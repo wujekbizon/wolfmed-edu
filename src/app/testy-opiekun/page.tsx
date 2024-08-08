@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 async function Tests() {
   // getting tests from json file , later we could move this to database
   const tests = await getTests()
-  console.log(tests.length)
+
   return <TestsList tests={tests} />
 }
 

@@ -1,5 +1,6 @@
 import TestInfoCard from '@/components/TestInfoCard'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function TestsSelection() {
   return (
@@ -17,15 +18,17 @@ export default function TestsSelection() {
         </p>
         <div className="flex items-center gap-2 justify-center lg:justify-start">
           <p className="text-base font-semibold text-zinc-900 transition-colors">Zobacz Wszystkie Testy </p>
-          <div className="h-9 w-9 flex items-center justify-center rounded-full bg-white hover:bg-[#ffa5a5]  cursor-pointer transition-al animate-pulse">
-            <Image
-              src="/right-arrow.png"
-              alt="right arrow"
-              width={36}
-              height={36}
-              className="object-cover h-3/4 w-3/4 "
-            />
-          </div>
+          <Link href="/testy-opiekun">
+            <div className="h-9 w-9 flex items-center justify-center rounded-full bg-white hover:bg-[#ffa5a5]  cursor-pointer transition-al animate-pulse">
+              <Image
+                src="/right-arrow.png"
+                alt="right arrow"
+                width={36}
+                height={36}
+                className="object-cover h-3/4 w-3/4 "
+              />
+            </div>
+          </Link>
         </div>
       </div>
       <div className="w-full lg:w-2/3 flex h-full gap-6 flex-wrap justify-center xl:justify-start">
