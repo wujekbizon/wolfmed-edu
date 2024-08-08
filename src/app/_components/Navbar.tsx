@@ -4,28 +4,14 @@ import { useStore } from '@/store/useStore'
 import Image from 'next/image'
 import Link from 'next/link'
 import SideMenu from './SideMenu'
+import Logo from '@/components/Logo'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
 
   return (
     <header className="h-16 w-full z-10 flex items-center justify-between relative animate-slideInDown opacity-0 [--slidein-delay:100ms]">
-      <div className="flex gap-2 h-10 items-center">
-        <div className="h-12 w-12">
-          <Image
-            className="h-full w-full object-cover"
-            src="/blood-test.png"
-            alt="blood vial"
-            width={100}
-            height={100}
-            priority
-          />
-        </div>
-        <div className="flex flex-col justify-around h-10 ">
-          <h3 className="text-base font-extrabold leading-3 tracking-wide text-zinc-900">WOLFMED</h3>
-          <h3 className="text-sm font-bold text-zinc-600 leading-3">EDUKACJA</h3>
-        </div>
-      </div>
+      <Logo />
       <Image
         src="/hamburger.png"
         alt="menu"
