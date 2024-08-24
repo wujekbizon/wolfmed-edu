@@ -1,4 +1,4 @@
-import TestsList from '@/components/TestsList'
+import AllTests from '@/components/AllTests'
 import { getTests } from '@/server/getData'
 import { Suspense } from 'react'
 
@@ -6,7 +6,7 @@ async function Tests() {
   // getting tests from json file , later we could move this to database
   const tests = await getTests()
 
-  return <TestsList tests={tests} />
+  return <AllTests tests={tests} />
 }
 
 export default function TestsPage() {
