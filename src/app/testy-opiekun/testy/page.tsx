@@ -1,3 +1,3 @@
 export default function TestsPage() {
-  return <div>Dashboard</div>
+  return <div>Testy</div>
 }
