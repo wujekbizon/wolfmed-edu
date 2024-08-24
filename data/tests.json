@@ -1,4 +1,2668 @@
 [
+   {
+      "data":{
+         "question":"Opiekun medyczny wykorzystując skalę Lawtona może ocenić możliwości i ograniczenia podopiecznego między innymi w zakresie",
+         "answers":[
+            {
+               "option":"gospodarowania pieniędzmi i samodzielnego przygotowywania posiłków.",
+               "isCorrect":true
+            },
+            {
+               "option":"samodzielnego przyjmowania leków i korzystania z toalety.",
+               "isCorrect":false
+            },
+            {
+               "option":"ubierania się, rozbierania i spożywania posiłków.",
+               "isCorrect":false
+            },
+            {
+               "option":"wchodzenia, schodzenia po schodach i korzystania z telefonu.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczny po raz pierwszy będzie samodzielnie wykonywał pomiar ciśnienia tętniczego krwi. Opiekun medyczny omówił z podopiecznym zasady obowiązujące podczas pomiaru i w ten sposób udzielił mu wsparcia",
+         "answers":[
+            {
+               "option":"informacyjnego.",
+               "isCorrect":true
+            },
+            {
+               "option":"rzeczowego.",
+               "isCorrect":false
+            },
+            {
+               "option":"wartościującego.",
+               "isCorrect":false
+            },
+            {
+               "option":"emocjonalnego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny wykonując toaletę całego ciała podopiecznego w łóżku, bezpośrednio po umyciu pleców powinien umyć",
+         "answers":[
+            {
+               "option":"pośladki.",
+               "isCorrect":true
+            },
+            {
+               "option":"kończyny dolne.",
+               "isCorrect":false
+            },
+            {
+               "option":"brzuch.",
+               "isCorrect":false
+            },
+            {
+               "option":"kończyny górne.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny oceniając możliwości i ograniczenia pacjentki z afazją czuciową (sensoryczną) powinien wiedzieć, że osoba ta",
+         "answers":[
+            {
+               "option":"ma trudności w różnicowaniu barw.",
+               "isCorrect":false
+            },
+            {
+               "option":"nie rozumie pytań i poleceń.",
+               "isCorrect":true
+            },
+            {
+               "option":"ma zaburzenia orientacji w czasie i miejscu.",
+               "isCorrect":false
+            },
+            {
+               "option":"nie może wykonać celowej czynności ruchowej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W planie opieki nad niesamodzielną, leżącą podopieczną z rozpoznanym problemem zaparć atonicznych, opiekun medyczny powinien uwzględnić między innymi podaż produktów z diety",
+         "answers":[
+            {
+               "option":"ubogoresztkowej, niegazowane płyny do picia i obserwację wypróżnień.",
+               "isCorrect":false
+            },
+            {
+               "option":"ubogoresztkowej, gazowane płyny do picia i podawanie basenu o stałych porach dnia.",
+               "isCorrect":false
+            },
+            {
+               "option":"bogatoresztkowej, kompoty z czarnych jagód do picia i podawanie basenu o stałych porach dnia.",
+               "isCorrect":false
+            },
+            {
+               "option":"bogatoresztkowej, kompoty z suszonych śliwek do picia i obserwację wypróżnień.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentka z powodu zaburzeń połykania jest karmiona przez zgłębnik żołądkowy. Do karmienia pacjentki opiekun medyczny powinien przygotować zmiksowany pokarm w temperaturze",
+         "answers":[
+            {
+               "option":"50°C",
+               "isCorrect":false
+            },
+            {
+               "option":"30°C",
+               "isCorrect":true
+            },
+            {
+               "option":"40°C",
+               "isCorrect":false
+            },
+            {
+               "option":"60°C",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas wykonywania pacjentce toalety całego ciała w łóżku, wodę w misce należy zmienić zawsze, gdy jest ona brudna, chłodna i zawiera dużo mydlin oraz bezpośrednio przed umyciem",
+         "answers":[
+            {
+               "option":"krocza.",
+               "isCorrect":true
+            },
+            {
+               "option":"szyi.",
+               "isCorrect":false
+            },
+            {
+               "option":"pośladków.",
+               "isCorrect":false
+            },
+            {
+               "option":"brzucha.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczny oparzył rękę wrzątkiem. Opiekun medyczny udzielając pierwszej pomocy, powinien",
+         "answers":[
+            {
+               "option":"założyć na miejsce oparzenia okład wysychający.",
+               "isCorrect":false
+            },
+            {
+               "option":"schładzać miejsce oparzenia pod bieżącą zimną wodą.",
+               "isCorrect":true
+            },
+            {
+               "option":"natłuścić miejsce oparzenia i założyć opatrunek ochronny.",
+               "isCorrect":false
+            },
+            {
+               "option":"włożyć rękę do letniej wody i stopniowo podnosić jej temperaturę.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do wykonania pacjentowi mycia głowy w łóżku, oprócz wanienki pneumatycznej, wiadra, ciepłej wody, grzebienia, suszarki do włosów, fartucha i rękawiczek jednorazowych, należy przygotować:",
+         "answers":[
+            {
+               "option":"szampon, folię, dwa ręczniki, dwa dzbanki.",
+               "isCorrect":true
+            },
+            {
+               "option":"odżywkę, dwa ręczniki, dwa dzbanki, waciki.",
+               "isCorrect":false
+            },
+            {
+               "option":"odżywkę, folię, duży ręcznik, dzbanek.",
+               "isCorrect":false
+            },
+            {
+               "option":"szampon, mały ręcznik, dzbanek, waciki.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Sprzęt jednorazowego użytku o ostrych końcach lub krawędziach po użyciu należy umieścić",
+         "answers":[
+            {
+               "option":"w grubych workach koloru żółtego.",
+               "isCorrect":false
+            },
+            {
+               "option":"w sztywnych czerwonych pojemnikach.",
+               "isCorrect":true
+            },
+            {
+               "option":"w metalowych pojemnikach wielorazowego użycia.",
+               "isCorrect":false
+            },
+            {
+               "option":"w grubych workach koloru czerwonego umieszczonych na stelażach.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Z czego wynika zmniejszenie sprawności fizycznej u pacjentów w podeszłym wieku?",
+         "answers":[
+            {
+               "option":"Ze zwiększenia siły mięśni",
+               "isCorrect":false
+            },
+            {
+               "option":"Ze zwiększenia masy mięśni.",
+               "isCorrect":false
+            },
+            {
+               "option":"Ze zmniejszenia ruchomości w stawach.",
+               "isCorrect":true
+            },
+            {
+               "option":"Ze zmniejszenia zawartości tkanki tłuszczowej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Materac zmiennociśnieniowy opiekun medyczny powinien zastosować u pacjenta",
+         "answers":[
+            {
+               "option":"z oparzeniem pośladków.",
+               "isCorrect":false
+            },
+            {
+               "option":"z trudnościami w wykonywaniu czynności higienicznych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z odparzeniami w fałdach brzusznych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z trudnościami w zmianie pozycji w łóżku.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W której kolejności opiekun medyczny powinien zdjąć i założyć koszulę pacjentowi z niedowładem lewostronnym?",
+         "answers":[
+            {
+               "option":"Należy rozpocząć zdejmowanie i zakładanie koszuli od kończyny lewej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zdejmowanie koszuli należy rozpocząć od kończyny lewej, a zakładanie od prawej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Należy rozpocząć zdejmowanie i zakładanie koszuli od kończyny prawej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zdejmowanie koszuli należy rozpocząć od kończyny prawej, a zakładanie od lewej.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny wykonał u pacjentki okład wysychający (zimny). Okład ten należy utrzymać",
+         "answers":[
+            {
+               "option":"8 godzin.",
+               "isCorrect":false
+            },
+            {
+               "option":"6 godzin.",
+               "isCorrect":false
+            },
+            {
+               "option":"4-5 godzin.",
+               "isCorrect":false
+            },
+            {
+               "option":"2-3 godziny.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas wykonywania okładu ciepłego (rozgrzewającego) opiekun medyczny warstwę wilgotną powinien zmożyć w ciepłej wodzie i skropić ją",
+         "answers":[
+            {
+               "option":"0,9% chlorkiem sodu.",
+               "isCorrect":false
+            },
+            {
+               "option":"2% spirytusem salicylowym.",
+               "isCorrect":false
+            },
+            {
+               "option":"70% alkoholem etylowym.",
+               "isCorrect":true
+            },
+            {
+               "option":"3% kwasem bornym.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentka ma założony wyciąg bezpośredni na kończynie dolnej. W celu umożliwienia jej wypróżnienia należy",
+         "answers":[
+            {
+               "option":"podać jej basen do łóżka.",
+               "isCorrect":true
+            },
+            {
+               "option":"zawieźć ją do łazienki na wózku leżącym.",
+               "isCorrect":false
+            },
+            {
+               "option":"zawieźć ją do łazienki na wózku inwalidzkim.",
+               "isCorrect":false
+            },
+            {
+               "option":"posadzić ją na krześle sanitarnym przy łóżku.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do skutków długotrwałego unieruchomienia pacjenta w łóżku zalicza się",
+         "answers":[
+            {
+               "option":"zapalenie płuc.",
+               "isCorrect":true
+            },
+            {
+               "option":"porażenia.",
+               "isCorrect":false
+            },
+            {
+               "option":"zapalenie stawów.",
+               "isCorrect":false
+            },
+            {
+               "option":"biegunki.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W trakcie toalety wieczornej pacjent z założonym zgłębnikiem do żołądka uskarża się na uczucie pełności w żołądku, nudności, duszność, wzdęcia. W tej sytuacji opiekun medyczny powinien",
+         "answers":[
+            {
+               "option":"kontynuować wykonywanie toalety, a po jej zakończeniu ułożyć pacjenta w pozycji bezpiecznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"przerwać wykonywanie toalety i wypłukać jamę ustną pacjentowi naparem z mięty.",
+               "isCorrect":false
+            },
+            {
+               "option":"kontynuować wykonywanie toalety, a po jej zakończeniu powiadomić pielęgniarkę.",
+               "isCorrect":false
+            },
+            {
+               "option":"przerwać wykonywanie toalety i natychmiast powiadomić o objawach pielęgniarkę.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas przyjęcia 50-letniej pacjentki do szpitala jej wskaźnik BMI wynosił 22. Jego wartość informuje, że u kobiety występuje",
+         "answers":[
+            {
+               "option":"waga prawidłowa.",
+               "isCorrect":true
+            },
+            {
+               "option":"niedowaga.",
+               "isCorrect":false
+            },
+            {
+               "option":"otyłość.",
+               "isCorrect":false
+            },
+            {
+               "option":"nadwaga.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentka w podeszłym wieku, która ma zaburzenia równowagi i porusza się przy pomocy balkonika, kąpiel całego ciała powinna mieć wykonaną",
+         "answers":[
+            {
+               "option":"na siedząco, w kabinie prysznicowej.",
+               "isCorrect":true
+            },
+            {
+               "option":"w wannie stacjonarnej wypełnionej wodą minimum do ¾ jej wysokości.",
+               "isCorrect":false
+            },
+            {
+               "option":"na stojąco, w kabinie prysznicowej.",
+               "isCorrect":false
+            },
+            {
+               "option":"w wannie stacjonarnej wypełnionej wodą maksimum do ¾ jej wysokości.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopiecznemu z rozpoznaną cukrzycą typu 2. należy w pierwszej kolejności wprowadzić ograniczenia w zakresie",
+         "answers":[
+            {
+               "option":"aktywności fizycznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"aktywności społecznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"spożywania węglowodanów prostych.",
+               "isCorrect":true
+            },
+            {
+               "option":"spożywania tłuszczów nienasyconych.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentce unieruchomionej w łóżku z wysokim ryzykiem wystąpienia odleżyn opiekun medyczny powinien wykonywać zmianę pozycji ciała w ciągu dnia w odstępach wynoszących co najmniej",
+         "answers":[
+            {
+               "option":"2 godziny.",
+               "isCorrect":true
+            },
+            {
+               "option":"1 godzinę.",
+               "isCorrect":false
+            },
+            {
+               "option":"4 godziny.",
+               "isCorrect":false
+            },
+            {
+               "option":"3 godziny.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"U podopiecznej wystąpiła zmiana chorobowa, polegająca na miejscowym odczynie tkanek w postaci obrzęku i zaczerwienienia oraz miejscowego podwyższenia temperatury. Objawy te wskazują na wystąpienie u niej",
+         "answers":[
+            {
+               "option":"zapalenia.",
+               "isCorrect":true
+            },
+            {
+               "option":"wysięku.",
+               "isCorrect":false
+            },
+            {
+               "option":"zwyrodnienia.",
+               "isCorrect":false
+            },
+            {
+               "option":"porażenia.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentkę hospitalizowaną z powodu zapalenia płuc, w czasie występującej dużej duszności, opiekun medyczny powinien ułożyć w pozycji",
+         "answers":[
+            {
+               "option":"wysokiej z pochyleniem do przodu.",
+               "isCorrect":true
+            },
+            {
+               "option":"bezpiecznej na boku Simsa.",
+               "isCorrect":false
+            },
+            {
+               "option":"z uniesieniem górnej części tułowia do 30°.",
+               "isCorrect":false
+            },
+            {
+               "option":"Trendelenburga.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Przeciwwskazaniem do karmienia pacjenta przy pomocy łyżki stołowej jest",
+         "answers":[
+            {
+               "option":"próchnica zębów trzonowych.",
+               "isCorrect":false
+            },
+            {
+               "option":"brak w uzębieniu.",
+               "isCorrect":false
+            },
+            {
+               "option":"wolne połykanie.",
+               "isCorrect":false
+            },
+            {
+               "option":"brak odruchu połykania.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjent z paraplegią ma przede wszystkim trudności",
+         "answers":[
+            {
+               "option":"w czytaniu.",
+               "isCorrect":false
+            },
+            {
+               "option":"w spożywaniu posiłków.",
+               "isCorrect":false
+            },
+            {
+               "option":"w poruszaniu się.",
+               "isCorrect":true
+            },
+            {
+               "option":"w pisaniu.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pędzlowanie jamy ustnej ciężko chorego pacjenta, u którego występują pleśniawki, opiekun medyczny powinien wykonać z zastosowaniem",
+         "answers":[
+            {
+               "option":"kwaczyków, szpatułek i zaleconego środka leczniczego.",
+               "isCorrect":true
+            },
+            {
+               "option":"gazików, szczoteczki i pasty do zębów.",
+               "isCorrect":false
+            },
+            {
+               "option":"szpatułek, szczoteczki do zębów i zaleconego środka leczniczego.",
+               "isCorrect":false
+            },
+            {
+               "option":"gazików, kwaczyków i pasty do zębów.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentce z zaburzeniami rytmu serca pomiar tętna należy wykonywać przez",
+         "answers":[
+            {
+               "option":"45 sekund",
+               "isCorrect":false
+            },
+            {
+               "option":"60 sekund.",
+               "isCorrect":true
+            },
+            {
+               "option":"30 sekund i pomnożyć wynik przez 2.",
+               "isCorrect":false
+            },
+            {
+               "option":"15 sekund i pomnożyć wynik przez 3.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Wykorzystując skalę Barthel można określić u pacjenta stopień",
+         "answers":[
+            {
+               "option":"zagrożenia upadkiem.",
+               "isCorrect":false
+            },
+            {
+               "option":"samodzielności.",
+               "isCorrect":true
+            },
+            {
+               "option":"niepełnosprawności.",
+               "isCorrect":false
+            },
+            {
+               "option":"zagrożenia wystąpieniem odleżyn.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Największym problemem pacjenta po amputacji lewego podudzia, który nie chce korzystać z kul, wózka inwalidzkiego, ani uczestniczyć w zajęciach rehabilitacyjnych przygotowujących do założenia protezy, jest brak",
+         "answers":[
+            {
+               "option":"środków finansowych.",
+               "isCorrect":false
+            },
+            {
+               "option":"dostatecznego wsparcia rodzinnego.",
+               "isCorrect":false
+            },
+            {
+               "option":"akceptacji własnej niepełnosprawności.",
+               "isCorrect":true
+            },
+            {
+               "option":"odpowiedniego zabezpieczenia ortopedycznego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Przytomnego pacjenta po zakończeniu karmienia przez zgłębnik założony do żołądka należy pozostawić na minimum",
+         "answers":[
+            {
+               "option":"20 minut w pozycji bocznej lub neutralnej.",
+               "isCorrect":false
+            },
+            {
+               "option":"20 minut w pozycji wysokiej lub półwysokiej.",
+               "isCorrect":false
+            },
+            {
+               "option":"30 minut w pozycji wysokiej lub półwysokiej.",
+               "isCorrect":true
+            },
+            {
+               "option":"30 minut w pozycji bocznej lub neutralnej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Stałe zamykanie drzwi, zastawianie ich sprzętami, zasłanianie i zamykanie okien, opór przy wychodzeniu z pokoju u 80-letniego podopiecznego, może wskazywać na niezaspokojenie jego potrzeby",
+         "answers":[
+            {
+               "option":"samorealizacji.",
+               "isCorrect":false
+            },
+            {
+               "option":"przynależności.",
+               "isCorrect":false
+            },
+            {
+               "option":"bezpieczeństwa.",
+               "isCorrect":true
+            },
+            {
+               "option":"afiliacji.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun wykonał u podopiecznego okład wysychający (zimny). Okład ten należy utrzymać",
+         "answers":[
+            {
+               "option":"4-5 godzin.",
+               "isCorrect":false
+            },
+            {
+               "option":"2-3 godziny.",
+               "isCorrect":true
+            },
+            {
+               "option":"6 godzin.",
+               "isCorrect":false
+            },
+            {
+               "option":"8 godzin.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W trakcie toalety wieczornej pacjentka z założonym zgłębnikiem do żołądka uskarża się na uczucie pełności w żołądku, nudności, duszność, wzdęcia. W tej sytuacji opiekun medyczny powinien",
+         "answers":[
+            {
+               "option":"przerwać wykonywanie toalety i natychmiast powiadomić o objawach pielęgniarkę.",
+               "isCorrect":true
+            },
+            {
+               "option":"kontynuować wykonywanie toalety, a po jej zakończeniu powiadomić pielęgniarkę.",
+               "isCorrect":false
+            },
+            {
+               "option":"przerwać wykonywanie toalety i wypłukać jamę ustną pacjentce naparem z mięty.",
+               "isCorrect":false
+            },
+            {
+               "option":"kontynuować wykonywanie toalety, a po jej zakończeniu ułożyć pacjentkę w pozycji bezpiecznej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do którego worka opiekun medyczny powinien wyrzucić zużyte pieluchomajtki pacjenta z zakażeniem układu moczowego, przebywającego na oddziale wewnętrznym?",
+         "answers":[
+            {
+               "option":"Niebieskiego.",
+               "isCorrect":false
+            },
+            {
+               "option":"Czerwonego.",
+               "isCorrect":true
+            },
+            {
+               "option":"Czarnego.",
+               "isCorrect":false
+            },
+            {
+               "option":"Żółtego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu monitorowania samodzielności podopiecznego w zakresie wykonywania złożonych czynności życia codziennego należy posłużyć się skalą",
+         "answers":[
+            {
+               "option":"Lawtona.",
+               "isCorrect":true
+            },
+            {
+               "option":"Torerance^a.",
+               "isCorrect":false
+            },
+            {
+               "option":"Katza.",
+               "isCorrect":false
+            },
+            {
+               "option":"Tinetti.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczny zgłasza dolegliwości bólowe i mrowienie stopy, która została amputowana miesiąc wcześniej. Który rodzaj dolegliwości występuje u podopiecznego?",
+         "answers":[
+            {
+               "option":"Bóle fantomowe.",
+               "isCorrect":true
+            },
+            {
+               "option":"Stopa cukrzycowa.",
+               "isCorrect":false
+            },
+            {
+               "option":"Niewydolność żylna.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zakrzepica żylna.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczna oparzyła rękę wrzątkiem. Opiekun medyczny udzielając pierwszej pomocy, powinien",
+         "answers":[
+            {
+               "option":"włożyć rękę do letniej wody i stopniowo podnosić jej temperaturę.",
+               "isCorrect":false
+            },
+            {
+               "option":"założyć na miejsce oparzenia okład wysychający.",
+               "isCorrect":false
+            },
+            {
+               "option":"natłuścić miejsce oparzenia i założyć opatrunek ochronny.",
+               "isCorrect":false
+            },
+            {
+               "option":"schładzać miejsce oparzenia pod bieżącą zimną wodą.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny wykonując toaletę całego ciała chorego w łóżku, bezpośrednio po umyciu pleców powinien umyć",
+         "answers":[
+            {
+               "option":"kończyny dolne.",
+               "isCorrect":false
+            },
+            {
+               "option":"brzuch.",
+               "isCorrect":false
+            },
+            {
+               "option":"pośladki.",
+               "isCorrect":true
+            },
+            {
+               "option":"kończyny górne.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do potrzeb fizjologicznych (biologicznych) zgodnie z piramidą Maslowa należą potrzeby:",
+         "answers":[
+            {
+               "option":"pożywienia, samorealizacji, szacunku, estetyczne.",
+               "isCorrect":false
+            },
+            {
+               "option":"seksualne, snu, wydalania, oddychania.",
+               "isCorrect":true
+            },
+            {
+               "option":"picia, bezpieczeństwa, zatrudnienia, przyjaźni.",
+               "isCorrect":false
+            },
+            {
+               "option":"bezpieczeństwa, pożywienia, oddychania, miłości.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentowi z zaburzeniami rytmu serca pomiar tętna należy wykonywać przez",
+         "answers":[
+            {
+               "option":"45 sekund.",
+               "isCorrect":false
+            },
+            {
+               "option":"30 sekund i pomnożyć wynik przez 2.",
+               "isCorrect":false
+            },
+            {
+               "option":"15 sekund i pomnożyć wynik przez 3.",
+               "isCorrect":false
+            },
+            {
+               "option":"60 sekund.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas przyjęcia pacjentki do szpitala jej wskaźnik BMI wynosił 28. Jego wartość informuje, że u kobiety występuje",
+         "answers":[
+            {
+               "option":"otyłość.",
+               "isCorrect":false
+            },
+            {
+               "option":"prawidłowa masa ciała.",
+               "isCorrect":false
+            },
+            {
+               "option":"wychudzenie organizmu.",
+               "isCorrect":false
+            },
+            {
+               "option":"nadwaga.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Która skala jest przeznaczona do oceny stopnia samodzielności pacjenta w zakresie utrzymania higieny osobistej?",
+         "answers":[
+            {
+               "option":"Norton.",
+               "isCorrect":false
+            },
+            {
+               "option":"Bradena.",
+               "isCorrect":false
+            },
+            {
+               "option":"Barthel.",
+               "isCorrect":true  
+            },
+            {
+               "option":"VAS.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W planie opieki nad niesamodzielnym, leżącym podopiecznym z rozpoznanym problemem zaparć atonicznych, należy uwzględnić między innymi podaż produktów z diety",
+         "answers":[
+            {
+               "option":"ubogoresztkowej, niegazowane płyny do picia i obserwację wypróżnień.",
+               "isCorrect":false
+            },
+            {
+               "option":"bogatoresztkowej, kompoty z suszonych śliwek do picia i obserwację wypróżnień.",
+               "isCorrect":true
+            },
+            {
+               "option":"ubogoresztkowej, gazowane płyny do picia i podawanie basenu o stałych porach dnia.",
+               "isCorrect":false
+            },
+            {
+               "option":"bogatoresztkowej, kompoty z czarnych jagód do picia i podawanie basenu o stałych porach dnia.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjent z powodu zaburzeń połykania po przebytym udarze mózgu jest karmiony przez zgłębnik żołądkowy. Do karmienia pacjenta należy przygotować zmiksowany pokarm w temperaturze",
+         "answers":[
+            {
+               "option":"400C",
+               "isCorrect":false
+            },
+            {
+               "option":"300C",
+               "isCorrect":true
+            },
+            {
+               "option":"500C",
+               "isCorrect":false
+            },
+            {
+               "option":"600C",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Materac zmiennociśnieniowy opiekun powinien zastosować u pacjentki",
+         "answers":[
+            {
+               "option":"z trudnościami w zmianie pozycji w łóżku.",
+               "isCorrect":true
+            },
+            {
+               "option":"z odparzeniami w fałdach brzusznych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z trudnościami w wykonywaniu czynności higienicznych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z oparzeniem pośladków.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczna przestała udzielać się towarzysko, rzadko odwiedza ją rodzina. Jest smutna, większość czasu spędza, wyglądając przez okno. Ostatnio przestała otwierać drzwi, zastawia je na noc krzesłem, obawia się napadu. Które potrzeby należy w pierwszej kolejności zaspokoić u podopiecznej?",
+         "answers":[
+            {
+               "option":"Uznania i samorealizacji.",
+               "isCorrect":false
+            },
+            {
+               "option":"Bezpieczeństwa i samorealizacji.",
+               "isCorrect":false
+            },
+            {
+               "option":"Uznania i przynależności.",
+               "isCorrect":false
+            },
+            {
+               "option":"Bezpieczeństwa i przynależności.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny wykonując zmianę worka stomijnego, powinien umyć skórę wokół stomii oraz",
+         "answers":[
+            {
+               "option":"delikatnie przetrzeć ją benzyną medyczną.",
+               "isCorrect":false
+            },
+            {
+               "option":"dokładnie zabezpieczyć ją maścią.",
+               "isCorrect":false
+            },
+            {
+               "option":"delikatnie i dokładnie osuszyć ją.",
+               "isCorrect":true
+            },
+            {
+               "option":"dokładnie i delikatnie zwilżyć ją spirytusem.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Płukanie włosów roztworem wody z octem spirytusowym u pacjentów po zdjęciu czepca przeciwwszawiczego i umyciu głowy, należy zastosować w celu",
+         "answers":[
+            {
+               "option":"nawilżenia włosów.",
+               "isCorrect":false
+            },
+            {
+               "option":"ułatwienia usunięcia płynu przeciwwszawiczego.",
+               "isCorrect":false
+            },
+            {
+               "option":"odtłuszczenia włosów.",
+               "isCorrect":false
+            },
+            {
+               "option":"ułatwienia usunięcia jaj pasożytów.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczna po raz pierwszy będzie samodzielnie wykonywała pomiar ciśnienia tętniczego krwi. Opiekun medyczny omówił z podopieczną zasady obowiązujące podczas pomiaru i w ten sposób udzielił jej wsparcia",
+         "answers":[
+            {
+               "option":"emocjonalnego.",
+               "isCorrect":false
+            },
+            {
+               "option":"informacyjnego.",
+               "isCorrect":true
+            },
+            {
+               "option":"wartościującego.",
+               "isCorrect":false
+            },
+            {
+               "option":"rzeczowego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W profilaktyce wystąpienia odparzeń opiekun medyczny bezpośrednio po umyciu ciała pacjentki powinien",
+         "answers":[
+            {
+               "option":"przetrzeć środkiem dezynfekcyjnym miejsca narażone na odparzenia.",
+               "isCorrect":false
+            },
+            {
+               "option":"posmarować oliwką miejsca narażone na odparzenia.",
+               "isCorrect":false
+            },
+            {
+               "option":"wymasować stykające się powierzchnie i fałdy skóry.",
+               "isCorrect":false
+            },
+            {
+               "option":"osuszyć dokładnie stykające się powierzchnie i fałdy skóry.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Na które powikłanie jest szczególnie narażony 70-letni pacjent, unieruchomiony w łóżku na oddziale ortopedycznym ze względu na złamanie miednicy?",
+         "answers":[
+            {
+               "option":"Zaleganie śluzu w drogach oddechowych.",
+               "isCorrect":true
+            },
+            {
+               "option":"Zmniejszenie wydalania moczu.",
+               "isCorrect":false
+            },
+            {
+               "option":"Biegunki, wymioty.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zapalenie mięśnia sercowego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"U pacjentki stwierdzono chorobę nadciśnieniową. W tej sytuacji opiekun medyczny powinien poinformować pacjentkę, aby w swojej diecie ograniczyła stosowanie",
+         "answers":[
+            {
+               "option":"soli.",
+               "isCorrect":true
+            },
+            {
+               "option":"bazylii.",
+               "isCorrect":false
+            },
+            {
+               "option":"pieprzu.",
+               "isCorrect":false
+            },
+            {
+               "option":"cukru.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W której kolejności należy prawidłowo zdjąć i założyć chorej koszulę nocną podopiecznej z niedowładem prawej kończyny górnej?",
+         "answers":[
+            {
+               "option":"Należy rozpocząć zdejmowanie i zakładanie koszuli od kończyny lewej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zdejmowanie koszuli należy rozpocząć od kończyny prawej, a zakładanie od lewej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Należy rozpocząć zdejmowanie i zakładanie koszuli od kończyny prawej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Zdejmowanie koszuli należy rozpocząć od kończyny lewej, a zakładanie od prawej.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Które zmiany w narządach zmysłów następują u osób starszych wraz z wiekiem?",
+         "answers":[
+            {
+               "option":"Osłabienie wzroku i wyostrzenie węchu.",
+               "isCorrect":false
+            },
+            {
+               "option":"Osłabienie smaku i węchu.",
+               "isCorrect":true
+            },
+            {
+               "option":"Wyostrzenie smaku i słuchu.",
+               "isCorrect":false
+            },
+            {
+               "option":"Wyostrzenie smaku i osłabienie wzroku.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Od czego powinien rozpocząć opiekun medyczny wymianę cewnika zewnętrznego pacjentowi leżącemu w łóżku?",
+         "answers":[
+            {
+               "option":"Od pobrania moczu pacjenta na badanie ogólne.",
+               "isCorrect":false
+            },
+            {
+               "option":"Od uzyskania zgody pacjenta na wykonanie zabiegu.",
+               "isCorrect":true
+            },
+            {
+               "option":"Od przygotowania zestawu do wykonania zabiegu.",
+               "isCorrect":false
+            },
+            {
+               "option":"Od osłonięcia łóżka pacjenta parawanem.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu określenia ryzyka wystąpienia odleżyn u podopiecznego należy wykorzystać skalę",
+         "answers":[
+            {
+               "option":"Norton lub Douglas.",
+               "isCorrect":true
+            },
+            {
+               "option":"Barthel lub Glasgow.",
+               "isCorrect":false
+            },
+            {
+               "option":"Barthel lub Norton.",
+               "isCorrect":false
+            },
+            {
+               "option":"Glasgow lub Douglas.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do wykonania pacjentce mycia głowy w łóżku, oprócz wanienki pneumatycznej, wiadra, ciepłej wody, szczotki lub grzebienia, suszarki do włosów, fartucha i rękawiczek jednorazowych, należy przygotować:",
+         "answers":[
+            {
+               "option":"szampon, folię, dwa ręczniki, dwa dzbanki.",
+               "isCorrect":true
+            },
+            {
+               "option":"szampon, mały ręcznik, dzbanek, waciki.",
+               "isCorrect":false
+            },
+            {
+               "option":"odżywkę, dwa ręczniki, dwa dzbanki, waciki.",
+               "isCorrect":false
+            },
+            {
+               "option":"odżywkę, folię, duży ręcznik, dzbanek.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pędzlowanie jamy ustnej ciężko chorego, u którego występują pleśniawki, należy wykonać z zastosowaniem",
+         "answers":[
+            {
+               "option":"kwaczyków, szpatułek i zaleconego środka leczniczego.",
+               "isCorrect":true
+            },
+            {
+               "option":"szpatułek, szczoteczki do zębów i zaleconego środka leczniczego.",
+               "isCorrect":false
+            },
+            {
+               "option":"gazików, kwaczyków i pasty do zębów.",
+               "isCorrect":false
+            },
+            {
+               "option":"gazików, szczoteczki i pasty do zębów.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"63-letnia pacjentka, przebywająca na oddziale ortopedycznym po zabiegu amputacji kończyny dolnej, obawia się utraty samodzielności, jest drażliwa, przygnębiona i odmawia współpracy w rehabilitacji. Jaki nastrój występuje u pacjentki?",
+         "answers":[
+            {
+               "option":"Podwyższony.",
+               "isCorrect":false
+            },
+            {
+               "option":"Wyrównany.",
+               "isCorrect":false
+            },
+            {
+               "option":"Obniżony.",
+               "isCorrect":true
+            },
+            {
+               "option":"Labilny.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu łagodzenia wzmożonego pragnienia i suchości w jamie ustnej pacjentowi z przewlekłą chorobą nerek, obrzękami i zaleceniem ograniczenia ilości przyjmowania płynów, należy uwzględnić między innymi częste przepłukiwanie jamy ustnej",
+         "answers":[
+            {
+               "option":"5% roztworem wody utlenionej.",
+               "isCorrect":false
+            },
+            {
+               "option":"5% roztworem soli kuchennej.",
+               "isCorrect":false
+            },
+            {
+               "option":"boraksem.",
+               "isCorrect":false
+            },
+            {
+               "option":"wodą.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Przytomną pacjentkę po zakończeniu karmienia przez zgłębnik założony do żołądka należy pozostawić na minimum",
+         "answers":[
+            {
+               "option":"20 minut w pozycji bocznej lub neutralnej.",
+               "isCorrect":false
+            },
+            {
+               "option":"20 minut w pozycji wysokiej lub półwysokiej.",
+               "isCorrect":false
+            },
+            {
+               "option":"30 minut w pozycji wysokiej lub półwysokiej.",
+               "isCorrect":true
+            },
+            {
+               "option":"30 minut w pozycji bocznej lub neutralnej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"U podopiecznego, który kilkakrotnie w nocy oddaje mocz, występuje",
+         "answers":[
+            {
+               "option":"dyzuria.",
+               "isCorrect":false
+            },
+            {
+               "option":"oliguria.",
+               "isCorrect":false
+            },
+            {
+               "option":"nykturia.",
+               "isCorrect":true
+            },
+            {
+               "option":"anuria.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W zakładzie opiekuńczo-leczniczym miskę nerkowatą wielorazową, którą opiekun użył do wykonania pacjentowi pędzlowania jamy ustnej, po opróżnieniu z zawartości w pierwszej kolejności powinien",
+         "answers":[
+            {
+               "option":"umyć pod bieżącą wodą.",
+               "isCorrect":false
+            },
+            {
+               "option":"zanurzyć w roztworze detergentu.",
+               "isCorrect":false
+            },
+            {
+               "option":"umyć przy użyciu detergentu.",
+               "isCorrect":false
+            },
+            {
+               "option":"zanurzyć w roztworze środka dezynfekcyjnego.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentowi unieruchomionemu w łóżku z wysokim ryzykiem wystąpienia odleżyn opiekun powinien wykonywać zmianę pozycji ciała w ciągu dnia w odstępach wynoszących co najmniej",
+         "answers":[
+            {
+               "option":"2 godziny.",
+               "isCorrect":true
+            },
+            {
+               "option":"3 godziny.",
+               "isCorrect":false
+            },
+            {
+               "option":"1 godzinę.",
+               "isCorrect":false
+            },
+            {
+               "option":"4 godziny.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjent w podeszłym wieku, który cierpi na zaburzenia równowagi i porusza się przy pomocy balkonika, kąpiel całego ciała powinien mieć wykonaną",
+         "answers":[
+            {
+               "option":"na siedząco, w kabinie prysznicowej.",
+               "isCorrect":true
+            },
+            {
+               "option":"w wannie stacjonarnej wypełnionej wodą minimum do % jej wysokości.",
+               "isCorrect":false
+            },
+            {
+               "option":"na stojąco, w kabinie prysznicowej.",
+               "isCorrect":false
+            },
+            {
+               "option":"w wannie stacjonarnej wypełnionej wodą maksimum do % jej wysokości.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W opiece nad pacjentem z biegunką należy uwzględnić między innymi",
+         "answers":[
+            {
+               "option":"wykonywanie pacjentowi masażu brzucha w kierunku zgodnym z przebiegiem jelita grubego i zwiększenie podaży płynów.",
+               "isCorrect":false
+            },
+            {
+               "option":"monitorowanie ilości i jakości wypróżnień oraz zachęcanie pacjenta do zwiększenia ilości wypijanych płynów.",
+               "isCorrect":true
+            },
+            {
+               "option":"wykonywanie pacjentowi masażu brzucha w kierunku przeciwnym do przebiegu jelita grubego i ograniczenie podaży płynów.",
+               "isCorrect":false
+            },
+            {
+               "option":"monitorowanie ilości i jakości wypróżnień oraz zachęcanie pacjenta do zmniejszenia ilości wypijanych płynów.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Wskazaniem do ułożenia w pozycji wysokiej unieruchomionej w łóżku pacjentki jest",
+         "answers":[
+            {
+               "option":"duszność spoczynkowa.",
+               "isCorrect":true
+            },
+            {
+               "option":"występowanie wzdęć brzucha.",
+               "isCorrect":false
+            },
+            {
+               "option":"występowanie omdleń.",
+               "isCorrect":false
+            },
+            {
+               "option":"zakrzepica żył kończyn dolnych.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas wykonywania toalety całego ciała w łóżku, wodę w misce należy zmienić zawsze, gdy jest ona brudna, chłodna i zawiera dużo mydlin oraz bezpośrednio przed umyciem",
+         "answers":[
+            {
+               "option":"krocza.",
+               "isCorrect":true
+            },
+            {
+               "option":"brzucha.",
+               "isCorrect":false
+            },
+            {
+               "option":"szyi.",
+               "isCorrect":false
+            },
+            {
+               "option":"pośladków.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Afazja powoduje u pacjenta zaburzenia w zakresie",
+         "answers":[
+            {
+               "option":"komunikowania się.",
+               "isCorrect":true
+            },
+            {
+               "option":"zapamiętywania.",
+               "isCorrect":false
+            },
+            {
+               "option":"funkcjonowania zmysłu równowagi.",
+               "isCorrect":false
+            },
+            {
+               "option":"funkcjonowania zmysłu słuchu.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Przygotowując termofor do wykonania zabiegu przeciwzapalnego z zastosowaniem ciepła, należy wypełnić go do",
+         "answers":[
+            {
+               "option":"1 objętości wodą o temperaturze 80°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w ceratowym pokrowcu.",
+               "isCorrect":false
+            },
+            {
+               "option":"14 objętości wodą o temperaturze 60°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w płóciennym pokrowcu.",
+               "isCorrect":true
+            },
+            {
+               "option":"pełna wodą o temperaturze 60°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w ceratowym pokrowcu.",
+               "isCorrect":false
+            },
+            {
+               "option":"pełna wodą o temperaturze 80°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w płóciennym pokrowcu.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu uzyskania miarodajnego wyniku ciśnienia tętniczego krwi u pacjentki, która o godzinie 13:00 zjadła posiłek, pierwszy pomiar należy wykonać najwcześniej o godzinie",
+         "answers":[
+            {
+               "option":"13:20",
+               "isCorrect":false
+            },
+            {
+               "option":"13:30",
+               "isCorrect":true
+            },
+            {
+               "option":"13:25",
+               "isCorrect":false
+            },
+            {
+               "option":"13:15",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W której pozycji należy ułożyć przytomnego pacjenta do karmienia przez zgłębnik?",
+         "answers":[
+            {
+               "option":"Bezpiecznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Płaskiej na boku.",
+               "isCorrect":false
+            },
+            {
+               "option":"Płaskiej na plecach.",
+               "isCorrect":false
+            },
+            {
+               "option":"Półsiedzącej.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Na oddziale urazowym przebywa pacjent unieruchomiony w łóżku z powodu złamania miednicy. Z której czynności powinien zrezygnować opiekun medyczny przy słaniu łóżka tego pacjenta?",
+         "answers":[
+            {
+               "option":"Z naciągnięcia prześcieradła.",
+               "isCorrect":false
+            },
+            {
+               "option":"Z umycia rąk przed zabiegiem.",
+               "isCorrect":false
+            },
+            {
+               "option":"Z obracania pacjenta na boki.",
+               "isCorrect":true
+            },
+            {
+               "option":"Z rozmowy z pacjentem.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podstawowym prawem pacjenta, korzystającego ze świadczeń medycznych, jest prawo do",
+         "answers":[
+            {
+               "option":"informacji o planowanym leczeniu i o pielęgnacji.",
+               "isCorrect":true
+            },
+            {
+               "option":"pobytu w szpitalu w przypadku każdej choroby.",
+               "isCorrect":false
+            },
+            {
+               "option":"zniżki na wszystkie leki przepisane przez lekarza prowadzącego.",
+               "isCorrect":false
+            },
+            {
+               "option":"ulgi na płatne procedury medyczne i pobyt w sanatorium.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas wyjścia na zakupy z podopieczną od niedawna ociemniałą opiekun medyczny powinien przede wszystkim",
+         "answers":[
+            {
+               "option":"trzymać stale podopieczną pod rękę i opisywać jej mijane budynki.",
+               "isCorrect":false
+            },
+            {
+               "option":"dopilnować, aby podopieczna zabrała laskę i iść za nią w pewnej odległości.",
+               "isCorrect":false
+            },
+            {
+               "option":"zadbać o odpowiednią ilość pieniędzy i pozwolić na samodzielność podopiecznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"pozwolić, by podopieczna trzymała opiekuna pod rękę i informować ją o przeszkodach.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"79-letnia podopieczna cierpi na zaawansowaną chorobę zwyrodnieniową ze zmianami w dużych stawach kończyn dolnych. W tej sytuacji w przemieszczaniu się na dalszą odległość, należy zapewnić podopiecznej",
+         "answers":[
+            {
+               "option":"sprzęt ślizgowy.",
+               "isCorrect":false
+            },
+            {
+               "option":"aparat ortopedyczny.",
+               "isCorrect":false
+            },
+            {
+               "option":"obuwie ortopedyczne.",
+               "isCorrect":false
+            },
+            {
+               "option":"wózek inwalidzki.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W przypadku zgłoszenia przez podopieczną, zamieszkałą w domu pomocy społecznej, pobolewania oraz pieczenia w trakcie oddawania moczu, opiekun powinien",
+         "answers":[
+            {
+               "option":"zapisać ją na wizytę do lekarza pierwszego kontaktu.",
+               "isCorrect":true
+            },
+            {
+               "option":"zwiększyć objętość podawanych jej płynów i witamin.",
+               "isCorrect":false
+            },
+            {
+               "option":"skierować ją na bezpłatne badanie moczu.",
+               "isCorrect":false
+            },
+            {
+               "option":"zaproponować jej zimne okłady na okolicę krocza i pęcherza moczowego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Zgodnie z algorytmem, toaletę twarzy pacjentki unieruchomionej w łóżku należy rozpocząć od umycia",
+         "answers":[
+            {
+               "option":"oczu.",
+               "isCorrect":true
+            },
+            {
+               "option":"nosa.",
+               "isCorrect":false
+            },
+            {
+               "option":"policzków.",
+               "isCorrect":false
+            },
+            {
+               "option":"brody.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Najwięcej informacji o zdiagnozowanych schorzeniach pacjenta dostarcza",
+         "answers":[
+            {
+               "option":"historia choroby pacjenta.",
+               "isCorrect":true
+            },
+            {
+               "option":"historia pielęgnowania.",
+               "isCorrect":false
+            },
+            {
+               "option":"karta pielęgnacji pacjenta.",
+               "isCorrect":false
+            },
+            {
+               "option":"karta gorączkowa.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W opiece nad pacjentem, u którego podczas wstawania z łóżka występują nagłe spadki ciśnienia, należy zadbać, aby po przebudzeniu pacjent",
+         "answers":[
+            {
+               "option":"wstawał szybko z zachowaniem trzech etapów: wykonanie głębokich wdechów, siadanie ze spuszczonymi nogami, stanie przy łóżku.",
+               "isCorrect":false
+            },
+            {
+               "option":"wstawał szybko z zachowaniem trzech etapów: siadanie w łóżku, siadanie ze spuszczonymi nogami, stanie przy łóżku.",
+               "isCorrect":false
+            },
+            {
+               "option":"wstawał powoli z zachowaniem trzech etapów: wykonanie głębokich wdechów, siadanie ze spuszczonymi nogami, stanie przy łóżku.",
+               "isCorrect":false
+            },
+            {
+               "option":"wstawał powoli z zachowaniem trzech etapów: siadanie w łóżku, siadanie ze spuszczonymi nogami, stanie przy łóżku.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Zgodnie z algorytmem całkowitą zmianę bielizny pościelowej pacjentowi leżącemu w łóżku opiekun powinien zakończyć na wymianie",
+         "answers":[
+            {
+               "option":"prześcieradła.",
+               "isCorrect":false
+            },
+            {
+               "option":"poszwy.",
+               "isCorrect":true
+            },
+            {
+               "option":"poszewki na poduszkę.",
+               "isCorrect":false
+            },
+            {
+               "option":"podkładu nieprzemakalnego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Najbardziej odpowiednim sposobem aktywizacji ruchowej pacjenta w czwartej dobie po niepowikłanym zawale serca jest",
+         "answers":[
+            {
+               "option":"trening siłowy.",
+               "isCorrect":false
+            },
+            {
+               "option":"jazda na rowerze.",
+               "isCorrect":false
+            },
+            {
+               "option":"chodzenie po schodach.",
+               "isCorrect":false
+            },
+            {
+               "option":"krótki spacer po korytarzu.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W sytuacji, gdy pacjentka zakładu opiekuńczo-leczniczego po wizycie syna oznajmiła, że nie chce go już widzieć w czasie pobytu w zakładzie, opiekun powinien",
+         "answers":[
+            {
+               "option":"wytłumaczyć synowi, że matka chce wrócić do domu, dlatego się na niego obraziła.",
+               "isCorrect":false
+            },
+            {
+               "option":"zapewnić pacjentkę, że ma takie prawo, ale warto porozmawiać z synem o swoich oczekiwaniach.",
+               "isCorrect":true
+            },
+            {
+               "option":"poinformować pacjentkę, że rodzina musi odwiedzać pacjentów przebywających w zakładzie.",
+               "isCorrect":false
+            },
+            {
+               "option":"zgłosić lekarzowi prowadzącemu, że pacjentka powinna porozmawiać z psychiatrą.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podopieczna z nadciśnieniem tętniczym stara się bardzo dbać o swoje zdrowie. O braku wiedzy w zakresie prawidłowego żywienia świadczy u niej częste spożywanie",
+         "answers":[
+            {
+               "option":"serów topionych i ryb wędzonych.",
+               "isCorrect":true
+            },
+            {
+               "option":"cielęciny i kaszy gryczanej.",
+               "isCorrect":false
+            },
+            {
+               "option":"pieczywa pełnoziarnistego i miodu pszczelego.",
+               "isCorrect":false
+            },
+            {
+               "option":"płatków owsianych i pieczonych jabłek.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Kąpiel chodzącego pacjenta po operacji wszczepienia endoprotezy stawu biodrowego najlepiej jest wykonać",
+         "answers":[
+            {
+               "option":"na wózku leżącym.",
+               "isCorrect":false
+            },
+            {
+               "option":"w wannie.",
+               "isCorrect":false
+            },
+            {
+               "option":"w łóżku.",
+               "isCorrect":false
+            },
+            {
+               "option":"pod prysznicem.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Podczas wykonywania porannej toalety chorej leżącej w łóżku opiekun zauważył u niej brudne włosy, długie paznokcie u stóp, zaczerwienienie w okolicy kości ogonowej i suchość skóry. Powinien bezwzględnie poinformować pielęgniarkę",
+         "answers":[
+            {
+               "option":"o brudnych włosach.",
+               "isCorrect":false
+            },
+            {
+               "option":"o zaczerwienieniu w okolicy kości ogonowej.",
+               "isCorrect":true
+            },
+            {
+               "option":"o długich paznokciach u stóp.",
+               "isCorrect":false
+            },
+            {
+               "option":"o suchości skóry.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjent ma założony cewnik Foleya do pęcherza moczowego. W zestawie do wymiany worka na mocz, oprócz miski nerkowatej, podkładu higienicznego, jednorazowego fartucha, gazika i płynu antyseptycznego, na tacy opiekun powinien umieścić:",
+         "answers":[
+            {
+               "option":"rękawiczki jednorazowe, pean, jałowy worek na mocz.",
+               "isCorrect":true
+            },
+            {
+               "option":"miskę, basen, jałowy worek na mocz.",
+               "isCorrect":false
+            },
+            {
+               "option":"ligninę, wiadro, worek na mocz.",
+               "isCorrect":false
+            },
+            {
+               "option":"rękawiczki jednorazowe, miskę, worek na mocz.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun pomagając pacjentce sprawnej ruchowo, która ma założone opatrunki na oczy, w samodzielnym spożywaniu posiłku nie powinien",
+         "answers":[
+            {
+               "option":"podawać pacjentce pokarmu do ust.",
+               "isCorrect":true
+            },
+            {
+               "option":"pomagać pacjentce w zajęciu miejsca przy stole.",
+               "isCorrect":false
+            },
+            {
+               "option":"informować pacjentki, że posiłek i napój postawiono na stole.",
+               "isCorrect":false
+            },
+            {
+               "option":"sygnalizować pacjentce ustawienia talerza i sztućców.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Zabiegi przeciwzapalne z zastosowaniem ciepła suchego oraz wilgotnego wykonuje się w celu",
+         "answers":[
+            {
+               "option":"zwolnienia przemiany materii.",
+               "isCorrect":false
+            },
+            {
+               "option":"zwiększenia napięcia mięśni.",
+               "isCorrect":false
+            },
+            {
+               "option":"rozszerzenia naczyń krwionośnych.",
+               "isCorrect":true
+            },
+            {
+               "option":"zwężenia naczyń chłonnych.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Zgodnie z algorytmem, toaletę całego ciała niesamodzielnego pacjenta przebywającego w łóżku należy rozpocząć od mycia",
+         "answers":[
+            {
+               "option":"zębów.",
+               "isCorrect":true
+            },
+            {
+               "option":"uszu.",
+               "isCorrect":false
+            },
+            {
+               "option":"twarzy.",
+               "isCorrect":false
+            },
+            {
+               "option":"szyi.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W sytuacji, kiedy konieczne jest wykonanie mycia głowy pacjentce z tetraplegią, opiekun medyczny nie dysponując wanienką pneumatyczną powinien wykonać tę czynność",
+         "answers":[
+            {
+               "option":"nad umywalką.",
+               "isCorrect":false
+            },
+            {
+               "option":"w łóżku kąpielowym.",
+               "isCorrect":true
+            },
+            {
+               "option":"pod prysznicem.",
+               "isCorrect":false
+            },
+            {
+               "option":"w wannie.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu podtrzymywania sprawności w zakresie funkcjonowania pamięci u podopiecznego z demencją opiekun medyczny powinien zaproponować mu",
+         "answers":[
+            {
+               "option":"gry zręcznościowe.",
+               "isCorrect":false
+            },
+            {
+               "option":"słuchanie audiobooków.",
+               "isCorrect":false
+            },
+            {
+               "option":"rozwiązywanie krzyżówek.",
+               "isCorrect":true
+            },
+            {
+               "option":"słuchanie muzyki.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjentka chorująca na reumatoidalne zapalenie stawów z widocznymi zmianami w obrębie stawów rąk, ma największe problemy",
+         "answers":[
+            {
+               "option":"z organizowaniem czasu wolnego.",
+               "isCorrect":false
+            },
+            {
+               "option":"z wykonywaniem czynności samoobsługowych.",
+               "isCorrect":true
+            },
+            {
+               "option":"z nawiązywaniem kontaktów interpersonalnych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z poruszaniem się.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W sytuacji, gdy przebywający w środowisku domowym samotny podopieczny z wyłonioną przetoką jelita grubego izoluje się od znajomych, większość dnia spędza oglądając programy telewizyjne i uważa, że korzystanie z worka kolostomijnego wyłącza go z życia towarzyskiego, należy",
+         "answers":[
+            {
+               "option":"przemilczeć przekonania podopiecznego na temat jego sytuacji i zaprosić do jego domu znajomych.",
+               "isCorrect":false
+            },
+            {
+               "option":"zaprzeczyć przekonaniom podopiecznego na temat jego sytuacji i poinformować o jego problemie znajomych.",
+               "isCorrect":false
+            },
+            {
+               "option":"zmotywować podopiecznego do zmiany przekonań na temat jego sytuacji i zaproponować kontakt ze stowarzyszeniem osób z kolostomią.",
+               "isCorrect":true
+            },
+            {
+               "option":"podtrzymać przekonania podopiecznego na temat jego sytuacji i zaakceptować jego styl życia.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Wraz ze starzeniem się organizmu bardzo często następuje",
+         "answers":[
+            {
+               "option":"zmniejszenie ruchomości w stawach.",
+               "isCorrect":true
+            },
+            {
+               "option":"poprawa pamięci krótkotrwałej.",
+               "isCorrect":false
+            },
+            {
+               "option":"gorsze widzenie z oddali niż z bliska.",
+               "isCorrect":false
+            },
+            {
+               "option":"zwiększenie masy mięśni.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Dla pacjenta z nadciśnieniem tętniczym uciążliwym problemem może być",
+         "answers":[
+            {
+               "option":"zapach acetonu z ust i nadmierna potliwość.",
+               "isCorrect":false
+            },
+            {
+               "option":"nadmierna męczliwość i bóle głowy.",
+               "isCorrect":true
+            },
+            {
+               "option":"drętwienie lewej ręki i bradykardia.",
+               "isCorrect":false
+            },
+            {
+               "option":"podrażnienie warg i języka.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W przypadku pojawienia się na skórze pacjenta unieruchomionego w łóżku zaczerwienienia w okolicy krętarza większego, opiekun powinien zgodnie z procedurą wykonać zmianę pozycji pacjenta oraz",
+         "answers":[
+            {
+               "option":"założyć okład pod ceratką ze spirytusem.",
+               "isCorrect":false
+            },
+            {
+               "option":"założyć okład zimny z Altacetu.",
+               "isCorrect":false
+            },
+            {
+               "option":"zastosować materac przeciwodleżynowy.",
+               "isCorrect":true
+            },
+            {
+               "option":"przemyć zaczerwienioną skórę wodą utlenioną.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun medyczny edukując pacjenta w zakresie samodzielnej wymiany worka stomijnego jednoczęściowego powinien poinformować go, że po odklejeniu worka i usunięciu resztek kału, skórę wokół przetoki jelitowej powinien umyć",
+         "answers":[
+            {
+               "option":"naparem z rumianku.",
+               "isCorrect":false
+            },
+            {
+               "option":"ciepłą wodą z mydłem o pH 4,5.",
+               "isCorrect":false
+            },
+            {
+               "option":"ciepłą wodą z mydłem o pH 5,5.",
+               "isCorrect":true
+            },
+            {
+               "option":"roztworem nadmanganianu potasu.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"80-letniemu podopiecznemu z zaburzeniami równowagi, do przemieszczania się po mieszkaniu, opiekun powinien zaproponować",
+         "answers":[
+            {
+               "option":"laskę.",
+               "isCorrect":false
+            },
+            {
+               "option":"balkonik.",
+               "isCorrect":true
+            },
+            {
+               "option":"kule łokciowe.",
+               "isCorrect":false
+            },
+            {
+               "option":"kule pachowe.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Na oddziale wewnętrznym materiały jednorazowego użytku po wykonaniu pacjentowi toalety jamy ustnej należy włożyć do worka koloru",
+         "answers":[
+            {
+               "option":"czerwonego.",
+               "isCorrect":true
+            },
+            {
+               "option":"czarnego.",
+               "isCorrect":false
+            },
+            {
+               "option":"niebieskiego.",
+               "isCorrect":false
+            },
+            {
+               "option":"żółtego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu ułatwienia unieruchomionej w łóżku pacjentce rozpoczęcia mikcji i oddania moczu na basenie, należy osłonić łóżko parawanem, a następnie",
+         "answers":[
+            {
+               "option":"podać pacjentce napar z ziół o działaniu antyseptycznym.",
+               "isCorrect":false
+            },
+            {
+               "option":"polewać krocze pacjentki chłodną wodą.",
+               "isCorrect":false
+            },
+            {
+               "option":"podać pacjentce napar z ziół o działaniu moczopędnym.",
+               "isCorrect":false
+            },
+            {
+               "option":"polewać krocze pacjentki ciepłą wodą.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu zmniejszenia obrzęku po stłuczeniu stopy należy zastosować",
+         "answers":[
+            {
+               "option":"chłodzącą kąpiel całego ciała.",
+               "isCorrect":false
+            },
+            {
+               "option":"okład rozgrzewający.",
+               "isCorrect":false
+            },
+            {
+               "option":"ciepłą kąpiel całego ciała.",
+               "isCorrect":false
+            },
+            {
+               "option":"okład zimny.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Materac zmiennociśnieniowy opiekun powinien zastosować u pacjenta",
+         "answers":[
+            {
+               "option":"z trudnościami w zmianie pozycji w łóżku.",
+               "isCorrect":true
+            },
+            {
+               "option":"z trudnościami w wykonywaniu czynności higienicznych.",
+               "isCorrect":false
+            },
+            {
+               "option":"z oparzeniem pośladków.",
+               "isCorrect":false
+            },
+            {
+               "option":"z odparzeniami w fałdach brzusznych.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu umożliwienia spożycia posiłku pacjentowi, u którego występują nasilone zawroty głowy, osłabienie i nieznaczne drżenie rąk, należy na czas posiłku",
+         "answers":[
+            {
+               "option":"posadzić go na krześle przy stoliku w pokoju chorych i zachęcić do samodzielnej konsumpcji.",
+               "isCorrect":false
+            },
+            {
+               "option":"pozostawić go w łóżku w pozycji neutralnej, karmić podając małe porcje posiłku.",
+               "isCorrect":false
+            },
+            {
+               "option":"posadzić go na krześle przy stoliku w pokoju chorych, karmić podając małe porcje posiłku.",
+               "isCorrect":false
+            },
+            {
+               "option":"pozostawić go w łóżku w pozycji półsiedzącej i zachęcić do samodzielnej konsumpcji.",
+               "isCorrect":true
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu zmiany pacjentowi leżącemu w łóżku spodni od piżamy należy",
+         "answers":[
+            {
+               "option":"zsunąć przykrycie wierzchnie w nogi łóżka i przystąpić do zmiany spodni.",
+               "isCorrect":false
+            },
+            {
+               "option":"odłożyć na krzesło przykrycie wierzchnie, a następnie przystąpić do zmiany spodni.",
+               "isCorrect":false
+            },
+            {
+               "option":"obluźnić przykrycie wierzchnie i zmienić spodnie, nie odkrywając pacjenta.",
+               "isCorrect":true
+            },
+            {
+               "option":"przesunąć nogi pacjenta poza przykrycie wierzchnie i zdjąć mu spodnie.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Pacjenta, u którego wystąpiła duszność należy ułożyć w pozycji",
+         "answers":[
+            {
+               "option":"neutralnej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Fowlera.",
+               "isCorrect":true
+            },
+            {
+               "option":"bezpiecznej.",
+               "isCorrect":false
+            },
+            {
+               "option":"Trendelenburga.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Opiekun powinien rozpocząć zdejmowanie koszuli nocnej pacjentce z niedowładem połowiczym lewostronnym od",
+         "answers":[
+            {
+               "option":"głowy, a potem zdjąć z lewej kończyny górnej.",
+               "isCorrect":false
+            },
+            {
+               "option":"lewej kończyny górnej.",
+               "isCorrect":true
+            },
+            {
+               "option":"obu kończyn górnych równocześnie.",
+               "isCorrect":false
+            },
+            {
+               "option":"prawej kończyny górnej.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Ścieląc łóżko z leżącym w nim pacjentem z zaawansowanym otępieniem, który ma ograniczone możliwości poruszania się w obrębie łóżka opiekun powinien: ",
+         "answers":[
+            {
+               "option":"przed ścieleniem łóżka podnieść barierki po obu stronach łóżka.",
+               "isCorrect":false
+            },
+            {
+               "option":"przed przejściem na lewą stronę łóżka podnieść barierkę po prawej.",
+               "isCorrect":true
+            },
+            {
+               "option":"pozostawić poduszki pod głową chorego przez cały zabieg.",
+               "isCorrect":false
+            },
+            {
+               "option":"przy podkładaniu prześcieradła pod materac przytrzymywać chorego.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"Do wykonania czepca przeciwwszawiczego u przytomnego pacjenta niezbędne jest: ",
+         "answers":[
+            {
+               "option":"uzyskanie zgody pacjenta.",
+               "isCorrect":true
+            },
+            {
+               "option":"zlecenie pisemne lekarza.",
+               "isCorrect":false
+            },
+            {
+               "option":"uzyskanie zgody rodziny pacjenta.",
+               "isCorrect":false
+            },
+            {
+               "option":"zlecenie pisemne pielęgniarki.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
+   {
+      "data":{
+         "question":"W celu ułatwienia adaptacji do oddziału szpitalnego nowoprzyjętemu pacjentowi opiekun powinien: ",
+         "answers":[
+            {
+               "option":"zapoznać pacjenta z topografią oddziału.",
+               "isCorrect":true
+            },
+            {
+               "option":"przedstawić pacjentowi plan leczenia.",
+               "isCorrect":false
+            },
+            {
+               "option":"zaproponować pacjentowi stosowanie diety leczniczej.",
+               "isCorrect":false
+            },
+            {
+               "option":"omówić z pacjentem zakres badań diagnostycznych.",
+               "isCorrect":false
+            }
+         ]
+      },
+      "category":"medical"
+   },
   {
      "data":{
         "question":"Transport pobranej pełnej krwi żylnej (nieodwirowanej) powinien odbywać się w temperaturze: ",
