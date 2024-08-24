@@ -4,6 +4,7 @@ import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useQuery } from '@tanstack/react-query'
 import { Test } from '@/server/getData'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
+import SearchTerm from './SearchTerm'
 
 export default function AllTests(props: { tests: Test[] }) {
   const { searchTerm } = useSearchTermStore()
@@ -33,10 +34,10 @@ export default function AllTests(props: { tests: Test[] }) {
   })
 
   return (
-    <div className="w-full h-full overflow-y-auto scrollbar-webkit">
-      {/* {props.tests.map((test) => (
-        <p key={test.data.question}>{test.category}</p>
-      ))} */}
-    </div>
+    <section className="flex flex-col items-center gap-8 p-2 md:p-8 w-full h-full overflow-y-auto scrollbar-webkit">
+      <div className="place-self-center xl:place-self-end w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+        <SearchTerm />
+      </div>
+    </section>
   )
 }
