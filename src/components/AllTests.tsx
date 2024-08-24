@@ -11,8 +11,11 @@ export default function AllTests(props: { tests: Test[] }) {
   const { searchTerm } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
 
+  // creates an array directly from object's values
+  const testsArr = Object.values(props.tests)
+
   const filteredTestsQueryFn = async () => {
-    if (!debouncedSearchTerm) return props.tests // Return all tests if no search term or category selected
+    if (!debouncedSearchTerm) return testsArr
 
     return props.tests.filter((test) => {
       const matchQuestion = test.data.question.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
@@ -30,7 +33,7 @@ export default function AllTests(props: { tests: Test[] }) {
   } = useQuery({
     queryKey: ['filteredTests', debouncedSearchTerm],
     queryFn: filteredTestsQueryFn,
-    enabled: !!searchTerm,
+    enabled: !!searchTerm || true,
     staleTime: 10 * 60 * 1000, // Cache results for 10 minutes
   })
 
@@ -39,7 +42,7 @@ export default function AllTests(props: { tests: Test[] }) {
       <div className="place-self-center xl:place-self-end w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
         <SearchTerm />
       </div>
-      <FilteredTestsList tests={filteredTests} isLoading={searchLoading} error={error} />
+      <FilteredTestsList tests={filteredTests ?? testsArr} isLoading={searchLoading} error={error} />
     </section>
   )
 }

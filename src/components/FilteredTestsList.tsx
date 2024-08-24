@@ -1,13 +1,30 @@
 import { Test } from '@/server/getData'
-import Link from 'next/link'
+import LearningCard from './LearningCard'
+import { useSearchTermStore } from '@/store/useSearchTermStore'
 
 interface FilteredTestsListProps {
-  tests: Test[] | undefined
+  tests: Test[]
   isLoading: boolean
   error?: Error | null
 }
 
 export default function FilteredTestsList({ tests, isLoading, error }: FilteredTestsListProps) {
+  const { currentPage, perPage, setCurrentPage } = useSearchTermStore()
+
+  console.log(tests)
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(tests?.length / perPage)
+
+  // Adjust currentPage if it exceeds totalPages after filtering
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(totalPages)
+  }
+
+  // Calculate the start and end indices for the current page
+  const startIndex = (currentPage - 1) * perPage
+  const paginatedTests = tests.slice(startIndex, startIndex + perPage)
+
   if (isLoading) {
     return <p className="text-center">Loading tests...</p>
   }
@@ -25,15 +42,34 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
   }
 
   return (
-    <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2 xl:w-5/6">
-      {tests.map((item, index) => (
-        <p key={item.data.question}>{item.category}</p>
-        // <QuestionCard
-        //   key={item.data.question}
-        //   test={item}
-        //   questionNumber={`${index + 1}/${tests.length}`}
-        // />
+    <div className="grid w-full grid-cols-1 gap-8 xl:w-3/4">
+      {paginatedTests.map((item, index) => (
+        <LearningCard
+          key={item.data.question}
+          test={item}
+          questionNumber={`${index + 1 + (currentPage - 1) * perPage}/${tests.length}`}
+        />
       ))}
+      {/* Pagination Controls */}
+      <div className="flex gap-2 mt-4">
+        <button
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 bg-gray-300 text-black rounded disabled:bg-gray-200"
+        >
+          Previous
+        </button>
+        <span className="px-3 py-1 bg-gray-200 text-black rounded">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage >= totalPages}
+          className="px-3 py-1 bg-gray-300 text-black rounded disabled:bg-gray-200"
+        >
+          Next
+        </button>
+      </div>
     </div>
   )
 }
