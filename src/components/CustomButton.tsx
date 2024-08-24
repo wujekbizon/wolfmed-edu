@@ -10,8 +10,8 @@ export default function CustomButton(props: {
     <Link
       href={props.href}
       className={`${
-        props.active ? 'bg-white' : 'bg-transparent'
-      } flex w-full cursor-pointer place-items-center gap-5 stroke-neutral-400 stroke-[0.75] px-0.5 py-1 text-zinc-900 transition-all hover:scale-95 rounded-md border border-red-200/60 hover:shadow-sm hover:bg-[#ffa5a5] shadow-md shadow-zinc-500 hover:border-amber-400/10 hover:stroke-neutral-100 hover:text-white`}
+        props.active ? 'bg-white' : 'bg-[#ffc5c5]'
+      } flex w-full cursor-pointer place-items-center gap-5 stroke-neutral-400 stroke-[0.75] px-0.5 py-1 text-zinc-900 transition-all hover:scale-95 rounded-md border border-red-200/60 hover:shadow-sm hover:bg-[#f58a8a] shadow-md shadow-zinc-500 hover:border-zinc-900 hover:stroke-neutral-100 hover:text-white`}
     >
       {props.children}
       <p className="font-poppins overflow-x-hidden whitespace-nowrap text-lg tracking-wide text-inherit">
