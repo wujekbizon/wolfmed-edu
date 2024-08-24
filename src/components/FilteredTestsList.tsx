@@ -1,6 +1,7 @@
 import { Test } from '@/server/getData'
 import LearningCard from './LearningCard'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
+import PaginationControls from './PaginationControls'
 
 interface FilteredTestsListProps {
   tests: Test[]
@@ -50,26 +51,7 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
           questionNumber={`${index + 1 + (currentPage - 1) * perPage}/${tests.length}`}
         />
       ))}
-      {/* Pagination Controls */}
-      <div className="flex gap-2 mt-4">
-        <button
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-3 py-1 bg-gray-300 text-black rounded disabled:bg-gray-200"
-        >
-          Previous
-        </button>
-        <span className="px-3 py-1 bg-gray-200 text-black rounded">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage >= totalPages}
-          className="px-3 py-1 bg-gray-300 text-black rounded disabled:bg-gray-200"
-        >
-          Next
-        </button>
-      </div>
+      <PaginationControls totalPages={totalPages} />
     </div>
   )
 }
