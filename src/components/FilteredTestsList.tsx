@@ -2,6 +2,7 @@ import { Test } from '@/server/getData'
 import LearningCard from './LearningCard'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import PaginationControls from './PaginationControls'
+import useStore from '@/hooks/useStore'
 
 interface FilteredTestsListProps {
   tests: Test[]
