@@ -15,10 +15,18 @@ export default function AllTests(props: { tests: Test[] }) {
   // creates an array directly from object's values
   const testsArr = Object.values(props.tests)
 
-  const filteredTestsQueryFn = async () => {
-    if (!debouncedSearchTerm) return testsArr
+  // Query to cache the unfiltered tests
+  const { data: cachedTestsArr } = useQuery({
+    queryKey: ['allTests'],
+    queryFn: async () => testsArr,
+    initialData: testsArr, // Initial data as testsArr
+    staleTime: 10 * 60 * 1000, // Cache for 10 minutes
+  })
 
-    return props.tests.filter((test) => {
+  const filteredTestsQueryFn = async () => {
+    if (!debouncedSearchTerm) return cachedTestsArr
+
+    return cachedTestsArr.filter((test) => {
       const matchQuestion = test.data.question.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
       const matchAnswers = test.data.answers.some((answer) =>
         answer.option.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
@@ -41,10 +49,10 @@ export default function AllTests(props: { tests: Test[] }) {
   return (
     <section className="flex flex-col items-center gap-4 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit">
       <LearningAssistant />
-      <div className="place-self-center w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+      <div className="animate-slideInDown opacity-0 [--slidein-delay:500ms] place-self-center w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
         <SearchTerm />
       </div>
-      <FilteredTestsList tests={filteredTests ?? testsArr} isLoading={searchLoading} error={error} />
+      <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
     </section>
   )
 }
