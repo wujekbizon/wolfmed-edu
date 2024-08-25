@@ -9,7 +9,7 @@ export default function TestsDashboard() {
       <div className="lg:w-[80%] h-full w-full flex flex-col items-center justify-center">
         <div className="border-red-200/60 shadow-md shadow-zinc-500 animate-slideInDown opacity-0 [--slidein-delay:300ms] bg-white w-full xl:w-3/4 gap-2 flex flex-col justify-between p-8 pr-8 lg:pr-14 rounded-xl relative">
           <p className="text-sm xs:text-base text-zinc-900">
-            Witaj przysły <span className="font-bold text-[#f58a8a] text-base xs:text-lg">opiekunie medyczny</span>,{' '}
+            Witaj przyszły <span className="font-bold text-[#f58a8a] text-base xs:text-lg">opiekunie medyczny</span>,{' '}
             <br /> w tym dziale przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do
             egzaminu zawodowego. Nasza baza danych zawiera większość testów z ostatnich 2-3 lat z egzaminów państwowych
             i jest aktualizowana na bierząco.

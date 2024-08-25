@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useQuery } from '@tanstack/react-query'
 import { Test } from '@/server/getData'
@@ -9,9 +10,16 @@ import FilteredTestsList from './FilteredTestsList'
 import LearningAssistant from './LearningAssistant'
 
 export default function AllTests(props: { tests: Test[] }) {
-  const { searchTerm } = useSearchTermStore()
+  const { searchTerm, currentPage } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
+  const listRef = useRef<HTMLDivElement>(null)
 
+  // Scroll to top when the current page changes
+  useEffect(() => {
+    if (listRef.current) {
+      listRef.current.scrollTo({ top: 0, behavior: 'instant' })
+    }
+  }, [currentPage])
   // creates an array directly from object's values
   const testsArr = Object.values(props.tests)
 
@@ -47,9 +55,12 @@ export default function AllTests(props: { tests: Test[] }) {
   })
 
   return (
-    <section className="flex flex-col items-center gap-4 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit">
+    <section
+      className="flex flex-col items-center gap-4 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit"
+      ref={listRef}
+    >
       <LearningAssistant />
-      <div className="animate-slideInDown opacity-0 [--slidein-delay:500ms] place-self-center w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+      <div className="place-self-center w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
         <SearchTerm />
       </div>
       <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />

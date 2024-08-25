@@ -3,14 +3,14 @@ import Image from 'next/image'
 
 export default function LearningAssistant() {
   return (
-    <div className="border-red-200/60 my-10 shadow-md shadow-zinc-500 animate-slideInDown opacity-0 [--slidein-delay:300ms] w-full lg:w-3/4 xl:w-2/3 bg-white gap-4 flex flex-row p-4 rounded-xl relative">
-      <div className="h-20 min-w-20">
+    <div className="border-red-200/60 my-10 shadow-md shadow-zinc-500  w-full lg:w-3/4 xl:w-2/3 bg-white gap-4 flex flex-row p-4 rounded-xl relative">
+      <div className="h-24 min-w-24">
         <Image
           src="/guide2.png"
           width={150}
           height={150}
           alt="Asystent"
-          className="w-full h-full object-cover rounded-full"
+          className="w-full h-full object-cover rounded-xl"
         />
       </div>
       <p className="text-sm xs:text-base text-zinc-900">
