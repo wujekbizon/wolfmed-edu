@@ -23,7 +23,7 @@ export default function Navbar() {
 
       {isMenuOpen && <SideMenu />}
 
-      <nav className="bg-white py-[13px] px-4 hidden lg:flex gap-5 items-center rounded-full border-red-300/50 shadow-sm shadow-zinc-400">
+      <nav className="bg-white py-[10px] px-4 hidden lg:flex gap-5 items-center rounded-full border-red-300/50 shadow-sm shadow-zinc-400">
         {navLinks.map((link) => (
           <Link href={link.linkUrl} key={link.id}>
             <p className="text-sm font-semibold text-zinc-900 hover:text-[#ffa5a5] transition-colors">{link.label}</p>
@@ -31,10 +31,10 @@ export default function Navbar() {
         ))}
       </nav>
       <div className="hidden lg:flex items-center gap-3">
-        <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-3 px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
+        <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
           Zaloguj się
         </button>
-        <button className="bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 shadow-sm shadow-zinc-400 text-sm font-semibold py-3 px-4 rounded-full hover:bg-[#ffa5a5] transition-colors text-zinc-900">
+        <button className="bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 shadow-sm shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full hover:bg-[#ffa5a5] transition-colors text-zinc-900">
           Wypróbuj za darmo
         </button>
       </div>

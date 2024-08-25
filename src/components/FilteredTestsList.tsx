@@ -41,7 +41,7 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
   }
 
   return (
-    <div className="grid w-full grid-cols-1 gap-8 xl:w-3/4">
+    <div className="grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3">
       {paginatedTests.map((item, index) => (
         <LearningCard
           key={item.data.question}
