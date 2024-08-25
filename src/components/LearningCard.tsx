@@ -27,7 +27,7 @@ export default function LearningCard(props: { test: Test; questionNumber: string
             </span>{' '}
             <span
               className={`${
-                showCorrectAnswer && (isCorrect ? 'rounded-xl bg-[#ffb1b1] ' : 'opacity-25')
+                showCorrectAnswer && (isCorrect ? 'rounded-xl bg-[#ffdcdc] ' : 'opacity-25')
               } text-sm px-2 py-0.5 text-zinc-800  transition-opacity`}
             >
               {' '}
@@ -36,12 +36,12 @@ export default function LearningCard(props: { test: Test; questionNumber: string
           </li>
         ))}
       </ul>
-      <div className="flex w-full self-center pt-4 md:w-1/2">
+      <div className="flex w-full self-center md:w-1/2">
         <button
           onClick={handleCorrectAnswer}
-          className="flex h-9 w-full items-center justify-center rounded-lg  px-4 py-2 text-base font-medium bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 text-black transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+          className="flex h-9 w-full mt-2 items-center justify-center rounded-lg  px-4 py-2 text-base font-medium bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 hover:border-zinc-900 hover:shadow-sm hover:bg-[#f58a8a] text-black transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
         >
-          {showCorrectAnswer ? 'Hide Answer' : 'Reveal Answer'}
+          {showCorrectAnswer ? 'Ukryj Odpowiedź' : 'Pokaż Odpowiedź'}
         </button>
       </div>
     </div>
