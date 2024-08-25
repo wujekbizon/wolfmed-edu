@@ -28,7 +28,7 @@ export default function LearningCard(props: { test: Test; questionNumber: string
             <span
               className={`${
                 showCorrectAnswer && (isCorrect ? 'rounded-xl bg-[#ffb1b1] ' : 'opacity-25')
-              } text-md px-2 py-0.5 text-zinc-800  transition-opacity`}
+              } text-sm px-2 py-0.5 text-zinc-800  transition-opacity`}
             >
               {' '}
               {option}

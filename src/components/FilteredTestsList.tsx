@@ -12,8 +12,6 @@ interface FilteredTestsListProps {
 export default function FilteredTestsList({ tests, isLoading, error }: FilteredTestsListProps) {
   const { currentPage, perPage, setCurrentPage } = useSearchTermStore()
 
-  console.log(tests)
-
   // Calculate the total number of pages
   const totalPages = Math.ceil(tests?.length / perPage)
 
