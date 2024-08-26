@@ -10,7 +10,7 @@ export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
 
   return (
-    <header className="h-16 w-full z-10 flex items-center justify-between relative animate-slideInDown opacity-0 [--slidein-delay:100ms]">
+    <header className="h-16 w-full z-10 flex items-center justify-between relative animate-slideInDown opacity-0 [--slidein-delay:100ms] px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4">
       <Logo />
       <Image
         src="/hamburger.png"
