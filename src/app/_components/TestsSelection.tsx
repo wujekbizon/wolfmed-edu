@@ -5,7 +5,7 @@ import Link from 'next/link'
 export default function TestsSelection() {
   return (
     <section
-      className="flex h-full w-full  p-0 sm:p-5 py-8 sm:py-16 flex-col justify-center lg:flex-row items-center lg:items-start gap-14 lg:gap-4"
+      className="flex h-full w-full  p-0 sm:p-8 py-8 sm:py-16 flex-col justify-center bg-[#e1b4b4] lg:flex-row items-center lg:items-start gap-14 lg:gap-4"
       id="testy"
     >
       <div className="w-full lg:w-[40%] flex flex-col gap-2 md:gap-5">
