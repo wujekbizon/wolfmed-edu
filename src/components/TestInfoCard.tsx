@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 export default function TestInfoCard() {
   return (
-    <div className="h-[470px] w-[350px] bg-white flex flex-col justify-between px-8 pt-8 rounded-[30px] border-red-300/50 shadow-md shadow-zinc-400">
+    <div className="h-[470px] w-full md:w-[350px] bg-white flex flex-col justify-between px-8 pt-8 rounded-[30px] border-red-300/50 shadow-md shadow-zinc-400">
       <div className="flex h-full w-full flex-col gap-2">
         <p className="text-xs text-zinc-400">Kardiologia</p>
         <h3 className="text-2xl text-zinc-900 font-semibold">Interpretacja arytmii przedsionkowych</h3>

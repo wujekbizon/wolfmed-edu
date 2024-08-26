@@ -5,10 +5,10 @@ import Link from 'next/link'
 export default function TestsSelection() {
   return (
     <section
-      className="flex h-full w-full p-0 sm:p-5 flex-col lg:flex-row items-center lg:items-start gap-14 lg:gap-4"
+      className="flex h-full w-full  p-0 sm:p-5 py-8 sm:py-16 flex-col justify-center lg:flex-row items-center lg:items-start gap-14 lg:gap-4"
       id="testy"
     >
-      <div className="w-full lg:w-1/3 flex flex-col gap-2 md:gap-5">
+      <div className="w-full lg:w-[40%] flex flex-col gap-2 md:gap-5">
         <h1 className="py-2 font-medium w-full lg:w-[80%] text-center lg:text-left text-[35px] sm:text-[40px] leading-[35px] md:text-[48px] sm:leading-[55px] text-zinc-950">
           Szeroki wybór testów
         </h1>
@@ -31,7 +31,7 @@ export default function TestsSelection() {
           </Link>
         </div>
       </div>
-      <div className="w-full lg:w-2/3 flex h-full gap-6 flex-wrap justify-center xl:justify-start">
+      <div className="w-full lg:w-[60%] flex h-full gap-6 flex-wrap justify-center xl:justify-start">
         <TestInfoCard />
         <TestInfoCard />
       </div>
