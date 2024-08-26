@@ -15,7 +15,7 @@ const SubmitButton = ({ label, loading, disabled }: SubmitButtonProps) => {
     <button
       type="submit"
       disabled={pending || disabled}
-      className="inline-flex h-9 w-full items-center justify-center whitespace-nowrap rounded-md bg-white px-4 py-2 text-base font-medium text-black shadow transition-colors hover:bg-[#ffb5b5] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+      className="inline-flex h-10 w-full items-center justify-center whitespace-nowrap rounded-md bg-white px-4 py-2 text-lg font-medium text-black shadow transition-colors hover:bg-[#ffb5b5] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
     >
       {pending ? loading : label}
     </button>

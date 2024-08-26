@@ -6,7 +6,6 @@ export default function SearchTerm() {
   return (
     <div className="flex w-full flex-col">
       <Label className="pb-1 text-sm text-muted-foreground" label="Szukaj terminu" htmlFor="input" />
-
       <input
         id="input"
         type="text"
