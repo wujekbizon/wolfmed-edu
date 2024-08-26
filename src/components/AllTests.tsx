@@ -56,7 +56,7 @@ export default function AllTests(props: { tests: Test[] }) {
 
   return (
     <section
-      className="flex flex-col items-center gap-4 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit"
+      className="flex flex-col items-center gap-8 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit"
       ref={listRef}
     >
       <LearningAssistant />

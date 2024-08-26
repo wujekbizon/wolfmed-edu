@@ -55,6 +55,7 @@ const config: Config = {
             }
             '&::-webkit-scrollbar-track': {
               background: string
+              borderRadius: string
             }
             '&::-webkit-scrollbar-thumb': {
               backgroundColor: string
@@ -73,11 +74,12 @@ const config: Config = {
         },
         '.scrollbar-webkit': {
           '&::-webkit-scrollbar': {
-            width: '10px',
+            width: '8px',
             height: '10px',
           },
           '&::-webkit-scrollbar-track': {
-            background: '#fcf2f1',
+            background: '#ffc5c5',
+            borderRadius: '10px',
           },
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: '#ffa5a5',

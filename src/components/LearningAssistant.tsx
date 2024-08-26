@@ -3,14 +3,14 @@ import Image from 'next/image'
 
 export default function LearningAssistant() {
   return (
-    <div className="border-red-200/60 my-10 shadow-md shadow-zinc-500  w-full lg:w-3/4 xl:w-2/3 bg-white gap-4 flex flex-row p-4 rounded-xl relative">
+    <div className="border-red-200/60 my-14 shadow-md shadow-zinc-500 w-full lg:w-3/4 xl:w-1/2 items-center bg-white gap-4 flex-col flex sm:flex-row p-4 rounded-xl relative">
       <div className="h-24 min-w-24">
         <Image
           src="/guide2.png"
           width={150}
           height={150}
           alt="Asystent"
-          className="w-full h-full object-cover rounded-xl"
+          className="w-24 sm:w-full h-full object-cover rounded-full sm:rounded-xl"
         />
       </div>
       <p className="text-sm xs:text-base text-zinc-900">
@@ -20,9 +20,9 @@ export default function LearningAssistant() {
         <span className="font-bold">{NUMBER_OF_TESTS}</span>.<br />
         Możesz przeglądać je po kolei badż skorzystać z prostej wyszukiwarki terminowej.
         <br />
-        <span className="text-xs text-zinc-600">
+        {/* <span className="text-xs text-zinc-600">
           Na obecną chwilę pytania nie są skateryzowane , ale pracujemy nad tym!
-        </span>
+        </span> */}
       </p>
     </div>
   )

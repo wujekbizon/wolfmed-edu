@@ -16,7 +16,7 @@ export const useSearchTermStore = create<SearchTermState>()(
     (set) => ({
       searchTerm: '',
       currentPage: 1,
-      perPage: 20,
+      perPage: 10,
       setSearchTerm: (term: string) => set({ searchTerm: term, currentPage: 1 }),
       clearSearchTerm: () => set({ searchTerm: '', currentPage: 1 }),
       setCurrentPage: (page: number) => set({ currentPage: page }),
