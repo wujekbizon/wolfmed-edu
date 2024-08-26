@@ -30,7 +30,7 @@ export default function SidePanel() {
       variants={containerVariants}
       animate={containerControls}
       initial="close"
-      className="z-10 absolute top-1 left-[-17px] hidden h-full min-w-20 flex-col gap-20 border rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500"
+      className="z-10 absolute top-1 left-[5px] hidden h-[99%] min-w-20 flex-col gap-20 border rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500"
     >
       <div className="flex w-full flex-row place-items-center justify-between gap-0.5">
         <div className="h-10 w-10 bg-white rounded-full flex justify-center items-center border-red-300/50 shadow-sm shadow-zinc-400">
