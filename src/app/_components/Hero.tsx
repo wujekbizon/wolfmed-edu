@@ -8,7 +8,7 @@ export default function Hero() {
         {' '}
         Edukacja <span className="font-bold text-[#ff5b5b]">medyczna</span> może być jeszcze łatwiejsza.
       </h1>
-      <div className="relative w-full h-full md:h-[490px] xl:w-3/4 border rounded-3xl animate-slideInDown opacity-0 [--slidein-delay:500ms] border-red-300/50 shadow-lg shadow-zinc-400 ">
+      <div className="relative w-full h-full md:h-[490px] xl:w-3/4 border rounded-3xl animate-slideInDown opacity-0 [--slidein-delay:500ms] border-red-200/40 shadow-lg shadow-zinc-400">
         <Image
           src="/hero.jpg"
           alt="person"
