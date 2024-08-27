@@ -1,4 +1,5 @@
 import TestInfoCard from '@/components/TestInfoCard'
+import { testCardContent } from '@/constants/testsCardContent'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -32,8 +33,9 @@ export default function TestsSelection() {
         </div>
       </div>
       <div className="w-full lg:w-[60%] flex h-full gap-6 flex-wrap justify-center xl:justify-start">
-        <TestInfoCard />
-        <TestInfoCard />
+        {testCardContent.map((card) => (
+          <TestInfoCard card={card} key={card.title} />
+        ))}
       </div>
     </section>
   )
