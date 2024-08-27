@@ -13,7 +13,7 @@ export interface TestCardContent {
 
 export const testCardContent: TestCardContent[] = [
   {
-    category: 'Opiekun Medyczny',
+    category: 'Testy',
     title: 'Testy Opiekuna Medycznego.',
     content: 'Darmowa baza testów, oparata na 2 ostatnich latach z egzaminów i kursu na Opiekuna Medycznego.',
     date: '27 Sie 2024',

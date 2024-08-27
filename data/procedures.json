@@ -1,0 +1,408 @@
+[
+  {
+     "data":{
+        "name":"Dobowa zbiórka moczu",
+        "procedure":"Zasady dobowej zbiórki moczu: Dobową zbiórkę moczu należy rozpocząć w godzinach porannych i prowadzić przez 24 godziny, czyli np. zbiórka rozpoczęta w poniedziałek o godzinie 8:00 powinna zakończyć się we wtorek o godzinie 8:00. (Ostatnią porcją moczu, która zostanie oddana do pojemnika jest poranna próbka moczu oddana w drugim dniu prowadzenia zbiórki.) Przy pomiarze trwającym od 7:00 rano (zazwyczaj) pierwszą porcję moczu oddaną ok. 7:00 wylewa się do toalety, pomiar rozpoczyna się od kolejnej mikcji, doba zbiórki kończy się ok. 7:00 dnia następnego. Należy pouczyć pacjenta o konieczności zbierania do pojemnika każdej wydalonej w ciągu doby porcji moczu. W przypadku pominięcia którejś z porcji moczu, zbiórkę należy przerwać i rozpocząć od nowa, następnego dnia, a zebrany już mocz wylać. Niektóre parametry oznaczane w dobowej zbiórce moczu wymagają zastosowania środka konserwującego. Przed przystąpieniem do zbiórki moczu należy uzyskać informację od personelu punktu pobrań, czy środek taki jest konieczny i czy można go otrzymać w punkcie pobrań. W przypadku konieczności zastosowania środka konserwującego należy go dodać do pojemnika, gdzie znajduje się już porcja moczu rozpoczynająca zbiórkę. W czasie trwania dobowej zbiórki moczu pojemnik należy przechowywać w lodówce lub w miejscu, gdzie temperatura wynosi ok. 40 C. Jeśli pacjent jest za cewnikowany, to przed pomiarem wymienia się worek na mocz. Wymianę worka na mocz wykonuje się w zależności od zaleceń producenta. Najczęściej jest to 3 dni. Worek należy opróżniać raz dziennie lub w zależności od potrzeby.",
+        "algorithm":[
+           {
+              "step":"Przygotowanie zestawu oraz podpisanie pojemnika datą i godziną rozpoczęcia i zakończenia dobowej zbiórki moczu. Jeśli DZM wykonujemy w podmiocie leczniczym oznaczenie pojemnika dodatkowo imieniem i nazwiskiem oraz datą urodzenia pacjenta."
+           },
+           {
+              "step":"Sprawdzenie tożsamości pacjenta."
+           },
+           {
+              "step":"W przypadku chorych samodzielnych i niezacewnikowanych poinformowanie pacjenta o konieczności oddawania każdej porcji moczu w czasie zbierania zbiórki do pojemnika do DZM, warunkach przechowywania moczu oraz oddaniu pierwszej porcji moczu do toalety; -udostępnienie kaczki/basenu do której chory będzie oddawał mocz i następnie przelewał go do pojemnika do DZM. W przypadku chorych niesamodzielnych i za cewnikowanych: -zlanie pierwszej porcji moczu z worka do toalety; -wymiana worka na mocz na nowy; -zlewanie moczu o określonej porze do pojemnika do DZM (w przypadku konieczności zastosowania środka konserwującego należy go dodać do pojemnika, gdzie znajduje się już porcja moczu rozpoczynająca zbiórkę) aż do czasu zakończenia DZM."
+           },
+           {
+              "step":"Dokładne wymieszanie moczu w pojemniku zbiorczym do DZM i odlanie do jednorazowego pojemnika 50-100 ml moczu."
+           },
+           {
+              "step":"Oznaczenie jednorazowego pojemnika imieniem i nazwiskiem pacjenta oraz informacją o objętości zebranego moczu (odczytaj pojemność z podziałki na ściankach naczynia) oraz o godzinie rozpoczęcia i zakończenia zbiórki."
+           },
+           {
+              "step":"Próbkę moczu w jednorazowym pojemniku dostarcz jak najszybciej do punktu pobrań (jeśli DZM jest wykonywana w domu) lub do laboratorium (jeśli zakładzie opieki stacjonarnej)."
+           },
+           {
+              "step":"Zgłoszenie uwag w zakresie wydalania moczu pielęgniarce lub lekarzowi."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Pomiar ciśnienia",
+        "procedure":"Trzeba pamiętać, że przez co najmniej 30 minut przed pomiarem pacjent nie powinien palić tytoniu, pić kawy ani wykonywać intensywnych ćwiczeń fizycznych. Pomiar powinien też być dokonany nie wcześniej niż około 60 minut po zjedzeniu obfitego posiłku. Przez 3-5 minut przed samym pomiarem pacjent powinien pozostawać w pozycji siedzącej, w spokojnym otoczeniu. Stopy pacjenta powinny się znajdować na ziemi, a plecy powinien mieć podparte, podobnie jak kończynę górną, na której mierzy się ciśnienie. Podczas pomiaru powinna być ona rozluźniona, a dłoń skierowana wewnętrzną stroną ku górze. Istotne jest prawidłowe założenie mankietu, który powinien się znajdować na wysokości serca co odpowiada wysokości 1 ,5-2,5 cm powyżej stawu łokciowego. Po odpowiednim przygotowaniu pacjenta i wyjaśnieniu mu całej procedury przystępuje się do pomiarów ciśnienia tętniczego, przy czym podczas samego pomiaru pacjent nie powinien mówić ani się poruszać. Bardzo istotne jest dobranie odpowiedniego rozmiaru mankietu ciśnieniomierza. W tym celu należy zmierzyć obwód ramienia pacjenta. Większość obecnie stosowanych mankietów jest opatrzona oznaczeniami wskazującymi, dla pacjentów o jakim obwodzenie ramienia są przeznaczone. Stosowanie zbyt małych lub zbyt dużych mankietów powoduje zafałszowanie mierzonych wartości. Badania wskazują, że wraz ze zwiększeniem obwodu ramienia o każde 5 cm powyżej górnej granicy wartości, przy których powinien być stosowany dany rozmiar mankietu, wartości ciśnienia tętniczego mierzone z jego użyciem wzrastają o ok. od 2 do 5 mm Hg dla skurczowego ciśnienia tętniczego oraz o ok. od 1 do 3 mm Hg dla ciśnienia rozkurczowego. W tym samym opracowaniu oceniono, że u ponad 40% pacjentów stosuje się mankiety o nieodpowiednim rozmiarze. Podczas pierwszej wizyty należy zmierzyć ciśnienie tętnicze na obu ramionach pacjenta. Najkorzystniejsze jest wykonywanie równoczesnego pomiaru po obu stronach. Różnice w pomiarach dokonywanych po sobie mogą wynikać ze zmienności wartości ciśnienia tętniczego. Jeśli wykryje się istotną różnicę wartości ciśnienia tętniczego między obiema stronami, to przy kolejnych pomiarach należy je mierzyć po tej stronie, po której wartości były wyższe. Za każdym razem należy dokonać przynajmniej 2 pomiarów w 1 minutowych odstępach. Ciśnienie tętnicze skurczowe/Ciśnienie tętnicze rozkurczowe:",
+        "algorithm":[
+           {
+              "step":"Prawidłowe ciśnienie\\ 120-129/80-84"
+           },
+           {
+              "step":"Wysokie ciśnienie prawidłowe\\ 130-139/85-89"
+           },
+           {
+              "step":"Nadciśnienie I stopnia.\\ 140-159 /90-99"
+           },
+           {
+              "step":"Nadciśnienie Il stopnia\\ 160-169 /100-109"
+           },
+           {
+              "step":"Nadciśnienie III stopnia. >= 180 >=110"
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Pomiar oddechu",
+        "procedure":"Przygotowanie zestawu: zegarek z sekundnikiem lub stoper. Poinformowanie pacjenta o badaniu tętna (badanie oddechu wykonujemy bez wiedzy pacjenta) Uzyskanie zgody pacjenta. Poinformowanie pacjenta o zachowaniu spokoju podczas badania. Przyjęcie przez pacjenta pozycji siedzącej lub leżącej (wskazane jest aby klatka piersiowa był odsłonięta).Ułożenie ręki na nadgarstku chorego jak do badania tętna. Dyskretne obserwowanie ruchów klatki piersiowej. Liczenie oddechów przez 1 minutę. Ustalenie toru oddychania. czy chory ma trudności oddechowe, czy w proces oddychania włączone są dodatkowe mięśnie oddechowe, czy występuje duszność, czy oddychaniu towarzyszą świsty, trzeszczenia w klatce piersiowej. Określenie zapachu wydychanego powietrza. Udokumentowanie wykonania pomiaru. Zgłoszenie lekarzowi rozpoznanych nieprawidłowości",
+        "algorithm":[
+           
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Mierzenie tętna",
+        "procedure":"Tętnem nazywamy spowodowane przez skurcz serca wyczuwalne uderzenie o ścianę naczynia fali krwi, która przepłynęła przez układ tętniczy. Tętno wyczuwa się tam gdzie tętnice przebiegają powierzchownie i gdzie można docisnąć je do twardych struktur tkankowych. Dokonując pomiaru tętna oceniamy: napięcie (siłę), liczbę (częstość) i miarowość. Badanie przeprowadza się w szpitalu u każdego chorego 2 razy dziennie równocześnie z pomiarem temperatury. Metody badania tętna: Metodą palpacyjną, Za pomocą stetoskopu, osłuchując serce, Metodą elektroniczną Typowym miejscem badania tętna jest tętnica promieniowa. W stanach nagłych tętno badamy na dużych tętnicach (szyjnej, udowej, ramiennej, nad koniuszkiem serca).W zaburzeniach krążenia tętno bada się na tętnicy: Grzbietowej stopy, Podkolanowej, Piszczelowej tylnej Zasady oceny tętna: Zapewnienie pacjentowi wygodnej pozycji (pozycja siedząca lub leżącą ze stabilnym podparciem badanej kończyny).Zalecenie pacjentowi 5minutowego odpoczynku przed badaniem. Do oceny tętna wykorzystujemy 2, 3 i 4 palec. Kciuk powinien znajdować się poza polem badanej tętnicy. Jeżeli tętno jest dobrze wyczuwalne i miarowe liczymy uderzenia przez 1 5 sekund (uzyskany wynik mnożymy przez 4). Jeżeli tętno jest niemiarowe liczymy uderzenia przez 1 min. Określamy szybkość, napięcie i ewentualny typ niemiarowości.",
+        "algorithm":[
+           
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Okład rozgrzewający",
+        "procedure":"Celem: zmniejszenie napięcia mięśni, zmniejszenie bólu, leczenie procesu zapalnego, przyśpieszenie przemiany materii, zwiększenie odporności komórek, pobudzenie czynności jelit z zachowaną perystaltyką, np. w zaparciach ,przyśpieszenie powstawania ropy. Okład rozgrzewający składa się z trzech warstw: wilgotnej, ceratki i suchej. Warstwa mokra okładu może być nasączona wodą lub wodą, np. z dodatkiem octanu glinu. Warstwa mokra utrzymuje swoją wilgotność 6-8 godzin i tyle czasu okład powinien być utrzymany na miejscu leczonym. Okład rozgrzewający - wskazania Stany zapalne żył Zrosty po wstrzyknięciach Zakrzepowe zapalenie żył Czyraki, zastrzały, ropowice (przyśpieszenie powstania ropy) Angina Stan zapalny ucha środkowego Zapalenie płuc i oskrzeli, jeśli temperatura nie przekracza 38 0 C Okład rozgrzewający - przeciwwskazania Początkowy okres urazu Choroba nowotworowa Krwotok „Ostry brzuch” (ostre chirurgiczne choroby jamy brzusznej - niedrożność jelit, zapalenie wyrostka robaczkowego) Sprzęt: warstwa waty rozmiarem dostosowana do wielkości miejsca terapii, cerata - większa od warstwy waty po 2 centymetry z każdej strony, warstwa ligniny większa od ceratki po 2 centymetry z każdej strony, miska z letnią wodą (28-33 0 C), dodatki do wody (octan glinu, 3% Natrium Bicarbonicum), wazelina, bandaż, worki na odpady medyczne, parawan (jeśli to konieczne), rękawiczki jednorazowe niejałowe",
+        "algorithm":[
+           {
+              "step":"Sprawdź tożsamość pacjenta."
+           },
+           {
+              "step":"Udziel pacjentowi informacji o celu zabiegu, przebiegu i potrzebie pozostawania w łóżku (potrzeba skorzystania z toalety)."
+           },
+           {
+              "step":"Uzyskaj zgodę pacjenta."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Ułóż pacjenta w wygodnej, bezpiecznej pozycji, zapewnij dostęp do planowanego miejsca zabiegu."
+           },
+           {
+              "step":"Posmaruj miejsce założenia okładu wazeliną."
+           },
+           {
+              "step":"Zmocz warstwę waty przygotowanym płynem, odciśnij nadmiar płynu, wyrównaj powierzchnię waty, ułóż warstwę mokrą okładu na okolicę leczoną na warstwie mokrej ułóż ceratkę , a następnie warstwę suchą , tak aby wszystkie warstwy ściśle do siebie przylegały, przymocuj okład w zależności od leczonego miejsca, np. bandażem."
+           },
+           {
+              "step":"Obserwuj reakcję pacjenta na zabieg."
+           },
+           {
+              "step":"Zapewnij pacjentowi dostęp do dzwonka alarmowego i poinstruuj go o konieczności zgłaszania wszelkich przejawów złego samopoczucia."
+           },
+           {
+              "step":"Uporządkuj zestaw po zabiegu."
+           },
+           {
+              "step":"Po upływie 6-8 godzin od rozpoczęcia zabiegu usuń warstwę mokrą i ceratkę okładu . Warstwa mokra i skóra powinny być po zabiegu wilgotne i ciepłe."
+           },
+           {
+              "step":"Suchą warstwę okładu pozostaw na miejscu leczenia umocowaną bandażem na kolejne 30 min. Po tym czasie zdejmij warstwy i przeznacz do utylizacji."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Okład wysychający",
+        "procedure":"Okład wysychający jest to zabieg terapeutyczny polegający na miejscowym stosowaniu zimna wilgotnego. Celem stosowania okładu wysychającego jest uzyskanie działania przeciwbólowego i uspakajającego, obniżenie temperatury ciała, zahamowanie procesu zapalnego, zmniejszenie napięcia mięśni. Okład wysychający obniża temperaturę ciała o ok. 1 o c. w czasie 2-3 godzin. Czas ten w gorączce ulega skróceniu, a w zaburzeniach krążenia obwodowego wydłużeniu. Okład wysychający - wskazania: Początkowy okres stanu zapalnego w obrębie tkanek miękkich, Nerwobóle, Stany zapalne układu oddechowego, Grypa, Wysięki zapalne w obrębie jamy brzusznej i miednicy mniejszej, Kamica wątrobowa, Bolesne miesiączkowanie, żylaki odbytu. Okład wysychający - przeciwwskazania: Nieustabilizowane krążenie krwi, zaburzenia dopływu krwi tętniczej. Sprzęt: warstwa waty rozmiarem dostosowana do wielkości miejsca leczenia, warstwa ligniny - większa od warstwy waty po 2 cm z każdej strony, miska z chłodną wodą (temp. 21-27 o c, kontrola temperatury wody), bandaż, rękawice jednorazowe niejałowe.",
+        "algorithm":[
+           {
+              "step":"Sprawdź tożsamość pacjenta."
+           },
+           {
+              "step":"Udziel pacjentowi informacji o celu zabiegu, przebiegu i potrzebie pozostawania w łóżku (potrzeba skorzystania z toalety)."
+           },
+           {
+              "step":"Uzyskaj zgodę pacjenta."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Ułóż pacjenta w wygodnej, bezpiecznej pozycji, zapewnij dostęp do planowanego miejsca zabiegu."
+           },
+           {
+              "step":"Zmocz warstwę waty przygotowaną wodą i odciśnij jej nadmiar, wyrównaj powierzchnię waty, ułóż watę na okolicę objętą leczeniem, na warstwie mokrej ułóż warstwę suchą, tak, aby wszystkie warstwy luźno do siebie przylegały, przymocuj okład w zależności od miejsca jego zastosowania."
+           },
+           {
+              "step":"Obserwuj reakcję pacjenta na zabieg."
+           },
+           {
+              "step":"Zapewnij pacjentowi dostęp do dzwonka alarmowego i poinstruuj o konieczności zgłaszania wszelkich przejawów złego samopoczucia."
+           },
+           {
+              "step":"Po upływie 2-3 godzin od rozpoczęcia zabiegu usuń wszystkie warstwy okładu."
+           },
+           {
+              "step":"Oceń stan skóry miejsca leczonego (skóra po zabiegu powinna być sucha i chłodna)."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Udokumentuj wykonanie zabiegu."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Płukanie rany",
+        "procedure":"Cel: leczniczy - oczyszczenie rany z ciał obcych, ropy, tkanek martwiczych Wskazania: nieprawidłowy proces gojenia się rany (obecność w ranie tkanek martwiczych, ciał obcych, ropy) Przeciwwskazania: wzmożone krwawienie z rany. Zestaw do płukania rany: strzykawka jałowa jednorazowego użytku o obj. 20 ml, igła z kulką 18-19 G albo kaniula z wenflonu koloru zielonego (18 G) jałowy i ciepły płyn płuczący, zgodny ze zleceniem pielęgniarskim/lekarskim, fartuch ochronny, okulary ochronne, maska chirurgiczna, podkład ochronny jednorazowy, 2 miski nerkowate, rękawiczki jednorazowe niejałowe, opatrunek specjalistyczny",
+        "algorithm":[
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Załóż rękawiczki jednorazowe niejałowe."
+           },
+           {
+              "step":"Rozłóż podkład wysoko-chłonny."
+           },
+           {
+              "step":"Rozłóż miski nerkowate."
+           },
+           {
+              "step":"Otwórz w sposób aseptyczny gaziki i polej je środkiem do przemycia ran Pierwszą porcję środka odlej do worka."
+           },
+           {
+              "step":"Delikatnie zdejmij opatrunek ze skóry pacjenta, otwórz opakowanie ze strzykawką i połącz z zielonym wenflonem. Wyjmij z kaniuli wenflonu igłę i wykorzystaj jedynie kaniulę."
+           },
+           {
+              "step":"Nabierz do strzykawki środek antyseptyczny zgodny ze zleceniem lekarza."
+           },
+           {
+              "step":"Końcówkę wenflonu umieść 5 cm nad raną i płucz ją słabym bądź silnym strumieniem w zależności od zlecenia lekarskiego, płucz ranę aż do uzyskania przejrzystego płynu płuczącego, płucz dokładnie ranę uwzględniając wszystkie szczeliny i kieszenie rany."
+           },
+           {
+              "step":"Zdejmij w prawidłowy sposób rękawiczki jednorazowe niejałowe i wyrzuć do worka na odpady medyczne potencjalnie zakaźne."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Załóż rękawiczki jednorazowe niejałowe."
+           },
+           {
+              "step":"Uchwyć narzędziem chwytnym gaziki i przemyj ranę od zewnątrz do środka. Do każdego przetarcia użyj nowego gazika, osusz gazikiem okolicę wokół rany."
+           },
+           {
+              "step":"Przyklej na ranę opatrunek specjalistyczny."
+           },
+           {
+              "step":"Posegreguj odpady medyczne i uporządkuj stanowisko pracy."
+           },
+           {
+              "step":"Złóż podkład wewnętrzną stroną do środka i wyrzuć do worka na odpady medyczne potencjalnie zakaźne."
+           },
+           {
+              "step":"Zdejmij w prawidłowy sposób rękawiczki."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Zmiana opatrunku na ranie niepowikłanej",
+        "procedure":"Rana niepowikłana- rana, w której nie stwierdza się cech zakażenia, czyli ropnego wycieku i/lub co najmniej jednego z objawów: rumień; bolesność; obrzęk; ucieplenie otoczenia rany; podwyższona temperatura ciała chorego. Zapamiętaj: Zaobserwowanie któregoś z wymienionych wyżej objawów może świadczyć o zakażeniu rany. Wówczas należy ten fakt bezwzględnie zgłosić lekarzowi lub pielęgniarce. Cel: zapobieganie zakażeniu rany; wczesne wykrywanie nieprawidłowości w gojeniu się rany; utrzymanie opatrunku w czystości. Sprzęt: wózek pielęgnacyjny z zawieszonym workiem na odpady komunalne i medyczne; jałowa serweta; jałowy opatrunek odpowiedniej wielkości; lawaseptyk (np. sól fizjologiczna); jałowe gaziki; jałowe rękawiczki; jałowe narzędzie chwytne (pęseta, pean); maseczka chirurgiczna; rękawiczki diagnostyczne (niejałowe); środek do dezynfekcji rąk. Zasady: 1 . Zasada aseptyki i antyseptyki. 2. Ranę niepowikłaną przemywa się w kierunku od środka rany na zewnątrz 3. Obowiązuje zasada: jeden gazik - jedno przetarcie- od środka rany na zewnątrz. Opatrunek na ranie niepowikłanej zmieniamy, gdy jest przesiąknięty treścią surowiczą, krwistą lub jest zabrudzony. W przypadku rany niepowikłanej chirurgicznej zmieniamy opatrunek nie wcześniej niż w 2. lub 3. dobie pooperacyjnej.",
+        "algorithm":[
+           {
+              "step":"Przygotuj niezbędny sprzęt i materiały opatrunkowe."
+           },
+           {
+              "step":"Przywitaj się, przedstaw się."
+           },
+           {
+              "step":"Sprawdź tożsamość pacjenta."
+           },
+           {
+              "step":"Poinformuj chorego o zamiarze zmiany opatrunku."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Załóż rękawice jednorazowe niejałowe."
+           },
+           {
+              "step":"Ułóż wygodnie chorego i odsłoń okolicę rany."
+           },
+           {
+              "step":"Pod okolicę rany rozłóż podkład/serwetę"
+           },
+           {
+              "step":"Usuń opatrunek z rany i wyrzuć go do worka na odpady medyczne. "
+           },
+           {
+              "step":"Zdejmij rękawice niejałowe i zdezynfekuj ręce."
+           },
+           {
+              "step":"Załóż rękawice jednorazowe jałowe."
+           },
+           {
+              "step":"Oceń wygląd rany."
+           },
+           {
+              "step":"Oczyść ranę za pomocą gazika nasączonego odpowiednim preparatem do lawaseptyki, zachowując dwie ważne zasady podczas zmiany opatrunku na ranie niepowikłanej: jeden gazik - jedno przetarcie oraz oczyszczanie rany od środka na zewnątrz."
+           },
+           {
+              "step":"Załóż nowy opatrunek."
+           },
+           {
+              "step":"Posegreguj zużyty sprzęt i odpady zgodnie z procedurą podmiotu leczniczego."
+           },
+           {
+              "step":"Zdejmij rękawice i zdezynfekuj ręce."
+           },
+           {
+              "step":"Jeśli zmiana opatrunku była wykonywana w sali opatrunkowej, odprowadź chorego na salę chorych."
+           },
+           {
+              "step":"Uporządkuj stanowisko pracy, wykonaj dezynfekcję blatu roboczego."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Udokumentuj wykonaną procedurę w dokumentacji pacjenta. Poinformuj pielęgniarkę/lekarza, jeśli zaobserwowałeś w ranie objawy zakażenia."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Zmiana opatrunku na ranie powikłanej",
+        "procedure":"Rana powikłana- rana, w której stwierdza się cechy zakażenia (zaczerwienienie, ból, obrzęk, nadmierne ucieplenie, nadmierny wysięk). Czynnik etiologiczny zakażenia ran: Najczęstszym czynnikiem etiologicznym wywołującym zakażenia ran są bakterie. Najpowszechniej z ran przewlekłych izolowane są Gram-dodatnie ziarniaki z rodzaju Staphylococcus, Enterococcus a także Gram-ujemne pałeczki z gatunku Pseudomonas aeruginosa (częsty czynnik etiologiczny zakażeń owrzodzeń stopy cukrzycowej oraz oparzeń). Zasady zmiany opatrunku na ranie powikłanej: Zasada aseptyki i antyseptyki. Ranę powikłaną przemywa się w kierunku od zewnątrz do środka rany. Obowiązuje zasada: jeden gazik - jedno przetarcie. Konieczne jest użycie antyseptyku (substancji o działaniu bakteriobójczym). Do wykonania zabiegu potrzebne są: wózek pielęgnacyjny z zawieszonym workiem na odpady komunalne i potencjalnie zakaźne; jałowa serweta; jałowy opatrunek specjalistyczny odpowiedniej wielkości; antyseptyk; jałowe gaziki; jałowe rękawiczki; jałowe narzędzie chwytne (pęseta, pean); maseczka chirurgiczna; rękawiczki diagnostyczne (niejałowe); środek do dezynfekcji rąk.",
+        "algorithm":[
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Przygotuj zestaw, rozłóż sterylną serwetę, w sposób aseptyczny otwórz materiał i umieść go na serwecie."
+           },
+           {
+              "step":"Polej gaziki."
+           },
+           {
+              "step":"Załóż rękawice jednorazowe niejałowe."
+           },
+           {
+              "step":"Ułóż wygodnie chorego i odsłoń okolicę rany."
+           },
+           {
+              "step":"Pod okolicę rany rozłóż podkład/serwetę."
+           },
+           {
+              "step":"Usuń opatrunek z rany i wyrzuć go do worka na odpady medyczne."
+           },
+           {
+              "step":"Zdejmij rękawice niejałowe i zdezynfekuj ręce."
+           },
+           {
+              "step":"Załóż rękawice jednorazowe jałowe."
+           },
+           {
+              "step":"Oceń wygląd rany."
+           },
+           {
+              "step":"Zapnij na peanie (narzędziu chwytnym) gaziki polane antyseptykiem."
+           },
+           {
+              "step":"Oczyść ranę za pomocą gazika nasączonego antyseptykiem zachowując dwie ważne zasady podczas zmiany opatrunku na ranie powikłanej: jeden gazik jedno przetarcie oraz oczyszczanie rany od zewnątrz do środka rany."
+           },
+           {
+              "step":"Załóż nowy opatrunek."
+           },
+           {
+              "step":"Posegreguj zużyty sprzęt i odpady zgodnie z procedurą podmiotu leczniczego."
+           },
+           {
+              "step":"Zdejmij rękawice i zdezynfekuj ręce."
+           },
+           {
+              "step":"Jeśli zmiana opatrunku była wykonywana w sali opatrunkowej, odprowadź chorego na salę chorych."
+           },
+           {
+              "step":"Uporządkuj stanowisko pracy, wykonaj dezynfekcję blatu roboczego."
+           },
+           {
+              "step":"Wykonaj higienę rąk."
+           },
+           {
+              "step":"Udokumentuj wykonaną procedurę w dokumentacji pacjenta."
+           }
+        ]
+     }
+  },
+  {
+     "data":{
+        "name":"Zmiana worka stomijnego na kolostomii",
+        "procedure":"Sprzęt: Worek stomijny zamknięty; Miarka do odmierzenia średnicy stomii (producenci załączają miarki do opakowania zbiorczego z workami); Pasta stomijna do uszczelnienia stomii; Nożyczki; Podkład wysoko-chłonny; Miska z wodą i hipoalergicznym mydłem Delikatne gaziki do przemywania skóry wokół stomii; Rękawiczki jednorazowe niejałowe; Środek do dezynfekcji rąk (w szpitalu)",
+        "algorithm":[
+           {
+              "step":"Przygotuj zestaw."
+           },
+           {
+              "step":"Udaj się do pacjenta."
+           },
+           {
+              "step":"Przywitaj się, przedstaw. Sprawdź tożsamość pacjenta."
+           },
+           {
+              "step":"Wyjaśnij pacjentowi, co chcesz zrobić."
+           },
+           {
+              "step":"Uzyskaj zgodę pacjenta."
+           },
+           {
+              "step":"Nalej wody do miski."
+           },
+           {
+              "step":"Rozłóż podkład wysokochłonny, aby zabezpieczyć bieliznę pościelową i osobistą chorego przed zabrudzeniem."
+           },
+           {
+              "step":"Odklej zużyty worek od góry ku dołowi lekko dociskając skórę przy jednoczesnym jego odciąganiu (przy ileostomii najpierw opróżniamy zawartość worka z treści jelitowej). Nie należy zrywać płytki zbyt szybkim ruchem, ponieważ może to prowadzić do podrażnienia skóry. Zużyty worek zaklej i wyrzuć do worka zgodnie z lokalną polityką. Zużytego worka nie wolno spłukiwać w toalecie."
+           },
+           {
+              "step":"Zmyj skórę wokół stomii oraz samą stomię (śluzówkę jelit) ciepłą wodą z użyciem delikatnego mydła."
+           },
+           {
+              "step":"Osusz skórę gazikiem."
+           },
+           {
+              "step":"Wytnij w worku otwór odpowiadający wielkości i kształtowi stomii. Pomocne w tym względzie są gotowe miarki zamieszczone w opakowaniach worków przez producentów. Następnie zmierzoną średnicę (uwzględniającą 1-2 mm margines) wytnij w płytce hydrokoloidowej."
+           },
+           {
+              "step":"Na przestrzeń pomiędzy stomią a skórą nałóż pastę stomijną. Pamiętaj: Otwór w samej płytce stomijnej powinien być o 1-2 mm większy od samej stomii. W ciągu 6-8 tygodni po operacji wielkość stomii będzie się stopniowo zmniejszać, w związku z czym konieczne jest, aby w tym czasie mierzyć średnicę stomii przy każdej zmianie worka - zbyt mały otwór uwierałby błonę śluzową jelita powodując krwawienie i mechaniczne podrażnienie, zbyt duży powodowałby drażnienie nieosłoniętej skóry przez treść jelitową."
+           },
+           {
+              "step":"Nowy worek zakładamy od dołu ku górze."
+           },
+           {
+              "step":"Dociśnij płytkę do skóry. Po przyklejeniu worka upewnij się, lekko pociągając za worek czy jest dobrze przytwierdzony do skóry. Zdejmij rękawiczki w prawidłowy sposób i zdezynfekuj ręce."
+           },
+           {
+              "step":"Uporządkuj stanowisko pracy."
+           },
+           {
+              "step":"Odnotuj charakter treści jelitowej oraz jej ilość"
+           }
+        ]
+     }
+  }
+]

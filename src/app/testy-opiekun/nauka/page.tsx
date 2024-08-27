@@ -1,10 +1,11 @@
 import AllTests from '@/components/AllTests'
-import { getTests } from '@/server/getData'
+import { fetchData } from '@/server/fetchData'
+import { Test } from '@/types/dataTypes'
 import { Suspense } from 'react'
 
 async function Tests() {
   // getting tests from json file , later we could move this to database
-  const tests = await getTests()
+  const tests = (await fetchData('tests.json')) as Test[]
 
   return <AllTests tests={tests} />
 }

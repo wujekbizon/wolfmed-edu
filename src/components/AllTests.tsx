@@ -3,11 +3,12 @@
 import { useEffect, useRef } from 'react'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useQuery } from '@tanstack/react-query'
-import { Test } from '@/server/getData'
+
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import SearchTerm from './SearchTerm'
 import FilteredTestsList from './FilteredTestsList'
 import LearningAssistant from './LearningAssistant'
+import { Test } from '@/types/dataTypes'
 
 export default function AllTests(props: { tests: Test[] }) {
   const { searchTerm, currentPage } = useSearchTermStore()
