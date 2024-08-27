@@ -1,7 +1,7 @@
 'use client'
 
 import { LETTERS } from '@/constants/optionsLetters'
-import { Test } from '@/server/getData'
+import { Test } from '@/types/dataTypes'
 import { useState } from 'react'
 
 export default function LearningCard(props: { test: Test; questionNumber: string }) {
