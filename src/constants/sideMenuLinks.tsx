@@ -1,6 +1,7 @@
 import DashboardIcon from '@/components/icons/DashboardIcon'
 import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
+import ProceduresIcon from '@/components/icons/ProceduresIcon'
 import ProgressIcon from '@/components/icons/ProgressIcon'
 import UserProfileIcon from '@/components/icons/UserProfileIcon'
 
@@ -19,6 +20,11 @@ export const sideMenuNavigationLinks = [
     url: '/testy-opiekun/nauka',
     label: 'Nauka',
     icon: <LearnIcon width={26} height={26} />,
+  },
+  {
+    url: '/testy-opiekun/procedury',
+    label: 'Procedury',
+    icon: <ProceduresIcon width={26} height={26} />,
   },
   {
     url: '/testy-opiekun/wyniki',
