@@ -9,6 +9,6 @@ export const testsMenu = [
   },
   {
     number: 40,
-    testTitle: 'Egazmin',
+    testTitle: 'Egzamin',
   },
 ]

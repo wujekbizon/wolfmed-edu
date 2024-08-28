@@ -1,20 +1,28 @@
 'use client'
 
+import { useFormState } from 'react-dom'
 import { useGenerateTestStore } from '@/store/useGenerateTestStore'
-import { Test } from '@/types/dataTypes'
-import TestsLevelMenu from './TestsLevelMenu'
 import { useGeneratedTest } from '@/hooks/useGeneratedTest'
+import TestsLevelMenu from './TestsLevelMenu'
 import TestCard from './TestCard'
-import { useActionState } from 'react'
+import { Test } from '@/types/dataTypes'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { submitTestAction } from '@/actions/actions'
-import { useFormState } from 'react-dom'
+import ResetTestButton from './ResetTestButton'
+import SubmitButton from './SubmitButton'
+import { useEffect } from 'react'
 
 export default function GenerateTests(props: { tests: Test[] }) {
-  const { numberTests, isTest } = useGenerateTestStore()
+  const { numberTests, isTest, setNumberTests, setIsTest } = useGenerateTestStore()
+  const [formState, action] = useFormState(submitTestAction, EMPTY_FORM_STATE)
   const randomTest = useGeneratedTest(props.tests, numberTests)
 
-  const [formState, action] = useFormState(submitTestAction, EMPTY_FORM_STATE)
+  useEffect(() => {
+    if (formState.status === 'SUCCESS') {
+      setNumberTests(null)
+      setIsTest(false)
+    }
+  }, [formState.status === 'SUCCESS'])
 
   return (
     <section className="flex w-full flex-col items-center gap-8 overflow-y-auto scrollbar-webkit p-4 sm:p-12">
@@ -33,6 +41,12 @@ export default function GenerateTests(props: { tests: Test[] }) {
               </div>
             ))}
           </>
+        )}
+        {isTest && (
+          <div className="flex w-full flex-col sm:flex-row justify-center items-center place-self-center gap-4 rounded-lg border border-red-200/40 bg-[#f58a8a] lg:w-2/3 xl:w-1/2 p-4 shadow shadow-zinc-500">
+            <SubmitButton label="Zatwierdź Test" loading="Submitting..." disabled={formState?.status === 'SUCCESS'} />
+            <ResetTestButton />
+          </div>
         )}
       </form>
     </section>

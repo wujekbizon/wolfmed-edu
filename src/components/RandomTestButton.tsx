@@ -23,7 +23,7 @@ export default function RandomTestButon({
     <button
       onClick={() => generateTest(number)}
       disabled={disabled}
-      className="inline-flex h-9 w-full md:w-48 items-center justify-center rounded-md border hover:border-zinc-900 border-red-200/40 hover:shadow-sm shadow shadow-zinc-500 bg-[#ffc5c5] hover:bg-[#f58a8a] text-base font-semibold text-secondary-foreground transition-all hover:scale-95  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+      className="inline-flex h-9 w-full md:w-48 items-center justify-center rounded-md border hover:border-zinc-800 border-red-200/40 hover:shadow-sm shadow shadow-zinc-500 bg-[#ffc5c5] hover:bg-[#f58a8a] text-base font-semibold text-secondary-foreground transition-all hover:scale-95  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
     >
       {children}
     </button>
