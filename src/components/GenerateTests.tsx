@@ -10,12 +10,12 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { submitTestAction } from '@/actions/actions'
 import ResetTestButton from './ResetTestButton'
 import SubmitButton from './SubmitButton'
-import { useEffect } from 'react'
+import { useActionState, useEffect } from 'react'
 import FieldError from './FieldError'
 
 export default function GenerateTests(props: { tests: Test[] }) {
   const { numberTests, isTest, setNumberTests, setIsTest } = useGenerateTestStore()
-  const [formState, action] = useFormState(submitTestAction, EMPTY_FORM_STATE)
+  const [formState, action] = useActionState(submitTestAction, EMPTY_FORM_STATE)
   const randomTest = useGeneratedTest(props.tests, numberTests)
 
   useEffect(() => {
