@@ -11,6 +11,7 @@ import { submitTestAction } from '@/actions/actions'
 import ResetTestButton from './ResetTestButton'
 import SubmitButton from './SubmitButton'
 import { useEffect } from 'react'
+import FieldError from './FieldError'
 
 export default function GenerateTests(props: { tests: Test[] }) {
   const { numberTests, isTest, setNumberTests, setIsTest } = useGenerateTestStore()
@@ -38,13 +39,14 @@ export default function GenerateTests(props: { tests: Test[] }) {
             {randomTest.map((item, index) => (
               <div className="flex flex-col" key={item.data.question}>
                 <TestCard formState={formState} test={item} questionNumber={`${index + 1}/${randomTest.length}`} />
+                <FieldError formState={formState} name={`answer-${item.data.question}`} />
               </div>
             ))}
           </>
         )}
         {isTest && (
           <div className="flex w-full flex-col sm:flex-row justify-center items-center place-self-center gap-4 rounded-lg border border-red-200/40 bg-[#f58a8a] lg:w-2/3 xl:w-1/2 p-4 shadow shadow-zinc-500">
-            <SubmitButton label="Zatwierdź Test" loading="Submitting..." disabled={formState?.status === 'SUCCESS'} />
+            <SubmitButton label="Prześlij Test" loading="Przesyłam..." disabled={formState?.status === 'SUCCESS'} />
             <ResetTestButton />
           </div>
         )}
