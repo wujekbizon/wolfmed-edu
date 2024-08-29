@@ -1,16 +1,15 @@
 'use client'
 
-import { useFormState } from 'react-dom'
+import { useActionState, useEffect } from 'react'
 import { useGenerateTestStore } from '@/store/useGenerateTestStore'
 import { useGeneratedTest } from '@/hooks/useGeneratedTest'
-import TestsLevelMenu from './TestsLevelMenu'
-import TestCard from './TestCard'
-import { Test } from '@/types/dataTypes'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { submitTestAction } from '@/actions/actions'
+import type { Test } from '@/types/dataTypes'
+import TestsLevelMenu from './TestsLevelMenu'
+import TestCard from './TestCard'
 import ResetTestButton from './ResetTestButton'
 import SubmitButton from './SubmitButton'
-import { useActionState, useEffect } from 'react'
 import FieldError from './FieldError'
 
 export default function GenerateTests(props: { tests: Test[] }) {
