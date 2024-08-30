@@ -10,6 +10,7 @@ interface TestData {
 }
 
 export interface Test {
+  id: string
   data: TestData
   category: string
 }

@@ -12,7 +12,7 @@ const FieldError = ({ formState, name }: FieldErrorProps) => {
         formState.status === 'ERROR' && 'bg-black/5'
       } flex min-h-5 w-full animate-pulse items-center bg-transparent pl-4 pt-1 `}
     >
-      <p className="text-xs text-red-400/60">
+      <p className="text-xs text-[#ef4040]">
         {name && formState.status === 'ERROR' && formState.message}
         {formState.fieldErrors[name]?.[0]}
       </p>

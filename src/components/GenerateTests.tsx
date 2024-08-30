@@ -38,7 +38,7 @@ export default function GenerateTests(props: { tests: Test[] }) {
             {randomTest.map((item, index) => (
               <div className="flex flex-col" key={item.data.question}>
                 <TestCard formState={formState} test={item} questionNumber={`${index + 1}/${randomTest.length}`} />
-                <FieldError formState={formState} name={`answer-${item.data.question}`} />
+                <FieldError formState={formState} name={`answer-${item.id}`} />
               </div>
             ))}
           </>

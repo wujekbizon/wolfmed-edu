@@ -39,7 +39,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                 value={answer.isCorrect ? 'true' : 'false'}
                 id={answer.option}
                 disabled={props.formState.status === 'SUCCESS'}
-                name={`answer-${props.test.data.question}`}
+                name={`answer-${props.test.id}`}
                 onClick={() => setActiveIndex(index)}
               />
               <Label className="p-0 text-sm text-muted-foreground" label={answer.option} htmlFor={answer.option} />
