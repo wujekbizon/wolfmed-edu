@@ -1,0 +1,48 @@
+import { sql } from 'drizzle-orm'
+import { pgTableCreator, timestamp, varchar, jsonb, integer, uuid, index } from 'drizzle-orm/pg-core'
+
+export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
+
+export const users = createTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: varchar('userId', { length: 256 }).notNull().unique(),
+    createdAt: timestamp('createdAt').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: timestamp('updatedAt').notNull(),
+  },
+  (table) => ({
+    userIdIndex: index('usersUserId').on(table.userId),
+  })
+)
+
+export const completedTestes = createTable('comleted_tests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: varchar('userId', { length: 256 })
+    .notNull()
+    .references(() => users.userId, { onDelete: 'cascade' }),
+  testResult: jsonb('testResult').default([]),
+  score: integer('score').notNull(),
+  completedAt: timestamp('completedAt')
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+})
+
+export const tests = createTable('tests', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  category: varchar('category', { length: 256 }).notNull(),
+  data: jsonb('data').notNull(),
+  createdAt: timestamp('createdAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp('updatedAt'),
+})
+
+export const procedures = createTable('procedures', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  data: jsonb('data').notNull(),
+  createdAt: timestamp('createdAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp('updatedAt'),
+})

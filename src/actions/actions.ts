@@ -3,6 +3,7 @@
 import { countTestScore } from '@/helpers/countTestScore'
 import { parseAnswerRecord } from '@/helpers/parseAnswerRecord'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+import { populateTests } from '@/server/db/populateDbWithTests'
 import { answersSchema } from '@/server/schema'
 import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
@@ -18,7 +19,6 @@ export async function submitTestAction(formState: FormState, formData: FormData)
       }
     })
 
-    console.log(answers)
     // Validate the parsed JSON data using Zod schema
     const { success, data, error } = answersSchema.safeParse(answers)
 
@@ -35,8 +35,6 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
     //Create a completed test object
     const completedTest = { score: correct, testResult }
-
-    console.log(completedTest)
   } catch (error) {
     return fromErrorToFormState(error)
   }
