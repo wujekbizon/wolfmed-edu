@@ -13,6 +13,8 @@ export interface Test {
   id: string
   data: TestData
   category: string
+  // createdAt: Date
+  // updatedAt: Date | null
 }
 
 // procedures related types
