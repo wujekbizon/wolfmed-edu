@@ -26,11 +26,11 @@ export default async function TestResultCard({ completedTest }: { completedTest:
           correctAnswer?.option === userCorrectAnswer?.option ? 'bg-green-400/30' : 'bg-red-400/30'
         } flex w-full flex-col md:flex-row items-center justify-between rounded-lg border border-zinc-200/40 p-3 shadow shadow-zinc-500`}
       >
-        <div className="w-full md:w-2/3 border-b border-r-0 md:border-b-0 md:border-r border-zinc-800/10 p-2">
+        <div className="w-full md:w-2/3 border-b border-r-0 md:border-b-0 md:border-r border-zinc-400/20 p-3">
           <p className="text-base text-muted-foreground">{question}</p>
         </div>
         {correctAnswer && (
-          <div className="w-full md:w-1/3 p-2">
+          <div className="w-full md:w-1/3 p-3">
             <p className="text-base text-muted-foreground">{correctAnswer.option}</p>
           </div>
         )}
@@ -43,7 +43,7 @@ export default async function TestResultCard({ completedTest }: { completedTest:
       <div className="flex items-center justify-center gap-2">
         <h2 className="text-lg text-zinc-900">Twój wynik to: </h2>
 
-        <div className="w-8 h-8 bg-zinc-200 rounded-full flex items-center justify-center">
+        <div className="w-9 h-9 bg-zinc-100 rounded-full flex items-center justify-center">
           <p className="text-xl text-[#ff5b5b] font-bold">{score}</p>
         </div>
       </div>
