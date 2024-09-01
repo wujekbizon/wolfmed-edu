@@ -40,3 +40,15 @@ export interface Procedure {
 export type ServerData = Procedure[] | Test[]
 export type QuestionAnswer = Record<string, string>
 export type FormattedAnswer = { questionId: string; answer: boolean }
+
+export interface CompletedTest {
+  completedAt?: Date
+  id?: string
+  userId: string
+  score: number
+  testResult: FormattedAnswer[]
+}
+
+export type ExtendedCompletedTest = Omit<CompletedTest, 'testResult'> & {
+  testResult: unknown
+}
