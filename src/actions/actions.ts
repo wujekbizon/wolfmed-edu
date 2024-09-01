@@ -7,6 +7,9 @@ import { answersSchema } from '@/server/schema'
 import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
+import { db } from '@/server/db/index'
+import { completedTestes } from '@/server/db/schema'
+import { USER_ID } from '@/constants/tempUser'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   try {
@@ -25,6 +28,8 @@ export async function submitTestAction(formState: FormState, formData: FormData)
       console.log(`Validation error: ${error.issues}`)
       return toFormState('ERROR', 'Wybierz jedna odpowiedz')
     }
+    // Generate temp user id with uuid
+    const userId = USER_ID
 
     // Processing test results to get score
     const { correct } = countTestScore(data)
@@ -32,9 +37,11 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     // answers containing all question IDs and values for future database storage.
     const testResult = parseAnswerRecord(data)
 
-    //Create a completed test object
+    // Create a completed test object
+    const completedTest = { userId, score: correct, testResult }
 
-    const completedTest = { score: correct, testResult }
+    // Insert completed tests to db
+    await db.insert(completedTestes).values(completedTest)
   } catch (error) {
     return fromErrorToFormState(error)
   }
