@@ -10,22 +10,22 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
   return (
     <Link
       href={`/testy-opiekun/wyniki/${id}`}
-      className="flex w-full flex-col items-center justify-between gap-4 rounded-xl border border-border/40 bg-zinc-950 p-4  hover:bg-zinc-900 lg:w-2/3"
+      className="flex w-full flex-col items-center justify-between gap-4 rounded-xl border transition-colors border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 p-4  hover:bg-[#f58a8a] lg:w-2/3 xl:w-1/2"
     >
-      <p className="text-center text-sm text-stone-400 sm:text-base">
-        You answered correctly to {correctAnswers.length} questions
+      <p className="text-center text-base text-zinc-900 sm:text-lg">
+        Odpowiedziałeś poprawnie na {correctAnswers.length} pytań
       </p>
-      <div className="flex h-32 w-32 flex-col items-center justify-center gap-3 rounded-full border border-border/40 bg-gradient-to-r from-gray-700 to-gray-900 shadow-inner shadow-slate-950 sm:h-48 sm:w-48">
-        <p className="text-center text-sm text-muted-foreground sm:text-base">Your score: </p>
-        <p className="text-center text-base text-muted-foreground sm:text-2xl">
-          <span className="text-2xl font-bold text-amber-500 sm:text-4xl">{score}</span>{' '}
-          <span className="font-thin text-stone-700">/</span> {totalTests}
+      <div className="flex h-32 w-32 flex-col items-center justify-center gap-3 rounded-full border border-red-200/60 bg-gradient-to-r from-zinc-600 to-zinc-950 shadow-inner shadow-slate-950 sm:h-48 sm:w-48">
+        <p className="text-center text-sm text-zinc-100 sm:text-lg">Wynik: </p>
+        <p className="text-center text-base text-zinc-300 sm:text-2xl">
+          <span className="text-2xl font-bold text-[#ff5b5b] sm:text-4xl">{score}</span>{' '}
+          <span className="font-thin text-zinc-600">/</span> {totalTests}
         </p>
       </div>
       <div className="flex w-full flex-col items-center justify-between md:flex-row">
-        <p className="text-center text-xs text-stone-700 sm:text-sm">Click for more detailed information</p>
+        <p className="text-center text-xs text-stone-700 sm:text-sm">Kliknij by dowiedzieć się więcej informacji.</p>
         <p className="text-center text-xs text-stone-700 sm:text-sm">
-          Test created at: {completedAt?.toLocaleDateString()}
+          Test rozwiązany: {completedAt?.toLocaleDateString()}
         </p>
       </div>
     </Link>
