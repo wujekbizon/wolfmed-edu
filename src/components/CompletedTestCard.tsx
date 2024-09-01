@@ -25,7 +25,7 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
       <div className="flex w-full flex-col items-center justify-between md:flex-row">
         <p className="text-center text-xs text-stone-700 sm:text-sm">Kliknij by dowiedzieć się więcej informacji.</p>
         <p className="text-center text-xs text-stone-700 sm:text-sm">
-          Test rozwiązany: {completedAt?.toLocaleDateString()}
+          Test rozwiązany: {completedAt ? new Date(completedAt).toLocaleDateString('pl-PL') : 'Brak dostępnej daty'}
         </p>
       </div>
     </Link>
