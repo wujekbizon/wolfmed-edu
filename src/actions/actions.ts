@@ -3,7 +3,6 @@
 import { countTestScore } from '@/helpers/countTestScore'
 import { parseAnswerRecord } from '@/helpers/parseAnswerRecord'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import { populateProcedures } from '@/server/db/populateDb'
 import { answersSchema } from '@/server/schema'
 import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
@@ -33,9 +32,8 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     // answers containing all question IDs and values for future database storage.
     const testResult = parseAnswerRecord(data)
 
-    populateProcedures()
-
     //Create a completed test object
+
     const completedTest = { score: correct, testResult }
   } catch (error) {
     return fromErrorToFormState(error)

@@ -1,11 +1,12 @@
 import GenerateTests from '@/components/GenerateTests'
 import { fetchData } from '@/server/fetchData'
+import { getAllTests } from '@/server/queries'
 import { Test } from '@/types/dataTypes'
 import { Suspense } from 'react'
 
 async function FetchTests() {
-  // getting tests from json file , later we could move this to database
-  const tests = (await fetchData('tests.json')) as Test[]
+  // const tests = (await fetchData('tests.json')) as Test[]
+  const tests = (await getAllTests()) as Test[]
   return <GenerateTests tests={tests} />
 }
 
