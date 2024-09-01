@@ -19,3 +19,19 @@ export async function getCompletedTestsByUser(userId: string): Promise<ExtendedC
 
   return completedTest
 }
+
+export async function getCompletedTest(testId: string) {
+  const completedTest = await db.query.completedTestes.findFirst({
+    where: (model, { eq }) => eq(model.id, testId),
+  })
+
+  return completedTest
+}
+
+export async function getQuestionById(testId: string) {
+  const question = await db.query.tests.findFirst({
+    where: (model, { eq }) => eq(model.id, testId),
+  })
+
+  return question
+}

@@ -9,7 +9,7 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
 
   return (
     <Link
-      href={`/tests-result/${id}`}
+      href={`/testy-opiekun/wyniki/${id}`}
       className="flex w-full flex-col items-center justify-between gap-4 rounded-xl border border-border/40 bg-zinc-950 p-4  hover:bg-zinc-900 lg:w-2/3"
     >
       <p className="text-center text-sm text-stone-400 sm:text-base">
