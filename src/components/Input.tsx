@@ -5,17 +5,21 @@ interface Input {
   className?: string
   type?: React.HTMLInputTypeAttribute | undefined
   id?: string | undefined
+  name?: string | undefined
+  required?: boolean | undefined
 }
 
-export default function Input({ onChangeHandler, value, placeholder, className, type }: Input) {
+export default function Input({ onChangeHandler, value, placeholder, className, type, name, required, id }: Input) {
   return (
     <input
-      id="input"
+      id={id}
       type={type}
       className={className}
       placeholder={placeholder}
       value={value}
       onChange={onChangeHandler}
+      name={name}
+      required={required}
     />
   )
 }

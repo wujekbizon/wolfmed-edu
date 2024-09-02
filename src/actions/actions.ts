@@ -3,13 +3,13 @@
 import { countTestScore } from '@/helpers/countTestScore'
 import { parseAnswerRecord } from '@/helpers/parseAnswerRecord'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import { answersSchema } from '@/server/schema'
 import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes } from '@/server/db/schema'
 import { USER_ID } from '@/constants/tempUser'
+import { createAnswersSchema } from '@/server/schema'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   try {
@@ -21,21 +21,25 @@ export async function submitTestAction(formState: FormState, formData: FormData)
       }
     })
 
-    // Validate the parsed JSON data using Zod schema
-    const { success, data, error } = answersSchema.safeParse(answers)
+    const allowedLengths = [10, 20, 40]
+    const answersSchema = createAnswersSchema(allowedLengths)
 
-    if (!success) {
-      console.log(`Validation error: ${error.issues}`)
-      return toFormState('ERROR', 'Wybierz jedna odpowiedz')
+    // Validate the parsed JSON data using Zod schema
+    const validationResult = answersSchema.safeParse(answers)
+
+    if (!validationResult.success) {
+      console.log(`Validation error: ${validationResult.error.issues}`)
+      return toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź')
     }
+
     // Generate temp user id with uuid
     const userId = USER_ID
 
     // Processing test results to get score
-    const { correct } = countTestScore(data)
+    const { correct } = countTestScore(validationResult.data)
     // Parses an array of question-answer records and transforms it into an array of formatted
     // answers containing all question IDs and values for future database storage.
-    const testResult = parseAnswerRecord(data)
+    const testResult = parseAnswerRecord(validationResult.data)
 
     // Create a completed test object
     const completedTest = { userId, score: correct, testResult }
@@ -47,6 +51,10 @@ export async function submitTestAction(formState: FormState, formData: FormData)
   }
 
   // Update form state and redirect on success and redirect user to result page
-  toFormState('SUCCESS', 'Test Successfully Submitted!')
+  toFormState('SUCCESS', 'Test został wypełniony pomyślnie')
   redirect('/testy-opiekun/wyniki')
+}
+
+export async function signup(formState: FormState, formData: FormData) {
+  return toFormState('SUCCESS', 'Konto zarejestrowane pomyślnie!')
 }
