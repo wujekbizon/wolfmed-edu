@@ -2,7 +2,7 @@ export default function Label(props: {
   label: string
   htmlFor: string
   className?: string
-  children: React.ReactNode
+  children?: React.ReactNode
 }) {
   return (
     <label
