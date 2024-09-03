@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import SideMenu from './SideMenu'
 import Logo from '@/components/Logo'
+import { ClerkLoading, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -30,7 +31,16 @@ export default function Navbar() {
           </Link>
         ))}
       </nav>
-      <div className="hidden lg:flex items-center gap-3">
+      <div className="flex w-20 items-center justify-center text-white">
+        <ClerkLoading>Sign in</ClerkLoading>
+        <SignedOut>
+          <SignInButton forceRedirectUrl="/" />
+        </SignedOut>
+        <SignedIn>
+          <UserButton afterSwitchSessionUrl="/" />
+        </SignedIn>
+      </div>
+      {/* <div className="hidden lg:flex items-center gap-3">
         <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
           Zaloguj się
         </button>
@@ -40,7 +50,7 @@ export default function Navbar() {
         >
           Wypróbuj za darmo
         </Link>
-      </div>
+      </div> */}
     </header>
   )
 }
