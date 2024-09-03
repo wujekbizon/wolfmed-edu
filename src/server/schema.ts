@@ -1,14 +1,22 @@
 import { z } from 'zod'
 
-export const createAnswersSchema = (allowedLengths: number[]) => {
+export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
     .array(z.record(z.string().min(1, 'Answer must not be empty')))
     .refine((data) => allowedLengths.includes(data.length), {
       message: 'Odpowiedz na wszystkie pytania.',
     })
 }
-export const signupSchema = z.object({
-  name: z.string().min(1, 'Imię jest wymagane'),
-  email: z.string().email('Niepoprawny adres email'),
-  password: z.string().min(8, 'Hasło powinno zawierać przynajmniej 8 znaków'),
+export const SignupForSchema = z.object({
+  name: z.string().min(1, 'Nazwa musi mieć co najmniej 2 znaki.').trim(),
+  email: z.string().email('Proszę podać poprawny email.').trim(),
+  password: z
+    .string()
+    .min(8, { message: 'Mieć co najmniej 8 znaków' })
+    .regex(/[a-zA-Z]/, { message: 'Zawierać co najmniej jedną literę.' })
+    .regex(/[0-9]/, { message: 'Zawierać co najmniej jedną liczbę.' })
+    .regex(/[^a-zA-Z0-9]/, {
+      message: 'Zawierać co najmniej jeden znak specjalny.',
+    })
+    .trim(),
 })

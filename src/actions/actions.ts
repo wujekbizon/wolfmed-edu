@@ -3,13 +3,13 @@
 import { countTestScore } from '@/helpers/countTestScore'
 import { parseAnswerRecord } from '@/helpers/parseAnswerRecord'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import { FormState } from '@/types/actionTypes'
+import { FormState, FormStateSignup } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes } from '@/server/db/schema'
 import { USER_ID } from '@/constants/tempUser'
-import { createAnswersSchema } from '@/server/schema'
+import { CreateAnswersSchema, SignupForSchema } from '@/server/schema'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   try {
@@ -22,7 +22,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     })
 
     const allowedLengths = [10, 20, 40]
-    const answersSchema = createAnswersSchema(allowedLengths)
+    const answersSchema = CreateAnswersSchema(allowedLengths)
 
     // Validate the parsed JSON data using Zod schema
     const validationResult = answersSchema.safeParse(answers)
@@ -55,6 +55,21 @@ export async function submitTestAction(formState: FormState, formData: FormData)
   redirect('/testy-opiekun/wyniki')
 }
 
-export async function signup(formState: FormState, formData: FormData) {
-  return toFormState('SUCCESS', 'Konto zarejestrowane pomyślnie!')
+export async function signup(formState: FormStateSignup, formData: FormData) {
+  const validationResult = SignupForSchema.safeParse({
+    name: formData.get('name'),
+    email: formData.get('email'),
+    password: formData.get('password'),
+  })
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    }
+  }
+
+  console.log(validationResult.data)
+
+  return undefined
+  // return toFormState('SUCCESS', 'Konto zarejestrowane pomyślnie!')
 }
