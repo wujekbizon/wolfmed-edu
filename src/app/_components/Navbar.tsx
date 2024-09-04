@@ -31,26 +31,31 @@ export default function Navbar() {
           </Link>
         ))}
       </nav>
-      <div className="flex w-20 items-center justify-center text-white">
+      <div className="hidden lg:flex items-center gap-3">
         <ClerkLoading>Sign in</ClerkLoading>
         <SignedOut>
-          <SignInButton forceRedirectUrl="/" />
+          {/* <Link
+            href="/sign-in"
+            className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors"
+          >
+            Zaloguj się
+          </Link>
+          <Link
+            href="/sign-up"
+            className="bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 shadow-sm shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full hover:bg-[#ffa5a5] transition-colors text-zinc-900"
+          >
+            Wypróbuj za darmo
+          </Link> */}
+          <SignInButton mode="modal">
+            <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
+              Zaloguj się
+            </button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
           <UserButton afterSwitchSessionUrl="/" />
         </SignedIn>
       </div>
-      {/* <div className="hidden lg:flex items-center gap-3">
-        <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
-          Zaloguj się
-        </button>
-        <Link
-          href="/signup"
-          className="bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 shadow-sm shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full hover:bg-[#ffa5a5] transition-colors text-zinc-900"
-        >
-          Wypróbuj za darmo
-        </Link>
-      </div> */}
     </header>
   )
 }

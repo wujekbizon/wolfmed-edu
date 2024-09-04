@@ -52,3 +52,10 @@ export interface CompletedTest {
 export type ExtendedCompletedTest = Omit<CompletedTest, 'testResult'> & {
   testResult: unknown
 }
+
+export interface UserData {
+  userId: string
+  imageUrl: string
+  createdAt?: Date
+  updatedAt: Date
+}

@@ -8,10 +8,14 @@ import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes } from '@/server/db/schema'
-import { USER_ID } from '@/constants/tempUser'
 import { CreateAnswersSchema, SignupForSchema } from '@/server/schema'
+import { auth } from '@clerk/nextjs/server'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
+  // Check user authorization before allowing submission
+  const { userId } = auth()
+  if (!userId) throw new Error('Unauthorized')
+
   try {
     // Extract answer data from the submitted form data
     const answers: QuestionAnswer[] = []
@@ -31,9 +35,6 @@ export async function submitTestAction(formState: FormState, formData: FormData)
       console.log(`Validation error: ${validationResult.error.issues}`)
       return toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź')
     }
-
-    // Generate temp user id with uuid
-    const userId = USER_ID
 
     // Processing test results to get score
     const { correct } = countTestScore(validationResult.data)
