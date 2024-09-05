@@ -10,6 +10,7 @@ import { db } from '@/server/db/index'
 import { completedTestes } from '@/server/db/schema'
 import { CreateAnswersSchema, SignupForSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
+import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -54,6 +55,16 @@ export async function submitTestAction(formState: FormState, formData: FormData)
   // Update form state and redirect on success and redirect user to result page
   toFormState('SUCCESS', 'Test został wypełniony pomyślnie')
   redirect('/testy-opiekun/wyniki')
+}
+
+export async function sendEmail(formState: FormState, formData: FormData) {
+  try {
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath('/')
+  return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
 }
 
 export async function signup(formState: FormStateSignup, formData: FormData) {

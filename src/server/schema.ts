@@ -20,3 +20,12 @@ export const SignupForSchema = z.object({
     })
     .trim(),
 })
+
+export const CreateMessageSchema = z.object({
+  email: z.string().email({ message: 'Proszę podać poprawny email' }).trim(),
+  message: z
+    .string()
+    .min(2, { message: 'Wiadomość musi mieć co najmniej 2 znaki.' })
+    .max(350, { message: 'Wiadomość nie może być dłuższa niż 350 znaków' })
+    .trim(),
+})
