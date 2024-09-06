@@ -7,10 +7,9 @@ import { FormState, FormStateSignup } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
-import { completedTestes } from '@/server/db/schema'
-import { CreateAnswersSchema, SignupForSchema } from '@/server/schema'
+import { completedTestes, customersMessages } from '@/server/db/schema'
+import { CreateAnswersSchema, CreateMessageSchema, SignupForSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
-import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -58,12 +57,21 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 }
 
 export async function sendEmail(formState: FormState, formData: FormData) {
+  const validationResult = CreateMessageSchema.safeParse({
+    email: formData.get('email'),
+    message: formData.get('message'),
+  })
+
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
+  }
+
   try {
+    await db.insert(customersMessages).values(validationResult.data)
   } catch (error) {
     return fromErrorToFormState(error)
   }
 
-  revalidatePath('/')
   return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
 }
 

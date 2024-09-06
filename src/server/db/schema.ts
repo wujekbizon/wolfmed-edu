@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { pgTableCreator, timestamp, varchar, jsonb, integer, uuid, index } from 'drizzle-orm/pg-core'
+import { pgTableCreator, timestamp, varchar, jsonb, integer, uuid, index, serial, text } from 'drizzle-orm/pg-core'
 
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
 
@@ -44,5 +44,13 @@ export const procedures = createTable('procedures', {
   createdAt: timestamp('createdAt')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
+  updatedAt: timestamp('updatedAt'),
+})
+
+export const customersMessages = createTable('messages', {
+  id: serial('id').primaryKey(),
+  email: text('email').notNull(),
+  message: text('message').notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
   updatedAt: timestamp('updatedAt'),
 })
