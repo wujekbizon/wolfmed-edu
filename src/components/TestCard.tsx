@@ -34,7 +34,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                   props.formState.status === 'SUCCESS' &&
                   activeIndex === index &&
                   'bg-[#ff6060] before:animate-none before:bg-[#ff6060]'
-                } before:content[''] border-blue-gray-200 before:bg-blue-gray-500 peer relative h-3.5 min-h-3.5 w-3.5 min-w-3.5 cursor-pointer appearance-none rounded-full border text-gray-900 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-6 before:w-6 before:-translate-x-2/4 before:-translate-y-2/4 before:animate-pulse before:rounded-full before:opacity-0 before:transition-opacity checked:border-zinc-800 checked:bg-[#ff6060] checked:before:bg-[#ff6060] hover:before:opacity-5 disabled:pointer-events-none`}
+                } before:content[''] border-zinc-500 before:bg-blue-gray-500 peer relative h-3.5 min-h-3.5 w-3.5 min-w-3.5 cursor-pointer appearance-none rounded-full border text-gray-900 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-6 before:w-6 before:-translate-x-2/4 before:-translate-y-2/4 before:animate-pulse before:rounded-full before:opacity-0 before:transition-opacity checked:border-zinc-800 checked:bg-[#ff6060] checked:before:bg-[#ff6060] hover:before:opacity-5 disabled:pointer-events-none`}
                 type="radio"
                 value={answer.isCorrect ? 'true' : 'false'}
                 id={answer.option}
