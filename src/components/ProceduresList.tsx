@@ -15,5 +15,11 @@ export default function ProceduresList({ procedures, isLoading, error }: Procedu
     return <p className="text-center text-red-500">Error loading procedures: {error.message}</p>
   }
 
-  return <div>ProceduresList</div>
+  return (
+    <div>
+      {procedures.map((procedure) => (
+        <p key={procedure.data.name}>{procedure.data.name}</p>
+      ))}
+    </div>
+  )
 }
