@@ -1,4 +1,5 @@
 import { Test } from '@/types/dataTypes'
+import { shuffleArray } from './shuffleArray'
 
 export function generateRandomTests(testArray: Test[], numOfQuestions: number) {
   // Handle empty test array
@@ -14,8 +15,17 @@ export function generateRandomTests(testArray: Test[], numOfQuestions: number) {
   while (selectedTests.length < numOfQuestions) {
     const randomIndex = Math.floor(Math.random() * testArray.length)
     const randomQuestion = testArray[randomIndex]
+
     if (randomQuestion && !selectedTests.includes(randomQuestion)) {
-      selectedTests.push(randomQuestion)
+      const shuffleAnswers = shuffleArray(randomQuestion.data.answers)
+
+      selectedTests.push({
+        ...randomQuestion,
+        data: {
+          ...randomQuestion.data,
+          answers: shuffleAnswers,
+        },
+      })
     }
   }
   return selectedTests
