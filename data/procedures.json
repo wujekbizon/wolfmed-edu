@@ -54,15 +54,65 @@
   {
     "data": {
       "name": "Pomiar oddechu",
-      "procedure": "Przygotowanie zestawu: zegarek z sekundnikiem lub stoper. Poinformowanie pacjenta o badaniu tętna (badanie oddechu wykonujemy bez wiedzy pacjenta) Uzyskanie zgody pacjenta. Poinformowanie pacjenta o zachowaniu spokoju podczas badania. Przyjęcie przez pacjenta pozycji siedzącej lub leżącej (wskazane jest aby klatka piersiowa był odsłonięta).Ułożenie ręki na nadgarstku chorego jak do badania tętna. Dyskretne obserwowanie ruchów klatki piersiowej. Liczenie oddechów przez 1 minutę. Ustalenie toru oddychania. czy chory ma trudności oddechowe, czy w proces oddychania włączone są dodatkowe mięśnie oddechowe, czy występuje duszność, czy oddychaniu towarzyszą świsty, trzeszczenia w klatce piersiowej. Określenie zapachu wydychanego powietrza. Udokumentowanie wykonania pomiaru. Zgłoszenie lekarzowi rozpoznanych nieprawidłowości",
-      "algorithm": []
+      "procedure": "Przygotowanie zestawu: zegarek z sekundnikiem lub stoper.",
+      "algorithm": [
+        {
+          "step": "Poinformowanie pacjenta o badaniu tętna (badanie oddechu wykonujemy bez wiedzy pacjenta)."
+        },
+        {
+          "step": "Uzyskanie zgody pacjenta."
+        },
+        {
+          "step": "Poinformowanie pacjenta o zachowaniu spokoju podczas badania."
+        },
+        {
+          "step": "Przyjęcie przez pacjenta pozycji siedzącej lub leżącej (wskazane jest aby klatka piersiowa był odsłonięta)."
+        },
+        {
+          "step": "Ułożenie ręki na nadgarstku chorego jak do badania tętna."
+        },
+        {
+          "step": "Dyskretne obserwowanie ruchów klatki piersiowej."
+        },
+        {
+          "step": "Liczenie oddechów przez 1 minutę."
+        },
+        {
+          "step": "Ustalenie toru oddychania. Czy chory ma trudności oddechowe, czy w proces oddychania włączone są dodatkowe mięśnie oddechowe, czy występuje duszność, czy oddychaniu towarzyszą świsty, trzeszczenia w klatce piersiowej. "
+        },
+        {
+          "step": "Określenie zapachu wydychanego powietrza."
+        },
+        {
+          "step": "Udokumentowanie wykonania pomiaru."
+        },
+        {
+          "step": "Zgłoszenie lekarzowi rozpoznanych nieprawidłowości."
+        }
+      ]
     }
   },
   {
     "data": {
       "name": "Mierzenie tętna",
-      "procedure": "Tętnem nazywamy spowodowane przez skurcz serca wyczuwalne uderzenie o ścianę naczynia fali krwi, która przepłynęła przez układ tętniczy. Tętno wyczuwa się tam gdzie tętnice przebiegają powierzchownie i gdzie można docisnąć je do twardych struktur tkankowych. Dokonując pomiaru tętna oceniamy: napięcie (siłę), liczbę (częstość) i miarowość. Badanie przeprowadza się w szpitalu u każdego chorego 2 razy dziennie równocześnie z pomiarem temperatury. Metody badania tętna: Metodą palpacyjną, Za pomocą stetoskopu, osłuchując serce, Metodą elektroniczną Typowym miejscem badania tętna jest tętnica promieniowa. W stanach nagłych tętno badamy na dużych tętnicach (szyjnej, udowej, ramiennej, nad koniuszkiem serca).W zaburzeniach krążenia tętno bada się na tętnicy: Grzbietowej stopy, Podkolanowej, Piszczelowej tylnej Zasady oceny tętna: Zapewnienie pacjentowi wygodnej pozycji (pozycja siedząca lub leżącą ze stabilnym podparciem badanej kończyny).Zalecenie pacjentowi 5minutowego odpoczynku przed badaniem. Do oceny tętna wykorzystujemy 2, 3 i 4 palec. Kciuk powinien znajdować się poza polem badanej tętnicy. Jeżeli tętno jest dobrze wyczuwalne i miarowe liczymy uderzenia przez 1 5 sekund (uzyskany wynik mnożymy przez 4). Jeżeli tętno jest niemiarowe liczymy uderzenia przez 1 min. Określamy szybkość, napięcie i ewentualny typ niemiarowości.",
-      "algorithm": []
+      "procedure": "Tętnem nazywamy spowodowane przez skurcz serca wyczuwalne uderzenie o ścianę naczynia fali krwi, która przepłynęła przez układ tętniczy. Tętno wyczuwa się tam gdzie tętnice przebiegają powierzchownie i gdzie można docisnąć je do twardych struktur tkankowych. Dokonując pomiaru tętna oceniamy: napięcie (siłę), liczbę (częstość) i miarowość. Badanie przeprowadza się w szpitalu u każdego chorego 2 razy dziennie równocześnie z pomiarem temperatury. Metody badania tętna: Metodą palpacyjną, Za pomocą stetoskopu, osłuchując serce, Metodą elektroniczną Typowym miejscem badania tętna jest tętnica promieniowa. W stanach nagłych tętno badamy na dużych tętnicach (szyjnej, udowej, ramiennej, nad koniuszkiem serca).W zaburzeniach krążenia tętno bada się na tętnicy: Grzbietowej stopy, Podkolanowej, Piszczelowej tylnej Zasady oceny tętna: ",
+      "algorithm": [
+        {
+          "step": "Zapewnienie pacjentowi wygodnej pozycji (pozycja siedząca lub leżącą ze stabilnym podparciem badanej kończyny). Zalecenie pacjentowi 5 minutowego odpoczynku przed badaniem."
+        },
+        {
+          "step": "Do oceny tętna wykorzystujemy 2, 3 i 4 palec. Kciuk powinien znajdować się poza polem badanej tętnicy."
+        },
+        {
+          "step": "Jeżeli tętno jest dobrze wyczuwalne i miarowe liczymy uderzenia przez 1 5 sekund (uzyskany wynik mnożymy przez 4)."
+        },
+        {
+          "step": "Jeżeli tętno jest niemiarowe liczymy uderzenia przez 1 min."
+        },
+        {
+          "step": "Określamy szybkość, napięcie i ewentualny typ niemiarowości."
+        }
+      ]
     }
   },
   {

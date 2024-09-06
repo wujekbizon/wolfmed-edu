@@ -23,7 +23,7 @@ export interface Test {
 export type ExtendedTest = Omit<Test, 'data'> & { data: unknown }
 
 // procedures related types
-type Step = {
+export type Step = {
   step: string
 }
 
