@@ -36,6 +36,7 @@ interface ProcedureData {
 export interface Procedure {
   data: ProcedureData
 }
+export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
 
 export type ServerData = Procedure[] | Test[]
 export type QuestionAnswer = Record<string, string>

@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { ExtendedCompletedTest, ExtendedTest } from '@/types/dataTypes'
+import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest } from '@/types/dataTypes'
 import { cache } from 'react'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -9,6 +9,14 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   })
 
   return tests
+})
+
+export const getAllProcedures = cache(async (): Promise<ExtendedProcedures[]> => {
+  const procedures = await db.query.procedures.findMany({
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+
+  return procedures
 })
 
 export const getCompletedTestsByUser = cache(async (userId: string): Promise<ExtendedCompletedTest[]> => {
