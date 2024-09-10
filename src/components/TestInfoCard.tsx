@@ -6,7 +6,7 @@ export default function TestInfoCard({ card }: { card: TestCardContent }) {
   return (
     <Link
       href={card.link}
-      className="h-[470px] w-[90%] md:w-[350px] bg-zinc-50 flex flex-col transition-all justify-between px-8 pt-8 rounded-[30px] hover:bg-white border hover:border-zinc-400/90 border-red-200/40 shadow-md shadow-zinc-500"
+      className="h-[470px] w-[90%] md:w-[370px] bg-zinc-50 flex flex-col transition-all justify-between px-8 pt-8 rounded-[30px] hover:bg-white border hover:border-zinc-400/90 border-red-200/40 shadow-md shadow-zinc-500"
     >
       <div className="flex h-full w-full flex-col gap-2">
         <p className="text-xs text-zinc-400">{card.category}</p>

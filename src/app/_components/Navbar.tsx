@@ -24,10 +24,10 @@ export default function Navbar() {
 
       {isMenuOpen && <SideMenu />}
 
-      <nav className="bg-white py-[10px] px-4 hidden lg:flex gap-5 items-center rounded-full border-red-300/50 shadow-sm shadow-zinc-400">
+      <nav className="bg-white py-[8px] px-8 hidden lg:flex gap-8 items-center rounded-full border-red-200/40 shadow-sm shadow-zinc-400">
         {navLinks.map((link) => (
           <Link href={link.linkUrl} key={link.id}>
-            <p className="text-sm font-semibold text-zinc-900 hover:text-[#ffa5a5] transition-colors">{link.label}</p>
+            <p className="text-base  text-zinc-900 hover:text-[#ffa5a5] transition-colors">{link.label}</p>
           </Link>
         ))}
       </nav>

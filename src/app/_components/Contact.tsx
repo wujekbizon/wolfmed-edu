@@ -14,7 +14,7 @@ export default function Contact() {
   const noScriptFallback = useToastMessage(state)
 
   return (
-    <div id="contact" className="h-[75vh] w-full rounded-3xl px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4">
+    <div id="contact" className="h-[75vh] w-full rounded-3xl px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 z-10">
       <div className="flex h-3/4 w-full items-end bg-[#ffc5c5] bg-[url('/contact.jpg')] bg-cover bg-top rounded-3xl border shadow-lg shadow-zinc-400">
         <div className="mb-[-170px] ml-auto mr-auto flex gap-5 w-[95%] flex-col justify-between rounded-lg border border-red-200/40 shadow-md shadow-zinc-500 bg-zinc-50 p-8 sm:mb-[-100px] sm:w-[500px] md:ml-[20%]">
           <h2 className="text-3xl font-semibold text-zinc-800">Jak Możemy Ci Pomóc?</h2>
