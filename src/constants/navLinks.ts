@@ -7,7 +7,7 @@ export const navLinks = [
   {
     id: '2',
     linkUrl: '/testy-opiekun',
-    label: 'Testy',
+    label: 'Testy i Procedury',
   },
   {
     id: '3',

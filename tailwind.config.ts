@@ -88,7 +88,7 @@ const config: Config = {
           '&::-webkit-scrollbar-thumb': {
             backgroundColor: '#ffa5a5',
             borderRadius: '20px',
-            border: '2px solid white',
+            border: '1px solid white',
           },
         },
       }

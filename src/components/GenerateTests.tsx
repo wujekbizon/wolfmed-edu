@@ -25,7 +25,7 @@ export default function GenerateTests(props: { tests: Test[] }) {
   }, [state.status === 'SUCCESS'])
 
   return (
-    <section className="flex w-full flex-col items-center gap-8 overflow-y-auto scrollbar-webkit p-4 sm:p-12">
+    <section className="flex w-full flex-col items-center gap-8 overflow-y-auto scrollbar-webkit p-4 sm:p-8">
       {!isTest && (
         <div className="w-full h-full flex items-center justify-center">
           <TestsLevelMenu />

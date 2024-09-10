@@ -14,15 +14,9 @@ export default function LearningAssistant() {
         />
       </div>
       <p className="text-sm xs:text-base text-zinc-900">
-        Cześć, jestem <span className="font-semibold text-red-600">Fiolka!</span> Cieszę sie że znalazłaś/łeś czas na
-        trochę nauki.
         <br /> Na tej stronie masz dostęp do wszystkich pytań. Wow, mamy ich naprawde bardzo dużo bo aż{' '}
         <span className="font-bold">{NUMBER_OF_TESTS}</span>.<br />
         Możesz przeglądać je po kolei badż skorzystać z prostej wyszukiwarki terminowej.
-        <br />
-        {/* <span className="text-xs text-zinc-600">
-          Na obecną chwilę pytania nie są skateryzowane , ale pracujemy nad tym!
-        </span> */}
       </p>
     </div>
   )
