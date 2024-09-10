@@ -36,6 +36,10 @@ const config: Config = {
       animation: {
         slideInDown: 'slideInDown 1s ease var(--slidein-delay, 0) forwards',
       },
+      backgroundSize: {
+        '70%': '70%',
+        '80%': '80%',
+      },
     },
   },
   plugins: [

@@ -21,9 +21,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.55.2
         version: 5.55.2(react@19.0.0-rc-a03254bc-20240905)
-      '@tanstack/react-query-devtools':
-        specifier: ^5.55.2
-        version: 5.55.2(@tanstack/react-query@5.55.2(react@19.0.0-rc-a03254bc-20240905))(react@19.0.0-rc-a03254bc-20240905)
       '@vercel/postgres':
         specifier: ^0.9.0
         version: 0.9.0
@@ -709,15 +706,6 @@ packages:
 
   '@tanstack/query-core@5.55.2':
     resolution: {integrity: sha512-WfuUx06sw/V3R2tRRQf4KZj0g4Q5EHrTdwJmCUovMFuHWVzDvLd5U+B7d5Pk8ni5w5SGpUuzGuQv3nN8xo1QbQ==}
-
-  '@tanstack/query-devtools@5.55.1':
-    resolution: {integrity: sha512-2g0TWQGlkyHs9maHIU5A7lRunG4Rj3Y5lOEenE+fydE4zk7GqRs7rKJBp7F74iqRo/cA9V6t1YYQWqd6YRBmcQ==}
-
-  '@tanstack/react-query-devtools@5.55.2':
-    resolution: {integrity: sha512-QkL5Saai7MqEEkGNjhtNB0F1iD4DjpKnvrBM3510L54N8/+4tBPXjMB5a2+ADTYgOrtm4Gn8sJQs/qWKmdpqIg==}
-    peerDependencies:
-      '@tanstack/react-query': ^5.55.2
-      react: ^18 || ^19
 
   '@tanstack/react-query@5.55.2':
     resolution: {integrity: sha512-PkbEmO64nphWPhufkE9aJ+iEScg8tNNCykYlH7vDwb2R6G8uJC+HTJgXc2n8cRaJe6ETVIeQLFFESVd+2N/tww==}
@@ -2947,14 +2935,6 @@ snapshots:
       tslib: 2.7.0
 
   '@tanstack/query-core@5.55.2': {}
-
-  '@tanstack/query-devtools@5.55.1': {}
-
-  '@tanstack/react-query-devtools@5.55.2(@tanstack/react-query@5.55.2(react@19.0.0-rc-a03254bc-20240905))(react@19.0.0-rc-a03254bc-20240905)':
-    dependencies:
-      '@tanstack/query-devtools': 5.55.1
-      '@tanstack/react-query': 5.55.2(react@19.0.0-rc-a03254bc-20240905)
-      react: 19.0.0-rc-a03254bc-20240905
 
   '@tanstack/react-query@5.55.2(react@19.0.0-rc-a03254bc-20240905)':
     dependencies:

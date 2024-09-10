@@ -2,7 +2,7 @@ export const navLinks = [
   {
     id: '1',
     linkUrl: '/',
-    label: 'Kursy i Szkolenia',
+    label: 'Strona główna',
   },
   {
     id: '2',
