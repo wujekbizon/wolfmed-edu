@@ -2,6 +2,7 @@ import DashboardIcon from '@/components/icons/DashboardIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
 import Image from 'next/image'
 import Link from 'next/link'
+import ProceduresIcon from './icons/ProceduresIcon'
 
 export default function TestsDashboard() {
   return (
@@ -20,21 +21,24 @@ export default function TestsDashboard() {
             zwiazanych z rozwojem tego zawodu.
           </p>
           <div className="flex items-center gap-4">
-            <p className="text-sm xs:text-base font-semibold text-zinc-900">No to co, zaczynamy sie uczyć ?</p>
-            <Link href="/testy-opiekun/nauka" className="flex items-center justify-center animate-bounce">
-              <LearnIcon color="#ff8c8c" width={34} height={34} />
+            <Link href="/testy-opiekun/nauka" className="flex items-center justify-center gap-2">
+              <p className="text-sm xs:text-base font-semibold text-zinc-900">Zobacz wszystkie dostępne pytania</p>
+              <LearnIcon color="#ff8c8c" width={30} height={30} />
             </Link>
           </div>
           <div className="flex items-center gap-4">
-            <p className="text-sm xs:text-base font-semibold text-zinc-900">A może sprawdzisz swoją wiedzę?</p>
-            <Link href="/testy-opiekun/testy" className="flex items-center justify-center animate-bounce">
-              <DashboardIcon color="#ff8c8c" width={34} height={34} />
+            <Link href="/testy-opiekun/testy" className="flex items-center justify-center gap-2">
+              <p className="text-sm xs:text-base font-semibold text-zinc-900 hover:text-zinc-800">Rozwiąż test</p>
+              <DashboardIcon color="#ff8c8c" width={30} height={30} />
+            </Link>
+          </div>
+          <div className="flex items-center gap-4">
+            <Link href="/testy-opiekun/procedury" className="flex items-center justify-center gap-2">
+              <p className="text-sm xs:text-base font-semibold text-zinc-900">Sprawdz swoją wiedzę z procedur</p>
+              <ProceduresIcon color="#ff8c8c" width={30} height={30} />
             </Link>
           </div>
           <div className="absolute right-[-10px] top-[-90px] lg:top-[-50px] lg:right-[-50px] h-32 min-w-32 border-4 border-white rounded-full hidden xs:inline-block">
-            <p className="absolute top-[-25px] left-[-45px] text-sm">
-              Cześć, jestem <span className="font-semibold">Ampułka</span>
-            </p>
             <Image
               src="/guide.jpg"
               width={150}
