@@ -6,21 +6,15 @@ import Link from 'next/link'
 import SideMenu from './SideMenu'
 import Logo from '@/components/Logo'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
+import MenuIcon from '@/components/icons/MenuIcon'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
 
   return (
     <header className="h-16 w-full z-10 flex items-center justify-between relative animate-slideInDown opacity-0 [--slidein-delay:100ms] px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4">
+      <MenuIcon onClick={toggleMenu} />
       <Logo />
-      <Image
-        src="/hamburger.png"
-        alt="menu"
-        width={32}
-        height={32}
-        className="inline-block lg:hidden cursor-pointer"
-        onClick={toggleMenu}
-      />
 
       {isMenuOpen && <SideMenu />}
 
@@ -31,18 +25,20 @@ export default function Navbar() {
           </Link>
         ))}
       </nav>
-      <div className="hidden lg:flex items-center gap-3">
-        <SignedOut>
-          <SignInButton mode="modal">
-            <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
-              Zaloguj się
-            </button>
-          </SignInButton>
-        </SignedOut>
-        <SignedIn>
-          <UserButton afterSwitchSessionUrl="/" />
-        </SignedIn>
-      </div>
+
+      <SignedOut>
+        <SignInButton mode="modal">
+          <button className="bg-white border border-red-300/50 shadow-sm hover:text-[#ffa5a5] shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full text-zinc-900 hover:bg-[#ffffff] transition-colors">
+            Zaloguj się
+          </button>
+        </SignInButton>
+      </SignedOut>
+      <SignedIn>
+        <UserButton
+          afterSwitchSessionUrl="/"
+          appearance={{ elements: { userButtonAvatarBox: { width: 40, height: 40 } } }}
+        />
+      </SignedIn>
     </header>
   )
 }

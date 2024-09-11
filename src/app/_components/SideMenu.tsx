@@ -1,4 +1,5 @@
 import CustomButton from '@/components/CustomButton'
+import CloseIcon from '@/components/icons/Close'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { useStore } from '@/store/useStore'
@@ -16,9 +17,9 @@ export default function SideMenu() {
         isMenuOpen ? 'translate-x-[0%]' : 'translate-x-[140%]'
       }`}
     >
-      <p className="cursor-pointer font-extrabold text-2xl text-zinc-50 hover:text-zinc-500" onClick={toggleMenu}>
-        X
-      </p>
+      <div className="flex justify-end">
+        <CloseIcon onClick={toggleMenu} />
+      </div>
       <div className="h-full w-full flex flex-col justify-around">
         <div className="grid h-full w-full grid-cols-2 grid-rows-2 gap-5 pt-5 rounded-lg xs:grid-cols-2 ">
           {navLinks.map((link) => (
@@ -29,7 +30,7 @@ export default function SideMenu() {
               className="w-full h-full flex items-center bg-[#ffc5c5] hover:scale-95 transition-all border border-red-200/40  hover:bg-[#f58a8a]  hover:border-zinc-800 rounded-lg justify-center"
             >
               <div className="flex items-center justify-center">
-                <p className="text-2xl text-zinc-900">{link.label}</p>
+                <p className="text-xl text-zinc-90 text-center">{link.label}</p>
               </div>
             </Link>
           ))}
