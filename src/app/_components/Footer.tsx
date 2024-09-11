@@ -43,18 +43,21 @@ export default function Footer() {
             <p className="text-sm text-zinc-50 font-semibold">Znajdż nas w sieci.</p>
             <div className="flex flex-row items-center justify-between w-full pb-8">
               <Link
+                target="_blank"
                 className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/"
               >
                 <FacebookIcon />
               </Link>
               <Link
+                target="_blank"
                 className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://www.facebook.com"
               >
                 <LinkedInIcon />
               </Link>
               <Link
+                target="_blank"
                 className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://x.com/home"
               >
