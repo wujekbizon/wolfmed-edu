@@ -8,7 +8,7 @@ export default function SortSelect() {
       <select
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value as SortOption)}
-        className="p-2 rounded-full text-sm border-red-200/40 bg-white shadow-md shadow-zinc-500 cursor-pointer outline-none"
+        className="p-2 rounded-full text-xs sm:text-sm border-red-200/40 bg-white shadow shadow-zinc-500 cursor-pointer outline-none"
       >
         <option value="dateDesc">Od Najnowszych</option>
         <option value="dateAsc">Od Najstarszych</option>

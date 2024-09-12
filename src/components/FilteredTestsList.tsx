@@ -24,9 +24,9 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
   const startIndex = (currentPage - 1) * perPage
   const paginatedTests = tests.slice(startIndex, startIndex + perPage)
 
-  if (isLoading) {
-    return <p className="text-center">Loading tests...</p>
-  }
+  // if (isLoading) {
+  //   return <p className="text-center">Loading tests...</p>
+  // }
 
   if (error) {
     return <p className="text-center text-red-500">Error loading tests: {error.message}</p>

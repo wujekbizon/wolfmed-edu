@@ -4,7 +4,7 @@ import { getCompletedTest } from '@/server/queries'
 import type { CompletedTest } from '@/types/dataTypes'
 import { Suspense } from 'react'
 
-export const experimental_ppr = true
+export const dynamic = 'force-dynamic'
 
 async function CompletedTest({ testId }: { testId: string }) {
   const completedTest = (await getCompletedTest(testId)) as CompletedTest

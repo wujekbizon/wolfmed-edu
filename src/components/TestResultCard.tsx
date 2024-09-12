@@ -23,14 +23,22 @@ export default async function TestResultCard({ completedTest }: { completedTest:
       <div
         key={id}
         className={`${
-          correctAnswer?.option === userCorrectAnswer?.option ? 'bg-green-400/30' : 'bg-red-400/30'
+          correctAnswer?.option === userCorrectAnswer?.option ? 'bg-green-400/20' : 'bg-red-400/20'
         } flex w-full flex-col md:flex-row items-center justify-between rounded-lg border border-zinc-200/40 p-3 shadow shadow-zinc-500`}
       >
         <div className="w-full md:w-2/3 border-b border-r-0 md:border-b-0 md:border-r border-zinc-400/20 p-3">
+          {userCorrectAnswer.isCorrect ? (
+            <p className="text-xs text-zinc-400">
+              Super, na to pytanie udzielłeś prawidłowej odpowiedzi<i></i>
+            </p>
+          ) : (
+            <p className="text-xs text-red-400">Niestety, na to pytanie udzielłeś nieprawidłowej odpowiedzi </p>
+          )}
           <p className="text-base text-muted-foreground">{question}</p>
         </div>
         {correctAnswer && (
           <div className="w-full md:w-1/3 p-3">
+            <p className="text-xs text-zinc-400">Poprawna odpowiedż to: </p>
             <p className="text-base text-muted-foreground">{correctAnswer.option}</p>
           </div>
         )}
@@ -43,9 +51,9 @@ export default async function TestResultCard({ completedTest }: { completedTest:
       <div className="flex items-center justify-center gap-2">
         <h2 className="text-lg text-zinc-900">Twój wynik to: </h2>
 
-        <div className="w-9 h-9 bg-zinc-100 rounded-full flex items-center justify-center">
-          <p className="text-xl text-[#ff5b5b] font-bold">{score}</p>
-        </div>
+        <p className="text-base text-zinc-800">
+          <span className="text-xl text-[#ff5b5b] font-bold">{score}</span> / {testResult.length}
+        </p>
       </div>
 
       {questionDetails}

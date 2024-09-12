@@ -45,14 +45,14 @@ export default function Footer() {
               <Link
                 target="_blank"
                 className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
-                href="https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/"
+                href="https://www.facebook.com"
               >
                 <FacebookIcon />
               </Link>
               <Link
                 target="_blank"
                 className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
-                href="https://www.facebook.com"
+                href="https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/"
               >
                 <LinkedInIcon />
               </Link>

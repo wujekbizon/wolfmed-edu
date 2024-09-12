@@ -7,7 +7,6 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import SearchTerm from './SearchTerm'
 import FilteredTestsList from './FilteredTestsList'
-import LearningAssistant from './LearningAssistant'
 import { Test } from '@/types/dataTypes'
 
 export default function AllTests(props: { tests: Test[] }) {
@@ -56,15 +55,14 @@ export default function AllTests(props: { tests: Test[] }) {
   })
 
   return (
-    <section
-      className="flex flex-col items-center gap-8 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit"
-      ref={listRef}
-    >
-      <LearningAssistant />
-      <div className="place-self-center w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
-        <SearchTerm />
+    <section className="px-1 sm:px-4 py-4 w-full h-full " ref={listRef}>
+      <div className="overflow-y-auto scrollbar-webkit h-full flex flex-col items-center gap-8 pr-1">
+        {/* <LearningAssistant /> */}
+        <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
+          <SearchTerm />
+        </div>
+        <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
       </div>
-      <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
     </section>
   )
 }
