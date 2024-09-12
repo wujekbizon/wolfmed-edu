@@ -16,6 +16,15 @@ export default function About() {
           Oferujemy <span className="font-bold text-lg underline">bezpłatny</span> dostęp do najnowszych testów i pytań
           medycznych, które pomogą Ci rozwinąć swoją wiedzę i umiejętności.
         </p>
+        <p>
+          Jesteśmy w trakcie rozwoju dlatego zachęcamy każdego do wsparcia naszego startupu:
+          <span className="text-xl font-bold text-red-500 animate-pulse">
+            {' '}
+            <Link target="_blank" href="https://buymeacoffee.com/grzegorzwolfinger">
+              Kupuje serduszko ❤️
+            </Link>
+          </span>
+        </p>
         <div className="flex flex-col w-full items-end gap-2">
           <p className="text-base">
             Dołącz do nas w budowaniu społeczności zmotywowanych osób zaangażowanych w pozytywny wpływ na opiekę

@@ -12,7 +12,7 @@ export default function Blog() {
           className="bg-[#ffb1b1] hover:text-[#fffcfc] border border-red-100/50 shadow-sm shadow-zinc-400 text-sm font-semibold py-[9px] px-4 rounded-full hover:bg-[#ffa5a5] transition-colors text-zinc-900 text-center place-self-center"
           href="/"
         >
-          Zapraszamy wkrótce
+          Już wkrótce odpalamy !🚀
         </Link>
       </div>
     </section>
