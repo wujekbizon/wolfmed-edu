@@ -5,7 +5,7 @@ export const testsMenu = [
   },
   {
     number: 20,
-    testTitle: 'Pewniak',
+    testTitle: 'Podstawowy',
   },
   {
     number: 40,
