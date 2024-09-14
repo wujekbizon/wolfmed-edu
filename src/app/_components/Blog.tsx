@@ -5,7 +5,8 @@ export default function Blog() {
     <section className="h-[calc(100vh_-_70px)] w-full flex flex-col items-center justify-center p-8">
       <div className="w-full lg:w-2/3 xl:w-1/2 h-fit bg-white rounded-2xl p-6 flex flex-col justify-center gap-8">
         <p className="text-center">
-          Witam na blogu medycznym, tutaj znajdziesz ciekawe informacje na temat opiekuna medycznego.
+          Witam na blogu medycznym, tutaj znajdziesz ciekawe informacje na temat opiekuna medycznego. Dostępne tylko dla
+          użytkowników premium
         </p>
 
         <Link

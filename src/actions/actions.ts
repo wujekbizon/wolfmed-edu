@@ -3,14 +3,15 @@
 import { countTestScore } from '@/helpers/countTestScore'
 import { parseAnswerRecord } from '@/helpers/parseAnswerRecord'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import { FormState, FormStateSignup } from '@/types/actionTypes'
+import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
-import { completedTestes, customersMessages } from '@/server/db/schema'
-import { CreateAnswersSchema, CreateMessageSchema, SignupForSchema } from '@/server/schema'
+import { completedTestes, customersMessages, users } from '@/server/db/schema'
+import { CreateAnswersSchema, CreateMessageSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
+import { getUserTestLimit } from '@/server/queries'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -18,6 +19,20 @@ export async function submitTestAction(formState: FormState, formData: FormData)
   if (!userId) throw new Error('Unauthorized')
 
   try {
+    const userTestLimit = await getUserTestLimit(userId)
+
+    if (!userTestLimit) {
+      console.log('No user is found!')
+      return toFormState('ERROR', 'No user is found!')
+    }
+
+    if (userTestLimit.testLimit !== null) {
+      if (userTestLimit.testLimit <= 0) {
+        // user has no premium member access or used his limit
+        toFormState('ERROR', 'Wyczerpałes limit testów dla darmowego konta. Sprawdż nasze oferty dla klientów premium')
+      }
+    }
+
     // Extract answer data from the submitted form data
     const answers: QuestionAnswer[] = []
     formData.forEach((value, key) => {
@@ -47,7 +62,17 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     const completedTest = { userId, score: correct, testResult }
 
     // Insert completed tests to db
-    await db.insert(completedTestes).values(completedTest)
+    await db.transaction(async (tx) => {
+      if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
+        // here I want to update user limit by decresing 1 from it
+        await tx
+          .update(users)
+          .set({ testLimit: userTestLimit.testLimit - 1 })
+          .where(eq(users.userId, userId))
+      }
+
+      await tx.insert(completedTestes).values(completedTest)
+    })
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -99,23 +124,4 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   }
 
   return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
-}
-
-export async function signup(formState: FormStateSignup, formData: FormData) {
-  const validationResult = SignupForSchema.safeParse({
-    name: formData.get('name'),
-    email: formData.get('email'),
-    password: formData.get('password'),
-  })
-
-  if (!validationResult.success) {
-    return {
-      errors: validationResult.error.flatten().fieldErrors,
-    }
-  }
-
-  console.log(validationResult.data)
-
-  return undefined
-  // return toFormState('SUCCESS', 'Konto zarejestrowane pomyślnie!')
 }

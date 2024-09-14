@@ -1,7 +1,9 @@
 import 'server-only'
 import { db } from '@/server/db/index'
+import { users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest } from '@/types/dataTypes'
 import { cache } from 'react'
+import { eq } from 'drizzle-orm'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -42,4 +44,9 @@ export const getQuestionById = cache(async (testId: string) => {
   })
 
   return question
+})
+
+export const getUserTestLimit = cache(async (id: string) => {
+  const [testLimit] = await db.select({ testLimit: users.testLimit }).from(users).where(eq(users.userId, id))
+  return testLimit
 })

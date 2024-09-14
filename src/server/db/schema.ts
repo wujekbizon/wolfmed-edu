@@ -8,6 +8,7 @@ export const users = createTable(
   {
     id: uuid('id').primaryKey().defaultRandom(),
     userId: varchar('userId', { length: 256 }).notNull().unique(),
+    testLimit: integer('testLimit').default(10),
     createdAt: timestamp('createdAt').default(sql`CURRENT_TIMESTAMP`),
     updatedAt: timestamp('updatedAt'),
   },
