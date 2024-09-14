@@ -1,7 +1,7 @@
 import LearningCard from '@/components/LearningCard'
 import SearchTerm from '@/components/SearchTerm'
 import TestLoader from '@/components/TestsLoader'
-import { loadingTestData } from '@/constants/LoadingTestsData'
+import { loadingTestData } from '@/constants/loadingTestsData'
 
 export default function Loading() {
   return (

@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+export const dynamic = 'force-static'
+
 export default function NotFound() {
   return (
     <div className="flex h-[calc(100vh_-_70px)] rounded-br-[46px]  rounded-bl-[46px] flex-col items-center justify-end bg-[url('/not-found.jpg')] bg-center bg-size-cover text-zinc-950">
