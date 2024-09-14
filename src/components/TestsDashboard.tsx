@@ -1,6 +1,3 @@
-import DashboardIcon from '@/components/icons/DashboardIcon'
-import LearnIcon from '@/components/icons/LearnIcon'
-import ProceduresIcon from './icons/ProceduresIcon'
 import Image from 'next/image'
 import Link from 'next/link'
 import { dashboardLinks } from '@/constants/dashboardLinks'
@@ -9,7 +6,7 @@ export default function TestsDashboard() {
   return (
     <section className="flex justify-center w-full gap-2 h-full overflow-y-auto scrollbar-webkit">
       <div className="lg:w-[80%] h-full w-full flex flex-col items-center justify-center">
-        <div className="border-red-200/60 shadow-md shadow-zinc-500 animate-slideInDown opacity-0 [--slidein-delay:300ms] h-fit bg-white w-[95%] xl:w-3/4 gap-6 flex flex-col justify-center sm:justify-between p-8 pr-8 lg:pr-14 rounded-xl relative">
+        <div className="border-red-200/60 shadow-md shadow-zinc-500 h-fit bg-white w-[95%] xl:w-3/4 gap-6 flex flex-col justify-center sm:justify-between p-8 pr-8 lg:pr-14 rounded-xl relative">
           <p className="text-base text-zinc-900 pt-6">
             Witaj przyszły <span className="font-bold text-[#f58a8a] text-base xs:text-lg">opiekunie medyczny</span>,{' '}
             <br /> w tym dziale przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do
@@ -43,6 +40,7 @@ export default function TestsDashboard() {
               height={150}
               alt="Asystent"
               className="w-full h-full object-cover rounded-full"
+              priority
             />
           </div>
         </div>

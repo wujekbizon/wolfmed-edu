@@ -51,13 +51,12 @@ export default function AllTests(props: { tests: Test[] }) {
     queryKey: ['filteredTests', debouncedSearchTerm],
     queryFn: filteredTestsQueryFn,
     enabled: !!searchTerm || true,
-    staleTime: 10 * 60 * 1000, // Cache results for 10 minutes
+    staleTime: 10 * 60 * 1000,
   })
 
   return (
     <section className="px-1 sm:px-4 py-4 w-full h-full " ref={listRef}>
       <div className="overflow-y-auto scrollbar-webkit h-full flex flex-col items-center gap-8 pr-1">
-        {/* <LearningAssistant /> */}
         <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
           <SearchTerm />
         </div>

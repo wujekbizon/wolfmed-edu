@@ -17,7 +17,7 @@ export default function ProceduresList({ procedures, isLoading, error }: Procedu
   }
 
   return (
-    <div className="w-full lg:w-3/4 xl:w-2/3 flex flex-col gap-6 py-2">
+    <div className="w-full lg:w-3/4 xl:w-2/3 flex flex-col gap-6 py-2 pr-2 overflow-y-auto scrollbar-webkit">
       {procedures.map((procedure) => (
         <ProcedureContent key={procedure.data.name} procedure={procedure} />
       ))}

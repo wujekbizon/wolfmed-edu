@@ -20,7 +20,7 @@ export default function AllProcedures(props: { procedures: Procedure[] }) {
   })
 
   return (
-    <section className="flex flex-col items-center gap-8 px-1 sm:px-4 w-full h-full overflow-y-auto scrollbar-webkit">
+    <section className="flex flex-col items-center gap-8 px-1 sm:px-4 py-4  w-full h-full ">
       <ProceduresList procedures={procedures} isLoading={isLoading} error={error} />
     </section>
   )

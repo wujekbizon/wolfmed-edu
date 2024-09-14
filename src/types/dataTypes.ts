@@ -4,7 +4,7 @@ type Answer = {
   isCorrect: boolean
 }
 
-interface TestData {
+export interface TestData {
   question: string
   answers: Answer[]
 }
@@ -13,8 +13,8 @@ export interface Test {
   id: string
   data: TestData
   category: string
-  createdAt: Date
-  updatedAt: Date | null
+  createdAt?: Date
+  updatedAt?: Date | null
 }
 
 // Create a custom type that uses the Omit utility type to exclude the data property

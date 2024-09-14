@@ -31,26 +31,26 @@ export default function GenerateTests(props: { tests: Test[] }) {
           <TestsLevelMenu />
         </div>
       )}
-      <div className="flex w-full flex-col items-center overflow-y-auto scrollbar-webkit p-2">
-        <form action={action} className="grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3 ">
-          {numberTests && (
-            <>
-              {randomTest.map((item, index) => (
-                <div className="flex flex-col" key={item.id}>
-                  <TestCard formState={state} test={item} questionNumber={`${index + 1}/${randomTest.length}`} />
-                  <FieldError formState={state} name={`answer-${item.id}`} />
-                </div>
-              ))}
-            </>
-          )}
-          {isTest && (
+      {isTest && (
+        <div className="flex w-full flex-col items-center overflow-y-auto scrollbar-webkit p-2">
+          <form action={action} className="grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3 ">
+            {numberTests && (
+              <>
+                {randomTest.map((item, index) => (
+                  <div className="flex flex-col" key={item.id}>
+                    <TestCard formState={state} test={item} questionNumber={`${index + 1}/${randomTest.length}`} />
+                    <FieldError formState={state} name={`answer-${item.id}`} />
+                  </div>
+                ))}
+              </>
+            )}
             <div className="flex w-full flex-col sm:flex-row justify-center items-center place-self-center gap-4 rounded-lg border border-red-200/40 bg-zinc-100 lg:w-2/3 xl:w-1/2 p-4 shadow shadow-zinc-500">
               <SubmitButton label="Prześlij Test" loading="Przesyłam..." disabled={state?.status === 'SUCCESS'} />
               <ResetTestButton />
             </div>
-          )}
-        </form>
-      </div>
+          </form>
+        </div>
+      )}
     </section>
   )
 }

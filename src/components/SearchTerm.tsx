@@ -1,3 +1,5 @@
+'use client'
+
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import Label from './Label'
 import Input from './Input'

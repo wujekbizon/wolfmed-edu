@@ -1,9 +1,9 @@
 import CompletedTestsList from '@/components/CompletedTestsList'
-import TestLoader from '@/components/TestsLoader'
 import { getCompletedTestsByUser } from '@/server/queries'
 import { CompletedTest } from '@/types/dataTypes'
 import { currentUser } from '@clerk/nextjs/server'
 import { Suspense } from 'react'
+import Loading from './loading'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,7 +19,7 @@ async function CompletedTests() {
 
 export default function TestsResultPage() {
   return (
-    <Suspense fallback={<TestLoader />}>
+    <Suspense fallback={<Loading />}>
       <CompletedTests />
     </Suspense>
   )

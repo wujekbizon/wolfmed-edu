@@ -3,6 +3,7 @@ import TestLoader from '@/components/TestsLoader'
 import { getAllProcedures } from '@/server/queries'
 import { Procedure } from '@/types/dataTypes'
 import { Suspense } from 'react'
+import Loading from './loading'
 
 export const dynamic = 'force-static'
 
@@ -14,7 +15,7 @@ async function Procedures() {
 
 export default function ProceduresPage() {
   return (
-    <Suspense fallback={<TestLoader />}>
+    <Suspense fallback={<Loading isLoading />}>
       <Procedures />
     </Suspense>
   )

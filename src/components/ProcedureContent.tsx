@@ -1,3 +1,5 @@
+'use client'
+
 import { Procedure } from '@/types/dataTypes'
 import { useState } from 'react'
 import ProcedureCard from './ProcedureCard'
