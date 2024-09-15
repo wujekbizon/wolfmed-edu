@@ -1,0 +1,42 @@
+export default function PremiumMemberCard() {
+  return (
+    <div className="h-[480px] w-[90%] md:w-[400px] bg-zinc-800 flex flex-col transition-all justify-between p-8 rounded-2xl shadow-md shadow-zinc-400">
+      <div className="flex w-full items-center gap-8 border-b border-zinc-400/20 pb-7">
+        <div className="w-20 h-20 rounded-2xl bg-zinc-50 relative overflow-hidden">
+          <div className="absolute right-[-8%] top-[-8%] w-10 h-10 rounded-full bg-zinc-300"></div>
+          <div className="absolute left-[-10%] bottom-[-16%] w-10 h-10 bg-zinc-300"></div>
+        </div>
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-semibold text-white">Premium</h2>
+          <h4 className="text-sm text-zinc-400">
+            <span className="text-3xl font-semibold text-[#fb8c8c] animate-pulse">14.99</span> zł / miesiąc
+          </h4>
+        </div>
+      </div>
+      <ul className="w-full h-full flex flex-col justify-center gap-4 text-lg">
+        <li className=" text-zinc-100">
+          <span className="mr-4">✔</span>
+          Obejmuje pakiet <span className="font-bold text-[#ffe3e3]">podstawowy</span>
+        </li>
+        <li className=" text-zinc-100">
+          {' '}
+          <span className="mr-4">✔</span>
+          Pełne <span className="font-bold text-[#ffe3e3]">wsparcie</span> klienta
+        </li>
+        <li className=" text-zinc-100">
+          {' '}
+          <span className="mr-4">✔</span>
+          <span className="font-bold text-[#ffe3e3]">Bez limitu</span> testów
+        </li>
+        <li className=" text-zinc-100">
+          {' '}
+          <span className="mr-4">✔</span>
+          Dostęp do <span className="font-bold text-[#ffe3e3]">blogu</span> informacyjnego
+        </li>
+      </ul>
+      <button className="bg-red-400 py-4 rounded-lg text-white text-lg hover:bg-red-500 transition-colors">
+        Wybierz plan
+      </button>
+    </div>
+  )
+}
