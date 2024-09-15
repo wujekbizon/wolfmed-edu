@@ -1,6 +1,6 @@
 export default function BasicMemberCard() {
   return (
-    <div className="h-[400px] w-[90%] md:w-[360px] bg-white flex flex-col transition-all justify-between p-8 rounded-2xl shadow-md shadow-zinc-300">
+    <div className="h-[400px] w-full sm:w-[360px] bg-white flex flex-col transition-all justify-between p-8 rounded-2xl shadow shadow-zinc-400">
       <div className="flex w-full items-center gap-8 border-b border-[#ffe3e3]/80 pb-7">
         <div className="w-20 h-20 rounded-2xl bg-[#ffc5c5] relative overflow-hidden">
           <div className="absolute right-[-8%] top-[-8%] w-10 h-10 rounded-full bg-[#ffe3e3]"></div>
