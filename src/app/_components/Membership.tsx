@@ -4,14 +4,15 @@ import PremiumMemberCard from '@/components/PremiumMemberCard'
 
 export default function Membership() {
   return (
-    <section className="min-h-[calc(100vh_-_70px)] bg-[url('/member.jpg')] bg-top rounded-bl-[46px] bg-cover w-full flex flex-col items-center justify-center overflow-x-hidden">
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_6px)] border-t-transparent border-r-transparent border-b-[5vw] border-b-zinc-100/70"></div>
-      <div className="bg-zinc-100/70 min-h-2/3 w-full flex-col lg:flex-row flex justify-center items-center gap-6 p-2 sm:p-8">
+    <section className="bg-gradient-to-b from-zinc-50 to-[#ffafaf] w-full h-full py-8">
+      <div className=" w-full flex items-center justify-center">
+        <h1 className="text-3xl sm:text-4xl py-4 text-center">Spróbuj jednego z naszych dostępnych planów.</h1>
+      </div>
+      <div className="min-h-3/4 w-full flex-col md:flex-row flex-wrap flex justify-center items-center gap-4 xl:gap-12 p-2 sm:p-8">
         <BasicMemberCard />
         <PremiumMemberCard />
         <CustomMemberCard />
       </div>
-      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_7px)] border-t-[5vw]  border-t-zinc-100/70 border-l-transparent"></div>
     </section>
   )
 }

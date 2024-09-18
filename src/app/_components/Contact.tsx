@@ -7,6 +7,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import { sendEmail } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import Image from 'next/image'
 
 export default function Contact() {
   const [state, action] = useActionState(sendEmail, EMPTY_FORM_STATE)
@@ -14,9 +15,17 @@ export default function Contact() {
   const noScriptFallback = useToastMessage(state)
 
   return (
-    <div id="contact" className="h-[85vh] w-full rounded-3xl px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 z-10">
-      <div className="flex h-3/4 w-full items-end bg-[#ffc5c5] bg-[url('/contact.jpg')] bg-cover bg-top rounded-3xl border shadow-lg shadow-zinc-400">
-        <div className="mb-[-170px] ml-auto mr-auto flex gap-5 w-[95%] flex-col justify-between rounded-lg border border-red-200/40 shadow-md shadow-zinc-500 bg-zinc-50 p-8 sm:mb-[-100px] sm:w-[500px] md:ml-[20%]">
+    <div id="contact" className="h-[75vh] bg-[#fed4d4] w-full ">
+      <div className="flex h-full w-full items-end  bg-gradient-to-b from-zinc-900 to-zinc-950 relative">
+        <Image
+          src="/contact.jpg"
+          alt="contact"
+          className="absolute h-full w-full object-cover opacity-40"
+          width={800}
+          height={600}
+          priority
+        />
+        <div className="ml-auto mr-auto flex gap-5 z-50 w-[95%] flex-col justify-between rounded-lg border border-red-200/40 shadow shadow-zinc-500 bg-zinc-50 p-8 mb-[60px] sm:w-[500px] md:ml-[20%]">
           <h2 className="text-3xl font-semibold text-zinc-800">Jak Możemy Ci Pomóc?</h2>
           <p className="text-base text-zinc-800">Napisz do nas, a nasi eksperci skontakytują się z Tobą.</p>
 
