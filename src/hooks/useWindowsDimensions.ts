@@ -7,8 +7,8 @@ type WindowDimentions = {
 
 export const useWindowDimensions = (): WindowDimentions => {
   const [windowDimensions, setWindowDimensions] = useState<WindowDimentions>({
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 0,
+    height: 0,
   })
   useEffect(() => {
     // Check if window is defined (client-side)

@@ -1,9 +1,5 @@
 import { NextResponse } from 'next/server'
-import Stripe from 'stripe'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20', // Use the latest API version
-})
+import stripe from '@/lib/stripeClient'
 
 export async function POST(req: Request) {
   const { userId, sessionId } = await req.json()
@@ -15,7 +11,6 @@ export async function POST(req: Request) {
     if (!sessionId) {
       return NextResponse.json({ error: 'Session ID is required' }, { status: 400 })
     }
-
     // Retrieve the Checkout session to get the customer ID
     const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId)
 
