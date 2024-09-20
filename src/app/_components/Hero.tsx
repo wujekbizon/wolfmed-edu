@@ -18,9 +18,9 @@ export default function Hero() {
           className="h-full w-full object-cover rounded-3xl "
         />
         <div className="absolute right-[5%] bottom-[5%] animate-slideInDown opacity-0 [--slidein-delay:600ms]">
-          <Link href="/#testy">
+          <Link href="/testy-opiekun/nauka">
             <button className="bg-white text-lg animate-bounce md:text-xl font-semibold px-7 md:px-10 py-1 md:py-2 rounded-full border border-red-200/40 shadow-md shadow-zinc-500 hover:border-zinc-800 hover:bg-[#ff5b5b] transition-colors">
-              Wybierz Test
+              Rozpocznij naukę
             </button>
           </Link>
         </div>
