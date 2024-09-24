@@ -17,6 +17,13 @@ export const users = createTable(
   })
 )
 
+export const processedEvents = createTable('processed_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  eventId: varchar('eventId', { length: 256 }).notNull().unique(),
+  userId: varchar('userId', { length: 256 }).notNull(),
+  processedAt: timestamp('processedAt').default(sql`CURRENT_TIMESTAMP`),
+})
+
 export const completedTestes = createTable('comleted_tests', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: varchar('userId', { length: 256 })
