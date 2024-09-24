@@ -3,12 +3,15 @@ import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
 import { updateTestLimit } from '@/server/db'
+import { auth } from '@clerk/nextjs/server'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(req: Request) {
   const body = await req.text()
   const sig = headers().get('stripe-signature')
+
+  const { userId } = auth()
 
   let event: Stripe.Event
 
@@ -29,7 +32,10 @@ export async function POST(req: Request) {
       status = subscription.status
       console.log(`Subscription created. Status: ${status}`)
 
-      await updateTestLimit(subscription.customer as string, 1000, subscription.id)
+      console.log(`UserId: ${userId}`)
+      console.log(subscription)
+
+      //await updateTestLimit(subscription.customer as string, 1000, subscription.id)
       break
     case 'customer.subscription.updated':
       subscription = event.data.object as Stripe.Subscription
@@ -42,7 +48,7 @@ export async function POST(req: Request) {
       status = subscription.status
       console.log(`Subscription deleted. Status: ${status}`)
 
-      await updateTestLimit(subscription.customer as string, 10, subscription.id)
+      //await updateTestLimit(subscription.customer as string, 10, subscription.id)
       break
     default:
       console.log(`Unhandled event type ${event.type}`)
