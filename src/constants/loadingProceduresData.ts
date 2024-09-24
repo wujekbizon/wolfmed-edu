@@ -2,6 +2,7 @@ import { Procedure } from '@/types/dataTypes'
 
 export const loadingProceduresData: Procedure[] = [
   {
+    id: '1',
     data: {
       name: 'Odsysanie drzewa oskrzelowego',
       procedure:
@@ -10,6 +11,7 @@ export const loadingProceduresData: Procedure[] = [
     },
   },
   {
+    id: '2',
     data: {
       name: 'Mierzenie tętna',
       procedure:
@@ -18,6 +20,7 @@ export const loadingProceduresData: Procedure[] = [
     },
   },
   {
+    id: '3',
     data: {
       name: 'Podanie leku na skórę',
       procedure:
@@ -26,6 +29,7 @@ export const loadingProceduresData: Procedure[] = [
     },
   },
   {
+    id: '4',
     data: {
       name: 'Zmiana opatrunku na ranie niepowikłanej',
       procedure:

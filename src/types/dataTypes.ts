@@ -34,6 +34,7 @@ interface ProcedureData {
 }
 
 export interface Procedure {
+  id: string
   data: ProcedureData
 }
 export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
