@@ -7,7 +7,7 @@ const CustomError = ({ error, reset }: { error: Error & { digest?: string }; res
       <p>Jeśli problem się powtarza proszę o kontakt z naszym biurem obsługi.</p>
       <div className="flex items-center justify-center gap-6 mt-10">
         <Link className="hover:text-[#871717]" href="/#contact">
-          Go back
+          Powrót
         </Link>
       </div>
     </aside>
