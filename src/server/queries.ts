@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { users } from './db/schema'
+import { subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq } from 'drizzle-orm'
@@ -50,3 +50,18 @@ export const getUserTestLimit = cache(async (id: string) => {
   const [testLimit] = await db.select({ testLimit: users.testLimit }).from(users).where(eq(users.userId, id))
   return testLimit
 })
+
+export async function getUserIdByCustomer(customerId: string) {
+  try {
+    const subscription = await db.select().from(subscriptions).where(eq(subscriptions.customerId, customerId)).limit(1)
+
+    if (subscription) {
+      return subscription[0]?.userId
+    } else {
+      throw new Error('Subscription not found')
+    }
+  } catch (error) {
+    console.error('Error fetching subscription:', error)
+    throw error
+  }
+}

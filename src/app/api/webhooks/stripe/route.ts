@@ -2,16 +2,14 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
-import { updateTestLimit } from '@/server/db'
-import { auth } from '@clerk/nextjs/server'
+import { insertSubscription, updateTestLimit } from '@/server/db'
+import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(req: Request) {
   const body = await req.text()
   const sig = headers().get('stripe-signature')
-
-  const { userId } = auth()
 
   let event: Stripe.Event
 
@@ -27,15 +25,55 @@ export async function POST(req: Request) {
 
   // Handle the event
   switch (event.type) {
+    case 'checkout.session.completed':
+      const {
+        client_reference_id,
+        id,
+        amount_total,
+        currency,
+        customer,
+        customer_details,
+        invoice,
+        payment_status,
+        subscription: subscription_id,
+        created,
+      } = event.data.object as Stripe.Checkout.Session
+
+      const newSubscription = {
+        userId: client_reference_id!,
+        sessionId: id,
+        amountTotal: amount_total!,
+        currency: currency! as 'pln' | 'usd' | 'eur',
+        customerId: customer?.toString()!,
+        customerEmail: customer_details?.email!,
+        invoiceId: invoice?.toString()!,
+        paymentStatus: payment_status,
+        subscriptionId: subscription_id?.toString()!,
+        createdAt: created,
+      }
+
+      // Insert subscription into database
+      await insertSubscription({ ...newSubscription })
+      break
     case 'customer.subscription.created':
       subscription = event.data.object as Stripe.Subscription
+      const eventId = event.request?.idempotency_key!
+      const customerId = subscription.customer.toString()
       status = subscription.status
       console.log(`Subscription created. Status: ${status}`)
 
-      console.log(`UserId: ${userId}`)
-      console.log(subscription)
+      try {
+        const userId = await getUserIdWithRetry(customerId)
+        if (!userId) {
+          console.error('User ID not found for customer:', customerId)
+          return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
+        }
+        await updateTestLimit(userId, 1000, eventId)
+      } catch (error) {
+        console.error('Error processing subscription:', error)
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+      }
 
-      //await updateTestLimit(subscription.customer as string, 1000, subscription.id)
       break
     case 'customer.subscription.updated':
       subscription = event.data.object as Stripe.Subscription
@@ -47,7 +85,6 @@ export async function POST(req: Request) {
       subscription = event.data.object as Stripe.Subscription
       status = subscription.status
       console.log(`Subscription deleted. Status: ${status}`)
-
       //await updateTestLimit(subscription.customer as string, 10, subscription.id)
       break
     default:

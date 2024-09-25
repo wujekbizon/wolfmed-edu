@@ -1,7 +1,20 @@
 import { sql } from 'drizzle-orm'
-import { pgTableCreator, timestamp, varchar, jsonb, integer, uuid, index, serial, text } from 'drizzle-orm/pg-core'
+import {
+  pgTableCreator,
+  timestamp,
+  varchar,
+  jsonb,
+  integer,
+  uuid,
+  index,
+  serial,
+  text,
+  pgEnum,
+} from 'drizzle-orm/pg-core'
 
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
+
+export const currencyEnum = pgEnum('currency', ['pln', 'usd', 'eur'])
 
 export const users = createTable(
   'users',
@@ -16,6 +29,22 @@ export const users = createTable(
     userIdIndex: index('usersUserId').on(table.userId),
   })
 )
+
+export const subscriptions = createTable('stripe_subscriptions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: varchar('userId', { length: 256 }).notNull().unique(),
+  sessionId: varchar('sessionId', { length: 256 }).notNull(),
+  amountTotal: integer('amountTotal').notNull(),
+  currency: currencyEnum('currency'),
+  customerId: varchar('customerId', { length: 256 }).notNull(),
+  customerEmail: varchar('customerEmail', { length: 256 }).notNull(),
+  invoiceId: varchar('invoiceId', { length: 256 }).notNull(),
+  paymentStatus: varchar('paymentStatus', { length: 50 }).notNull(),
+  subscriptionId: varchar('subscriptionId', { length: 256 }).notNull(),
+  createdAt: timestamp('createdAt')
+    .default(sql`NOW()`)
+    .notNull(),
+})
 
 export const processedEvents = createTable('processed_events', {
   id: uuid('id').primaryKey().defaultRandom(),
