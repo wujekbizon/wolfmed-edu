@@ -57,18 +57,18 @@ export async function POST(req: Request) {
       break
     case 'customer.subscription.created':
       subscription = event.data.object as Stripe.Subscription
-      const eventId = event.request?.idempotency_key!
-      const customerId = subscription.customer.toString()
+      const createdEventId = event.request?.idempotency_key!
+      const createdCustomerId = subscription.customer.toString()
       status = subscription.status
       console.log(`Subscription created. Status: ${status}`)
 
       try {
-        const userId = await getUserIdWithRetry(customerId)
+        const userId = await getUserIdWithRetry(createdCustomerId)
         if (!userId) {
-          console.error('User ID not found for customer:', customerId)
+          console.error('User ID not found for customer:', createdCustomerId)
           return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
         }
-        await updateTestLimit(userId, 1000, eventId)
+        await updateTestLimit(userId, 1000, createdEventId)
       } catch (error) {
         console.error('Error processing subscription:', error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
@@ -83,9 +83,22 @@ export async function POST(req: Request) {
       break
     case 'customer.subscription.deleted':
       subscription = event.data.object as Stripe.Subscription
+      const deletedEventId = event.request?.idempotency_key!
+      const deletedCustomerId = subscription.customer.toString()
       status = subscription.status
       console.log(`Subscription deleted. Status: ${status}`)
-      //await updateTestLimit(subscription.customer as string, 10, subscription.id)
+      try {
+        const userId = await getUserIdWithRetry(deletedCustomerId)
+        if (!userId) {
+          console.error('User ID not found for customer:', deletedCustomerId)
+          return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
+        }
+
+        await updateTestLimit(userId, 10, subscription.id)
+      } catch (error) {
+        console.error('Error processing subscription:', error)
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+      }
       break
     default:
       console.log(`Unhandled event type ${event.type}`)

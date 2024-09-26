@@ -1,6 +1,6 @@
 export default function BasicMemberCard() {
   return (
-    <div className="h-[400px] w-[95%] xs:w-[90%] md:w-[360px] hover:scale-105 bg-white flex flex-col transition-all justify-between p-8 rounded-2xl shadow-md shadow-zinc-600">
+    <div className="h-[400px] w-[95%] xs:w-[90%] md:w-[360px]  opacity-60 bg-white flex flex-col transition-all justify-between p-8 rounded-2xl shadow-md shadow-zinc-600">
       <div className="flex w-full items-center gap-8 border-b border-[#ffe3e3]/80 pb-7">
         <div className="hidden xs:block w-20 h-20 rounded-2xl bg-[#ffc5c5] relative overflow-hidden shadow-inner shadow-zinc-500">
           <div className="absolute right-[-8%] top-[-8%] w-10 h-10 rounded-full bg-[#ffe3e3] shadow-md shadow-zinc-500"></div>
@@ -28,10 +28,7 @@ export default function BasicMemberCard() {
           <span className="mr-4">✔</span>Limit <span className="font-bold text-zinc-700"> 10</span> testów
         </li>
       </ul>
-      <button
-        disabled
-        className="bg-red-400 py-4 rounded-lg text-white text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-      >
+      <button disabled className="bg-red-400 py-4 rounded-lg text-white text-lg ">
         Obecnie posiadasz
       </button>
     </div>
