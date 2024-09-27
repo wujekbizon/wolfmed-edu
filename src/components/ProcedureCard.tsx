@@ -28,7 +28,7 @@ export default function ProcedureCard(props: { steps: Step[] }) {
           props.steps.map((step, index) => (
             <div
               key={`${step.step}/${index}`}
-              className="border border-zinc-700/50 bg-zinc-50 hover:bg-[#ffeeee] p-4 rounded-lg shadow-md opacity-100 transition-all"
+              className="border border-zinc-700/50 bg-zinc-200 hover:bg-zinc-300 p-4 rounded-lg shadow-md opacity-100 transition-all"
             >
               <div className="flex justify-between items-center">
                 <h3 className="text-xs font-semibold text-zinc-600">{`Krok ${index + 1}`}</h3>

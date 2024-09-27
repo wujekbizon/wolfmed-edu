@@ -2,7 +2,7 @@ import { fetchQuestionDetails } from '@/actions/fetchQuestionDetails'
 import { CompletedTest, Test } from '@/types/dataTypes'
 
 export default async function TestResultCard({ completedTest }: { completedTest: CompletedTest }) {
-  const { score, testResult, id } = completedTest as CompletedTest
+  const { score, testResult } = completedTest as CompletedTest
 
   const testsData = (await fetchQuestionDetails(testResult)) as {
     testData: Test
@@ -50,12 +50,10 @@ export default async function TestResultCard({ completedTest }: { completedTest:
     <div className="flex w-full flex-col gap-4 overflow-y-auto rounded-lg border border-red-200/60 bg-white shadow-md shadow-zinc-500 p-2 scrollbar-webkit md:p-8 lg:w-3/4 xl:w-2/3">
       <div className="flex items-center justify-center gap-2">
         <h2 className="text-lg text-zinc-900">Twój wynik to: </h2>
-
         <p className="text-base text-zinc-800">
           <span className="text-xl text-[#ff5b5b] font-bold">{score}</span> / {testResult.length}
         </p>
       </div>
-
       {questionDetails}
     </div>
   )

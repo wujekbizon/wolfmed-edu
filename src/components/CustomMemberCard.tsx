@@ -12,6 +12,8 @@ export default function CustomMemberCard() {
           <h2 className="text-2xl font-semibold">Biznes</h2>
           <h4 className="text-sm text-zinc-100">
             <span className="text-sm text-zinc-600">wycena</span> indywidualna
+            <br />
+            dla szkół policealnych
           </h4>
         </div>
       </div>

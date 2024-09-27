@@ -11,7 +11,7 @@ export default function PremiumMemberCard() {
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold text-white">Premium</h2>
           <h4 className="text-sm text-zinc-400">
-            <span className="text-3xl font-semibold text-[#fb8c8c] animate-pulse">14.99</span> zł / miesiąc
+            <span className="text-3xl font-semibold text-[#fb8c8c] animate-pulse">49.99</span> zł / jednorazowo
           </h4>
         </div>
       </div>

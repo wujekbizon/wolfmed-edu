@@ -45,7 +45,7 @@ export default function Contact() {
               className="h-24 w-full rounded-md border border-red-100/80 bg-[#ffc5c5] px-3 py-2 text-sm ring-offset-background resize-none scrollbar-webkit placeholder:text-zinc-500 shadow-sm shadow-zinc-400 focus:border-zinc-700/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
             ></textarea>
             <FieldError name="message" formState={state} />
-            <SubmitButton label="Send" loading="Sending..." />
+            <SubmitButton label="Wyślij" loading="Wysyłam..." />
             {noScriptFallback}
           </form>
         </div>

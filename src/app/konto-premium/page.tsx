@@ -1,22 +1,26 @@
 'use client'
 
 import { createCheckoutSession } from '@/actions/stripe'
-import Logo from '@/components/Logo'
 import SubmitButton from '@/components/SubmitButton'
+import Image from 'next/image'
 import Link from 'next/link'
 
 const ProductDisplay = () => (
   <div className="w-full xs:w-96 bg-white/70 rounded-xl shadow-md shadow-zinc-500">
     <div className="w-full p-8 flex justify-evenly gap-2 flex-col">
-      <div className="w-full flex items-center justify-end mb-14">
-        <Logo />
+      <div className="w-full flex items-center justify-center mb-14">
+        <Image src="/blood-test.png" alt="blood icon" width={60} height={60} priority className="" />
       </div>
-      <div className="uppercase tracking-wide text-sm text-indigo-600 font-semibold">Wolfmed Premium Plan</div>
-      <div className="block mt-1 text-lg leading-tight font-medium text-black">14.99zł / miesiąc</div>
-      <p className="mt-2 text-zinc-500">Uzyskaj dostęp do wszystkich funkcji premium.</p>
-      <form action={createCheckoutSession} className="mt-6">
+      <div className="flex items-center justify-between">
+        <h2 className="uppercase tracking-wide text-base text-zinc-900 font-bold">Wolfmed Premium Plan</h2>
+        <span className="text-lg text-zinc-900 font-bold">49.99zł</span>
+      </div>
+      <p className="mt-2 text-zinc-500 text-base">
+        Uzyskaj dostęp do wszystkich funkcji premium. Płacisz tylko raz, używasz ile chcesz.
+      </p>
+      <form action={createCheckoutSession} className="mt-10">
         <input type="hidden" name="lookup_key" value="Wolfmed_Premium_Plan-a02a43b" />
-        <SubmitButton label="Zakup premium" loading={'Zakup w trakcie...'} />
+        <SubmitButton label="Kup premium" loading={'Zakup w trakcie...'} />
       </form>
       <Link className="w-full py-3" href="/">
         <p className="text-center text-sm text-zinc-600 hover:text-zinc-800">Powrót do strony głównej</p>

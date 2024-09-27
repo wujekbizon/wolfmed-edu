@@ -12,7 +12,7 @@ export default function ProcedureContent(props: { procedure: Procedure }) {
   const truncatedProcedure = procedure.slice(0, 280) + (procedure.length > 280 ? '...' : '')
 
   return (
-    <div className="border p-5 rounded-lg shadow-md border-red-200/60 bg-[#ffb1b1] shadow-zinc-500">
+    <div className="border p-5 rounded-lg shadow-md border-red-200/60 bg-white shadow-zinc-500">
       <h2 className="text-2xl mb-2">{name}</h2>
       <p className="text-zinc-700 mb-4">
         {isExpanded ? procedure : truncatedProcedure}{' '}
