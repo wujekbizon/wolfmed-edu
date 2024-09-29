@@ -8,10 +8,19 @@ import Link from 'next/link'
 const ProductDisplay = () => (
   <div className="w-full xs:w-96 bg-white/70 rounded-xl shadow-md shadow-zinc-500">
     <div className="w-full p-8 flex justify-evenly gap-2 flex-col">
-      <div className="w-full flex items-center justify-center mb-14">
-        <Image src="/blood-test.png" alt="blood icon" width={60} height={60} priority className="" />
+      <div className="w-full flex items-center justify-center mb-8">
+        <div className="w-16 h-16 border bg-zinc-200 border-zinc-800/25 shadow shadow-zinc-400 rounded-full">
+          <Image
+            src="/blood-test.png"
+            alt="blood icon"
+            width={60}
+            height={60}
+            priority
+            className="h-full w-full object-contain"
+          />
+        </div>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col xs:flex-row items-center justify-between">
         <h2 className="uppercase tracking-wide text-base text-zinc-900 font-bold">Wolfmed Premium Plan</h2>
         <span className="text-lg text-zinc-900 font-bold">49.99zł</span>
       </div>
