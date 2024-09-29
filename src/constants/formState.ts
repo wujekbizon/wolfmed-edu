@@ -5,4 +5,5 @@ export const EMPTY_FORM_STATE: FormState = {
   message: '',
   fieldErrors: {},
   timestamp: Date.now(),
+  values: {},
 }

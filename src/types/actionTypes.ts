@@ -3,6 +3,7 @@ export type FormState = {
   message: string
   fieldErrors: Record<string, string[] | undefined>
   timestamp: number
+  values?: Record<string, string> // Add this line
 }
 
 export type FormStateSignup =

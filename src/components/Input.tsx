@@ -1,6 +1,7 @@
 interface Input {
   onChangeHandler?: (value: React.ChangeEvent<HTMLInputElement>) => void
   value?: string | number | readonly string[] | undefined
+  defaultValue?: string | number | readonly string[] | undefined // Add this line
   placeholder?: string | undefined
   className?: string
   type?: React.HTMLInputTypeAttribute | undefined
@@ -9,7 +10,17 @@ interface Input {
   required?: boolean | undefined
 }
 
-export default function Input({ onChangeHandler, value, placeholder, className, type, name, required, id }: Input) {
+export default function Input({
+  onChangeHandler,
+  value,
+  defaultValue, // Add this parameter
+  placeholder,
+  className,
+  type,
+  name,
+  required,
+  id,
+}: Input) {
   return (
     <input
       id={id}
@@ -17,6 +28,7 @@ export default function Input({ onChangeHandler, value, placeholder, className, 
       className={className}
       placeholder={placeholder}
       value={value}
+      defaultValue={defaultValue} // Add this line
       onChange={onChangeHandler}
       name={name}
       required={required}

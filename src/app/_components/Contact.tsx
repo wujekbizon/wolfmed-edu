@@ -9,49 +9,71 @@ import { sendEmail } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import Image from 'next/image'
 import { SignedIn } from '@clerk/nextjs'
+import Label from '@/components/Label'
 
 export default function Contact() {
   const [state, action] = useActionState(sendEmail, EMPTY_FORM_STATE)
-
   const noScriptFallback = useToastMessage(state)
 
   return (
-    <div id="contact" className="h-[75vh] bg-[#fed4d4] w-full ">
-      <div className="flex h-full w-full items-end  bg-gradient-to-b from-zinc-900 to-zinc-950 relative">
-        <Image
-          src="/contact.jpg"
-          alt="contact"
-          className="absolute h-full w-full object-cover opacity-40"
-          width={800}
-          height={600}
-          priority
-        />
-        <SignedIn>
-          <div className="ml-auto mr-auto flex gap-5 z-50 w-[95%] flex-col justify-between rounded-lg border border-red-200/40 shadow shadow-zinc-500 bg-zinc-50 p-8 mb-[60px] sm:w-[500px] md:ml-[20%]">
-            <h2 className="text-3xl font-semibold text-zinc-800">Jak Możemy Ci Pomóc?</h2>
-            <p className="text-base text-zinc-800">Napisz do nas, a nasi eksperci skontakytują się z Tobą.</p>
+    <div id="contact" className="relative h-[80vh] w-full overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-950">
+      <Image
+        src="/contact.jpg"
+        alt="contact"
+        className="absolute h-full w-full object-cover opacity-40"
+        width={800}
+        height={600}
+        priority
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-60">
+        <div className="container mx-auto h-full px-4 py-12 flex flex-col justify-center">
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-12">
+            <div className="w-full lg:w-1/2 text-white">
+              <h2 className="text-2xl xs:text-4xl font-bold text-white pb-6">
+                Skontaktuj się z nami <span className="text-red-500 animate-pulse text-2xl xs:text-4xl"> ✉︎</span>
+              </h2>
 
-            <form className="flex w-full flex-col gap-2" action={action}>
-              <Input
-                type="text"
-                name="email"
-                placeholder="Podaj Email"
-                id="email"
-                className="flex h-10 w-full rounded-md border border-red-100/80 bg-[#ffc5c5] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 shadow-sm shadow-zinc-400 focus:border-zinc-700/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              />
-              <FieldError name="email" formState={state} />
-              <textarea
-                name="message"
-                id="message"
-                placeholder="Twoja Wiadomość"
-                className="h-24 w-full rounded-md border border-red-100/80 bg-[#ffc5c5] px-3 py-2 text-sm ring-offset-background resize-none scrollbar-webkit placeholder:text-zinc-500 shadow-sm shadow-zinc-400 focus:border-zinc-700/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              ></textarea>
-              <FieldError name="message" formState={state} />
-              <SubmitButton label="Wyślij" loading="Wysyłam..." />
-              {noScriptFallback}
-            </form>
+              <p className="text-sm xs:text-lg text-zinc-300 font-semibold">
+                Niezależnie od tego, czy masz pytanie, sugestię czy potrzebujesz pomocy, nasz zespół jest gotowy, aby Ci
+                pomóc. Skontaktuj się z nami, a odpowiemy najszybciej jak to możliwe.
+              </p>
+            </div>
+
+            <SignedIn>
+              <div className="w-full lg:w-1/2">
+                <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-8">
+                  <form className="flex flex-col gap-4" action={action}>
+                    <div>
+                      <Label htmlFor="email" label="Email" className="text-zinc-600" />
+                      <Input
+                        type="text"
+                        name="email"
+                        placeholder="Twój adres email"
+                        id="email"
+                        className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
+                        defaultValue={state.values?.email || ''}
+                      />
+                      <FieldError name="email" formState={state} />
+                    </div>
+                    <div>
+                      <Label htmlFor="message" label="Wiadomość" className="text-zinc-600" />
+                      <textarea
+                        name="message"
+                        id="message"
+                        placeholder="Twoja wiadomość"
+                        className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition h-32 resize-none"
+                        defaultValue={state.values?.message || ''}
+                      ></textarea>
+                      <FieldError name="message" formState={state} />
+                    </div>
+                    <SubmitButton label="Wyślij wiadomość" loading="Wysyłanie..." />
+                    {noScriptFallback}
+                  </form>
+                </div>
+              </div>
+            </SignedIn>
           </div>
-        </SignedIn>
+        </div>
       </div>
     </div>
   )

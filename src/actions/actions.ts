@@ -83,16 +83,17 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 }
 
 export async function sendEmail(formState: FormState, formData: FormData) {
-  const validationResult = CreateMessageSchema.safeParse({
-    email: formData.get('email'),
-    message: formData.get('message'),
-  })
+  const email = formData.get('email') as string
+  const message = formData.get('message') as string
+
+  const validationResult = CreateMessageSchema.safeParse({ email, message })
 
   if (!validationResult.success) {
-    return fromErrorToFormState(validationResult.error)
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { email, message }, // Include the form values
+    }
   }
-
-  const email = validationResult.data.email
 
   try {
     // Fetch the timestamp of the last message sent by this email
@@ -120,7 +121,10 @@ export async function sendEmail(formState: FormState, formData: FormData) {
       createdAt: new Date(),
     })
   } catch (error) {
-    return fromErrorToFormState(error)
+    return {
+      ...fromErrorToFormState(error),
+      values: { email, message }, // Include the form values
+    }
   }
 
   return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
