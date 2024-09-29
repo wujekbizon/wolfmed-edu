@@ -1,6 +1,6 @@
 import { LETTERS } from '@/constants/optionsLetters'
 import { Test } from '@/types/dataTypes'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Label from './Label'
 import { FormState } from '@/types/actionTypes'
 
@@ -10,6 +10,17 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
   const {
     data: { answers, question },
   } = props.test
+
+  // Use useEffect to set the activeIndex based on the formState values
+  useEffect(() => {
+    if (props.formState.values) {
+      const savedAnswer = props.formState.values[`answer-${props.test.id}`]
+      if (savedAnswer !== undefined) {
+        const index = answers.findIndex((answer) => answer.isCorrect === (savedAnswer === 'true'))
+        setActiveIndex(index !== -1 ? index : null)
+      }
+    }
+  }, [props.formState.values, answers, props.test.id])
 
   return (
     <div className="relative flex h-full min-h-80 w-full flex-col rounded-lg shadow-md shadow-zinc-500 border border-red-100/50 bg-white px-4 py-6 text-zinc-900">
@@ -41,6 +52,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                 disabled={props.formState.status === 'SUCCESS'}
                 name={`answer-${props.test.id}`}
                 onClick={() => setActiveIndex(index)}
+                defaultChecked={activeIndex === index}
               />
               <Label className="p-0 text-sm text-muted-foreground" label={answer.option} htmlFor={answer.option} />
             </div>

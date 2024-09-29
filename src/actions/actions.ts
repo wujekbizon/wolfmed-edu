@@ -49,7 +49,16 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
     if (!validationResult.success) {
       console.log(`Validation error: ${validationResult.error.issues}`)
-      return toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź')
+      const formValues: Record<string, string> = {}
+      formData.forEach((value, key) => {
+        if (key.startsWith('answer-')) {
+          formValues[key] = value.toString()
+        }
+      })
+      return {
+        ...toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź'),
+        values: formValues,
+      }
     }
 
     // Processing test results to get score
