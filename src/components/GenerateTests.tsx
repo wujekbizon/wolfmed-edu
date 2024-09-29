@@ -24,6 +24,15 @@ export default function GenerateTests(props: { tests: Test[] }) {
     }
   }, [state.status === 'SUCCESS'])
 
+  // Add a new useEffect to handle component unmounting
+  useEffect(() => {
+    return () => {
+      // Reset the state when the component unmounts
+      setNumberTests(null)
+      setIsTest(false)
+    }
+  }, [])
+
   return (
     <section className="flex w-full flex-col items-center gap-8 p-0 sm:p-4">
       {!isTest && (

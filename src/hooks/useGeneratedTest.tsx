@@ -17,6 +17,7 @@ export function useGeneratedTest(tests: Test[], numberTests: number | null) {
   useEffect(() => {
     // Skip generation if numberTests is null
     if (!numberTests) {
+      setRandomTestsArray([]) // Reset the array when numberTests is null
       return
     }
     // Generate tests using provided data and number
