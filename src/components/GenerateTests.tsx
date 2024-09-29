@@ -24,7 +24,6 @@ export default function GenerateTests(props: { tests: Test[] }) {
     }
   }, [state.status === 'SUCCESS'])
 
-  // Add a new useEffect to handle component unmounting
   useEffect(() => {
     return () => {
       // Reset the state when the component unmounts

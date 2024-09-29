@@ -12,6 +12,10 @@ export default function PremiumMemberCard() {
           <h2 className="text-2xl font-semibold text-white">Premium</h2>
           <h4 className="text-sm text-zinc-400">
             <span className="text-3xl font-semibold text-[#fb8c8c] animate-pulse">49.99</span> zł / jednorazowo
+            <br />
+            <span className="text-sm text-zinc-400">
+              <span className="line-through">199.99</span> zł
+            </span>
           </h4>
         </div>
       </div>
