@@ -7,6 +7,7 @@ export const CreateAnswersSchema = (allowedLengths: number[]) => {
       message: 'Odpowiedz na wszystkie pytania.',
     })
 }
+
 export const SignupForSchema = z.object({
   name: z.string().min(1, 'Nazwa musi mieć co najmniej 2 znaki.').trim(),
   email: z.string().email('Proszę podać poprawny email.').trim(),
