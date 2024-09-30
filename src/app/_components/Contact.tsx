@@ -8,7 +8,6 @@ import FieldError from '@/components/FieldError'
 import { sendEmail } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import Image from 'next/image'
-import { SignedIn } from '@clerk/nextjs'
 import Label from '@/components/Label'
 
 export default function Contact() {
@@ -38,40 +37,37 @@ export default function Contact() {
                 pomóc. Skontaktuj się z nami, a odpowiemy najszybciej jak to możliwe.
               </p>
             </div>
-
-            <SignedIn>
-              <div className="w-full lg:w-1/2">
-                <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-8">
-                  <form className="flex flex-col gap-4" action={action}>
-                    <div>
-                      <Label htmlFor="email" label="Email" className="text-zinc-600" />
-                      <Input
-                        type="text"
-                        name="email"
-                        placeholder="Twój adres email"
-                        id="email"
-                        className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
-                        defaultValue={state.values?.email || ''}
-                      />
-                      <FieldError name="email" formState={state} />
-                    </div>
-                    <div>
-                      <Label htmlFor="message" label="Wiadomość" className="text-zinc-600" />
-                      <textarea
-                        name="message"
-                        id="message"
-                        placeholder="Twoja wiadomość"
-                        className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition h-32 resize-none"
-                        defaultValue={state.values?.message || ''}
-                      ></textarea>
-                      <FieldError name="message" formState={state} />
-                    </div>
-                    <SubmitButton label="Wyślij wiadomość" loading="Wysyłanie..." />
-                    {noScriptFallback}
-                  </form>
-                </div>
+            <div className="w-full lg:w-1/2">
+              <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-8">
+                <form className="flex flex-col gap-4" action={action}>
+                  <div>
+                    <Label htmlFor="email" label="Email" className="text-zinc-600" />
+                    <Input
+                      type="text"
+                      name="email"
+                      placeholder="Twój adres email"
+                      id="email"
+                      className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
+                      defaultValue={state.values?.email || ''}
+                    />
+                    <FieldError name="email" formState={state} />
+                  </div>
+                  <div>
+                    <Label htmlFor="message" label="Wiadomość" className="text-zinc-600" />
+                    <textarea
+                      name="message"
+                      id="message"
+                      placeholder="Twoja wiadomość"
+                      className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition h-32 resize-none"
+                      defaultValue={state.values?.message || ''}
+                    ></textarea>
+                    <FieldError name="message" formState={state} />
+                  </div>
+                  <SubmitButton label="Wyślij wiadomość" loading="Wysyłanie..." />
+                  {noScriptFallback}
+                </form>
               </div>
-            </SignedIn>
+            </div>
           </div>
         </div>
       </div>

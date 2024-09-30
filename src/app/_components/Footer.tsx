@@ -39,6 +39,9 @@ export default function Footer() {
               </Link>
             ))}
           </div>
+          <Link href="/terms" className="text-base font-semibold text-white hover:text-red-500">
+            Regulamin Użykowania
+          </Link>
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-sm text-zinc-50 font-semibold">Znajdż nas w sieci.</p>
             <div className="flex flex-row items-center justify-between w-full pb-8">

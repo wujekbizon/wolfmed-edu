@@ -7,7 +7,7 @@ export default function AuthSection() {
   if (!isLoaded) {
     return (
       <div className="flex gap-2">
-        <AuthButton text="Zarejestruj się" isPlaceholder />
+        <AuthButton text="Rejestracja" isPlaceholder />
         <AuthButton text="Zaloguj się" isPlaceholder />
       </div>
     )
@@ -18,7 +18,7 @@ export default function AuthSection() {
       <SignedOut>
         <div className="flex gap-2">
           <SignUpButton mode="modal">
-            <AuthButton text="Zarejestruj się" />
+            <AuthButton text="Rejestracja" />
           </SignUpButton>
           <SignInButton mode="modal">
             <AuthButton text="Zaloguj się" />

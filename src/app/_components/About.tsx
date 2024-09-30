@@ -30,12 +30,6 @@ export default function About() {
             Dołącz do nas w budowaniu społeczności zmotywowanych osób zaangażowanych w pozytywny wpływ na opiekę
             zdrowotną.
           </p>
-          <Link
-            href={'/#contact'}
-            className="min-w-48 py-1 px-4 text-lg font-semibold transition-colors hover:bg-[#ff5b5b] bg-white rounded-xl flex items-center justify-center border border-zinc-800/40 shadow shadow-zinc-700"
-          >
-            Skontaktuj się
-          </Link>
         </div>
       </div>
     </section>

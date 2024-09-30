@@ -30,7 +30,6 @@ export default function GenerateTests(props: { tests: Test[] }) {
             {numberTests && (
               <>
                 {randomTest.map((item, index) => {
-                  console.log(item)
                   return (
                     <div className="flex flex-col" key={`${item.id}/${index}`}>
                       <TestCard
