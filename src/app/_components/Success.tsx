@@ -7,7 +7,7 @@ import { useWindowDimensions } from '@/hooks/useWindowsDimensions'
 import Link from 'next/link'
 import Confetti from 'react-confetti'
 
-export const Success = ({ sessionId }: { sessionId: string }) => {
+export const Success = () => {
   const { width, height } = useWindowDimensions()
 
   return (

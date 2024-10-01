@@ -8,7 +8,7 @@ export default function Loading() {
     <section className="px-1 sm:px-4 py-4 w-full h-full ">
       <div className="overflow-y-auto scrollbar-webkit h-full flex flex-col items-center gap-8 pr-1">
         <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
-          <SearchTerm />
+          <SearchTerm label="Szukaj terminu" />
         </div>
         <div className="grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3">
           {loadingTestData.map((item, index) => (

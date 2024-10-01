@@ -4,14 +4,8 @@ import { blogPosts } from '@/data/blogPosts'
 
 export const dynamic = 'force-static'
 
-export async function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    id: post.id,
-  }))
-}
-
-export default function BlogPostPage({ params }: { params: { id: string } }) {
-  const post = blogPosts.find((p) => p.id === params.id)
+export default function BlogPostPage(props: { params: { id: string } }) {
+  const post = blogPosts.find((p) => p.id === props.params.id)
 
   if (!post) {
     notFound()
