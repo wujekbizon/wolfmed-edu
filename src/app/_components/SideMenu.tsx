@@ -1,9 +1,7 @@
-import CustomButton from '@/components/CustomButton'
 import CloseIcon from '@/components/icons/Close'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { useStore } from '@/store/useStore'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 

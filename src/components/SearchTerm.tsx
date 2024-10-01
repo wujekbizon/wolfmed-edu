@@ -4,11 +4,11 @@ import { useSearchTermStore } from '@/store/useSearchTermStore'
 import Label from './Label'
 import Input from './Input'
 
-export default function SearchTerm() {
+export default function SearchTerm({ label }: { label: string }) {
   const { searchTerm, setSearchTerm } = useSearchTermStore()
   return (
     <div className="flex w-full flex-col">
-      <Label className="pb-1 text-sm text-muted-foreground" label="Szukaj terminu" htmlFor="input" />
+      <Label className="pb-1 text-sm text-muted-foreground" label={label} htmlFor="input" />
 
       <Input
         value={searchTerm}
