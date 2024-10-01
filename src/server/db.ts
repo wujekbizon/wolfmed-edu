@@ -2,7 +2,8 @@ import 'server-only'
 import { UserData } from '@/types/dataTypes'
 import { db } from '@/server/db/index'
 import { eq } from 'drizzle-orm'
-import { processedEvents, subscriptions, users } from './db/schema'
+import { payments, processedEvents, subscriptions, users } from './db/schema'
+import { Payment, Subscription } from '@/types/stripeTypes'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
@@ -78,18 +79,7 @@ export async function insertSubscription({
   subscriptionId,
   customerId,
   createdAt,
-}: {
-  userId: string
-  sessionId: string
-  amountTotal: number
-  currency: 'pln' | 'usd' | 'eur'
-  customerEmail: string
-  customerId: string
-  invoiceId: string
-  paymentStatus: string
-  subscriptionId: string
-  createdAt: number
-}) {
+}: Subscription) {
   try {
     await db.insert(subscriptions).values({
       userId,
@@ -101,11 +91,34 @@ export async function insertSubscription({
       invoiceId,
       paymentStatus,
       subscriptionId,
-      createdAt: new Date(createdAt * 1000), // Convert seconds to milliseconds
+      createdAt: new Date(createdAt * 1000),
     })
     console.log(`Subscription for user ${userId} inserted successfully.`)
   } catch (error) {
     console.error(`Failed to insert subscription for user ${userId}:`, error)
     throw new Error('Error inserting subscription')
+  }
+}
+
+export async function insertPayment({
+  userId,
+  amountTotal,
+  currency,
+  customerEmail,
+  paymentStatus,
+  createdAt,
+}: Payment) {
+  try {
+    await db.insert(payments).values({
+      userId,
+      amountTotal,
+      currency,
+      customerEmail,
+      paymentStatus,
+      createdAt: new Date(createdAt * 1000),
+    })
+  } catch (error) {
+    console.error(`Failed to insert payment for user ${userId}:`, error)
+    throw new Error('Error inserting payment')
   }
 }

@@ -27,7 +27,7 @@ export function useTestFormState(state: FormState) {
     if (localState.status === 'SUCCESS') {
       resetTest()
     }
-  }, [localState.status === 'SUCCESS', resetTest])
+  }, [localState.status, resetTest])
 
   // Return relevant state and functions needed for managing the test form
   return { numberTests, isTest, localState, resetTest }

@@ -29,7 +29,10 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     if (userTestLimit.testLimit !== null) {
       if (userTestLimit.testLimit <= 0) {
         // user has no premium member access or used his limit
-        toFormState('ERROR', 'Wyczerpałes limit testów dla darmowego konta. Sprawdż nasze oferty dla klientów premium')
+        return toFormState(
+          'ERROR',
+          'Wyczerpałes limit testów dla darmowego konta. Sprawdż nasze oferty dla klientów premium'
+        )
       }
     }
 

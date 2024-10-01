@@ -17,10 +17,10 @@ export const Success = ({ sessionId }: { sessionId: string }) => {
         <div className="p-8">
           <div className="uppercase tracking-wide text-sm text-indigo-600  font-semibold">Sukces!</div>
           <p className="mt-2 text-gray-500">Dziękujemy za zakup premium planu.</p>
-          <form action={createPortalSession} className="mt-6">
+          {/* <form action={createPortalSession} className="mt-6">
             <input type="hidden" id="session-id" name="session_id" value={sessionId} />
             <SubmitButton loading="Wczytywanie..." label="Zarządzaj informacjami o subskrypcji" />
-          </form>
+          </form> */}
           <Link href="/">
             <p className="text-center text-sm py-3 text-zinc-600 hover:text-zinc-800">Wróc do strony głównej</p>
           </Link>

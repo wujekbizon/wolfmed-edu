@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect } from 'react'
 import { useGeneratedTest } from '@/hooks/useGeneratedTest'
 import { useTestFormState } from '@/hooks/useTestFormState'
 import { useTestSubmission } from '@/hooks/useTestSubmission'
@@ -17,6 +17,13 @@ export default function GenerateTests(props: { tests: Test[] }) {
   const { numberTests, isTest, localState, resetTest } = useTestFormState(state)
   const { isPending, handleSubmit } = useTestSubmission(action)
   const randomTest = useGeneratedTest(props.tests, numberTests)
+
+  // Reset the test form when the component unmounts
+  useEffect(() => {
+    return () => {
+      resetTest()
+    }
+  }, [resetTest])
 
   return (
     <section className="flex w-full flex-col items-center gap-8 p-0 sm:p-4">

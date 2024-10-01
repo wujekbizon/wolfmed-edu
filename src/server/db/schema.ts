@@ -30,6 +30,18 @@ export const users = createTable(
   })
 )
 
+export const payments = createTable('stripe_payments', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: varchar('userId', { length: 256 }).notNull().unique(),
+  amountTotal: integer('amountTotal').notNull(),
+  currency: currencyEnum('currency'),
+  customerEmail: varchar('customerEmail', { length: 256 }).notNull(),
+  paymentStatus: varchar('paymentStatus', { length: 50 }).notNull(),
+  createdAt: timestamp('createdAt')
+    .default(sql`NOW()`)
+    .notNull(),
+})
+
 export const subscriptions = createTable('stripe_subscriptions', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: varchar('userId', { length: 256 }).notNull().unique(),
