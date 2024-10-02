@@ -64,7 +64,7 @@ export default function Footer() {
           </div>
           <div className="text-center lg:text-left">
             <h4 className="font-semibold mb-4">Kontakt</h4>
-            <p>info@wolfmed-edukacja.pl</p>
+            <p>grzegorz.wolfinger@gmail.com</p>
 
             <div className="flex justify-center lg:justify-start space-x-4 mt-4">
               <Link
