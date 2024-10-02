@@ -9,6 +9,7 @@ import SearchTerm from '@/components/SearchTerm'
 import PaginationControls from '@/components/PaginationControls'
 import { blogPosts } from '@/data/blogPosts'
 import { BlogPostType } from '@/types/blogTypes'
+import TestLoader from '@/components/TestsLoader'
 
 const POSTS_PER_PAGE = 5
 
@@ -63,7 +64,7 @@ export default function BlogPostList() {
     <div className="w-full lg:w-2/3 xl:w-1/2 flex flex-col items-center gap-8" ref={listRef}>
       <SearchTerm label="Szukaj postu" />
       {searchLoading ? (
-        <p>Loading...</p>
+        <TestLoader />
       ) : error ? (
         <p>Error: {(error as Error).message}</p>
       ) : (

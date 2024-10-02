@@ -11,7 +11,7 @@ export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
 
   return (
-    <header className="h-16 w-full z-10 flex items-center justify-between animate-slideInDown opacity-0 [--slidein-delay:100ms] px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4">
+    <header className="relative h-16 w-full z-10 flex items-center justify-between animate-slideInDown opacity-0 [--slidein-delay:100ms] px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4">
       <MenuIcon onClick={toggleMenu} />
       <Logo />
       {isMenuOpen && <SideMenu />}
