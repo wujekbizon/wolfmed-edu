@@ -19,8 +19,10 @@ export default function Home() {
       <SignedIn>
         <Contact />
       </SignedIn>
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-r-zinc-800 border-b-[10vw] border-b-[#dbd9d9]"></div>
-      <Footer />
+      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-r-zinc-800 border-b-[10vw] border-b-zinc-100"></div>
+      <div className="w-full h-full">
+        <Footer />
+      </div>
     </section>
   )
 }

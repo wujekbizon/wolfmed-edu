@@ -3,90 +3,103 @@ import LinkedInIcon from '@/components/icons/LinkedInIcon'
 import XIcon from '@/components/icons/XIcon'
 import { navLinks } from '@/constants/navLinks'
 import Image from 'next/image'
-
 import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <section className="h-[75vh] bg-zinc-200 bg-[url('/footer.jpg')] bg-cover bg-blend-difference bg-center w-full rounded-br-3xl rounded-bl-3xl sm:rounded-br-[50px] sm:rounded-bl-[50px]">
-      <div className="w-full h-full flex flex-col justify-between">
-        <div className="flex gap-4 justify-center items-center border border-red-200/40 bg-[#ffb1b1]/80 rounded-lg shadow-md shadow-zinc-500 w-[90%] lg:2/3 xl:w-3/4 py-1 px-4 place-self-center mt-8">
-          <div className="hidden sm:flex items-center justify-center h-12 w-12 md:h-20 md:w-20 bg-white rounded-full">
+    <footer className="bg-zinc-100 text-zinc-800 flex justify-center">
+      <div className="container px-4 py-12">
+        {/* Logo and tagline */}
+        <div className="flex items-center justify-center mb-8 gap-3 flex-col sm:flex-row ">
+          <div className="w-14 h-14 bg-zinc-200 rounded-full border justify-center items-center border-zinc-400">
             <Image
-              className="h-[85%] w-[85%] object-cover"
               src="/blood-test.png"
-              alt="blood vial"
-              width={280}
-              height={280}
-              priority
+              alt="Wolfmed Edukacja logo"
+              width={50}
+              height={50}
+              className="mb-4 w-full h-full object-cover"
             />
           </div>
-          <div className="flex text-2xl xs:text-3xl md:text-5xl flex-row items-center h-full gap-3">
-            <h3 className="font-bold tracking-wide text-zinc-900">WOLFMED</h3>
-            <h3 className="font-medium text-zinc-500">EDUKACJA</h3>
+          <div className="text-center sm:text-left">
+            <h3 className="text-2xl font-bold">
+              WOLFMED <span className="font-normal text-zinc-500">EDUKACJA</span>
+            </h3>
+            <p className="text-sm text-zinc-500">Innowacyjne rozwiązania w edukacji medycznej</p>
           </div>
         </div>
-        <div className="w-[90%] lg:w-1/2 h-3/4 gap-5 sm:h-full flex-col place-self-center flex items-center justify-evenly sm:justify-evenly">
-          <div className="flex flex-col gap-4 h-full w-full justify-center">
-            {' '}
-            {navLinks.map((link) => (
-              <Link
-                className="py-2 text-center w-full shadow shadow-zinc-500 bg-zinc-400/40 hover:bg-zinc-100/80 rounded  text-zinc-900 font-semibold hover:text-[#ff7c7c] transition-colors text-2xl"
-                key={link.id}
-                href={link.linkUrl}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-          <Link href="/terms" className="text-sm font-semibold text-white hover:text-red-500">
-            Regulamin Użykowania
-          </Link>
-          <Link href="/policy" className="text-sm font-semibold text-white hover:text-red-500">
-            Polityka Prywatności
-          </Link>
-          <Link href="/legal-compliance" className="text-sm font-semibold text-white hover:text-red-500">
-            Lista Kontrolna Zgodności Prawnej - kontynuując korzystanie z aplikacji, użytkownik potwierdza swoje
-            zrozumienie tych warunków.
-          </Link>
 
-          <div className="flex flex-col items-center justify-center gap-3">
-            <p className="text-sm text-zinc-50 font-semibold">Znajdż nas w sieci.</p>
-            <div className="flex flex-row items-center justify-between w-full pb-8">
+        {/* Navigation and legal links */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          <div className="text-center sm:text-left">
+            <h4 className="font-semibold mb-4">Nawigacja</h4>
+            <ul className="space-y-2">
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <Link href={link.linkUrl} className="hover:text-red-500 transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="text-center sm:text-left">
+            <h4 className="font-semibold mb-4">Informacje prawne</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/terms" className="hover:text-red-500 transition-colors">
+                  Regulamin Użytkowania
+                </Link>
+              </li>
+              <li>
+                <Link href="/policy" className="hover:text-red-500 transition-colors">
+                  Polityka Prywatności
+                </Link>
+              </li>
+              <li>
+                <Link href="/legal-compliance" className="hover:text-red-500 transition-colors">
+                  Korzystanie z serwisu oznacza akceptację - Kontrola Zgodności Prawnej
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="text-center lg:text-left">
+            <h4 className="font-semibold mb-4">Kontakt</h4>
+            <p>info@wolfmed-edukacja.pl</p>
+
+            <div className="flex justify-center lg:justify-start space-x-4 mt-4">
               <Link
-                target="_blank"
-                className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://www.facebook.com"
+                target="_blank"
+                className="hover:text-red-500 transition-colors border border-zinc-400 p-1 rounded-2xl hover:bg-zinc-200"
               >
                 <FacebookIcon />
               </Link>
               <Link
-                target="_blank"
-                className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/"
+                target="_blank"
+                className="hover:text-zinc-800 transition-colors border border-zinc-400 p-1 rounded-2xl hover:bg-zinc-200"
               >
                 <LinkedInIcon />
               </Link>
               <Link
-                target="_blank"
-                className="hover:bg-zinc-100/80 shadow shadow-zinc-500 bg-zinc-400/40 p-1 rounded"
                 href="https://x.com/home"
+                target="_blank"
+                className="hover:text-red-500 transition-colors border border-zinc-400 p-1 rounded-2xl hover:bg-zinc-200"
               >
                 <XIcon />
               </Link>
             </div>
           </div>
         </div>
-        <div className="bg-[#ffa5a5]/90 rounded-br-3xl rounded-bl-3xl flex flex-col xs:flex-row items-center justify-center xs:justify-between sm:rounded-br-[50px] sm:rounded-bl-[50px] h-14 xs:h-20 px-2 sm:px-8">
-          <p className="text-base text-zinc-800">
-            © 2024
-            <span className="font-semibold"> Wolfmed-Edukacja</span>
-          </p>
-          <Link target="_blank" href="https://wesa.vercel.app/" className="">
-            © Designed by <span className="font-bold text-[#ff5b5b] hover:text-white transition-colors">WESA</span>
+
+        {/* Copyright and attribution */}
+        <div className="border-t border-zinc-200 pt-8 mt-8 text-sm text-center">
+          <p>© 2024 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
+          <Link href="https://wesa.vercel.app/" target="_blank" className="hover:text-red-500 transition-colors ">
+            Designed by <span className="font-bold">WESA</span>
           </Link>
         </div>
       </div>
-    </section>
+    </footer>
   )
 }
