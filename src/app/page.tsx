@@ -3,7 +3,7 @@ import Hero from './_components/Hero'
 import Contact from './_components/Contact'
 import Footer from './_components/Footer'
 import Membership from './_components/Membership'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { SignedIn } from '@clerk/nextjs'
 
 export default function Home() {
   return (

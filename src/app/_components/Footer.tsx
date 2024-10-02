@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <section className="h-[70vh] bg-zinc-200 bg-[url('/footer.jpg')] bg-cover bg-blend-difference bg-center w-full rounded-br-3xl rounded-bl-3xl sm:rounded-br-[50px] sm:rounded-bl-[50px]">
+    <section className="h-[75vh] bg-zinc-200 bg-[url('/footer.jpg')] bg-cover bg-blend-difference bg-center w-full rounded-br-3xl rounded-bl-3xl sm:rounded-br-[50px] sm:rounded-bl-[50px]">
       <div className="w-full h-full flex flex-col justify-between">
         <div className="flex gap-4 justify-center items-center border border-red-200/40 bg-[#ffb1b1]/80 rounded-lg shadow-md shadow-zinc-500 w-[90%] lg:2/3 xl:w-3/4 py-1 px-4 place-self-center mt-8">
           <div className="hidden sm:flex items-center justify-center h-12 w-12 md:h-20 md:w-20 bg-white rounded-full">
@@ -39,9 +39,17 @@ export default function Footer() {
               </Link>
             ))}
           </div>
-          <Link href="/terms" className="text-base font-semibold text-white hover:text-red-500">
+          <Link href="/terms" className="text-sm font-semibold text-white hover:text-red-500">
             Regulamin Użykowania
           </Link>
+          <Link href="/policy" className="text-sm font-semibold text-white hover:text-red-500">
+            Polityka Prywatności
+          </Link>
+          <Link href="/legal-compliance" className="text-sm font-semibold text-white hover:text-red-500">
+            Lista Kontrolna Zgodności Prawnej - kontynuując korzystanie z aplikacji, użytkownik potwierdza swoje
+            zrozumienie tych warunków.
+          </Link>
+
           <div className="flex flex-col items-center justify-center gap-3">
             <p className="text-sm text-zinc-50 font-semibold">Znajdż nas w sieci.</p>
             <div className="flex flex-row items-center justify-between w-full pb-8">
