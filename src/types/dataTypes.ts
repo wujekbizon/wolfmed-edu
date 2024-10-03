@@ -61,3 +61,18 @@ export interface UserData {
   createdAt?: Date
   updatedAt: Date
 }
+
+export interface Post {
+  id: string
+  title: string
+  date: string
+  excerpt: string
+  content: string
+  createdAt?: Date
+  updatedAt?: Date | null
+}
+
+export type PostProps = {
+  params: { id: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}

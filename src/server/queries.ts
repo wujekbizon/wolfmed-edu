@@ -1,7 +1,7 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { payments, subscriptions, users } from './db/schema'
-import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest } from '@/types/dataTypes'
+import { blogPosts, payments, subscriptions, users } from './db/schema'
+import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq } from 'drizzle-orm'
 
@@ -19,6 +19,14 @@ export const getAllProcedures = cache(async (): Promise<ExtendedProcedures[]> =>
   })
 
   return procedures
+})
+
+export const getAllPosts = cache(async (): Promise<Post[]> => {
+  const posts = await db.query.blogPosts.findMany({
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+
+  return posts
 })
 
 export const getCompletedTestsByUser = cache(async (userId: string): Promise<ExtendedCompletedTest[]> => {
@@ -78,4 +86,12 @@ export async function getUserIdByCustomerEmail(customerEmail: string): Promise<s
     console.error('Error fetching payment:', error)
     throw error
   }
+}
+
+// Function to fetch a single post by ID from the database
+export async function getPostById(id: string) {
+  const post = await db.query.blogPosts.findFirst({
+    where: (model, { eq }) => eq(model.id, id),
+  })
+  return post
 }

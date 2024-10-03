@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 async function FetchTests() {
   const tests = (await getAllTests()) as Test[]
   if (!tests || tests.length === 0) {
-    return <div>Brak dostępnych testów. Proszę spróbować później.</div>
+    return <p>Brak dostępnych testów. Proszę spróbować później.</p>
   }
   return <GenerateTests tests={tests} />
 }

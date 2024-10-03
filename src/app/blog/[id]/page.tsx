@@ -1,18 +1,15 @@
 import { notFound } from 'next/navigation'
 import BlogPost from '@/app/_components/BlogPost'
-import { blogPosts } from '@/data/blogPosts'
-import { Metadata, ResolvingMetadata } from 'next'
+import { Metadata } from 'next'
+import { getPostById } from '@/server/queries'
+import { PostProps } from '@/types/dataTypes'
+import { Suspense } from 'react'
+import TestLoader from '@/components/TestsLoader'
 
 export const dynamic = 'force-static'
 
-type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
-export async function generateMetadata({ params, searchParams }: Props, parent: ResolvingMetadata): Promise<Metadata> {
-  const id = params.id
-  const post = blogPosts.find((p) => p.id === id)
+export async function generateMetadata({ params }: PostProps): Promise<Metadata> {
+  const post = await getPostById(params.id)
 
   if (!post) {
     return {
@@ -26,16 +23,20 @@ export async function generateMetadata({ params, searchParams }: Props, parent: 
   }
 }
 
-export default function BlogPostPage({ params, searchParams }: Props) {
-  const post = blogPosts.find((p) => p.id === params.id)
+async function Post({ id }: { id: string }) {
+  const post = await getPostById(id)
 
   if (!post) {
     notFound()
   }
 
+  return <BlogPost post={post} />
+}
+
+export default function BlogPostPage({ params }: PostProps) {
   return (
-    <div className="min-h-[calc(100vh_-_70px)] w-full flex flex-col items-center justify-start p-8 bg-[#fff5f5]">
-      <BlogPost post={post} />
-    </div>
+    <Suspense fallback={<TestLoader />}>
+      <Post id={params.id} />
+    </Suspense>
   )
 }

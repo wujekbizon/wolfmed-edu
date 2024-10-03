@@ -107,7 +107,7 @@ export const customersMessages = createTable('messages', {
 export const blogPosts = createTable('blog_posts', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: varchar('title', { length: 256 }).notNull(),
-  date: timestamp('date').notNull(),
+  date: varchar('date', { length: 64 }).notNull(),
   excerpt: text('excerpt').notNull(),
   content: text('content').notNull(),
   createdAt: timestamp('createdAt')

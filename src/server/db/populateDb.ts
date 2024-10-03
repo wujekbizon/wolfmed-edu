@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
-import { procedures, tests } from '@/server/db/schema'
-import { Procedure, Test } from '@/types/dataTypes'
+import { procedures, tests, blogPosts } from '@/server/db/schema'
+import { Post, Procedure, Test } from '@/types/dataTypes'
 import { readFile } from 'node:fs/promises'
 import * as path from 'node:path'
 
@@ -42,5 +42,22 @@ export async function populateProcedures() {
     console.log('Procedures table populated successfully!')
   } catch (error) {
     console.error('Error populating procedures table:', error)
+  }
+}
+
+export async function populatePosts() {
+  try {
+    const postsData = (await readDataFileAndParse('blogPosts.json')) as Post[]
+
+    await insertData(postsData, blogPosts, (post) => ({
+      title: post.title,
+      date: post.date,
+      excerpt: post.excerpt,
+      content: post.content,
+    }))
+
+    console.log('Posts table populated successfully!')
+  } catch (error) {
+    console.error('Error populating posts table:', error)
   }
 }

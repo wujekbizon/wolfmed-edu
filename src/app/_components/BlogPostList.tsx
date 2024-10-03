@@ -7,13 +7,12 @@ import Link from 'next/link'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import SearchTerm from '@/components/SearchTerm'
 import PaginationControls from '@/components/PaginationControls'
-import { blogPosts } from '@/data/blogPosts'
-import { BlogPostType } from '@/types/blogTypes'
 import TestLoader from '@/components/TestsLoader'
+import { Post } from '@/types/dataTypes'
 
 const POSTS_PER_PAGE = 5
 
-export default function BlogPostList() {
+export default function BlogPostList(props: { posts: Post[] }) {
   const { searchTerm, currentPage } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
   const listRef = useRef<HTMLDivElement>(null)
@@ -26,8 +25,8 @@ export default function BlogPostList() {
 
   const { data: cachedBlogPosts } = useQuery({
     queryKey: ['allBlogPosts'],
-    queryFn: async () => blogPosts,
-    initialData: blogPosts,
+    queryFn: async () => props.posts,
+    initialData: props.posts,
     staleTime: 10 * 60 * 1000, // Cache for 10 minutes
   })
 
@@ -70,7 +69,7 @@ export default function BlogPostList() {
       ) : (
         <>
           <div className="w-full grid gap-8">
-            {paginatedPosts.map((post: BlogPostType) => (
+            {paginatedPosts.map((post: Post) => (
               <Link key={post.id} href={`/blog/${post.id}`}>
                 <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow border border-red-200/40">
                   <h2 className="text-2xl font-semibold text-zinc-900 mb-2">{post.title}</h2>
