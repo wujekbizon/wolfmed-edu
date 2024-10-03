@@ -65,7 +65,7 @@ export const processedEvents = createTable('processed_events', {
   processedAt: timestamp('processedAt').default(sql`CURRENT_TIMESTAMP`),
 })
 
-export const completedTestes = createTable('comleted_tests', {
+export const completedTestes = createTable('completed_tests', {
   id: uuid('id').primaryKey().defaultRandom(),
   userId: varchar('userId', { length: 256 })
     .notNull()
@@ -101,5 +101,17 @@ export const customersMessages = createTable('messages', {
   email: text('email').notNull(),
   message: text('message').notNull(),
   createdAt: timestamp('createdAt').defaultNow().notNull(),
+  updatedAt: timestamp('updatedAt'),
+})
+
+export const blogPosts = createTable('blog_posts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  title: varchar('title', { length: 256 }).notNull(),
+  date: timestamp('date').notNull(),
+  excerpt: text('excerpt').notNull(),
+  content: text('content').notNull(),
+  createdAt: timestamp('createdAt')
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   updatedAt: timestamp('updatedAt'),
 })

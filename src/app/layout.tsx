@@ -16,6 +16,30 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'Wolfmed Edukacja',
   description: 'Edukacja medyczna, testy opiekuna medycznego i kursy',
+  keywords: 'edukacja, opiekun, testy, kursy, egzamin, szkolenie-zawodowe, medyczna',
+  authors: { name: 'WESA', url: 'https://wesa.vercel.app/' },
+  creator: 'WESA',
+  robots: {
+    index: false,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: 'Wolfmed Edukacja',
+    description: 'Edukacja medyczna, testy opiekuna medycznego i kursy',
+    url: 'https://wolfmed-edukacja.pl/',
+    siteName: 'Wolfmed Edukacja',
+    locale: 'pl_PL',
+    type: 'website',
+  },
 }
 
 export default function RootLayout({

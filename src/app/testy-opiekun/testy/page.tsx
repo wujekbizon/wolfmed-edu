@@ -3,9 +3,16 @@ import { getAllTests } from '@/server/queries'
 import { Test } from '@/types/dataTypes'
 import { Suspense } from 'react'
 import Loading from './loading'
+import { Metadata } from 'next'
 
 export const dynamic = 'force-static'
-export const revalidate = 3600
+
+export const metadata: Metadata = {
+  title: 'Testy Opiekuna Medycznego',
+  description:
+    'Darmowa baza testów, oparata na 2 ostatnich latach z egzaminów i kursu MED-14: "Świadczenie usług medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej"',
+  keywords: 'opiekun, med-14, egzamin, testy, pytania, zagadnienia, medyczno-pielęgnacyjnych, opiekuńczych, baza',
+}
 
 async function FetchTests() {
   const tests = (await getAllTests()) as Test[]

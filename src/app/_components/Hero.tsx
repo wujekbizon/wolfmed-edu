@@ -17,7 +17,7 @@ export default function Hero() {
           width={800}
           height={600}
           priority
-          className="h-full w-full object-cover rounded-3xl "
+          className="h-full w-full object-cover rounded-3xl"
         />
         <div className="absolute right-[5%] bottom-[5%] animate-slideInDown opacity-0 [--slidein-delay:600ms]">
           <Link href="/#register">
