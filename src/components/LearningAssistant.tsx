@@ -6,7 +6,7 @@ export default function LearningAssistant() {
     <div className="border-red-200/60 my-14 shadow-md shadow-zinc-500 w-full lg:w-3/4 xl:w-1/2 items-center bg-white gap-4 flex-col flex sm:flex-row p-4 rounded-xl relative">
       <div className="h-24 min-w-24">
         <Image
-          src="/guide2.jpg"
+          src="/guide2.webp"
           width={150}
           height={150}
           alt="Asystent"

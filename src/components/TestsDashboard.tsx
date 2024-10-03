@@ -35,9 +35,9 @@ export default function TestsDashboard() {
           </div>
           <div className="absolute right-[-10px] top-[calc(0px_-_128px/2.5)] lg:right-[calc(0px_-_128px/2.5)] h-32 min-w-32 border-4 border-white shadow shadow-zinc-500 rounded-full hidden xs:inline-block">
             <Image
-              src="/guide.jpg"
-              width={150}
-              height={150}
+              src="/guide.webp"
+              width={120}
+              height={120}
               alt="Asystent"
               className="w-full h-full object-cover rounded-full"
               priority

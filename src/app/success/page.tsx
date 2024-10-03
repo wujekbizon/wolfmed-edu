@@ -1,4 +1,4 @@
-import { Success } from '../_components/Success'
+import { Success } from '@/app/_components/Success'
 
 export default async function SuccessPage() {
   return <Success />

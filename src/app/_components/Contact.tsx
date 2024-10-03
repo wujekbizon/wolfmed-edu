@@ -17,7 +17,7 @@ export default function Contact() {
   return (
     <div id="contact" className="relative h-[80vh] w-full overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-950">
       <Image
-        src="/contact.jpg"
+        src="/contact.webp"
         alt="contact"
         className="absolute h-full w-full object-cover opacity-40"
         width={800}

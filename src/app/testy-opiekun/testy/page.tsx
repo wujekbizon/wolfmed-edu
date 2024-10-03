@@ -1,9 +1,9 @@
+import { Metadata } from 'next'
 import GenerateTests from '@/components/GenerateTests'
 import { getAllTests } from '@/server/queries'
 import { Test } from '@/types/dataTypes'
 import { Suspense } from 'react'
 import Loading from './loading'
-import { Metadata } from 'next'
 
 export const dynamic = 'force-static'
 

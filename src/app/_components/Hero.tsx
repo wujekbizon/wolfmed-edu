@@ -12,7 +12,7 @@ export default function Hero() {
       </div>
       <div className="relative w-full h-full md:h-[490px] xl:w-3/4 border rounded-3xl animate-slideInDown opacity-0 [--slidein-delay:500ms] border-red-200/40 shadow-md shadow-zinc-500">
         <Image
-          src="/hero.jpg"
+          src="/hero.webp"
           alt="person"
           width={800}
           height={600}

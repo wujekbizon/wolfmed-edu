@@ -1,4 +1,4 @@
-import SidePanel from '../_components/SidePanel'
+import SidePanel from '@/app/_components/SidePanel'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

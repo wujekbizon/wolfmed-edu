@@ -12,7 +12,6 @@ import { CreateAnswersSchema, CreateMessageSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
 import { getUserTestLimit } from '@/server/queries'
-import { populatePosts } from '@/server/db/populateDb'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
