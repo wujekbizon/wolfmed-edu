@@ -7,6 +7,7 @@ import Providers from './providers'
 import { ClerkProvider } from '@clerk/nextjs'
 import { plPL } from '@clerk/localizations'
 import ToastProvider from './_components/ToastProvider'
+import GoogleAnalytics from './_components/GoogleAnalytics'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -60,6 +61,7 @@ export default function RootLayout({
       }}
     >
       <html lang="pl">
+        <GoogleAnalytics />
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl sm:rounded-[50px] border-white">
             <Navbar />
