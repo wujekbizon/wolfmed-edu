@@ -11,11 +11,11 @@ export default function Home() {
       <Hero />
       <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-t-transparent border-r-transparent border-b-[10vw] border-b-[#e1b4b4]"></div>
       <TestsSelection />
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-t-transparent border-r-[#e1b4b4] border-b-[10vw] border-b-zinc-50">
+      {/* <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-t-transparent border-r-[#e1b4b4] border-b-[10vw] border-b-zinc-50">
         {' '}
-      </div>
-      <Membership />
-      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_14px)] border-t-[10vw] border-t-[#ffafaf] border-l-zinc-800"></div>
+      </div> */}
+      {/* <Membership /> */}
+      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_14px)] border-t-[10vw] border-t-[#e1b4b4] border-l-zinc-800"></div>
       <SignedIn>
         <Contact />
       </SignedIn>

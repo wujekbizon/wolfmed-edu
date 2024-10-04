@@ -56,6 +56,15 @@ export default function PolicyPage() {
         publikowane na naszej stronie internetowej oraz w aplikacji.
       </p>
       <p className="text-lg text-zinc-800">
+        7. Narzędzia do analizy danych
+        <br />
+        Wolfmed Edukacja korzysta z Google Analytics, narzędzia do analizy ruchu sieciowego, które zbiera dane, takie
+        jak adres IP, aktywność użytkownika, rodzaj przeglądarki i czas wizyty. Te informacje są używane do
+        monitorowania i analizowania korzystania z serwisu w celu poprawy funkcjonalności oraz doświadczenia
+        użytkowników. Dane są zbierane przy pomocy plików cookies. Użytkownicy mogą zarządzać plikami cookies lub
+        zrezygnować z ich używania, zmieniając ustawienia przeglądarki.
+      </p>
+      <p className="text-lg text-zinc-800">
         8. Kontakt
         <br />W przypadku pytań dotyczących Polityki Prywatności, prosimy o kontakt za pośrednictwem formularza
         kontaktowego dostępnego w aplikacji.
