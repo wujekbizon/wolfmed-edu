@@ -1,17 +1,20 @@
 import { CompletedTest } from '@/types/dataTypes'
 import Link from 'next/link'
+import CompletedTestDeleteButton from './CompletedTestDeleteButton'
+import { useStore } from '@/store/useStore'
+import CompletedTestDeleteModal from './CompletedTestDeleteModal'
 
 export default function CompletedTestCard({ completedTest }: { completedTest: CompletedTest }) {
   const { score, id, testResult, completedAt } = completedTest as CompletedTest
+  const { isDeleteModalOpen, testIdToDelete } = useStore()
 
   const totalTests = testResult.length
   const correctAnswers = testResult.filter((result) => result.answer === true)
 
   return (
-    <Link
-      href={`/testy-opiekun/wyniki/${id}`}
-      className="flex w-full flex-col items-center justify-between gap-4 rounded-xl border transition-colors border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 p-4  hover:bg-[#f58a8a] lg:w-2/3 xl:w-1/2"
-    >
+    <div className="relative flex flex-col gap-4 items-center justify-between rounded-xl border  border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 p-4 lg:w-2/3 xl:w-1/2">
+      {isDeleteModalOpen && testIdToDelete === id && <CompletedTestDeleteModal testId={id} />}
+
       <p className="text-center text-base text-zinc-900 sm:text-lg">
         Odpowiedziałeś poprawnie na {correctAnswers.length} pytań
       </p>
@@ -22,12 +25,20 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
           <span className="font-thin text-zinc-600">/</span> {totalTests}
         </p>
       </div>
-      <div className="flex w-full flex-col items-center justify-between md:flex-row">
-        <p className="text-center text-xs text-stone-700 sm:text-sm">Kliknij by dowiedzieć się więcej informacji.</p>
-        <p className="text-center text-xs text-stone-700 sm:text-sm">
-          Test rozwiązany: {completedAt ? new Date(completedAt).toLocaleDateString('pl-PL') : 'Brak dostępnej daty'}
-        </p>
+      <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
+        <Link
+          href={`/testy-opiekun/wyniki/${id}`}
+          className="bg-zinc-100 hover:bg-green-100 transition-colors px-2 rounded"
+        >
+          <p className="text-center text-xs text-zinc-800 sm:text-base font-semibold">Zobacz szczegóły testu.</p>
+        </Link>
+        <div className="flex gap-2">
+          <p className="text-center text-xs text-zinc-800 sm:text-base">
+            Test rozwiązany: {completedAt ? new Date(completedAt).toLocaleDateString('pl-PL') : 'Brak dostępnej daty'}
+          </p>
+          <CompletedTestDeleteButton testId={id} />
+        </div>
       </div>
-    </Link>
+    </div>
   )
 }

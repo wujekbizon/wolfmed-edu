@@ -1,8 +1,12 @@
 import { z } from 'zod'
 
+export const DeleteTestIdSchema = z.object({
+  testId: z.string().min(1, 'Musisz podać poprawny identyfikator testu.').trim(),
+})
+
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
-    .array(z.record(z.string().min(1, 'Answer must not be empty')))
+    .array(z.record(z.string().min(1, 'Odpowiedz na wszystkie pytania')))
     .refine((data) => allowedLengths.includes(data.length), {
       message: 'Odpowiedz na wszystkie pytania.',
     })

@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { blogPosts, payments, subscriptions, users } from './db/schema'
+import { blogPosts, completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq } from 'drizzle-orm'
@@ -94,4 +94,8 @@ export async function getPostById(id: string) {
     where: (model, { eq }) => eq(model.id, id),
   })
   return post
+}
+
+export async function deleteCompletedTest(testId: string) {
+  await db.delete(completedTestes).where(eq(completedTestes.id, testId))
 }

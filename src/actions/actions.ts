@@ -8,10 +8,11 @@ import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes, customersMessages, users } from '@/server/db/schema'
-import { CreateAnswersSchema, CreateMessageSchema } from '@/server/schema'
+import { CreateAnswersSchema, CreateMessageSchema, DeleteTestIdSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
-import { getUserTestLimit } from '@/server/queries'
+import { deleteCompletedTest, getUserTestLimit } from '@/server/queries'
+import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -139,4 +140,32 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   }
 
   return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
+}
+
+export async function deleteTestAction(formState: FormState, formData: FormData) {
+  // Check user authorization before allowing submission
+  const { userId } = auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  try {
+    const testId = formData.get('testId') as string
+
+    if (!testId) {
+      return toFormState('ERROR', 'Invalid test ID')
+    }
+
+    const validationResult = DeleteTestIdSchema.safeParse({ testId })
+
+    if (!validationResult.success) {
+      return toFormState('ERROR', 'Brak testu do usunięcia')
+    }
+
+    // remove completed test from database
+    await deleteCompletedTest(testId)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath('testy-opiekun/wyniki')
+  return toFormState('SUCCESS', 'Test usunięty pomyślnie')
 }

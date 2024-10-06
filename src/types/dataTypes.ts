@@ -45,7 +45,7 @@ export type FormattedAnswer = { questionId: string; answer: boolean }
 
 export interface CompletedTest {
   completedAt?: Date
-  id?: string
+  id: string
   userId: string
   score: number
   testResult: FormattedAnswer[]
