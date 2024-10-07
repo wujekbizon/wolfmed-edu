@@ -1,12 +1,12 @@
 import { SignedIn, SignedOut } from '@clerk/nextjs'
-import MembershipPlans from '@/components/MembershipPlans'
 import RegisterNow from '@/components/RegisterNow'
+import ThankYou from '@/components/ThankYou'
 
 export default function Membership() {
   return (
     <section className="bg-gradient-to-b from-zinc-50 to-zinc-800 w-full h-full py-8">
       <SignedIn>
-        <MembershipPlans />
+        <ThankYou />
       </SignedIn>
       <SignedOut>
         <RegisterNow />

@@ -9,17 +9,17 @@ export default function Home() {
   return (
     <section className="w-full h-full flex flex-col items-center">
       <Hero />
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_12px)] border-t-transparent border-r-transparent border-b-[10vw] border-b-[#e1b4b4]"></div>
+      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-t-transparent border-r-transparent border-b-[10vw] border-b-[#e1b4b4]"></div>
       <TestsSelection />
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_12px)] border-t-transparent border-r-[#e1b4b4] border-b-[10vw] border-b-zinc-50">
+      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-t-transparent border-r-[#e1b4b4] border-b-[10vw] border-b-zinc-50">
         {' '}
       </div>
       <Membership />
-      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_12px)] border-t-[10vw] border-t-zinc-800 border-l-zinc-900"></div>
+      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_14px)] border-t-[10vw] border-t-zinc-800 border-l-zinc-900"></div>
       <SignedIn>
         <Contact />
       </SignedIn>
-      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_12px)] border-r-zinc-900 border-b-[10vw] border-b-zinc-100"></div>
+      <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_14px)] border-r-zinc-900 border-b-[10vw] border-b-zinc-100"></div>
       <div className="w-full h-full">
         <Footer />
       </div>

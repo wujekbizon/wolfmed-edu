@@ -20,15 +20,15 @@ export default function ProductDisplay() {
           </div>
         </div>
         <div className="flex flex-col xs:flex-row items-center justify-between">
-          <h2 className="uppercase tracking-wide text-base text-zinc-900 font-bold">Wolfmed Premium</h2>
-          <span className="text-lg text-zinc-900 font-bold">49.99zł</span>
+          <h2 className="uppercase tracking-wide text-xl text-zinc-900 font-bold">Wolfmed Donacja</h2>
+          <span className="text-xl text-zinc-900 font-bold">49.99zł</span>
         </div>
         <p className="mt-2 text-zinc-500 text-base">
-          Uzyskaj dostęp do wszystkich funkcji premium. Płacisz tylko raz, używasz ile chcesz.
+          Tutaj możesz nasz wesprzeć, Twoja pomoc pozwoli dalej budować i rozwijać nasza aplikacja.
         </p>
         <form action={createCheckoutSession} className="mt-10">
           {/* <input type="hidden" name="lookup_key" value="Wolfmed_Premium_Plan-a02a43b" /> */}
-          <SubmitButton label="Kup premium" loading={'Zakup w trakcie...'} />
+          <SubmitButton label="Wspieram" loading={'Wsparcie w trakcie...'} />
         </form>
         <Link className="w-full py-3" href="/">
           <p className="text-center text-sm text-zinc-600 hover:text-zinc-800">Powrót do strony głównej</p>
