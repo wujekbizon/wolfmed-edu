@@ -15,7 +15,10 @@ export default function Contact() {
   const noScriptFallback = useToastMessage(state)
 
   return (
-    <div id="contact" className="relative h-[80vh] w-full overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-950">
+    <div
+      id="contact"
+      className="relative h-screen xs:h-[80vh] w-full overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-950"
+    >
       <Image
         src="/contact.webp"
         alt="contact"

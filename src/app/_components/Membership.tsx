@@ -4,7 +4,7 @@ import RegisterNow from '@/components/RegisterNow'
 
 export default function Membership() {
   return (
-    <section className="bg-gradient-to-b from-zinc-50 to-[#ffafaf] w-full h-full py-8">
+    <section className="bg-gradient-to-b from-zinc-50 to-zinc-800 w-full h-full py-8">
       <SignedIn>
         <MembershipPlans />
       </SignedIn>

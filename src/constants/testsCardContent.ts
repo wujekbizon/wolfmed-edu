@@ -19,7 +19,7 @@ export const testCardContent: TestCardContent[] = [
     date: '27 Sie 2024',
     testsNumber: NUMBER_OF_TESTS,
     testsLabel: 'Testów',
-    image: '/heart.webp',
+    image: '/tests.png',
     link: '/testy-opiekun/nauka',
   },
   {

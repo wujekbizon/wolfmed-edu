@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { dashboardLinks } from '@/constants/dashboardLinks'
 
@@ -18,7 +17,7 @@ export default function TestsDashboard() {
             prowadzony przez naszych doświadzczonych opiekunów medycznych, a także wiele materiałów i pomocy naukowych
             zwiazanych z rozwojem tego zawodu.
           </p>
-          <div className="py-10 bg-[#fff9f9] flex flex-col justify-center items-center rounded-xl">
+          <div className="py-10 flex flex-col justify-center items-center rounded-xl">
             <div className="flex flex-col gap-3">
               {dashboardLinks.map(({ icon, link, text }) => (
                 <div
@@ -32,16 +31,6 @@ export default function TestsDashboard() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="absolute right-[-10px] top-[calc(0px_-_128px/2.5)] lg:right-[calc(0px_-_128px/2.5)] h-32 min-w-32 border-4 border-white shadow shadow-zinc-500 rounded-full hidden xs:inline-block">
-            <Image
-              src="/guide.webp"
-              width={120}
-              height={120}
-              alt="Asystent"
-              className="w-full h-full object-cover rounded-full"
-              priority
-            />
           </div>
         </div>
       </div>

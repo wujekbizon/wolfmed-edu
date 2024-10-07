@@ -2,7 +2,7 @@ import AllTests from '@/components/AllTests'
 import { getAllTests } from '@/server/queries'
 import { Test } from '@/types/dataTypes'
 import { Suspense } from 'react'
-import Loading from './loading'
+import TestLoader from '@/components/TestsLoader'
 
 export const dynamic = 'force-static'
 
@@ -13,7 +13,7 @@ async function Tests() {
 
 export default function NaukaPage() {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<TestLoader />}>
       <Tests />
     </Suspense>
   )
