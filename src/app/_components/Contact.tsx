@@ -41,7 +41,7 @@ export default function Contact() {
               </p>
             </div>
             <div className="w-full lg:w-1/2">
-              <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-8">
+              <div className="bg-white bg-opacity-90 rounded-lg shadow-xl  p-4 xs:p-8">
                 <form className="flex flex-col gap-4" action={action}>
                   <div>
                     <Label htmlFor="email" label="Email" className="text-zinc-600" />
