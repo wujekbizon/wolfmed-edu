@@ -7,7 +7,6 @@ import Providers from './providers'
 import { ClerkProvider } from '@clerk/nextjs'
 import { plPL } from '@clerk/localizations'
 import ToastProvider from './_components/ToastProvider'
-import GoogleAnalytics from './_components/GoogleAnalytics'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -43,6 +42,9 @@ export const metadata: Metadata = {
   },
 }
 
+const GA_ID = process.env.NEXT_PUBLIC_MEASUREMENT_ID || 'dev'
+const GTAG_JS_URI = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,7 +63,21 @@ export default function RootLayout({
       }}
     >
       <html lang="pl">
-        <GoogleAnalytics />
+        <head>
+          <script async src={GTAG_JS_URI}>
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_ID}', {
+                page_path: window.location.pathname });
+             `,
+              }}
+            />
+          </script>
+        </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl sm:rounded-[50px] border-white">
             <Navbar />
