@@ -43,7 +43,7 @@ export async function updateTestLimit(id: string, testLimit: number, eventId: st
     const existingEvent = await db.query.processedEvents.findFirst({
       where: (model, { eq }) => eq(model.eventId, eventId),
     })
-    console.log(existingEvent)
+
     if (existingEvent) {
       console.log(`Event ${eventId} already processed`)
       return
@@ -65,6 +65,37 @@ export async function updateTestLimit(id: string, testLimit: number, eventId: st
   } catch (error) {
     console.error(`Failed to update testLimit for user with ID: ${id}`, error)
     throw new Error('Error updating test limit')
+  }
+}
+
+export async function updateUserSupporterStatus(id: string, eventId: string) {
+  try {
+    // Check if the event has already been processed (idempotency)
+    const existingEvent = await db.query.processedEvents.findFirst({
+      where: (model, { eq }) => eq(model.eventId, eventId),
+    })
+
+    if (existingEvent) {
+      console.log(`Event ${eventId} already processed`)
+      return
+    }
+
+    // Use a transaction to update the user and record the event
+    await db.transaction(async (tx) => {
+      // Update the user's supporter status
+      await tx.update(users).set({ supporter: true }).where(eq(users.userId, id))
+
+      // Log the processed event for idempotency
+      await tx.insert(processedEvents).values({
+        eventId,
+        userId: id,
+      })
+    })
+
+    console.log(`User with ID: ${id} is now a supporter.`)
+  } catch (error) {
+    console.error(`Failed to update supporter status for user with ID: ${id}`, error)
+    throw new Error('Error updating supporter status')
   }
 }
 

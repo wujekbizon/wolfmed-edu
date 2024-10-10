@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
-import { insertPayment, insertSubscription, updateTestLimit } from '@/server/db'
+import { insertPayment, insertSubscription, updateTestLimit, updateUserSupporterStatus } from '@/server/db'
 import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
 import { getUserIdByCustomer, getUserIdByCustomerEmail } from '@/server/queries'
 
@@ -88,7 +88,8 @@ export async function POST(req: Request) {
           console.error('User ID not found for customer:', chargedCustomerEmail)
           return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
         }
-        await updateTestLimit(userId, 1000, chargedEventId)
+
+        await updateUserSupporterStatus(userId, chargedEventId)
       } catch (error) {
         console.error('Error processing subscription:', error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
@@ -108,7 +109,7 @@ export async function POST(req: Request) {
           console.error('User ID not found for customer:', createdCustomerId)
           return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
         }
-        await updateTestLimit(userId, 1000, createdEventId)
+        // await updateTestLimit(userId, 1000, createdEventId)
       } catch (error) {
         console.error('Error processing subscription:', error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
@@ -134,7 +135,7 @@ export async function POST(req: Request) {
           return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
         }
 
-        await updateTestLimit(userId, 10, deletedEventId)
+        // await updateTestLimit(userId, 10, deletedEventId)
       } catch (error) {
         console.error('Error processing subscription:', error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })

@@ -10,6 +10,7 @@ import {
   serial,
   text,
   pgEnum,
+  boolean,
 } from 'drizzle-orm/pg-core'
 
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
@@ -23,10 +24,14 @@ export const users = createTable(
     userId: varchar('userId', { length: 256 }).notNull().unique(),
     testLimit: integer('testLimit').default(1000),
     createdAt: timestamp('createdAt').default(sql`CURRENT_TIMESTAMP`),
+    motto: varchar('motto').default('').notNull(),
+    supporter: boolean('supporter').default(false).notNull(),
+    username: varchar('username', { length: 256 }).default('').notNull(),
     updatedAt: timestamp('updatedAt'),
   },
   (table) => ({
     userIdIndex: index('usersUserId').on(table.userId),
+    usernameIndex: index('usersUsername').on(table.username),
   })
 )
 
