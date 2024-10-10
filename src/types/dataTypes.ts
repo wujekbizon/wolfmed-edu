@@ -58,6 +58,7 @@ export type ExtendedCompletedTest = Omit<CompletedTest, 'testResult'> & {
 export interface UserData {
   userId: string
   imageUrl: string
+  username?: string
   createdAt?: Date
   updatedAt: Date
 }

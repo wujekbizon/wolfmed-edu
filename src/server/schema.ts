@@ -34,3 +34,10 @@ export const CreateMessageSchema = z.object({
     .max(350, { message: 'Wiadomość nie może być dłuższa niż 350 znaków' })
     .trim(),
 })
+
+export const UpdateUsernameSchema = z.object({
+  username: z
+    .string()
+    .min(3, 'Nazwa użytkownika musi mieć co najmniej 3 znaki.')
+    .max(50, 'Nazwa użytkownika może mieć maksymalnie 50 znaków.'),
+})

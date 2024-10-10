@@ -63,6 +63,7 @@ export async function POST(req: Request) {
       const user: UserData = {
         userId: id,
         imageUrl: image_url || '',
+        username: `Użytkownik-${crypto.randomUUID().slice(0, 8)}`,
         updatedAt: new Date(updated_at),
       }
 
@@ -85,10 +86,14 @@ export async function POST(req: Request) {
       })
     }
 
-    // Deletes a user record from the database based on the provided ID,
-    // all user progress and completed tests.
-    // NOTE: Tests created by this user are currently not deleted.
-    await deleteUserFromDb(id)
+    try {
+      await deleteUserFromDb(id)
+    } catch (error) {
+      console.log(error)
+      return new Response('Failed to delete user from database', {
+        status: 500,
+      })
+    }
   }
 
   return new Response('', { status: 200 })

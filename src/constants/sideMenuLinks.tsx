@@ -31,9 +31,9 @@ export const sideMenuNavigationLinks = [
     label: 'Wyniki',
     icon: <ProgressIcon width={26} height={26} />,
   },
-  // {
-  //   url: '/testy-opiekun/opinie',
-  //   label: 'Opinie',
-  //   icon: <FeadbackIcon width={26} height={26} />,
-  // },
+  {
+    url: '/#contact',
+    label: 'Kontakt',
+    icon: <FeadbackIcon width={26} height={26} />,
+  },
 ]

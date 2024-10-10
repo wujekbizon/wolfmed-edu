@@ -4,7 +4,7 @@ import ProceduresIcon from '@/components/icons/ProceduresIcon'
 
 export const dashboardLinks = [
   {
-    text: 'Zobacz wszystkie dostępne pytania',
+    text: 'Wszystkie pytania',
     link: '/testy-opiekun/nauka',
     icon: <LearnIcon color="#ff8c8c" width={30} height={30} />,
   },
@@ -14,7 +14,7 @@ export const dashboardLinks = [
     icon: <DashboardIcon color="#ff8c8c" width={30} height={30} />,
   },
   {
-    text: 'Sprawdz swoją wiedzę z procedur',
+    text: 'Sprawdz procedury',
     link: '/testy-opiekun/procedury',
     icon: <ProceduresIcon color="#ff8c8c" width={30} height={30} />,
   },

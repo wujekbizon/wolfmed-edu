@@ -8,10 +8,10 @@ import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes, customersMessages, users } from '@/server/db/schema'
-import { CreateAnswersSchema, CreateMessageSchema, DeleteTestIdSchema } from '@/server/schema'
+import { CreateAnswersSchema, CreateMessageSchema, DeleteTestIdSchema, UpdateUsernameSchema } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
-import { deleteCompletedTest, getUserTestLimit } from '@/server/queries'
+import { deleteCompletedTest, getUserTestLimit, updateUsernameByUserId } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
@@ -168,4 +168,31 @@ export async function deleteTestAction(formState: FormState, formData: FormData)
 
   revalidatePath('testy-opiekun/wyniki')
   return toFormState('SUCCESS', 'Test usunięty pomyślnie')
+}
+
+export async function updateUsername(formState: FormState, formData: FormData) {
+  const { userId } = auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const username = formData.get('username') as string
+
+  const validationResult = UpdateUsernameSchema.safeParse({ username })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { username },
+    }
+  }
+
+  try {
+    await updateUsernameByUserId(userId, validationResult.data.username)
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { username },
+    }
+  }
+  revalidatePath('/testy-opiekun')
+  return toFormState('SUCCESS', 'Username updated successfully!')
 }

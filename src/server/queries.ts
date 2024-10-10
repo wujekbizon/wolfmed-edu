@@ -1,6 +1,6 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { blogPosts, completedTestes, payments, subscriptions, users } from './db/schema'
+import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq } from 'drizzle-orm'
@@ -98,4 +98,15 @@ export async function getPostById(id: string) {
 
 export async function deleteCompletedTest(testId: string) {
   await db.delete(completedTestes).where(eq(completedTestes.id, testId))
+}
+
+export async function updateUsernameByUserId(userId: string, newUsername: string) {
+  await db.update(users).set({ username: newUsername }).where(eq(users.userId, userId))
+}
+
+export async function getUserUsername(userId: string) {
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+  })
+  return user?.username
 }
