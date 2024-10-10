@@ -15,7 +15,7 @@ export default function UserDashboard({
   totalTests: number
 }) {
   return (
-    <section className="flex justify-center h-full w-full bg-gradient-to-br from-zinc-100 to-zinc-200">
+    <section className="flex justify-center h-full w-full">
       <div className="lg:w-[70%] xl:w-3/4 h-full w-full flex flex-col items-center py-8 gap-8 pr-2 overflow-y-scroll scrollbar-webkit">
         <DashboardInfo />
         <div className="bg-white w-full gap-8 flex flex-col p-6 sm:p-10 rounded-2xl shadow-lg">

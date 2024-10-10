@@ -3,29 +3,33 @@ import Link from 'next/link'
 
 export default function DashboardInfo() {
   return (
-    <div className="border-red-200/60 shadow-md shadow-zinc-500 h-full bg-white w-full gap-6 flex flex-col items-center xl:flex-row justify-center sm:justify-between p-4 rounded-xl relative">
-      <p className="text-base text-zinc-900 p-0 xs:p-4">
-        Witaj przyszły <span className="font-bold text-[#f58a8a] text-base xs:text-xl">opiekunie medyczny</span>, <br />{' '}
-        <br />
-        przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do egzaminu zawodowego. Nasza
-        baza danych zawiera większość testów z ostatnich 2-3 lat z egzaminów państwowych i jest aktualizowana na
-        bierząco.
-        <br />
-        Ponadto nasza aplikacja będzie rozbudowana o kursy uzupełniające, a także wiele materiałów i pomocy naukowych
-        zwiazanych z rozwojem tego zawodu.
-      </p>
+    <div className="bg-white w-full gap-8 flex flex-col items-center xl:flex-row justify-between p-6 sm:p-10 rounded-2xl shadow-lg">
+      <div className="w-full xl:w-1/2">
+        <h2 className="text-2xl sm:text-3xl text-zinc-800 font-bold mb-4">
+          Witaj przyszły <span className="text-[#f58a8a]">opiekunie medyczny</span>!
+        </h2>
+        <p className="text-base text-zinc-700 leading-relaxed">
+          Przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do egzaminu zawodowego.
+          Nasza baza danych zawiera większość testów z ostatnich 2-3 lat z egzaminów państwowych i jest aktualizowana na
+          bieżąco.
+        </p>
+        <p className="text-base text-zinc-700 leading-relaxed mt-4">
+          Ponadto nasza aplikacja będzie rozbudowana o kursy uzupełniające, a także wiele materiałów i pomocy naukowych
+          związanych z rozwojem tego zawodu.
+        </p>
+      </div>
 
-      <div className="flex flex-col gap-5 justify-center w-full sm:w-2/3 h-full p-0 xs:p-4">
+      <div className="w-full xl:w-1/2 flex flex-col gap-4">
+        <h3 className="text-xl font-semibold text-zinc-800 mb-2">Szybki dostęp</h3>
         {dashboardLinks.map(({ icon, link, text }) => (
-          <div
+          <Link
             key={text}
-            className="flex w-full xs:min-w-72 items-center justify-center cursor-pointer gap-5 stroke-zinc-500 px-4 py-1 bg-[#ffb1b1] text-zinc-800 transition-all hover:scale-95 rounded-md border border-red-200/40 hover:shadow-sm hover:bg-[#ffc5c5] shadow shadow-zinc-500 "
+            href={link}
+            className="flex items-center justify-between w-full gap-4 px-6 py-4 bg-[#ffb1b1] text-zinc-800 rounded-xl shadow-md transition-all hover:shadow-lg hover:scale-[1.02] hover:bg-[#ffc5c5]"
           >
-            <Link href={link} className="flex items-center justify-between w-full gap-2">
-              <p className="text-sm xs:text-base font-semibold text-zinc-900">{text}</p>
-              {icon}
-            </Link>
-          </div>
+            <span className="text-base font-semibold text-zinc-900">{text}</span>
+            <span className="text-zinc-700">{icon}</span>
+          </Link>
         ))}
       </div>
     </div>
