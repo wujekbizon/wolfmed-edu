@@ -109,27 +109,27 @@ export async function sendEmail(formState: FormState, formData: FormData) {
 
   try {
     // Fetch the timestamp of the last message sent by this email
-    const lastMessage = await db
-      .select({ createdAt: customersMessages.createdAt })
-      .from(customersMessages)
-      .where(eq(customersMessages.email, email))
-      .limit(1)
-      .execute()
+    // const lastMessage = await db
+    //   .select({ createdAt: customersMessages.createdAt })
+    //   .from(customersMessages)
+    //   .where(eq(customersMessages.email, email))
+    //   .limit(1)
+    //   .execute()
 
-    if (lastMessage.length > 0 && lastMessage[0]?.createdAt) {
-      const lastSentTime = new Date(lastMessage[0].createdAt)
-      const now = new Date()
-      const diffMinutes = (now.getTime() - lastSentTime.getTime()) / (1000 * 60)
+    // if (lastMessage.length > 0 && lastMessage[0]?.createdAt) {
+    //   const lastSentTime = new Date(lastMessage[0].createdAt)
+    //   const now = new Date()
+    //   const diffMinutes = (now.getTime() - lastSentTime.getTime()) / (1000 * 60)
 
-      // Check if the last message was sent within the last 15 minutes
-      if (diffMinutes < 15) {
-        return toFormState('ERROR', 'Możesz wysłać wiadomość tylko raz na 15 minut.')
-      }
-    }
+    //   // Check if the last message was sent within the last 15 minutes
+    //   if (diffMinutes < 15) {
+    //     return toFormState('ERROR', 'Możesz wysłać wiadomość tylko raz na 15 minut.')
+    //   }
+    // }
 
     await db.insert(customersMessages).values({
       email: validationResult.data.email,
-      message: validationResult.data.email,
+      message: validationResult.data.message,
       createdAt: new Date(),
     })
   } catch (error) {

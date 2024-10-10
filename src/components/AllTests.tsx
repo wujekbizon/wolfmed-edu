@@ -18,8 +18,10 @@ export default function AllTests(props: { tests: Test[] }) {
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTo({ top: 0, behavior: 'auto' })
+      console.log(currentPage)
     }
   }, [currentPage])
+
   // creates an array directly from object's values
   const testsArr = Object.values(props.tests)
 
@@ -55,8 +57,8 @@ export default function AllTests(props: { tests: Test[] }) {
   })
 
   return (
-    <section className="px-1 sm:px-4 py-4 w-full h-full " ref={listRef}>
-      <div className="overflow-y-auto scrollbar-webkit h-full flex flex-col items-center gap-8 pr-1">
+    <section className="px-1 sm:px-4 py-4 w-full overflow-y-auto scrollbar-webkit" ref={listRef}>
+      <div className=" h-full flex flex-col items-center gap-8 pr-1">
         <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
           <SearchTerm label="Szukaj terminu" />
         </div>
