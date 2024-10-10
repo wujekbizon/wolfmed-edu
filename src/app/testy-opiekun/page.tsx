@@ -16,5 +16,12 @@ export default async function TestsPage() {
 
   const averageScore = calculateAverageScore(totalScore, totalQuestions)
 
-  return <UserDashboard username={username} completedTestsCount={completedTestsCount} averageScore={averageScore} />
+  return (
+    <UserDashboard
+      username={username}
+      completedTestsCount={completedTestsCount}
+      averageScore={averageScore}
+      totalTests={10}
+    />
+  )
 }
