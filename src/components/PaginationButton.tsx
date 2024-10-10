@@ -1,13 +1,13 @@
 type PaginationButtonProps = {
   children: React.ReactNode
-  onCLick: () => void
+  onClick: () => void
   disabled: boolean
 }
 
-export default function PaginationButton({ disabled, onCLick, children }: PaginationButtonProps) {
+export default function PaginationButton({ disabled, onClick, children }: PaginationButtonProps) {
   return (
     <button
-      onClick={onCLick}
+      onClick={onClick}
       disabled={disabled}
       className={`${
         disabled

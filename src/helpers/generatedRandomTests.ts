@@ -6,25 +6,21 @@ export function generateRandomTests(testArray: Test[], numOfQuestions: number) {
     return []
   }
 
+  // Ensure we don't try to select more questions than available
   numOfQuestions = Math.min(numOfQuestions, testArray.length)
 
-  const selectedTests = new Set<Test>()
+  // Create a copy of the testArray and shuffle it
+  const shuffledTests = shuffleArray([...testArray])
 
-  while (selectedTests.size < numOfQuestions) {
-    const randomIndex = Math.floor(Math.random() * testArray.length)
-    const randomQuestion = testArray[randomIndex]
+  // Select the first numOfQuestions tests from the shuffled array
+  const selectedTests = shuffledTests.slice(0, numOfQuestions)
 
-    if (randomQuestion) {
-      const shuffleAnswers = shuffleArray(randomQuestion.data.answers)
-      selectedTests.add({
-        ...randomQuestion,
-        data: {
-          ...randomQuestion.data,
-          answers: shuffleAnswers,
-        },
-      })
-    }
-  }
-
-  return Array.from(selectedTests)
+  // Shuffle the answers for each selected test
+  return selectedTests.map((test) => ({
+    ...test,
+    data: {
+      ...test.data,
+      answers: shuffleArray(test.data.answers),
+    },
+  }))
 }

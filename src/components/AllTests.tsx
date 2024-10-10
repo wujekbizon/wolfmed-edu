@@ -17,7 +17,7 @@ export default function AllTests(props: { tests: Test[] }) {
   // Scroll to top when the current page changes
   useEffect(() => {
     if (listRef.current) {
-      listRef.current.scrollTo({ top: 0, behavior: 'instant' })
+      listRef.current.scrollTo({ top: 0, behavior: 'auto' })
     }
   }, [currentPage])
   // creates an array directly from object's values
