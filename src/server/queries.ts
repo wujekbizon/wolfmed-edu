@@ -3,7 +3,7 @@ import { db } from '@/server/db/index'
 import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -89,24 +89,63 @@ export async function getUserIdByCustomerEmail(customerEmail: string): Promise<s
 }
 
 // Function to fetch a single post by ID from the database
-export async function getPostById(id: string) {
+export const getPostById = cache(async (id: string) => {
   const post = await db.query.blogPosts.findFirst({
     where: (model, { eq }) => eq(model.id, id),
   })
   return post
-}
+})
 
-export async function deleteCompletedTest(testId: string) {
+export const deleteCompletedTest = cache(async (testId: string) => {
   await db.delete(completedTestes).where(eq(completedTestes.id, testId))
-}
+})
 
-export async function updateUsernameByUserId(userId: string, newUsername: string) {
+export const updateUsernameByUserId = cache(async (userId: string, newUsername: string) => {
   await db.update(users).set({ username: newUsername }).where(eq(users.userId, userId))
-}
+})
 
-export async function getUserUsername(userId: string) {
+export const getUserUsername = cache(async (userId: string) => {
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
   })
   return user?.username
-}
+})
+
+export const updateMottoByUserId = cache(async (userId: string, newMotto: string) => {
+  await db.update(users).set({ motto: newMotto }).where(eq(users.userId, userId))
+})
+
+export const getUserMotto = cache(async (userId: string) => {
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+  })
+  return user?.motto
+})
+
+export const getTestScoreAndQuestionCountByUser = cache(
+  async (userId: string): Promise<{ totalScore: number; totalQuestions: number }> => {
+    const result = await db
+      .select({
+        totalScore: sql<number>`SUM(score)`,
+        totalQuestions: sql<number>`SUM(jsonb_array_length("testResult"))`,
+      })
+      .from(completedTestes)
+      .where(eq(completedTestes.userId, userId))
+
+    return {
+      totalScore: result[0]?.totalScore || 0,
+      totalQuestions: result[0]?.totalQuestions || 0,
+    }
+  }
+)
+
+export const getCompletedTestCountByUser = cache(async (userId: string): Promise<number> => {
+  const result = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(completedTestes)
+    .where(eq(completedTestes.userId, userId))
+
+  return result[0]?.count || 0
+})

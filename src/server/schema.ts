@@ -12,6 +12,10 @@ export const CreateAnswersSchema = (allowedLengths: number[]) => {
     })
 }
 
+export const UpdateMottoSchema = z.object({
+  motto: z.string().min(1, 'Motto nie może być puste').max(100, 'Motto nie może być dłuższe niż 100 znaków'),
+})
+
 export const SignupForSchema = z.object({
   name: z.string().min(1, 'Nazwa musi mieć co najmniej 2 znaki.').trim(),
   email: z.string().email('Proszę podać poprawny email.').trim(),

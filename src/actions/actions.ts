@@ -8,10 +8,16 @@ import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
 import { completedTestes, customersMessages, users } from '@/server/db/schema'
-import { CreateAnswersSchema, CreateMessageSchema, DeleteTestIdSchema, UpdateUsernameSchema } from '@/server/schema'
+import {
+  CreateAnswersSchema,
+  CreateMessageSchema,
+  DeleteTestIdSchema,
+  UpdateMottoSchema,
+  UpdateUsernameSchema,
+} from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq } from 'drizzle-orm'
-import { deleteCompletedTest, getUserTestLimit, updateUsernameByUserId } from '@/server/queries'
+import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
@@ -195,4 +201,32 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   }
   revalidatePath('/testy-opiekun')
   return toFormState('SUCCESS', 'Username updated successfully!')
+}
+
+export async function updateMotto(formState: FormState, formData: FormData) {
+  const { userId } = auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const motto = formData.get('motto') as string
+
+  const validationResult = UpdateMottoSchema.safeParse({ motto })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { motto },
+    }
+  }
+
+  try {
+    await updateMottoByUserId(userId, validationResult.data.motto)
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { motto },
+    }
+  }
+
+  revalidatePath('/testy-opiekun')
+  return toFormState('SUCCESS', 'Motto zaktualizowane pomyślnie!')
 }
