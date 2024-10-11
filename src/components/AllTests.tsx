@@ -18,7 +18,6 @@ export default function AllTests(props: { tests: Test[] }) {
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollTo({ top: 0, behavior: 'auto' })
-      console.log(currentPage)
     }
   }, [currentPage])
 
