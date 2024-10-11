@@ -1,0 +1,1 @@
+export const TOTAL_TESTS_TO_COMPLETE = 100

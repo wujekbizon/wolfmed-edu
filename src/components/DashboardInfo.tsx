@@ -5,8 +5,8 @@ export default function DashboardInfo() {
   return (
     <div className="bg-white w-full gap-8 flex flex-col items-center xl:flex-row justify-between p-6 sm:p-10 rounded-2xl shadow-lg">
       <div className="w-full xl:w-1/2">
-        <h2 className="text-2xl sm:text-3xl text-zinc-800 font-bold mb-4">
-          Witaj przyszły <span className="text-[#f58a8a]">opiekunie medyczny</span>!
+        <h2 className="text-xl sm:text-3xl text-center xs:text-left text-zinc-800 font-bold mb-4">
+          Witaj przyszły <span className="text-[#f58a8a]">opiekunie medyczny </span>!
         </h2>
         <p className="text-base text-zinc-700 leading-relaxed">
           Przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do egzaminu zawodowego.

@@ -82,7 +82,7 @@ const config: Config = {
             height: '10px',
           },
           '&::-webkit-scrollbar-track': {
-            background: 'transparent',
+            background: '#fce5e3',
             borderRadius: '10px',
           },
           '&::-webkit-scrollbar-thumb': {

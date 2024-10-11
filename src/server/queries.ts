@@ -124,14 +124,18 @@ export const getUserMotto = cache(async (userId: string) => {
 
 export const getTestScoreAndQuestionCountByUser = cache(
   async (userId: string): Promise<{ totalScore: number; totalQuestions: number }> => {
+    // Execute a SQL query to calculate the total score and count the number of questions
     const result = await db
       .select({
+        // Calculate the sum of scores for the given user using raw SQL
         totalScore: sql<number>`SUM(score)`,
+        // Count the number of questions by measuring the length of the JSON array field (testResult)
         totalQuestions: sql<number>`SUM(jsonb_array_length("testResult"))`,
       })
       .from(completedTestes)
       .where(eq(completedTestes.userId, userId))
 
+    // Return the total score and total number of questions, defaulting to 0 if no results are found
     return {
       totalScore: result[0]?.totalScore || 0,
       totalQuestions: result[0]?.totalQuestions || 0,
