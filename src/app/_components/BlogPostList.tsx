@@ -60,7 +60,7 @@ export default function BlogPostList(props: { posts: Post[] }) {
   const totalPages = Math.ceil((filteredBlogPosts ?? cachedBlogPosts).length / POSTS_PER_PAGE)
 
   return (
-    <div className="w-full lg:w-2/3 xl:w-1/2 flex flex-col items-center gap-8" ref={listRef}>
+    <div className="w-full lg:w-3/4 xl:w-2/3 flex flex-col items-center gap-8" ref={listRef}>
       <SearchTerm label="Szukaj postu" />
       {searchLoading ? (
         <TestLoader />
