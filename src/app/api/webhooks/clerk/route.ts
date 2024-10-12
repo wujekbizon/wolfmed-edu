@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { WebhookEvent } from '@clerk/nextjs/server'
 import { UserData } from '@/types/dataTypes'
 import { deleteUserFromDb, insertUserToDb } from '@/server/db'
+import { generateRandomMotto } from '@/helpers/generateRandomMotto'
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -62,9 +63,9 @@ export async function POST(req: Request) {
     try {
       const user: UserData = {
         userId: id,
-        imageUrl: image_url || '',
-        username: `Użytkownik-${crypto.randomUUID().slice(0, 8)}`,
-        updatedAt: new Date(updated_at),
+        username: `User-${crypto.randomUUID().slice(0, 8)}`,
+        createdAt: new Date(),
+        motto: generateRandomMotto(),
       }
 
       // Insert a new user record into the database.

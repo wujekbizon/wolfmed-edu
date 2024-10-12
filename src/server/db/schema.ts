@@ -37,7 +37,7 @@ export const users = createTable(
 
 export const payments = createTable('stripe_payments', {
   id: uuid('id').primaryKey().defaultRandom(),
-  userId: varchar('userId', { length: 256 }).notNull().unique(),
+  userId: varchar('userId', { length: 256 }).notNull(),
   amountTotal: integer('amountTotal').notNull(),
   currency: currencyEnum('currency'),
   customerEmail: varchar('customerEmail', { length: 256 }).notNull(),

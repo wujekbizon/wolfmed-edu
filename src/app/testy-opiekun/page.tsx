@@ -1,7 +1,12 @@
 import UserDashboard from '@/components/UserDashboard'
 import { TOTAL_TESTS_TO_COMPLETE } from '@/constants/totalTests'
 import { calculateAverageScore } from '@/helpers/calculateAverageScore'
-import { getCompletedTestCountByUser, getTestScoreAndQuestionCountByUser, getUserUsername } from '@/server/queries'
+import {
+  getCompletedTestCountByUser,
+  getTestScoreAndQuestionCountByUser,
+  getUserMotto,
+  getUserUsername,
+} from '@/server/queries'
 import { currentUser } from '@clerk/nextjs/server'
 
 export default async function TestsPage() {
@@ -16,6 +21,7 @@ export default async function TestsPage() {
   const completedTestsCount = await getCompletedTestCountByUser(user.id)
 
   const averageScore = calculateAverageScore(totalScore, totalQuestions)
+  const motto = (await getUserMotto(user.id)) as string
 
   return (
     <UserDashboard
@@ -23,6 +29,7 @@ export default async function TestsPage() {
       completedTestsCount={completedTestsCount}
       averageScore={averageScore}
       totalTests={TOTAL_TESTS_TO_COMPLETE}
+      motto={motto}
     />
   )
 }

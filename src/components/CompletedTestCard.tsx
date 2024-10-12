@@ -28,7 +28,7 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
       <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
         <Link
           href={`/testy-opiekun/wyniki/${id}`}
-          className="bg-zinc-100 hover:bg-green-100 transition-colors px-2 rounded"
+          className="bg-zinc-100 hover:bg-green-300 transition-colors py-2 px-4 rounded-md"
         >
           <p className="text-center text-xs text-zinc-800 sm:text-base font-semibold">Zobacz szczegóły testu.</p>
         </Link>

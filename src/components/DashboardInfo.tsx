@@ -3,10 +3,10 @@ import Link from 'next/link'
 
 export default function DashboardInfo() {
   return (
-    <div className="bg-white w-full gap-8 flex flex-col items-center xl:flex-row justify-between p-6 sm:p-10 rounded-2xl shadow-lg">
+    <div className="bg-white w-full gap-8 flex flex-col items-center xl:flex-row justify-between p-6 sm:p-10 rounded-2xl shadow-md shadow-zinc-500 border border-red-200/40">
       <div className="w-full xl:w-1/2">
-        <h2 className="text-xl sm:text-3xl text-center xs:text-left text-zinc-800 font-bold mb-4">
-          Witaj przyszły <span className="text-[#f58a8a]">opiekunie medyczny </span>!
+        <h2 className="text-xl sm:text-2xl text-center xs:text-left text-zinc-800 font-bold mb-4">
+          Witaj przyszły <span className="text-[#f58a8a]">opiekunie medyczny</span>!
         </h2>
         <p className="text-base text-zinc-700 leading-relaxed">
           Przygotowaliśmy dla Ciebie najnowsze testy, które pomogą Ci się lepiej przygotować do egzaminu zawodowego.
@@ -25,7 +25,7 @@ export default function DashboardInfo() {
           <Link
             key={text}
             href={link}
-            className="flex items-center justify-between w-full gap-4 px-6 py-4 bg-[#ffb1b1] text-zinc-800 rounded-xl shadow-md transition-all hover:shadow-lg hover:scale-[1.02] hover:bg-[#ffc5c5]"
+            className="flex items-center justify-between w-full gap-4 px-6 py-3 bg-[#ffb1b1] text-zinc-800 rounded-xl shadow-md transition-all hover:shadow-lg hover:scale-[1.02] hover:bg-[#ffc5c5]"
           >
             <span className="text-base font-semibold text-zinc-900">{text}</span>
             <span className="text-zinc-700">{icon}</span>

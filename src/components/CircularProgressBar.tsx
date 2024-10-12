@@ -17,7 +17,7 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({ percentage, c
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <circle
-        className="text-gray-200"
+        className="text-zinc-300"
         strokeWidth={strokeWidth}
         stroke="currentColor"
         fill="transparent"
