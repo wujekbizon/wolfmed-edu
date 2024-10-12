@@ -1,5 +1,6 @@
 import { fetchQuestionDetails } from '@/actions/fetchQuestionDetails'
 import { CompletedTest, Test } from '@/types/dataTypes'
+import Link from 'next/link'
 
 export default async function TestResultCard({ completedTest }: { completedTest: CompletedTest }) {
   const { score, testResult } = completedTest as CompletedTest
@@ -47,7 +48,7 @@ export default async function TestResultCard({ completedTest }: { completedTest:
   })
 
   return (
-    <div className="flex w-full flex-col gap-4 overflow-y-auto rounded-lg border border-red-200/60 bg-white shadow-md shadow-zinc-500 p-2 scrollbar-webkit md:p-8 lg:w-3/4 xl:w-2/3">
+    <div className="flex w-full flex-col gap-4 overflow-y-auto items-center rounded-lg border border-red-200/60 bg-white shadow-md shadow-zinc-500 p-2 scrollbar-webkit md:p-8 lg:w-3/4 xl:w-2/3">
       <div className="flex items-center justify-center gap-2">
         <h2 className="text-lg text-zinc-900">Twój wynik to: </h2>
         <p className="text-base text-zinc-800">
@@ -55,6 +56,13 @@ export default async function TestResultCard({ completedTest }: { completedTest:
         </p>
       </div>
       {questionDetails}
+
+      <Link
+        className="bg-zinc-300 py-2 px-4 w-full sm:w-52 text-center rounded-md mt-4 hover:bg-zinc-300/70 "
+        href="/testy-opiekun/wyniki"
+      >
+        Powrót
+      </Link>
     </div>
   )
 }
