@@ -49,7 +49,7 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
           questionNumber={`${index + 1 + (currentPage - 1) * perPage}/${tests.length}`}
         />
       ))}
-      <PaginationControls totalPages={totalPages} />
+      <PaginationControls totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
     </div>
   )
 }

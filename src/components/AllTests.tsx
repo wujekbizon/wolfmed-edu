@@ -10,7 +10,7 @@ import FilteredTestsList from './FilteredTestsList'
 import { Test } from '@/types/dataTypes'
 
 export default function AllTests(props: { tests: Test[] }) {
-  const { searchTerm, currentPage } = useSearchTermStore()
+  const { searchTerm, currentPage, setSearchTerm } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
   const listRef = useRef<HTMLDivElement>(null)
 
@@ -59,7 +59,7 @@ export default function AllTests(props: { tests: Test[] }) {
     <section className="px-1 sm:px-4 py-4 w-full overflow-y-auto scrollbar-webkit" ref={listRef}>
       <div className=" h-full flex flex-col items-center gap-8 pr-1">
         <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
-          <SearchTerm label="Szukaj terminu" />
+          <SearchTerm label="Szukaj terminu" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
         <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
       </div>

@@ -4,16 +4,16 @@ import { useEffect, useRef } from 'react'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import { useSearchTermStore } from '@/store/useSearchTermStore'
 import SearchTerm from '@/components/SearchTerm'
 import PaginationControls from '@/components/PaginationControls'
 import TestLoader from '@/components/TestsLoader'
 import { Post } from '@/types/dataTypes'
+import { useBlogSearchStore } from '@/store/useBlogSearch'
 
 const POSTS_PER_PAGE = 5
 
 export default function BlogPostList(props: { posts: Post[] }) {
-  const { searchTerm, currentPage } = useSearchTermStore()
+  const { searchTerm, currentPage, setCurrentPage, setSearchTerm } = useBlogSearchStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
   const listRef = useRef<HTMLDivElement>(null)
 
@@ -61,7 +61,7 @@ export default function BlogPostList(props: { posts: Post[] }) {
 
   return (
     <div className="w-full lg:w-3/4 xl:w-2/3 flex flex-col items-center gap-8" ref={listRef}>
-      <SearchTerm label="Szukaj postu" />
+      <SearchTerm label="Szukaj postu" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {searchLoading ? (
         <TestLoader />
       ) : error ? (
@@ -82,7 +82,7 @@ export default function BlogPostList(props: { posts: Post[] }) {
               </Link>
             ))}
           </div>
-          <PaginationControls totalPages={totalPages} />
+          <PaginationControls totalPages={totalPages} setCurrentPage={setCurrentPage} currentPage={currentPage} />
         </>
       )}
     </div>

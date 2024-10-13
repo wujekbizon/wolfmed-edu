@@ -1,11 +1,17 @@
 'use client'
 
-import { useSearchTermStore } from '@/store/useSearchTermStore'
 import Label from './Label'
 import Input from './Input'
 
-export default function SearchTerm({ label }: { label: string }) {
-  const { searchTerm, setSearchTerm } = useSearchTermStore()
+export default function SearchTerm({
+  label,
+  searchTerm,
+  setSearchTerm,
+}: {
+  label: string
+  searchTerm: string
+  setSearchTerm: (term: string) => void
+}) {
   return (
     <div className="flex w-full flex-col">
       <Label className="pb-1 text-sm text-muted-foreground" label={label} htmlFor="input" />
