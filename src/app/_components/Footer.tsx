@@ -62,11 +62,11 @@ export default function Footer() {
               </li>
             </ul>
           </div>
-          <div className="text-center lg:text-left">
+          <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Kontakt</h4>
             <p>grzegorz.wolfinger@gmail.com</p>
 
-            <div className="flex justify-center lg:justify-start space-x-4 mt-4">
+            <div className="flex justify-center sm:justify-start space-x-4 mt-4">
               <Link
                 href="https://www.facebook.com"
                 target="_blank"
