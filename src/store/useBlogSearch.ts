@@ -23,7 +23,7 @@ export const useBlogSearchStore = create<BlogSearchState>()(
       setPerPage: (perPage: number) => set({ perPage }),
     }),
     {
-      name: 'searchTerm-storage', // Name of the storage key
+      name: 'blogSearch-storage', // Name of the storage key
       storage: createJSONStorage(() => localStorage),
     }
   )
