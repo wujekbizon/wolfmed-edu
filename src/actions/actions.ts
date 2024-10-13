@@ -16,7 +16,7 @@ import {
   UpdateUsernameSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
 
@@ -86,7 +86,12 @@ export async function submitTestAction(formState: FormState, formData: FormData)
         // here I want to update user limit by decresing 1 from it
         await tx
           .update(users)
-          .set({ testLimit: userTestLimit.testLimit - 1 })
+          .set({
+            testLimit: userTestLimit.testLimit - 1,
+            testsAttempted: sql`${users.testsAttempted} + 1`,
+            totalScore: sql`${users.totalScore} + ${correct}`,
+            totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
+          })
           .where(eq(users.userId, userId))
       }
       await tx.insert(completedTestes).values(completedTest)

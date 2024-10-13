@@ -1,21 +1,24 @@
 import DashboardInfo from '@/components/DashboardInfo'
 import UsernameForm from './UsernameForm'
 import MottoForm from './MottoForm'
-import CircularProgressBar from './CircularProgressBar'
 import UserProgress from './UserProgress'
 
 export default function UserDashboard({
   username,
-  completedTestsCount,
+  testsAttempted,
   averageScore,
   totalTests,
   motto,
+  totalScore,
+  totalQuestions,
 }: {
   username: string
-  completedTestsCount: number
+  testsAttempted: number
   averageScore: number
   totalTests: number
   motto: string
+  totalScore: number
+  totalQuestions: number
 }) {
   return (
     <section className="flex justify-center h-full w-full">
@@ -35,7 +38,13 @@ export default function UserDashboard({
             <MottoForm />
           </div>
 
-          <UserProgress completedTestsCount={completedTestsCount} averageScore={averageScore} totalTests={totalTests} />
+          <UserProgress
+            testsAttempted={testsAttempted}
+            averageScore={averageScore}
+            totalTests={totalTests}
+            totalScore={totalScore}
+            totalQuestions={totalQuestions}
+          />
         </div>
       </div>
     </section>

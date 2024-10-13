@@ -124,18 +124,15 @@ export const getUserMotto = cache(async (userId: string) => {
 
 export const getTestScoreAndQuestionCountByUser = cache(
   async (userId: string): Promise<{ totalScore: number; totalQuestions: number }> => {
-    // Execute a SQL query to calculate the total score and count the number of questions
     const result = await db
       .select({
-        // Calculate the sum of scores for the given user using raw SQL
-        totalScore: sql<number>`SUM(score)`,
-        // Count the number of questions by measuring the length of the JSON array field (testResult)
-        totalQuestions: sql<number>`SUM(jsonb_array_length("testResult"))`,
+        totalScore: users.totalScore,
+        totalQuestions: users.totalQuestions,
       })
-      .from(completedTestes)
-      .where(eq(completedTestes.userId, userId))
+      .from(users)
+      .where(eq(users.userId, userId))
+      .limit(1)
 
-    // Return the total score and total number of questions, defaulting to 0 if no results are found
     return {
       totalScore: result[0]?.totalScore || 0,
       totalQuestions: result[0]?.totalQuestions || 0,
@@ -145,11 +142,9 @@ export const getTestScoreAndQuestionCountByUser = cache(
 
 export const getCompletedTestCountByUser = cache(async (userId: string): Promise<number> => {
   const result = await db
-    .select({
-      count: sql<number>`count(*)`,
-    })
-    .from(completedTestes)
-    .where(eq(completedTestes.userId, userId))
-
-  return result[0]?.count || 0
+    .select({ testsAttempted: users.testsAttempted })
+    .from(users)
+    .where(eq(users.userId, userId))
+    .limit(1)
+  return result[0]?.testsAttempted || 0
 })

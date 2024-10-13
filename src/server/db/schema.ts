@@ -28,6 +28,9 @@ export const users = createTable(
     supporter: boolean('supporter').default(false).notNull(),
     username: varchar('username', { length: 256 }).default('').notNull(),
     updatedAt: timestamp('updatedAt'),
+    testsAttempted: integer('tests_attempted').default(0).notNull(),
+    totalScore: integer('total_score').default(0).notNull(),
+    totalQuestions: integer('total_questions').default(0).notNull(),
   },
   (table) => ({
     userIdIndex: index('usersUserId').on(table.userId),
