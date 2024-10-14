@@ -5,6 +5,7 @@ import { Suspense } from 'react'
 import TestLoader from '@/components/TestsLoader'
 import BlogPostList from '../_components/BlogPostList'
 import Link from 'next/link'
+import HomeButton from '@/components/HomeButton'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -45,15 +46,7 @@ export default function BlogPage() {
             </div>
           </Suspense>
         </div>
-
-        <div className="text-center">
-          <Link
-            className="inline-block bg-gradient-to-r from-[#ffb1b1] to-[#ffa5a5] hover:from-[#ffa5a5] hover:to-[#ff9999] text-zinc-800 font-semibold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 text-sm sm:text-lg"
-            href="/"
-          >
-            Powrót do strony głównej
-          </Link>
-        </div>
+        <HomeButton title="Powrót do strony głównej" />
       </div>
     </section>
   )

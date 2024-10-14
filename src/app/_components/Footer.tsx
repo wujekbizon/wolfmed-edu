@@ -64,7 +64,9 @@ export default function Footer() {
           </div>
           <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Kontakt</h4>
-            <p>grzegorz.wolfinger@gmail.com</p>
+            <a href="mailto:wolfmededu@gmail.com" target="_blank" className="hover:text-red-500 transition-colors">
+              wolfmededu@gmail.com
+            </a>
 
             <div className="flex justify-center sm:justify-start space-x-4 mt-4">
               <Link
@@ -75,14 +77,14 @@ export default function Footer() {
                 <FacebookIcon />
               </Link>
               <Link
-                href="https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/"
+                href="https://www.linkedin.com/in/wolfmed-edukacja/"
                 target="_blank"
                 className="hover:text-zinc-800 transition-colors border border-zinc-400 p-1 rounded-2xl hover:bg-zinc-200"
               >
                 <LinkedInIcon />
               </Link>
               <Link
-                href="https://x.com/home"
+                href="https://x.com/wolfmededukacja"
                 target="_blank"
                 className="hover:text-red-500 transition-colors border border-zinc-400 p-1 rounded-2xl hover:bg-zinc-200"
               >

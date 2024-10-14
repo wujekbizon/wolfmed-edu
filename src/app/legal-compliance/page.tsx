@@ -1,9 +1,11 @@
+import HomeButton from '@/components/HomeButton'
+
 export const dynamic = 'force-static'
 
 export default function LegalCompliancePage() {
   return (
-    <section className="w-1/2 mx-auto  min-h-[calc(100vh_-_70px)] flex flex-col justify-center ">
-      <div className="h-full w-full bg-white flex flex-col p-12 gap-2 rounded-2xl">
+    <section className="w-[95%] md:w-1/2 mx-auto  min-h-[calc(100vh_-_70px)] py-4 flex flex-col justify-center">
+      <div className="h-full w-full bg-white flex flex-col p-4 sm:p-8 md:p-12 gap-2 rounded-2xl">
         <h2 className="text-2xl font-bold mb-8">Lista Kontrolna Zgodności Prawnej dla Użytkowników Wolfmed Edukacja</h2>
         <p className="text-lg text-zinc-800">
           1. Akceptacja Regulaminu
@@ -39,6 +41,7 @@ export default function LegalCompliancePage() {
           <br />
           Rozumiesz, że możesz otrzymywać komunikaty od nas dotyczące swojego konta i usług.
         </p>
+        <HomeButton title="Powrót do strony głównej" />
       </div>
     </section>
   )
