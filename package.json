@@ -1,6 +1,6 @@
 {
-  "name": "omed",
-  "version": "0.1.0",
+  "name": "wolfmed-edukacja",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,35 +12,35 @@
   },
   "dependencies": {
     "@clerk/localizations": "^2.8.1",
-    "@clerk/nextjs": "^5.6.2",
-    "@tanstack/react-query": "^5.56.2",
+    "@clerk/nextjs": "^5.7.2",
+    "@tanstack/react-query": "^5.59.13",
     "@vercel/postgres": "^0.9.0",
-    "babel-plugin-react-compiler": "0.0.0-experimental-b4db8c3-20241001",
+    "babel-plugin-react-compiler": "0.0.0-experimental-ad3b12a-20241011",
     "drizzle-orm": "^0.33.0",
     "next": "15.0.0-canary.170",
     "postgres": "^3.4.4",
-    "react": "19.0.0-rc-d8c90fa4-20241001",
+    "react": "19.0.0-rc-cd22717c-20241013",
     "react-confetti": "^6.1.0",
-    "react-dom": "19.0.0-rc-d8c90fa4-20241001",
+    "react-dom": "19.0.0-rc-cd22717c-20241013",
     "react-hot-toast": "^2.4.1",
     "server-only": "^0.0.1",
     "stripe": "^16.12.0",
-    "svix": "^1.36.0",
+    "svix": "^1.37.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@types/node": "^22.7.3",
+    "@types/node": "^22.7.5",
     "@types/react": "npm:types-react@beta",
     "@types/react-dom": "npm:types-react-dom@beta",
     "drizzle-kit": "^0.24.2",
-    "eslint": "^9.11.1",
+    "eslint": "^9.12.0",
     "eslint-config-next": "15.0.0-canary.170",
     "pg": "^8.13.0",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.13",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.3"
   },
   "type": "module",
   "resolutions": {
