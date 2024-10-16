@@ -102,6 +102,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
   // Update form state and redirect on success and redirect user to result page
   toFormState('SUCCESS', 'Test został wypełniony pomyślnie')
+  revalidatePath('/testy-opiekun', 'page')
   redirect('/testy-opiekun/wyniki')
 }
 

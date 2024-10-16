@@ -20,7 +20,7 @@ export default function Home() {
         <Contact />
       </SignedIn>
       <div className="w-0 h-0 border-solid border-r-[calc(100vw_-_6px)] border-r-zinc-900 border-b-[10vw] border-b-zinc-100"></div>
-      <div className="w-full h-full">
+      <div className="w-full h-full ">
         <Footer />
       </div>
     </section>

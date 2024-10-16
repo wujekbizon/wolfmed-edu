@@ -79,7 +79,7 @@ export default function RootLayout({
           <noscript>
             <iframe src={GTM_JS_URI} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }} />
           </noscript>
-          <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl sm:rounded-[50px] border-white">
+          <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl lg:rounded-[50px] border-white">
             <Navbar />
             <Providers>
               <ToastProvider>{children}</ToastProvider>

@@ -18,7 +18,9 @@ export default function UserProgress({
 
   return (
     <div className="bg-zinc-50 p-4 sm:p-6 rounded-xl shadow-md shadow-zinc-500 border border-red-200/40">
-      <h3 className="text-lg sm:text-xl font-semibold text-zinc-800 mb-4 sm:mb-6">Przegląd postępów</h3>
+      <h3 className="text-lg sm:text-xl font-semibold text-zinc-800 mb-4 sm:mb-6 text-center sm:text-left">
+        Przegląd postępów
+      </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         <div className="flex flex-col items-center">
           <CircularProgressBar

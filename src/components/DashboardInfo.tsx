@@ -20,7 +20,7 @@ export default function DashboardInfo() {
       </div>
 
       <div className="w-full xl:w-1/2 flex flex-col gap-4">
-        <h3 className="text-xl font-semibold text-zinc-800 mb-2">Szybki dostęp</h3>
+        <h3 className="text-lg sm:text-xl font-semibold text-zinc-800 mb-2">Szybki dostęp: </h3>
         {dashboardLinks.map(({ icon, link, text }) => (
           <Link
             key={text}

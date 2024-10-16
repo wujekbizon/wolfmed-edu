@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function About() {
   return (
-    <section className="relative min-h-[calc(100vh_-_70px)] w-full flex flex-col items-center justify-end bg-[#ffb5b5] bg-[url('/students.webp')] rounded-br-3xl sm:rounded-br-[50px] bg-top rounded-bl-3xl sm:rounded-bl-[50px] bg-cover p-3 xs:p-12">
+    <section className="relative min-h-[calc(100vh_-_70px)] w-full flex flex-col items-center justify-end bg-[#ffb5b5] bg-[url('/students.webp')] rounded-br-3xl lg:rounded-br-[50px] bg-top rounded-bl-3xl lg:rounded-bl-[50px] bg-cover p-3 xs:p-12">
       <div className="container w-full md:w-3/4 xl:w-1/2 bg-[#ffb5b5]/90 p-4 sm:p-6 flex flex-col gap-3 rounded-2xl shadow-md shadow-zinc-500 border border-red-200/60">
         <h1 className="text-2xl sm:text-4xl font-bold py-2 text-center">
           WOLFMED <span className="text-zinc-500 font-semibold">EDUKACJA</span>
