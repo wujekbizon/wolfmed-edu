@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
-import { insertPayment, insertSubscription, updateTestLimit, updateUserSupporterStatus } from '@/server/db'
+import { insertPayment, insertSubscription, updateUserSupporterStatus } from '@/server/db'
 import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
 import { getUserIdByCustomer, getUserIdByCustomerEmail } from '@/server/queries'
 

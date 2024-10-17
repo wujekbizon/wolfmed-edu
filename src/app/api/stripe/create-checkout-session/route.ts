@@ -2,22 +2,22 @@ import { NextResponse } from 'next/server'
 import stripe from '@/lib/stripeClient'
 
 export async function POST(req: Request) {
-  const { userId } = await req.json()
+  const { userId, priceId } = await req.json()
 
   if (!userId) {
     return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
   }
 
-  try {
-    if (!process.env.STRIPE_PRICE_ID) {
-      throw new Error('STRIPE_PRICE_ID is not defined')
-    }
+  if (!priceId) {
+    return NextResponse.json({ error: 'Price ID is required' }, { status: 400 })
+  }
 
+  try {
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: 'auto',
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID,
+          price: priceId as string,
           quantity: 1,
         },
       ],
