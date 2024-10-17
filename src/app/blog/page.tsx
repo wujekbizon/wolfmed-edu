@@ -17,12 +17,8 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-static'
 
-async function Posts() {
+export default async function BlogPage() {
   const posts = (await getAllPosts()) as Post[]
-  return <BlogPostList posts={posts} />
-}
-
-export default function BlogPage() {
   return (
     <section className="min-h-screen w-full bg-gradient-to-b from-[#f5d4cf] via-[#e8b8b1] to-[#f5d4cf] rounded-br-3xl sm:rounded-br-[50px] rounded-bl-3xl sm:rounded-bl-[50px]">
       <div className="max-w-7xl mx-auto px-0 xs:px-6 lg:px-8 py-4 xs:py-12 ">
@@ -40,11 +36,10 @@ export default function BlogPage() {
           <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-800 mb-4 sm:mb-6 text-center">
             Najnowsze Artykuły
           </h2>
-          <Suspense fallback={<TestLoader />}>
-            <div className="flex justify-center">
-              <Posts />
-            </div>
-          </Suspense>
+
+          <div className="flex justify-center">
+            <BlogPostList posts={posts} />
+          </div>
         </div>
         <HomeButton title="Powrót do strony głównej" />
       </div>

@@ -1,9 +1,7 @@
 import AllProcedures from '@/components/AllProcedures'
 import { getAllProcedures } from '@/server/queries'
 import { Procedure } from '@/types/dataTypes'
-import { Suspense } from 'react'
 import { Metadata } from 'next'
-import TestLoader from '@/components/TestsLoader'
 
 export const dynamic = 'force-static'
 
@@ -13,16 +11,7 @@ export const metadata: Metadata = {
   keywords: 'opiekun, algorytmy, procedury',
 }
 
-async function Procedures() {
+export default async function ProceduresPage() {
   const procedures = (await getAllProcedures()) as Procedure[]
-
   return <AllProcedures procedures={procedures} />
-}
-
-export default function ProceduresPage() {
-  return (
-    <Suspense fallback={<TestLoader />}>
-      <Procedures />
-    </Suspense>
-  )
 }

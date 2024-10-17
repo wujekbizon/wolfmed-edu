@@ -25,7 +25,7 @@ export default function UserDashboard({
       <div className="lg:w-[80%] xl:w-3/4 h-full w-full flex flex-col items-center p-2 gap-8 overflow-y-scroll scrollbar-webkit">
         <div className="w-full flex justify-center bg-white p-6 rounded-xl shadow-md shadow-zinc-500 border border-red-200/40">
           <p className="text-lg font-semibold text-zinc-800 text-center">
-            Twoje motto na dziś: <span className="text-[#f58a8a] font-bold ml-2">{motto}</span>
+            Twoje motto: <span className="text-[#f58a8a] font-bold ml-2">{motto}</span>
           </p>
         </div>
         <DashboardInfo />

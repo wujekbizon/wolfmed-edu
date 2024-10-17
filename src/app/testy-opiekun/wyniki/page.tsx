@@ -1,26 +1,21 @@
-import CompletedTestsList from '@/components/CompletedTestsList'
-import { getCompletedTestsByUser } from '@/server/queries'
-import { CompletedTest } from '@/types/dataTypes'
+import { Metadata } from 'next'
 import { currentUser } from '@clerk/nextjs/server'
-import { Suspense } from 'react'
-import Loading from './loading'
+import { getCompletedTestsByUser } from '@/server/queries'
+import CompletedTestsList from '@/components/CompletedTestsList'
+import { CompletedTest } from '@/types/dataTypes'
 
 export const dynamic = 'force-dynamic'
 
-async function CompletedTests() {
-  const user = await currentUser()
-  if (!user) {
-    return <p>Not signed in</p>
-  }
-
-  const completedTestsByUser = (await getCompletedTestsByUser(user?.id)) as CompletedTest[]
-  return <CompletedTestsList tests={completedTestsByUser} />
+export const metadata: Metadata = {
+  title: 'Twoje Wyniki Testów',
+  description: 'Sprawdź swoje wyniki testów i popraw się w opiece medycznej!',
+  keywords:
+    'opiekun, med-14, egzamin, testy, pytania, zagadnienia, medyczno-pielęgnacyjnych, opiekuńczych, baza, wyniki',
 }
 
-export default function TestsResultPage() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <CompletedTests />
-    </Suspense>
-  )
+export default async function TestsResultPage() {
+  const user = await currentUser()
+  const completedTests = user ? ((await getCompletedTestsByUser(user.id)) as CompletedTest[]) : []
+
+  return <CompletedTestsList tests={completedTests} />
 }

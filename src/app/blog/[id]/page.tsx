@@ -3,8 +3,6 @@ import BlogPost from '@/app/_components/BlogPost'
 import { Metadata } from 'next'
 import { getPostById } from '@/server/queries'
 import { PostProps } from '@/types/dataTypes'
-import { Suspense } from 'react'
-import TestLoader from '@/components/TestsLoader'
 
 export const dynamic = 'force-static'
 
@@ -23,20 +21,11 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
   }
 }
 
-async function Post({ id }: { id: string }) {
-  const post = await getPostById(id)
+export default async function BlogPostPage({ params }: PostProps) {
+  const post = await getPostById(params.id)
 
   if (!post) {
     notFound()
   }
-
   return <BlogPost post={post} />
-}
-
-export default function BlogPostPage({ params }: PostProps) {
-  return (
-    <Suspense fallback={<TestLoader />}>
-      <Post id={params.id} />
-    </Suspense>
-  )
 }
