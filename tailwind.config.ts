@@ -32,9 +32,19 @@ const config: Config = {
             transform: 'translateY(0)',
           },
         },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         slideInDown: 'slideInDown 1s ease var(--slidein-delay, 0) forwards',
+        fadeInUp: 'fadeInUp 0.5s ease-out forwards',
+        scaleIn: 'scaleIn 0.5s ease-out forwards',
       },
       backgroundSize: {
         '70%': '70%',

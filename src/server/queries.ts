@@ -3,7 +3,7 @@ import { db } from '@/server/db/index'
 import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
-import { eq, sql } from 'drizzle-orm'
+import { eq, sql, asc } from 'drizzle-orm'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -147,4 +147,21 @@ export const getCompletedTestCountByUser = cache(async (userId: string): Promise
     .where(eq(users.userId, userId))
     .limit(1)
   return result[0]?.testsAttempted || 0
+})
+
+export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id: string; username: string }[]> => {
+  const supporters = await db
+    .select({
+      userId: users.userId,
+      username: users.username,
+    })
+    .from(users)
+    .where(eq(users.supporter, true))
+    .orderBy(asc(users.createdAt))
+    .limit(limit)
+
+  return supporters.map((supporter) => ({
+    id: supporter.userId,
+    username: supporter.username || 'Anonymous',
+  }))
 })

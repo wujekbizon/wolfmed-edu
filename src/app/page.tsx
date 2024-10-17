@@ -3,6 +3,7 @@ import Hero from './_components/Hero'
 import Contact from './_components/Contact'
 import Footer from './_components/Footer'
 import Membership from './_components/Membership'
+import EarlySupporters from '@/components/EarlySupporters'
 import { SignedIn } from '@clerk/nextjs'
 
 export default function Home() {
@@ -15,7 +16,9 @@ export default function Home() {
         {' '}
       </div>
       <Membership />
-      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_6px)] border-t-[10vw] border-t-zinc-800 border-l-zinc-900"></div>
+      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_6px)] border-t-[10vw] border-t-zinc-800 border-l-zinc-100"></div>
+      <EarlySupporters />
+      <div className="w-0 h-0 border-solid border-l-[calc(100vw_-_6px)] border-t-[10vw] border-t-zinc-200 border-l-zinc-900"></div>
       <SignedIn>
         <Contact />
       </SignedIn>
