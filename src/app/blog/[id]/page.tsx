@@ -1,14 +1,12 @@
-import { use } from 'react'
 import { notFound } from 'next/navigation'
 import BlogPost from '@/app/_components/BlogPost'
 import { Metadata } from 'next'
 import { getPostById } from '@/server/queries'
-import { PostProps } from '@/types/dataTypes'
 
 export const dynamic = 'force-static'
 
-export async function generateMetadata(props: PostProps): Promise<Metadata> {
-  const { id } = (await props.params) as { id: string }
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
   const post = await getPostById(id)
 
   if (!post) {
@@ -23,8 +21,8 @@ export async function generateMetadata(props: PostProps): Promise<Metadata> {
   }
 }
 
-export default async function BlogPostPage({ params }: PostProps) {
-  const { id } = (await params) as { id: string }
+export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const post = await getPostById(id)
 
   if (!post) {

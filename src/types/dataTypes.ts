@@ -75,6 +75,6 @@ export interface Post {
 }
 
 export type PostProps = {
-  params: Usable<{ id: string }>
+  params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
