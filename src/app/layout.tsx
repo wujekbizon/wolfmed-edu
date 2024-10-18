@@ -9,6 +9,7 @@ import { plPL } from '@clerk/localizations'
 import ToastProvider from './_components/ToastProvider'
 import Script from 'next/script'
 import { GA_ID, GTAG_JS_URI, GTM_JS_URI } from '@/constants/googleAnalytics'
+import { headers } from 'next/headers'
 
 const poppins = Poppins({
   subsets: ['latin'],

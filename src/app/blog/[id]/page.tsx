@@ -1,3 +1,4 @@
+import { use } from 'react'
 import { notFound } from 'next/navigation'
 import BlogPost from '@/app/_components/BlogPost'
 import { Metadata } from 'next'
@@ -6,8 +7,9 @@ import { PostProps } from '@/types/dataTypes'
 
 export const dynamic = 'force-static'
 
-export async function generateMetadata({ params }: PostProps): Promise<Metadata> {
-  const post = await getPostById(params.id)
+export async function generateMetadata(props: PostProps): Promise<Metadata> {
+  const { id } = (await props.params) as { id: string }
+  const post = await getPostById(id)
 
   if (!post) {
     return {
@@ -22,7 +24,8 @@ export async function generateMetadata({ params }: PostProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PostProps) {
-  const post = await getPostById(params.id)
+  const { id } = (await params) as { id: string }
+  const post = await getPostById(id)
 
   if (!post) {
     notFound()

@@ -1,9 +1,9 @@
-import { Suspense } from 'react'
+import { Suspense, use } from 'react'
 import { Metadata } from 'next'
 import { getCompletedTest } from '@/server/queries'
-import type { CompletedTest } from '@/types/dataTypes'
-import Loading from './loading'
 import TestResultCard from '@/components/TestResultCard'
+import Loading from './loading'
+import type { CompletedTest } from '@/types/dataTypes'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,10 +17,11 @@ async function CompletedTest({ testId }: { testId: string }) {
   return <TestResultCard completedTest={completedTest} />
 }
 
-export default function TestResultPage(props: { params: { testId: string }; searchParams: {} }) {
+export default function TestResultPage(props: { params: Promise<{ testId: string }>; searchParams: Promise<{}> }) {
+  const { testId } = use(props.params) as { testId: string }
   return (
     <Suspense fallback={<Loading />}>
-      <CompletedTest testId={props.params.testId} />
+      <CompletedTest testId={testId} />
     </Suspense>
   )
 }

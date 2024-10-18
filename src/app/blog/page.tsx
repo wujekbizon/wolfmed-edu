@@ -4,7 +4,6 @@ import { Post } from '@/types/dataTypes'
 import { Suspense } from 'react'
 import TestLoader from '@/components/TestsLoader'
 import BlogPostList from '../_components/BlogPostList'
-import Link from 'next/link'
 import HomeButton from '@/components/HomeButton'
 
 export const metadata: Metadata = {

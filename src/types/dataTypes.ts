@@ -1,3 +1,5 @@
+import { Usable } from 'react'
+
 // tests related types
 type Answer = {
   option: string
@@ -73,6 +75,6 @@ export interface Post {
 }
 
 export type PostProps = {
-  params: { id: string }
+  params: Usable<{ id: string }>
   searchParams: { [key: string]: string | string[] | undefined }
 }
