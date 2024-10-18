@@ -13,7 +13,7 @@ export default clerkMiddleware((auth, request) => {
   return applyCsp(request as any)
 })
 
-async function applyCsp(request: NextRequest) {
+function applyCsp(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
   const cspHeader = `
@@ -32,10 +32,9 @@ async function applyCsp(request: NextRequest) {
     frame-src 'self' https://challenges.cloudflare.com;
     form-action 'self';
   `
-
   const contentSecurityPolicyHeaderValue = cspHeader.replace(/\s{2,}/g, ' ').trim()
 
-  const requestHeaders = new Headers(await request.headers)
+  const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-nonce', nonce)
   requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
 
@@ -45,7 +44,7 @@ async function applyCsp(request: NextRequest) {
     },
   })
 
-  await response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
+  response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
 
   return response
 }

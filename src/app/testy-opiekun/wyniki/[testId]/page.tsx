@@ -17,8 +17,11 @@ async function CompletedTest({ testId }: { testId: string }) {
   return <TestResultCard completedTest={completedTest} />
 }
 
-export default function TestResultPage(props: { params: Promise<{ testId: string }>; searchParams: Promise<{}> }) {
-  const { testId } = use(props.params) as { testId: string }
+export default async function TestResultPage(props: {
+  params: Promise<{ testId: string }>
+  searchParams: Promise<{}>
+}) {
+  const { testId } = await props.params
   return (
     <Suspense fallback={<Loading />}>
       <CompletedTest testId={testId} />
