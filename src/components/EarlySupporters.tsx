@@ -65,7 +65,7 @@ export default function EarlySupporters() {
         </div>
 
         <div className="mt-12 text-center animate-fadeInUp" style={{ animationDelay: '400ms' }}>
-          <p className="text-zinc-600 italic">"Razem tworzymy przyszłość medycyny"</p>
+          <p className="text-zinc-600 italic">`&quot`Razem tworzymy przyszłość medycyny`&quot`</p>
         </div>
       </div>
     </section>

@@ -33,7 +33,7 @@ export function useDebouncedValue<T>(value: T, delay: number): T {
       // Cleanup function to clear timer on unmount or value/delay change
       clearTimeout(timer)
     }
-  }, [value, delay]) // Re-run on changes to value or delay
+  }, [value, delay, prevValue]) // Re-run on changes to value or delay
 
   // Return the current debounced value
   return debouncedValue
