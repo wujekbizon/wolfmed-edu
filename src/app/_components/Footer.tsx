@@ -46,17 +46,17 @@ export default function Footer() {
             <h4 className="font-semibold mb-4">Informacje prawne</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/terms" className="hover:text-red-500 transition-colors">
+                <Link href="/terms/#terms" className="hover:text-red-500 transition-colors">
                   Regulamin Użytkowania
                 </Link>
               </li>
               <li>
-                <Link href="/policy" className="hover:text-red-500 transition-colors">
+                <Link href="/terms/#policy" className="hover:text-red-500 transition-colors">
                   Polityka Prywatności
                 </Link>
               </li>
               <li>
-                <Link href="/legal-compliance" className="hover:text-red-500 transition-colors">
+                <Link href="/terms/#legal-compliance" className="hover:text-red-500 transition-colors">
                   Korzystanie z serwisu oznacza akceptację - Kontrola Zgodności Prawnej
                 </Link>
               </li>

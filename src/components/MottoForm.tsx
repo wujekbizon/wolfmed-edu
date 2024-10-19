@@ -24,6 +24,7 @@ export default function MottoForm() {
           className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
           placeholder="Twoje motto"
           defaultValue={state.values?.motto || ''}
+          autoComplete="motto"
         />
         <FieldError name="motto" formState={state} />
       </div>
