@@ -12,7 +12,6 @@ export default function SidePanel() {
 
   return (
     <nav
-      // Use Tailwind CSS classes for animation
       className={`z-10 hidden h-full min-w-20 flex-col gap-20 border rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 transition-all duration-500 ${
         isSidePanelOpen ? 'w-64' : 'w-20'
       }`}

@@ -1,25 +1,15 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useQuery } from '@tanstack/react-query'
-
+import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
-import SearchTerm from './SearchTerm'
-import FilteredTestsList from './FilteredTestsList'
-import { Test } from '@/types/dataTypes'
+import SearchTerm from '@/components/SearchTerm'
+import FilteredTestsList from '@/components/FilteredTestsList'
+import type { Test } from '@/types/dataTypes'
 
 export default function AllTests(props: { tests: Test[] }) {
-  const { searchTerm, currentPage, setSearchTerm } = useSearchTermStore()
+  const { searchTerm, setSearchTerm, isExpanded, toggleExpand } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
-  const listRef = useRef<HTMLDivElement>(null)
-
-  // Scroll to top when the current page changes
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollTo({ top: 0, behavior: 'auto' })
-    }
-  }, [currentPage])
 
   // creates an array directly from object's values
   const testsArr = Object.values(props.tests)
@@ -56,13 +46,18 @@ export default function AllTests(props: { tests: Test[] }) {
   })
 
   return (
-    <section className="px-1 sm:px-4 py-4 w-full overflow-y-auto scrollbar-webkit" ref={listRef}>
-      <div className=" h-full flex flex-col items-center gap-8 pr-1">
-        <div className="w-full md:w-3/4 lg:w-1/2 xl:w-1/3">
-          <SearchTerm label="Szukaj terminu" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        </div>
-        <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
+    <section className="flex flex-col items-center w-full h-full">
+      <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] pb-4">
+        <SearchTerm
+          label="Szukaj testów"
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          isExpanded={isExpanded}
+          toggleExpand={toggleExpand}
+          title="Baza pytań"
+        />
       </div>
+      <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
     </section>
   )
 }

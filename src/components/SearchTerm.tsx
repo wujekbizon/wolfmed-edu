@@ -1,29 +1,66 @@
 'use client'
 
-import Label from './Label'
-import Input from './Input'
+import Label from '@/components/Label'
+import Input from '@/components/Input'
 
 export default function SearchTerm({
   label,
   searchTerm,
   setSearchTerm,
+  isExpanded,
+  toggleExpand,
+  title,
 }: {
   label: string
   searchTerm: string
   setSearchTerm: (term: string) => void
+  isExpanded: boolean
+  toggleExpand: () => void
+  title?: string
 }) {
   return (
-    <div className="flex w-full flex-col">
-      <Label className="pb-1 text-sm text-muted-foreground" label={label} htmlFor="input" />
+    <div className="relative w-full rounded-full border border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500">
+      <button
+        type="button"
+        onClick={toggleExpand}
+        className={`flex items-center justify-center cursor-pointer w-10 h-10 rounded-full bg-[#ffc5c5] text-red-500 text-2xl hover:bg-[#f58a8a] border border-red-200/60 hover:border-zinc-900 hover:shadow-sm shadow-md shadow-zinc-500 hover:scale-95 transition-all duration-300 ${
+          isExpanded ? 'rotate-90' : ''
+        }`}
+      >
+        {isExpanded ? '✕' : '🔍'}
+      </button>
 
-      <Input
-        value={searchTerm}
-        onChangeHandler={(e) => setSearchTerm(e.target.value)}
-        id="input"
-        type="text"
-        className="flex h-10 w-full rounded-md border border-red-100/80 bg-[#ffc5c5] px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-400 shadow-sm shadow-zinc-400 focus:border-zinc-700/60 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-        placeholder="Wyszukaj..."
-      />
+      {!isExpanded && title && (
+        <h3 className="absolute left-[calc(50%_-_100px)] right-[calc(50%_-_120px)] top-[calc(50%_-_12px)] bottom-[calc(50%_-_12px)] text-base sm:text-xl font-semibold text-zinc-800 text-center">
+          {title}
+        </h3>
+      )}
+      <div
+        className={`absolute right-0 top-0 overflow-hidden transition-all duration-300 ${
+          isExpanded ? 'w-full opacity-100' : 'w-0 opacity-0'
+        }`}
+      >
+        <Label className="sr-only" label={label} htmlFor="search-input" />
+        <Input
+          id="search-input"
+          value={searchTerm}
+          onChangeHandler={(e) => setSearchTerm(e.target.value)}
+          type="text"
+          className="w-full h-10 pl-4 pr-12 rounded-full border border-red-200/60 focus:outline-none focus:border-zinc-400 bg-zinc-50"
+          placeholder="Wyszukaj..."
+          autoComplete="search"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            setSearchTerm('')
+            toggleExpand()
+          }}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 font-bold cursor-pointer text-lg hover:text-red-600"
+        >
+          ✕
+        </button>
+      </div>
     </div>
   )
 }

@@ -1,90 +1,50 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { useDebouncedValue } from '@/hooks/useDebounceValue'
-import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
-import SearchTerm from '@/components/SearchTerm'
 import PaginationControls from '@/components/PaginationControls'
-import TestLoader from '@/components/TestsLoader'
 import { Post } from '@/types/dataTypes'
 import { useBlogSearchStore } from '@/store/useBlogSearch'
 
-const POSTS_PER_PAGE = 5
+interface BlogPostListProps {
+  posts: Post[]
+  isLoading: boolean
+  error?: Error | null
+}
 
-export default function BlogPostList(props: { posts: Post[] }) {
-  const { searchTerm, currentPage, setCurrentPage, setSearchTerm } = useBlogSearchStore()
-  const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
-  const listRef = useRef<HTMLDivElement>(null)
+export default function BlogPostList({ posts }: BlogPostListProps) {
+  const { currentPage, perPage, setCurrentPage } = useBlogSearchStore()
 
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollTo({ top: 0, behavior: 'instant' })
-    }
-  }, [currentPage])
+  const totalPages = Math.ceil(posts?.length / perPage)
 
-  const { data: cachedBlogPosts } = useQuery({
-    queryKey: ['allBlogPosts'],
-    queryFn: async () => props.posts,
-    initialData: props.posts,
-    staleTime: 10 * 60 * 1000, // Cache for 10 minutes
-  })
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(totalPages)
+  }
+  const startIndex = (currentPage - 1) * perPage
+  const paginatedPosts = posts.slice(startIndex, startIndex + perPage)
 
-  const filteredBlogPostsQueryFn = async () => {
-    if (!debouncedSearchTerm) return cachedBlogPosts
-
-    return cachedBlogPosts.filter((post) => {
-      const matchTitle = post.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-      const matchExcerpt = post.excerpt.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-      const matchContent = post.content.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-      return matchTitle || matchExcerpt || matchContent
-    })
+  if (!posts?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        <p className="text-lg text-muted-foreground">Brak dostępnych postów...</p>
+      </div>
+    )
   }
 
-  const {
-    data: filteredBlogPosts,
-    isLoading: searchLoading,
-    error,
-  } = useQuery({
-    queryKey: ['filteredBlogPosts', debouncedSearchTerm],
-    queryFn: filteredBlogPostsQueryFn,
-    enabled: !!searchTerm || true,
-    staleTime: 10 * 60 * 1000,
-  })
-
-  const paginatedPosts = (filteredBlogPosts ?? cachedBlogPosts).slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE
-  )
-
-  const totalPages = Math.ceil((filteredBlogPosts ?? cachedBlogPosts).length / POSTS_PER_PAGE)
-
   return (
-    <div className="w-full lg:w-3/4 xl:w-2/3 flex flex-col items-center gap-8" ref={listRef}>
-      <SearchTerm label="Szukaj postu" searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      {searchLoading ? (
-        <TestLoader />
-      ) : error ? (
-        <p>Error: {(error as Error).message}</p>
-      ) : (
-        <>
-          <div className="w-full grid gap-8">
-            {paginatedPosts.map((post: Post) => (
-              <Link key={post.id} href={`/blog/${post.id}`}>
-                <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow border border-red-200/40">
-                  <h2 className="text-2xl font-semibold text-zinc-900 mb-2">{post.title}</h2>
-                  <p className="text-zinc-600 mb-4">{post.excerpt}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-zinc-500">{post.date}</span>
-                    <span className="text-sm font-medium text-[#ff5b5b]">Czytaj więcej →</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+    <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] flex flex-col gap-6 pb-2 pr-1 overflow-y-auto">
+      {paginatedPosts.map((post: Post) => (
+        <Link key={post.id} href={`/blog/${post.id}`}>
+          <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow border border-red-200/40">
+            <h2 className="text-2xl font-semibold text-zinc-900 mb-2">{post.title}</h2>
+            <p className="text-zinc-600 mb-4">{post.excerpt}</p>
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-zinc-500">{post.date}</span>
+              <span className="text-sm font-medium text-[#ff5b5b]">Czytaj więcej →</span>
+            </div>
           </div>
-          <PaginationControls totalPages={totalPages} setCurrentPage={setCurrentPage} currentPage={currentPage} />
-        </>
-      )}
+        </Link>
+      ))}
+      <PaginationControls totalPages={totalPages} setCurrentPage={setCurrentPage} currentPage={currentPage} />
     </div>
   )
 }
