@@ -8,6 +8,7 @@ interface Input {
   id?: string | undefined
   name?: string | undefined
   required?: boolean | undefined
+  autoComplete?: string | undefined
 }
 
 export default function Input({
@@ -20,6 +21,7 @@ export default function Input({
   name,
   required,
   id,
+  autoComplete,
 }: Input) {
   return (
     <input
@@ -32,6 +34,7 @@ export default function Input({
       onChange={onChangeHandler}
       name={name}
       required={required}
+      autoComplete={autoComplete}
     />
   )
 }

@@ -6,6 +6,8 @@ export default function SortSelect() {
   return (
     <div className="flex justify-end w-full">
       <select
+        name="sort"
+        id="sort"
         value={sortOption}
         onChange={(e) => setSortOption(e.target.value as SortOption)}
         className="p-2 rounded-full text-xs sm:text-sm border-red-200/40 bg-white shadow shadow-zinc-500 cursor-pointer outline-none"

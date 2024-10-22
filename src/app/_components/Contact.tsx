@@ -52,6 +52,7 @@ export default function Contact() {
                       id="email"
                       className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
                       defaultValue={state.values?.email || ''}
+                      autoComplete="email"
                     />
                     <FieldError name="email" formState={state} />
                   </div>

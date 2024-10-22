@@ -24,6 +24,7 @@ export default function UsernameForm() {
           className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
           placeholder="Twoja nazwa"
           defaultValue={state.values?.username || ''}
+          autoComplete="username"
         />
         <FieldError name="username" formState={state} />
       </div>

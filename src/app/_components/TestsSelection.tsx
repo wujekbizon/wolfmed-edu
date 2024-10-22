@@ -10,9 +10,9 @@ export default function TestsSelection() {
       id="testy"
     >
       <div className="w-full xl:w-[40%] flex flex-col gap-4 sm:gap-5 px-2 sm:px-6 md:px-10">
-        <h1 className="font-medium w-full xl:w-[80%] text-center xl:text-left text-2xl sm:text-3xl md:text-4xl leading-tight text-zinc-950">
+        <h2 className="font-medium w-full xl:w-[80%] text-center xl:text-left text-2xl sm:text-3xl md:text-4xl leading-tight text-zinc-950">
           Szeroki wybór testów i procedur.
-        </h1>
+        </h2>
         <p className="text-base sm:text-lg text-zinc-600 w-full xl:w-[90%] text-center xl:text-left">
           Wybieraj spośród ponad 500 testów obejmujących szeroką gamę odpowiednich tematów rozwoju zawodowego opiekunów
           medycznych!
