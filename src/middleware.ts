@@ -13,21 +13,24 @@ export default clerkMiddleware(async (auth, request) => {
   return applyCsp(request as any)
 })
 
-async function applyCsp(request: NextRequest) {
+function applyCsp(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
+    script-src 'self' 'nonce-${nonce}' https: http: ${
+    process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`
+  } https://challenges.cloudflare.com https://checkout.stripe.com https://js.stripe.com https://www.googletagmanager.com https://www.google-analytics.com;
     connect-src 'self' https://region1.analytics.google.com https://stats.g.doubleclick.net ${
       process.env.NODE_ENV === 'production'
         ? 'https://clerk.wolfmed-edukacja.pl'
         : 'https://definite-mantis-39.clerk.accounts.dev'
     };
-    img-src 'self' https://img.clerk.com https://www.google.pl https://www.google.com;
+    img-src 'self' data: https://img.clerk.com https://www.google.pl https://www.google.com https://fonts.gstatic.com https://www.googletagmanager.com;
     worker-src 'self' blob:;
-    style-src 'self' 'unsafe-inline';
-    frame-src 'self' https://challenges.cloudflare.com;
+    font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;
+    frame-src 'self' https://challenges.cloudflare.com https://checkout.stripe.com;
     form-action 'self';
   `
   const contentSecurityPolicyHeaderValue = cspHeader.replace(/\s{2,}/g, ' ').trim()
@@ -41,9 +44,7 @@ async function applyCsp(request: NextRequest) {
       headers: requestHeaders,
     },
   })
-
   response.headers.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
-
   return response
 }
 
