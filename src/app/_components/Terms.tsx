@@ -37,8 +37,8 @@ export default function Terms() {
         6. Prawa własności intelektualnej
         <br />
         Wszystkie testy oraz materiały edukacyjne udostępniane w aplikacji są oparte na programie nauczania MED-14:
-        "Świadczenie usług medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej". Materiały te są
-        dostępne publicznie, dlatego użytkownicy mogą je wykorzystywać do własnego użytku edukacyjnego, jednakże
+        &quot;Świadczenie usług medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej&quot;. Materiały
+        te są dostępne publicznie, dlatego użytkownicy mogą je wykorzystywać do własnego użytku edukacyjnego, jednakże
         wszelkie ich rozpowszechnianie lub kopiowanie poza platformą Wolfmed Edukacja wymaga przestrzegania zasad prawa
         autorskiego, o ile takie obowiązują.
       </p>

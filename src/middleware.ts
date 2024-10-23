@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const isProtectedRoute = createRouteMatcher(['/testy-opiekun(.*)', '/blog(.*)'])
 
-export default clerkMiddleware((auth, request) => {
+export default clerkMiddleware(async (auth, request) => {
   if (isProtectedRoute(request))
-    auth().protect({
+    await auth.protect({
       unauthorizedUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
       unauthenticatedUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
     })
@@ -13,14 +13,12 @@ export default clerkMiddleware((auth, request) => {
   return applyCsp(request as any)
 })
 
-function applyCsp(request: NextRequest) {
+async function applyCsp(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'strict-dynamic' 'nonce-${nonce}' https: http: ${
-    process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`
-  };
+    script-src 'self' 'nonce-${nonce}' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
     connect-src 'self' https://region1.analytics.google.com https://stats.g.doubleclick.net ${
       process.env.NODE_ENV === 'production'
         ? 'https://clerk.wolfmed-edukacja.pl'
@@ -50,5 +48,10 @@ function applyCsp(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
+  ],
 }

@@ -22,7 +22,7 @@ import { revalidatePath } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   try {
@@ -156,7 +156,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
 
 export async function deleteTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   try {
@@ -183,7 +183,7 @@ export async function deleteTestAction(formState: FormState, formData: FormData)
 }
 
 export async function updateUsername(formState: FormState, formData: FormData) {
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const username = formData.get('username') as string
@@ -210,7 +210,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
 }
 
 export async function updateMotto(formState: FormState, formData: FormData) {
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const motto = formData.get('motto') as string
