@@ -14,7 +14,7 @@ export const mockSupporters: Supporter[] = [
   { id: '8', username: 'StudentMedycyny' },
   { id: '9', username: 'User-56789012' },
   { id: '10', username: 'User-21098765' },
-  { id: '11', username: 'User-12345678' },
+  { id: '11', username: 'User-6aa47f45' },
   { id: '12', username: 'ZdrowiePL' },
   { id: '13', username: 'User-09876543' },
   { id: '14', username: 'RatownikMedyczny' },
