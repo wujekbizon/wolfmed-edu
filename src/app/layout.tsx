@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
@@ -64,16 +64,8 @@ export default async function RootLayout({
     >
       <html lang="pl">
         <head>
-          <Script
-            strategy="afterInteractive"
-            src={GTAG_JS_URI}
-            nonce={await headers().then((headers) => headers.get('x-nonce') ?? '')}
-          />
-          <Script
-            id="google-analytics"
-            strategy="afterInteractive"
-            nonce={await headers().then((headers) => headers.get('x-nonce') ?? '')}
-          >
+          <Script strategy="afterInteractive" src={GTAG_JS_URI} />
+          <Script id="google-analytics" strategy="afterInteractive">
             {`
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
@@ -82,11 +74,7 @@ export default async function RootLayout({
                 page_path: window.location.pathname });
              `}
           </Script>
-          <Script
-            strategy="afterInteractive"
-            src={GTM_JS_URI}
-            nonce={await headers().then((headers) => headers.get('x-nonce') ?? '')}
-          />
+          <Script strategy="afterInteractive" src={GTM_JS_URI} />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <noscript>

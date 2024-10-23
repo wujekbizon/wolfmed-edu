@@ -18,7 +18,7 @@ async function applyCsp(request: NextRequest) {
 
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
+    script-src 'self' 'unsafe-inline' https: http: ${process.env.NODE_ENV === 'production' ? '' : `'unsafe-eval'`};
     connect-src 'self' https://region1.analytics.google.com https://stats.g.doubleclick.net ${
       process.env.NODE_ENV === 'production'
         ? 'https://clerk.wolfmed-edukacja.pl'
