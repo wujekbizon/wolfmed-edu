@@ -3,7 +3,7 @@ import { db } from '@/server/db/index'
 import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
-import { eq, sql, asc } from 'drizzle-orm'
+import { eq, asc } from 'drizzle-orm'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -164,4 +164,11 @@ export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id:
     id: supporter.userId,
     username: supporter.username || 'Anonymous',
   }))
+})
+
+export const getSupporterByUserId = cache(async (userId: string): Promise<boolean> => {
+  const supporter = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+  })
+  return supporter?.supporter || false
 })

@@ -6,8 +6,10 @@ import {
   getUserMotto,
   getUserUsername,
   getCompletedTestCountByUser,
+  getSupporterByUserId,
 } from '@/server/queries'
 import { currentUser } from '@clerk/nextjs/server'
+import { unstable_cache } from 'next/cache'
 
 export default async function TestsPage() {
   const user = await currentUser()
@@ -21,7 +23,19 @@ export default async function TestsPage() {
   const testsAttempted = await getCompletedTestCountByUser(user.id)
 
   const averageScore = calculateAverageScore(totalScore, totalQuestions)
-  const motto = (await getUserMotto(user.id)) as string
+
+  const getCachedMotto = unstable_cache(getUserMotto, [user.id], {
+    tags: ['motto'],
+    revalidate: 60,
+  })
+
+  const getCachedSuporter = unstable_cache(getSupporterByUserId, [user.id], {
+    tags: ['supporterStatus'],
+    revalidate: 60 * 60 * 24,
+  })
+
+  const motto = (await getCachedMotto(user.id)) as string
+  const isSupporter = await getCachedSuporter(user.id)
 
   return (
     <UserDashboard
@@ -32,6 +46,7 @@ export default async function TestsPage() {
       motto={motto}
       totalScore={totalScore}
       totalQuestions={totalQuestions}
+      isSupporter={isSupporter}
     />
   )
 }

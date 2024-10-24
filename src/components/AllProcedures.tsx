@@ -16,7 +16,7 @@ export default function AllProcedures(props: { procedures: Procedure[] }) {
     queryKey: ['allProcedures'],
     queryFn: async () => proceduresArr,
     initialData: proceduresArr,
-    staleTime: 10 * 60 * 1000, // Cache for 10 minutes
+    staleTime: 10 * 60 * 1000,
   })
 
   return (
