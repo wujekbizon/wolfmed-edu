@@ -23,8 +23,8 @@ export default function Policy() {
         W Wolfmed Edukacja użytkownicy mają możliwość wspierania naszej aplikacji poprzez donacje. Aby dokonać donacji,
         musisz podać naszem procesorowi płatności (Stripe) swoje dane płatnicze oraz adres e-mail. Stripe akceptuje
         płatności kartą oraz płatności BLIK. Po dokonaniu donacji, przechowujemy numer transakcji, kwotę oraz adres
-        e-mail. Użytkownicy, którzy wsparli naszą aplikację, są zapisywani jako "Supporter", co może umożliwić im
-        korzystanie z dodatkowych funkcji w przyszłości.
+        e-mail. Użytkownicy, którzy wsparli naszą aplikację, są zapisywani jako &quot;Supporter&quot;, co może umożliwić
+        im korzystanie z dodatkowych funkcji w przyszłości.
       </p>
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Zbieranie informacji osobowych</h2>
       <p className="text-base xs:text-lg text-zinc-800">
@@ -76,8 +76,8 @@ export default function Policy() {
         Możesz przestać korzystać z naszej aplikacji, usuwając swoje konto za pomocą funkcji dostępnej w Wolfmed
         Edukacja. Po usunięciu konta wszystkie powiązane dane zostaną trwale usunięte. W przypadku wsparcia naszej
         aplikacji przez donacje, usunięcie konta nie wpływa na wcześniejsze transakcje. Użytkownik, który usunie konto,
-        traci dostęp do funkcji dostępnych dla "Supporterów". Pamiętaj, że usunięcie konta wiąże się z utratą możliwości
-        korzystania z naszej aplikacji.
+        traci dostęp do funkcji dostępnych dla &quot;Supporterów&quot;. Pamiętaj, że usunięcie konta wiąże się z utratą
+        możliwości korzystania z naszej aplikacji.
       </p>
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Odzyskiwanie danych na żądanie</h2>
       <p className="text-base xs:text-lg text-zinc-800">
