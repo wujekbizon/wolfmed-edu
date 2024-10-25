@@ -14,7 +14,7 @@ export const dashboardLinks = [
     icon: <DashboardIcon color="#2f2b2b" width={30} height={30} />,
   },
   {
-    text: 'Sprawdz procedury',
+    text: 'Sprawdź procedury',
     link: '/testy-opiekun/procedury',
     icon: <ProceduresIcon color="#2f2b2b" width={30} height={30} />,
   },

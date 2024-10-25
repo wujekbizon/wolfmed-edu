@@ -4,13 +4,11 @@ import LinearProgressBar from './LinearProgressBar'
 export default function UserProgress({
   testsAttempted,
   averageScore,
-  totalTests,
   totalScore,
   totalQuestions,
 }: {
   testsAttempted: number
   averageScore: number
-  totalTests: number
   totalScore: number
   totalQuestions: number
 }) {
@@ -24,15 +22,13 @@ export default function UserProgress({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         <div className="flex flex-col items-center">
           <CircularProgressBar
-            percentage={(testsAttempted / totalTests) * 100}
+            percentage={Math.min((testsAttempted / 100) * 100, 100)}
             color="#f58a8a"
             size={120}
             strokeWidth={12}
           />
           <p className="mt-2 sm:mt-4 text-base sm:text-lg font-semibold text-zinc-700">Ukończone testy</p>
-          <p className="text-xl sm:text-3xl font-bold text-[#f58a8a]">
-            {testsAttempted} / {totalTests}
-          </p>
+          <p className="text-xl sm:text-3xl font-bold text-[#f58a8a]">{testsAttempted}</p>
         </div>
         <div className="flex flex-col items-center">
           <CircularProgressBar percentage={averageScore} color="#4CAF50" size={120} strokeWidth={12} />

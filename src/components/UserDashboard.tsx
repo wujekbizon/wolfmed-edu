@@ -8,7 +8,6 @@ export default function UserDashboard({
   username,
   testsAttempted,
   averageScore,
-  totalTests,
   motto,
   totalScore,
   totalQuestions,
@@ -17,7 +16,6 @@ export default function UserDashboard({
   username: string
   testsAttempted: number
   averageScore: number
-  totalTests: number
   motto: string
   totalScore: number
   totalQuestions: number
@@ -65,7 +63,6 @@ export default function UserDashboard({
           <UserProgress
             testsAttempted={testsAttempted}
             averageScore={averageScore}
-            totalTests={totalTests}
             totalScore={totalScore}
             totalQuestions={totalQuestions}
           />

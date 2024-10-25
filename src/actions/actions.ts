@@ -35,7 +35,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
     if (userTestLimit.testLimit !== null) {
       if (userTestLimit.testLimit <= 0) {
-        // user has no premium member access or used his limit
+        // user exceeded his test limit
         return toFormState(
           'ERROR',
           'Wyczerpałes limit testów dla darmowego konta. Sprawdż nasze oferty dla klientów premium'
@@ -71,19 +71,15 @@ export async function submitTestAction(formState: FormState, formData: FormData)
       }
     }
 
-    // Processing test results to get score
+    // Calculate score and prepare completed test data
     const { correct } = countTestScore(validationResult.data)
-    // Parses an array of question-answer records and transforms it into an array of formatted
-    // answers containing all question IDs and values for future database storage.
     const testResult = parseAnswerRecord(validationResult.data)
-
-    // Create a completed test object
     const completedTest = { userId, score: correct, testResult }
 
-    // Insert completed tests to db
+    // Execute all database operations in one transaction
     await db.transaction(async (tx) => {
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
-        // here I want to update user limit by decresing 1 from it
+        // Update user test limit
         await tx
           .update(users)
           .set({
@@ -115,30 +111,11 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { email, message }, // Include the form values
+      values: { email, message },
     }
   }
 
   try {
-    // Fetch the timestamp of the last message sent by this email
-    // const lastMessage = await db
-    //   .select({ createdAt: customersMessages.createdAt })
-    //   .from(customersMessages)
-    //   .where(eq(customersMessages.email, email))
-    //   .limit(1)
-    //   .execute()
-
-    // if (lastMessage.length > 0 && lastMessage[0]?.createdAt) {
-    //   const lastSentTime = new Date(lastMessage[0].createdAt)
-    //   const now = new Date()
-    //   const diffMinutes = (now.getTime() - lastSentTime.getTime()) / (1000 * 60)
-
-    //   // Check if the last message was sent within the last 15 minutes
-    //   if (diffMinutes < 15) {
-    //     return toFormState('ERROR', 'Możesz wysłać wiadomość tylko raz na 15 minut.')
-    //   }
-    // }
-
     await db.insert(customersMessages).values({
       email: validationResult.data.email,
       message: validationResult.data.message,
@@ -147,7 +124,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { email, message }, // Include the form values
+      values: { email, message },
     }
   }
 
@@ -155,7 +132,6 @@ export async function sendEmail(formState: FormState, formData: FormData) {
 }
 
 export async function deleteTestAction(formState: FormState, formData: FormData) {
-  // Check user authorization before allowing submission
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
@@ -172,7 +148,6 @@ export async function deleteTestAction(formState: FormState, formData: FormData)
       return toFormState('ERROR', 'Brak testu do usunięcia')
     }
 
-    // remove completed test from database
     await deleteCompletedTest(testId)
   } catch (error) {
     return fromErrorToFormState(error)
