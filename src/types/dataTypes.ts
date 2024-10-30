@@ -78,3 +78,7 @@ export type PostProps = {
   params: { id: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }
+
+export interface StepWithId extends Step {
+  id: string
+}
