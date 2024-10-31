@@ -27,14 +27,14 @@
     "react-dom": "19.0.0-rc-0bc30748-20241028",
     "react-hot-toast": "^2.4.1",
     "server-only": "^0.0.1",
-    "stripe": "^17.2.1",
+    "stripe": "^17.3.0",
     "svix": "^1.37.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8",
     "zustand": "5.0.0"
   },
   "devDependencies": {
-    "@types/node": "^22.8.4",
+    "@types/node": "^22.8.5",
     "@types/react": "npm:types-react@beta",
     "@types/react-dom": "npm:types-react-dom@beta",
     "drizzle-kit": "^0.26.2",

@@ -16,7 +16,7 @@ export const testCardContent: TestCardContent[] = [
     category: 'Testy',
     title: 'Testy Opiekuna Medycznego.',
     content: 'Darmowa baza testów, oparata na 2 ostatnich latach z egzaminów i kursu na Opiekuna Medycznego.',
-    date: '27 Sie 2024',
+    date: '31 Paż 2024',
     testsNumber: NUMBER_OF_TESTS,
     testsLabel: 'Testów',
     image: '/tests.png',
