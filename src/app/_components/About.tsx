@@ -20,10 +20,6 @@ export default function About() {
           Dołącz do nas w budowaniu społeczności zmotywowanych osób zaangażowanych w pozytywny wpływ na opiekę
           zdrowotną.
         </p>
-        <p className="text-base">
-          Dołącz do nas w budowaniu społeczności zmotywowanych osób zaangażowanych w pozytywny wpływ na opiekę
-          zdrowotną.
-        </p>
         <p className="text-base">Jesteśmy w trakcie rozwoju dlatego zachęcamy każdego do wsparcia naszego startupu: </p>
         <Link
           className="self-center w-full xs:w-64 text-center px-4 my-4 sm:px-6 py-2 sm:py-3 bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white font-bold text-sm sm:text-base rounded-full transition-all duration-300 transform hover:scale-105"
