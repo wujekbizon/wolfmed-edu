@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
-import { procedures, tests, blogPosts } from '@/server/db/schema'
-import { Post, Procedure, Test } from '@/types/dataTypes'
+import { procedures, tests, blogPosts, users, completedTestes } from '@/server/db/schema'
+import { Post, Procedure, Test, User, CompletedTestData } from '@/types/dataTypes'
 import { readFile } from 'node:fs/promises'
 import * as path from 'node:path'
 
@@ -21,6 +21,7 @@ export async function populateTests() {
     const testsData = (await readDataFileAndParse('tests.json')) as Test[]
 
     await insertData(testsData, tests, (test) => ({
+      id: test.id,
       category: test.category,
       data: test.data,
     }))
@@ -36,6 +37,7 @@ export async function populateProcedures() {
     const proceduresData = (await readDataFileAndParse('procedures.json')) as Procedure[]
 
     await insertData(proceduresData, procedures, (procedure) => ({
+      id: procedure.id,
       data: procedure.data,
     }))
 
@@ -59,5 +61,47 @@ export async function populatePosts() {
     console.log('Posts table populated successfully!')
   } catch (error) {
     console.error('Error populating posts table:', error)
+  }
+}
+
+export async function populateUsers() {
+  try {
+    const usersData = (await readDataFileAndParse('users.json')) as User[]
+
+    await insertData(usersData, users, (user) => ({
+      id: user.id,
+      userId: user.userId,
+      testLimit: user.testLimit,
+      motto: user.motto,
+      supporter: user.supporter,
+      username: user.username,
+      testsAttempted: user.tests_attempted,
+      totalScore: user.total_score,
+      totalQuestions: user.total_questions,
+      createdAt: new Date(user.createdAt),
+      updatedAt: user.updatedAt ? new Date(user.updatedAt) : null,
+    }))
+
+    console.log('Users table populated successfully!')
+  } catch (error) {
+    console.error('Error populating users table:', error)
+  }
+}
+
+export async function populateCompletedTests() {
+  try {
+    const completedTestsData = (await readDataFileAndParse('completed_tests.json')) as CompletedTestData[]
+
+    await insertData(completedTestsData, completedTestes, (test) => ({
+      id: test.id,
+      userId: test.userId,
+      testResult: test.testResult,
+      score: test.score,
+      completedAt: test.completedAt ? new Date(test.completedAt) : null,
+    }))
+
+    console.log('Completed tests table populated successfully!')
+  } catch (error) {
+    console.error('Error populating completed tests table:', error)
   }
 }

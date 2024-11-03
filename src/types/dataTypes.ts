@@ -82,3 +82,30 @@ export type PostProps = {
 export interface StepWithId extends Step {
   id: string
 }
+
+// Add this to your existing types
+export interface User {
+  id: string
+  userId: string
+  testLimit: number
+  createdAt: string
+  updatedAt: string | null
+  motto: string
+  supporter: boolean
+  username: string
+  tests_attempted: number
+  total_score: number
+  total_questions: number
+}
+
+// Add this to your existing types
+export interface CompletedTestData {
+  id: string
+  userId: string
+  testResult: Array<{
+    answer: boolean
+    questionId: string
+  }>
+  score: number
+  completedAt: Date | null
+}

@@ -1,10 +1,19 @@
-import { type Config } from 'drizzle-kit'
+import { defineConfig } from 'drizzle-kit'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
-export default {
+if (!process.env.NEON_DATABASE_URL) {
+  throw new Error('NEON_DATABASE_URL is not defined')
+}
+
+export default defineConfig({
   schema: './src/server/db/schema.ts',
   dialect: 'postgresql',
+  out: './drizzle',
   dbCredentials: {
-    url: process.env.POSTGRES_URL,
+    url: process.env.NEON_DATABASE_URL,
   },
+  verbose: true,
+  strict: true,
   tablesFilter: ['wolfmed_*'],
-} as Config
+})
