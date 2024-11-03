@@ -21,6 +21,7 @@ export async function populateTests() {
     const testsData = (await readDataFileAndParse('tests.json')) as Test[]
 
     await insertData(testsData, tests, (test) => ({
+      id: test.id,
       category: test.category,
       data: test.data,
     }))
@@ -36,6 +37,7 @@ export async function populateProcedures() {
     const proceduresData = (await readDataFileAndParse('procedures.json')) as Procedure[]
 
     await insertData(proceduresData, procedures, (procedure) => ({
+      id: procedure.id,
       data: procedure.data,
     }))
 

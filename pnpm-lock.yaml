@@ -38,7 +38,7 @@ importers:
         version: 19.0.0-beta-6fc168f-20241025
       drizzle-orm:
         specifier: ^0.36.0
-        version: 0.36.0(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0-rc-7c8e5e7a-20241101)(types-react@19.0.0-beta.2)
+        version: 0.36.0(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.10.1)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0-rc-7c8e5e7a-20241101)(types-react@19.0.0-beta.2)
       framer-motion:
         specifier: ^11.11.11
         version: 11.11.11(react-dom@19.0.0-rc-7c8e5e7a-20241101(react@19.0.0-rc-7c8e5e7a-20241101))(react@19.0.0-rc-7c8e5e7a-20241101)
@@ -79,6 +79,9 @@ importers:
         specifier: 5.0.0
         version: 5.0.0(react@19.0.0-rc-7c8e5e7a-20241101)(types-react@19.0.0-beta.2)(use-sync-external-store@1.2.2(react@19.0.0-rc-7c8e5e7a-20241101))
     devDependencies:
+      '@neondatabase/serverless':
+        specifier: ^0.10.1
+        version: 0.10.1
       '@types/node':
         specifier: ^22.8.6
         version: 22.8.6
@@ -88,6 +91,9 @@ importers:
       '@types/react-dom':
         specifier: npm:types-react-dom@beta
         version: types-react-dom@19.0.0-beta.2
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.4.5
       drizzle-kit:
         specifier: ^0.27.1
         version: 0.27.1
@@ -662,6 +668,9 @@ packages:
   '@libsql/core@0.14.0':
     resolution: {integrity: sha512-nhbuXf7GP3PSZgdCY2Ecj8vz187ptHlZQ0VRc751oB2C1W8jQUXKKklvt7t1LJiUTQBVJuadF628eUk+3cRi4Q==}
 
+  '@neondatabase/serverless@0.10.1':
+    resolution: {integrity: sha512-Upn555uEYL/q8aqMdPSviggNWeeZLCl5FhCIs7A4hmshfoOAAfML+Sqbcxr+Re2WZN5+hpyM9JClImXnBuhuXw==}
+
   '@neondatabase/serverless@0.9.5':
     resolution: {integrity: sha512-siFas6gItqv6wD/pZnvdu34wEqgG3nSE6zWZdq5j2DEsa+VvX8i/5HXJOo06qrw5axPXn+lGCxeR+NLaSPIXug==}
 
@@ -1090,6 +1099,10 @@ packages:
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
+
+  dotenv@16.4.5:
+    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
 
   drizzle-kit@0.27.1:
     resolution: {integrity: sha512-4BNA0T2blN+jW5wSwhtc+FIlCMuxYSMWCnYYdOBi5rttwq8aVXRUid0d0NCzcBKtZQSPZGAUxy+TXr7Q1OgEug==}
@@ -2898,6 +2911,10 @@ snapshots:
       js-base64: 3.7.7
     optional: true
 
+  '@neondatabase/serverless@0.10.1':
+    dependencies:
+      '@types/pg': 8.11.6
+
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
@@ -3344,6 +3361,8 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.8.1
 
+  dotenv@16.4.5: {}
+
   drizzle-kit@0.27.1:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
@@ -3353,10 +3372,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.36.0(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.9.5)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0-rc-7c8e5e7a-20241101)(types-react@19.0.0-beta.2):
+  drizzle-orm@0.36.0(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.10.1)(@types/pg@8.11.6)(@vercel/postgres@0.10.0)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0-rc-7c8e5e7a-20241101)(types-react@19.0.0-beta.2):
     optionalDependencies:
       '@libsql/client-wasm': 0.14.0
-      '@neondatabase/serverless': 0.9.5
+      '@neondatabase/serverless': 0.10.1
       '@types/pg': 8.11.6
       '@types/react': types-react@19.0.0-beta.2
       '@vercel/postgres': 0.10.0
