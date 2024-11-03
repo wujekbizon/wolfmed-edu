@@ -1,11 +1,12 @@
 import path from 'path'
 import fs from 'fs'
-import { Post, Procedure } from '@/types/dataTypes'
+import { Post, Procedure, Test } from '@/types/dataTypes'
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
   getPostById: (id: string) => Promise<Post | null>
   getAllProcedures: () => Promise<Procedure[]>
+  getAllTests: () => Promise<Test[]>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -41,6 +42,16 @@ export const fileData: FileDataOperations = {
       return procedures
     } catch (error) {
       console.error('Error fetching procedures:', error)
+      return []
+    }
+  },
+
+  getAllTests: async () => {
+    try {
+      const tests = await readJsonFile<Test[]>('tests.json')
+      return tests
+    } catch (error) {
+      console.error('Error fetching tests:', error)
       return []
     }
   },

@@ -1,9 +1,6 @@
 import AllTests from '@/components/AllTests'
-import { getAllTests } from '@/server/queries'
-import { Test } from '@/types/dataTypes'
+import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
-
-export const dynamic = 'force-static'
 
 export const metadata: Metadata = {
   title: 'Baza pytań Opiekuna Medycznego',
@@ -13,6 +10,6 @@ export const metadata: Metadata = {
 }
 
 export default async function NaukaPage() {
-  const tests = (await getAllTests()) as Test[]
+  const tests = await fileData.getAllTests()
   return <AllTests tests={tests} />
 }
