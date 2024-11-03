@@ -85,6 +85,9 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
       // Update the user's supporter status
       await tx.update(users).set({ supporter: true }).where(eq(users.userId, id))
 
+      // Update the user's test limit
+      await tx.update(users).set({ testLimit: 1000 }).where(eq(users.userId, id))
+
       // Log the processed event for idempotency
       await tx.insert(processedEvents).values({
         eventId,

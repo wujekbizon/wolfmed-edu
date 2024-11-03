@@ -38,7 +38,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
         // user exceeded his test limit
         return toFormState(
           'ERROR',
-          'Wyczerpałes limit testów dla darmowego konta. Sprawdż nasze oferty dla klientów premium'
+          'Wyczerpałes limit 150 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów.'
         )
       }
     }
