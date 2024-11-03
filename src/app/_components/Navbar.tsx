@@ -9,6 +9,7 @@ import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
 import GradientOverlay from '@/components/GradientOverlay'
 import { usePathname } from 'next/navigation'
+import { SignedIn } from '@clerk/nextjs'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -30,17 +31,21 @@ export default function Navbar() {
       >
         {pathname === '/' && <GradientOverlay />}
 
-        <MenuIcon onClick={toggleMenu} />
+        <SignedIn>
+          <MenuIcon onClick={toggleMenu} />
+        </SignedIn>
         <Logo className={pathname === '/' ? 'bg-white' : 'bg-[#ffb1b1]'} />
-        <nav className="bg-white py-[8px] px-8 hidden lg:flex gap-6 items-center rounded-full border-red-200/40 shadow-sm shadow-zinc-500 z-10">
-          {navLinks.map((link) => (
-            <Link href={link.linkUrl} key={link.id}>
-              <p className="text-base font-semibold text-zinc-900 hover:text-[#ffa5a5] transition-colors">
-                {link.label}
-              </p>
-            </Link>
-          ))}
-        </nav>
+        <SignedIn>
+          <nav className="bg-white py-[8px] px-8 hidden lg:flex gap-6 items-center rounded-full border-red-200/40 shadow-sm shadow-zinc-500 z-10">
+            {navLinks.map((link) => (
+              <Link href={link.linkUrl} key={link.id}>
+                <p className="text-base font-semibold text-zinc-900 hover:text-[#ffa5a5] transition-colors">
+                  {link.label}
+                </p>
+              </Link>
+            ))}
+          </nav>
+        </SignedIn>
         <AuthSection />
       </header>
     </>
