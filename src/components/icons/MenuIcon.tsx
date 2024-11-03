@@ -8,16 +8,16 @@ export default function MenuIcon(props: { onClick?: React.MouseEventHandler<SVGS
       fill="none"
       onClick={props.onClick}
     >
-      <g className="stroke-[#ffc5c5]/50 transition-all hover:stroke-[#f58a8a]/80">
+      <g className="stroke-[#ffc5c5]/10 transition-all hover:stroke-[#f58a8a]/80">
         <path
           d="M4 17H8M12 17H20M4 12H20M4 7H12M16 7H20"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          fill="#ffffff"
+          fill="#000000"
           fillOpacity=".16"
-          stroke="#ffffff"
-          strokeMiterlimit="10"
+          stroke="#000000"
+          strokeMiterlimit="40"
           className="before:content[''] animate-pulse fill-[#f58a8a] before:absolute before:left-0 before:top-0 before:block before:h-full before:w-full before:rounded-full before:opacity-0 before:transition-opacity "
         />
       </g>

@@ -1,31 +1,49 @@
+'use client'
+
+import { motion } from 'framer-motion'
 import HeroButton from '@/components/HeroButton'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
-import Image from 'next/image'
+import { fadeInUp, staggerContainer } from '@/animations/motion'
+import { MedicalIllustration } from './MedicalIllustration'
+import { MobileMedicalIllustration } from './MobileMedicalIllustration'
+import { useIsMobile } from '@/hooks/useIsMobile'
+import GradientOverlay from '@/components/GradientOverlay'
+import HeroTitle from '@/components/HeroTitle'
+import { FloatingShapes } from '@/components/FloatingShapes'
 
 export default function Hero() {
+  const isMobile = useIsMobile()
+
   return (
-    <section className="relative w-full h-[calc(100vh_-_70px)] gap-12 flex items-center justify-around py-4 sm:py-12 px-0 sm:px-6">
-      <div className="absolute w-[90%] lg:w-[60%] p-4 rounded-xl animate-slideInDown opacity-0 [--slidein-delay:300ms] bg-white/80">
-        <h1 className="text-center font-semibold  text-3xl xs:text-[35px] sm:text-[40px] leading-[35px] md:text-[50px] sm:leading-[55px] text-zinc-950">
-          {' '}
-          Edukacja <span className="font-bold text-[#ff5b5b]">medyczna</span> może być jeszcze łatwiejsza.
-        </h1>
-      </div>
-      <Image
-        src="/hero.webp"
-        alt="person"
-        width={1200}
-        height={800}
-        priority
-        className="h-full w-full object-cover bg-top rounded-none sm:rounded-3xl"
-      />
-      <div className="absolute right-12 bottom-16 animate-slideInDown opacity-0 [--slidein-delay:600ms]">
-        <SignedIn>
-          <HeroButton link="/testy-opiekun/nauka">Rozpocznij naukę</HeroButton>
-        </SignedIn>
-        <SignedOut>
-          <HeroButton link="/sign-up">Zarejestruj się</HeroButton>
-        </SignedOut>
+    <section className="relative w-full h-[calc(100vh_-_70px)] flex items-center justify-center overflow-hidden bg-white">
+      <GradientOverlay />
+      <FloatingShapes />
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-12">
+        {/* Text content */}
+        <motion.div
+          // @ts-ignore
+          className="flex-1 text-center lg:text-left z-[1]"
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+        >
+          <HeroTitle />
+          <motion.div
+            variants={fadeInUp}
+            // @ts-ignore
+            className="space-x-4"
+          >
+            <SignedIn>
+              <HeroButton link="/testy-opiekun/nauka">Rozpocznij naukę</HeroButton>
+            </SignedIn>
+            <SignedOut>
+              <HeroButton link="/sign-up">Zarejestruj się</HeroButton>
+            </SignedOut>
+          </motion.div>
+        </motion.div>
+
+        {/* Illustration section */}
+        {isMobile ? <MobileMedicalIllustration /> : <MedicalIllustration />}
       </div>
     </section>
   )

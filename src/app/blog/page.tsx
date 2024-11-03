@@ -3,8 +3,6 @@ import { getAllPosts } from '@/server/queries'
 import { Post } from '@/types/dataTypes'
 import AllPosts from '@/components/AllPosts'
 
-export const dynamic = 'force-static'
-
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
   description:
