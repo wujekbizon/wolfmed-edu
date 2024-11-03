@@ -97,3 +97,15 @@ export interface User {
   totalScore: number
   totalQuestions: number
 }
+
+// Add this to your existing types
+export interface CompletedTestData {
+  id: string
+  userId: string
+  testResult: Array<{
+    answer: boolean
+    questionId: string
+  }>
+  score: number
+  completedAt: Date | null
+}

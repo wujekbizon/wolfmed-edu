@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
-import { procedures, tests, blogPosts, users } from '@/server/db/schema'
-import { Post, Procedure, Test, User } from '@/types/dataTypes'
+import { procedures, tests, blogPosts, users, completedTestes } from '@/server/db/schema'
+import { Post, Procedure, Test, User, CompletedTestData } from '@/types/dataTypes'
 import { readFile } from 'node:fs/promises'
 import * as path from 'node:path'
 
@@ -85,5 +85,23 @@ export async function populateUsers() {
     console.log('Users table populated successfully!')
   } catch (error) {
     console.error('Error populating users table:', error)
+  }
+}
+
+export async function populateCompletedTests() {
+  try {
+    const completedTestsData = (await readDataFileAndParse('completed_tests.json')) as CompletedTestData[]
+
+    await insertData(completedTestsData, completedTestes, (test) => ({
+      id: test.id,
+      userId: test.userId,
+      testResult: test.testResult,
+      score: test.score,
+      completedAt: test.completedAt ? new Date(test.completedAt) : null,
+    }))
+
+    console.log('Completed tests table populated successfully!')
+  } catch (error) {
+    console.error('Error populating completed tests table:', error)
   }
 }
