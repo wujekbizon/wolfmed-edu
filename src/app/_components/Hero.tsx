@@ -15,14 +15,14 @@ export default function Hero() {
   const isMobile = useIsMobile()
 
   return (
-    <section className="relative w-full h-[calc(100vh_-_70px)] flex items-center justify-center overflow-hidden bg-white">
+    <section className="relative w-full min-h-[calc(100dvh_-_70px)] flex items-center justify-center overflow-hidden bg-white py-8 sm:py-12">
       <GradientOverlay />
       <FloatingShapes />
-      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-12">
+      <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
         {/* Text content */}
         <motion.div
           // @ts-ignore
-          className="flex-1 text-center lg:text-left z-[1]"
+          className="flex-1 text-center lg:text-left z-[1] mt-4 sm:mt-0"
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
