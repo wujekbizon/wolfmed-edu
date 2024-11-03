@@ -75,9 +75,9 @@ export async function populateUsers() {
       motto: user.motto,
       supporter: user.supporter,
       username: user.username,
-      testsAttempted: user.testsAttempted,
-      totalScore: user.totalScore,
-      totalQuestions: user.totalQuestions,
+      testsAttempted: user.tests_attempted,
+      totalScore: user.total_score,
+      totalQuestions: user.total_questions,
       createdAt: new Date(user.createdAt),
       updatedAt: user.updatedAt ? new Date(user.updatedAt) : null,
     }))
