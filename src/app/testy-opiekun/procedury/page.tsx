@@ -1,6 +1,5 @@
 import AllProcedures from '@/components/AllProcedures'
-import { getAllProcedures } from '@/server/queries'
-import { Procedure } from '@/types/dataTypes'
+import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -10,6 +9,6 @@ export const metadata: Metadata = {
 }
 
 export default async function ProceduresPage() {
-  const procedures = (await getAllProcedures()) as Procedure[]
+  const procedures = await fileData.getAllProcedures()
   return <AllProcedures procedures={procedures} />
 }

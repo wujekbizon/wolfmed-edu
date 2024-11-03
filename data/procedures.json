@@ -1,0 +1,1756 @@
+[
+  {
+    "id": "001d29de-1f5b-4d31-9858-3241227b0461",
+    "data": {
+      "name": "Zmiana worka stomijnego na kolostomii",
+      "algorithm": [
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw. Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co chcesz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Nalej wody do miski."
+        },
+        {
+          "step": "Rozłóż podkład wysokochłonny, aby zabezpieczyć bieliznę pościelową i osobistą chorego przed zabrudzeniem."
+        },
+        {
+          "step": "Odklej zużyty worek od góry ku dołowi lekko dociskając skórę przy jednoczesnym jego odciąganiu (przy ileostomii najpierw opróżniamy zawartość worka z treści jelitowej). Nie należy zrywać płytki zbyt szybkim ruchem, ponieważ może to prowadzić do podrażnienia skóry. Zużyty worek zaklej i wyrzuć do worka zgodnie z lokalną polityką. Zużytego worka nie wolno spłukiwać w toalecie."
+        },
+        {
+          "step": "Zmyj skórę wokół stomii oraz samą stomię (śluzówkę jelit) ciepłą wodą z użyciem delikatnego mydła."
+        },
+        {
+          "step": "Osusz skórę gazikiem."
+        },
+        {
+          "step": "Wytnij w worku otwór odpowiadający wielkości i kształtowi stomii. Pomocne w tym względzie są gotowe miarki zamieszczone w opakowaniach worków przez producentów. Następnie zmierzoną średnicę (uwzględniającą 1-2 mm margines) wytnij w płytce hydrokoloidowej."
+        },
+        {
+          "step": "Na przestrzeń pomiędzy stomią a skórą nałóż pastę stomijną. Pamiętaj: Otwór w samej płytce stomijnej powinien być o 1-2 mm większy od samej stomii. W ciągu 6-8 tygodni po operacji wielkość stomii będzie się stopniowo zmniejszać, w związku z czym konieczne jest, aby w tym czasie mierzyć średnicę stomii przy każdej zmianie worka - zbyt mały otwór uwierałby błonę śluzową jelita powodując krwawienie i mechaniczne podrażnienie, zbyt duży powodowałby drażnienie nieosłoniętej skóry przez treść jelitową."
+        },
+        {
+          "step": "Nowy worek zakładamy od dołu ku górze."
+        },
+        {
+          "step": "Dociśnij płytkę do skóry. Po przyklejeniu worka upewnij się, lekko pociągając za worek czy jest dobrze przytwierdzony do skóry. Zdejmij rękawiczki w prawidłowy sposób i zdezynfekuj ręce."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Odnotuj charakter treści jelitowej oraz jej ilość"
+        }
+      ],
+      "procedure": "Sprzęt: Worek stomijny zamknięty; Miarka do odmierzenia średnicy stomii (producenci załączają miarki do opakowania zbiorczego z workami); Pasta stomijna do uszczelnienia stomii; Nożyczki; Podkład wysoko-chłonny; Miska z wodą i hipoalergicznym mydłem Delikatne gaziki do przemywania skóry wokół stomii; Rękawiczki jednorazowe niejałowe; Środek do dezynfekcji rąk (w szpitalu)"
+    },
+    "createdAt": "2024-09-06T13:47:29.346Z",
+    "updatedAt": null
+  },
+  {
+    "id": "09130715-ebee-4185-b499-01eed542842d",
+    "data": {
+      "name": "Pielęgnacja gastrostomii po ponad 14 dniach od założenia",
+      "algorithm": [
+        {
+          "step": "Ogólne zasady pielęgnacji stomii: Przez pierwsze 14 dni od założenie PEG-a nie należy się kąpać w wannie ani w basenie."
+        },
+        {
+          "step": "Zawsze po kąpieli należy dokładnie osuszyć okolicę stomii. Po całkowitym wytworzeniu się kanału przetoki można brać prysznic, kapać się w wannie oraz pływać. Jednak zawsze należy pamiętać o osuszeniu dokładnym przetoki oraz PEG-a."
+        },
+        {
+          "step": "W trakcie wykonywania czynności pielęgnacyjnych wokół PEG-a, należy zawsze upewnić się, że końcówka zgłębnika jest zamknięta, a zaciski na nim w pozycji zamkniętej."
+        },
+        {
+          "step": "W przypadku gdy skóra wokół PEG-a zaczerwieni się i zacznie boleć przy dotyku lub gdy z przetoki sączy się wydzielina należy bezwzględnie zgłosić ten fakt pielęgniarce lub lekarzowi."
+        },
+        {
+          "step": "Zasady karmienia po założeniu PEG: żywienie zaleca się rozpoczynać nie wcześniej niż 6-8 godzin po założeniu PEG-a. Dieta przemysłowa powinna być podawana w temperaturze pokojowej, bez podgrzewania. Aby zapobiec zatkaniu zgłębnika, przed każdym rozpoczęciem i po zakończeniu podawania diety lub leku, jednak nie rzadziej niż co 8 godzin, zgłębnik należy przepłukać 20-50 ml wody przegotowanej lub mineralnej wody. Do przepłukiwania nie stosować herbaty ani kompotów, ponieważ przebarwiają zgłębnik."
+        },
+        {
+          "step": "Zatkanie się zgłębnika PEG: Jeśli napotkasz opór przy płukaniu zgłębnika, nie wprowadzaj do niego wody na siłę. Najpierw sprawdź czy zacisk do regulacji przepływu jest otwarty. Gdy już jesteś pewien, że doszło do zatkania gastrostomii, w pierwszej kolejności należy napełnić strzykawkę ciepłą przegotowana wodą w ilości około 20 - 50 ml, przykręcić ja do łącznika żywieniowego w PEG-u, otworzyć zacisk do regulacji przepływu i próbować dynamicznym ruchem podać ją do gastrostomii. Jeśli to nie przyniesie pozytywnych efektów używamy ciepłej wody, którą wtłaczamy i odsysamy energicznymi ruchami, aż do momentu uzyskania pełnej drożności. Jeśli zabieg ten nie przyniesie oczekiwanych efektów, próbujemy podać ciepłą wodę do rurki zgłębnika i pozostawiamy na 10 - 15 sekund i następnie powtarzamy wcześniejsze procedury. Do udrażniania PEG-a nie należy używać kwaśnych roztworów, np. soków owocowych. Nie wolno również przepychać zgłębnika przy użyciu innych narzędzi. Może to spowodować uszkodzenie zgłębnika oraz uszkodzenie powłok brzusznych. Jeśli pomimo tych zabiegów nie udało się udrożnić zgłębnika, zgłoś ten fakt pielęgniarce lub lekarzowi"
+        },
+        {
+          "step": "Wysunięcie zgłębnika PEG: Bardzo ważnym jest jak najszybsze założenie zgłębnika po jego wysunięciu się z przetoki. Czas odgrywa istotną rolę, ponieważ gastrostomia ma tendencje do szybkiego zamykania się. Jak postąpić? Nie denerwuj się. Przyłóż do otworu czysty opatrunek z gazy, żeby treść z żołądka nie wyciekała na skórę i skontaktuj się z lekarzem lub pielęgniarką"
+        }
+      ],
+      "procedure": "Pielęgnację stomii wykonujemy przynajmniej raz na dobę. Skórę wokół stomii przemywa się łagodnym roztworem wody z mydłem. Roztworem wody z mydłem należy również przemyć dren oraz zewnętrzną płytkę mocującą. Skórę wokół stomii należy zawsze dokładnie osuszyć. Codziennie należy obracać PEG-a 0 1 80 0 w obu kierunkach (w prawo i w lewo). Codziennie należy wsuwać w kierunku światła żołądka oraz wysuwać w kierunku skóry zgłębnik na głębokość ok. 1,5 cm. Po zagojeniu przetoki nie ma konieczności umieszczania pod płytką opatrunków. Opatrunki stosujemy jedynie w przypadku, jeśli skóra w kontakcie z płytką jest podrażniona. Unikaj używania kremów, pudru oraz talku. Mogą one uszkodzić zgłębnik oraz spowodować podrażnienie skóry, a w konsekwencji doprowadzić do wtórnego zakażenia. Do pielęgnacji skóry wokół stomii nie używaj środków odkażających zawierających jodynę."
+    },
+    "createdAt": "2024-09-06T13:47:29.922Z",
+    "updatedAt": null
+  },
+  {
+    "id": "099b8333-3d99-4df7-af53-1b803403c28a",
+    "data": {
+      "name": "Podskórne podanie insuliny wstrzykiwaczem typu pen",
+      "algorithm": [
+        {
+          "step": "Zapoznanie się ze zleceniem lekarskim (nazwa insuliny, dawka sposób i czas podania)."
+        },
+        {
+          "step": "Higiena rąk zgodnie z wytycznymi WHO."
+        },
+        {
+          "step": "Dezynfekcja blatu roboczego."
+        },
+        {
+          "step": "Przygotowanie zleconego leku. W trakcie przygotowywania 3-krotne sprawdzenie nazwy insuliny, postaci. Sprawdzenie daty ważności."
+        },
+        {
+          "step": "Umieszczenie wkładu z insuliną we wstrzykiwaczu."
+        },
+        {
+          "step": "Ocena wyglądu insuliny. Jeśli insulina jest mętna należy odtworzyć zawiesinę należy wstrzykiwacz odwracać ku górze i ku dołowi co najmniej 1 0 razy. Wstrzykiwacz należy odwracać delikatnie, aby zapobiec powstawaniu piany w układzie."
+        },
+        {
+          "step": "Zdezynfekowanie gumowego korka wkładu i odczekanie aż wyschnie."
+        },
+        {
+          "step": "Zdjęcie folii ochronnej z pojemnika z nową igłą."
+        },
+        {
+          "step": "Założenie igły wraz z zewnętrzna osłonką igły na wstrzykiwacz, trzymając prosto podczas zakładania igły (igłę przekręcić lub wcisnąć, zależnie od rodzaju igły).Jeśli igła nie jest zakładana prosto, może to spowodować uszkodzenie gumowej uszczelki i wyciek insuliny lub pęknięcie igły."
+        },
+        {
+          "step": "Udanie się do pacjenta."
+        },
+        {
+          "step": "Przywitanie i przedstawienie się (imię i nazwisko, stanowisko)."
+        },
+        {
+          "step": "Sprawdzenie tożsamości pacjenta."
+        },
+        {
+          "step": "Poinformowanie o celu zabiegu."
+        },
+        {
+          "step": "Uzyskanie zgody pacjenta."
+        },
+        {
+          "step": "Odsłonięcie planowanego miejsca wkłucia. Ocena wzrokowa i palpacyjna miejsca wkucia."
+        },
+        {
+          "step": "Umycie skóry wodą z mydłem lub zdezynfekowanie miejsca wkłucia środkiem antyseptycznym i odczekanie wymaganego przez producenta czasu. Jeżeli miejsce wkłucia jest zabrudzone lub pacjent znajduje się w otoczeniu, w którym łatwo o infekcję (np. w szpitalu lub domu opieki), należy to miejsce zdezynfekować. Jeżeli do dezynfekcji użyto alkoholu, przed wykonaniem iniekcji należy odczekać aż skóra całkowicie wyschnie."
+        },
+        {
+          "step": "Wykonanie testu bezpieczeństwa- przed każdym wstrzyknięciem zawsze należy wykonać test bezpieczeństwa. Zapewnia to podanie właściwej dawki, poprzez: upewnienie się, że wstrzykiwacz wraz z igłą działa prawidłowo; pozbycie się pęcherzyków powietrza."
+        },
+        {
+          "step": "Ustawienie wskaźnika dawki na 2 poprzez obrócenie pokrętła nastawienia dawki insuliny."
+        },
+        {
+          "step": "Zdjęcie zewnętrznej oraz wewnętrznej osłonki igły oraz wyrzucenie ich."
+        },
+        {
+          "step": "Ustawienie wstrzykiwacza pionowo z igłą skierowaną ku górze."
+        },
+        {
+          "step": "Delikatne uderzanie palcem w pojemnik z insuliną, tak, aby wszystkie pęcherzyki powietrza przesunęły się w kierunku igły."
+        },
+        {
+          "step": "Wciśnięcie przycisku podania dawki. Sprawdzenie czy na końcu igły pojawia się insulina .Test bezpieczeństwa może być wykonany kilka razy zanim insulina będzie widoczna."
+        },
+        {
+          "step": "Sprawdzenie czy wskaźnik dawki wskazuje 0 po wykonaniu testu bezpieczeństwa."
+        },
+        {
+          "step": "Ustawienie wymaganej dawki. Jeśli dawka została wybrana, można ją zmienić obracając pokrętło do tyłu."
+        },
+        {
+          "step": "Należy zwrócić szczególną uwagę, aby nie nacisnąć przycisku podania dawki podczas obracania pokrętła nastawienia dawki insuliny, gdyż może to spowodować wydostanie się dawki insuliny. Ważne: Nie można obracać dalej pokrętła nastawienia dawki, jeśli ilość pozostałych we wstrzykiwaczu jednostek insuliny jest za mała. Należy w takim przypadku albo podać pozostałą we wstrzykiwaczu insulinę i uzupełnić wymaganą dawkę korzystając z nowego wstrzykiwacza, albo całą dawkę podać używając nowego wstrzykiwacza."
+        },
+        {
+          "step": "Usunięcie ewentualnego nadmiaru środka do dezynfekcji jałowym gazikiem."
+        },
+        {
+          "step": "Zastosowanie odpowiedniej techniki wstrzyknięcia: technika wykonania wstrzyknięcia z fałdem skórnym (preferowana):  unieść fałd skórny; wprowadzić igłę w środek fałdu pod kątem 90 lub 45 0 ; trzymając fałd unieść insulinę; odczekać 10-15 s lub policzyć do 10; wyciągnąć igłę pod niezmienionym kątem; puścić fałd skórny; ocenić wizualnie stopień ewentualnego wypłynięcia insuliny."
+        },
+        {
+          "step": "Podanie dawki = całkowite wciśnięcie przycisku podania dawki. Liczba w okienku wskaźnika dawki powróci do wartości 0 po wstrzyknięciu. Przed wyjęciem igły ze skóry należy wolno policzyć do 10 przytrzymując jednocześnie przycisk podania dawki. To zapewni, że cała dawka insuliny zostanie podana."
+        },
+        {
+          "step": "Zalecenie pacjentowi, aby nie masował miejsca wkłucia oraz w przypadku insuliny krótkodziałającej przypomnienie o konieczności zjedzenia posiłku."
+        },
+        {
+          "step": "Segregacja odpadów. Po każdej iniekcji należy zawsze zdjąć igłę ze wstrzykiwacza i przechowywać wstrzykiwacz bez założonej igły. Postępowanie takie chroni przed: zakażeniem i/lub zanieczyszczeniem insuliny dostaniem się powietrza do pojemnika z insuliną i wyciekiem insuliny z pojemnika."
+        },
+        {
+          "step": "Higiena rąk według wytycznych WHO."
+        },
+        {
+          "step": "Udokumentowanie wykonania zabiegu."
+        }
+      ],
+      "procedure": "Cel: utrzymanie prawidłowych stężeń glukozy we krwi.\r\nWskazania: hiperglikemia, podaż insuliny przed posiłkiem. Przeciwwskazania: niskie stężenie glukozy we krwi. Niebezpieczeństwa:\r\nwypłynięcie insuliny (zbyt płytkie podanie), podanie leku do tkanki mięśniowej (zbyt głębokie podanie), podanie leku do naczynia krwionośnego, powikłania skórne, hipoglikemia, hiperglikemia. Zasady:\r\nPrzed wykonaniem wkłucia pacjent/pracownik medyczny powinien ocenić miejsce wkłucia.\r\nNie należy wykonywać wkłucia w miejsca z lipohipertrofią (zrostem), stanem zapalnym, obrzękiem, owrzodzeniem lub objęte zakażaniem.\r\nIniekcje należy wykonywać czystymi rękami, w czyste miejsce na skórze. Jeżeli miejsce wkłucia jest zabrudzone lub pacjent znajduje się w otoczeniu,\r\nw którym łatwo o infekcję (np. w szpitalu lub w domu opieki), należy to miejsce zdezynfekować. Jeżeli do dezynfekcji użyto alkoholu, przed wykonaniem iniekcji należy odczekać aż skóra całkowicie wyschnie (alkohol denaturuje, czyli ścina białko jakim w tym przypadku jest insulina). Poza szpitalem i domem opieki zazwyczaj nie ma konieczności dezynfekcji miejsca wkłucia.\r\nPrzed wykonaniem iniekcji wstrzykiwacz należy przygotować zgodnie z instrukcją producenta (na końcu igły powinna pojawić się kropla), co pozwoli zapewnić niezakłócony przepływ insuliny i wykluczyć martwą objętość igły. Po sprawdzeniu przepływu należy ustawić odpowiednią dawkę insuliny i wprowadzić ją do organizmu.\r\nPrzycisk należy wciskać do momentu całkowitego wycofania igły z organizmu, aby nie dopuścić do aspiracji tkanek pacjenta do wkładu z insuliną.\r\nNie należy wykonywać wkłuć przez ubranie - pacjent nie może wtedy unieść fałdu skóry ani zobaczyć miejsca planowanego wkłucia, co utrudnia prawidłowe wykonanie iniekcji.\r\nKażde miejsce wkłucia należy oddzielnie zbadać i ocenić, czy konieczne jest uniesienie fałdu skóry, biorąc pod uwagę długość igły.\r\nW przypadku wystąpienia krwawienia i zasinienia należy zapewnić pacjenta, że nie ma to wpływu na wchłanianie insuliny ani na ogólną kontrolę glikemii. Jeżeli zasinienie utrzymuje się lub wystąpią wylewy podskórne, należy sprawdzić technikę wykonywania iniekcji i zasugerować zmiany (np. systematyczna rotacja miejsc wkłucia).\r\nNależy podawać insulinę o temperaturze pokojowej. Zimna insulina jest bardziej bolesna.\r\nJeżeli pacjent odczuje ostry ból w momencie wkłucia, należy mu wyjaśnić, że prawdopodobnie igła dotknęła zakończenia nerwowego, co nie powoduje uszczerbku na zdrowiu. Jeżeli ból utrzymuje się, pracownik służby zdrowia powinien poddać ocenie technikę iniekcji pacjenta.\r\nNiejednokrotnie podczas iniekcji igła przekłuwa naczynie krwionośne lub łożysko włośniczkowe, powodując miejscowe krwawienie lub zasinienie. Obecnie igły mają niewielką średnicę, więc ilość utraconej krwi nie jest istotna dla zdrowia. W celu zatamowania krwawienia należy uciskać miejsce wkłucia przez 5-10 sekund. Zmiana długości igły lub innych czynników iniekcji nie ma wpływu na częstotliwość występowania krwawień i zasinień.\r\nPo wykonaniu iniekcji należy poinformować pacjenta, aby nie masował miejsca wkłucia (zapobiegnie to wyciekowi insuliny).\r\nNależy stosować regularną rotację miejsc wkłucia, tak, aby kolejne wkłucie wykonywać w odległości co najmniej. Należy stosować rotację w obrębie obszaru anatomicznego.\r\nJedna osoba - jeden wstrzykiwacz. Wstrzykiwacz wraz z ampułką insuliny może być używany tylko przez jednego pacjenta, dlatego też pomimo zmiany igły nie należy używać go z wspólnie z inną osobą. W placówkach ochrony zdrowia, w których materiały przechowuje się wspólnie np. w lodówkach, wstrzykiwacze, wkłady i małe, pojedyncze fiolki należy wyraźnie podpisać nazwiskiem/ identyfikatorem pacjenta.\r\n"
+    },
+    "createdAt": "2024-09-06T13:47:31.191Z",
+    "updatedAt": null
+  },
+  {
+    "id": "0be37e61-d93d-4d7a-9080-367374792dd7",
+    "data": {
+      "name": "Zasady podawania leków",
+      "algorithm": [
+        {
+          "step": "Przez przewód pokarmowy: doustnie - per os (p.o.);"
+        },
+        {
+          "step": "doodbytniczo - per rectum (p.r.);"
+        },
+        {
+          "step": "podjęzykowo - sublinguae (s.l.);"
+        },
+        {
+          "step": "okołopoliczkowo - pro bucca (p.b.);"
+        },
+        {
+          "step": "Do tkanek i jam ciała i narządów: Podskórnie - injectio subcutanea (s.c.);"
+        },
+        {
+          "step": "Przez drogi oddechowe;"
+        },
+        {
+          "step": "Na skórę - in cutis (i.c.)."
+        },
+        {
+          "step": "Podstawową jednostką, w której wyrażana jest dawka (masa) leku jest gram (g). W przypadku określenia aktywności substancji biologicznie czynnych (witaminy, hormony, leki, szczepionki) stosuje się jednostkę międzynarodową - j.m. (ang. international unit - IU).\r\nPrzeliczanie jednostek:\r\n1 g = 1000 mg (miligram)\r\n0,1 g = 100 mg\r\n mg\r\n0,00 Ig = 1 mg\r\n1 mg = 1000 pg (mikrogram)\r\n0,1 mg = 100 pg\r\n0,01 mg = 10 pg\r\n0,001 mg = 1  \r\n"
+        }
+      ],
+      "procedure": "Procedura podania leku obejmuje jego odebranie i przygotowanie do użycia. Może polegać na odliczeniu leku, wyliczeniu dawki, zmierzeniu lub np. rozpuszczeniu. Przed przystąpieniem do przygotowania i podawania leków należy zadbać o dobre oświetlenie, umyć lub zdezynfekować ręce, skompletować sprzęt oraz skoncentrować się na wykonywanej czynności, której nie należy przerywać rozmową z koleżanką czy odbieraniem telefonu komórkowego. Każda osoba przygotowująca lek musi sprawdzić PRZYNAJMNIEJ 3 RAZY (np. w czasie szukania go w szafce/apteczce, po wyjęciu z szafki/apteczki, po wyjęciu blistra, tuż przed odłożeniem go na miejsce) nazwę leku (handlową), dawkę oraz datę ważności. Należy zwrócić uwagę na zgodność między nazwą leku, dawki na opakowaniu bezpośrednim, a blistrze. Lek posiada dwie nazwy - handlową oraz międzynarodową/chemiczną (zapisaną małymi literami). Leki posiadają zamienniki, czyli leki o tej samej substancji czynnej, ale innej nazwie handlowej. Zamiennik może wydać jedynie farmaceuta. Realizując zlecenie opiekun medyczny może podać pacjentowi lek wyłącznie o nazwie handlowej zgodnej ze zleceniem lekarskim/pielęgniarskim. Wyjątkiem jest realizacja zlecenia w domu pacjenta. Wówczas można podać lek - zamiennik wydany przez farmaceutę po uprzednim sprawdzeniu nazwy chemicznej. Podczas podawania leku obowiązuje zasada 6W. Jest to schemat postępowania, który wymusza na osobie przygotowującej lek, aby sprawdzając zlecenie upewniła się, że podaje: Właściwy lek (zgodność nazwy leku) we Właściwej (prawidłowej) dawce, właściwą (odpowiednią) drogą o właściwym czasie; Właściwemu pacjentowi i właściwie, czyli prawidłowo to udokumentowała. Ważne! Pomyłki związane z podaniem leku niewłaściwemu pacjentowi wynikają często z błędnej identyfikacji chorych. Należy pamiętać, że podczas identyfikacji pacjenta nie sugerujemy tożsamości, tzn. zamiast pytania: „Pan Kowalski Jerzy?” pytamy: „Jak się pan nazywa? „Odchodząc od szafki z lekami należy ją zamknąć. Lek podaje wyłącznie osoba, która go przygotowała. W przypadku podawania leku drogą doustną trzeba pozostać przy pacjencie tak długo, aż lek zostanie połknięty. Jeśli to możliwe, należy zmienić nieprzyjemny smak leku lub podać go w opłatku, leki płynne szkodliwe dla zębów podawać przez słomkę, a jeżeli pacjent nie jest w stanie połknąć leku - zwrócić się do lekarza, aby zmienił podane leki. W przypadku nieobecności pacjenta podczas podawania leków, nie wolno kieliszka z lekami pozostawiać na stoliku przyłóżkowym, lecz podać lek w późniejszym czasie. Po zakończeniu przygotowania i podania leku należy uporządkować użyte przybory, umyć ręce i udokumentować podanie leków. Dzielenia tabletek dokonuje się wyłącznie w przypadku leków wymagających stopniowego zwiększania czy stopniowego zmniejszania dawki leku, aby uniknąć objawów zespołu odstawiennego (leki przeciwdepresyjne, neuroleptyki). Ze względu na dużą niedokładność w dawkowaniu dzielenie tabletek stanowi złożony temat do rozmowy i nie powinno być stosowane rutynowo. Podziałka na tabletce, wykonana przez producenta leku, służy do podzielenia tabletki, ale wyłącznie w celu ułatwienia jej przyjęcia, np. dla pacjentów z dysfagią (zaburzenia połykania). Istotne jest, aby dzielić tabletki przystosowane do tego, a więc z wyraźnie zaznaczoną podziałką przez producenta. Nie zaleca się dzielenia tabletek o modyfikowanym uwalnianiu oraz tabletek powlekanych. Bezwzględnie nie należy dzielić tabletek dojelitowych, gdyż ich otoczka, odporna na działanie kwasu solnego, ulega zniszczeniu oraz tabletek podjęzykowych, które uwalniają substancję czynną w jamie ustnej w ciągu kilku sekund. Podając lek pacjentowi jesteśmy również zobligowani do monitorowania działań leków podawanych pacjentom. Monitorowanie działania leków obejmuje obserwację czy pacjent: przyjął lek prawidłowo; dobrze się czuje;\tnie odczuwa dyskomfortu; odczuwa terapeutyczne działanie leku; nie ma objawów ubocznych (objawy niepożądane i działania toksyczne) oraz uwzględnienie tych elementów w dokumentacji; Nie należy podawać leków przeterminowanych i o zmienionym wyglądzie, tj. przebarwionych, z obecnością kłaczków, zawilgoconych, nieoznakowanych, oznakowanych niewyraźnie, o nieczytelnej etykiecie. Podczas przygotowywania leku należy zwrócić uwagę również na leki, które w swojej nazwie zawierają skróty. Skróty te zawierają ważne informacje na temat szybkości, profilu i miejsca uwalniania się substancji aktywnej. Należy przestrzegać ustalonych godzin podawania leków. Zlecone 1 raz dziennie podaje się najczęściej rano lub wieczorem, 2 razy dziennie — rano i wieczorem, 3 razy dziennie - rano, w południe i wieczorem. Leki podajemy 30 minut po głównych posiłkach, leki nasenne - 30 minut przed godziną udania się na spoczynek, leki przeczyszczające silnie działające - rano na czczo, łagodnie działające - na noc. Podajemy także leki w razie potrzeby, np. przed nasileniem się dolegliwości bólowych. Antybiotyki podaje się ściśle wg wskazań lekarza w ciągu całej doby (np. 3 razy dziennie o godz. 8, 16 i 24, a 2 razy dziennie o godz. 8 i 20, po to, aby we krwi pacjenta stężenie antybiotyku utrzymało się na takim samym poziomie. Spadek stężenia antybiotyku we krwi spowodowany wydłużaniem odstępu pomiędzy dawkami jest powodem namnażania się bakterii w tkankach organizmu. Działanie niepożądane to „każda szkodliwa i niezamierzona reakcja na lek”. Objaw niepożądany to znane działanie - inne niż pierwotnie zamierzone związane z właściwościami farmakologicznymi leku. Przykład: objawem niepożądanym morfiny są nudności i zaparcia. Działanie niepożądane jest to z kolei nieprzewidywana szkoda spowodowana uzasadnionym działaniem w przypadku, gdy przestrzegana była prawidłowa procedura. Przykład: działaniem niepożądanym jest reakcja alergiczna u pacjenta na lek, który przyjął po raz pierwszy. Opiekun medyczny może podać leki następującą drogą:"
+    },
+    "createdAt": "2024-09-06T13:47:31.051Z",
+    "updatedAt": null
+  },
+  {
+    "id": "0f024811-e224-4c76-81fc-b11f10960288",
+    "data": {
+      "name": "Nebulizacja w domu pacjenta",
+      "algorithm": [
+        {
+          "step": "Przygotuj zestaw. W trakcie procedury pamiętaj o trzykrotnym sprawdzeniu nazwy, dawki i daty ważności leku!"
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj, przedstaw się."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co zamierzasz zrobić i w jakim celu. Poinformuj pacjenta o czasie trwania nebulizacji (1 0 min) oraz że na czas nebulizacji powinien oddychać przez usta."
+        },
+        {
+          "step": "Umyj ręce zgodnie z techniką Ayliffe'a(w domu pacjenta najprawdopodobniej nie będziesz mieć środka do dezynfekcji)."
+        },
+        {
+          "step": "Wlej lek do pojemniczka."
+        },
+        {
+          "step": "Ułóż pacjenta w pozycji wysokiej (jeśli nie ma przeciwwskazań)."
+        },
+        {
+          "step": "Podłącz nebulizator do zasilania."
+        },
+        {
+          "step": "Załóż maskę z nebulizatorem na twarz pacjenta. Dopasuj metalową listewkę do kształtu nosa."
+        },
+        {
+          "step": "Połącz maskę z nebulizatorem z drenem tlenowym."
+        },
+        {
+          "step": "Włóż dren tlenowy w odpowiednie miejsce w nebulizatorze."
+        },
+        {
+          "step": "Włącz nebulizator. Spod maski powinien ulatniać się obłok pary."
+        },
+        {
+          "step": "Po zakończonej nebulizacji (jeśli nebulizacja była wykonana z glikokortykosteroidu) podaj pacjentowi kubek z wodą (do przepłukania ust), miskę nerkowatą i płat ligniny."
+        }
+      ],
+      "procedure": "Zestaw: Lek do nebulizacji zgodny ze zleceniem lekarskim. Nebulizator odpowiedniego rodzaju (w przypadku glikokortykosteroidów i antybiotyków - nebulizator pneumatyczny; nebulizatory ultradźwiękowe nie są odpowiednie do nebulizacji glikokortykosteroidów i antybiotyków, ponieważ ultradźwięki niszczą strukturę cząsteczki leku)."
+    },
+    "createdAt": "2024-09-06T13:47:30.489Z",
+    "updatedAt": null
+  },
+  {
+    "id": "0f5f2e5c-6541-4219-bb05-7789145c32a0",
+    "data": {
+      "name": "Zmiana worka stomijnego na ileostomii",
+      "algorithm": [
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw. Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co chcesz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Nalej wody do miski."
+        },
+        {
+          "step": "Rozłóż podkład wysokochłonny, aby zabezpieczyć bieliznę pościelową i osobistą chorego przed zabrudzeniem."
+        },
+        {
+          "step": "Odklej zużyty worek od góry ku dołowi lekko dociskając skórę przy jednoczesnym jego odciąganiu (przy ileostomii najpierw opróżniamy zawartość worka z treści jelitowej). Nie należy zrywać płytki zbyt szybkim ruchem, ponieważ może to prowadzić do podrażnienia skóry. Zużyty worek zaklej i wyrzuć do worka zgodnie z lokalną polityką. Zużytego worka nie wolno spłukiwać w toalecie. "
+        },
+        {
+          "step": "Zmyj skórę wokół stomii oraz samą stomię (śluzówkę jelit) ciepłą wodą z użyciem delikatnego mydła. Zataczaj koła od zewnątrz do środka, czyli od najczyściejszej powierzchni i kieruj się ku stomii."
+        },
+        {
+          "step": "Osusz skórę gazikiem."
+        },
+        {
+          "step": "Wytnij w worku otwór odpowiadający wielkości i kształtowi stomii. Pomocne w tym względzie są gotowe miarki zamieszczone w opakowaniach worków przez producentów. Następnie zmierzoną średnicę (uwzględniającą 1 -2 mm margines) wytnij w płytce hydrokoloidowej. Pamiętaj o odciągnięciu tylnej ściany worka podczas przycinania, tak aby nie doszło do jej nacięcia."
+        },
+        {
+          "step": "Na przestrzeń pomiędzy stomią a skórą nałóż pastę stomijną."
+        },
+        {
+          "step": "Zdejmij folię z płytki hydrokoloidowej."
+        },
+        {
+          "step": "Nowy worek zakładamy od dołu ku górze."
+        },
+        {
+          "step": "Dociśnij płytkę do skóry . Po przyklejeniu worka upewnij się, lekko pociągając za worek czy jest dobrze przytwierdzony do skóry."
+        },
+        {
+          "step": "Zdejmij rękawiczki w prawidłowy sposób i zdezynfekuj ręce."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Wykonaj higienę rąk"
+        },
+        {
+          "step": "Odnotuj charakter treści jelitowej oraz jej ilość."
+        }
+      ],
+      "procedure": "Sprzęt: Worek stomijny otwarty; Miarka do odmierzenia średnicy stomii (producenci załączają miarki do opakowania zbiorczego z workami); Pasta stomijna do uszczelnienia stomii; Nożyczki; Podkład wysokochłonny; Miska z wodą i hipoalergicznym mydłem; Delikatne gaziki do przemywania skóry wokół stomii;Rękawiczki jednorazowe niejałowe; Środek do dezynfekcji rąk (w szpitalu);"
+    },
+    "createdAt": "2024-09-06T13:47:29.485Z",
+    "updatedAt": null
+  },
+  {
+    "id": "174b26a7-33d9-46a1-ae42-775432d27812",
+    "data": {
+      "name": "Pomiar ciśnienia",
+      "algorithm": [
+        {
+          "step": "Prawidłowe ciśnienie\\ 120-129/80-84"
+        },
+        {
+          "step": "Wysokie ciśnienie prawidłowe\\ 130-139/85-89"
+        },
+        {
+          "step": "Nadciśnienie I stopnia.\\ 140-159 /90-99"
+        },
+        {
+          "step": "Nadciśnienie Il stopnia\\ 160-169 /100-109"
+        },
+        {
+          "step": "Nadciśnienie III stopnia. >= 180 >=110"
+        }
+      ],
+      "procedure": "Trzeba pamiętać, że przez co najmniej 30 minut przed pomiarem pacjent nie powinien palić tytoniu, pić kawy ani wykonywać intensywnych ćwiczeń fizycznych. Pomiar powinien też być dokonany nie wcześniej niż około 60 minut po zjedzeniu obfitego posiłku. Przez 3-5 minut przed samym pomiarem pacjent powinien pozostawać w pozycji siedzącej, w spokojnym otoczeniu. Stopy pacjenta powinny się znajdować na ziemi, a plecy powinien mieć podparte, podobnie jak kończynę górną, na której mierzy się ciśnienie. Podczas pomiaru powinna być ona rozluźniona, a dłoń skierowana wewnętrzną stroną ku górze. Istotne jest prawidłowe założenie mankietu, który powinien się znajdować na wysokości serca co odpowiada wysokości 1 ,5-2,5 cm powyżej stawu łokciowego. Po odpowiednim przygotowaniu pacjenta i wyjaśnieniu mu całej procedury przystępuje się do pomiarów ciśnienia tętniczego, przy czym podczas samego pomiaru pacjent nie powinien mówić ani się poruszać. Bardzo istotne jest dobranie odpowiedniego rozmiaru mankietu ciśnieniomierza. W tym celu należy zmierzyć obwód ramienia pacjenta. Większość obecnie stosowanych mankietów jest opatrzona oznaczeniami wskazującymi, dla pacjentów o jakim obwodzenie ramienia są przeznaczone. Stosowanie zbyt małych lub zbyt dużych mankietów powoduje zafałszowanie mierzonych wartości. Badania wskazują, że wraz ze zwiększeniem obwodu ramienia o każde 5 cm powyżej górnej granicy wartości, przy których powinien być stosowany dany rozmiar mankietu, wartości ciśnienia tętniczego mierzone z jego użyciem wzrastają o ok. od 2 do 5 mm Hg dla skurczowego ciśnienia tętniczego oraz o ok. od 1 do 3 mm Hg dla ciśnienia rozkurczowego. W tym samym opracowaniu oceniono, że u ponad 40% pacjentów stosuje się mankiety o nieodpowiednim rozmiarze. Podczas pierwszej wizyty należy zmierzyć ciśnienie tętnicze na obu ramionach pacjenta. Najkorzystniejsze jest wykonywanie równoczesnego pomiaru po obu stronach. Różnice w pomiarach dokonywanych po sobie mogą wynikać ze zmienności wartości ciśnienia tętniczego. Jeśli wykryje się istotną różnicę wartości ciśnienia tętniczego między obiema stronami, to przy kolejnych pomiarach należy je mierzyć po tej stronie, po której wartości były wyższe. Za każdym razem należy dokonać przynajmniej 2 pomiarów w 1 minutowych odstępach. Ciśnienie tętnicze skurczowe/Ciśnienie tętnicze rozkurczowe:"
+    },
+    "createdAt": "2024-09-06T13:47:28.192Z",
+    "updatedAt": null
+  },
+  {
+    "id": "1c5729c5-aae4-4b95-bbc2-b58a99488664",
+    "data": {
+      "name": "Przygotowanie i pobranie moczu",
+      "algorithm": [
+        {
+          "step": "Umyć ręce wodą z mydłem."
+        },
+        {
+          "step": "Wziąć czysty pojemnik na mocz."
+        },
+        {
+          "step": "Nie dotykać palcami wewnętrznej strony pojemnika."
+        },
+        {
+          "step": "Umyć zewnętrzne narządy płciowe z okolicą ujścia cewki moczowej włącznie przy użyciu ciepłej wody, ale bez użycia mydła."
+        },
+        {
+          "step": "Oddać pierwszą porcję moczu do toalety."
+        },
+        {
+          "step": "Drugą porcję moczu oddać do pojemnika."
+        },
+        {
+          "step": "Pozostałą część moczu oddać do toalety."
+        },
+        {
+          "step": "Wytrzeć zewnętrzne powierzchnie pojemnika z moczem, zamknąć."
+        },
+        {
+          "step": "Podpisać próbkę w czytelny sposób, podać datę i godz. pobrania."
+        },
+        {
+          "step": "Dostarczyć próbkę do laboratorium."
+        }
+      ],
+      "procedure": "Przygotowanie i pobranie moczu - algorytm i postęowanie"
+    },
+    "createdAt": "2024-09-06T13:47:32.067Z",
+    "updatedAt": null
+  },
+  {
+    "id": "1dbc19bd-e450-4d7c-a2d7-41ea2993fb14",
+    "data": {
+      "name": "Zmiana opatrunku na ranie powikłanej",
+      "algorithm": [
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Przygotuj zestaw, rozłóż sterylną serwetę, w sposób aseptyczny otwórz materiał i umieść go na serwecie."
+        },
+        {
+          "step": "Polej gaziki."
+        },
+        {
+          "step": "Załóż rękawice jednorazowe niejałowe."
+        },
+        {
+          "step": "Ułóż wygodnie chorego i odsłoń okolicę rany."
+        },
+        {
+          "step": "Pod okolicę rany rozłóż podkład/serwetę."
+        },
+        {
+          "step": "Usuń opatrunek z rany i wyrzuć go do worka na odpady medyczne."
+        },
+        {
+          "step": "Zdejmij rękawice niejałowe i zdezynfekuj ręce."
+        },
+        {
+          "step": "Załóż rękawice jednorazowe jałowe."
+        },
+        {
+          "step": "Oceń wygląd rany."
+        },
+        {
+          "step": "Zapnij na peanie (narzędziu chwytnym) gaziki polane antyseptykiem."
+        },
+        {
+          "step": "Oczyść ranę za pomocą gazika nasączonego antyseptykiem zachowując dwie ważne zasady podczas zmiany opatrunku na ranie powikłanej: jeden gazik jedno przetarcie oraz oczyszczanie rany od zewnątrz do środka rany."
+        },
+        {
+          "step": "Załóż nowy opatrunek."
+        },
+        {
+          "step": "Posegreguj zużyty sprzęt i odpady zgodnie z procedurą podmiotu leczniczego."
+        },
+        {
+          "step": "Zdejmij rękawice i zdezynfekuj ręce."
+        },
+        {
+          "step": "Jeśli zmiana opatrunku była wykonywana w sali opatrunkowej, odprowadź chorego na salę chorych."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy, wykonaj dezynfekcję blatu roboczego."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonaną procedurę w dokumentacji pacjenta."
+        }
+      ],
+      "procedure": "Rana powikłana- rana, w której stwierdza się cechy zakażenia (zaczerwienienie, ból, obrzęk, nadmierne ucieplenie, nadmierny wysięk). Czynnik etiologiczny zakażenia ran: Najczęstszym czynnikiem etiologicznym wywołującym zakażenia ran są bakterie. Najpowszechniej z ran przewlekłych izolowane są Gram-dodatnie ziarniaki z rodzaju Staphylococcus, Enterococcus a także Gram-ujemne pałeczki z gatunku Pseudomonas aeruginosa (częsty czynnik etiologiczny zakażeń owrzodzeń stopy cukrzycowej oraz oparzeń). Zasady zmiany opatrunku na ranie powikłanej: Zasada aseptyki i antyseptyki. Ranę powikłaną przemywa się w kierunku od zewnątrz do środka rany. Obowiązuje zasada: jeden gazik - jedno przetarcie. Konieczne jest użycie antyseptyku (substancji o działaniu bakteriobójczym). Do wykonania zabiegu potrzebne są: wózek pielęgnacyjny z zawieszonym workiem na odpady komunalne i potencjalnie zakaźne; jałowa serweta; jałowy opatrunek specjalistyczny odpowiedniej wielkości; antyseptyk; jałowe gaziki; jałowe rękawiczki; jałowe narzędzie chwytne (pęseta, pean); maseczka chirurgiczna; rękawiczki diagnostyczne (niejałowe); środek do dezynfekcji rąk."
+    },
+    "createdAt": "2024-09-06T13:47:29.219Z",
+    "updatedAt": null
+  },
+  {
+    "id": "1e1273e1-34dd-4f6a-b632-43a01f738aba",
+    "data": {
+      "name": "Pomiar oddechu",
+      "algorithm": [
+        {
+          "step": "Poinformowanie pacjenta o badaniu tętna (badanie oddechu wykonujemy bez wiedzy pacjenta)."
+        },
+        {
+          "step": "Uzyskanie zgody pacjenta."
+        },
+        {
+          "step": "Poinformowanie pacjenta o zachowaniu spokoju podczas badania."
+        },
+        {
+          "step": "Przyjęcie przez pacjenta pozycji siedzącej lub leżącej (wskazane jest aby klatka piersiowa był odsłonięta)."
+        },
+        {
+          "step": "Ułożenie ręki na nadgarstku chorego jak do badania tętna."
+        },
+        {
+          "step": "Dyskretne obserwowanie ruchów klatki piersiowej."
+        },
+        {
+          "step": "Liczenie oddechów przez 1 minutę."
+        },
+        {
+          "step": "Ustalenie toru oddychania. Czy chory ma trudności oddechowe, czy w proces oddychania włączone są dodatkowe mięśnie oddechowe, czy występuje duszność, czy oddychaniu towarzyszą świsty, trzeszczenia w klatce piersiowej. "
+        },
+        {
+          "step": "Określenie zapachu wydychanego powietrza."
+        },
+        {
+          "step": "Udokumentowanie wykonania pomiaru."
+        },
+        {
+          "step": "Zgłoszenie lekarzowi rozpoznanych nieprawidłowości."
+        }
+      ],
+      "procedure": "Przygotowanie zestawu: zegarek z sekundnikiem lub stoper."
+    },
+    "createdAt": "2024-09-06T13:47:28.317Z",
+    "updatedAt": null
+  },
+  {
+    "id": "3b55e291-47ed-4535-a0e7-d6a68a5bbddb",
+    "data": {
+      "name": "Pobieranie krwi żylnej",
+      "algorithm": [
+        {
+          "step": "Identyfikacja pacjenta."
+        },
+        {
+          "step": "Sprawdzenie, czy pacjent jest na czczo i odpowiednio przygotowany do zabiegu."
+        },
+        {
+          "step": "Przygotowanie wyposażenia niezbędnego do pobrania krwi."
+        },
+        {
+          "step": "Oznakowanie/identyfikacja probówek."
+        },
+        {
+          "step": "Założenie rękawiczek ochronnych."
+        },
+        {
+          "step": "Założenie stazy."
+        },
+        {
+          "step": "Wybranie miejsca wkłucia."
+        },
+        {
+          "step": "Dezynfekcja miejsca wkłucia."
+        },
+        {
+          "step": "Nakłucie żyły."
+        },
+        {
+          "step": "Pobranie krwi do pierwszej probówki."
+        },
+        {
+          "step": "Zwolnienie stazy."
+        },
+        {
+          "step": "Delikatne jednokrotne odwrócenie probówki do góry dnem (jedno pełne odwrócenie)."
+        },
+        {
+          "step": "Pobranie krwi do następnych probówek w odpowiedniej kolejności."
+        },
+        {
+          "step": "Wycofanie igły z żyły i aktywacja mechanizmu zabezpieczającego."
+        },
+        {
+          "step": "Wyrzucenie igieł."
+        },
+        {
+          "step": "Opatrzenie miejsca wkłucia."
+        },
+        {
+          "step": "Poinformowanie pacjenta o konieczności delikatnego uciskania przez 5-10 minut i unikania zginania ramienia."
+        },
+        {
+          "step": "Czterokrotne odwrócenie wszystkich probówek do góry dnem."
+        },
+        {
+          "step": "Zdjęcie rękawiczek."
+        },
+        {
+          "step": "Wykonaj higienę rąk"
+        },
+        {
+          "step": "Zalecenie pacjentowi odpoczynku przez 5 minut i przed opuszczeniem pomieszczenia upewnienie się, że krwawienie ustało."
+        }
+      ],
+      "procedure": "Prawidłowa kolejność napełniania probówek wg EFLM: Probówka na posiew; Probówka z cytrynianem; Probówka bez dodatków lub z aktywatorem skrzepu; Probówka z heparyną; Probówka z EDTA; Probówka z inhibitorem glikolizy; Inne. Probówki powinny być napełniane do ±10% objętości należnej. Niepoprawne napełnienie próbówki może doprowadzić do licznych niekorzystnych następstw: powstanie mikro skrzepów, fałszywe stężenie oznaczanych substancji, wydłużenie wartości badań układu krzepnięcia, zmiany w wynikach badania morfologii krwi obwodowej. Jednym z częstszych problemów pojawiających się w fazie przed analitycznej jest hemoliza próbki. Aby zminimalizować ryzyko wystąpienia hemolizy, staraj się: postępować delikatnie z próbką, szczególnie podczas mieszania; nie oklepywać żył przed pobraniem; nie przestrzykiwać krwi z probówki do probówki; nie pobierać krwi z krwiaków; nigdy nie wstrząsać probówką; pobierać krew zgodnie z omawianymi zasadami i instrukcją producenta."
+    },
+    "createdAt": "2024-09-06T13:47:31.897Z",
+    "updatedAt": null
+  },
+  {
+    "id": "46fe62d8-75f7-46de-9b26-d88898ec9346",
+    "data": {
+      "name": "Okład wysychający",
+      "algorithm": [
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Udziel pacjentowi informacji o celu zabiegu, przebiegu i potrzebie pozostawania w łóżku (potrzeba skorzystania z toalety)."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Ułóż pacjenta w wygodnej, bezpiecznej pozycji, zapewnij dostęp do planowanego miejsca zabiegu."
+        },
+        {
+          "step": "Zmocz warstwę waty przygotowaną wodą i odciśnij jej nadmiar, wyrównaj powierzchnię waty, ułóż watę na okolicę objętą leczeniem, na warstwie mokrej ułóż warstwę suchą, tak, aby wszystkie warstwy luźno do siebie przylegały, przymocuj okład w zależności od miejsca jego zastosowania."
+        },
+        {
+          "step": "Obserwuj reakcję pacjenta na zabieg."
+        },
+        {
+          "step": "Zapewnij pacjentowi dostęp do dzwonka alarmowego i poinstruuj o konieczności zgłaszania wszelkich przejawów złego samopoczucia."
+        },
+        {
+          "step": "Po upływie 2-3 godzin od rozpoczęcia zabiegu usuń wszystkie warstwy okładu."
+        },
+        {
+          "step": "Oceń stan skóry miejsca leczonego (skóra po zabiegu powinna być sucha i chłodna)."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonanie zabiegu."
+        }
+      ],
+      "procedure": "Okład wysychający jest to zabieg terapeutyczny polegający na miejscowym stosowaniu zimna wilgotnego. Celem stosowania okładu wysychającego jest uzyskanie działania przeciwbólowego i uspakajającego, obniżenie temperatury ciała, zahamowanie procesu zapalnego, zmniejszenie napięcia mięśni. Okład wysychający obniża temperaturę ciała o ok. 1 o c. w czasie 2-3 godzin. Czas ten w gorączce ulega skróceniu, a w zaburzeniach krążenia obwodowego wydłużeniu. Okład wysychający - wskazania: Początkowy okres stanu zapalnego w obrębie tkanek miękkich, Nerwobóle, Stany zapalne układu oddechowego, Grypa, Wysięki zapalne w obrębie jamy brzusznej i miednicy mniejszej, Kamica wątrobowa, Bolesne miesiączkowanie, żylaki odbytu. Okład wysychający - przeciwwskazania: Nieustabilizowane krążenie krwi, zaburzenia dopływu krwi tętniczej. Sprzęt: warstwa waty rozmiarem dostosowana do wielkości miejsca leczenia, warstwa ligniny - większa od warstwy waty po 2 cm z każdej strony, miska z chłodną wodą (temp. 21-27 o c, kontrola temperatury wody), bandaż, rękawice jednorazowe niejałowe."
+    },
+    "createdAt": "2024-09-06T13:47:28.789Z",
+    "updatedAt": null
+  },
+  {
+    "id": "501ca47b-543a-4cd2-be54-58df5683733a",
+    "data": {
+      "name": "Zmiana opatrunku wokół tracheostomii w pierwszych 14 dniach od zabiegu",
+      "algorithm": [
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co zamierzasz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Odwiąż rurkę tracheostomijną."
+        },
+        {
+          "step": "Wyjmij ostrożnie spod rurki kompres tracheotomijny."
+        },
+        {
+          "step": "Zdejmij rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Otwórz w sposób aseptyczny kompres tracheotomijny, gaziki, pęsetę."
+        },
+        {
+          "step": "Spryskaj gaziki środkiem antyseptycznym."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe jałowe."
+        },
+        {
+          "step": "Chwyć pęsetą gaziki i umyj okolicę tracheostomii."
+        },
+        {
+          "step": "Podłóż pod kołnierz rurki tracheostomijnej za pomocą pęsety kompres tracheotomijny."
+        },
+        {
+          "step": "Umocuj rurkę za pomocą opaski tracheotomijnej."
+        },
+        {
+          "step": "Zdejmij jałowe rękawiczki."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        }
+      ],
+      "procedure": "Zmiana opatrunku wokół tracheostomii różni się w zależności od tego, ile czasu upłynęło od zabiegu tracheotomii. 14 dni to okres jaki rana potrzebuje, aby się zagoić. Traktujemy w tym okresie tracheostomię jak każdą ranę pooperacyjną, a więc podczas zmiany kompresu tracheostomijnego musimy zachować zasady aseptyki i antyseptyki. Zestaw: środek do dezynfekcji rąk; rękawiczki niejałowe; rękawiczki jałowe; środek antyseptyczny; kompres tracheotomijny; jałowe gaziki; jałowa pęseta; opaska do rurki tracheostomijnej."
+    },
+    "createdAt": "2024-09-06T13:47:30.316Z",
+    "updatedAt": null
+  },
+  {
+    "id": "52952be5-b6ad-4dca-a9ae-6a0e93fd4b74",
+    "data": {
+      "name": "Technika mycia i dezynfekcji rąk według schematu AYLIFFE'A",
+      "algorithm": [
+        {
+          "step": "Nanieść odpowiednią porcję mydła lub środka dezynfekcyjnego."
+        },
+        {
+          "step": "Dezynfekować ręce wg schematu- każdy etap to pięć ruchów 'tam i z powrotem'"
+        },
+        {
+          "step": "Pocieranie dłoni o dłoń"
+        },
+        {
+          "step": "Pocieranie części prawej dłoni o powierzchnię grzbietową lewej dłoni, zmiana rąk."
+        },
+        {
+          "step": "Pocieranie grzbietowej powierzchni zgiętych palców jednej dłoni pod zagiętymi palcami drugiej dłoni."
+        },
+        {
+          "step": "Kciuk prawej dłoni ujęty w lewą dłoń, wykonywać ruchy obrotowe wokół kciuka, zmiana rąk."
+        },
+        {
+          "step": "Okrężne pocieranie opuszków palców prawej dłoni w zagłębieniu dłoniowym lewej dłoni, zmiana dłoni."
+        }
+      ],
+      "procedure": "Mycie rąk tą techniką powinno zająć około jednej minuty. W każdym etapie należy wykonać pięć ruchów tam i z powrotem w celu dokładnego dotarcia do miejsc pomijanych. Dla lepszego i dokładniejszego zdezynfekowania rąk należy zdjąć biżuterie i dodatki, a także wszelkie środki znajdujące się na paznokciach (tj. tipsy, lakiery). Po myciu rąk tym sposobem nie należy dotykać brudnego kranu. Wodę najlepiej zakręcić wtedy za pomocą łokcia bądź, jeżeli nie ma takiej możliwości, można użyć na przykład papierowego ręcznika."
+    },
+    "createdAt": "2024-10-04T13:21:37.864Z",
+    "updatedAt": null
+  },
+  {
+    "id": "63162cfc-2ef6-40de-a322-250a43ca4b32",
+    "data": {
+      "name": "Opieka nad pacjentem z zaburzeniami połykania (zasady bezpiecznego karmienia osób z zaburzeniami połykania)",
+      "algorithm": [
+        {
+          "step": "Praktyczne rady przy zaburzeniach połykania: "
+        },
+        {
+          "step": "W przypadku krztuszenia się przy piciu płynów należy: unikać odchylania głowy do tyłu podczas picia, połykanie z brodą pochyloną w kierunku mostka, wykonać połykanie nagłośniowe, pić płyny pojedynczymi i / lub małymi łykami. Można również zagęści płyny, pić gazowane napoje, napoje o wyrazistej temperaturze, poić przez słomkę (najlepiej bez przegubu), z filiżanki o dużej średnicy lub łyżeczką, unikać mieszanej konsystencji posiłków (np. zupa z ryżem, krupnik). Rozwiązaniem może być również miksowanie zup."
+        },
+        {
+          "step": "W przypadku uczucia zalegania kęsa w gardle lub konieczności kilkakrotnego przełknięcia pojedynczego kęsa pokarmu czy uczucia przeszkody podczas przełykania można wykonać następujące czynności: silnie przełknąć jednocześnie opierając się łokciami na stole; połykać z brodą pochyloną do mostka; można wykonać manewr Mendelsona polegający na utrzymaniu krtani przez około dwie sekundy w górze po połknięciu. "
+        },
+        {
+          "step": "Można również spróbować „pusto” przełknąć po każdym kęsie, popijać po każdym kęsie stałego pokarmu, odchrząkiwać i przełykać po każdym kęsie, jeść małymi kęsami, dodawać do pokarmów stałych past i sosów lub eliminować z diety pokarmy stałe, a zamiast tego zastosować pokarmy mielone lub papkowate."
+        },
+        {
+          "step": "Można również podjąć próbę ćwiczeń wzmacniających język i przednią ścianę gardła. "
+        },
+        {
+          "step": "W przypadku kichania lub wycieku z nosa podczas jedzenia można spróbować: silnie przełknąć oraz oprzeć łokcie na stole; zmniejszyć jednorazową objętości łykanej porcji, zagęścić płyny, a także podjąć próbę ćwiczeń wzmacniających podniebienie (np. długa fonacja `k`). Niezwykle ważna jest toaleta jamy ustnej w celu usunięcia reszek pokarmowych, aby zapobiec infekcjom jamy ustnej. Zabieg należy wykonywać rano i wieczorem, po każdym posiłku oraz po karmieniu przez sondę żołądkową. Higiena jamy ustnej i częste jej nawilżanie istotnie zwiększa apetyt, ilość spożywanych pokarmów, a także zapobiega zmianom grzybiczym śluzówek. Zmiany grzybicze charakteryzują się typowym białoszarym nalotem na błonach śluzowych oraz na języku. Często grzybicy towarzyszy obrzęk i bolesność, a chory odmawia przyjmowania posiłków. Należy wówczas zastosować środki przeciwgrzybicze. W przypadku suchości jamy ustnej, polecanymi sposobami pomocy są: stosowanie kostek lodu lub zamrożonych kawałków ananasa do ssania, podawanie łyżeczką bardzo małych ilości płynów, smarowanie warg wazeliną lub oliwą z oliwek. Toaleta jamy ustnej powinna być dostosowana do stanu chorego. Płukanie jamy ustnej wykonujemy tylko u chorych przytomnych."
+        },
+        {
+          "step": "Postępowanie w stanie nagłym - zakrztuszenie się: "
+        },
+        {
+          "step": "W przypadki zakrztuszenia się, należy stanąć nieco z boku za poszkodowanym."
+        },
+        {
+          "step": "Jedną ręką podeprzeć klatkę piersiową poszkodowanego i pochylić go lekko do przodu. Drugą ręką mocno uderzyć poszkodowanego 5 razy między łopatkami. "
+        },
+        {
+          "step": "Jeśli uderzenia nie pomogą , należy stanąć za poszkodowanym i objąć go obiema rękami. Następnie ułożyć tak złożone dłonie w górnej części brzucha poszkodowanego (nad pępkiem) i pochylić poszkodowanego do przodu."
+        },
+        {
+          "step": "Zdecydowanym, krótkim ruchem podciągnąć ułożone na brzuchu ręce do siebie i do góry, w razie potrzeby - powtórz 5 razy. "
+        },
+        {
+          "step": "Następnie wykonuje się naprzemiennie 5 uderzeń między łopatki i 5 uciśnięć nadbrzusza, dopóki poszkodowany nie przestanie się krztusić."
+        }
+      ],
+      "procedure": "Właściwa pozycja podczas karmienia lub samodzielnego jedzenia: osoba karmiona siedzi prosto, z głową ustawioną na wprost i lekko ku dołowi; osoba karmiąca siedzi i podaje pokarm wprost do ust od przodu. Dlaczego taka pozycja jest preferowana? Ponieważ osoba karmiona źle widzi pokarm podawany od boku i może mieć kłopot z właściwym rozmieszczeniem go w ustach, co może sprzyjać zachłyśnięciu. Ponadto skręt głowy na bok podczas jedzenia może utrudnić połykanie i przyczynić się do zachłyśnięcia. Natomiast uniesienie głowy ku górze otwiera dostęp do dróg oddechowych i stwarza ryzyko zachłyśnięcia. Dlatego osoba karmiąca nie powinna stać! Właściwa pozycja po samodzielnym jedzeniu lub karmieniu: osoba karmiona powinna pozostać w pozycji siedzącej lub półsiedzącej przez co najmniej 30 minut po posiłku. Dlaczego powinna być taka pozycja? Ponieważ wysoka pozycja po jedzeniu zapobiega cofaniu się treści żołądkowej do przełyku i gardła i ma istotne znaczenie w profilaktyce zachłystowych zapaleń płuc. Dlaczego podajemy małe kęsy pokarmu oraz małe łyki płynu? Ponieważ trudności z połykaniem nasilają się wraz z rozmiarem kęsa lub jednorazową objętością płynu. Karmienie małymi kęsami i małymi łykami zmniejsza ryzyko zachłyśnięcia się. Bodźce zewnętrzne ograniczyć do niezbędnego minimum. Dlaczego karmienie powinno odbywać się w całkowitym spokoju i bez pośpiechu? Wszelkie dodatkowe bodźce takie jak np.: grające radio, telewizor, nawet rozmowa w sąsiednim pokoju, mogą na tyle absorbować uwagę osoby karmionej, że nie będzie ona w stanie dostatecznie skupić się na jedzeniu. Dlaczego osoba karmiona nie powinna mówić podczas jedzenia? Mówienie podczas jedzenia absorbuje uwagę osoby karmionej i dodatkowo utrudnia koordynację połykania z oddechem, przez co zwiększa ryzyko zachłyśnięcia. Eliminacja z diety pokarmów o „konsystencji ryzykownej”. Należy unikać pokarmów / konsystencji, przy których połykaniu najłatwiej można się zachłysnąć. Najbardziej niebezpieczne są niejadalne części pokarmów: np. kości, ości, chrząstki, ścięgna, pestki owoców, części łupin; Karmienie pokarmami o jednolitej konsystencji. Najbezpieczniejsze są pokarmy o jednolitej konsystencji (tzn. pokarmy bez mieszania różnych konsystencji np.: zupa bez pływających warzyw, jogurt bez kawałków owoców, czy musli, kalafior bez twardego głąba, mięso bez twardych włókien). Pokarm powinien dać się przeżuć do postaci gładkiej papki. W indywidualnych przypadkach zalecenia dotyczące diety mogą się różnić w zależności od ryzyka aspiracji poszczególnych konsystencji pokarmu. Połykanie leków. Bezpieczniejsze jest połykanie leków z pokarmem o konsystencji papkowatej, niż popijanie płynem. U osób z zaburzeniami połykania popijanie leków płynem zwiększa ryzyko ich aspiracji. Zaprzestanie karmienia, gdy pojawia się kasze/ lub krztuszenie się. Należy przerwać posiłek, dać choremu odpocząć i wrócić do karmienia za jakiś czas. Rozłożenie jedzenia na kilka mniejszych posiłków w ciągu dnia. Dlaczego? U osób, które mają trudności z połykaniem, każdy posiłek jest dużym wysiłkiem. W miarę trwania posiłku struktury odpowiedzialne za połykanie mogą ulegać zmęczeniu. Może się to objawiać przejściowym pogorszeniem sprawności połykania, czego dowodem jest krztuszenie się czy kaszel. Dalsze karmienie zwiększa ryzyko zachłyśnięcia. Jeżeli krztuszenie pojawia się od razu na początku posiłku i spełnione są wszystkie pozostałe zasady bezpiecznego karmienia, należy pilnie zgłosić to pielęgniarce lub lekarzowi"
+    },
+    "createdAt": "2024-09-06T13:47:30.795Z",
+    "updatedAt": null
+  },
+  {
+    "id": "70a39fb4-cc1b-4153-b55a-41037b0b9142",
+    "data": {
+      "name": "Podanie leków doodbytniczo",
+      "algorithm": [
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co chcesz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę chorego."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Poucz chorego, że w wypadku problemów z włożeniem czopka należy lekko przeć na stolec, dzięki czemu otwiera się zwieracz odbytu."
+        },
+        {
+          "step": "Zachęć chorego, aby, jeśli to możliwe przed założeniem czopka oddał stolec (jeśli wskazaniem nie było zaparcie)."
+        },
+        {
+          "step": "Poinformuj o konieczności wstrzymania się przed oddawaniem stolca bezpośrednio po założeniu czopka."
+        },
+        {
+          "step": "Poucz chorego, że po założeniu czopka należy zewrzeć silnie mięśnie pośladków."
+        },
+        {
+          "step": "Poinformuj, że zabieg może być nieprzyjemny, ale nie bolesny."
+        },
+        {
+          "step": "Poucz chorego, że w czasie niemożności utrzymania czopka w odbycie ulgę przynosi wykonywanie głębokich spokojnych oddechów przez usta. "
+        },
+        {
+          "step": "Ułóż chorego w ustalonej wcześniej pozycji, najlepiej na lewym boku z kolanami przyciągniętymi do klatki piersiowej."
+        },
+        {
+          "step": "Okryj chorego lub zastaw łóżko parawanem."
+        },
+        {
+          "step": "Wyjmij czopek z opakowania."
+        },
+        {
+          "step": "Zanurz obły końca czopka w wodzie."
+        },
+        {
+          "step": "Wsuń czopek tuż za zwieracz odbytu."
+        },
+        {
+          "step": "Poucz chorego, żeby jak najdłużej zatrzymał czopek (co najmniej 15 min)."
+        },
+        {
+          "step": "Podłóż basen w razie potrzeby."
+        },
+        {
+          "step": "Kontroluj reakcję pacjenta na lek, czy lek przyniósł oczekiwany skutek."
+        },
+        {
+          "step": "Obserwuj wystąpienia ewentualnych skutków ubocznych."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Zdejmij rękawiczki."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonanie zabiegu."
+        }
+      ],
+      "procedure": "Zabieg terapeutyczny polegający na podaniu leku w postaci czopków do odbytu. Wykonywany na podstawie indywidualnej karty zleceń lekarskich. Wskazania: brak możliwości podania leku inną drogą, zadziałanie na zmienioną chorobowo śluzówkę odbytnicy, hemoroidy, zaparcia, stany zapalne jelit, nieżyt odbytu, uspokojenie, obniżenie poziomu potasu w organizmie. Zestaw: Lek w postaci czopka, płatki ligniny, rękawiczki jednorazowego użytku, basen i papier toaletowy - w zależności od celu zabiegu, parawan "
+    },
+    "createdAt": "2024-09-06T13:47:31.606Z",
+    "updatedAt": null
+  },
+  {
+    "id": "8f6978af-04ce-4576-91c2-d34a8dfaa781",
+    "data": {
+      "name": "Zasady tlenoterapii",
+      "algorithm": [
+        {
+          "step": "Podanie tlenu przez cewnik donosowy („ wąsy tlenowe”): Przygotuj kompletny zestaw."
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw."
+        },
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Wyjaśnij, co zamierzasz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe (opcjonalnie)."
+        },
+        {
+          "step": "Wykonaj pomiar saturacji za pomocą pulsoksymetru."
+        },
+        {
+          "step": "Wmontuj przepływomierz w panel ze źródłem tlenu."
+        },
+        {
+          "step": "Ustaw przepływ tlenu zgodnie ze zleceniem lekarskim. Potwierdzeniem prawidłowego wmontowania przepływomierza jest bulgotanie wody w nawilżaczu do tlenu."
+        },
+        {
+          "step": "Połącz dren z przepływomierzem."
+        },
+        {
+          "step": "Załóż wąsy tlenowe - kaniule włóż do nosa, dreny przeprowadź za uszami, ściągnij dreny zaciskiem."
+        },
+        {
+          "step": "Unieś wyżej wezgłowie pacjenta (jeśli nie ma przeciwwskazań)."
+        },
+        {
+          "step": "Skontroluj saturację."
+        },
+        {
+          "step": "Zapytaj o samopoczucie pacjenta. Poinformuj pacjenta o konieczności zgłaszania niepokojących objawów."
+        },
+        {
+          "step": "Zdejmij rękawiczki (jeśli z nich korzystałeś)."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonanie procedury."
+        }
+      ],
+      "procedure": "Podawaj tlen zawsze nawilżony. Służą do tego specjalne urządzenia do nawilżania gazów. Podając tlen zadbaj o to, aby kaniule nie uszkadzały okolicy za uszami czy nie uwierały pacjenta. Możesz w tych miejscach umieścić kompres włókninowy między skórą a kaniulą. Pamiętaj o toalecie jamy nosowej i ustnej podawanie tlenu pomimo jego nawilżania może powodować wysychanie błon śluzowych i różnego rodzaju zmiany w jamie ustnej. Jeśli to możliwe zadbaj o odpowiednie ułożenie pacjenta podczas tlenoterapii. Najlepsza jest pozycja wysoka lub półwysoka. Wówczas płuca mają więcej miejsca na rozprężanie. MW przypadku tlenoterapii w domu stosuj przepływ zlecony przez pielęgniarkę lub lekarza, ale nie większy niż wymaga tego pacjent, ponieważ tlen jest toksyczny i powoduje różnego rodzaju powikłania. Kontroluj okolicę za uszami i pod głową pod kątem występowania odleżyn i innych uszkodzeń skóry. W razie wystąpienia u pacjenta niepokojących objawów skontroluj skuteczność tlenoterapii za pomocą pulsoksymetru. Sprzęt do tlenoterapii - źródła tlenu: Szpitalne (źródła czystego tlenu) - tlen ciekły lub gazowy (sprężony w butlach o różnej pojemności), dostarczany do pacjenta przez centralną instalację tlenową lub z przenośnej butli; Pozaszpitalne (w tlenoterapii domowej): koncentratory - zwiększają stężenie tlenu pobieranego z otaczającego powietrza (do 85-95%) i dostarczają go w sposób ciągły choremu."
+    },
+    "createdAt": "2024-09-06T13:47:30.179Z",
+    "updatedAt": null
+  },
+  {
+    "id": "94e60552-7c0e-46ab-a9c0-606d10c0049c",
+    "data": {
+      "name": "Odłączanie kroplowego wlewu dożylnego",
+      "algorithm": [
+        {
+          "step": "Higiena rąk zgodnie z wytycznymi WHO."
+        },
+        {
+          "step": "Przywitanie się, przedstawienie się."
+        },
+        {
+          "step": "Sprawdzenie tożsamości pacjenta."
+        },
+        {
+          "step": "Poinformowanie o zamiarze wykonania procedury i zapytanie o zgodę."
+        },
+        {
+          "step": "Otwarcie opakowania z koreczkiem."
+        },
+        {
+          "step": "Zaciśnięcie zacisku aparatu po zakończeniu przetaczania płynu."
+        },
+        {
+          "step": "Podłożenie jałowego gazika pod wylot wenflonu."
+        },
+        {
+          "step": "Odłączenie aparatu od kaniuli poprzez odkręcenie."
+        },
+        {
+          "step": "Wkręcenie koreczka w ujście wenflonu. Palcem wskazującym ręki niedominującej uciśnięcie skóry w okolicy końca kaniuli z jednoczesnym przytrzymaniem kciukiem skrzydełka wenflonu. Ręką dominującą wkręcenie koreczka Luer-Lock w ujście wenflonu. "
+        },
+        {
+          "step": "Usunięcie gazika spod wylotu wenflonu i wyrzucenie go do worka na odpady medyczne. "
+        },
+        {
+          "step": "Segregacja sprzętu zgodnie z procedurą wewnętrzną jednostki."
+        },
+        {
+          "step": "Zdjęcie rękawic jednorazowych niejałowych."
+        },
+        {
+          "step": "Higiena rąk zgodnie z wytycznymi WHO."
+        },
+        {
+          "step": "Udokumentowanie wykonania zabiegu w dokumentacji pacjenta."
+        }
+      ],
+      "procedure": "Sprzęt, narzędzia i materiały potrzebne do odłączania wlewu kroplowego dożylnego: wózek z zawieszonym workiem na odpady medyczne i komunalne; środek do dezynfekcji rąk; rękawiczki diagnostyczne (niejałowe); koreczek Luer Lock jednorazowy sterylny (jeśli nie zabezpieczono wenflonu korkiem niekapkiem); jałowy gazik."
+    },
+    "createdAt": "2024-09-06T13:47:31.731Z",
+    "updatedAt": null
+  },
+  {
+    "id": "98abacb5-210c-489f-b039-3ffca0b8c0a0",
+    "data": {
+      "name": "Zasady pielęgnacji gastrostomii przez pierwsze 14 dni od założenia",
+      "algorithm": [
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż jałowe rękawiczki."
+        },
+        {
+          "step": "Zdejmij zacisk mocujący. Zapamiętaj, na jakiej wysokości jest położona zewnętrzna płytka mocująca."
+        },
+        {
+          "step": "Poluzuj płytkę mocującą."
+        },
+        {
+          "step": "Zdezynfekuj okolicę stomii środkiem antyseptycznym, np. na bazie octenidyny."
+        },
+        {
+          "step": "Dokładnie osusz skórę."
+        },
+        {
+          "step": "Oczyść również elementy PEG-a (dren, płytkę mocującą)."
+        },
+        {
+          "step": "Obracaj PEG-a 0 1 80 0 w obu kierunkach - w prawo i w lewo."
+        },
+        {
+          "step": "Wsuwaj w kierunku światła żołądka oraz wysuwaj w kierunku skóry zgłębnik na głębokość ok. 1,5 cm."
+        },
+        {
+          "step": "Pod zewnętrzną płytkę mocującą umieść jałowy opatrunek w kształcie litery Y tak, aby zostawić odrobinę luzu ok. 5 mm płytką mocującą."
+        }
+      ],
+      "procedure": "Pielęgnację przetoki wykonujemy minimum raz na dobę. Przez pierwsze 7 - 14 dni opatrunek należy zmieniać codziennie. Przez pierwsze 24 godziny zewnętrzna płytka mocująca powinna przylegać do skóry jednak niezbyt ściśle, aby nie doszło do niedokrwienia obszaru pomiędzy płytkami zewnętrzną i wewnętrzną, która tkwi w świetle żołądka. Po 24 godzinach należy poluzować zewnętrzną płytkę mocującą na około 5 mm w celu umieszczenia opatrunku. Przez pierwsze 72 godziny (3 doby) nie należy zmieniać pozycji PEG-a, aby nie rozkrwawić stomii. Po 3 dniach należy rozpocząć obracanie PEG-a wokół osi 0 1 80 0 . Po 7 dniach od założenia należy dodatkowo wsuwać (w kierunku światła żołądka) i wysuwać (w kierunku skóry) na ok. 1,5-2 cm."
+    },
+    "createdAt": "2024-09-06T13:47:29.752Z",
+    "updatedAt": null
+  },
+  {
+    "id": "9941e376-1372-4bec-b961-1f8fdd7e72d0",
+    "data": {
+      "name": "Ogólne zasady transportu pacjenta za pomocą podnośnika",
+      "algorithm": [
+        {
+          "step": "Rozpoczynanie podnoszenia"
+        },
+        {
+          "step": "Pamiętaj, że wszystkie paski powinny być wyciągane do góry równocześnie."
+        },
+        {
+          "step": "Upewnij się, że pacjent nie odczuwa bolesnego ucisku pod ramionami, biodrami i udami - zaleca się stosowanie nosidła z szerokimi paskami."
+        },
+        {
+          "step": "Sprawdź, czy pacjent znajduje się we właściwej pozycji, jeśli to konieczne, podeprzyj mu głowę i nogi w trakcie podnoszenia. Uważaj, by podnoszony pacjent nie kołysał się. Jeżeli w konstrukcji podnośnika nie ma sztywnego ramienia zaczepowego, które ogranicza ruch wahadłowy, to można użyć specjalnie usztywnionego nosidła lub stabilizować pacjenta ręką."
+        },
+        {
+          "step": "Gdy pacjent jest już na odpowiedniej wysokości, należy zsunąć jego nogi z łóżka, jednocześnie uważając, aby nie uderzył nimi o podnośnik."
+        },
+        {
+          "step": "Kończyny górne pacjenta podczas przenoszenia mogą spoczywać w hamaku lub na brzuchu chorego lub może on trzymać się pasów - daje to pacjentowi dodatkową pewność, że się czegoś trzyma, a nie jest zawieszony w powietrzu. Następnie należy złapać za uchwyty podnośnika i odjechać, sterując urządzeniem tak, by pacjent znalazł się w zaplanowanym miejscu, np. bezpośrednio nad siedziskiem wózka inwalidzkiego."
+        },
+        {
+          "step": "Sadzając pacjenta na wózku inwalidzkim należy wykonać następujące czynności:"
+        },
+        {
+          "step": " Po ustawieniu podnośnika z pacjentem stań z tyłu za wózkiem, złap za uchwyty znajdujące się z tyłu szelek nosidła i opuść podopiecznego w dół pilotem, pilnując jednocześnie, aby się nie kołysał i usiadł bezpiecznie."
+        },
+        {
+          "step": "Odepnij nosidło - po posadzeniu pacjenta na siedzisku opuść ramię podnośnika nieco niżej, co pozwoli na łatwiejsze odczepienie pasów nosidła. Podczas tego działania uważaj, by ramię nie uderzyło chorego w głowę. Gdy widać, że pasy luźno zwisają, można wypiąć je z uchwytów i odsunąć podnośnik od pacjenta. Wyjmij nosidło - najpierw wyciągnij pasy spod kończyn dolnych, a następnie usuń całe nosidło za pleców pacjenta."
+        }
+      ],
+      "procedure": "Przed transportem sprawdź naładowanie podnośnika. Pamiętaj: podnośnik nie działa podczas ładowania. Akumulatory muszą był ładowane w regularnych odstępach czasu, aby zapewnić prawidłowe działanie podnośnika (należy ładować podnośnik przynajmniej raz w miesiącu). Aby transport był bardziej stabilny otwieraj podstawę podnośnika (ułóż nogi podnośnika w pozycji rozwartej) Pacjent podczas transportu powinien być zwrócony do przodu. Unikaj gwałtownych ruchów. Podczas podnoszenia, opuszczania i parkowania konieczne jest zablokowanie tylnych kół hamulcem."
+    },
+    "createdAt": "2024-09-06T13:47:30.052Z",
+    "updatedAt": null
+  },
+  {
+    "id": "9b297333-22fc-4cce-9dbf-c94570a8a370",
+    "data": {
+      "name": "Okład rozgrzewający",
+      "algorithm": [
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Udziel pacjentowi informacji o celu zabiegu, przebiegu i potrzebie pozostawania w łóżku (potrzeba skorzystania z toalety)."
+        },
+        {
+          "step": "Uzyskaj zgodę pacjenta."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Ułóż pacjenta w wygodnej, bezpiecznej pozycji, zapewnij dostęp do planowanego miejsca zabiegu."
+        },
+        {
+          "step": "Posmaruj miejsce założenia okładu wazeliną."
+        },
+        {
+          "step": "Zmocz warstwę waty przygotowanym płynem, odciśnij nadmiar płynu, wyrównaj powierzchnię waty, ułóż warstwę mokrą okładu na okolicę leczoną na warstwie mokrej ułóż ceratkę , a następnie warstwę suchą , tak aby wszystkie warstwy ściśle do siebie przylegały, przymocuj okład w zależności od leczonego miejsca, np. bandażem."
+        },
+        {
+          "step": "Obserwuj reakcję pacjenta na zabieg."
+        },
+        {
+          "step": "Zapewnij pacjentowi dostęp do dzwonka alarmowego i poinstruuj go o konieczności zgłaszania wszelkich przejawów złego samopoczucia."
+        },
+        {
+          "step": "Uporządkuj zestaw po zabiegu."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Po upływie 6-8 godzin od rozpoczęcia zabiegu usuń warstwę mokrą i ceratkę okładu . Warstwa mokra i skóra powinny być po zabiegu wilgotne i ciepłe."
+        },
+        {
+          "step": "Suchą warstwę okładu pozostaw na miejscu leczenia umocowaną bandażem na kolejne 30 min. Po tym czasie zdejmij warstwy i przeznacz do utylizacji."
+        }
+      ],
+      "procedure": "Celem: zmniejszenie napięcia mięśni, zmniejszenie bólu, leczenie procesu zapalnego, przyśpieszenie przemiany materii, zwiększenie odporności komórek, pobudzenie czynności jelit z zachowaną perystaltyką, np. w zaparciach ,przyśpieszenie powstawania ropy. Okład rozgrzewający składa się z trzech warstw: wilgotnej, ceratki i suchej. Warstwa mokra okładu może być nasączona wodą lub wodą, np. z dodatkiem octanu glinu. Warstwa mokra utrzymuje swoją wilgotność 6-8 godzin i tyle czasu okład powinien być utrzymany na miejscu leczonym. Okład rozgrzewający - wskazania Stany zapalne żył Zrosty po wstrzyknięciach Zakrzepowe zapalenie żył Czyraki, zastrzały, ropowice (przyśpieszenie powstania ropy) Angina Stan zapalny ucha środkowego Zapalenie płuc i oskrzeli, jeśli temperatura nie przekracza 38 0 C Okład rozgrzewający - przeciwwskazania Początkowy okres urazu Choroba nowotworowa Krwotok „Ostry brzuch” (ostre chirurgiczne choroby jamy brzusznej - niedrożność jelit, zapalenie wyrostka robaczkowego) Sprzęt: warstwa waty rozmiarem dostosowana do wielkości miejsca terapii, cerata - większa od warstwy waty po 2 centymetry z każdej strony, warstwa ligniny większa od ceratki po 2 centymetry z każdej strony, miska z letnią wodą (28-33 0 C), dodatki do wody (octan glinu, 3% Natrium Bicarbonicum), wazelina, bandaż, worki na odpady medyczne, parawan (jeśli to konieczne), rękawiczki jednorazowe niejałowe"
+    },
+    "createdAt": "2024-09-06T13:47:28.657Z",
+    "updatedAt": null
+  },
+  {
+    "id": "9d8fafa8-63d4-4855-9bfc-5ff7de2f6b58",
+    "data": {
+      "name": "Dobowa zbiórka moczu",
+      "algorithm": [
+        {
+          "step": "Przygotowanie zestawu oraz podpisanie pojemnika datą i godziną rozpoczęcia i zakończenia dobowej zbiórki moczu. Jeśli DZM wykonujemy w podmiocie leczniczym oznaczenie pojemnika dodatkowo imieniem i nazwiskiem oraz datą urodzenia pacjenta."
+        },
+        {
+          "step": "Sprawdzenie tożsamości pacjenta."
+        },
+        {
+          "step": "W przypadku chorych samodzielnych i niezacewnikowanych poinformowanie pacjenta o konieczności oddawania każdej porcji moczu w czasie zbierania zbiórki do pojemnika do DZM, warunkach przechowywania moczu oraz oddaniu pierwszej porcji moczu do toalety; -udostępnienie kaczki/basenu do której chory będzie oddawał mocz i następnie przelewał go do pojemnika do DZM. W przypadku chorych niesamodzielnych i za cewnikowanych: -zlanie pierwszej porcji moczu z worka do toalety; -wymiana worka na mocz na nowy; -zlewanie moczu o określonej porze do pojemnika do DZM (w przypadku konieczności zastosowania środka konserwującego należy go dodać do pojemnika, gdzie znajduje się już porcja moczu rozpoczynająca zbiórkę) aż do czasu zakończenia DZM."
+        },
+        {
+          "step": "Dokładne wymieszanie moczu w pojemniku zbiorczym do DZM i odlanie do jednorazowego pojemnika 50-100 ml moczu."
+        },
+        {
+          "step": "Oznaczenie jednorazowego pojemnika imieniem i nazwiskiem pacjenta oraz informacją o objętości zebranego moczu (odczytaj pojemność z podziałki na ściankach naczynia) oraz o godzinie rozpoczęcia i zakończenia zbiórki."
+        },
+        {
+          "step": "Próbkę moczu w jednorazowym pojemniku dostarcz jak najszybciej do punktu pobrań (jeśli DZM jest wykonywana w domu) lub do laboratorium (jeśli zakładzie opieki stacjonarnej)."
+        },
+        {
+          "step": "Zgłoszenie uwag w zakresie wydalania moczu pielęgniarce lub lekarzowi."
+        }
+      ],
+      "procedure": "Zasady dobowej zbiórki moczu: Dobową zbiórkę moczu należy rozpocząć w godzinach porannych i prowadzić przez 24 godziny, czyli np. zbiórka rozpoczęta w poniedziałek o godzinie 8:00 powinna zakończyć się we wtorek o godzinie 8:00. (Ostatnią porcją moczu, która zostanie oddana do pojemnika jest poranna próbka moczu oddana w drugim dniu prowadzenia zbiórki.) Przy pomiarze trwającym od 7:00 rano (zazwyczaj) pierwszą porcję moczu oddaną ok. 7:00 wylewa się do toalety, pomiar rozpoczyna się od kolejnej mikcji, doba zbiórki kończy się ok. 7:00 dnia następnego. Należy pouczyć pacjenta o konieczności zbierania do pojemnika każdej wydalonej w ciągu doby porcji moczu. W przypadku pominięcia którejś z porcji moczu, zbiórkę należy przerwać i rozpocząć od nowa, następnego dnia, a zebrany już mocz wylać. Niektóre parametry oznaczane w dobowej zbiórce moczu wymagają zastosowania środka konserwującego. Przed przystąpieniem do zbiórki moczu należy uzyskać informację od personelu punktu pobrań, czy środek taki jest konieczny i czy można go otrzymać w punkcie pobrań. W przypadku konieczności zastosowania środka konserwującego należy go dodać do pojemnika, gdzie znajduje się już porcja moczu rozpoczynająca zbiórkę. W czasie trwania dobowej zbiórki moczu pojemnik należy przechowywać w lodówce lub w miejscu, gdzie temperatura wynosi ok. 40 C. Jeśli pacjent jest za cewnikowany, to przed pomiarem wymienia się worek na mocz. Wymianę worka na mocz wykonuje się w zależności od zaleceń producenta. Najczęściej jest to 3 dni. Worek należy opróżniać raz dziennie lub w zależności od potrzeby."
+    },
+    "createdAt": "2024-09-06T13:47:28.049Z",
+    "updatedAt": null
+  },
+  {
+    "id": "a7eced65-340a-4a7a-9f36-0acf3589ca74",
+    "data": {
+      "name": "Pomiar glikemii",
+      "algorithm": [
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Przywitaj się, przedstaw się."
+        },
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Poinformuj pacjenta o zamiarze wykonania procedury."
+        },
+        {
+          "step": "Zapytaj o zgodę."
+        },
+        {
+          "step": "Poproś pacjenta aby umył ręce ciepłą wodą z mydłem oraz dokładnie je osuszył (ciepło powoduje rozszerzenie naczyń, przez co zwiększa się przepływ krwi w naczyniach włosowatych i ułatwia pobieranie krwi, pozostawienie mokrej skóry może rozcieńczyć uzyskaną kroplę krwi)."
+        },
+        {
+          "step": "Otwórz opakowanie z jałowym gazikiem."
+        },
+        {
+          "step": "Wyjmij pasek testowy z opakowania zbiorczego."
+        },
+        {
+          "step": "Natychmiast zamknij opakowanie zbiorcze."
+        },
+        {
+          "step": "Umieść pasek testowy w glukometrze."
+        },
+        {
+          "step": "Nakłuj boczną powierzchnię opuszki palca."
+        },
+        {
+          "step": "Po pojawieniu się na ekranie glukometru migającej kropli nałóż kroplę krwi na pasek testowy lub przyłóż kroplę do końcówki paska (w zależności od rodzaju paska testowego)."
+        },
+        {
+          "step": "Do pomiaru użyj pierwszej kropli krwi, gdyż wielokrotne wyciskanie kropli krwi powoduje rozcieńczenie jej płynem tkankowym."
+        },
+        {
+          "step": "Zabezpiecz miejsce nakłucia jałowym gazikiem."
+        },
+        {
+          "step": "Zdejmij rękawiczki."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Zanotuj wynik glikemii."
+        }
+      ],
+      "procedure": "Jednym z podstawowych elementów opieki nad pacjentem z cukrzycą jest monitorowanie stężenia glukozy we krwi. Osoby z cukrzycą leczone metodą wielokrotnych wstrzyknięć insuliny (tj. co najmniej 3 razy dziennie) powinny co najmniej cztery razy dziennie, tj. przed głównymi posiłkami (śniadanie, obiad, kolacja) oraz przed snem, dokonywać pomiaru glikemii. Kiedy wykonujemy dodatkowy pomiar glikemii? Dodatkowy pomiar glikemii należy zawsze wykonać w następujących sytuacjach: gdy pacjent źle się czuje; podczas przeziębienia i gorączki; przy dodatkowej chorobie; gdy istnieje podejrzenie spadku glukozy we krwi; gdy występują nudności i wymioty; podczas wykonywania dodatkowego nieplanowanego wysiłku; gdy występuje silny stres; w podmiotach leczniczych zawsze na zlecenie lekarza i pielęgniarki. Sprzęt: glukometr, paski, nakłuwacz, pojemnik twardościenny na zużyte paski i nakłuwacze, jałowy gazik, rękawiczki diagnostyczne (niejałowe), miska nerkowata albo wózek pielęgniarski z założonym workiem niebieskim i czerwonym; Zasady: Przed pomiarem ręce muszą być umyte ciepłą wodą z mydłem oraz dokładnie osuszone (ciepło powoduje rozszerzenie naczyń, przez co zwiększa się przepływ krwi w naczyniach włosowatych i ułatwia pobieranie krwi, pozostawienie mokrej skóry może rozcieńczyć uzyskaną kroplę krwi). W podmiotach leczniczych zgodnie z najnowszymi zaleceniami - przed nakłuciem palec należy zdezynfekować (uwaga! należy odczekać wymagany przez producenta czas, aby środek alkoholowy wysechł). Do badania wykorzystujemy pierwszą kroplę krwi. Do nakłucia wykorzystuje się boczną powierzchnię palca, tak, aby jak najdłużej zachować funkcję czuciową opuszek. Przed nakłuciem należy delikatnie rozmasować dłoń w kierunku nakłuwanego palca. Należy sprawdzić ważność pasków testowych do glukometru (w paskach testowych znajdują się substancje chemiczne, które mają okres przydatności). Po pierwszorazowym otwarciu opakowanie z paskami testowymi powinno być opisane datą otwarcia. Palce zalecane do nakłucia to palec serdeczny i środkowy. Pomiar glikemii należy udokumentować. Czynniki zakłócające pomiar glikemii: Czynniki środowiskowe - opisane w instrukcji obsługi każdego glukometru. Wysokie stężenie trójglicerydów, bilirubiny, kreatyniny. Wartość hematokrytu poniżej 30% (niedokrwistość, przewlekła niewydolność nerek, krwotoki). Wartość hematokrytu powyżej 60% (odwodnienie występujące w przebiegu biegunki, wymiotów lub w cukrzycowej kwasicy ketonowej).Niedostateczna higiena rąk - pozostałości cukru pochodzącego ze spożywanych owoców i warzyw, resztki środków dezynfekujących, pozostałości kremu do rąk. Obrzęknięte ręce. Zimne ręce. Problemy z krążeniem krwi. Zasady dokumentowania pomiarów glikemii w domu: Dzienniczki samokontroli można pobrać ze strony internetowej i wydrukować. Można również poprosić o nie w aptece albo lekarza bądź pielęgniarkę. Dzienniczki samokontroli pacjent może prowadzić w formie elektronicznej pobierając specjalną aplikację na telefon. W dzienniczku samokontroli powinna znaleźć się wartość glikemii, data i godzina jej pomiaru, ilość przyjętej insuliny w jednostkach. Warto zapisać okoliczności w jakich był dokonywany pomiar, np. po wysiłku fizycznym, po sytuacji stresowej, w trakcie wymiotów itp. W dzienniczku powinna być również odnotowana kontrola sprawności działania glukometru. Zasady dokumentowania pomiarów glikemii w podmiocie leczniczym: W podmiocie leczniczym pomiar glikemii jest wykonywany na zlecenie lekarza bądź pielęgniarki. Pomiarów dokonuje się zwykle u kilku/kilkunastu pacjentów o tej samej porze. Pomiary zapisuje się na druku o określonym wzorze obowiązującym w danym podmiocie. Każdy pomiar należy udokumentować zaraz po wykonaniu. Pacjent ma prawo znać wynik swojej glikemii. W przypadku wartości zagrażających życiu należy jak najszybciej powiadomić pielęgniarkę bądź lekarza. Czego nie wolno robić podczas pomiaru glikemii? Używać pasków testowych, których termin ważności upłynął. Wyjmować pasków mokrymi rękoma. Pozostawiać otwartego pojemnika na paski testowe. Wyciskać krwi z opuszki palca. Nakłuwać kciuka, palca wskazującego i małego palca. Nakłuwać czubka opuszki palca. Nakłuwać palców rąk, gdzie wykonywany jest wlew dożylny. Nakłuwać palców po stronie ciała, gdzie przeprowadzono mastektomię."
+    },
+    "createdAt": "2024-09-06T13:47:30.920Z",
+    "updatedAt": null
+  },
+  {
+    "id": "adccd864-ac2a-4aec-9fff-3350c1512157",
+    "data": {
+      "name": "Karmienie przez zgłębnik nosowo-żołądkowy",
+      "algorithm": [
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się i przedstaw."
+        },
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co chcesz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę chorego."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Przygotuj zestaw."
+        },
+        {
+          "step": "Sprawdź położenie zgłębnika poprzez, np. osłuchiwanie: przyłóż stetoskop w okolicy nadbrzusza; wprowadź strzykawką ok. 30 ml powietrza; sprawdź, czy słychać charakterystyczny odgłos bulgotania; odciągnij wprowadzone powietrze."
+        },
+        {
+          "step": "Sprawdź zaleganie treści w żołądku (odciągnij tłok strzykawki) i zanotuj jej ilość. "
+        },
+        {
+          "step": "Zamknij korkiem zgłębnik. "
+        },
+        {
+          "step": "Sprawdź temperaturę posiłku (maks. 30 0 C). Jeśli otwierasz opakowanie z dietą przemysłową po raz pierwszy oznacz opakowanie datą i godziną otwarcia. Pamiętaj, że jest ono zdatne do spożycia przez 24 godziny po otwarciu."
+        },
+        {
+          "step": "Zabezpiecz bieliznę pacjenta płatami ligniny lub serwetą."
+        },
+        {
+          "step": "Nabierz pokarm do strzykawki. W przypadku diety przemysłowej - wstrząśnij pokarmem."
+        },
+        {
+          "step": "Wypuść powietrze ze strzykawki"
+        },
+        {
+          "step": "Zagnij zgłębnik tuż przy jego końcu i zdejmij zatyczkę"
+        },
+        {
+          "step": "Połącz strzykawkę ze zgłębnikiem"
+        },
+        {
+          "step": "Odegnij zgłębnik."
+        },
+        {
+          "step": "Podaj pokarm z prędkością 30 ml/min."
+        },
+        {
+          "step": "Zagnij zgłębnik i odłącz strzykawkę 21 Zatkaj zgłębnik zatyczką."
+        },
+        {
+          "step": "Powtarzaj czynność aż podasz zleconą ilość posiłku."
+        },
+        {
+          "step": "Przepłucz zgłębnik 30 ml przegotowanej (niegazowanej) wody."
+        },
+        {
+          "step": "Zamknij zgłębnik zatyczką."
+        },
+        {
+          "step": "Pozostaw pacjenta w pozycji siedzącej lub półsiedzącej przez ok. 30 minut."
+        },
+        {
+          "step": "Uporządkuj zestaw."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Zapamiętaj! Reguła 30-tki: Przed podaniem pokarmu sprawdź położenie zgłębnika wysłuchując stetoskopem w trakcie podania ok. 30 ml powietrza do żołądka. Podczas podawania pokarmu wezgłowie pacjenta powinno być uniesione pod kątem min. 30 0 . Temperatura pokarmu powinna wynosić ok. 30 0 C. Pokarm powinien być podany z prędkością 30 ml/min. Pacjent powinien pozostać po podaniu pokarmu w pozycji półwysokiej lub wysokiej przez ok 30 minut."
+        }
+      ],
+      "procedure": "Zestaw: odpowiedni rodzaj diety (pokarm miksowany albo dieta przemysłowa zgodna ze zlecenie lekarskim), płaty ligniny do zabezpieczenia ubrania i pościeli przed zabrudzeniem, strzykawka Janetta (1 00 ml), korek do zamknięcia zgłębnika między porcjami jedzenia, woda o temp. 30 0 C do przepłukania zgłębnika, stetoskop, miska nerkowata, kubek na wodę, pojemnik na dietę, rękawiczki jednorazowe niejałowe."
+    },
+    "createdAt": "2024-09-06T13:47:29.620Z",
+    "updatedAt": null
+  },
+  {
+    "id": "b0e978c8-19f6-44f9-90fd-551e0b0207ca",
+    "data": {
+      "name": "Podanie heparyny drobnocząsteczkowej",
+      "algorithm": [
+        {
+          "step": "Podanie podskórnie heparyny drobnocząsteczkowej w ampułko strzykawce: Zapoznanie się ze zleceniem lekarskim (nazwa leku, dawka, postać, droga i czas podania)."
+        },
+        {
+          "step": "Higiena rąk zgodnie z wytycznymi WHO."
+        },
+        {
+          "step": "Zdezynfekowanie blatu roboczego/wózka jezdnego preparatem dezynfekcyjnym do powierzchni."
+        },
+        {
+          "step": "Sprawdzenie terminu ważności leku."
+        },
+        {
+          "step": "W trakcie wykonywania zlecenia 3-krotne sprawdzenie leku ze zleceniem lekarskim (nazwa, dawka, postać, droga podania, data ważności wygląd leku)."
+        },
+        {
+          "step": "Udanie się z zestawem do pacjenta."
+        },
+        {
+          "step": "Przedstawienie się (imię i nazwisko, stanowisko)."
+        },
+        {
+          "step": "Sprawdzenie tożsamości pacjenta."
+        },
+        {
+          "step": "Poinformowanie pacjenta o istocie i celu zabiegu."
+        },
+        {
+          "step": "Uzyskanie zgody pacjenta na wykonanie zabiegu."
+        },
+        {
+          "step": "Higiena rąk zgodnie z wytycznymi WHO i opcjonalne założenie rękawic jednorazowych niejałowych (wg zaleceń WHO, w przypadku wykonywania iniekcji podskórnej, stosowanie rękawic jednorazowych niejałowych nie jest wymagane poza sytuacją izolacji kontaktowej pacjenta)."
+        },
+        {
+          "step": "Przygotowanie pacjenta: ułożenie na plecach, odsłonięcie planowanego miejsca wkłucia (przednio-boczna lub tylno-boczna część powłok brzusznych, w odległości 2-5 cm od pępka)."
+        },
+        {
+          "step": "Ocena wzrokowa oraz palpacyjna miejsca wstrzyknięcia."
+        },
+        {
+          "step": "Zdezynfekowanie skóry w miejscu wkłucia. Umieszczenie suchego, jałowego gazika w zasięgu ręki."
+        },
+        {
+          "step": "Wyjęcie ampułko-strzykawki z opakowania."
+        },
+        {
+          "step": "Zdjęcie osłonki z igły w sposób aseptyczny."
+        },
+        {
+          "step": "Uniesienie kciukiem i palcem wskazującym fałdu skórnego o grubości 2-3 cm. 18. Zdecydowanym ruchem wkłucie całej długości igły pod kątem 90 0, utrzymanie fałdu skórnego przez cały okres podawania leku."
+        },
+        {
+          "step": "Wyjęcie ampułko-strzykawki."
+        },
+        {
+          "step": "Zwolnienie fałdu skórnego."
+        },
+        {
+          "step": "Opcjonalne uciśnięcie krwawiącego miejsca wkłucia jałowym gazikiem."
+        },
+        {
+          "step": "Zalecenie pacjentowi, aby nie masował miejsca wkłucia."
+        },
+        {
+          "step": "Wyrzucenie ampułko-strzykawki do pojemnika twardościennego."
+        },
+        {
+          "step": "Osłonięcie miejsca wstrzyknięcia."
+        },
+        {
+          "step": "Poprawienie okrycia wierzchniego."
+        },
+        {
+          "step": "Opcjonalne zdjęcie rękawic jednorazowych niejałowych. Higiena rąk zgodnie z wytycznymi WHO."
+        },
+        {
+          "step": "Udokumentowanie podania leku."
+        },
+        {
+          "step": "Postępowanie przy objawach hipoglikemii u przytomnej osoby:\r\n1 . podanie 15 g glukozy (tabletki zawierające glukozę, żele) lub napoju słodzonego;\r\n2.\t1 5 g glukozy powoduje wzrost glikemii po około 10-20 minutach. Aby uniknąć wystąpienia ponownego incydentu hipoglikemii, należy spożyć węglowodany złożone, a pomiar glikemii powtórzyć po 1 5 minutach;\r\n3.\tmonitorować glikemię;\r\n4.\trozważyć podanie glukagonu podskórnie lub domięśniowo;\r\n5.\tpamiętaj, aby przeszkolić osoby bliskie w zakresie podawania glukagonu!\r\nGlucaGen1 jest stosowany w ciężkiej hipoglikemii u pacjentów z cukrzycą, u których wystąpiła utrata przytomności. Ciężka hipoglikemia oznacza bardzo małe stężenie cukru we krwi. GlucaGen 1 mg HypoKit zawiera jednorazową dawkę biosyntetycznego ludzkiego glukagonu (0,001 g) oraz strzykawkę z rozpuszczalnikiem. Zestaw taki może być bez trudu przechowany w pracy i w szkole, w podręcznej torebce i podróżnej walizce. Większość pacjentów leczonych insuliną zna doskonale objawy zbliżającego się niedocukrzenia. Stanowi ono najczęściej konsekwencje nadmiaru insuliny, opuszczenia lub opóźnienia posiłku, może być również następstwem zbyt intensywnego wysiłku fizycznego. W przypadku silnej hipoglikemii (najczęściej z utratą przytomności) na pomoc przychodzi GlucaGen 1 mg HypoKit.\r\nPodanie glukagonu za pomocą ampułkostrzykawki\r\nZestaw GlucaGen 1 mg HypoKit do jednorazowego podania dla osób z cukrzycą dostępny jest w większości aptek za opłatą ryczałtową. Przed sporządzeniem roztworu proszek powinien być biały lub prawie biały. Sporządzony roztwór powinien być przejrzysty i bezbarwny i nie zawierać żadnych cząstek stałych. Wskazanie konkretnego produktu nie stanowi lokowania, lecz wynika z zasad. Glukagon powoduje uwolnienie glukozy magazynowanej w wątrobie i w krótkim czasie podwyższa jej poziom we krwi. Działa skutecznie zarówno po podaniu dożylnym, jak i domięśniowym lub podskórnym. Leczenie powinno być uzupełnione doustnym podaniem węglowodanów.\r\n"
+        },
+        {
+          "step": "Algorytm podania glukagonu zestawem GlucaGen: "
+        },
+        {
+          "step": "Usuń z fiolki GlucaGen pomarańczową osłonkę. Wbij igłę ze strzykawką w gumowe zakończenie. Następnie wstrzyknij zawartość strzykawki(rozpuszczalnik) do fiolki, w której znajduje się glukagon. Nie wyjmuj igły z fiolki."
+        },
+        {
+          "step": "Podaj rozpuszczalnik ze strzykawki do fiolki zawierającej Glukagon."
+        },
+        {
+          "step": "Wymieszaj zawartość fiolki, aż do całkowitego rozpuszczenia się glukagonu. Nie wyjmuj igły z fiolki."
+        },
+        {
+          "step": "Po rozpuszczeniu nabierz roztwór z fiolki ponownie do strzykawki. Usuń ze strzykawki pęcherzyki powietrza, pukając delikatnie palcem w obudowę strzykawki."
+        },
+        {
+          "step": "Wykonaj wstrzyknięcie podskórnie (pod skórę) lub domięśniowo . Zużytą strzykawkę umieść w pudełku i wyrzuć do kosza."
+        }
+      ],
+      "procedure": "Heparyna drobnocząsteczkowa zapobiega zakrzepom krwi, lek często ordynowany pacjentom długotrwale unieruchomionym, po zabiegach chirurgicznych. W Polsce stosuje się następujące substancje heparyny drobnocząsteczkowej: dalteparyna, enoksaparyna, nadroparyna. Najczęstsze preparaty heparyny drobnocząsteczkowej (nazwy handlowe): Fraxiparyna; Clexane; Fraxiparyna Multi Preparaty te są zwykle ordynowane w ml. Przykładowe zlecenie na Fraxiparynę: Jan Kowalski 22.04.2021 godz. 10.00 - Fraxiparyna Multi 0,4 ml s.c. Miejsca podania: przednio-boczna ściana brzucha; środkowa część zewnętrznej powierzchni ramienia; producent Fraxiparyny alternatywnie dopuszcza podanie podskórne w udo (środkowa część zewnętrznej powierzchni uda - rzadko wykorzystywane). Zasady podawania heparyny drobnocząsteczkowej. Kąt prosty. Utrzymywanie fałdu skórnego przez cały okres podawania leku. Nie masujemy miejsca podania heparyny drobnocząsteczkowej (można ucisnąć gazikiem, aby zamknąć kanał). Nie ma potrzeby usuwania powietrza. 5. Nie aspirujemy. Zachowujemy odstęp od pępka 5 cm. Przednio-boczna oraz przednio-tylna powierzchnia brzucha- najczęstsze miejsce wstrzyknięcia. Podanie glukagonu.\r\nCukrzyca jest to grupa chorób metabolicznych charakteryzująca się hiperglikemią wynikającą z defektu wydzielania i/lub działania insuliny. Insulina (łac. insula - wyspa) jest hormonem białkowym, którego zadanie polega na obniżaniu poziomu cukru we krwi. Produkowana jest w komórkach beta trzustki, a następnie wydzielana do krwi w małych ilościach przez całą dobę oraz w momencie, gdy zobaczysz lub poczujesz zapach jedzenia (następuje zwiększenie produkcji insuliny).\r\nJednym z powikłań cukrzycy jest hipoglikemia. Hipoglikemię rozpoznaje się przy obniżeniu stężenia glukozy we krwi poniżej 70 mg/dl (3,9 mmol/l), niezależnie od występowania objawów, które u części osób, zwłaszcza chorujących od wielu lat na cukrzycę typu l, mogą\r\npojawiać się dopiero przy znacznie niższych wartościach glikemii.\r\nObjawy hipoglikemii: pocenie się, uczucie głodu, uczucie słabości, kołatanie serca, niepokój,\r\nzaburzenia widzenia, drżenie rąk, bóle głowy.\r\nNajczęstsze przyczyny hipoglikemii to: błędy dietetyczne (błędy w odżywianiu), nadmiar insuliny,\r\nza duży wysiłek fizyczny (zmiana aktywności fizycznej), spożycie alkoholu,\r\nnieregularne przyjmowanie doustnych leków hipoglikemizujących, infekcje (bezobjawowe), nieadekwatna dawka leków doustnych.\r\nGlikemia 55-70 mg/dl wymaga przeciwdziałania dalszemu jej spadkowi, niezależnie od wystąpienia objawów czy też ich braku. Należy pamiętać, że wartości stężenia glukozy powodujące objawy hipoglikemii określa się w sposób indywidualny. Organizm człowieka broni się przed wystąpieniem hipoglikemii (niedocukrzenia). Zwykle występują objawy sygnalizujące ten stan. Każdy chory trochę inaczej odczuwa niedocukrzenie. Warto nauczyć się rozpoznawać wczesne objawy hipoglikemii, aby w porę podjąć odpowiednie środki zaradcze.\r\n"
+    },
+    "createdAt": "2024-09-06T13:47:31.332Z",
+    "updatedAt": null
+  },
+  {
+    "id": "c665d053-b83d-451f-9378-6e362a22bc48",
+    "data": {
+      "name": "Płukanie rany",
+      "algorithm": [
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Rozłóż podkład wysoko-chłonny."
+        },
+        {
+          "step": "Rozłóż miski nerkowate."
+        },
+        {
+          "step": "Otwórz w sposób aseptyczny gaziki i polej je środkiem do przemycia ran Pierwszą porcję środka odlej do worka."
+        },
+        {
+          "step": "Delikatnie zdejmij opatrunek ze skóry pacjenta, otwórz opakowanie ze strzykawką i połącz z zielonym wenflonem. Wyjmij z kaniuli wenflonu igłę i wykorzystaj jedynie kaniulę."
+        },
+        {
+          "step": "Nabierz do strzykawki środek antyseptyczny zgodny ze zleceniem lekarza."
+        },
+        {
+          "step": "Końcówkę wenflonu umieść 5 cm nad raną i płucz ją słabym bądź silnym strumieniem w zależności od zlecenia lekarskiego, płucz ranę aż do uzyskania przejrzystego płynu płuczącego, płucz dokładnie ranę uwzględniając wszystkie szczeliny i kieszenie rany."
+        },
+        {
+          "step": "Zdejmij w prawidłowy sposób rękawiczki jednorazowe niejałowe i wyrzuć do worka na odpady medyczne potencjalnie zakaźne."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Uchwyć narzędziem chwytnym gaziki i przemyj ranę od zewnątrz do środka. Do każdego przetarcia użyj nowego gazika, osusz gazikiem okolicę wokół rany."
+        },
+        {
+          "step": "Przyklej na ranę opatrunek specjalistyczny."
+        },
+        {
+          "step": "Posegreguj odpady medyczne i uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Złóż podkład wewnętrzną stroną do środka i wyrzuć do worka na odpady medyczne potencjalnie zakaźne."
+        },
+        {
+          "step": "Zdejmij w prawidłowy sposób rękawiczki."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        }
+      ],
+      "procedure": "Cel: leczniczy - oczyszczenie rany z ciał obcych, ropy, tkanek martwiczych Wskazania: nieprawidłowy proces gojenia się rany (obecność w ranie tkanek martwiczych, ciał obcych, ropy) Przeciwwskazania: wzmożone krwawienie z rany. Zestaw do płukania rany: strzykawka jałowa jednorazowego użytku o obj. 20 ml, igła z kulką 18-19 G albo kaniula z wenflonu koloru zielonego (18 G) jałowy i ciepły płyn płuczący, zgodny ze zleceniem pielęgniarskim/lekarskim, fartuch ochronny, okulary ochronne, maska chirurgiczna, podkład ochronny jednorazowy, 2 miski nerkowate, rękawiczki jednorazowe niejałowe, opatrunek specjalistyczny"
+    },
+    "createdAt": "2024-09-06T13:47:28.914Z",
+    "updatedAt": null
+  },
+  {
+    "id": "ce7225db-4e2b-4621-90a7-09d3246e38d9",
+    "data": {
+      "name": "Instrukcja pobrania kału",
+      "algorithm": [
+        {
+          "step": "Przed pobraniem próbki kału całkowicie opróżnić pęcherz moczowy."
+        },
+        {
+          "step": "Przygotować jałowy, plastikowy pojemnik z nakrętką i łopatką."
+        },
+        {
+          "step": "Oddać kał do jednorazowego jałowego pojemnika."
+        },
+        {
+          "step": "Za pomocą łopatki z jałowego pojemnika transportowego, pobrać próbkę wielkości orzecha laskowego (w przypadku kału płynnego 2-3 ml) i umieścić ją w pojemniku."
+        },
+        {
+          "step": "Pojemnik szczelnie zamknąć, opisać imieniem i nazwiskiem zgodnie ze skierowaniem, włożyć do woreczka foliowego - woreczek zawiązać."
+        },
+        {
+          "step": "Przechowywać i transportować w temperaturze pokojowej, dostarczyć do laboratorium w ciągu 2-3 godzin."
+        },
+        {
+          "step": "Gdy to niemożliwe, przechowywać w temp. chłodziarki (2 - 8 o c) i dostarczyć do laboratorium w ciągu 24 godzin."
+        },
+        {
+          "step": "W przypadku dłuższego czasu transportu - kał pobierać na podłoże transportowe i przechowywać w temperaturze pokojowej. Dostarczyć do laboratorium, w ciągu 48 godzin."
+        }
+      ],
+      "procedure": "Instrukcja pobrania kału na podłoże transportowe (mikrobiologia):\r\n1 . Jałową wymazówką pobierać kał z kilku miejsc.\r\n2.\tZanurzyć wacik wymazówki w materiale kałowym, obrócić kilkakrotnie wymazówką.\r\n3.\tPrzenieść wymazówkę z pobranym materiałem do probówki z podłożem transportowym (probówka z żelem).\r\n4.\tPodłoże transportowe szczelnie zamknąć, opisać imieniem i nazwiskiem.\r\n5.\tDostarczać do laboratorium do 72 godzin od pobrania, przechowując i transportując w temperaturze pokojowej.\r\nInstrukcja pobrania wymazu z odbytnicy na podłoże transportowe ( mikrobiologia)\r\n1 . Wprowadzić wymazówkę przez zwieracz zewnętrzny do odbytnicy, u osoby dorosłej na głębokość ok. 4-5 cm, u dziecka 1-2 cm.\r\n2.\tKilkoma ruchami okrężnymi poruszać po śluzówce odbytnicy w celu pozyskania materiału do badania, wacik powinien nosić ślady kału.\r\n3.\tPrzenieść wymazówkę z pobranym materiałem do probówki z podłożem transportowym (probówka z żelem).\r\n4.\tPodłoże transportowe szczelnie zamknąć, opisać imieniem i nazwiskiem.\r\n5.\tDostarczyć do laboratorium do 24 godzin od pobrania, przechowując i transportując w temperaturze pokojowej.\r\n6.\tWymaz pobieramy gdy nie ma możliwości pobrania próbki kału.\r\nPrzy badaniu w kierunku owsicy zalecane jest wykonanie wymazu około odbytniczego pobranego metodą Grahama (przylepcem z taśmy klejącej). 1 . Materiał pobierać rano przed wykonaniem wszelkich czynności higienicznych i fizjologicznych.\r\n2.\tRozsunąć jedną ręką pośladki i przykleić taśmę klejącą na 5 sekund do fałd odbytu.\r\n3.\tNastępnie taśmę odkleić i przykleić do otrzymanego szkiełka podstawowego.\r\n4.\tPróbkę dostarczyć do laboratorium do 24 godzin\r\n"
+    },
+    "createdAt": "2024-09-06T13:47:32.194Z",
+    "updatedAt": null
+  },
+  {
+    "id": "da117120-3f6b-4d69-98f0-3f5125a28364",
+    "data": {
+      "name": "Zmiana opatrunku na ranie niepowikłanej",
+      "algorithm": [
+        {
+          "step": "Przygotuj niezbędny sprzęt i materiały opatrunkowe."
+        },
+        {
+          "step": "Przywitaj się, przedstaw się."
+        },
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Poinformuj chorego o zamiarze zmiany opatrunku."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawice jednorazowe niejałowe."
+        },
+        {
+          "step": "Ułóż wygodnie chorego i odsłoń okolicę rany."
+        },
+        {
+          "step": "Pod okolicę rany rozłóż podkład/serwetę"
+        },
+        {
+          "step": "Usuń opatrunek z rany i wyrzuć go do worka na odpady medyczne. "
+        },
+        {
+          "step": "Zdejmij rękawice niejałowe i zdezynfekuj ręce."
+        },
+        {
+          "step": "Załóż rękawice jednorazowe jałowe."
+        },
+        {
+          "step": "Oceń wygląd rany."
+        },
+        {
+          "step": "Oczyść ranę za pomocą gazika nasączonego odpowiednim preparatem do lawaseptyki, zachowując dwie ważne zasady podczas zmiany opatrunku na ranie niepowikłanej: jeden gazik - jedno przetarcie oraz oczyszczanie rany od środka na zewnątrz."
+        },
+        {
+          "step": "Załóż nowy opatrunek."
+        },
+        {
+          "step": "Posegreguj zużyty sprzęt i odpady zgodnie z procedurą podmiotu leczniczego."
+        },
+        {
+          "step": "Zdejmij rękawice i zdezynfekuj ręce."
+        },
+        {
+          "step": "Jeśli zmiana opatrunku była wykonywana w sali opatrunkowej, odprowadź chorego na salę chorych."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy, wykonaj dezynfekcję blatu roboczego."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonaną procedurę w dokumentacji pacjenta. Poinformuj pielęgniarkę/lekarza, jeśli zaobserwowałeś w ranie objawy zakażenia."
+        }
+      ],
+      "procedure": "Rana niepowikłana- rana, w której nie stwierdza się cech zakażenia, czyli ropnego wycieku i/lub co najmniej jednego z objawów: rumień; bolesność; obrzęk; ucieplenie otoczenia rany; podwyższona temperatura ciała chorego. Zapamiętaj: Zaobserwowanie któregoś z wymienionych wyżej objawów może świadczyć o zakażeniu rany. Wówczas należy ten fakt bezwzględnie zgłosić lekarzowi lub pielęgniarce. Cel: zapobieganie zakażeniu rany; wczesne wykrywanie nieprawidłowości w gojeniu się rany; utrzymanie opatrunku w czystości. Sprzęt: wózek pielęgnacyjny z zawieszonym workiem na odpady komunalne i medyczne; jałowa serweta; jałowy opatrunek odpowiedniej wielkości; lawaseptyk (np. sól fizjologiczna); jałowe gaziki; jałowe rękawiczki; jałowe narzędzie chwytne (pęseta, pean); maseczka chirurgiczna; rękawiczki diagnostyczne (niejałowe); środek do dezynfekcji rąk. Zasady: 1 . Zasada aseptyki i antyseptyki. 2. Ranę niepowikłaną przemywa się w kierunku od środka rany na zewnątrz 3. Obowiązuje zasada: jeden gazik - jedno przetarcie- od środka rany na zewnątrz. Opatrunek na ranie niepowikłanej zmieniamy, gdy jest przesiąknięty treścią surowiczą, krwistą lub jest zabrudzony. W przypadku rany niepowikłanej chirurgicznej zmieniamy opatrunek nie wcześniej niż w 2. lub 3. dobie pooperacyjnej."
+    },
+    "createdAt": "2024-09-06T13:47:29.085Z",
+    "updatedAt": null
+  },
+  {
+    "id": "debdd568-0d0b-4e47-b76a-12459b5c3b9c",
+    "data": {
+      "name": "Podanie leku na skórę",
+      "algorithm": [
+        {
+          "step": "Udaj się do pacjenta."
+        },
+        {
+          "step": "Przywitaj się, przedstaw."
+        },
+        {
+          "step": "Wyjaśnij pacjentowi, co chcesz zrobić."
+        },
+        {
+          "step": "Uzyskaj zgodę chorego."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe (opcjonalnie)."
+        },
+        {
+          "step": "Podłóż pod miejsce aplikacji leku podkład jednorazowy zabezpieczający bieliznę chorego przez zabrudzeniem."
+        },
+        {
+          "step": "Oczyść skórę pacjenta przed nałożeniem dawki."
+        },
+        {
+          "step": "Sprawdź nazwę, dawkę i termin ważności leku."
+        },
+        {
+          "step": "Na patyczek laryngologiczny nałóż pasek leku o odpowiedniej długości."
+        },
+        {
+          "step": "Nałóż na skórę lek i dokładnie rozsmaruj."
+        },
+        {
+          "step": "Poinformuj pacjenta o konieczności zgłaszania niepokojących objawów takich jak świąd, pieczenie."
+        },
+        {
+          "step": "Zdejmij rękawiczki (jeśli były założone)."
+        },
+        {
+          "step": "Uporządkuj stanowisko pracy."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj podanie leku."
+        }
+      ],
+      "procedure": "Cel: profilaktyczny (osłona skóry przed urazami mechanicznymi, odparzeniami); leczniczy (zmniejszenie stanu zapalnego na skórze). Działanie lecznicze leków podanych na skórę następuje po około 30 minutach (chłód odczuwany jest natychmiast). Do podstawowych leków stosowanych na skórę należą: glikokortykosteroidy, niesteroidowe leki przeciwzapalne, środki przeciwbakteryjne oraz środki przeciwgrzybicze. Wskazania: Stany zapalne skóry i jej wytworów z wysiękami i bez wysięków, Zakażenie, Obrzęki, Odparzenia, Oparzenia Odmrożenia, Łuszczyca, Owrzodzenia, Zmiany ropne skóry owłosionej i nieowłosionej. Przeciwwskazania: Nadwrażliwość na substancję czynną lub składniki nośnika leku, Alergia na lek, Pierwszy trymestr ciąży oraz okres karmienia (w przypadku niektórych leków). Niebezpieczeństwa: Podanie leku na skórę niewłaściwemu pacjentowi, Podanie niewłaściwego leku, Podanie leku na skórę po upływie terminu ważności. Zasady podania leku na skórę (Zasada 6 W): Właściwy lek (zgodność nazwy leku); We Właściwej (prawidłowej) dawce; Właściwą (odpowiednią) drogą; O Właściwym czasie; Właściwemu pacjentowi; Właściwie, czyli prawidłowo, udokumentowane podanie3-krotne sprawdzenie nazwy, dawki oraz daty ważności leku. Zestaw: Lek zgodny ze zleceniem lekarskim; Szpatułka laryngologiczna; Podkład jednorazowy; Rękawiczki jednorazowe niejałowe (opcjonalnie)"
+    },
+    "createdAt": "2024-09-06T13:47:31.468Z",
+    "updatedAt": null
+  },
+  {
+    "id": "e46de187-4a52-4344-bb9f-57ddaedc9c43",
+    "data": {
+      "name": "Mierzenie tętna",
+      "algorithm": [
+        {
+          "step": "Zapewnienie pacjentowi wygodnej pozycji (pozycja siedząca lub leżącą ze stabilnym podparciem badanej kończyny). Zalecenie pacjentowi 5 minutowego odpoczynku przed badaniem."
+        },
+        {
+          "step": "Do oceny tętna wykorzystujemy 2, 3 i 4 palec. Kciuk powinien znajdować się poza polem badanej tętnicy."
+        },
+        {
+          "step": "Jeżeli tętno jest dobrze wyczuwalne i miarowe liczymy uderzenia przez 1 5 sekund (uzyskany wynik mnożymy przez 4)."
+        },
+        {
+          "step": "Jeżeli tętno jest niemiarowe liczymy uderzenia przez 1 min."
+        },
+        {
+          "step": "Określamy szybkość, napięcie i ewentualny typ niemiarowości."
+        }
+      ],
+      "procedure": "Tętnem nazywamy spowodowane przez skurcz serca wyczuwalne uderzenie o ścianę naczynia fali krwi, która przepłynęła przez układ tętniczy. Tętno wyczuwa się tam gdzie tętnice przebiegają powierzchownie i gdzie można docisnąć je do twardych struktur tkankowych. Dokonując pomiaru tętna oceniamy: napięcie (siłę), liczbę (częstość) i miarowość. Badanie przeprowadza się w szpitalu u każdego chorego 2 razy dziennie równocześnie z pomiarem temperatury. Metody badania tętna: Metodą palpacyjną, Za pomocą stetoskopu, osłuchując serce, Metodą elektroniczną Typowym miejscem badania tętna jest tętnica promieniowa. W stanach nagłych tętno badamy na dużych tętnicach (szyjnej, udowej, ramiennej, nad koniuszkiem serca).W zaburzeniach krążenia tętno bada się na tętnicy: Grzbietowej stopy, Podkolanowej, Piszczelowej tylnej Zasady oceny tętna: "
+    },
+    "createdAt": "2024-09-06T13:47:28.488Z",
+    "updatedAt": null
+  },
+  {
+    "id": "eeb39891-b50c-4615-a5b9-882a152637a3",
+    "data": {
+      "name": "Odsysanie drzewa oskrzelowego",
+      "algorithm": [
+        {
+          "step": "Sprawdź tożsamość pacjenta."
+        },
+        {
+          "step": "Poinformuj o celu i przebiegu czynności."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Załóż rękawiczki jednorazowe niejałowe."
+        },
+        {
+          "step": "Zabezpiecz bieliznę pościelową i osobistą pacjenta przed zabrudzeniem."
+        },
+        {
+          "step": "Otwórz cewnik."
+        },
+        {
+          "step": "Odłącz wymiennik ciepła i wilgoci od rurki tracheostomijnej."
+        },
+        {
+          "step": "Połącz cewnik z drenem do ssania."
+        },
+        {
+          "step": "Wysuń cewnik z opakowania."
+        },
+        {
+          "step": "Wprowadź cewnik do dolnych dróg oddechowych przy wyłączonym ssaniu (zagięcie drenu) i do momentu wyczucia oporu. Następnie wycofaj cewnik na ok. 1 - 2 cm, włącz ssanie i wyciągnij cewnik ruchem."
+        },
+        {
+          "step": "Wyrzuć cewnik do worka na odpady medyczne."
+        },
+        {
+          "step": "Jeśli wymiennik ciepła i wilgoci jest zabrudzony lub od jego wymiany upłynęły 72 godziny, wymień go na nowy."
+        },
+        {
+          "step": "Skontroluj stan pacjenta."
+        },
+        {
+          "step": "Uporządkuj sprzęt."
+        },
+        {
+          "step": "Wykonaj higienę rąk."
+        },
+        {
+          "step": "Udokumentuj wykonaną czynność."
+        }
+      ],
+      "procedure": "Definicja: mechaniczne oczyszczanie (odsysanie) dróg oddechowych z zalegającej wydzieliny, krwi i śluzu za pomocą urządzenia ssącego z wykorzystaniem cewników do odsysania (metoda otwarta). Cele: utrzymanie drożności dróg oddechowych; przeciwdziałanie powikłaniom (infekcji, ognisk niedodmy); zapewnienie optymalnej wymiany gazowej; ocena makroskopowa (charakter i ilość) zalegającej wydzieliny oskrzelowej; pobranie wydzieliny oskrzelowej do badania mikrobiologicznego. Wskazania: chorzy nieprzytomni z wyłonioną sztuczną drogą oddechową (np. tracheostomia, rurka intubacyjna); chorzy przytomni z wyłonioną sztuczną drogą oddechową z zaleganiem wydzieliny w drzewie oskrzelowym. Niebezpieczeństwa: uszkodzenie błony śluzowej i w konsekwencji ułatwiona adhezja bakterii; spadek saturacji krwi (Sp02);obniżenie ciśnienia tętniczego (0 12 - 20 mmHg); zakażenie układu oddechowego; przemieszczenie rurki w drogach oddechowych; sprowokowanie kaszlu i podwyższenie ciśnienia w klatce piersiowej oraz ciśnienia śródczaszkowego; zakażenie gałki ocznej. Zasady: Zachowanie zasad aseptyki i antyseptyki (jałowe cewniki, jałowe rękawiczki). Nieprzeprowadzanie odsysania w sposób rutynowy, a jedynie w razie potrzeby (zmiany osłuchowe sugerujące nagromadzenie się wydzieliny, obecność wydzieliny w rurce, narastająca niewydolność oddechowa sugerująca niedrożność dróg oddechowych, zwiększone opory w drogach oddechowych nie mające innego wyjaśnienia). Przerwa pomiędzy odsysaniami nie krótsza niż 20 - 30 sekund. Maksymalny czas odsysania 10 - 1 5 sekund. Wyłączanie źródła ssania podczas wprowadzania cewnika (aby zapobiec niedodmie). Kontrola sprawności ssaka przed odsysaniem i ustawienie siły ssania w odpowiednim zakresie (0,02 - 0,04 MPa/100 - 150 mmHg/ 135 - 2013 cmH20/ 0,1-0,2 bar). W przypadku stosowania rurki dotchawiczej z możliwością odsysania znad mankietu uszczelniającego ewakuacja treści za pomocą źródła ssania albo z użyciem pustej strzykawki, np. o objętości 10 ml. Ocena parametrów życiowych przed, w trakcie i po toalecie dróg oddechowych. Ocena wydzieliny z dróg oddechowych pod kątem ilości, barwy, zapachu. Dobór odpowiedniej średnicy cewnika (nie większa niż 1/2 średnicy rurki). Zestaw: cewnik do odsysania, jałowe rękawiczki, maska na twarz, okulary ochronne (opcjonalnie), źródło ssania z drenem, podkład jednorazowy."
+    },
+    "createdAt": "2024-09-06T13:47:30.666Z",
+    "updatedAt": null
+  }
+]
