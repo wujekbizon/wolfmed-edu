@@ -15,7 +15,7 @@ export interface Test {
   id: string
   data: TestData
   category: string
-  createdAt?: Date
+  createdAt?: Date | null
   updatedAt?: Date | null
 }
 
@@ -70,7 +70,7 @@ export interface Post {
   date: string
   excerpt: string
   content: string
-  createdAt?: Date
+  createdAt?: Date | null
   updatedAt?: Date | null
 }
 

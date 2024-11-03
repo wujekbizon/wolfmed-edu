@@ -1,4 +1,3 @@
-import { sql } from 'drizzle-orm'
 import {
   pgTableCreator,
   timestamp,
@@ -23,7 +22,7 @@ export const users = createTable(
     id: uuid('id').primaryKey().defaultRandom(),
     userId: varchar('userId', { length: 256 }).notNull().unique(),
     testLimit: integer('testLimit').default(150),
-    createdAt: timestamp('createdAt').default(sql`CURRENT_TIMESTAMP`),
+    createdAt: timestamp('createdAt').defaultNow(),
     motto: varchar('motto').default('').notNull(),
     supporter: boolean('supporter').default(false).notNull(),
     username: varchar('username', { length: 256 }).default('').notNull(),
@@ -45,9 +44,7 @@ export const payments = createTable('stripe_payments', {
   currency: currencyEnum('currency'),
   customerEmail: varchar('customerEmail', { length: 256 }).notNull(),
   paymentStatus: varchar('paymentStatus', { length: 50 }).notNull(),
-  createdAt: timestamp('createdAt')
-    .default(sql`NOW()`)
-    .notNull(),
+  createdAt: timestamp('createdAt').defaultNow(),
 })
 
 export const subscriptions = createTable('stripe_subscriptions', {
@@ -61,16 +58,14 @@ export const subscriptions = createTable('stripe_subscriptions', {
   invoiceId: varchar('invoiceId', { length: 256 }).notNull(),
   paymentStatus: varchar('paymentStatus', { length: 50 }).notNull(),
   subscriptionId: varchar('subscriptionId', { length: 256 }).notNull(),
-  createdAt: timestamp('createdAt')
-    .default(sql`NOW()`)
-    .notNull(),
+  createdAt: timestamp('createdAt').defaultNow().notNull(),
 })
 
 export const processedEvents = createTable('processed_events', {
   id: uuid('id').primaryKey().defaultRandom(),
   eventId: varchar('eventId', { length: 256 }).notNull().unique(),
   userId: varchar('userId', { length: 256 }).notNull(),
-  processedAt: timestamp('processedAt').default(sql`CURRENT_TIMESTAMP`),
+  processedAt: timestamp('processedAt').defaultNow(),
 })
 
 export const completedTestes = createTable('completed_tests', {
@@ -80,27 +75,21 @@ export const completedTestes = createTable('completed_tests', {
     .references(() => users.userId, { onDelete: 'cascade' }),
   testResult: jsonb('testResult').default([]),
   score: integer('score').notNull(),
-  completedAt: timestamp('completedAt')
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
+  completedAt: timestamp('completedAt').notNull().defaultNow(),
 })
 
 export const tests = createTable('tests', {
   id: uuid('id').primaryKey().defaultRandom(),
   category: varchar('category', { length: 256 }).notNull(),
   data: jsonb('data').notNull(),
-  createdAt: timestamp('createdAt')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt'),
 })
 
 export const procedures = createTable('procedures', {
   id: uuid('id').primaryKey().defaultRandom(),
   data: jsonb('data').notNull(),
-  createdAt: timestamp('createdAt')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt'),
 })
 
@@ -118,8 +107,6 @@ export const blogPosts = createTable('blog_posts', {
   date: varchar('date', { length: 64 }).notNull(),
   excerpt: text('excerpt').notNull(),
   content: text('content').notNull(),
-  createdAt: timestamp('createdAt')
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+  createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt'),
 })
