@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
-import { procedures, tests, blogPosts } from '@/server/db/schema'
-import { Post, Procedure, Test } from '@/types/dataTypes'
+import { procedures, tests, blogPosts, users } from '@/server/db/schema'
+import { Post, Procedure, Test, User } from '@/types/dataTypes'
 import { readFile } from 'node:fs/promises'
 import * as path from 'node:path'
 
@@ -61,5 +61,29 @@ export async function populatePosts() {
     console.log('Posts table populated successfully!')
   } catch (error) {
     console.error('Error populating posts table:', error)
+  }
+}
+
+export async function populateUsers() {
+  try {
+    const usersData = (await readDataFileAndParse('users.json')) as User[]
+
+    await insertData(usersData, users, (user) => ({
+      id: user.id,
+      userId: user.userId,
+      testLimit: user.testLimit,
+      motto: user.motto,
+      supporter: user.supporter,
+      username: user.username,
+      testsAttempted: user.testsAttempted,
+      totalScore: user.totalScore,
+      totalQuestions: user.totalQuestions,
+      createdAt: new Date(user.createdAt),
+      updatedAt: user.updatedAt ? new Date(user.updatedAt) : null,
+    }))
+
+    console.log('Users table populated successfully!')
+  } catch (error) {
+    console.error('Error populating users table:', error)
   }
 }
