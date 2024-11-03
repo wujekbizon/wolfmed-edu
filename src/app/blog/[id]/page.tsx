@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation'
 import BlogPost from '@/app/_components/BlogPost'
 import { Metadata } from 'next'
-import { getPostById } from '@/server/queries'
+import { fileData } from '@/server/fetchData'
 
 export const dynamic = 'force-static'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   const { id } = await params
-  const post = await getPostById(id)
+  const post = await fileData.getPostById(id)
 
   if (!post) {
     return {
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const post = await getPostById(id)
+  const post = await fileData.getPostById(id)
 
   if (!post) {
     notFound()

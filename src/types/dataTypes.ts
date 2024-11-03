@@ -41,7 +41,7 @@ export interface Procedure {
 }
 export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
 
-export type ServerData = Procedure[] | Test[]
+export type ServerData = Procedure[] | Test[] | Post[]
 export type QuestionAnswer = Record<string, string>
 export type FormattedAnswer = { questionId: string; answer: boolean }
 

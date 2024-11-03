@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
-import { getAllPosts } from '@/server/queries'
-import { Post } from '@/types/dataTypes'
 import AllPosts from '@/components/AllPosts'
+import { fileData } from '@/server/fetchData'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -12,6 +11,7 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
-  const posts = (await getAllPosts()) as Post[]
+  // file data
+  const posts = await fileData.getAllPosts()
   return <AllPosts posts={posts} />
 }
