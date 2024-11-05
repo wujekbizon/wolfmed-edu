@@ -14,9 +14,12 @@ export default function EarlySupporters() {
   return (
     <section className="w-full py-8 sm:py-16 bg-gradient-to-b from-zinc-100 to-zinc-200">
       <div className="container mx-auto px-4 xs:px-8 relative">
-        <div className="animate-fadeInUp">
+        <div className="animate-fadeInUp text-center">
+          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-zinc-200 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-800">
+            Wasze wsparcie
+          </span>
           <h2 className="text-2xl sm:text-4xl font-bold text-center mb-8 sm:mb-12 text-zinc-800">
-            Nasi Wspaniali Wspierający
+            Pionierzy Platformy
           </h2>
           <p className="text-center text-zinc-600 mb-12 max-w-2xl mx-auto">
             Jesteśmy wdzięczni za wsparcie tych wyjątkowych osób, które pomagają nam rozwijać naszą platformę i wspierać

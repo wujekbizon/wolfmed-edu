@@ -22,6 +22,13 @@ export default function About() {
         <div className="flex flex-col gap-8 md:gap-12">
           {/* Header Section */}
           <div className="text-center mb-8">
+            <motion.span
+              variants={fadeInUp}
+              // @ts-ignore
+              className="mb-3 sm:mb-4 inline-block rounded-full bg-zinc-800 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white"
+            >
+              O Nas
+            </motion.span>
             <motion.h2
               variants={fadeInUp}
               // @ts-ignore
