@@ -15,12 +15,9 @@ export default async function TestsPage() {
   if (!user) notFound()
 
   const username = (await getUserUsername(user.id)) as string
-
   const { totalScore, totalQuestions } = await getTestScoreAndQuestionCountByUser(user.id)
   const testsAttempted = await getCompletedTestCountByUser(user.id)
-
   const averageScore = calculateAverageScore(totalScore, totalQuestions)
-
   const motto = (await getUserMotto(user.id)) as string
   const isSupporter = await getSupporterByUserId(user.id)
 

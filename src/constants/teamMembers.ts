@@ -3,7 +3,7 @@ export const teamMembers = [
     name: 'Kinga Wolfinger',
     role: 'Założyciel i Główny Instruktor',
     image: '/kia.webp',
-    bio: 'Doświadczony opiekun medyczny oraz opiekun osób starszych, z ponad 8-letnim doświadczeniem.',
+    bio: 'Doświadczony opiekun medyczny oraz opiekun osób starszych, z wieloletnim doświadczeniem.',
     linkedin: 'https://www.linkedin.com/in/kinga-wolfinger-71b0aa2a2/',
   },
   {

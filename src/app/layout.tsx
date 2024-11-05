@@ -4,12 +4,10 @@ import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import Navbar from './_components/Navbar'
 import Providers from './providers'
-import { ClerkProvider } from '@clerk/nextjs'
-import { plPL } from '@clerk/localizations'
 import ToastProvider from './_components/ToastProvider'
-import Script from 'next/script'
-import { GA_ID, GTAG_JS_URI, GTM_JS_URI } from '@/constants/googleAnalytics'
-import { headers } from 'next/headers'
+import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
+import GoogleAnalytics from './_components/GoogleAnalytics'
+import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -45,51 +43,19 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const nonce = await headers().then((headers) => headers.get('x-nonce') ?? '')
-
   return (
-    <ClerkProvider
-      nonce={nonce}
-      localization={plPL}
-      appearance={{
-        variables: {
-          colorBackground: 'white',
-          colorInputBackground: '#ffb1b1',
-          colorText: '#09090a',
-          colorShimmer: '#e8b8b1',
-        },
-      }}
-    >
+    <ClerkProviderWrapper>
       <html lang="pl">
         <head>
-          <Script strategy="afterInteractive" src={GTAG_JS_URI} nonce={nonce} />
-          <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
-            {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_ID}', {
-                page_path: window.location.pathname });
-             `}
-          </Script>
-          <Script strategy="afterInteractive" src={GTM_JS_URI} nonce={nonce} />
+          <GoogleAnalytics />
         </head>
-
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-          <noscript>
-            <iframe
-              src={GTM_JS_URI}
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-              nonce={nonce}
-            />
-          </noscript>
+          <GoogleAnalyticsNoscript />
           <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl lg:rounded-[50px] border-white">
             <Providers>
               <Navbar />
@@ -98,6 +64,6 @@ export default async function RootLayout({
           </main>
         </body>
       </html>
-    </ClerkProvider>
+    </ClerkProviderWrapper>
   )
 }

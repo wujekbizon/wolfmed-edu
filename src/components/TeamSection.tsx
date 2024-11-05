@@ -20,14 +20,14 @@ export default function TeamSection() {
             key={member.name}
             variants={fadeInUp}
             // @ts-ignore
-            className="flex items-center gap-4 p-4 rounded-xl bg-zinc-900/30 border border-zinc-700/50"
+            className="flex items-center flex-col xs:flex-row gap-4 p-4 rounded-xl bg-zinc-900/30 border border-zinc-700/50"
           >
             <Image
               src={member.image}
               alt={member.name}
               width={400}
               height={600}
-              className="rounded-xl object-cover w-32 h-full"
+              className="rounded-xl object-cover w-full xs:w-32 h-full"
             />
             <div>
               <h4 className="font-bold text-white">{member.name}</h4>
