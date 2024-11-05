@@ -2,40 +2,57 @@ import TestInfoCard from '@/components/TestInfoCard'
 import { testCardContent } from '@/constants/testsCardContent'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function TestsSelection() {
   return (
-    <section
-      className="flex h-full w-full p-2 sm:p-4 md:p-8 py-8 sm:py-12 md:py-16 flex-col justify-center bg-[#e1b4b4] xl:flex-row items-center xl:items-start gap-8 xl:gap-4"
-      id="testy"
-    >
-      <div className="w-full xl:w-[40%] flex flex-col gap-4 sm:gap-5 px-2 sm:px-6 md:px-10">
-        <h2 className="font-medium w-full xl:w-[80%] text-center xl:text-left text-2xl sm:text-3xl md:text-4xl leading-tight text-zinc-950">
-          Szeroki wybór testów i procedur.
-        </h2>
-        <p className="text-base sm:text-lg text-zinc-600 w-full xl:w-[90%] text-center xl:text-left">
-          Wybieraj spośród ponad 500 testów obejmujących szeroką gamę odpowiednich tematów rozwoju zawodowego opiekunów
-          medycznych!
-        </p>
-        <div className="flex items-center gap-2 justify-center xl:justify-start">
-          <p className="text-base sm:text-lg font-semibold text-zinc-900 transition-colors">Zobacz Wszystkie Testy </p>
-          <Link href="/testy-opiekun">
-            <div className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-full bg-white hover:bg-[#ffa5a5] cursor-pointer transition-all animate-pulse">
-              <Image
-                src="/right-arrow.png"
-                alt="right arrow"
-                width={36}
-                height={36}
-                className="object-cover h-3/4 w-3/4"
-              />
-            </div>
-          </Link>
-        </div>
+    <section className="relative w-full bg-gradient-to-b from-[#e1b4b4] to-[#f8e3e3] py-12 sm:py-16 md:py-20" id="testy">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5 mix-blend-overlay">
+        <Image src="/member.webp" alt="background pattern" fill className="object-cover" priority />
       </div>
-      <div className="w-full xl:w-[60%] flex h-full gap-4 sm:gap-6 flex-wrap justify-center xl:justify-start">
-        {testCardContent.map((card) => (
-          <TestInfoCard card={card} key={card.title} />
-        ))}
+
+      <div className="container relative mx-auto px-3 sm:px-4">
+        {/* Header Section */}
+        <div className="relative mb-10 sm:mb-16 flex flex-col items-center text-center">
+          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-100 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-800">
+            Baza Wiedzy
+          </span>
+          <h2 className="mb-4 sm:mb-6 max-w-2xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-900 px-2">
+            Szeroki wybór testów i procedur
+          </h2>
+          <p className="mb-6 sm:mb-8 max-w-3xl text-base sm:text-lg text-zinc-700 px-3">
+            Wybieraj spośród ponad 500 testów obejmujących szeroką gamę odpowiednich tematów rozwoju zawodowego
+            opiekunów medycznych!
+          </p>
+
+          {/* CTA Section */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            <SignedIn>
+              <Link
+                href="/testy-opiekun"
+                className="group flex items-center gap-2 sm:gap-3 rounded-full bg-white px-4 sm:px-6 py-2.5 sm:py-3 shadow-lg transition-all hover:bg-red-50"
+              >
+                <span className="text-sm sm:text-base font-semibold text-zinc-900">Zobacz Wszystkie Testy</span>
+                <div className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-red-100 transition-transform group-hover:translate-x-1">
+                  <Image src="/right-arrow.png" alt="arrow" width={20} height={20} className="h-3 w-3 sm:h-4 sm:w-4" />
+                </div>
+              </Link>
+            </SignedIn>
+            <SignedOut>
+              <div className="rounded-full bg-red-50 px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-red-900">
+                Zarejestruj się, aby uzyskać dostęp
+              </div>
+            </SignedOut>
+          </div>
+        </div>
+
+        {/* Cards Section */}
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-2">
+          {testCardContent.map((card) => (
+            <TestInfoCard key={card.title} card={card} />
+          ))}
+        </div>
       </div>
     </section>
   )

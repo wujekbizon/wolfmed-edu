@@ -7,6 +7,7 @@ import Membership from './_components/Membership'
 import EarlySupporters from '@/components/EarlySupporters'
 import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
+import About from './_components/About'
 
 export default function Home() {
   return (
@@ -20,25 +21,25 @@ export default function Home() {
         <GradientOverlay />
         <TriangleDivider
           direction="right"
-          className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-[#e1b4b4]"
+          className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-zinc-50"
         />
       </div>
-      <TestsSelection />
+      <Membership />
       <TriangleDivider
         direction="right"
-        className="border-t-transparent border-r-[#e1b4b4] border-b-[10vw] border-b-zinc-50"
+        className="border-t-transparent border-r-purple-100 border-b-[10vw] border-b-[#e1b4b4]"
       />
-      <Membership />
-      <TriangleDivider direction="left" className="border-t-[10vw] border-t-zinc-800 border-l-zinc-100" />
+
+      <TestsSelection />
+      <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#f8e3e3]  border-l-zinc-100" />
       <EarlySupporters />
-      <TriangleDivider direction="left" className="border-t-[10vw] border-t-zinc-200 border-l-zinc-900" />
+      <TriangleDivider direction="left" className="border-t-[10vw] border-t-zinc-200 border-l-[#0d0b0b]" />
       <SignedIn>
         <Contact />
       </SignedIn>
-      <TriangleDivider direction="right" className="border-b-[10vw] border-r-zinc-900 border-b-zinc-100" />
-      <div className="w-full h-full ">
-        <Footer />
-      </div>
+      <About />
+      <TriangleDivider direction="right" className="border-b-[10vw] border-r-[#0d0b0b] border-b-zinc-100" />
+      <Footer />
     </section>
   )
 }

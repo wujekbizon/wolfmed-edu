@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function ThankYou() {
   return (
     <div className="w-full flex items-center justify-center">
-      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 bg-white rounded-3xl shadow-xl">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 bg-white rounded-3xl shadow-xl border border-zinc-400/20">
         <div className="text-center mb-8">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-800 mb-4">
             Witamy w naszej społeczności!

@@ -4,7 +4,7 @@ import ThankYou from '@/components/ThankYou'
 
 export default function Membership() {
   return (
-    <section className="bg-gradient-to-b from-zinc-50 to-zinc-800 min-h-screen w-full py-8">
+    <section className="bg-gradient-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
       <div className="container mx-auto px-4">
         <SignedIn>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -16,7 +16,7 @@ export default function Membership() {
             {/* Community Updates Sidebar */}
             <aside className="lg:col-span-4 space-y-6">
               {/* Latest Updates */}
-              <div className="bg-white rounded-2xl shadow-xl p-6">
+              <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
                 <div className="space-y-4">
                   <div className="border-l-4 border-red-500 pl-4">
@@ -33,7 +33,7 @@ export default function Membership() {
               </div>
 
               {/* Video Procedures Announcement */}
-              <div className="bg-gradient-to-r from-[#ff5b5b] via-purple-500 to-transparent rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+              <div className="bg-gradient-to-r from-[#ff5b5b] to-purple-500 border border-zinc-400/20 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-3">Nowość 2025!</h3>
                   <p className="text-base mb-2 font-medium">Procedury Medyczne na Video</p>
@@ -50,7 +50,7 @@ export default function Membership() {
               </div>
 
               {/* Upcoming Features */}
-              <div className="bg-white rounded-2xl shadow-xl p-6">
+              <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Planowane Funkcje</h3>
                 <ul className="space-y-3 text-zinc-600">
                   <li className="flex items-center gap-2">
@@ -69,7 +69,7 @@ export default function Membership() {
               </div>
 
               {/* Community Spotlight */}
-              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white">
+              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
                 <h3 className="text-xl font-bold mb-3">Dołącz do Dyskusji</h3>
                 <p className="text-sm opacity-90 mb-4">
                   Wkrótce uruchomimy forum, gdzie będziesz mógł dzielić się wiedzą i doświadczeniem z innymi

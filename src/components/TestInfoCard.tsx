@@ -1,37 +1,92 @@
 import { TestCardContent } from '@/constants/testsCardContent'
 import Image from 'next/image'
 import Link from 'next/link'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function TestInfoCard({ card }: { card: TestCardContent }) {
-  return (
-    <Link
-      href={card.link}
-      className="h-[450px] sm:h-[470px] w-full sm:w-[95%] md:w-[370px] bg-zinc-50 flex flex-col transition-all justify-between rounded-2xl sm:rounded-[30px] hover:bg-white border hover:border-zinc-400/90 border-red-200/40 shadow-md shadow-zinc-500"
-    >
-      <div className="flex h-full w-full flex-col gap-2 px-4 sm:px-6 md:px-8 pt-4 sm:pt-6 md:pt-8">
-        <p className="text-xs text-zinc-400">{card.category}</p>
-        <h3 className="text-xl sm:text-2xl text-zinc-900 font-semibold">{card.title}</h3>
-        <p className="text-sm sm:text-base text-zinc-900">{card.content}</p>
-        <div className="flex flex-col xs:flex-row items-center justify-between mt-2 xs:mt-4 gap-2">
-          <div className="w-full xs:w-1/2 h-full flex items-center gap-2">
-            <Image src="/upload.png" alt="date" width={20} height={20} className="w-5 h-5 sm:w-6 sm:h-6" />
-            <div className="flex flex-col justify-center">
-              <p className="text-xs text-zinc-400">Opublikowano</p>
-              <p className="text-sm text-zinc-900 font-semibold">{card.date}</p>
+  const CardContent = () => (
+    <div className="flex h-[450px] sm:h-[500px] flex-col">
+      {/* Card Image */}
+      <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-t-2xl">
+        <Image
+          src={card.image}
+          alt={card.category}
+          width={400}
+          height={200}
+          className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
+        <span className="absolute left-3 sm:left-4 top-3 sm:top-4 rounded-full bg-red-100/90 px-2.5 sm:px-3 py-1 text-xs font-medium text-red-900 backdrop-blur-sm">
+          {card.category}
+        </span>
+      </div>
+
+      {/* Card Content */}
+      <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
+        {/* Title and Description */}
+        <div className="space-y-1.5 sm:space-y-2">
+          <h3 className="line-clamp-2 text-lg sm:text-xl font-bold text-zinc-100">{card.title}</h3>
+          <p className="line-clamp-2 text-xs sm:text-sm text-zinc-400">{card.content}</p>
+        </div>
+
+        <div className="space-y-3 sm:space-y-4">
+          {/* Stats Grid */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 border-t border-zinc-700/50 pt-3 sm:pt-4">
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
+                <Image src="/upload.png" alt="calendar" width={16} height={16} className="h-3 w-3 sm:h-4 sm:w-4 opacity-70" />
+              </div>
+              <div>
+                <p className="text-[10px] sm:text-xs text-zinc-500">Data publikacji</p>
+                <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.date}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
+                <Image src="/stopwatch.png" alt="timer" width={16} height={16} className="h-3 w-3 sm:h-4 sm:w-4 opacity-70" />
+              </div>
+              <div>
+                <p className="text-[10px] sm:text-xs text-zinc-500">{card.testsLabel}</p>
+                <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.testsNumber}</p>
+              </div>
             </div>
           </div>
-          <div className="w-full xs:w-1/2 h-full flex items-center justify-start xs:justify-end gap-2">
-            <Image src="/stopwatch.png" alt="date" width={20} height={20} className="w-5 h-5 sm:w-6 sm:h-6" />
-            <div className="flex flex-col">
-              <p className="text-xs text-zinc-400">Liczba {card.testsLabel}</p>
-              <p className="text-sm text-zinc-900 font-semibold">{card.testsNumber}</p>
-            </div>
+
+          {/* Additional Info */}
+          <div className="flex items-center justify-center border-t border-zinc-700/50 pt-3 sm:pt-4">
+            <SignedIn>
+              <div className="rounded-full bg-red-900/10 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-red-200">
+                Kliknij aby otworzyć
+              </div>
+            </SignedIn>
+            <SignedOut>
+              <div className="rounded-full bg-zinc-800/50 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-400">
+                Zaloguj się
+              </div>
+            </SignedOut>
           </div>
         </div>
       </div>
-      <div className="w-full h-full flex items-center justify-center overflow-y-hidden">
-        <Image src={card.image} alt={card.category} width={400} height={200} className="w-full h-full object-cover" />
-      </div>
-    </Link>
+    </div>
+  )
+
+  const cardClasses =
+    'group w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all ' +
+    'border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 ' +
+    'hover:border-red-900/20'
+
+  return (
+    <>
+      <SignedIn>
+        <Link href={card.link} className={`${cardClasses}`}>
+          <CardContent />
+        </Link>
+      </SignedIn>
+      <SignedOut>
+        <div className={cardClasses}>
+          <CardContent />
+        </div>
+      </SignedOut>
+    </>
   )
 }
