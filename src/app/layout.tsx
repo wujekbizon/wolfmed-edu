@@ -1,5 +1,6 @@
 import '@/styles/globals.css'
 
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import Navbar from './_components/Navbar'
@@ -62,6 +63,7 @@ export default function RootLayout({
               <ToastProvider>{children}</ToastProvider>
             </Providers>
           </main>
+          <SpeedInsights />
         </body>
       </html>
     </ClerkProviderWrapper>
