@@ -1589,7 +1589,7 @@
         },
         {
           "option": "lewej kończyny górnej.",
-          "isCorrect": true
+          "isCorrect": false
         },
         {
           "option": "obu kończyn górnych równocześnie.",
@@ -1597,7 +1597,7 @@
         },
         {
           "option": "prawej kończyny górnej.",
-          "isCorrect": false
+          "isCorrect": true
         }
       ],
       "question": "Opiekun powinien rozpocząć zdejmowanie koszuli nocnej pacjentce z niedowładem połowiczym lewostronnym od"
