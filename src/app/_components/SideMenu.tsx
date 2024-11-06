@@ -11,46 +11,63 @@ export default function SideMenu() {
 
   return (
     <aside
-      className={`fixed z-50 h-screen left-0 top-0 p-5 w-[calc(100vw_-_8px)] bg-zinc-950/95 border-red-200/40 shadow-md shadow-zinc-500 flex lg:hidden flex-col transition-transform ${
-        isMenuOpen ? 'translate-x-[0%]' : 'translate-x-[140%]'
-      }`}
+      className={`fixed z-50 h-screen left-0 top-0 w-[calc(100vw)] bg-gradient-to-b from-zinc-900/95 to-zinc-950/95 
+        backdrop-blur-sm border-r border-red-300/20 shadow-xl shadow-zinc-950/20 flex lg:hidden flex-col 
+        transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-[0%]' : 'translate-x-[140%]'}`}
     >
-      <div className="flex justify-end">
+      <div className="flex justify-end p-5">
         <CloseIcon onClick={toggleMenu} />
       </div>
-      <div className="h-full w-full flex flex-col justify-around">
-        <div className="grid h-full w-full grid-cols-2 grid-rows-2 gap-5 pt-5 rounded-lg xs:grid-cols-2 ">
-          {navLinks.map((link) => (
-            <Link
-              onClick={toggleMenu}
-              href={link.linkUrl}
-              key={link.id}
-              className="w-full h-full flex items-center bg-[#ffc5c5] hover:scale-95 transition-all border border-red-200/40  hover:bg-[#f58a8a]  hover:border-zinc-800 rounded-lg justify-center"
-            >
-              <div className="flex items-center justify-center">
-                <p className="text-xl text-zinc-90 text-center">{link.label}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <div className="grid h-full w-full grid-cols-2 grid-rows-3 gap-5 rounded-lg pt-5 xs:grid-cols-2 ">
-          {sideMenuNavigationLinks.map((link) => (
-            <div
-              key={link.label}
-              className="flex h-full w-full flex-col items-center justify-center rounded-lg border border-red-200/40 bg-[#ffc5c5] p-2 transition-all hover:scale-95 hover:bg-[#f58a8a]"
-            >
+
+      <nav className="flex flex-col h-full px-5 pb-8">
+        {/* Main Navigation */}
+        <div>
+          <h3 className="text-red-200 text-sm font-medium mb-3 px-1">Menu główne</h3>
+          <div className="space-y-3">
+            {navLinks.map((link) => (
               <Link
-                href={link.url}
-                className="flex h-full w-full flex-col items-center justify-center gap-3"
                 onClick={toggleMenu}
+                href={link.linkUrl}
+                key={link.id}
+                className={`group w-full p-4 flex items-center gap-4 rounded-xl border transition-all duration-200
+                  ${
+                    pathname === link.linkUrl
+                      ? 'bg-gradient-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
+                      : 'bg-[#ffc5c5] border-red-200/40 hover:bg-[#f58a8a] hover:shadow-md'
+                  }`}
               >
-                {link.icon}
-                <p className="text-center text-base text-zinc-900 md:text-lg ">{link.label}</p>
+                <span className="text-zinc-900 transition-transform duration-200 group-hover:scale-110">
+                  {link.icon}
+                </span>
+                <span className="text-lg font-medium text-zinc-900">{link.label}</span>
               </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+
+        {/* Dashboard Navigation */}
+        <div className="mt-16">
+          <h3 className="text-red-200 text-sm font-medium mb-3 px-1">Panel użytkownika</h3>
+          <div className="grid grid-cols-2 gap-3">
+            {sideMenuNavigationLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.url}
+                onClick={toggleMenu}
+                className={`group flex flex-col items-center justify-center p-4 rounded-xl border
+                  transition-all duration-200 ${
+                    pathname === link.url
+                      ? 'bg-gradient-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
+                      : 'bg-[#ffc5c5] border-red-200/40 hover:bg-[#f58a8a] hover:shadow-md'
+                  }`}
+              >
+                <span className="transition-transform duration-200 group-hover:scale-110">{link.icon}</span>
+                <span className="mt-2 text-sm font-medium text-zinc-900 text-center">{link.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </nav>
     </aside>
   )
 }
