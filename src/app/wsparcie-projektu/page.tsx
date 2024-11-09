@@ -1,7 +1,6 @@
 import ProductDisplay from '@/components/ProductDisplay'
 import Image from 'next/image'
 
-export const dynamic = 'force-static'
 export default function MembershipPage() {
   return (
     <section className="relative flex items-center justify-center min-h-[calc(100vh_-_70px)] rounded-br-3xl lg:rounded-br-[50px] rounded-bl-3xl lg:rounded-bl-[50px] p-3 sm:p-12 overflow-hidden">

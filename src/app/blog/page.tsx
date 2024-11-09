@@ -2,8 +2,6 @@ import { Metadata } from 'next'
 import AllPosts from '@/components/AllPosts'
 import { fileData } from '@/server/fetchData'
 
-export const dynamic = 'force-static'
-
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
   description:

@@ -4,8 +4,6 @@ import { Suspense } from 'react'
 import Loading from './loading'
 import { fileData } from '@/server/fetchData'
 
-export const dynamic = 'force-static'
-
 export const metadata: Metadata = {
   title: 'Testy Opiekuna Medycznego',
   description:
