@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
 
-export const dynamic = 'force-static'
-
 export default function NotFound() {
   return (
     <div className="relative flex h-[calc(100vh_-_70px)] rounded-br-3xl lg:rounded-br-[50px] rounded-bl-3xl lg:rounded-bl-[50px] flex-col items-center justify-end">
