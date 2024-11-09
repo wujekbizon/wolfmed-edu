@@ -8,12 +8,6 @@ import UserProgress from '@/components/UserProgress'
 import ExamCountdown from '@/components/ExamCountdown'
 import SupporterStatus from '@/components/SupporterStatus'
 import UserMotto from '@/components/UserMotto'
-import { Suspense } from 'react'
-import UserProgressSkeleton from '@/components/skeletons/UserProgressSkeleton'
-import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
-import UserMottoSkeleton from '@/components/skeletons/UserMottoSkeleton'
-
-export const experimental_ppr = true
 
 export default async function TestsPage() {
   const user = await currentUser()
@@ -35,20 +29,14 @@ export default async function TestsPage() {
           }`}
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Suspense fallback={<UsernameSkeleton />}>
-              <h2 className="text-xl sm:text-2xl text-zinc-800 font-bold text-center sm:text-left">
-                Panel użytkownika, <span className="text-[#f58a8a] font-semibold">{username}</span>
-              </h2>
-            </Suspense>
-            <Suspense fallback={<div>Loading...</div>}>
-              <SupporterStatus isSupporter={isSupporter} />
-            </Suspense>
+            <h2 className="text-xl sm:text-2xl text-zinc-800 font-bold text-center sm:text-left">
+              Panel użytkownika, <span className="text-[#f58a8a] font-semibold">{username}</span>
+            </h2>
+            <SupporterStatus isSupporter={isSupporter} />
           </div>
           <div className="flex flex-col gap-6">
             <div className="flex flex-col xs:flex-row gap-6">
-              <Suspense fallback={<UserMottoSkeleton />}>
-                <UserMotto motto={motto} />
-              </Suspense>
+              <UserMotto motto={motto} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
@@ -59,9 +47,7 @@ export default async function TestsPage() {
               </div>
             </div>
           </div>
-          <Suspense fallback={<UserProgressSkeleton />}>
-            <UserProgress testsAttempted={testsAttempted} totalScore={totalScore} totalQuestions={totalQuestions} />
-          </Suspense>
+          <UserProgress testsAttempted={testsAttempted} totalScore={totalScore} totalQuestions={totalQuestions} />
         </div>
       </div>
     </section>

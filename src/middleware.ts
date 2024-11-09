@@ -26,7 +26,7 @@ function applyCsp(request: NextRequest) {
         ? 'https://clerk.wolfmed-edukacja.pl'
         : 'https://definite-mantis-39.clerk.accounts.dev'
     };
-    img-src 'self' data: https://img.clerk.com https://www.google.pl https://www.google.com https://fonts.gstatic.com https://www.googletagmanager.com;
+    img-src 'self' data: https://img.clerk.com https://utfs.io https://www.google.pl https://www.google.com https://fonts.gstatic.com https://www.googletagmanager.com;
     worker-src 'self' blob:;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;

@@ -8,8 +8,6 @@ import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
 import About from './_components/About'
 
-export const experimental_ppr = true
-
 export default async function Home() {
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
