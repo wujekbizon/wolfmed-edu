@@ -4,6 +4,7 @@ import { db } from '@/server/db/index'
 import { eq } from 'drizzle-orm'
 import { payments, processedEvents, subscriptions, users } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
+import { revalidateTag } from 'next/dist/server/web/spec-extension/revalidate'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
@@ -93,6 +94,7 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
         eventId,
         userId: id,
       })
+      revalidateTag('supporter')
     })
 
     console.log(`User with ID: ${id} is now a supporter.`)

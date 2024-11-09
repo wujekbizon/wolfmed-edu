@@ -1,18 +1,20 @@
+import { calculateAverageScore } from '@/helpers/calculateAverageScore'
 import CircularProgressBar from './CircularProgressBar'
 import LinearProgressBar from './LinearProgressBar'
+import { useMemo } from 'react'
 
 export default function UserProgress({
   testsAttempted,
-  averageScore,
   totalScore,
   totalQuestions,
 }: {
   testsAttempted: number
-  averageScore: number
   totalScore: number
   totalQuestions: number
 }) {
   const overallProgressPercentage = totalQuestions > 0 ? (totalScore / totalQuestions) * 100 : 0
+
+  const averageScore = useMemo(() => calculateAverageScore(totalScore, totalQuestions), [totalScore, totalQuestions])
 
   return (
     <div
@@ -26,7 +28,7 @@ export default function UserProgress({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">
         <div className="flex flex-col items-center">
           <CircularProgressBar
-            percentage={Math.min((testsAttempted / 100) * 100, 100)}
+            percentage={Math.min((testsAttempted / 150) * 100, 100)}
             color="#ff9898"
             size={120}
             strokeWidth={12}

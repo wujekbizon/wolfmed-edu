@@ -10,6 +10,7 @@ const nextConfig = {
       },
     },
     reactCompiler: true,
+    ppr: 'incremental',
   },
   images: {
     remotePatterns: [

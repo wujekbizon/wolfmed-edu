@@ -4,6 +4,7 @@ import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq, asc } from 'drizzle-orm'
+import { unstable_cache } from 'next/cache'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -104,49 +105,36 @@ export const updateUsernameByUserId = cache(async (userId: string, newUsername: 
   await db.update(users).set({ username: newUsername }).where(eq(users.userId, userId))
 })
 
-export const getUserUsername = cache(async (userId: string) => {
-  const user = await db.query.users.findFirst({
-    where: (model, { eq }) => eq(model.userId, userId),
-  })
-  return user?.username
+export const getUserUsername = cache(async (userId: string): Promise<string> => {
+  const getCachedUsername = unstable_cache(async () => {
+    const user = await db.query.users.findFirst({
+      where: (model, { eq }) => eq(model.userId, userId),
+      columns: { username: true },
+    })
+    return user?.username || ''
+  }, ['username'])
+  return getCachedUsername()
 })
 
 export const updateMottoByUserId = cache(async (userId: string, newMotto: string) => {
   await db.update(users).set({ motto: newMotto }).where(eq(users.userId, userId))
 })
 
-export const getUserMotto = cache(async (userId: string) => {
-  const user = await db.query.users.findFirst({
-    where: (model, { eq }) => eq(model.userId, userId),
-  })
-  return user?.motto
-})
-
-export const getTestScoreAndQuestionCountByUser = cache(
-  async (userId: string): Promise<{ totalScore: number; totalQuestions: number }> => {
-    const result = await db
-      .select({
-        totalScore: users.totalScore,
-        totalQuestions: users.totalQuestions,
+export const getUserMotto = cache(async (userId: string): Promise<string> => {
+  const getCachedMotto = unstable_cache(
+    async () => {
+      const user = await db.query.users.findFirst({
+        where: (model, { eq }) => eq(model.userId, userId),
+        columns: { motto: true },
       })
-      .from(users)
-      .where(eq(users.userId, userId))
-      .limit(1)
-
-    return {
-      totalScore: result[0]?.totalScore || 0,
-      totalQuestions: result[0]?.totalQuestions || 0,
+      return user?.motto || ''
+    },
+    [userId],
+    {
+      tags: [`motto-${userId}`],
     }
-  }
-)
-
-export const getCompletedTestCountByUser = cache(async (userId: string): Promise<number> => {
-  const result = await db
-    .select({ testsAttempted: users.testsAttempted })
-    .from(users)
-    .where(eq(users.userId, userId))
-    .limit(1)
-  return result[0]?.testsAttempted || 0
+  )
+  return getCachedMotto()
 })
 
 export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id: string; username: string }[]> => {
@@ -167,8 +155,50 @@ export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id:
 })
 
 export const getSupporterByUserId = cache(async (userId: string): Promise<boolean> => {
-  const supporter = await db.query.users.findFirst({
-    where: (model, { eq }) => eq(model.userId, userId),
-  })
-  return supporter?.supporter || false
+  const getCachedSupporterStatus = unstable_cache(
+    async () => {
+      const user = await db.query.users.findFirst({
+        where: (model, { eq }) => eq(model.userId, userId),
+        columns: { supporter: true },
+      })
+      return user?.supporter || false
+    },
+    [userId],
+    {
+      revalidate: 3600,
+      tags: ['supporter'],
+    }
+  )
+
+  return getCachedSupporterStatus()
 })
+
+export const getUserStats = cache(
+  async (
+    userId: string
+  ): Promise<{
+    totalScore: number
+    totalQuestions: number
+    testsAttempted: number
+  }> => {
+    const getCachedStats = unstable_cache(async () => {
+      const result = await db
+        .select({
+          totalScore: users.totalScore,
+          totalQuestions: users.totalQuestions,
+          testsAttempted: users.testsAttempted,
+        })
+        .from(users)
+        .where(eq(users.userId, userId))
+        .limit(1)
+
+      return {
+        totalScore: result[0]?.totalScore || 0,
+        totalQuestions: result[0]?.totalQuestions || 0,
+        testsAttempted: result[0]?.testsAttempted || 0,
+      }
+    }, ['score'])
+
+    return getCachedStats()
+  }
+)
