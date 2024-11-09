@@ -19,7 +19,7 @@ export const testCardContent: TestCardContent[] = [
     date: '31 Paż 2024',
     testsNumber: NUMBER_OF_TESTS,
     testsLabel: 'Testów',
-    image: '/tests.png',
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Jp1VzHmQWsLSvF0ZVh7qXdCNxbjatwczey8g',
     link: '/testy-opiekun/nauka',
   },
   {
@@ -29,7 +29,7 @@ export const testCardContent: TestCardContent[] = [
     date: '27 Sie 2024',
     testsNumber: NUMBER_OF_PROCEDURES,
     testsLabel: 'Procedur',
-    image: '/syringie.webp',
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5HvfwYbqRXZAfUgQh6yMWki0EFjo5rbcJDS2m',
     link: '/testy-opiekun/procedury',
   },
 ]

@@ -19,7 +19,7 @@ export default function ProductCard({ product }: { product: Product }) {
           }`}
         >
           <Image
-            src="/blood-test.png"
+            src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
             alt="blood icon"
             width={64}
             height={64}

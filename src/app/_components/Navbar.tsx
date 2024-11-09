@@ -21,7 +21,7 @@ export default function Navbar() {
       {isMenuOpen && <SideMenu />}
       <header
         className={`${
-          pathname === '/' ? 'bg-white' : 'bg-transparent'
+          pathname === '/' ? 'bg-white' : 'bg-zinc-500'
         } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animate-slideInDown opacity-0 [--slidein-delay:100ms] transition-all duration-300}
           ${
             pathname === '/' && isScrolled

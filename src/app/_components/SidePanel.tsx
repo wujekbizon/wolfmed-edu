@@ -12,15 +12,15 @@ export default function SidePanel() {
 
   return (
     <nav
-      className={`z-10 hidden h-full min-w-20 flex-col gap-20 border rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 transition-all duration-500 ${
+      className={`z-10 hidden h-full min-w-20 flex-col gap-20 rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex bg-zinc-800/30 backdrop-blur-md border border-zinc-600/20 shadow-md transition-all duration-500 ${
         isSidePanelOpen ? 'w-64' : 'w-20'
       }`}
     >
       <div className="flex w-full flex-row place-items-center justify-between gap-1">
-        <div className="h-10 w-10 bg-white rounded-full flex justify-center items-center border-red-300/50 shadow-sm shadow-zinc-400">
+        <div className="h-10 w-10 bg-white/70 rounded-full flex justify-center items-center border-red-300/20 shadow-sm">
           <Image
             className="h-8 w-8 object-cover"
-            src="/blood-test.png"
+            src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
             alt="blood vial"
             width={60}
             height={60}
@@ -28,7 +28,7 @@ export default function SidePanel() {
           />
         </div>
         <button
-          className="flex justify-center bg-[#ffc5c5] items-center pr-0.5 transition-all hover:scale-95 rounded-md border border-red-100/50 hover:border-zinc-900 hover:shadow-sm hover:bg-[#f58a8a] shadow-md shadow-zinc-500"
+          className="flex justify-center bg-[#ffc5c5]/70 backdrop-blur-sm items-center pr-0.5 transition-all hover:scale-95 rounded-md border border-red-100/20 hover:border-zinc-900/10 hover:shadow-sm hover:bg-[#f58a8a]/70 shadow-sm"
           onClick={toggleSidePanel}
         >
           <svg

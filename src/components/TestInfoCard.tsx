@@ -34,7 +34,13 @@ export default function TestInfoCard({ card }: { card: TestCardContent }) {
           <div className="grid grid-cols-2 gap-3 sm:gap-4 border-t border-zinc-700/50 pt-3 sm:pt-4">
             <div className="flex items-center gap-2">
               <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
-                <Image src="/upload.png" alt="calendar" width={16} height={16} className="h-3 w-3 sm:h-4 sm:w-4 opacity-70" />
+                <Image
+                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5sBPZa9Wj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6"
+                  alt="calendar"
+                  width={16}
+                  height={16}
+                  className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
+                />
               </div>
               <div>
                 <p className="text-[10px] sm:text-xs text-zinc-500">Data publikacji</p>
@@ -43,7 +49,13 @@ export default function TestInfoCard({ card }: { card: TestCardContent }) {
             </div>
             <div className="flex items-center gap-2">
               <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
-                <Image src="/stopwatch.png" alt="timer" width={16} height={16} className="h-3 w-3 sm:h-4 sm:w-4 opacity-70" />
+                <Image
+                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuF8wystcXZNvjLlr5ady1QbVDuRB7qTC8fU"
+                  alt="timer"
+                  width={16}
+                  height={16}
+                  className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
+                />
               </div>
               <div>
                 <p className="text-[10px] sm:text-xs text-zinc-500">{card.testsLabel}</p>

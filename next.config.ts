@@ -11,6 +11,16 @@ const nextConfig = {
     },
     reactCompiler: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'utfs.io',
+        port: '',
+        pathname: '/a/zw3dk8dyy9/**',
+      },
+    ],
+  },
 }
 
 export default nextConfig

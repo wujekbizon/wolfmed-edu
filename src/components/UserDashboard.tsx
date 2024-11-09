@@ -2,7 +2,9 @@ import DashboardInfo from '@/components/DashboardInfo'
 import UsernameForm from './UsernameForm'
 import MottoForm from './MottoForm'
 import UserProgress from './UserProgress'
-import Link from 'next/link'
+import ExamCountdown from './ExamCountdown'
+import SupporterStatus from './SupporterStatus'
+import UserMotto from './UserMotto'
 
 export default function UserDashboard({
   username,
@@ -24,42 +26,32 @@ export default function UserDashboard({
   return (
     <section className="flex justify-center h-full w-full">
       <div className="lg:w-[80%] xl:w-3/4 h-full w-full flex flex-col items-center p-2 gap-8 overflow-y-scroll scrollbar-webkit">
-        <div className="w-full flex justify-center bg-white p-6 rounded-xl shadow-md shadow-zinc-500 border border-red-200/40">
-          <p className="text-lg font-semibold text-zinc-800 text-center">
-            Twoje motto: <span className="text-[#f58a8a] font-bold ml-2">{motto}</span>
-          </p>
-        </div>
+        <ExamCountdown />
         <DashboardInfo />
         <div
-          className={`bg-white w-full gap-8 flex flex-col p-6 sm:p-10 rounded-2xl shadow-lg ${
-            isSupporter ? 'border-2 border-green-300/80' : ''
+          className={`backdrop-blur-sm w-full gap-8 flex flex-col p-3 xs:-p-4 sm:p-10 rounded-2xl shadow-lg border border-zinc-200/60 transition-all duration-300 ${
+            isSupporter ? 'bg-gradient-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80' : 'bg-zinc-50/80'
           }`}
         >
-          <h2 className="text-xl sm:text-2xl text-zinc-800 font-bold text-center sm:text-left">
-            Panel użytkownika, <span className="text-[#f58a8a]">{username}</span>
-          </h2>
-          {isSupporter ? (
-            <div
-              className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-              role="alert"
-            >
-              <strong className="font-bold">Dziękujemy za wsparcie!</strong>
-              <span className="block sm:inline"> Twoje wsparcie pomaga nam rozwijać projekt.</span>
-            </div>
-          ) : (
-            <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
-              <strong className="font-bold">Wesprzyj nas!</strong>
-              <span className="block sm:inline"> Wspieraj rozwój projektu i pomóż nam w jego dalszym tworzeniu.</span>
-              <Link href="/wsparcie-projektu" className="underline ml-2 hover:text-blue-900 transition-colors">
-                Dowiedz się więcej
-              </Link>
-            </div>
-          )}
-          <div className="flex flex-col sm:flex-row gap-6 bg-zinc-50 p-4 sm:p-6 rounded-xl shadow-md shadow-zinc-500 border border-red-200/40">
-            <UsernameForm />
-            <MottoForm />
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <h2 className="text-xl sm:text-2xl text-zinc-800 font-bold text-center sm:text-left">
+              Panel użytkownika, <span className="text-[#f58a8a] font-semibold">{username}</span>
+            </h2>
+            <SupporterStatus isSupporter={isSupporter} />
           </div>
-
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col xs:flex-row gap-6">
+              <UserMotto motto={motto} />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <UsernameForm />
+              </div>
+              <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <MottoForm />
+              </div>
+            </div>
+          </div>
           <UserProgress
             testsAttempted={testsAttempted}
             averageScore={averageScore}

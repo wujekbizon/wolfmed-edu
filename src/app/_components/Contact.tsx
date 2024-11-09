@@ -20,7 +20,7 @@ export default function Contact() {
       className="relative h-screen xs:min-h-[80vh] w-full overflow-hidden bg-gradient-to-r from-zinc-800 to-zinc-950"
     >
       <Image
-        src="/contact.webp"
+        src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5odaAfpvSLyQhzP6mdErKItkOUcXlTqiNMavY"
         alt="contact"
         className="absolute h-full w-full object-cover opacity-40"
         width={800}

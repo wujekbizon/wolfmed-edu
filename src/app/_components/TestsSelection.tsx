@@ -6,12 +6,10 @@ import { SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function TestsSelection() {
   return (
-    <section className="relative w-full bg-gradient-to-b from-[#e1b4b4] to-[#f8e3e3] py-12 sm:py-16 md:py-20" id="testy">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5 mix-blend-overlay">
-        <Image src="/member.webp" alt="background pattern" fill className="object-cover" priority />
-      </div>
-
+    <section
+      className="relative w-full bg-gradient-to-b from-[#e1b4b4] to-[#f8e3e3] py-12 sm:py-16 md:py-20"
+      id="testy"
+    >
       <div className="container relative mx-auto px-3 sm:px-4">
         {/* Header Section */}
         <div className="relative mb-10 sm:mb-16 flex flex-col items-center text-center">
@@ -35,7 +33,13 @@ export default function TestsSelection() {
               >
                 <span className="text-sm sm:text-base font-semibold text-zinc-900">Zobacz Wszystkie Testy</span>
                 <div className="flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-red-100 transition-transform group-hover:translate-x-1">
-                  <Image src="/right-arrow.png" alt="arrow" width={20} height={20} className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <Image
+                    src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5DBUrW97Z2fx3PC4csA61VRoig5ELrXbvQz8K"
+                    alt="arrow"
+                    width={20}
+                    height={20}
+                    className="h-3 w-3 sm:h-4 sm:w-4"
+                  />
                 </div>
               </Link>
             </SignedIn>

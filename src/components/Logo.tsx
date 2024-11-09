@@ -10,7 +10,7 @@ export default function Logo({ className }: { className: string }) {
         <div className="h-12 w-12">
           <Image
             className="h-full w-full object-cover"
-            src="/blood-test.png"
+            src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
             alt="blood vial"
             width={80}
             height={80}

@@ -14,7 +14,7 @@ export default function Footer() {
         <div className="flex items-center justify-center mb-8 gap-3 flex-col sm:flex-row ">
           <div className="w-14 h-14 bg-zinc-200 rounded-full border justify-center items-center border-zinc-400">
             <Image
-              src="/blood-test.png"
+              src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
               alt="Wolfmed Edukacja logo"
               width={50}
               height={50}

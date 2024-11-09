@@ -57,7 +57,7 @@ export default function RootLayout({
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <GoogleAnalyticsNoscript />
-          <main className="shadow-lg shadow-zinc-400 bg-gradient-to-t from-[rgb(245,212,207)] to-[#e8b8b1] border-[3px] rounded-3xl lg:rounded-[50px] border-white">
+          <main className="shadow-lg shadow-zinc-400 border-[3px] rounded-3xl lg:rounded-[50px] border-white">
             <Providers>
               <Navbar />
               <ToastProvider>{children}</ToastProvider>

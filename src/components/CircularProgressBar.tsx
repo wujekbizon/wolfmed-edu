@@ -1,35 +1,42 @@
 'use client'
 
-import React from 'react'
+import { motion } from 'framer-motion'
 
 interface CircularProgressBarProps {
   percentage: number
   color: string
   size: number
   strokeWidth: number
+  bgColor?: string
 }
 
-const CircularProgressBar: React.FC<CircularProgressBarProps> = ({ percentage, color, size, strokeWidth }) => {
+const CircularProgressBar: React.FC<CircularProgressBarProps> = ({
+  percentage,
+  color,
+  size,
+  strokeWidth,
+  bgColor = 'rgba(255, 255, 255, 0.1)',
+}) => {
   const radius = (size - strokeWidth) / 2
   const circumference = radius * 2 * Math.PI
   const strokeDashoffset = circumference - (percentage / 100) * circumference
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <circle
-        className="text-zinc-300"
-        strokeWidth={strokeWidth}
-        stroke="currentColor"
-        fill="transparent"
-        r={radius}
-        cx={size / 2}
-        cy={size / 2}
-      />
-      <circle
-        className="text-blue-600"
+    <motion.svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      initial={false}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1, ease: 'easeOut' }}
+    >
+      <circle strokeWidth={strokeWidth} stroke={bgColor} fill="transparent" r={radius} cx={size / 2} cy={size / 2} />
+      <motion.circle
         strokeWidth={strokeWidth}
         strokeDasharray={circumference}
-        strokeDashoffset={strokeDashoffset}
+        initial={{ strokeDashoffset: circumference }}
+        animate={{ strokeDashoffset }}
+        transition={{ duration: 1, ease: 'easeOut' }}
         strokeLinecap="round"
         stroke={color}
         fill="transparent"
@@ -37,15 +44,24 @@ const CircularProgressBar: React.FC<CircularProgressBarProps> = ({ percentage, c
         cx={size / 2}
         cy={size / 2}
         style={{
-          transition: 'stroke-dashoffset 0.5s ease 0s',
           transform: 'rotate(-90deg)',
           transformOrigin: '50% 50%',
         }}
       />
-      <text x="50%" y="50%" dy=".3em" textAnchor="middle" className="font-bold text-xl" fill={color}>
+      <motion.text
+        x="50%"
+        y="50%"
+        dy=".3em"
+        textAnchor="middle"
+        className="font-bold text-lg sm:text-xl"
+        fill={color}
+        initial={false}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
         {`${Math.round(percentage)}%`}
-      </text>
-    </svg>
+      </motion.text>
+    </motion.svg>
   )
 }
 
