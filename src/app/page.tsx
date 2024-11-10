@@ -7,15 +7,8 @@ import EarlySupporters from '@/components/EarlySupporters'
 import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
 import About from './_components/About'
-import { currentUser } from '@clerk/nextjs/server'
-import { revalidateTag } from 'next/cache'
 
 export default async function Home() {
-  const user = await currentUser()
-  if (user) {
-    revalidateTag('username')
-  }
-
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
       <Hero />

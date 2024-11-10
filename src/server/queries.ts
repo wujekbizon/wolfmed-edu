@@ -117,7 +117,7 @@ export const getUserUsername = cache(async (userId: string): Promise<string> => 
     ['username'],
     {
       tags: ['username'],
-      revalidate: 3600,
+      revalidate: 60,
     }
   )
   return getCachedUsername()
