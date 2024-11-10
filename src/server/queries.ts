@@ -4,7 +4,6 @@ import { completedTestes, payments, subscriptions, users } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq, asc } from 'drizzle-orm'
-import { unstable_cache } from 'next/cache'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -106,21 +105,11 @@ export const updateUsernameByUserId = cache(async (userId: string, newUsername: 
 })
 
 export const getUserUsername = cache(async (userId: string): Promise<string> => {
-  const getCachedUsername = unstable_cache(
-    async () => {
-      const user = await db.query.users.findFirst({
-        where: (model, { eq }) => eq(model.userId, userId),
-        columns: { username: true },
-      })
-      return user?.username || ''
-    },
-    ['username'],
-    {
-      tags: ['username'],
-      revalidate: 60,
-    }
-  )
-  return getCachedUsername()
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+    columns: { username: true },
+  })
+  return user?.username || ''
 })
 
 export const updateMottoByUserId = cache(async (userId: string, newMotto: string) => {
@@ -128,21 +117,11 @@ export const updateMottoByUserId = cache(async (userId: string, newMotto: string
 })
 
 export const getUserMotto = cache(async (userId: string): Promise<string> => {
-  const getCachedMotto = unstable_cache(
-    async () => {
-      const user = await db.query.users.findFirst({
-        where: (model, { eq }) => eq(model.userId, userId),
-        columns: { motto: true },
-      })
-      return user?.motto || ''
-    },
-    [userId],
-    {
-      tags: [`motto-${userId}`],
-      revalidate: 3600,
-    }
-  )
-  return getCachedMotto()
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+    columns: { motto: true },
+  })
+  return user?.motto || ''
 })
 
 export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id: string; username: string }[]> => {
@@ -163,22 +142,11 @@ export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id:
 })
 
 export const getSupporterByUserId = cache(async (userId: string): Promise<boolean> => {
-  const getCachedSupporterStatus = unstable_cache(
-    async () => {
-      const user = await db.query.users.findFirst({
-        where: (model, { eq }) => eq(model.userId, userId),
-        columns: { supporter: true },
-      })
-      return user?.supporter || false
-    },
-    [userId],
-    {
-      tags: ['supporter'],
-      revalidate: 3600,
-    }
-  )
-
-  return getCachedSupporterStatus()
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+    columns: { supporter: true },
+  })
+  return user?.supporter || false
 })
 
 export const getUserStats = cache(
@@ -189,31 +157,20 @@ export const getUserStats = cache(
     totalQuestions: number
     testsAttempted: number
   }> => {
-    const getCachedStats = unstable_cache(
-      async () => {
-        const result = await db
-          .select({
-            totalScore: users.totalScore,
-            totalQuestions: users.totalQuestions,
-            testsAttempted: users.testsAttempted,
-          })
-          .from(users)
-          .where(eq(users.userId, userId))
-          .limit(1)
+    const result = await db
+      .select({
+        totalScore: users.totalScore,
+        totalQuestions: users.totalQuestions,
+        testsAttempted: users.testsAttempted,
+      })
+      .from(users)
+      .where(eq(users.userId, userId))
+      .limit(1)
 
-        return {
-          totalScore: result[0]?.totalScore || 0,
-          totalQuestions: result[0]?.totalQuestions || 0,
-          testsAttempted: result[0]?.testsAttempted || 0,
-        }
-      },
-      ['score'],
-      {
-        revalidate: 60,
-        tags: ['score'],
-      }
-    )
-
-    return getCachedStats()
+    return {
+      totalScore: result[0]?.totalScore || 0,
+      totalQuestions: result[0]?.totalQuestions || 0,
+      testsAttempted: result[0]?.testsAttempted || 0,
+    }
   }
 )
