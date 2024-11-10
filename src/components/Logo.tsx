@@ -14,7 +14,7 @@ export default function Logo({ className }: { className: string }) {
             alt="blood vial"
             width={80}
             height={80}
-            priority
+            loading="eager"
           />
         </div>
         <div className="flex flex-col justify-around h-full">

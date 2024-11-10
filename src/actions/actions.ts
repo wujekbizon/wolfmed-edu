@@ -18,7 +18,7 @@ import {
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql } from 'drizzle-orm'
 import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -98,7 +98,8 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
   // Update form state and redirect on success and redirect user to result page
   toFormState('SUCCESS', 'Test został wypełniony pomyślnie')
-  revalidatePath('/testy-opiekun', 'page')
+  // revalidatePath('/testy-opiekun', 'page')
+  revalidateTag('score')
   redirect('/testy-opiekun/wyniki')
 }
 

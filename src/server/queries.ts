@@ -106,13 +106,20 @@ export const updateUsernameByUserId = cache(async (userId: string, newUsername: 
 })
 
 export const getUserUsername = cache(async (userId: string): Promise<string> => {
-  const getCachedUsername = unstable_cache(async () => {
-    const user = await db.query.users.findFirst({
-      where: (model, { eq }) => eq(model.userId, userId),
-      columns: { username: true },
-    })
-    return user?.username || ''
-  }, ['username'])
+  const getCachedUsername = unstable_cache(
+    async () => {
+      const user = await db.query.users.findFirst({
+        where: (model, { eq }) => eq(model.userId, userId),
+        columns: { username: true },
+      })
+      return user?.username || ''
+    },
+    ['username'],
+    {
+      tags: ['username'],
+      revalidate: 3600,
+    }
+  )
   return getCachedUsername()
 })
 
@@ -132,6 +139,7 @@ export const getUserMotto = cache(async (userId: string): Promise<string> => {
     [userId],
     {
       tags: [`motto-${userId}`],
+      revalidate: 3600,
     }
   )
   return getCachedMotto()
@@ -165,8 +173,8 @@ export const getSupporterByUserId = cache(async (userId: string): Promise<boolea
     },
     [userId],
     {
-      revalidate: 3600,
       tags: ['supporter'],
+      revalidate: 3600,
     }
   )
 
@@ -181,23 +189,30 @@ export const getUserStats = cache(
     totalQuestions: number
     testsAttempted: number
   }> => {
-    const getCachedStats = unstable_cache(async () => {
-      const result = await db
-        .select({
-          totalScore: users.totalScore,
-          totalQuestions: users.totalQuestions,
-          testsAttempted: users.testsAttempted,
-        })
-        .from(users)
-        .where(eq(users.userId, userId))
-        .limit(1)
+    const getCachedStats = unstable_cache(
+      async () => {
+        const result = await db
+          .select({
+            totalScore: users.totalScore,
+            totalQuestions: users.totalQuestions,
+            testsAttempted: users.testsAttempted,
+          })
+          .from(users)
+          .where(eq(users.userId, userId))
+          .limit(1)
 
-      return {
-        totalScore: result[0]?.totalScore || 0,
-        totalQuestions: result[0]?.totalQuestions || 0,
-        testsAttempted: result[0]?.testsAttempted || 0,
+        return {
+          totalScore: result[0]?.totalScore || 0,
+          totalQuestions: result[0]?.totalQuestions || 0,
+          testsAttempted: result[0]?.testsAttempted || 0,
+        }
+      },
+      ['score'],
+      {
+        revalidate: 60,
+        tags: ['score'],
       }
-    }, ['score'])
+    )
 
     return getCachedStats()
   }
