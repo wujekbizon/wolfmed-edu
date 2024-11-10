@@ -30,7 +30,7 @@ function applyCsp(request: NextRequest) {
     worker-src 'self' blob:;
     font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://www.googletagmanager.com;
-    frame-src 'self' https://challenges.cloudflare.com https://checkout.stripe.com;
+    frame-src 'self' https://challenges.cloudflare.com https://checkout.stripe.com https://vercel.live;
     form-action 'self';
   `
   const contentSecurityPolicyHeaderValue = cspHeader.replace(/\s{2,}/g, ' ').trim()
