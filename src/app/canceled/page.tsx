@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+export const dynamic = 'force-static'
+
 export default function CanceledPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh_-_70px)] bg-transparent p-6 sm:p-12">

@@ -1,14 +1,14 @@
 import Script from 'next/script'
-import { headers } from 'next/headers'
+// import { headers } from 'next/headers'
 import { GA_ID, GTAG_JS_URI, GTM_JS_URI } from '@/constants/googleAnalytics'
 
-export default async function GoogleAnalytics() {
-  const nonce = await headers().then((headers) => headers.get('x-nonce') ?? '')
+export default function GoogleAnalytics() {
+  // const nonce = await headers().then((headers) => headers.get('x-nonce') ?? '')
 
   return (
     <>
-      <Script strategy="afterInteractive" src={GTAG_JS_URI} nonce={nonce} />
-      <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
+      <Script strategy="afterInteractive" src={GTAG_JS_URI} />
+      <Script id="google-analytics" strategy="afterInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -17,7 +17,7 @@ export default async function GoogleAnalytics() {
           page_path: window.location.pathname });
         `}
       </Script>
-      <Script strategy="afterInteractive" src={GTM_JS_URI} nonce={nonce} />
+      <Script strategy="afterInteractive" src={GTM_JS_URI} />
     </>
   )
 }

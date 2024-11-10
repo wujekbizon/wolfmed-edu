@@ -4758,7 +4758,7 @@
           "isCorrect": false
         },
         {
-          "option": "14 objętości wodą o temperaturze 60°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w płóciennym pokrowcu.",
+          "option": "3/4 objętości wodą o temperaturze 60°C, odpowietrzyć, sprawdzić szczelność zakręconego korka, osuszyć i umieścić w płóciennym pokrowcu.",
           "isCorrect": true
         },
         {
@@ -13112,8 +13112,12 @@
           "isCorrect": false
         },
         {
-          "option": "70-80 °C",
+          "option": "60-65 °C",
           "isCorrect": true
+        },
+        {
+          "option": "70-80 °C",
+          "isCorrect": false
         },
         {
           "option": "70-100 °C",

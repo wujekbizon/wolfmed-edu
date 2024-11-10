@@ -1,17 +1,17 @@
 import { ClerkProvider } from '@clerk/nextjs'
 import { plPL } from '@clerk/localizations'
-import { headers } from 'next/headers'
+// import { headers } from 'next/headers'
 
 interface ClerkProviderWrapperProps {
   children: React.ReactNode
 }
 
-export default async function ClerkProviderWrapper({ children }: ClerkProviderWrapperProps) {
-  const nonce = await headers().then((headers) => headers.get('x-nonce') ?? '')
+export default function ClerkProviderWrapper({ children }: ClerkProviderWrapperProps) {
+  // const nonce = await headers().then((headers) => headers.get('x-nonce') ?? '')
 
   return (
     <ClerkProvider
-      nonce={nonce}
+      // nonce={nonce}
       localization={plPL}
       appearance={{
         variables: {

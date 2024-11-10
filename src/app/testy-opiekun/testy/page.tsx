@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   keywords: 'opiekun, med-14, egzamin, testy, pytania, zagadnienia, medyczno-pielęgnacyjnych, opiekuńczych, baza',
 }
 
+export const dynamic = 'force-static'
+
 async function FetchTests() {
   const tests = await fileData.getAllTests()
 

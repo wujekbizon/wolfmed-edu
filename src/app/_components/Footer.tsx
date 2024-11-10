@@ -2,7 +2,6 @@ import FacebookIcon from '@/components/icons/FacebookIcon'
 import LinkedInIcon from '@/components/icons/LinkedInIcon'
 import XIcon from '@/components/icons/XIcon'
 import { navLinks } from '@/constants/navLinks'
-import { SignedIn } from '@clerk/nextjs'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -33,17 +32,15 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Nawigacja</h4>
-            <SignedIn>
-              <ul className="space-y-2">
-                {navLinks.map((link) => (
-                  <li key={link.id}>
-                    <Link href={link.linkUrl} className="hover:text-red-500 transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </SignedIn>
+            <ul className="space-y-2">
+              {navLinks.map((link) => (
+                <li key={link.id}>
+                  <Link href={link.linkUrl} className="hover:text-red-500 transition-colors">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Informacje prawne</h4>

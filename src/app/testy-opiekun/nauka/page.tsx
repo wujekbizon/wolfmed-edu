@@ -2,6 +2,8 @@ import AllTests from '@/components/AllTests'
 import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 
+export const dynamic = 'force-static'
+
 export const metadata: Metadata = {
   title: 'Baza pytań Opiekuna Medycznego',
   description:
