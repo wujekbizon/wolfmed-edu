@@ -1,10 +1,14 @@
+import { getSupporterByUserId } from '@/server/queries'
+import { currentUser } from '@clerk/nextjs/server'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
-interface SupporterStatusProps {
-  isSupporter: boolean
-}
+export default async function SupporterStatus() {
+  const user = await currentUser()
+  if (!user) notFound()
 
-export default function SupporterStatus({ isSupporter }: SupporterStatusProps) {
+  const isSupporter = await getSupporterByUserId(user.id)
+
   if (isSupporter) {
     return (
       <div

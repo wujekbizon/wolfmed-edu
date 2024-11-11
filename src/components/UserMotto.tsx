@@ -1,8 +1,12 @@
-interface UserMottoProps {
-  motto: string
-}
+import { getUserMotto } from '@/server/queries'
+import { currentUser } from '@clerk/nextjs/server'
+import { notFound } from 'next/navigation'
 
-export default function UserMotto({ motto }: UserMottoProps) {
+export default async function UserMotto() {
+  const user = await currentUser()
+  if (!user) notFound()
+  const motto = await getUserMotto(user.id)
+
   return (
     <div
       className="w-full bg-gradient-to-br from-[#ff9898]/5 via-zinc-100/10 to-[#ffc5c5]/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl 

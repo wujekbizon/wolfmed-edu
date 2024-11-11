@@ -1,20 +1,16 @@
 import { calculateAverageScore } from '@/helpers/calculateAverageScore'
 import CircularProgressBar from './CircularProgressBar'
 import LinearProgressBar from './LinearProgressBar'
-import { useMemo } from 'react'
+import { getUserStats } from '@/server/queries'
+import { currentUser } from '@clerk/nextjs/server'
+import { notFound } from 'next/navigation'
 
-export default function UserProgress({
-  testsAttempted,
-  totalScore,
-  totalQuestions,
-}: {
-  testsAttempted: number
-  totalScore: number
-  totalQuestions: number
-}) {
+export default async function UserProgress() {
+  const user = await currentUser()
+  if (!user) notFound()
+  const { totalScore, totalQuestions, testsAttempted } = await getUserStats(user.id)
   const overallProgressPercentage = totalQuestions > 0 ? (totalScore / totalQuestions) * 100 : 0
-
-  const averageScore = useMemo(() => calculateAverageScore(totalScore, totalQuestions), [totalScore, totalQuestions])
+  const averageScore = calculateAverageScore(totalScore, totalQuestions)
 
   return (
     <div
