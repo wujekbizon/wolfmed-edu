@@ -10,6 +10,7 @@ import UserMottoSkeleton from '@/components/skeletons/UserMottoSkeleton'
 import UserProgressSkeleton from '@/components/skeletons/UserProgressSkeleton'
 import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 import Username from '@/components/Username'
+import SupporterStatusSkeleton from '@/components/skeletons/SupporterStatusSkeleton'
 
 export const experimental_ppr = true
 
@@ -24,7 +25,7 @@ export default async function TestsPage() {
             <Suspense fallback={<UsernameSkeleton />}>
               <Username />
             </Suspense>
-            <Suspense fallback={<p className="text-sm text-zinc-500">Loading...</p>}>
+            <Suspense fallback={<SupporterStatusSkeleton />}>
               <SupporterStatus />
             </Suspense>
           </div>
