@@ -18,7 +18,7 @@ export default function Footer() {
               width={50}
               height={50}
               className="mb-4 w-full h-full object-cover"
-              loading="lazy"
+              priority
             />
           </div>
           <div className="text-center sm:text-left">

@@ -15,7 +15,7 @@ export default async function TestInfoCard({ card }: { card: TestCardContent }) 
             width={400}
             height={200}
             className="h-full w-full object-cover"
-            loading="lazy"
+            priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
           <span className="absolute left-3 sm:left-4 top-3 sm:top-4 rounded-full bg-red-100/90 px-2.5 sm:px-3 py-1 text-xs font-medium text-red-900 backdrop-blur-sm">
@@ -41,7 +41,7 @@ export default async function TestInfoCard({ card }: { card: TestCardContent }) 
                     width={16}
                     height={16}
                     className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
-                    loading="lazy"
+                    priority
                   />
                 </div>
                 <div>
@@ -57,7 +57,7 @@ export default async function TestInfoCard({ card }: { card: TestCardContent }) 
                     width={16}
                     height={16}
                     className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
-                    loading="lazy"
+                    priority
                   />
                 </div>
                 <div>

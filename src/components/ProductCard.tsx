@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
             alt="blood icon"
             width={64}
             height={64}
-            loading="lazy"
+            priority
             className="h-full w-full object-contain"
           />
         </div>

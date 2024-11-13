@@ -10,7 +10,7 @@ export default function MembershipPage() {
         src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QHAPUHYf6PZ5eKuhFM9REHkAy4n7s3aNYmWi"
         alt="Membership background"
         fill
-        loading="lazy"
+        priority
         className="object-cover object-top -z-10"
         quality={90}
       />
