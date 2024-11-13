@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import TestsSelection from './_components/TestsSelection'
 import Hero from './_components/Hero'
 import Contact from './_components/Contact'
@@ -8,10 +9,18 @@ import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
 import About from './_components/About'
 
+export const experimental_ppr = true
+
 export default async function Home() {
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
-      <Hero />
+      <Suspense
+        fallback={
+          <div className="relative w-full min-h-[calc(100dvh_-_70px)] flex items-center justify-center overflow-hidden bg-white py-8 sm:py-12"></div>
+        }
+      >
+        <Hero />
+      </Suspense>
       <div className="relative w-full h-[10vw] overflow-hidden">
         <TriangleDivider
           direction="right"
@@ -23,18 +32,25 @@ export default async function Home() {
           className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-zinc-50"
         />
       </div>
-      <Membership />
+      <Suspense
+        fallback={
+          <div className="relative w-full min-h-[calc(100dvh_-_70px)] flex items-center justify-center overflow-hidden bg-white py-8 sm:py-12"></div>
+        }
+      >
+        <Membership />
+      </Suspense>
       <TriangleDivider
         direction="right"
         className="border-t-transparent border-r-purple-100 border-b-[10vw] border-b-[#e1b4b4]"
       />
       <TestsSelection />
-      <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#f8e3e3]  border-l-zinc-100" />
+      <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#f8e3e3] border-l-[#0d0b0b]" />
+      <About />
+      <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#0d0b0b]  border-l-zinc-100" />
       <EarlySupporters />
       <TriangleDivider direction="left" className="border-t-[10vw] border-t-zinc-200 border-l-[#0d0b0b]" />
       <Contact />
-      <About />
-      <TriangleDivider direction="right" className="border-b-[10vw] border-r-[#0d0b0b] border-b-zinc-100" />
+      <TriangleDivider direction="right" className="border-b-[10vw] border-r-zinc-900 border-b-zinc-100" />
       <Footer />
     </section>
   )

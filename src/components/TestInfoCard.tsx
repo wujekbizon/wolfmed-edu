@@ -1,104 +1,85 @@
-import { TestCardContent } from '@/constants/testsCardContent'
+import { Suspense } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
-
+import type { TestCardContent } from '@/constants/testsCardContent'
+import InfoCardAuthStatus from './InfoCardAuthStatus'
+import { twClasses } from '@/styles/tailwindClasses'
 export default function TestInfoCard({ card }: { card: TestCardContent }) {
-  const CardContent = () => (
-    <div className="flex h-[450px] sm:h-[500px] flex-col">
-      {/* Card Image */}
-      <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-t-2xl">
-        <Image
-          src={card.image}
-          alt={card.category}
-          width={400}
-          height={200}
-          className="h-full w-full object-cover transition-transform duration-500 hover:scale-110"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
-        <span className="absolute left-3 sm:left-4 top-3 sm:top-4 rounded-full bg-red-100/90 px-2.5 sm:px-3 py-1 text-xs font-medium text-red-900 backdrop-blur-sm">
-          {card.category}
-        </span>
-      </div>
-
-      {/* Card Content */}
-      <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
-        {/* Title and Description */}
-        <div className="space-y-1.5 sm:space-y-2">
-          <h3 className="line-clamp-2 text-lg sm:text-xl font-bold text-zinc-100">{card.title}</h3>
-          <p className="line-clamp-2 text-xs sm:text-sm text-zinc-400">{card.content}</p>
+  return (
+    <div className={twClasses.testInfoCard}>
+      <div className="flex h-[450px] sm:h-[500px] flex-col">
+        {/* Card Image */}
+        <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-t-2xl">
+          <Image
+            src={card.image}
+            alt={card.category}
+            width={400}
+            height={200}
+            priority
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
+          <span className="absolute left-3 sm:left-4 top-3 sm:top-4 rounded-full bg-red-100/90 px-2.5 sm:px-3 py-1 text-xs font-medium text-red-900 backdrop-blur-sm">
+            {card.category}
+          </span>
         </div>
 
-        <div className="space-y-3 sm:space-y-4">
-          {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 border-t border-zinc-700/50 pt-3 sm:pt-4">
-            <div className="flex items-center gap-2">
-              <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
-                <Image
-                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5sBPZa9Wj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6"
-                  alt="calendar"
-                  width={16}
-                  height={16}
-                  className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-xs text-zinc-500">Data publikacji</p>
-                <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.date}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
-                <Image
-                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuF8wystcXZNvjLlr5ady1QbVDuRB7qTC8fU"
-                  alt="timer"
-                  width={16}
-                  height={16}
-                  className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] sm:text-xs text-zinc-500">{card.testsLabel}</p>
-                <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.testsNumber}</p>
-              </div>
-            </div>
+        {/* Card Content */}
+        <div className="flex flex-1 flex-col justify-between p-4 sm:p-6">
+          <div className="space-y-1.5 sm:space-y-2">
+            <h3 className="line-clamp-2 text-lg sm:text-xl font-bold text-zinc-100">{card.title}</h3>
+            <p className="line-clamp-2 text-xs sm:text-sm text-zinc-400">{card.content}</p>
           </div>
 
-          {/* Additional Info */}
-          <div className="flex items-center justify-center border-t border-zinc-700/50 pt-3 sm:pt-4">
-            <SignedIn>
-              <div className="rounded-full bg-red-900/10 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-red-200">
-                Kliknij aby otworzyć
+          <div className="space-y-3 sm:space-y-4">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 border-t border-zinc-700/50 pt-3 sm:pt-4">
+              <div className="flex items-center gap-2">
+                <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
+                  <Image
+                    src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5sBPZa9Wj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6"
+                    alt="calendar"
+                    width={16}
+                    height={16}
+                    className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
+                  />
+                </div>
+                <div>
+                  <p className="text-[10px] sm:text-xs text-zinc-500">Data publikacji</p>
+                  <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.date}</p>
+                </div>
               </div>
-            </SignedIn>
-            <SignedOut>
-              <div className="rounded-full bg-zinc-800/50 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-400">
-                Zaloguj się
+              <div className="flex items-center gap-2">
+                <div className="rounded-full bg-red-900/10 p-1.5 sm:p-2">
+                  <Image
+                    src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuF8wystcXZNvjLlr5ady1QbVDuRB7qTC8fU"
+                    alt="timer"
+                    width={16}
+                    height={16}
+                    className="h-3 w-3 sm:h-4 sm:w-4 opacity-70"
+                  />
+                </div>
+                <div>
+                  <p className="text-[10px] sm:text-xs text-zinc-500">{card.testsLabel}</p>
+                  <p className="text-xs sm:text-sm font-medium text-zinc-300">{card.testsNumber}</p>
+                </div>
               </div>
-            </SignedOut>
+            </div>
+
+            {/* Additional Info */}
+            <div className="flex items-center justify-center border-t border-zinc-700/50 pt-3 sm:pt-4">
+              <Suspense
+                fallback={
+                  <div className="rounded-full bg-zinc-800/50 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-400">
+                    Loading...
+                  </div>
+                }
+              >
+                <InfoCardAuthStatus card={card} />
+              </Suspense>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
-
-  const cardClasses =
-    'group w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all ' +
-    'border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 ' +
-    'hover:border-red-900/20'
-
-  return (
-    <>
-      <SignedIn>
-        <Link href={card.link} className={`${cardClasses}`}>
-          <CardContent />
-        </Link>
-      </SignedIn>
-      <SignedOut>
-        <div className={cardClasses}>
-          <CardContent />
-        </div>
-      </SignedOut>
-    </>
   )
 }

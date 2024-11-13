@@ -1,8 +1,9 @@
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { Suspense } from 'react'
 import RegisterNow from '@/components/RegisterNow'
 import ThankYou from '@/components/ThankYou'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
 
-export default function Membership() {
+export default async function Membership() {
   return (
     <section className="bg-gradient-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
       <div className="container mx-auto px-4">
@@ -12,22 +13,21 @@ export default function Membership() {
             <div className="lg:col-span-8">
               <ThankYou />
             </div>
-
             {/* Community Updates Sidebar */}
             <aside className="lg:col-span-4 space-y-6">
               {/* Latest Updates */}
               <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
                 <div className="space-y-4">
+                  <div className="border-l-4 border-zinc-300 pl-4">
+                    <p className="text-sm text-zinc-500">13 Listopada 2024</p>
+                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
+                    <p className="text-sm text-zinc-600">Już ponad 650 aktywnych użytkowników!</p>
+                  </div>
                   <div className="border-l-4 border-red-500 pl-4">
                     <p className="text-sm text-zinc-500">31 Października 2024</p>
                     <h4 className="font-medium text-zinc-800">Nowa baza pytań</h4>
                     <p className="text-sm text-zinc-600">Dodaliśmy 38 nowych pytań do naszej bazy</p>
-                  </div>
-                  <div className="border-l-4 border-zinc-300 pl-4">
-                    <p className="text-sm text-zinc-500">3 Listopada 2024</p>
-                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
-                    <p className="text-sm text-zinc-600">Już ponad 400 aktywnych użytkowników!</p>
                   </div>
                 </div>
               </div>
@@ -85,7 +85,6 @@ export default function Membership() {
             </aside>
           </div>
         </SignedIn>
-
         <SignedOut>
           <RegisterNow />
         </SignedOut>

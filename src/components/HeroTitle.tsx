@@ -1,51 +1,18 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { textReveal, fadeInUp } from '@/animations/motion'
-
 export default function HeroTitle() {
   return (
     <>
-      <motion.h1
-        variants={textReveal}
-        // @ts-ignore
-        className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800"
-      >
-        Edukacja{' '}
-        <motion.span
-          // @ts-ignore
-          className="text-[#ff5b5b]"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.5,
-            delay: 0.2,
-            ease: 'easeOut',
-          }}
-        >
-          medyczna
-        </motion.span>
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
+        <span className="animate-fadeInUp inline-block">Edukacja </span>{' '}
+        <span className="text-[#ff5b5b] animate-scaleIn [--slidein-delay:200ms] inline-block"> medyczna</span>
         <br />
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.5,
-            delay: 0.4,
-            ease: 'easeOut',
-          }}
-        >
-          może być jeszcze łatwiejsza.
-        </motion.span>
-      </motion.h1>
+        <span className="animate-fadeInUp [--slidein-delay:400ms] inline-block">może być jeszcze łatwiejsza.</span>
+      </h1>
 
-      <motion.p
-        variants={fadeInUp}
-        // @ts-ignore
-        className="text-lg text-zinc-600 mb-8 max-w-xl place-self-center lg:place-self-start"
-      >
+      <p className="text-lg text-zinc-600 mb-8 max-w-xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:600ms]">
         Rozpocznij swoją podróż w świecie medycyny z naszą innowacyjną platformą edukacyjną.
-      </motion.p>
+      </p>
     </>
   )
 }

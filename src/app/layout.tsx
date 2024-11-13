@@ -15,7 +15,7 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'Wolfmed Edukacja',
+  title: 'Wolfmed Edukacja - Innowacyjna platforma edukacyjna',
   description: 'Edukacja medyczna, testy opiekuna medycznego i kursy',
   keywords: 'edukacja, opiekun, testy, kursy, egzamin, szkolenie-zawodowe, medyczna',
   authors: { name: 'WESA', url: 'https://wesa.vercel.app/' },

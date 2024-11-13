@@ -40,11 +40,71 @@ const config: Config = {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
         },
+        gradient: {
+          '0%': { opacity: '0' },
+          '50%': { opacity: '0.5' },
+          '100%': { opacity: '0.2' },
+        },
+        gradientPosition: {
+          '0%, 100%': {
+            'background-position': '0% 50%',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            'background-position': '100% 50%',
+            transform: 'scale(1.1)',
+          },
+        },
+        gradientScale: {
+          '0%, 100%': {
+            transform: 'scale(1)',
+          },
+          '50%': {
+            transform: 'scale(1.1)',
+          },
+        },
+        gradientRotate: {
+          '0%': {
+            opacity: '0',
+            'background-image':
+              'linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(147,51,234,0.1) 50%, rgba(255,91,91,0.2) 100%)',
+          },
+          '33%': {
+            opacity: '1',
+            'background-image':
+              'linear-gradient(60deg, rgba(59,130,246,0.1) 0%, rgba(255,91,91,0.2) 50%, rgba(147,51,234,0.1) 100%)',
+          },
+          '66%': {
+            opacity: '1',
+            'background-image':
+              'linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(59,130,246,0.1) 50%, rgba(255,91,91,0.2) 100%)',
+          },
+          '100%': {
+            opacity: '0',
+            'background-image':
+              'linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(147,51,234,0.1) 50%, rgba(255,91,91,0.2) 100%)',
+          },
+        },
+        radialPulse: {
+          '0%, 100%': {
+            opacity: '0.2',
+            transform: 'scale(1)',
+          },
+          '50%': {
+            opacity: '0.3',
+            transform: 'scale(1.1)',
+          },
+        },
       },
       animation: {
         slideInDown: 'slideInDown 1s ease var(--slidein-delay, 0) forwards',
         fadeInUp: 'fadeInUp 0.5s ease-out forwards',
         scaleIn: 'scaleIn 0.5s ease-out forwards',
+        gradient: 'gradient 8s ease-in-out infinite alternate',
+        gradientPosition: 'gradientPosition 5s ease-in-out infinite',
+        gradientScale: 'gradientScale 8s ease-in-out infinite',
+        gradientRotate: 'gradientRotate 6s ease infinite',
+        radialPulse: 'radialPulse 8s ease-in-out infinite',
       },
       backgroundSize: {
         '70%': '70%',
