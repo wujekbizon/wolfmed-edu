@@ -28,6 +28,7 @@ export default function TeamSection() {
               width={400}
               height={600}
               className="rounded-xl object-cover w-full xs:w-32 h-full"
+              loading="lazy"
             />
             <div>
               <h4 className="font-bold text-white">{member.name}</h4>
