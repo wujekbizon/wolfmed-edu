@@ -3,9 +3,9 @@ import Image from 'next/image'
 import type { TestCardContent } from '@/constants/testsCardContent'
 import InfoCardAuthStatus from './InfoCardAuthStatus'
 
-export default function TestInfoCard({ card }: { card: TestCardContent }) {
+export default async function TestInfoCard({ card }: { card: TestCardContent }) {
   return (
-    <div className="group w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 hover:border-red-900/20">
+    <div className="w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 hover:border-red-900/20">
       <div className="flex h-[450px] sm:h-[500px] flex-col">
         {/* Card Image */}
         <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-t-2xl">
