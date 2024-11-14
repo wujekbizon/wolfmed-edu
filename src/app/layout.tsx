@@ -20,8 +20,9 @@ export const metadata: Metadata = {
   keywords: 'edukacja, opiekun, testy, kursy, egzamin, szkolenie-zawodowe, medyczna',
   authors: { name: 'WESA', url: 'https://wesa.vercel.app/' },
   creator: 'WESA',
+  category: 'education',
   robots: {
-    index: false,
+    index: true,
     follow: true,
     nocache: true,
     googleBot: {
@@ -52,6 +53,7 @@ export default function RootLayout({
     <ClerkProviderWrapper>
       <html lang="pl">
         <head>
+          <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
           <GoogleAnalytics />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
