@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import GenerateTests from '@/components/GenerateTests'
-import { Suspense } from 'react'
-import Loading from './loading'
 import { fileData } from '@/server/fetchData'
 
 export const metadata: Metadata = {
@@ -13,19 +11,11 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-static'
 
-async function FetchTests() {
+export default async function TestsPage() {
   const tests = await fileData.getAllTests()
 
   if (!tests || tests.length === 0) {
     return <p>Brak dostępnych testów. Proszę spróbować później.</p>
   }
   return <GenerateTests tests={tests} />
-}
-
-export default function TestsPage() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <FetchTests />
-    </Suspense>
-  )
 }

@@ -1,7 +1,7 @@
-import { Suspense } from 'react'
 import RegisterNow from '@/components/RegisterNow'
 import ThankYou from '@/components/ThankYou'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
+import Link from 'next/link'
 
 export default async function Membership() {
   return (
@@ -14,20 +14,24 @@ export default async function Membership() {
               <ThankYou />
             </div>
             {/* Community Updates Sidebar */}
-            <aside className="lg:col-span-4 space-y-6">
+            <aside className="lg:col-span-4 space-y-6 ">
               {/* Latest Updates */}
               <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
                 <div className="space-y-4">
-                  <div className="border-l-4 border-zinc-300 pl-4">
-                    <p className="text-sm text-zinc-500">13 Listopada 2024</p>
-                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
-                    <p className="text-sm text-zinc-600">Już ponad 650 aktywnych użytkowników!</p>
-                  </div>
                   <div className="border-l-4 border-red-500 pl-4">
-                    <p className="text-sm text-zinc-500">31 Października 2024</p>
-                    <h4 className="font-medium text-zinc-800">Nowa baza pytań</h4>
-                    <p className="text-sm text-zinc-600">Dodaliśmy 38 nowych pytań do naszej bazy</p>
+                    <p className="text-sm text-zinc-500">19 Listopad 2024</p>
+                    <h4 className="font-medium text-zinc-800">Własne kategorie pytań</h4>
+                    <Link href="/testy-opiekun/wybrane-pytania">
+                      <p className="text-sm text-red-400 hover:underline hover:text-red-500 transition-colors">
+                        Stwórz własne zestawy pytań dopasowane do Twoich potrzeb.
+                      </p>
+                    </Link>
+                  </div>
+                  <div className="border-l-4 border-zinc-300 pl-4">
+                    <p className="text-sm text-zinc-500">19 Listopad 2024</p>
+                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
+                    <p className="text-sm text-zinc-600">Już ponad 740 aktywnych użytkowników!</p>
                   </div>
                 </div>
               </div>

@@ -4658,15 +4658,15 @@
           "isCorrect": false
         },
         {
-          "option": "osłonić łóżko parawanem, umieścić kaczkę między udami pacjenta, opróżnić kaczkę, usunąć parawan, przygotować przybory do mycia.",
+          "option": "osłonić łóżko parawanem, umieścić kaczkę między udami pacjenta, podać pacjentowi dzwonek, opróżnić kaczkę, umyć ręce pacjenta, usunąć parawan.",
           "isCorrect": true
         },
         {
-          "option": "umieścić kaczkę między udami pacjenta, podać pacjentowi dzwonek, osłonić łóżko parawanem, opróżnić kaczkę, umyć ręce pacjenta, wywietrzyć salę.",
+          "option": "umieścić kaczkę między udami pacjenta, osłonić łóżko parawanem, umyć ręce pacjenta, opróżnić kaczkę, wywietrzyć salę, usunąć parawan.",
           "isCorrect": false
         },
         {
-          "option": "umieścić kaczkę między udami pacjentami, osłonić łóżko parawanem, przygotować ręce do mycia, opróżnić kaczkę, wywietrzyć salę.",
+          "option": "wywietrzyć salę, umieścić kaczkę między udami pacjenta, opróżnić kaczkę, umyć ręce pacjenta.",
           "isCorrect": false
         }
       ],

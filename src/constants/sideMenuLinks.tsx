@@ -3,6 +3,7 @@ import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
 import ProceduresIcon from '@/components/icons/ProceduresIcon'
 import ProgressIcon from '@/components/icons/ProgressIcon'
+import SelectedIcon from '@/components/icons/SelectedIcon'
 import UserProfileIcon from '@/components/icons/UserProfileIcon'
 
 export const sideMenuNavigationLinks = [
@@ -15,6 +16,11 @@ export const sideMenuNavigationLinks = [
     url: '/testy-opiekun/testy',
     label: 'Testy',
     icon: <DashboardIcon width={26} height={26} />,
+  },
+  {
+    url: '/testy-opiekun/wybrane-pytania',
+    label: 'Wybrane',
+    icon: <SelectedIcon width={26} height={26} />,
   },
   {
     url: '/testy-opiekun/nauka',

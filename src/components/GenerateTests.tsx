@@ -11,12 +11,16 @@ import TestsLevelMenu from '@/components/TestsLevelMenu'
 import TestCard from '@/components/TestCard'
 import ResetTestButton from '@/components/ResetTestButton'
 import SubmitButton from '@/components/SubmitButton'
+import { useState } from 'react'
 
 export default function GenerateTests(props: { tests: Test[] }) {
   const [state, action] = useActionState(submitTestAction, EMPTY_FORM_STATE)
   const { numberTests, isTest, localState, resetTest } = useTestFormState(state)
   const { isPending, handleSubmit } = useTestSubmission(action)
-  const randomTest = useGeneratedTest(props.tests, numberTests)
+  const [selectedQuestions, setSelectedQuestions] = useState<Test[] | null>(null)
+
+  // Modify randomTest to use either all tests or selected category tests
+  const randomTest = useGeneratedTest(selectedQuestions || props.tests, numberTests)
 
   // Reset the test form when the component unmounts
   useEffect(() => {
@@ -29,7 +33,7 @@ export default function GenerateTests(props: { tests: Test[] }) {
     <section className="flex w-full flex-col items-center gap-8 p-0 sm:p-4">
       {!isTest ? (
         <div className="w-full h-full flex items-center justify-center">
-          <TestsLevelMenu />
+          <TestsLevelMenu allQuestions={props.tests} onSelectQuestions={setSelectedQuestions} />
         </div>
       ) : (
         <div className="flex w-full flex-col items-center overflow-y-auto scrollbar-webkit p-2">

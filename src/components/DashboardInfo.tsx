@@ -32,8 +32,8 @@ export default function DashboardInfo() {
             key={text}
             href={link}
             className="flex items-center justify-between w-full gap-3 xs:gap-4 px-4 xs:px-6 py-2.5 xs:py-3 
-              bg-[#ffb1b1] text-zinc-800 rounded-xl shadow-md transition-all hover:shadow-lg 
-              hover:scale-[1.02] hover:bg-[#ffc5c5]"
+              bg-gradient-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm text-zinc-800 rounded-xl transition-all hover:shadow-md 
+              hover:scale-[1.01] hover:bg-[#ffc5c5]"
           >
             <span className="text-sm xs:text-base font-semibold text-zinc-900">{text}</span>
             <span className="text-zinc-700">{icon}</span>
