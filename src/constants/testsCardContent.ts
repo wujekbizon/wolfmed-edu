@@ -1,4 +1,5 @@
-import { NUMBER_OF_PROCEDURES, NUMBER_OF_TESTS } from './testsNumbers'
+const NUMBER_OF_TESTS = 624
+const NUMBER_OF_PROCEDURES = 31
 
 export interface TestCardContent {
   category: string

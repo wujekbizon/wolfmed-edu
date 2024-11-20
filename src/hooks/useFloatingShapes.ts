@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
-import { SHAPE_COLORS } from '@/constants/shapes'
 import { generateShape } from '@/helpers/shapeGenerators'
 import type { FloatingShape, ShapeConfig } from '@/types/shapes'
+
+const SHAPE_COLORS = ['bg-[#ff5b5b]/15', 'bg-purple-500/10', 'bg-blue-500/10'] as const
 
 export const useFloatingShapes = ({
   count = 5,

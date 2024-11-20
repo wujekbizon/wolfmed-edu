@@ -1,5 +1,10 @@
-import { SHAPE_CONSTANTS } from '@/constants/shapes'
 import type { FloatingShape } from '@/types/shapes'
+
+const SHAPE_CONSTANTS = {
+  PADDING: 10,
+  X_RANGE: 80,
+  Y_RANGE: 85,
+} as const
 
 export const generateRandomNumber = (min: number, max: number): number => {
   return Math.random() * (max - min) + min

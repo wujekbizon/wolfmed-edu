@@ -16,16 +16,16 @@
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
-    "@tanstack/react-query": "^5.60.5",
+    "@tanstack/react-query": "^5.60.6",
     "@vercel/postgres": "^0.10.0",
     "babel-plugin-react-compiler": "19.0.0-beta-0dec889-20241115",
     "drizzle-orm": "^0.36.3",
     "framer-motion": "^11.11.17",
-    "next": "15.0.4-canary.19",
+    "next": "15.0.4-canary.20",
     "postgres": "^3.4.5",
-    "react": "19.0.0-rc-4beb1fd8-20241118",
+    "react": "19.0.0-rc-6f0dc294-20241119",
     "react-confetti": "^6.1.0",
-    "react-dom": "19.0.0-rc-4beb1fd8-20241118",
+    "react-dom": "19.0.0-rc-6f0dc294-20241119",
     "react-hot-toast": "^2.4.1",
     "server-only": "^0.0.1",
     "stripe": "^17.3.1",
@@ -36,13 +36,13 @@
   },
   "devDependencies": {
     "@neondatabase/serverless": "^0.10.3",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.1",
     "@types/react": "npm:types-react@beta",
     "@types/react-dom": "npm:types-react-dom@beta",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.28.1",
     "eslint": "^9.15.0",
-    "eslint-config-next": "15.0.4-canary.19",
+    "eslint-config-next": "15.0.4-canary.20",
     "pg": "^8.13.1",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
@@ -52,6 +52,5 @@
   "resolutions": {
     "@types/react": "npm:types-react@beta",
     "@types/react-dom": "npm:types-react-dom@beta"
-  },
-  "packageManager": "pnpm@9.9.0+sha512.60c18acd138bff695d339be6ad13f7e936eea6745660d4cc4a776d5247c540d0edee1a563695c183a66eb917ef88f2b4feb1fc25f32a7adcadc7aaf3438e99c1"
+  }
 }
