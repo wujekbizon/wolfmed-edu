@@ -3,7 +3,7 @@ import ThankYou from '@/components/ThankYou'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 import Link from 'next/link'
 
-export default async function Membership() {
+export default function Membership() {
   return (
     <section className="bg-gradient-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
       <div className="container mx-auto px-4">

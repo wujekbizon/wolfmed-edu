@@ -1,6 +1,4 @@
-import { Suspense } from 'react'
 import ContactForm from './ContactForm'
-import ContactSkeleton from './ContactSkeleton'
 
 export default async function Contact() {
   return (
@@ -18,9 +16,7 @@ export default async function Contact() {
             </p>
           </div>
           <div className="max-w-2xl mx-auto">
-            <Suspense fallback={<ContactSkeleton />}>
-              <ContactForm />
-            </Suspense>
+            <ContactForm />
           </div>
         </div>
       </div>

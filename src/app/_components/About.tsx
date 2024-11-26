@@ -32,7 +32,7 @@ export default function About() {
             <motion.h2
               variants={fadeInUp}
               // @ts-ignore
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-red-400"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl py-2 font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-red-400"
             >
               Odkryj <span className="text-red-400">Wolfmed</span>
             </motion.h2>

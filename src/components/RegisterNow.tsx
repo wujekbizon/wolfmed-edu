@@ -95,7 +95,7 @@ export default function RegisterNow() {
             >
               Dołącz do nas za darmo
             </Link>
-            <p className="mt-4 text-sm text-zinc-500">Dołącz do ponad 400 aktywnych użytkowników już dziś!</p>
+            <p className="mt-4 text-sm text-zinc-500">Dołącz do ponad 820 aktywnych użytkowników już dziś!</p>
           </div>
         </div>
       </div>

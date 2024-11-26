@@ -1,4 +1,3 @@
-import { Suspense } from 'react'
 import TestsSelection from './_components/TestsSelection'
 import Hero from './_components/Hero'
 import Contact from './_components/Contact'
@@ -9,18 +8,10 @@ import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
 import About from './_components/About'
 
-export const experimental_ppr = true
-
-export default async function Home() {
+export default function HomePage() {
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
-      <Suspense
-        fallback={
-          <div className="relative w-full min-h-[calc(100dvh_-_70px)] flex items-center justify-center overflow-hidden bg-white py-8 sm:py-12"></div>
-        }
-      >
-        <Hero />
-      </Suspense>
+      <Hero />
       <div className="relative w-full h-[10vw] overflow-hidden">
         <TriangleDivider
           direction="right"
@@ -32,13 +23,7 @@ export default async function Home() {
           className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-zinc-50"
         />
       </div>
-      <Suspense
-        fallback={
-          <div className="relative w-full min-h-[calc(100dvh_-_70px)] flex items-center justify-center overflow-hidden bg-white py-8 sm:py-12"></div>
-        }
-      >
-        <Membership />
-      </Suspense>
+      <Membership />
       <TriangleDivider
         direction="right"
         className="border-t-transparent border-r-purple-100 border-b-[10vw] border-b-[#e1b4b4]"

@@ -1,8 +1,6 @@
-import { Suspense } from 'react'
 import SupportersList from './SupportersList'
-import SupportersListSkeleton from '@/components/skeletons/SupportersListSkeleton'
 
-export default async function EarlySupporters() {
+export default function EarlySupporters() {
   return (
     <section className="w-full py-8 sm:py-16 bg-gradient-to-b from-zinc-100 to-zinc-200">
       <div className="container mx-auto px-4 xs:px-8 relative">
@@ -21,9 +19,7 @@ export default async function EarlySupporters() {
         <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden animate-scaleIn">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
           <div className="relative z-10 p-4 sm:p-8 lg:p-12">
-            <Suspense fallback={<SupportersListSkeleton />}>
-              <SupportersList />
-            </Suspense>
+            <SupportersList />
           </div>
         </div>
         <div className="mt-12 text-center animate-fadeInUp" style={{ animationDelay: '400ms' }}>

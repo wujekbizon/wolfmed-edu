@@ -1,6 +1,6 @@
 'use client'
 
-import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs'
 import Input from '@/components/Input'
 import SubmitButton from '@/components/SubmitButton'
 import { useActionState } from 'react'
@@ -12,8 +12,29 @@ import Label from '@/components/Label'
 import Link from 'next/link'
 
 export default function ContactForm() {
+  const { isLoaded } = useUser()
+
   const [state, action] = useActionState(sendEmail, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
+
+  if (!isLoaded) {
+    return (
+      <div className="max-w-2xl mx-auto blur-[2px] bg-zinc-900 border border-zinc-700 h-[400px] rounded-lg  p-4 xs:p-8">
+        <div className="flex flex-col items-center justify-center gap-6 text-center h-full">
+          <p className="text-zinc-400">Aby skontaktować się z nami, musisz być zalogowany do swojego konta</p>
+          <button className="min-w-40 inline-flex items-center justify-center px-6 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition-colors">
+            Wczytywanie
+          </button>
+        </div>
+        <p className="text-sm text-zinc-500 pt-8 text-center">
+          Nie masz konta?{' '}
+          <Link href="/sign-up" className="text-red-300 hover:underline hover:text-red-400">
+            Zarejestruj się
+          </Link>
+        </p>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -50,11 +71,11 @@ export default function ContactForm() {
         </div>
       </SignedIn>
       <SignedOut>
-        <div className="backdrop-blur-md bg-zinc-800 rounded-lg p-4 xs:p-8 mt-6">
-          <div className="flex flex-col items-center justify-center gap-6 text-center">
+        <div className="h-[400px] backdrop-blur-md border border-zinc-700 bg-zinc-900 rounded-lg p-4 xs:p-8 mt-6">
+          <div className="flex flex-col items-center justify-center gap-6 text-center h-full">
             <p className="text-zinc-400">Aby skontaktować się z nami, musisz być zalogowany do swojego konta</p>
             <SignInButton mode="modal">
-              <button className="inline-flex items-center justify-center px-6 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition-colors">
+              <button className="min-w-40 inline-flex items-center justify-center px-6 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition-colors">
                 Zaloguj się
               </button>
             </SignInButton>

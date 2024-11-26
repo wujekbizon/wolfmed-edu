@@ -1,9 +1,8 @@
-import { Suspense } from 'react'
 import Image from 'next/image'
 import type { TestCardContent } from '@/constants/testsCardContent'
 import InfoCardAuthStatus from './InfoCardAuthStatus'
 
-export default async function TestInfoCard({ card }: { card: TestCardContent }) {
+export default function TestInfoCard({ card }: { card: TestCardContent }) {
   return (
     <div className="flex h-[450px] sm:h-[500px] flex-col w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 hover:border-red-900/20">
       {/* Card Image */}
@@ -68,15 +67,7 @@ export default async function TestInfoCard({ card }: { card: TestCardContent }) 
 
           {/* Additional Info */}
           <div className="flex items-center justify-center border-t border-zinc-700/50 pt-3 sm:pt-4">
-            <Suspense
-              fallback={
-                <div className="w-full h-full flex items-center justify-center rounded-full bg-zinc-800/50 px-3 sm:px-4 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-400">
-                  Loading...
-                </div>
-              }
-            >
-              <InfoCardAuthStatus card={card} />
-            </Suspense>
+            <InfoCardAuthStatus card={card} />
           </div>
         </div>
       </div>
