@@ -3,7 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
-export async function createCheckoutSession(formData: FormData) {
+export async function createCheckoutSession(formData: FormData): Promise<void> {
   const { userId } = await auth()
   if (!userId) {
     redirect('/sign-in')
@@ -11,7 +11,7 @@ export async function createCheckoutSession(formData: FormData) {
 
   const productId = formData.get('productId') as string
   if (!productId) {
-    return { error: 'Product ID is required' }
+    throw new Error('Product ID is required')
   }
 
   let priceId: string | undefined
@@ -22,7 +22,7 @@ export async function createCheckoutSession(formData: FormData) {
   }
 
   if (!priceId) {
-    return { error: 'Invalid product ID' }
+    throw new Error('Invalid product ID')
   }
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/create-checkout-session`, {
