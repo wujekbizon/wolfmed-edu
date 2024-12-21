@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { KeyboardSensor, PointerSensor, useSensor, useSensors, TouchSensor } from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useProceduresStore } from '@/store/useProceduresStore'
 import { useChallengeStore } from '@/store/useChallengeStore'
@@ -13,7 +13,8 @@ export function useDragAndDrop() {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
+    useSensor(TouchSensor)
   )
 
   function handleDragStart(event: any) {

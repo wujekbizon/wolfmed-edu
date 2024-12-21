@@ -31,7 +31,7 @@ export function SortableItem({ id, step, isLocked, isActive }: SortableItemProps
       style={style}
       {...attributes}
       {...listeners}
-      className={`p-4 rounded shadow border-2 w-full flex flex-col items-center justify-center transition-all  hover:shadow-md hover:scale-[1.02] ${
+      className={`p-4 rounded shadow border-2 w-full flex flex-col items-center justify-center transition-all touch-manipulation hover:shadow-md hover:scale-[1.02] ${
         isLocked ? 'cursor-not-allowed' : 'cursor-move'
       } ${isActive ? 'shadow-lg' : ''}`}
     >
