@@ -11,7 +11,7 @@ export default function SideMenu() {
 
   return (
     <aside
-      className={`fixed z-50 h-screen left-0 top-0 w-[calc(100vw)] bg-gradient-to-b from-zinc-900/95 to-zinc-950/95 
+      className={`fixed z-50 overflow-y-scroll h-screen left-0 top-0 w-[calc(100vw)] bg-gradient-to-b from-zinc-900/95 to-zinc-950/95 
         backdrop-blur-sm border-r border-red-300/20 shadow-xl shadow-zinc-950/20 flex lg:hidden flex-col 
         transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-[0%]' : 'translate-x-[140%]'}`}
     >
