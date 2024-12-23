@@ -26,7 +26,7 @@ import {
   updateUsernameByUserId,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createPost } from '@/server/fileArchive'
+import { createPost, deletePost } from '@/server/fileArchive'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -223,9 +223,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
 
 export async function createPostAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
-  if (!userId) {
-    return toFormState('ERROR', 'Musisz być zalogowany')
-  }
+  if (!userId) throw new Error('Unauthorized')
 
   const title = formData.get('title') as string
   const content = formData.get('content') as string
@@ -252,4 +250,25 @@ export async function createPostAction(formState: FormState, formData: FormData)
 
   revalidatePath('/forum')
   return toFormState('SUCCESS', 'Post został dodany pomyślnie!')
+}
+
+export async function deletePostAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const postId = formData.get('postId') as string
+  const authorId = formData.get('authorId') as string
+
+  if (userId !== authorId) {
+    return toFormState('ERROR', 'Nie masz uprawnień do usunięcia tego posta')
+  }
+
+  try {
+    await deletePost(postId)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath('/forum')
+  return toFormState('SUCCESS', 'Post został usunięty')
 }

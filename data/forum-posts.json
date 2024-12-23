@@ -40,16 +40,6 @@
       ]
     },
     {
-      "id": "2",
-      "title": "Dokumentacja medyczna - najczęstsze błędy",
-      "content": "Jakie są według Was najczęstsze błędy w prowadzeniu dokumentacji medycznej? Jak ich unikać?",
-      "authorId": "user_3",
-      "authorName": "Piotr Wiśniewski",
-      "createdAt": "2024-03-18T15:20:00Z",
-      "updatedAt": "2024-03-18T15:20:00Z",
-      "comments": []
-    },
-    {
       "id": "3",
       "title": "Komunikacja z pacjentem z demencją",
       "content": "Szukam porad dotyczących efektywnej komunikacji z pacjentami cierpiącymi na demencję. Jakie techniki się sprawdzają?",
@@ -68,51 +58,13 @@
       ]
     },
     {
-      "id": "4",
-      "title": "Ergonomia w pracy opiekuna",
-      "content": "Jakie są Wasze sposoby na zachowanie prawidłowej postawy podczas wykonywania codziennych obowiązków? Szczególnie podczas przenoszenia pacjentów.",
-      "authorId": "user_6",
-      "authorName": "Magdalena Dąbrowska",
-      "createdAt": "2024-03-16T14:45:00Z",
-      "updatedAt": "2024-03-16T14:45:00Z",
-      "comments": []
-    },
-    {
-      "id": "5",
+      "id": "73781204-fa77-4db7-a20d-fcfc85b671c5",
       "title": "Współpraca z rodzinami pacjentów",
       "content": "Jak budujecie pozytywne relacje z rodzinami pacjentów? Czasami trudno jest spełnić wszystkie oczekiwania.",
-      "authorId": "user_7",
-      "authorName": "Jan Kaczmarek",
-      "createdAt": "2024-03-15T16:30:00Z",
-      "updatedAt": "2024-03-15T16:30:00Z",
-      "comments": [
-        {
-          "id": "comment_3",
-          "content": "Regularna, szczera komunikacja to podstawa. Warto też jasno określić granice możliwości opieki.",
-          "authorId": "user_8",
-          "authorName": "Alicja Szymańska",
-          "createdAt": "2024-03-15T17:00:00Z"
-        }
-      ]
-    },
-    {
-      "id": "1b0a1abf-3b09-45da-8210-bc72c31cfd96",
-      "title": "Praca a płaca",
-      "content": "The form follows the same pattern as your ContactForm component, using the same helper components and hooks for consistency.",
       "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
       "authorName": "Admin",
-      "createdAt": "2024-12-23T15:09:23.474Z",
-      "updatedAt": "2024-12-23T15:09:23.474Z",
-      "comments": []
-    },
-    {
-      "id": "37abdec7-d645-4a37-8546-3f25ec27dd01",
-      "title": "New Post about me",
-      "content": "useRef would be more appropriate if we needed to maintain a value between renders without causing re-renders, but for this use case, useEffect is the right tool.",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-23T15:33:32.915Z",
-      "updatedAt": "2024-12-23T15:33:32.915Z",
+      "createdAt": "2024-12-23T16:16:02.857Z",
+      "updatedAt": "2024-12-23T16:16:02.857Z",
       "comments": []
     }
   ]
