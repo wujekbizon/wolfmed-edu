@@ -15,6 +15,7 @@ import {
   UpdateMottoSchema,
   UpdateUsernameSchema,
   CreatePostSchema,
+  CreateCommentSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql } from 'drizzle-orm'
@@ -26,7 +27,7 @@ import {
   updateUsernameByUserId,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createPost, deletePost } from '@/server/fileArchive'
+import { createPost, deletePost, addComment } from '@/server/fileArchive'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -271,4 +272,34 @@ export async function deletePostAction(formState: FormState, formData: FormData)
 
   revalidatePath('/forum')
   return toFormState('SUCCESS', 'Post został usunięty')
+}
+
+export async function createCommentAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const content = formData.get('content') as string
+  const postId = formData.get('postId') as string
+
+  const validationResult = CreateCommentSchema.safeParse({ content, postId })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { content },
+    }
+  }
+
+  try {
+    const username = 'Admin' // await getUserUsername(userId)
+    await addComment(postId, validationResult.data.content, userId, username || 'Anonymous')
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { content },
+    }
+  }
+
+  revalidatePath('/forum')
+  return toFormState('SUCCESS', 'Komentarz został dodany')
 }

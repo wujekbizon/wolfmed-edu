@@ -65,6 +65,34 @@
       "authorName": "Admin",
       "createdAt": "2024-12-23T16:16:02.857Z",
       "updatedAt": "2024-12-23T16:16:02.857Z",
+      "comments": [
+        {
+          "id": "32f521c6-78f4-4a93-929f-26e68f8d6fd1",
+          "content": "Bardzo słuszna uwaga :)",
+          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+          "authorName": "Admin",
+          "createdAt": "2024-12-23T17:39:32.259Z"
+        }
+      ]
+    },
+    {
+      "id": "e385f2e6-edc6-4dfd-bc49-2b7b94b2c705",
+      "title": "Komunikacja z pacjentem z demencją",
+      "content": "Szukam porad dotyczących efektywnej komunikacji z pacjentami cierpiącymi na demencję. Jakie techniki się sprawdzają?",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-23T17:48:23.931Z",
+      "updatedAt": "2024-12-23T17:48:23.931Z",
+      "comments": []
+    },
+    {
+      "id": "11376211-0f8c-4efe-9ad7-87e0f3b4591f",
+      "title": "Jak radzić sobie ze stresem podczas dyżuru? ver2",
+      "content": "Dzień dobry! Jestem początkującym opiekunem medycznym i chciałbym się dowiedzieć, jakie macie sposoby na radzenie sobie ze stresem podczas długich dyżurów? Szczególnie trudne są dla mnie sytuacje nagłe.",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-23T17:49:00.787Z",
+      "updatedAt": "2024-12-23T17:49:00.787Z",
       "comments": []
     }
   ]

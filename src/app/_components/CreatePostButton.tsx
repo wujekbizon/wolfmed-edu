@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import CreatePostForm from '../_components/CreatePostForm'
+import AddPostIcon from '@/components/icons/AddPostIcon'
 
 export default function CreatePostButton() {
   const [isFormOpen, setIsFormOpen] = useState(false)
@@ -10,9 +11,10 @@ export default function CreatePostButton() {
     <>
       <button
         onClick={() => setIsFormOpen(true)}
-        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors"
+        className="group flex items-center gap-2 bg-gradient-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 hover:from-[#f58a8a] hover:to-[#ffc5c5] text-white px-2 py-1 rounded-lg transition-all duration-200 "
       >
-        Nowy post
+        <AddPostIcon width={26} height={26} color="black" />
+        <span className="font-semibold text-lg text-zinc-950">Dodaj</span>
       </button>
 
       {isFormOpen && <CreatePostForm onClose={() => setIsFormOpen(false)} />}

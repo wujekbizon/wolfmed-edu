@@ -20,7 +20,11 @@ export default function DeletePostButton({ postId, authorId }: Props) {
       <form action={action}>
         <input type="hidden" name="postId" value={postId} />
         <input type="hidden" name="authorId" value={authorId} />
-        <button type="submit" className="text-zinc-500 hover:bg-gray-900 transition-colors py-1 rounded">
+        <button
+          disabled
+          type="submit"
+          className="text-zinc-500 hover:bg-gray-900 transition-colors py-1 rounded disabled:cursor-not-allowed disabled:opacity-50"
+        >
           <DeleteIcon width={19} height={19} color="red" />
         </button>
       </form>

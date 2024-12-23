@@ -51,4 +51,13 @@ export const CreatePostSchema = z.object({
   content: z.string().min(30, 'Treść musi mieć minimum 30 znaków').max(2000, 'Treść nie może przekraczać 2000 znaków'),
 })
 
+export const CreateCommentSchema = z.object({
+  content: z
+    .string()
+    .min(3, 'Komentarz musi mieć minimum 3 znaki')
+    .max(500, 'Komentarz nie może przekraczać 500 znaków'),
+  postId: z.string().min(1, 'ID posta jest wymagane'),
+})
+
 export type CreatePostInput = z.infer<typeof CreatePostSchema>
+export type CreateCommentInput = z.infer<typeof CreateCommentSchema>

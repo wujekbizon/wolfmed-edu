@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useUser } from '@clerk/nextjs'
 import DeletePostButton from '@/components/DeletePostButton'
 import ProgressIcon from '@/components/icons/ProgressIcon'
+import AddCommentButton from '@/components/AddCommentButton'
 
 const COMMENTS_PER_PAGE = 3
 
@@ -31,7 +32,7 @@ export default function PostCard({ post }: { post: Post }) {
   const visibleComments = post.comments.slice(0, displayedComments)
 
   return (
-    <article className="bg-zinc-900 rounded-lg p-6 hover:bg-zinc-950 transition-colors group">
+    <article className="bg-zinc-900 rounded-lg p-4 xs:p-6 hover:bg-zinc-950 transition-colors group">
       <Link href={`/forum/${post.id}`}>
         <h2 className="text-xl font-semibold text-zinc-100 mb-3 group-hover:text-zinc-50">{post.title}</h2>
         <p className="text-zinc-400 mb-4">{truncateText(post.content, 150)}</p>
@@ -44,7 +45,7 @@ export default function PostCard({ post }: { post: Post }) {
       </div>
 
       <div className="border-t border-zinc-800 pt-4">
-        <div className="flex items-center gap-4 justify-between">
+        <div className="flex flex-col-reverse xs:flex-row xs:items-center gap-4 xs:justify-between">
           <button
             onClick={(e) => {
               e.preventDefault()
@@ -60,11 +61,8 @@ export default function PostCard({ post }: { post: Post }) {
             {commentCount > 0 && <span className="text-xs">{showComments ? '▼' : '▶'}</span>}
           </button>
 
-          <div className="flex items-center gap-3 text-sm">
-            <button className="text-zinc-500 hover:text-zinc-300 transition-colors flex items-center justify-center gap-1">
-              <span className="text-lg">+</span>
-              <span>Dodaj komentarz</span>
-            </button>
+          <div className="flex items-center gap-3 text-sm justify-between">
+            <AddCommentButton postId={post.id} />
             {isAuthor && <DeletePostButton postId={post.id} authorId={post.authorId} />}
           </div>
         </div>
@@ -85,7 +83,7 @@ export default function PostCard({ post }: { post: Post }) {
             {displayedComments < commentCount && (
               <button
                 onClick={handleShowMore}
-                className="text-sm text-purple-400 hover:text-purple-300 transition-colors mt-2"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors mt-2"
               >
                 Pokaż więcej komentarzy ({commentCount - displayedComments})
               </button>
