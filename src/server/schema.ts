@@ -45,3 +45,10 @@ export const UpdateUsernameSchema = z.object({
     .min(3, 'Nazwa użytkownika musi mieć co najmniej 3 znaki.')
     .max(50, 'Nazwa użytkownika może mieć maksymalnie 50 znaków.'),
 })
+
+export const CreatePostSchema = z.object({
+  title: z.string().min(10, 'Tytuł musi mieć minimum 10 znaków').max(100, 'Tytuł nie może przekraczać 100 znaków'),
+  content: z.string().min(30, 'Treść musi mieć minimum 30 znaków').max(2000, 'Treść nie może przekraczać 2000 znaków'),
+})
+
+export type CreatePostInput = z.infer<typeof CreatePostSchema>

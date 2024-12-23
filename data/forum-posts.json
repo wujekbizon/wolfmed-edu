@@ -1,0 +1,119 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Jak radzić sobie ze stresem podczas dyżuru?",
+      "content": "Dzień dobry! Jestem początkującym opiekunem medycznym i chciałbym się dowiedzieć, jakie macie sposoby na radzenie sobie ze stresem podczas długich dyżurów? Szczególnie trudne są dla mnie sytuacje nagłe.",
+      "authorId": "user_1",
+      "authorName": "Anna Kowalska",
+      "createdAt": "2024-12-21T10:00:00Z",
+      "updatedAt": "2024-12-22T10:00:00Z",
+      "comments": [
+        {
+          "id": "comment_1",
+          "content": "Polecam techniki oddechowe i krótkie przerwy, jeśli to możliwe. Pomaga też rozmowa z bardziej doświadczonymi kolegami.",
+          "authorId": "user_2",
+          "authorName": "Marek Nowak",
+          "createdAt": "2024-03-19T11:30:00Z"
+        },
+        {
+          "id": "comment_2",
+          "content": "Regularny grafik i dobra organizacja pracy też pomagają zredukować stres. Warto też zadbać o odpoczynek przed dyżurem.",
+          "authorId": "user_5",
+          "authorName": "Tomasz Zieliński",
+          "createdAt": "2024-03-19T12:15:00Z"
+        },
+        {
+          "id": "comment_3",
+          "content": "Z mojego doświadczenia pomaga też prowadzenie dziennika trudnych sytuacji i analiza ich po fakcie. To pozwala lepiej się przygotować na przyszłość.",
+          "authorId": "user_7",
+          "authorName": "Jan Kaczmarek",
+          "createdAt": "2024-03-19T13:45:00Z"
+        },
+        {
+          "id": "comment_4",
+          "content": "Pamiętaj też o wsparciu zespołu - nie bój się prosić o pomoc bardziej doświadczonych kolegów w trudnych sytuacjach.",
+          "authorId": "user_3",
+          "authorName": "Piotr Wiśniewski",
+          "createdAt": "2024-03-19T14:20:00Z"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Dokumentacja medyczna - najczęstsze błędy",
+      "content": "Jakie są według Was najczęstsze błędy w prowadzeniu dokumentacji medycznej? Jak ich unikać?",
+      "authorId": "user_3",
+      "authorName": "Piotr Wiśniewski",
+      "createdAt": "2024-03-18T15:20:00Z",
+      "updatedAt": "2024-03-18T15:20:00Z",
+      "comments": []
+    },
+    {
+      "id": "3",
+      "title": "Komunikacja z pacjentem z demencją",
+      "content": "Szukam porad dotyczących efektywnej komunikacji z pacjentami cierpiącymi na demencję. Jakie techniki się sprawdzają?",
+      "authorId": "user_4",
+      "authorName": "Katarzyna Lewandowska",
+      "createdAt": "2024-03-17T09:15:00Z",
+      "updatedAt": "2024-03-17T09:15:00Z",
+      "comments": [
+        {
+          "id": "comment_2",
+          "content": "Kluczowa jest cierpliwość i spokojny ton głosu. Warto też używać prostych, krótkich zdań.",
+          "authorId": "user_5",
+          "authorName": "Tomasz Zieliński",
+          "createdAt": "2024-03-17T10:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "title": "Ergonomia w pracy opiekuna",
+      "content": "Jakie są Wasze sposoby na zachowanie prawidłowej postawy podczas wykonywania codziennych obowiązków? Szczególnie podczas przenoszenia pacjentów.",
+      "authorId": "user_6",
+      "authorName": "Magdalena Dąbrowska",
+      "createdAt": "2024-03-16T14:45:00Z",
+      "updatedAt": "2024-03-16T14:45:00Z",
+      "comments": []
+    },
+    {
+      "id": "5",
+      "title": "Współpraca z rodzinami pacjentów",
+      "content": "Jak budujecie pozytywne relacje z rodzinami pacjentów? Czasami trudno jest spełnić wszystkie oczekiwania.",
+      "authorId": "user_7",
+      "authorName": "Jan Kaczmarek",
+      "createdAt": "2024-03-15T16:30:00Z",
+      "updatedAt": "2024-03-15T16:30:00Z",
+      "comments": [
+        {
+          "id": "comment_3",
+          "content": "Regularna, szczera komunikacja to podstawa. Warto też jasno określić granice możliwości opieki.",
+          "authorId": "user_8",
+          "authorName": "Alicja Szymańska",
+          "createdAt": "2024-03-15T17:00:00Z"
+        }
+      ]
+    },
+    {
+      "id": "1b0a1abf-3b09-45da-8210-bc72c31cfd96",
+      "title": "Praca a płaca",
+      "content": "The form follows the same pattern as your ContactForm component, using the same helper components and hooks for consistency.",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-23T15:09:23.474Z",
+      "updatedAt": "2024-12-23T15:09:23.474Z",
+      "comments": []
+    },
+    {
+      "id": "37abdec7-d645-4a37-8546-3f25ec27dd01",
+      "title": "New Post about me",
+      "content": "useRef would be more appropriate if we needed to maintain a value between renders without causing re-renders, but for this use case, useEffect is the right tool.",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-23T15:33:32.915Z",
+      "updatedAt": "2024-12-23T15:33:32.915Z",
+      "comments": []
+    }
+  ]
+}

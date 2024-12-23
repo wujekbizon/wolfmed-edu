@@ -14,11 +14,19 @@ import {
   DeleteTestIdSchema,
   UpdateMottoSchema,
   UpdateUsernameSchema,
+  CreatePostSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql } from 'drizzle-orm'
-import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
+import {
+  deleteCompletedTest,
+  getUserTestLimit,
+  getUserUsername,
+  updateMottoByUserId,
+  updateUsernameByUserId,
+} from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
+import { createPost } from '@/server/fileArchive'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -211,4 +219,37 @@ export async function updateMotto(formState: FormState, formData: FormData) {
 
   revalidatePath('/testy-opiekun')
   return toFormState('SUCCESS', 'Motto zaktualizowane pomyślnie!')
+}
+
+export async function createPostAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) {
+    return toFormState('ERROR', 'Musisz być zalogowany')
+  }
+
+  const title = formData.get('title') as string
+  const content = formData.get('content') as string
+
+  const validationResult = CreatePostSchema.safeParse({ title, content })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { title, content },
+    }
+  }
+
+  try {
+    const username = 'Admin' //await getUserUsername(userId)
+
+    await createPost(validationResult.data.title, validationResult.data.content, userId, username || 'Anonymous')
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { title, content },
+    }
+  }
+
+  revalidatePath('/forum')
+  return toFormState('SUCCESS', 'Post został dodany pomyślnie!')
 }
