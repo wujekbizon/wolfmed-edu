@@ -2,30 +2,32 @@
 
 import { useActionState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { deletePostAction } from '@/actions/actions'
+import { deleteCommentAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import DeleteIcon from '@/components/icons/DeleteIcon'
 
 type Props = {
   postId: string
+  commentId: string
   authorId: string
 }
 
-export default function DeletePostButton({ postId, authorId }: Props) {
-  const [state, action] = useActionState(deletePostAction, EMPTY_FORM_STATE)
+export default function DeleteCommentButton({ postId, commentId, authorId }: Props) {
+  const [state, action] = useActionState(deleteCommentAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
   return (
     <>
       <form action={action}>
         <input type="hidden" name="postId" value={postId} />
+        <input type="hidden" name="commentId" value={commentId} />
         <input type="hidden" name="authorId" value={authorId} />
         <button
-          disabled
           type="submit"
-          className="text-zinc-500 hover:bg-gray-900 transition-colors py-1 rounded disabled:cursor-not-allowed disabled:opacity-50"
+          className="text-zinc-500 border border-zinc-800 hover:border-zinc-600 py-1 bg-zinc-900/40 rounded-lg flex items-center justify-center hover:text-red-500 transition-colors"
+          title="Usuń komentarz"
         >
-          <DeleteIcon width={18} height={18} color="red" />
+          <DeleteIcon width={14} height={14} color="red" />
         </button>
       </form>
       {noScriptFallback}

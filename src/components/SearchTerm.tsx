@@ -10,6 +10,7 @@ export default function SearchTerm({
   isExpanded,
   toggleExpand,
   title,
+  className,
 }: {
   label: string
   searchTerm: string
@@ -17,9 +18,12 @@ export default function SearchTerm({
   isExpanded: boolean
   toggleExpand: () => void
   title?: string
+  className?: string
 }) {
   return (
-    <div className="relative w-full rounded-full border border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500">
+    <div
+      className={`${className} relative w-full rounded-full border border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500`}
+    >
       <button
         type="button"
         onClick={toggleExpand}

@@ -93,7 +93,22 @@
       "authorName": "Admin",
       "createdAt": "2024-12-23T17:49:00.787Z",
       "updatedAt": "2024-12-23T17:49:00.787Z",
-      "comments": []
+      "comments": [
+        {
+          "id": "ce5ce37f-78d7-4e7a-a203-d681ad1801b4",
+          "content": "good test comment",
+          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+          "authorName": "Admin",
+          "createdAt": "2024-12-25T19:23:36.410Z"
+        },
+        {
+          "id": "2178d9e7-3bc0-4a69-ba12-13ce544531ff",
+          "content": "So this is my second comment. ",
+          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+          "authorName": "Admin",
+          "createdAt": "2024-12-27T12:38:11.863Z"
+        }
+      ]
     }
   ]
 }

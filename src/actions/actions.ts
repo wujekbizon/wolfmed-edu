@@ -27,7 +27,7 @@ import {
   updateUsernameByUserId,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createPost, deletePost, addComment } from '@/server/fileArchive'
+import { createPost, deletePost, addComment, deleteComment } from '@/server/fileArchive'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -302,4 +302,26 @@ export async function createCommentAction(formState: FormState, formData: FormDa
 
   revalidatePath('/forum')
   return toFormState('SUCCESS', 'Komentarz został dodany')
+}
+
+export async function deleteCommentAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const postId = formData.get('postId') as string
+  const commentId = formData.get('commentId') as string
+  const authorId = formData.get('authorId') as string
+
+  if (userId !== authorId) {
+    return toFormState('ERROR', 'Nie masz uprawnień do usunięcia tego komentarza')
+  }
+
+  try {
+    await deleteComment(postId, commentId)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath('/forum')
+  return toFormState('SUCCESS', 'Komentarz został usunięty')
 }

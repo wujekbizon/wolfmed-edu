@@ -16,8 +16,8 @@ export default function AddCommentButton({ postId }: Props) {
         onClick={() => setIsFormOpen(true)}
         className="text-zinc-500 hover:text-zinc-300 transition-colors flex items-center justify-center gap-1"
       >
-        <span className="text-lg">+</span>
-        <span>Dodaj komentarz</span>
+        <span className="text-sm xs:text-lg">+</span>
+        <span className="text-sm xs:text-base">Dodaj komentarz</span>
       </button>
 
       {isFormOpen && <CreateCommentForm postId={postId} onClose={() => setIsFormOpen(false)} />}
