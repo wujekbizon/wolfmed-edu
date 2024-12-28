@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { getLexicalContent } from '@/helpers/getLexicalContent'
 
 export const DeleteTestIdSchema = z.object({
   testId: z.string().min(1, 'Musisz podać poprawny identyfikator testu.').trim(),
@@ -47,8 +48,14 @@ export const UpdateUsernameSchema = z.object({
 })
 
 export const CreatePostSchema = z.object({
-  title: z.string().min(2, 'Tytuł musi mieć minimum 2 znaków').max(100, 'Tytuł nie może przekraczać 100 znaków'),
-  content: z.string().min(10, 'Treść musi mieć minimum 10 znaków').max(2000, 'Treść nie może przekraczać 2000 znaków'),
+  title: z.string().min(3, 'Tytuł musi mieć co najmniej 3 znaki').max(100, 'Tytuł nie może przekraczać 100 znaków'),
+  content: z.string().refine(
+    (content) => {
+      const textContent = getLexicalContent(content)
+      return textContent.length >= 10 && textContent.length <= 2000
+    },
+    { message: 'Treść musi mieć od 10 do 2000 znaków' }
+  ),
 })
 
 export const CreateCommentSchema = z.object({

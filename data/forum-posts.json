@@ -1,181 +1,23 @@
 {
   "posts": [
     {
-      "id": "1",
-      "title": "Jak radzić sobie ze stresem podczas dyżuru?",
-      "content": "Dzień dobry! Jestem początkującym opiekunem medycznym i chciałbym się dowiedzieć, jakie macie sposoby na radzenie sobie ze stresem podczas długich dyżurów? Szczególnie trudne są dla mnie sytuacje nagłe.",
-      "authorId": "user_1",
-      "authorName": "Anna Kowalska",
-      "createdAt": "2024-12-21T10:00:00Z",
-      "updatedAt": "2024-12-22T10:00:00Z",
-      "comments": [
-        {
-          "id": "comment_1",
-          "content": "Polecam techniki oddechowe i krótkie przerwy, jeśli to możliwe. Pomaga też rozmowa z bardziej doświadczonymi kolegami.",
-          "authorId": "user_2",
-          "authorName": "Marek Nowak",
-          "createdAt": "2024-03-19T11:30:00Z"
-        },
-        {
-          "id": "comment_2",
-          "content": "Regularny grafik i dobra organizacja pracy też pomagają zredukować stres. Warto też zadbać o odpoczynek przed dyżurem.",
-          "authorId": "user_5",
-          "authorName": "Tomasz Zieliński",
-          "createdAt": "2024-03-19T12:15:00Z"
-        },
-        {
-          "id": "comment_3",
-          "content": "Z mojego doświadczenia pomaga też prowadzenie dziennika trudnych sytuacji i analiza ich po fakcie. To pozwala lepiej się przygotować na przyszłość.",
-          "authorId": "user_7",
-          "authorName": "Jan Kaczmarek",
-          "createdAt": "2024-03-19T13:45:00Z"
-        },
-        {
-          "id": "comment_4",
-          "content": "Pamiętaj też o wsparciu zespołu - nie bój się prosić o pomoc bardziej doświadczonych kolegów w trudnych sytuacjach.",
-          "authorId": "user_3",
-          "authorName": "Piotr Wiśniewski",
-          "createdAt": "2024-03-19T14:20:00Z"
-        }
-      ]
-    },
-    {
-      "id": "3",
-      "title": "Komunikacja z pacjentem z demencją",
-      "content": "Szukam porad dotyczących efektywnej komunikacji z pacjentami cierpiącymi na demencję. Jakie techniki się sprawdzają?",
-      "authorId": "user_4",
-      "authorName": "Katarzyna Lewandowska",
-      "createdAt": "2024-03-17T09:15:00Z",
-      "updatedAt": "2024-03-17T09:15:00Z",
-      "comments": [
-        {
-          "id": "comment_2",
-          "content": "Kluczowa jest cierpliwość i spokojny ton głosu. Warto też używać prostych, krótkich zdań.",
-          "authorId": "user_5",
-          "authorName": "Tomasz Zieliński",
-          "createdAt": "2024-03-17T10:00:00Z"
-        }
-      ]
-    },
-    {
-      "id": "73781204-fa77-4db7-a20d-fcfc85b671c5",
-      "title": "Współpraca z rodzinami pacjentów",
-      "content": "Jak budujecie pozytywne relacje z rodzinami pacjentów? Czasami trudno jest spełnić wszystkie oczekiwania.",
+      "id": "5c645903-3684-4162-b794-2b7aaae1797a",
+      "title": "Test 1",
+      "content": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":8,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hello World !\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":8,\"textStyle\":\"\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"I today post I want to place \",\"type\":\"text\",\"version\":1},{\"detail\":0,\"format\":1,\"mode\":\"normal\",\"style\":\"\",\"text\":\"my \",\"type\":\"text\",\"version\":1},{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"point of view.\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
       "authorName": "Admin",
-      "createdAt": "2024-12-23T16:16:02.857Z",
-      "updatedAt": "2024-12-23T16:16:02.857Z",
-      "comments": [
-        {
-          "id": "32f521c6-78f4-4a93-929f-26e68f8d6fd1",
-          "content": "Bardzo słuszna uwaga :)",
-          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-          "authorName": "Admin",
-          "createdAt": "2024-12-23T17:39:32.259Z"
-        }
-      ]
-    },
-    {
-      "id": "e385f2e6-edc6-4dfd-bc49-2b7b94b2c705",
-      "title": "Komunikacja z pacjentem z demencją",
-      "content": "Szukam porad dotyczących efektywnej komunikacji z pacjentami cierpiącymi na demencję. Jakie techniki się sprawdzają?",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-23T17:48:23.931Z",
-      "updatedAt": "2024-12-23T17:48:23.931Z",
+      "createdAt": "2024-12-28T14:05:09.349Z",
+      "updatedAt": "2024-12-28T14:05:09.349Z",
       "comments": []
     },
     {
-      "id": "11376211-0f8c-4efe-9ad7-87e0f3b4591f",
-      "title": "Jak radzić sobie ze stresem podczas dyżuru? ver2",
-      "content": "Dzień dobry! Jestem początkującym opiekunem medycznym i chciałbym się dowiedzieć, jakie macie sposoby na radzenie sobie ze stresem podczas długich dyżurów? Szczególnie trudne są dla mnie sytuacje nagłe.",
+      "id": "c3872f9f-ab1e-4e1a-afb1-62297a2ba113",
+      "title": "Test 2",
+      "content": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":3,\"mode\":\"normal\",\"style\":\"\",\"text\":\"My second post\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":3,\"textStyle\":\"\"},{\"children\":[],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":3,\"textStyle\":\"\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Hello all \",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
       "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
       "authorName": "Admin",
-      "createdAt": "2024-12-23T17:49:00.787Z",
-      "updatedAt": "2024-12-23T17:49:00.787Z",
-      "comments": [
-        {
-          "id": "ce5ce37f-78d7-4e7a-a203-d681ad1801b4",
-          "content": "good test comment",
-          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-          "authorName": "Admin",
-          "createdAt": "2024-12-25T19:23:36.410Z"
-        },
-        {
-          "id": "2178d9e7-3bc0-4a69-ba12-13ce544531ff",
-          "content": "So this is my second comment. ",
-          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-          "authorName": "Admin",
-          "createdAt": "2024-12-27T12:38:11.863Z"
-        }
-      ]
-    },
-    {
-      "id": "fa0bac4f-2010-445f-821f-c84067f109ee",
-      "title": "Test 12345",
-      "content": "Dzień dobry, witam wszystkich :)",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-27T18:19:17.945Z",
-      "updatedAt": "2024-12-27T18:19:17.945Z",
-      "comments": [
-        {
-          "id": "20c7f789-da15-40ee-86e5-c142c8d90067",
-          "content": "witam pana , spoko post",
-          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-          "authorName": "Admin",
-          "createdAt": "2024-12-27T18:20:10.650Z"
-        }
-      ]
-    },
-    {
-      "id": "5948d93b-66c6-4539-b11a-00915b09f338",
-      "title": "Placeat facere sit",
-      "content": "Libero rerum dicta q",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-28T10:18:20.042Z",
-      "updatedAt": "2024-12-28T10:18:20.042Z",
-      "comments": []
-    },
-    {
-      "id": "5a64bab9-1272-4bf2-a487-437a13664dd9",
-      "title": "Aute id dolor dolore",
-      "content": "Cumque perferendis e",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-28T10:18:29.133Z",
-      "updatedAt": "2024-12-28T10:18:29.133Z",
-      "comments": []
-    },
-    {
-      "id": "be326e6c-26d9-43ae-893e-3377e9e1a4f6",
-      "title": "Eligendi cupiditate ",
-      "content": "Modi aliquip dolores",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-28T10:18:35.787Z",
-      "updatedAt": "2024-12-28T10:18:35.787Z",
-      "comments": []
-    },
-    {
-      "id": "5701817a-47fc-4aa1-a244-490c0a3a7568",
-      "title": "Adipisci adipisci as",
-      "content": "Autem in debitis aut",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-28T10:18:39.316Z",
-      "updatedAt": "2024-12-28T10:18:39.316Z",
-      "comments": []
-    },
-    {
-      "id": "a7a415c7-0db0-4fc3-9091-2c9ea6ee5c71",
-      "title": "Minima ut officia an",
-      "content": "Optio recusandae M",
-      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
-      "authorName": "Admin",
-      "createdAt": "2024-12-28T10:19:01.850Z",
-      "updatedAt": "2024-12-28T10:19:01.850Z",
+      "createdAt": "2024-12-28T14:10:23.591Z",
+      "updatedAt": "2024-12-28T14:10:23.591Z",
       "comments": []
     }
   ]

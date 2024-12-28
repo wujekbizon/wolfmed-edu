@@ -6,6 +6,7 @@ import Link from 'next/link'
 import AddCommentButton from '@/components/AddCommentButton'
 import DeletePostButton from '@/components/DeletePostButton'
 import DeleteCommentButton from '@/components/DeleteCommentButton'
+import RichTextContent from '@/components/RichTextContent'
 
 export default async function PostPage({ params }: { params: { postId: string } }) {
   const { postId } = await params
@@ -48,7 +49,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
         {/* Content Section */}
         <div className="p-6 border-b border-zinc-800">
           <div className="prose prose-invert max-w-none">
-            <p className="text-zinc-300 leading-relaxed whitespace-pre-wrap">{post.content}</p>
+            <RichTextContent content={post.content} className="text-zinc-400 mb-4" />
           </div>
         </div>
 
