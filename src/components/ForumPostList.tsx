@@ -1,5 +1,5 @@
-import PostCard from './PostCard'
 import type { Post } from '@/types/forumPostsTypes'
+import ForumPostCard from './ForumPostCard'
 
 type Props = {
   posts: Post[]
@@ -7,7 +7,7 @@ type Props = {
   error?: Error | null
 }
 
-export default function PostList({ posts, isLoading, error }: Props) {
+export default function ForumPostList({ posts, error }: Props) {
   if (error) {
     return <div className="text-center text-red-500 py-8">Wystąpił błąd podczas ładowania postów</div>
   }
@@ -19,7 +19,7 @@ export default function PostList({ posts, isLoading, error }: Props) {
   return (
     <div className="grid gap-6">
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <ForumPostCard key={post.id} post={post} />
       ))}
     </div>
   )

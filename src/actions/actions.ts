@@ -239,7 +239,8 @@ export async function createPostAction(formState: FormState, formData: FormData)
   }
 
   try {
-    const username = 'Admin' //await getUserUsername(userId)
+    //await getUserUsername(userId)
+    const username = 'Admin' // temp name
 
     await createPost(validationResult.data.title, validationResult.data.content, userId, username || 'Anonymous')
   } catch (error) {

@@ -109,6 +109,24 @@
           "createdAt": "2024-12-27T12:38:11.863Z"
         }
       ]
+    },
+    {
+      "id": "fa0bac4f-2010-445f-821f-c84067f109ee",
+      "title": "Test 12345",
+      "content": "Dzień dobry, witam wszystkich :)",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-27T18:19:17.945Z",
+      "updatedAt": "2024-12-27T18:19:17.945Z",
+      "comments": [
+        {
+          "id": "20c7f789-da15-40ee-86e5-c142c8d90067",
+          "content": "witam pana , spoko post",
+          "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+          "authorName": "Admin",
+          "createdAt": "2024-12-27T18:20:10.650Z"
+        }
+      ]
     }
   ]
 }
