@@ -1,55 +1,11 @@
 'use client'
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { FORMAT_TEXT_COMMAND, UNDO_COMMAND, REDO_COMMAND } from 'lexical'
-import { $getSelection, $isRangeSelection } from 'lexical'
-import { HeadingNode, $createHeadingNode } from '@lexical/rich-text'
-import { $getNearestNodeOfType } from '@lexical/utils'
-import { useState, useEffect } from 'react'
-import { $createParagraphNode } from 'lexical'
+import { UNDO_COMMAND, REDO_COMMAND } from 'lexical'
+import { useEditorToolbar } from '@/hooks/useEditorToolbar'
 import { TOOLBAR_BUTTONS } from '@/constants/editorToolbar'
 
 export default function EditorToolbar() {
-  const [editor] = useLexicalComposerContext()
-  const [activeFormats, setActiveFormats] = useState<Record<string, boolean>>({})
-
-  useEffect(() => {
-    return editor.registerUpdateListener(({ editorState }) => {
-      editorState.read(() => {
-        const selection = $getSelection()
-        if (!$isRangeSelection(selection)) return
-
-        // Check text formats
-        setActiveFormats({
-          bold: selection.hasFormat('bold'),
-          italic: selection.hasFormat('italic'),
-          underline: selection.hasFormat('underline'),
-          strikethrough: selection.hasFormat('strikethrough'),
-          h1: $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)?.getTag() === 'h1',
-          h3: $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)?.getTag() === 'h3',
-          h5: $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)?.getTag() === 'h5',
-        })
-      })
-    })
-  }, [editor])
-
-  const formatText = (format: 'bold' | 'italic' | 'underline' | 'strikethrough') => {
-    editor.dispatchCommand(FORMAT_TEXT_COMMAND, format)
-  }
-
-  const formatHeading = (tag: 'h1' | 'h3' | 'h5') => {
-    editor.update(() => {
-      const selection = $getSelection()
-      if (!$isRangeSelection(selection)) return
-
-      const headingNode = $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)
-      if (headingNode && headingNode.getTag() === tag) {
-        headingNode.replace($createParagraphNode())
-      } else {
-        selection.insertNodes([$createHeadingNode(tag)])
-      }
-    })
-  }
+  const { activeFormats, formatText, formatHeading, handleCommand } = useEditorToolbar()
 
   const buttonClass = (active: boolean) =>
     `p-2 rounded text-zinc-300 hover:text-zinc-100 ${active ? 'bg-zinc-700 text-zinc-100' : 'hover:bg-zinc-700'}`
@@ -66,9 +22,9 @@ export default function EditorToolbar() {
             switch (button.action) {
               case 'command':
                 if (button.command === 'UNDO_COMMAND') {
-                  editor.dispatchCommand(UNDO_COMMAND, undefined)
+                  handleCommand(UNDO_COMMAND)
                 } else if (button.command === 'REDO_COMMAND') {
-                  editor.dispatchCommand(REDO_COMMAND, undefined)
+                  handleCommand(REDO_COMMAND)
                 }
                 break
               case 'format':
