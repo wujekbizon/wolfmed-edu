@@ -3,6 +3,7 @@
 import { UNDO_COMMAND, REDO_COMMAND } from 'lexical'
 import { useEditorToolbar } from '@/hooks/useEditorToolbar'
 import { TOOLBAR_BUTTONS } from '@/constants/editorToolbar'
+import SpeechToTextButton from './speech/SpeechToTextButton'
 
 export default function EditorToolbar() {
   const { activeFormats, formatText, formatHeading, handleCommand } = useEditorToolbar()
@@ -54,6 +55,8 @@ export default function EditorToolbar() {
             </button>
           )
         })}
+        <div className="block w-px h-6 bg-zinc-700 mx-1" />
+        <SpeechToTextButton />
       </div>
     </div>
   )
