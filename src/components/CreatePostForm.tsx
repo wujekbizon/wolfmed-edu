@@ -34,30 +34,29 @@ export default function CreatePostForm({ onClose }: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50 overflow-hidden">
-      <div className="bg-zinc-900 rounded-lg p-4 xs:p-6 w-full max-w-2xl max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50 overflow-hidden">
+      <div className="bg-zinc-900 rounded-lg p-2 sm:p-4 xs:p-6 w-full sm:max-w-[90%] md:max-w-3xl h-[90vh] flex flex-col">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-zinc-100">Nowy post</h2>
         </div>
 
-        <form action={action} className="space-y-4 flex-1 overflow-auto px-2">
+        <form action={action} className="space-y-4 flex-1 overflow-auto px-2 h-full">
           <div>
-            <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm" />
+            <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm mb-1" />
             <Input
               type="text"
               id="title"
               name="title"
               placeholder="Tytuł posta"
               defaultValue={state.values?.title || ''}
-              className="w-full px-4 py-2 bg-zinc-800 rounded-lg text-zinc-100 placeholder:text-zinc-600"
+              className="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 text-zinc-100 placeholder:text-zinc-600 outline-none"
             />
             <FieldError name="title" formState={state} />
           </div>
 
-          <div>
-            <Label htmlFor="content" label="Treść" />
+          <div className="flex-1 h-[75%]">
             <input type="hidden" name="content" value={editorContent} />
-            <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full" />
+            <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full h-full" />
             <FieldError name="content" formState={state} />
           </div>
 

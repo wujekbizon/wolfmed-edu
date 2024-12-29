@@ -30,14 +30,29 @@ export default function Editor({
 
   return (
     <LexicalComposer initialConfig={config}>
-      <div className={`bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 ${className}`}>
+      <div
+        className={`bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 h-full ${className}`}
+        role="textbox"
+        aria-multiline="true"
+        aria-label="Edytor tekstu"
+      >
         <EditorToolbar />
-        <div className="p-4">
+        <div className="p-2 sm:p-4 flex-1 relative">
           <RichTextPlugin
             contentEditable={
-              <ContentEditable className="min-h-[150px] max-h-[400px] overflow-y-auto scrollbar-webkit outline-none text-zinc-200" />
+              <ContentEditable
+                className="h-full overflow-y-auto scrollbar-webkit outline-none text-zinc-200"
+                aria-describedby="editor-placeholder"
+              />
             }
-            placeholder={<div className="absolute top-0 left-0 text-zinc-500 pointer-events-none">{placeholder}</div>}
+            placeholder={
+              <div
+                id="editor-placeholder"
+                className="absolute top-[16px] left-[16px] text-zinc-600 pointer-events-none"
+              >
+                {placeholder}
+              </div>
+            }
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />

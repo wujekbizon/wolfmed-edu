@@ -22,6 +22,7 @@
     "@lexical/list": "^0.22.0",
     "@lexical/react": "^0.22.0",
     "@lexical/rich-text": "^0.22.0",
+    "@lexical/utils": "^0.22.0",
     "@tanstack/react-query": "^5.62.8",
     "@types/uuid": "^10.0.0",
     "@vercel/postgres": "^0.10.0",
