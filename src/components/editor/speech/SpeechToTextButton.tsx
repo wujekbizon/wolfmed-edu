@@ -1,7 +1,7 @@
 'use client'
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { $getSelection, $isRangeSelection } from 'lexical'
+import { $getSelection, $isRangeSelection, $getRoot, $createRangeSelection, $setSelection } from 'lexical'
 import { useSpeechRecognition } from './useSpeechRecognition'
 import MicrophoneIcon from '@/components/icons/MicrophoneIcon'
 
@@ -11,8 +11,22 @@ export default function SpeechToTextButton() {
   const handleResult = (transcript: string) => {
     editor.update(() => {
       const selection = $getSelection()
-      if ($isRangeSelection(selection)) {
-        selection.insertText(transcript + ' ')
+
+      // If no selection, create one at the end of the document
+      if (!$isRangeSelection(selection)) {
+        const lastNode = $getRoot().getLastDescendant()
+        if (lastNode) {
+          const newSelection = $createRangeSelection()
+          newSelection.anchor.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
+          newSelection.focus.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
+          $setSelection(newSelection)
+        }
+      }
+
+      // Now we can safely insert text
+      const updatedSelection = $getSelection()
+      if ($isRangeSelection(updatedSelection)) {
+        updatedSelection.insertText(transcript + ' ')
       }
     })
   }

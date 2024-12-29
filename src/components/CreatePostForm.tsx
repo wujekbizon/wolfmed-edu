@@ -36,13 +36,9 @@ export default function CreatePostForm({ onClose }: Props) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50 overflow-hidden">
       <div className="bg-zinc-900 rounded-lg p-2 sm:p-4 xs:p-6 w-full sm:max-w-[90%] md:max-w-3xl h-[90vh] flex flex-col">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-zinc-100">Nowy post</h2>
-        </div>
-
-        <form action={action} className="space-y-4 flex-1 overflow-auto px-2 h-full">
+        <form action={action} className="space-y-4 flex-1 overflow-auto px-2 h-full mt-2">
           <div>
-            <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm mb-1" />
+            <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm" />
             <Input
               type="text"
               id="title"
