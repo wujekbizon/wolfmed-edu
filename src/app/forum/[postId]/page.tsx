@@ -49,7 +49,7 @@ export default async function PostPage({ params }: { params: { postId: string } 
         {/* Content Section */}
         <div className="p-6 border-b border-zinc-800">
           <div className="prose prose-invert max-w-none">
-            <RichTextContent content={post.content} className="text-zinc-400 mb-4" />
+            <RichTextContent content={post.content} className="text-zinc-300 mt-4" />
           </div>
         </div>
 
