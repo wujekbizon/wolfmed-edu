@@ -56,6 +56,7 @@ export const CreatePostSchema = z.object({
     },
     { message: 'Treść musi mieć od 10 do 2000 znaków' }
   ),
+  readonly: z.boolean().default(false),
 })
 
 export const CreateCommentSchema = z.object({

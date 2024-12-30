@@ -8,7 +8,8 @@
       "authorName": "Admin",
       "createdAt": "2024-12-28T14:05:09.349Z",
       "updatedAt": "2024-12-28T14:05:09.349Z",
-      "comments": []
+      "comments": [],
+      "readonly": false
     },
     {
       "id": "c3872f9f-ab1e-4e1a-afb1-62297a2ba113",
@@ -18,7 +19,8 @@
       "authorName": "Admin",
       "createdAt": "2024-12-28T14:10:23.591Z",
       "updatedAt": "2024-12-28T14:10:23.591Z",
-      "comments": []
+      "comments": [],
+      "readonly": false
     },
     {
       "id": "867ecfa1-d8ad-4a64-9e6d-e538a4bc7c2c",
@@ -36,7 +38,8 @@
           "authorName": "Admin",
           "createdAt": "2024-12-29T17:42:20.621Z"
         }
-      ]
+      ],
+      "readonly": false
     },
     {
       "id": "1240c7be-d195-4bfa-87e8-1899b77c8a98",
@@ -61,7 +64,30 @@
           "authorName": "Admin",
           "createdAt": "2024-12-29T18:01:50.691Z"
         }
-      ]
+      ],
+      "readonly": false
+    },
+    {
+      "id": "d9bcd30e-9b9f-4788-9efc-7718c5685665",
+      "title": "Ai Darwinism",
+      "content": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Introduction. \",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"start\",\"indent\":0,\"type\":\"heading\",\"version\":1,\"tag\":\"h3\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\" In computer science, we delve into various algorithms that excel at sorting data, searching efficiently, and tackling complex problems. But what if the problem at hand doesn't have a clear-cut formula or a single optimal solution? This is where genetic algorithms come in – powerful tools inspired by evolution that can navigate vast possibilities and discover surprisingly effective solutions. \",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"start\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\" University courses in algorithms and data structures equip us with powerful tools for problem-solving. Graph theory, for example, unveils a captivating world of relationships and connections. But as we delve deeper into complex mathematical problems involving graphs, traditional methods can sometimes reach their limits. \",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"start\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"The search for optimal solutions across intricate networks of nodes and edges can feel like navigating a labyrinth. This yearning for more efficient exploration strategies within the realm of mathematics is what piqued my curiosity about genetic algorithms. These intriguing techniques, inspired by the principles of natural selection, offer a promising path towards tackling complex mathematical problems involving graphs but not only that.\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"start\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-29T18:21:15.424Z",
+      "updatedAt": "2024-12-29T18:21:15.424Z",
+      "comments": [],
+      "readonly": true
+    },
+    {
+      "id": "5473bcf7-d3cd-4436-bc66-98dee36e94d9",
+      "title": "Readonly Post",
+      "content": "{\"root\":{\"children\":[{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Info about latest exam.\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"},{\"children\":[],\"direction\":null,\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"},{\"children\":[{\"detail\":0,\"format\":0,\"mode\":\"normal\",\"style\":\"\",\"text\":\"Today we want to invite all of you\",\"type\":\"text\",\"version\":1}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"paragraph\",\"version\":1,\"textFormat\":0,\"textStyle\":\"\"}],\"direction\":\"ltr\",\"format\":\"\",\"indent\":0,\"type\":\"root\",\"version\":1}}",
+      "authorId": "user_2nObK33yaJokYWcG7cpGa0asPqH",
+      "authorName": "Admin",
+      "createdAt": "2024-12-30T08:43:21.657Z",
+      "updatedAt": "2024-12-30T08:43:21.657Z",
+      "comments": [],
+      "readonly": true
     }
   ]
 }

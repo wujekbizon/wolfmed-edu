@@ -32,7 +32,13 @@ export async function getPostById(postId: string): Promise<Post | null> {
   return data.posts.find((post) => post.id === postId) || null
 }
 
-export async function createPost(title: string, content: string, authorId: string, authorName: string): Promise<Post> {
+export async function createPost(
+  title: string,
+  content: string,
+  authorId: string,
+  authorName: string,
+  readonly: boolean = false
+): Promise<Post> {
   const data = await readForumData()
 
   const newPost: Post = {
@@ -44,6 +50,7 @@ export async function createPost(title: string, content: string, authorId: strin
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     comments: [],
+    readonly,
   }
 
   data.posts.push(newPost)

@@ -41,6 +41,7 @@ export default function ForumPostCard({ post }: { post: Post }) {
           isAuthor={isAuthor}
           commentCount={commentCount}
           showComments={showComments}
+          readonly={post.readonly}
           onToggleComments={() => {
             setShowComments(!showComments)
             if (!showComments) {
@@ -49,7 +50,7 @@ export default function ForumPostCard({ post }: { post: Post }) {
           }}
         />
 
-        {showComments && commentCount > 0 && user?.id && (
+        {showComments && commentCount > 0 && user?.id && !post.readonly && (
           <ForumPostComments
             comments={visibleComments}
             postId={post.id}

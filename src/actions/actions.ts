@@ -27,7 +27,7 @@ import {
   updateUsernameByUserId,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createPost, deletePost, addComment, deleteComment } from '@/server/fileArchive'
+import { createPost, deletePost, addComment, deleteComment, getPostById } from '@/server/fileArchive'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -228,13 +228,14 @@ export async function createPostAction(formState: FormState, formData: FormData)
 
   const title = formData.get('title') as string
   const content = formData.get('content') as string
+  const readonly = formData.get('readonly') === 'true'
 
-  const validationResult = CreatePostSchema.safeParse({ title, content })
+  const validationResult = CreatePostSchema.safeParse({ title, content, readonly })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { title, content },
+      values: { title, content, readonly: readonly.toString() },
     }
   }
 
@@ -242,11 +243,17 @@ export async function createPostAction(formState: FormState, formData: FormData)
     //await getUserUsername(userId)
     const username = 'Admin' // temp name
 
-    await createPost(validationResult.data.title, validationResult.data.content, userId, username || 'Anonymous')
+    await createPost(
+      validationResult.data.title,
+      validationResult.data.content,
+      userId,
+      username || 'Anonymous',
+      validationResult.data.readonly
+    )
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { title, content },
+      values: { title, content, readonly: readonly.toString() },
     }
   }
 
@@ -282,6 +289,7 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   const content = formData.get('content') as string
   const postId = formData.get('postId') as string
 
+  // First validate the form data - cheap operation
   const validationResult = CreateCommentSchema.safeParse({ content, postId })
 
   if (!validationResult.success) {
@@ -292,7 +300,22 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   }
 
   try {
-    const username = 'Admin' // await getUserUsername(userId)
+    // await getUserUsername(userId)
+    const username = 'Admin' // temp name
+
+    // Do all database operations in a single transaction
+    const post = await getPostById(postId)
+
+    // Check post existence and readonly status
+    if (!post) {
+      return toFormState('ERROR', 'Post nie istnieje')
+    }
+
+    if (post.readonly) {
+      return toFormState('ERROR', 'Ten post ma wyłączone komentarze')
+    }
+
+    // If all checks pass, add the comment
     await addComment(postId, validationResult.data.content, userId, username || 'Anonymous')
   } catch (error) {
     return {

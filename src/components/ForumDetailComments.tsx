@@ -8,14 +8,18 @@ type Props = {
   comments: Comment[]
   userId: string | null
   isAuthor: boolean
+  readonly: boolean
 }
 
-export default function ForumDetailComments({ postId, comments, userId, isAuthor }: Props) {
+export default function ForumDetailComments({ postId, comments, userId, isAuthor, readonly }: Props) {
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-sm xs:text-lg font-semibold text-zinc-100">Komentarze ({comments.length})</h2>
-        <AddCommentButton postId={postId} />
+        <h2 className="text-sm xs:text-lg font-semibold text-zinc-100">
+          Komentarze ({comments.length})
+          {readonly && <span className="text-zinc-500 text-sm ml-2">(Komentarze wyłączone)</span>}
+        </h2>
+        {!readonly && <AddCommentButton postId={postId} />}
       </div>
 
       <div className="space-y-6">
@@ -27,7 +31,7 @@ export default function ForumDetailComments({ postId, comments, userId, isAuthor
                 <span>•</span>
                 <time>{formatDate(comment.createdAt)}</time>
               </div>
-              {(isAuthor || userId === comment.authorId) && (
+              {!readonly && (isAuthor || userId === comment.authorId) && (
                 <DeleteCommentButton postId={postId} commentId={comment.id} authorId={comment.authorId} />
               )}
             </div>
@@ -36,7 +40,9 @@ export default function ForumDetailComments({ postId, comments, userId, isAuthor
         ))}
 
         {comments.length === 0 && (
-          <p className="text-center text-zinc-500 py-4">Bądź pierwszym który skomentuje ten post</p>
+          <p className="text-center text-zinc-500 py-4">
+            {readonly ? 'Ten post nie ma komentarzy' : 'Bądź pierwszym który skomentuje ten post'}
+          </p>
         )}
       </div>
     </div>

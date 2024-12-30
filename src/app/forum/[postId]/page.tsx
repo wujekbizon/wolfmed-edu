@@ -38,7 +38,13 @@ export default async function PostPage({ params }: { params: { postId: string } 
           authorId={post.authorId}
         />
         <ForumDetailContent content={post.content} />
-        <ForumDetailComments postId={post.id} comments={post.comments} userId={userId} isAuthor={isAuthor} />
+        <ForumDetailComments
+          postId={post.id}
+          comments={post.comments}
+          userId={userId}
+          isAuthor={isAuthor}
+          readonly={post.readonly}
+        />
       </article>
     </main>
   )

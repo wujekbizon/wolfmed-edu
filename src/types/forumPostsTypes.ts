@@ -15,6 +15,7 @@ export type Post = {
   createdAt: string
   updatedAt: string
   comments: Comment[]
+  readonly: boolean
 }
 
 export type ForumData = {

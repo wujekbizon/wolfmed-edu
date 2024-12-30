@@ -10,6 +10,7 @@ import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import Editor from './editor/Editor'
 import { EditorState } from 'lexical'
+import Checkbox from './Checkbox'
 
 type Props = {
   onClose: () => void
@@ -18,6 +19,7 @@ type Props = {
 export default function CreatePostForm({ onClose }: Props) {
   const [state, action] = useActionState(createPostAction, EMPTY_FORM_STATE)
   const [editorContent, setEditorContent] = useState('')
+  const [readonly, setReadonly] = useState(false)
   const noScriptFallback = useToastMessage(state)
 
   useEffect(() => {
@@ -48,6 +50,17 @@ export default function CreatePostForm({ onClose }: Props) {
               className="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 text-zinc-100 placeholder:text-zinc-600 outline-none"
             />
             <FieldError name="title" formState={state} />
+          </div>
+
+          <div>
+            <input type="hidden" name="readonly" value={readonly.toString()} />
+            <Checkbox
+              id="readonly"
+              name="readonly"
+              label="Wyłącz komentarze"
+              checked={readonly}
+              onChange={setReadonly}
+            />
           </div>
 
           <div className="flex-1 h-[75%]">
