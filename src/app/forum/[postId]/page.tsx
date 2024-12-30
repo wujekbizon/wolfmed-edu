@@ -6,7 +6,13 @@ import ForumDetailHeader from '@/components/ForumDetailHeader'
 import ForumDetailContent from '@/components/ForumDetailContent'
 import ForumDetailComments from '@/components/ForumDetailComments'
 
-export default async function PostPage({ params }: { params: { postId: string } }) {
+type Props = {
+  params: Promise<{
+    postId: string
+  }>
+}
+
+export default async function PostPage({ params }: Props) {
   const { postId } = await params
   const post = await getForumPostById(postId)
   const { userId } = await auth()
