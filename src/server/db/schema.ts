@@ -110,3 +110,44 @@ export const blogPosts = createTable('blog_posts', {
   createdAt: timestamp('createdAt').defaultNow(),
   updatedAt: timestamp('updatedAt'),
 })
+
+export const forumPosts = createTable(
+  'forum_posts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    title: varchar('title', { length: 256 }).notNull(),
+    content: text('content').notNull(),
+    authorId: varchar('authorId', { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
+    authorName: varchar('authorName', { length: 256 }).notNull(),
+    readonly: boolean('readonly').default(false).notNull(),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+    updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  },
+  (table) => ({
+    authorIdIdx: index('forum_posts_author_id_idx').on(table.authorId),
+    createdAtIdx: index('forum_posts_created_at_idx').on(table.createdAt),
+  })
+)
+
+export const forumComments = createTable(
+  'forum_comments',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    content: text('content').notNull(),
+    postId: uuid('postId')
+      .notNull()
+      .references(() => forumPosts.id, { onDelete: 'cascade' }),
+    authorId: varchar('authorId', { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
+    authorName: varchar('authorName', { length: 256 }).notNull(),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+  },
+  (table) => ({
+    postIdIdx: index('forum_comments_post_id_idx').on(table.postId),
+    authorIdIdx: index('forum_comments_author_id_idx').on(table.authorId),
+    createdAtIdx: index('forum_comments_created_at_idx').on(table.createdAt),
+  })
+)
