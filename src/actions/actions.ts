@@ -280,7 +280,7 @@ export async function deletePostAction(formState: FormState, formData: FormData)
     return fromErrorToFormState(error)
   }
 
-  revalidatePath('/forum')
+  redirect('/forum')
   return toFormState('SUCCESS', 'Post został usunięty')
 }
 

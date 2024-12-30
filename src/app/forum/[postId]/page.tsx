@@ -7,7 +7,7 @@ import ForumDetailContent from '@/components/ForumDetailContent'
 import ForumDetailComments from '@/components/ForumDetailComments'
 
 export default async function PostPage({ params }: { params: { postId: string } }) {
-  const { postId } = params
+  const { postId } = await params
   const post = await getForumPostById(postId)
   const { userId } = await auth()
 
