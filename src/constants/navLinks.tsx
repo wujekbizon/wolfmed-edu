@@ -1,5 +1,6 @@
 import BlogIcon from '@/components/icons/BlogIcon'
 import DashboardIcon from '@/components/icons/DashboardIcon'
+import ForumIcon from '@/components/icons/ForumIcon'
 import HomeIcon from '@/components/icons/HomeIcon'
 
 export const navLinks = [
@@ -17,6 +18,12 @@ export const navLinks = [
   },
   {
     id: '3',
+    linkUrl: '/forum',
+    label: 'Forum',
+    icon: <ForumIcon />,
+  },
+  {
+    id: '4',
     linkUrl: '/blog',
     label: 'Blog',
     icon: <BlogIcon />,

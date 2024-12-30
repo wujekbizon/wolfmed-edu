@@ -15,23 +15,35 @@ export default function Membership() {
             </div>
             {/* Community Updates Sidebar */}
             <aside className="lg:col-span-4 space-y-6 ">
+              {/* Community Spotlight */}
+              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
+                <h3 className="text-xl font-bold mb-3">🎉 Zapraszamy na forum 🎉</h3>
+                <p className="text-sm opacity-90 mb-4">
+                  Właśnie uruchomiliśmy forum, gdzie możesz dzielić się swoją wiedzą i doświadczeniem z innymi
+                  uczestnikami
+                </p>
+                <Link
+                  href="/forum"
+                  className="bg-white text-red-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Forum dyskusyjne
+                </Link>
+              </div>
               {/* Latest Updates */}
               <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
                 <div className="space-y-4">
                   <div className="border-l-4 border-red-500 pl-4">
-                    <p className="text-sm text-zinc-500">19 Listopad 2024</p>
-                    <h4 className="font-medium text-zinc-800">Własne kategorie pytań</h4>
-                    <Link href="/testy-opiekun/wybrane-pytania">
-                      <p className="text-sm text-red-400 hover:underline hover:text-red-500 transition-colors">
-                        Stwórz własne zestawy pytań dopasowane do Twoich potrzeb.
-                      </p>
-                    </Link>
+                    <p className="text-sm text-zinc-500">31 Grudnia 2024</p>
+                    <h4 className="font-medium text-zinc-800">Otwarte - Forum dyskusyjne</h4>
+                    <p className="text-sm text-red-400 hover:text-red-500 transition-colors">
+                      Zapraszamy wszystkich do rozmów na tematy związane z rozwojem naszej społeczności.
+                    </p>
                   </div>
                   <div className="border-l-4 border-zinc-300 pl-4">
-                    <p className="text-sm text-zinc-500">19 Listopad 2024</p>
+                    <p className="text-sm text-zinc-500">21 Grudnia 2024</p>
                     <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
-                    <p className="text-sm text-zinc-600">Już ponad 740 aktywnych użytkowników!</p>
+                    <p className="text-sm text-zinc-600">Już ponad 1000 aktywnych użytkowników!</p>
                   </div>
                 </div>
               </div>
@@ -58,10 +70,6 @@ export default function Membership() {
                 <h3 className="text-xl font-bold text-zinc-800 mb-4">Planowane Funkcje</h3>
                 <ul className="space-y-3 text-zinc-600">
                   <li className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-yellow-400 rounded-full"></span>
-                    Forum dyskusyjne
-                  </li>
-                  <li className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-green-400 rounded-full"></span>
                     Materiały edukacyjne
                   </li>
@@ -70,21 +78,6 @@ export default function Membership() {
                     Wideo procedury
                   </li>
                 </ul>
-              </div>
-
-              {/* Community Spotlight */}
-              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
-                <h3 className="text-xl font-bold mb-3">Dołącz do Dyskusji</h3>
-                <p className="text-sm opacity-90 mb-4">
-                  Wkrótce uruchomimy forum, gdzie będziesz mógł dzielić się wiedzą i doświadczeniem z innymi
-                  uczestnikami
-                </p>
-                <button
-                  disabled
-                  className="bg-white text-red-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Dowiedz się więcej
-                </button>
               </div>
             </aside>
           </div>
