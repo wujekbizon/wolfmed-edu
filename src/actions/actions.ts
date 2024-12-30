@@ -19,15 +19,8 @@ import {
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql } from 'drizzle-orm'
-import {
-  deleteCompletedTest,
-  getUserTestLimit,
-  getUserUsername,
-  updateMottoByUserId,
-  updateUsernameByUserId,
-} from '@/server/queries'
+import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { addComment, deleteComment, getPostById } from '@/server/fileArchive'
 import { createForumPost, deleteForumPost } from '@/server/queries'
 import { createForumComment, deleteForumComment } from '@/server/queries'
 
