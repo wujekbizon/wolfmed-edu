@@ -1,9 +1,10 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { completedTestes, payments, subscriptions, users } from './db/schema'
+import { completedTestes, payments, subscriptions, users, forumPosts, forumComments } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
 import { eq, asc } from 'drizzle-orm'
+import { Post as ForumPost } from '@/types/forumPostsTypes'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
@@ -174,3 +175,92 @@ export const getUserStats = cache(
     }
   }
 )
+
+// Get all forum posts with their comments
+export const getAllForumPosts = cache(async (): Promise<ForumPost[]> => {
+  const posts = await db.query.forumPosts.findMany({
+    orderBy: (model, { desc }) => desc(model.createdAt),
+    with: {
+      comments: {
+        orderBy: (model, { asc }) => asc(model.createdAt),
+      },
+    },
+  })
+
+  // Transform the dates to strings to match the Post type
+  return posts.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+    comments: post.comments.map((comment) => ({
+      ...comment,
+      createdAt: comment.createdAt.toISOString(),
+    })),
+  }))
+})
+
+// Get a single forum post with its comments
+export const getForumPostById = cache(async (postId: string): Promise<ForumPost | null> => {
+  const post = await db.query.forumPosts.findFirst({
+    where: (model, { eq }) => eq(model.id, postId),
+    with: {
+      comments: {
+        orderBy: (model, { asc }) => asc(model.createdAt),
+      },
+    },
+  })
+
+  if (!post) return null
+
+  // Transform the dates to strings
+  return {
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+    comments: post.comments.map((comment) => ({
+      ...comment,
+      createdAt: comment.createdAt.toISOString(),
+    })),
+  }
+})
+
+// Create a forum post
+export const createForumPost = cache(
+  async (data: { title: string; content: string; authorId: string; authorName: string; readonly: boolean }) => {
+    const post = await db
+      .insert(forumPosts)
+      .values({
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning()
+
+    return post[0]
+  }
+)
+
+// Delete a forum post and its comments (cascade delete will handle comments)
+export const deleteForumPost = cache(async (postId: string) => {
+  await db.delete(forumPosts).where(eq(forumPosts.id, postId))
+})
+
+// Create a comment
+export const createForumComment = cache(
+  async (data: { postId: string; content: string; authorId: string; authorName: string }) => {
+    const comment = await db
+      .insert(forumComments)
+      .values({
+        ...data,
+        createdAt: new Date(),
+      })
+      .returning()
+
+    return comment[0]
+  }
+)
+
+// Delete a comment
+export const deleteForumComment = cache(async (commentId: string) => {
+  await db.delete(forumComments).where(eq(forumComments.id, commentId))
+})

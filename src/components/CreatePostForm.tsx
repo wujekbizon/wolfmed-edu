@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { createPostAction } from '@/actions/actions'
+import { createForumPostAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import Input from '@/components/Input'
 import Label from '@/components/Label'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export default function CreatePostForm({ onClose }: Props) {
-  const [state, action] = useActionState(createPostAction, EMPTY_FORM_STATE)
+  const [state, action] = useActionState(createForumPostAction, EMPTY_FORM_STATE)
   const [editorContent, setEditorContent] = useState('')
   const [readonly, setReadonly] = useState(false)
   const noScriptFallback = useToastMessage(state)

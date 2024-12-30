@@ -11,6 +11,7 @@ import {
   pgEnum,
   boolean,
 } from 'drizzle-orm/pg-core'
+import { relations } from 'drizzle-orm'
 
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
 
@@ -151,3 +152,14 @@ export const forumComments = createTable(
     createdAtIdx: index('forum_comments_created_at_idx').on(table.createdAt),
   })
 )
+
+export const forumPostsRelations = relations(forumPosts, ({ many }) => ({
+  comments: many(forumComments),
+}))
+
+export const forumCommentsRelations = relations(forumComments, ({ one }) => ({
+  post: one(forumPosts, {
+    fields: [forumComments.postId],
+    references: [forumPosts.id],
+  }),
+}))

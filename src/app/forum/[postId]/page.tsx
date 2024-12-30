@@ -1,4 +1,4 @@
-import { getPostById } from '@/server/fileArchive'
+import { getForumPostById } from '@/server/queries'
 import { notFound } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
@@ -8,7 +8,7 @@ import ForumDetailComments from '@/components/ForumDetailComments'
 
 export default async function PostPage({ params }: { params: { postId: string } }) {
   const { postId } = params
-  const post = await getPostById(postId)
+  const post = await getForumPostById(postId)
   const { userId } = await auth()
 
   if (!post) {

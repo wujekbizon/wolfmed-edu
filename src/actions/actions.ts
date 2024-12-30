@@ -27,7 +27,9 @@ import {
   updateUsernameByUserId,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createPost, deletePost, addComment, deleteComment, getPostById } from '@/server/fileArchive'
+import { addComment, deleteComment, getPostById } from '@/server/fileArchive'
+import { createForumPost, deleteForumPost } from '@/server/queries'
+import { createForumComment, deleteForumComment } from '@/server/queries'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -222,7 +224,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   return toFormState('SUCCESS', 'Motto zaktualizowane pomyślnie!')
 }
 
-export async function createPostAction(formState: FormState, formData: FormData) {
+export async function createForumPostAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
@@ -240,16 +242,23 @@ export async function createPostAction(formState: FormState, formData: FormData)
   }
 
   try {
-    //await getUserUsername(userId)
-    const username = 'Admin' // temp name
+    const post = await db.transaction(async (tx) => {
+      // Get username first
+      const [user] = await tx.select({ username: users.username }).from(users).where(eq(users.userId, userId))
 
-    await createPost(
-      validationResult.data.title,
-      validationResult.data.content,
-      userId,
-      username || 'Anonymous',
-      validationResult.data.readonly
-    )
+      if (!user) throw new Error('Username not found')
+
+      // Use createForumPost query
+      return await createForumPost({
+        title: validationResult.data.title,
+        content: validationResult.data.content,
+        authorId: userId,
+        authorName: user.username || 'Anonymous',
+        readonly: validationResult.data.readonly,
+      })
+    })
+
+    if (!post) throw new Error('Failed to create post')
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
@@ -273,7 +282,7 @@ export async function deletePostAction(formState: FormState, formData: FormData)
   }
 
   try {
-    await deletePost(postId)
+    await deleteForumPost(postId)
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -289,7 +298,6 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   const content = formData.get('content') as string
   const postId = formData.get('postId') as string
 
-  // First validate the form data - cheap operation
   const validationResult = CreateCommentSchema.safeParse({ content, postId })
 
   if (!validationResult.success) {
@@ -300,23 +308,28 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   }
 
   try {
-    // await getUserUsername(userId)
-    const username = 'Admin' // temp name
+    const post = await db.transaction(async (tx) => {
+      // Get username and check post in transaction
+      const [user] = await tx.select({ username: users.username }).from(users).where(eq(users.userId, userId))
+      const postExists = await tx.query.forumPosts.findFirst({
+        where: (posts, { eq }) => eq(posts.id, postId),
+        columns: { readonly: true },
+      })
 
-    // Do all database operations in a single transaction
-    const post = await getPostById(postId)
+      if (!user) throw new Error('Username not found')
+      if (!postExists) throw new Error('Post nie istnieje')
+      if (postExists.readonly) throw new Error('Ten post ma wyłączone komentarze')
 
-    // Check post existence and readonly status
-    if (!post) {
-      return toFormState('ERROR', 'Post nie istnieje')
-    }
+      // Create comment if all checks pass
+      return await createForumComment({
+        postId,
+        content: validationResult.data.content,
+        authorId: userId,
+        authorName: user.username || 'Anonymous',
+      })
+    })
 
-    if (post.readonly) {
-      return toFormState('ERROR', 'Ten post ma wyłączone komentarze')
-    }
-
-    // If all checks pass, add the comment
-    await addComment(postId, validationResult.data.content, userId, username || 'Anonymous')
+    if (!post) throw new Error('Failed to create comment')
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
@@ -332,7 +345,6 @@ export async function deleteCommentAction(formState: FormState, formData: FormDa
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
-  const postId = formData.get('postId') as string
   const commentId = formData.get('commentId') as string
   const authorId = formData.get('authorId') as string
 
@@ -341,7 +353,7 @@ export async function deleteCommentAction(formState: FormState, formData: FormDa
   }
 
   try {
-    await deleteComment(postId, commentId)
+    await deleteForumComment(commentId)
   } catch (error) {
     return fromErrorToFormState(error)
   }

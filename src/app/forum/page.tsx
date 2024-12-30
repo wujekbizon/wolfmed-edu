@@ -1,11 +1,11 @@
 import ForumPosts from '@/components/ForumPosts'
-import { getAllPosts } from '@/server/fileArchive'
+import { getAllForumPosts } from '@/server/queries'
 import { Suspense } from 'react'
 
 export const experimental_ppr = true
 
 export default async function ForumPage() {
-  const posts = await getAllPosts() // temp getting all posts from json file
+  const posts = await getAllForumPosts()
 
   return (
     <Suspense fallback={<p>Loading...</p>}>
