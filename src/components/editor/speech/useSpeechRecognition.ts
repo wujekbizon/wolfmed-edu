@@ -13,6 +13,17 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
   const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null)
 
   /**
+   * Stops the speech recognition service
+   * Memoized to prevent unnecessary re-renders
+   */
+  const stopListening = useCallback(() => {
+    if (speechRecognition) {
+      speechRecognition.stop()
+      setIsListening(false)
+    }
+  }, [speechRecognition])
+
+  /**
    * Initialize speech recognition on mount
    * Handles browser compatibility and sets up initial configuration
    */
@@ -69,7 +80,7 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
         speechRecognition.onerror = () => {}
       }
     }
-  }, [isListening, speechRecognition, onResult])
+  }, [isListening, speechRecognition, onResult, stopListening])
 
   /**
    * Starts the speech recognition service
@@ -79,17 +90,6 @@ export function useSpeechRecognition(onResult: (text: string) => void) {
     if (speechRecognition) {
       speechRecognition.start()
       setIsListening(true)
-    }
-  }, [speechRecognition])
-
-  /**
-   * Stops the speech recognition service
-   * Memoized to prevent unnecessary re-renders
-   */
-  const stopListening = useCallback(() => {
-    if (speechRecognition) {
-      speechRecognition.stop()
-      setIsListening(false)
     }
   }, [speechRecognition])
 
