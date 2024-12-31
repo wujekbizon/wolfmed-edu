@@ -24,31 +24,6 @@ async function ForumPost({ postId }: { postId: string }) {
   const isAuthor = userId === post.authorId
 
   return (
-    <article className="bg-zinc-900 rounded-lg overflow-hidden">
-      <ForumDetailHeader
-        title={post.title}
-        authorName={post.authorName}
-        createdAt={post.createdAt}
-        isAuthor={isAuthor}
-        postId={post.id}
-        authorId={post.authorId}
-      />
-      <ForumDetailContent content={post.content} />
-      <ForumDetailComments
-        postId={post.id}
-        comments={post.comments}
-        userId={userId}
-        isAuthor={isAuthor}
-        readonly={post.readonly}
-      />
-    </article>
-  )
-}
-
-export default async function PostPage({ params }: Props) {
-  const { postId } = await params
-
-  return (
     <section className="min-h-screen w-full max-w-5xl mx-auto px-0 xs:px-4 py-8">
       <div className="mb-6">
         <Link
@@ -58,10 +33,34 @@ export default async function PostPage({ params }: Props) {
           ← Wróć do forum
         </Link>
       </div>
-
-      <Suspense fallback={<Loading />}>
-        <ForumPost postId={postId} />
-      </Suspense>
+      <article className="bg-zinc-900 rounded-lg overflow-hidden">
+        <ForumDetailHeader
+          title={post.title}
+          authorName={post.authorName}
+          createdAt={post.createdAt}
+          isAuthor={isAuthor}
+          postId={post.id}
+          authorId={post.authorId}
+        />
+        <ForumDetailContent content={post.content} />
+        <ForumDetailComments
+          postId={post.id}
+          comments={post.comments}
+          userId={userId}
+          isAuthor={isAuthor}
+          readonly={post.readonly}
+        />
+      </article>
     </section>
+  )
+}
+
+export default async function PostPage({ params }: Props) {
+  const { postId } = await params
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <ForumPost postId={postId} />
+    </Suspense>
   )
 }

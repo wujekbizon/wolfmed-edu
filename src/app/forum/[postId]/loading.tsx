@@ -1,10 +1,10 @@
 export default function Loading() {
   return (
     <main className="min-h-screen w-full max-w-5xl mx-auto px-0 xs:px-4 py-8">
+      <div className="mb-6">
+        <div className="text-zinc-800 inline-flex items-center gap-2">← Wróć do forum</div>
+      </div>
       <article className="bg-zinc-900/80 backdrop-blur-sm rounded-lg overflow-hidden animate-pulse">
-        {/* Space reserved for back button */}
-        <div className="h-6 mb-6"></div>
-        {/* Header Loading */}
         <div className="p-6 border-b border-zinc-800/50">
           <div className="flex justify-between items-start">
             <div className="h-[32px] sm:h-[40px] bg-zinc-800/60 rounded-md w-3/4 mb-4 blur-[1px]"></div>
