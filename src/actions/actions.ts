@@ -7,7 +7,7 @@ import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
-import { completedTestes, customersMessages, users } from '@/server/db/schema'
+import { completedTestes, customersMessages, forumComments, users } from '@/server/db/schema'
 import {
   CreateAnswersSchema,
   CreateMessageSchema,
@@ -18,11 +18,20 @@ import {
   CreateCommentSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
-import { eq, sql } from 'drizzle-orm'
-import { deleteCompletedTest, getUserTestLimit, updateMottoByUserId, updateUsernameByUserId } from '@/server/queries'
+import { eq, sql, and, gt } from 'drizzle-orm'
+import {
+  deleteCompletedTest,
+  getUserTestLimit,
+  updateMottoByUserId,
+  updateUsernameByUserId,
+  createForumPost,
+  deleteForumPost,
+  createForumComment,
+  deleteForumComment,
+  getLastUserPostTime,
+  getLastUserCommentTime,
+} from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
-import { createForumPost, deleteForumPost } from '@/server/queries'
-import { createForumComment, deleteForumComment } from '@/server/queries'
 
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
@@ -235,6 +244,19 @@ export async function createForumPostAction(formState: FormState, formData: Form
   }
 
   try {
+    // Check when user's last post was created
+    const lastPostTime = await getLastUserPostTime(userId)
+
+    if (lastPostTime) {
+      const timeSinceLastPost = Date.now() - lastPostTime.getTime()
+      const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
+
+      if (timeSinceLastPost < ONE_HOUR) {
+        const minutesRemaining = Math.ceil((ONE_HOUR - timeSinceLastPost) / (60 * 1000))
+        return toFormState('ERROR', `Możesz utworzyć następny post za ${minutesRemaining} minut.`)
+      }
+    }
+
     const post = await db.transaction(async (tx) => {
       // Get username first
       const [user] = await tx.select({ username: users.username }).from(users).where(eq(users.userId, userId))
@@ -301,6 +323,29 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   }
 
   try {
+    // Check when user's last comment was created
+    const lastCommentTime = await getLastUserCommentTime(userId)
+
+    if (lastCommentTime) {
+      const timeSinceLastComment = Date.now() - lastCommentTime.getTime()
+      const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
+      const MAX_COMMENTS_PER_HOUR = 5
+
+      // Get count of comments in the last hour
+      const commentCount = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(forumComments)
+        .where(and(eq(forumComments.authorId, userId), gt(forumComments.createdAt, new Date(Date.now() - ONE_HOUR))))
+
+      if ((commentCount[0]?.count ?? 0) >= MAX_COMMENTS_PER_HOUR) {
+        const minutesRemaining = Math.ceil((ONE_HOUR - timeSinceLastComment) / (60 * 1000))
+        return toFormState(
+          'ERROR',
+          `Przekroczono limit 5 komentarzy na godzinę. Spróbuj ponownie za ${minutesRemaining} minut.`
+        )
+      }
+    }
+
     const post = await db.transaction(async (tx) => {
       // Get username and check post in transaction
       const [user] = await tx.select({ username: users.username }).from(users).where(eq(users.userId, userId))

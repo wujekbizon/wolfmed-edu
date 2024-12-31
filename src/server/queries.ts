@@ -3,7 +3,7 @@ import { db } from '@/server/db/index'
 import { completedTestes, payments, subscriptions, users, forumPosts, forumComments } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, desc } from 'drizzle-orm'
 import { Post as ForumPost } from '@/types/forumPostsTypes'
 
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -263,4 +263,26 @@ export const createForumComment = cache(
 // Delete a comment
 export const deleteForumComment = cache(async (commentId: string) => {
   await db.delete(forumComments).where(eq(forumComments.id, commentId))
+})
+
+export const getLastUserPostTime = cache(async (userId: string): Promise<Date | null> => {
+  const [lastPost] = await db
+    .select({ createdAt: forumPosts.createdAt })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+    .orderBy(desc(forumPosts.createdAt))
+    .limit(1)
+
+  return lastPost?.createdAt ?? null
+})
+
+export const getLastUserCommentTime = cache(async (userId: string): Promise<Date | null> => {
+  const [lastComment] = await db
+    .select({ createdAt: forumComments.createdAt })
+    .from(forumComments)
+    .where(eq(forumComments.authorId, userId))
+    .orderBy(desc(forumComments.createdAt))
+    .limit(1)
+
+  return lastComment?.createdAt ?? null
 })
