@@ -49,7 +49,7 @@ export default async function PostPage({ params }: Props) {
   const { postId } = await params
 
   return (
-    <main className="min-h-screen w-full max-w-5xl mx-auto px-0 xs:px-4 py-8">
+    <section className="min-h-screen w-full max-w-5xl mx-auto px-0 xs:px-4 py-8">
       <div className="mb-6">
         <Link
           href="/forum"
@@ -62,6 +62,6 @@ export default async function PostPage({ params }: Props) {
       <Suspense fallback={<Loading />}>
         <ForumPost postId={postId} />
       </Suspense>
-    </main>
+    </section>
   )
 }
