@@ -33,6 +33,10 @@ import {
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
+/**
+ * Processes test submission, validates answers, updates user limits and stores results
+ * Handles: form validation, test limits, score calculation, and DB transaction
+ */
 export async function submitTestAction(formState: FormState, formData: FormData) {
   // Check user authorization before allowing submission
   const { userId } = await auth()
@@ -116,6 +120,10 @@ export async function submitTestAction(formState: FormState, formData: FormData)
   redirect('/testy-opiekun/wyniki')
 }
 
+/**
+ * Handles customer message submission with email validation
+ * Stores: email and message in customersMessages table
+ */
 export async function sendEmail(formState: FormState, formData: FormData) {
   const email = formData.get('email') as string
   const message = formData.get('message') as string
@@ -145,6 +153,10 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   return toFormState('SUCCESS', 'Wiadomość wysłana pomyślnie!')
 }
 
+/**
+ * Deletes a completed test if user is authorized
+ * Validates: user ownership and test existence
+ */
 export async function deleteTestAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -171,6 +183,10 @@ export async function deleteTestAction(formState: FormState, formData: FormData)
   return toFormState('SUCCESS', 'Test usunięty pomyślnie')
 }
 
+/**
+ * Updates user's display name with validation
+ * Handles: username format validation and DB update
+ */
 export async function updateUsername(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -198,6 +214,10 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   return toFormState('SUCCESS', 'Username updated successfully!')
 }
 
+/**
+ * Updates user's motto with validation
+ * Handles: motto format validation and DB update
+ */
 export async function updateMotto(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -226,6 +246,10 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   return toFormState('SUCCESS', 'Motto zaktualizowane pomyślnie!')
 }
 
+/**
+ * Creates a forum post with rate limiting (1 post per hour)
+ * Handles: content validation, rate limiting, and user verification
+ */
 export async function createForumPostAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -285,6 +309,10 @@ export async function createForumPostAction(formState: FormState, formData: Form
   return toFormState('SUCCESS', 'Post został dodany pomyślnie!')
 }
 
+/**
+ * Deletes a forum post if user is the author
+ * Validates: user ownership before deletion
+ */
 export async function deletePostAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -306,6 +334,10 @@ export async function deletePostAction(formState: FormState, formData: FormData)
   return toFormState('SUCCESS', 'Post został usunięty')
 }
 
+/**
+ * Creates a forum comment with rate limiting (5 comments per hour)
+ * Handles: content validation, rate limiting, readonly check, and user verification
+ */
 export async function createCommentAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
@@ -379,6 +411,10 @@ export async function createCommentAction(formState: FormState, formData: FormDa
   return toFormState('SUCCESS', 'Komentarz został dodany')
 }
 
+/**
+ * Deletes a forum comment if user is the author
+ * Validates: user ownership before deletion
+ */
 export async function deleteCommentAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
