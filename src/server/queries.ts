@@ -1,68 +1,70 @@
 import 'server-only'
 import { db } from '@/server/db/index'
-import { completedTestes, payments, subscriptions, users } from './db/schema'
+import { completedTestes, payments, subscriptions, users, forumPosts, forumComments } from './db/schema'
 import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@/types/dataTypes'
 import { cache } from 'react'
-import { eq, asc } from 'drizzle-orm'
+import { eq, asc, desc } from 'drizzle-orm'
+import { Post as ForumPost } from '@/types/forumPostsTypes'
 
+// Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   const tests = await db.query.tests.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
-
   return tests
 })
 
+// Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(async (): Promise<ExtendedProcedures[]> => {
   const procedures = await db.query.procedures.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
-
   return procedures
 })
 
+// Get all blog posts, ordered by newest first
 export const getAllPosts = cache(async (): Promise<Post[]> => {
   const posts = await db.query.blogPosts.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
-
   return posts
 })
 
+// Get all completed tests for a specific user, ordered by completion date
 export const getCompletedTestsByUser = cache(async (userId: string): Promise<ExtendedCompletedTest[]> => {
   const completedTest = await db.query.completedTestes.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
     orderBy: (model, { desc }) => desc(model.completedAt),
   })
-
   return completedTest
 })
 
+// Get a specific completed test by its ID
 export const getCompletedTest = cache(async (testId: string) => {
   const completedTest = await db.query.completedTestes.findFirst({
     where: (model, { eq }) => eq(model.id, testId),
   })
-
   return completedTest
 })
 
+// Get a specific question by its test ID
 export const getQuestionById = cache(async (testId: string) => {
   const question = await db.query.tests.findFirst({
     where: (model, { eq }) => eq(model.id, testId),
   })
-
   return question
 })
 
+// Get user's remaining test limit
 export const getUserTestLimit = cache(async (id: string) => {
   const [testLimit] = await db.select({ testLimit: users.testLimit }).from(users).where(eq(users.userId, id))
   return testLimit
 })
 
-export async function getUserIdByCustomer(customerId: string): Promise<string | null> {
+// Get userId by Stripe customer ID
+export const getUserIdByCustomer = cache(async (customerId: string): Promise<string | null> => {
   try {
     const subscription = await db.select().from(subscriptions).where(eq(subscriptions.customerId, customerId)).limit(1)
-
     if (subscription) {
       return subscription[0]?.userId || null
     } else {
@@ -72,9 +74,10 @@ export async function getUserIdByCustomer(customerId: string): Promise<string | 
     console.error('Error fetching subscription:', error)
     throw error
   }
-}
+})
 
-export async function getUserIdByCustomerEmail(customerEmail: string): Promise<string | null> {
+// Get userId by customer email
+export const getUserIdByCustomerEmail = cache(async (customerEmail: string): Promise<string | null> => {
   try {
     const payment = await db.select().from(payments).where(eq(payments.customerEmail, customerEmail)).limit(1)
     if (payment) {
@@ -86,9 +89,9 @@ export async function getUserIdByCustomerEmail(customerEmail: string): Promise<s
     console.error('Error fetching payment:', error)
     throw error
   }
-}
+})
 
-// Function to fetch a single post by ID from the database
+// Get a blog post by its ID
 export const getPostById = cache(async (id: string) => {
   const post = await db.query.blogPosts.findFirst({
     where: (model, { eq }) => eq(model.id, id),
@@ -96,14 +99,17 @@ export const getPostById = cache(async (id: string) => {
   return post
 })
 
+// Delete a completed test by its ID
 export const deleteCompletedTest = cache(async (testId: string) => {
   await db.delete(completedTestes).where(eq(completedTestes.id, testId))
 })
 
+// Update username for a specific user
 export const updateUsernameByUserId = cache(async (userId: string, newUsername: string) => {
   await db.update(users).set({ username: newUsername }).where(eq(users.userId, userId))
 })
 
+// Get username for a specific user
 export const getUserUsername = cache(async (userId: string): Promise<string> => {
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -112,10 +118,12 @@ export const getUserUsername = cache(async (userId: string): Promise<string> => 
   return user?.username || ''
 })
 
+// Update motto for a specific user
 export const updateMottoByUserId = cache(async (userId: string, newMotto: string) => {
   await db.update(users).set({ motto: newMotto }).where(eq(users.userId, userId))
 })
 
+// Get motto for a specific user
 export const getUserMotto = cache(async (userId: string): Promise<string> => {
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -124,6 +132,7 @@ export const getUserMotto = cache(async (userId: string): Promise<string> => {
   return user?.motto || ''
 })
 
+// Get early supporters list, limited to specified number
 export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id: string; username: string }[]> => {
   const supporters = await db
     .select({
@@ -141,6 +150,7 @@ export const getEarlySupporters = cache(async (limit: number = 5): Promise<{ id:
   }))
 })
 
+// Check if a user is a supporter
 export const getSupporterByUserId = cache(async (userId: string): Promise<boolean> => {
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -149,6 +159,7 @@ export const getSupporterByUserId = cache(async (userId: string): Promise<boolea
   return user?.supporter || false
 })
 
+// Get user statistics (total score, questions, tests attempted)
 export const getUserStats = cache(
   async (
     userId: string
@@ -174,3 +185,114 @@ export const getUserStats = cache(
     }
   }
 )
+
+// Get all forum posts with their comments, ordered by creation date
+export const getAllForumPosts = cache(async (): Promise<ForumPost[]> => {
+  const posts = await db.query.forumPosts.findMany({
+    orderBy: (model, { desc }) => desc(model.createdAt),
+    with: {
+      comments: {
+        orderBy: (model, { asc }) => asc(model.createdAt),
+      },
+    },
+  })
+
+  return posts.map((post) => ({
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+    comments: post.comments.map((comment) => ({
+      ...comment,
+      createdAt: comment.createdAt.toISOString(),
+    })),
+  }))
+})
+
+// Get a specific forum post with its comments
+export const getForumPostById = cache(async (postId: string): Promise<ForumPost | null> => {
+  const post = await db.query.forumPosts.findFirst({
+    where: (model, { eq }) => eq(model.id, postId),
+    with: {
+      comments: {
+        orderBy: (model, { asc }) => asc(model.createdAt),
+      },
+    },
+  })
+
+  if (!post) return null
+
+  return {
+    ...post,
+    createdAt: post.createdAt.toISOString(),
+    updatedAt: post.updatedAt.toISOString(),
+    comments: post.comments.map((comment) => ({
+      ...comment,
+      createdAt: comment.createdAt.toISOString(),
+    })),
+  }
+})
+
+// Create a new forum post
+export const createForumPost = cache(
+  async (data: { title: string; content: string; authorId: string; authorName: string; readonly: boolean }) => {
+    const post = await db
+      .insert(forumPosts)
+      .values({
+        ...data,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning()
+
+    return post[0]
+  }
+)
+
+// Delete a forum post and its associated comments
+export const deleteForumPost = cache(async (postId: string) => {
+  await db.delete(forumPosts).where(eq(forumPosts.id, postId))
+})
+
+// Create a new comment on a forum post
+export const createForumComment = cache(
+  async (data: { postId: string; content: string; authorId: string; authorName: string }) => {
+    const comment = await db
+      .insert(forumComments)
+      .values({
+        ...data,
+        createdAt: new Date(),
+      })
+      .returning()
+
+    return comment[0]
+  }
+)
+
+// Delete a specific comment
+export const deleteForumComment = cache(async (commentId: string) => {
+  await db.delete(forumComments).where(eq(forumComments.id, commentId))
+})
+
+// Get the timestamp of user's last forum post
+export const getLastUserPostTime = cache(async (userId: string): Promise<Date | null> => {
+  const [lastPost] = await db
+    .select({ createdAt: forumPosts.createdAt })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+    .orderBy(desc(forumPosts.createdAt))
+    .limit(1)
+
+  return lastPost?.createdAt ?? null
+})
+
+// Get the timestamp of user's last comment
+export const getLastUserCommentTime = cache(async (userId: string): Promise<Date | null> => {
+  const [lastComment] = await db
+    .select({ createdAt: forumComments.createdAt })
+    .from(forumComments)
+    .where(eq(forumComments.authorId, userId))
+    .orderBy(desc(forumComments.createdAt))
+    .limit(1)
+
+  return lastComment?.createdAt ?? null
+})

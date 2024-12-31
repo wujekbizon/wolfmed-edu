@@ -4,6 +4,7 @@ import { getCompletedTest } from '@/server/queries'
 import TestResultCard from '@/components/TestResultCard'
 import type { CompletedTest } from '@/types/dataTypes'
 import Loading from './loading'
+
 export const experimental_ppr = true
 
 export const metadata: Metadata = {
