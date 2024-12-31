@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { getForumPostById } from '@/server/queries'
 import { notFound } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
@@ -5,15 +6,14 @@ import Link from 'next/link'
 import ForumDetailHeader from '@/components/ForumDetailHeader'
 import ForumDetailContent from '@/components/ForumDetailContent'
 import ForumDetailComments from '@/components/ForumDetailComments'
+import Loading from './loading'
 
 type Props = {
   params: Promise<{
     postId: string
   }>
 }
-
-export default async function PostPage({ params }: Props) {
-  const { postId } = await params
+async function ForumPost({ postId }: { postId: string }) {
   const post = await getForumPostById(postId)
   const { userId } = await auth()
 
@@ -22,6 +22,31 @@ export default async function PostPage({ params }: Props) {
   }
 
   const isAuthor = userId === post.authorId
+
+  return (
+    <article className="bg-zinc-900 rounded-lg overflow-hidden">
+      <ForumDetailHeader
+        title={post.title}
+        authorName={post.authorName}
+        createdAt={post.createdAt}
+        isAuthor={isAuthor}
+        postId={post.id}
+        authorId={post.authorId}
+      />
+      <ForumDetailContent content={post.content} />
+      <ForumDetailComments
+        postId={post.id}
+        comments={post.comments}
+        userId={userId}
+        isAuthor={isAuthor}
+        readonly={post.readonly}
+      />
+    </article>
+  )
+}
+
+export default async function PostPage({ params }: Props) {
+  const { postId } = await params
 
   return (
     <main className="min-h-screen w-full max-w-5xl mx-auto px-0 xs:px-4 py-8">
@@ -34,24 +59,9 @@ export default async function PostPage({ params }: Props) {
         </Link>
       </div>
 
-      <article className="bg-zinc-900 rounded-lg overflow-hidden">
-        <ForumDetailHeader
-          title={post.title}
-          authorName={post.authorName}
-          createdAt={post.createdAt}
-          isAuthor={isAuthor}
-          postId={post.id}
-          authorId={post.authorId}
-        />
-        <ForumDetailContent content={post.content} />
-        <ForumDetailComments
-          postId={post.id}
-          comments={post.comments}
-          userId={userId}
-          isAuthor={isAuthor}
-          readonly={post.readonly}
-        />
-      </article>
+      <Suspense fallback={<Loading />}>
+        <ForumPost postId={postId} />
+      </Suspense>
     </main>
   )
 }
