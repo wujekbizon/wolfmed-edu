@@ -33,7 +33,7 @@ export const EXAM_PERIODS: ExamPeriod[] = [
     label: 'Trwa letnia sesja egzaminacyjna',
   },
   {
-    startDate: createPolandDate(2025, 6, 22),
+    startDate: createPolandDate(2025, 6, 2),
     endDate: createPolandDate(2025, 8, 29, 23, 59, 59),
     type: 'waiting_results',
     label: 'Czas do ogłoszenia wyników',

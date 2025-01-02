@@ -1,43 +1,23 @@
 import { EXAM_PERIODS } from '@/constants/examDates'
-import { ExamStatus } from '@/types/examCountdownTypes'
-
-const calculations = {
-  days: (difference: number) => Math.floor(difference / (1000 * 60 * 60 * 24)),
-  hours: (difference: number) => Math.floor((difference / (1000 * 60 * 60)) % 24),
-  minutes: (difference: number) => Math.floor((difference / 1000 / 60) % 60),
-  seconds: (difference: number) => Math.floor((difference / 1000) % 60),
-} as const
+import type { ExamStatus } from '@/types/examCountdownTypes'
 
 /**
  * Calculates the time remaining until the next exam event or during current exam period
- *
- * The function:
- * 1. Gets current time in Poland timezone
- * 2. Finds if we're currently in an exam period
- * 3. If not in a period, finds the next upcoming period
- * 4. Calculates the time difference to either:
- *    - The start of the next period (for countdown)
- *    - The end of current period (for in_progress/waiting_results)
- *
- * @returns {ExamStatus} Object containing:
- *  - timeLeft: remaining time in days, hours, minutes, seconds
- *  - currentPeriod: the current or next exam period details
+ * Uses UTC dates to ensure consistent calculations across server/client
  */
 export function calculateTimeLeft(): ExamStatus {
-  // Get current time in UTC
-  const now = new Date()
+  // Get current timestamp in milliseconds
+  const now = Date.now()
+  const polandTime = new Date(now)
+  const polandTimestamp = polandTime.getTime()
 
-  // Convert to Poland time more reliably
-  const polandOffset = now.getTimezoneOffset() + (new Date().getMonth() >= 2 && new Date().getMonth() <= 9 ? 120 : 60)
-  const polandTime = new Date(now.getTime() + polandOffset * 60000)
-
-  // Find current period
+  // Find current period using timestamp comparison
   const currentPeriod = EXAM_PERIODS.find((period) => {
-    return polandTime >= period.startDate && polandTime <= period.endDate
+    return polandTimestamp >= period.startDate.getTime() && polandTimestamp <= period.endDate.getTime()
   })
 
   if (!currentPeriod) {
-    const nextPeriod = EXAM_PERIODS.find((period) => polandTime < period.startDate)
+    const nextPeriod = EXAM_PERIODS.find((period) => polandTimestamp < period.startDate.getTime())
     if (!nextPeriod) {
       return {
         timeLeft: { days: 0, hours: 0, minutes: 0, seconds: 0 },
@@ -45,25 +25,27 @@ export function calculateTimeLeft(): ExamStatus {
       }
     }
 
-    const difference = nextPeriod.startDate.getTime() - polandTime.getTime()
+    const difference = nextPeriod.startDate.getTime() - polandTimestamp
+
     return {
       timeLeft: {
-        days: calculations.days(difference),
-        hours: calculations.hours(difference),
-        minutes: calculations.minutes(difference),
-        seconds: calculations.seconds(difference),
+        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
       },
       currentPeriod: nextPeriod,
     }
   }
 
-  const difference = currentPeriod.endDate.getTime() - polandTime.getTime()
+  const difference = currentPeriod.endDate.getTime() - polandTimestamp
+
   return {
     timeLeft: {
-      days: calculations.days(difference),
-      hours: calculations.hours(difference),
-      minutes: calculations.minutes(difference),
-      seconds: calculations.seconds(difference),
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+      seconds: Math.floor((difference / 1000) % 60),
     },
     currentPeriod,
   }
