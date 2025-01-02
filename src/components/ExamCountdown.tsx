@@ -1,6 +1,5 @@
 import { calculateTimeLeft } from '@/utils/dateUtils'
 import CountdownTimer from './CountdownTimer'
-import type { ExamStatus } from '@/types/examCountdownTypes'
 
 export default function ExamCountdown() {
   const { timeLeft, currentPeriod } = calculateTimeLeft()
@@ -13,6 +12,10 @@ export default function ExamCountdown() {
         </h3>
       </div>
     )
+  }
+
+  const formatDate = (date: Date) => {
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
   }
 
   return (
@@ -30,25 +33,19 @@ export default function ExamCountdown() {
         {currentPeriod.type === 'in_progress' ? (
           <>
             Egzaminy trwają od{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">
-              {currentPeriod.startDate.toLocaleDateString('pl-PL')}
-            </span>{' '}
-            do{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">{currentPeriod.endDate.toLocaleDateString('pl-PL')}</span>
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.startDate)}</span> do{' '}
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.endDate)}</span>
           </>
         ) : currentPeriod.type === 'waiting_results' ? (
           <>
             Wyniki będą dostępne{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">{currentPeriod.endDate.toLocaleDateString('pl-PL')}</span>
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.endDate)}</span>
           </>
         ) : (
           <>
             Egzaminy odbędą się od{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">
-              {currentPeriod.startDate.toLocaleDateString('pl-PL')}
-            </span>{' '}
-            do{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">{currentPeriod.endDate.toLocaleDateString('pl-PL')}</span>
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.startDate)}</span> do{' '}
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.endDate)}</span>
           </>
         )}
       </p>
