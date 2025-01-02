@@ -1,14 +1,9 @@
-'use client'
-
+import { calculateTimeLeft } from '@/utils/dateUtils'
 import CountdownTimer from './CountdownTimer'
 import type { ExamStatus } from '@/types/examCountdownTypes'
 
-interface ExamCountdownProps {
-  initialExamStatus: ExamStatus
-}
-
-export default function ExamCountdown({ initialExamStatus }: ExamCountdownProps) {
-  const { timeLeft, currentPeriod } = initialExamStatus
+export default function ExamCountdown() {
+  const { timeLeft, currentPeriod } = calculateTimeLeft()
 
   if (!currentPeriod) {
     return (
