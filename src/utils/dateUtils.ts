@@ -1,60 +1,5 @@
-interface ExamPeriod {
-  startDate: Date
-  endDate: Date
-  type: 'countdown' | 'in_progress' | 'waiting_results'
-  label: string
-}
-
-const EXAM_PERIODS: ExamPeriod[] = [
-  {
-    startDate: new Date('2025-01-09T00:00:00+01:00'),
-    endDate: new Date('2025-01-20T23:59:59+01:00'),
-    type: 'countdown',
-    label: 'Czas do zimowej sesji egzaminacyjnej',
-  },
-  {
-    startDate: new Date('2025-01-09T00:00:00+01:00'),
-    endDate: new Date('2025-01-20T23:59:59+01:00'),
-    type: 'in_progress',
-    label: 'Trwa zimowa sesja egzaminacyjna',
-  },
-  {
-    startDate: new Date('2025-01-21T00:00:00+01:00'),
-    endDate: new Date('2025-03-28T23:59:59+01:00'),
-    type: 'waiting_results',
-    label: 'Czas do ogłoszenia wyników',
-  },
-  {
-    startDate: new Date('2025-06-02T00:00:00+02:00'),
-    endDate: new Date('2025-06-21T23:59:59+02:00'),
-    type: 'countdown',
-    label: 'Czas do letniej sesji egzaminacyjnej',
-  },
-  {
-    startDate: new Date('2025-06-02T00:00:00+02:00'),
-    endDate: new Date('2025-06-21T23:59:59+02:00'),
-    type: 'in_progress',
-    label: 'Trwa letnia sesja egzaminacyjna',
-  },
-  {
-    startDate: new Date('2025-06-22T00:00:00+02:00'),
-    endDate: new Date('2025-08-29T23:59:59+02:00'),
-    type: 'waiting_results',
-    label: 'Czas do ogłoszenia wyników',
-  },
-]
-
-interface TimeLeft {
-  days: number
-  hours: number
-  minutes: number
-  seconds: number
-}
-
-interface ExamStatus {
-  timeLeft: TimeLeft
-  currentPeriod: ExamPeriod | null
-}
+import { EXAM_PERIODS } from '@/constants/examDates'
+import { ExamStatus } from '@/types/examCountdownTypes'
 
 const calculations = {
   days: (difference: number) => Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -63,25 +8,44 @@ const calculations = {
   seconds: (difference: number) => Math.floor((difference / 1000) % 60),
 } as const
 
+/**
+ * Calculates the time remaining until the next exam event or during current exam period
+ *
+ * The function:
+ * 1. Gets current time in Poland timezone
+ * 2. Finds if we're currently in an exam period
+ * 3. If not in a period, finds the next upcoming period
+ * 4. Calculates the time difference to either:
+ *    - The start of the next period (for countdown)
+ *    - The end of current period (for in_progress/waiting_results)
+ *
+ * @returns {ExamStatus} Object containing:
+ *  - timeLeft: remaining time in days, hours, minutes, seconds
+ *  - currentPeriod: the current or next exam period details
+ */
 export function calculateTimeLeft(): ExamStatus {
+  // Get current time in Poland's timezone
   const now = new Date()
   const polandTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Warsaw' }))
 
+  // Check if we're currently in an exam period
   const currentPeriod = EXAM_PERIODS.find((period) => {
     return polandTime >= period.startDate && polandTime <= period.endDate
   })
 
   if (!currentPeriod) {
-    // Find the next upcoming period
+    // If not in a period, find the next upcoming one
     const nextPeriod = EXAM_PERIODS.find((period) => polandTime < period.startDate)
 
     if (!nextPeriod) {
+      // No upcoming periods found
       return {
         timeLeft: { days: 0, hours: 0, minutes: 0, seconds: 0 },
         currentPeriod: null,
       }
     }
 
+    // Calculate time until next period starts
     const difference = nextPeriod.startDate.getTime() - polandTime.getTime()
 
     return {
@@ -95,6 +59,7 @@ export function calculateTimeLeft(): ExamStatus {
     }
   }
 
+  // Calculate time until current period ends
   const difference = currentPeriod.endDate.getTime() - polandTime.getTime()
 
   return {
