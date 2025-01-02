@@ -24,30 +24,28 @@ const calculations = {
  *  - currentPeriod: the current or next exam period details
  */
 export function calculateTimeLeft(): ExamStatus {
-  // Get current time in Poland's timezone
+  // Get current time in UTC
   const now = new Date()
-  const polandTime = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Warsaw' }))
 
-  // Check if we're currently in an exam period
+  // Convert to Poland time more reliably
+  const polandOffset = now.getTimezoneOffset() + (new Date().getMonth() >= 2 && new Date().getMonth() <= 9 ? 120 : 60)
+  const polandTime = new Date(now.getTime() + polandOffset * 60000)
+
+  // Find current period
   const currentPeriod = EXAM_PERIODS.find((period) => {
     return polandTime >= period.startDate && polandTime <= period.endDate
   })
 
   if (!currentPeriod) {
-    // If not in a period, find the next upcoming one
     const nextPeriod = EXAM_PERIODS.find((period) => polandTime < period.startDate)
-
     if (!nextPeriod) {
-      // No upcoming periods found
       return {
         timeLeft: { days: 0, hours: 0, minutes: 0, seconds: 0 },
         currentPeriod: null,
       }
     }
 
-    // Calculate time until next period starts
     const difference = nextPeriod.startDate.getTime() - polandTime.getTime()
-
     return {
       timeLeft: {
         days: calculations.days(difference),
@@ -59,9 +57,7 @@ export function calculateTimeLeft(): ExamStatus {
     }
   }
 
-  // Calculate time until current period ends
   const difference = currentPeriod.endDate.getTime() - polandTime.getTime()
-
   return {
     timeLeft: {
       days: calculations.days(difference),
@@ -71,4 +67,13 @@ export function calculateTimeLeft(): ExamStatus {
     },
     currentPeriod,
   }
+}
+
+// Helper function to create dates in Poland timezone
+export function createPolandDate(year: number, month: number, day: number, hour = 0, minute = 0, second = 0): Date {
+  // Create date in UTC, accounting for Poland timezone
+  const isDST = month >= 3 && month <= 10
+  const offset = isDST ? 2 : 1 // UTC+2 in summer, UTC+1 in winter
+  const date = new Date(Date.UTC(year, month - 1, day, hour - offset, minute, second))
+  return date
 }
