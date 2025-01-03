@@ -2,13 +2,18 @@
   "name": "wolfmed-edukacja",
   "version": "3.2.1",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "core:dev": "pnpm --filter @teaching-playground/core dev",
+    "core:build": "pnpm --filter @teaching-playground/core build"
   },
   "dependencies": {
     "@clerk/localizations": "^3.9.5",

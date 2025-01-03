@@ -2,12 +2,14 @@
 
 # dependencies
 /node_modules
+/packages/*/node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 
 # testing
 /coverage
+/packages/*/coverage
 
 # next.js
 /.next/
@@ -15,6 +17,7 @@
 
 # production
 /build
+/packages/*/dist
 
 # misc
 .DS_Store
@@ -37,3 +40,5 @@ yarn-error.log*
 next-env.d.ts
 
 .cursorrules
+
+detail_layers.txt
