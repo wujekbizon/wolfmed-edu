@@ -1,5 +1,4 @@
-import { CommsConfig } from '@/interfaces/comms.interface'
-import { SystemError } from '@/interfaces'
+import { CommsConfig, SystemError } from '../../interfaces'
 
 export class RealTimeCommunicationSystem {
   constructor(private config?: CommsConfig) {}

@@ -1,5 +1,4 @@
-import { RoomConfig } from '@/interfaces/room.interface'
-import { SystemError } from '@/interfaces'
+import { SystemError, RoomConfig } from '../../interfaces'
 
 export class RoomManagementSystem {
   constructor(private config?: RoomConfig) {}

@@ -1,11 +1,11 @@
-import { TeachingPlaygroundConfig } from '@/interfaces/teaching-playground.interface'
-import { RealTimeCommunicationSystem } from '@/systems/comms/RealTimeCommunicationSystem'
-import { DataManagementSystem } from '@/systems/data/DataManagementSystem'
-import { EventManagementSystem } from '@/systems/event/EventManagementSystem'
-import { RoomManagementSystem } from '@/systems/room/RoomManagementSystem'
-import { Lecture } from '@/interfaces/event.interface'
-import { SystemError } from '@/interfaces'
-import { User, TeacherProfile } from '@/interfaces/user.interface'
+import { TeachingPlaygroundConfig } from '../interfaces/teaching-playground.interface'
+import { RealTimeCommunicationSystem } from '../systems/comms/RealTimeCommunicationSystem'
+import { DataManagementSystem } from '../systems/data/DataManagementSystem'
+import { EventManagementSystem } from '../systems/event/EventManagementSystem'
+import { RoomManagementSystem } from '../systems/room/RoomManagementSystem'
+import { Lecture } from '../interfaces/event.interface'
+import { SystemError } from '../interfaces'
+import { User, TeacherProfile } from '../interfaces/user.interface'
 
 export class TeachingPlayground {
   private roomSystem: RoomManagementSystem

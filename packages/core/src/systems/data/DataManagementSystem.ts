@@ -1,5 +1,4 @@
-import { DataConfig } from '@/interfaces/data.interface'
-import { SystemError } from '@/interfaces'
+import { SystemError, DataConfig } from '../../interfaces'
 
 export class DataManagementSystem {
   constructor(private config?: DataConfig) {}

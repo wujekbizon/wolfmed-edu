@@ -1,34 +1,32 @@
-import { promises as fs } from 'fs'
-import path from 'path'
-import { SystemError } from '@/interfaces'
+import { SystemError } from '../interfaces'
 
 export class JsonDatabase {
-  private dbPath: string
-  private data: any
+  private data: any = null
 
-  constructor(filename: string = 'test-data.json') {
-    this.dbPath = path.join(process.cwd(), 'src/data', filename)
-    this.data = null
-  }
+  constructor(private filename: string = 'test-data.json') {}
 
   private async load() {
     try {
-      const content = await fs.readFile(this.dbPath, 'utf-8')
-      this.data = JSON.parse(content)
+      const response = await fetch('/api/db')
+      if (!response.ok) throw new Error('Failed to load database')
+      this.data = await response.json()
     } catch (error) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-        // Initialize with empty data if file doesn't exist
+      if (!this.data) {
         this.data = { events: [], rooms: [], participants: [] }
         await this.save()
-      } else {
-        throw new SystemError('DATABASE_READ_ERROR', 'Failed to read database')
       }
+      throw new SystemError('DATABASE_READ_ERROR', 'Failed to read database')
     }
   }
 
   private async save() {
     try {
-      await fs.writeFile(this.dbPath, JSON.stringify(this.data, null, 2))
+      const response = await fetch('/api/db', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.data),
+      })
+      if (!response.ok) throw new Error('Failed to save database')
     } catch (error) {
       throw new SystemError('DATABASE_WRITE_ERROR', 'Failed to write to database')
     }

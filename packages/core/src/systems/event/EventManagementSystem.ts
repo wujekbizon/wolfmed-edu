@@ -1,6 +1,5 @@
-import { EventConfig, Lecture, EventOptions } from '@/interfaces/event.interface'
-import { SystemError } from '@/interfaces'
-import { JsonDatabase } from '@/utils/JsonDatabase'
+import { SystemError, EventConfig, Lecture, EventOptions } from '../../interfaces'
+import { JsonDatabase } from '../../utils/JsonDatabase'
 
 export class EventManagementSystem {
   private db: JsonDatabase
