@@ -1,60 +1,39 @@
 'use client'
 
 import { useState } from 'react'
-import { TeachingPlayground } from '../../../../packages/core/src/engine/TeachingPlayground'
-import { User } from '../../../../packages/core/src/interfaces/user.interface'
+import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 import { Lecture } from '../../../../packages/core/src/interfaces/event.interface'
-import PlaygroundForm from './PlaygroundForm'
 import { formatLectureDate } from '@/helpers/formatDate'
+import UpdateLectureForm from './UpdateLectureForm'
+import CreateLectureForm from './CreateLectureForm'
+import CancelLectureForm from './CancelLectureForm'
+import clsx from 'clsx'
 
-const dummyTeacher: User = {
+type TabType = 'scheduled' | 'cancelled'
+
+const dummyTeacher = {
   id: 'teacher_123',
   name: 'John Doe',
   email: 'john@example.com',
-  role: 'teacher',
-  status: 'active',
+  role: 'teacher' as const,
+  status: 'active' as const,
 }
 
-export default function PlaygroundControls({ initialEvents }: { initialEvents: Lecture[] }) {
-  const [playground, setPlayground] = useState<TeachingPlayground | null>(null)
-  const [events, setEvents] = useState(initialEvents)
-  const [error, setError] = useState<string | null>(null)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
+export default function PlaygroundControls({ events }: { events: Lecture[] }) {
+  const [activeTab, setActiveTab] = useState<TabType>('scheduled')
+  const {
+    playground,
+    error,
+    isCreateModalOpen,
+    selectedLecture,
+    initializePlayground,
+    setCreateModalOpen,
+    setSelectedLecture,
+  } = usePlaygroundStore()
 
-  const initializePlayground = () => {
-    const tp = new TeachingPlayground({
-      roomConfig: {},
-      commsConfig: {},
-      eventConfig: {},
-      dataConfig: {},
-    })
-    tp.setCurrentUser(dummyTeacher)
-    setPlayground(tp)
-  }
-
-  const cancelLecture = async (lectureId: string) => {
-    if (!playground) return
-    setError(null)
-
-    try {
-      await playground.cancelLecture(lectureId)
-      setEvents(events.map((event) => (event.id === lectureId ? { ...event, status: 'cancelled' } : event)))
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to cancel lecture')
-    }
-  }
-
-  const updateLecture = async (lectureId: string, updates: Partial<Lecture>) => {
-    if (!playground) return
-    setError(null)
-
-    try {
-      const updatedLecture = await playground.updateLecture(lectureId, updates)
-      setEvents(events.map((event) => (event.id === lectureId ? updatedLecture : event)))
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to update lecture')
-    }
-  }
+  const filteredEvents = events
+    .filter((event) => event.status === activeTab)
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return (
     <>
@@ -68,14 +47,14 @@ export default function PlaygroundControls({ initialEvents }: { initialEvents: L
         <h2 className="text-lg font-medium mb-4">Playground Controls</h2>
         <div className="space-x-4">
           <button
-            onClick={initializePlayground}
+            onClick={() => initializePlayground(dummyTeacher)}
             disabled={!!playground}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
           >
             Initialize Playground
           </button>
           <button
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={() => setCreateModalOpen(true)}
             disabled={!playground}
             className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300"
           >
@@ -85,37 +64,68 @@ export default function PlaygroundControls({ initialEvents }: { initialEvents: L
       </section>
 
       <section className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium mb-4">Current Lectures</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-medium">Current Lectures</h2>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => setActiveTab('scheduled')}
+              className={clsx(
+                'px-4 py-2 text-sm rounded-lg',
+                activeTab === 'scheduled' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+              )}
+            >
+              Scheduled ({events.filter((e) => e.status === 'scheduled').length})
+            </button>
+            <button
+              onClick={() => setActiveTab('cancelled')}
+              className={clsx(
+                'px-4 py-2 text-sm rounded-lg',
+                activeTab === 'cancelled' ? 'bg-gray-500 text-white' : 'text-gray-600 hover:bg-gray-100'
+              )}
+            >
+              Cancelled ({events.filter((e) => e.status === 'cancelled').length})
+            </button>
+          </div>
+        </div>
+
         <div className="space-y-4">
-          {events.map((event) => (
-            <div key={event.id} className="border rounded p-4 hover:bg-gray-50 flex justify-between items-start">
+          {filteredEvents.map((event) => (
+            <div
+              key={event.id}
+              className={clsx(
+                'border rounded p-4 flex justify-between items-start',
+                event.status === 'cancelled' ? 'bg-gray-50 opacity-75' : 'hover:bg-gray-50'
+              )}
+            >
               <div>
-                <h3 className="font-medium">{event.name}</h3>
+                <h3 className={clsx('font-medium', event.status === 'cancelled' && 'line-through text-gray-500')}>
+                  {event.name}
+                </h3>
                 <div className="text-sm text-gray-500 mt-1">
                   <p>Date: {formatLectureDate(event.date)}</p>
-                  <p>Status: {event.status}</p>
                   <p>Room: {event.roomId}</p>
+                  <p>Participants: {event.maxParticipants}</p>
+                  <p>Status: {event.status}</p>
                 </div>
               </div>
               <div className="space-x-2">
-                <button
-                  //onClick={() => setSelectedEvent(event)}
-                  className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
-                  disabled={event.status === 'cancelled'}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => cancelLecture(event.id)}
-                  className="px-3 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
-                  disabled={event.status === 'cancelled'}
-                >
-                  Cancel
-                </button>
+                {event.status === 'scheduled' && (
+                  <>
+                    <button
+                      onClick={() => setSelectedLecture(event)}
+                      className="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600"
+                    >
+                      Edit
+                    </button>
+                    <CancelLectureForm event={event} />
+                  </>
+                )}
               </div>
             </div>
           ))}
-          {events.length === 0 && <p className="text-gray-500">No lectures created yet.</p>}
+          {filteredEvents.length === 0 && (
+            <p className="text-gray-500 text-center py-4">No {activeTab} lectures found</p>
+          )}
         </div>
       </section>
 
@@ -123,7 +133,16 @@ export default function PlaygroundControls({ initialEvents }: { initialEvents: L
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 max-w-md w-full">
             <h3 className="text-lg font-medium mb-4">Create New Lecture</h3>
-            <PlaygroundForm onCancel={() => setIsCreateModalOpen(false)} />
+            <CreateLectureForm />
+          </div>
+        </div>
+      )}
+
+      {selectedLecture && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-medium mb-4">Edit Lecture</h3>
+            <UpdateLectureForm lecture={selectedLecture} />
           </div>
         </div>
       )}

@@ -2,19 +2,33 @@
 
 import { useActionState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { createLecture } from '@/actions/teachingPlayground'
+import { updateLecture } from '@/actions/teachingPlayground'
 import FieldError from '@/components/FieldError'
 import Label from '@/components/Label'
+import { Lecture } from '../../../../packages/core/src/interfaces/event.interface'
+import { usePlaygroundStore } from '@/store/usePlaygroundStore'
+import { useEffect } from 'react'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
-interface PlaygroundFormProps {
-  onCancel?: () => void
+interface UpdateLectureFormProps {
+  lecture: Lecture
 }
 
-export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
-  const [state, action] = useActionState(createLecture, EMPTY_FORM_STATE)
+export default function UpdateLectureForm({ lecture }: UpdateLectureFormProps) {
+  const [state, action] = useActionState(updateLecture, EMPTY_FORM_STATE)
+  const { setSelectedLecture } = usePlaygroundStore()
+
+  const noScriptFallback = useToastMessage(state)
+
+  useEffect(() => {
+    if (state.status === 'SUCCESS') {
+      setSelectedLecture(null)
+    }
+  }, [state.status])
 
   return (
     <form action={action}>
+      <input type="hidden" name="lectureId" value={lecture.id} />
       <div className="space-y-4">
         <div>
           <Label htmlFor="name" label="Name" className="text-gray-700" />
@@ -22,7 +36,7 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
             type="text"
             name="name"
             id="name"
-            defaultValue={state.values?.name || ''}
+            defaultValue={state.values?.name || lecture.name}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <FieldError name="name" formState={state} />
@@ -34,7 +48,7 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
             type="datetime-local"
             name="date"
             id="date"
-            defaultValue={state.values?.date || ''}
+            defaultValue={state.values?.date || lecture.date}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <FieldError name="date" formState={state} />
@@ -46,7 +60,7 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
             type="text"
             name="roomId"
             id="roomId"
-            defaultValue={state.values?.roomId || 'room_1'}
+            defaultValue={state.values?.roomId || lecture.roomId}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <FieldError name="roomId" formState={state} />
@@ -57,7 +71,7 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
           <textarea
             name="description"
             id="description"
-            defaultValue={state.values?.description || ''}
+            defaultValue={state.values?.description || lecture.description}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <FieldError name="description" formState={state} />
@@ -69,7 +83,7 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
             type="number"
             name="maxParticipants"
             id="maxParticipants"
-            defaultValue={state.values?.maxParticipants || 30}
+            defaultValue={state.values?.maxParticipants || lecture.maxParticipants}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <FieldError name="maxParticipants" formState={state} />
@@ -78,16 +92,17 @@ export default function PlaygroundForm({ onCancel }: PlaygroundFormProps) {
         <div className="flex justify-end space-x-2">
           <button
             type="button"
-            onClick={onCancel}
+            onClick={() => setSelectedLecture(null)}
             className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
           >
             Cancel
           </button>
           <button type="submit" className="px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">
-            Create
+            Update
           </button>
         </div>
       </div>
+      {noScriptFallback}
     </form>
   )
 }
