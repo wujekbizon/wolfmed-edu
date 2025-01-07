@@ -1,0 +1,42 @@
+{
+  "events": [
+    {
+      "id": "lecture_1736254756176",
+      "name": "Test",
+      "date": "2025-01-16T13:59",
+      "roomId": "room_1",
+      "description": "asdasdasdasdasd",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "scheduled",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe"
+    },
+    {
+      "id": "lecture_1736255748039",
+      "name": "Testtest",
+      "date": "2025-01-22T14:15",
+      "roomId": "room_1",
+      "description": "teststsddasdasdas",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "scheduled",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe"
+    },
+    {
+      "id": "lecture_1736256504292",
+      "name": "Test222",
+      "date": "2025-01-31T14:28",
+      "roomId": "Pokoj 12",
+      "description": "asdasxzsadasdasdasdasdas",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "scheduled",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe"
+    }
+  ],
+  "rooms": [],
+  "participants": []
+}

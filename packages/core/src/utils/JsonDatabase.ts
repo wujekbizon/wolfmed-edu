@@ -1,33 +1,37 @@
+import { readFile, writeFile } from 'node:fs/promises'
+import path from 'path'
 import { SystemError } from '../interfaces'
 
 export class JsonDatabase {
-  private data: any = null
+  private dbPath: string
+  private data: any
 
-  constructor(private filename: string = 'test-data.json') {}
+  constructor(filename: string = 'test-data.json') {
+    this.dbPath = path.join(process.cwd(), 'data', filename)
+    this.data = null
+  }
 
   private async load() {
     try {
-      const response = await fetch('/api/db')
-      if (!response.ok) throw new Error('Failed to load database')
-      this.data = await response.json()
+      const content = await readFile(this.dbPath, 'utf-8')
+      this.data = JSON.parse(content)
     } catch (error) {
-      if (!this.data) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         this.data = { events: [], rooms: [], participants: [] }
         await this.save()
+      } else {
+        throw new SystemError('DATABASE_READ_ERROR', 'Failed to read database')
       }
-      throw new SystemError('DATABASE_READ_ERROR', 'Failed to read database')
     }
   }
 
   private async save() {
     try {
-      const response = await fetch('/api/db', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(this.data),
-      })
-      if (!response.ok) throw new Error('Failed to save database')
+      console.log('Saving to database:', this.dbPath)
+      console.log('Data to save:', this.data)
+      await writeFile(this.dbPath, JSON.stringify(this.data, null, 2))
     } catch (error) {
+      console.error('Save error:', error)
       throw new SystemError('DATABASE_WRITE_ERROR', 'Failed to write to database')
     }
   }

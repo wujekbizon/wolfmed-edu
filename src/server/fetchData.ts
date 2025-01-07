@@ -7,6 +7,7 @@ interface FileDataOperations {
   getPostById: (id: string) => Promise<Post | null>
   getAllProcedures: () => Promise<Procedure[]>
   getAllTests: () => Promise<Test[]>
+  getAllEvents: () => Promise<any[]>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -52,6 +53,16 @@ export const fileData: FileDataOperations = {
       return tests
     } catch (error) {
       console.error('Error fetching tests:', error)
+      return []
+    }
+  },
+
+  getAllEvents: async () => {
+    try {
+      const data = await readJsonFile<{ events: any[] }>('test-data.json')
+      return data.events
+    } catch (error) {
+      console.error('Error fetching events:', error)
       return []
     }
   },

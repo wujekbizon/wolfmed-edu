@@ -1,4 +1,5 @@
 import { SystemError, EventConfig, Lecture, EventOptions } from '../../interfaces'
+import { CreateLectureSchema, UpdateLectureSchema } from '../../../../../src/server/schema'
 import { JsonDatabase } from '../../utils/JsonDatabase'
 
 export class EventManagementSystem {
@@ -10,18 +11,33 @@ export class EventManagementSystem {
 
   async createEvent(options: EventOptions & { teacherId: string; createdBy: string }): Promise<Lecture> {
     try {
+      // Log the incoming data
+      console.log('Creating event with options:', options)
+
+      const validationResult = CreateLectureSchema.safeParse(options)
+      if (!validationResult.success) {
+        console.error('Validation error:', validationResult.error.flatten())
+        throw new SystemError('EVENT_VALIDATION_FAILED', 'Invalid lecture data', validationResult.error.flatten())
+      }
+
       const event: Lecture = {
         id: `lecture_${Date.now()}`,
-        ...options,
+        ...validationResult.data,
         type: 'lecture',
         status: 'scheduled',
         teacherId: options.teacherId,
         createdBy: options.createdBy,
       }
 
+      // Log the event before insertion
+      console.log('Event to be inserted:', event)
+
       await this.db.insert('events', event)
       return event
     } catch (error) {
+      // Log the full error
+      console.error('Event creation error:', error)
+      if (error instanceof SystemError) throw error
       throw new SystemError('EVENT_CREATION_FAILED', 'Failed to create event', error)
     }
   }
@@ -67,14 +83,24 @@ export class EventManagementSystem {
 
   async updateEvent(eventId: string, updates: Partial<Lecture>): Promise<Lecture> {
     try {
-      const updated = await this.db.update('events', { id: eventId }, updates)
+      // Validate updates
+      const validationResult = UpdateLectureSchema.safeParse(updates)
+      if (!validationResult.success) {
+        throw new SystemError(
+          'EVENT_VALIDATION_FAILED',
+          'Invalid lecture update data',
+          validationResult.error.flatten()
+        )
+      }
 
+      const updated = await this.db.update('events', { id: eventId }, validationResult.data)
       if (!updated) {
         throw new SystemError('EVENT_NOT_FOUND', `Event ${eventId} not found`)
       }
 
       return updated
     } catch (error) {
+      if (error instanceof SystemError) throw error
       throw new SystemError('EVENT_UPDATE_FAILED', 'Failed to update event', error)
     }
   }
