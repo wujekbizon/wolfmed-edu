@@ -7,12 +7,30 @@ import ForumDetailHeader from '@/components/ForumDetailHeader'
 import ForumDetailContent from '@/components/ForumDetailContent'
 import ForumDetailComments from '@/components/ForumDetailComments'
 import Loading from './loading'
+import { Metadata } from 'next'
 
 type Props = {
   params: Promise<{
     postId: string
   }>
 }
+
+export async function generateMetadata({ params }: { params: Promise<{ postId: string }> }): Promise<Metadata> {
+  const { postId } = await params
+  const forumPost = await getForumPostById(postId)
+
+  if (!forumPost) {
+    return {
+      title: 'Wolfmed Forum Dyskusyjne',
+    }
+  }
+
+  return {
+    title: forumPost.title,
+    description: forumPost.content.substring(0, 120) + '...',
+  }
+}
+
 async function ForumPost({ postId }: { postId: string }) {
   const post = await getForumPostById(postId)
   const { userId } = await auth()

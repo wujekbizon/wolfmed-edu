@@ -3,8 +3,17 @@ import { getAllForumPosts } from '@/server/queries'
 import { Suspense } from 'react'
 import CreatePostButton from '@/components/CreatePostButton'
 import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
+import { Metadata } from 'next'
 
 export const experimental_ppr = true
+
+export const metadata: Metadata = {
+  title: 'Wolfmed Forum Dyskusyjne ',
+  description:
+    'Witam na forum dyskusyjne na naszej platformie. To przestrzeń, która łączy zarówno tych, którzy dopiero przygotowują się do egzaminu na opiekuna medycznego, jak i doświadczonych opiekunów, chcących podzielić się swoimi rozwiązaniami i poradami z innymi.',
+  keywords:
+    'opiekun, forum, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja, dyskusja, problemy',
+}
 
 export default async function ForumPage() {
   const posts = await getAllForumPosts()
