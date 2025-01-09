@@ -42,7 +42,6 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
           <p className="text-red-700">{error}</p>
         </div>
       )}
-
       <section className="bg-white shadow rounded-lg p-6">
         <h2 className="text-lg font-medium mb-4">Playground Controls</h2>
         <div className="space-x-4">
@@ -131,8 +130,8 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
 
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-lg font-medium mb-4">Create New Lecture</h3>
+          <div className="bg-zinc-900 rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg text-white font-medium mb-4">Create New Lecture</h3>
             <CreateLectureForm />
           </div>
         </div>
