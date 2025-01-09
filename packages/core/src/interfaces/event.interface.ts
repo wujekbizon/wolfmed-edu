@@ -15,7 +15,7 @@ export interface Lecture {
   date: string
   roomId: string
   type: 'lecture'
-  status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled'
+  status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled' | 'delayed'
   communicationStatus?: {
     websocket: boolean
     webrtc: boolean
@@ -40,4 +40,7 @@ export interface Lecture {
     cancelledBy?: string
     cancellationReason?: string
   }
+  startTime?: string
+  endTime?: string
+  scheduledDuration?: number
 }

@@ -27,9 +27,11 @@ export class JsonDatabase {
 
   private async save() {
     try {
-      console.log('Saving to database:', this.dbPath)
-      console.log('Data to save:', this.data)
-      await writeFile(this.dbPath, JSON.stringify(this.data, null, 2))
+      if (!this.data) {
+        await this.load()
+      }
+
+      await writeFile(this.dbPath, JSON.stringify(this.data, null, 2), 'utf-8')
     } catch (error) {
       console.error('Save error:', error)
       throw new SystemError('DATABASE_WRITE_ERROR', 'Failed to write to database')
@@ -60,8 +62,14 @@ export class JsonDatabase {
     const index = this.data[collection].findIndex((item: any) =>
       Object.entries(query).every(([key, value]) => item[key] === value)
     )
+
     if (index !== -1) {
-      this.data[collection][index] = { ...this.data[collection][index], ...update }
+      this.data[collection][index] = {
+        ...this.data[collection][index],
+        ...update,
+        lastModified: new Date().toISOString(),
+      }
+
       await this.save()
       return this.data[collection][index]
     }

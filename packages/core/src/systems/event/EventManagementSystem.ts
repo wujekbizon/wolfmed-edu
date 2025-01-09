@@ -1,4 +1,5 @@
-import { SystemError, EventConfig, Lecture, EventOptions } from '../../interfaces'
+import { SystemError, ErrorCode } from '../../interfaces/errors.interface'
+import { EventConfig, Lecture, EventOptions } from '../../interfaces'
 import { CreateLectureSchema, UpdateLectureSchema } from '../../../../../src/server/schema'
 import { JsonDatabase } from '../../utils/JsonDatabase'
 
@@ -102,6 +103,46 @@ export class EventManagementSystem {
     } catch (error) {
       if (error instanceof SystemError) throw error
       throw new SystemError('EVENT_UPDATE_FAILED', 'Failed to update event', error)
+    }
+  }
+
+  async updateEventStatus(eventId: string, newStatus: Lecture['status']): Promise<Lecture> {
+    try {
+      const event = (await this.db.findOne('events', { id: eventId })) as Lecture
+      if (!event) {
+        throw new SystemError('EVENT_NOT_FOUND', `Event ${eventId} not found`)
+      }
+
+      const allowedTransitions: Record<Lecture['status'], Lecture['status'][]> = {
+        scheduled: ['in-progress', 'cancelled', 'delayed'],
+        delayed: ['in-progress', 'cancelled'],
+        'in-progress': ['completed', 'cancelled'],
+        completed: [], // Final state
+        cancelled: [], // Final state
+      }
+
+      if (!allowedTransitions[event.status]?.includes(newStatus)) {
+        throw new SystemError(
+          'INVALID_STATUS_TRANSITION' as ErrorCode,
+          `Cannot transition from ${event.status} to ${newStatus}`
+        )
+      }
+
+      const updates: Partial<Lecture> = {
+        status: newStatus,
+        ...(newStatus === 'in-progress' && { startTime: new Date().toISOString() }),
+        ...(newStatus === 'completed' && { endTime: new Date().toISOString() }),
+      }
+
+      const updated = await this.db.update('events', { id: eventId }, updates)
+      if (!updated) {
+        throw new SystemError('EVENT_UPDATE_FAILED', 'Failed to update event status')
+      }
+
+      return updated
+    } catch (error) {
+      if (error instanceof SystemError) throw error
+      throw new SystemError('EVENT_UPDATE_FAILED', 'Failed to update event status', error)
     }
   }
 }

@@ -7,9 +7,9 @@ import { formatLectureDate } from '@/helpers/formatDate'
 import UpdateLectureForm from './UpdateLectureForm'
 import CreateLectureForm from './CreateLectureForm'
 import CancelLectureForm from './CancelLectureForm'
+import EndLectureForm from './EndLectureForm'
 import clsx from 'clsx'
-
-type TabType = 'scheduled' | 'cancelled'
+import LectureFilter, { LectureFilterType } from './LectureFilter'
 
 const dummyTeacher = {
   id: 'teacher_123',
@@ -19,8 +19,16 @@ const dummyTeacher = {
   status: 'active' as const,
 }
 
+const statusStyles = {
+  scheduled: 'text-blue-600 bg-blue-50 border-blue-200',
+  'in-progress': 'text-green-600 bg-green-50 border-green-200',
+  completed: 'text-gray-600 bg-gray-50 border-gray-200',
+  cancelled: 'text-red-600 bg-red-50 border-red-200 line-through',
+  delayed: 'text-yellow-600 bg-yellow-50 border-yellow-200',
+} as const
+
 export default function PlaygroundControls({ events }: { events: Lecture[] }) {
-  const [activeTab, setActiveTab] = useState<TabType>('scheduled')
+  const [activeTab, setActiveTab] = useState<LectureFilterType>('all')
   const {
     playground,
     error,
@@ -32,7 +40,7 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
   } = usePlaygroundStore()
 
   const filteredEvents = events
-    .filter((event) => event.status === activeTab)
+    .filter((event) => activeTab === 'all' || event.status === activeTab)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
   return (
@@ -65,36 +73,14 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
       <section className="bg-white shadow rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-medium">Current Lectures</h2>
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setActiveTab('scheduled')}
-              className={clsx(
-                'px-4 py-2 text-sm rounded-lg',
-                activeTab === 'scheduled' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-100'
-              )}
-            >
-              Scheduled ({events.filter((e) => e.status === 'scheduled').length})
-            </button>
-            <button
-              onClick={() => setActiveTab('cancelled')}
-              className={clsx(
-                'px-4 py-2 text-sm rounded-lg',
-                activeTab === 'cancelled' ? 'bg-gray-500 text-white' : 'text-gray-600 hover:bg-gray-100'
-              )}
-            >
-              Cancelled ({events.filter((e) => e.status === 'cancelled').length})
-            </button>
-          </div>
+          <LectureFilter activeTab={activeTab} onTabChange={setActiveTab} events={events} />
         </div>
 
         <div className="space-y-4">
           {filteredEvents.map((event) => (
             <div
               key={event.id}
-              className={clsx(
-                'border rounded p-4 flex justify-between items-start',
-                event.status === 'cancelled' ? 'bg-gray-50 opacity-75' : 'hover:bg-gray-50'
-              )}
+              className={clsx('border rounded-lg p-4', 'flex justify-between items-start', statusStyles[event.status])}
             >
               <div>
                 <h3 className={clsx('font-medium', event.status === 'cancelled' && 'line-through text-gray-500')}>
@@ -119,6 +105,7 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
                     <CancelLectureForm event={event} />
                   </>
                 )}
+                {event.status === 'in-progress' && <EndLectureForm event={event} />}
               </div>
             </div>
           ))}

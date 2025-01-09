@@ -6,8 +6,11 @@ import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '../helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { auth } from '@clerk/nextjs/server'
+import { EventManagementSystem } from '@teaching-playground/core/systems/event/EventManagementSystem'
+import { Lecture } from '@teaching-playground/core/interfaces'
 
 const db = new JsonDatabase()
+const eventSystem = new EventManagementSystem()
 
 export async function createLecture(formState: FormState, formData: FormData): Promise<FormState> {
   // TODO: user will need to have teacher permisssions
@@ -111,4 +114,33 @@ export async function updateLecture(formState: FormState, formData: FormData): P
 
   revalidatePath('/tp')
   return toFormState('SUCCESS', 'Lecture updated successfully')
+}
+
+export async function updateLectureStatus(lectureId: string, status: Lecture['status']) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  try {
+    await eventSystem.updateEventStatus(lectureId, status)
+  } catch (error) {
+    console.error('Error updating lecture status:', error)
+    throw error
+  }
+}
+
+export async function endLecture(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const lectureId = formData.get('lectureId') as string
+
+  try {
+    await eventSystem.updateEventStatus(lectureId, 'completed')
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  // Force revalidation
+  revalidatePath('/tp')
+  return toFormState('SUCCESS', 'Lecture completed successfully')
 }
