@@ -23,11 +23,15 @@ export class EventManagementSystem {
 
       const event: Lecture = {
         id: `lecture_${Date.now()}`,
-        ...validationResult.data,
+        name: validationResult.data.name,
+        date: validationResult.data.date,
+        roomId: validationResult.data.roomId,
         type: 'lecture',
         status: 'scheduled',
         teacherId: options.teacherId,
         createdBy: options.createdBy,
+        description: validationResult.data.description,
+        maxParticipants: validationResult.data.maxParticipants,
       }
 
       // Log the event before insertion
@@ -72,9 +76,9 @@ export class EventManagementSystem {
   async listEvents(filter: { type: string; roomId?: string; teacherId?: string; status?: string }): Promise<Lecture[]> {
     try {
       const query: Record<string, any> = { type: filter.type }
-      if (filter.roomId) query.roomId = filter.roomId
-      if (filter.teacherId) query.teacherId = filter.teacherId
-      if (filter.status) query.status = filter.status
+      if (filter.roomId !== undefined) query.roomId = filter.roomId
+      if (filter.teacherId !== undefined) query.teacherId = filter.teacherId
+      if (filter.status !== undefined) query.status = filter.status
 
       return await this.db.find('events', query)
     } catch (error) {

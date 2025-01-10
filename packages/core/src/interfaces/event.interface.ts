@@ -16,31 +16,39 @@ export interface Lecture {
   roomId: string
   type: 'lecture'
   status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled' | 'delayed'
-  communicationStatus?: {
-    websocket: boolean
-    webrtc: boolean
-    resources: {
-      allocated: boolean
-      type: string
-    }
-  }
-  participants?: {
-    id: string
-    role: 'teacher' | 'student'
-    status: 'online' | 'offline'
-  }[]
   teacherId: string
   createdBy: string
-  description?: string
-  maxParticipants?: number
-  metadata?: {
-    createdAt: string
-    lastModified: string
-    cancelledAt?: string
-    cancelledBy?: string
-    cancellationReason?: string
-  }
-  startTime?: string
-  endTime?: string
-  scheduledDuration?: number
+
+  // Optional fields with explicit undefined
+  description?: string | undefined
+  maxParticipants?: number | undefined
+  communicationStatus?:
+    | {
+        websocket: boolean
+        webrtc: boolean
+        resources: {
+          allocated: boolean
+          type: string
+        }
+      }
+    | undefined
+  participants?:
+    | {
+        id: string
+        role: 'teacher' | 'student'
+        status: 'online' | 'offline'
+      }[]
+    | undefined
+  metadata?:
+    | {
+        createdAt: string
+        lastModified: string
+        cancelledAt?: string
+        cancelledBy?: string
+        cancellationReason?: string
+      }
+    | undefined
+  startTime?: string | undefined
+  endTime?: string | undefined
+  scheduledDuration?: number | undefined
 }

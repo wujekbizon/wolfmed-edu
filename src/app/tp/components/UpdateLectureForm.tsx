@@ -24,7 +24,7 @@ export default function UpdateLectureForm({ lecture }: UpdateLectureFormProps) {
     if (state.status === 'SUCCESS') {
       setSelectedLecture(null)
     }
-  }, [state.status])
+  }, [state.status, setSelectedLecture])
 
   return (
     <form action={action}>

@@ -19,7 +19,7 @@ export default function CreateLectureForm() {
     if (state.status === 'SUCCESS') {
       setCreateModalOpen(false)
     }
-  }, [state.status])
+  }, [state.status, setCreateModalOpen])
 
   return (
     <form action={action}>

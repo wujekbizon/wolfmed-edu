@@ -146,7 +146,7 @@ export class TeachingPlayground {
     try {
       const lectures = await this.eventSystem.listEvents({
         type: 'lecture',
-        roomId,
+        ...(roomId !== undefined && { roomId }),
       })
 
       // Enrich with communication status
