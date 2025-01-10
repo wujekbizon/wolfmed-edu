@@ -42,5 +42,4 @@ next-env.d.ts
 /packages
 detail_layers.txt
 
-# Sentry Config File
-.env.sentry-build-plugin
+

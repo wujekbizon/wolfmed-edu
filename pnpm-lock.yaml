@@ -45,7 +45,7 @@ importers:
         specifier: ^0.23.1
         version: 0.23.1
       '@sentry/nextjs':
-        specifier: '8'
+        specifier: ^8.48.0
         version: 8.48.0(@opentelemetry/core@1.30.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.56.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@1.30.0(@opentelemetry/api@1.9.0))(next@15.2.0-canary.3(@babel/core@7.26.0)(@opentelemetry/api@1.9.0)(babel-plugin-react-compiler@19.0.0-beta-63e3235-20250105)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(webpack@5.97.1(esbuild@0.19.12))
       '@tanstack/react-query':
         specifier: ^5.63.0
@@ -64,7 +64,7 @@ importers:
         version: 0.38.3(@neondatabase/serverless@0.10.4)(@opentelemetry/api@1.9.0)(@types/pg@8.11.6)(@types/react@19.0.4)(@vercel/postgres@0.10.0)(pg@8.13.1)(postgres@3.4.5)(react@19.0.0)
       framer-motion:
         specifier: ^11.16.4
-        version: 11.16.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 11.16.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       lexical:
         specifier: ^0.23.1
         version: 0.23.1
@@ -2122,8 +2122,8 @@ packages:
   forwarded-parse@2.1.2:
     resolution: {integrity: sha512-alTFZZQDKMporBH77856pXgzhEzaUVmLCDk+egLgIgHst3Tpndzz8MnKe+GzRJRfvVdn69HhpW7cmXzvtLvJAw==}
 
-  framer-motion@11.16.4:
-    resolution: {integrity: sha512-7ncPlBjrYX6iQXcTSw1kvZcHSVjEuOAW3uWuu+/+chUS4UWBMe8kCjniE4VMc2/BMo0su0Uw9sw0aWS9anpPWA==}
+  framer-motion@11.16.7:
+    resolution: {integrity: sha512-oq/t8XNDgONW5kJ0AaMcKcYKU1a1kZsHnUumw05P50Mc5YkRZHSzQF4YPe6yqgkCLFT+wRRVo/mVYOP8uTQK+A==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: ^18.0.0 || ^19.0.0
@@ -4701,7 +4701,7 @@ snapshots:
 
   '@types/pg-pool@2.0.6':
     dependencies:
-      '@types/pg': 8.11.6
+      '@types/pg': 8.6.1
 
   '@types/pg@8.11.6':
     dependencies:
@@ -5707,7 +5707,7 @@ snapshots:
 
   forwarded-parse@2.1.2: {}
 
-  framer-motion@11.16.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  framer-motion@11.16.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       motion-dom: 11.16.4
       motion-utils: 11.16.0
@@ -6504,7 +6504,7 @@ snapshots:
     dependencies:
       debug: 4.4.0
       module-details-from-path: 1.0.3
-      resolve: 1.22.10
+      resolve: 1.22.8
     transitivePeerDependencies:
       - supports-color
 
