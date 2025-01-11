@@ -1,19 +1,15 @@
 import { fetchQuestionDetails } from '@/actions/fetchQuestionDetails'
-import { CompletedTest, Test } from '@/types/dataTypes'
+import { CompletedTest } from '@/types/dataTypes'
 import Link from 'next/link'
 
 export default async function TestResultCard({ completedTest }: { completedTest: CompletedTest }) {
   const { score, testResult } = completedTest as CompletedTest
 
-  const testsData = (await fetchQuestionDetails(testResult)) as {
-    testData: Test
-    userCorrectAnswer: {
-      option: string
-      isCorrect: boolean
-    }
-  }[]
+  const testsDataResponse = await fetchQuestionDetails(testResult)
+  // Filter out undefined values and type assert the result
+  const testsData = testsDataResponse.filter((item): item is NonNullable<typeof item> => item !== undefined)
 
-  const questionDetails = testsData?.map(({ testData, userCorrectAnswer }) => {
+  const questionDetails = testsData.map(({ testData, userCorrectAnswer }) => {
     const {
       id,
       data: { question, answers },
@@ -37,10 +33,14 @@ export default async function TestResultCard({ completedTest }: { completedTest:
           )}
           <p className="text-base text-muted-foreground">{question}</p>
         </div>
-        {correctAnswer && (
+        {correctAnswer ? (
           <div className="w-full md:w-1/3 p-3">
             <p className="text-xs text-zinc-400">Poprawna odpowiedż to: </p>
             <p className="text-base text-muted-foreground">{correctAnswer.option}</p>
+          </div>
+        ) : (
+          <div className="w-full md:w-1/3 p-3">
+            <p className="text-xs text-red-400">Nie znaleziono poprawnej odpowiedzi</p>
           </div>
         )}
       </div>
