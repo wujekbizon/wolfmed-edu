@@ -19,9 +19,9 @@ export default async function TestsPage() {
   return (
     <section className="flex justify-center h-full w-full">
       <div className="lg:w-[80%] xl:w-3/4 h-full w-full flex flex-col items-center p-2 gap-8 overflow-y-scroll scrollbar-webkit">
-        <Suspense fallback={<ExamCountdownSkeleton />}>
+        {/* <Suspense fallback={<ExamCountdownSkeleton />}>
           <ExamCountdown />
-        </Suspense>
+        </Suspense> */}
         <DashboardInfo />
         <div className="backdrop-blur-sm w-full gap-8 flex flex-col p-3 xs:-p-4 sm:p-10 rounded-2xl shadow-lg border border-zinc-200/60 transition-all duration-300 bg-gradient-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
