@@ -37,8 +37,8 @@ export default function CreatePostForm({ onClose }: Props) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50 overflow-hidden">
-      <div className="bg-zinc-900 rounded-lg p-2 sm:p-4 xs:p-6 w-full sm:max-w-[90%] md:max-w-3xl h-[90vh] flex flex-col">
-        <form action={action} className="space-y-4 flex-1 overflow-auto px-2 h-full mt-2">
+      <div className="bg-zinc-900 rounded-lg p-2 sm:p-4 xs:p-6 w-full sm:max-w-[90%] md:max-w-3xl h-[95vh] flex flex-col">
+        <form action={action} className="space-y-4 flex-1 px-2 h-full mt-2">
           <div>
             <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm" />
             <Input
@@ -61,15 +61,13 @@ export default function CreatePostForm({ onClose }: Props) {
               checked={readonly}
               onChange={setReadonly}
             />
+          </div> 
+          <div className='flex flex-col h-[75%]'>
+          <input type="hidden" name="content" value={editorContent} />
+          <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full h-full" />
+          <FieldError name="content" formState={state} />
           </div>
-
-          <div className="flex-1 h-[75%]">
-            <input type="hidden" name="content" value={editorContent} />
-            <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full h-full" />
-            <FieldError name="content" formState={state} />
-          </div>
-
-          <div className="flex justify-end gap-4 pt-2">
+          <div className="flex justify-end gap-4">
             <button
               type="button"
               onClick={onClose}
