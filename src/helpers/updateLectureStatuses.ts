@@ -1,6 +1,5 @@
-import { Lecture } from '@teaching-playground/core/interfaces'
+import { Lecture, JsonDatabase } from '@teaching-playground/core'
 import { determineLectureStatus } from '@/utils/lectureStatus'
-import { JsonDatabase } from '@teaching-playground/core/utils/JsonDatabase'
 
 const db = new JsonDatabase()
 

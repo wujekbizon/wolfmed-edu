@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
-import { Lecture } from '../../../../packages/core/src/interfaces/event.interface'
+import type { Lecture } from '@teaching-playground/core'
 import { formatLectureDate } from '@/helpers/formatDate'
 import UpdateLectureForm from './UpdateLectureForm'
 import CreateLectureForm from './CreateLectureForm'
@@ -19,7 +19,7 @@ const dummyTeacher = {
   status: 'active' as const,
 }
 
-const statusStyles = {
+const statusStyles: Record<Lecture['status'], string> = {
   scheduled: 'text-blue-600 bg-blue-50 border-blue-200',
   'in-progress': 'text-green-600 bg-green-50 border-green-200',
   completed: 'text-gray-600 bg-gray-50 border-gray-200',

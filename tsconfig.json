@@ -35,8 +35,8 @@
       "@/*": [
         "./src/*"
       ],
-      "@teaching-playground/core/*": [
-        "./packages/core/src/*"
+      "@teaching-playground/core": [
+        "../teaching-playground-core/src"
       ]
     }
   },

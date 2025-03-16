@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import  TeachingPlayground from '../../packages/core/src/engine/TeachingPlayground'
-import { Lecture } from '../../packages/core/src/interfaces/event.interface'
-import { User } from '../../packages/core/src/interfaces/user.interface'
+import { TeachingPlayground, type Lecture, type User} from '@teaching-playground/core'
 
 interface PlaygroundState {
   playground: TeachingPlayground | null

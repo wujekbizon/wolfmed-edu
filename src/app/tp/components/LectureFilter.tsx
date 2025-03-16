@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Lecture } from '../../../../packages/core/src/interfaces/event.interface'
+import { Lecture } from '@teaching-playground/core'
 
 export type LectureFilterType = 'all' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled'
 

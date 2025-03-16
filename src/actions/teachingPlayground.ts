@@ -1,13 +1,11 @@
 'use server'
 
 import { CreateLectureSchema, UpdateLectureSchema } from '@/server/schema'
-import { JsonDatabase } from '../../packages/core/src/utils/JsonDatabase'
 import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '../helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { auth } from '@clerk/nextjs/server'
-import { EventManagementSystem } from '@teaching-playground/core/systems/event/EventManagementSystem'
-import { Lecture } from '@teaching-playground/core/interfaces'
+import { Lecture, JsonDatabase, EventManagementSystem } from '@teaching-playground/core'
 
 const db = new JsonDatabase()
 const eventSystem = new EventManagementSystem()

@@ -2,7 +2,7 @@ import { useActionState } from 'react'
 import { cancelLecture } from '@/actions/teachingPlayground'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import type { Lecture } from '../../../../packages/core/src/interfaces/index'
+import type { Lecture } from '@teaching-playground/core'
 
 export default function CancelLectureForm(props: { event: Lecture }) {
   const [state, action] = useActionState(cancelLecture, EMPTY_FORM_STATE)
