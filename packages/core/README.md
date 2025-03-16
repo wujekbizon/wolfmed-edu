@@ -100,7 +100,7 @@ pnpm test
 ## Usage
 
 ```typescript
-import { TeachingPlayground } from '@teaching-playground/core';
+import  TeachingPlayground  from '@teaching-playground/core';
 // Initialize the playground
 const playground = new TeachingPlayground({
 // configuration

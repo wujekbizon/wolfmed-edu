@@ -7,7 +7,7 @@ import { Lecture } from '../interfaces/event.interface'
 import { SystemError } from '../interfaces'
 import { User, TeacherProfile } from '../interfaces/user.interface'
 
-export class TeachingPlayground {
+export default class TeachingPlayground {
   private roomSystem: RoomManagementSystem
   private commsSystem: RealTimeCommunicationSystem
   private eventSystem: EventManagementSystem

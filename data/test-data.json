@@ -111,10 +111,11 @@
       "description": "testdcccccccccccccccccccccccccc",
       "maxParticipants": 30,
       "type": "lecture",
-      "status": "scheduled",
+      "status": "completed",
       "teacherId": "teacher_123",
       "createdBy": "John Doe",
-      "lastModified": "2025-03-08T20:27:31.837Z"
+      "lastModified": "2025-03-16T12:11:29.685Z",
+      "endTime": "2025-03-16T12:11:29.651Z"
     }
   ],
   "rooms": [],
