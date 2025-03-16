@@ -97,9 +97,24 @@
       "description": "asdasdasasdasda",
       "maxParticipants": 30,
       "type": "lecture",
+      "status": "completed",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe",
+      "endTime": "2025-03-08T20:26:23.086Z",
+      "lastModified": "2025-03-08T20:26:23.089Z"
+    },
+    {
+      "id": "lecture_1741465632859",
+      "name": "Admin",
+      "date": "2025-03-15T00:26",
+      "roomId": "room_1",
+      "description": "testdcccccccccccccccccccccccccc",
+      "maxParticipants": 30,
+      "type": "lecture",
       "status": "scheduled",
       "teacherId": "teacher_123",
-      "createdBy": "John Doe"
+      "createdBy": "John Doe",
+      "lastModified": "2025-03-08T20:27:31.837Z"
     }
   ],
   "rooms": [],
