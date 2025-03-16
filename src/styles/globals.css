@@ -1,75 +1,266 @@
 @import "tailwindcss";
 @tailwind utilities;
 
-@config "../../tailwind.config.ts";
+@theme {
+  /* Breakpoints */
+  --breakpoint-xs: 480px;
+  
+  /* Colors */
+  --background: 255 100% 100%;
+  --foreground: 240 10% 3.9%;
 
-@layer base {
-  :root {
-    --background: 255 100% 100%;
-    --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 10% 30%;
+  --muted-foreground: 240 3.8% 46.1%;
 
-    --muted: 240 10% 30%;
-    --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 10.9%;
+  --accent-foreground: 240 5.9% 10%;
 
-    --accent: 240 4.8% 10.9%;
-    --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 10% 16%;
+  --ring: 240 10% 3.9%;
+  
+  /* Sizes */
+  --background-size-70: 70%;
+  --background-size-80: 80%;
+  
+  /* Border Radius */
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
 
-    --border: 240 5.9% 90%;
-    --input: 240 10% 16%;
-    --ring: 240 10% 3.9%;
-    --slidein-delay: 0;
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --slidein-delay: 0;
-  }
+  /* Scrollbar */
+  --scrollbar-width: 8px;
+  --scrollbar-height: 10px;
+  --scrollbar-track-bg: transparent;
+  --scrollbar-track-radius: 10px;
+  --scrollbar-thumb-bg: #ffa5a5;
+  --scrollbar-thumb-radius: 20px;
+  --scrollbar-thumb-border: 1px solid white;
 }
+
+@theme dark {
+  /* Colors for dark mode */
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+}
+
+:root {
+  --slidein-delay: 0;
+}
+
+.dark {
+  --slidein-delay: 0;
+}
+
+/* Border radius utilities */
+.rounded-sm { border-radius: var(--radius-sm); }
+.rounded { border-radius: var(--radius-md); }
+.rounded-md { border-radius: var(--radius-md); }
+.rounded-lg { border-radius: var(--radius-lg); }
+.rounded-xl { border-radius: var(--radius-xl); }
+.rounded-2xl { border-radius: var(--radius-2xl); }
+.rounded-full { border-radius: 9999px; }
+
+/* Background size utilities */
+.bg-70\% { background-size: var(--background-size-70); }
+.bg-80\% { background-size: var(--background-size-80); }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Custom animation utilities for v4 compatibility */
+  .animate-slideInDown {
+    animation: slideInDown 1s ease var(--slidein-delay, 0) forwards;
+    opacity: 0;
+  }
+  
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fadeInUp {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes fadeInUp {
+    0% { 
+      opacity: 0; 
+      transform: translateY(10px); 
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+  }
+  
+  .animate-scaleIn {
+    animation: scaleIn 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  @keyframes scaleIn {
+    0% { 
+      opacity: 0; 
+      transform: scale(0.95); 
+    }
+    100% { 
+      opacity: 1; 
+      transform: scale(1); 
+    }
+  }
+  
+  .animate-gradient {
+    animation: gradient 8s ease-in-out infinite alternate;
+  }
+  
+  @keyframes gradient {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.2; }
+  }
+  
+  .animate-gradientPosition {
+    animation: gradientPosition 5s ease-in-out infinite;
+  }
+  
+  @keyframes gradientPosition {
+    0%, 100% {
+      background-position: 0% 50%;
+      transform: scale(1);
+    }
+    50% {
+      background-position: 100% 50%;
+      transform: scale(1.1);
+    }
+  }
+  
+  .animate-gradientScale {
+    animation: gradientScale 8s ease-in-out infinite;
+  }
+  
+  @keyframes gradientScale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .animate-gradientRotate {
+    animation: gradientRotate 6s ease infinite;
+  }
+  
+  @keyframes gradientRotate {
+    0% {
+      opacity: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(147,51,234,0.1) 50%, rgba(255,91,91,0.2) 100%);
+    }
+    33% {
+      opacity: 1;
+      background-image:
+        linear-gradient(60deg, rgba(59,130,246,0.1) 0%, rgba(255,91,91,0.2) 50%, rgba(147,51,234,0.1) 100%);
+    }
+    66% {
+      opacity: 1;
+      background-image:
+        linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(59,130,246,0.1) 50%, rgba(255,91,91,0.2) 100%);
+    }
+    100% {
+      opacity: 0;
+      background-image:
+        linear-gradient(45deg, rgba(255,91,91,0.2) 0%, rgba(147,51,234,0.1) 50%, rgba(255,91,91,0.2) 100%);
+    }
+  }
+  
+  .animate-radialPulse {
+    animation: radialPulse 8s ease-in-out infinite;
+  }
+  
+  @keyframes radialPulse {
+    0%, 100% {
+      opacity: 0.2;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(1.1);
+    }
+  }
+}
+
+/* Scrollbar utilities */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #fcf2f1 white;
+}
+
+.scrollbar-webkit::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-height);
+}
+
+.scrollbar-webkit::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-bg);
+  border-radius: var(--scrollbar-track-radius);
+}
+
+.scrollbar-webkit::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg);
+  border-radius: var(--scrollbar-thumb-radius);
+  border: var(--scrollbar-thumb-border);
 }

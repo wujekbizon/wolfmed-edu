@@ -21,13 +21,14 @@ export default function Navbar() {
       {isMenuOpen && <SideMenu />}
       <header
         className={`${
-          pathname === '/' ? 'bg-white' : 'bg-zinc-500'
-        } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animate-slideInDown opacity-0 [--slidein-delay:100ms] transition-all duration-300
+          pathname === '/' ? 'bg-white' : 'bg-zinc-500/100'
+        } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animate-slideInDown transition-all duration-300
           ${
             (pathname === '/' || pathname === '/forum') && isScrolled
-              ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
+              ? 'bg-white/90 backdrop-blur-sm shadow-sm sticky top-0'
               : 'rounded-tr-[20px] lg:rounded-tr-[47px] rounded-tl-[20px] lg:rounded-tl-[47px]'
           }`}
+        style={{ '--slidein-delay': '100ms' } as React.CSSProperties}
       >
         {pathname === '/' && <GradientOverlay />}
 
