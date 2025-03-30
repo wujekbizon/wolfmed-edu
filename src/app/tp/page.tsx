@@ -10,10 +10,8 @@ export default async function TpPage() {
   const updatedEvents = await updateLectureStatuses(events)
 
   return (
-    <div className="space-y-8">
       <Suspense>
         <PlaygroundControls events={updatedEvents} />
       </Suspense>
-    </div>
   )
 }
