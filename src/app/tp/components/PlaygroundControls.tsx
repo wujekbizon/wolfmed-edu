@@ -9,7 +9,6 @@ import UpdateLectureForm from './UpdateLectureForm'
 import CreateLectureForm from './CreateLectureForm'
 import CancelLectureForm from './CancelLectureForm'
 import EndLectureForm from './EndLectureForm'
-import LoginForm from './LoginForm'
 import clsx from 'clsx'
 import LectureFilter, { LectureFilterType } from './LectureFilter'
 
@@ -32,13 +31,13 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
     setSelectedLecture,
   } = usePlaygroundStore()
 
+  if (!isAuthenticated) {
+    return null
+  }
+
   const filteredEvents = events
     .filter((event) => activeTab === 'all' || event.status === activeTab)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-
-  if (!isAuthenticated) {
-    return <LoginForm />
-  }
 
   return (
     <>

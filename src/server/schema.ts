@@ -88,7 +88,13 @@ export const CreateLectureSchema = z.object({
 
 export const UpdateLectureSchema = CreateLectureSchema.partial()
 
+export const LoginSchema = z.object({
+  username: z.string().min(3, 'Username must be at least 3 characters').max(50, 'Username cannot exceed 50 characters'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
 export type CreatePostInput = z.infer<typeof CreatePostSchema>
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>
 export type CreateLectureInput = z.infer<typeof CreateLectureSchema>
 export type UpdateLectureInput = z.infer<typeof UpdateLectureSchema>
+export type LoginInput = z.infer<typeof LoginSchema>

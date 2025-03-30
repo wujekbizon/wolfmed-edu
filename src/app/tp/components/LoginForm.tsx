@@ -1,67 +1,91 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState } from 'react'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useToastMessage } from '@/hooks/useToastMessage'
+import { loginAction } from '@/actions/actions'
+import FieldError from '@/components/FieldError'
 import { useAuthStore } from '@/store/useAuthStore'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import SubmitButton from '@/components/SubmitButton'
 
 export default function LoginForm() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [state, action] = useActionState(loginAction, EMPTY_FORM_STATE)
+  const noScriptFallback = useToastMessage(state)
   const login = useAuthStore((state) => state.login)
+  const router = useRouter()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const isValid = login(username, password)
-    if (!isValid) {
-      setError('Invalid username or password')
-      setPassword('')
+  useEffect(() => {
+    if (state.status === 'SUCCESS' && state.values?.username) {
+      // Try to login with the credentials
+      const username = String(state.values.username)
+      const password = String(state.values?.password || '')
+      const loginSuccess = login(username, password)
+      
+      if (loginSuccess) {
+        // Only redirect if login was successful
+        router.push('/tp')
+      }
     }
-  }
+  }, [state.status, state.values, login, router])
 
   return (
-    <div className="max-w-md mx-auto">
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <h2 className="text-xl font-bold mb-4 text-center">Teacher Login</h2>
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span className="block sm:inline">{error}</span>
-          </div>
-        )}
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+    <div className="bg-zinc-800 shadow-xl rounded-xl border border-zinc-700 p-8">
+      <div className="text-center mb-8">
+        <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent mb-2">
+          Teaching Playground
+        </h1>
+        <p className="text-zinc-400">Sign in to continue</p>
+      </div>
+
+      <form action={action} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-2" htmlFor="username">
             Username
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500
+                     focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
             id="username"
+            name="username"
             type="text"
-            placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter your username"
+            defaultValue={state.values?.username || ''}
           />
+          <FieldError name="username" formState={state} />
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+
+        <div>
+          <label className="block text-sm font-medium text-zinc-300 mb-2" htmlFor="password">
             Password
           </label>
           <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500
+                     focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
             id="password"
+            name="password"
             type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Enter your password"
           />
+          <FieldError name="password" formState={state} />
         </div>
-        <div className="flex items-center justify-center">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Login
-          </button>
-        </div>
+
+        <SubmitButton
+          label="Sign In"
+          loading="Signing in..."
+          disabled={state.status === 'SUCCESS'}
+          className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border-blue-500/20"
+        />
       </form>
+
+      <p className="mt-8 text-center text-sm text-zinc-500">
+        Need help? Contact{' '}
+        <a href="mailto:support@wolfmed.com" className="text-blue-400 hover:text-blue-300">
+          support@wolfmed.com
+        </a>
+      </p>
+      {noScriptFallback}
     </div>
   )
 } 
