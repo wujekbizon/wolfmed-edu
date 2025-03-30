@@ -1,17 +1,27 @@
-import { fileData } from '@/server/fetchData'
-import PlaygroundControls from './components/PlaygroundControls'
 import { Suspense } from 'react'
+import { fileData } from '@/server/fetchData'
 import { updateLectureStatuses } from '@/helpers/updateLectureStatuses'
+import { LecturesLoadingState } from './components/LecturesLoadingState'
+import { FilteredLectureList } from './components/FilteredLectureList'
 
-export const experimental_ppr = true
-
-export default async function TpPage() {
+async function LectureList() {
   const events = await fileData.getAllEvents()
   const updatedEvents = await updateLectureStatuses(events)
 
+  return <FilteredLectureList events={updatedEvents} />
+}
+
+export default async function TeachingPlaygroundPage() {
   return (
-      <Suspense>
-        <PlaygroundControls events={updatedEvents} />
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-semibold text-zinc-100">Lectures</h1>
+        <p className="text-zinc-400 mt-1">Manage your scheduled lectures and sessions.</p>
+      </div>
+
+      <Suspense fallback={<LecturesLoadingState />}>
+        <LectureList />
       </Suspense>
+    </div>
   )
 }
