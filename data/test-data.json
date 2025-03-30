@@ -1,6 +1,34 @@
 {
   "events": [
     {
+      "id": "lecture_1",
+      "name": "Advanced Medical Procedures",
+      "date": "2024-03-31T10:00:00.000Z",
+      "roomId": "room_1",
+      "description": "Comprehensive overview of latest medical procedures",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "completed",
+      "teacherId": "teacher_1",
+      "createdBy": "Dr. Smith",
+      "endTime": "2025-03-30T17:52:42.847Z",
+      "lastModified": "2025-03-30T17:52:42.848Z"
+    },
+    {
+      "id": "lecture_2",
+      "name": "Introduction to Clinical Practice",
+      "date": "2024-03-31T14:00:00.000Z",
+      "roomId": "room_2",
+      "description": "Basic clinical practice guidelines for medical students",
+      "maxParticipants": 20,
+      "type": "lecture",
+      "status": "completed",
+      "teacherId": "teacher_2",
+      "createdBy": "Dr. Johnson",
+      "endTime": "2025-03-30T17:53:33.331Z",
+      "lastModified": "2025-03-30T17:53:33.332Z"
+    },
+    {
       "id": "lecture_1736452131813",
       "name": "test",
       "date": "2025-01-09T20:49",
@@ -157,6 +185,78 @@
       "createdBy": "John Doe"
     }
   ],
-  "rooms": [],
+  "rooms": [
+    {
+      "id": "room_1",
+      "name": "Main Lecture Hall",
+      "capacity": 100,
+      "status": "occupied",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": true,
+        "hasScreenShare": true
+      },
+      "currentLecture": {
+        "id": "lecture_1",
+        "name": "Advanced Medical Procedures",
+        "teacherId": "teacher_1",
+        "status": "in-progress"
+      },
+      "participants": [
+        {
+          "id": "teacher_1",
+          "username": "Dr. Smith",
+          "role": "teacher",
+          "status": "online",
+          "joinedAt": "2024-03-31T10:00:00.000Z",
+          "canStream": true,
+          "canChat": true,
+          "canScreenShare": true
+        }
+      ],
+      "createdAt": "2024-03-20T10:00:00.000Z",
+      "updatedAt": "2024-03-31T10:00:00.000Z"
+    },
+    {
+      "id": "room_2",
+      "name": "Small Group Room",
+      "capacity": 20,
+      "status": "scheduled",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": false,
+        "hasScreenShare": true
+      },
+      "currentLecture": {
+        "id": "lecture_2",
+        "name": "Introduction to Clinical Practice",
+        "teacherId": "teacher_2",
+        "status": "scheduled"
+      },
+      "participants": [],
+      "createdAt": "2024-03-20T10:00:00.000Z",
+      "updatedAt": "2024-03-31T09:00:00.000Z"
+    },
+    {
+      "id": "room_3",
+      "name": "Interactive Workshop",
+      "capacity": 50,
+      "status": "available",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": true,
+        "hasScreenShare": true
+      },
+      "participants": [],
+      "createdAt": "2024-03-20T10:00:00.000Z",
+      "updatedAt": "2024-03-20T10:00:00.000Z"
+    }
+  ],
   "participants": []
 }

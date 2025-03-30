@@ -14,7 +14,8 @@
     "lint": "next lint",
     "core:dev": "cd ../teaching-playground-core && pnpm dev",
     "core:local": "pnpm remove @teaching-playground/core && pnpm add ../teaching-playground-core",
-    "core:npm": "pnpm remove @teaching-playground/core && pnpm add @teaching-playground/core@latest"
+    "core:npm": "pnpm remove @teaching-playground/core && pnpm add @teaching-playground/core@latest",
+    "ws": "cd ../teaching-playground-core && pnpm server:dev"
   },
   "dependencies": {
     "@clerk/localizations": "^3.11.1",

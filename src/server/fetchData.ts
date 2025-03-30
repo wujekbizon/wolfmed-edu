@@ -1,6 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 import { Post, Procedure, Test } from '@/types/dataTypes'
+import { Room } from '@teaching-playground/core'
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
@@ -8,6 +9,7 @@ interface FileDataOperations {
   getAllProcedures: () => Promise<Procedure[]>
   getAllTests: () => Promise<Test[]>
   getAllEvents: () => Promise<any[]>
+  getAllRooms: () => Promise<Room[]>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -63,6 +65,16 @@ export const fileData: FileDataOperations = {
       return data.events
     } catch (error) {
       console.error('Error fetching events:', error)
+      return []
+    }
+  },
+
+  getAllRooms: async () => {
+    try {
+      const data = await readJsonFile<{ rooms: Room[] }>('test-data.json')
+      return data.rooms || []
+    } catch (error) {
+      console.error('Error fetching rooms:', error)
       return []
     }
   },

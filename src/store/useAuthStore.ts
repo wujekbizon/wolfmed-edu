@@ -10,19 +10,15 @@ interface AuthState {
   logout: () => void
 }
 
-if (!process.env.NEXT_PUBLIC_TEACHER_USERNAME || !process.env.NEXT_PUBLIC_TEACHER_PASSWORD) {
-  console.warn('Teacher credentials not found in environment variables')
-}
-
 const TEACHER_USERNAME = process.env.NEXT_PUBLIC_TEACHER_USERNAME
 const TEACHER_PASSWORD = process.env.NEXT_PUBLIC_TEACHER_PASSWORD
 
 const createDummyTeacher = (username: string): User => ({
   id: 'teacher_123',
-  name: username,
+  username: username,
   email: `${username}@example.com`,
   role: 'teacher' as const,
-  status: 'active' as const,
+  status: 'online' as const,
 })
 
 export const useAuthStore = create<AuthState>()(
