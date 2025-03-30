@@ -138,10 +138,23 @@
       "description": "this is a final test but there will be one more after this one  ",
       "maxParticipants": 30,
       "type": "lecture",
-      "status": "scheduled",
+      "status": "completed",
       "teacherId": "teacher_123",
       "createdBy": "John Doe",
-      "lastModified": "2025-03-16T15:47:24.112Z"
+      "lastModified": "2025-03-30T08:25:20.615Z",
+      "endTime": "2025-03-30T08:25:20.614Z"
+    },
+    {
+      "id": "lecture_1743323863907",
+      "name": "test",
+      "date": "2025-03-31T10:37",
+      "roomId": "room_1",
+      "description": "A new look on ai in programming workflow",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "scheduled",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe"
     }
   ],
   "rooms": [],

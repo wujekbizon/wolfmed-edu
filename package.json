@@ -11,7 +11,10 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "core:dev": "cd ../teaching-playground-core && pnpm dev",
+    "core:local": "pnpm remove @teaching-playground/core && pnpm add ../teaching-playground-core",
+    "core:npm": "pnpm remove @teaching-playground/core && pnpm add @teaching-playground/core@latest"
   },
   "dependencies": {
     "@clerk/localizations": "^3.11.1",
@@ -29,7 +32,7 @@
     "@sentry/nextjs": "^9.5.0",
     "@tailwindcss/postcss": "^4.0.14",
     "@tanstack/react-query": "^5.67.2",
-    "@teaching-playground/core": "^1.0.1",
+    "@teaching-playground/core": "link:..\\teaching-playground-core",
     "@types/uuid": "^10.0.0",
     "@vercel/postgres": "^0.10.0",
     "babel-plugin-react-compiler": "19.0.0-beta-bafa41b-20250307",

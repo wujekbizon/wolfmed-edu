@@ -2,22 +2,16 @@
 
 import { useState } from 'react'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
+import { useAuthStore } from '@/store/useAuthStore'
 import type { Lecture } from '@teaching-playground/core'
 import { formatLectureDate } from '@/helpers/formatDate'
 import UpdateLectureForm from './UpdateLectureForm'
 import CreateLectureForm from './CreateLectureForm'
 import CancelLectureForm from './CancelLectureForm'
 import EndLectureForm from './EndLectureForm'
+import LoginForm from './LoginForm'
 import clsx from 'clsx'
 import LectureFilter, { LectureFilterType } from './LectureFilter'
-
-const dummyTeacher = {
-  id: 'teacher_123',
-  name: 'John Doe',
-  email: 'john@example.com',
-  role: 'teacher' as const,
-  status: 'active' as const,
-}
 
 const statusStyles: Record<Lecture['status'], string> = {
   scheduled: 'text-blue-600 bg-blue-50 border-blue-200',
@@ -29,19 +23,29 @@ const statusStyles: Record<Lecture['status'], string> = {
 
 export default function PlaygroundControls({ events }: { events: Lecture[] }) {
   const [activeTab, setActiveTab] = useState<LectureFilterType>('all')
+  const { isAuthenticated, logout } = useAuthStore()
   const {
     playground,
     error,
     isCreateModalOpen,
     selectedLecture,
-    initializePlayground,
     setCreateModalOpen,
     setSelectedLecture,
+    reset,
   } = usePlaygroundStore()
 
   const filteredEvents = events
     .filter((event) => activeTab === 'all' || event.status === activeTab)
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+  const handleLogout = () => {
+    logout()
+    reset()
+  }
+
+  if (!isAuthenticated) {
+    return <LoginForm />
+  }
 
   return (
     <>
@@ -51,26 +55,26 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
         </div>
       )}
       <section className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium mb-4">Playground Controls</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium">Playground Controls</h2>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Logout
+          </button>
+        </div>
         <div className="space-x-4">
           <button
-            onClick={() => initializePlayground(dummyTeacher)}
-            disabled={!!playground}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
-          >
-            Initialize Playground
-          </button>
-          <button
             onClick={() => setCreateModalOpen(true)}
-            disabled={!playground}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-300"
+            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
           >
             Create New Lecture
           </button>
         </div>
       </section>
 
-      <section className="bg-white shadow rounded-lg p-6">
+      <section className="bg-white shadow rounded-lg p-6 mt-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-lg font-medium">Current Lectures</h2>
           <LectureFilter activeTab={activeTab} onTabChange={setActiveTab} events={events} />

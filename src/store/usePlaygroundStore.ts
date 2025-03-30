@@ -8,7 +8,7 @@ interface PlaygroundState {
   isCreateModalOpen: boolean
   error: string | null
   // Actions
-  initializePlayground: (user: User) => void
+  setPlayground: (playground: TeachingPlayground) => void
   setSelectedLecture: (lecture: Lecture | null) => void
   setCreateModalOpen: (isOpen: boolean) => void
   setError: (error: string | null) => void
@@ -23,17 +23,7 @@ export const usePlaygroundStore = create<PlaygroundState>()(
       isCreateModalOpen: false,
       error: null,
 
-      initializePlayground: (user: User) => {
-        const tp = new TeachingPlayground({
-          roomConfig: {},
-          commsConfig: {},
-          eventConfig: {},
-          dataConfig: {},
-        })
-        tp.setCurrentUser(user)
-        set({ playground: tp })
-      },
-
+      setPlayground: (playground: TeachingPlayground) => set({ playground }),
       setSelectedLecture: (lecture) => set({ selectedLecture: lecture }),
       setCreateModalOpen: (isOpen) => set({ isCreateModalOpen: isOpen }),
       setError: (error) => set({ error }),
