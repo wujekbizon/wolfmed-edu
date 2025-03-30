@@ -23,7 +23,6 @@ export default async function TeachingPlaygroundPage() {
           <h1 className="text-2xl font-semibold text-zinc-100">Lectures</h1>
           <p className="text-zinc-400 mt-1">Manage your scheduled lectures and sessions.</p>
         </div>
-
         <Suspense fallback={<LecturesLoadingState />}>
           <LectureList />
         </Suspense>
