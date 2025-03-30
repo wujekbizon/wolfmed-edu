@@ -19,7 +19,7 @@ export default function Navbar() {
   const { isAuthenticated } = useAuthStore()
 
   // Hide navbar in playground when authenticated
-  if (pathname.startsWith('/tp') && isAuthenticated) {
+  if (pathname.startsWith('/tp')) {
     return null
   }
 

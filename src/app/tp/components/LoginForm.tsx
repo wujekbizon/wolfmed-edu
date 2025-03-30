@@ -45,8 +45,7 @@ export default function LoginForm() {
             Username
           </label>
           <input
-            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500
-                     focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
+            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
             id="username"
             name="username"
             type="text"
@@ -61,8 +60,7 @@ export default function LoginForm() {
             Password
           </label>
           <input
-            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500
-                     focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
+            className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-md text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-colors"
             id="password"
             name="password"
             type="password"

@@ -4,9 +4,9 @@ import Link from 'next/link'
 
 export default function TeachingPlaygroundHero() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-zinc-900 to-zinc-800">
+    <div className="h-[calc(100vh-6px)] flex flex-col items-center justify-center px-4 py-16 bg-gradient-to-b from-zinc-900 to-zinc-800">
       <div className="text-center space-y-6 max-w-3xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent leading-relaxed py-2">
           Teaching Playground
         </h1>
         <p className="text-xl text-zinc-400">
@@ -44,7 +44,7 @@ export default function TeachingPlaygroundHero() {
         </div>
 
         <div className="mt-12 text-sm text-zinc-500">
-          <p>Need help? Contact support at wolfmed.com</p>
+          <p>Need help? Contact support at <a href="https://wolfmed-edukacja.pl/" target='_blank'>wolfmed-edukacja.pl</a></p>
         </div>
       </div>
     </div>
