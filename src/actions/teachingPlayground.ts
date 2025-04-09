@@ -6,8 +6,10 @@ import { fromErrorToFormState, toFormState } from '../helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { auth } from '@clerk/nextjs/server'
 import { Lecture, JsonDatabase, EventManagementSystem } from '@teaching-playground/core'
+import { manageRoomForLecture, cleanupExpiredRooms } from '@/utils/teachingPlaygroundUtils'
 
-const db = new JsonDatabase()
+// Use singleton JsonDatabase instance
+const db = JsonDatabase.getInstance()
 const eventSystem = new EventManagementSystem()
 
 export async function createLecture(formState: FormState, formData: FormData): Promise<FormState> {
@@ -18,7 +20,6 @@ export async function createLecture(formState: FormState, formData: FormData): P
   const values = {
     name: formData.get('name') as string,
     date: formData.get('date') as string,
-    roomId: formData.get('roomId') as string,
     description: formData.get('description') as string,
     maxParticipants: Number(formData.get('maxParticipants')),
   }
@@ -32,16 +33,30 @@ export async function createLecture(formState: FormState, formData: FormData): P
   }
 
   try {
-    const lecture = {
-      id: `lecture_${Date.now()}`,
+    // Create the lecture with a unique ID
+    const lectureId = `lecture_${Date.now()}`
+    const roomId = `room_${lectureId}`
+
+    // Create the lecture object
+    const lecture: Lecture = {
+      id: lectureId,
       ...validationResult.data,
+      roomId, // Use the consistent room ID
       type: 'lecture',
       status: 'scheduled',
       teacherId: 'teacher_123',
       createdBy: 'John Doe',
     }
 
+    // Save the lecture to the database
     await db.insert('events', lecture)
+
+    // Create or update the associated room
+    await manageRoomForLecture(lecture)
+
+    // Clean up any expired rooms
+    await cleanupExpiredRooms()
+
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
@@ -142,3 +157,15 @@ export async function endLecture(formState: FormState, formData: FormData) {
   revalidatePath('/tp')
   return toFormState('SUCCESS', 'Lecture completed successfully')
 }
+
+// Server action to get all events
+export async function getLectures(): Promise<Lecture[]> {
+  try {
+    const events = await db.find('events', { type: 'lecture' })
+    return events
+  } catch (error) {
+    console.error('Failed to fetch lectures:', error)
+    return []
+  }
+}
+

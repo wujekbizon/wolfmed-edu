@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Room } from '@teaching-playground/core'
 
 interface RoomStreamProps {
@@ -10,103 +10,146 @@ interface RoomStreamProps {
     streamerId: string | null
     quality: 'low' | 'medium' | 'high'
   } | null
-  onStartStream: (quality?: 'low' | 'medium' | 'high') => void
-  onStopStream: () => void
+  onStartStream?: (quality?: 'low' | 'medium' | 'high') => void
+  onStopStream?: () => void
+  localStream?: MediaStream | null
+  remoteStreams?: Map<string, MediaStream>
 }
 
-export default function RoomStream({ room, stream, onStartStream, onStopStream }: RoomStreamProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
+export default function RoomStream({ 
+  room, 
+  stream,
+  onStartStream,
+  onStopStream,
+  localStream,
+  remoteStreams = new Map()
+}: RoomStreamProps) {
+  const localVideoRef = useRef<HTMLVideoElement>(null)
+  const remoteVideosRef = useRef<Map<string, HTMLVideoElement>>(new Map())
+  const [activeStreams, setActiveStreams] = useState<string[]>([])
+  const previousRemoteStreamsRef = useRef<Map<string, MediaStream>>(new Map())
 
+  // Handle local stream
   useEffect(() => {
-    if (!stream || !stream.isActive || !videoRef.current) return
-
-    const videoElement = videoRef.current;
-
-    // For now, we'll use a mock video stream
-    // In the future, this will be replaced with real WebRTC implementation
-    const mockStream = () => {
-      const canvas = document.createElement('canvas')
-      canvas.width = 640
-      canvas.height = 480
-      const ctx = canvas.getContext('2d')
-      
-      if (!ctx) return
-
-      // Create a mock video stream with animated content
-      setInterval(() => {
-        ctx.fillStyle = '#1f2937'
-        ctx.fillRect(0, 0, canvas.width, canvas.height)
-        
-        // Draw some animated shapes
-        const time = Date.now() / 1000
-        ctx.fillStyle = '#3b82f6'
-        ctx.beginPath()
-        ctx.arc(
-          canvas.width/2 + Math.cos(time) * 100,
-          canvas.height/2 + Math.sin(time) * 100,
-          20,
-          0,
-          2 * Math.PI
-        )
-        ctx.fill()
-        
-        // Add some text
-        ctx.fillStyle = '#ffffff'
-        ctx.font = '24px sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillText('Mock Stream', canvas.width/2, 40)
-        ctx.font = '18px sans-serif'
-        ctx.fillText(`Room: ${room.name}`, canvas.width/2, 70)
-      }, 1000/30) // 30fps
-
-      return canvas.captureStream(30)
+    if (localVideoRef.current && localStream) {
+      localVideoRef.current.srcObject = localStream
     }
+  }, [localStream])
 
-    const mockVideoStream = mockStream()
-    if (mockVideoStream && videoElement) {
-      videoElement.srcObject = mockVideoStream
-    }
-
-    return () => {
-      if (videoElement) {
-        videoElement.srcObject = null
+  // Handle remote streams
+  useEffect(() => {
+    const hasStreamsChanged = (
+      previousStreams: Map<string, MediaStream>,
+      currentStreams: Map<string, MediaStream>
+    ): boolean => {
+      if (previousStreams.size !== currentStreams.size) return true
+      for (const [key, value] of previousStreams) {
+        if (!currentStreams.has(key) || currentStreams.get(key) !== value) return true
       }
+      return false
     }
-  }, [stream, room.name])
 
-  if (!stream || !stream.isActive) {
-    return (
-      <div className="flex items-center justify-center h-full bg-zinc-900">
-        <div className="text-zinc-500 text-center">
-          <svg 
-            className="w-12 h-12 mx-auto mb-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={1.5} 
-              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
-            />
-          </svg>
-          <p className="text-lg font-medium">Stream is inactive</p>
-          <p className="text-sm mt-1">Waiting for the stream to start...</p>
-        </div>
-      </div>
-    )
-  }
+    if (!hasStreamsChanged(previousRemoteStreamsRef.current, remoteStreams)) {
+      return
+    }
+
+    // Update active streams list
+    const currentPeers = Array.from(remoteStreams.keys())
+    setActiveStreams(currentPeers)
+
+    // Update or create video elements for each remote stream
+    remoteStreams.forEach((stream, peerId) => {
+      let videoElement = remoteVideosRef.current.get(peerId)
+      
+      if (!videoElement) {
+        videoElement = document.createElement('video')
+        videoElement.autoplay = true
+        videoElement.playsInline = true
+        remoteVideosRef.current.set(peerId, videoElement)
+      }
+
+      if (videoElement.srcObject !== stream) {
+        videoElement.srcObject = stream
+      }
+    })
+
+    // Remove disconnected peers
+    remoteVideosRef.current.forEach((_, peerId) => {
+      if (!remoteStreams.has(peerId)) {
+        remoteVideosRef.current.delete(peerId)
+      }
+    })
+
+    // Update previous streams reference
+    previousRemoteStreamsRef.current = new Map(remoteStreams)
+  }, [remoteStreams])
 
   return (
     <div className="relative w-full h-full bg-zinc-900">
-      <video
-        ref={videoRef}
-        className="w-full h-full object-contain"
-        autoPlay
-        playsInline
-        muted
-      />
+      {/* Stream status overlay */}
+      {!stream?.isActive && (
+        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900/80">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-zinc-100 mb-4">
+              No active stream
+            </h3>
+            {room.features.hasVideo && (
+              <p className="text-zinc-400">
+                Start streaming to begin sharing your video
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Video grid */}
+      <div className="grid h-full p-4">
+        <div className={`grid gap-4 h-full auto-rows-fr ${
+          activeStreams.length === 0 ? 'grid-cols-1' : 
+          activeStreams.length <= 2 ? 'grid-cols-2' :
+          'grid-cols-3'
+        }`}>
+          {/* Local video */}
+          {localStream && (
+            <div className={`relative bg-zinc-800 rounded-lg overflow-hidden flex items-center justify-center ${
+              activeStreams.length === 0 ? 'col-span-full row-span-full' : ''
+            }`}>
+              <video
+                ref={localVideoRef}
+                autoPlay
+                playsInline
+                muted
+                className="absolute min-w-full min-h-full object-cover"
+              />
+              <div className="absolute bottom-2 left-2 px-2 py-1 bg-zinc-900/80 rounded text-sm text-zinc-100">
+                You
+              </div>
+            </div>
+          )}
+
+          {/* Remote videos */}
+          {activeStreams.map((peerId) => (
+            <div key={peerId} className="relative bg-zinc-800 rounded-lg overflow-hidden flex items-center justify-center">
+              <video
+                ref={(el) => {
+                  if (el) {
+                    remoteVideosRef.current.set(peerId, el)
+                    if (remoteStreams.has(peerId)) {
+                      el.srcObject = remoteStreams.get(peerId) || null
+                    }
+                  }
+                }}
+                autoPlay
+                playsInline
+                className="absolute min-w-full min-h-full object-cover"
+              />
+              <div className="absolute bottom-2 left-2 px-2 py-1 bg-zinc-900/80 rounded text-sm text-zinc-100">
+                Participant {peerId}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   )
 } 

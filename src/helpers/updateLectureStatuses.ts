@@ -1,7 +1,8 @@
 import { Lecture, JsonDatabase } from '@teaching-playground/core'
 import { determineLectureStatus } from '@/utils/lectureStatus'
 
-const db = new JsonDatabase()
+// Use singleton JsonDatabase instance
+const db = JsonDatabase.getInstance()
 
 export async function updateLectureStatuses(events: Lecture[]): Promise<Lecture[]> {
   // Collect all status updates

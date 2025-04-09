@@ -456,8 +456,10 @@ export async function loginAction(formState: FormState, formData: FormData) {
 
   try {
     // Mock authentication - check against environment variables
-    const isValid = username === process.env.NEXT_PUBLIC_TEACHER_USERNAME && 
-                   password === process.env.NEXT_PUBLIC_TEACHER_PASSWORD
+    const isValid = (username === process.env.NEXT_PUBLIC_TEACHER_USERNAME && 
+                   password === process.env.NEXT_PUBLIC_TEACHER_PASSWORD) || 
+                   (username === process.env.NEXT_PUBLIC_STUDENT_USERNAME && 
+                   password === process.env.NEXT_PUBLIC_STUDENT_PASSWORD)
 
     if (!isValid) {
       return {

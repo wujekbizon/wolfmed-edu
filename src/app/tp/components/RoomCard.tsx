@@ -16,8 +16,9 @@ export function RoomCard({ room, currentLecture }: RoomCardProps) {
   const statusColors = {
     available: 'bg-green-500/10 text-green-400',
     occupied: 'bg-blue-500/10 text-blue-400',
+    scheduled: 'bg-yellow-500/10 text-yellow-400',
     maintenance: 'bg-red-500/10 text-red-400',
-  }
+  } as const
 
   const handleRoomClick = () => {
     if (room.status === 'occupied' && currentLecture) {
@@ -51,17 +52,17 @@ export function RoomCard({ room, currentLecture }: RoomCardProps) {
 
       <div className="mt-4 space-y-2">
         <div className="flex flex-wrap gap-2">
-          {room.features.videoConference && (
+          {room.features.hasVideo && (
             <span className="px-2 py-1 bg-zinc-700/50 rounded-md text-xs text-zinc-300">
               Video Conference
             </span>
           )}
-          {room.features.whiteboard && (
+          {room.features.hasWhiteboard && (
             <span className="px-2 py-1 bg-zinc-700/50 rounded-md text-xs text-zinc-300">
               Whiteboard
             </span>
           )}
-          {room.features.screenSharing && (
+          {room.features.hasScreenShare && (
             <span className="px-2 py-1 bg-zinc-700/50 rounded-md text-xs text-zinc-300">
               Screen Sharing
             </span>
@@ -73,17 +74,13 @@ export function RoomCard({ room, currentLecture }: RoomCardProps) {
             <p className="text-sm font-medium text-zinc-300">Current Session</p>
             <p className="text-sm text-zinc-400 mt-1">{currentLecture.name}</p>
             <div className="flex items-center mt-2">
-              {room.communicationStatus && (
-                <>
-                  <div className={clsx(
-                    'w-2 h-2 rounded-full mr-2',
-                    room.communicationStatus.websocket ? 'bg-green-400' : 'bg-red-400'
-                  )} />
-                  <span className="text-xs text-zinc-400">
-                    {room.communicationStatus.participants} connected
-                  </span>
-                </>
-              )}
+              <div className={clsx(
+                'w-2 h-2 rounded-full mr-2',
+                currentLecture.communicationStatus?.websocket ? 'bg-green-400' : 'bg-red-400'
+              )} />
+              <span className="text-xs text-zinc-400">
+                {room.participants.length} connected
+              </span>
             </div>
           </div>
         )}

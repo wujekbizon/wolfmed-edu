@@ -1,42 +1,49 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { RoomParticipant } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface RoomParticipantsProps {
   roomId: string
-  participants: Array<{
-    id: string
-    username: string
-    role: string
-    status: string
-    canStream: boolean
-    canChat: boolean
-    canScreenShare: boolean
-  }>
+  participants?: Array<RoomParticipant>
 }
 
-export default function RoomParticipants({ roomId }: RoomParticipantsProps) {
-  const [participants, setParticipants] = useState<RoomParticipant[]>([])
+export default function RoomParticipants({ roomId, participants: initialParticipants }: RoomParticipantsProps) {
+  const [participants, setParticipants] = useState<RoomParticipant[]>(initialParticipants || [])
   const playground = usePlaygroundStore((state) => state.playground)
 
-  useEffect(() => {
-    async function loadParticipants() {
-      try {
-        if (!playground) return
-        const roomParticipants = await playground.roomSystem.getRoomParticipants(roomId)
-        setParticipants(roomParticipants)
-      } catch (error) {
-        console.error('Failed to load participants:', error)
-      }
-    }
+  // Function to fetch participants directly from the database
+  const fetchParticipants = useCallback(async () => {
+    try {
+      if (!playground) return
 
-    loadParticipants()
-    // Refresh participants list periodically
-    const interval = setInterval(loadParticipants, 5000)
-    return () => clearInterval(interval)
+      // Use the JsonDatabase via RoomManagementSystem to get participants
+      const roomParticipants = await playground.roomSystem.getRoomParticipants(roomId)
+      
+      // Log for debugging
+      console.log(`Fetched ${roomParticipants.length} participants for room ${roomId}:`, 
+        roomParticipants.map(p => `${p.username} (${p.id}${p.isStreaming ? ', streaming' : ''})`).join(', '))
+      
+      setParticipants(roomParticipants)
+    } catch (error) {
+      console.error('Failed to load participants:', error)
+    }
   }, [playground, roomId])
+
+  // Initial load and setup polling
+  useEffect(() => {
+    // Load participants immediately
+    fetchParticipants()
+    
+    // Polling interval (once per second to ensure we catch all changes quickly)
+    const interval = setInterval(fetchParticipants, 1000)
+    
+    // Cleanup
+    return () => {
+      clearInterval(interval)
+    }
+  }, [fetchParticipants])
 
   return (
     <div className="flex flex-col h-full">
@@ -55,15 +62,22 @@ export default function RoomParticipants({ roomId }: RoomParticipantsProps) {
           <ul className="divide-y divide-zinc-700">
             {participants.map((participant) => (
               <li key={participant.id} className="p-3 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-medium">
+                <div className={`w-8 h-8 rounded-full ${participant.isStreaming ? 'bg-green-500' : 'bg-blue-500'} flex items-center justify-center text-white font-medium`}>
                   {participant.username.charAt(0).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-zinc-200 font-medium truncate">
-                    {participant.username}
-                  </p>
+                  <div className="flex items-center">
+                    <p className="text-zinc-200 font-medium truncate">
+                      {participant.username}
+                    </p>
+                    {participant.isStreaming && (
+                      <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
+                        Streaming
+                      </span>
+                    )}
+                  </div>
                   <p className="text-xs text-zinc-500">
-                    Joined {new Date(participant.joinedAt).toLocaleTimeString()}
+                    {participant.role === 'teacher' ? 'Teacher' : 'Student'} • Joined {new Date(participant.joinedAt).toLocaleTimeString()}
                   </p>
                 </div>
                 <div className="flex gap-1">

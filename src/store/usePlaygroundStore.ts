@@ -34,21 +34,17 @@ export const usePlaygroundStore = create<PlaygroundState>()(
       isAuthenticated: false,
       user: null,
 
-      setPlayground: (playground: TeachingPlayground) => set({ playground }),
+      setPlayground: (playground: TeachingPlayground) => {
+        set({ playground, isAuthenticated: true })
+      },
       setSelectedLecture: (lecture) => set({ selectedLecture: lecture }),
       setCreateModalOpen: (isOpen) => set({ isCreateModalOpen: isOpen }),
       setError: (error) => set({ error }),
       setUser: (user) => set({ user }),
-      reset: () =>
-        set({
-          playground: null,
-          selectedLecture: null,
-          isCreateModalOpen: false,
-          error: null,
-          username: null,
-          isAuthenticated: false,
-          user: null,
-        }),
+      reset: () => {
+        // Don't destroy the playground instance, just clear the state
+        set({ playground: null, isAuthenticated: false })
+      },
       setUsername: (username: string) => set({ username }),
       setIsAuthenticated: (isAuthenticated: boolean) => set({ isAuthenticated }),
       login: (username: string) => set({ username, isAuthenticated: true }),

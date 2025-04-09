@@ -1,7 +1,10 @@
 import path from 'path'
 import fs from 'fs'
 import { Post, Procedure, Test } from '@/types/dataTypes'
-import { Room } from '@teaching-playground/core'
+import { Room, JsonDatabase } from '@teaching-playground/core'
+
+// Use singleton JsonDatabase instance for all data operations
+const db = JsonDatabase.getInstance()
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
@@ -59,20 +62,20 @@ export const fileData: FileDataOperations = {
     }
   },
 
+  // Use the JsonDatabase singleton for events to ensure consistency
   getAllEvents: async () => {
     try {
-      const data = await readJsonFile<{ events: any[] }>('test-data.json')
-      return data.events
+      return await db.find('events', {})
     } catch (error) {
       console.error('Error fetching events:', error)
       return []
     }
   },
 
+  // Use the JsonDatabase singleton for rooms to ensure consistency
   getAllRooms: async () => {
     try {
-      const data = await readJsonFile<{ rooms: Room[] }>('test-data.json')
-      return data.rooms || []
+      return await db.find('rooms', {})
     } catch (error) {
       console.error('Error fetching rooms:', error)
       return []

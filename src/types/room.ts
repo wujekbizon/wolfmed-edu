@@ -1,17 +1,8 @@
-export interface Room {
-  id: string
-  name: string
-  capacity: number
-  features: {
-    videoConference: boolean
-    whiteboard: boolean
-    screenSharing: boolean
-  }
-  status: 'available' | 'occupied' | 'maintenance'
-  currentLecture?: string // lecture ID if room is occupied
-  communicationStatus?: {
-    websocket: boolean
-    webrtc: boolean
-    participants: number
-  }
-} 
+import { Room as CoreRoom } from '@teaching-playground/core'
+
+export type Room = CoreRoom
+
+// Or if you need to extend it:
+// export interface Room extends CoreRoom {
+//   // additional properties
+// } 

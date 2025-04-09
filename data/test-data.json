@@ -1,183 +1,11 @@
 {
   "events": [
     {
-      "id": "lecture_1",
-      "name": "Advanced Medical Procedures",
-      "date": "2024-03-31T10:00:00.000Z",
+      "id": "lecture_1743882373492",
+      "name": "AI in 2025",
+      "date": "2025-04-12T21:45",
       "roomId": "room_1",
-      "description": "Comprehensive overview of latest medical procedures",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_1",
-      "createdBy": "Dr. Smith",
-      "endTime": "2025-03-30T17:52:42.847Z",
-      "lastModified": "2025-03-30T17:52:42.848Z"
-    },
-    {
-      "id": "lecture_2",
-      "name": "Introduction to Clinical Practice",
-      "date": "2024-03-31T14:00:00.000Z",
-      "roomId": "room_2",
-      "description": "Basic clinical practice guidelines for medical students",
-      "maxParticipants": 20,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_2",
-      "createdBy": "Dr. Johnson",
-      "endTime": "2025-03-30T17:53:33.331Z",
-      "lastModified": "2025-03-30T17:53:33.332Z"
-    },
-    {
-      "id": "lecture_1736452131813",
-      "name": "test",
-      "date": "2025-01-09T20:49",
-      "roomId": "room_1",
-      "description": "asdasdasdasdasda",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "startTime": "2025-01-09T20:10:54.436Z",
-      "metadata": {
-        "lastStatusUpdate": "2025-01-09T20:10:54.436Z"
-      },
-      "lastModified": "2025-01-09T20:12:37.364Z",
-      "endTime": "2025-01-09T20:12:37.362Z"
-    },
-    {
-      "id": "lecture_1736453693678",
-      "name": "Wyklad12",
-      "date": "2025-01-13T21:14",
-      "roomId": "room_3",
-      "description": "Wyklad o oczach ryb :)",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "cancelled",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-01-09T20:56:36.699Z"
-    },
-    {
-      "id": "lecture_1736454542221",
-      "name": "test22",
-      "date": "2025-01-09T21:27",
-      "roomId": "room_1",
-      "description": "test21232dasdasda",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "cancelled",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-01-09T20:29:18.734Z"
-    },
-    {
-      "id": "lecture_1736454579213",
-      "name": "test2",
-      "date": "2025-01-09T21:30",
-      "roomId": "room_1",
-      "description": "test1234tresdadas",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-01-09T20:37:58.707Z",
-      "startTime": "2025-01-09T20:37:19.647Z",
-      "endTime": "2025-01-09T20:37:58.706Z"
-    },
-    {
-      "id": "lecture_1736455262458",
-      "name": "Test",
-      "date": "2025-01-09T21:41",
-      "roomId": "room_1",
-      "description": "Full description",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "startTime": "2025-01-09T20:41:02.507Z",
-      "lastModified": "2025-01-09T20:42:02.300Z",
-      "endTime": "2025-01-09T20:42:02.299Z"
-    },
-    {
-      "id": "lecture_1736456210799",
-      "name": "Test1121",
-      "date": "2025-01-09T21:57",
-      "roomId": "room_1",
-      "description": "asdasdasdasdasasasasasasasas",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "startTime": "2025-01-09T20:57:09.057Z",
-      "lastModified": "2025-01-09T20:57:27.164Z",
-      "endTime": "2025-01-09T20:57:27.163Z"
-    },
-    {
-      "id": "lecture_1736456229013",
-      "name": "tersddfs",
-      "date": "2025-01-27T21:57",
-      "roomId": "room_11111",
-      "description": "asdasdasasdasda",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "endTime": "2025-03-08T20:26:23.086Z",
-      "lastModified": "2025-03-08T20:26:23.089Z"
-    },
-    {
-      "id": "lecture_1741465632859",
-      "name": "Admin",
-      "date": "2025-03-15T00:26",
-      "roomId": "room_1",
-      "description": "testdcccccccccccccccccccccccccc",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-03-16T12:11:29.685Z",
-      "endTime": "2025-03-16T12:11:29.651Z"
-    },
-    {
-      "id": "lecture_1742133600174",
-      "name": "test28",
-      "date": "2025-03-23T20:00",
-      "roomId": "room_11",
-      "description": "This is a final exam ",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "cancelled",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-03-16T14:00:05.121Z"
-    },
-    {
-      "id": "lecture_1742138327673",
-      "name": "wolfmed",
-      "date": "2025-03-23T20:22",
-      "roomId": "room_1",
-      "description": "this is a final test but there will be one more after this one  ",
-      "maxParticipants": 30,
-      "type": "lecture",
-      "status": "completed",
-      "teacherId": "teacher_123",
-      "createdBy": "John Doe",
-      "lastModified": "2025-03-30T08:25:20.615Z",
-      "endTime": "2025-03-30T08:25:20.614Z"
-    },
-    {
-      "id": "lecture_1743323863907",
-      "name": "test",
-      "date": "2025-03-31T10:37",
-      "roomId": "room_1",
-      "description": "A new look on ai in programming workflow",
+      "description": "Latest models and prices per token",
       "maxParticipants": 30,
       "type": "lecture",
       "status": "scheduled",
@@ -188,75 +16,26 @@
   "rooms": [
     {
       "id": "room_1",
-      "name": "Main Lecture Hall",
-      "capacity": 100,
-      "status": "occupied",
-      "features": {
-        "hasVideo": true,
-        "hasAudio": true,
-        "hasChat": true,
-        "hasWhiteboard": true,
-        "hasScreenShare": true
-      },
-      "currentLecture": {
-        "id": "lecture_1",
-        "name": "Advanced Medical Procedures",
-        "teacherId": "teacher_1",
-        "status": "in-progress"
-      },
-      "participants": [
-        {
-          "id": "teacher_1",
-          "username": "Dr. Smith",
-          "role": "teacher",
-          "status": "online",
-          "joinedAt": "2024-03-31T10:00:00.000Z",
-          "canStream": true,
-          "canChat": true,
-          "canScreenShare": true
-        }
-      ],
-      "createdAt": "2024-03-20T10:00:00.000Z",
-      "updatedAt": "2024-03-31T10:00:00.000Z"
-    },
-    {
-      "id": "room_2",
-      "name": "Small Group Room",
-      "capacity": 20,
+      "name": "Room for AI in 2025",
+      "capacity": 30,
       "status": "scheduled",
       "features": {
         "hasVideo": true,
         "hasAudio": true,
         "hasChat": true,
-        "hasWhiteboard": false,
-        "hasScreenShare": true
-      },
-      "currentLecture": {
-        "id": "lecture_2",
-        "name": "Introduction to Clinical Practice",
-        "teacherId": "teacher_2",
-        "status": "scheduled"
-      },
-      "participants": [],
-      "createdAt": "2024-03-20T10:00:00.000Z",
-      "updatedAt": "2024-03-31T09:00:00.000Z"
-    },
-    {
-      "id": "room_3",
-      "name": "Interactive Workshop",
-      "capacity": 50,
-      "status": "available",
-      "features": {
-        "hasVideo": true,
-        "hasAudio": true,
-        "hasChat": true,
         "hasWhiteboard": true,
         "hasScreenShare": true
       },
+      "currentLecture": {
+        "id": "lecture_1743882373492",
+        "name": "AI in 2025",
+        "teacherId": "teacher_123",
+        "status": "scheduled"
+      },
       "participants": [],
-      "createdAt": "2024-03-20T10:00:00.000Z",
-      "updatedAt": "2024-03-20T10:00:00.000Z"
+      "createdAt": "2025-04-05T19:46:13.494Z",
+      "updatedAt": "2025-04-05T21:22:39.586Z",
+      "lastModified": "2025-04-05T21:22:39.604Z"
     }
-  ],
-  "participants": []
+  ]
 }

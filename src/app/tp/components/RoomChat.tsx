@@ -4,43 +4,22 @@ import { useState, useEffect, useRef } from 'react'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface ChatMessage {
-  id: string
   userId: string
   username: string
   content: string
-  timestamp: Date
+  timestamp: string
 }
 
 interface RoomChatProps {
-  messages: Array<{
-    userId: string
-    username: string
-    content: string
-    timestamp: string
-  }>
+  messages: Array<ChatMessage>
   onSendMessage: (content: string) => void
   isEnabled: boolean
 }
 
-export default function RoomChat({ isEnabled }: RoomChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+export default function RoomChat({ messages, onSendMessage, isEnabled }: RoomChatProps) {
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const playground = usePlaygroundStore((state) => state.playground)
   const username = usePlaygroundStore((state) => state.username)
-
-  useEffect(() => {
-    // Mock initial messages
-    setMessages([
-      {
-        id: '1',
-        userId: 'system',
-        username: 'System',
-        content: 'Welcome to the chat!',
-        timestamp: new Date()
-      }
-    ])
-  }, [])
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -54,16 +33,7 @@ export default function RoomChat({ isEnabled }: RoomChatProps) {
     e.preventDefault()
     if (!inputValue.trim() || !isEnabled) return
 
-    // Add new message
-    const newMessage: ChatMessage = {
-      id: Date.now().toString(),
-      userId: username || 'anonymous',
-      username: username || 'Anonymous',
-      content: inputValue.trim(),
-      timestamp: new Date()
-    }
-
-    setMessages(prev => [...prev, newMessage])
+    onSendMessage(inputValue.trim())
     setInputValue('')
   }
 
@@ -97,8 +67,8 @@ export default function RoomChat({ isEnabled }: RoomChatProps) {
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map(message => (
-          <div key={message.id} className="flex flex-col">
+        {messages.map((message, index) => (
+          <div key={`${message.userId}-${index}`} className="flex flex-col">
             <div className="flex items-baseline gap-2">
               <span className="font-medium text-zinc-200">
                 {message.username}
