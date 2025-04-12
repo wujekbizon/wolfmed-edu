@@ -15,6 +15,24 @@ export default function Membership() {
             </div>
             {/* Community Updates Sidebar */}
             <aside className="lg:col-span-4 space-y-6 ">
+              {/* Latest Updates */}
+              <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
+                <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
+                <div className="space-y-4">
+                  <div className="border-l-4 border-red-500 pl-4">
+                    <p className="text-sm text-zinc-500">12 Kwiecień 2025</p>
+                    <h4 className="font-medium text-zinc-800">Aktualizacja bazy testów</h4>
+                    <p className="text-sm text-red-400 hover:text-red-500 transition-colors">
+                      Poszerzyliśmy nasza bazę danych o najnowsze 40 testów z egzaminów ze Stycznia 2025
+                    </p>
+                  </div>
+                  <div className="border-l-4 border-zinc-300 pl-4">
+                    <p className="text-sm text-zinc-500">12 Kwiecień 2025</p>
+                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
+                    <p className="text-sm text-zinc-600">Już ponad 2500 aktywnych użytkowników!</p>
+                  </div>
+                </div>
+              </div>
               {/* Community Spotlight */}
               <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
                 <h3 className="text-xl font-bold mb-3">🎉 Zapraszamy na forum 🎉</h3>
@@ -29,25 +47,6 @@ export default function Membership() {
                   Forum dyskusyjne
                 </Link>
               </div>
-              {/* Latest Updates */}
-              <div className="bg-white rounded-2xl shadow-xl p-6 border border-zinc-400/20">
-                <h3 className="text-xl font-bold text-zinc-800 mb-4">Najnowsze Aktualizacje</h3>
-                <div className="space-y-4">
-                  <div className="border-l-4 border-red-500 pl-4">
-                    <p className="text-sm text-zinc-500">31 Grudnia 2024</p>
-                    <h4 className="font-medium text-zinc-800">Otwarte - Forum dyskusyjne</h4>
-                    <p className="text-sm text-red-400 hover:text-red-500 transition-colors">
-                      Zapraszamy wszystkich do rozmów na tematy związane z rozwojem naszej społeczności.
-                    </p>
-                  </div>
-                  <div className="border-l-4 border-zinc-300 pl-4">
-                    <p className="text-sm text-zinc-500">21 Grudnia 2024</p>
-                    <h4 className="font-medium text-zinc-800">Rozwój Społeczności</h4>
-                    <p className="text-sm text-zinc-600">Już ponad 1000 aktywnych użytkowników!</p>
-                  </div>
-                </div>
-              </div>
-
               {/* Video Procedures Announcement */}
               <div className="bg-gradient-to-r from-[#ff5b5b] to-purple-500 border border-zinc-400/20 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
                 <div className="relative z-10">
