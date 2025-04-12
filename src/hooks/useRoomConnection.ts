@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { RoomConnection, User } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
@@ -68,7 +68,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   const hasJoinedRoomRef = useRef(false)
 
   // Handle joining the room
-  const joinRoom = async () => {
+  const joinRoom = useCallback(async () => {
     if (!playground || hasJoinedRoomRef.current || !mountedRef.current) return;
     
     try {
@@ -79,10 +79,10 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     } catch (error) {
       console.error(`Failed to join room ${roomId}:`, error);
     }
-  };
+  }, [playground, roomId, user]);
   
   // Handle leaving the room
-  const leaveRoom = async () => {
+  const leaveRoom = useCallback(async () => {
     if (!playground || !hasJoinedRoomRef.current) return;
     
     try {
@@ -93,7 +93,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     } catch (error) {
       console.error(`Failed to leave room ${roomId}:`, error);
     }
-  };
+  }, [playground, roomId, user.id, user.username]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -275,7 +275,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       isConnectingRef.current = false;
       hasJoinedRoomRef.current = false;
     };
-  }, [roomId, user, serverUrl, playground]);
+  }, [roomId, user, serverUrl, playground,leaveRoom, joinRoom, localStream]);
 
   const startStream = async (quality?: 'low' | 'medium' | 'high') => {
     try {
