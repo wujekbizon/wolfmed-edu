@@ -1,12 +1,18 @@
 import path from 'path'
 import fs from 'fs'
 import { Post, Procedure, Test } from '@/types/dataTypes'
+import { Room, JsonDatabase } from '@teaching-playground/core'
+
+// Use singleton JsonDatabase instance for all data operations
+const db = JsonDatabase.getInstance()
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
   getPostById: (id: string) => Promise<Post | null>
   getAllProcedures: () => Promise<Procedure[]>
   getAllTests: () => Promise<Test[]>
+  getAllEvents: () => Promise<any[]>
+  getAllRooms: () => Promise<Room[]>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -52,6 +58,26 @@ export const fileData: FileDataOperations = {
       return tests
     } catch (error) {
       console.error('Error fetching tests:', error)
+      return []
+    }
+  },
+
+  // Use the JsonDatabase singleton for events to ensure consistency
+  getAllEvents: async () => {
+    try {
+      return await db.find('events', {})
+    } catch (error) {
+      console.error('Error fetching events:', error)
+      return []
+    }
+  },
+
+  // Use the JsonDatabase singleton for rooms to ensure consistency
+  getAllRooms: async () => {
+    try {
+      return await db.find('rooms', {})
+    } catch (error) {
+      console.error('Error fetching rooms:', error)
       return []
     }
   },

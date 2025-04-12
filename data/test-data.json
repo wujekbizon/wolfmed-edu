@@ -1,0 +1,41 @@
+{
+  "events": [
+    {
+      "id": "lecture_1743882373492",
+      "name": "AI in 2025",
+      "date": "2025-04-12T21:45",
+      "roomId": "room_1",
+      "description": "Latest models and prices per token",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "scheduled",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe"
+    }
+  ],
+  "rooms": [
+    {
+      "id": "room_1",
+      "name": "Room for AI in 2025",
+      "capacity": 30,
+      "status": "scheduled",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": true,
+        "hasScreenShare": true
+      },
+      "currentLecture": {
+        "id": "lecture_1743882373492",
+        "name": "AI in 2025",
+        "teacherId": "teacher_123",
+        "status": "scheduled"
+      },
+      "participants": [],
+      "createdAt": "2025-04-05T19:46:13.494Z",
+      "updatedAt": "2025-04-05T21:22:39.586Z",
+      "lastModified": "2025-04-05T21:22:39.604Z"
+    }
+  ]
+}

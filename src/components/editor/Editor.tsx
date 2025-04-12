@@ -31,7 +31,7 @@ export default function Editor({
   return (
     <LexicalComposer initialConfig={config}>
       <div
-        className={`bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 h-full ${className}`}
+        className={`bg-zinc-800 rounded-lg overflow-y-auto scrollbar-webkit border border-zinc-700 max-h-[550px] ${className}`}
         role="textbox"
         aria-multiline="true"
         aria-label="Edytor tekstu"

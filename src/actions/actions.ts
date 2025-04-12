@@ -16,6 +16,7 @@ import {
   UpdateUsernameSchema,
   CreatePostSchema,
   CreateCommentSchema,
+  LoginSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql, and, gt } from 'drizzle-orm'
@@ -434,4 +435,47 @@ export async function deleteCommentAction(formState: FormState, formData: FormDa
 
   revalidatePath('/forum')
   return toFormState('SUCCESS', 'Komentarz został usunięty')
+}
+
+/**
+ * Handles user login with validation
+ * Currently using mock authentication, but follows the same pattern as other actions
+ */
+export async function loginAction(formState: FormState, formData: FormData) {
+  const username = formData.get('username') as string
+  const password = formData.get('password') as string
+
+  const validationResult = LoginSchema.safeParse({ username, password })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { username },
+    }
+  }
+
+  try {
+    // Mock authentication - check against environment variables
+    const isValid = (username === process.env.NEXT_PUBLIC_TEACHER_USERNAME && 
+                   password === process.env.NEXT_PUBLIC_TEACHER_PASSWORD) || 
+                   (username === process.env.NEXT_PUBLIC_STUDENT_USERNAME && 
+                   password === process.env.NEXT_PUBLIC_STUDENT_PASSWORD)
+
+    if (!isValid) {
+      return {
+        ...toFormState('ERROR', 'Invalid username or password'),
+        values: { username },
+      }
+    }
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { username },
+    }
+  }
+
+  return {
+    ...toFormState('SUCCESS', 'Login successful!'),
+    values: { username, password },
+  }
 }
