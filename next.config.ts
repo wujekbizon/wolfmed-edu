@@ -37,7 +37,6 @@ export default withSentryConfig(nextConfig, {
   project: 'wolfmed-edukacja',
   silent: !process.env.CI,
   widenClientFileUpload: true,
-  hideSourceMaps: true,
   sourcemaps: { disable: true },
   disableLogger: true,
   automaticVercelMonitors: true,

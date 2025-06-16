@@ -1,4 +1,4 @@
-import { Pool } from '@neondatabase/serverless'
+import { Pool, Client} from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-serverless'
 import * as schema from './schema'
 
@@ -14,7 +14,7 @@ const pool = new Pool({
   maxUses: 7500, // Maximum number of times a connection can be used before being destroyed
 })
 
-pool.on('error', (err, client) => {
+pool.on('error', (err: Error, client: Client) => {
   console.error('Unexpected error on idle client', err)
 })
 

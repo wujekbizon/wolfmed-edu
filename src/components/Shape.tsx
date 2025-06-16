@@ -25,7 +25,7 @@ export function Shape({ width, height, left, top, duration, index }: ShapeProps)
         left,
         top,
       }}
-      animate={floatingAnimation}
+      animate={floatingAnimation as any}
       transition={{
         delay: index * 0.2,
         duration,

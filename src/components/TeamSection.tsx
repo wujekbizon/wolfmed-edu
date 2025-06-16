@@ -9,7 +9,7 @@ import { teamMembers } from '@/constants/teamMembers'
 export default function TeamSection() {
   return (
     <motion.div
-      variants={fadeInUp}
+      variants={fadeInUp as any}
       // @ts-ignore
       className="lg:col-span-5 bg-zinc-800/30 border border-zinc-700/50 rounded-2xl p-6"
     >
@@ -18,7 +18,7 @@ export default function TeamSection() {
         {teamMembers.map((member) => (
           <motion.div
             key={member.name}
-            variants={fadeInUp}
+            variants={fadeInUp as any}
             // @ts-ignore
             className="flex items-center flex-col xs:flex-row gap-4 p-4 rounded-xl bg-zinc-900/30 border border-zinc-700/50"
           >
