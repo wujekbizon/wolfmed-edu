@@ -23,22 +23,22 @@ export default function About() {
           {/* Header Section */}
           <div className="text-center mb-8">
             <motion.span
-              variants={fadeInUp}
               // @ts-ignore
+              variants={fadeInUp}
               className="mb-3 sm:mb-4 inline-block rounded-full bg-zinc-800 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white"
             >
               O Nas
             </motion.span>
             <motion.h2
-              variants={fadeInUp}
               // @ts-ignore
+              variants={fadeInUp}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl py-2 font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-red-400"
             >
               Odkryj <span className="text-red-400">Wolfmed</span>
             </motion.h2>
             <motion.p
-              variants={fadeInUp}
               // @ts-ignore
+              variants={fadeInUp}
               className="mt-4 text-lg text-zinc-300 max-w-2xl mx-auto"
             >
               Tworzymy przyszłość edukacji medycznej, łącząc doświadczenie z innowacją
