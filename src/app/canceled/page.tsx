@@ -4,7 +4,7 @@ export const dynamic = 'force-static'
 
 export default function CanceledPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh_-_70px)] bg-transparent p-6 sm:p-12">
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-70px)] bg-transparent p-6 sm:p-12">
       <div className="w-full max-w-md bg-zinc-50 p-8 rounded-3xl shadow-lg border border-zinc-200 transition-all duration-300 hover:shadow-xl">
         <div className="flex flex-col items-center gap-6 text-center">
           <div className="bg-white p-4 rounded-full w-20 h-20 flex items-center justify-center shadow-sm">

@@ -1,7 +1,7 @@
 export default function UserMottoSkeleton() {
   return (
     <div
-      className="w-full bg-gradient-to-br from-[#ff9898]/5 via-zinc-100/10 to-[#ffc5c5]/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl 
+      className="w-full bg-linear-to-br from-[#ff9898]/5 via-zinc-100/10 to-[#ffc5c5]/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl 
       border border-[#ff9898]/20 animate-pulse"
     >
       <div className="flex flex-col">

@@ -4,7 +4,7 @@ import { testCardContent } from '@/constants/testsCardContent'
 export default function TestsSelection() {
   return (
     <section
-      className="relative w-full bg-gradient-to-b from-[#e1b4b4] to-[#f8e3e3] py-12 sm:py-16 md:py-20"
+      className="relative w-full bg-linear-to-b from-[#e1b4b4] to-[#f8e3e3] py-12 sm:py-16 md:py-20"
       id="testy"
     >
       <div className="container relative mx-auto px-3 sm:px-4">

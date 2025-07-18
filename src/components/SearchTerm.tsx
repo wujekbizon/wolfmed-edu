@@ -35,7 +35,7 @@ export default function SearchTerm({
       </button>
 
       {!isExpanded && title && (
-        <h3 className="absolute left-[calc(50%_-_100px)] right-[calc(50%_-_120px)] top-[calc(50%_-_12px)] bottom-[calc(50%_-_12px)] text-base sm:text-xl font-semibold text-zinc-800 text-center">
+        <h3 className="absolute left-[calc(50%-100px)] right-[calc(50%-120px)] top-[calc(50%-12px)] bottom-[calc(50%-12px)] text-base sm:text-xl font-semibold text-zinc-800 text-center">
           {title}
         </h3>
       )}

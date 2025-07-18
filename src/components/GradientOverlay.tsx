@@ -3,12 +3,12 @@ export default function GradientOverlay() {
     <>
       {/* Base gradient layer with combined position and scale animation */}
       <div className="absolute inset-0 opacity-0 animate-fadeInUp">
-        <div className="absolute inset-0 animate-gradientPosition bg-gradient-to-r from-[#ff5b5b]/20 via-purple-500/10 to-[#ff5b5b]/20 bg-[length:200%_200%]" />
+        <div className="absolute inset-0 animate-gradientPosition bg-linear-to-r from-[#ff5b5b]/20 via-purple-500/10 to-[#ff5b5b]/20 bg-size-[200%_200%]" />
       </div>
 
       {/* Rotating gradient overlay with opacity transitions */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 animate-gradientRotate bg-gradient-to-r from-[#ff5b5b]/15 via-[#3b82f6]/10 to-[#ff5b5b]/15" />
+        <div className="absolute inset-0 animate-gradientRotate bg-linear-to-r from-[#ff5b5b]/15 via-[#3b82f6]/10 to-[#ff5b5b]/15" />
       </div>
 
       {/* Primary radial gradient with pulse */}

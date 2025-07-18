@@ -21,7 +21,7 @@ export default function CompletedTestCard({ completedTest }: { completedTest: Co
       <p className="text-center text-sm text-zinc-900 sm:text-base md:text-lg">
         Odpowiedziałeś poprawnie na {correctAnswersCount} {getQuestionWord(correctAnswersCount)}
       </p>
-      <div className="flex h-32 w-32 flex-col items-center justify-center gap-3 rounded-full border border-red-200/60 bg-gradient-to-r from-zinc-600 to-zinc-950 shadow-inner shadow-slate-950 sm:h-48 sm:w-48">
+      <div className="flex h-32 w-32 flex-col items-center justify-center gap-3 rounded-full border border-red-200/60 bg-linear-to-r from-zinc-600 to-zinc-950 shadow-inner shadow-slate-950 sm:h-48 sm:w-48">
         <p className="text-center text-sm text-zinc-100 sm:text-lg">Wynik: </p>
         <p className="text-center text-base text-zinc-300 sm:text-2xl">
           <span className="text-2xl font-bold text-[#ff5b5b] sm:text-4xl">{score}</span>{' '}

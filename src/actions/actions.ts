@@ -83,14 +83,14 @@ export async function submitTestAction(formState: FormState, formData: FormData)
         }
       })
       return {
-        ...toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź'),
+        ...toFormState('ERROR', validationResult.error.message ?? 'Wybierz jedną odpowiedź'),
         values: formValues,
       }
     }
 
     // Calculate score and prepare completed test data
-    const { correct } = countTestScore(validationResult.data)
-    const testResult = parseAnswerRecord(validationResult.data)
+    const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
+    const testResult = parseAnswerRecord(validationResult?.data as QuestionAnswer[])
     const completedTest = { userId, score: correct, testResult }
 
     // Execute all database operations in one transaction

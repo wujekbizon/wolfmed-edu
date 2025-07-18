@@ -14,7 +14,7 @@ export const MedicalIllustration = () => {
       {/* Main circle background */}
       <motion.div
         // @ts-ignore
-        className="absolute inset-[5%] md:inset-0 rounded-full bg-gradient-to-tr from-[#ff5b5b]/20 to-purple-500/10"
+        className="absolute inset-[5%] md:inset-0 rounded-full bg-linear-to-tr from-[#ff5b5b]/20 to-purple-500/10"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,

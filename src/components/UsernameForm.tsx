@@ -48,7 +48,7 @@ export default function UsernameForm() {
         label="Aktualizuj nazwę"
         loading="Aktualizowanie..."
         // @ts-ignore
-        className="w-full mt-1 sm:mt-2 bg-gradient-to-r from-[#ff9898] to-[#ff8989] text-white py-2 sm:py-2.5 rounded-lg text-sm font-medium shadow-sm hover:shadow-mdtransition-all duration-300 hover:from-[#ff8989] hover:to-[#ff9898] disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full mt-1 sm:mt-2 bg-linear-to-r from-[#ff9898] to-[#ff8989] text-white py-2 sm:py-2.5 rounded-lg text-sm font-medium shadow-sm hover:shadow-mdtransition-all duration-300 hover:from-[#ff8989] hover:to-[#ff9898] disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {noScriptFallback}
     </form>

@@ -8,7 +8,7 @@ export const Success = () => {
   const { width, height } = useWindowDimensions()
 
   return (
-    <section className="min-h-[calc(100vh_-_70px)] bg-transparent p-6 flex flex-col justify-center items-center sm:p-12">
+    <section className="min-h-[calc(100vh-70px)] bg-transparent p-6 flex flex-col justify-center items-center sm:p-12">
       <Confetti width={width} height={height} />
       <div className="w-full max-w-2xl bg-zinc-50 rounded-3xl shadow-lg border border-zinc-200 overflow-hidden transition-all duration-300 hover:shadow-xl">
         <div className="p-8 sm:p-12">

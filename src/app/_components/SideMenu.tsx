@@ -11,7 +11,7 @@ export default function SideMenu() {
 
   return (
     <aside
-      className={`fixed z-50 overflow-y-scroll h-screen left-0 top-0 w-[calc(100vw)] bg-gradient-to-b from-zinc-900/95 to-zinc-950/95 
+      className={`fixed z-50 overflow-y-scroll h-screen left-0 top-0 w-[calc(100vw)] bg-linear-to-b from-zinc-900/95 to-zinc-950/95 
         backdrop-blur-sm border-r border-red-300/20 shadow-xl shadow-zinc-950/20 flex lg:hidden flex-col 
         transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-[0%]' : 'translate-x-[140%]'}`}
     >
@@ -32,7 +32,7 @@ export default function SideMenu() {
                 className={`group w-full p-4 flex items-center gap-4 rounded-xl border transition-all duration-200
                   ${
                     pathname === link.linkUrl
-                      ? 'bg-gradient-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
+                      ? 'bg-linear-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
                       : 'bg-[#ffc5c5] border-red-200/40 hover:bg-[#f58a8a] hover:shadow-md'
                   }`}
               >
@@ -57,7 +57,7 @@ export default function SideMenu() {
                 className={`group flex flex-col items-center justify-center p-4 rounded-xl border
                   transition-all duration-200 ${
                     pathname === link.url
-                      ? 'bg-gradient-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
+                      ? 'bg-linear-to-r from-[#f58a8a] to-[#ffc5c5] border-red-200/60 shadow-lg'
                       : 'bg-[#ffc5c5] border-red-200/40 hover:bg-[#f58a8a] hover:shadow-md'
                   }`}
               >

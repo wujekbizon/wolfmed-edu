@@ -12,7 +12,7 @@ export default async function SupporterStatus() {
   if (isSupporter) {
     return (
       <div
-        className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#ff9898]/20 to-rose-200/20 
+        className="flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-[#ff9898]/20 to-rose-200/20 
         border border-[#ff9898]/30 shadow-sm"
       >
         <svg
@@ -33,7 +33,7 @@ export default async function SupporterStatus() {
 
   return (
     <div
-      className="bg-gradient-to-r from-[#ff9898]/10 to-rose-100/10 backdrop-blur-sm 
+      className="bg-linear-to-r from-[#ff9898]/10 to-rose-100/10 backdrop-blur-sm 
       border border-[#ff9898]/20 px-4 py-3 rounded-lg shadow-sm"
       role="alert"
     >

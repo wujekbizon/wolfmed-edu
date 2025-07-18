@@ -6,7 +6,7 @@ export default function RegisterNow() {
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 ">
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-zinc-400/20">
           {/* Header Section */}
-          <div className="text-center px-6 py-8 sm:py-12 bg-gradient-to-br from-rose-50 to-rose-300 ">
+          <div className="text-center px-6 py-8 sm:py-12 bg-linear-to-br from-rose-50 to-rose-300 ">
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-800 mb-4">
               Dołącz do społeczności opiekunów medycznych
             </h2>
@@ -16,7 +16,7 @@ export default function RegisterNow() {
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 sm:p-8 bg-gradient-to-b from-white to-rose-50">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 sm:p-8 bg-linear-to-b from-white to-rose-50">
             <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-sm border border-rose-100 hover:shadow-md transition-shadow">
               <div className="h-12 w-12 bg-rose-50 rounded-xl flex items-center justify-center mb-4">
                 <svg
@@ -91,7 +91,7 @@ export default function RegisterNow() {
           <div className="px-6 py-8 sm:py-10 bg-white text-center">
             <Link
               href="/sign-up"
-              className="inline-block px-8 py-4 bg-gradient-to-r from-rose-400 to-rose-500 text-white font-medium text-lg rounded-full hover:from-rose-500 hover:to-rose-600 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-rose-300/50 shadow-lg shadow-rose-200"
+              className="inline-block px-8 py-4 bg-linear-to-r from-rose-400 to-rose-500 text-white font-medium text-lg rounded-full hover:from-rose-500 hover:to-rose-600 transition-all duration-300 transform hover:scale-105 focus:ring-4 focus:ring-rose-300/50 shadow-lg shadow-rose-200"
             >
               Dołącz do nas za darmo
             </Link>

@@ -22,7 +22,7 @@ export default function Navbar() {
       <header
         className={`${
           pathname === '/' ? 'bg-white' : 'bg-zinc-500'
-        } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animate-slideInDown opacity-0 [--slidein-delay:100ms] transition-all duration-300
+        } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animation-slideInDown
           ${
             (pathname === '/' || pathname === '/forum') && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
@@ -44,7 +44,7 @@ export default function Navbar() {
                 className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
                   ${
                     pathname === link.linkUrl
-                      ? 'bg-gradient-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
+                      ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
                       : 'hover:bg-red-100/50'
                   }`}
               >
@@ -61,7 +61,7 @@ export default function Navbar() {
                   {link.label}
                 </span>
                 {pathname === link.linkUrl && (
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
+                  <span className="absolute inset-0 rounded-full bg-linear-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
                 )}
               </Link>
             ))}

@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Membership() {
   return (
-    <section className="bg-gradient-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
+    <section className="bg-linear-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
       <div className="container mx-auto px-4">
         <SignedIn>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -34,7 +34,7 @@ export default function Membership() {
                 </div>
               </div>
               {/* Community Spotlight */}
-              <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
+              <div className="bg-linear-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
                 <h3 className="text-xl font-bold mb-3">🎉 Zapraszamy na forum 🎉</h3>
                 <p className="text-sm opacity-90 mb-4">
                   Właśnie uruchomiliśmy forum, gdzie możesz dzielić się swoją wiedzą i doświadczeniem z innymi
@@ -48,7 +48,7 @@ export default function Membership() {
                 </Link>
               </div>
               {/* Video Procedures Announcement */}
-              <div className="bg-gradient-to-r from-[#ff5b5b] to-purple-500 border border-zinc-400/20 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
+              <div className="bg-linear-to-r from-[#ff5b5b] to-purple-500 border border-zinc-400/20 rounded-2xl shadow-xl p-6 text-white relative overflow-hidden">
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-3">Nowość 2025!</h3>
                   <p className="text-base mb-2 font-medium">Procedury Medyczne na Video</p>
@@ -61,7 +61,7 @@ export default function Membership() {
                     <span className="bg-white/20 px-3 py-1 rounded-full text-xs xs:text-sm">20+ procedur</span>
                   </div>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#ff5b5b]/10 via-purple-500/5 to-transparent opacity-50" />
+                <div className="absolute inset-0 bg-linear-to-r from-[#ff5b5b]/10 via-purple-500/5 to-transparent opacity-50" />
               </div>
 
               {/* Upcoming Features */}

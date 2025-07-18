@@ -7,7 +7,12 @@ export const DeleteTestIdSchema = z.object({
 
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
-    .array(z.record(z.string().min(1, 'Odpowiedz na wszystkie pytania')))
+    .array(
+      z.record(
+        z.string().min(1, 'Odpowiedz na wszystkie pytania'),
+        z.string()
+      )
+    )
     .refine((data) => allowedLengths.includes(data.length), {
       message: 'Odpowiedz na wszystkie pytania.',
     })
