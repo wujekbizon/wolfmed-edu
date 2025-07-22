@@ -3,9 +3,9 @@ import { generateShape } from '@/helpers/shapeGenerators'
 import type { FloatingShape, ShapeConfig } from '@/types/shapes'
 
 const SHAPE_COLORS = [
-  'bg-lime-400/20',     // Bad bacteria (greenish, slightly toxic look)
-  'bg-rose-500/20',     // Virus (reddish/purple, danger vibe)
-  'bg-cyan-300/20',     // Healthy human cell (soothing cyan/blue)
+  'bg-[#82a61e]/10',     // Bad bacteria (greenish, slightly toxic look)
+  'bg-[#a66ca6]/10',     // Virus (reddish/purple, danger vibe)
+  'bg-[#c6dff7]/40',     // Healthy human cell (soothing cyan/blue)
 ] as const
 
 export const useFloatingShapes = ({

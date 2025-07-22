@@ -7,6 +7,8 @@ import EarlySupporters from '@/components/EarlySupporters'
 import GradientOverlay from '@/components/GradientOverlay'
 import TriangleDivider from '@/components/TriangleDivider'
 import About from './_components/About'
+import { SignedIn, SignedOut } from '@clerk/nextjs'
+import EducationPathsSection from './_components/EducationalPaths'
 
 export default function HomePage() {
   return (
@@ -20,13 +22,18 @@ export default function HomePage() {
         <GradientOverlay />
         <TriangleDivider
           direction="right"
-          className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-zinc-50"
+          className="absolute bottom-0  border-t-transparent border-r-transparent border-b-[10vw] border-b-slate-900"
         />
       </div>
-      <Membership />
+      <SignedIn>
+        <Membership />
+      </SignedIn>
+      <SignedOut>
+       <EducationPathsSection /> 
+      </SignedOut>
       <TriangleDivider
         direction="right"
-        className="border-t-transparent border-r-purple-100 border-b-[10vw] border-b-[#e1b4b4]"
+        className="border-t-transparent border-r-slate-900 border-b-[10vw] border-b-[#e1b4b4]"
       />
       <TestsSelection />
       <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#f8e3e3] border-l-[#0d0b0b]" />

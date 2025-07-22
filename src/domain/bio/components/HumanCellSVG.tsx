@@ -92,31 +92,31 @@ export function HumanCellSVG({
         cx={cx - actualRadius * 0.3}
         cy={cy - actualRadius * 0.2}
         r={organelleRadius}
-        fill="#ff9e80"
+        fill="rgba(255, 158, 128, 0.5)"
       />
       <circle
         cx={cx + actualRadius * 0.4}
         cy={cy - actualRadius * 0.25}
         r={organelleRadius * 0.8}
-        fill="#ffcd80"
+        fill="rgba(255, 204, 128, 0.5)"
       />
       <circle
         cx={cx - actualRadius * 0.2}
         cy={cy + actualRadius * 0.3}
         r={organelleRadius * 1.2}
-        fill="#a1e3a1"
+        fill="rgba(161, 227, 161, 0.5)"
       />
       <circle
         cx={cx + actualRadius * 0.35}
         cy={cy + actualRadius * 0.2}
         r={organelleRadius}
-        fill="#d5a1e3"
+        fill="rgba(213, 161, 227, 0.5)"
       />
       <circle
         cx={cx - actualRadius * 0.4}
         cy={cy + actualRadius * 0.1}
         r={organelleRadius * 0.8}
-        fill="#f4a1d6"
+        fill="rgba(244, 161, 214, 0.517)"
       />
 
       {/* Shine */}
