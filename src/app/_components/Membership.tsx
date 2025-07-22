@@ -81,9 +81,7 @@ export default function Membership() {
             </aside>
           </div>
         </SignedIn>
-        <SignedOut>
-          <RegisterNow />
-        </SignedOut>
+
       </div>
     </section>
   )

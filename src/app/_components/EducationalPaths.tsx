@@ -2,7 +2,7 @@
 
 
 import EducationalPathCard from "@/components/EducationalPathCard";
-import { CAREGIVER, NURSE} from "@/constants/educationalPathCards";
+import { CAREGIVER, INFO, NURSE} from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
     return (
@@ -24,6 +24,7 @@ export default function EducationPathsSection() {
       <div className="flex flex-col py-4 sm:py-16 bg-slate-950 rounded-3xl">
           <EducationalPathCard {...CAREGIVER} />
           <EducationalPathCard {...NURSE} className="flex flex:col lg:flex-row-reverse gap-20" />
+          <EducationalPathCard {...INFO} vertical />
       </div>
       </section>
     );
