@@ -2,14 +2,19 @@ import { useState, useEffect, useCallback } from 'react'
 import { generateShape } from '@/helpers/shapeGenerators'
 import type { FloatingShape, ShapeConfig } from '@/types/shapes'
 
-const SHAPE_COLORS = ['bg-[#ff5b5b]/15', 'bg-purple-500/10', 'bg-blue-500/10'] as const
+const SHAPE_COLORS = [
+  'bg-lime-400/20',     // Bad bacteria (greenish, slightly toxic look)
+  'bg-rose-500/20',     // Virus (reddish/purple, danger vibe)
+  'bg-cyan-300/20',     // Healthy human cell (soothing cyan/blue)
+] as const
 
 export const useFloatingShapes = ({
   count = 5,
-  minSize = 50,
-  maxSize = 150,
-  minDuration = 2,
-  maxDuration = 4,
+  minSize = 25,
+  maxSize = 100,
+  minDuration = 10,
+  maxDuration = 20,
+
 }: ShapeConfig): FloatingShape[] => {
   const [shapes, setShapes] = useState<FloatingShape[]>([])
 

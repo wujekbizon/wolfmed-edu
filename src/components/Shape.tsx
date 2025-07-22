@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { floatingAnimation } from '@/animations/motion'
+import { driftingAnimation, floatingAnimation, longDriftAnimation } from '@/animations/motion'
 
 interface ShapeProps {
   width: number
@@ -10,28 +10,29 @@ interface ShapeProps {
   top: string
   duration: number
   index: number
+  color: string
 }
 
-export function Shape({ width, height, left, top, duration, index }: ShapeProps) {
+export function Shape({ width, height, left, top, duration, index, color }: ShapeProps) {
   return (
     <motion.div
       // @ts-ignore
-      className={`absolute rounded-full backdrop-blur-sm ${
-        index % 3 === 0 ? 'bg-[#ff5b5b]/15' : index % 3 === 1 ? 'bg-purple-500/10' : 'bg-blue-500/10'
-      }`}
+      className={`absolute rounded-full backdrop-blur-sm border border-black/10 ${color}`}
       style={{
         width,
         height,
         left,
         top,
+        boxShadow: '0 0 15px rgba(0,0,0,0.05)'
       }}
-      animate={floatingAnimation as any}
-      transition={{
-        delay: index * 0.2,
-        duration,
-        repeat: Infinity,
-        repeatType: 'reverse',
-      }}
+     
+      animate={longDriftAnimation(
+        200,   // max drift horizontally
+        200,   // max drift vertically
+        15,    // subtle rotation
+        0.03, // small breathing
+        duration // <- will be around 10–20s per shape
+      ) as any}
     />
   )
 }

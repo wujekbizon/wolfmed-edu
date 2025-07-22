@@ -24,23 +24,23 @@
   --ring: 240 10% 3.9%;
   --slidein-delay: 0;
   --radius: 0.5rem;
-  --animation-slideInDown: slideInDown 1s ease var(--slidein-delay, 0) forwards;
-  --animation-fadeInUp: fadeInUp 0.5s ease-out forwards;
-  --animation-scaleIn: scaleIn 0.5s ease-out forwards;
-  --animation-gradient: gradient 8s ease-in-out infinite alternate;
-  --animation-gradientPosition: gradientPosition 5s ease-in-out infinite;
-  --animation-gradientScale: gradientScale 8s ease-in-out infinite;
-  --animation-gradientRotate: gradientRotate 6s ease infinite;
-  --animation-radialPulse: radialPulse 8s ease-in-out infinite;
+  --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0) forwards;
+  --animate-fadeInUp: fadeInUp 0.5s ease-out forwards;
+  --animate-scaleIn: scaleIn 0.5s ease-out forwards;
+  --animate-gradient: gradient 8s ease-in-out infinite alternate;
+  --animate-gradientPosition: gradientPosition 30s ease-in-out infinite;
+  --animate-gradientScale: gradientScale 60s ease-in-out infinite;
+  --animate-gradientRotate: gradientRotate 40s ease infinite;
+  --animate-radialPulse: radialPulse 60s ease-in-out infinite;
 
   @keyframes slideInDown {
     from {
       opacity: 0;
-      transform: translateY(-10px);
+      transform: translateY(-100px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(100px);
     }
   }
 
@@ -58,7 +58,7 @@
   @keyframes scaleIn {
     from {
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.35);
     }
     to {
       opacity: 1;

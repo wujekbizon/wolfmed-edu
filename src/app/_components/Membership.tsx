@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default function Membership() {
   return (
-    <section className="bg-linear-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8">
+    <section className="bg-linear-to-b from-zinc-50 to-purple-100 min-h-screen w-full py-8 flex items-center justify-center">
       <div className="container mx-auto px-4">
         <SignedIn>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">

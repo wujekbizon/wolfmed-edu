@@ -63,7 +63,7 @@ export default function RootLayout({
         </head>
         <body className={`${openSans.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <GoogleAnalyticsNoscript />
-          <main className="shadow-lg shadow-zinc-400 border-[3px] rounded-3xl lg:rounded-[50px] border-white">
+          <main>
             <Providers>
               <Navbar />
               <ToastProvider>{children}</ToastProvider>

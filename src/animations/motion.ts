@@ -20,17 +20,140 @@ export const staggerContainer = {
   },
 }
 
-export const floatingAnimation = {
-  y: [-10, 10],
+export const floatingAnimation = (
+  floatDistance: number = 10,    // how far it moves up/down
+  rotateAmount: number = 2,      // how much it rotates
+  scaleAmount: number = 0.05     // how much it "breathes"
+) => ({
+  y: [-floatDistance, floatDistance],
+  rotate: [0, rotateAmount, -rotateAmount, rotateAmount / 2, -rotateAmount / 2, 0],
+  scale: [1, 1 + scaleAmount, 1 - scaleAmount, 1 + scaleAmount / 2, 1],
   transition: {
     y: {
-      duration: 2,
+      duration: 2 + Math.random(), // small random variation
       repeat: Infinity,
       repeatType: 'reverse',
       ease: 'easeInOut',
     },
+    rotate: {
+      duration: 3 + Math.random() * 2,
+      repeat: Infinity,
+      repeatType: 'mirror',
+      ease: 'easeInOut',
+    },
+    scale: {
+      duration: 2.5 + Math.random(),
+      repeat: Infinity,
+      repeatType: 'mirror',
+      ease: 'easeInOut',
+    },
   },
+})
+
+export const driftingAnimation = (
+  driftX: number = 15,   // max horizontal drift
+  driftY: number = 15,   // max vertical drift
+  rotateAmount: number = 4, // how much it rotates
+  scaleAmount: number = 0.05 // pulsing
+) => {
+  // create a more organic "wandering" pattern
+  const xKeyframes = [
+    0,
+    Math.random() * driftX,
+    -Math.random() * driftX,
+    Math.random() * (driftX / 2),
+    0,
+  ]
+  const yKeyframes = [
+    0,
+    -Math.random() * driftY,
+    Math.random() * driftY,
+    -Math.random() * (driftY / 2),
+    0,
+  ]
+
+  return {
+    x: xKeyframes,
+    y: yKeyframes,
+    rotate: [0, rotateAmount, -rotateAmount, rotateAmount / 2, -rotateAmount / 2, 0],
+    scale: [1, 1 + scaleAmount, 1 - scaleAmount, 1 + scaleAmount / 2, 1],
+    transition: {
+      x: {
+        duration: 8 + Math.random() * 4, // slow, long drift
+        repeat: Infinity,
+        repeatType: 'mirror',
+        ease: 'easeInOut',
+      },
+      y: {
+        duration: 9 + Math.random() * 4,
+        repeat: Infinity,
+        repeatType: 'mirror',
+        ease: 'easeInOut',
+      },
+      rotate: {
+        duration: 6 + Math.random() * 3,
+        repeat: Infinity,
+        repeatType: 'mirror',
+        ease: 'easeInOut',
+      },
+      scale: {
+        duration: 5 + Math.random() * 2,
+        repeat: Infinity,
+        repeatType: 'mirror',
+        ease: 'easeInOut',
+      },
+    },
+  }
 }
+
+export const longDriftAnimation = (
+  driftX: number = 40,   // max horizontal drift
+  driftY: number = 40,   // max vertical drift
+  rotateAmount: number = 5,
+  scaleAmount: number = 0.05,
+  forwardDuration: number = 10 // seconds for forward drift
+) => {
+  // pick a random direction offset for THIS shape
+  const targetX = (Math.random() * 2 - 1) * driftX; // random -driftX..driftX
+  const targetY = (Math.random() * 2 - 1) * driftY;
+
+  return {
+    // drift forward, then back
+    x: [0, targetX, 0],
+    y: [0, targetY, 0],
+
+    // slow rotation (just adds a bit of life)
+    rotate: [0, rotateAmount, -rotateAmount, 0],
+
+    // very subtle breathing
+    scale: [1, 1 + scaleAmount, 1 - scaleAmount, 1],
+
+    transition: {
+      x: {
+        duration: forwardDuration * 2, // forward 10s + back 10s
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+      y: {
+        duration: forwardDuration * 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+      rotate: {
+        duration: forwardDuration * 1.5,
+        repeat: Infinity,
+        repeatType: "mirror",
+        ease: "easeInOut",
+      },
+      scale: {
+        duration: forwardDuration,
+        repeat: Infinity,
+        repeatType: "mirror",
+        ease: "easeInOut",
+      },
+    },
+  };
+};
 
 export const gradientAnimation = {
   opacity: [0, 1],
