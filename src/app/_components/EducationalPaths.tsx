@@ -21,7 +21,7 @@ export default function EducationPathsSection() {
           </p>
         </div>
       </div>
-      <div className="flex flex-col py-4 sm:py-16 bg-slate-950 rounded-3xl">
+      <div className="flex flex-col p-4 sm:p-8 xl:p-16 bg-slate-950 rounded-3xl">
           <EducationalPathCard {...CAREGIVER} />
           <EducationalPathCard {...NURSE} className="flex flex:col lg:flex-row-reverse gap-20" />
           <EducationalPathCard {...INFO} vertical />

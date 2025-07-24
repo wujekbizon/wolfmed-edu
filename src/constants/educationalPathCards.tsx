@@ -26,18 +26,18 @@ const CAREGIVER: CardProps = {
   description:
     "Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny. Korzystaj z setek testów, procedur krok po kroku oraz wsparcia aktywnej społeczności. Nasza ścieżka edukacyjna została stworzona z myślą zarówno o osobach, które dopiero rozpoczynają swoją karierę i przygotowują się do egzaminu zawodowego, jak i o tych, którzy już pracują w zawodzie i chcą pogłębić swoją wiedzę, utrwalić procedury lub odświeżyć materiał przed kolejnym etapem kariery.",
   imgSrc: img1,
-  text: "Dołącz do naszej społeczności już dziś.",
+  text: "Sprawdź kierunek opiekun medyczny",
   url: "/",
   icon: "caregiver",
 };
 
 const NURSE: CardProps = {
-  title: "Pielęgniarka / Pielęgniarz",
+  title: "Pielęgniarstwo",
   titleBtn: "Design without limits",
   description:
     "Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.",
   imgSrc: img2,
-  text: "Zarejestruj się już dzis.",
+  text: "Sprawdź kierunek pielęgniarstwo",
   url: "/",
   icon: "nurse",
 };
@@ -67,8 +67,8 @@ const INFO: CardProps = {
     },
   ],
   imgSrc: img3,
-  text: "know more about design",
-  url: "/",
+  text: "Dołącz już dziś",
+  url: "/sign-up",
   icon: "info",
 };
 

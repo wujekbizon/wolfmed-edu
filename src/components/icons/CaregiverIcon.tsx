@@ -11,9 +11,7 @@ const CaregiverIcon = ({
         height="56"
         viewBox="0 0 56 56" // Ensure viewBox matches the width and height
         fill="none"
-        stroke={primary}
-        strokeWidth="0.2"
-        className="flex justify-center items-center w-full h-full"
+     
       >
         <g transform="translate(-8, -8)" >
           <defs>

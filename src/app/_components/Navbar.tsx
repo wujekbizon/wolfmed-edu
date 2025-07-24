@@ -20,9 +20,7 @@ export default function Navbar() {
     <>
       {isMenuOpen && <SideMenu />}
       <header
-        className={`${
-          pathname === '/' ? 'bg-white' : 'bg-zinc-500'
-        } h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
+        className={`bg-white h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
             (pathname === '/' || pathname === '/forum') && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
@@ -34,7 +32,7 @@ export default function Navbar() {
         <SignedIn>
           <MenuIcon onClick={toggleMenu} />
         </SignedIn>
-        <Logo className={pathname === '/' ? 'bg-white' : 'bg-[#ffb1b1]'} />
+        <Logo className="bg-white" />
         <SignedIn>
           <nav className="bg-white/90 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full border border-red-200/40 shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => (
