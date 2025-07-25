@@ -132,6 +132,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.4
         version: 0.31.4
+      embla-carousel:
+        specifier: ^8.6.0
+        version: 8.6.0
       eslint:
         specifier: ^9.31.0
         version: 9.31.0(jiti@2.4.2)

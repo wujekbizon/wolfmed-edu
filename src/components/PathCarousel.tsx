@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import useEmblaCarousel from "embla-carousel-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image, { StaticImageData } from "next/image";
+import { useCarousel } from "@/hooks/useCarousel";
 
 type Path = {
   slug: string;
@@ -19,47 +18,9 @@ interface CarouselProps {
 }
 
 export default function PathCarousel({ paths }: CarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true, 
-    align: "center",
-    skipSnaps: false,
-    duration: 20,
-    startIndex: 0,
-    containScroll: "trimSnaps"
+  const { emblaRef, selected, isPlaying, scrollTo, setIsPlaying } = useCarousel({
+    autoplayDelay: 5000
   });
-  const [selected, setSelected] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-
-  const scrollTo = (index: number) => {
-    emblaApi?.scrollTo(index);
-    setSelected(index);
-  };
-
-  const scrollNext = useCallback(() => {
-    if (!emblaApi) return;
-    emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const onSelect = () => setSelected(emblaApi?.selectedScrollSnap() || 0);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on("select", onSelect);
-  }, [emblaApi]);
-
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    if (isPlaying) {
-      intervalId = setInterval(() => {
-        scrollNext();
-      }, 5000);
-    }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [isPlaying, scrollNext]);
 
   return (
     <div className="relative w-full">
@@ -133,8 +94,8 @@ export default function PathCarousel({ paths }: CarouselProps) {
                                 w-4 h-4 md:w-4 md:h-4
                                 ${
                                   selected === i 
-                                    ? "bg-white border border-slate-900/80" 
-                                    : "border border-slate-800/80 hover:border-slate-900/80 hover:bg-white"
+                                    ? "bg-white border border-slate-900/80 " 
+                                    : "border border-slate-800/80 backdrop-blur-sm hover:border-slate-900/80 hover:bg-white"
                                 }
                                 rounded-full
                               `}

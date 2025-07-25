@@ -54,6 +54,7 @@
     "@types/react-dom": "19.1.6",
     "dotenv": "^17.2.0",
     "drizzle-kit": "^0.31.4",
+    "embla-carousel": "^8.6.0",
     "eslint": "^9.31.0",
     "eslint-config-next": "15.4.1",
     "pg": "^8.16.3",

@@ -28,7 +28,7 @@ export default function KierunkiPage() {
         <div className="relative w-full flex flex-col items-center justify-center px-4">
           <div className="max-w-3xl text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-              Kariera Medyczna
+             Kierunki Edukacyjne
             </h1>
             <p className="text-lg md:text-xl text-zinc-400 mb-16 leading-relaxed">
               Twoja ścieżka w świecie medycyny — znajdź program edukacyjny
