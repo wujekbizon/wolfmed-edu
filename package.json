@@ -30,6 +30,7 @@
     "@vercel/postgres": "^0.10.0",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
     "drizzle-orm": "^0.44.3",
+    "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.6",
     "lexical": "^0.33.1",
     "next": "15.4.1",

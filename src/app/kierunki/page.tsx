@@ -1,45 +1,44 @@
-import Link from "next/link";
+import PathCarousel from "@/components/PathCarousel";
+import img1 from "@/images/medical-guardian-wide.jpg";
+import img2 from "@/images/nurse-wide.jpg";
+import Footer from "../_components/Footer";
 
 const paths = [
   {
     slug: "opiekun-medyczny",
     title: "Opiekun Medyczny",
-    teaser:
-      "Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny...",
-    cta: "Dołącz do naszej społeczności",
+    teaser: "Zdobądź kompleksową wiedzę i praktyczne umiejętności....Zachodnie wyobrażenia o Japonii często opierają się na stereotypach – technologii, grzeczności, pracoholizmie czy anime. Ale co naprawdę kryje się za fasadą nowoczesności i tradycji? Odpowiedzi na to pytanie udziela dr n. hum. Dariusz P. Skowroński – psycholog, seksuolog kliniczny i ",
+    image: img1,
+    cta: "Dołącz do społeczności",
   },
   {
     slug: "pielegniarstwo",
-    title: "Pielęgniarka / Pielęgniarz",
-    teaser:
-      "Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy...",
-    cta: "Zarejestruj się już dzis.",
-  },
+    title: "Pielęgniarstwo",
+    teaser: "Nowa ścieżka edukacyjna dla pielęgniarek...Zachodnie wyobrażenia o Japonii często opierają się na stereotypach – technologii, grzeczności, pracoholizmie czy anime. Ale co naprawdę kryje się za fasadą nowoczesności i tradycji? Odpowiedzi na to pytanie udziela dr n. hum. Dariusz P. Skowroński – psycholog, seksuolog kliniczny i ",
+    image: img2,
+    cta: "Zarejestruj się już dziś",
+  }
 ];
 
 export default function KierunkiPage() {
   return (
-    <section className="py-16 px-4 md:px-12">
-      <h1 className="text-4xl font-bold mb-6">Kariera Medyczna</h1>
-      <p className="text-lg mb-10">
-        Twoja ścieżka w świecie medycyny — znajdź program edukacyjny idealnie
-        dopasowany do Twoich potrzeb, tempa nauki i planów zawodowych.
-      </p>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        {paths.map(({ slug, title, teaser, cta }) => (
-          <div key={slug} className="bg-white p-6 rounded-xl shadow-md">
-            <h2 className="text-2xl font-semibold mb-3">{title}</h2>
-            <p className="text-gray-700 mb-4">{teaser}</p>
-            <Link
-              href={`/kierunki/${slug}`}
-              className="text-blue-600 font-medium hover:underline"
-            >
-              {cta} →
-            </Link>
+    <>
+      <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-900 to-zinc-900">
+        <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px]" />
+        <div className="relative w-full flex flex-col items-center justify-center px-4">
+          <div className="max-w-3xl text-center">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+              Kariera Medyczna
+            </h1>
+            <p className="text-lg md:text-xl text-zinc-400 mb-16 leading-relaxed">
+              Twoja ścieżka w świecie medycyny — znajdź program edukacyjny
+              <span className="block mt-2">idealnie dopasowany do Twoich potrzeb.</span>
+            </p>
           </div>
-        ))}
-      </div>
-    </section>
+        </div>
+        <PathCarousel paths={paths} />
+      </section>
+      <Footer />
+    </>
   );
 }
