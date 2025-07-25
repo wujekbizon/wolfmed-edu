@@ -7,14 +7,14 @@ const paths = [
   {
     slug: "opiekun-medyczny",
     title: "Opiekun Medyczny",
-    teaser: "Zdobądź kompleksową wiedzę i praktyczne umiejętności....Zachodnie wyobrażenia o Japonii często opierają się na stereotypach – technologii, grzeczności, pracoholizmie czy anime. Ale co naprawdę kryje się za fasadą nowoczesności i tradycji? Odpowiedzi na to pytanie udziela dr n. hum. Dariusz P. Skowroński – psycholog, seksuolog kliniczny i ",
+    teaser: "Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!",
     image: img1,
-    cta: "Dołącz do społeczności",
+    cta: "Sprawdź szczegóły",
   },
   {
     slug: "pielegniarstwo",
     title: "Pielęgniarstwo",
-    teaser: "Nowa ścieżka edukacyjna dla pielęgniarek...Zachodnie wyobrażenia o Japonii często opierają się na stereotypach – technologii, grzeczności, pracoholizmie czy anime. Ale co naprawdę kryje się za fasadą nowoczesności i tradycji? Odpowiedzi na to pytanie udziela dr n. hum. Dariusz P. Skowroński – psycholog, seksuolog kliniczny i ",
+    teaser: "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
     image: img2,
     cta: "Zarejestruj się już dziś",
   }

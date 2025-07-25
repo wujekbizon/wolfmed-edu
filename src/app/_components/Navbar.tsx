@@ -10,6 +10,7 @@ import AuthSection from '@/components/AuthSection'
 import GradientOverlay from '@/components/GradientOverlay'
 import { usePathname } from 'next/navigation'
 import { SignedIn } from '@clerk/nextjs'
+import { Tooltip } from '@/components/Tooltip'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -42,20 +43,21 @@ export default function Navbar() {
                 className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
                   ${
                     pathname === link.linkUrl
-                      ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
-                      : 'hover:bg-red-100/50'
+                    ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
+                    : 'hover:bg-red-100/50'
                   }`}
-              >
+                // title={link.title}
+                  >
                 <span
                   className={`transition-transform duration-200 ${
                     pathname === link.linkUrl ? 'scale-105' : 'group-hover:scale-105'
                   }`}
-                >
+                  >
                   {link.icon}
                 </span>
                 <span
                   className={`text-sm font-medium text-zinc-900 ${pathname === link.linkUrl ? 'font-semibold' : ''}`}
-                >
+                  >
                   {link.label}
                 </span>
                 {pathname === link.linkUrl && (

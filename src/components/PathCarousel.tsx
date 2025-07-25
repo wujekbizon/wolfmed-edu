@@ -19,7 +19,7 @@ interface CarouselProps {
 
 export default function PathCarousel({ paths }: CarouselProps) {
   const { emblaRef, selected, isPlaying, scrollTo, setIsPlaying } = useCarousel({
-    autoplayDelay: 5000
+    autoplayDelay: 4000
   });
 
   return (
@@ -34,25 +34,24 @@ export default function PathCarousel({ paths }: CarouselProps) {
               >
                 <div className="relative w-full lg:max-w-[80%] flex flex-col md:flex-row px-4 lg:px-8 mx-auto">
                   <motion.div
-                    className="relative bg-white/95 backdrop-blur-sm p-6 md:p-12 shadow-2xl w-full lg:w-[655px] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10"
+                    className="relative bg-white/95 backdrop-blur-sm p-8 md:p-16 px-8 md:px-16 lg:px-20 shadow-2xl w-full lg:w-[655px] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10"
                     key={`info-${p.slug}`}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: selected === idx ? 1 : 0, y: selected === idx ? 0 : 50 }}
                     transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
                   >
                     <div className="flex flex-col justify-center h-full">
-                      <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-slate-900">{p.title}</h2>
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold mb-4 md:mb-6 text-slate-900 leading-16">{p.title}</h1>
                       <p className="text-slate-600 font-medium text-base md:text-lg leading-relaxed mb-6 md:mb-8 line-clamp-3 md:line-clamp-none">{p.teaser}</p>
                       <Link 
                         href={`/kierunki/${p.slug}`}
-                        className="inline-block px-4 md:px-6 py-2 md:py-3 text-sm md:text-base bg-slate-900 text-white font-medium rounded-[15px] hover:bg-slate-800 transition-colors border border-slate-800"
+                        className="w-fit px-4 md:px-8 py-2 md:py-4 text-sm md:text-base bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors border border-slate-800"
                       >
                         {p.cta}
                       </Link>
                     </div>
 
                   </motion.div>
-                  
                   <motion.div
                     className="relative w-full"
                     initial={{ opacity: 0 }}
