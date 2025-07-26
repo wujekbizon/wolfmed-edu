@@ -1,12 +1,8 @@
 import { useInView } from "react-intersection-observer";
-
-import TitleButton from "./TitleButton";
 import Title from "./Title";
 import ExploreLink from "./ExploreLink";
 import { CardProps } from "@/constants/educationalPathCards";
 import Image from "next/image";
-import NurseIcon from "./icons/NurseIcon";
-import CaregiverIcon from "./icons/CaregiverIcon";
 import FeatureCard from "./FeatureCard";
 
 const EducationalPathCard = ({
@@ -30,11 +26,9 @@ const EducationalPathCard = ({
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } flex items-center flex-col w-full h-full p-4 xs:p-8 sm:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out ${
-            className || ""
-          }`}
+          } ${ className || ""} flex items-center flex-col w-full h-full p-4 xs:p-8 xl:p-4 2xl:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out`}
         >
-          <div className="w-full h-[65vh] flex flex-col items-center justify-center gap-4 md:gap-14 flex-1/2">
+          <div className="w-full h-[55vh] flex flex-col items-center justify-center gap-14 flex-1/2">
             <div className="w-full flex flex-col items-center gap-16">
               <div className="pt-8">
                 <Title title={title} className="max-w-full text-center" />
@@ -42,7 +36,7 @@ const EducationalPathCard = ({
                   {description}
                 </p>
               </div>
-              <div className="flex flex-row flex-wrap justify-center items-center gap-24">
+              <div className="flex flex-row flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-24">
                 {customDescriptions?.map((item) => (
                   <FeatureCard {...item} key={item.id} />
                 ))}
@@ -52,11 +46,11 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full flex-1/2">
+          <div className="w-full hidden md:flex items-center h-[55vh] flex-1/2">
             <Image
               src={imgSrc}
               alt={title}
-              className="w-full h-[700px] object-cover rounded-[25px] object-top"
+              className="w-full h-[600px] object-cover rounded-xl object-top"
             />
           </div>
         </div>
@@ -65,45 +59,24 @@ const EducationalPathCard = ({
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } flex items-center flex-col lg:flex-row w-full h-full p-4 lg:p-8 xl:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out ${
+          } flex items-center flex-col lg:flex-row w-full h-full p-4 xs:p-8 xl:p-4 2xl:p-14 gap-12 2xl:gap-24 transition-all duration-800 ease-in-out ${
             className || ""
           }`}
         >
-          <div className="w-full h-[65vh] flex flex-col items-center justify-center gap-4 md:gap-14 flex-1/2 ">
-            {/* <TitleButton title={titleBtn} /> */}
-            {/* <div className="border border-zinc-800 bg-slate-900 rounded-[15px] h-[90px] w-[90px] flex items-center justify-center">
-              {icon === "nurse" && (
-                <NurseIcon
-                  width={60}
-                  height={60}
-                  primary="#c6dff7"
-                  secondary="#ff8181"
-                />
-              )}
-              {icon === "caregiver" && (
-                <CaregiverIcon
-                  width={60}
-                  height={60}
-                  primary="#c6dff7"
-                  secondary="#ff8181"
-                />
-              )}
-            </div> */}
-            <div className="flex flex-col items-center gap-12">
+          <div className="w-full h-[55vh] flex flex-col items-center justify-center gap-4 md:gap-14 flex-1/2 ">
+            <div className="h-full w-full flex flex-col items-start justify-evenly gap-6 lg:gap-0">
               <Title title={title} />
-              <p className="max-w-2xl text-zinc-400 font-medium text-lg sm:text-xl leading-9 text-center mb-4 sm:mb-6">
+              <p className="max-w-2xl text-zinc-400 font-medium text-base sm:text-lg lg:text-xl leading-7 xl:leading-9 text-left">
                 {description}
               </p>
-            </div>
-            <div className="flex items-center justify-center">
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full h-[65vh] flex-1/2">
+          <div className="w-full flex items-center h-[55vh] flex-1/2 ">
             <Image
               src={imgSrc}
               alt={title}
-              className="w-full h-full object-cover rounded-[25px]"
+              className="w-full h-full object-cover rounded-xl"
             />
           </div>
 

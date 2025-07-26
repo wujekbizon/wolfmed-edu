@@ -23,12 +23,12 @@ export default function Navbar() {
       <header
         className={`bg-white h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
-            (pathname === '/' || pathname === '/forum') && isScrolled
+            pathname && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
               : ''
           }`}
       >
-        {pathname === '/' && <GradientOverlay />}
+        {(pathname === '/' || pathname.includes('/kierunki/')) && <GradientOverlay />}
 
         <SignedIn>
           <MenuIcon onClick={toggleMenu} />

@@ -27,12 +27,12 @@ export default function HomePage() {
       </div>
         {/* <Membership /> */}
        <EducationPathsSection /> 
-      <TriangleDivider
+      {/* <TriangleDivider
         direction="right"
         className="border-t-transparent border-r-slate-900 border-b-[10vw] border-b-[#e1b4b4]"
-      />
-      <TestsSelection />
-      <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#f8e3e3] border-l-[#0d0b0b]" />
+      /> */}
+      {/* <TestsSelection /> */}
+      <TriangleDivider direction="left" className="border-t-[10vw] border-t-slate-900 border-l-[#0d0b0b]" />
       <About />
       <TriangleDivider direction="left" className="border-t-[10vw] border-t-[#0d0b0b]  border-l-zinc-100" />
       <EarlySupporters />

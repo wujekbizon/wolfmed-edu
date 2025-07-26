@@ -22,29 +22,29 @@ export interface CardProps {
 
 const CAREGIVER: CardProps = {
   title: "Opiekun Medyczny",
-  titleBtn: "Design without limits",
+  titleBtn: "Najczęściej wybierany!",
   description:
     "Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny. Korzystaj z setek testów, procedur krok po kroku oraz wsparcia aktywnej społeczności. Nasza ścieżka edukacyjna została stworzona z myślą zarówno o osobach, które dopiero rozpoczynają swoją karierę i przygotowują się do egzaminu zawodowego, jak i o tych, którzy już pracują w zawodzie i chcą pogłębić swoją wiedzę, utrwalić procedury lub odświeżyć materiał przed kolejnym etapem kariery.",
   imgSrc: img1,
   text: "Sprawdź kierunek opiekun medyczny",
-  url: "/",
+  url: "/kierunki/opiekun-medyczny",
   icon: "caregiver",
 };
 
 const NURSE: CardProps = {
   title: "Pielęgniarstwo",
-  titleBtn: "Design without limits",
+  titleBtn: "W krótce dostępny!",
   description:
     "Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.",
   imgSrc: img2,
   text: "Sprawdź kierunek pielęgniarstwo",
-  url: "/",
+  url: "/kierunki/pielegniarstwo",
   icon: "nurse",
 };
 
 const INFO: CardProps = {
   title: "Dołącz do naszej społeczności",
-  titleBtn: "See what’s inside our studio",
+  titleBtn: "Nauka może być prostsza!",
   description: "Stawiamy na rozwój, nowoczesność i technologie.",
   customDescriptions: [
     {
