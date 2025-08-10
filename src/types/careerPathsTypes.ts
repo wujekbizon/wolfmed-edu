@@ -26,6 +26,13 @@ type PricingTable = {
   };
 };
 
+export type Testimonial = {
+  quote: string;
+  author: string;
+  role?: string;
+  avatarUrl?: string;
+};
+
 export type PathData = {
   title: string;
   description: string;
@@ -33,6 +40,6 @@ export type PathData = {
   modules?: string[];
   curriculum?: CurriculumBlock[];
   pricing?: PricingTable;
-  testimonials?: string[];
+  testimonials?: Testimonial[];
   features?: CardProps[];
 };

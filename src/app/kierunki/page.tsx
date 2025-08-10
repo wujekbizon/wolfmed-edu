@@ -22,7 +22,6 @@ const paths = [
 
 export default function KierunkiPage() {
   return (
-    <>
       <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-900 to-zinc-900">
         <div className="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px]" />
         <div className="relative w-full flex flex-col items-center justify-center px-4">
@@ -38,7 +37,5 @@ export default function KierunkiPage() {
         </div>
         <PathCarousel paths={paths} />
       </section>
-      <Footer />
-    </>
   );
 }

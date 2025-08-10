@@ -92,7 +92,7 @@ export default function Footer() {
 
         {/* Copyright and attribution */}
         <div className="border-t border-zinc-200 pt-8 mt-8 text-sm text-center">
-          <p>© 2024 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
+          <p>© 2025 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
           <Link href="https://wesa.vercel.app/" target="_blank" className="hover:text-red-500 transition-colors ">
             Designed by <span className="font-bold">WESA</span>
           </Link>

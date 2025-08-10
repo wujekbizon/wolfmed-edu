@@ -254,12 +254,22 @@ export const careerPathsData: Record<string, PathData> = {
         title: "Testy egzaminacyjne",
         titleBtn: "Duża baza testów!",
         description:
-          "Darmowa baza testów, oparata na 2 ostatnich latach z egzaminów i kursu na Opiekuna Medycznego.",
-        text: "Wybierz kierunek",
-        imgSrc: "",
+          "Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym.",
+        text: "Wybierz kierunek Pielęgniarstwo",
+        imgSrc: exams,
         url: "/sign-up",
-        icon: "",
+        icon: "tests",
       },
+      {
+        title: "Moduł do nauki",
+        titleBtn: "Ucz się w swoim tempie!",
+        description:
+          "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
+        text: "Wybierz kierunek Pielęgniarstwo",
+        imgSrc: modules,
+        url: "/sign-up",
+        icon: "learn",
+      }
     ],
     pricing: {
       standard: {
@@ -282,7 +292,23 @@ export const careerPathsData: Record<string, PathData> = {
       }
     },
     testimonials: [
-      "“Świetna platforma edukacyjna!” – studentka pielęgniarstwa",
+      {
+        quote:
+          "Świetna platforma edukacyjna! Materiały są konkretne, a mapa programu pomaga zrozumieć cały tok nauczania.",
+        author: "Anna, studentka pielęgniarstwa",
+        role: "II rok",
+      },
+      {
+        quote:
+          "Przejrzyste moduły, testy i procedury – wszystko w jednym miejscu. Idealne wsparcie przed kolokwiami i praktykami.",
+        author: "Michał, student pielęgniarstwa",
+        role: "III rok",
+      },
+      {
+        quote:
+          "Najbardziej cenię możliwość szybkiego powtórzenia materiału i sprawdzenia się na quizach. Polecam!",
+        author: "Katarzyna, absolwentka",
+      },
     ],
   },
 };
