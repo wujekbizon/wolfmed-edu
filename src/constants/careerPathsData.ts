@@ -1,5 +1,8 @@
 import { CurriculumBlock, PathData } from "@/types/careerPathsTypes";
-import img1 from "@/images/students.jpg"
+import exams from "@/images/exams.jpg"
+import procedures from "@/images/procedures.jpg"
+import quizes from "@/images/quizes.jpg"
+import modules from "@/images/modules.jpg"
 
 export const curriculum: CurriculumBlock[] = [
   {
@@ -170,7 +173,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Darmowa baza testów oparta na egzaminach z ostatnich 2 lat i kursie na opiekuna medycznego. Trzy poziomy trudności – losowe pytania z całej dostępnej puli.",
         text: "Wybierz kierunek OM",
-        imgSrc: img1,
+        imgSrc: exams,
         url: "/sign-up",
         icon: "tests",
       },
@@ -180,7 +183,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Lista procedur i algorytmów dla opiekunów medycznych. Ponad 31 dostępnych algorytmów, które każdy przyszły opiekun medyczny powinien znać.",
         text: "Wybierz kierunek OM",
-        imgSrc: img1,
+        imgSrc: procedures,
         url: "/sign-up",
         icon: "procedure",
       },
@@ -202,7 +205,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Zweryfikuj swoją znajomość procedur obowiązujących opiekuna medycznego. Wylosuj jedną z nich i sprawdź, czy pamiętasz, jak należy ją prawidłowo wykonać.",
         text: "Wybierz kierunek OM",
-        imgSrc: img1,
+        imgSrc: quizes,
         url: "/sign-up",
         icon: "game",
       },
@@ -213,13 +216,30 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
         text: "Wybierz kierunek OM",
-        imgSrc: img1,
+        imgSrc: modules,
         url: "/sign-up",
         icon: "learn",
       }
     ],
     pricing: {
-      standard: "Dostęp darmowy: 0 zł/mies.",
+      standard: {
+        price: "Dostęp darmowy: 0 zł/mies.",
+        features: [
+          "Dostęp do wszystkich pytań egzaminacyjnych",
+          "Podstawowe materiały szkoleniowe",
+          "Testy z ostatnich 2 lat"
+        ]
+      },
+      premium: {
+        price: "49,99 zł/mies.",
+        features: [
+          "Wszystko z planu darmowego",
+          "Ponad 31 algorytmów i procedur",
+          "Materiały i książki dydaktyczne (cyfrowe)",
+          "Dostęp do modułu praktycznego",
+          "Wyzwania i quizy procedur"
+        ]
+      }
     },
   },
 
@@ -242,8 +262,24 @@ export const careerPathsData: Record<string, PathData> = {
       },
     ],
     pricing: {
-      standard: "Dostęp podstawowy: 39 zł/mies.",
-      premium: "Dostęp rozszerzony: 59 zł/mies.",
+      standard: {
+        price: "Dostęp podstawowy: 39 zł/mies.",
+        features: [
+          "Dostęp do wszystkich pytań egzaminacyjnych",
+          "Podstawowe materiały szkoleniowe",
+          "Testy z ostatnich 2 lat"
+        ]
+      },
+      premium: {
+        price: "Dostęp rozszerzony: 59 zł/mies.",
+        features: [
+          "Wszystko z planu darmowego",
+          "Ponad 31 algorytmów i procedur",
+          "Materiały i książki dydaktyczne (cyfrowe)",
+          "Dostęp do modułu praktycznego",
+          "Wyzwania i quizy procedur"
+        ]
+      }
     },
     testimonials: [
       "“Świetna platforma edukacyjna!” – studentka pielęgniarstwa",

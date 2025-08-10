@@ -7,8 +7,8 @@ export default function TestsSelection() {
       className="relative w-full py-12 sm:py-16 md:py-20"
       id="testy"
     >
-      <div className="container relative mx-auto px-3 sm:px-4">
-        <div className="relative mb-10 sm:mb-16 flex flex-col items-center text-center">
+      <div className="container relative mx-auto">
+        <div className="relative mb-10 sm:mb-12 flex flex-col items-center text-center">
           <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-200 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-800">
             Baza Wiedzy
           </span>
@@ -20,7 +20,7 @@ export default function TestsSelection() {
             opiekunów medycznych!
           </p>
         </div>
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 px-2">
+        <div className="w-full flex flex-wrap justify-center gap-4 sm:gap-6">
           {testCardContent.map((card) => (
             <TestInfoCard key={card.title} card={card} />
           ))}

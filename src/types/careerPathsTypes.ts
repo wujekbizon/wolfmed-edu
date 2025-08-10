@@ -16,8 +16,14 @@ export type CurriculumBlock = {
 };
 
 type PricingTable = {
-  standard: string;
-  premium?: string;
+  standard: {
+    price: string;
+    features: string[];
+  };
+  premium?: {
+    price: string;
+    features: string[];
+  };
 };
 
 export type PathData = {
