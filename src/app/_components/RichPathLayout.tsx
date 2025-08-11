@@ -28,7 +28,7 @@ export default function RichPathLayout({
           <span className="mb-3 sm:mb-4 inline-block rounded-full bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-600">
             Kierunek Edukacyjny
           </span>
-          <h1 className="mb-2 lg:mb-4 max-w-2xl text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-700 p-2 leading-14 underline">
+          <h1 className="mb-2 lg:mb-4 max-w-2xl text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-700 p-2 leading-14">
             {title}
           </h1>
           <p className="mb-8 sm:mb-16 max-w-3xl text-zinc-500 text-base sm:text-xl font-normal leading-6 tracking-[-0.14px] text-center">
@@ -42,7 +42,7 @@ export default function RichPathLayout({
             Program nauczania
           </span>
           <h2 id="curriculum-title" className="mt-3 text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
-            Szczegółowa mapa programu (3 lata)
+            Szczegółowa mapa programu
           </h2>
           <p className="mt-3 text-zinc-600 text-base md:text-lg">
             Przeglądaj przedmioty według roku. Rozwiń moduły, aby zobaczyć liczbę godzin, ECTS i formę zaliczenia.

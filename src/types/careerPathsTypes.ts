@@ -1,4 +1,5 @@
 import { CardProps } from "@/constants/educationalPathCards";
+import { StaticImageData } from "next/image";
 
 type TemplateType = "simple" | "rich" | "advanced";
 
@@ -6,6 +7,7 @@ export type CurriculumBlock = {
   id: string,
   year: number;
   module: string;
+  image: StaticImageData | string;
   subjects: {
     name: string;
     hours: number;

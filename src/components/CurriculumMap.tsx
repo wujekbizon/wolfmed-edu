@@ -4,15 +4,10 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import type { CurriculumBlock } from "@/types/careerPathsTypes";
 import { groupByYear } from "@/helpers/groupByYear";
-import modulesImg from "@/images/modules.jpg";
-import examsImg from "@/images/exams.jpg";
-import proceduresImg from "@/images/procedures.jpg";
-import nurseImg from "@/images/nurse.jpg";
 
 type CurriculumMapProps = {
   curriculum: CurriculumBlock[];
 };
-
 
 export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
   const grouped = useMemo(() => groupByYear(curriculum), [curriculum]);
@@ -75,15 +70,6 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
     }
   };
 
-  const pickModuleImage = (moduleTitle: string) => {
-    const lower = moduleTitle.toLowerCase();
-    if (lower.includes("podstaw")) return modulesImg;
-    if (lower.includes("egz") || lower.includes("badania")) return examsImg;
-    if (lower.includes("chirurg") || lower.includes("anestez") || lower.includes("zagrożeniu")) return nurseImg;
-    if (lower.includes("procedur") || lower.includes("opieki")) return proceduresImg;
-    return modulesImg;
-  };
-
   return (
     <div className="space-y-8">
       {years.map((year, yearIndex) => {
@@ -95,7 +81,6 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
 
         return (
           <section key={year} aria-labelledby={`year-${year}`} className="relative">
-            {/* timeline connector */}
             {yearIndex < years.length - 1 && (
               <div className="absolute left-4 sm:left-6 top-12 bottom-0 w-px bg-gradient-to-b from-zinc-300 to-transparent" aria-hidden />
             )}
@@ -154,12 +139,11 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                   }`}
                 >
                   <ul className="mt-4 space-y-5">
-                    {blocks?.map((block) => {
-                      const isModuleOpen = expandedModules.has(block.id);
-                      const moduleHours = block.subjects.reduce((s, sub) => s + (sub.hours || 0), 0);
-                      const image = pickModuleImage(block.module);
+                    {blocks?.map(({id, module, image, subjects}) => {
+                      const isModuleOpen = expandedModules.has(id);
+                      const moduleHours = subjects.reduce((s, sub) => s + (sub.hours || 0), 0);
                       return (
-                        <li key={block.id} className="relative overflow-hidden rounded-2xl ring-1 ring-zinc-200 bg-white/80">
+                        <li key={id} className="relative overflow-hidden rounded-2xl ring-1 ring-zinc-200 bg-white/80">
                           <div className="absolute inset-0">
                             <Image src={image} alt="Tło modułu" fill className="object-cover opacity-30" sizes="(max-width: 768px) 100vw, 800px" />
                             <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/60 to-white/30" />
@@ -168,14 +152,14 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                           <button
                             type="button"
                             aria-expanded={isModuleOpen}
-                            aria-controls={`module-panel-${block.id}`}
+                            aria-controls={`module-panel-${id}`}
                             className="relative w-full text-left p-5 sm:p-6 hover:bg-white/60 rounded-2xl transition"
-                            onClick={() => toggleModule(block.id)}
+                            onClick={() => toggleModule(id)}
                           >
                             <div className="flex items-start justify-between gap-4">
                               <div>
                                 <p className={`text-sm ${theme.accentText}`}>Moduł</p>
-                                <h4 className="text-lg sm:text-xl font-semibold text-slate-900">{block.module}</h4>
+                                <h4 className="text-lg sm:text-xl font-semibold text-slate-900">{module}</h4>
                                 <div className="mt-2 flex flex-wrap items-center gap-2">
                                   <span className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs ${theme.chip}`}>
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="-mt-[2px]">
@@ -184,7 +168,7 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                                     {moduleHours} h
                                   </span>
                                   <span className="inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs bg-white/60 text-slate-700 border-slate-200">
-                                    {block.subjects.length} przedmiotów
+                                    {subjects.length} przedmiotów
                                   </span>
                                 </div>
                               </div>
@@ -202,14 +186,14 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                           </button>
 
                           <div
-                            id={`module-panel-${block.id}`}
+                            id={`module-panel-${id}`}
                             className={`relative overflow-hidden transition-[max-height,opacity] duration-500 ease-in-out ${
                               isModuleOpen ? "max-h-[1200px] opacity-100" : "max-h-0 opacity-0"
                             }`}
                           >
                             <div className="relative px-5 sm:px-6 pb-5 sm:pb-6">
                               <ul className="rounded-xl border border-white/60 bg-white/70 backdrop-blur-sm divide-y divide-zinc-200">
-                                {block.subjects.map((subj, idx) => (
+                                {subjects.map((subj, idx) => (
                                   <li key={idx} className="py-3 flex items-start gap-4 px-4">
                                     <span className={`mt-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-900 text-white text-[11px]`}>{idx + 1}</span>
                                     <div className="flex-1">

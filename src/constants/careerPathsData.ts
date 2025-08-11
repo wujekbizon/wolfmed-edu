@@ -9,6 +9,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "1",
     year: 1,
     module: "Moduł A - Nauki podstawowe",
+    image: modules,
     subjects: [
       { name: "Anatomia", hours: 90, ects: 4, exam: true },
       { name: "Fizjologia", hours: 75, ects: 3, exam: true },
@@ -29,6 +30,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "2",
     year: 1,
     module: "Moduł B - Nauki społeczne i humanistyczne",
+    image: "",
     subjects: [
       { name: "Psychologia", hours: 55, ects: 3, exam: true },
       { name: "Socjologia", hours: 40, ects: 1, exam: false },
@@ -41,6 +43,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "3",
     year: 1,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
+    image: "",
     subjects: [
       { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true },
       { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false },
@@ -61,12 +64,14 @@ export const curriculum: CurriculumBlock[] = [
     id: "4",
     year: 2,
     module: "Moduł B - Nauki społeczne i humanistyczne",
+    image: "",
     subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true }],
   },
   {
     id: "5",
     year: 2,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
+    image: "",
     subjects: [
       {
         name: "Choroby wewnętrzne i pielęgniarstwo internistyczne",
@@ -104,6 +109,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "6",
     year: 3,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
+    image: "",
     subjects: [
       {
         name: "Organizacja pracy pielęgniarki",
@@ -117,6 +123,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "7",
     year: 3,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
+    image: "",
     subjects: [
       {
         name: "Psychiatria i pielęgniarstwo psychiatryczne",
@@ -244,9 +251,9 @@ export const careerPathsData: Record<string, PathData> = {
   },
 
   pielegniarstwo: {
-    title: "Pielęgniarka / Pielęgniarz",
+    title: "Pielęgniarstwo",
     description:
-      "Zaawansowany, trzyletni program oparty na strukturze uniwersyteckiej...",
+      "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
     templateType: "rich",
     curriculum,
     features: [
