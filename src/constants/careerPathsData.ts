@@ -30,7 +30,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "2",
     year: 1,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: "",
+    image: modules,
     subjects: [
       { name: "Psychologia", hours: 55, ects: 3, exam: true },
       { name: "Socjologia", hours: 40, ects: 1, exam: false },
@@ -43,7 +43,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "3",
     year: 1,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: "",
+    image: modules,
     subjects: [
       { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true },
       { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false },
@@ -64,14 +64,14 @@ export const curriculum: CurriculumBlock[] = [
     id: "4",
     year: 2,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: "",
+    image: modules,
     subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true }],
   },
   {
     id: "5",
     year: 2,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: "",
+    image: modules,
     subjects: [
       {
         name: "Choroby wewnętrzne i pielęgniarstwo internistyczne",
@@ -109,7 +109,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "6",
     year: 3,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: "",
+    image: modules,
     subjects: [
       {
         name: "Organizacja pracy pielęgniarki",
@@ -123,7 +123,7 @@ export const curriculum: CurriculumBlock[] = [
     id: "7",
     year: 3,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: "",
+    image: modules,
     subjects: [
       {
         name: "Psychiatria i pielęgniarstwo psychiatryczne",

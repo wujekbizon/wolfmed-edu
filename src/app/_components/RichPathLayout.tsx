@@ -15,7 +15,7 @@ export default function RichPathLayout({
   testimonials,
 }: PathData) {
   return (
-    <section className="relative @container flex flex-col w-full bg-white gap-12 overflow-hidden">
+    <section className="relative @container flex flex-col w-full gap-12 overflow-hidden">
       <TriangleDivider
         direction="right"
         className="border-b-[5vh] lg:border-b-[10vh] border-r-transparent border-b-transparent"
@@ -36,7 +36,7 @@ export default function RichPathLayout({
           </p>
         </div>
       </div>
-      <section aria-labelledby="curriculum-title" className="relative w-full">
+      <section aria-labelledby="curriculum-title" className="relative w-full p-4 sm:p-8 bg-white">
         <header className="mb-6 sm:mb-10 text-center">
           <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
             Program nauczania
