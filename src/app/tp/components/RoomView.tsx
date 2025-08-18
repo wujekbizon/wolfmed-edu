@@ -1,8 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { Room, User, RoomParticipant } from '@teaching-playground/core'
-import { useAuthStore } from '@/store/useAuthStore'
+import { useEffect } from 'react'
+import { Room, RoomParticipant, User } from '@teaching-playground/core'
 import { useRoomConnection } from '@/hooks/useRoomConnection'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 import RoomControls from './RoomControls'
@@ -15,32 +14,14 @@ interface RoomViewProps {
 }
 
 export default function RoomView({ room }: RoomViewProps) {
-  const { username, userRole } = useAuthStore()
-  const playground = usePlaygroundStore((state) => state.playground)
+  
+  const {username, user } = usePlaygroundStore()
   const router = useRouter()
-  const [initialParticipants, setInitialParticipants] = useState<RoomParticipant[]>(room.participants || [])
   
-  // Fetch the latest participants from the database for initial render
-  useEffect(() => {
-    const fetchInitialParticipants = async () => {
-      if (playground) {
-        try {
-          const participants = await playground.roomSystem.getRoomParticipants(room.id)
-          console.log('Initial participants from database:', participants)
-          setInitialParticipants(participants)
-        } catch (error) {
-          console.error('Failed to fetch initial participants:', error)
-        }
-      }
-    }
-    
-    fetchInitialParticipants()
-  }, [playground, room.id])
-  
-  const user: User = {
-    id: userRole === 'teacher' ? 'teacher_123' : 'student_123',
+  const newUser: User = {
+    id: user?.role === 'teacher' ? 'teacher_123' : 'student_123',
     username: username || 'Anonymous',
-    role: userRole as 'teacher' | 'student' || 'student',
+    role: user?.role as 'teacher' | 'student' || 'student',
     status: 'online'
   }
 
@@ -54,16 +35,26 @@ export default function RoomView({ room }: RoomViewProps) {
     exitRoom
   } = useRoomConnection({
     roomId: room.id,
-    user,
+    user: newUser,
     serverUrl: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001'
   })
 
   console.log('Room participants from state:', state.participants)
-  
+
   const handleExitRoom = async () => {
-    await exitRoom();
-    router.push('/tp/rooms');
+    console.log('User initiated room exit')
+    try {
+      await exitRoom()
+      console.log('Room exit completed successfully')
+    } catch (error) {
+      console.error('Error during room exit:', error)
+    }
+    router.push('/tp/rooms')
   }
+
+  useEffect(() => {
+    console.log('Connection state changed:', state.isConnected ? 'CONNECTED' : 'DISCONNECTED')
+  }, [state.isConnected])
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -81,6 +72,12 @@ export default function RoomView({ room }: RoomViewProps) {
           </button>
         </div>
       </div>
+
+      {state.systemMessage && (
+        <div className="p-2 bg-blue-100 text-blue-800 rounded mb-4">
+          {state.systemMessage}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
@@ -119,8 +116,8 @@ export default function RoomView({ room }: RoomViewProps) {
           <div className="flex-1 overflow-hidden grid grid-rows-2 gap-6">
             <div className="row-span-1 bg-zinc-800 rounded-lg border border-zinc-700 overflow-hidden">
               <RoomParticipants 
-                roomId={room.id} 
-                participants={initialParticipants}
+                roomId={room.id}
+                participants={state.participants as RoomParticipant[]} 
               />
             </div>
             <div className="row-span-1 bg-zinc-800 rounded-lg border border-zinc-700 overflow-hidden">

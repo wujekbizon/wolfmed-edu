@@ -41,16 +41,19 @@ export async function manageRoomForLecture(lecture: Lecture): Promise<Room> {
       updatedAt: new Date().toISOString(),
     }
 
+    console.log('Generated room object:', room);
     // Check if room already exists and update it, or create new one
     const existingRoom = await db.findOne('rooms', { id: roomId }) as Room | null
     if (existingRoom) {
       console.log(`Updating existing room: ${roomId}`)
       const updatedRoom = await db.update('rooms', { id: roomId }, room) as Room
+      console.log('Room updated:', updatedRoom);
       return updatedRoom
     }
     
     console.log(`Creating new room: ${roomId}`)
     const newRoom = await db.insert('rooms', room) as Room
+    console.log('New room created:', newRoom);
     return newRoom
   } catch (error) {
     console.error('Failed to manage room for lecture:', error)

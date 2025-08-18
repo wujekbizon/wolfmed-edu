@@ -42,14 +42,16 @@ interface RoomState {
   messages: RoomMessage[]
   stream: StreamState | null
   participants: Array<{
+    joinedAt: string
     id: string
     username: string
-    role: string
+    role: "teacher" | "student" | "admin"
     status: string
     canStream: boolean
     canChat: boolean
     canScreenShare: boolean
   }>
+  systemMessage?: string;
 }
 
 export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnectionOptions) {
@@ -66,6 +68,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   const mountedRef = useRef(true)
   const isConnectingRef = useRef(false)
   const hasJoinedRoomRef = useRef(false)
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   // Handle joining the room
   const joinRoom = useCallback(async () => {
@@ -130,27 +133,38 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           // If this is an unexpected disconnection, we still want to be in the room
         });
 
-        connection.on('room_state_updated', async (roomState: RoomStateUpdate) => {
-          if (!mountedRef.current) return;
-          if (playground) {
-            try {
-              const participants = await playground.roomSystem.getRoomParticipants(roomId);
-              setState(prev => ({
-                ...prev,
-                messages: roomState.messages,
-                stream: roomState.stream,
-                participants: participants.map(p => ({
-                  ...p,
-                  canStream: p.role === 'teacher',
-                  canChat: true,
-                  canScreenShare: p.role === 'teacher'
-                }))
-              }));
-            } catch (error) {
-              console.error('Failed to get room participants:', error);
-            }
-          }
+        // Listen for the 'welcome' event
+        connection.on('welcome', (data: { message: string, timestamp: string }) => {
+          console.log('Server welcome:', data.message);
+          setState(prev => ({
+            ...prev,
+            systemMessage: data.message
+          }));
         });
+
+        const handleRoomState = (stateUpdate: { // Changed parameter name to avoid conflict with outer 'state'
+          stream: StreamState | null,
+          messages: RoomMessage[],
+          participants: Array<{
+            joinedAt: string
+            id: string
+            username: string
+            role: "teacher" | "student" | "admin"
+            status: string
+            canStream: boolean
+            canChat: boolean
+            canScreenShare: boolean
+          }>
+        }) => {
+          setState(prev => ({
+            ...prev,
+            stream: stateUpdate.stream,
+            participants: stateUpdate.participants || [], 
+            messages: stateUpdate.messages || []
+          }));
+        };
+
+        connection.on('room_state', handleRoomState);
 
         connection.on('message_received', (message: RoomMessage) => {
           if (!mountedRef.current) return;
@@ -191,6 +205,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           if (!mountedRef.current) return;
           if (playground) {
             try {
+              // Fetch updated participants after user joins
               const participants = await playground.roomSystem.getRoomParticipants(roomId);
               setState(prev => ({
                 ...prev,
@@ -211,6 +226,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           if (!mountedRef.current) return;
           if (playground) {
             try {
+              // Fetch updated participants after user leaves
               const participants = await playground.roomSystem.getRoomParticipants(roomId);
               setState(prev => ({
                 ...prev,
@@ -253,27 +269,62 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     setupConnection();
 
     return () => {
-      console.log('Cleaning up room connection');
-      mountedRef.current = false;
+      console.log('Starting connection cleanup...')
+      mountedRef.current = false
       
-      // Explicit room leave on component unmount
-      leaveRoom();
-      
+      // 1. Leave the room
+      leaveRoom().then(() => {
+        console.log('Successfully left room:', roomId)
+      }).catch(err => {
+        console.error('Error leaving room:', err)
+      })
+
+      // 2. Clean up local stream
       if (localStream) {
+        console.log('Stopping local stream tracks')
         localStream.getTracks().forEach(track => {
-          track.stop();
-          console.log('Stopped track:', track.kind);
-        });
-        setLocalStream(null);
+          track.stop()
+          console.log(`Stopped ${track.kind} track`)
+        })
+        setLocalStream(null)
       }
 
+      // 3. Clean up remote streams
+      console.log('Clearing remote streams')
+      setRemoteStreams(new Map())
+
+      // 4. Disconnect WebSocket/WebRTC
       if (connectionRef.current) {
-        connectionRef.current.disconnect();
-        connectionRef.current = null;
+        console.log('Disconnecting RoomConnection')
+        connectionRef.current.disconnect()
+        connectionRef.current = null
       }
 
-      isConnectingRef.current = false;
-      hasJoinedRoomRef.current = false;
+      // 5. Reset state
+      isConnectingRef.current = false
+      hasJoinedRoomRef.current = false
+      console.log('Cleanup complete')
+
+      // Add this to the cleanup:
+      const cleanup = () => {
+        console.log('[Cleanup] Starting...')
+        
+        // Cancel any pending operations
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current)
+        }
+
+        // Force disconnect
+        if (connectionRef.current) {
+          console.log('[Cleanup] Force-disconnecting')
+          connectionRef.current.disconnect()
+        }
+
+        // Clear remote streams
+        setRemoteStreams(new Map())
+        console.log('[Cleanup] Completed')
+      }
+      cleanup()
     };
   }, [roomId, user, serverUrl, playground,leaveRoom, joinRoom, localStream]);
 
@@ -308,7 +359,8 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       return;
     }
 
-    console.log('Stopping stream...');
+    console.log('Stopping stream');
+    
     if (localStream) {
       localStream.getTracks().forEach(track => {
         track.stop();

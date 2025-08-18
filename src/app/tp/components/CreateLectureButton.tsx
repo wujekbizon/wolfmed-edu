@@ -2,13 +2,11 @@
 
 import { useState } from 'react'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
-import { useAuthStore } from '@/store/useAuthStore'
 import CreateLectureForm from './CreateLectureForm'
 
 export default function CreateLectureButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { userRole } = useAuthStore()
-  const { setCreateModalOpen } = usePlaygroundStore()
+  const { setCreateModalOpen, user } = usePlaygroundStore()
 
   const openModal = () => {
     setIsModalOpen(true)
@@ -21,7 +19,7 @@ export default function CreateLectureButton() {
   }
 
   // Only teachers can create lectures
-  if (userRole !== 'teacher') {
+  if (user?.role !== 'teacher') {
     return null
   }
 

@@ -1,12 +1,42 @@
 {
   "events": [
     {
-      "id": "lecture_1743882373492",
-      "name": "AI in 2025",
-      "date": "2025-04-12T21:45",
-      "roomId": "room_1",
-      "description": "Latest models and prices per token",
+      "id": "lecture_1755425027263",
+      "name": "wolfmed",
+      "date": "2025-08-17T13:03",
+      "roomId": "room_lecture_1755425027263",
+      "description": "asdasdasdasdasdas",
       "maxParticipants": 30,
+      "type": "lecture",
+      "status": "completed",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe",
+      "startTime": "2025-08-17T11:59:08.817Z",
+      "lastModified": "2025-08-17T15:15:59.364Z",
+      "endTime": "2025-08-17T15:15:59.362Z"
+    },
+    {
+      "id": "lecture_1755448527407",
+      "name": "New lecture",
+      "date": "2025-08-17T19:34",
+      "roomId": "room_lecture_1755448527407",
+      "description": "This is a newly created AI content ",
+      "maxParticipants": 30,
+      "type": "lecture",
+      "status": "completed",
+      "teacherId": "teacher_123",
+      "createdBy": "John Doe",
+      "startTime": "2025-08-17T17:34:17.265Z",
+      "lastModified": "2025-08-18T04:54:23.125Z",
+      "endTime": "2025-08-18T04:54:23.123Z"
+    },
+    {
+      "id": "lecture_1755493678435",
+      "name": "AI Tech",
+      "date": "2025-08-18T08:07",
+      "roomId": "room_lecture_1755493678435",
+      "description": "this is the latest lecture ",
+      "maxParticipants": 10,
       "type": "lecture",
       "status": "scheduled",
       "teacherId": "teacher_123",
@@ -15,8 +45,8 @@
   ],
   "rooms": [
     {
-      "id": "room_1",
-      "name": "Room for AI in 2025",
+      "id": "room_lecture_1755425027263",
+      "name": "Room for wolfmed",
       "capacity": 30,
       "status": "scheduled",
       "features": {
@@ -27,15 +57,59 @@
         "hasScreenShare": true
       },
       "currentLecture": {
-        "id": "lecture_1743882373492",
-        "name": "AI in 2025",
+        "id": "lecture_1755425027263",
+        "name": "wolfmed",
         "teacherId": "teacher_123",
         "status": "scheduled"
       },
       "participants": [],
-      "createdAt": "2025-04-05T19:46:13.494Z",
-      "updatedAt": "2025-04-05T21:22:39.586Z",
-      "lastModified": "2025-04-05T21:22:39.604Z"
+      "createdAt": "2025-08-17T10:03:47.267Z",
+      "updatedAt": "2025-08-17T10:03:47.267Z"
+    },
+    {
+      "id": "room_lecture_1755448527407",
+      "name": "Room for New lecture",
+      "capacity": 30,
+      "status": "scheduled",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": true,
+        "hasScreenShare": true
+      },
+      "currentLecture": {
+        "id": "lecture_1755448527407",
+        "name": "New lecture",
+        "teacherId": "teacher_123",
+        "status": "scheduled"
+      },
+      "participants": [],
+      "createdAt": "2025-08-17T16:35:27.410Z",
+      "updatedAt": "2025-08-17T16:35:27.410Z"
+    },
+    {
+      "id": "room_lecture_1755493678435",
+      "name": "Room for AI Tech",
+      "capacity": 10,
+      "status": "scheduled",
+      "features": {
+        "hasVideo": true,
+        "hasAudio": true,
+        "hasChat": true,
+        "hasWhiteboard": true,
+        "hasScreenShare": true
+      },
+      "currentLecture": {
+        "id": "lecture_1755493678435",
+        "name": "AI Tech",
+        "teacherId": "teacher_123",
+        "status": "scheduled"
+      },
+      "participants": [],
+      "createdAt": "2025-08-18T05:07:58.439Z",
+      "updatedAt": "2025-08-18T05:07:58.439Z"
     }
-  ]
+  ],
+  "participants": []
 }

@@ -4,22 +4,56 @@ import { CreateLectureSchema, UpdateLectureSchema } from '@/server/schema'
 import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '../helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
-import { auth } from '@clerk/nextjs/server'
-import { Lecture, JsonDatabase, EventManagementSystem } from '@teaching-playground/core'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { manageRoomForLecture, cleanupExpiredRooms } from '@/utils/teachingPlaygroundUtils'
+import { EventManagementSystem } from '@/lib/teaching-playground/systems'
+import { Lecture, User } from '@/lib/teaching-playground/interfaces'
+import { JsonDatabase } from '@/lib/teaching-playground/db/JsonDatabase'
+import { createServerPlaygroundInstance } from '@/helpers/createServerPlaygroundInstance'
 
 // Use singleton JsonDatabase instance
 const db = JsonDatabase.getInstance()
 const eventSystem = new EventManagementSystem()
 
+export async function initializeTeachingPlayground():Promise<User | null> {
+  try {
+    const user = await currentUser()
+    if (!user) {
+      console.log('Server Action: No user found for server-side initialization, returning null.')
+      return null
+    }
+    
+    console.log("Called!!")
+
+    const playground = createServerPlaygroundInstance()
+
+    const role = user.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student';
+
+    const serverUser: User = {
+      id: user.id,
+      username: user.username || user.emailAddresses[0]?.emailAddress || 'Guest',
+      role: role,
+      email: user.emailAddresses[0]?.emailAddress ?? null,
+      displayName: user.fullName || user.username || null,
+      status: 'online',
+    }
+    playground.setCurrentUser(serverUser)
+   
+    return serverUser
+  } catch (error) {
+    console.error("Server Action: Error in initializeTeachingPlayground:", error);
+    return null; 
+  }
+}
+
 export async function createLecture(formState: FormState, formData: FormData): Promise<FormState> {
-  // TODO: user will need to have teacher permisssions
-  const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  const user = await currentUser()
+  if (!user) throw new Error('Unauthorized')
 
   const values = {
     name: formData.get('name') as string,
     date: formData.get('date') as string,
+    roomId: formData.get('roomId') as string,
     description: formData.get('description') as string,
     maxParticipants: Number(formData.get('maxParticipants')),
   }
@@ -50,12 +84,15 @@ export async function createLecture(formState: FormState, formData: FormData): P
 
     // Save the lecture to the database
     await db.insert('events', lecture)
+    console.log('Lecture inserted into DB.');
 
     // Create or update the associated room
     await manageRoomForLecture(lecture)
+    console.log('Room management completed for lecture:', lectureId);
 
     // Clean up any expired rooms
     await cleanupExpiredRooms()
+    console.log('Expired rooms cleanup completed.');
 
   } catch (error) {
     return {

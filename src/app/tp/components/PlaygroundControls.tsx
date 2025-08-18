@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
-import { useAuthStore } from '@/store/useAuthStore'
 import type { Lecture } from '@teaching-playground/core'
 import { formatLectureDate } from '@/helpers/formatDate'
 import UpdateLectureForm from './UpdateLectureForm'
@@ -22,7 +21,6 @@ const statusStyles: Record<Lecture['status'], string> = {
 
 export default function PlaygroundControls({ events }: { events: Lecture[] }) {
   const [activeTab, setActiveTab] = useState<LectureFilterType>('all')
-  const { isAuthenticated } = useAuthStore()
   const {
     error,
     isCreateModalOpen,
@@ -31,9 +29,7 @@ export default function PlaygroundControls({ events }: { events: Lecture[] }) {
     setSelectedLecture,
   } = usePlaygroundStore()
 
-  if (!isAuthenticated) {
-    return null
-  }
+
 
   const filteredEvents = events
     .filter((event) => activeTab === 'all' || event.status === activeTab)

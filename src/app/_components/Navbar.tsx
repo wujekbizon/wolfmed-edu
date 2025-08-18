@@ -10,13 +10,11 @@ import AuthSection from '@/components/AuthSection'
 import GradientOverlay from '@/components/GradientOverlay'
 import { usePathname } from 'next/navigation'
 import { SignedIn } from '@clerk/nextjs'
-import { useAuthStore } from '@/store/useAuthStore'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { isScrolled } = useScroll(0)
   const pathname = usePathname()
-  const { isAuthenticated } = useAuthStore()
 
   // Hide navbar in playground when authenticated
   if (pathname.startsWith('/tp')) {

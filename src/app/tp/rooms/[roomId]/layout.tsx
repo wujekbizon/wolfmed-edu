@@ -18,27 +18,27 @@ export default function RoomLayout({ children, params }: RoomLayoutProps) {
   const [hasActiveLecture, setHasActiveLecture] = useState(false)
   const { roomId } = use(params)
 
-  // useEffect(() => {
-  //   async function checkLectureStatus() {
-  //     try {
-  //       if (!playground) return
-  //       const room = await playground.roomSystem.getRoom(roomId)
-  //       setHasActiveLecture(!!room.currentLecture)
+  useEffect(() => {
+    async function checkLectureStatus() {
+      try {
+        if (!playground) return
+        const room = await playground.roomSystem.getRoom(roomId)
+        setHasActiveLecture(!!room.currentLecture)
         
-  //       if (room.currentLecture && !isAuthenticated) {
-  //         router.push('/tp/login')
-  //       }
-  //     } catch (error) {
-  //       console.error('Failed to check room status:', error)
-  //     }
-  //   }
+        if (room.currentLecture && !isAuthenticated) {
+          router.push('/tp/login')
+        }
+      } catch (error) {
+        console.error('Failed to check room status:', error)
+      }
+    }
 
-  //   checkLectureStatus()
-  // }, [playground, roomId, isAuthenticated, router])
+    checkLectureStatus()
+  }, [playground, roomId, isAuthenticated, router])
 
-  // if (hasActiveLecture && !isAuthenticated) {
-  //   return null
-  // }
+  if (hasActiveLecture && !isAuthenticated) {
+    return null
+  }
 
   return (
     <div className="min-h-screen bg-zinc-900">

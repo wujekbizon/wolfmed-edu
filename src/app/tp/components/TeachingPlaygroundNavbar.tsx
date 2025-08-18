@@ -1,15 +1,13 @@
 'use client'
 
-import { useAuthStore } from '@/store/useAuthStore'
+import AuthSection from '@/components/AuthSection';
 
 interface TeachingPlaygroundNavbarProps {
   onToggleSidebar: () => void
 }
 
 export default function TeachingPlaygroundNavbar({ onToggleSidebar }: TeachingPlaygroundNavbarProps) {
-  const { username, logout } = useAuthStore()
-  const userInitial = username ? username[0]?.toUpperCase() : ''
-
+ 
   return (
     <nav className="bg-zinc-800 border-b border-zinc-700">
       <div className="max-w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -25,22 +23,8 @@ export default function TeachingPlaygroundNavbar({ onToggleSidebar }: TeachingPl
           <h1 className="text-xl font-semibold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
             Teaching Playground
           </h1>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-violet-400 flex items-center justify-center">
-              <span className="text-sm font-medium">{userInitial}</span>
-            </div>
-            <span className="text-sm text-zinc-400">{username}</span>
-          </div>
-          <button
-            onClick={logout}
-            className="px-3 py-1.5 text-sm bg-red-500/10 text-red-400 rounded-md hover:bg-red-500/20 transition-colors"
-          >
-            Logout
-          </button>
-        </div>
+        </div> 
+         <AuthSection />
       </div>
     </nav>
   )
