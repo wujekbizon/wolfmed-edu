@@ -10,20 +10,19 @@ import { EventManagementSystem } from '@/lib/teaching-playground/systems'
 import { Lecture, User } from '@/lib/teaching-playground/interfaces'
 import { JsonDatabase } from '@/lib/teaching-playground/db/JsonDatabase'
 import { createServerPlaygroundInstance } from '@/helpers/createServerPlaygroundInstance'
+import TeachingPlayground from '@/lib/teaching-playground/engine/TeachingPlayground'
 
 // Use singleton JsonDatabase instance
 const db = JsonDatabase.getInstance()
 const eventSystem = new EventManagementSystem()
 
-export async function initializeTeachingPlayground():Promise<User | null> {
+export async function initializeTeachingPlayground():Promise<TeachingPlayground | null> {
   try {
     const user = await currentUser()
+
     if (!user) {
-      console.log('Server Action: No user found for server-side initialization, returning null.')
       return null
     }
-    
-    console.log("Called!!")
 
     const playground = createServerPlaygroundInstance()
 
@@ -39,7 +38,7 @@ export async function initializeTeachingPlayground():Promise<User | null> {
     }
     playground.setCurrentUser(serverUser)
    
-    return serverUser
+    return playground
   } catch (error) {
     console.error("Server Action: Error in initializeTeachingPlayground:", error);
     return null; 
@@ -75,7 +74,7 @@ export async function createLecture(formState: FormState, formData: FormData): P
     const lecture: Lecture = {
       id: lectureId,
       ...validationResult.data,
-      roomId, // Use the consistent room ID
+      roomId,
       type: 'lecture',
       status: 'scheduled',
       teacherId: 'teacher_123',
@@ -84,7 +83,6 @@ export async function createLecture(formState: FormState, formData: FormData): P
 
     // Save the lecture to the database
     await db.insert('events', lecture)
-    console.log('Lecture inserted into DB.');
 
     // Create or update the associated room
     await manageRoomForLecture(lecture)

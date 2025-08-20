@@ -84,7 +84,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
         }
       })
       return {
-        ...toFormState('ERROR', validationResult.error.errors[0]?.message ?? 'Wybierz jedną odpowiedź'),
+        ...toFormState('ERROR', validationResult.error.issues[0]?.message ?? 'Wybierz jedną odpowiedź'),
         values: formValues,
       }
     }

@@ -1,5 +1,3 @@
-'use client'
-
 
 interface RoomsLayoutProps {
   children: React.ReactNode

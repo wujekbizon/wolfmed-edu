@@ -1,41 +1,59 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import clsx from 'clsx'
-import { navigationItems } from '@/constants/navigation'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
+import { navigationItems } from "@/constants/navigation";
+import { useState } from "react";
 
-interface TeachingPlaygroundSidebarProps {
-  isCollapsed: boolean
-}
-
-export default function TeachingPlaygroundSidebar({ isCollapsed }: TeachingPlaygroundSidebarProps) {
-  const pathname = usePathname()
+export default function TeachingPlaygroundSidebar() {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
 
   return (
     <aside
       className={clsx(
-        'bg-zinc-800 border-r border-zinc-700 transition-all duration-300',
-        isCollapsed ? 'w-16' : 'w-64'
+        "bg-zinc-800 border-r border-zinc-700 transition-all duration-300",
+        isCollapsed ? "w-16" : "w-64"
       )}
     >
       <nav className="p-4 space-y-2">
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-zinc-400 hover:text-zinc-100"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 6h16M4 12h16M4 18h16"
+            />
+          </svg>
+        </button>
         {navigationItems.map((item) => (
           <div key={item.id} className="relative group">
             <Link
               href={item.path}
               className={clsx(
-                'w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors',
-                isCollapsed ? 'justify-center' : '',
+                "w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                isCollapsed ? "justify-center" : "",
                 pathname === item.path
-                  ? 'bg-blue-500/10 text-blue-400'
-                  : 'text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-100'
+                  ? "bg-blue-500/10 text-blue-400"
+                  : "text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-100"
               )}
             >
-              <div className={clsx(
-                'flex items-center justify-center',
-                isCollapsed ? 'w-8 h-8' : 'w-6 h-6'
-              )}>
+              <div
+                className={clsx(
+                  "flex items-center justify-center",
+                  isCollapsed ? "w-8 h-8" : "w-6 h-6"
+                )}
+              >
                 {item.icon}
               </div>
               {!isCollapsed && <span>{item.name}</span>}
@@ -49,5 +67,5 @@ export default function TeachingPlaygroundSidebar({ isCollapsed }: TeachingPlayg
         ))}
       </nav>
     </aside>
-  )
-} 
+  );
+}
