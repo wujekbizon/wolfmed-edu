@@ -45,6 +45,62 @@ export async function initializeTeachingPlayground():Promise<TeachingPlayground 
   }
 }
 
+export async function addParticipantToServer(roomId: string, user: User) {
+  try {
+    const playground = await initializeTeachingPlayground();
+    if (!playground) {
+      throw new Error("Failed to initialize TeachingPlayground on server.");
+    }
+    await playground.roomSystem.addParticipant(roomId, user);
+    revalidatePath('/tp');
+  } catch (error) {
+    console.error("Server Action: Error in addParticipantToServer:", error);
+    throw error;
+  }
+}
+
+export async function removeParticipantFromServer(roomId: string, userId: string) {
+  try {
+    const playground = await initializeTeachingPlayground();
+    if (!playground) {
+      throw new Error("Failed to initialize TeachingPlayground on server.");
+    }
+    await playground.roomSystem.removeParticipant(roomId, userId);
+    revalidatePath('/tp'); // Revalidate if removing a participant affects the lecture list display
+  } catch (error) {
+    console.error("Server Action: Error in removeParticipantFromServer:", error);
+    throw error;
+  }
+}
+
+export async function getRoomParticipantsFromServer(roomId: string): Promise<User[]> {
+  try {
+    const playground = await initializeTeachingPlayground();
+    if (!playground) {
+      throw new Error("Failed to initialize TeachingPlayground on server.");
+    }
+    const participants = await playground.roomSystem.getRoomParticipants(roomId);
+    return participants;
+  } catch (error) {
+    console.error("Server Action: Error in getRoomParticipantsFromServer:", error);
+    return [];
+  }
+}
+
+export async function updateParticipantStreamingStatusFromServer(roomId: string, userId: string, isStreaming: boolean) {
+  try {
+    const playground = await initializeTeachingPlayground();
+    if (!playground) {
+      throw new Error("Failed to initialize TeachingPlayground on server.");
+    }
+    await playground.roomSystem.updateParticipantStreamingStatus(roomId, userId, isStreaming);
+    revalidatePath('/tp'); // Revalidate if streaming status changes affects UI
+  } catch (error) {
+    console.error("Server Action: Error in updateParticipantStreamingStatusFromServer:", error);
+    throw error;
+  }
+}
+
 export async function createLecture(formState: FormState, formData: FormData): Promise<FormState> {
   const user = await currentUser()
   if (!user) throw new Error('Unauthorized')

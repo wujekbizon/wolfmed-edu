@@ -18,6 +18,7 @@ export default function CancelLectureForm(props: { event: Lecture }) {
       >
         Cancel
       </button>
+      {noScriptFallback}
     </form>
   )
 }
