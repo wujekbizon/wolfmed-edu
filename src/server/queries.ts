@@ -5,6 +5,7 @@ import { ExtendedCompletedTest, ExtendedProcedures, ExtendedTest, Post } from '@
 import { cache } from 'react'
 import { eq, asc, desc } from 'drizzle-orm'
 import { Post as ForumPost } from '@/types/forumPostsTypes'
+import { Payment, Supporter } from '@/types/stripeTypes'
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -296,3 +297,37 @@ export const getLastUserCommentTime = cache(async (userId: string): Promise<Date
 
   return lastComment?.createdAt ?? null
 })
+
+// Get userId from stripe support payments 
+export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
+  const payments = await db.query.payments.findMany()
+  return payments
+})
+
+// Get supporters userId from stripe support payments
+export const getSupportersUserIds = cache(async (): Promise<string[]> => {
+  const payments = await getStripeSupportPayments()
+  const supportersUserId = payments.map((payment) => payment.userId)
+  return supportersUserId
+})
+
+// Get supporters usernames 
+export const getSupportersUsernames = cache(async (): Promise<Supporter[]> => {
+  const supportersIds = await getSupportersUserIds()
+  
+  if(supportersIds.length === 0) return []
+
+  const supporters = await db.query.users.findMany({
+    where: (users, {inArray}) => inArray(users.userId, supportersIds ),
+    columns: {
+      username: true,
+      id: true
+    }
+  }) 
+
+  return supporters.map((user) => ({id: user.id, username: user.username}))
+})
+
+
+
+

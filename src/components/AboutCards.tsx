@@ -41,11 +41,10 @@ export default function AboutCards() {
             Twoje wsparcie pomaga nam tworzyć lepsze materiały edukacyjne dla przyszłych opiekunów medycznych
           </p>
           <Link
-            href="https://buymeacoffee.com/grzegorzwolfinger"
-            target="_blank"
+            href="/wsparcie-projektu"
             className="inline-block bg-linear-to-r from-red-400 to-red-500 text-white text-sm sm:text-base font-semibold px-8 py-3 rounded-full shadow-lg shadow-red-400/30 border border-red-300/20 transition-all duration-300 ease-out hover:shadow-xl hover:shadow-red-400/40 hover:scale-105 hover:border-red-300/30 active:scale-95"
           >
-            Wesprzyj nas ❤️
+            Wesprzyj nas
           </Link>
         </div>
       </motion.div>

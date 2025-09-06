@@ -2,15 +2,12 @@
 
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/animations/motion'
-import SparklingEffect from '@/components/SparklingEffect'
 import AboutCards from '@/components/AboutCards'
 import TeamSection from '@/components/TeamSection'
 
 export default function About() {
   return (
-    <section className="w-full flex flex-col items-center justify-center py-16 md:py-24 bg-zinc-900 text-white relative overflow-hidden">
-      <SparklingEffect />
-
+    <section className="w-full flex flex-col items-center justify-center py-16 md:py-24 bg-zinc-950 text-white relative overflow-hidden">
       <motion.div
         // @ts-ignore
         className="container max-w-7xl px-4 relative"
@@ -20,7 +17,6 @@ export default function About() {
         variants={staggerContainer}
       >
         <div className="flex flex-col gap-8 md:gap-12">
-          {/* Header Section */}
           <div className="text-center mb-8">
             <motion.span
               // @ts-ignore

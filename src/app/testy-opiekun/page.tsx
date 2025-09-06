@@ -12,6 +12,7 @@ import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 import Username from '@/components/Username'
 import SupporterStatusSkeleton from '@/components/skeletons/SupporterStatusSkeleton'
 import ExamCountdownSkeleton from '@/components/skeletons/ExamCountdownSkeleton'
+import Membership from '@/app/_components/Membership'
 
 export const experimental_ppr = true
 
@@ -22,6 +23,7 @@ export default async function TestsPage() {
         {/* <Suspense fallback={<ExamCountdownSkeleton />}>
           <ExamCountdown />
         </Suspense> */}
+        <Membership />
         <DashboardInfo />
         <div className="backdrop-blur-sm w-full gap-8 flex flex-col p-3 xs:-p-4 sm:p-10 rounded-2xl shadow-lg border border-zinc-200/60 transition-all duration-300 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
