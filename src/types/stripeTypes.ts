@@ -4,7 +4,7 @@ interface BasePayment {
   currency: 'pln' | 'usd' | 'eur' | null
   customerEmail: string
   paymentStatus: string
-  createdAt: Date | null
+  createdAt: Date
 }
 
 export interface Subscription extends BasePayment {

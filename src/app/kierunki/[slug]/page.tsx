@@ -7,7 +7,7 @@ export async function generateStaticParams() {
   return Object.keys(careerPathsData).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const {slug} = await params
   const data = careerPathsData[slug];
   if (!data) return { title: 'Program nie znaleziony' };
@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PathPage({ params }: { params: { slug: string } }) {
+export default async function PathPage({ params }: { params: Promise<{ slug: string }> }) {
   const {slug} = await params
   const data = careerPathsData[slug];
   if (!data) notFound();

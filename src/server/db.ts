@@ -127,7 +127,7 @@ export async function insertSubscription({
       invoiceId,
       paymentStatus,
       subscriptionId,
-      createdAt: new Date(createdAt * 1000),
+      createdAt: createdAt,
     })
     console.log(`Subscription for user ${userId} inserted successfully.`)
   } catch (error) {
@@ -151,7 +151,7 @@ export async function insertPayment({
       currency,
       customerEmail,
       paymentStatus,
-      createdAt: new Date(createdAt * 1000),
+      createdAt: createdAt,
     })
   } catch (error) {
     console.error(`Failed to insert payment for user ${userId}:`, error)

@@ -32,7 +32,7 @@ export default function Simulation() {
     frame = requestAnimationFrame(loop);
 
     return () => cancelAnimationFrame(frame);
-  }, []);
+  }, [initialEntities]);
 
   const entities = sim.current?.getEntities() ?? [];
 

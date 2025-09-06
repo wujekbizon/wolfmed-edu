@@ -301,7 +301,10 @@ export const getLastUserCommentTime = cache(async (userId: string): Promise<Date
 // Get userId from stripe support payments 
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()
-  return payments
+  return payments.map(p=> ({
+    ...p,
+    createdAt: p.createdAt ?? new Date()
+  }))
 })
 
 // Get supporters userId from stripe support payments
