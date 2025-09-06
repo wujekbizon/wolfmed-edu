@@ -3,60 +3,104 @@ import exams from "@/images/exams.jpg"
 import procedures from "@/images/procedures.jpg"
 import quizes from "@/images/quizes.jpg"
 import modules from "@/images/modules.jpg"
+import basic from "@/images/nauki_podstawowe.jpg"
+import social from "@/images/nauki_spoleczne.jpg"
+import nursing from "@/images/nauki_pielegniarstwo.jpg"
+import specializedCare from "@/images/nauki_opieka_specjalistyczna.jpg"
+import anatomy from "@/images/anatomia.jpg"
+import physiology from "@/images/fizjologia.jpg"
+import pathology from "@/images/patologia.jpg"
+import genetics from "@/images/genetyka.jpg"
+import biochemistry from "@/images/biochemia.jpg"
+import microbiology from "@/images/mikrobiologia.jpg"
+import pharmacology from "@/images/farmakologia.jpg"
+import radiology from "@/images/radiologia.jpg"
+import psychology from "@/images/psychologia.jpg"
+import sociology from "@/images/socjologia.jpg"
+import pedagogy from "@/images/pedagogika.jpg"
+import law from "@/images/prawo_medyczne.jpg"
+import publicHealth from "@/images/zdrowie.jpg"
+import nursingBasic from "@/images/podstawy_pielegniarstwa.jpg"
+import nursingEthics from "@/images/etyka_zawodowa.jpg"
+import healthPromotion from "@/images/promocja_zdrowia.jpg"
+import basicCare from "@/images/podstawowa_opieka.jpg"
+import dietetics from "@/images/dietetyka.jpg"
+import examination from "@/images/badania.jpg"
+import infection from "@/images/zakazenia.jpg"
+import information from "@/images/systemy.jpg"
+import healthPublic from "@/images/zdrowie_publiczne.jpg"
+import internalMedicine from "@/images/choroby_wewnetrzne.jpg"
+import pediatrics from "@/images/pediatria.jpg"
+import surgery from "@/images/chirurgia.jpg"
+import gynecology from "@/images/poloznictwo.jpg"
+import neurology from "@/images/neurologia.jpg"
+import psychiatry from "@/images/psychiatria.jpg"
+import anesthesiology from "@/images/anestezjologia.jpg"
+import longTermCare from "@/images/pielegniarstwo_dlugoterminowe.jpg"
+import geriatrics from "@/images/geriatria.jpg"
+import organization from "@/images/organizacja.jpg"
+import palliativeCare from "@/images/opieka_paliatywna.jpg"
+import rehabilitation from "@/images/rehabilitacja.jpg"
+import resuscitation from "@/images/ratownictwo.jpg"
+import research from "@/images/badania.jpg"
+import seminar from "@/images/seminarium.jpg"
+
 
 export const curriculum: CurriculumBlock[] = [
   {
     id: "1",
-    year: 1,
+    year: 1,  
     module: "Moduł A - Nauki podstawowe",
-    image: modules,
+    image: basic,
     subjects: [
-      { name: "Anatomia", hours: 90, ects: 4, exam: true },
-      { name: "Fizjologia", hours: 75, ects: 3, exam: true },
+      { name: "Anatomia", hours: 90, ects: 4, exam: true, img: anatomy },
+      { name: "Fizjologia", hours: 75, ects: 3, exam: true, img: physiology },
       {
         name: "Patologia / Patomorfologia / Patofizjologia",
         hours: 80,
         ects: 2,
         exam: true,
+        img: pathology,
       },
-      { name: "Genetyka", hours: 45, ects: 2, exam: true },
-      { name: "Biochemia z biofizyką", hours: 50, ects: 2, exam: true },
-      { name: "Mikrobiologia z parazytologią", hours: 50, ects: 2, exam: true },
-      { name: "Farmakologia", hours: 85, ects: 4, exam: true },
-      { name: "Radiologia", hours: 25, ects: 1, exam: false },
+      { name: "Genetyka", hours: 45, ects: 2, exam: true, img: genetics },
+      { name: "Biochemia z biofizyką", hours: 50, ects: 2, exam: true, img: biochemistry },
+      { name: "Mikrobiologia z parazytologią", hours: 50, ects: 2, exam: true, img: microbiology },
+      { name: "Farmakologia", hours: 85, ects: 4, exam: true, img: pharmacology },
+      { name: "Radiologia", hours: 25, ects: 1, exam: false, img: radiology },
     ],
   },
   {
     id: "2",
     year: 1,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: modules,
+    image: social,
     subjects: [
-      { name: "Psychologia", hours: 55, ects: 3, exam: true },
-      { name: "Socjologia", hours: 40, ects: 1, exam: false },
-      { name: "Pedagogika", hours: 50, ects: 2, exam: true },
-      { name: "Prawo medyczne", hours: 55, ects: 2, exam: false },
-      { name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true },
+      { name: "Psychologia", hours: 55, ects: 3, exam: true, img: psychology },
+      { name: "Socjologia", hours: 40, ects: 1, exam: false, img: sociology },
+      { name: "Pedagogika", hours: 50, ects: 2, exam: true , img: pedagogy },
+      { name: "Prawo medyczne", hours: 55, ects: 2, exam: false , img: law },
+      { name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: publicHealth },
     ],
   },
   {
     id: "3",
     year: 1,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: modules,
+    image: nursing,
     subjects: [
-      { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true },
-      { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false },
-      { name: "Promocja zdrowia", hours: 55, ects: 1, exam: false },
-      { name: "Podstawowa opieka zdrowotna", hours: 55, ects: 3, exam: true },
-      { name: "Dietetyka", hours: 40, ects: 1, exam: false },
-      { name: "Badanie fizykalne", hours: 60, ects: 3, exam: true },
-      { name: "Zakażenia szpitalne", hours: 45, ects: 1, exam: false },
+      { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true , img: nursingBasic },
+      { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false , img: nursingEthics },
+      { name: "Promocja zdrowia", hours: 55, ects: 1, exam: false , img: healthPromotion },
+      { name: "Podstawowa opieka zdrowotna", hours: 55, ects: 3, exam: true , img: basicCare },
+      { name: "Dietetyka", hours: 40, ects: 1, exam: false , img: dietetics },
+      { name: "Badanie fizykalne", hours: 60, ects: 3, exam: true , img: examination },
+      { name: "Zakażenia szpitalne", hours: 45, ects: 1, exam: false , img: infection },
       {
         name: "Systemy informacji w ochronie zdrowia",
         hours: 30,
         ects: 1,
         exam: false,
+        img: information,
       },
     ],
   },
@@ -64,44 +108,49 @@ export const curriculum: CurriculumBlock[] = [
     id: "4",
     year: 2,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: modules,
-    subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true }],
+    image: social,
+    subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: healthPublic }],
   },
   {
     id: "5",
     year: 2,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: modules,
+    image: specializedCare,
     subjects: [
       {
         name: "Choroby wewnętrzne i pielęgniarstwo internistyczne",
         hours: 100,
         ects: 3,
         exam: true,
+        img: internalMedicine,
       },
       {
         name: "Pediatra i pelęgniarstwo pediatryczne",
         hours: 100,
         ects: 3,
         exam: true,
+        img: pediatrics,
       },
       {
         name: "Chirurgia i pelęgniarstwo chirurgiczne",
         hours: 100,
         ects: 3,
         exam: true,
+        img: surgery,
       },
       {
         name: "Położnictwo i ginekologia i pielęgniarstwo położniczo-ginekologiczne",
         hours: 55,
         ects: 1,
         exam: true,
+        img: gynecology,
       },
       {
         name: "Neurologia i pielęgniarstwo neurologiczne",
         hours: 60,
         ects: 2,
         exam: true,
+        img: neurology,
       },
     ],
   },
@@ -109,13 +158,14 @@ export const curriculum: CurriculumBlock[] = [
     id: "6",
     year: 3,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: modules,
+    image:  nursing,
     subjects: [
       {
         name: "Organizacja pracy pielęgniarki",
         hours: 45,
         ects: 2,
         exam: false,
+        img: organization,
       },
     ],
   },
@@ -123,47 +173,53 @@ export const curriculum: CurriculumBlock[] = [
     id: "7",
     year: 3,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: modules,
+    image: specializedCare,
     subjects: [
       {
         name: "Psychiatria i pielęgniarstwo psychiatryczne",
         hours: 50,
         ects: 2,
         exam: true,
+        img: psychiatry,
       },
       {
         name: "Anestezjologia i pielęgniarstwo w zagrożeniu życia",
         hours: 65,
         ects: 3,
         exam: true,
+        img: anesthesiology,
       },
       {
         name: "Pielęgniarstwo opieki długoterminowej",
         hours: 55,
         ects: 2,
         exam: true,
+        img: longTermCare,
       },
       {
         name: "Geriatria i pielęgniarstwo geriatryczne",
         hours: 60,
         ects: 2,
         exam: true,
+        img: geriatrics,
       },
-      { name: "Opieka paliatywna", hours: 55, ects: 1, exam: true },
-      { name: "Podstawy rehabilitacji", hours: 45, ects: 1, exam: false },
+      { name: "Opieka paliatywna", hours: 55, ects: 1, exam: true, img: palliativeCare },
+      { name: "Podstawy rehabilitacji", hours: 45, ects: 1, exam: false, img: rehabilitation },
       {
         name: "Podstawy ratownictwa medycznego",
         hours: 50,
         ects: 2,
         exam: true,
+        img: resuscitation,
       },
       {
         name: "Badania naukowe w pielęgniarstwie",
         hours: 45,
         ects: 2,
         exam: false,
+        img: research,
       },
-      { name: "Seminarium dyplomowe", hours: 50, ects: 2, exam: false },
+      { name: "Seminarium dyplomowe", hours: 50, ects: 2, exam: false, img: seminar },
     ],
   },
 ];

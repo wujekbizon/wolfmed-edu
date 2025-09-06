@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import subjectPlaceholder from "@/images/modules.jpg";
 import type { CurriculumBlock } from "@/types/careerPathsTypes";
 import { groupByYear } from "@/helpers/groupByYear";
 
@@ -136,7 +135,7 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                   <div className="flex justify-end items-center">
 
                   <span
-                    className={`cursor-pointer inline-flex items-center h-8 w-8 bg-red-500/20 animate-pulse border justify-center rounded-full text-zinc-800 transition ${
+                    className={`cursor-pointer inline-flex items-center h-8 w-8 mt-2 bg-red-500/20 animate-pulse border justify-center rounded-full text-zinc-800 transition ${
                       isYearOpen ? "rotate-180" : "rotate-0"
                     }`}
                     aria-hidden
@@ -167,7 +166,7 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <ul className=" space-y-7 border p-4">
+                  <ul className=" space-y-7 border border-zinc-300/40 p-4 bg-slate-50">
                     {blocks?.map(({ id, module, image, subjects }) => {
                       const isModuleOpen = expandedModules.has(id);
                       const moduleHours = subjects.reduce(
@@ -185,6 +184,7 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                               alt={module}
                               fill
                               className="object-cover "
+                              sizes="(max-width: 768px) 100vw, 400px"
                             />
                             <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-white/60 to-white/30" />
                           </div>
@@ -253,7 +253,7 @@ export default function CurriculumMap({ curriculum }: CurriculumMapProps) {
                                       className="relative overflow-hidden rounded-lg border border-zinc-200 p-3 sm:p-4 text-center shadow-sm hover:shadow transition h-[150px] sm:h-[170px]"
                                     >
                                       <Image
-                                        src={subjectPlaceholder}
+                                        src={subj.img ?? ""}
                                         alt="Tło przedmiotu"
                                         fill
                                         className="object-cover"

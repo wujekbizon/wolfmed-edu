@@ -14,6 +14,7 @@ export type CurriculumBlock = {
     ects?: number;
     form?: string;
     exam?: boolean;
+    img?: StaticImageData | string;
   }[];
 };
 
