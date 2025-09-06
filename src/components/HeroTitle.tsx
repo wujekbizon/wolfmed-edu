@@ -3,7 +3,7 @@
 export default function HeroTitle() {
   return (
     <>
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800 leading-16">
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
         <span className="animate-fadeInUp inline-block">Edukacja </span>{' '}
         <span className="text-[#ff5b5b] animate-scaleIn [--slidein-delay:200ms] inline-block"> medyczna</span>
         <br />

@@ -21,7 +21,7 @@ export function HumanCellSVG({
   color,
   reproductionCooldown = 10,
 }: HumanCellSVGProps) {
-  const strokeW = 2; 
+  const strokeW = 1; 
 
   const actualRadius = Math.min(size.width, size.height) / 2 - strokeW;
 
@@ -36,14 +36,14 @@ export function HumanCellSVG({
     <svg
       id={id}
       data-type={type}
-      width={size.width}
-      height={size.height}
+      width="100%"
+      height="100%"
       style={{
-        position: "absolute",
-        left: position.x - size.width / 2,
-        top: position.y - size.height / 2,
+        position: "relative",
+        display: "block",
       }}
       viewBox={`0 0 ${size.width} ${size.height}`}
+      
     >
       {/* Cell membrane */}
       <circle

@@ -46,13 +46,13 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full hidden md:flex items-center h-[55vh] flex-1/2">
+          {/* <div className="w-full hidden md:flex items-center h-[55vh] flex-1/2 justify-center">
             <Image
               src={imgSrc}
               alt={title}
-              className="w-full h-[600px] object-cover rounded-xl object-top"
+              className="w-2/3 h-[600px] object-cover rounded-xl"
             />
-          </div>
+          </div> */}
         </div>
       ) : (
         <div
