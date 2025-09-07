@@ -46,7 +46,7 @@ export default function CreatePostForm({ onClose }: Props) {
               id="title"
               name="title"
               placeholder="Tytuł posta"
-              defaultValue={state.values?.title || ''}
+              defaultValue={state.values?.title?.toString() || ''}
               className="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 text-zinc-100 placeholder:text-zinc-600 outline-none"
             />
             <FieldError name="title" formState={state} />

@@ -353,25 +353,6 @@ export const careerPathsData: Record<string, PathData> = {
           "Wyzwania i quizy procedur"
         ]
       }
-    },
-    testimonials: [
-      {
-        quote:
-          "Świetna platforma edukacyjna! Materiały są konkretne, a mapa programu pomaga zrozumieć cały tok nauczania.",
-        author: "Anna, studentka pielęgniarstwa",
-        role: "II rok",
-      },
-      {
-        quote:
-          "Przejrzyste moduły, testy i procedury – wszystko w jednym miejscu. Idealne wsparcie przed kolokwiami i praktykami.",
-        author: "Michał, student pielęgniarstwa",
-        role: "III rok",
-      },
-      {
-        quote:
-          "Najbardziej cenię możliwość szybkiego powtórzenia materiału i sprawdzenia się na quizach. Polecam!",
-        author: "Katarzyna, absolwentka",
-      },
-    ],
+    }
   },
 };

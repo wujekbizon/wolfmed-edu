@@ -13,6 +13,7 @@ import Username from '@/components/Username'
 import SupporterStatusSkeleton from '@/components/skeletons/SupporterStatusSkeleton'
 import ExamCountdownSkeleton from '@/components/skeletons/ExamCountdownSkeleton'
 import Membership from '@/app/_components/Membership'
+import TestimonialForm from '@/components/TestimonialForm'
 
 export const experimental_ppr = true
 
@@ -34,12 +35,15 @@ export default async function TestsPage() {
               <SupporterStatus />
             </Suspense>
           </div>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col xs:flex-row gap-6">
+          <div className="flex flex-col xs:flex-row gap-6">
               <Suspense fallback={<UserMottoSkeleton />}>
                 <UserMotto />
               </Suspense>
             </div>
+          <Suspense fallback={<UserProgressSkeleton />}>
+            <UserProgress />
+          </Suspense>
+          <div className="flex flex-col gap-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                 <UsernameForm />
@@ -47,11 +51,12 @@ export default async function TestsPage() {
               <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                 <MottoForm />
               </div>
+              <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+               <TestimonialForm />
+              </div>
             </div>
           </div>
-          <Suspense fallback={<UserProgressSkeleton />}>
-            <UserProgress />
-          </Suspense>
+  
         </div>
       </div>
     </section>

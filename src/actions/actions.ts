@@ -16,6 +16,7 @@ import {
   UpdateUsernameSchema,
   CreatePostSchema,
   CreateCommentSchema,
+  CreateTestimonialSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql, and, gt } from 'drizzle-orm'
@@ -30,6 +31,7 @@ import {
   deleteForumComment,
   getLastUserPostTime,
   getLastUserCommentTime,
+  createTestimonial,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
@@ -434,4 +436,44 @@ export async function deleteCommentAction(formState: FormState, formData: FormDa
 
   revalidatePath('/forum')
   return toFormState('SUCCESS', 'Komentarz został usunięty')
+}
+
+export async function createTestimonialAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const content = formData.get('content') as string
+  const rating = Number(formData.get('rating')) || 0
+  const visibleRaw = formData.get('visible') as string | null
+
+  const visible = visibleRaw === 'on'
+
+  const validationResult = CreateTestimonialSchema.safeParse({
+    content,
+    rating,
+    visible:true,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { content, rating, visible },
+    }
+  }
+
+  try {
+    await createTestimonial({
+      userId,
+      ...validationResult.data,
+      visible:true
+    })
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: { content, rating },
+    }
+  }
+
+  revalidatePath('/panel')
+  return toFormState('SUCCESS', 'Opinia została dodana pomyślnie!')
 }

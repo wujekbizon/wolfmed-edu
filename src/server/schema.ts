@@ -74,3 +74,16 @@ export const CreateCommentSchema = z.object({
 
 export type CreatePostInput = z.infer<typeof CreatePostSchema>
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>
+
+export const CreateTestimonialSchema = z.object({
+  content: z
+    .string()
+    .min(10, 'Opinia musi mieć co najmniej 10 znaków')
+    .max(1000, 'Opinia nie może być dłuższa niż 1000 znaków'),
+  rating: z
+    .number()
+    .min(0, 'Ocena nie może być mniejsza niż 0')
+    .max(5, 'Ocena nie może być większa niż 5')
+    .multipleOf(0.5, 'Ocena musi być podawana w krokach co 0.5'),
+  visible: z.coerce.boolean().default(true),
+})

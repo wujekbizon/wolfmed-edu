@@ -9,6 +9,9 @@ interface Input {
   name?: string | undefined
   required?: boolean | undefined
   autoComplete?: string | undefined
+  min?: number | undefined
+  max?: number | undefined
+  step?: number | string | undefined
 }
 
 export default function Input({
@@ -22,6 +25,9 @@ export default function Input({
   required,
   id,
   autoComplete,
+  min,
+  max,
+  step
 }: Input) {
   return (
     <input
@@ -35,6 +41,9 @@ export default function Input({
       name={name}
       required={required}
       autoComplete={autoComplete}
+      min={min}
+      max={max}
+      step={step}
     />
   )
 }
