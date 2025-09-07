@@ -18,5 +18,6 @@ export interface Payment extends BasePayment {}
 
 export type Supporter = {
   id: string
+  userId: string
   username: string
 }

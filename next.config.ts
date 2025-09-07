@@ -23,7 +23,13 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/a/zw3dk8dyy9/**',
       },
-    ],
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+        port: '',
+        pathname: '/**',
+      },
+    ]
   },
   webpack: (config) => {
     config.cache = {

@@ -30,10 +30,14 @@ type PricingTable = {
 };
 
 export type Testimonial = {
-  quote: string;
-  author: string;
-  role?: string;
-  avatarUrl?: string;
+  id:string,
+  userId: string,
+  content: string,
+  rating: number,
+  visible: boolean,
+  createdAt: Date,
+  updatedAt:Date,
+  username: string | null
 };
 
 export type PathData = {

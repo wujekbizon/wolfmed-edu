@@ -1,11 +1,11 @@
 import { Suspense } from 'react'
 import SupportersList from './SupportersList'
-import { getSupportersUsernames } from '@/server/queries'
-import SupportersListSkeleton from './SupportersListSkeleton'
+import SupportersListSkeleton from './skeletons/SupportersListSkeleton'
+import { getSupportersWithUsernames } from '@/server/queries'
 
 export default async function EarlySupporters() {
-  const supportersUsernames = await getSupportersUsernames()
-
+  const supportersUsernames = await getSupportersWithUsernames()
+  
   return (
     <section className="w-full py-8 sm:py-16 bg-linear-to-b from-zinc-100 to-zinc-200">
       <div className="container mx-auto px-4 xs:px-8 relative">
