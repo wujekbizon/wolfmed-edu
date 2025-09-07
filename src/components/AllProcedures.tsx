@@ -32,7 +32,7 @@ export default function AllProcedures(props: { procedures: Procedure[] }) {
       <div className="w-full lg:w-3/4 xl:w-2/3 flex">
         <Link
           className="flex items-center justify-between gap-2 sm:gap-5 bg-red-400 hover:bg-red-500 px-4 sm:px-8 py-2 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
-          href="/testy-opiekun/procedury/wyzwania"
+          href="/panel/procedury/wyzwania"
         >
           <Game width={28} height={28} />
           Wyzwanie losowej procedury

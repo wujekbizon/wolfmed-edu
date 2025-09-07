@@ -115,9 +115,9 @@ export async function submitTestAction(formState: FormState, formData: FormData)
 
   // Update form state and redirect on success and redirect user to result page
   toFormState('SUCCESS', 'Test został wypełniony pomyślnie')
-  // revalidatePath('/testy-opiekun', 'page')
+  // revalidatePath('/panel', 'page')
   revalidateTag('score')
-  redirect('/testy-opiekun/wyniki')
+  redirect('/panel/wyniki')
 }
 
 /**
@@ -179,7 +179,7 @@ export async function deleteTestAction(formState: FormState, formData: FormData)
     return fromErrorToFormState(error)
   }
 
-  revalidatePath('testy-opiekun/wyniki')
+  revalidatePath('panel/wyniki')
   return toFormState('SUCCESS', 'Test usunięty pomyślnie')
 }
 
@@ -210,7 +210,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
       values: { username },
     }
   }
-  revalidatePath('/testy-opiekun')
+  revalidatePath('/panel')
   return toFormState('SUCCESS', 'Username updated successfully!')
 }
 
@@ -242,7 +242,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
     }
   }
 
-  revalidatePath('/testy-opiekun')
+  revalidatePath('/panel')
   return toFormState('SUCCESS', 'Motto zaktualizowane pomyślnie!')
 }
 

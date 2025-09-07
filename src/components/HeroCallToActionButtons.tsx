@@ -8,7 +8,7 @@ export default async function HeroCallToActionButtons() {
   return (
     <>
       {isSignedIn ? (
-        <HeroButton link="/testy-opiekun/nauka">Rozpocznij naukę</HeroButton>
+        <HeroButton link="/panel/nauka">Rozpocznij naukę</HeroButton>
       ) : (
         <HeroButton link="/sign-up">Zarejestruj się</HeroButton>
       )}

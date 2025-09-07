@@ -21,7 +21,7 @@ export const navLinks = [
   },
   {
     id: '3',
-    linkUrl: '/testy-opiekun',
+    linkUrl: '/panel',
     label: 'Panel',
     icon: <DashboardIcon />,
     title: "Panel Użytkownika"

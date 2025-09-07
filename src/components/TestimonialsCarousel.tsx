@@ -3,7 +3,7 @@
 import { useCarousel } from "@/hooks/useCarousel"
 import { getInitials } from "@/helpers/getInitials"
 import { Testimonial } from "@/types/careerPathsTypes"
-import { Stars } from "./Stars"
+import Stars  from "./Stars"
 import { formatDaysAgo } from "@/helpers/formatDate"
 
 export default function TestimonialsCarousel({

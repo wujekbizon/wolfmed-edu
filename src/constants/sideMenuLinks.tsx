@@ -8,32 +8,32 @@ import UserProfileIcon from '@/components/icons/UserProfileIcon'
 
 export const sideMenuNavigationLinks = [
   {
-    url: '/testy-opiekun',
+    url: '/panel',
     label: 'Ogólne',
     icon: <UserProfileIcon width={26} height={26} />,
   },
   {
-    url: '/testy-opiekun/testy',
+    url: '/panel/testy',
     label: 'Testy',
     icon: <DashboardIcon width={26} height={26} />,
   },
   {
-    url: '/testy-opiekun/wybrane-pytania',
+    url: '/panel/wybrane-pytania',
     label: 'Wybrane',
     icon: <SelectedIcon width={26} height={26} />,
   },
   {
-    url: '/testy-opiekun/nauka',
+    url: '/panel/nauka',
     label: 'Nauka',
     icon: <LearnIcon width={26} height={26} />,
   },
   {
-    url: '/testy-opiekun/procedury',
+    url: '/panel/procedury',
     label: 'Procedury',
     icon: <ProceduresIcon width={26} height={26} />,
   },
   {
-    url: '/testy-opiekun/wyniki',
+    url: '/panel/wyniki',
     label: 'Wyniki',
     icon: <ProgressIcon width={26} height={26} />,
   },

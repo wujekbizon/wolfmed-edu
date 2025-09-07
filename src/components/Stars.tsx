@@ -56,7 +56,7 @@ type StarsProps = {
   rating: number; // supports integers and halves like 3.5
 };
 
-export const Stars = React.memo(({ rating }: StarsProps) => {
+const Stars =({ rating }: StarsProps) => {
   const stars = useMemo(() => {
     const fullStars = Math.floor(rating);
     const hasHalf = rating % 1 >= 0.5;
@@ -69,4 +69,6 @@ export const Stars = React.memo(({ rating }: StarsProps) => {
   }, [rating]);
 
   return <div className="flex gap-1">{stars}</div>;
-});
+};
+
+export default React.memo(Stars)
