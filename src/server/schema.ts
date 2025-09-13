@@ -87,3 +87,56 @@ export const CreateTestimonialSchema = z.object({
     .multipleOf(0.5, 'Ocena musi być podawana w krokach co 0.5'),
   visible: z.coerce.boolean().default(true),
 })
+
+/**
+ * Schema for validating the data required to create a new test.
+ */
+export const CreateTestSchema = z.object({
+  category: z.string().min(1, { message: "Proszę wybrać kategorię" }),
+  question: z
+    .string()
+    .min(1, { message: "Pole pytania nie może być puste" })
+    .max(550, { message: "Długość nie może przekraczać 550 znaków" }),
+  answers: z.array(
+    z.object({
+      option: z
+        .string()
+        .min(1, { message: "Pole odpowiedzi nie może być puste" })
+        .max(350, {
+          message: "Odpowiedź nie może być dłuższa niż 350 znaków",
+        }),
+      isCorrect: z.boolean(),
+    }),
+  ),
+});
+
+/**
+ * Schema for validating test data imported from a file.
+ */
+export const TestFileSchema = z.array(
+  z.object({
+    data: z.object({
+      question: z
+        .string()
+        .min(1, { message: "Pole pytania nie może być puste" })
+        .max(650, {
+          message: "Długość nie może przekraczać 650 znaków",
+        }),
+      answers: z
+        .array(
+          z.object({
+            option: z
+              .string()
+              .min(1, { message: "Pole odpowiedzi nie może być puste" })
+              .max(500, {
+                message: "Odpowiedź nie może być dłuższa niż 500 znaków",
+              }),
+            isCorrect: z.boolean(),
+          }),
+        )
+        .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
+        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
+    }),
+    category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
+  }),
+);

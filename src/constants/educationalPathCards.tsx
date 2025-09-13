@@ -1,7 +1,4 @@
 import { StaticImageData } from "next/image";
-import img1 from "@/images/caregiver.jpg";
-import img2 from "@/images/nurse.jpg";
-import img3 from "@/images/students.jpg";
 import React from "react";
 import LearnIcon from "@/components/icons/LearnIcon";
 import ProgressIcon from "@/components/icons/ProgressIcon";
@@ -25,7 +22,7 @@ const CAREGIVER: CardProps = {
   titleBtn: "Najczęściej wybierany!",
   description:
     "Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny. Korzystaj z setek testów, procedur krok po kroku oraz wsparcia aktywnej społeczności. Nasza ścieżka edukacyjna została stworzona z myślą zarówno o osobach, które dopiero rozpoczynają swoją karierę i przygotowują się do egzaminu zawodowego, jak i o tych, którzy już pracują w zawodzie i chcą pogłębić swoją wiedzę, utrwalić procedury lub odświeżyć materiał przed kolejnym etapem kariery.",
-  imgSrc: img1,
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN',
   text: "Sprawdź kierunek opiekun medyczny",
   url: "/kierunki/opiekun-medyczny",
   icon: "caregiver",
@@ -36,7 +33,7 @@ const NURSE: CardProps = {
   titleBtn: "W krótce dostępny!",
   description:
     "Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.",
-  imgSrc: img2,
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ICz8koequML1BazyDiNo5UcxtTn3s6YgW47C',
   text: "Sprawdź kierunek pielęgniarstwo",
   url: "/kierunki/pielegniarstwo",
   icon: "nurse",
@@ -66,7 +63,7 @@ const INFO: CardProps = {
       icon: <ProgressIcon color="white" width={56} height={56}/>
     },
   ],
-  imgSrc: img3,
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5p5q9UmXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb',
   text: "Dołącz już dziś",
   url: "/sign-up",
   icon: "info",

@@ -23,6 +23,11 @@ export const sideMenuNavigationLinks = [
     icon: <SelectedIcon width={26} height={26} />,
   },
   {
+    url: '/panel/dodaj-test',
+    label: 'Dodaj Test',
+    icon: <FeadbackIcon width={26} height={26} />,
+  },
+  {
     url: '/panel/nauka',
     label: 'Nauka',
     icon: <LearnIcon width={26} height={26} />,
@@ -36,10 +41,6 @@ export const sideMenuNavigationLinks = [
     url: '/panel/wyniki',
     label: 'Wyniki',
     icon: <ProgressIcon width={26} height={26} />,
-  },
-  {
-    url: '/#contact',
-    label: 'Kontakt',
-    icon: <FeadbackIcon width={26} height={26} />,
-  },
+  }
 ]
+

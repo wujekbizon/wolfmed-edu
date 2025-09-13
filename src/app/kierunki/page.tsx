@@ -1,21 +1,18 @@
 import PathCarousel from "@/components/PathCarousel";
-import img1 from "@/images/medical-guardian-wide.jpg";
-import img2 from "@/images/nurse-wide.jpg";
-import Footer from "../_components/Footer";
 
 const paths = [
   {
     slug: "opiekun-medyczny",
     title: "Opiekun Medyczny",
     teaser: "Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!",
-    image: img1,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RgLCs7moJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
     cta: "Sprawdź szczegóły",
   },
   {
     slug: "pielegniarstwo",
     title: "Pielęgniarstwo",
     teaser: "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
-    image: img2,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
     cta: "Zarejestruj się już dziś",
   }
 ];

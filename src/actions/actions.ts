@@ -7,7 +7,7 @@ import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
-import { completedTestes, customersMessages, forumComments, users } from '@/server/db/schema'
+import { completedTestes, customersMessages, forumComments, tests, users } from '@/server/db/schema'
 import {
   CreateAnswersSchema,
   CreateMessageSchema,
@@ -17,6 +17,8 @@ import {
   CreatePostSchema,
   CreateCommentSchema,
   CreateTestimonialSchema,
+  CreateTestSchema,
+  TestFileSchema,
 } from '@/server/schema'
 import { auth } from '@clerk/nextjs/server'
 import { eq, sql, and, gt } from 'drizzle-orm'
@@ -34,6 +36,8 @@ import {
   createTestimonial,
 } from '@/server/queries'
 import { revalidatePath, revalidateTag } from 'next/cache'
+import { extractAnswerData } from '@/helpers/extractAnswerData'
+import { determineTestCategory } from '@/helpers/determineTestCategory'
 
 /**
  * Processes test submission, validates answers, updates user limits and stores results
@@ -476,4 +480,124 @@ export async function createTestimonialAction(formState: FormState, formData: Fo
 
   revalidatePath('/panel')
   return toFormState('SUCCESS', 'Opinia została dodana pomyślnie!')
+}
+
+// Function to create a single test object
+export async function createTestAction(
+  formState: FormState,
+  formData: FormData,
+) {
+  // Check user authorization
+  const user = await auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  try {
+    // Extract answers from formData
+    const answersData = extractAnswerData(formData);
+
+    // Determine the chosen category
+    const testCategory = determineTestCategory(formData);
+
+    // Validate and destructure form data using Zod schema
+    const { answers, category, question } = CreateTestSchema.parse({
+      category: testCategory,
+      question: formData.get("question"),
+      answers: answersData,
+    });
+
+    // Additional validation for exactly one correct answer
+    const correctAnswers = answersData.filter((answer) => answer.isCorrect);
+    if (correctAnswers.length !== 1) {
+      return toFormState("ERROR", "Please select exactly one correct answer.");
+    }
+
+    // Prepare data for database insertion
+    const data = {
+      question,
+      answers,
+    };
+
+      // // Insert test data into database
+      // await db
+      //   .insert(tests)
+      //   .values({ userId: user.userId, data, category: category.toLowerCase() });
+      console.log(data)
+  } catch (error) {
+    return fromErrorToFormState(error);
+  }
+
+  return toFormState("SUCCESS", "Test Utworzony");
+}
+
+// Function to upload tests from a file
+export async function uploadTestsFromFile(
+  FormState: FormState,
+  formData: FormData,
+) {
+  // Check user authorization
+  const user = await auth();
+  if (!user.userId) throw new Error("Unauthorized");
+
+  // Get the uploaded file
+  const file = formData.get("file") as File;
+  if (!file) throw new Error("Please select file!");
+
+  try {
+    // Read the file content chunk by chunk
+    const fileReader = file.stream().getReader();
+    const testsDataU8: Uint8Array[] = [];
+
+    while (true) {
+      const { done, value } = await fileReader.read();
+      if (done) break;
+      testsDataU8.push(value as Uint8Array);
+    }
+
+    // Reconstruct the file content from chunks
+    const testsBinary = Buffer.concat(testsDataU8);
+    const fileContent = testsBinary.toString("utf8"); // Decode Buffer as UTF-8 string
+
+    if (!fileContent)
+      return toFormState("ERROR", "Proszę wybrać plik do przesłania!");
+
+    // Parse the JSON content from the file
+    const parsedData = JSON.parse(fileContent);
+
+    // Validate the parsed JSON data using Zod schema
+    const validationResult = await TestFileSchema.safeParseAsync(parsedData);
+
+    if (!validationResult.success) {
+      console.error("Validation Errors:", validationResult.error.issues);
+      return toFormState(
+        "ERROR",
+        "Nieprawidłowy format danych. Sprawdź dokumentację, jak przygotować plik z danymi testowymi.",
+      );
+    }
+
+    // Data is valid, proceed with processing
+    const validatedData = validationResult.data;
+
+    console.log(validatedData)
+
+    // const insertPromises = validatedData.map(async (testData) => {
+    //   await db.insert(tests).values({
+    //     userId: user.userId,
+    //     data: testData.data,
+    //     category: testData.category,
+    //   });
+    // });
+
+    // await Promise.all(insertPromises);
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Error parsing JSON:", error.message);
+      return toFormState(
+        "ERROR",
+        "Wygląda na to, że treść jest nieprawidłowym kodem JSON. Upewnij się, że dane JSON są prawidłowe.",
+      );
+    } else {
+      return fromErrorToFormState(error);
+    }
+  }
+  return toFormState("SUCCESS", "Plik poprawnie przesłany");
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import Input from '@/components/Input'
-import Label from '@/components/Label'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useActionState } from 'react'
 import { updateUsername } from '@/actions/actions'

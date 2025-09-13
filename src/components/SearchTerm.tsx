@@ -1,7 +1,7 @@
 'use client'
 
-import Label from '@/components/Label'
-import Input from '@/components/Input'
+import Label from '@/components/ui/Label'
+import Input from '@/components/ui/Input'
 
 export default function SearchTerm({
   label,

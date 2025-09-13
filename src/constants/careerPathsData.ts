@@ -1,106 +1,60 @@
 import { CurriculumBlock, PathData } from "@/types/careerPathsTypes";
-import exams from "@/images/exams.jpg"
-import procedures from "@/images/procedures.jpg"
-import quizes from "@/images/quizes.jpg"
-import modules from "@/images/modules.jpg"
-import basic from "@/images/nauki_podstawowe.jpg"
-import social from "@/images/nauki_spoleczne.jpg"
-import nursing from "@/images/nauki_pielegniarstwo.jpg"
-import specializedCare from "@/images/nauki_opieka_specjalistyczna.jpg"
-import anatomy from "@/images/anatomia.jpg"
-import physiology from "@/images/fizjologia.jpg"
-import pathology from "@/images/patologia.jpg"
-import genetics from "@/images/genetyka.jpg"
-import biochemistry from "@/images/biochemia.jpg"
-import microbiology from "@/images/mikrobiologia.jpg"
-import pharmacology from "@/images/farmakologia.jpg"
-import radiology from "@/images/radiologia.jpg"
-import psychology from "@/images/psychologia.jpg"
-import sociology from "@/images/socjologia.jpg"
-import pedagogy from "@/images/pedagogika.jpg"
-import law from "@/images/prawo_medyczne.jpg"
-import publicHealth from "@/images/zdrowie.jpg"
-import nursingBasic from "@/images/podstawy_pielegniarstwa.jpg"
-import nursingEthics from "@/images/etyka_zawodowa.jpg"
-import healthPromotion from "@/images/promocja_zdrowia.jpg"
-import basicCare from "@/images/podstawowa_opieka.jpg"
-import dietetics from "@/images/dietetyka.jpg"
-import examination from "@/images/badania.jpg"
-import infection from "@/images/zakazenia.jpg"
-import information from "@/images/systemy.jpg"
-import healthPublic from "@/images/zdrowie_publiczne.jpg"
-import internalMedicine from "@/images/choroby_wewnetrzne.jpg"
-import pediatrics from "@/images/pediatria.jpg"
-import surgery from "@/images/chirurgia.jpg"
-import gynecology from "@/images/poloznictwo.jpg"
-import neurology from "@/images/neurologia.jpg"
-import psychiatry from "@/images/psychiatria.jpg"
-import anesthesiology from "@/images/anestezjologia.jpg"
-import longTermCare from "@/images/pielegniarstwo_dlugoterminowe.jpg"
-import geriatrics from "@/images/geriatria.jpg"
-import organization from "@/images/organizacja.jpg"
-import palliativeCare from "@/images/opieka_paliatywna.jpg"
-import rehabilitation from "@/images/rehabilitacja.jpg"
-import resuscitation from "@/images/ratownictwo.jpg"
-import research from "@/images/badania.jpg"
-import seminar from "@/images/seminarium.jpg"
-
 
 export const curriculum: CurriculumBlock[] = [
   {
     id: "1",
     year: 1,  
     module: "Moduł A - Nauki podstawowe",
-    image: basic,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k55TMQo0nBKUAhkYmyprxV4JznuWGliEwXqgb2',
     subjects: [
-      { name: "Anatomia", hours: 90, ects: 4, exam: true, img: anatomy },
-      { name: "Fizjologia", hours: 75, ects: 3, exam: true, img: physiology },
+      { name: "Anatomia", hours: 90, ects: 4, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52G1vt6SEBiUD8sVXHObYqkj3TNfo4PKMGg6J' },
+      { name: "Fizjologia", hours: 75, ects: 3, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UN2L0ZIxs2k5EyuGdN4SRigYP6qreJDvtVZl' },
       {
         name: "Patologia / Patomorfologia / Patofizjologia",
         hours: 80,
         ects: 2,
         exam: true,
-        img: pathology,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kfYUFUA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R',
       },
-      { name: "Genetyka", hours: 45, ects: 2, exam: true, img: genetics },
-      { name: "Biochemia z biofizyką", hours: 50, ects: 2, exam: true, img: biochemistry },
-      { name: "Mikrobiologia z parazytologią", hours: 50, ects: 2, exam: true, img: microbiology },
-      { name: "Farmakologia", hours: 85, ects: 4, exam: true, img: pharmacology },
-      { name: "Radiologia", hours: 25, ects: 1, exam: false, img: radiology },
+      { name: "Genetyka", hours: 45, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5D2kdG57Z2fx3PC4csA61VRoig5ELrXbvQz8K' },
+      { name: "Biochemia z biofizyką", hours: 50, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bHmZPN10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
+      { name: "Mikrobiologia z parazytologią", hours: 50, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QNXUuJYf6PZ5eKuhFM9REHkAy4n7s3aNYmWi' },
+      { name: "Farmakologia", hours: 85, ects: 4, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5pu33VvXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb' },
+      { name: "Radiologia", hours: 25, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k572wvLXLMpcn5R2Y4TWoEbjyPSwZtlvLxBXzi' },
     ],
   },
   {
     id: "2",
     year: 1,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: social,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
     subjects: [
-      { name: "Psychologia", hours: 55, ects: 3, exam: true, img: psychology },
-      { name: "Socjologia", hours: 40, ects: 1, exam: false, img: sociology },
-      { name: "Pedagogika", hours: 50, ects: 2, exam: true , img: pedagogy },
-      { name: "Prawo medyczne", hours: 55, ects: 2, exam: false , img: law },
-      { name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: publicHealth },
+      { name: "Psychologia", hours: 55, ects: 3, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kbdfnVA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R' },
+      { name: "Socjologia", hours: 40, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nt6oObL9GQYxNri4Uw0MejlVEP63mgKp18FO' },
+      { name: "Pedagogika", hours: 50, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bp3ERm10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
+      { name: "Prawo medyczne", hours: 55, ects: 2, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JajIrkmQWsLSvF0ZVh7qXdCNxbjatwczey8g' },
+      { name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k54pC04HH9lLqODmv7er0SPRQB8C9VnfbTHisc' },
     ],
   },
   {
     id: "3",
     year: 1,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: nursing,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
     subjects: [
-      { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true , img: nursingBasic },
-      { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false , img: nursingEthics },
-      { name: "Promocja zdrowia", hours: 55, ects: 1, exam: false , img: healthPromotion },
-      { name: "Podstawowa opieka zdrowotna", hours: 55, ects: 3, exam: true , img: basicCare },
-      { name: "Dietetyka", hours: 40, ects: 1, exam: false , img: dietetics },
-      { name: "Badanie fizykalne", hours: 60, ects: 3, exam: true , img: examination },
-      { name: "Zakażenia szpitalne", hours: 45, ects: 1, exam: false , img: infection },
+      { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5gOhTeFK1JZolbvwfgWCAFPh8xz9BIKNsVjGk' },
+      { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KqquTG6br79T0mSRj6eAJqPf4kEid2ncgM5N' },
+      { name: "Promocja zdrowia", hours: 55, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52bP49YSEBiUD8sVXHObYqkj3TNfo4PKMGg6J' },
+      { name: "Podstawowa opieka zdrowotna", hours: 55, ects: 3, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MuPZEoNpIgLRq2SWA1u9QmzbxiHJl47OaTGX' },
+      { name: "Dietetyka", hours: 40, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JrZfRllmQWsLSvF0ZVh7qXdCNxbjatwczey8' },
+      { name: "Badanie fizykalne", hours: 60, ects: 3, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5TrNkKU6spcKHld4CGX8o0kyJTPUwfnQEMegN' },
+      { name: "Zakażenia szpitalne", hours: 45, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5s4bwXrWj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6' },
       {
         name: "Systemy informacji w ochronie zdrowia",
         hours: 30,
         ects: 1,
         exam: false,
-        img: information,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5L6WOW0yT6ikNIWjyZsOdaGtHcBb3PAS8E7u5',
       },
     ],
   },
@@ -108,49 +62,49 @@ export const curriculum: CurriculumBlock[] = [
     id: "4",
     year: 2,
     module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: social,
-    subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: healthPublic }],
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
+    subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rKVZXnDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C' }],
   },
   {
     id: "5",
     year: 2,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: specializedCare,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
     subjects: [
       {
         name: "Choroby wewnętrzne i pielęgniarstwo internistyczne",
         hours: 100,
         ects: 3,
         exam: true,
-        img: internalMedicine,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
       },
       {
         name: "Pediatra i pelęgniarstwo pediatryczne",
         hours: 100,
         ects: 3,
         exam: true,
-        img: pediatrics,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UEui6vIxs2k5EyuGdN4SRigYP6qreJDvtVZl',
       },
       {
         name: "Chirurgia i pelęgniarstwo chirurgiczne",
         hours: 100,
         ects: 3,
         exam: true,
-        img: surgery,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5G5GvuJptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
       },
       {
         name: "Położnictwo i ginekologia i pielęgniarstwo położniczo-ginekologiczne",
         hours: 55,
         ects: 1,
         exam: true,
-        img: gynecology,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5BiLJRlEFD1UJjByX9nEY7CcT26HaQ4iwRItP',
       },
       {
         name: "Neurologia i pielęgniarstwo neurologiczne",
         hours: 60,
         ects: 2,
         exam: true,
-        img: neurology,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5arfwh6ktQrdmqhSKIRj5fanksB630Te2FpiO',
       },
     ],
   },
@@ -158,14 +112,14 @@ export const curriculum: CurriculumBlock[] = [
     id: "6",
     year: 3,
     module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image:  nursing,
+    image:  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
     subjects: [
       {
         name: "Organizacja pracy pielęgniarki",
         hours: 45,
         ects: 2,
         exam: false,
-        img: organization,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rMpctujDJ4x1k8yEQjwiVOufWtG7U0K2FIB5',
       },
     ],
   },
@@ -173,53 +127,53 @@ export const curriculum: CurriculumBlock[] = [
     id: "7",
     year: 3,
     module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: specializedCare,
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
     subjects: [
       {
         name: "Psychiatria i pielęgniarstwo psychiatryczne",
         hours: 50,
         ects: 2,
         exam: true,
-        img: psychiatry,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Esgan2xcmxY7yfWXOQoKS6ujlVhadLJtzgFp',
       },
       {
         name: "Anestezjologia i pielęgniarstwo w zagrożeniu życia",
         hours: 65,
         ects: 3,
         exam: true,
-        img: anesthesiology,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5AyzkbsTmtJLFcNxMQbgSqKBWs3zA7RoEVreO',
       },
       {
         name: "Pielęgniarstwo opieki długoterminowej",
         hours: 55,
         ects: 2,
         exam: true,
-        img: longTermCare,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k553dSzbnBKUAhkYmyprxV4JznuWGliEwXqgb2',
       },
       {
         name: "Geriatria i pielęgniarstwo geriatryczne",
         hours: 60,
         ects: 2,
         exam: true,
-        img: geriatrics,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GMV4f0ptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
       },
-      { name: "Opieka paliatywna", hours: 55, ects: 1, exam: true, img: palliativeCare },
-      { name: "Podstawy rehabilitacji", hours: 45, ects: 1, exam: false, img: rehabilitation },
+      { name: "Opieka paliatywna", hours: 55, ects: 1, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5buIgEa10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
+      { name: "Podstawy rehabilitacji", hours: 45, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GP9lE8ptmTzWn2MCIiBjAQoFa6kbwYUZJScD' },
       {
         name: "Podstawy ratownictwa medycznego",
         hours: 50,
         ects: 2,
         exam: true,
-        img: resuscitation,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k58iLAeJ4HBZxypP1UFjuAhJ4WoOXgcGSRqzCi',
       },
       {
         name: "Badania naukowe w pielęgniarstwie",
         hours: 45,
         ects: 2,
         exam: false,
-        img: research,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5J4d8yhmQWsLSvF0ZVh7qXdCNxbjatwczey8g',
       },
-      { name: "Seminarium dyplomowe", hours: 50, ects: 2, exam: false, img: seminar },
+      { name: "Seminarium dyplomowe", hours: 50, ects: 2, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuHh2dFstcXZNvjLlr5ady1QbVDuRB7qTC8f' },
     ],
   },
 ];
@@ -236,7 +190,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Darmowa baza testów oparta na egzaminach z ostatnich 2 lat i kursie na opiekuna medycznego. Trzy poziomy trudności – losowe pytania z całej dostępnej puli.",
         text: "Wybierz kierunek OM",
-        imgSrc: exams,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
         url: "/sign-up",
         icon: "tests",
       },
@@ -246,7 +200,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Lista procedur i algorytmów dla opiekunów medycznych. Ponad 31 dostępnych algorytmów, które każdy przyszły opiekun medyczny powinien znać.",
         text: "Wybierz kierunek OM",
-        imgSrc: procedures,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Rgqyd4roJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
         url: "/sign-up",
         icon: "procedure",
       },
@@ -268,7 +222,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Zweryfikuj swoją znajomość procedur obowiązujących opiekuna medycznego. Wylosuj jedną z nich i sprawdź, czy pamiętasz, jak należy ją prawidłowo wykonać.",
         text: "Wybierz kierunek OM",
-        imgSrc: quizes,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Nyh9LK2M1UuCEmiKr7chszHj6GeZpqAJ4w2g',
         url: "/sign-up",
         icon: "game",
       },
@@ -279,7 +233,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
         text: "Wybierz kierunek OM",
-        imgSrc: modules,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
         url: "/sign-up",
         icon: "learn",
       }
@@ -319,7 +273,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym.",
         text: "Wybierz kierunek Pielęgniarstwo",
-        imgSrc: exams,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
         url: "/sign-up",
         icon: "tests",
       },
@@ -329,7 +283,7 @@ export const careerPathsData: Record<string, PathData> = {
         description:
           "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
         text: "Wybierz kierunek Pielęgniarstwo",
-        imgSrc: modules,
+        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
         url: "/sign-up",
         icon: "learn",
       }

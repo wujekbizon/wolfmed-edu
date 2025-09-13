@@ -1,14 +1,14 @@
 'use client'
 
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs'
-import Input from '@/components/Input'
 import SubmitButton from '@/components/SubmitButton'
 import { useActionState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import { sendEmail } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
-import Label from '@/components/Label'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 import Link from 'next/link'
 
 export default function ContactForm() {

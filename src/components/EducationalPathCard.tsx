@@ -51,6 +51,9 @@ const EducationalPathCard = ({
               src={imgSrc}
               alt={title}
               className="w-2/3 h-[600px] object-cover rounded-xl"
+              width={1024}
+              height={1024}
+              priority
             />
           </div> */}
         </div>
@@ -77,6 +80,9 @@ const EducationalPathCard = ({
               src={imgSrc}
               alt={title}
               className="w-full h-full object-cover rounded-xl"
+              width={1024}
+              height={1024}
+              priority
             />
           </div>
 
