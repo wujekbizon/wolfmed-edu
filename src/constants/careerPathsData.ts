@@ -259,7 +259,6 @@ export const careerPathsData: Record<string, PathData> = {
       }
     },
   },
-
   pielegniarstwo: {
     title: "Pielęgniarstwo",
     description:

@@ -10,7 +10,6 @@ import AuthSection from '@/components/AuthSection'
 import GradientOverlay from '@/components/GradientOverlay'
 import { usePathname } from 'next/navigation'
 import { SignedIn } from '@clerk/nextjs'
-import { Tooltip } from '@/components/Tooltip'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -21,7 +20,7 @@ export default function Navbar() {
     <>
       {isMenuOpen && <SideMenu />}
       <header
-        className={`bg-white h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
+        className={`${pathname.includes("panel") ? "bg-zinc-800" : "bg-white"} h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
             pathname && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'

@@ -9,7 +9,7 @@ import UserProfileIcon from '@/components/icons/UserProfileIcon'
 export const sideMenuNavigationLinks = [
   {
     url: '/panel',
-    label: 'Ogólne',
+    label: 'Panel Użytkownika',
     icon: <UserProfileIcon width={26} height={26} />,
   },
   {

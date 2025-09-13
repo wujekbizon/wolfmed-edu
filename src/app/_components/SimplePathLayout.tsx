@@ -43,7 +43,8 @@ export default function SimplePathLayout({
             Zyskaj solidne przygotowanie teoretyczne i praktyczne niezbędne do
             pracy w roli opiekuna medycznego.
           </p>
-          <div className="w-full h-full flex flex-col-reverse gap-0 sm:gap-6 2xl:flex-row items-center shadow-lg bg-white rounded-2xl border border-zinc-900/20 p-4 sm:p-6 md:px-16 md:py-10">
+          <div className="w-full h-full flex flex-col gap-0 sm:gap-6 2xl:flex-row items-center shadow-lg bg-white rounded-2xl border border-zinc-900/20 p-4 sm:p-6 md:px-16 md:py-10">
+            <TestsSelection />
             <div className="min-h-full lg:min-h-[800px] w-full flex flex-col justify-around items-center gap-8 @sm:gap-16 flex-3/5 rounded-2xl bg-black/5 p-4 md:p-8 lg:p-12">
               <h2 className="text-zinc-950 text-lg @md:text-xl @lg:text-2xl font-semibold text-center">
                 Rekomendacja Prezes Wolfmed Edukacja
@@ -69,7 +70,6 @@ export default function SimplePathLayout({
                 </p>
               </div>
             </div>
-            <TestsSelection />
           </div>
         </div>
       </div>

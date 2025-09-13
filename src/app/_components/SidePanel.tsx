@@ -12,12 +12,12 @@ export default function SidePanel() {
 
   return (
     <nav
-      className={`z-10 hidden h-full min-w-20 flex-col gap-20 rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex bg-zinc-800/30 backdrop-blur-md border border-zinc-600/20 shadow-md transition-all duration-500 ${
-        isSidePanelOpen ? 'w-64' : 'w-20'
+      className={`z-10 hidden h-full min-w-20 flex-col gap-20 text-zinc-900 bg-zinc-800 p-5 lg:flex transition-all duration-500 ${
+        isSidePanelOpen ? 'w-80' : 'w-20'
       }`}
     >
       <div className="flex w-full flex-row place-items-center justify-between gap-1">
-        <div className="h-10 w-10 bg-white/70 rounded-full flex justify-center items-center border-red-300/20 shadow-sm">
+        <div className="h-10 w-10 flex justify-center items-center">
           <Image
             className="h-8 w-8 object-cover"
             src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"

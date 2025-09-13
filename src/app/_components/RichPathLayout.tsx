@@ -4,7 +4,6 @@ import GradientOverlay from "@/components/GradientOverlay";
 import SimplePathCard from "@/components/SimplePathCard";
 import Link from "next/link";
 import CurriculumMap from "../../components/CurriculumMap";
-import TestimonialsCarousel from "../../components/TestimonialsCarousel";
 
 export default function RichPathLayout({
   title,
@@ -152,30 +151,6 @@ export default function RichPathLayout({
           </div>
         </section>
       )}
-
-      <section
-        aria-labelledby="testimonials-title"
-        className="relative w-full  px-4 sm:px-8 md:px-16 py-12 sm:py-16 lg:py-20 bg-slate-950"
-      >
-        <div className="pointer-events-none absolute inset-0 opacity-40">
-          <div className="absolute inset-0 bg-[radial-gradient(60%_60%_at_50%_0%,rgba(244,63,94,0.35)_0%,transparent_60%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(40%_40%_at_90%_90%,rgba(99,102,241,0.25)_0%,transparent_60%)]" />
-        </div>
-
-        <header className="relative mb-8 sm:mb-12 text-center">
-          <span className="inline-block rounded-full bg-white/10 text-white px-3 py-1 text-xs font-medium tracking-wide">
-            Opinie studentów
-          </span>
-          <h2 id="testimonials-title" className="mt-3 text-2xl md:text-3xl lg:text-4xl font-bold text-white">
-            Co mówią o programie
-          </h2>
-          <p className="mt-2 text-sm md:text-base text-zinc-300">Prawdziwe głosy naszych użytkowników.</p>
-        </header>
-
-        <div className="relative mx-auto w-full max-w-4xl">
-          <TestimonialsCarousel testimonials={testimonials ?? []} />
-        </div>
-      </section>
     </section>
   );
 }

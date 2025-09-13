@@ -5,7 +5,7 @@ export default function Logo({ className }: { className: string }) {
   return (
     <Link href="/" className="z-10">
       <div
-        className={`${className} hidden lg:flex gap-6 cursor-pointer transition-all hover:border-[border-red-200/80] hover:shadow-sm hover:scale-95 h-10 py-1 items-center w-[230px] px-4 border rounded-full border-red-200/40  shadow shadow-zinc-500 `}
+        className={`${className} hidden lg:flex gap-6 cursor-pointer transition-all hover:border-[border-red-200/80] hover:shadow-sm h-10 py-1 items-center w-[230px] px-4 border rounded-full border-red-200/40  shadow shadow-zinc-500 `}
       >
         <div className="h-12 w-12">
           <Image
