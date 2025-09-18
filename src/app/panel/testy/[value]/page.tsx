@@ -36,8 +36,11 @@ async function TestsByCategory({ category }: { category: string }) {
 export default async function CategoryTestPage(props: CategoryPageProps) {
   const { value } = await props.params
   return (
-    <Suspense>
-      <TestsByCategory category={value} />
-    </Suspense>
+    <section className='flex w-full flex-col items-center gap-8 p-0 sm:p-4'>
+
+      <Suspense>
+        <TestsByCategory category={value} />
+      </Suspense>
+    </section>
   );
 }

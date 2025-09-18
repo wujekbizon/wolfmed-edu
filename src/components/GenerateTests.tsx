@@ -30,7 +30,7 @@ export default function GenerateTests(props: { tests: Test[] }) {
   }, [resetTest])
 
   return (
-    <section className="flex w-full flex-col items-center gap-8 p-0 sm:p-4">
+    <section className="flex h-full w-full flex-col items-center gap-8">
       {!isTest ? (
         <div className="w-full h-full flex items-center justify-center">
           <TestsLevelMenu allQuestions={props.tests} onSelectQuestions={setSelectedQuestions} />
