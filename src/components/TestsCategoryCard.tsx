@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { fileData } from '@/server/fetchData'
+import Image from "next/image";
 
 export default async function TestsCategoryCard(props: {
   item: { category: string; value: string };
@@ -7,20 +8,53 @@ export default async function TestsCategoryCard(props: {
   const numberOfTest = await fileData.countTestsByCategory(props.item.value);
 
   return (
-    <div className="flex h-60 w-full flex-col items-center justify-between rounded-md border border-border/40 bg-zinc-950 p-3">
-      <p className="text-md text-center text-zinc-200">
-        Wszystkie dostępne pytania:
-        <span className="px-3 text-lg text-amber-300"> {numberOfTest}</span>
-      </p>
-      <div className="flex h-24 w-full items-center justify-center rounded-xl bg-black">
-        <p className="text-center text-2xl text-white">{props.item.category}</p>
+    <div className="relative flex flex-col lg:flex-row min-h-[400px] w-full p-5 overflow-hidden rounded-xl bg-zinc-800 transition-all duration-300">
+      <div className="relative h-72 lg:h-full w-full lg:w-1/3 overflow-hidden rounded-lg">
+        <Image
+          src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN"
+          alt="Opiekun Medyczny Test"
+          fill
+          className="object-cover h-fit w-full transition-transform duration-300 opacity-75 hover:opacity-100"
+          priority
+        />
       </div>
-      <Link
-        className="inline-flex  w-3/4 items-center justify-center whitespace-nowrap rounded-md bg-primary/90 px-2 py-1 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-amber-500/80  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-        href={`/panel/testy/${props.item.value}`}
-      >
-        Take Test
-      </Link>
+
+      <div className="relative z-10 flex w-full lg:w-2/3 flex-col justify-between p-0 lg:p-6 pt-10">
+        <div className="flex flex-col items-start">
+          <p className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-400 border border-green-500/30 mb-2">Dostępny online</p>
+          <h3 className="text-4xl font-extrabold text-white drop-shadow-md leading-tight">{props.item.category}</h3>
+          <p className="mt-2 text-zinc-300 text-base leading-relaxed">
+            Przygotuj się do egzaminu Opiekuna Medycznego z naszymi kompleksowymi testami i pytaniami.
+            Setki pytań, trzy poziomy trudności, które pomogą Ci w 100% przygotować sie do egzaminu państwowego i zdać za pierwszym razem! 
+          </p>
+        </div>
+
+        <div className="mt-4 flex items-center justify-start">
+          <p className="text-zinc-200 text-base ">Wszystkie dostępne pytania:
+            <span className="text-xl font-bold text-red-300 mx-2">{numberOfTest}</span>
+            <span className="text-zinc-300 text-base">pytań</span>
+          </p>
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-4 text-sm text-zinc-400">
+          <p className="flex items-center">
+            <span className="text-red-300 text-lg font-bold mr-2">Bardzo popularny</span>
+          </p>
+          <p className="flex items-center">
+            <span className="text-red-300 text-lg font-bold mr-2">25 min</span>czas trwania
+          </p>
+          {/* <p className="flex items-center">
+            <span className="text-red-300 text-lg font-bold mr-2">4.8/5</span>ocena
+          </p> */}
+        </div>
+
+        <Link
+          className="mt-8 inline-flex w-full items-center justify-center whitespace-nowrap rounded-md bg-[#ffc5c5]/70 border border-red-100/20 px-6 py-3 text-lg font-semibold text-zinc-950 hover:text-white shadow-lg transition-colors hover:bg-[#f58a8a]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 disabled:pointer-events-none disabled:opacity-50"
+          href={`/panel/testy/${props.item.value}`}
+        >
+          Rozpocznij Test
+        </Link>
+      </div>
     </div>
   );
 }

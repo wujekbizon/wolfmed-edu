@@ -29,13 +29,11 @@ async function TestsCategories() {
 }
 
 export default function TestsPage() {
-
   return (
-    <section className='flex w-full flex-col items-center gap-8 p-0 sm:p-4'>
+    <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
       <Suspense fallback={<TestsCategoriesListSkeleton />}>
         <TestsCategories />
       </Suspense>
     </section>
   )
-
 }
