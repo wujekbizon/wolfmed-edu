@@ -80,6 +80,24 @@ export const completedTestes = createTable("completed_tests", {
   completedAt: timestamp("completedAt").notNull().defaultNow(),
 })
 
+export const testSessions = createTable("test_sessions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("userId", { length: 256 })
+    .notNull()
+    .references(() => users.userId, { onDelete: "cascade" }),
+  category: varchar("category", { length: 128 }).notNull(),
+  numberOfQuestions: integer("numberOfQuestions").notNull(),
+  durationMinutes: integer("durationMinutes").notNull(),
+  startedAt: timestamp("startedAt").notNull().defaultNow(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  finishedAt: timestamp("finishedAt"),
+  status: varchar("status", { length: 32 })
+    .$type<"ACTIVE" | "EXPIRED" | "COMPLETED" | "CANCELLED">()
+    .notNull()
+    .default("ACTIVE"),
+  meta: jsonb("meta").default({}),
+});
+
 export const tests = createTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
   category: varchar("category", { length: 256 }).notNull(),

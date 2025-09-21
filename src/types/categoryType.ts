@@ -4,7 +4,6 @@ export interface Categories {
   }
   
   export interface CategoryPageProps {
-    params: { value: string };
-    searchParams: {};
+    params:Promise<{ value: string }>;
   }
   
