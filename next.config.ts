@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app'],
   experimental: {
     reactCompiler: true,
     //ppr: 'incremental',
