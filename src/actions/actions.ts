@@ -7,7 +7,7 @@ import { FormState } from '@/types/actionTypes'
 import { QuestionAnswer } from '@/types/dataTypes'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
-import { completedTestes, customersMessages, forumComments, tests, users } from '@/server/db/schema'
+import { completedTestes, customersMessages, forumComments, tests, testSessions, users } from '@/server/db/schema'
 import {
   CreateAnswersSchema,
   CreateMessageSchema,
@@ -39,14 +39,74 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { extractAnswerData } from '@/helpers/extractAnswerData'
 import { determineTestCategory } from '@/helpers/determineTestCategory'
 
+export async function startTestAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  try {
+    // 1. Parse form values
+    const category = formData.get("category")?.toString()
+    const numberOfQuestions = parseInt(formData.get("numberOfQuestions")?.toString() || "0", 10)
+    const durationMinutes = parseInt(formData.get("durationMinutes")?.toString() || "0", 10)
+    const metaString = formData.get("meta")?.toString() ?? "{}"
+
+    // 2. Validate inputs
+    if (!category || !numberOfQuestions || !durationMinutes) {
+      return toFormState("ERROR", "Musisz podać kategorię, ilość pytań i czas trwania testu.")
+    }
+
+    if (![10, 20, 40].includes(numberOfQuestions)) {
+      return toFormState("ERROR", "Niepoprawna ilość pytań.")
+    }
+
+    if (durationMinutes <= 0 || durationMinutes > 120) {
+      return toFormState("ERROR", "Niepoprawny czas trwania testu.")
+    }
+
+    // 3. Create session
+    const now = new Date()
+    const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
+    const meta = JSON.parse(metaString)
+  
+    const [session] = await db
+      .insert(testSessions)
+      .values({
+        userId,
+        category,
+        numberOfQuestions,
+        durationMinutes,
+        startedAt: now,
+        expiresAt,
+        status: "ACTIVE",
+        meta
+      })
+      .returning()
+
+    // 4. Return success with session data
+    return {
+      ...toFormState("SUCCESS", "Sesja testowa została rozpoczęta."),
+      sessionId: session?.id,
+      expiresAt: session?.expiresAt,
+      durationMinutes: session?.durationMinutes,
+      numberOfQuestions: session?.numberOfQuestions, // Added numberOfQuestions
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+}
+
 /**
  * Processes test submission, validates answers, updates user limits and stores results
  * Handles: form validation, test limits, score calculation, and DB transaction
  */
 export async function submitTestAction(formState: FormState, formData: FormData) {
-  // Check user authorization before allowing submission
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
+
+  const sessionId = formData.get('sessionId')
+  if (!sessionId) {
+    return toFormState('ERROR', 'No session ID provided')
+  }
 
   try {
     const userTestLimit = await getUserTestLimit(userId)
@@ -89,7 +149,7 @@ export async function submitTestAction(formState: FormState, formData: FormData)
         }
       })
       return {
-        ...toFormState('ERROR', validationResult.error.message ?? 'Wybierz jedną odpowiedź'),
+        ...toFormState('ERROR', validationResult.error.issues[0]?.message || 'Wybierz jedną odpowiedź'),
         values: formValues,
       }
     }
@@ -97,12 +157,59 @@ export async function submitTestAction(formState: FormState, formData: FormData)
     // Calculate score and prepare completed test data
     const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
     const testResult = parseAnswerRecord(validationResult?.data as QuestionAnswer[])
-    const completedTest = { userId, score: correct, testResult }
+   
 
-    // Execute all database operations in one transaction
+    // // Execute all database operations in one transaction
+    // await db.transaction(async (tx) => {
+    //   if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
+    //     // Update user test limit
+    //     await tx
+    //       .update(users)
+    //       .set({
+    //         testLimit: userTestLimit.testLimit - 1,
+    //         testsAttempted: sql`${users.testsAttempted} + 1`,
+    //         totalScore: sql`${users.totalScore} + ${correct}`,
+    //         totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
+    //       })
+    //       .where(eq(users.userId, userId))
+    //   }
+    //   await tx.insert(completedTestes).values(completedTest)
+    // })
+
+     // 5. Run everything in transaction
     await db.transaction(async (tx) => {
+      // (a) Lock the session by ID instead of searching
+      const result = await tx.execute(
+        sql`SELECT * FROM ${testSessions}
+            WHERE ${testSessions.id} = ${sessionId}
+            AND ${testSessions.userId} = ${userId}
+            AND ${testSessions.status} = 'ACTIVE'
+            FOR UPDATE`
+      )
+      const session = result.rows?.[0] as any
+
+      if (!session) {
+        throw new Error("No active session found")
+      }
+
+      const now = new Date()
+
+      // (b) Check expiry
+      if (now > session.expiresAt) {
+        await tx
+          .update(testSessions)
+          .set({ status: "EXPIRED", finishedAt: now })
+          .where(eq(testSessions.id, session.id))
+        throw new Error("Session expired — your time is up")
+      }
+
+      // (c) Update user stats if they have limits
+      const userTestLimit = await getUserTestLimit(userId)
+      if (!userTestLimit) {
+        throw new Error("No user is found!")
+      }
+
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
-        // Update user test limit
         await tx
           .update(users)
           .set({
@@ -113,7 +220,20 @@ export async function submitTestAction(formState: FormState, formData: FormData)
           })
           .where(eq(users.userId, userId))
       }
-      await tx.insert(completedTestes).values(completedTest)
+
+      // (d) Insert into completed_tests
+      await tx.insert(completedTestes).values({
+        userId,
+        sessionId: session.id,
+        score: correct,
+        testResult,
+      })
+
+      // (e) Mark session as completed
+      await tx
+        .update(testSessions)
+        .set({ status: "COMPLETED", finishedAt: now })
+        .where(eq(testSessions.id, session.id))
     })
   } catch (error) {
     return fromErrorToFormState(error)
@@ -600,4 +720,24 @@ export async function uploadTestsFromFile(
     }
   }
   return toFormState("SUCCESS", "Plik poprawnie przesłany");
+}
+
+export async function expireSession(sessionId: string) {
+  try {
+    const now = new Date()
+
+    // Update only if still active
+    await db
+      .update(testSessions)
+      .set({ status: 'EXPIRED', finishedAt: now })
+      .where(and(
+        eq(testSessions.id, sessionId),
+        eq(testSessions.status, 'ACTIVE'),
+        sql`${testSessions.expiresAt} <= ${now}`
+      ))
+
+    return { status: 'SUCCESS' }
+  } catch (error) {
+    return { status: 'ERROR', message: 'Failed to expire session' }
+  }
 }

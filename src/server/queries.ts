@@ -8,6 +8,7 @@ import {
   forumPosts,
   forumComments,
   testimonials,
+  testSessions,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -102,6 +103,17 @@ export const getUserIdByCustomer = cache(
     }
   }
 )
+
+export async function getTestSessionDetails(sessionId: string) {
+  const session = await db.query.testSessions.findFirst({
+    where: eq(testSessions.id, sessionId),
+    columns: {
+      durationMinutes: true,
+      numberOfQuestions: true,
+    },
+  });
+  return session;
+}
 
 // Get userId by customer email
 export const getUserIdByCustomerEmail = cache(

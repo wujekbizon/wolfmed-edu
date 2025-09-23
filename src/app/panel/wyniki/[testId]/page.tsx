@@ -5,7 +5,6 @@ import TestResultCard from '@/components/TestResultCard'
 import type { CompletedTest } from '@/types/dataTypes'
 import Loading from './loading'
 
-export const experimental_ppr = true
 
 export const metadata: Metadata = {
   title: 'Szczegółowe Wyniku Testu',

@@ -50,6 +50,7 @@ export interface CompletedTest {
   id: string
   userId: string
   score: number
+  sessionId:string
   testResult: FormattedAnswer[]
 }
 
