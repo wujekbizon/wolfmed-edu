@@ -26,6 +26,7 @@ import {
   CreateTestimonialSchema,
   CreateTestSchema,
   TestFileSchema,
+  StartTestSchema,
 } from "@/server/schema"
 import { auth } from "@clerk/nextjs/server"
 import { eq, sql, and, gt } from "drizzle-orm"
@@ -56,38 +57,25 @@ export async function startTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   try {
-    // 1. Parse form values
-    const category = formData.get("category")?.toString()
-    const numberOfQuestions = parseInt(
-      formData.get("numberOfQuestions")?.toString() || "0",
-      10
-    )
-    const durationMinutes = parseInt(
-      formData.get("durationMinutes")?.toString() || "0",
-      10
-    )
-    const metaString = formData.get("meta")?.toString() ?? "{}"
+    const validationResult = StartTestSchema.safeParse({
+      category: formData.get("category"),
+      numberOfQuestions: formData.get("numberOfQuestions"),
+      durationMinutes: formData.get("durationMinutes"),
+      meta: formData.get("meta") ?? "{}",
+    })
 
-    // 2. Validate inputs
-    if (!category || !numberOfQuestions || !durationMinutes) {
+    if (!validationResult.success) {
+      console.log(`Validation error: ${validationResult.error.issues}`)
       return toFormState(
         "ERROR",
-        "Musisz podać kategorię, ilość pytań i czas trwania testu."
+        validationResult.error.issues[0]?.message || "Nieprawidłowe dane wejściowe."
       )
     }
 
-    if (![10, 20, 40].includes(numberOfQuestions)) {
-      return toFormState("ERROR", "Niepoprawna ilość pytań.")
-    }
+    const { category, numberOfQuestions, durationMinutes, meta } = validationResult.data
 
-    if (durationMinutes <= 0 || durationMinutes > 120) {
-      return toFormState("ERROR", "Niepoprawny czas trwania testu.")
-    }
-
-    // 3. Create session
     const now = new Date()
     const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
-    const meta = JSON.parse(metaString)
 
     const [session] = await db
       .insert(testSessions)
@@ -99,11 +87,10 @@ export async function startTestAction(
         startedAt: now,
         expiresAt,
         status: "ACTIVE",
-        meta,
+        meta: JSON.parse(meta),
       })
       .returning()
 
-    // 4. Return success with session data
     return {
       ...toFormState("SUCCESS", "Sesja testowa została rozpoczęta."),
       sessionId: session?.id,

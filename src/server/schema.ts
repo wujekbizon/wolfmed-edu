@@ -24,7 +24,7 @@ export const UpdateMottoSchema = z.object({
 
 export const SignupForSchema = z.object({
   name: z.string().min(1, 'Nazwa musi mieć co najmniej 2 znaki.').trim(),
-  email: z.string().email('Proszę podać poprawny email.').trim(),
+  email: z.email('Proszę podać poprawny email.').trim(),
   password: z
     .string()
     .min(8, { message: 'Mieć co najmniej 8 znaków' })
@@ -37,7 +37,7 @@ export const SignupForSchema = z.object({
 })
 
 export const CreateMessageSchema = z.object({
-  email: z.string().email({ message: 'Proszę podać poprawny email' }).trim(),
+  email: z.email({ message: 'Proszę podać poprawny email' }).trim(),
   message: z
     .string()
     .min(2, { message: 'Wiadomość musi mieć co najmniej 2 znaki.' })
@@ -87,6 +87,19 @@ export const CreateTestimonialSchema = z.object({
     .multipleOf(0.5, 'Ocena musi być podawana w krokach co 0.5'),
   visible: z.coerce.boolean().default(true),
 })
+
+/**
+ * Schema for validating the data required to start a new test session.
+ */
+export const StartTestSchema = z.object({
+  category: z.string().min(1, 'Musisz podać kategorię.'),
+  numberOfQuestions: z.coerce.number().refine(
+    (num) => [10, 20, 40].includes(num),
+    { message: 'Niepoprawna ilość pytań.' }
+  ),
+  durationMinutes: z.coerce.number().min(1, 'Niepoprawny czas trwania testu.').max(120, 'Niepoprawny czas trwania testu.'),
+  meta: z.string().default('{}'),
+});
 
 /**
  * Schema for validating the data required to create a new test.
