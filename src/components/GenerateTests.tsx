@@ -72,11 +72,12 @@ export default function GenerateTests(props: { tests: Test[], sessionId: string,
 
       <section className="flex h-full w-full flex-col items-center gap-8">
         <div className="flex w-full flex-col items-center overflow-y-auto scrollbar-webkit p-2">
-          <div className="sticky top-0 z-50 w-full flex justify-center py-2 bg-zinc-900/80 backdrop-blur-sm">
+          <div className="sticky top-0 z-50 w-full flex justify-end py-2 ">
             <TestTimer
               durationMinutes={props.duration}
               sessionId={props.sessionId}
               onExpiration={handleTimerExpiration}
+              message="Sesja egzaminacyjna rozpoczęta, proszę ukończyć w określonym czasie."
             />
           </div>
           <form action={action} className="grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3 ">

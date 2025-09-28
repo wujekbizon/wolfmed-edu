@@ -30,8 +30,8 @@ export default function StartTestForm({ category }: { category: string }) {
   return (
     <form action={action} className="flex flex-col gap-4">
       <Input type="hidden" name="category" value={category} />
-      <Input type="hidden" name="numberOfQuestions" value={10} />
-      <Input type="hidden" name="durationMinutes" value={1} />
+      <Input type="hidden" name="numberOfQuestions" value={40} />
+      <Input type="hidden" name="durationMinutes" value={6} />
       <Input type="hidden" name="meta" value={meta} />
       <SubmitButton
         label="Rozpocznij Test"

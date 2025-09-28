@@ -4,15 +4,16 @@ import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import { expireSessionAction } from '@/actions/actions'
-import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer' // Import the renamed hook
+import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer'
 
 interface TestTimerProps {
   durationMinutes: number
   sessionId: string
   onExpiration: () => void
+  message: string
 }
 
-export default function TestTimer({ durationMinutes, sessionId, onExpiration }: TestTimerProps) {
+export default function TestTimer({ durationMinutes, sessionId, onExpiration, message }: TestTimerProps) {
   const [isPending, startTransition] = useTransition()
   const [expired, setExpired] = useState(false)
   const router = useRouter()
@@ -53,13 +54,12 @@ export default function TestTimer({ durationMinutes, sessionId, onExpiration }: 
 
   return (
     <div
-      className={`font-mono text-lg font-bold px-4 py-2 rounded-lg ${
-        isWarning
-          ? 'bg-red-500/20 text-red-400'
-          : 'bg-green-500/20 text-green-400'
-      }`}
+      className={`flex items-center gap-4 font-mono text-lg font-bold px-4 py-2 rounded-lg backdrop-blur-sm shadow-lg ${isWarning ? 'bg-red-500/15 text-red-300' : 'bg-green-500/15 text-green-600'}`}
     >
-      {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+      <span className="text-base font-normal text-zinc-700">{message}</span>
+      <span>
+        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+      </span>
     </div>
   )
 }
