@@ -28,4 +28,9 @@ const useToastMessage = (formState: FormState) => {
   )
 }
 
+export const showToast = (status: 'SUCCESS' | 'ERROR', message: string) => {
+  if (status === 'ERROR') toast.error(message)
+  else toast.success(message)
+}
+
 export { useToastMessage }

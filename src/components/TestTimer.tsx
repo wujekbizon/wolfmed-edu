@@ -1,55 +1,64 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { expireSession } from '@/actions/actions'
+import { toast } from 'react-hot-toast'
+import { expireSessionAction } from '@/actions/actions'
+import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer' // Import the renamed hook
 
 interface TestTimerProps {
   durationMinutes: number
   sessionId: string
+  onExpiration: () => void
 }
 
-export default function TestTimer({ durationMinutes, sessionId }: TestTimerProps) {
-  const [timeLeft, setTimeLeft] = useState(durationMinutes * 60)
-  const [isWarning, setIsWarning] = useState(false)
+export default function TestTimer({ durationMinutes, sessionId, onExpiration }: TestTimerProps) {
+  const [isPending, startTransition] = useTransition()
+  const [expired, setExpired] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout
+  const { timeLeft, isWarning, isTimeUp } = useCountdownTestTimer({
+    durationMinutes,
+    warningThresholdSeconds: 300
+  });
 
-    const handleExpiration = async () => {
-      if (sessionId) {
-        await expireSession(sessionId)
+  const handleExpiration = useCallback(async () => {
+    startTransition( async () => {
+      const result = await expireSessionAction(sessionId)
+
+      if(result.status === "SUCCESS") {
+        setExpired(true)
+        onExpiration()
+      } else {
+        toast.error(result.message || 'Nie udało się zakończyć sesji.')
       }
-    }
+    })
+  }, [sessionId, startTransition, setExpired, onExpiration])
 
-    timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime === 0) {
-          clearInterval(timer)
-          handleExpiration()
-          return 0
-        }
-        // Set warning when 5 minutes remaining
-        if (prevTime === 300) {
-          setIsWarning(true)
-        }
-        return prevTime - 1
-      })
-    }, 1000)
-
-    return () => {
-      clearInterval(timer)
+  useEffect(() => {
+    if (isTimeUp && !expired) {
+      handleExpiration()
     }
-  }, [sessionId])
+  }, [isTimeUp, expired, handleExpiration])
+
+  useEffect(() => {
+    if (expired) {
+      toast.error('Czas testu minął — sesja wygasła!')
+      router.push('/panel/testy')
+    }
+  }, [expired, router])
 
   const minutes = Math.floor(timeLeft / 60)
   const seconds = timeLeft % 60
 
-  const timerClasses = `font-mono text-lg font-bold px-4 py-2 rounded-lg ${isWarning ? 'bg-red-500/20 text-red-400' : 'bg-green-500/20 text-green-400'}`
-
   return (
-    <div className={timerClasses}>
+    <div
+      className={`font-mono text-lg font-bold px-4 py-2 rounded-lg ${
+        isWarning
+          ? 'bg-red-500/20 text-red-400'
+          : 'bg-green-500/20 text-green-400'
+      }`}
+    >
       {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
     </div>
   )

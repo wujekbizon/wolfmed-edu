@@ -14,6 +14,7 @@ export default async function TestsCategoryCard(props: {
           src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN"
           alt="Opiekun Medyczny Test"
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover h-fit w-full transition-transform duration-300 opacity-75 hover:opacity-100"
           priority
         />

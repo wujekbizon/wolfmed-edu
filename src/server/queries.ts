@@ -17,7 +17,7 @@ import {
   Post,
 } from "@/types/dataTypes"
 import { cache } from "react"
-import { eq, asc, desc, sql } from "drizzle-orm"
+import { eq, asc, desc, sql, and } from "drizzle-orm"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 
@@ -480,3 +480,26 @@ export const deleteTestimonial = cache(async (id: string) => {
 
   return deleted[0]
 })
+
+export const sessionExists = cache(async (sessionId: string) => {
+  const [session] = await db
+    .select({ id: testSessions.id })
+    .from(testSessions)
+    .where(eq(testSessions.id, sessionId))
+    .limit(1);
+  return !!session;
+});
+
+export const expireTestSession = cache(async (sessionId: string) => {
+  const now = new Date();
+  await db
+    .update(testSessions)
+    .set({ status: 'EXPIRED', finishedAt: now })
+    .where(and(
+      eq(testSessions.id, sessionId),
+      eq(testSessions.status, 'ACTIVE'),
+      sql`${testSessions.expiresAt} <= ${now}`
+    ));
+});
+
+
