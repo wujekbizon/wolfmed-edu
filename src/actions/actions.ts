@@ -44,6 +44,7 @@ import {
   createTestimonial,
   expireTestSession,
   sessionExists,
+  getSupporterByUserId,
 } from "@/server/queries"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -76,6 +77,17 @@ export async function startTestAction(
 
     const now = new Date()
     const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
+
+    // Check if the user is a supporter if numberOfQuestions is 40
+    if (numberOfQuestions === 40) {
+      const isSupporter = await getSupporterByUserId(userId)
+      if (!isSupporter) {
+        return toFormState(
+          "ERROR",
+          "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
+        )
+      }
+    }
 
     const [session] = await db
       .insert(testSessions)
