@@ -16162,5 +16162,28 @@
       },
       "createdAt": "2024-11-03 19:59:27.363738",
       "updatedAt": null
+    },
+    {
+      "id": "ff9dec0a-a4cc-4129-b8da-661232dasdasd",
+      "category": "pielęgniarstwo",
+      "data": {
+        "answers": [
+          {
+            "option": "węglowodany",
+            "isCorrect": false
+          },
+          {
+            "option": "białko",
+            "isCorrect": false
+          },
+          {
+            "option": "błonnik",
+            "isCorrect": true
+          }
+        ],
+        "question": "Jednym z ogólnych zaleceń dotyczących diety osób z kamicą pęcherzyka żółciowego jest zwiększenie spożycia błonnika pokarmowego. Jednak w zaostrzeniu kamicy żółciowej stosuje się dietę łatwostrawną, niskotłuszczową z ograniczeniem produktów bogatych w: "
+      },
+      "createdAt": "2024-11-03 19:59:27.363738",
+      "updatedAt": null
     }
   ]
