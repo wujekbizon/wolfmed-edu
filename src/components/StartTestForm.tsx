@@ -39,7 +39,7 @@ export default function StartTestForm({ category }: { category: string }) {
             id="numberOfQuestions"
             name="numberOfQuestions"
             defaultValue={40}
-            className="block w-full  px-4 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
+            className="block w-full  px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
           >
             <option value={40}>Egzamin (40 pytań)</option>
             <option value={10}>Praktyka (10 pytań)</option>
@@ -51,7 +51,7 @@ export default function StartTestForm({ category }: { category: string }) {
             id="durationMinutes"
             name="durationMinutes"
             defaultValue={25}
-            className="block w-full px-3 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
+            className="block w-full px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
           >
             <option value={25}>25 minut</option>
           </select>

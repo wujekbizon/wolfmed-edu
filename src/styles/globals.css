@@ -32,6 +32,7 @@
   --animate-gradientScale: gradientScale 60s ease-in-out infinite;
   --animate-gradientRotate: gradientRotate 40s ease infinite;
   --animate-radialPulse: radialPulse 60s ease-in-out infinite;
+  --animate-slideInLeft: slideInLeft 1s ease-out forwards;
 
   @keyframes slideInDown {
     from {
@@ -41,6 +42,17 @@
     to {
       opacity: 1;
       transform: translateY(100px);
+    }
+  }
+
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
     }
   }
 
