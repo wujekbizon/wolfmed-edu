@@ -1,6 +1,7 @@
 import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 import CategoryGrid from '@/components/CategoryGrid'
+import { getPopulatedCategories } from '@/helpers/populateCategories'
 
 export const dynamic = 'force-static'
 
@@ -12,18 +13,7 @@ export const metadata: Metadata = {
 }
 
 export default async function NaukaPage() {
-  const categories = await fileData.getTestsCategories()
-  const populatedCategories = await Promise.all(
-    categories.map(async (cat) => {
-      const count = await fileData.countTestsByCategory(cat.category)
-      const categoryName = cat.category
-        .replace(/-/g, ' ')
-        .split(' ')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-      return { category: categoryName, value: cat.category, count }
-    })
-  )
+  const populatedCategories = await getPopulatedCategories(fileData)
 
   return <CategoryGrid categories={populatedCategories} />
 }

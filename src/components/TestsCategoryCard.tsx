@@ -1,12 +1,10 @@
 import Image from "next/image";
-import { fileData } from "@/server/fetchData";
 import StartTestForm from "./StartTestForm";
 
 export default async function TestsCategoryCard(props: {
-  item: { category: string; value: string };
+  item: { category: string; value: string, count: number };
 }) {
-  const numberOfTest = await fileData.countTestsByCategory(props.item.value);
-
+  
   return (
     <div className="relative flex flex-col lg:flex-row min-h-[400px] w-full p-5 overflow-hidden rounded-xl bg-zinc-800 transition-all duration-300">
       <div className="relative h-72 lg:h-full w-full lg:w-1/3 overflow-hidden rounded-lg">
@@ -39,7 +37,7 @@ export default async function TestsCategoryCard(props: {
           <p className="text-zinc-200 text-base ">
             Wszystkie dostępne pytania:
             <span className="text-xl font-bold text-red-300 mx-2">
-              {numberOfTest}
+              {props.item.count}
             </span>
             <span className="text-zinc-300 text-base">pytań</span>
           </p>

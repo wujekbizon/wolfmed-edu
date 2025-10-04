@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
 import { fileData } from '@/server/fetchData'
-import { populateCategories } from '@/helpers/populateCategories'
 import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
+import { getPopulatedCategories } from '@/helpers/populateCategories'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
@@ -22,10 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export const dynamic = 'force-static'
 
 async function TestsCategories() {
-  const categories = await fileData.getTestsCategories()
-  const CATEGORIES = populateCategories(categories);
-
-  return <TestsCategoriesList categories={CATEGORIES} />
+  const populatedCategories = await getPopulatedCategories(fileData)
+  return <TestsCategoriesList categories={populatedCategories} />
 }
 
 export default function TestsPage() {

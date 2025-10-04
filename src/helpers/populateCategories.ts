@@ -1,42 +1,38 @@
 import "server-only";
 
-import { Categories } from "@/types/categoryType";
+import { PopulatedCategories } from "@/types/categoryType";
 
 
-export function populateCategories(
-  categories: { category: string }[],
-): Categories[] {
-  const CATEGORY_OPTIONS: Categories[] = [];
-  const existingCategories = new Set();
+export async function getPopulatedCategories(fileData: {
+  getTestsCategories: () => Promise<{ category: string }[]>,
+  countTestsByCategory: (cat: string) => Promise<number>
+}): Promise<PopulatedCategories[]> {
+  const categories = await fileData.getTestsCategories();
 
-  for (const c of categories) {
-    c.category = c.category.trim();
+  const seen = new Set<string>();
+  const uniqueCategories = categories.filter(cat => {
+    const normalized = cat.category.toLowerCase();
+    if (seen.has(normalized)) return false;
+    seen.add(normalized);
+    return true;
+  });
 
-    if (CATEGORY_OPTIONS.length === 0) {
-      CATEGORY_OPTIONS.push({
-        category: "Select Category",
-        value: "",
-      });
-    }
-
-    // Check if category already exists (case-insensitive)
-    const normalizedCategory = c.category.toLowerCase();
-
-    if (!existingCategories.has(normalizedCategory)) {
-      existingCategories.add(normalizedCategory);
-      CATEGORY_OPTIONS.push({
-        category: toTitleCase(c.category),
-        value: normalizedCategory,
-      });
-    }
-  }
-
-  return CATEGORY_OPTIONS;
+  return Promise.all(
+    uniqueCategories.map(async (cat) => {
+      const count = await fileData.countTestsByCategory(cat.category);
+      return {
+        category: formatCategoryName(cat.category),
+        value: cat.category,
+        count,
+      };
+    })
+  );
 }
 
-function toTitleCase(str: string) {
-  return str.replace(
-    /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase(),
-  );
+function formatCategoryName(name: string) {
+  return name
+    .replace(/-/g, " ")
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

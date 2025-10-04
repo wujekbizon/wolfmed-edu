@@ -1,6 +1,7 @@
-export interface Categories {
+export interface PopulatedCategories {
     category: string;
     value: string;
+    count: number;
   }
   
   export interface CategoryPageProps {

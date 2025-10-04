@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 }
 
 async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
-  const categoryTests = await fileData.getTestsByCategory(category)
+  const categoryTests = await fileData.getTestsByCategory(decodeURIComponent(category))
   const sessionDetails = await getTestSessionDetails(sessionId);
 
   if (!categoryTests || categoryTests.length === 0) {
