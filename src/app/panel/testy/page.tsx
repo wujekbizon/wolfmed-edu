@@ -23,6 +23,7 @@ export const dynamic = 'force-static'
 
 async function TestsCategories() {
   const populatedCategories = await getPopulatedCategories(fileData)
+  console.log(populatedCategories)
   return <TestsCategoriesList categories={populatedCategories} />
 }
 

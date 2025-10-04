@@ -1,6 +1,7 @@
 import path from "path"
 import fs from "fs"
 import { Post, Procedure, Test } from "@/types/dataTypes"
+import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType"
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
@@ -10,6 +11,7 @@ interface FileDataOperations {
   getTestsCategories: () => Promise<{ category: string }[]>
   countTestsByCategory: (category: string) => Promise<number>
   getTestsByCategory: (category: string) => Promise<Test[]>
+  getCategoriesMetadata: () => Promise<CategoryMetadata[]>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -99,6 +101,16 @@ export const fileData: FileDataOperations = {
     } catch (error) {
       console.error(`Error fetching tests for category ${category}:`, error)
       return []
+    }
+  },
+
+  getCategoriesMetadata: async () => {
+    try {
+      const metadata = await readJsonFile<CategoryMetadata[]>("categoryMetadata.json");
+      return metadata;
+    } catch (error) {
+      console.error("Error fetching category metadata:", error);
+      return [];
     }
   },
 }
