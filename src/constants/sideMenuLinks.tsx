@@ -14,7 +14,7 @@ export const sideMenuNavigationLinks = [
   },
   {
     url: '/panel/testy',
-    label: 'Testy',
+    label: 'Testy i Egzaminy',
     icon: <DashboardIcon width={26} height={26} />,
   },
   {
@@ -29,7 +29,7 @@ export const sideMenuNavigationLinks = [
   },
   {
     url: '/panel/nauka',
-    label: 'Nauka',
+    label: 'Centrum Nauki',
     icon: <LearnIcon width={26} height={26} />,
   },
   {
