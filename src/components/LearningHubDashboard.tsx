@@ -1,26 +1,29 @@
 "use client"
 
-import { PopulatedCategories } from "@/types/categoryType"
+import { useState } from "react"
+import PDFViewer from "./reader/PDFViewer"
 import CategoryGrid from "./CategoryGrid"
 import Editor from "./editor/Editor"
 import NotesSection from "./NotesSection"
-import { useState } from "react"
+import type { PopulatedCategories } from "@/types/categoryType"
 
 interface LearningHubDashboardProps {
     categories: PopulatedCategories[]
 }
 
 const combinedMaterials = [
-    { id: 1, title: "Anatomia - Notatki", type: "note", category: "anatomia", date: "2025-10-01", isUser: true },
-    { id: 2, title: "Farmakologia.pdf", type: "pdf", category: "farmakologia", date: "2025-10-02", isUser: true },
+    { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
+    { id: 2, title: "file3.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
     { id: 3, title: "Procedury Medyczne", type: "note", category: "pielęgniarstwo", date: "2025-10-03", isUser: true },
-    { id: 4, title: "Podręcznik Anatomii", type: "pdf", category: "anatomia", date: "2025-09-28", isUser: false },
-    { id: 5, title: "Video: Procedury", type: "video", category: "pielęgniarstwo", date: "2025-09-25", isUser: false },
-    { id: 6, title: "Cheat Sheet: Farmakologia", type: "pdf", category: "farmakologia", date: "2025-09-20", isUser: false }
+    { id: 5, title: "video.mp4", type: "video", category: "pielęgniarstwo", date: "2025-09-25", isUser: false },
 ]
+
+
 
 export default function LearningHubDashboard({ categories }: LearningHubDashboardProps) {
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
+
+    const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
 
     const handleEditorChange = (editorState: any) => {
         console.log("Editor content changed")
@@ -32,6 +35,31 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
 
     const closePdfPreview = () => {
         setSelectedPdf(null)
+    }
+
+    const handleDownloadPdf = () => {
+        if (selectedPdf) {
+            const link = document.createElement('a')
+            link.href = `/${selectedPdf}`
+            link.download = selectedPdf // Set the download attribute to the file name
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+        }
+    }
+
+    const handleOpenFullPdf = () => {
+        if (selectedPdf) {
+            window.open(`/${selectedPdf}`, '_blank')
+        }
+    }
+
+    const openVideoPreview = (title: string) => {
+        setSelectedVideo(title)
+    }
+
+    const closeVideoPreview = () => {
+        setSelectedVideo(null)
     }
 
     return (
@@ -77,7 +105,7 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
                         <div key={material.id} className="bg-zinc-50 p-4 rounded-xl border border-zinc-200/60 hover:border-zinc-300/80 transition-all duration-300">
                             <div className="flex items-center mb-3">
                                 <div className={`w-8 h-8 flex items-center justify-center mr-3 rounded-full ${material.type === 'pdf' ? 'bg-red-500' :
-                                        material.type === 'video' ? 'bg-purple-500' : 'bg-green-500'
+                                    material.type === 'video' ? 'bg-purple-500' : 'bg-green-500'
                                     }`}>
                                     {material.type === 'pdf' ? '📄' :
                                         material.type === 'video' ? '🎥' : '📝'}
@@ -102,9 +130,14 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
                                         Podgląd PDF
                                     </button>
                                 )}
-                                <button className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200">
-                                    Otwórz
-                                </button>
+                                {material.type === 'video' && (
+                                    <button
+                                        onClick={() => openVideoPreview(material.title)}
+                                        className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
+                                    >
+                                        Podgląd Video
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}
@@ -112,7 +145,7 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
             </div>
             {selectedPdf && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-auto">
+                    <div className="bg-white p-6 rounded-md shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-webkit">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-zinc-800">Podgląd: {selectedPdf}</h3>
                             <button
@@ -123,24 +156,48 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
                             </button>
                         </div>
                         <div className="bg-zinc-50 min-h-[500px] flex items-center justify-center rounded-xl border border-zinc-200/60">
-                            <div className="text-center text-zinc-600 p-8">
-                                <div className="text-4xl mb-4 text-zinc-300">📄</div>
-                                <h4 className="text-xl font-semibold mb-2 text-zinc-700">Podgląd PDF</h4>
-                                <p className="mb-4 text-zinc-600">Tutaj będzie wyświetlana zawartość pliku PDF</p>
-                                <div className="bg-zinc-100 h-64 w-full flex items-center justify-center rounded-lg border border-zinc-200/60">
-                                    <span className="text-zinc-500">Strona 1 z 5</span>
-                                </div>
-                                <div className="flex justify-center gap-4 mt-4">
-                                    <button className="bg-zinc-200 text-zinc-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-300">← Poprzednia</button>
-                                    <button className="bg-zinc-200 text-zinc-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-300">Następna →</button>
-                                </div>
-                            </div>
+                            {selectedPdf && <PDFViewer file={`/${selectedPdf}`} />}
                         </div>
                         <div className="flex justify-end gap-2 mt-4">
-                            <button className="bg-zinc-100 text-zinc-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-200">
+                            <button
+                                onClick={handleDownloadPdf}
+                                className="bg-zinc-100 text-zinc-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-200"
+                            >
                                 Pobierz
                             </button>
-                            <button className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700">
+                            <button
+                                onClick={handleOpenFullPdf}
+                                className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700"
+                            >
+                                Otwórz pełny
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {selectedVideo && (
+                <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                    <div className="bg-white p-6 rounded-md shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-webkit">
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-xl font-bold text-zinc-800">Podgląd: {selectedVideo}</h3>
+                            <button
+                                onClick={closeVideoPreview}
+                                className="text-zinc-500 hover:text-zinc-800 text-2xl transition-colors"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="bg-zinc-50 min-h-[300px] flex items-center justify-center rounded-xl border border-zinc-200/60">
+                            <video controls width="100%" height="auto" className="rounded-xl">
+                                <source src={`/${selectedVideo}`} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                onClick={() => window.open(`/${selectedVideo}`, '_blank')}
+                                className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700"
+                            >
                                 Otwórz pełny
                             </button>
                         </div>

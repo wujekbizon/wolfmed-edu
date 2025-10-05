@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 
-// Dummy data for prototyping - will be replaced with real data from DB
 const dummyNotes = [
     { id: 1, title: "Anatomia - Układ nerwowy", content: "Notatki o budowie układu nerwowego...", category: "anatomia", date: "2025-10-05", lastEdited: "2 godziny temu" },
     { id: 2, title: "Farmakologia - Leki przeciwbólowe", content: "Działanie i zastosowanie popularnych leków...", category: "farmakologia", date: "2025-10-04", lastEdited: "1 dzień temu" },
