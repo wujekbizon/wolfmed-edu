@@ -48,7 +48,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
             </p>
             <p className="flex items-center justify-end text-sm md:text-base xl:text:lg text-white">
               Czas trwania:
-              <span className="text-red-300 font-bold mx-2">{item.data.duration}</span>
+              <span className="text-red-300 font-bold mx-2">{item.data.duration[0]}</span>
               minut
             </p>
           </div>
