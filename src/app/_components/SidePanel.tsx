@@ -13,7 +13,7 @@ export default function SidePanel() {
   return (
     <nav
       className={`z-10 hidden h-full min-w-20 flex-col gap-20 text-zinc-900 bg-zinc-800 p-5 lg:flex transition-all duration-500 ${
-        isSidePanelOpen ? 'w-80' : 'w-20'
+        isSidePanelOpen ? 'w-90' : 'w-20'
       }`}
     >
       <div className="flex w-full flex-row place-items-center justify-between gap-1">

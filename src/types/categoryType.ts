@@ -13,7 +13,7 @@ export interface CategoryMetadata {
   category: string
   image: string
   description: string
-  duration: string
+  duration: number
   popularity: string
   status: boolean
 }

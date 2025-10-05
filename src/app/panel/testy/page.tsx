@@ -23,13 +23,12 @@ export const dynamic = 'force-static'
 
 async function TestsCategories() {
   const populatedCategories = await getPopulatedCategories(fileData)
-  console.log(populatedCategories)
   return <TestsCategoriesList categories={populatedCategories} />
 }
 
 export default function TestsPage() {
   return (
-    <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
+    <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
       <Suspense fallback={<TestsCategoriesListSkeleton />}>
         <TestsCategories />
       </Suspense>

@@ -3,16 +3,16 @@
       "category": "opiekun-medyczny",
       "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN",
       "description": "Przygotuj się do egzaminu Opiekuna Medycznego z naszymi kompleksowymi testami i pytaniami. Bogata baza pytań, która pomoże Ci w 100% przygotować sie do egzaminu państwowego i zdać za pierwszym razem!",
-      "duration": "25 min",
+      "duration": 25,
       "popularity": "Bardzo popularny",
       "status": true
     },
     {
       "category": "pielęgniarstwo",
       "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ICz8koequML1BazyDiNo5UcxtTn3s6YgW47C",
-      "description": "Sprawdź swoją wiedzę z anatomii...",
-      "duration": "60 min",
-      "popularity": "Nowość!",
+      "description": "Ogólne testy z kierunku pielęgniarstwo obejmujące wszystkie działy obowiązujące w ścieżce Pielęgniarstwo. Egzamin sprawdzający ogólną wiedzę niezbędną do zaliczenia kierunku.",
+      "duration": 60,
+      "popularity": "Nowość - wkrótce dostępne",
       "status": false
     }
   ]
