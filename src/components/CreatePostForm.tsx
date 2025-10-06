@@ -12,11 +12,9 @@ import Editor from './editor/Editor'
 import { EditorState } from 'lexical'
 import Checkbox from './Checkbox'
 
-type Props = {
+export default function CreatePostForm({ onClose }: {
   onClose: () => void
-}
-
-export default function CreatePostForm({ onClose }: Props) {
+}) {
   const [state, action] = useActionState(createForumPostAction, EMPTY_FORM_STATE)
   const [editorContent, setEditorContent] = useState('')
   const [readonly, setReadonly] = useState(false)

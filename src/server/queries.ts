@@ -9,6 +9,7 @@ import {
   forumComments,
   testimonials,
   testSessions,
+  notes,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -20,6 +21,7 @@ import { cache } from "react"
 import { eq, asc, desc, sql, and } from "drizzle-orm"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
+import { NoteInput } from "./schema"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -502,4 +504,77 @@ export const expireTestSession = cache(async (sessionId: string) => {
     ));
 });
 
+export const getAllUserNotes = cache(async (userId: string) => {
+  const notesList = await db.query.notes.findMany({
+    where: (model, { eq }) => eq(model.userId, userId),
+    orderBy: (model, { desc }) => desc(model.createdAt),
+  })
 
+  return notesList.map((note) => ({
+    ...note,
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
+  }))
+})
+
+export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
+  const notesList = await db.query.notes.findMany({
+    where: (model, { and, eq }) => and(eq(model.userId, userId), eq(model.pinned, true)),
+    orderBy: (model, { desc }) => desc(model.createdAt),
+    limit,
+  })
+
+  return notesList.map((note) => ({
+    ...note,
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
+  }))
+})
+
+export const getNoteById = cache(async (userId: string, noteId: string) => {
+  const note = await db.query.notes.findFirst({
+    where: (model, { and, eq }) => and(eq(model.id, noteId), eq(model.userId, userId)),
+  })
+
+  if (!note) return null
+
+  return {
+    ...note,
+    createdAt: note.createdAt.toISOString(),
+    updatedAt: note.updatedAt.toISOString(),
+  }
+})
+
+export const createNote = cache(async (userId: string, data: NoteInput) => {
+  const note = await db.insert(notes).values({
+    ...data,
+    content: JSON.parse(data.content),
+    userId,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }).returning()
+
+  return note[0]
+})
+
+export const updateNote = cache(
+  async (userId: string, noteId: string, data: Partial<NoteInput>) => {
+    const note = await db.update(notes)
+      .set({
+        ...data,
+        ...(data.content ? { content: JSON.parse(data.content) } : {}),
+        updatedAt: new Date(),
+      })
+      .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
+      .returning()
+
+    return note[0] || null
+  }
+)
+
+export const deleteNote = cache(async (userId: string, noteId: string) => {
+  const deleted = await db.delete(notes)
+    .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
+    .returning()
+  return deleted[0] || null
+})

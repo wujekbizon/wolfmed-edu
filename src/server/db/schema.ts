@@ -219,3 +219,27 @@ export const usersRelations = relations(users, ({many}) => (
   }
 ))
 
+export const notes = createTable(
+  "notes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    title: varchar("title", { length: 256 }).notNull(),
+    content: jsonb("content").notNull(),
+    plainText: text("plain_text"),
+    excerpt: text("excerpt").default(""),
+    category: varchar("category", { length: 128 }).notNull(),
+    tags: jsonb("tags").default([]),
+    pinned: boolean("pinned").default(false).notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("notes_user_id_idx").on(table.userId),
+    index("notes_category_idx").on(table.category),
+    index("notes_pinned_idx").on(table.pinned),
+    index("notes_created_at_idx").on(table.createdAt),
+  ]
+)

@@ -6,10 +6,8 @@ import CategoryGrid from "./CategoryGrid"
 import Editor from "./editor/Editor"
 import NotesSection from "./NotesSection"
 import type { PopulatedCategories } from "@/types/categoryType"
-
-interface LearningHubDashboardProps {
-    categories: PopulatedCategories[]
-}
+import CreateNoteForm from "./CreateNoteForm"
+import { NoteInput } from "@/server/schema"
 
 const combinedMaterials = [
     { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
@@ -18,16 +16,12 @@ const combinedMaterials = [
     { id: 5, title: "video.mp4", type: "video", category: "pielęgniarstwo", date: "2025-09-25", isUser: false },
 ]
 
-
-
-export default function LearningHubDashboard({ categories }: LearningHubDashboardProps) {
+export default function LearningHubDashboard({ categories, notes }: {
+    categories: PopulatedCategories[]
+    notes:NoteInput[]
+}) {
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
-
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
-
-    const handleEditorChange = (editorState: any) => {
-        console.log("Editor content changed")
-    }
 
     const openPdfPreview = (title: string) => {
         setSelectedPdf(title)
@@ -41,7 +35,7 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
         if (selectedPdf) {
             const link = document.createElement('a')
             link.href = `/${selectedPdf}`
-            link.download = selectedPdf // Set the download attribute to the file name
+            link.download = selectedPdf
             document.body.appendChild(link)
             link.click()
             document.body.removeChild(link)
@@ -70,18 +64,8 @@ export default function LearningHubDashboard({ categories }: LearningHubDashboar
             </div>
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <h2 className="text-xl font-bold text-zinc-800 mb-6">Szybkie Notatki</h2>
-                <div className="h-64">
-                    <Editor
-                        onChange={handleEditorChange}
-                        placeholder="Zacznij pisać swoje notatki..."
-                        className="h-full bg-zinc-50 border border-zinc-200/60 rounded-xl" // Updated editor styling for light theme
-                    />
-                </div>
-                <div className="flex justify-end mt-4">
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-colors">
-                        Zapisz Notatkę
-                    </button>
-                </div>
+                <CreateNoteForm
+                />
             </div>
             <NotesSection />
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
