@@ -8,11 +8,11 @@ import Label from "./ui/Label";
 import Answers from "./Answers";
 import FieldError from "./FieldError";
 import SubmitButton from "./SubmitButton";
-import type { Categories } from "@/types/categoryType";
+import type { PopulatedCategories } from "@/types/categoryType";
 import CategorySelection from "./CategorySelection";
 import { createTestAction } from "@/actions/actions";
 
-export default function CreateTestForm(props: { categories: Categories[] }) {
+export default function CreateTestForm(props: { categories: PopulatedCategories[] }) {
   const [formState, action] = useActionState(
     createTestAction,
     EMPTY_FORM_STATE,
