@@ -17,15 +17,13 @@ export const EditorField = memo(function EditorField({
     plainTextRef: React.RefObject<HTMLInputElement>
     excerptRef: React.RefObject<HTMLInputElement>
 }) {
-  
+
     return (
         <div>
             <input type="hidden" name="content" ref={contentRef} defaultValue="" />
             <input type="hidden" name="plainText" ref={plainTextRef} defaultValue="" />
             <input type="hidden" name="excerpt" ref={excerptRef} defaultValue="" />
-            <div className="h-64">
-                <Editor key={editorKey} onChange={onChange} placeholder="Napisz swoją notatkę..." className="min-h-64" />
-            </div>
+            <Editor key={editorKey} onChange={onChange} placeholder="Napisz swoją notatkę..." className="min-h-64 max-h-64 overflow-y-auto scrollbar-webkit"  />
             <FieldError name="content" formState={formState} />
         </div>
     )

@@ -8,6 +8,13 @@ export const DeleteTestIdSchema = z.object({
     .trim(),
 })
 
+export const DeleteNoteIdSchema = z.object({
+  noteId: z
+    .string()
+    .min(1, "Musisz podać poprawny identyfikator notatki.")
+    .trim(),
+})
+
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
     .array(

@@ -2,10 +2,12 @@
 
 import { notes } from "@/server/db/schema"
 import { db } from "@/server/db/index"
-import { NoteInput, NoteSchema } from "@/server/schema"
+import { DeleteNoteIdSchema, NoteInput, NoteSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
+import { revalidatePath } from "next/cache"
+import { deleteNote } from "@/server/queries"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -26,7 +28,6 @@ export const createNoteAction = async (
     pinned: formData.get("pinned") === "true",
   }
 
-  console.log(data)
   const validationResult = NoteSchema.safeParse(data)
   if (!validationResult.success) {
     return {
@@ -52,6 +53,32 @@ export const createNoteAction = async (
       values: data,
     }
   }
-
+  revalidatePath("panel/nauka")
   return toFormState("SUCCESS", "Notatka została utworzona pomyślnie!")
+}
+
+export async function deleteNoteAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  try {
+    const noteId = formData.get("noteId") as string
+
+    if (!noteId) {
+      return toFormState("ERROR", "Niepoprawne ID notatki")
+    }
+
+    const validationResult = DeleteNoteIdSchema.safeParse({ noteId })
+
+    if (!validationResult.success) {
+      return toFormState("ERROR", "Brak notatki do usunięcia")
+    }
+
+    await deleteNote(userId,noteId)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("panel/nauka")
+  return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
 }

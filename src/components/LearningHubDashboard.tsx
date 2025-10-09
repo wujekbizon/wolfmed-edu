@@ -3,11 +3,10 @@
 import { useState } from "react"
 import PDFViewer from "./reader/PDFViewer"
 import CategoryGrid from "./CategoryGrid"
-import Editor from "./editor/Editor"
 import NotesSection from "./NotesSection"
 import type { PopulatedCategories } from "@/types/categoryType"
 import CreateNoteForm from "./CreateNoteForm"
-import { NoteInput } from "@/server/schema"
+import type { NotesType } from "@/types/notesTypes"
 
 const combinedMaterials = [
     { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
@@ -18,7 +17,7 @@ const combinedMaterials = [
 
 export default function LearningHubDashboard({ categories, notes }: {
     categories: PopulatedCategories[]
-    notes:NoteInput[]
+    notes:NotesType[]
 }) {
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
@@ -67,7 +66,7 @@ export default function LearningHubDashboard({ categories, notes }: {
                 <CreateNoteForm
                 />
             </div>
-            <NotesSection />
+            <NotesSection notes={notes} />
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
                 <CategoryGrid categories={categories} />
