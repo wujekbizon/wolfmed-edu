@@ -243,3 +243,20 @@ export const notes = createTable(
     index("notes_created_at_idx").on(table.createdAt),
   ]
 )
+
+export const userCellsList = createTable(
+  "user_cells_list",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    cells: jsonb("cells").notNull(),
+    order: jsonb("order").notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_cells_list_user_id_idx").on(table.userId),
+  ]
+)

@@ -10,6 +10,7 @@ import {
   testimonials,
   testSessions,
   notes,
+  userCellsList,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -22,6 +23,7 @@ import { eq, asc, desc, sql, and } from "drizzle-orm"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
+import { Cell, UserCellsList } from "@/types/cellTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -113,8 +115,8 @@ export async function getTestSessionDetails(sessionId: string) {
       durationMinutes: true,
       numberOfQuestions: true,
     },
-  });
-  return session;
+  })
+  return session
 }
 
 // Get userId by customer email
@@ -488,21 +490,23 @@ export const sessionExists = cache(async (sessionId: string) => {
     .select({ id: testSessions.id })
     .from(testSessions)
     .where(eq(testSessions.id, sessionId))
-    .limit(1);
-  return !!session;
-});
+    .limit(1)
+  return !!session
+})
 
 export const expireTestSession = cache(async (sessionId: string) => {
-  const now = new Date();
+  const now = new Date()
   await db
     .update(testSessions)
-    .set({ status: 'EXPIRED', finishedAt: now })
-    .where(and(
-      eq(testSessions.id, sessionId),
-      eq(testSessions.status, 'ACTIVE'),
-      sql`${testSessions.expiresAt} <= ${now}`
-    ));
-});
+    .set({ status: "EXPIRED", finishedAt: now })
+    .where(
+      and(
+        eq(testSessions.id, sessionId),
+        eq(testSessions.status, "ACTIVE"),
+        sql`${testSessions.expiresAt} <= ${now}`
+      )
+    )
+})
 
 export const getAllUserNotes = cache(async (userId: string) => {
   const notesList = await db.query.notes.findMany({
@@ -519,7 +523,8 @@ export const getAllUserNotes = cache(async (userId: string) => {
 
 export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
   const notesList = await db.query.notes.findMany({
-    where: (model, { and, eq }) => and(eq(model.userId, userId), eq(model.pinned, true)),
+    where: (model, { and, eq }) =>
+      and(eq(model.userId, userId), eq(model.pinned, true)),
     orderBy: (model, { desc }) => desc(model.createdAt),
     limit,
   })
@@ -533,7 +538,8 @@ export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
 
 export const getNoteById = cache(async (userId: string, noteId: string) => {
   const note = await db.query.notes.findFirst({
-    where: (model, { and, eq }) => and(eq(model.id, noteId), eq(model.userId, userId)),
+    where: (model, { and, eq }) =>
+      and(eq(model.id, noteId), eq(model.userId, userId)),
   })
 
   if (!note) return null
@@ -546,20 +552,24 @@ export const getNoteById = cache(async (userId: string, noteId: string) => {
 })
 
 export const createNote = cache(async (userId: string, data: NoteInput) => {
-  const note = await db.insert(notes).values({
-    ...data,
-    content: JSON.parse(data.content),
-    userId,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  }).returning()
+  const note = await db
+    .insert(notes)
+    .values({
+      ...data,
+      content: JSON.parse(data.content),
+      userId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning()
 
   return note[0]
 })
 
 export const updateNote = cache(
   async (userId: string, noteId: string, data: Partial<NoteInput>) => {
-    const note = await db.update(notes)
+    const note = await db
+      .update(notes)
       .set({
         ...data,
         ...(data.content ? { content: JSON.parse(data.content) } : {}),
@@ -573,8 +583,59 @@ export const updateNote = cache(
 )
 
 export const deleteNote = cache(async (userId: string, noteId: string) => {
-  const deleted = await db.delete(notes)
+  const deleted = await db
+    .delete(notes)
     .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
     .returning()
   return deleted[0] || null
+})
+
+export const getUserCellsList = cache(async (userId: string): Promise<UserCellsList | null> => {
+  const rows = await db
+    .select()
+    .from(userCellsList)
+    .where(eq(userCellsList.userId, userId))
+    .limit(1)
+
+  const userCells = rows[0] ?? null
+
+  if (!userCells) return null
+
+  return {
+    id: userCells.id,
+    cells: userCells.cells as Record<string, Cell>,
+    order: userCells.order as string[],
+  }
+})
+
+export const createUserCellsList = cache(
+  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
+    await db.insert(userCellsList).values({
+      userId,
+      cells,
+      order,
+    })
+  }
+)
+export const updateUserCellsList = cache(
+  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
+    await db
+      .update(userCellsList)
+      .set({
+        cells,
+        order,
+        updatedAt: new Date(),
+      })
+      .where(eq(userCellsList.userId, userId))
+  }
+)
+
+export const checkUserCellsList = cache(async (userId: string) => {
+  const existing = await db
+    .select()
+    .from(userCellsList)
+    .where(eq(userCellsList.userId, userId))
+    .limit(1)
+
+  return existing[0] || null
 })

@@ -4,9 +4,10 @@ import { useState } from "react"
 import PDFViewer from "./reader/PDFViewer"
 import CategoryGrid from "./CategoryGrid"
 import NotesSection from "./NotesSection"
+import CellList from "./cells/CellList"
 import type { PopulatedCategories } from "@/types/categoryType"
-import CreateNoteForm from "./CreateNoteForm"
 import type { NotesType } from "@/types/notesTypes"
+import { UserCellsList } from "@/types/cellTypes"
 
 const combinedMaterials = [
     { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
@@ -15,10 +16,12 @@ const combinedMaterials = [
     { id: 5, title: "video.mp4", type: "video", category: "pielęgniarstwo", date: "2025-09-25", isUser: false },
 ]
 
-export default function LearningHubDashboard({ categories, notes }: {
+export default function LearningHubDashboard({ categories, notes, cells}: {
     categories: PopulatedCategories[]
     notes:NotesType[]
+    cells: UserCellsList
 }) {
+
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
 
@@ -61,11 +64,7 @@ export default function LearningHubDashboard({ categories, notes }: {
                 <h1 className="text-3xl font-bold text-zinc-800 mb-2">Centrum Nauki</h1>
                 <p className="text-zinc-600">Twoje osobiste środowisko do nauki i rozwoju</p>
             </div>
-            <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
-                <h2 className="text-xl font-bold text-zinc-800 mb-6">Szybkie Notatki</h2>
-                <CreateNoteForm
-                />
-            </div>
+           <CellList cells={cells}/>
             <NotesSection notes={notes} />
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>

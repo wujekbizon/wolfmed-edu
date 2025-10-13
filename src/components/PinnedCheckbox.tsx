@@ -9,8 +9,8 @@ export function PinnedCheckbox({
 }) {
   return (
     <>
-      <Checkbox id="pinned" label="Przypięta notatka" checked={pinned} onChange={onChange} />
       <input type="hidden" name="pinned" value={String(pinned)} />
+      <Checkbox id="pinned" label="Przypięta notatka" checked={pinned} onChange={onChange} />
     </>
   )
 }
