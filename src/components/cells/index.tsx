@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic'
 import ProgressBar from './ProgressBar'
 
-const DynamicExcalidraw = dynamic(() => import('./NoteCell'), {
+const DynamicExcalidraw = dynamic(() => import('@/components/excalidraw/Excalidraw'), {
   loading: () => (
-    <div className="dynamic-loader">
+    <div className="h-1/10 flex flex-col items-center justify-center">
       <ProgressBar />
     </div>
   ),
@@ -12,7 +12,7 @@ const DynamicExcalidraw = dynamic(() => import('./NoteCell'), {
 
 const DynamicTextEditor = dynamic(() => import('./NoteCell'), {
   loading: () => (
-    <div className="dynamic-loader">
+    <div className="h-1/10 flex flex-col items-center justify-center">
       <ProgressBar />
     </div>
   ),
