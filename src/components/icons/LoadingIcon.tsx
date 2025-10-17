@@ -1,4 +1,4 @@
-export default function SavingIcon({ color = '#302e2e', width = 24, height = 24 }) {
+export default function LoadingIcon({ color = '#302e2e', width = 24, height = 24 }) {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"

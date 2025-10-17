@@ -3,13 +3,15 @@
 import { db } from "@/server/db/index"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
-import { auth } from "@clerk/nextjs/server"
+import { auth, currentUser } from "@clerk/nextjs/server"
 import { UserCellsListSchema } from "@/server/schema"
 import {
   checkUserCellsList,
   createUserCellsList,
+  getUserCellsList,
   updateUserCellsList,
 } from "@/server/queries"
+import { UserCellsList } from "@/types/cellTypes"
 
 export async function saveCellsAction(
   formState: FormState,
@@ -46,3 +48,21 @@ export async function saveCellsAction(
   }
   return toFormState("SUCCESS", "Zapisano pomyślnie")
 }
+
+
+export const syncCellsAction = async (): Promise<{ success: boolean; data?: UserCellsList; error?: string }> => {
+    try {
+      const user = await currentUser();
+      if (!user?.id) return { success: false, error: "Unauthorized" };
+  
+      const fetchedCells = await getUserCellsList(user.id);
+      if (!fetchedCells) {
+        return { success: false, error: "No saved cells found" };
+      }
+  
+      return { success: true, data: fetchedCells };
+    } catch (err) {
+      console.error("Sync error:", err);
+      return { success: false, error: "Unexpected error" };
+    }
+  };

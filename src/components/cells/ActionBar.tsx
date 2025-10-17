@@ -8,6 +8,7 @@ import ArrowUpIcon from '../icons/ArrowUpIcon'
 import ArrowDownIcon from '../icons/ArrowDownIcon'
 import SyncIcon from '../icons/SyncIcon'
 import SaveCellsButton from './SaveCellsButton'
+import { SyncCellsButton } from './SyncCellsButton'
 
 
 export default function ActionBar({ cell }: { cell: Cell }) {
@@ -17,8 +18,7 @@ export default function ActionBar({ cell }: { cell: Cell }) {
         <div className='flex items-center justify-between'>
             <div className="flex items-center px-1 gap-1">
                 <SaveCellsButton />
-                <ActionButton icon={<SyncIcon  color="white" />} onClick={() =>
-                    console.log("Sync from database")} />
+                <SyncCellsButton />
             </div>
             <div className="flex items-center px-1 gap-1">
                 <ActionButton
