@@ -27,7 +27,7 @@ export default function CellListItem ({cell}: {cell: Cell}) {
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
-          <DynamicExcalidraw />
+          <DynamicExcalidraw cell={cell} />
         </div>
       )}
     </div>

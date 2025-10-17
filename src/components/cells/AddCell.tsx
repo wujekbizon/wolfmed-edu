@@ -1,5 +1,7 @@
 import { cellButtons } from '@/constants/cellButtons'
 import { useCellsStore } from '@/store/useCellsStore'
+import SaveCellsButton from './SaveCellsButton'
+import { SyncCellsButton } from './SyncCellsButton'
 
 interface AddCellProps {
   prevCellId: string | null
@@ -15,6 +17,8 @@ export default function AddCell({ prevCellId, forceVisible }: AddCellProps) {
         }`}
     >
       <div className="relative flex flex-wrap items-center justify-center gap-2 sm:gap-3 z-10">
+      <SaveCellsButton />
+      <SyncCellsButton />
         {cellButtons.map(({ id, type, cellName }) => (
           <button
             key={id}

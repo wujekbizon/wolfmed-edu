@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
     Excalidraw as Draw,
     useHandleLibrary,
@@ -8,10 +8,15 @@ import { MainMenu } from '@excalidraw/excalidraw';
 import DarkModeIcon from '../icons/DarkModeIcon';
 import LightModeIcon from '../icons/LightModeIcon';
 import ResizableComponent from '../Resizable';
+import { Cell } from '@/types/cellTypes';
+import { useCellsStore } from '@/store/useCellsStore';
 
-const Excalidraw = () => {
+const Excalidraw = ({cell}:{cell:Cell}) => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
     const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+
+    const { updateCell,data } = useCellsStore()
+
     useHandleLibrary({ excalidrawAPI });
 
     const renderMenu = () => {
@@ -49,6 +54,18 @@ const Excalidraw = () => {
         );
     };
 
+    const initialData = useMemo(() => {
+        return data[cell.id]?.content
+            ? {
+                  ...JSON.parse(data[cell.id]!.content),
+                  appState: {
+                      ...(JSON.parse(data[cell.id]!.content).appState || {}),
+                      collaborators: [],
+                  },
+              }
+            : {};
+    }, [data, cell.id]);
+
     return (
         <div className="relative h-full w-full">
             <ResizableComponent direction="vertical">
@@ -56,6 +73,8 @@ const Excalidraw = () => {
                     <Draw
                         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
                         theme={theme}
+                        onChange={(_elements, appState) => updateCell(cell.id, JSON.stringify({ elements: _elements, appState }))}
+                        initialData={initialData}
                     >
                         {renderMenu()}
                     </Draw>
