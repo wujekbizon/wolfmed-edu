@@ -7,7 +7,6 @@ import NotesSection from "./NotesSection"
 import CellList from "./cells/CellList"
 import type { PopulatedCategories } from "@/types/categoryType"
 import type { NotesType } from "@/types/notesTypes"
-import { UserCellsList } from "@/types/cellTypes"
 
 const combinedMaterials = [
     { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },

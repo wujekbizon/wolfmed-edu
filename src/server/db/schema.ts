@@ -260,3 +260,32 @@ export const userCellsList = createTable(
     index("user_cells_list_user_id_idx").on(table.userId),
   ]
 )
+
+export const materials = createTable(
+  "materials",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    title: varchar("title", { length: 256 }).notNull(),
+    key: varchar("key", { length: 256 }).notNull().unique(),
+    url: text("url").notNull(),
+    type: varchar("type", { length: 64 }).notNull(),
+    category: varchar("category", { length: 128 }).default("general"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("materials_user_id_idx").on(table.userId),
+    index("materials_category_idx").on(table.category),
+    index("materials_type_idx").on(table.type),
+  ]
+);
+
+export const materialsRelations = relations(materials, ({ one }) => ({
+  user: one(users, {
+    fields: [materials.userId],
+    references: [users.userId],
+  }),
+}));
