@@ -215,3 +215,17 @@ export const NoteUpdateSchema = NoteSchema.partial()
  * Type inference for use in TypeScript.
  */
 export type NoteInput = z.infer<typeof NoteSchema>
+
+/**
+ * Schema for validating data when saving user cells to database.
+ */
+export const CellSchema = z.object({
+  id: z.string(),
+  type: z.enum(["note", "text", "draw"]),
+  content: z.string(),
+})
+
+export const UserCellsListSchema = z.object({
+  order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
+  cells: z.record(z.string(),CellSchema),
+})
