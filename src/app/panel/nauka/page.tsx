@@ -22,16 +22,9 @@ export default async function NaukaPage() {
   const populatedCategories = await getPopulatedCategories(fileData)
   const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
 
-  const fetchedCells = user ? await getUserCellsList(user.id) : null
-  const userCells: UserCellsList = fetchedCells ?? {
-    id: '',
-    cells: {},
-    order: [],
-  }
-
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubDashboard cells={userCells} categories={populatedCategories} notes={userAllNotes}/>
+      <LearningHubDashboard categories={populatedCategories} notes={userAllNotes}/>
     </section>
   )
 }

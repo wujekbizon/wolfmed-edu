@@ -16,10 +16,9 @@ const combinedMaterials = [
     { id: 5, title: "video.mp4", type: "video", category: "pielęgniarstwo", date: "2025-09-25", isUser: false },
 ]
 
-export default function LearningHubDashboard({ categories, notes, cells}: {
+export default function LearningHubDashboard({ categories, notes }: {
     categories: PopulatedCategories[]
     notes:NotesType[]
-    cells: UserCellsList
 }) {
 
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
@@ -64,7 +63,7 @@ export default function LearningHubDashboard({ categories, notes, cells}: {
                 <h1 className="text-3xl font-bold text-zinc-800 mb-2">Centrum Nauki</h1>
                 <p className="text-zinc-600">Twoje osobiste środowisko do nauki i rozwoju</p>
             </div>
-           <CellList cells={cells}/>
+           <CellList />
             <NotesSection notes={notes} />
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
