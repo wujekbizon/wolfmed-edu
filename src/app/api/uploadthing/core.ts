@@ -25,7 +25,7 @@ export const ourFileRouter = {
           userId: metadata.userId,
           title: file.name,
           key: file.key,
-          url: file.url,
+          url: file.ufsUrl,
           type: file.type,
           category: "general",
         });
@@ -33,7 +33,7 @@ export const ourFileRouter = {
         console.error("Failed to insert material:", error);
       }
 
-      return { uploadedBy: metadata.userId, fileUrl: file.url };
+      return { uploadedBy: metadata.userId, fileUrl: file.ufsUrl };
     }),
 } satisfies FileRouter;
 
