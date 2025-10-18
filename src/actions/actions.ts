@@ -11,6 +11,7 @@ import {
   completedTestes,
   customersMessages,
   forumComments,
+  materials,
   tests,
   testSessions,
   users,
@@ -27,6 +28,7 @@ import {
   CreateTestSchema,
   TestFileSchema,
   StartTestSchema,
+  MaterialsSchema,
 } from "@/server/schema"
 import { auth } from "@clerk/nextjs/server"
 import { eq, sql, and, gt } from "drizzle-orm"
@@ -807,4 +809,47 @@ export async function expireSessionAction(sessionId: string) {
   } catch (error) {
     return { status: "ERROR", message: "Nie udało się zakończyć sesji." }
   }
+}
+
+export async function uploadMaterialAction(  FormState: FormState, formData: FormData) {
+  try {
+    const {userId} = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const title = String(formData.get("title") ?? "");
+    const key = String(formData.get("key") ?? "");
+    const fileUrl = String(formData.get("fileUrl") ?? "");
+    const type = String(formData.get("type") ?? "");
+    const category = String(formData.get("category") ?? "ogólne");
+
+    const validationResult = MaterialsSchema.safeParse({
+      title,
+      key,
+      url:fileUrl,
+      type,
+      category,
+    });
+
+    if (!validationResult.success) {
+      return {
+        ...fromErrorToFormState(validationResult.error),
+        values: { title, key, fileUrl, type, category },
+      }
+    }
+
+    await db.insert(materials).values({
+      userId,
+      title: validationResult.data.title,
+      key: validationResult.data.key,
+      url: validationResult.data.url,
+      type: validationResult.data.type,
+      category: validationResult.data.category,
+    });
+
+  } catch (error: any) {
+    return toFormState("ERROR", error.message );
+  }
+
+  revalidatePath("/panel/nauka");
+  return toFormState("SUCCESS","Plik został pomyślnie wrzucony")
 }

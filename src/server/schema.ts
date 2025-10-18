@@ -229,3 +229,16 @@ export const UserCellsListSchema = z.object({
   order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
   cells: z.record(z.string(),CellSchema),
 })
+
+/**
+ * Schema for validating form to upload files.
+ */
+export const MaterialsSchema = z.object({
+  title: z.string().min(1, "Tytuł jest wymagany"),
+  key: z.string().min(1, "Brak niepowtarzalnego klucza"),
+  url: z.string().min(1,"Nieprawidłowy URL pliku"),
+  type: z.string().min(1, "Typ jest wymagany"),
+  category: z.string().min(1, "Kategoria pliku wymagana."),
+});
+
+export type MaterialsSchemaType = z.infer<typeof MaterialsSchema>;

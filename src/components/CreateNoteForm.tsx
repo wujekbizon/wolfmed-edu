@@ -43,12 +43,15 @@ export default function CreateNoteForm() {
           onChange={handleEditorChange}
         />
       </ResizableComponent>
-      <div className="flex flex-col flex-grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
+      <div className="flex flex-col justify-between flex-grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
+        <div>
+
         <div>
           <NoteMetaFields formState={state} />
         </div>
         <div className="flex flex-col gap-4 my-4">
           <TagSelector tagCount={tagCount} onTagCountChange={handleTagCountChange} />
+        </div>
         </div>
         <div className="flex flex-col items-end justify-end gap-4">
           <PinnedCheckbox pinned={pinned} onChange={setPinned} />

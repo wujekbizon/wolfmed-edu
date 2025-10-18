@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+@import "uploadthing/tw/v4";
+@source "../../node_modules/@uploadthing/react/dist";
+
 @theme {
   --background: hsl(255 100% 100%);
   --foreground: hsl(240 10% 3.9%);

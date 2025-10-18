@@ -1,6 +1,7 @@
 import '@/styles/globals.css'
 import "@excalidraw/excalidraw/index.css";
 
+
 import type { Metadata } from 'next'
 import { Open_Sans, Poppins } from 'next/font/google'
 import Navbar from './_components/Navbar'

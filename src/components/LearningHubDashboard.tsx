@@ -7,6 +7,7 @@ import NotesSection from "./NotesSection"
 import CellList from "./cells/CellList"
 import type { PopulatedCategories } from "@/types/categoryType"
 import type { NotesType } from "@/types/notesTypes"
+import UploadMaterialForm from "./UploadMaterialForm"
 
 const combinedMaterials = [
     { id: 1, title: "file2.pdf", type: "pdf", category: "test-category", date: "2025-10-05", isUser: true },
@@ -17,11 +18,12 @@ const combinedMaterials = [
 
 export default function LearningHubDashboard({ categories, notes }: {
     categories: PopulatedCategories[]
-    notes:NotesType[]
+    notes: NotesType[]
 }) {
 
     const [selectedPdf, setSelectedPdf] = useState<string | null>(null)
     const [selectedVideo, setSelectedVideo] = useState<string | null>(null)
+    const [isUploadModalOpen, setIsUploadModalOpen] = useState(false)
 
     const openPdfPreview = (title: string) => {
         setSelectedPdf(title)
@@ -62,7 +64,7 @@ export default function LearningHubDashboard({ categories, notes }: {
                 <h1 className="text-3xl font-bold text-zinc-800 mb-2">Centrum Nauki</h1>
                 <p className="text-zinc-600">Twoje osobiste środowisko do nauki i rozwoju</p>
             </div>
-           <CellList />
+            <CellList />
             <NotesSection notes={notes} />
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
@@ -71,14 +73,12 @@ export default function LearningHubDashboard({ categories, notes }: {
             <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold text-zinc-800">Materiały i Zasoby</h2>
-                    <div className="flex gap-2">
-                        <button className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700 transition-colors">
-                            + Dodaj Materiał
-                        </button>
-                        <button className="bg-zinc-100 text-zinc-700 px-4 py-2 rounded-full text-sm font-medium hover:bg-zinc-200 transition-colors">
-                            Przeglądaj Zasoby
-                        </button>
-                    </div>
+                    <button
+                        className="bg-slate-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
+                        onClick={() => setIsUploadModalOpen(true)}
+                    >
+                        + Dodaj Materiał
+                    </button>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {combinedMaterials.map((material) => (
@@ -184,6 +184,22 @@ export default function LearningHubDashboard({ categories, notes }: {
                     </div>
                 </div>
             )}
+            {isUploadModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl p-6 relative">
+            {/* Close button */}
+            <button
+              onClick={() => setIsUploadModalOpen(false)}
+              className="absolute top-4 right-4 text-zinc-500 hover:text-zinc-800 text-2xl"
+            >
+              ×
+            </button>
+            <UploadMaterialForm
+              onSuccess={() => setIsUploadModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
         </div>
     )
 }
