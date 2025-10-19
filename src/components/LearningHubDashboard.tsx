@@ -6,12 +6,11 @@ import CategoryGrid from "./CategoryGrid";
 import NotesSection from "./NotesSection";
 import CellList from "./cells/CellList";
 import UploadMaterialForm from "./UploadMaterialForm";
+import MaterialCard from "./MaterialCard";
 import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
 import CloseIcon from "./icons/Close";
-import { formatDate } from "@/helpers/formatDate";
-import { resolveSrc } from "@/helpers/resolveSource";
 
 export default function LearningHubDashboard({
   categories,
@@ -81,8 +80,6 @@ export default function LearningHubDashboard({
     }
   };
 
-  const closeTextPreview = () => setSelectedText(null);
-
   return (
     <div className="w-full space-y-8">
       <div>
@@ -111,74 +108,13 @@ export default function LearningHubDashboard({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {materials.map((material) => (
-            <div
+            <MaterialCard
               key={material.id}
-              className="bg-zinc-50 p-4 rounded-xl border border-zinc-200/60 hover:border-zinc-300/80 transition-all duration-300"
-            >
-              <div className="flex items-center mb-3">
-                <div
-                  className={`w-8 h-8 flex items-center justify-center mr-3 rounded-full ${
-                    material.type === "application/pdf"
-                      ? "bg-red-500"
-                      : material.type === "video/mp4"
-                      ? "bg-purple-500"
-                      : "bg-green-500"
-                  }`}
-                >
-                  {material.type === "application/pdf"
-                    ? "📄"
-                    : material.type === "video/mp4"
-                    ? "🎥"
-                    : "📝"}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-zinc-800 font-semibold truncate">
-                    {material.title || "Brak tytułu"}
-                  </h4>
-                  <div className="text-zinc-600 text-sm">
-                    <span className="bg-zinc-100 px-2 py-1 text-xs rounded-full">
-                      {material.category}
-                    </span>
-                    <span className="ml-2 text-zinc-500">
-                      {formatDate(material.createdAt)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-3 flex gap-2">
-                {material.type === "application/pdf" && (
-                  <button
-                    onClick={() =>
-                      openPdfPreview(resolveSrc(material), material.title)
-                    }
-                    className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
-                  >
-                    Podgląd PDF
-                  </button>
-                )}
-                {material.type === "video/mp4" && (
-                  <button
-                    onClick={() =>
-                      openVideoPreview(resolveSrc(material), material.title)
-                    }
-                    className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
-                  >
-                    Podgląd Video
-                  </button>
-                )}
-                {material.type === "text/plain" && (
-                  <button
-                    onClick={() =>
-                      openTextPreview(resolveSrc(material), material.title)
-                    }
-                    className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
-                  >
-                    Podgląd Tekst
-                  </button>
-                )}
-              </div>
-            </div>
+              material={material}
+              onOpenPdf={openPdfPreview}
+              onOpenVideo={openVideoPreview}
+              onOpenText={openTextPreview}
+            />
           ))}
         </div>
         {materials.length === 0 && (
@@ -273,7 +209,7 @@ export default function LearningHubDashboard({
                 Podgląd: {selectedText.title ?? ""}
               </h3>
               <button
-                onClick={closeTextPreview}
+                onClick={() => setSelectedText(null)}
                 className="text-zinc-500 hover:text-zinc-800 text-2xl transition-colors"
               >
                 ×
