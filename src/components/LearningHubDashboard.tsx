@@ -10,6 +10,8 @@ import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
 import CloseIcon from "./icons/Close";
+import { formatDate } from "@/helpers/formatDate";
+import { resolveSrc } from "@/helpers/resolveSource";
 
 export default function LearningHubDashboard({
   categories,
@@ -20,20 +22,20 @@ export default function LearningHubDashboard({
   notes: NotesType[];
   materials: MaterialsType[];
 }) {
-  const [selectedPdf, setSelectedPdf] = useState<{ src: string; title?: string } | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<{ src: string; title?: string } | null>(null);
+  const [selectedPdf, setSelectedPdf] = useState<{
+    src: string;
+    title?: string;
+  } | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<{
+    src: string;
+    title?: string;
+  } | null>(null);
+  const [selectedText, setSelectedText] = useState<{
+    src?: string;
+    content: string;
+    title?: string;
+  } | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-
-  const resolveSrc = (m: any) => {
-    const url = m.fileUrl ?? m.url;
-    if (typeof url === "string") {
-      if (url.startsWith("http://") || url.startsWith("https://")) return url;
-      return url.startsWith("/") ? url : `/${url}`;
-    }
-    if (m.key) return `/uploads/${m.key}`;
-    if (m.title) return `/${m.title}`;
-    return "";
-  };
 
   const openPdfPreview = (src: string, title?: string) => {
     setSelectedPdf(title === undefined ? { src } : { src, title });
@@ -68,6 +70,19 @@ export default function LearningHubDashboard({
     setSelectedVideo(null);
   };
 
+  const openTextPreview = async (src: string, title?: string) => {
+    try {
+      const res = await fetch(src);
+      const content = await res.text();
+      setSelectedText(title ? { src, content, title } : { src, content });
+    } catch (err) {
+      const errorContent = "Błąd wczytywania pliku.";
+      setSelectedText(title ? { src, content: errorContent, title } : { src, content: errorContent });
+    }
+  };
+
+  const closeTextPreview = () => setSelectedText(null);
+
   return (
     <div className="w-full space-y-8">
       <div>
@@ -88,10 +103,10 @@ export default function LearningHubDashboard({
             Materiały i Zasoby
           </h2>
           <button
-            className="bg-slate-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
+            className="bg-slate-600 text-white px-4 py-2 cursor-pointer rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
             onClick={() => setIsUploadModalOpen(true)}
           >
-            + Dodaj Materiał
+            Dodaj Materiał
           </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -117,13 +132,16 @@ export default function LearningHubDashboard({
                     : "📝"}
                 </div>
                 <div className="flex-1 min-w-0">
-                  {/* title */}
-                  <h4 className="text-zinc-800 font-semibold truncate">{material.title || "Brak tytułu"}</h4>
+                  <h4 className="text-zinc-800 font-semibold truncate">
+                    {material.title || "Brak tytułu"}
+                  </h4>
                   <div className="text-zinc-600 text-sm">
                     <span className="bg-zinc-100 px-2 py-1 text-xs rounded-full">
                       {material.category}
                     </span>
-                    <span className="ml-2 text-zinc-500">{material.createdAt}</span>
+                    <span className="ml-2 text-zinc-500">
+                      {formatDate(material.createdAt)}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -131,7 +149,9 @@ export default function LearningHubDashboard({
               <div className="mt-3 flex gap-2">
                 {material.type === "application/pdf" && (
                   <button
-                    onClick={() => openPdfPreview(resolveSrc(material), material.title)}
+                    onClick={() =>
+                      openPdfPreview(resolveSrc(material), material.title)
+                    }
                     className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
                   >
                     Podgląd PDF
@@ -139,23 +159,44 @@ export default function LearningHubDashboard({
                 )}
                 {material.type === "video/mp4" && (
                   <button
-                    onClick={() => openVideoPreview(resolveSrc(material), material.title)}
+                    onClick={() =>
+                      openVideoPreview(resolveSrc(material), material.title)
+                    }
                     className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
                   >
                     Podgląd Video
+                  </button>
+                )}
+                {material.type === "text/plain" && (
+                  <button
+                    onClick={() =>
+                      openTextPreview(resolveSrc(material), material.title)
+                    }
+                    className="text-blue-600 hover:text-blue-700 text-xs bg-zinc-100 px-3 py-1 rounded-full transition-colors hover:bg-zinc-200"
+                  >
+                    Podgląd Tekst
                   </button>
                 )}
               </div>
             </div>
           ))}
         </div>
+        {materials.length === 0 && (
+          <div className="flex w-full flex-col items-center justify-center">
+            <div className="text-5xl mb-4 text-zinc-300">📝</div>
+            <h3 className="text-xl text-zinc-500 mb-2 font-medium">
+              Brak dostepnych materiałów
+            </h3>
+            <p className="text-zinc-400">Dodaj swój pierwszy materiał!</p>
+          </div>
+        )}
       </div>
       {selectedPdf && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
           <div className="bg-white p-6 rounded-md shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-webkit">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-zinc-800">
-                Podgląd: {selectedPdf.title ?? (selectedPdf.src ?? "")}
+                Podgląd: {selectedPdf.title ?? selectedPdf.src ?? ""}
               </h3>
               <button
                 onClick={closePdfPreview}
@@ -189,7 +230,7 @@ export default function LearningHubDashboard({
           <div className="bg-white p-6 rounded-md shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-webkit">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-zinc-800">
-                Podgląd: {selectedVideo.title ?? (selectedVideo.src ?? "")}
+                Podgląd: {selectedVideo.title ?? selectedVideo.src ?? ""}
               </h3>
               <button
                 onClick={closeVideoPreview}
@@ -200,7 +241,12 @@ export default function LearningHubDashboard({
             </div>
             <div className="bg-zinc-50 min-h-[300px] flex items-center justify-center rounded-xl border border-zinc-200/60">
               {selectedVideo?.src && (
-                <video controls width="100%" height="auto" className="rounded-xl">
+                <video
+                  controls
+                  width="100%"
+                  height="auto"
+                  className="rounded-xl"
+                >
                   <source src={selectedVideo.src} type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
@@ -208,7 +254,43 @@ export default function LearningHubDashboard({
             </div>
             <div className="flex justify-end gap-2 mt-4">
               <button
-                onClick={() => selectedVideo?.src && window.open(selectedVideo.src, "_blank")}
+                onClick={() =>
+                  selectedVideo?.src && window.open(selectedVideo.src, "_blank")
+                }
+                className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700"
+              >
+                Otwórz pełny
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {selectedText && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-md shadow-xl border border-zinc-200/60 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold text-zinc-800">
+                Podgląd: {selectedText.title ?? ""}
+              </h3>
+              <button
+                onClick={closeTextPreview}
+                className="text-zinc-500 hover:text-zinc-800 text-2xl transition-colors"
+              >
+                ×
+              </button>
+            </div>
+            <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200/60 overflow-auto max-h-[60vh]">
+              <pre className="whitespace-pre-wrap text-sm text-zinc-800">
+                {selectedText.content}
+              </pre>
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                onClick={() => {
+                  if (selectedText?.src) {
+                    window.open(selectedText.src, "_blank");
+                  }
+                }}
                 className="bg-red-600 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-red-700"
               >
                 Otwórz pełny

@@ -820,7 +820,7 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
     const key = String(formData.get("key") ?? "");
     const fileUrl = String(formData.get("fileUrl") ?? "");
     const type = String(formData.get("type") ?? "");
-    const category = String(formData.get("category") ?? "ogólne");
+    const category = String(formData.get("category") ?? "");
 
     const validationResult = MaterialsSchema.safeParse({
       title,

@@ -23,6 +23,7 @@ export default function UploadMaterialForm({
   const [fileKey, setFileKey] = useState<string | null>(null);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileType, setFileType] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const noScriptFallback = useToastMessage(state);
 
   useEffect(() => {
@@ -31,21 +32,7 @@ export default function UploadMaterialForm({
   }, [state.status, onSuccess]);
 
   return (
-    <form action={action} className="flex flex-col gap-4 p-4">
-      <div className="relative w-full">
-        <Input
-          id="title"
-          name="title"
-          className="peer w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-transparent"
-        />
-        <Label
-          htmlFor="title"
-          label="Tytuł notatki"
-          className="absolute left-3 top-2.5 text-sm text-zinc-400 pointer-events-none transition-all duration-300 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-zinc-400 peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#f6aaaa]"
-        />
-        <FieldError formState={state} name="title" />
-      </div>
-
+    <form action={action} className="flex flex-col p-4">
       <div className="relative w-full">
         <Input
           id="category"
@@ -82,6 +69,7 @@ export default function UploadMaterialForm({
           const key = uploaded.key;
           const url = uploaded.ufsUrl;
           const type = uploaded.type;
+          const name = uploaded.name
 
           if (!key || !url || !type) {
             console.warn("Unexpected upload response:", uploaded);
@@ -91,6 +79,7 @@ export default function UploadMaterialForm({
           setFileKey(key ?? null);
           setFileUrl(url ?? null);
           setFileType(type ?? null);
+          setFileName(name ?? null)
         }}
         appearance={{
           button:
@@ -105,6 +94,7 @@ export default function UploadMaterialForm({
       {fileKey && <input type="hidden" name="key" value={fileKey} />}
       {fileUrl && <input type="hidden" name="fileUrl" value={fileUrl} />}
       {fileType && <input type="hidden" name="type" value={fileType} />}
+      {fileName && <input type="hidden" name="title" value={fileName} />}
 
       <div className="flex items-center gap-3">
         <SubmitButton label="Zapisz materiał" loading="Zapisywanie..." />

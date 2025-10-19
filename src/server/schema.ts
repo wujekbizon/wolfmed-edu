@@ -1,19 +1,19 @@
-import { z } from "zod"
-import { getLexicalContent } from "@/helpers/getLexicalContent"
+import { z } from "zod";
+import { getLexicalContent } from "@/helpers/getLexicalContent";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
     .string()
     .min(1, "Musisz podać poprawny identyfikator testu.")
     .trim(),
-})
+});
 
 export const DeleteNoteIdSchema = z.object({
   noteId: z
     .string()
     .min(1, "Musisz podać poprawny identyfikator notatki.")
     .trim(),
-})
+});
 
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
@@ -22,15 +22,15 @@ export const CreateAnswersSchema = (allowedLengths: number[]) => {
     )
     .refine((data) => allowedLengths.includes(data.length), {
       message: "Odpowiedz na wszystkie pytania.",
-    })
-}
+    });
+};
 
 export const UpdateMottoSchema = z.object({
   motto: z
     .string()
     .min(1, "Motto nie może być puste")
     .max(100, "Motto nie może być dłuższe niż 100 znaków"),
-})
+});
 
 export const SignupForSchema = z.object({
   name: z.string().min(1, "Nazwa musi mieć co najmniej 2 znaki.").trim(),
@@ -44,7 +44,7 @@ export const SignupForSchema = z.object({
       message: "Zawierać co najmniej jeden znak specjalny.",
     })
     .trim(),
-})
+});
 
 export const CreateMessageSchema = z.object({
   email: z.email({ message: "Proszę podać poprawny email" }).trim(),
@@ -53,14 +53,14 @@ export const CreateMessageSchema = z.object({
     .min(2, { message: "Wiadomość musi mieć co najmniej 2 znaki." })
     .max(350, { message: "Wiadomość nie może być dłuższa niż 350 znaków" })
     .trim(),
-})
+});
 
 export const UpdateUsernameSchema = z.object({
   username: z
     .string()
     .min(3, "Nazwa użytkownika musi mieć co najmniej 3 znaki.")
     .max(50, "Nazwa użytkownika może mieć maksymalnie 50 znaków."),
-})
+});
 
 export const CreatePostSchema = z.object({
   title: z
@@ -69,13 +69,13 @@ export const CreatePostSchema = z.object({
     .max(100, "Tytuł nie może przekraczać 100 znaków"),
   content: z.string().refine(
     (content) => {
-      const textContent = getLexicalContent(content)
-      return textContent.length >= 10 && textContent.length <= 2000
+      const textContent = getLexicalContent(content);
+      return textContent.length >= 10 && textContent.length <= 2000;
     },
     { message: "Treść musi mieć od 10 do 2000 znaków" }
   ),
   readonly: z.boolean().default(false),
-})
+});
 
 export const CreateCommentSchema = z.object({
   content: z
@@ -83,10 +83,10 @@ export const CreateCommentSchema = z.object({
     .min(3, "Komentarz musi mieć minimum 3 znaki")
     .max(300, "Komentarz nie może przekraczać 300 znaków"),
   postId: z.string().min(1, "ID posta jest wymagane"),
-})
+});
 
-export type CreatePostInput = z.infer<typeof CreatePostSchema>
-export type CreateCommentInput = z.infer<typeof CreateCommentSchema>
+export type CreatePostInput = z.infer<typeof CreatePostSchema>;
+export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
 
 export const CreateTestimonialSchema = z.object({
   content: z
@@ -99,7 +99,7 @@ export const CreateTestimonialSchema = z.object({
     .max(5, "Ocena nie może być większa niż 5")
     .multipleOf(0.5, "Ocena musi być podawana w krokach co 0.5"),
   visible: z.coerce.boolean().default(true),
-})
+});
 
 /**
  * Schema for validating the data required to start a new test session.
@@ -116,7 +116,7 @@ export const StartTestSchema = z.object({
     .min(1, "Niepoprawny czas trwania testu.")
     .max(120, "Niepoprawny czas trwania testu."),
   meta: z.string().default("{}"),
-})
+});
 
 /**
  * Schema for validating the data required to create a new test.
@@ -138,7 +138,7 @@ export const CreateTestSchema = z.object({
       isCorrect: z.boolean(),
     })
   ),
-})
+});
 
 /**
  * Schema for validating test data imported from a file.
@@ -169,7 +169,7 @@ export const TestFileSchema = z.array(
     }),
     category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
   })
-)
+);
 
 /**
  * Schema for validating data when creating or updating a note.
@@ -185,10 +185,10 @@ export const NoteSchema = z.object({
     .refine(
       (value) => {
         try {
-          JSON.parse(value)
-          return true
+          JSON.parse(value);
+          return true;
         } catch {
-          return false
+          return false;
         }
       },
       { message: "Nieprawidłowy format danych edytora" }
@@ -209,12 +209,12 @@ export const NoteSchema = z.object({
     .optional()
     .default([]),
   pinned: z.boolean().optional().default(false),
-})
-export const NoteUpdateSchema = NoteSchema.partial()
+});
+export const NoteUpdateSchema = NoteSchema.partial();
 /**
  * Type inference for use in TypeScript.
  */
-export type NoteInput = z.infer<typeof NoteSchema>
+export type NoteInput = z.infer<typeof NoteSchema>;
 
 /**
  * Schema for validating data when saving user cells to database.
@@ -223,12 +223,12 @@ export const CellSchema = z.object({
   id: z.string(),
   type: z.enum(["note", "text", "draw"]),
   content: z.string(),
-})
+});
 
 export const UserCellsListSchema = z.object({
   order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
-  cells: z.record(z.string(),CellSchema),
-})
+  cells: z.record(z.string(), CellSchema),
+});
 
 /**
  * Schema for validating form to upload files.
@@ -244,12 +244,10 @@ export const allowedFileTypes = [
 export const MaterialsSchema = z.object({
   title: z.string().min(1, "Tytuł jest wymagany"),
   key: z.string().min(1, "Brak niepowtarzalnego klucza"),
-  url: z.string().min(1,"Nieprawidłowy URL pliku"),
-   type: z
-    .string()
-    .refine((val) => allowedFileTypes.includes(val as any), {
-      message: "Nieobsługiwany format pliku. Dozwolone: pdf, txt, mp4, json",
-    }),
+  url: z.string().min(1, "Nieprawidłowy URL pliku"),
+  type: z.string().refine((val) => allowedFileTypes.includes(val as any), {
+    message: "Nieobsługiwany format pliku. Dozwolone: pdf, txt, mp4, json",
+  }),
   category: z.string().min(1, "Kategoria pliku wymagana."),
 });
 
