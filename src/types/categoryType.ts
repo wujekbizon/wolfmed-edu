@@ -7,6 +7,7 @@ export interface PopulatedCategories {
 
 export interface CategoryPageProps {
   params: Promise<{ value: string }>
+  searchParams: Promise<{ sessionId: string }>
 }
 
 export interface CategoryMetadata {
@@ -16,5 +17,5 @@ export interface CategoryMetadata {
   duration: number[]
   popularity: string
   status: boolean
-  numberOfQuestions:number[]
+  numberOfQuestions: number[]
 }

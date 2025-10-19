@@ -1,8 +1,8 @@
-import { Categories } from "@/types/categoryType";
+import { PopulatedCategories } from "@/types/categoryType";
 import Label from "./Label";
 
 export default function Select(props: {
-  categories: Categories[];
+  categories: PopulatedCategories[];
   label: string;
 }) {
   return (

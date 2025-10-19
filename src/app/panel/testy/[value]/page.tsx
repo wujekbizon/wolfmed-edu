@@ -37,7 +37,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   return <GenerateTests tests={categoryTests} sessionId={sessionId} duration={durationMinutes} questions={numberOfQuestions} />;
 }
 
-export default async function CategoryTestPage(props: CategoryPageProps & { searchParams: { sessionId: string } }) {
+export default async function CategoryTestPage(props: CategoryPageProps) {
   const { value } = await props.params
   const { sessionId } = await props.searchParams;
 

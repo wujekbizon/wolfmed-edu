@@ -1,12 +1,12 @@
 import { useTestFormStore } from "@/store/useTestFormStore";
-import { Categories } from "@/types/categoryType";
+import { PopulatedCategories } from "@/types/categoryType";
 import Label from "./ui/Label";
 import Input from "./ui/Input";
 import Select from "./ui/Select";
 import SwitchLeftIcon from "./icons/SwitchLeftIcon";
 import SwitchRightIcon from "./icons/SwitchRightIcon";
 
-export default function CategorySelection(props: { categories: Categories[] }) {
+export default function CategorySelection(props: { categories: PopulatedCategories[] }) {
   const { selectionMethod, setSelectionMethod } = useTestFormStore();
   return (
     <div className="flex w-full items-end gap-6">

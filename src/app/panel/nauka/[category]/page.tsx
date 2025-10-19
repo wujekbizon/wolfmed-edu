@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 import { Suspense } from 'react';
 
 interface CategoryPageProps {
-    params: { category: string };
+    params: Promise<{ category: string }>;
 }
 
 export const dynamic = 'force-static'
