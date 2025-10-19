@@ -233,11 +233,23 @@ export const UserCellsListSchema = z.object({
 /**
  * Schema for validating form to upload files.
  */
+
+export const allowedFileTypes = [
+  "application/pdf",
+  "text/plain",
+  "video/mp4",
+  "application/json",
+] as const;
+
 export const MaterialsSchema = z.object({
   title: z.string().min(1, "Tytuł jest wymagany"),
   key: z.string().min(1, "Brak niepowtarzalnego klucza"),
   url: z.string().min(1,"Nieprawidłowy URL pliku"),
-  type: z.string().min(1, "Typ jest wymagany"),
+   type: z
+    .string()
+    .refine((val) => allowedFileTypes.includes(val as any), {
+      message: "Nieobsługiwany format pliku. Dozwolone: pdf, txt, mp4, json",
+    }),
   category: z.string().min(1, "Kategoria pliku wymagana."),
 });
 

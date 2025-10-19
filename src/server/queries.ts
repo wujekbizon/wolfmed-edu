@@ -617,6 +617,7 @@ export const createUserCellsList = cache(
     })
   }
 )
+
 export const updateUserCellsList = cache(
   async (userId: string, cells: Record<string, Cell>, order: string[]) => {
     await db
@@ -638,4 +639,17 @@ export const checkUserCellsList = cache(async (userId: string) => {
     .limit(1)
 
   return existing[0] || null
+})
+
+export const getMaterialsByUser = cache(async (userId: string) => {
+  const rows = await db.query.materials.findMany({
+    where: (m, { eq }) => eq(m.userId, userId),
+    orderBy: (m, { desc }) => desc(m.createdAt),
+  })
+
+  return rows.map((r) => ({
+    ...r,
+    createdAt: r.createdAt?.toISOString?.() ?? null,
+    updatedAt: r.updatedAt?.toISOString?.() ?? null,
+  }))
 })

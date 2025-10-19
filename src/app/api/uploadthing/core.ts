@@ -1,16 +1,15 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { auth } from "@clerk/nextjs/server";
-import { db } from "@/server/db/index";
-import { materials } from "@/server/db/schema"; 
 
 const f = createUploadthing();
 
 export const ourFileRouter = {
   materialUploader: f({
-    pdf: { maxFileSize: "4MB", maxFileCount: 1 },
-    video: { maxFileSize: "8MB", maxFileCount: 1 },
-    text: { maxFileSize: "2MB", maxFileCount: 1 },
+    "pdf": { maxFileSize: "4MB", maxFileCount: 1 },
+    "video/mp4": { maxFileSize: "8MB", maxFileCount: 1 },
+    "text/plain": { maxFileSize: "1MB", maxFileCount: 1 },
+    "application/json": { maxFileSize: "1MB", maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {
       const { userId } = await auth();
@@ -18,22 +17,19 @@ export const ourFileRouter = {
       if (!userId) throw new UploadThingError("Unauthorized");
       return { userId };
     })
-
+    .onUploadError(({ error, fileKey }) => {
+      console.log(fileKey);
+      console.error("Upload error:", error);
+    })
     .onUploadComplete(async ({ metadata, file }) => {
-      try {
-        await db.insert(materials).values({
-          userId: metadata.userId,
-          title: file.name,
-          key: file.key,
-          url: file.ufsUrl,
-          type: file.type,
-          category: "general",
-        });
-      } catch (error) {
-        console.error("Failed to insert material:", error);
-      }
-
-      return { uploadedBy: metadata.userId, fileUrl: file.ufsUrl };
+      console.log("#CORE: Upload complete for userId:", metadata.userId);
+      console.log("#CORE: File available at:", file.ufsUrl);
+      return {
+        uploadedBy: metadata.userId,
+        fileUrl: file.ufsUrl,
+        fileKey: file.key,
+        fileType: file.type,
+      };
     }),
 } satisfies FileRouter;
 

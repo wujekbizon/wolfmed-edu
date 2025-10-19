@@ -41,7 +41,7 @@ export default function Navbar() {
                 key={link.id}
                 className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
                   ${
-                    pathname === link.linkUrl
+                    pathname === link.linkUrl 
                     ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
                     : 'hover:bg-red-100/50'
                   }`}
