@@ -289,3 +289,17 @@ export const materialsRelations = relations(materials, ({ one }) => ({
     references: [users.userId],
   }),
 }));
+
+export const userLimits = createTable(
+  "user_limits", 
+  {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" })
+    .unique(),
+  storageLimit: integer("storage_limit").notNull().default(20_000_000),
+  storageUsed: integer("storage_used").notNull().default(0),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});

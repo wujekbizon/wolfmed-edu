@@ -24,6 +24,7 @@ export default function UploadMaterialForm({
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileType, setFileType] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [fileSize, setFileSize] = useState<number | null>(null);
   const noScriptFallback = useToastMessage(state);
 
   useEffect(() => {
@@ -70,6 +71,7 @@ export default function UploadMaterialForm({
           const url = uploaded.ufsUrl;
           const type = uploaded.type;
           const name = uploaded.name
+          const size = uploaded.size
 
           if (!key || !url || !type) {
             console.warn("Unexpected upload response:", uploaded);
@@ -80,6 +82,7 @@ export default function UploadMaterialForm({
           setFileUrl(url ?? null);
           setFileType(type ?? null);
           setFileName(name ?? null)
+          setFileSize(size ?? null)
         }}
         appearance={{
           button:
@@ -91,10 +94,11 @@ export default function UploadMaterialForm({
         uploadProgressGranularity="fine"
       />
       <FieldError formState={state} name="type" />
+      {fileName && <input type="hidden" name="title" value={fileName} />}
       {fileKey && <input type="hidden" name="key" value={fileKey} />}
       {fileUrl && <input type="hidden" name="fileUrl" value={fileUrl} />}
       {fileType && <input type="hidden" name="type" value={fileType} />}
-      {fileName && <input type="hidden" name="title" value={fileName} />}
+      {fileSize && <input type="hidden" name="size" value={fileSize} />}
 
       <div className="flex items-center gap-3">
         <SubmitButton label="Zapisz materiał" loading="Zapisywanie..." />

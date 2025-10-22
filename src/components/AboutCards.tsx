@@ -28,8 +28,6 @@ export default function AboutCards() {
           </div>
         </motion.div>
       ))}
-
-      {/* Support Card */}
       <motion.div
         // @ts-ignore
         variants={fadeInUp}
