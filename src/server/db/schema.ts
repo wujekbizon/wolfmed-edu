@@ -293,13 +293,24 @@ export const materialsRelations = relations(materials, ({ one }) => ({
 export const userLimits = createTable(
   "user_limits", 
   {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id")
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("userId", { length: 256 })
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" })
+    .references(() => users.userId, { onDelete: "cascade" })
     .unique(),
   storageLimit: integer("storage_limit").notNull().default(20_000_000),
   storageUsed: integer("storage_used").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+},
+(table) => [
+  index("user_limits_user_id_idx").on(table.userId),
+]
+);
+
+export const userLimitsRelations = relations(userLimits, ({ one }) => ({
+  user: one(users, {
+    fields: [userLimits.userId],
+    references: [users.userId],
+  }),
+}));

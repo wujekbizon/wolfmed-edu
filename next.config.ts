@@ -11,10 +11,9 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],
   allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app'],
   experimental: {
-    reactCompiler: true,
-    //ppr: 'incremental',
   },
   images: {
     remotePatterns: [

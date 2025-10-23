@@ -94,7 +94,7 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
         eventId,
         userId: id,
       })
-      revalidateTag('supporter')
+      revalidateTag('supporter', 'max')
     })
 
     console.log(`User with ID: ${id} is now a supporter.`)

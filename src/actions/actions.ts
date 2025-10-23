@@ -273,7 +273,7 @@ export async function submitTestAction(
   // Update form state and redirect on success and redirect user to result page
   toFormState("SUCCESS", "Test został wypełniony pomyślnie")
   // revalidatePath('/panel', 'page')
-  revalidateTag("score")
+  revalidateTag("score", "max")
   redirect("/panel/wyniki")
 }
 
