@@ -249,6 +249,7 @@ export const MaterialsSchema = z.object({
     message: "Nieobsługiwany format pliku. Dozwolone: pdf, txt, mp4, json",
   }),
   category: z.string().min(1, "Kategoria pliku wymagana."),
+  size:z.number().min(1,"Wymagany rozmiar pliku")
 });
 
 export type MaterialsSchemaType = z.infer<typeof MaterialsSchema>;

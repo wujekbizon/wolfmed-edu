@@ -35,6 +35,21 @@
   --animate-gradientRotate: gradientRotate 40s ease infinite;
   --animate-radialPulse: radialPulse 60s ease-in-out infinite;
   --animate-slideInLeft: slideInLeft 1s ease-out forwards;
+  --animate-slideInUp: slideInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  --animate-slideInRight: slideInRight 0.5s ease-out forwards;
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+      border-radius: 1.25rem;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      border-radius: var(--radius);
+    }
+  }
 
   @keyframes slideInDown {
     from {
@@ -51,6 +66,17 @@
     from {
       opacity: 0;
       transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
     }
     to {
       opacity: 1;
@@ -118,17 +144,53 @@
   }
   .scrollbar-webkit {
     &::-webkit-scrollbar {
-      width: 8px;
+      width: 10px;
       height: 10px;
     }
+
+    /* Track (background of scrollbar) */
     &::-webkit-scrollbar-track {
-      background: transparent;
+      background: #fff4f4;
       border-radius: 10px;
+      box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
     }
+
     &::-webkit-scrollbar-thumb {
-      background-color: #ffa5a5;
+      background-color: #e8b1b1;
       border-radius: 20px;
       border: 1px solid white;
+    }
+
+    /* Scrollbar buttons (arrows) */
+    &::-webkit-scrollbar-button {
+      display: block;
+      height: 10px;
+      background-color: #fff4f4;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    /* Up arrow */
+    &::-webkit-scrollbar-button:single-button:vertical:decrement {
+      border-width: 0 5px 5px 5px;
+      border-style: solid;
+      border-color: transparent transparent #e8b1b1 transparent;
+    }
+
+    /* Down arrow */
+    &::-webkit-scrollbar-button:single-button:vertical:increment {
+      border-width: 5px 5px 0 5px;
+      border-style: solid;
+      border-color: #e8b1b1 transparent transparent transparent;
+    }
+
+    /* Hover effects */
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #e8b1b1;
+    }
+
+    &::-webkit-scrollbar-button:hover {
+      filter: brightness(0.9);
     }
   }
 }

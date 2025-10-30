@@ -273,6 +273,7 @@ export const materials = createTable(
     url: text("url").notNull(),
     type: varchar("type", { length: 64 }).notNull(),
     category: varchar("category", { length: 128 }).notNull(),
+    size: integer("size").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },

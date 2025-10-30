@@ -821,6 +821,7 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
     const fileUrl = String(formData.get("fileUrl") ?? "");
     const type = String(formData.get("type") ?? "");
     const category = String(formData.get("category") ?? "");
+    const size = Number(formData.get("size") ?? "");
 
     const validationResult = MaterialsSchema.safeParse({
       title,
@@ -833,7 +834,7 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
     if (!validationResult.success) {
       return {
         ...fromErrorToFormState(validationResult.error),
-        values: { title, key, fileUrl, type, category },
+        values: {size, title, key, fileUrl, type, category },
       }
     }
 
@@ -844,6 +845,7 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
       url: validationResult.data.url,
       type: validationResult.data.type,
       category: validationResult.data.category,
+      size:validationResult.data.size 
     });
 
   } catch (error: any) {

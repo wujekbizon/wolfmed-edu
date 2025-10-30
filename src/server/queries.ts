@@ -11,6 +11,7 @@ import {
   testSessions,
   notes,
   userCellsList,
+  userLimits, // Added userLimits
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -24,6 +25,7 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
+import { auth } from "@clerk/nextjs/server" // Added auth import
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -653,3 +655,23 @@ export const getMaterialsByUser = cache(async (userId: string) => {
     updatedAt: r.updatedAt?.toISOString?.() ?? null,
   }))
 })
+
+export const getUserStorageUsage = async (userId: string) => {
+  const userStorage = await db
+    .select()
+    .from(userLimits)
+    .where(eq(userLimits.userId, userId))
+    .limit(1)
+
+  if (userStorage.length === 0) {
+    return {
+      storageUsed: 0,
+      storageLimit: 20_000_000,
+    }
+  }
+
+  return {
+    storageUsed: userStorage[0]?.storageUsed,
+    storageLimit: userStorage[0]?.storageLimit,
+  }
+}
