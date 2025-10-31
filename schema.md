@@ -506,7 +506,7 @@ const session = await db.query.testSessions.findFirst({
 
 ---
 
-**Last Updated:** October 31, 2024  
+**Last Updated:** October 31, 2025  
 **Schema Version:** 1.0  
 **ORM:** Drizzle ORM  
 **Database:** PostgreSQL

@@ -1047,6 +1047,6 @@ Always use limits for large datasets:
 
 ---
 
-**Last Updated:** October 31, 2024  
+**Last Updated:** October 31, 2025  
 **File Location:** `src/server/queries.ts`  
 **ORM Version:** Drizzle ORM v0.29+

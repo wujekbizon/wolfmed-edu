@@ -6,7 +6,7 @@ This is a Next.js application for an educational platform called Wolfmed. It app
 *   **Authentication:** Clerk
 *   **Database:** PostgreSQL with Drizzle ORM and Neon
 *   **Payments:** Stripe
-*   **Styling:** Tailwind CSS
+*   **Styling:** Tailwind CSS v4
 *   **Error Tracking:** Sentry
 *   **Rich Text Editor:** Lexical
 *   **State Management:** Zustand
@@ -34,7 +34,7 @@ The application features a user-facing website, a forum, a blog, and a user dash
 - ❌ **NEVER** query database directly from client components
 - ❌ **NEVER** bypass Server Actions for mutations
 - ❌ **NEVER** trust client input without Zod validation
-- ✅ **ALWAYS** use Server Actions from `src/server/actions.ts`
+- ✅ **ALWAYS** use Server Actions from `src/actions/actions.ts` or from ` src/actions` folder.
 - ✅ **ALWAYS** validate with schemas from `src/server/schema.ts`
 - ✅ **ALWAYS** authenticate users before mutations
 - ✅ **ALWAYS** use transactions for multi-step operations
@@ -87,7 +87,7 @@ For detailed query signatures, parameters, usage examples, and best practices, r
 ## Server Actions Documentation
 All user mutations are handled through Server Actions documented in `server-actions.md`. Key points:
 
-- **Location:** `src/server/actions.ts`
+- **Location:** `src/actions/actions.ts`
 - **Directive:** All marked with `"use server"` at top of file
 - **Patterns:** 5 standard patterns for different use cases (CRUD, rate-limited, multi-step, permissions, file uploads)
 - **Security:** Mandatory authentication, Zod validation, permission checks, rate limiting
@@ -99,7 +99,7 @@ For complete patterns, security checklist, and migration guide, refer to `server
 ## Database Access Pattern
 ```typescript
 // 1. Server Actions for mutations (user input)
-// File: src/server/actions.ts
+// File: src/actions/actions.ts
 "use server"
 export async function updateUsername(formState: FormState, formData: FormData) {
   const { userId } = await auth()
@@ -125,7 +125,7 @@ const stats = await getUserStats(userId)
 // Client Component (with form):
 "use client"
 import { useActionState } from "react"
-import { updateUsername } from "@/server/actions"
+import { updateUsername } from "@/actions/actions"
 
 // Server Component (read-only):
 import { getUserStats } from "@/server/queries"
@@ -160,7 +160,7 @@ To build and run the project locally, follow these steps:
 
 ## Server Actions (Database Mutations)
 *   **Mandatory Pattern:** ALL database mutations MUST use Server Actions
-*   **Location:** `src/server/actions.ts` with `"use server"` directive
+*   **Location:** `src/actions/actions.ts` with `"use server"` directive
 *   **Structure:** Authentication → Validation → Business Logic → Database → Revalidation
 *   **Validation:** Use Zod schemas from `src/server/schema.ts` with `.safeParse()`
 *   **Security:** 
@@ -176,7 +176,7 @@ To build and run the project locally, follow these steps:
 *   **ORM:** The project uses Drizzle ORM for database access
 *   **Schema:** Database schema is defined in `src/server/db/schema.ts`
 *   **Queries:** All read queries are centralized in `src/server/queries.ts` with full documentation in `queries.md`
-*   **Actions:** All write operations use Server Actions in `src/server/actions.ts` with full documentation in `server-actions.md`
+*   **Actions:** All write operations use Server Actions in `src/actions/actions.ts` with full documentation in `server-actions.md`
 *   **Migrations:** The `drizzle-kit` CLI is used to manage database migrations
 *   **Caching:** Use React's `cache()` function for query deduplication
 *   **Type Safety:** All queries return properly typed data matching the schema definitions
@@ -188,7 +188,14 @@ To build and run the project locally, follow these steps:
 *   **Indexes:** Leverage existing indexes for optimal query performance (see `schema.md`)
 
 ## Styling
-*   The project uses Tailwind CSS for styling
+*   **Framework:** Tailwind CSS v4 with CSS-first configuration
+*   **Configuration:** All customization in `globals.css` using `@theme` directive
+*   **Complete Guide:** See `tailwind-styles.md` for styling rules, animations, and best practices
+*   **Key Points:**
+    - Custom animations defined in `@theme` block
+    - Use existing CSS variables for colors/spacing
+    - Custom utilities in `@layer utilities`
+    - Dark mode overrides in `@layer base`
 *   Utility classes are used directly in the JSX code
 
 ## Components
@@ -221,7 +228,7 @@ To build and run the project locally, follow these steps:
    })
    ```
 
-2. **Create Server Action** in `src/server/actions.ts`
+2. **Create Server Action** in `src/actions/actions.ts`
    ```typescript
    "use server"
    export async function newFeatureAction(formState: FormState, formData: FormData) {
@@ -240,7 +247,7 @@ To build and run the project locally, follow these steps:
    ```typescript
    "use client"
    import { useActionState } from "react"
-   import { newFeatureAction } from "@/server/actions"
+   import { newFeatureAction } from "@/src/actions/actions"
    
    const [state, action, pending] = useActionState(newFeatureAction, { status: "IDLE", message: "" })
    ```
@@ -256,7 +263,7 @@ To build and run the project locally, follow these steps:
    - Add type safety with proper return types
    - Document in `queries.md`
 3. **Creating new mutations:**
-   - Add Server Action to `src/server/actions.ts`
+   - Add Server Action to `src/actions/actions.ts`
    - Create Zod schema in `src/server/schema.ts`
    - Follow standard pattern (see `server-actions.md`)
    - Document in `server-actions.md` if it's a new pattern
@@ -278,12 +285,18 @@ To build and run the project locally, follow these steps:
 ## File Structure
 ```
 src/
+├── actions/
+│   ├── actions.ts          # All Server Actions (writes)
+│   ├── cells.ts            # Dedicated only to cells actions 
+│   ├── notes.ts            # Dedicated only to notes actions 
+│   ├── fetchQuestionDetails.ts 
+│   └── stripe.ts            # Dedicated only to Stripe payments actions 
 ├── server/
 │   ├── db/
 │   │   ├── schema.ts       # Database schema definitions
 │   │   └── index.ts        # Database connection
 │   ├── queries.ts          # All database queries (reads)
-│   ├── actions.ts          # All Server Actions (writes)
+│   │       
 │   └── schema.ts           # Zod validation schemas
 ├── components/             # React components
 └── types/                  # TypeScript type definitions
@@ -294,12 +307,13 @@ src/
 - **Schema Details:** See `schema.md` for complete database structure
 - **Query Usage:** See `queries.md` for all available queries and usage examples
 - **Server Actions:** See `server-actions.md` for mutation patterns, security, and best practices
+- **Styling Guide:** See `tailwind-styles.md` for Tailwind v4 rules, animations, and custom utilities
 - **Testing:** See `Testing.md` for testing guidelines (if available)
 
 ---
 
 **Project Status:** Active Development  
-**Last Updated:** October 31, 2024  
+**Last Updated:** October 31, 2025 
 **Database:** PostgreSQL with Drizzle ORM  
 **Framework:** Next.js 15+ with App Router  
 **React:** 19+ (with Server Actions)

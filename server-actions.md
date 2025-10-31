@@ -842,7 +842,7 @@ Is there user input that modifies database?
 
 ---
 
-**Last Updated:** October 31, 2024  
-**File Location:** `src/server/actions.ts`  
+**Last Updated:** October 31, 2025  
+**File Location:** `src/actions/actions.ts`  
 **Next.js Version:** 15+  
 **React Version:** 19+
