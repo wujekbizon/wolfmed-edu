@@ -26,14 +26,14 @@ export default function GridProcedureCard({
             badge: null
         },
         ukończone: {
-            border: 'border-emerald-700/20',
+            border: 'border-emerald-700/30',
             bg: 'bg-white',
             badge: <div className="absolute top-3 left-3 bg-emerald-500 text-white rounded-full p-1.5 shadow-md z-10">
                 <Check className="w-4 h-4" />
             </div>
         },
         trudne: {
-            border: 'border-[#ffa5a5]/30',
+            border: 'border-[#ffa5a5]/40',
             bg: 'bg-white',
             badge: <div className="absolute top-3 left-3 bg-[#ffa5a5] text-white rounded-full p-1.5 shadow-md z-10">
                 <AlertCircle className="w-4 h-4" />
@@ -44,7 +44,10 @@ export default function GridProcedureCard({
     const config = statusConfig[status]
 
     return (
-        <div className={`relative group border ${config.border} ${config.bg} rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden`}>
+        <div className={`relative group border ${config.border} ${config.bg} flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden`}>
+            {showMenu && (
+                <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] rounded-2xl z-5 pointer-events-none" />
+            )}
             {config.badge}
             <div className="absolute top-3 right-3 z-20">
                 <button
@@ -116,7 +119,7 @@ export default function GridProcedureCard({
                 />
             </div>
 
-            <div className="flex flex-col grow p-5">
+            <div className="flex flex-col grow">
                 <h3 className="text-lg font-bold text-zinc-800 mb-2 line-clamp-2 leading-tight">{name}</h3>
                 <p className="text-zinc-600 text-sm leading-relaxed mb-4 line-clamp-3 grow">{truncatedDescription}</p>
                 <div className="mt-auto flex justify-end">

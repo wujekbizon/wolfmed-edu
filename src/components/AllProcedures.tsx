@@ -29,15 +29,6 @@ export default function AllProcedures(props: { procedures: Procedure[] }) {
 
   return (
     <section className="flex flex-col items-center gap-8 px-1 sm:px-4 py-4 w-full h-full ">
-      {/* <div className="w-full lg:w-3/4 xl:w-2/3 flex">
-        <Link
-          className="flex items-center justify-between gap-2 sm:gap-5 bg-red-400 hover:bg-red-500 px-4 sm:px-8 py-2 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
-          href="/panel/procedury/wyzwania"
-        >
-          <Game width={28} height={28} />
-          Wyzwanie losowej procedury
-        </Link>
-      </div> */}
       <ProceduresList procedures={procedures} isLoading={isLoading} error={error} />
     </section>
   )

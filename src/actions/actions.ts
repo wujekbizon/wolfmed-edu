@@ -829,6 +829,7 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
       url:fileUrl,
       type,
       category,
+      size
     });
 
     if (!validationResult.success) {

@@ -3,6 +3,7 @@
 import { Procedure } from '@/types/dataTypes'
 import ProcedureCard from './ProcedureCard'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function ProcedureContent({
   procedure,
@@ -14,7 +15,7 @@ export default function ProcedureContent({
   const { name, procedure: procedureText, image } = procedure.data
 
   return (
-    <div className="relative w-full h-full bg-white flex flex-col gap-5 overflow-y-auto p-3 sm:p-6 md:p-10">
+    <div className="relative w-full h-full bg-white flex flex-col gap-5 overflow-y-auto p-3 sm:p-6 md:p-8">
       <div className="absolute inset-0">
         <Image
           src={image}
@@ -39,10 +40,18 @@ export default function ProcedureContent({
       <div className="relative z-20 flex-2 flex items-ends justify-center mb-2">
         <ProcedureCard procedure={procedure} />
       </div>
-      <div className="relative z-20 flex items-center py-2 justify-center backdrop-blur-sm bg-white/70">
+      <div className="relative z-20 flex items-center justify-around flex-col sm:flex-row gap-2 py-2 backdrop-blur-sm bg-white/70">
+       
+        <Link
+          className="flex min-w-[250px] items-center justify-center gap-2 sm:gap-5 bg-red-400 hover:bg-red-500/80 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
+          href="/panel/procedury/wyzwania"
+        >
+         Wyzwanie procedury
+        </Link>
+     
         <button
           onClick={onClose}
-          className="px-4 py-2 rounded-full cursor-pointer text-sm font-medium transition-colors bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800"
+          className="flex min-w-[250px] items-center justify-center cursor-pointer bg-slate-700 text-white hover:bg-slate-800 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
         >
           Zakończ procedurę
         </button>
