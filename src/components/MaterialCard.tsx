@@ -1,7 +1,13 @@
+'use client'
+
 import React from "react";
 import type { MaterialsType } from "@/types/materialsTypes";
 import { formatDate } from "@/helpers/formatDate";
 import { resolveSrc } from "@/helpers/resolveSource";
+import { useDashboardStore } from '@/store/useDashboardStore'
+import MaterialDeleteButton from './MaterialDeleteButton'
+import MaterialDeleteModal from './MaterialDeleteModal'
+import { formatBytes } from '@/helpers/formatBytes'
 
 type Props = {
   material: MaterialsType;
@@ -11,6 +17,7 @@ type Props = {
 };
 
 export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenText }: Props) {
+  const { isDeleteModalOpen, materialIdToDelete } = useDashboardStore()
   const src = resolveSrc(material);
 
   const isPdf = material.type === "application/pdf";
@@ -23,10 +30,17 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
   const filename = src?.split("/").pop()?.split("?")[0] ?? "";
 
   return (
-    <article
-      className="flex flex-col justify-between relative bg-zinc-50 border border-zinc-300/50 rounded-xl hover:border-slate-300 transition-all duration-200 p-3"
-      aria-labelledby={`material-${material.id}-title`}
-    >
+    <>
+      {isDeleteModalOpen && materialIdToDelete === material.id && (
+        <MaterialDeleteModal
+          materialId={material.id}
+          materialTitle={material.title}
+        />
+      )}
+      <article
+        className="flex flex-col justify-between relative bg-zinc-50 border border-zinc-300/50 rounded-xl hover:border-slate-300 transition-all duration-200 p-3"
+        aria-labelledby={`material-${material.id}-title`}
+      >
       <header className="flex item-center gap-4">
         <div className={`w-11 h-11 flex items-center justify-center rounded-full shrink-0 ${accent} border border-zinc-900/10 flex-none`}>
           <span className="text-2xl">
@@ -50,6 +64,8 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
 
           <div className="mt-2 flex items-center gap-2 text-xs">
             <span className="text-zinc-500">{material.type}</span>
+            <span className="text-zinc-500">•</span>
+            <span className="text-zinc-700 font-semibold">{formatBytes(material.size)}</span>
           </div>
         </div>
       </header>
@@ -66,6 +82,7 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
             )}
           </div>
           <div className="flex gap-2 items-center">
+            <MaterialDeleteButton materialId={material.id} />
             {isPdf && (
               <button
                 onClick={() => onOpenPdf(src, material.title)}
@@ -98,5 +115,6 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
         </div>
       </div>
     </article>
+    </>
   );
 }
