@@ -11,7 +11,8 @@ import {
   testSessions,
   notes,
   userCellsList,
-  userLimits, // Added userLimits
+  userLimits,
+  materials,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -588,6 +589,14 @@ export const deleteNote = cache(async (userId: string, noteId: string) => {
   const deleted = await db
     .delete(notes)
     .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
+    .returning()
+  return deleted[0] || null
+})
+
+export const deleteMaterial = cache(async (userId: string, materialId: string) => {
+  const deleted = await db
+    .delete(materials)
+    .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
     .returning()
   return deleted[0] || null
 })

@@ -2,13 +2,23 @@ import 'server-only'
 import { UserData } from '@/types/dataTypes'
 import { db } from '@/server/db/index'
 import { eq } from 'drizzle-orm'
-import { payments, processedEvents, subscriptions, users } from './db/schema'
+import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
 import { revalidateTag } from 'next/dist/server/web/spec-extension/revalidate'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
-    await db.insert(users).values(userData)
+    await db.transaction(async (tx) => {
+      // Insert user
+      await tx.insert(users).values(userData)
+
+      // Create userLimits with default values (20MB)
+      await tx.insert(userLimits).values({
+        userId: userData.userId,
+        storageLimit: 20_000_000, // 20MB in bytes
+        storageUsed: 0,
+      })
+    })
   } catch (error) {
     console.error('Error inserting users:', error)
     // Ensure the error is actually an Error object before re-throwing

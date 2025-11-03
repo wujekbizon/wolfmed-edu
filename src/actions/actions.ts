@@ -15,11 +15,13 @@ import {
   tests,
   testSessions,
   users,
+  userLimits,
 } from "@/server/db/schema"
 import {
   CreateAnswersSchema,
   CreateMessageSchema,
   DeleteTestIdSchema,
+  DeleteMaterialIdSchema,
   UpdateMottoSchema,
   UpdateUsernameSchema,
   CreatePostSchema,
@@ -47,6 +49,8 @@ import {
   expireTestSession,
   sessionExists,
   getSupporterByUserId,
+  deleteMaterial,
+  getUserStorageUsage,
 } from "@/server/queries"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -839,14 +843,34 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
       }
     }
 
-    await db.insert(materials).values({
-      userId,
-      title: validationResult.data.title,
-      key: validationResult.data.key,
-      url: validationResult.data.url,
-      type: validationResult.data.type,
-      category: validationResult.data.category,
-      size:validationResult.data.size 
+    // Check quota before uploading
+    const { storageUsed, storageLimit } = await getUserStorageUsage(userId);
+
+    if (storageUsed + validationResult.data.size > storageLimit) {
+      return toFormState("ERROR", "Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce.");
+    }
+
+    // Use transaction to insert material and update storage atomically
+    await db.transaction(async (tx) => {
+      // Insert material
+      await tx.insert(materials).values({
+        userId,
+        title: validationResult.data.title,
+        key: validationResult.data.key,
+        url: validationResult.data.url,
+        type: validationResult.data.type,
+        category: validationResult.data.category,
+        size: validationResult.data.size
+      });
+
+      // Update storage used
+      await tx
+        .update(userLimits)
+        .set({
+          storageUsed: sql`${userLimits.storageUsed} + ${validationResult.data.size}`,
+          updatedAt: new Date(),
+        })
+        .where(eq(userLimits.userId, userId));
     });
 
   } catch (error: any) {
@@ -855,4 +879,44 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
 
   revalidatePath("/panel/nauka");
   return toFormState("SUCCESS","Plik został pomyślnie wrzucony")
+}
+
+export async function deleteMaterialAction(formState: FormState, formData: FormData) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  try {
+    const materialId = formData.get("materialId") as string
+
+    if (!materialId) {
+      return toFormState("ERROR", "Niepoprawne ID materiału")
+    }
+
+    const validationResult = DeleteMaterialIdSchema.safeParse({ materialId })
+
+    if (!validationResult.success) {
+      return toFormState("ERROR", "Brak materiału do usunięcia")
+    }
+
+    // Delete material and get the deleted record (includes size)
+    const deletedMaterial = await deleteMaterial(userId, materialId)
+
+    if (!deletedMaterial) {
+      return toFormState("ERROR", "Materiał nie został znaleziony")
+    }
+
+    // Update storage used
+    await db
+      .update(userLimits)
+      .set({
+        storageUsed: sql`GREATEST(0, ${userLimits.storageUsed} - ${deletedMaterial.size})`,
+        updatedAt: new Date(),
+      })
+      .where(eq(userLimits.userId, userId))
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/nauka")
+  return toFormState("SUCCESS", "Materiał został usunięty pomyślnie")
 }

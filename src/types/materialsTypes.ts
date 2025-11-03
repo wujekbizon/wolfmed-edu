@@ -8,4 +8,5 @@ export type MaterialsType = {
     key: string;
     url: string;
     type: string;
+    size: number;
 }

@@ -15,6 +15,13 @@ export const DeleteNoteIdSchema = z.object({
     .trim(),
 });
 
+export const DeleteMaterialIdSchema = z.object({
+  materialId: z
+    .string()
+    .min(1, "Musisz podać poprawny identyfikator materiału.")
+    .trim(),
+});
+
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
     .array(
