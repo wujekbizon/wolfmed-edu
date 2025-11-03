@@ -12,6 +12,8 @@ import Username from "@/components/Username"
 import SupporterStatusSkeleton from "@/components/skeletons/SupporterStatusSkeleton"
 import TestimonialForm from "@/components/TestimonialForm"
 import DynamicBoard from "../_components/DynamicBoard"
+import StorageQuotaWidget from "@/components/StorageQuotaWidget"
+import StorageQuotaWidgetSkeleton from "@/components/skeletons/StorageQuotaWidgetSkeleton"
 
 export const experimental_ppr = true
 
@@ -49,6 +51,9 @@ export default async function TestsPage() {
                 <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                   <TestimonialForm />
                 </div>
+                <Suspense fallback={<StorageQuotaWidgetSkeleton />}>
+                  <StorageQuotaWidget />
+                </Suspense>
               </div>
             </div>
           </div>
