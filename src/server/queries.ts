@@ -680,7 +680,7 @@ export const getUserStorageUsage = async (userId: string) => {
   }
 
   return {
-    storageUsed: userStorage[0]?.storageUsed,
-    storageLimit: userStorage[0]?.storageLimit,
+    storageUsed: userStorage[0]?.storageUsed ?? 0,
+    storageLimit: userStorage[0]?.storageLimit ?? 20_000_000,
   }
 }
