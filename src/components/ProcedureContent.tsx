@@ -41,14 +41,14 @@ export default function ProcedureContent({
         <ProcedureCard procedure={procedure} />
       </div>
       <div className="relative z-20 flex items-center justify-around flex-col sm:flex-row gap-2 py-2 backdrop-blur-sm bg-white/70">
-       
+
         <Link
           className="flex min-w-[250px] items-center justify-center gap-2 sm:gap-5 bg-red-400 hover:bg-red-500/80 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
-          href="/panel/procedury/wyzwania"
+          href={`/panel/procedury/${procedure.id}/wyzwania`}
         >
          Wyzwanie procedury
         </Link>
-     
+
         <button
           onClick={onClose}
           className="flex min-w-[250px] items-center justify-center cursor-pointer bg-slate-700 text-white hover:bg-slate-800 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
