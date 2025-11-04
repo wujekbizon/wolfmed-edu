@@ -328,6 +328,7 @@ export const challengeCompletions = createTable(
     score: integer("score").notNull(),
     timeSpent: integer("timeSpent").notNull(),
     attempts: integer("attempts").notNull().default(1),
+    passed: boolean("passed").notNull().default(false),
     completedAt: timestamp("completedAt").defaultNow().notNull(),
   },
   (table) => [

@@ -117,7 +117,7 @@ export default function OrderStepsChallenge({ procedure }: Props) {
   }
 
   return (
-    <div className="flex flex-col items-center gap-8 px-1 sm:px-4 py-4 w-full min-h-screen">
+    <section className="flex flex-col items-center gap-8 px-1 sm:px-4 py-8 w-full h-full overflow-y-auto scrollbar-webkit">
       <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] bg-zinc-100 p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-2 text-zinc-800">
           Uporządkuj kroki procedury
@@ -170,6 +170,6 @@ export default function OrderStepsChallenge({ procedure }: Props) {
           </ChallengeButton>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

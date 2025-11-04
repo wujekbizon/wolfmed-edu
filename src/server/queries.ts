@@ -698,7 +698,11 @@ export const getChallengeCompletionsByProcedure = cache(
   async (userId: string, procedureId: string) => {
     const completions = await db.query.challengeCompletions.findMany({
       where: (model, { and, eq }) =>
-        and(eq(model.userId, userId), eq(model.procedureId, procedureId)),
+        and(
+          eq(model.userId, userId),
+          eq(model.procedureId, procedureId),
+          eq(model.passed, true)
+        ),
       orderBy: (model, { desc }) => desc(model.completedAt),
     })
 
@@ -738,6 +742,9 @@ export const saveChallengeCompletion = async (
     timeSpent: number
   }
 ) => {
+  // Calculate if challenge was passed (score >= 70%)
+  const passed = data.score >= 70
+
   // Check if completion already exists
   const existing = await tx
     .select()
@@ -758,6 +765,7 @@ export const saveChallengeCompletion = async (
       .set({
         score: data.score,
         timeSpent: data.timeSpent,
+        passed,
         attempts: sql`${challengeCompletions.attempts} + 1`,
         completedAt: new Date(),
       })
@@ -772,6 +780,7 @@ export const saveChallengeCompletion = async (
     // Insert new completion
     await tx.insert(challengeCompletions).values({
       ...data,
+      passed,
       attempts: 1,
       completedAt: new Date(),
     })
@@ -779,7 +788,7 @@ export const saveChallengeCompletion = async (
 }
 
 /**
- * Check if all 5 challenges are completed for a procedure
+ * Check if all 5 challenges are completed (passed) for a procedure
  * Used within a transaction
  */
 export const checkAllChallengesComplete = async (
@@ -793,11 +802,12 @@ export const checkAllChallengesComplete = async (
     .where(
       and(
         eq(challengeCompletions.userId, userId),
-        eq(challengeCompletions.procedureId, procedureId)
+        eq(challengeCompletions.procedureId, procedureId),
+        eq(challengeCompletions.passed, true)
       )
     )
 
-  // Need 5 unique challenge types completed
+  // Need 5 unique challenge types PASSED (score >= 70%)
   const uniqueChallengeTypes = new Set(
     completions.map((c: any) => c.challengeType)
   )

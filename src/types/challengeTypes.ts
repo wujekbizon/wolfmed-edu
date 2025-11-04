@@ -1,5 +1,8 @@
 // Challenge Types for Procedural Learning System
 
+// Minimum score required to pass a challenge (70%)
+export const MIN_PASSING_SCORE = 70
+
 export enum ChallengeType {
   ORDER_STEPS = 'order-steps',
   KNOWLEDGE_QUIZ = 'knowledge-quiz',
