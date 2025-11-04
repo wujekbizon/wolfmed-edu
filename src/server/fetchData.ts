@@ -7,6 +7,7 @@ interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
   getPostById: (id: string) => Promise<Post | null>
   getAllProcedures: () => Promise<Procedure[]>
+  getProcedureById: (id: string) => Promise<Procedure | null>
   getAllTests: () => Promise<Test[]>
   getTestsCategories: () => Promise<{ category: string }[]>
   countTestsByCategory: (category: string) => Promise<number>
@@ -48,6 +49,16 @@ export const fileData: FileDataOperations = {
     } catch (error) {
       console.error("Error fetching procedures:", error)
       return []
+    }
+  },
+
+  getProcedureById: async (id: string) => {
+    try {
+      const procedures = await readJsonFile<Procedure[]>("procedures.json")
+      return procedures.find((procedure) => procedure.id === id) || null
+    } catch (error) {
+      console.error("Error fetching procedure:", error)
+      return null
     }
   },
 
