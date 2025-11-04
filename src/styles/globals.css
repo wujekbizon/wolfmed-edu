@@ -37,6 +37,13 @@
   --animate-slideInLeft: slideInLeft 1s ease-out forwards;
   --animate-slideInUp: slideInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
   --animate-slideInRight: slideInRight 0.5s ease-out forwards;
+  --animate-shake: shake 0.5s ease-in-out;
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
 
   @keyframes slideInUp {
     from {

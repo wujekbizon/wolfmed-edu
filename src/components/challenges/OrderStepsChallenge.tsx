@@ -9,20 +9,12 @@ import { SortableItem } from '@/components/SortableItem'
 import ChallengeButton from '@/components/ChallengeButton'
 import { useDragAndDrop } from '@/hooks/useDragAndDrop'
 import { completeChallengeAction } from '@/actions/challenges'
+import { shuffleArray } from '@/helpers/shuffleArray'
 import type { Procedure, StepWithId } from '@/types/dataTypes'
 import { ChallengeType } from '@/types/challengeTypes'
 
 interface Props {
   procedure: Procedure
-}
-
-function shuffleArray<T>(array: T[]): T[] {
-  const newArray = [...array]
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[newArray[i], newArray[j]] = [newArray[j], newArray[i]]
-  }
-  return newArray
 }
 
 export default function OrderStepsChallenge({ procedure }: Props) {
@@ -60,7 +52,9 @@ export default function OrderStepsChallenge({ procedure }: Props) {
 
     let correctCount = 0
     for (let i = 0; i < correctSteps.length; i++) {
-      if (correctSteps[i].step === userSteps[i]?.step) {
+      const correctStep = correctSteps[i]
+      const userStep = userSteps[i]
+      if (correctStep && userStep && correctStep.step === userStep.step) {
         correctCount++
       }
     }
