@@ -315,3 +315,57 @@ export const userLimitsRelations = relations(userLimits, ({ one }) => ({
     references: [users.userId],
   }),
 }));
+
+export const challengeCompletions = createTable(
+  "challenge_completions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    procedureId: varchar("procedureId", { length: 256 }).notNull(),
+    challengeType: varchar("challengeType", { length: 64 }).notNull(),
+    score: integer("score").notNull(),
+    timeSpent: integer("timeSpent").notNull(),
+    attempts: integer("attempts").notNull().default(1),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("challenge_completions_user_id_idx").on(table.userId),
+    index("challenge_completions_procedure_id_idx").on(table.procedureId),
+    index("challenge_completions_user_procedure_idx").on(table.userId, table.procedureId),
+  ]
+);
+
+export const challengeCompletionsRelations = relations(challengeCompletions, ({ one }) => ({
+  user: one(users, {
+    fields: [challengeCompletions.userId],
+    references: [users.userId],
+  }),
+}));
+
+export const procedureBadges = createTable(
+  "procedure_badges",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    procedureId: varchar("procedureId", { length: 256 }).notNull(),
+    procedureName: varchar("procedureName", { length: 256 }).notNull(),
+    badgeImageUrl: text("badgeImageUrl").notNull().default("/images/badge-placeholder.png"),
+    earnedAt: timestamp("earnedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("procedure_badges_user_id_idx").on(table.userId),
+    index("procedure_badges_procedure_id_idx").on(table.procedureId),
+    index("procedure_badges_earned_at_idx").on(table.earnedAt),
+  ]
+);
+
+export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => ({
+  user: one(users, {
+    fields: [procedureBadges.userId],
+    references: [users.userId],
+  }),
+}));

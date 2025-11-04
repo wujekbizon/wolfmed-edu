@@ -13,6 +13,8 @@ import {
   userCellsList,
   userLimits,
   materials,
+  challengeCompletions,
+  procedureBadges,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -684,3 +686,185 @@ export const getUserStorageUsage = async (userId: string) => {
     storageLimit: userStorage[0]?.storageLimit ?? 20_000_000,
   }
 }
+
+// ============================================================================
+// Challenge Completions & Badges Queries
+// ============================================================================
+
+/**
+ * Get all challenge completions for a specific procedure
+ */
+export const getChallengeCompletionsByProcedure = cache(
+  async (userId: string, procedureId: string) => {
+    const completions = await db.query.challengeCompletions.findMany({
+      where: (model, { and, eq }) =>
+        and(eq(model.userId, userId), eq(model.procedureId, procedureId)),
+      orderBy: (model, { desc }) => desc(model.completedAt),
+    })
+
+    return completions
+  }
+)
+
+/**
+ * Get a specific challenge completion
+ */
+export const getChallengeCompletion = cache(
+  async (userId: string, procedureId: string, challengeType: string) => {
+    const completion = await db.query.challengeCompletions.findFirst({
+      where: (model, { and, eq }) =>
+        and(
+          eq(model.userId, userId),
+          eq(model.procedureId, procedureId),
+          eq(model.challengeType, challengeType)
+        ),
+    })
+
+    return completion
+  }
+)
+
+/**
+ * Save or update a challenge completion
+ * Used within a transaction
+ */
+export const saveChallengeCompletion = async (
+  tx: any,
+  data: {
+    userId: string
+    procedureId: string
+    challengeType: string
+    score: number
+    timeSpent: number
+  }
+) => {
+  // Check if completion already exists
+  const existing = await tx
+    .select()
+    .from(challengeCompletions)
+    .where(
+      and(
+        eq(challengeCompletions.userId, data.userId),
+        eq(challengeCompletions.procedureId, data.procedureId),
+        eq(challengeCompletions.challengeType, data.challengeType)
+      )
+    )
+    .limit(1)
+
+  if (existing.length > 0) {
+    // Update existing completion
+    await tx
+      .update(challengeCompletions)
+      .set({
+        score: data.score,
+        timeSpent: data.timeSpent,
+        attempts: sql`${challengeCompletions.attempts} + 1`,
+        completedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(challengeCompletions.userId, data.userId),
+          eq(challengeCompletions.procedureId, data.procedureId),
+          eq(challengeCompletions.challengeType, data.challengeType)
+        )
+      )
+  } else {
+    // Insert new completion
+    await tx.insert(challengeCompletions).values({
+      ...data,
+      attempts: 1,
+      completedAt: new Date(),
+    })
+  }
+}
+
+/**
+ * Check if all 5 challenges are completed for a procedure
+ * Used within a transaction
+ */
+export const checkAllChallengesComplete = async (
+  tx: any,
+  userId: string,
+  procedureId: string
+): Promise<boolean> => {
+  const completions = await tx
+    .select()
+    .from(challengeCompletions)
+    .where(
+      and(
+        eq(challengeCompletions.userId, userId),
+        eq(challengeCompletions.procedureId, procedureId)
+      )
+    )
+
+  // Need 5 unique challenge types completed
+  const uniqueChallengeTypes = new Set(
+    completions.map((c: any) => c.challengeType)
+  )
+  return uniqueChallengeTypes.size >= 5
+}
+
+/**
+ * Award a badge to a user
+ * Used within a transaction
+ */
+export const awardBadge = async (
+  tx: any,
+  data: {
+    userId: string
+    procedureId: string
+    procedureName: string
+    badgeImageUrl?: string
+  }
+) => {
+  // Check if badge already exists
+  const existing = await tx
+    .select()
+    .from(procedureBadges)
+    .where(
+      and(
+        eq(procedureBadges.userId, data.userId),
+        eq(procedureBadges.procedureId, data.procedureId)
+      )
+    )
+    .limit(1)
+
+  if (existing.length === 0) {
+    await tx.insert(procedureBadges).values({
+      userId: data.userId,
+      procedureId: data.procedureId,
+      procedureName: data.procedureName,
+      badgeImageUrl: data.badgeImageUrl || "/images/badge-placeholder.png",
+      earnedAt: new Date(),
+    })
+  }
+}
+
+/**
+ * Get a specific badge for a procedure
+ */
+export const getProcedureBadge = cache(
+  async (userId: string, procedureId: string) => {
+    const badge = await db.query.procedureBadges.findFirst({
+      where: (model, { and, eq }) =>
+        and(eq(model.userId, userId), eq(model.procedureId, procedureId)),
+    })
+
+    return badge
+  }
+)
+
+/**
+ * Get all badges earned by a user
+ */
+export const getUserBadges = cache(async (userId: string) => {
+  const badges = await db.query.procedureBadges.findMany({
+    where: (model, { eq }) => eq(model.userId, userId),
+    orderBy: (model, { desc }) => desc(model.earnedAt),
+  })
+
+  return badges.map((badge) => ({
+    ...badge,
+    earnedAt: badge.earnedAt.toISOString(),
+  }))
+})
