@@ -1,0 +1,19 @@
+import Link from 'next/link'
+
+type ExploreLinkProps = {
+  text: string
+  url: string
+  className?: string
+}
+
+const ExploreLink = ({ text, url, className }: ExploreLinkProps) => {
+  return (
+    <Link href={url} className={`w-fit text-xs sm:text-base md:text-lg tracking-[0.6px] text-red-400 hover:text-red-500 ${
+        className || ''
+      }`}>
+      {text} 
+      <span className='animate-pulse font-extrabold'> →</span>
+    </Link>
+  )
+}
+export default ExploreLink;

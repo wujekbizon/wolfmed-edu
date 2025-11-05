@@ -9,7 +9,7 @@ export default function ProductCard({ product }: { product: Product }) {
   return (
     <div
       className={`rounded-lg shadow-md p-2 xs:p-3 sm:p-4 md:p-6 flex flex-col ${
-        isPremium ? 'bg-gradient-to-br from-amber-50 to-amber-200 border border-yellow-400' : 'bg-white'
+        isPremium ? 'bg-linear-to-br from-amber-50 to-amber-200 border border-yellow-400' : 'bg-white'
       }`}
     >
       <div className="flex items-center justify-center mb-2 xs:mb-3 sm:mb-4">

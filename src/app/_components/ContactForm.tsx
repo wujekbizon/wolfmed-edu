@@ -1,14 +1,14 @@
 'use client'
 
 import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs'
-import Input from '@/components/Input'
 import SubmitButton from '@/components/SubmitButton'
 import { useActionState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import { sendEmail } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
-import Label from '@/components/Label'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 import Link from 'next/link'
 
 export default function ContactForm() {
@@ -49,7 +49,7 @@ export default function ContactForm() {
                 placeholder="Twój adres email"
                 id="email"
                 className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition"
-                defaultValue={state.values?.email || ''}
+                defaultValue={state.values?.email?.toString() || ''}
                 autoComplete="email"
               />
               <FieldError name="email" formState={state} />
@@ -61,7 +61,7 @@ export default function ContactForm() {
                 id="message"
                 placeholder="Twoja wiadomość"
                 className="w-full px-4 py-2 rounded-md border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition h-32 resize-none"
-                defaultValue={state.values?.message || ''}
+                defaultValue={state.values?.message?.toString() || ''}
               ></textarea>
               <FieldError name="message" formState={state} />
             </div>

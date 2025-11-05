@@ -3,6 +3,7 @@
     "id": "001d29de-1f5b-4d31-9858-3241227b0461",
     "data": {
       "name": "Zmiana worka stomijnego na kolostomii",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5oNgZgSvSLyQhzP6mdErKItkOUcXlTqiNMavY",
       "algorithm": [
         {
           "step": "Przygotuj zestaw."
@@ -62,6 +63,7 @@
     "id": "09130715-ebee-4185-b499-01eed542842d",
     "data": {
       "name": "Pielęgnacja gastrostomii po ponad 14 dniach od założenia",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5IVOcabequML1BazyDiNo5UcxtTn3s6YgW47C",
       "algorithm": [
         {
           "step": "Ogólne zasady pielęgnacji stomii: Przez pierwsze 14 dni od założenie PEG-a nie należy się kąpać w wannie ani w basenie."
@@ -94,6 +96,7 @@
     "id": "099b8333-3d99-4df7-af53-1b803403c28a",
     "data": {
       "name": "Podskórne podanie insuliny wstrzykiwaczem typu pen",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nfMQFJL9GQYxNri4Uw0MejlVEP63mgKp18FO",
       "algorithm": [
         {
           "step": "Zapoznanie się ze zleceniem lekarskim (nazwa insuliny, dawka sposób i czas podania)."
@@ -201,6 +204,7 @@
     "id": "0be37e61-d93d-4d7a-9080-367374792dd7",
     "data": {
       "name": "Zasady podawania leków",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k572Btf6GMpcn5R2Y4TWoEbjyPSwZtlvLxBXzi",
       "algorithm": [
         {
           "step": "Przez przewód pokarmowy: doustnie - per os (p.o.);"
@@ -236,6 +240,7 @@
     "id": "0f024811-e224-4c76-81fc-b11f10960288",
     "data": {
       "name": "Nebulizacja w domu pacjenta",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rmBulQDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C",
       "algorithm": [
         {
           "step": "Przygotuj zestaw. W trakcie procedury pamiętaj o trzykrotnym sprawdzeniu nazwy, dawki i daty ważności leku!"
@@ -286,6 +291,7 @@
     "id": "0f5f2e5c-6541-4219-bb05-7789145c32a0",
     "data": {
       "name": "Zmiana worka stomijnego na ileostomii",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5IVOcabequML1BazyDiNo5UcxtTn3s6YgW47C",
       "algorithm": [
         {
           "step": "Przygotuj zestaw."
@@ -354,6 +360,7 @@
     "id": "174b26a7-33d9-46a1-ae42-775432d27812",
     "data": {
       "name": "Pomiar ciśnienia",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nI6ztoL9GQYxNri4Uw0MejlVEP63mgKp18FO",
       "algorithm": [
         {
           "step": "Prawidłowe ciśnienie\\ 120-129/80-84"
@@ -380,6 +387,7 @@
     "id": "1c5729c5-aae4-4b95-bbc2-b58a99488664",
     "data": {
       "name": "Przygotowanie i pobranie moczu",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5oNVL7PvSLyQhzP6mdErKItkOUcXlTqiNMavY",
       "algorithm": [
         {
           "step": "Umyć ręce wodą z mydłem."
@@ -421,6 +429,7 @@
     "id": "1dbc19bd-e450-4d7c-a2d7-41ea2993fb14",
     "data": {
       "name": "Zmiana opatrunku na ranie powikłanej",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Z5TPwxrONPcnEXeA3kx1jV6t9rCB2UlzoaSM",
       "algorithm": [
         {
           "step": "Wykonaj higienę rąk."
@@ -489,6 +498,7 @@
     "id": "1e1273e1-34dd-4f6a-b632-43a01f738aba",
     "data": {
       "name": "Pomiar oddechu",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MH9P9LNpIgLRq2SWA1u9QmzbxiHJl47OaTGX",
       "algorithm": [
         {
           "step": "Poinformowanie pacjenta o badaniu tętna (badanie oddechu wykonujemy bez wiedzy pacjenta)."
@@ -533,6 +543,7 @@
     "id": "3b55e291-47ed-4535-a0e7-d6a68a5bbddb",
     "data": {
       "name": "Pobieranie krwi żylnej",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mdzsPNZ7X6gGeKqRUixZb41zLrcWStM5HDAk",
       "algorithm": [
         {
           "step": "Identyfikacja pacjenta."
@@ -607,6 +618,7 @@
     "id": "46fe62d8-75f7-46de-9b26-d88898ec9346",
     "data": {
       "name": "Okład wysychający",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5n2PFHDL9GQYxNri4Uw0MejlVEP63mgKp18FO",
       "algorithm": [
         {
           "step": "Sprawdź tożsamość pacjenta."
@@ -654,6 +666,7 @@
     "id": "501ca47b-543a-4cd2-be54-58df5683733a",
     "data": {
       "name": "Zmiana opatrunku wokół tracheostomii w pierwszych 14 dniach od zabiegu",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5v3RQCg1osWNRSp0OXdUmcQAhVqCtZH5D7YaM",
       "algorithm": [
         {
           "step": "Przygotuj zestaw."
@@ -725,6 +738,7 @@
     "id": "52952be5-b6ad-4dca-a9ae-6a0e93fd4b74",
     "data": {
       "name": "Technika mycia i dezynfekcji rąk według schematu AYLIFFE'A",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5WLqyiHuB5MlwXOa6c4ysqzvIDSAEFVTYor7Q",
       "algorithm": [
         {
           "step": "Nanieść odpowiednią porcję mydła lub środka dezynfekcyjnego."
@@ -757,6 +771,7 @@
     "id": "63162cfc-2ef6-40de-a322-250a43ca4b32",
     "data": {
       "name": "Opieka nad pacjentem z zaburzeniami połykania (zasady bezpiecznego karmienia osób z zaburzeniami połykania)",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Qr94BoYf6PZ5eKuhFM9REHkAy4n7s3aNYmWi",
       "algorithm": [
         {
           "step": "Praktyczne rady przy zaburzeniach połykania: "
@@ -804,6 +819,7 @@
     "id": "70a39fb4-cc1b-4153-b55a-41037b0b9142",
     "data": {
       "name": "Podanie leków doodbytniczo",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5sqZMuCWj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6",
       "algorithm": [
         {
           "step": "Udaj się do pacjenta."
@@ -890,6 +906,7 @@
     "id": "8f6978af-04ce-4576-91c2-d34a8dfaa781",
     "data": {
       "name": "Zasady tlenoterapii",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UvblChIxs2k5EyuGdN4SRigYP6qreJDvtVZl",
       "algorithm": [
         {
           "step": "Podanie tlenu przez cewnik donosowy („ wąsy tlenowe”): Przygotuj kompletny zestaw."
@@ -961,6 +978,7 @@
     "id": "94e60552-7c0e-46ab-a9c0-606d10c0049c",
     "data": {
       "name": "Odłączanie kroplowego wlewu dożylnego",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GxWYAYsptmTzWn2MCIiBjAQoFa6kbwYUZJSc",
       "algorithm": [
         {
           "step": "Higiena rąk zgodnie z wytycznymi WHO."
@@ -1014,6 +1032,7 @@
     "id": "98abacb5-210c-489f-b039-3ffca0b8c0a0",
     "data": {
       "name": "Zasady pielęgnacji gastrostomii przez pierwsze 14 dni od założenia",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RucAAVoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
       "algorithm": [
         {
           "step": "Wykonaj higienę rąk."
@@ -1055,6 +1074,7 @@
     "id": "9941e376-1372-4bec-b961-1f8fdd7e72d0",
     "data": {
       "name": "Ogólne zasady transportu pacjenta za pomocą podnośnika",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZmqLdgrONPcnEXeA3kx1jV6t9rCB2UlzoaSM",
       "algorithm": [
         {
           "step": "Rozpoczynanie podnoszenia"
@@ -1093,6 +1113,7 @@
     "id": "9b297333-22fc-4cce-9dbf-c94570a8a370",
     "data": {
       "name": "Okład rozgrzewający",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KtZm0Ubr79T0mSRj6eAJqPf4kEid2ncgM5Nu",
       "algorithm": [
         {
           "step": "Sprawdź tożsamość pacjenta."
@@ -1143,6 +1164,7 @@
     "id": "9d8fafa8-63d4-4855-9bfc-5ff7de2f6b58",
     "data": {
       "name": "Dobowa zbiórka moczu",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5oNVL7PvSLyQhzP6mdErKItkOUcXlTqiNMavY",
       "algorithm": [
         {
           "step": "Przygotowanie zestawu oraz podpisanie pojemnika datą i godziną rozpoczęcia i zakończenia dobowej zbiórki moczu. Jeśli DZM wykonujemy w podmiocie leczniczym oznaczenie pojemnika dodatkowo imieniem i nazwiskiem oraz datą urodzenia pacjenta."
@@ -1175,6 +1197,7 @@
     "id": "a7eced65-340a-4a7a-9f36-0acf3589ca74",
     "data": {
       "name": "Pomiar glikemii",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rvTvkxDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C",
       "algorithm": [
         {
           "step": "Wykonaj higienę rąk."
@@ -1243,6 +1266,7 @@
     "id": "adccd864-ac2a-4aec-9fff-3350c1512157",
     "data": {
       "name": "Karmienie przez zgłębnik nosowo-żołądkowy",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57jH15FMpcn5R2Y4TWoEbjyPSwZtlvLxBXziD",
       "algorithm": [
         {
           "step": "Przygotuj zestaw."
@@ -1335,6 +1359,7 @@
     "id": "b0e978c8-19f6-44f9-90fd-551e0b0207ca",
     "data": {
       "name": "Podanie heparyny drobnocząsteczkowej",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5q07XQHjUp7AKTXPiSIaZx3nO6jY9c4GvQe8w",
       "algorithm": [
         {
           "step": "Podanie podskórnie heparyny drobnocząsteczkowej w ampułko strzykawce: Zapoznanie się ze zleceniem lekarskim (nazwa leku, dawka, postać, droga i czas podania)."
@@ -1445,6 +1470,7 @@
     "id": "c665d053-b83d-451f-9378-6e362a22bc48",
     "data": {
       "name": "Płukanie rany",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QFgGkYf6PZ5eKuhFM9REHkAy4n7s3aNYmWiL",
       "algorithm": [
         {
           "step": "Wykonaj higienę rąk."
@@ -1507,6 +1533,7 @@
     "id": "ce7225db-4e2b-4621-90a7-09d3246e38d9",
     "data": {
       "name": "Instrukcja pobrania kału",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kxZEguA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R",
       "algorithm": [
         {
           "step": "Przed pobraniem próbki kału całkowicie opróżnić pęcherz moczowy."
@@ -1542,6 +1569,7 @@
     "id": "da117120-3f6b-4d69-98f0-3f5125a28364",
     "data": {
       "name": "Zmiana opatrunku na ranie niepowikłanej",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hvwzhWaPSlWXcFVLft4M8kAgI2ECx19u7JNT",
       "algorithm": [
         {
           "step": "Przygotuj niezbędny sprzęt i materiały opatrunkowe."
@@ -1613,6 +1641,7 @@
     "id": "debdd568-0d0b-4e47-b76a-12459b5c3b9c",
     "data": {
       "name": "Podanie leku na skórę",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5lW41rHQZL8RnOt9ME3WgkVAFJaXBNK7HC5qI",
       "algorithm": [
         {
           "step": "Udaj się do pacjenta."
@@ -1672,6 +1701,7 @@
     "id": "e46de187-4a52-4344-bb9f-57ddaedc9c43",
     "data": {
       "name": "Mierzenie tętna",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ekO2gKMhPYN5fnAqMm3rc0CKDb7LHTkptIj9",
       "algorithm": [
         {
           "step": "Zapewnienie pacjentowi wygodnej pozycji (pozycja siedząca lub leżącą ze stabilnym podparciem badanej kończyny). Zalecenie pacjentowi 5 minutowego odpoczynku przed badaniem."
@@ -1698,6 +1728,7 @@
     "id": "eeb39891-b50c-4615-a5b9-882a152637a3",
     "data": {
       "name": "Odsysanie drzewa oskrzelowego",
+      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5pBuocb6XHWiBDmgJ5wlKFsnLYVX34eQIkxfv",
       "algorithm": [
         {
           "step": "Sprawdź tożsamość pacjenta."

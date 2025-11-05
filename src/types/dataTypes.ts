@@ -24,6 +24,8 @@ export interface Test {
 // this is because Drizzle doesn't support typed JSON in their schemas
 export type ExtendedTest = Omit<Test, 'data'> & { data: unknown }
 
+export type ProcedureStatus = 'normal' | 'ukończone' | 'trudne'
+
 // procedures related types
 export type Step = {
   step: string
@@ -31,6 +33,7 @@ export type Step = {
 
 interface ProcedureData {
   name: string
+  image:string
   procedure: string
   algorithm: Step[]
 }
@@ -50,6 +53,7 @@ export interface CompletedTest {
   id: string
   userId: string
   score: number
+  sessionId:string
   testResult: FormattedAnswer[]
 }
 
@@ -232,3 +236,4 @@ export interface CompletedTestData {
   score: number
   completedAt: Date | null
 }
+

@@ -48,13 +48,13 @@ export async function POST(req: Request) {
           userId: client_reference_id!,
           sessionId: id,
           amountTotal: amount_total!,
-          currency: currency! as 'pln' | 'usd' | 'eur',
+          currency: currency! as 'pln' | 'usd' | 'eur'| null,
           customerId: customer?.toString()!,
           customerEmail: customer_details?.email!,
           invoiceId: invoice?.toString()!,
           paymentStatus: payment_status,
           subscriptionId: subscription_id?.toString()!,
-          createdAt: created,
+          createdAt: new Date(created * 1000),
         }
         // Insert subscription into database
         await insertSubscription({ ...newSubscription })
@@ -64,9 +64,9 @@ export async function POST(req: Request) {
         const newPayment = {
           userId: client_reference_id!,
           amountTotal: amount_total!,
-          currency: currency! as 'pln' | 'usd' | 'eur',
+          currency: currency! as 'pln' | 'usd' | 'eur' | null,
           customerEmail: customer_details?.email!,
-          createdAt: created,
+          createdAt:  new Date(created * 1000),
           paymentStatus: payment_status,
         }
 

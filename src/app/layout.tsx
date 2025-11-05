@@ -1,4 +1,6 @@
 import '@/styles/globals.css'
+import "@excalidraw/excalidraw/index.css";
+
 
 import type { Metadata } from 'next'
 import { Open_Sans, Poppins } from 'next/font/google'
@@ -11,7 +13,7 @@ import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript'
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '600', '800'],
+  weight: ['200','400', '600', '800'],
 })
 
 const openSans = Open_Sans({
@@ -61,9 +63,9 @@ export default function RootLayout({
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
           <GoogleAnalytics />
         </head>
-        <body className={`${openSans.className} bg-[#fcf2f1] scrollbar-webkit`}>
+        <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
           <GoogleAnalyticsNoscript />
-          <main className="shadow-lg shadow-zinc-400 border-[3px] rounded-3xl lg:rounded-[50px] border-white">
+          <main>
             <Providers>
               <Navbar />
               <ToastProvider>{children}</ToastProvider>

@@ -34,3 +34,10 @@ export function formatDate(date: string): string {
     year: 'numeric',
   })
 }
+
+
+export function formatDaysAgo(date: Date) {
+  const diffMs = new Date().getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  return diffDays === 0 ? "Today" : diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
+}

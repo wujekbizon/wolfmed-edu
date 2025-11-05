@@ -1,7 +1,7 @@
 import { LETTERS } from '@/constants/optionsLetters'
 import { Test } from '@/types/dataTypes'
 import { useState, useEffect } from 'react'
-import Label from './Label'
+import Label from '@/components/ui/Label'
 import { FormState } from '@/types/actionTypes'
 
 export default function TestCard(props: { test: Test; questionNumber: string; formState: FormState }) {
