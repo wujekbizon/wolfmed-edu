@@ -14,6 +14,7 @@ import { shuffleArray } from '@/helpers/shuffleArray'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import type { Procedure, StepWithId } from '@/types/dataTypes'
 import Link from 'next/link'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
@@ -21,6 +22,7 @@ interface Props {
 
 export default function OrderStepsChallenge({ procedure }: Props) {
   const router = useRouter()
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [steps, setSteps] = useState<StepWithId[]>([])
   const [startTime] = useState(Date.now())
   const [state, action] = useActionState(submitOrderStepsAction, EMPTY_FORM_STATE)
@@ -47,7 +49,7 @@ export default function OrderStepsChallenge({ procedure }: Props) {
     if (state.status === 'SUCCESS') {
 
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedure.id}/wyzwania`)
+        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
       }, 1500)
     }
   }, [state.status, procedure.id])

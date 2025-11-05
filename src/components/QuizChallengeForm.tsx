@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
-import ChallengeButton from '@/components/ChallengeButton'
+import Link from 'next/link'
 import SubmitButton from '@/components/SubmitButton'
 import QuizChallengeSkeleton from '@/components/skeletons/QuizChallengeSkeleton'
 import { submitQuizAction } from '@/actions/challenges'
@@ -12,6 +12,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { generateQuizChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
 import type { QuizQuestion } from '@/types/challengeTypes'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
@@ -19,6 +20,7 @@ interface Props {
 
 export default function QuizChallengeForm({ procedure }: Props) {
   const router = useRouter()
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitQuizAction, EMPTY_FORM_STATE)
   const [questions, setQuestions] = useState<QuizQuestion[]>([])
   const [answers, setAnswers] = useState<Record<string, number>>({})
@@ -28,7 +30,7 @@ export default function QuizChallengeForm({ procedure }: Props) {
    useEffect(() => {
     if (state.status === 'SUCCESS') {
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedure.id}/wyzwania`)
+        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
       }, 1500)
       return () => clearTimeout(timer)
     }
@@ -40,6 +42,13 @@ export default function QuizChallengeForm({ procedure }: Props) {
     setQuestions(quiz.questions)
   }, [procedure])
 
+  const correctAnswers = useMemo(() => {
+    return questions.reduce((acc, q) => {
+      acc[q.id] = q.correctAnswer
+      return acc
+    }, {} as Record<string, number>)
+  }, [questions])
+
   function handleAnswerSelect(questionId: string, optionIndex: number) {
     setAnswers((prev) => ({
       ...prev,
@@ -47,9 +56,6 @@ export default function QuizChallengeForm({ procedure }: Props) {
     }))
   }
 
-  function handleCancel() {
-    router.push(`/panel/procedury/${procedure.id}/wyzwania`)
-  }
 
   if (questions.length === 0) {
     return <QuizChallengeSkeleton />
@@ -107,6 +113,7 @@ export default function QuizChallengeForm({ procedure }: Props) {
           <input type="hidden" name="procedureId" value={procedure.id} />
           <input type="hidden" name="procedureName" value={procedure.data.name} />
           <input type="hidden" name="answers" value={JSON.stringify(answers)} />
+          <input type="hidden" name="correctAnswers" value={JSON.stringify(correctAnswers)} />
           <input type="hidden" name="timeSpent" value={timeSpent} />
 
           {/* Questions */}
@@ -209,12 +216,12 @@ export default function QuizChallengeForm({ procedure }: Props) {
                   : 'bg-zinc-300 text-zinc-500 cursor-not-allowed'
               }`}
             />
-            <ChallengeButton
-              onClick={handleCancel}
-              className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200"
+            <Link
+              href={`/panel/procedury/${procedureSlug}/wyzwania`}
+              className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200 flex items-center justify-center"
             >
               Anuluj
-            </ChallengeButton>
+            </Link>
           </div>
           {noScriptFallback}
         </form>

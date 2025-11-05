@@ -15,18 +15,18 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: Promise<{ id: string; type: string }>
+  params: Promise<{ slug: string; type: string }>
 }
 
 export default async function ChallengeTypePage({ params }: Props) {
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
 
-  const { id: procedureId, type: challengeType } = await params
+  const { slug, type: challengeType } = await params
 
   // Get procedure data
+  const procedure = await fileData.getProcedureBySlug(slug)
   const procedures = await fileData.getAllProcedures()
-  const procedure = procedures.find((p) => p.id === procedureId)
 
   if (!procedure) {
     redirect('/panel/procedury')
@@ -50,6 +50,6 @@ export default async function ChallengeTypePage({ params }: Props) {
       return <ScenarioChallengeForm procedure={procedure} />
 
     default:
-      redirect(`/panel/procedury/${procedureId}/wyzwania`)
+      redirect(`/panel/procedury/${slug}/wyzwania`)
   }
 }

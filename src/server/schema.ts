@@ -292,6 +292,17 @@ export const SubmitQuizSchema = z.object({
     },
     { message: "Nieprawidłowy format odpowiedzi" }
   ),
+  correctAnswers: z.string().min(1, "Brak poprawnych odpowiedzi").refine(
+    (val) => {
+      try {
+        const parsed = JSON.parse(val);
+        return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+      } catch {
+        return false;
+      }
+    },
+    { message: "Nieprawidłowy format poprawnych odpowiedzi" }
+  ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
@@ -299,6 +310,7 @@ export const SubmitVisualRecognitionSchema = z.object({
   procedureId: z.string().min(1, "Brak ID procedury"),
   procedureName: z.string().min(1, "Brak nazwy procedury"),
   selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
+  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 

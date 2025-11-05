@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ChallengeType, CHALLENGE_TYPE_LABELS, ProcedureProgress } from '@/types/challengeTypes'
 import type { Procedure } from '@/types/dataTypes'
 import ChallengeCard from '@/components/ChallengeCard'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
@@ -12,7 +13,7 @@ interface Props {
 
 export default function ChallengesList({ procedure, progress }: Props) {
   const procedureName = procedure.data.name
-  const procedureId = procedure.id
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const progressPercentage = (progress.totalCompleted / 5) * 100
 
   // Define all 5 challenges
@@ -51,9 +52,9 @@ export default function ChallengesList({ procedure, progress }: Props) {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full bg-zinc-200 rounded-full h-3 overflow-hidden">
+            <div className="bg-zinc-200 rounded-full h-4 overflow-hidden shadow-inner">
               <div
-                className="bg-gradient-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 h-full transition-all duration-700 ease-out"
+                className="bg-gradient-to-r from-[#f58a8a] via-pink-500 to-[#ffc5c5] h-full transition-all duration-700 ease-out"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -63,11 +64,14 @@ export default function ChallengesList({ procedure, progress }: Props) {
               {[1, 2, 3, 4, 5].map((milestone) => (
                 <div
                   key={milestone}
-                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                    progress.totalCompleted >= milestone
-                      ? 'bg-[#f58a8a] scale-125'
-                      : 'bg-zinc-300'
-                  }`}
+                  className={`
+                    w-3 h-3 rounded-full transition-all duration-300
+                    ${
+                      progress.totalCompleted >= milestone
+                        ? 'bg-gradient-to-br from-[#f58a8a] to-[#ffc5c5] scale-125 shadow-md'
+                        : 'bg-zinc-300'
+                    }
+                  `}
                 />
               ))}
             </div>
@@ -107,11 +111,12 @@ export default function ChallengesList({ procedure, progress }: Props) {
                 className="animate-slideInUp"
               >
                 <ChallengeCard
-                  procedureId={procedureId}
+                  procedureSlug={procedureSlug}
                   challengeType={challengeType}
                   label={CHALLENGE_TYPE_LABELS[challengeType]}
                   isCompleted={isCompleted}
                   score={completion?.score}
+                  attempts={completion?.attempts}
                 />
               </div>
             )

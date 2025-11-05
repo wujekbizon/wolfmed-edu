@@ -4,6 +4,7 @@ import { Procedure } from '@/types/dataTypes'
 import ProcedureCard from './ProcedureCard'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 export default function ProcedureContent({
   procedure,
@@ -13,6 +14,7 @@ export default function ProcedureContent({
   onClose: () => void
 }) {
   const { name, procedure: procedureText, image } = procedure.data
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
 
   return (
     <div className="relative w-full h-full bg-white flex flex-col gap-5 overflow-y-auto p-3 sm:p-6 md:p-8">
@@ -44,7 +46,7 @@ export default function ProcedureContent({
 
         <Link
           className="flex min-w-[250px] items-center justify-center gap-2 sm:gap-5 bg-red-400 hover:bg-red-500/80 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
-          href={`/panel/procedury/${procedure.id}/wyzwania`}
+          href={`/panel/procedury/${procedureSlug}/wyzwania`}
         >
          Wyzwanie procedury
         </Link>
