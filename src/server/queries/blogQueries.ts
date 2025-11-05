@@ -11,7 +11,6 @@ import {
   blogCategories,
   blogTags,
   blogPostTags,
-  blogComments,
   blogLikes,
 } from '@/server/db/schema'
 import { eq, desc, asc, sql, and, or, like, count, inArray } from 'drizzle-orm'
@@ -19,7 +18,6 @@ import type {
   BlogPost,
   BlogCategory,
   BlogTag,
-  BlogComment,
   BlogPostFilters,
   BlogStatistics,
 } from '@/types/dataTypes'
@@ -132,12 +130,7 @@ export const getBlogPostBySlug = cache(
         .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
         .where(eq(blogPostTags.postId, post[0]!.id))
 
-      // Get comment and like counts
-      const [commentCountResult] = await db
-        .select({ count: count() })
-        .from(blogComments)
-        .where(eq(blogComments.postId, post[0]!.id))
-
+      // Get like count
       const [likeCountResult] = await db
         .select({ count: count() })
         .from(blogLikes)
@@ -148,7 +141,6 @@ export const getBlogPostBySlug = cache(
         category,
         tags: tagsResult,
         _count: {
-          comments: commentCountResult?.count || 0,
           likes: likeCountResult?.count || 0,
         },
       } as BlogPost
@@ -427,48 +419,6 @@ export const getBlogPostsByTagSlug = cache(
 )
 
 /**
- * Get blog comments for a post
- */
-export const getBlogComments = cache(async (postId: string): Promise<BlogComment[]> => {
-  try {
-    const comments = await db
-      .select()
-      .from(blogComments)
-      .where(
-        and(eq(blogComments.postId, postId), eq(blogComments.status, 'approved'))
-      )
-      .orderBy(desc(blogComments.createdAt))
-
-    // Organize into parent-child structure
-    const commentsMap = new Map<string, BlogComment>()
-    const rootComments: BlogComment[] = []
-
-    // First pass: create all comment objects
-    comments.forEach((comment) => {
-      commentsMap.set(comment.id, { ...comment, replies: [] } as BlogComment)
-    })
-
-    // Second pass: organize into tree
-    comments.forEach((comment) => {
-      const commentObj = commentsMap.get(comment.id)!
-      if (comment.parentId) {
-        const parent = commentsMap.get(comment.parentId)
-        if (parent) {
-          parent.replies!.push(commentObj)
-        }
-      } else {
-        rootComments.push(commentObj)
-      }
-    })
-
-    return rootComments
-  } catch (error) {
-    console.error('Error fetching blog comments:', error)
-    return []
-  }
-})
-
-/**
  * Check if user has liked a post
  */
 export const hasUserLikedPost = cache(
@@ -514,8 +464,6 @@ export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
       .select({ total: sql<number>`SUM(${blogPosts.viewCount})` })
       .from(blogPosts)
 
-    const [totalCommentsResult] = await db.select({ count: count() }).from(blogComments)
-
     const [totalLikesResult] = await db.select({ count: count() }).from(blogLikes)
 
     const [totalCategoriesResult] = await db
@@ -530,7 +478,6 @@ export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
       draftPosts: draftPostsResult?.count || 0,
       archivedPosts: archivedPostsResult?.count || 0,
       totalViews: totalViewsResult?.total || 0,
-      totalComments: totalCommentsResult?.count || 0,
       totalLikes: totalLikesResult?.count || 0,
       totalCategories: totalCategoriesResult?.count || 0,
       totalTags: totalTagsResult?.count || 0,
@@ -543,7 +490,6 @@ export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
       draftPosts: 0,
       archivedPosts: 0,
       totalViews: 0,
-      totalComments: 0,
       totalLikes: 0,
       totalCategories: 0,
       totalTags: 0,

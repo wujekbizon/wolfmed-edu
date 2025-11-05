@@ -76,7 +76,6 @@ export interface Post {
 
 // Enhanced blog types
 export type BlogStatus = 'draft' | 'published' | 'archived'
-export type CommentStatus = 'pending' | 'approved' | 'rejected'
 
 export interface BlogCategory {
   id: string
@@ -120,25 +119,10 @@ export interface BlogPost {
   // Relations (populated by queries)
   category?: BlogCategory | null
   tags?: BlogTag[]
-  comments?: BlogComment[]
   likes?: BlogLike[]
   _count?: {
-    comments: number
     likes: number
   }
-}
-
-export interface BlogComment {
-  id: string
-  content: string
-  postId: string
-  authorId: string
-  authorName: string
-  status: CommentStatus
-  parentId: string | null
-  createdAt: Date
-  updatedAt: Date | null
-  replies?: BlogComment[]
 }
 
 export interface BlogLike {
@@ -170,12 +154,6 @@ export interface CreateBlogPostInput {
 
 export interface UpdateBlogPostInput extends Partial<CreateBlogPostInput> {
   id: string
-}
-
-export interface CreateBlogCommentInput {
-  content: string
-  postId: string
-  parentId?: string | null
 }
 
 export interface CreateBlogCategoryInput {
@@ -214,7 +192,6 @@ export interface BlogStatistics {
   draftPosts: number
   archivedPosts: number
   totalViews: number
-  totalComments: number
   totalLikes: number
   totalCategories: number
   totalTags: number

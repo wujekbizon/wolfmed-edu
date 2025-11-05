@@ -109,13 +109,6 @@ export const blogStatusEnum = pgEnum('blog_status', [
   'archived',
 ])
 
-// Comment status enum
-export const commentStatusEnum = pgEnum('comment_status', [
-  'pending',
-  'approved',
-  'rejected',
-])
-
 // Blog categories table
 export const blogCategories = createTable(
   'blog_categories',
@@ -217,36 +210,6 @@ export const blogPostTags = createTable(
   })
 )
 
-// Blog comments table
-export const blogComments = createTable(
-  'blog_comments',
-  {
-    id: uuid('id').primaryKey().defaultRandom(),
-    content: text('content').notNull(),
-    postId: uuid('postId')
-      .notNull()
-      .references(() => blogPosts.id, { onDelete: 'cascade' }),
-    authorId: varchar('authorId', { length: 256 }).notNull(),
-    authorName: varchar('authorName', { length: 256 }).notNull(),
-
-    // Moderation
-    status: commentStatusEnum('status').default('approved').notNull(),
-
-    // Nested comments support
-    parentId: uuid('parentId').references(() => blogComments.id, {
-      onDelete: 'cascade',
-    }),
-
-    createdAt: timestamp('createdAt').defaultNow().notNull(),
-    updatedAt: timestamp('updatedAt'),
-  },
-  (table) => ({
-    postIdx: index('blog_comments_post_idx').on(table.postId),
-    authorIdx: index('blog_comments_author_idx').on(table.authorId),
-    parentIdx: index('blog_comments_parent_idx').on(table.parentId),
-  })
-)
-
 // Blog likes table
 export const blogLikes = createTable(
   'blog_likes',
@@ -322,7 +285,6 @@ export const blogPostsRelations = relations(blogPosts, ({ one, many }) => ({
     references: [blogCategories.id],
   }),
   tags: many(blogPostTags),
-  comments: many(blogComments),
   likes: many(blogLikes),
 }))
 
@@ -342,21 +304,6 @@ export const blogPostTagsRelations = relations(blogPostTags, ({ one }) => ({
   tag: one(blogTags, {
     fields: [blogPostTags.tagId],
     references: [blogTags.id],
-  }),
-}))
-
-export const blogCommentsRelations = relations(blogComments, ({ one, many }) => ({
-  post: one(blogPosts, {
-    fields: [blogComments.postId],
-    references: [blogPosts.id],
-  }),
-  parent: one(blogComments, {
-    fields: [blogComments.parentId],
-    references: [blogComments.id],
-    relationName: 'parentComment',
-  }),
-  replies: many(blogComments, {
-    relationName: 'parentComment',
   }),
 }))
 
