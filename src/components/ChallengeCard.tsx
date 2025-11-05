@@ -9,7 +9,7 @@ interface Props {
   label: string
   isCompleted: boolean
   score: number | undefined
-  attempts?: number
+  attempts: number | undefined
 }
 
 // Helper function for challenge icons
