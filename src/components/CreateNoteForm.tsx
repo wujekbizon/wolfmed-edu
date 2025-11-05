@@ -43,7 +43,7 @@ export default function CreateNoteForm() {
           onChange={handleEditorChange}
         />
       </ResizableComponent>
-      <div className="flex flex-col justify-between flex-grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
+      <div className="flex flex-col justify-between grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
         <div>
 
         <div>

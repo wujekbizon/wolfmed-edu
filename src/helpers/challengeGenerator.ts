@@ -21,6 +21,7 @@ export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
 
   stepIndices.forEach((index, questionIndex) => {
     const currentStep = algorithm[index]
+    if (!currentStep) return
     const correctStepText = currentStep.step
 
     // Generate wrong options by using other steps or variations
@@ -49,15 +50,27 @@ export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
 /**
  * Generate visual recognition challenge
  */
-export function generateVisualRecognitionChallenge(procedure: Procedure): VisualRecognitionChallenge {
-  // Use the procedure's image for visual recognition
+export function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): VisualRecognitionChallenge {
+  // Filter out the current procedure to get distractors
+  const otherProcedures = allProcedures.filter(p => p.id !== procedure.id)
+
+  // Randomly select 3 other procedures as distractors
+  const distractorIndices = getRandomIndices(otherProcedures.length, Math.min(3, otherProcedures.length))
+  const distractors = distractorIndices
+    .map(i => otherProcedures[i]?.data.name)
+    .filter((name): name is string => !!name)
+
+  // Randomize the position of the correct answer
+  const correctAnswerIndex = Math.floor(Math.random() * 4)
+  const options = [...distractors.slice(0, correctAnswerIndex), procedure.data.name, ...distractors.slice(correctAnswerIndex)]
+
   return {
     procedureId: procedure.id,
     procedureName: procedure.data.name,
     image: procedure.data.image,
     question: `Którą procedurę przedstawia poniższy obraz?`,
-    options: [procedure.data.name, 'Inna procedura 1', 'Inna procedura 2', 'Inna procedura 3'],
-    correctAnswer: 0,
+    options: options.slice(0, 4),
+    correctAnswer: correctAnswerIndex,
   }
 }
 
@@ -66,11 +79,15 @@ export function generateVisualRecognitionChallenge(procedure: Procedure): Visual
  */
 export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChallenge {
   const algorithm = procedure.data.algorithm
-  const steps = algorithm.map((step, index) => ({
+  const steps: Array<{
+    id: string
+    step: string
+    isCorrect: boolean
+    explanation?: string
+  }> = algorithm.map((step, index) => ({
     id: `step-${index}`,
     step: step.step,
     isCorrect: true,
-    explanation: undefined,
   }))
 
   // Introduce 2-3 errors by modifying random steps
@@ -78,9 +95,12 @@ export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChall
   const errorIndices = getRandomIndices(algorithm.length, numErrors)
 
   errorIndices.forEach((index) => {
-    steps[index].isCorrect = false
-    steps[index].step = introduceError(steps[index].step)
-    steps[index].explanation = `Błąd: To nie jest prawidłowy krok. Powinno być: ${algorithm[index].step}`
+    const step = steps[index]
+    const algorithmStep = algorithm[index]
+    if (!step || !algorithmStep) return
+    step.isCorrect = false
+    step.step = introduceError(step.step)
+    step.explanation = `Błąd: To nie jest prawidłowy krok. Powinno być: ${algorithmStep.step}`
   })
 
   return {
@@ -101,7 +121,9 @@ export function generateScenarioChallenge(procedure: Procedure): ScenarioChallen
 
   // Pick a random critical step from the middle of the algorithm
   const criticalStepIndex = Math.floor(algorithm.length / 2)
-  const correctStep = algorithm[criticalStepIndex].step
+  const criticalStep = algorithm[criticalStepIndex]
+  if (!criticalStep) throw new Error('No critical step found')
+  const correctStep = criticalStep.step
 
   // Generate plausible but incorrect options
   const wrongOptions = [
@@ -135,7 +157,10 @@ function getRandomIndices(arrayLength: number, count: number): number[] {
 
   for (let i = 0; i < count && indices.length > 0; i++) {
     const randomIndex = Math.floor(Math.random() * indices.length)
-    selected.push(indices[randomIndex])
+    const selectedIndex = indices[randomIndex]
+    if (selectedIndex !== undefined) {
+      selected.push(selectedIndex)
+    }
     indices.splice(randomIndex, 1)
   }
 
@@ -154,7 +179,10 @@ function generateWrongOptions(algorithm: { step: string }[], correctIndex: numbe
 
     if (!usedIndices.has(randomIndex)) {
       usedIndices.add(randomIndex)
-      options.push(algorithm[randomIndex].step)
+      const step = algorithm[randomIndex]
+      if (step) {
+        options.push(step.step)
+      }
     }
   }
 
@@ -182,5 +210,5 @@ function introduceError(step: string): string {
   ]
 
   const errorType = errorTypes[Math.floor(Math.random() * errorTypes.length)]
-  return errorType()
+  return errorType ? errorType() : step
 }

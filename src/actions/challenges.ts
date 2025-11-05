@@ -2,76 +2,33 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
-import { db } from '@/server/db'
+import { redirect } from 'next/navigation'
+import { db } from '@/server/db/index'
 import {
   saveChallengeCompletion,
   checkAllChallengesComplete,
   awardBadge,
   getChallengeCompletionsByProcedure,
   getProcedureBadge,
-  getUserBadges,
 } from '@/server/queries'
+import { fileData } from '@/server/fetchData'
+import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+import {
+  SubmitOrderStepsSchema,
+  SubmitQuizSchema,
+  SubmitVisualRecognitionSchema,
+  SubmitScenarioSchema,
+  SubmitSpotErrorSchema,
+} from '@/server/schema'
+import {
+  generateQuizChallenge,
+  generateVisualRecognitionChallenge,
+  generateScenarioChallenge,
+  generateSpotErrorChallenge,
+} from '@/helpers/challengeGenerator'
+import type { FormState } from '@/types/actionTypes'
 import type { ActionResult, ChallengeType, ProcedureProgress } from '@/types/challengeTypes'
-
-/**
- * Complete a challenge and check if badge should be awarded
- */
-export async function completeChallengeAction(
-  procedureId: string,
-  procedureName: string,
-  challengeType: ChallengeType,
-  score: number,
-  timeSpent: number
-): Promise<ActionResult<{ badgeEarned: boolean }>> {
-  const { userId } = await auth()
-
-  if (!userId) {
-    return { success: false, error: 'Unauthorized' }
-  }
-
-  try {
-    let badgeEarned = false
-
-    await db.transaction(async (tx) => {
-      // 1. Save challenge completion
-      await saveChallengeCompletion(tx, {
-        userId,
-        procedureId,
-        challengeType,
-        score,
-        timeSpent,
-      })
-
-      // 2. Check if all 5 challenges are complete
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
-
-      // 3. Award badge if all challenges complete
-      if (allComplete) {
-        await awardBadge(tx, {
-          userId,
-          procedureId,
-          procedureName,
-        })
-        badgeEarned = true
-      }
-    })
-
-    // Revalidate the challenges page
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
-    revalidatePath('/panel') // For badge widget
-
-    return {
-      success: true,
-      data: { badgeEarned },
-    }
-  } catch (error) {
-    console.error('Challenge completion failed:', error)
-    return {
-      success: false,
-      error: 'Failed to save challenge progress',
-    }
-  }
-}
+import type { StepWithId } from '@/types/dataTypes'
 
 /**
  * Get challenge progress for a specific procedure
@@ -125,37 +82,394 @@ export async function getChallengeProgressAction(
 }
 
 /**
- * Get all badges earned by the user
+ * Submit quiz challenge with server-side score calculation
  */
-export async function getUserBadgesAction(): Promise<
-  ActionResult<
-    Array<{
-      id: string
-      procedureId: string
-      procedureName: string
-      badgeImageUrl: string
-      earnedAt: string
-    }>
-  >
-> {
+export async function submitQuizAction(
+  formState: FormState,
+  formData: FormData
+) {
   const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
 
-  if (!userId) {
-    return { success: false, error: 'Unauthorized' }
+  const procedureId = formData.get('procedureId') as string
+  const procedureName = formData.get('procedureName') as string
+  const answers = formData.get('answers') as string
+  const timeSpent = formData.get('timeSpent') as string
+
+  const validationResult = SubmitQuizSchema.safeParse({
+    procedureId,
+    procedureName,
+    answers,
+    timeSpent,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { procedureId, procedureName, answers, timeSpent },
+    }
   }
 
   try {
-    const badges = await getUserBadges(userId)
+    const { procedureId, procedureName, answers: answersJson, timeSpent } = validationResult.data
 
-    return {
-      success: true,
-      data: badges,
+    // Parse user answers
+    const userAnswers: Record<string, number> = JSON.parse(answersJson)
+
+    // Load procedure from DB (server-side)
+    const procedure = await fileData.getProcedureById(procedureId)
+    if (!procedure) {
+      return toFormState('ERROR', 'Procedura nie została znaleziona')
     }
+
+    // SERVER-SIDE: Generate quiz and calculate score
+    const quiz = generateQuizChallenge(procedure)
+    let correctCount = 0
+    quiz.questions.forEach((question) => {
+      if (userAnswers[question.id] === question.correctAnswer) {
+        correctCount++
+      }
+    })
+    const score = Math.round((correctCount / quiz.questions.length) * 100)
+
+    // Save challenge completion
+    await db.transaction(async (tx) => {
+      await saveChallengeCompletion(tx, {
+        userId,
+        procedureId,
+        challengeType: 'knowledge-quiz',
+        score,
+        timeSpent,
+      })
+
+      // Check if all 5 challenges are complete
+      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+
+      // Award badge if all challenges complete
+      if (allComplete) {
+        await awardBadge(tx, {
+          userId,
+          procedureId,
+          procedureName,
+        })
+      }
+    })
+
+    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath('/panel')
+
+    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
   } catch (error) {
-    console.error('Get user badges failed:', error)
-    return {
-      success: false,
-      error: 'Failed to load badges',
-    }
+    return fromErrorToFormState(error)
   }
 }
+
+/**
+ * Submit order steps challenge with server-side score calculation
+ */
+export async function submitOrderStepsAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const procedureId = formData.get('procedureId') as string
+  const procedureName = formData.get('procedureName') as string
+  const stepOrderString = formData.get('stepOrder') as string
+  const timeSpent = formData.get('timeSpent') as string
+
+  const validationResult = SubmitOrderStepsSchema.safeParse({
+    procedureId,
+    procedureName,
+    stepOrder: stepOrderString,
+    timeSpent,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { procedureId, procedureName, stepOrder: stepOrderString, timeSpent },
+    }
+  }
+
+  try {
+    const { procedureId, procedureName, stepOrder: stepOrderJson, timeSpent } = validationResult.data
+
+    // Parse step order
+    const userStepOrder: StepWithId[] = JSON.parse(stepOrderJson)
+
+    // Load procedure from DB (server-side)
+    const procedure = await fileData.getProcedureById(procedureId)
+    if (!procedure) {
+      return toFormState('ERROR', 'Procedura nie została znaleziona')
+    }
+
+    const correctSteps = procedure.data.algorithm
+    let correctCount = 0
+    for (let i = 0; i < correctSteps.length; i++) {
+      const correctStep = correctSteps[i]
+      const userStep = userStepOrder[i]
+      if (correctStep && userStep && correctStep.step === userStep.step) {
+        correctCount++
+      }
+    }
+    const score = Math.round((correctCount / correctSteps.length) * 100)
+
+    // Save challenge completion
+    await db.transaction(async (tx) => {
+      await saveChallengeCompletion(tx, {
+        userId,
+        procedureId,
+        challengeType: 'order-steps',
+        score,
+        timeSpent,
+      })
+
+      // Check if all 5 challenges are complete
+      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+
+      // Award badge if all challenges complete
+      if (allComplete) {
+        await awardBadge(tx, {
+          userId,
+          procedureId,
+          procedureName,
+        })
+      }
+    })
+
+    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath('/panel')
+    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+}
+
+
+/**
+ * Submit visual recognition challenge with server-side score calculation
+ */
+export async function submitVisualRecognitionAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const procedureId = formData.get("procedureId") as string
+  const procedureName = formData.get("procedureName") as string
+  const selectedOption = formData.get("selectedOption") as string
+  const timeSpent = formData.get("timeSpent") as string
+
+  const validationResult = SubmitVisualRecognitionSchema.safeParse({
+    procedureId,
+    procedureName,
+    selectedOption,
+    timeSpent,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { procedureId, procedureName, selectedOption, timeSpent },
+    }
+  }
+
+  try {
+    const { procedureId, procedureName, selectedOption, timeSpent } = validationResult.data
+
+    const procedure = await fileData.getProcedureById(procedureId)
+    if (!procedure) {
+      return toFormState("ERROR", "Procedura nie została znaleziona")
+    }
+
+    const allProcedures = await fileData.getAllProcedures()
+    const challenge = generateVisualRecognitionChallenge(procedure, allProcedures)
+    const isCorrect = selectedOption === challenge.correctAnswer
+    const score = isCorrect ? 100 : 0
+
+    await db.transaction(async (tx) => {
+      await saveChallengeCompletion(tx, {
+        userId,
+        procedureId,
+        challengeType: "visual-recognition",
+        score,
+        timeSpent,
+      })
+
+      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+
+      if (allComplete) {
+        await awardBadge(tx, {
+          userId,
+          procedureId,
+          procedureName,
+        })
+      }
+    })
+
+    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath("/panel")
+    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+}
+
+/**
+ * Submit scenario challenge with server-side score calculation
+ */
+export async function submitScenarioAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const procedureId = formData.get("procedureId") as string
+  const procedureName = formData.get("procedureName") as string
+  const selectedOption = formData.get("selectedOption") as string
+  const correctAnswer = formData.get("correctAnswer") as string
+  const timeSpent = formData.get("timeSpent") as string
+
+  const validationResult = SubmitScenarioSchema.safeParse({
+    procedureId,
+    procedureName,
+    selectedOption,
+    correctAnswer,
+    timeSpent,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { procedureId, procedureName, selectedOption, correctAnswer, timeSpent },
+    }
+  }
+
+  try {
+    const { procedureId, procedureName, selectedOption, correctAnswer, timeSpent } = validationResult.data
+
+    const procedure = await fileData.getProcedureById(procedureId)
+    if (!procedure) {
+      return toFormState("ERROR", "Procedura nie została znaleziona")
+    }
+
+    const isCorrect = selectedOption === correctAnswer
+    const score = isCorrect ? 100 : 0
+
+    await db.transaction(async (tx) => {
+      await saveChallengeCompletion(tx, {
+        userId,
+        procedureId,
+        challengeType: "scenario-based",
+        score,
+        timeSpent,
+      })
+
+      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+
+      if (allComplete) {
+        await awardBadge(tx, {
+          userId,
+          procedureId,
+          procedureName,
+        })
+      }
+    })
+
+    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath("/panel")
+    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+}
+
+/**
+ * Submit spot error challenge with server-side score calculation
+ */
+export async function submitSpotErrorAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const procedureId = formData.get("procedureId") as string
+  const procedureName = formData.get("procedureName") as string
+  const selectedErrorsString = formData.get("selectedErrors") as string
+  const timeSpent = formData.get("timeSpent") as string
+
+  const validationResult = SubmitSpotErrorSchema.safeParse({
+    procedureId,
+    procedureName,
+    selectedErrors: selectedErrorsString,
+    timeSpent,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { procedureId, procedureName, selectedErrors: selectedErrorsString, timeSpent },
+    }
+  }
+
+  try {
+    const { procedureId, procedureName, selectedErrors: selectedErrorsJson, timeSpent } = validationResult.data
+
+    const userSelectedErrors: string[] = JSON.parse(selectedErrorsJson)
+
+    const procedure = await fileData.getProcedureById(procedureId)
+    if (!procedure) {
+      return toFormState("ERROR", "Procedura nie została znaleziona")
+    }
+
+    const challenge = generateSpotErrorChallenge(procedure)
+    const actualErrors = challenge.steps
+      .filter((step) => !step.isCorrect)
+      .map((step) => step.id)
+
+    const correctIdentifications = userSelectedErrors.filter((id) =>
+      actualErrors.includes(id)
+    ).length
+    const incorrectIdentifications = userSelectedErrors.filter(
+      (id) => !actualErrors.includes(id)
+    ).length
+
+    const score = Math.max(
+      0,
+      Math.round(((correctIdentifications - incorrectIdentifications) / actualErrors.length) * 100)
+    )
+
+    await db.transaction(async (tx) => {
+      await saveChallengeCompletion(tx, {
+        userId,
+        procedureId,
+        challengeType: "spot-error",
+        score,
+        timeSpent,
+      })
+
+      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+
+      if (allComplete) {
+        await awardBadge(tx, {
+          userId,
+          procedureId,
+          procedureName,
+        })
+      }
+    })
+
+    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath("/panel")
+    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+}
+

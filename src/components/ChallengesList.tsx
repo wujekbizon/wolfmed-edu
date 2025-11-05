@@ -25,7 +25,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
   ]
 
   return (
-    <section className="w-full min-h-screen overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-zinc-50">
+    <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-zinc-50">
       <div className="max-w-7xl mx-auto space-y-6 animate-fadeInUp">
         {/* Header Card */}
         <div

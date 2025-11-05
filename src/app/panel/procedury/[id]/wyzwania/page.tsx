@@ -1,4 +1,3 @@
-import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
 import { fileData } from '@/server/fetchData'
@@ -15,19 +14,14 @@ interface Props {
 }
 
 export default async function ChallengePage({ params }: Props) {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
-
   const { id: procedureId } = await params
 
-  // Get procedure data by ID
   const procedure = await fileData.getProcedureById(procedureId)
 
   if (!procedure) {
     redirect('/panel/procedury')
   }
 
-  // Get challenge progress
   const progressResult = await getChallengeProgressAction(procedureId, procedure.data.name)
 
   if (!progressResult.success) {

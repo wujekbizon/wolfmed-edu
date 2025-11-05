@@ -3,10 +3,8 @@
 import { useQuery } from '@tanstack/react-query'
 import type { Procedure } from '@/types/dataTypes'
 import ProceduresList from './ProceduresList'
-import Link from 'next/link'
 import { useProceduresStore } from '@/store/useProceduresStore'
 import { useEffect } from 'react'
-import Game from './icons/Game'
 
 export default function AllProcedures(props: { procedures: Procedure[] }) {
   const proceduresArr = Object.values(props.procedures)

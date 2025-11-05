@@ -2,8 +2,11 @@ import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { fileData } from '@/server/fetchData'
 import { ChallengeType } from '@/types/challengeTypes'
-import OrderStepsChallenge from '@/components/challenges/OrderStepsChallenge'
-import QuizChallenge from '@/components/challenges/QuizChallenge'
+import OrderStepsChallenge from '@/components/OrderStepsChallenge'
+import QuizChallengeForm from '@/components/QuizChallengeForm'
+import VisualRecognitionChallengeForm from '@/components/VisualRecognitionChallengeForm'
+import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
+import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -35,30 +38,16 @@ export default async function ChallengeTypePage({ params }: Props) {
       return <OrderStepsChallenge procedure={procedure} />
 
     case ChallengeType.KNOWLEDGE_QUIZ:
-      return <QuizChallenge procedure={procedure} />
+      return <QuizChallengeForm procedure={procedure} />
 
     case ChallengeType.VISUAL_RECOGNITION:
+      return <VisualRecognitionChallengeForm procedure={procedure} allProcedures={procedures} />
+
     case ChallengeType.SPOT_ERROR:
+      return <SpotErrorChallengeForm procedure={procedure} />
+
     case ChallengeType.SCENARIO_BASED:
-      // For MVP, show placeholder
-      return (
-        <div className="flex flex-col items-center justify-center min-h-screen p-4">
-          <div className="bg-zinc-800 p-8 rounded-2xl max-w-md text-center">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Wyzwanie w budowie
-            </h2>
-            <p className="text-white mb-6">
-              To wyzwanie będzie dostępne wkrótce.
-            </p>
-            <a
-              href={`/panel/procedury/${procedureId}/wyzwania`}
-              className="inline-block px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
-            >
-              ← Powrót do listy wyzwań
-            </a>
-          </div>
-        </div>
-      )
+      return <ScenarioChallengeForm procedure={procedure} />
 
     default:
       redirect(`/panel/procedury/${procedureId}/wyzwania`)
