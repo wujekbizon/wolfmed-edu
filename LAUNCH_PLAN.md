@@ -37,6 +37,7 @@
 - ❌ **CRITICAL:** New features are NOT behind paywall (anyone can access)
 - ❌ No supporter-only middleware or route protection
 - ❌ Nursing path is visible but incomplete
+- ❌ **Custom test feature is broken** (copied from another project, doesn't work)
 - ❌ No upgrade CTA for free users trying to access paid features
 - ❌ Subscription page doesn't clearly explain what you get
 
@@ -48,8 +49,9 @@ This release should focus on:
 1. Implementing access control for paid features
 2. Updating subscription page with clear feature breakdown
 3. Hiding/disabling incomplete nursing path
-4. Testing supporter flow end-to-end
-5. Basic QA on paid features
+4. Hiding/removing broken custom test feature
+5. Testing supporter flow end-to-end
+6. Basic QA on paid features
 
 **DO NOT:**
 - Wait for nursing path completion
@@ -78,7 +80,7 @@ This release should focus on:
 - 🔒 **Notes & Whiteboard** (Excalidraw + rich text notes)
 - 🔒 **Badge System** (achievement badges)
 - 🔒 **Unlimited Tests** (no 150 test limit)
-- 🔒 **Custom Test Creation** (add your own questions)
+- ~~🔒 Custom Test Creation~~ (removed - broken, launching post-launch)
 
 #### Nursing Path
 - ⏳ **Coming Soon** - Completely paid (no free tier)
@@ -305,22 +307,48 @@ This feature is cool but:
 
 ### 9. Custom Test Creation
 
-#### Overall Status: 🚧 NEEDS WORK (60% complete)
+#### Overall Status: ❌ **NOT READY** (0% complete - Broken)
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Route exists | ✅ READY | `/panel/dodaj-test` route exists |
-| Form UI | ⚠️ **UNKNOWN** | Need to verify if form is complete |
-| Database integration | ⚠️ **UNKNOWN** | Need to verify if saving works |
-| **Access control** | ❌ **MISSING** | **Likely no supporter check** |
+| Route exists | ⚠️ EXISTS | `/panel/dodaj-test` route exists but broken |
+| Form UI | ❌ **BROKEN** | **Copied from another project, styles not updated** |
+| Database integration | ❌ **BROKEN** | **Server actions don't work yet** |
+| Implementation | ❌ **NOT STARTED** | **Needs complete reimplementation** |
+| Access control | ❌ **MISSING** | No supporter check |
 
-**Decision: VERIFY OR PUNT**
+**Decision: HIDE FOR NOW - Ship Post-Launch**
 
-Need to check if this feature is actually complete. If not complete:
-- **Option A:** Finish it (if < 2 days work)
-- **Option B:** Hide the route and ship post-launch
+**Current Situation:**
+- Feature was copied from another project as placeholder
+- Styles haven't been changed to match this project
+- Server actions are broken and don't work
+- Needs complete reimplementation for this project
 
-**Time Estimate:** 0-2 days (depending on completeness)
+**Recommendation:**
+- **DO NOT** try to fix before launch (too much work)
+- **HIDE** the route/feature completely
+- Add to post-launch roadmap (Month 2)
+- This is NOT a core promised feature, safe to punt
+
+**Implementation:**
+```typescript
+// Option 1: Remove from navigation
+// Remove from src/constants/dashboardLinks.tsx or sideMenuLinks.tsx
+
+// Option 2: Redirect to dashboard
+// src/app/panel/dodaj-test/page.tsx
+export default function AddTestPage() {
+  redirect('/panel')
+}
+
+// Option 3: Show "Coming Soon" page
+export default function AddTestPage() {
+  return <ComingSoonMessage feature="Tworzenie Własnych Testów" />
+}
+```
+
+**Time Estimate:** 0.5 days to hide properly
 
 ---
 
@@ -514,7 +542,87 @@ export default function NursingPath() {
 
 ---
 
-#### 3. End-to-End Testing (2 days)
+#### 3. Hide Custom Test Creation (0.5 days)
+**Priority: CRITICAL**
+
+**Current Situation:**
+- Route exists at `/panel/dodaj-test`
+- Feature was copied from another project (placeholder)
+- Styles not updated to match this project
+- Server actions are broken and don't work
+- Needs complete reimplementation
+- Currently accessible to all users (broken experience)
+
+**Why This Is Critical:**
+- Users can access broken feature
+- Creates bad user experience
+- Undermines platform credibility
+- Not a core promised feature (safe to remove)
+
+**Options:**
+
+**Option 1: Remove from Navigation (Recommended)**
+```typescript
+// src/constants/dashboardLinks.tsx or sideMenuLinks.tsx
+// Comment out or remove the "Dodaj Test" link
+export const dashboardLinks = [
+  { name: 'Dashboard', href: '/panel', icon: DashboardIcon },
+  { name: 'Nauka', href: '/panel/nauka', icon: LearnIcon },
+  { name: 'Testy', href: '/panel/testy', icon: TestIcon },
+  // { name: 'Dodaj Test', href: '/panel/dodaj-test', icon: AddIcon }, // REMOVED
+  { name: 'Procedury', href: '/panel/procedury', icon: ProcedureIcon },
+  { name: 'Wyniki', href: '/panel/wyniki', icon: ResultsIcon },
+]
+```
+
+**Option 2: Redirect to Dashboard**
+```typescript
+// src/app/panel/dodaj-test/page.tsx
+import { redirect } from 'next/navigation'
+
+export default function AddTestPage() {
+  redirect('/panel') // Immediately redirect away
+}
+```
+
+**Option 3: Show "Coming Soon" Page (If you want to keep it visible)**
+```typescript
+// src/app/panel/dodaj-test/page.tsx
+export default function AddTestPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="text-center max-w-md">
+        <h1 className="text-3xl font-bold mb-4">
+          Tworzenie Własnych Testów - Wkrótce
+        </h1>
+        <p className="text-gray-600 mb-8">
+          Pracujemy nad funkcją umożliwiającą tworzenie własnych testów.
+          Ta funkcja będzie dostępna w przyszłych aktualizacjach.
+        </p>
+        <Link
+          href="/panel"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Powrót do panelu
+        </Link>
+      </div>
+    </div>
+  )
+}
+```
+
+**Recommendation:** Use **Option 1** (remove from navigation) - cleanest approach
+
+**Post-Launch Plan:**
+- Add to Month 2 roadmap
+- Properly implement from scratch
+- Add to supporter features once working
+
+**Time: 0.5 days**
+
+---
+
+#### 4. End-to-End Testing (2 days)
 **Priority: HIGH**
 
 **Test Flows:**
@@ -589,7 +697,7 @@ export default function NursingPath() {
   - ✅ Rich Notes & Whiteboard
   - ✅ Achievement Badges
   - ✅ Unlimited Tests
-  - ✅ Custom Test Creation
+  - ~~❌ Custom Test Creation~~ (removed - broken, ship post-launch)
 - [ ] Add testimonials from early supporters
 - [ ] Add 30-day guarantee (if offering)
 - [ ] FAQ section
@@ -831,10 +939,11 @@ If any of these occur, pause and fix:
 - Build upgrade CTA buttons
 - Update subscription page
 
-**Day 4: Nursing Path & Content**
+**Day 4: Hide Incomplete Features & Content**
 - Hide/disable nursing path
+- Hide/remove broken custom test feature
 - Update homepage messaging
-- Update pricing copy
+- Update pricing copy (remove custom test)
 - Create announcement content
 
 **Day 5-6: Testing**
@@ -940,6 +1049,7 @@ If any of these occur, pause and fix:
 - [ ] UpgradeModal component built
 - [ ] Subscription page updated with feature breakdown
 - [ ] Nursing path hidden or marked "Coming Soon"
+- [ ] **Custom test feature hidden/removed** (broken, ship post-launch)
 - [ ] All 5 challenge types tested
 - [ ] Material upload tested
 - [ ] Notes system tested
@@ -1048,6 +1158,7 @@ If any of these occur, pause and fix:
 ### Month 2: Enhance Features
 
 **New Features:**
+- **Custom Test Creation** (properly implement from scratch - supporter feature)
 - Badge social sharing
 - Challenge leaderboard
 - Advanced note search
@@ -1065,6 +1176,7 @@ If any of these occur, pause and fix:
 - 50% increase in engagement
 - 15% conversion rate
 - 20+ new procedures
+- Custom test creation launched and working
 
 ---
 
@@ -1107,10 +1219,11 @@ If any of these occur, pause and fix:
 **Priority 1 (Must Have):**
 1. Access control on paid features (3-4 days)
 2. Hide/disable nursing path (0.5 days)
-3. End-to-end testing (2 days)
-4. Content & messaging updates (1 day)
+3. Hide/remove broken custom test feature (0.5 days)
+4. End-to-end testing (2 days)
+5. Content & messaging updates (1 day)
 
-**Total: 6-7 days of development**
+**Total: 7-8 days of development**
 
 **Priority 2 (Should Have):**
 1. Database migrations (1 day)
