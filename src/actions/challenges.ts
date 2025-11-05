@@ -94,43 +94,41 @@ export async function submitQuizAction(
   const procedureId = formData.get('procedureId') as string
   const procedureName = formData.get('procedureName') as string
   const answers = formData.get('answers') as string
+  const correctAnswers = formData.get('correctAnswers') as string
   const timeSpent = formData.get('timeSpent') as string
 
   const validationResult = SubmitQuizSchema.safeParse({
     procedureId,
     procedureName,
     answers,
+    correctAnswers,
     timeSpent,
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, answers, timeSpent },
+      values: { procedureId, procedureName, answers, correctAnswers, timeSpent },
     }
   }
 
   try {
-    const { procedureId, procedureName, answers: answersJson, timeSpent } = validationResult.data
+    const { procedureId, procedureName, answers: answersJson, correctAnswers: correctAnswersJson, timeSpent } = validationResult.data
 
-    // Parse user answers
+    // Parse user answers and correct answers from client
     const userAnswers: Record<string, number> = JSON.parse(answersJson)
+    const correctAnswersMap: Record<string, number> = JSON.parse(correctAnswersJson)
 
-    // Load procedure from DB (server-side)
-    const procedure = await fileData.getProcedureById(procedureId)
-    if (!procedure) {
-      return toFormState('ERROR', 'Procedura nie została znaleziona')
-    }
-
-    // SERVER-SIDE: Generate quiz and calculate score
-    const quiz = generateQuizChallenge(procedure)
+    // Calculate score by comparing against correct answers sent from client
     let correctCount = 0
-    quiz.questions.forEach((question) => {
-      if (userAnswers[question.id] === question.correctAnswer) {
+    const totalQuestions = Object.keys(correctAnswersMap).length
+
+    Object.keys(correctAnswersMap).forEach((questionId) => {
+      if (userAnswers[questionId] === correctAnswersMap[questionId]) {
         correctCount++
       }
     })
-    const score = Math.round((correctCount / quiz.questions.length) * 100)
+    const score = Math.round((correctCount / totalQuestions) * 100)
 
     // Save challenge completion
     await db.transaction(async (tx) => {
@@ -262,33 +260,34 @@ export async function submitVisualRecognitionAction(
   const procedureId = formData.get("procedureId") as string
   const procedureName = formData.get("procedureName") as string
   const selectedOption = formData.get("selectedOption") as string
+  const correctAnswer = formData.get("correctAnswer") as string
   const timeSpent = formData.get("timeSpent") as string
 
   const validationResult = SubmitVisualRecognitionSchema.safeParse({
     procedureId,
     procedureName,
     selectedOption,
+    correctAnswer,
     timeSpent,
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, selectedOption, timeSpent },
+      values: { procedureId, procedureName, selectedOption, correctAnswer, timeSpent },
     }
   }
 
   try {
-    const { procedureId, procedureName, selectedOption, timeSpent } = validationResult.data
+    const { procedureId, procedureName, selectedOption, correctAnswer, timeSpent } = validationResult.data
 
     const procedure = await fileData.getProcedureById(procedureId)
     if (!procedure) {
       return toFormState("ERROR", "Procedura nie została znaleziona")
     }
 
-    const allProcedures = await fileData.getAllProcedures()
-    const challenge = generateVisualRecognitionChallenge(procedure, allProcedures)
-    const isCorrect = selectedOption === challenge.correctAnswer
+    // Compare selectedOption against the correctAnswer sent from client
+    const isCorrect = selectedOption === correctAnswer
     const score = isCorrect ? 100 : 0
 
     await db.transaction(async (tx) => {

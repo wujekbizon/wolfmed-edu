@@ -14,6 +14,8 @@ import TestimonialForm from "@/components/TestimonialForm"
 import DynamicBoard from "../_components/DynamicBoard"
 import StorageQuotaWidget from "@/components/StorageQuotaWidget"
 import StorageQuotaWidgetSkeleton from "@/components/skeletons/StorageQuotaWidgetSkeleton"
+import BadgeWidget from "@/components/BadgeWidget"
+import BadgeWidgetSkeleton from "@/components/BadgeWidgetSkeleton"
 
 export const experimental_ppr = true
 
@@ -41,6 +43,9 @@ export default async function TestsPage() {
               <UserProgress />
             </Suspense>
             <div className="flex flex-col gap-6">
+              <Suspense fallback={<BadgeWidgetSkeleton />}>
+                <BadgeWidget />
+              </Suspense>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                   <UsernameForm />

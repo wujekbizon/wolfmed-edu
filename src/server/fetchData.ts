@@ -2,12 +2,14 @@ import path from "path"
 import fs from "fs"
 import { Post, Procedure, Test } from "@/types/dataTypes"
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType"
+import { getProcedureIdFromSlug } from "@/constants/procedureSlugs"
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
   getPostById: (id: string) => Promise<Post | null>
   getAllProcedures: () => Promise<Procedure[]>
   getProcedureById: (id: string) => Promise<Procedure | null>
+  getProcedureBySlug: (slug: string) => Promise<Procedure | null>
   getAllTests: () => Promise<Test[]>
   getTestsCategories: () => Promise<{ category: string }[]>
   countTestsByCategory: (category: string) => Promise<number>
@@ -58,6 +60,23 @@ export const fileData: FileDataOperations = {
       return procedures.find((procedure) => procedure.id === id) || null
     } catch (error) {
       console.error("Error fetching procedure:", error)
+      return null
+    }
+  },
+
+  getProcedureBySlug: async (slug: string) => {
+    try {
+      // Get ID from slug mapping
+      const procedureId = getProcedureIdFromSlug(slug)
+      if (!procedureId) {
+        return null
+      }
+
+      // Fetch procedure by ID
+      const procedures = await readJsonFile<Procedure[]>("procedures.json")
+      return procedures.find((procedure) => procedure.id === procedureId) || null
+    } catch (error) {
+      console.error("Error fetching procedure by slug:", error)
       return null
     }
   },

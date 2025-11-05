@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import ChallengeButton from '@/components/ChallengeButton'
+import Link from 'next/link'
 import SubmitButton from '@/components/SubmitButton'
 import VisualRecognitionChallengeSkeleton from '@/components/skeletons/VisualRecognitionChallengeSkeleton'
 import { submitVisualRecognitionAction } from '@/actions/challenges'
@@ -12,6 +12,7 @@ import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { generateVisualRecognitionChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
@@ -20,22 +21,19 @@ interface Props {
 
 export default function VisualRecognitionChallengeForm({ procedure, allProcedures }: Props) {
   const router = useRouter()
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitVisualRecognitionAction, EMPTY_FORM_STATE)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [startTime] = useState(Date.now())
+  const [challenge] = useState(() => generateVisualRecognitionChallenge(procedure, allProcedures))
   const noScriptFallback = useToastMessage(state)
 
-  const challenge = generateVisualRecognitionChallenge(procedure, allProcedures)
   const timeSpent = Math.floor((Date.now() - startTime) / 1000)
-
-  function handleCancel() {
-    router.push(`/panel/procedury/${procedure.id}/wyzwania`)
-  }
 
   useEffect(() => {
     if (state.status === 'SUCCESS') {
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedure.id}/wyzwania`)
+        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
       }, 1500)
       return () => clearTimeout(timer)
     }
@@ -43,8 +41,8 @@ export default function VisualRecognitionChallengeForm({ procedure, allProcedure
   
 
   return (
-    <section className="flex flex-col items-center gap-8 px-4 sm:px-6 py-8 w-full h-full overflow-y-auto scrollbar-webkit bg-gradient-to-br from-zinc-50 via-white to-zinc-50">
-      <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden">
+    <section className="flex flex-col items-center px-4 sm:px-6 py-8 w-full h-full bg-gradient-to-br from-zinc-50 via-white to-zinc-50">
+      <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] max-h-full overflow-y-auto scrollbar-webkit bg-white rounded-xl shadow-lg border border-zinc-200">
         {/* Header with gradient background */}
         <div className="bg-gradient-to-r from-zinc-800 to-zinc-900 p-6 sm:p-8">
           <div className="flex items-center gap-3 mb-2">
@@ -65,11 +63,12 @@ export default function VisualRecognitionChallengeForm({ procedure, allProcedure
             <input type="hidden" name="procedureId" value={procedure.id} />
             <input type="hidden" name="procedureName" value={procedure.data.name} />
             <input type="hidden" name="selectedOption" value={selectedOption ?? ''} />
+            <input type="hidden" name="correctAnswer" value={challenge.correctAnswer} />
             <input type="hidden" name="timeSpent" value={timeSpent} />
 
             {/* Image Container */}
             <div className="mb-8">
-              <div className="relative w-full aspect-video bg-zinc-100 rounded-xl overflow-hidden shadow-lg border-2 border-zinc-200 group">
+              <div className="relative w-full h-64 sm:h-80 md:h-96 bg-zinc-100 rounded-xl overflow-hidden shadow-lg border-2 border-zinc-200 group">
                 <Image
                   src={challenge.image}
                   alt="Procedura medyczna"
@@ -164,12 +163,12 @@ export default function VisualRecognitionChallengeForm({ procedure, allProcedure
                     : 'bg-zinc-300 text-zinc-500 cursor-not-allowed'
                 }`}
               />
-              <ChallengeButton
-                onClick={handleCancel}
-                className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200"
+              <Link
+                href={`/panel/procedury/${procedureSlug}/wyzwania`}
+                className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200 flex items-center justify-center"
               >
                 Anuluj
-              </ChallengeButton>
+              </Link>
             </div>
             {noScriptFallback}
           </form>

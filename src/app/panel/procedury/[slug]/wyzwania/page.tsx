@@ -10,19 +10,19 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: Promise<{ id: string }>
+  params: Promise<{ slug: string }>
 }
 
 export default async function ChallengePage({ params }: Props) {
-  const { id: procedureId } = await params
+  const { slug } = await params
 
-  const procedure = await fileData.getProcedureById(procedureId)
+  const procedure = await fileData.getProcedureBySlug(slug)
 
   if (!procedure) {
     redirect('/panel/procedury')
   }
 
-  const progressResult = await getChallengeProgressAction(procedureId, procedure.data.name)
+  const progressResult = await getChallengeProgressAction(procedure.id, procedure.data.name)
 
   if (!progressResult.success) {
     return <div className="p-4 text-red-500">Failed to load progress</div>

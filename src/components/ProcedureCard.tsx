@@ -130,12 +130,7 @@ export default function ProcedureCard({ procedure }: { procedure: Procedure }) {
                 <RotateCcw className="w-4 h-4" />
                 Zacznij od nowa
               </button>
-              <Link
-                href={`/procedury/${id}`}
-                className="mt-8 inline-block bg-[#ffb1b1] hover:bg-[#ffa5a5] text-zinc-900 hover:text-white border border-red-100/50 shadow-sm text-sm font-semibold py-2 px-4 rounded-full transition-colors"
-              >
-                Przetestuj Procedurę
-              </Link>
+           
             </div>
           )}
         </div>

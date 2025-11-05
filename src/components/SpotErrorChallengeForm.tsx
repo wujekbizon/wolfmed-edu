@@ -3,13 +3,14 @@
 import { useState, useEffect } from 'react'
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
-import ChallengeButton from '@/components/ChallengeButton'
+import Link from 'next/link'
 import SubmitButton from '@/components/SubmitButton'
 import { submitSpotErrorAction } from '@/actions/challenges'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { generateSpotErrorChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
@@ -17,6 +18,7 @@ interface Props {
 
 export default function SpotErrorChallengeForm({ procedure }: Props) {
   const router = useRouter()
+  const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitSpotErrorAction, EMPTY_FORM_STATE)
   const [selectedErrors, setSelectedErrors] = useState<Set<string>>(new Set())
   const [startTime] = useState(Date.now())
@@ -37,14 +39,11 @@ export default function SpotErrorChallengeForm({ procedure }: Props) {
     })
   }
 
-  function handleCancel() {
-    router.push(`/panel/procedury/${procedure.id}/wyzwania`)
-  }
 
   useEffect(() => {
     if (state.status === 'SUCCESS') {
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedure.id}/wyzwania`)
+        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
       }, 1500)
       return () => clearTimeout(timer)
     }
@@ -169,12 +168,12 @@ export default function SpotErrorChallengeForm({ procedure }: Props) {
                   : 'bg-zinc-300 text-zinc-500 cursor-not-allowed'
               }`}
             />
-            <ChallengeButton
-              onClick={handleCancel}
-              className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200"
+            <Link
+              href={`/panel/procedury/${procedureSlug}/wyzwania`}
+              className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200 flex items-center justify-center"
             >
               Anuluj
-            </ChallengeButton>
+            </Link>
           </div>
           {noScriptFallback}
         </form>
