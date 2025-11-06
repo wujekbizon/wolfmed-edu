@@ -16,6 +16,7 @@ import StorageQuotaWidget from "@/components/StorageQuotaWidget"
 import StorageQuotaWidgetSkeleton from "@/components/skeletons/StorageQuotaWidgetSkeleton"
 import BadgeWidget from "@/components/BadgeWidget"
 import BadgeWidgetSkeleton from "@/components/BadgeWidgetSkeleton"
+import AdminBlogWidget from "@/components/AdminBlogWidget"
 
 export const experimental_ppr = true
 
@@ -47,6 +48,10 @@ export default async function TestsPage() {
                 <BadgeWidget />
               </Suspense>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {/* Admin Blog Widget - Only visible to admins */}
+                <Suspense fallback={null}>
+                  <AdminBlogWidget />
+                </Suspense>
                 <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                   <UsernameForm />
                 </div>

@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import AllPosts from '@/components/AllPosts'
-import { fileData } from '@/server/fetchData'
-
-export const dynamic = 'force-static'
+import { getAllBlogPosts } from '@/server/queries/blogQueries'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -13,7 +11,23 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
-  // file data
-  const posts = await fileData.getAllPosts()
-  return <AllPosts posts={posts} />
+  // Fetch published blog posts from database
+  const posts = await getAllBlogPosts({
+    status: 'published',
+    sortBy: 'publishedAt',
+    sortOrder: 'desc',
+  })
+
+  // Transform to match old Post type for AllPosts component
+  const transformedPosts = posts.map((post) => ({
+    id: post.id,
+    title: post.title,
+    date: post.date || post.publishedAt?.toISOString().split('T')[0] || '',
+    excerpt: post.excerpt,
+    content: post.content,
+    createdAt: post.createdAt,
+    updatedAt: post.updatedAt,
+  }))
+
+  return <AllPosts posts={transformedPosts} />
 }
