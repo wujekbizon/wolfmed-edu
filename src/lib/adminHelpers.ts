@@ -4,7 +4,7 @@
  */
 
 import 'server-only'
-import { auth } from '@clerk/nextjs/server'
+import { auth, currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 
 /**
@@ -17,9 +17,10 @@ export async function isUserAdmin(): Promise<boolean> {
     const { userId } = await auth()
     if (!userId) return false
 
-    // Import clerkClient dynamically to avoid issues
-    const { clerkClient } = await import('@clerk/nextjs/server')
-    const user = await clerkClient().users.getUser(userId)
+    const user = await currentUser()
+    if(!user) {
+      return false
+    }
 
     // Check if user has admin role in publicMetadata
     const role = user.publicMetadata?.role as string | undefined
@@ -66,8 +67,10 @@ export async function getAdminUser(): Promise<{
     const { userId } = await auth()
     if (!userId) return null
 
-    const { clerkClient } = await import('@clerk/nextjs/server')
-    const user = await clerkClient().users.getUser(userId)
+    const user = await currentUser()
+    if(!user) {
+      return null
+    }
 
     const role = user.publicMetadata?.role as string | undefined
     if (role !== 'admin') return null

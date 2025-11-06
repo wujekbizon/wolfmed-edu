@@ -6,7 +6,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { db } from '@/server/db'
+import { db } from '@/server/db/index'
 import { blogPosts, blogPostTags, blogLikes } from '@/server/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { requireAdminAction, requireAuth } from '@/lib/adminHelpers'

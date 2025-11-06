@@ -5,7 +5,7 @@
 
 import 'server-only'
 import { cache } from 'react'
-import { db } from '@/server/db'
+import { db } from '@/server/db/index'
 import {
   blogPosts,
   blogCategories,
