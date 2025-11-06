@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getBlogStatistics, getAllBlogPosts } from '@/server/queries/blogQueries'
+import { getBlogStatistics, getAllBlogPosts } from '@/server/queries'
 import { formatDate } from '@/lib/blogUtils'
 
 export default async function AdminDashboardPage() {

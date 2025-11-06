@@ -1,4 +1,4 @@
-import { getBlogCategories, getBlogTags } from '@/server/queries/blogQueries'
+import { getBlogCategories, getBlogTags } from '@/server/queries'
 import BlogPostForm from '@/components/blog/admin/BlogPostForm'
 import Link from 'next/link'
 

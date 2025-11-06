@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import AllPosts from '@/components/AllPosts'
-import { getAllBlogPosts } from '@/server/queries/blogQueries'
+import { getAllBlogPosts } from '@/server/queries'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',

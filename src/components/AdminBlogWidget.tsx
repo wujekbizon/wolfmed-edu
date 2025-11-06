@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { isUserAdmin } from '@/lib/adminHelpers'
-import { getBlogStatistics } from '@/server/queries/blogQueries'
+import { getBlogStatistics } from '@/server/queries'
 
 export default async function AdminBlogWidget() {
   // Check if user is admin

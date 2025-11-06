@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { getAllBlogPosts } from '@/server/queries/blogQueries'
+import { getAllBlogPosts } from '@/server/queries'
 import { formatDate } from '@/lib/blogUtils'
 import { useDashboardStore } from '@/store/useDashboardStore'
 import DeletePostButton from '@/components/blog/admin/DeletePostButton'
