@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { generateSlug, calculateReadingTime } from '@/lib/blogUtils'
-import { createBlogPost, updateBlogPost } from '@/server/actions/blogActions'
+import { createBlogPost, updateBlogPost } from '@/actions/blog'
 import type { BlogPost, BlogCategory, BlogTag } from '@/types/dataTypes'
 import toast from 'react-hot-toast'
 

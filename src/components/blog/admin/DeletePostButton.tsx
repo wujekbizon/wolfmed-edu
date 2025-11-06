@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { deleteBlogPost } from '@/server/actions/blogActions'
+import { deleteBlogPost } from '@/actions/blog'
 import toast from 'react-hot-toast'
 
 interface DeletePostButtonProps {
