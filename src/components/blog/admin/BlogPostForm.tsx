@@ -74,7 +74,6 @@ export default function BlogPostForm({
               type="text"
               id="title"
               name="title"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="Wprowadź tytuł posta..."
               defaultValue={state.values?.title?.toString() || post?.title || ''}
@@ -94,7 +93,6 @@ export default function BlogPostForm({
               type="text"
               id="slug"
               name="slug"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none font-mono text-sm"
               placeholder="tytul-posta"
               defaultValue={
@@ -119,7 +117,6 @@ export default function BlogPostForm({
             <textarea
               id="excerpt"
               name="excerpt"
-              required
               rows={3}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
               placeholder="Krótki opis posta (50-500 znaków)..."
@@ -139,7 +136,6 @@ export default function BlogPostForm({
             <textarea
               id="content"
               name="content"
-              required
               rows={20}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-y font-mono text-sm"
               placeholder="Treść posta (obsługuje Markdown)..."

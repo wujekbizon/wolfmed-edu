@@ -69,7 +69,6 @@ export default function CategoryForm({ category, mode }: CategoryFormProps) {
               type="text"
               id="name"
               name="name"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="Wprowadź nazwę kategorii..."
               defaultValue={state.values?.name?.toString() || category?.name || ''}
@@ -89,7 +88,6 @@ export default function CategoryForm({ category, mode }: CategoryFormProps) {
               type="text"
               id="slug"
               name="slug"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none font-mono text-sm"
               placeholder="nazwa-kategorii"
               defaultValue={
@@ -137,7 +135,6 @@ export default function CategoryForm({ category, mode }: CategoryFormProps) {
                 type="color"
                 id="color"
                 name="color"
-                required
                 className="h-10 w-20 border border-zinc-300 rounded-md cursor-pointer"
                 defaultValue={
                   state.values?.color?.toString() || category?.color || '#ef4444'

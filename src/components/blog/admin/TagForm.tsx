@@ -64,7 +64,6 @@ export default function TagForm({ tag, mode }: TagFormProps) {
               type="text"
               id="name"
               name="name"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
               placeholder="Wprowadź nazwę tagu..."
               defaultValue={state.values?.name?.toString() || tag?.name || ''}
@@ -84,7 +83,6 @@ export default function TagForm({ tag, mode }: TagFormProps) {
               type="text"
               id="slug"
               name="slug"
-              required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none font-mono text-sm"
               placeholder="nazwa-tagu"
               defaultValue={
