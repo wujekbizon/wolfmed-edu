@@ -33,7 +33,7 @@ export default function BlogPostList({ posts }: BlogPostListProps) {
   return (
     <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] flex flex-col gap-6 pb-2 pr-1 overflow-y-auto">
       {paginatedPosts.map((post: Post) => (
-        <Link key={post.id} href={`/blog/${post.id}`}>
+        <Link key={post.id} href={`/blog/${post.slug}`}>
           <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow border border-red-200/40">
             <h2 className="text-2xl font-semibold text-zinc-900 mb-2">{post.title}</h2>
             <p className="text-zinc-600 mb-4">{post.excerpt}</p>

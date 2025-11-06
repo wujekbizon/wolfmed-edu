@@ -22,6 +22,7 @@ export default async function BlogPage() {
   const transformedPosts = posts.map((post) => ({
     id: post.id,
     title: post.title,
+    slug: post.slug,
     date: post.date || post.publishedAt?.toISOString().split('T')[0] || '',
     excerpt: post.excerpt,
     content: post.content,

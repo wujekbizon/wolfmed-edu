@@ -71,6 +71,7 @@ export interface UserData {
 export interface Post {
   id: string
   title: string
+  slug: string
   date: string
   excerpt: string
   content: string
