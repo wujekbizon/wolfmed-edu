@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/blogUtils'
 export default async function AdminDashboardPage() {
   const stats = await getBlogStatistics()
   const recentPosts = await getAllBlogPosts({
-    status: undefined, // Get all statuses
+    // Omit status to get all statuses
     limit: 5,
     sortBy: 'createdAt',
     sortOrder: 'desc',

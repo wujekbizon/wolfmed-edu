@@ -3,7 +3,7 @@ import PostsManagementContent from '@/components/blog/admin/PostsManagementConte
 
 export default async function PostsManagementPage() {
   const posts = await getAllBlogPosts({
-    status: undefined, // Show all statuses
+    // Omit status to show all statuses
     limit: 100,
     sortBy: 'createdAt',
     sortOrder: 'desc',
