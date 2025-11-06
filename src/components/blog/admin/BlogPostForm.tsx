@@ -1,11 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { generateSlug, calculateReadingTime } from '@/lib/blogUtils'
-import { createBlogPost, updateBlogPost } from '@/actions/blog'
+import { generateSlug } from '@/lib/blogUtils'
+import { createBlogPostAction, updateBlogPostAction } from '@/actions/blog'
 import type { BlogPost, BlogCategory, BlogTag } from '@/types/dataTypes'
-import toast from 'react-hot-toast'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useToastMessage } from '@/hooks/useToastMessage'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
+import FieldError from '@/components/FieldError'
+import SubmitButton from '@/components/SubmitButton'
 
 interface BlogPostFormProps {
   post?: BlogPost
@@ -21,91 +26,37 @@ export default function BlogPostForm({
   mode,
 }: BlogPostFormProps) {
   const router = useRouter()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  // Form state
-  const [title, setTitle] = useState(post?.title || '')
-  const [slug, setSlug] = useState(post?.slug || '')
-  const [excerpt, setExcerpt] = useState(post?.excerpt || '')
-  const [content, setContent] = useState(post?.content || '')
-  const [coverImage, setCoverImage] = useState(post?.coverImage || '')
-  const [categoryId, setCategoryId] = useState(post?.categoryId || '')
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    post?.tags?.map((t) => t.id) || []
+  const [state, action] = useActionState(
+    mode === 'create' ? createBlogPostAction : updateBlogPostAction,
+    EMPTY_FORM_STATE
   )
-  const [status, setStatus] = useState<'draft' | 'published'>(
-    (post?.status as 'draft' | 'published') || 'draft'
-  )
-  const [metaTitle, setMetaTitle] = useState(post?.metaTitle || '')
-  const [metaDescription, setMetaDescription] = useState(post?.metaDescription || '')
-  const [metaKeywords, setMetaKeywords] = useState(post?.metaKeywords || '')
+  const noScriptFallback = useToastMessage(state)
 
-  // Auto-generate slug from title
-  const handleTitleChange = (value: string) => {
-    setTitle(value)
-    if (mode === 'create' || !post?.slug) {
-      setSlug(generateSlug(value))
+  // Client-side slug generation only
+  const [title, setTitle] = useState('')
+  const [autoSlug, setAutoSlug] = useState('')
+
+  useEffect(() => {
+    if (mode === 'create' && title) {
+      setAutoSlug(generateSlug(title))
     }
-  }
+  }, [title, mode])
 
-  // Calculate reading time
-  const readingTime = calculateReadingTime(content)
-
-  // Handle tag selection
-  const toggleTag = (tagId: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
-    )
-  }
-
-  // Handle submit
-  const handleSubmit = async (e: React.FormEvent, isDraft: boolean = false) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const formData = {
-        title,
-        slug,
-        excerpt,
-        content,
-        coverImage: coverImage || null,
-        categoryId: categoryId || null,
-        tags: selectedTags,
-        status: isDraft ? ('draft' as const) : status,
-        metaTitle: metaTitle || undefined,
-        metaDescription: metaDescription || undefined,
-        metaKeywords: metaKeywords || undefined,
-      }
-
-      let result
-      if (mode === 'create') {
-        result = await createBlogPost(formData)
-      } else {
-        result = await updateBlogPost({ id: post!.id, ...formData })
-      }
-
-      if (result.success) {
-        toast.success(
-          mode === 'create'
-            ? 'Post został utworzony!'
-            : 'Post został zaktualizowany!'
-        )
-        router.push('/blog/admin/posts')
-        router.refresh()
-      } else {
-        toast.error(result.error || 'Wystąpił błąd')
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
-      toast.error('Wystąpił błąd podczas zapisywania posta')
-    } finally {
-      setIsSubmitting(false)
+  // Redirect on success
+  useEffect(() => {
+    if (state.status === 'SUCCESS') {
+      router.push('/blog/admin/posts')
+      router.refresh()
     }
-  }
+  }, [state.status, router])
 
   return (
-    <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-8">
+    <form action={action} className="space-y-8">
+      {/* Hidden ID for edit mode */}
+      {mode === 'edit' && post && (
+        <input type="hidden" name="id" value={post.id} />
+      )}
+
       {/* Basic Information */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
         <h2 className="text-lg font-semibold text-zinc-900 mb-4">
@@ -114,106 +65,105 @@ export default function BlogPostForm({
         <div className="space-y-4">
           {/* Title */}
           <div>
-            <label
+            <Label
               htmlFor="title"
+              label="Tytuł *"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Tytuł <span className="text-red-500">*</span>
-            </label>
-            <input
+            />
+            <Input
               type="text"
               id="title"
-              value={title}
-              onChange={(e) => handleTitleChange(e.target.value)}
+              name="title"
               required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="Wprowadź tytuł posta..."
+              defaultValue={state.values?.title?.toString() || post?.title || ''}
+              onChangeHandler={(e) => setTitle(e.target.value)}
             />
+            <FieldError name="title" formState={state} />
           </div>
 
           {/* Slug */}
           <div>
-            <label
+            <Label
               htmlFor="slug"
+              label="Slug (URL) *"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Slug (URL) <span className="text-red-500">*</span>
-            </label>
-            <input
+            />
+            <Input
               type="text"
               id="slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
+              name="slug"
               required
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none font-mono text-sm"
               placeholder="tytul-posta"
+              defaultValue={
+                state.values?.slug?.toString() ||
+                post?.slug ||
+                autoSlug
+              }
             />
             <p className="mt-1 text-xs text-zinc-500">
-              URL: /blog/{slug || 'tytul-posta'}
+              URL: /blog/{autoSlug || post?.slug || 'tytul-posta'}
             </p>
+            <FieldError name="slug" formState={state} />
           </div>
 
           {/* Excerpt */}
           <div>
-            <label
+            <Label
               htmlFor="excerpt"
+              label="Wstęp *"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Wstęp <span className="text-red-500">*</span>
-            </label>
+            />
             <textarea
               id="excerpt"
-              value={excerpt}
-              onChange={(e) => setExcerpt(e.target.value)}
+              name="excerpt"
               required
               rows={3}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
               placeholder="Krótki opis posta (50-500 znaków)..."
               maxLength={500}
+              defaultValue={state.values?.excerpt?.toString() || post?.excerpt || ''}
             />
-            <p className="mt-1 text-xs text-zinc-500">
-              {excerpt.length}/500 znaków
-            </p>
+            <FieldError name="excerpt" formState={state} />
           </div>
 
           {/* Content */}
           <div>
-            <label
+            <Label
               htmlFor="content"
+              label="Treść *"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Treść <span className="text-red-500">*</span>
-            </label>
+            />
             <textarea
               id="content"
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
+              name="content"
               required
               rows={20}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-y font-mono text-sm"
               placeholder="Treść posta (obsługuje Markdown)..."
+              defaultValue={state.values?.content?.toString() || post?.content || ''}
             />
-            <p className="mt-1 text-xs text-zinc-500">
-              Czas czytania: ~{readingTime} min | {content.length} znaków
-            </p>
+            <FieldError name="content" formState={state} />
           </div>
 
           {/* Cover Image */}
           <div>
-            <label
+            <Label
               htmlFor="coverImage"
+              label="URL Obrazu Głównego"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              URL Obrazu Głównego
-            </label>
-            <input
+            />
+            <Input
               type="url"
               id="coverImage"
-              value={coverImage}
-              onChange={(e) => setCoverImage(e.target.value)}
+              name="coverImage"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="https://example.com/image.jpg"
+              defaultValue={state.values?.coverImage?.toString() || post?.coverImage || ''}
             />
+            <FieldError name="coverImage" formState={state} />
           </div>
         </div>
       </div>
@@ -224,17 +174,16 @@ export default function BlogPostForm({
         <div className="space-y-4">
           {/* Category */}
           <div>
-            <label
-              htmlFor="category"
+            <Label
+              htmlFor="categoryId"
+              label="Kategoria"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Kategoria
-            </label>
+            />
             <select
-              id="category"
-              value={categoryId}
-              onChange={(e) => setCategoryId(e.target.value)}
+              id="categoryId"
+              name="categoryId"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+              defaultValue={state.values?.categoryId?.toString() || post?.categoryId || ''}
             >
               <option value="">Brak kategorii</option>
               {categories.map((category) => (
@@ -243,27 +192,31 @@ export default function BlogPostForm({
                 </option>
               ))}
             </select>
+            <FieldError name="categoryId" formState={state} />
           </div>
 
           {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-zinc-700 mb-2">
-              Tagi
+              Tagi (max 10)
             </label>
             <div className="flex flex-wrap gap-2">
               {tags.map((tag) => (
-                <button
+                <label
                   key={tag.id}
-                  type="button"
-                  onClick={() => toggleTag(tag.id)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                    selectedTags.includes(tag.id)
-                      ? 'bg-red-600 text-white'
-                      : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
-                  }`}
+                  className="inline-flex items-center cursor-pointer"
                 >
-                  {tag.name}
-                </button>
+                  <input
+                    type="checkbox"
+                    name="tags"
+                    value={tag.id}
+                    defaultChecked={post?.tags?.some((t) => t.id === tag.id)}
+                    className="sr-only peer"
+                  />
+                  <span className="px-3 py-1 rounded-full text-sm font-medium transition-colors peer-checked:bg-red-600 peer-checked:text-white bg-zinc-100 text-zinc-700 hover:bg-zinc-200">
+                    {tag.name}
+                  </span>
+                </label>
               ))}
             </div>
             {tags.length === 0 && (
@@ -271,6 +224,7 @@ export default function BlogPostForm({
                 Brak dostępnych tagów. Dodaj tagi w sekcji zarządzania.
               </p>
             )}
+            <FieldError name="tags" formState={state} />
           </div>
         </div>
       </div>
@@ -282,61 +236,80 @@ export default function BlogPostForm({
         </h2>
         <div className="space-y-4">
           <div>
-            <label
+            <Label
               htmlFor="metaTitle"
+              label="Meta Tytuł"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Meta Tytuł
-            </label>
-            <input
+            />
+            <Input
               type="text"
               id="metaTitle"
-              value={metaTitle}
-              onChange={(e) => setMetaTitle(e.target.value)}
+              name="metaTitle"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="Zostaw puste aby użyć tytułu posta"
               maxLength={60}
+              defaultValue={state.values?.metaTitle?.toString() || post?.metaTitle || ''}
             />
-            <p className="mt-1 text-xs text-zinc-500">{metaTitle.length}/60 znaków</p>
+            <FieldError name="metaTitle" formState={state} />
           </div>
 
           <div>
-            <label
+            <Label
               htmlFor="metaDescription"
+              label="Meta Opis"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Meta Opis
-            </label>
+            />
             <textarea
               id="metaDescription"
-              value={metaDescription}
-              onChange={(e) => setMetaDescription(e.target.value)}
+              name="metaDescription"
               rows={2}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
               placeholder="Zostaw puste aby użyć wstępu posta"
               maxLength={160}
+              defaultValue={state.values?.metaDescription?.toString() || post?.metaDescription || ''}
             />
-            <p className="mt-1 text-xs text-zinc-500">
-              {metaDescription.length}/160 znaków
-            </p>
+            <FieldError name="metaDescription" formState={state} />
           </div>
 
           <div>
-            <label
+            <Label
               htmlFor="metaKeywords"
+              label="Słowa Kluczowe"
               className="block text-sm font-medium text-zinc-700 mb-1"
-            >
-              Słowa Kluczowe
-            </label>
-            <input
+            />
+            <Input
               type="text"
               id="metaKeywords"
-              value={metaKeywords}
-              onChange={(e) => setMetaKeywords(e.target.value)}
+              name="metaKeywords"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="opiekun, medyczny, porady (oddzielone przecinkami)"
+              defaultValue={state.values?.metaKeywords?.toString() || post?.metaKeywords || ''}
             />
+            <FieldError name="metaKeywords" formState={state} />
           </div>
+        </div>
+      </div>
+
+      {/* Status */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
+        <h2 className="text-lg font-semibold text-zinc-900 mb-4">Status Publikacji</h2>
+        <div>
+          <Label
+            htmlFor="status"
+            label="Status"
+            className="block text-sm font-medium text-zinc-700 mb-1"
+          />
+          <select
+            id="status"
+            name="status"
+            className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+            defaultValue={state.values?.status?.toString() || post?.status || 'draft'}
+          >
+            <option value="draft">Szkic</option>
+            <option value="published">Opublikowany</option>
+            <option value="archived">Archiwum</option>
+          </select>
+          <FieldError name="status" formState={state} />
         </div>
       </div>
 
@@ -345,35 +318,19 @@ export default function BlogPostForm({
         <button
           type="button"
           onClick={() => router.back()}
-          disabled={isSubmitting}
-          className="px-6 py-2 text-zinc-700 bg-white border border-zinc-300 rounded-md hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          className="px-6 py-2 text-zinc-700 bg-white border border-zinc-300 rounded-md hover:bg-zinc-50 font-medium"
         >
           Anuluj
         </button>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={(e) => handleSubmit(e, true)}
-            disabled={isSubmitting}
-            className="px-6 py-2 text-zinc-700 bg-white border border-zinc-300 rounded-md hover:bg-zinc-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-          >
-            {isSubmitting ? 'Zapisywanie...' : 'Zapisz jako szkic'}
-          </button>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
-          >
-            {isSubmitting
-              ? 'Publikowanie...'
-              : mode === 'create'
-              ? 'Opublikuj Post'
-              : 'Aktualizuj Post'}
-          </button>
-        </div>
+        <SubmitButton
+          label={mode === 'create' ? 'Utwórz Post' : 'Aktualizuj Post'}
+          loading="Zapisywanie..."
+          className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
+        />
       </div>
+
+      {noScriptFallback}
     </form>
   )
 }

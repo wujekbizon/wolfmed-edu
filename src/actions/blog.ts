@@ -41,9 +41,8 @@ export async function createBlogPostAction(
     const metaDescription = formData.get('metaDescription') as string | null
     const metaKeywords = formData.get('metaKeywords') as string | null
 
-    // Extract tags array
-    const tagsData = formData.get('tags') as string
-    const tags = tagsData ? JSON.parse(tagsData) : []
+    // Extract tags array (multiple checkboxes with same name)
+    const tags = formData.getAll('tags') as string[]
 
     // Validate input
     const validationResult = CreateBlogPostSchema.safeParse({
@@ -138,9 +137,9 @@ export async function updateBlogPostAction(
     const metaDescription = formData.get('metaDescription') as string | null
     const metaKeywords = formData.get('metaKeywords') as string | null
 
-    // Extract tags array
-    const tagsData = formData.get('tags') as string | null
-    const tags = tagsData ? JSON.parse(tagsData) : undefined
+    // Extract tags array (multiple checkboxes with same name)
+    const tagsArray = formData.getAll('tags') as string[]
+    const tags = tagsArray.length > 0 ? tagsArray : undefined
 
     // Build validation object (only include fields that are present)
     const validationInput: any = { id }
