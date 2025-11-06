@@ -1,6 +1,9 @@
 import Link from 'next/link'
 import { getBlogCategories, getBlogTags } from '@/server/queries'
 
+// Force dynamic rendering for admin pages (requires auth check)
+export const dynamic = 'force-dynamic'
+
 export default async function CategoriesManagementPage() {
   const [categories, tags] = await Promise.all([
     getBlogCategories(),

@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { getBlogStatistics, getAllBlogPosts } from '@/server/queries'
 import { formatDate } from '@/lib/blogUtils'
 
+// Force dynamic rendering for admin pages (requires auth check)
+export const dynamic = 'force-dynamic'
+
 export default async function AdminDashboardPage() {
   const stats = await getBlogStatistics()
   const recentPosts = await getAllBlogPosts({

@@ -1,6 +1,9 @@
 import CategoryForm from '@/components/blog/admin/CategoryForm'
 import Link from 'next/link'
 
+// Force dynamic rendering for admin pages (requires auth check)
+export const dynamic = 'force-dynamic'
+
 export default async function NewCategoryPage() {
   return (
     <div className="max-w-4xl mx-auto">

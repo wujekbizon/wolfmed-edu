@@ -1,6 +1,9 @@
 import TagForm from '@/components/blog/admin/TagForm'
 import Link from 'next/link'
 
+// Force dynamic rendering for admin pages (requires auth check)
+export const dynamic = 'force-dynamic'
+
 export default async function NewTagPage() {
   return (
     <div className="max-w-4xl mx-auto">

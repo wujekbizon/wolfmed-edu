@@ -3,6 +3,9 @@ import CategoryForm from '@/components/blog/admin/CategoryForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+// Force dynamic rendering for admin pages (requires auth check)
+export const dynamic = 'force-dynamic'
+
 interface EditCategoryPageProps {
   params: Promise<{
     id: string
