@@ -359,6 +359,26 @@ export const getBlogCategoryBySlug = cache(
 )
 
 /**
+ * Get blog category by ID
+ */
+export const getBlogCategoryById = cache(
+  async (id: string): Promise<BlogCategory | null> => {
+    try {
+      const category = await db
+        .select()
+        .from(blogCategories)
+        .where(eq(blogCategories.id, id))
+        .limit(1)
+
+      return (category[0] as BlogCategory) || null
+    } catch (error) {
+      console.error('Error fetching blog category by id:', error)
+      return null
+    }
+  }
+)
+
+/**
  * Get all blog tags
  */
 export const getBlogTags = cache(async (): Promise<BlogTag[]> => {
@@ -389,6 +409,24 @@ export const getBlogTagBySlug = cache(async (slug: string): Promise<BlogTag | nu
     return (tag[0] as BlogTag) || null
   } catch (error) {
     console.error('Error fetching blog tag by slug:', error)
+    return null
+  }
+})
+
+/**
+ * Get blog tag by ID
+ */
+export const getBlogTagById = cache(async (id: string): Promise<BlogTag | null> => {
+  try {
+    const tag = await db
+      .select()
+      .from(blogTags)
+      .where(eq(blogTags.id, id))
+      .limit(1)
+
+    return (tag[0] as BlogTag) || null
+  } catch (error) {
+    console.error('Error fetching blog tag by id:', error)
     return null
   }
 })
