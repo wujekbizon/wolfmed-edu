@@ -24,7 +24,7 @@ import {
 export async function createBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     const admin = await requireAdminAction()
@@ -119,7 +119,7 @@ export async function createBlogPostAction(
 export async function updateBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -240,7 +240,7 @@ export async function updateBlogPostAction(
 export async function deleteBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -277,7 +277,7 @@ export async function deleteBlogPostAction(
 export async function publishBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -325,7 +325,7 @@ export async function publishBlogPostAction(
 export async function archiveBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -379,7 +379,7 @@ export async function incrementViewCountAction(postId: string): Promise<void> {
 export async function likeBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check authentication
     const userId = await requireAuth()
@@ -434,7 +434,7 @@ export async function likeBlogPostAction(
 export async function unlikeBlogPostAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check authentication
     const userId = await requireAuth()

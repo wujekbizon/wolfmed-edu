@@ -26,7 +26,7 @@ import {
 export async function createBlogCategoryAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -84,7 +84,7 @@ export async function createBlogCategoryAction(
 export async function updateBlogCategoryAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -157,7 +157,7 @@ export async function updateBlogCategoryAction(
 export async function deleteBlogCategoryAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -198,7 +198,7 @@ export async function deleteBlogCategoryAction(
 export async function createBlogTagAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -244,7 +244,7 @@ export async function createBlogTagAction(
 export async function updateBlogTagAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
@@ -303,7 +303,7 @@ export async function updateBlogTagAction(
 export async function deleteBlogTagAction(
   formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   try {
     // Check admin access
     await requireAdminAction()
