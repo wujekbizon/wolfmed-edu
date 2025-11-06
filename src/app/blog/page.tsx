@@ -30,5 +30,9 @@ export default async function BlogPage() {
     updatedAt: post.updatedAt,
   }))
 
+  // Debug logging (remove in production)
+  console.log('Blog posts loaded:', transformedPosts.length)
+  console.log('First post slug:', transformedPosts[0]?.slug)
+
   return <AllPosts posts={transformedPosts} />
 }

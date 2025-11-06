@@ -4,14 +4,15 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface EditPostPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function EditPostPage({ params }: EditPostPageProps) {
+  const { id } = await params
   const [post, categories, tags] = await Promise.all([
-    getBlogPostById(params.id),
+    getBlogPostById(id),
     getBlogCategories(),
     getBlogTags(),
   ])
