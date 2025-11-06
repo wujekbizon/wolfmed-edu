@@ -10,22 +10,22 @@ import VisualRecognitionChallengeSkeleton from '@/components/skeletons/VisualRec
 import { submitVisualRecognitionAction } from '@/actions/challenges'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { generateVisualRecognitionChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
+import type { VisualRecognitionChallenge } from '@/types/challengeTypes'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
   allProcedures: Procedure[]
+  challenge: VisualRecognitionChallenge
 }
 
-export default function VisualRecognitionChallengeForm({ procedure, allProcedures }: Props) {
+export default function VisualRecognitionChallengeForm({ procedure, allProcedures, challenge }: Props) {
   const router = useRouter()
   const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitVisualRecognitionAction, EMPTY_FORM_STATE)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [startTime] = useState(Date.now())
-  const [challenge] = useState(() => generateVisualRecognitionChallenge(procedure, allProcedures))
   const noScriptFallback = useToastMessage(state)
 
   const timeSpent = Math.floor((Date.now() - startTime) / 1000)

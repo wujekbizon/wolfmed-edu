@@ -9,20 +9,20 @@ import QuizChallengeSkeleton from '@/components/skeletons/QuizChallengeSkeleton'
 import { submitQuizAction } from '@/actions/challenges'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { generateQuizChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
-import type { QuizQuestion } from '@/types/challengeTypes'
+import type { QuizQuestion, QuizChallenge } from '@/types/challengeTypes'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
+  challenge: QuizChallenge
 }
 
-export default function QuizChallengeForm({ procedure }: Props) {
+export default function QuizChallengeForm({ procedure, challenge }: Props) {
   const router = useRouter()
   const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitQuizAction, EMPTY_FORM_STATE)
-  const [questions, setQuestions] = useState<QuizQuestion[]>([])
+  const questions = challenge.questions
   const [answers, setAnswers] = useState<Record<string, number>>({})
   const [startTime] = useState(Date.now())
   const noScriptFallback = useToastMessage(state)
@@ -35,12 +35,6 @@ export default function QuizChallengeForm({ procedure }: Props) {
       return () => clearTimeout(timer)
     }
   }, [state.status, procedure.id])
-  
-
-  useEffect(() => {
-    const quiz = generateQuizChallenge(procedure)
-    setQuestions(quiz.questions)
-  }, [procedure])
 
   const correctAnswers = useMemo(() => {
     return questions.reduce((acc, q) => {

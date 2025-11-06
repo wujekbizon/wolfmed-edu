@@ -8,21 +8,21 @@ import SubmitButton from '@/components/SubmitButton'
 import { submitScenarioAction } from '@/actions/challenges'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { generateScenarioChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
+import type { ScenarioChallenge } from '@/types/challengeTypes'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 interface Props {
   procedure: Procedure
+  challenge: ScenarioChallenge
 }
 
-export default function ScenarioChallengeForm({ procedure }: Props) {
+export default function ScenarioChallengeForm({ procedure, challenge }: Props) {
   const router = useRouter()
   const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitScenarioAction, EMPTY_FORM_STATE)
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [startTime] = useState(Date.now())
-  const [challenge] = useState(() => generateScenarioChallenge(procedure))
   const noScriptFallback = useToastMessage(state)
 
   const timeSpent = Math.floor((Date.now() - startTime) / 1000)

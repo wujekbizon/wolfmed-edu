@@ -7,6 +7,12 @@ import QuizChallengeForm from '@/components/QuizChallengeForm'
 import VisualRecognitionChallengeForm from '@/components/VisualRecognitionChallengeForm'
 import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
 import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
+import {
+  generateSpotErrorChallenge,
+  generateQuizChallenge,
+  generateVisualRecognitionChallenge,
+  generateScenarioChallenge
+} from '@/helpers/challengeGenerator'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -33,23 +39,32 @@ export default async function ChallengeTypePage({ params }: Props) {
   }
 
   // Render appropriate challenge based on type
-  switch (challengeType) {
-    case ChallengeType.ORDER_STEPS:
-      return <OrderStepsChallenge procedure={procedure} />
+  try {
+    switch (challengeType) {
+      case ChallengeType.ORDER_STEPS:
+        return <OrderStepsChallenge procedure={procedure} />
 
-    case ChallengeType.KNOWLEDGE_QUIZ:
-      return <QuizChallengeForm procedure={procedure} />
+      case ChallengeType.KNOWLEDGE_QUIZ:
+        const quizChallenge = await generateQuizChallenge(procedure)
+        return <QuizChallengeForm procedure={procedure} challenge={quizChallenge} />
 
-    case ChallengeType.VISUAL_RECOGNITION:
-      return <VisualRecognitionChallengeForm procedure={procedure} allProcedures={procedures} />
+      case ChallengeType.VISUAL_RECOGNITION:
+        const visualChallenge = await generateVisualRecognitionChallenge(procedure, procedures)
+        return <VisualRecognitionChallengeForm procedure={procedure} allProcedures={procedures} challenge={visualChallenge} />
 
-    case ChallengeType.SPOT_ERROR:
-      return <SpotErrorChallengeForm procedure={procedure} />
+      case ChallengeType.SPOT_ERROR:
+        const spotErrorChallenge = await generateSpotErrorChallenge(procedure)
+        return <SpotErrorChallengeForm procedure={procedure} challenge={spotErrorChallenge} />
 
-    case ChallengeType.SCENARIO_BASED:
-      return <ScenarioChallengeForm procedure={procedure} />
+      case ChallengeType.SCENARIO_BASED:
+        const scenarioChallenge = await generateScenarioChallenge(procedure)
+        return <ScenarioChallengeForm procedure={procedure} challenge={scenarioChallenge} />
 
-    default:
-      redirect(`/panel/procedury/${slug}/wyzwania`)
+      default:
+        redirect(`/panel/procedury/${slug}/wyzwania`)
+    }
+  } catch (error) {
+    console.error('Challenge generation failed:', error)
+    redirect(`/panel/procedury/${slug}/wyzwania`)
   }
 }

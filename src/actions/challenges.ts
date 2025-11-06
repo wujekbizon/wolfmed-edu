@@ -401,36 +401,29 @@ export async function submitSpotErrorAction(
   const procedureId = formData.get("procedureId") as string
   const procedureName = formData.get("procedureName") as string
   const selectedErrorsString = formData.get("selectedErrors") as string
+  const actualErrorsString = formData.get("actualErrors") as string
   const timeSpent = formData.get("timeSpent") as string
 
   const validationResult = SubmitSpotErrorSchema.safeParse({
     procedureId,
     procedureName,
     selectedErrors: selectedErrorsString,
+    actualErrors: actualErrorsString,
     timeSpent,
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, selectedErrors: selectedErrorsString, timeSpent },
+      values: { procedureId, procedureName, selectedErrors: selectedErrorsString, actualErrors: actualErrorsString, timeSpent },
     }
   }
 
   try {
-    const { procedureId, procedureName, selectedErrors: selectedErrorsJson, timeSpent } = validationResult.data
+    const { procedureId, procedureName, selectedErrors: selectedErrorsJson, actualErrors: actualErrorsJson, timeSpent } = validationResult.data
 
     const userSelectedErrors: string[] = JSON.parse(selectedErrorsJson)
-
-    const procedure = await fileData.getProcedureById(procedureId)
-    if (!procedure) {
-      return toFormState("ERROR", "Procedura nie została znaleziona")
-    }
-
-    const challenge = generateSpotErrorChallenge(procedure)
-    const actualErrors = challenge.steps
-      .filter((step) => !step.isCorrect)
-      .map((step) => step.id)
+    const actualErrors: string[] = JSON.parse(actualErrorsJson)
 
     const correctIdentifications = userSelectedErrors.filter((id) =>
       actualErrors.includes(id)

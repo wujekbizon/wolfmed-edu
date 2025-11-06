@@ -1,3 +1,5 @@
+'use server'
+
 import type { Procedure } from '@/types/dataTypes'
 import type {
   QuizChallenge,
@@ -10,7 +12,7 @@ import type {
 /**
  * Generate quiz questions from procedure algorithm steps
  */
-export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
+export async function generateQuizChallenge(procedure: Procedure): Promise<QuizChallenge> {
   const algorithm = procedure.data.algorithm
   const questions: QuizQuestion[] = []
 
@@ -50,7 +52,7 @@ export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
 /**
  * Generate visual recognition challenge
  */
-export function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): VisualRecognitionChallenge {
+export async function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): Promise<VisualRecognitionChallenge> {
   // Filter out the current procedure to get distractors
   const otherProcedures = allProcedures.filter(p => p.id !== procedure.id)
 
@@ -77,7 +79,7 @@ export function generateVisualRecognitionChallenge(procedure: Procedure, allProc
 /**
  * Generate spot the error challenge
  */
-export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChallenge {
+export async function generateSpotErrorChallenge(procedure: Procedure): Promise<SpotErrorChallenge> {
   const algorithm = procedure.data.algorithm
   const steps: Array<{
     id: string
@@ -113,7 +115,7 @@ export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChall
 /**
  * Generate scenario-based challenge
  */
-export function generateScenarioChallenge(procedure: Procedure): ScenarioChallenge {
+export async function generateScenarioChallenge(procedure: Procedure): Promise<ScenarioChallenge> {
   const algorithm = procedure.data.algorithm
 
   // Create a clinical scenario
@@ -196,19 +198,44 @@ function generateWrongOptions(algorithm: { step: string }[], correctIndex: numbe
 
 /**
  * Introduce an error into a step (for spot-the-error challenge)
+ * Ensures modification always occurs by trying multiple strategies
  */
 function introduceError(step: string): string {
-  const errorTypes = [
+  // Try pattern-based replacements first
+  const patternErrors = [
     () => step.replace(/prawidłow/gi, 'nieprawidłow'),
     () => step.replace(/należy/gi, 'nie należy'),
     () => step.replace(/przed/gi, 'po'),
     () => step.replace(/po/gi, 'przed'),
-    () => `${step} (bez mycia rąk)`,
     () => step.replace(/delikatnie/gi, 'gwałtownie'),
     () => step.replace(/ciepłą/gi, 'zimną'),
-    () => step + ' Pomiń ten krok jeśli jest to możliwe.',
+    () => step.replace(/sterylny/gi, 'niesterylny'),
+    () => step.replace(/czyste/gi, 'brudne'),
+    () => step.replace(/dokładnie/gi, 'powierzchownie'),
   ]
 
-  const errorType = errorTypes[Math.floor(Math.random() * errorTypes.length)]
-  return errorType ? errorType() : step
+  // Shuffle and try pattern errors
+  const shuffled = patternErrors.sort(() => Math.random() - 0.5)
+  for (const errorFn of shuffled) {
+    const modified = errorFn()
+    if (modified !== step) {
+      return modified
+    }
+  }
+
+  // If no patterns matched, use guaranteed modification strategies
+  const guaranteedErrors = [
+    () => `${step} (bez mycia rąk)`,
+    () => `${step} Pomiń ten krok jeśli jest to możliwe.`,
+    () => `POMIŃ: ${step}`,
+    () => `${step} (wykonaj szybko, bez ostrożności)`,
+    () => step.split(' ').slice(0, -1).join(' '), // Remove last word if possible
+    () => `${step} Nie zwracaj uwagi na sterylność.`,
+  ]
+
+  const guaranteed = guaranteedErrors[Math.floor(Math.random() * guaranteedErrors.length)]!
+  const result = guaranteed()
+
+  // Final safety: if somehow still unchanged, append error marker
+  return result !== step ? result : `${step} [BŁĄD]`
 }

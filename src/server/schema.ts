@@ -336,5 +336,16 @@ export const SubmitSpotErrorSchema = z.object({
     },
     { message: "Nieprawidłowy format błędów" }
   ),
+  actualErrors: z.string().refine(
+    (val) => {
+      try {
+        const parsed = JSON.parse(val);
+        return Array.isArray(parsed);
+      } catch {
+        return false;
+      }
+    },
+    { message: "Nieprawidłowy format błędów rzeczywistych" }
+  ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
