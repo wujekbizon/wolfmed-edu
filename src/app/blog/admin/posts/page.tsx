@@ -1,19 +1,46 @@
+'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { getAllBlogPosts } from '@/server/queries/blogQueries'
 import { formatDate } from '@/lib/blogUtils'
+import { useDashboardStore } from '@/store/useDashboardStore'
 import DeletePostButton from '@/components/blog/admin/DeletePostButton'
+import DeletePostModal from '@/components/blog/admin/DeletePostModal'
+import type { BlogPost } from '@/types/dataTypes'
 
-export default async function PostsManagementPage() {
-  // Get all posts (including drafts and archived)
-  const posts = await getAllBlogPosts({
-    status: undefined, // Show all statuses
-    limit: 100,
-    sortBy: 'createdAt',
-    sortOrder: 'desc',
-  })
+export default function PostsManagementPage() {
+  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { isDeleteModalOpen, postIdToDelete } = useDashboardStore()
+
+  useEffect(() => {
+    const loadPosts = async () => {
+      setIsLoading(true)
+      try {
+        const data = await getAllBlogPosts({
+          status: undefined, // Show all statuses
+          limit: 100,
+          sortBy: 'createdAt',
+          sortOrder: 'desc',
+        })
+        setPosts(data)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadPosts()
+  }, [isDeleteModalOpen]) // Reload when modal closes
+
+  if (isLoading) {
+    return <div className="text-center py-12">Ładowanie...</div>
+  }
 
   return (
     <div>
+      {/* Delete Modal */}
+      {isDeleteModalOpen && postIdToDelete && <DeletePostModal postId={postIdToDelete} />}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-zinc-900">Zarządzanie Postami</h1>
@@ -142,7 +169,7 @@ export default async function PostsManagementPage() {
                         >
                           Edytuj
                         </Link>
-                        <DeletePostButton postId={post.id} postTitle={post.title} />
+                        <DeletePostButton postId={post.id} />
                       </div>
                     </td>
                   </tr>
@@ -201,7 +228,7 @@ export default async function PostsManagementPage() {
                   >
                     Edytuj
                   </Link>
-                  <DeletePostButton postId={post.id} postTitle={post.title} />
+                  <DeletePostButton postId={post.id} />
                 </div>
               </div>
             ))}

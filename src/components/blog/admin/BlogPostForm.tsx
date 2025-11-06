@@ -241,7 +241,7 @@ export default function BlogPostForm({
               label="Meta Tytuł"
               className="block text-sm font-medium text-zinc-700 mb-1"
             />
-            <Input
+            <input
               type="text"
               id="metaTitle"
               name="metaTitle"
