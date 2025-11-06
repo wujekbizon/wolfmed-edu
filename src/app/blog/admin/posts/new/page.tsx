@@ -2,7 +2,6 @@ import { getBlogCategories, getBlogTags } from '@/server/queries'
 import BlogPostForm from '@/components/blog/admin/BlogPostForm'
 import Link from 'next/link'
 
-// Force dynamic rendering for admin pages (requires auth check)
 export const dynamic = 'force-dynamic'
 
 export default async function NewPostPage() {

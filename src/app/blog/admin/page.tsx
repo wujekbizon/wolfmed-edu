@@ -2,13 +2,11 @@ import Link from 'next/link'
 import { getBlogStatistics, getAllBlogPosts } from '@/server/queries'
 import { formatDate } from '@/lib/blogUtils'
 
-// Force dynamic rendering for admin pages (requires auth check)
 export const dynamic = 'force-dynamic'
 
 export default async function AdminDashboardPage() {
   const stats = await getBlogStatistics()
   const recentPosts = await getAllBlogPosts({
-    // Omit status to get all statuses
     limit: 5,
     sortBy: 'createdAt',
     sortOrder: 'desc',
@@ -22,10 +20,7 @@ export default async function AdminDashboardPage() {
           Przegląd statystyk i ostatniej aktywności
         </p>
       </div>
-
-      {/* Statistics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Posts */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
           <div className="flex items-center justify-between">
             <div>
@@ -45,8 +40,6 @@ export default async function AdminDashboardPage() {
             <span className="text-yellow-600">{stats.draftPosts} szkice</span>
           </div>
         </div>
-
-        {/* Total Views */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
           <div className="flex items-center justify-between">
             <div>
@@ -69,8 +62,6 @@ export default async function AdminDashboardPage() {
             średnio na post
           </p>
         </div>
-
-        {/* Total Likes */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
           <div className="flex items-center justify-between">
             <div>
@@ -92,8 +83,6 @@ export default async function AdminDashboardPage() {
             średnio na post
           </p>
         </div>
-
-        {/* Categories & Tags */}
         <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
           <div className="flex items-center justify-between">
             <div>

@@ -11,14 +11,13 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
-  // Fetch published blog posts from database
+
   const posts = await getAllBlogPosts({
     status: 'published',
     sortBy: 'publishedAt',
     sortOrder: 'desc',
   })
 
-  // Transform to match old Post type for AllPosts component
   const transformedPosts = posts.map((post) => ({
     id: post.id,
     title: post.title,
@@ -29,10 +28,6 @@ export default async function BlogPage() {
     createdAt: post.createdAt,
     updatedAt: post.updatedAt,
   }))
-
-  // Debug logging (remove in production)
-  console.log('Blog posts loaded:', transformedPosts.length)
-  console.log('First post slug:', transformedPosts[0]?.slug)
 
   return <AllPosts posts={transformedPosts} />
 }

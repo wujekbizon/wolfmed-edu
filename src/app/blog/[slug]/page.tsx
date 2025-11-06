@@ -28,7 +28,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
-  // Transform BlogPost to Post type for BlogPost component
   const transformedPost = {
     id: post.id,
     title: post.title,

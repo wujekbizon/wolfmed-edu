@@ -18,7 +18,7 @@ import BadgeWidget from "@/components/BadgeWidget"
 import BadgeWidgetSkeleton from "@/components/BadgeWidgetSkeleton"
 import AdminBlogWidget from "@/components/AdminBlogWidget"
 
-export const experimental_ppr = true
+export const dynamic = 'force-dynamic'
 
 export default async function TestsPage() {
   return (
