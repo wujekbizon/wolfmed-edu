@@ -106,6 +106,7 @@ export async function createBlogPostAction(
     // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
+    revalidatePath('/blog/admin/posts')
 
     return toFormState('SUCCESS', 'Post został utworzony pomyślnie!')
   } catch (error) {
@@ -224,6 +225,7 @@ export async function updateBlogPostAction(
     // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
+    revalidatePath('/blog/admin/posts')
     if (updatedPost) {
       revalidatePath(`/blog/${updatedPost.slug}`)
     }
@@ -264,6 +266,7 @@ export async function deleteBlogPostAction(
     // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
+    revalidatePath('/blog/admin/posts')
 
     return toFormState('SUCCESS', 'Post został usunięty pomyślnie!')
   } catch (error) {
