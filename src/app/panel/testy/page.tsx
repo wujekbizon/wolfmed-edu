@@ -15,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const categoryKeywords = categories.flatMap(([_, meta]) => meta.keywords).join(", ")
 
   return {
-    title: `Oferujemy testy sprawdzające dla wszystich kategorii: ${categoryKeys}`,
+    title: `Oferujemy testy sprawdzające dla wszystkich kategorii: ${categoryKeys}`,
     description: `Przeglądaj bazę testów obejmującą kategorie: ${categoryKeys}. ${categoryDescriptions}`,
     keywords: categoryKeywords,
   }
@@ -30,7 +30,7 @@ async function TestsCategories() {
   // Pass userId if supporter, to merge official + custom tests
   const populatedCategories = await getPopulatedCategories(
     fileData,
-    isSupporter ? userId : undefined
+    isSupporter ? (userId || undefined) : undefined
   )
   return <TestsCategoriesList categories={populatedCategories} />
 }

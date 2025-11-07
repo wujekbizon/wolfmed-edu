@@ -14,11 +14,12 @@ export const metadata: Metadata = {
 
 export default async function SelectedQuestionsPage() {
   const { userId } = await auth()
+
   const isSupporter = userId ? await getSupporterByUserId(userId) : false
 
   // Merge tests if supporter, otherwise only official
   const tests = isSupporter
-    ? await fileData.mergedGetAllTests(userId)
+    ? await fileData.mergedGetAllTests(userId || "")
     : await fileData.getAllTests()
 
   if (!tests || tests.length === 0) {

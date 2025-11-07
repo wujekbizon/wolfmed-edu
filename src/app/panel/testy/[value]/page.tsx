@@ -28,7 +28,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
 
   // Merge tests if supporter, otherwise only official
   const categoryTests = isSupporter
-    ? await fileData.mergedGetTestsByCategory(decodeURIComponent(category), userId)
+    ? await fileData.mergedGetTestsByCategory(decodeURIComponent(category), userId || "")
     : await fileData.getTestsByCategory(decodeURIComponent(category))
 
   const sessionDetails = await getTestSessionDetails(sessionId);
