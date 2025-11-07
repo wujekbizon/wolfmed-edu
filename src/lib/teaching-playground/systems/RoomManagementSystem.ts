@@ -214,4 +214,51 @@ export default class RoomManagementSystem {
       );
     }
   }
+
+  /**
+   * Clears all participants from a room.
+   * Used when a lecture ends to reset room state.
+   */
+  async clearAllParticipants(roomId: string): Promise<void> {
+    try {
+      console.log(`Clearing all participants from room ${roomId}`);
+      const room = await this.getRoom(roomId);
+
+      if (room.participants.length === 0) {
+        console.log(`Room ${roomId} already has no participants`);
+        return;
+      }
+
+      // Update the room with empty participants array
+      const updatedRoom = await this.db.update(
+        "rooms",
+        { id: roomId },
+        {
+          participants: [],
+          updatedAt: new Date().toISOString(),
+        }
+      );
+
+      if (!updatedRoom) {
+        throw new SystemError(
+          "PARTICIPANTS_CLEAR_FAILED",
+          "Failed to clear participants from room"
+        );
+      }
+
+      // Emit event to notify all connected clients that the room is being cleared
+      this.commsSystem.emit("room_cleared", { roomId });
+
+      console.log(
+        `Successfully cleared ${room.participants.length} participants from room ${roomId}`
+      );
+    } catch (error) {
+      console.error(`Failed to clear participants from room ${roomId}:`, error);
+      throw new SystemError(
+        "PARTICIPANTS_CLEAR_FAILED",
+        "Failed to clear participants",
+        error
+      );
+    }
+  }
 }

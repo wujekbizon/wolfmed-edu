@@ -15,6 +15,9 @@ export default class TeachingPlayground {
     this.roomSystem = new RoomManagementSystem(config.roomConfig);
     this.commsSystem = new RealTimeCommunicationSystem(config.commsConfig);
     this.eventSystem = new EventManagementSystem(config.eventConfig);
+
+    // Wire up the event system with room system for cleanup operations
+    this.eventSystem.setRoomSystem(this.roomSystem);
   }
 
   setCurrentUser(user: User | null): void {

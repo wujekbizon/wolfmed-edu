@@ -259,7 +259,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         connection.on('stream_status_change', async ({ isStreaming, userId, username }) => {
           if (!mountedRef.current) return;
           console.log(`Stream status changed for ${username} (${userId}): ${isStreaming ? 'streaming' : 'not streaming'}`);
-          
+
           if (playground) {
             try {
               await playground.roomSystem.updateParticipantStreamingStatus(roomId, userId, isStreaming);
@@ -268,6 +268,27 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
               console.error('Failed to update streaming status in database:', error);
             }
           }
+        });
+
+        connection.on('room_cleared', ({ roomId: clearedRoomId }: { roomId: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`Room ${clearedRoomId} has been cleared (lecture ended)`);
+
+          // Update state to show system message
+          setState(prev => ({
+            ...prev,
+            systemMessage: 'This lecture has ended. The room has been cleared.',
+            participants: [],
+            messages: []
+          }));
+
+          // Disconnect after a short delay to allow user to see the message
+          setTimeout(() => {
+            if (connectionRef.current && mountedRef.current) {
+              console.log('Disconnecting due to room cleared event');
+              connectionRef.current.disconnect();
+            }
+          }, 2000);
         });
 
         await connection.connect();

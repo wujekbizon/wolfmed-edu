@@ -1,11 +1,20 @@
 import { JsonDatabase } from "../db/JsonDatabase";
 import { ErrorCode, EventConfig, Lecture, SystemError } from "../interfaces";
+import RoomManagementSystem from "./RoomManagementSystem";
 
 export default class EventManagementSystem {
   private db: JsonDatabase
+  private roomSystem?: RoomManagementSystem
 
   constructor(private config?: EventConfig) {
     this.db = JsonDatabase.getInstance()
+  }
+
+  /**
+   * Set the room management system for handling room cleanup
+   */
+  setRoomSystem(roomSystem: RoomManagementSystem): void {
+    this.roomSystem = roomSystem
   }
 
   async updateEventStatus(eventId: string, newStatus: Lecture['status']): Promise<Lecture> {
@@ -50,17 +59,28 @@ export default class EventManagementSystem {
         } else if (newStatus === 'completed' || newStatus === 'cancelled') {
           roomStatus = 'available'
         }
-        
+
         // Update room status and lecture reference
         await this.db.update('rooms', { id: event.roomId }, {
           status: roomStatus,
-          currentLecture: newStatus === 'completed' || newStatus === 'cancelled' 
-            ? undefined 
+          currentLecture: newStatus === 'completed' || newStatus === 'cancelled'
+            ? undefined
             : { ...room.currentLecture, status: newStatus },
           updatedAt: new Date().toISOString()
         })
-        
+
         console.log(`Room ${event.roomId} status updated to ${roomStatus} after lecture status change to ${newStatus}`)
+
+        // Clear all participants when lecture ends
+        if ((newStatus === 'completed' || newStatus === 'cancelled') && this.roomSystem) {
+          try {
+            await this.roomSystem.clearAllParticipants(event.roomId)
+            console.log(`Cleared all participants from room ${event.roomId} after lecture ended`)
+          } catch (error) {
+            console.error(`Failed to clear participants from room ${event.roomId}:`, error)
+            // Don't throw - the lecture status update succeeded, participant cleanup is secondary
+          }
+        }
       }
 
       return updated
