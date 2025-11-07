@@ -20,8 +20,9 @@
 import { startWebSocketServer } from '@teaching-playground/core/dist/server.js';
 import * as dotenv from 'dotenv';
 
-// Load environment variables
+// Load environment variables - try .env.local first, then .env
 dotenv.config({ path: '.env.local' });
+dotenv.config({ path: '.env' });
 
 const PORT = parseInt(process.env.WS_PORT || '3001', 10);
 
