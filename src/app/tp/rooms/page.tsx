@@ -1,10 +1,10 @@
 import { Suspense } from 'react'
-import { fileData } from '@/server/fetchData'
+import { getRooms } from '@/actions/teachingPlayground'
 import { RoomList } from '../components/RoomList'
 import { RoomsLoadingState } from '../components/RoomsLoadingState'
 
 async function RoomListContainer() {
-  const rooms = await fileData.getAllRooms()
+  const rooms = await getRooms()
   return <RoomList rooms={rooms} />
 }
 

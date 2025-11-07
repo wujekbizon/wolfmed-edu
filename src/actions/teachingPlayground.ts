@@ -260,3 +260,38 @@ export async function getLectures(): Promise<Lecture[]> {
   }
 }
 
+// Server action to get all rooms
+export async function getRooms() {
+  try {
+    const rooms = await db.find('rooms', {})
+    return rooms
+  } catch (error) {
+    console.error('Failed to fetch rooms:', error)
+    return []
+  }
+}
+
+// Server action to get room by ID
+export async function getRoomById(roomId: string) {
+  try {
+    const room = await db.findOne('rooms', { id: roomId })
+    if (!room) return null
+
+    // If room has a current lecture, fetch the full lecture data
+    if (room.currentLecture) {
+      const lecture = await db.findOne('events', { id: room.currentLecture.id })
+      if (lecture) {
+        return {
+          ...room,
+          currentLecture: lecture
+        }
+      }
+    }
+
+    return room
+  } catch (error) {
+    console.error('Failed to fetch room:', error)
+    return null
+  }
+}
+

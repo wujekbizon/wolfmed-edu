@@ -1,11 +1,10 @@
 import { Suspense } from 'react'
-import { fileData } from '@/server/fetchData'
+import { getRoomById } from '@/actions/teachingPlayground'
 import { RoomLoadingState } from '../../components/RoomLoadingState'
 import RoomView from '../../components/RoomView'
 
 async function RoomContainer({ roomId }: { roomId: string }) {
-  const rooms = await fileData.getAllRooms()
-  const room = rooms.find(r => r.id === roomId)
+  const room = await getRoomById(roomId)
   
   if (!room) {
     return (
