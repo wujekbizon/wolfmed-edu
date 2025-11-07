@@ -1,39 +1,65 @@
 ## Wolfmed
 
-## Development with teaching-playground-core
+Educational platform for medical training with integrated virtual classroom (Teaching Playground).
 
-This project uses `@teaching-playground/core` package which can be used in two modes: local development and npm version.
+## Quick Start
 
-### Local Development Mode
+### 1. Install Dependencies
 
-When you want to make changes to the core package and test them immediately:
-
-1. Switch to local version:
 ```bash
-pnpm core:local
+pnpm install
 ```
 
-2. Start the main project in one terminal:
+### 2. Configure Environment
+
+Copy `.env.local.example` to `.env.local` (or use the existing `.env.local`) and configure:
+
+```env
+NEXT_PUBLIC_WS_URL=http://localhost:3001
+WS_PORT=3001
+# ... other variables
+```
+
+### 3. Run the Application
+
+**Option A: Two Terminals (Recommended)**
+
+Terminal 1 - Frontend:
 ```bash
 pnpm dev
 ```
 
-3. Start the core package in watch mode in another terminal:
+Terminal 2 - WebSocket Server:
 ```bash
-pnpm core:dev
+pnpm ws-server
 ```
 
-Now any changes you make to the core package will be automatically recompiled and reflected in the main project.
+**Option B: Separate Processes**
 
-### Using the NPM Version
+The WebSocket server runs independently from the Next.js app. This allows you to:
+- Restart frontend without affecting active classroom sessions
+- Scale WebSocket server separately
+- Monitor each service independently
 
-When you want to use the published version from npm:
+### 4. Access the Application
 
-```bash
-pnpm core:npm
-```
+- **Main App:** http://localhost:3000
+- **Teaching Playground:** http://localhost:3000/tp
+- **WebSocket Server:** ws://localhost:3001
 
-This will install the latest version from npm.
+## Teaching Playground
+
+The Teaching Playground is a virtual classroom system enabling:
+- Live video/audio streaming
+- Real-time chat
+- Room management
+- Lecture scheduling
+
+📖 **Full Documentation:** [docs/TEACHING_PLAYGROUND.md](docs/TEACHING_PLAYGROUND.md)
+
+## Development with @teaching-playground/core
+
+This project uses `@teaching-playground/core` package published on npm.
 
 ### Publishing Changes to NPM
 
@@ -62,16 +88,43 @@ pnpm core:npm
 
 ### Available Scripts
 
-- `pnpm core:local` - Switch to local version of the core package
-- `pnpm core:npm` - Switch to the npm version of the core package
-- `pnpm core:dev` - Start the core package in development (watch) mode
+**Main Application:**
+- `pnpm dev` - Start Next.js development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint
+
+**Teaching Playground:**
+- `pnpm ws-server` - Start WebSocket server for Teaching Playground
+
+**Database:**
+- `pnpm db:push` - Push database schema changes
+- `pnpm db:studio` - Open Drizzle Studio
 
 ### Project Structure
 
 ```
-root/
-├── wolfmed/               # Main project
-└── teaching-playground-core/  # Core package
+wolfmed-edu/
+├── src/
+│   ├── app/
+│   │   ├── tp/                 # Teaching Playground routes
+│   │   │   ├── page.tsx        # TP dashboard
+│   │   │   ├── components/     # TP components
+│   │   │   └── rooms/          # Virtual classrooms
+│   ├── actions/
+│   │   └── teachingPlayground.ts  # Server actions
+│   ├── hooks/
+│   │   └── useRoomConnection.ts   # Room connection hook
+│   ├── lib/
+│   │   └── teaching-playground/   # Local implementations
+│   └── store/
+│       └── usePlaygroundStore.ts  # State management
+├── scripts/
+│   └── start-ws-server.ts      # WebSocket server
+├── docs/
+│   └── TEACHING_PLAYGROUND.md  # Full TP documentation
+└── data/
+    └── test-data.json          # Test data
 ```
 
 ### Troubleshooting
