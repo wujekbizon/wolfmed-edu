@@ -24,6 +24,7 @@ export function FloatingShapes({ count }: { count?: number }) {
           height={shape.height}
           left={shape.left}
           top={shape.top}
+          color={shape.color ?? 'bg-white'}
           duration={shape.duration}
         />
       ))}

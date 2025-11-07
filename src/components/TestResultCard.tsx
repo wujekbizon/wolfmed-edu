@@ -59,7 +59,7 @@ export default async function TestResultCard({ completedTest }: { completedTest:
 
       <Link
         className="bg-zinc-300 py-2 px-4 w-full sm:w-52 text-center rounded-md mt-4 hover:bg-zinc-300/70 "
-        href="/testy-opiekun/wyniki"
+        href="/panel/wyniki"
       >
         Powrót
       </Link>

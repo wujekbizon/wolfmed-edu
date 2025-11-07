@@ -1,7 +1,7 @@
 export default function SupporterStatusSkeleton() {
   return (
     <div
-      className="bg-gradient-to-r from-[#ff9898]/10 to-rose-100/10 backdrop-blur-sm 
+      className="bg-linear-to-r from-[#ff9898]/10 to-rose-100/10 backdrop-blur-sm 
       border border-[#ff9898]/20 px-4 py-3 rounded-lg shadow-sm"
     >
       <div className="flex items-center gap-3">

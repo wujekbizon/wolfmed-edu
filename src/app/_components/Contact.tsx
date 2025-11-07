@@ -2,7 +2,7 @@ import ContactForm from './ContactForm'
 
 export default async function Contact() {
   return (
-    <section id="contact" className="w-full bg-gradient-to-b from-[#0d0b0b] to-zinc-900 pt-16 sm:pt-24 pb-20 sm:pb-20">
+    <section id="contact" className="w-full bg-linear-to-b from-[#0d0b0b] to-zinc-900 pt-16 sm:pt-24 pb-20 sm:pb-20">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">

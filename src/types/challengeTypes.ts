@@ -71,7 +71,7 @@ export interface VisualRecognitionChallenge {
   correctAnswer: number
 }
 
-// Spot error types
+// Error categories for spot-the-error challenge
 export enum ErrorCategory {
   SAFETY = 'safety',           // Safety violations (hygiene, patient ID)
   SEQUENCE = 'sequence',       // Wrong order or timing
@@ -96,6 +96,7 @@ export const ERROR_CATEGORY_COLORS: Record<ErrorCategory, { bg: string; border: 
   [ErrorCategory.MEASUREMENT]: { bg: 'bg-blue-50', border: 'border-blue-400', text: 'text-blue-700' },
 }
 
+// Spot error types
 export interface SpotErrorChallenge {
   procedureId: string
   procedureName: string

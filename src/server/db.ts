@@ -2,13 +2,23 @@ import 'server-only'
 import { UserData } from '@/types/dataTypes'
 import { db } from '@/server/db/index'
 import { eq } from 'drizzle-orm'
-import { payments, processedEvents, subscriptions, users } from './db/schema'
+import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
 import { revalidateTag } from 'next/dist/server/web/spec-extension/revalidate'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
-    await db.insert(users).values(userData)
+    await db.transaction(async (tx) => {
+      // Insert user
+      await tx.insert(users).values(userData)
+
+      // Create userLimits with default values (20MB)
+      await tx.insert(userLimits).values({
+        userId: userData.userId,
+        storageLimit: 20_000_000, // 20MB in bytes
+        storageUsed: 0,
+      })
+    })
   } catch (error) {
     console.error('Error inserting users:', error)
     // Ensure the error is actually an Error object before re-throwing
@@ -94,7 +104,7 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
         eventId,
         userId: id,
       })
-      revalidateTag('supporter')
+      revalidateTag('supporter', 'max')
     })
 
     console.log(`User with ID: ${id} is now a supporter.`)
@@ -127,7 +137,7 @@ export async function insertSubscription({
       invoiceId,
       paymentStatus,
       subscriptionId,
-      createdAt: new Date(createdAt * 1000),
+      createdAt: createdAt,
     })
     console.log(`Subscription for user ${userId} inserted successfully.`)
   } catch (error) {
@@ -151,7 +161,7 @@ export async function insertPayment({
       currency,
       customerEmail,
       paymentStatus,
-      createdAt: new Date(createdAt * 1000),
+      createdAt: createdAt,
     })
   } catch (error) {
     console.error(`Failed to insert payment for user ${userId}:`, error)

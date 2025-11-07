@@ -34,7 +34,7 @@ export default function CustomCategoryManager({ questions }: Props) {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 min-h-[calc(100vh_-_64px)]">
+    <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 min-h-[calc(100vh-64px)]">
       <CategoriesPanel questions={questions} />
       <QuestionsPanel
         questions={currentQuestions}

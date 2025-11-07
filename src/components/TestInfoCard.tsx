@@ -4,7 +4,7 @@ import InfoCardAuthStatus from './InfoCardAuthStatus'
 
 export default function TestInfoCard({ card }: { card: TestCardContent }) {
   return (
-    <div className="flex h-[450px] sm:h-[500px] flex-col w-full sm:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 hover:border-red-900/20">
+    <div className="flex h-[450px] sm:h-[500px] flex-col w-full lg:max-w-sm overflow-hidden rounded-2xl bg-zinc-900 transition-all border border-zinc-800 shadow-lg hover:shadow-xl hover:shadow-red-900/10 hover:border-red-900/20">
       {/* Card Image */}
       <div className="relative h-40 sm:h-48 w-full overflow-hidden rounded-t-2xl">
         <Image
@@ -15,7 +15,7 @@ export default function TestInfoCard({ card }: { card: TestCardContent }) {
           className="h-full w-full object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/40 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-zinc-900/40 to-transparent" />
         <span className="absolute left-3 sm:left-4 top-3 sm:top-4 rounded-full bg-red-100/90 px-2.5 sm:px-3 py-1 text-xs font-medium text-red-900 backdrop-blur-sm">
           {card.category}
         </span>

@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 export default function Footer() {
   return (
-    <footer className="bg-zinc-100 text-zinc-800 flex w-full h-full justify-center rounded-br-3xl lg:rounded-br-[50px] rounded-bl-3xl lg:rounded-bl-[50px]">
+    <footer className="bg-zinc-100 text-zinc-800 flex w-full h-full justify-center">
       <div className="container px-4 py-12">
         {/* Logo and tagline */}
         <div className="flex items-center justify-center mb-8 gap-3 flex-col sm:flex-row ">
@@ -92,7 +92,7 @@ export default function Footer() {
 
         {/* Copyright and attribution */}
         <div className="border-t border-zinc-200 pt-8 mt-8 text-sm text-center">
-          <p>© 2024 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
+          <p>© 2025 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
           <Link href="https://wesa.vercel.app/" target="_blank" className="hover:text-red-500 transition-colors ">
             Designed by <span className="font-bold">WESA</span>
           </Link>

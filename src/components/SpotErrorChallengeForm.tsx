@@ -8,23 +8,26 @@ import SubmitButton from '@/components/SubmitButton'
 import { submitSpotErrorAction } from '@/actions/challenges'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { generateSpotErrorChallenge } from '@/helpers/challengeGenerator'
 import type { Procedure } from '@/types/dataTypes'
+import type { SpotErrorChallenge } from '@/types/challengeTypes'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 import { ERROR_CATEGORY_LABELS, ERROR_CATEGORY_COLORS } from '@/types/challengeTypes'
 
 interface Props {
   procedure: Procedure
+  challenge: SpotErrorChallenge
 }
 
-export default function SpotErrorChallengeForm({ procedure }: Props) {
+export default function SpotErrorChallengeForm({ procedure, challenge }: Props) {
   const router = useRouter()
   const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
   const [state, action] = useActionState(submitSpotErrorAction, EMPTY_FORM_STATE)
   const [selectedErrors, setSelectedErrors] = useState<Set<string>>(new Set())
   const [startTime] = useState(Date.now())
-  const [challenge] = useState(() => generateSpotErrorChallenge(procedure))
   const noScriptFallback = useToastMessage(state)
+
+  // Extract actual error IDs from challenge (server-generated)
+  const actualErrorIds = challenge.steps.filter(step => !step.isCorrect).map(step => step.id)
 
   const timeSpent = Math.floor((Date.now() - startTime) / 1000)
 
@@ -45,7 +48,7 @@ export default function SpotErrorChallengeForm({ procedure }: Props) {
     if (state.status === 'SUCCESS') {
       const timer = setTimeout(() => {
         router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
-      }, 1500)
+      }, 500)
       return () => clearTimeout(timer)
     }
   }, [state.status, procedure.id])
@@ -109,6 +112,7 @@ export default function SpotErrorChallengeForm({ procedure }: Props) {
           <input type="hidden" name="procedureId" value={procedure.id} />
           <input type="hidden" name="procedureName" value={procedure.data.name} />
           <input type="hidden" name="selectedErrors" value={JSON.stringify(Array.from(selectedErrors))} />
+          <input type="hidden" name="actualErrors" value={JSON.stringify(actualErrorIds)} />
           <input type="hidden" name="timeSpent" value={timeSpent} />
 
           {/* Steps List */}

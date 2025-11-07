@@ -20,21 +20,19 @@ export default function Navbar() {
     <>
       {isMenuOpen && <SideMenu />}
       <header
-        className={`${
-          pathname === '/' ? 'bg-white' : 'bg-zinc-500'
-        } h-16 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2.5 sm:pt-4 animate-slideInDown opacity-0 [--slidein-delay:100ms] transition-all duration-300
+        className={`${pathname.includes("panel") ? "bg-zinc-800" : "bg-white"} h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
-            (pathname === '/' || pathname === '/forum') && isScrolled
+            pathname && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
-              : 'rounded-tr-[20px] lg:rounded-tr-[47px] rounded-tl-[20px] lg:rounded-tl-[47px]'
+              : ''
           }`}
       >
-        {pathname === '/' && <GradientOverlay />}
+        {(pathname === '/' || pathname.includes('/kierunki/')) && <GradientOverlay />}
 
         <SignedIn>
           <MenuIcon onClick={toggleMenu} />
         </SignedIn>
-        <Logo className={pathname === '/' ? 'bg-white' : 'bg-[#ffb1b1]'} />
+        <Logo className="bg-white" />
         <SignedIn>
           <nav className="bg-white/90 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full border border-red-200/40 shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => (
@@ -43,25 +41,26 @@ export default function Navbar() {
                 key={link.id}
                 className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
                   ${
-                    pathname === link.linkUrl
-                      ? 'bg-gradient-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
-                      : 'hover:bg-red-100/50'
+                    pathname === link.linkUrl 
+                    ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
+                    : 'hover:bg-red-100/50'
                   }`}
-              >
+                // title={link.title}
+                  >
                 <span
                   className={`transition-transform duration-200 ${
                     pathname === link.linkUrl ? 'scale-105' : 'group-hover:scale-105'
                   }`}
-                >
+                  >
                   {link.icon}
                 </span>
                 <span
                   className={`text-sm font-medium text-zinc-900 ${pathname === link.linkUrl ? 'font-semibold' : ''}`}
-                >
+                  >
                   {link.label}
                 </span>
                 {pathname === link.linkUrl && (
-                  <span className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
+                  <span className="absolute inset-0 rounded-full bg-linear-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
                 )}
               </Link>
             ))}

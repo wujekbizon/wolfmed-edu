@@ -1,3 +1,5 @@
+'use server'
+
 import type { Procedure } from '@/types/dataTypes'
 import type {
   QuizChallenge,
@@ -11,7 +13,7 @@ import { ErrorCategory } from '@/types/challengeTypes'
 /**
  * Generate quiz questions from procedure algorithm steps with diverse question types
  */
-export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
+export async function generateQuizChallenge(procedure: Procedure): Promise<QuizChallenge> {
   const algorithm = procedure.data.algorithm
   const questions: QuizQuestion[] = []
 
@@ -147,7 +149,7 @@ export function generateQuizChallenge(procedure: Procedure): QuizChallenge {
 /**
  * Generate visual recognition challenge
  */
-export function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): VisualRecognitionChallenge {
+export async function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): Promise<VisualRecognitionChallenge> {
   // Filter out the current procedure to get distractors
   const otherProcedures = allProcedures.filter(p => p.id !== procedure.id)
 
@@ -174,7 +176,7 @@ export function generateVisualRecognitionChallenge(procedure: Procedure, allProc
 /**
  * Generate spot the error challenge with categorized errors
  */
-export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChallenge {
+export async function generateSpotErrorChallenge(procedure: Procedure): Promise<SpotErrorChallenge> {
   const algorithm = procedure.data.algorithm
   const steps: Array<{
     id: string
@@ -215,7 +217,7 @@ export function generateSpotErrorChallenge(procedure: Procedure): SpotErrorChall
 /**
  * Generate scenario-based challenge with realistic clinical situations
  */
-export function generateScenarioChallenge(procedure: Procedure): ScenarioChallenge {
+export async function generateScenarioChallenge(procedure: Procedure): Promise<ScenarioChallenge> {
   const algorithm = procedure.data.algorithm
 
   // Scenario templates for variety and realism
