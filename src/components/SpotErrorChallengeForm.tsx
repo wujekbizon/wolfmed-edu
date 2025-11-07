@@ -11,6 +11,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import type { Procedure } from '@/types/dataTypes'
 import type { SpotErrorChallenge } from '@/types/challengeTypes'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
+import { ERROR_CATEGORY_LABELS, ERROR_CATEGORY_COLORS } from '@/types/challengeTypes'
 
 interface Props {
   procedure: Procedure
@@ -61,9 +62,37 @@ export default function SpotErrorChallengeForm({ procedure, challenge }: Props) 
         <h3 className="text-lg font-medium mb-3 text-zinc-700">{procedure.data.name}</h3>
 
         {/* Instructions */}
-        <p className="text-sm text-zinc-600 mb-6 flex items-center gap-2">
-          Zaznacz wszystkie kroki, które zawierają błędy
-        </p>
+        <div className="bg-blue-50 border-l-4 border-blue-400 rounded-r-lg p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-blue-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="text-sm font-medium text-blue-900 mb-1">
+                Zaznacz wszystkie kroki, które zawierają błędy
+              </p>
+              <p className="text-xs text-blue-700">
+                Przeanalizuj każdy krok uważnie. Procedura może zawierać błędy dotyczące bezpieczeństwa, kolejności, techniki wykonania lub pomiarów.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Error Categories Legend */}
+        <div className="mb-6 p-4 bg-zinc-50 rounded-lg border border-zinc-200">
+          <h4 className="text-sm font-semibold text-zinc-700 mb-3">Kategorie błędów:</h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+            {Object.entries(ERROR_CATEGORY_LABELS).map(([key, label]) => {
+              const colors = ERROR_CATEGORY_COLORS[key as keyof typeof ERROR_CATEGORY_COLORS]
+              return (
+                <div key={key} className={`flex items-center gap-2 px-3 py-2 rounded-md border ${colors?.border} ${colors?.bg}`}>
+                  <div className={`w-2 h-2 rounded-full ${colors?.bg} ${colors?.border} border-2`} />
+                  <span className={`text-xs font-medium ${colors?.text}`}>{label}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
 
         {/* Error Counter Badge */}
         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium mb-6 transition-all duration-200 ${
