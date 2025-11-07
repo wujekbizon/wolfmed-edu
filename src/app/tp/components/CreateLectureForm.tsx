@@ -4,10 +4,10 @@ import { useActionState, useEffect } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { createLecture } from '@/actions/teachingPlayground'
 import FieldError from '@/components/FieldError'
-import Label from '@/components/Label'
+import Label from '@/components/ui/Label'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 import { useToastMessage } from '@/hooks/useToastMessage'
-import Input from '@/components/Input'
+import Input from '@/components/ui/Input'
 
 export default function CreateLectureForm() {
   const [state, action] = useActionState(createLecture, EMPTY_FORM_STATE)
