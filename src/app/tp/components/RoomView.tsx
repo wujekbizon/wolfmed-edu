@@ -14,15 +14,28 @@ interface RoomViewProps {
 }
 
 export default function RoomView({ room }: RoomViewProps) {
-  
-  const {username, user } = usePlaygroundStore()
+
+  const { user } = usePlaygroundStore()
   const router = useRouter()
-  
-  const newUser: User = {
-    id: user?.role === 'teacher' ? 'teacher_123' : 'student_123',
-    username: username || 'Anonymous',
-    role: user?.role as 'teacher' | 'student' || 'student',
-    status: 'online'
+
+  // Use actual user from store (initialized by PlaygroundInitializer)
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <p className="text-zinc-400">Loading user data...</p>
+        </div>
+      </div>
+    )
+  }
+
+  const roomUser: User = {
+    id: user.id,
+    username: user.username,
+    role: user.role,
+    status: 'online',
+    email: user.email,
+    displayName: user.displayName
   }
 
   const {
@@ -35,7 +48,7 @@ export default function RoomView({ room }: RoomViewProps) {
     exitRoom
   } = useRoomConnection({
     roomId: room.id,
-    user: newUser,
+    user: roomUser,
     serverUrl: process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:3001'
   })
 
