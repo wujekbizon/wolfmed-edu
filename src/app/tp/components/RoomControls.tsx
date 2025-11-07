@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Room } from '@teaching-playground/core'
+import type { Room } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface RoomControlsProps {

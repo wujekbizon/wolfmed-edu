@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
-import { Room, RoomParticipant, User } from '@teaching-playground/core'
+import type { Room, RoomParticipant, User } from '@teaching-playground/core'
 import { useRoomConnection } from '@/hooks/useRoomConnection'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 import RoomControls from './RoomControls'

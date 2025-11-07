@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Room } from '@teaching-playground/core'
+import type { Room } from '@teaching-playground/core'
 
 interface RoomStreamProps {
   room: Room

@@ -1,4 +1,4 @@
-import { Lecture } from '@teaching-playground/core'
+import type { Lecture } from '@teaching-playground/core'
 import clsx from 'clsx'
 
 interface LectureCardProps {

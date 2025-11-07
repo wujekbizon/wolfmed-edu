@@ -1,7 +1,7 @@
 'use client'
 
 import { Room } from '@/types/room'
-import { Lecture } from '@teaching-playground/core'
+import type { Lecture } from '@teaching-playground/core'
 import { useRouter } from 'next/navigation'
 import clsx from 'clsx'
 

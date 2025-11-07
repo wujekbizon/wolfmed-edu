@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
     // ppr: 'incremental',
   },
+  serverComponentsExternalPackages: ['@teaching-playground/core', 'socket.io'],
   images: {
     remotePatterns: [
       {
@@ -25,12 +26,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config: any, { webpack }: any) => {
+  webpack: (config: any, { webpack, isServer }: any) => {
     config.experiments = { ...config.experiments, topLevelAwait: true }
     config.externals['node:fs'] = 'commonjs node:fs'
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
+      path: false,
     }
     config.cache = {
       type: 'memory',
@@ -40,6 +42,16 @@ const nextConfig: NextConfig = {
         resource.request = resource.request.replace(/^node:/, '')
       })
     )
+
+    // Replace JsonDatabase with empty module on client side
+    if (!isServer) {
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /JsonDatabase/,
+          require.resolve('./src/lib/emptyModule.js')
+        )
+      )
+    }
 
     return config
   },

@@ -1,7 +1,7 @@
 'use client'
 
 import clsx from 'clsx'
-import { Lecture } from '@teaching-playground/core'
+import type { Lecture } from '@teaching-playground/core'
 
 export type LectureFilterType = 'all' | 'scheduled' | 'in-progress' | 'completed' | 'cancelled'
 

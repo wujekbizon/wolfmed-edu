@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { RoomParticipant } from '@teaching-playground/core'
+import type { RoomParticipant } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface RoomParticipantsProps {

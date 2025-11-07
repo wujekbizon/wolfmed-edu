@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { RoomConnection, User } from '@teaching-playground/core'
+import { RoomConnection } from '@teaching-playground/core/dist/services/RoomConnection'
+import type { User } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface UseRoomConnectionOptions {

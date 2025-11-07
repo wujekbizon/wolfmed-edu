@@ -512,3 +512,28 @@ export type UpdateBlogTagInput = z.infer<typeof UpdateBlogTagSchema>;
 export type DeleteBlogTagInput = z.infer<typeof DeleteBlogTagSchema>;
 export type LikeBlogPostInput = z.infer<typeof LikeBlogPostSchema>;
 export type UnlikeBlogPostInput = z.infer<typeof UnlikeBlogPostSchema>;
+
+// Teaching Playground Lecture schemas
+export const CreateLectureSchema = z.object({
+  name: z
+    .string()
+    .min(3, 'Nazwa wykładu musi mieć co najmniej 3 znaki')
+    .max(200, 'Nazwa wykładu nie może przekraczać 200 znaków'),
+  date: z.string().min(1, 'Data jest wymagana'),
+  roomId: z.string().min(1, 'ID pokoju jest wymagane'),
+  description: z
+    .string()
+    .min(10, 'Opis musi mieć co najmniej 10 znaków')
+    .max(1000, 'Opis nie może przekraczać 1000 znaków'),
+  maxParticipants: z.coerce
+    .number()
+    .min(1, 'Minimalna liczba uczestników to 1')
+    .max(100, 'Maksymalna liczba uczestników to 100'),
+});
+
+export const UpdateLectureSchema = CreateLectureSchema.partial().extend({
+  lectureId: z.string().min(1, 'ID wykładu jest wymagane'),
+});
+
+export type CreateLectureInput = z.infer<typeof CreateLectureSchema>;
+export type UpdateLectureInput = z.infer<typeof UpdateLectureSchema>;

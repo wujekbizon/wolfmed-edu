@@ -44,3 +44,19 @@ export function formatLectureDate(dateString: string) {
     minute: '2-digit',
   })
 }
+
+export function formatDaysAgo(dateString: string): string {
+  const now = new Date()
+  const date = new Date(dateString)
+  const diffMs = now.getTime() - date.getTime()
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  const diffWeeks = Math.floor(diffDays / 7)
+  const diffMonths = Math.floor(diffDays / 30)
+
+  if (diffDays === 0) return 'dzisiaj'
+  else if (diffDays === 1) return 'wczoraj'
+  else if (diffDays < 7) return `${diffDays} dni temu`
+  else if (diffWeeks < 4) return `${diffWeeks} ${diffWeeks === 1 ? 'tydzień' : 'tygodnie'} temu`
+  else if (diffMonths < 12) return `${diffMonths} ${diffMonths === 1 ? 'miesiąc' : 'miesięcy'} temu`
+  else return date.toLocaleDateString('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' })
+}

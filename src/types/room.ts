@@ -1,4 +1,4 @@
-import { Room as CoreRoom } from '@teaching-playground/core'
+import type { Room as CoreRoom } from '@teaching-playground/core'
 
 export type Room = CoreRoom
 
