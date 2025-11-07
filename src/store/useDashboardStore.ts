@@ -7,9 +7,11 @@ interface DashboardState {
   isDeleteModalOpen: boolean
   noteIdToDelete: string | null
   materialIdToDelete: string | null
+  postIdToDelete: string | null
   setIsSupporter: (isSupporter: boolean) => void
   openDeleteModal: (noteId: string | null) => void
   openDeleteMaterialModal: (materialId: string | null) => void
+  openDeletePostModal: (postId: string | null) => void
   closeDeleteModal: () => void
 }
 
@@ -20,8 +22,10 @@ export const useDashboardStore = create<DashboardState>((set) => ({
   isDeleteModalOpen: false,
   noteIdToDelete: null,
   materialIdToDelete: null,
+  postIdToDelete: null,
   setIsSupporter: (isSupporter: boolean) => set({ isSupporter }),
   openDeleteModal: (noteId: string | null) => set(() => ({ isDeleteModalOpen: true, noteIdToDelete: noteId })),
   openDeleteMaterialModal: (materialId: string | null) => set(() => ({ isDeleteModalOpen: true, materialIdToDelete: materialId })),
-  closeDeleteModal: () => set(() => ({ isDeleteModalOpen: false, noteIdToDelete: null, materialIdToDelete: null })),
+  openDeletePostModal: (postId: string | null) => set(() => ({ isDeleteModalOpen: true, postIdToDelete: postId })),
+  closeDeleteModal: () => set(() => ({ isDeleteModalOpen: false, noteIdToDelete: null, materialIdToDelete: null, postIdToDelete: null })),
 }))

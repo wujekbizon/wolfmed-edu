@@ -124,15 +124,129 @@ export const customersMessages = createTable("messages", {
   updatedAt: timestamp("updatedAt"),
 })
 
-export const blogPosts = createTable("blog_posts", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  title: varchar("title", { length: 256 }).notNull(),
-  date: varchar("date", { length: 64 }).notNull(),
-  excerpt: text("excerpt").notNull(),
-  content: text("content").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
+// Blog status enum
+export const blogStatusEnum = pgEnum('blog_status', [
+  'draft',
+  'published',
+  'archived',
+])
+
+// Blog categories table
+export const blogCategories = createTable(
+  'blog_categories',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: varchar('name', { length: 100 }).notNull().unique(),
+    slug: varchar('slug', { length: 100 }).notNull().unique(),
+    description: text('description'),
+    color: varchar('color', { length: 7 }).default('#ef4444'), // Red medical theme
+    icon: varchar('icon', { length: 50 }),
+    order: integer('order').default(0),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+  },
+  (table) => [
+    index('blog_categories_slug_idx').on(table.slug),
+  ]
+)
+
+// Blog tags table
+export const blogTags = createTable(
+  'blog_tags',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    name: varchar('name', { length: 50 }).notNull().unique(),
+    slug: varchar('slug', { length: 50 }).notNull().unique(),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+  },
+  (table) => [
+    index('blog_tags_slug_idx').on(table.slug),
+  ]
+)
+
+// Enhanced blog posts table
+export const blogPosts = createTable(
+  'blog_posts',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+
+    // Content fields
+    title: varchar('title', { length: 256 }).notNull(),
+    slug: varchar('slug', { length: 256 }).notNull().unique(),
+    excerpt: text('excerpt').notNull(),
+    content: text('content').notNull(), // MDX/Markdown content
+    coverImage: varchar('coverImage', { length: 512 }),
+
+    // Organization
+    categoryId: uuid('categoryId').references(() => blogCategories.id, {
+      onDelete: 'set null',
+    }),
+
+    // Metadata
+    authorId: varchar('authorId', { length: 256 }).notNull(),
+    authorName: varchar('authorName', { length: 256 }).notNull(),
+
+    // Publishing
+    status: blogStatusEnum('status').notNull().default('draft'),
+    publishedAt: timestamp('publishedAt'),
+
+    // SEO
+    metaTitle: varchar('metaTitle', { length: 256 }),
+    metaDescription: text('metaDescription'),
+    metaKeywords: text('metaKeywords'),
+
+    // Analytics
+    viewCount: integer('viewCount').default(0).notNull(),
+    readingTime: integer('readingTime'), // in minutes
+
+    // Legacy date field (for backward compatibility)
+    date: varchar('date', { length: 64 }),
+
+    // Timestamps
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+    updatedAt: timestamp('updatedAt').defaultNow().notNull(),
+  },
+  (table) => [
+    index('blog_posts_slug_idx').on(table.slug),
+    index('blog_posts_category_idx').on(table.categoryId),
+    index('blog_posts_author_idx').on(table.authorId),
+    index('blog_posts_status_idx').on(table.status),
+    index('blog_posts_published_at_idx').on(table.publishedAt),
+  ]
+)
+
+// Blog post tags (many-to-many relationship)
+export const blogPostTags = createTable(
+  'blog_post_tags',
+  {
+    postId: uuid('postId')
+      .notNull()
+      .references(() => blogPosts.id, { onDelete: 'cascade' }),
+    tagId: uuid('tagId')
+      .notNull()
+      .references(() => blogTags.id, { onDelete: 'cascade' }),
+  },
+  (table) => [
+    index('blog_post_tags_pk').on(table.postId, table.tagId),
+    index('blog_post_tags_post_idx').on(table.postId),
+    index('blog_post_tags_tag_idx').on(table.tagId),
+  ]
+)
+
+// Blog likes table
+export const blogLikes = createTable(
+  'blog_likes',
+  {
+    userId: varchar('userId', { length: 256 }).notNull(),
+    postId: uuid('postId')
+      .notNull()
+      .references(() => blogPosts.id, { onDelete: 'cascade' }),
+    createdAt: timestamp('createdAt').defaultNow().notNull(),
+  },
+  (table) => [
+    index('blog_likes_pk').on(table.userId, table.postId),
+    index('blog_likes_post_idx').on(table.postId),
+  ]
+)
 
 export const forumPosts = createTable(
   "forum_posts",
@@ -183,6 +297,42 @@ export const forumCommentsRelations = relations(forumComments, ({ one }) => ({
   post: one(forumPosts, {
     fields: [forumComments.postId],
     references: [forumPosts.id],
+  }),
+}))
+
+// Blog relations
+export const blogPostsRelations = relations(blogPosts, ({ one, many }) => ({
+  category: one(blogCategories, {
+    fields: [blogPosts.categoryId],
+    references: [blogCategories.id],
+  }),
+  tags: many(blogPostTags),
+  likes: many(blogLikes),
+}))
+
+export const blogCategoriesRelations = relations(blogCategories, ({ many }) => ({
+  posts: many(blogPosts),
+}))
+
+export const blogTagsRelations = relations(blogTags, ({ many }) => ({
+  posts: many(blogPostTags),
+}))
+
+export const blogPostTagsRelations = relations(blogPostTags, ({ one }) => ({
+  post: one(blogPosts, {
+    fields: [blogPostTags.postId],
+    references: [blogPosts.id],
+  }),
+  tag: one(blogTags, {
+    fields: [blogPostTags.tagId],
+    references: [blogTags.id],
+  }),
+}))
+
+export const blogLikesRelations = relations(blogLikes, ({ one }) => ({
+  post: one(blogPosts, {
+    fields: [blogLikes.postId],
+    references: [blogPosts.id],
   }),
 }))
 
