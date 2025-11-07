@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
+import { auth } from '@clerk/nextjs/server'
 import { fileData } from '@/server/fetchData'
+import { getSupporterByUserId } from '@/server/queries'
 import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
@@ -19,10 +21,17 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 async function TestsCategories() {
-  const populatedCategories = await getPopulatedCategories(fileData)
+  const { userId } = await auth()
+  const isSupporter = userId ? await getSupporterByUserId(userId) : false
+
+  // Pass userId if supporter, to merge official + custom tests
+  const populatedCategories = await getPopulatedCategories(
+    fileData,
+    isSupporter ? userId : undefined
+  )
   return <TestsCategoriesList categories={populatedCategories} />
 }
 

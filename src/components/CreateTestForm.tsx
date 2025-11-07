@@ -21,7 +21,7 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
 
   return (
     <form
-      className="flex w-full text-white flex-col rounded-lg border border-zinc-400 bg-zinc-900 px-4 py-6 lg:w-2/3"
+      className="flex w-full text-white flex-col rounded-lg border border-border/40 bg-zinc-800/50 backdrop-blur-sm px-4 py-6 lg:w-2/3"
       action={action}
     >
       <div className="flex w-full flex-col items-end sm:flex-row">
@@ -40,7 +40,7 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
       </div>
       <FieldError formState={formState} name="checkbox" />
       <div className="flex w-full self-center md:w-1/3">
-        <SubmitButton label="Create Test" loading="Creating..." />
+        <SubmitButton label="Utwórz Test" loading="Tworzenie..." />
       </div>
       {noScriptFallback}
     </form>

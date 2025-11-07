@@ -20,6 +20,7 @@ import {
   blogTags,
   blogPostTags,
   blogLikes,
+  userCustomTests,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -47,6 +48,41 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   })
   return tests
 })
+
+// ============================================================================
+// USER CUSTOM TESTS QUERIES
+// ============================================================================
+
+/**
+ * Fetch all tests created by specific user
+ */
+export const getUserCustomTests = cache(async (userId: string) => {
+  const tests = await db.query.userCustomTests.findMany({
+    where: (model, { eq }) => eq(model.userId, userId),
+    orderBy: (model, { desc }) => desc(model.createdAt),
+  })
+  return tests
+})
+
+/**
+ * Fetch single user test with ownership verification
+ */
+export const getUserCustomTestById = cache(async (userId: string, testId: string) => {
+  const test = await db.query.userCustomTests.findFirst({
+    where: (model, { eq, and }) =>
+      and(eq(model.id, testId), eq(model.userId, userId)),
+  })
+  return test
+})
+
+/**
+ * Delete user test with ownership verification
+ */
+export const deleteUserCustomTest = async (userId: string, testId: string) => {
+  return await db
+    .delete(userCustomTests)
+    .where(and(eq(userCustomTests.id, testId), eq(userCustomTests.userId, userId)))
+}
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(

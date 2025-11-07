@@ -19,7 +19,7 @@ export default function CategorySelection(props: { categories: PopulatedCategori
             type="text"
             id="addCategory"
             name="newCategory"
-            className="h-10 p-1 text-sm"
+            className="h-10 rounded border border-border/40 bg-neutral-900 px-2 text-sm text-white focus:border-amber-200/10 focus-visible:outline-none"
           />
         </div>
       )}

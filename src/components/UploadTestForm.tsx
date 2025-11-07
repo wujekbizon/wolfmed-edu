@@ -19,7 +19,7 @@ export default function UploadTestForm() {
   return (
     <form
       action={action}
-      className="flex w-full flex-col gap-2 rounded-lg border border-border/40 bg-zinc-950 px-4 py-8 lg:w-2/3"
+      className="flex w-full flex-col gap-2 rounded-lg border border-border/40 bg-zinc-800/50 backdrop-blur-sm px-4 py-8 lg:w-2/3"
     >
       <label
         htmlFor="fileUpload"
@@ -28,8 +28,7 @@ export default function UploadTestForm() {
         <div className="flex flex-col items-center justify-center pb-6 pt-5">
           <UploadSVG />
           <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-semibold">Click to upload</span> or drag and
-            drop
+            <span className="font-semibold">Kliknij, aby przesłać</span> lub przeciągnij i upuść
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400">JSON</p>
         </div>
@@ -38,7 +37,7 @@ export default function UploadTestForm() {
 
       <FieldError formState={formState} name="file" />
       <div className="flex w-full self-center md:w-1/3">
-        <SubmitButton label="Upload File" loading="Uploading..." />
+        <SubmitButton label="Prześlij Plik" loading="Przesyłanie..." />
       </div>
       {noScriptFallback}
     </form>

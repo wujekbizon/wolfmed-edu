@@ -3,6 +3,12 @@ import fs from "fs"
 import { Post, Procedure, Test } from "@/types/dataTypes"
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType"
 import { getProcedureIdFromSlug } from "@/constants/procedureSlugs"
+import {
+  getMergedTests,
+  getMergedTestsByCategory,
+  getMergedCategories,
+  countMergedTestsByCategory
+} from "@/helpers/mergeTests"
 
 interface FileDataOperations {
   getAllPosts: () => Promise<Post[]>
@@ -15,6 +21,12 @@ interface FileDataOperations {
   countTestsByCategory: (category: string) => Promise<number>
   getTestsByCategory: (category: string) => Promise<Test[]>
   getCategoriesMetadata: () => Promise<CategoryMetadata[]>
+  // Merged variants (JSON official + DB user custom tests)
+  // See @/helpers/mergeTests.ts for architecture details
+  mergedGetAllTests: (userId?: string) => Promise<Test[]>
+  mergedGetTestsByCategory: (category: string, userId?: string) => Promise<Test[]>
+  mergedGetTestsCategories: (userId?: string) => Promise<{ category: string }[]>
+  mergedCountTestsByCategory: (category: string, userId?: string) => Promise<number>
 }
 
 async function readJsonFile<T>(filename: string): Promise<T> {
@@ -142,5 +154,22 @@ export const fileData: FileDataOperations = {
       console.error("Error fetching category metadata:", error);
       return [];
     }
+  },
+
+  // Merged variants for supporter users (official + custom tests)
+  mergedGetAllTests: async (userId?: string) => {
+    return getMergedTests(userId)
+  },
+
+  mergedGetTestsByCategory: async (category: string, userId?: string) => {
+    return getMergedTestsByCategory(category, userId)
+  },
+
+  mergedGetTestsCategories: async (userId?: string) => {
+    return getMergedCategories(userId)
+  },
+
+  mergedCountTestsByCategory: async (category: string, userId?: string) => {
+    return countMergedTestsByCategory(category, userId)
   },
 }

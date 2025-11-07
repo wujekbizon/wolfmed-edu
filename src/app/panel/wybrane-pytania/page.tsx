@@ -1,9 +1,11 @@
 import { Metadata } from 'next'
+import { auth } from '@clerk/nextjs/server'
 import { fileData } from '@/server/fetchData'
+import { getSupporterByUserId } from '@/server/queries'
 import CustomCategoryManager from '@/components/CustomCategoryManager'
 import CategoryManagerHeader from '@/components/CategoryManagerHeader'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Własne kategorie pytań - Testy Opiekuna Medycznego',
@@ -11,7 +13,13 @@ export const metadata: Metadata = {
 }
 
 export default async function SelectedQuestionsPage() {
-  const tests = await fileData.getAllTests()
+  const { userId } = await auth()
+  const isSupporter = userId ? await getSupporterByUserId(userId) : false
+
+  // Merge tests if supporter, otherwise only official
+  const tests = isSupporter
+    ? await fileData.mergedGetAllTests(userId)
+    : await fileData.getAllTests()
 
   if (!tests || tests.length === 0) {
     return <p>Brak dostępnych pytań. Proszę spróbować później.</p>

@@ -41,7 +41,12 @@ const Answers: React.FC<AnswersProps> = ({ formState }) => {
               label={answer.label}
             />
 
-            <Input id={answer.id} type="text" name={answer.name} />
+            <Input
+              id={answer.id}
+              type="text"
+              name={answer.name}
+              className="h-10 rounded border border-border/40 bg-neutral-900 px-2 text-sm text-white focus:border-amber-200/10 focus-visible:outline-none"
+            />
             <FieldError formState={formState} name="answers" />
           </div>
           <div className="flex h-16 w-24 flex-col items-center justify-center gap-1">
