@@ -15,7 +15,7 @@ export default async function AdminBlogWidget() {
   const stats = await getBlogStatistics()
 
   return (
-    <div className="bg-gradient-to-br from-red-50/80 via-white/60 to-red-50/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-red-200/60 hover:shadow-lg transition-all duration-300">
+    <div className="bg-linear-to-br from-red-50/80 via-white/60 to-red-50/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-red-200/60 hover:shadow-lg transition-all duration-300">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-zinc-900 mb-1">
