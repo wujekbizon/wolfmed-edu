@@ -76,6 +76,22 @@ export default class EventManagementSystem {
           try {
             await this.roomSystem.clearAllParticipants(event.roomId)
             console.log(`Cleared all participants from room ${event.roomId} after lecture ended`)
+
+            // Also clear WebSocket server's in-memory state
+            try {
+              const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001'
+              const wsBaseUrl = wsUrl.replace('ws://', 'http://').replace('wss://', 'https://')
+              const response = await fetch(`${wsBaseUrl}/rooms/${event.roomId}`, {
+                method: 'DELETE',
+              })
+              if (response.ok) {
+                console.log(`✅ WebSocket server cleaned up room ${event.roomId}`)
+              } else {
+                console.error(`Failed to cleanup WebSocket room: ${response.statusText}`)
+              }
+            } catch (wsError) {
+              console.error(`Failed to call WebSocket cleanup endpoint:`, wsError)
+            }
           } catch (error) {
             console.error(`Failed to clear participants from room ${event.roomId}:`, error)
             // Don't throw - the lecture status update succeeded, participant cleanup is secondary

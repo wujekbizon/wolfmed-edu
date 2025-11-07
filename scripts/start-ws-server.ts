@@ -35,15 +35,44 @@ async function main() {
     console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🔒 CORS Origins: ${ALLOWED_ORIGINS}`);
 
-    // Create HTTP server
-    const server = createServer((req, res) => {
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      res.end('Teaching Playground WebSocket Server is running');
-    });
-
-    // Initialize real-time communication system
+    // Initialize real-time communication system first
     const commsSystem = new RealTimeCommunicationSystem({
       allowedOrigins: ALLOWED_ORIGINS
+    });
+
+    // Create HTTP server with cleanup endpoint
+    const server = createServer(async (req, res) => {
+      // CORS headers
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+      // Handle OPTIONS for CORS preflight
+      if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        res.end();
+        return;
+      }
+
+      // Handle DELETE /rooms/:roomId endpoint for cleanup
+      if (req.method === 'DELETE' && req.url?.startsWith('/rooms/')) {
+        const roomId = req.url.split('/')[2];
+        try {
+          console.log(`🧹 Cleanup requested for room: ${roomId}`);
+          await commsSystem.deallocateResources(roomId);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, roomId, message: 'Room cleaned up successfully' }));
+        } catch (error) {
+          console.error(`❌ Failed to cleanup room ${roomId}:`, error);
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Failed to cleanup room' }));
+        }
+        return;
+      }
+
+      // Default health check response
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      res.end('Teaching Playground WebSocket Server is running');
     });
 
     commsSystem.initialize(server);

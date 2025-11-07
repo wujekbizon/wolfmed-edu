@@ -177,10 +177,27 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('message_received', (message: RoomMessage) => {
           if (!mountedRef.current) return;
-          setState(prev => ({
-            ...prev,
-            messages: [...prev.messages, message]
-          }));
+          console.log('[message_received] New message:', message.content, 'from:', message.username);
+          console.log('[message_received] Current messages count before add:', state.messages.length);
+          setState(prev => {
+            // Check if this exact message already exists (within 1 second timestamp tolerance)
+            const messageExists = prev.messages.some(
+              m => m.userId === message.userId &&
+                   m.content === message.content &&
+                   Math.abs(new Date(m.timestamp).getTime() - new Date(message.timestamp).getTime()) < 1000
+            );
+
+            if (messageExists) {
+              console.log('[message_received] ⚠️ Duplicate detected, skipping');
+              return prev;
+            }
+
+            console.log('[message_received] ✅ Adding message, new count will be:', prev.messages.length + 1);
+            return {
+              ...prev,
+              messages: [...prev.messages, message]
+            };
+          });
         });
 
         connection.on('stream_started', (streamState: StreamState) => {
