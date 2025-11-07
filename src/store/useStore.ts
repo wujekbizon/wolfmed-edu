@@ -4,7 +4,7 @@ interface StateType {
   isMenuOpen: boolean
   isSidePanelOpen: boolean
   isDeleteModalOpen: boolean
-  testIdToDelete: string | null // Track which test is being deleted
+  testIdToDelete: string | null
   toggleMenu: () => void
   toggleSidePanel: () => void
   openDeleteModal: (testId: string | null) => void

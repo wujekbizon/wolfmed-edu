@@ -7,7 +7,7 @@ type BlogPostProps = {
 
 export default function BlogPost({ post }: BlogPostProps) {
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-start p-4 sm:p-8 bg-gradient-to-b from-[#f5d4cf] via-[#e8b8b1] to-[#f5d4cf] rounded-br-3xl sm:rounded-br-[50px] rounded-bl-3xl sm:rounded-bl-[50px]">
+    <section className="min-h-screen w-full flex flex-col items-center justify-start p-4 sm:p-8 bg-linear-to-b from-[#f5d4cf] via-[#e8b8b1] to-[#f5d4cf] rounded-br-3xl sm:rounded-br-[50px] rounded-bl-3xl sm:rounded-bl-[50px]">
       <article className="w-full max-w-3xl bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-red-200/40">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 mb-4">{post.title}</h1>
         <div className="text-sm text-zinc-500 mb-6">

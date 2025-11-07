@@ -40,6 +40,11 @@ yarn-error.log*
 next-env.d.ts
 
 .cursorrules
+.gemini
 
 detail_layers.txt
+
+/outputs
+/inputs
+
 *.md

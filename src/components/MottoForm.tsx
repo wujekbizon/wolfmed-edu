@@ -1,7 +1,7 @@
 'use client'
 
-import Input from '@/components/Input'
-import Label from '@/components/Label'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useActionState } from 'react'
 import { updateMotto } from '@/actions/actions'
@@ -34,7 +34,7 @@ export default function MottoForm() {
           name="motto"
           className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm"
           placeholder="Twoje motto"
-          defaultValue={state.values?.motto || ''}
+          defaultValue={(state.values?.motto?.toString() || "")}
           autoComplete="off"
         />
         <FieldError name="motto" formState={state} />
@@ -44,7 +44,7 @@ export default function MottoForm() {
         label="Ustaw motto"
         loading="Ustawianie..."
         // @ts-ignore
-        className="w-full mt-1 sm:mt-2 bg-gradient-to-r from-[#ff9898] to-[#ff8989] text-white py-2 sm:py-2.5 rounded-lg text-sm font-medium shadow-s transition-all duration-300 hover:from-[#ff8989] hover:to-[#ff9898] selection:disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full mt-1 sm:mt-2 bg-linear-to-r from-[#ff9898] to-[#ff8989] text-white py-2 sm:py-2.5 rounded-lg text-sm font-medium shadow-s transition-all duration-300 hover:from-[#ff8989] hover:to-[#ff9898] selection:disabled:opacity-50 disabled:cursor-not-allowed"
       />
       {noScriptFallback}
     </form>

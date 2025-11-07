@@ -21,7 +21,7 @@ export const testCardContent: TestCardContent[] = [
     testsNumber: NUMBER_OF_TESTS,
     testsLabel: 'Testów',
     image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Jp1VzHmQWsLSvF0ZVh7qXdCNxbjatwczey8g',
-    link: '/testy-opiekun/nauka',
+    link: '/panel/nauka',
   },
   {
     category: 'Procedury',
@@ -31,6 +31,6 @@ export const testCardContent: TestCardContent[] = [
     testsNumber: NUMBER_OF_PROCEDURES,
     testsLabel: 'Procedur',
     image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5HvfwYbqRXZAfUgQh6yMWki0EFjo5rbcJDS2m',
-    link: '/testy-opiekun/procedury',
+    link: '/panel/procedury',
   },
 ]

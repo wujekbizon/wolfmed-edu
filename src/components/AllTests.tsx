@@ -11,15 +11,13 @@ export default function AllTests(props: { tests: Test[] }) {
   const { searchTerm, setSearchTerm, isExpanded, toggleExpand } = useSearchTermStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
 
-  // creates an array directly from object's values
   const testsArr = Object.values(props.tests)
 
-  // Query to cache the unfiltered tests
   const { data: cachedTestsArr } = useQuery({
-    queryKey: ['allTests'],
+    queryKey: ['allTests', props.tests[0]?.category ?? ''],
     queryFn: async () => testsArr,
-    initialData: testsArr, // Initial data as testsArr
-    staleTime: 10 * 60 * 1000, // Cache for 10 minutes
+    initialData: testsArr,
+    staleTime: 10 * 60 * 1000,
   })
 
   const filteredTestsQueryFn = async () => {
@@ -39,7 +37,7 @@ export default function AllTests(props: { tests: Test[] }) {
     isLoading: searchLoading,
     error,
   } = useQuery({
-    queryKey: ['filteredTests', debouncedSearchTerm],
+    queryKey: ['filteredTests', debouncedSearchTerm, props.tests[0]?.category ?? ''],
     queryFn: filteredTestsQueryFn,
     enabled: !!searchTerm || true,
     staleTime: 10 * 60 * 1000,

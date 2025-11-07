@@ -36,7 +36,7 @@ export default function CreateCommentForm({ postId, onClose }: Props) {
               name="content"
               rows={4}
               placeholder="Napisz komentarz..."
-              defaultValue={state.values?.content || ''}
+              defaultValue={state.values?.content?.toString() || ''}
               className="w-full px-4 py-2 bg-zinc-800 rounded-lg text-zinc-100 resize-none"
               autoFocus
             />
