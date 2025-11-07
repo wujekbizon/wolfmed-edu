@@ -2,68 +2,37 @@
 
 import { useEffect, useState } from 'react'
 import type { RoomParticipant } from '@teaching-playground/core'
-import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface RoomParticipantsProps {
   roomId: string
-  participants?: Array<RoomParticipant>
+  participants?: Array<any> // Can be RoomParticipant objects or socket IDs (strings)
 }
 
-export default function RoomParticipants({ roomId, participants: initialParticipants }: RoomParticipantsProps) {
-  const [participants, setParticipants] = useState<RoomParticipant[]>(initialParticipants || [])
-  const playground = usePlaygroundStore((state) => state.playground)
+export default function RoomParticipants({ roomId, participants: wsParticipants }: RoomParticipantsProps) {
+  // Convert WebSocket participants (which might be strings) to proper participant objects
+  const participants: RoomParticipant[] = (wsParticipants || []).map((p, index) => {
+    // If it's already an object, use it
+    if (typeof p === 'object' && p.id) {
+      return p as RoomParticipant
+    }
+    // If it's just a socket ID string, create a minimal participant object
+    return {
+      id: typeof p === 'string' ? p : `participant-${index}`,
+      username: typeof p === 'string' ? `User ${index + 1}` : p.username || 'Unknown',
+      role: 'student' as const,
+      status: 'online',
+      joinedAt: new Date().toISOString(),
+      canStream: false,
+      canChat: true,
+      canScreenShare: false,
+      isStreaming: false,
+    }
+  })
 
+  // Update participants count when WebSocket participants change
   useEffect(() => {
-    if (!playground) return
-
-    // Fetch initial participants
-    const fetchInitialParticipants = async () => {
-      try {
-        const roomParticipants = await playground.roomSystem.getRoomParticipants(roomId)
-        setParticipants(roomParticipants)
-      } catch (error) {
-        console.error('Failed to load initial participants:', error)
-      }
-    }
-
-    fetchInitialParticipants()
-
-    // Set up WebSocket event listeners
-    const handleUserJoined = (newParticipant: RoomParticipant) => {
-      setParticipants(prev => [...prev, newParticipant])
-    }
-
-    const handleUserLeft = (participantId: string) => {
-      setParticipants(prev => prev.filter(p => p.id !== participantId))
-    }
-
-    const handleStreamStarted = (participantId: string) => {
-      setParticipants(prev => prev.map(p => 
-        p.id === participantId ? { ...p, isStreaming: true } : p
-      ))
-    }
-
-    const handleStreamStopped = (participantId: string) => {
-      setParticipants(prev => prev.map(p => 
-        p.id === participantId ? { ...p, isStreaming: false } : p
-      ))
-    }
-
-    // Subscribe to events (replace with your actual event names)
-    const commsSystem  = playground.roomSystem.getCommsSystem()
-    commsSystem.on('user_joined', handleUserJoined)
-    commsSystem.on('user_left', handleUserLeft)
-    commsSystem.on('stream_started', handleStreamStarted)
-    commsSystem.on('stream_stopped', handleStreamStopped)
-
-    // Cleanup
-    return () => {
-      commsSystem.off('user_joined', handleUserJoined)
-      commsSystem.off('user_left', handleUserLeft)
-      commsSystem.off('stream_started', handleStreamStarted)
-      commsSystem.off('stream_stopped', handleStreamStopped)
-    }
-  }, [playground, roomId])
+    console.log('Participants updated:', participants.length)
+  }, [wsParticipants])
 
   return (
     <div className="flex flex-col h-full">

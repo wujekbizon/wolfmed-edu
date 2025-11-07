@@ -17,22 +17,23 @@ interface RoomControlsProps {
   onStopStream?: () => void
 }
 
-export default function RoomControls({ 
-  room, 
-  isConnected, 
+export default function RoomControls({
+  room,
+  isConnected,
   stream,
   localStream,
   onStartStream,
-  onStopStream 
+  onStopStream
 }: RoomControlsProps) {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [videoEnabled, setVideoEnabled] = useState(true)
   const {user} = usePlaygroundStore()
 
   // Check if the current user is the streamer
-  const isStreamer = stream?.streamerId === user?.id
+  // The package uses username as streamerId, not user.id
+  const isStreamer = stream?.streamerId === user?.username
   console.log("Stream ID: ",stream?.streamerId)
-  console.log("User ID: ",user?.id)
+  console.log("User username: ",user?.username)
   console.log("Is user a streamer", isStreamer)
   // Check if the user has permission to stream
   const canStream = user?.role === 'teacher'
