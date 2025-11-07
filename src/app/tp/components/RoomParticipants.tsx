@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import type { RoomParticipant } from '@teaching-playground/core'
+import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface RoomParticipantsProps {
   roomId: string
@@ -9,30 +10,47 @@ interface RoomParticipantsProps {
 }
 
 export default function RoomParticipants({ roomId, participants: wsParticipants }: RoomParticipantsProps) {
-  // Convert WebSocket participants (which might be strings) to proper participant objects
-  const participants: RoomParticipant[] = (wsParticipants || []).map((p, index) => {
-    // If it's already an object, use it
-    if (typeof p === 'object' && p.id) {
-      return p as RoomParticipant
-    }
-    // If it's just a socket ID string, create a minimal participant object
-    return {
-      id: typeof p === 'string' ? p : `participant-${index}`,
-      username: typeof p === 'string' ? `User ${index + 1}` : p.username || 'Unknown',
-      role: 'student' as const,
-      status: 'online',
-      joinedAt: new Date().toISOString(),
-      canStream: false,
-      canChat: true,
-      canScreenShare: false,
-      isStreaming: false,
-    }
-  })
+  const [participants, setParticipants] = useState<RoomParticipant[]>([])
+  const { playground } = usePlaygroundStore()
 
-  // Update participants count when WebSocket participants change
+  // Fetch actual participant data from the database
   useEffect(() => {
-    console.log('Participants updated:', participants.length)
-  }, [wsParticipants])
+    const fetchParticipants = async () => {
+      if (!playground || !wsParticipants || wsParticipants.length === 0) {
+        setParticipants([])
+        return
+      }
+
+      try {
+        // Get full participant data from the room
+        const fullParticipants = await playground.roomSystem.getRoomParticipants(roomId)
+        setParticipants(fullParticipants)
+        console.log('Participants updated:', fullParticipants.length, fullParticipants)
+      } catch (error) {
+        console.error('Failed to fetch participants:', error)
+        // Fallback to creating dummy objects if fetching fails
+        const fallbackParticipants: RoomParticipant[] = (wsParticipants || []).map((p, index) => {
+          if (typeof p === 'object' && p.id) {
+            return p as RoomParticipant
+          }
+          return {
+            id: typeof p === 'string' ? p : `participant-${index}`,
+            username: typeof p === 'string' ? `User ${index + 1}` : p.username || 'Unknown',
+            role: 'student' as const,
+            status: 'online',
+            joinedAt: new Date().toISOString(),
+            canStream: false,
+            canChat: true,
+            canScreenShare: false,
+            isStreaming: false,
+          }
+        })
+        setParticipants(fallbackParticipants)
+      }
+    }
+
+    fetchParticipants()
+  }, [wsParticipants, roomId, playground])
 
   return (
     <div className="flex flex-col h-full">

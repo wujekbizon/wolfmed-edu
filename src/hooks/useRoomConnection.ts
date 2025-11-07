@@ -177,24 +177,10 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('message_received', (message: RoomMessage) => {
           if (!mountedRef.current) return;
-          setState(prev => {
-            // Check if message already exists (prevent duplicates)
-            const isDuplicate = prev.messages.some(
-              m => m.userId === message.userId &&
-                   m.content === message.content &&
-                   m.timestamp === message.timestamp
-            );
-
-            if (isDuplicate) {
-              console.log('Duplicate message detected, skipping');
-              return prev;
-            }
-
-            return {
-              ...prev,
-              messages: [...prev.messages, message]
-            };
-          });
+          setState(prev => ({
+            ...prev,
+            messages: [...prev.messages, message]
+          }));
         });
 
         connection.on('stream_started', (streamState: StreamState) => {

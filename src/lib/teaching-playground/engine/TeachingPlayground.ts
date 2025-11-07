@@ -7,8 +7,8 @@ import {
 
 export default class TeachingPlayground {
   public roomSystem: RoomManagementSystem;
+  public eventSystem: EventManagementSystem;
   private commsSystem: RealTimeCommunicationSystem;
-  private eventSystem: EventManagementSystem;
   private currentUser: User | null = null;
 
   constructor(config: TeachingPlaygroundConfig) {

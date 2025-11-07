@@ -15,7 +15,6 @@ import TeachingPlayground from '@/lib/teaching-playground/engine/TeachingPlaygro
 
 // Use singleton JsonDatabase instance
 const db = JsonDatabase.getInstance()
-const eventSystem = new EventManagementSystem()
 
 export async function initializeTeachingPlayground():Promise<TeachingPlayground | null> {
   try {
@@ -226,7 +225,11 @@ export async function updateLectureStatus(lectureId: string, status: Lecture['st
   await requireTeacherAction()
 
   try {
-    await eventSystem.updateEventStatus(lectureId, status)
+    const playground = await initializeTeachingPlayground()
+    if (!playground) {
+      throw new Error('Failed to initialize TeachingPlayground on server')
+    }
+    await playground.eventSystem.updateEventStatus(lectureId, status)
   } catch (error) {
     console.error('Error updating lecture status:', error)
     throw error
@@ -240,7 +243,11 @@ export async function endLecture(formState: FormState, formData: FormData) {
   const lectureId = formData.get('lectureId') as string
 
   try {
-    await eventSystem.updateEventStatus(lectureId, 'completed')
+    const playground = await initializeTeachingPlayground()
+    if (!playground) {
+      throw new Error('Failed to initialize TeachingPlayground on server')
+    }
+    await playground.eventSystem.updateEventStatus(lectureId, 'completed')
   } catch (error) {
     return fromErrorToFormState(error)
   }
