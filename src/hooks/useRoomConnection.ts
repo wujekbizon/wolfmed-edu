@@ -10,6 +10,8 @@ interface UseRoomConnectionOptions {
 }
 
 interface RoomMessage {
+  messageId: string
+  sequence: number
   userId: string
   username: string
   content: string
@@ -24,8 +26,20 @@ interface StreamState {
 
 interface RoomStateUpdate {
   stream: StreamState | null
-  messages: RoomMessage[]
-  participants: string[]
+  participants: Array<{
+    id: string
+    username: string
+    role: "teacher" | "student" | "admin"
+    displayName?: string
+    email?: string
+    status: string
+    socketId: string
+    joinedAt: string
+    canStream: boolean
+    canChat: boolean
+    canScreenShare: boolean
+    isStreaming?: boolean
+  }>
 }
 
 interface StreamAddedEvent {
@@ -151,48 +165,38 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }));
         });
 
-        const handleRoomState = (stateUpdate: { // Changed parameter name to avoid conflict with outer 'state'
-          stream: StreamState | null,
-          messages: RoomMessage[],
-          participants: Array<{
-            joinedAt: string
-            id: string
-            username: string
-            role: "teacher" | "student" | "admin"
-            status: string
-            canStream: boolean
-            canChat: boolean
-            canScreenShare: boolean
-          }>
-        }) => {
+        const handleRoomState = (stateUpdate: RoomStateUpdate) => {
           setState(prev => ({
             ...prev,
             stream: stateUpdate.stream,
-            participants: stateUpdate.participants || [], 
-            messages: stateUpdate.messages || []
+            participants: stateUpdate.participants || []
           }));
+
+          // Request message history after room_state
+          if (connectionRef.current?.socket) {
+            connectionRef.current.socket.emit('request_message_history', roomId)
+          }
         };
 
         connection.on('room_state', handleRoomState);
 
+        // Handle message history (v1.1.0)
+        connection.on('message_history', ({ messages }: { messages: RoomMessage[] }) => {
+          if (!mountedRef.current) return;
+          console.log('Received message history:', messages.length, 'messages');
+          setState(prev => ({
+            ...prev,
+            messages: messages || []
+          }));
+        });
+
         connection.on('message_received', (message: RoomMessage) => {
           if (!mountedRef.current) return;
-          console.log('[message_received] New message:', message.content, 'from:', message.username);
-          console.log('[message_received] Current messages count before add:', state.messages.length);
           setState(prev => {
-            // Check if this exact message already exists (within 1 second timestamp tolerance)
-            const messageExists = prev.messages.some(
-              m => m.userId === message.userId &&
-                   m.content === message.content &&
-                   Math.abs(new Date(m.timestamp).getTime() - new Date(message.timestamp).getTime()) < 1000
-            );
+            // Use messageId for deduplication (v1.1.0)
+            const isDuplicate = prev.messages.some(m => m.messageId === message.messageId);
+            if (isDuplicate) return prev;
 
-            if (messageExists) {
-              console.log('[message_received] ⚠️ Duplicate detected, skipping');
-              return prev;
-            }
-
-            console.log('[message_received] ✅ Adding message, new count will be:', prev.messages.length + 1);
             return {
               ...prev,
               messages: [...prev.messages, message]
@@ -277,7 +281,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           if (!mountedRef.current) return;
           console.log(`Room ${clearedRoomId} has been cleared (lecture ended)`);
 
-          // Update state to show system message
           setState(prev => ({
             ...prev,
             systemMessage: 'This lecture has ended. The room has been cleared.',
@@ -285,13 +288,52 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
             messages: []
           }));
 
-          // Disconnect after a short delay to allow user to see the message
           setTimeout(() => {
             if (connectionRef.current && mountedRef.current) {
               console.log('Disconnecting due to room cleared event');
               connectionRef.current.disconnect();
             }
           }, 2000);
+        });
+
+        // Handle automatic room closure (v1.1.0)
+        connection.on('room_closed', ({ roomId: closedRoomId, reason }: { roomId: string, reason: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`Room ${closedRoomId} was closed: ${reason}`);
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: `Room closed: ${reason}`,
+            isConnected: false,
+            participants: [],
+            messages: []
+          }));
+
+          setTimeout(() => {
+            if (connectionRef.current && mountedRef.current) {
+              connectionRef.current.disconnect();
+            }
+          }, 3000);
+        });
+
+        // Handle server shutdown (v1.1.0)
+        connection.on('server_shutdown', ({ message }: { message: string }) => {
+          if (!mountedRef.current) return;
+          console.log('Server shutdown:', message);
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: `Server maintenance. Will reconnect automatically.`,
+            isConnected: false
+          }));
+
+          // Auto-reconnect after 5 seconds
+          setTimeout(() => {
+            if (mountedRef.current && connectionRef.current) {
+              console.log('Attempting reconnect after server shutdown...');
+              connectionRef.current.connect();
+            }
+          }, 5000);
         });
 
         await connection.connect();

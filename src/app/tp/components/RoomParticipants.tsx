@@ -10,47 +10,12 @@ interface RoomParticipantsProps {
 }
 
 export default function RoomParticipants({ roomId, participants: wsParticipants }: RoomParticipantsProps) {
-  const [participants, setParticipants] = useState<RoomParticipant[]>([])
-  const { playground } = usePlaygroundStore()
+  // v1.1.0 sends full participant objects!
+  const participants = (wsParticipants || []) as RoomParticipant[]
 
-  // Fetch actual participant data from the database
   useEffect(() => {
-    const fetchParticipants = async () => {
-      if (!playground || !wsParticipants || wsParticipants.length === 0) {
-        setParticipants([])
-        return
-      }
-
-      try {
-        // Get full participant data from the room
-        const fullParticipants = await playground.roomSystem.getRoomParticipants(roomId)
-        setParticipants(fullParticipants)
-        console.log('Participants updated:', fullParticipants.length, fullParticipants)
-      } catch (error) {
-        console.error('Failed to fetch participants:', error)
-        // Fallback to creating dummy objects if fetching fails
-        const fallbackParticipants: RoomParticipant[] = (wsParticipants || []).map((p, index) => {
-          if (typeof p === 'object' && p.id) {
-            return p as RoomParticipant
-          }
-          return {
-            id: typeof p === 'string' ? p : `participant-${index}`,
-            username: typeof p === 'string' ? `User ${index + 1}` : p.username || 'Unknown',
-            role: 'student' as const,
-            status: 'online',
-            joinedAt: new Date().toISOString(),
-            canStream: false,
-            canChat: true,
-            canScreenShare: false,
-            isStreaming: false,
-          }
-        })
-        setParticipants(fallbackParticipants)
-      }
-    }
-
-    fetchParticipants()
-  }, [wsParticipants, roomId, playground])
+    console.log('Participants updated:', participants.length, participants)
+  }, [participants])
 
   return (
     <div className="flex flex-col h-full">
