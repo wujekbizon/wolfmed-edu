@@ -209,12 +209,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
               const participants = await playground.roomSystem.getRoomParticipants(roomId);
               setState(prev => ({
                 ...prev,
-                participants: participants.map(p => ({
-                  ...p,
-                  canStream: p.role === 'teacher',
-                  canChat: true,
-                  canScreenShare: p.role === 'teacher'
-                }))
+                participants: participants
               }));
             } catch (error) {
               console.error('Failed to update participants after user joined:', error);
@@ -230,12 +225,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
               const participants = await playground.roomSystem.getRoomParticipants(roomId);
               setState(prev => ({
                 ...prev,
-                participants: participants.map(p => ({
-                  ...p,
-                  canStream: p.role === 'teacher',
-                  canChat: true,
-                  canScreenShare: p.role === 'teacher'
-                }))
+                participants: participants
               }));
             } catch (error) {
               console.error('Failed to update participants after user left:', error);

@@ -104,4 +104,114 @@ export default class RoomManagementSystem {
       );
     }
   }
+
+  async removeParticipant(roomId: string, userId: string): Promise<void> {
+    try {
+      console.log(`Removing participant ${userId} from room ${roomId}`);
+      const room = await this.getRoom(roomId);
+
+      // Filter out the participant
+      const updatedParticipants = room.participants.filter(
+        (p) => p.id !== userId
+      );
+
+      // Update the room in the database
+      const updatedRoom = await this.db.update(
+        "rooms",
+        { id: roomId },
+        {
+          participants: updatedParticipants,
+          updatedAt: new Date().toISOString(),
+        }
+      );
+
+      if (!updatedRoom) {
+        throw new SystemError(
+          "PARTICIPANT_REMOVE_FAILED",
+          "Failed to update room after removing participant"
+        );
+      }
+
+      this.commsSystem.emit("user_left", { userId });
+      console.log(
+        `Successfully removed ${userId} from room ${roomId}. Remaining participants: ${updatedParticipants.length}`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to remove participant ${userId} from room ${roomId}:`,
+        error
+      );
+      throw new SystemError(
+        "PARTICIPANT_REMOVE_FAILED",
+        "Failed to remove participant",
+        error
+      );
+    }
+  }
+
+  async getRoomParticipants(roomId: string): Promise<RoomParticipant[]> {
+    try {
+      const room = await this.getRoom(roomId);
+      return room.participants;
+    } catch (error) {
+      console.error(
+        `Failed to get participants for room ${roomId}:`,
+        error
+      );
+      throw new SystemError(
+        "PARTICIPANTS_FETCH_FAILED",
+        "Failed to fetch room participants",
+        error
+      );
+    }
+  }
+
+  async updateParticipantStreamingStatus(
+    roomId: string,
+    userId: string,
+    isStreaming: boolean
+  ): Promise<void> {
+    try {
+      console.log(
+        `Updating streaming status for ${userId} in room ${roomId}: ${isStreaming}`
+      );
+      const room = await this.getRoom(roomId);
+
+      // Find and update the participant
+      const updatedParticipants = room.participants.map((p) =>
+        p.id === userId ? { ...p, isStreaming } : p
+      );
+
+      // Update the room in the database
+      const updatedRoom = await this.db.update(
+        "rooms",
+        { id: roomId },
+        {
+          participants: updatedParticipants,
+          updatedAt: new Date().toISOString(),
+        }
+      );
+
+      if (!updatedRoom) {
+        throw new SystemError(
+          "STREAMING_STATUS_UPDATE_FAILED",
+          "Failed to update participant streaming status"
+        );
+      }
+
+      console.log(
+        `Successfully updated streaming status for ${userId} in room ${roomId}`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to update streaming status for ${userId} in room ${roomId}:`,
+        error
+      );
+      throw new SystemError(
+        "STREAMING_STATUS_UPDATE_FAILED",
+        "Failed to update streaming status",
+        error
+      );
+    }
+  }
 }

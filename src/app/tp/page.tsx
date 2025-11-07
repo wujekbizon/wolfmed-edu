@@ -14,7 +14,7 @@ async function LectureList() {
 }
 
 export default async function TeachingPlaygroundPage() {
-  const user = currentUser();
+  const user = await currentUser();
   if (!user) {
     return null;
   }
