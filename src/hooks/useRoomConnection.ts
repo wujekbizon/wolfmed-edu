@@ -71,33 +71,41 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   const hasJoinedRoomRef = useRef(false)
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Store user in ref to avoid dependency issues
+  const userRef = useRef(user);
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
+
   // Handle joining the room
   const joinRoom = useCallback(async () => {
     if (!playground || hasJoinedRoomRef.current || !mountedRef.current) return;
-    
+
     try {
-      console.log(`Joining room ${roomId} as ${user.username} (${user.id})`);
-      await playground.roomSystem.addParticipant(roomId, user);
+      const currentUser = userRef.current;
+      console.log(`Joining room ${roomId} as ${currentUser.username} (${currentUser.id})`);
+      await playground.roomSystem.addParticipant(roomId, currentUser);
       hasJoinedRoomRef.current = true;
       console.log(`Successfully joined room ${roomId}`);
     } catch (error) {
       console.error(`Failed to join room ${roomId}:`, error);
     }
-  }, [playground, roomId, user]);
-  
+  }, [playground, roomId]);
+
   // Handle leaving the room
   const leaveRoom = useCallback(async () => {
     if (!playground || !hasJoinedRoomRef.current) return;
-    
+
     try {
-      console.log(`Leaving room ${roomId} as ${user.username} (${user.id})`);
-      await playground.roomSystem.removeParticipant(roomId, user.id);
+      const currentUser = userRef.current;
+      console.log(`Leaving room ${roomId} as ${currentUser.username} (${currentUser.id})`);
+      await playground.roomSystem.removeParticipant(roomId, currentUser.id);
       hasJoinedRoomRef.current = false;
       console.log(`Successfully left room ${roomId}`);
     } catch (error) {
       console.error(`Failed to leave room ${roomId}:`, error);
     }
-  }, [playground, roomId, user.id, user.username]);
+  }, [playground, roomId]);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -106,12 +114,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
     const setupConnection = async () => {
       if (!mountedRef.current || isConnectingRef.current) return;
-      
+
       try {
         isConnectingRef.current = true;
         console.log('Connecting to WebSocket server:', serverUrl);
-        
-        const connection = new RoomConnection(roomId, user, serverUrl);
+
+        const connection = new RoomConnection(roomId, userRef.current, serverUrl);
         connectionRef.current = connection;
 
         connection.on('connected', async () => {
@@ -299,7 +307,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       // Add this to the cleanup:
       const cleanup = () => {
         console.log('[Cleanup] Starting...')
-        
+
         // Cancel any pending operations
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current)
@@ -317,7 +325,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       }
       cleanup()
     };
-  }, [roomId, user, serverUrl, playground,leaveRoom, joinRoom, localStream]);
+  }, [roomId, serverUrl, playground, leaveRoom, joinRoom]); // Stable dependencies only
 
   const startStream = async (quality?: 'low' | 'medium' | 'high') => {
     try {
