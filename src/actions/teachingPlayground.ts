@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '../helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { auth, currentUser } from '@clerk/nextjs/server'
+import { requireTeacherAction } from '@/lib/teacherHelpers'
 import { manageRoomForLecture, cleanupExpiredRooms } from '@/utils/teachingPlaygroundUtils'
 import { EventManagementSystem } from '@/lib/teaching-playground/systems'
 import { Lecture, User } from '@/lib/teaching-playground/interfaces'
@@ -102,8 +103,8 @@ export async function updateParticipantStreamingStatusFromServer(roomId: string,
 }
 
 export async function createLecture(formState: FormState, formData: FormData): Promise<FormState> {
-  const user = await currentUser()
-  if (!user) throw new Error('Unauthorized')
+  // Require teacher/admin access
+  const teacher = await requireTeacherAction()
 
   const values = {
     name: formData.get('name') as string,
@@ -126,15 +127,15 @@ export async function createLecture(formState: FormState, formData: FormData): P
     const lectureId = `lecture_${Date.now()}`
     const roomId = `room_${lectureId}`
 
-    // Create the lecture object
+    // Create the lecture object with actual teacher data
     const lecture: Lecture = {
       id: lectureId,
       ...validationResult.data,
       roomId,
       type: 'lecture',
       status: 'scheduled',
-      teacherId: 'teacher_123',
-      createdBy: 'John Doe',
+      teacherId: teacher.userId,
+      createdBy: teacher.name,
     }
 
     // Save the lecture to the database
@@ -160,8 +161,8 @@ export async function createLecture(formState: FormState, formData: FormData): P
 }
 
 export async function cancelLecture(formState: FormState, formData: FormData) {
-  const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  // Require teacher/admin access
+  await requireTeacherAction()
 
   const lectureId = formData.get('lectureId') as string
 
@@ -183,8 +184,8 @@ export async function cancelLecture(formState: FormState, formData: FormData) {
 }
 
 export async function updateLecture(formState: FormState, formData: FormData): Promise<FormState> {
-  const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  // Require teacher/admin access
+  await requireTeacherAction()
 
   const values = {
     lectureId: formData.get('lectureId') as string,
@@ -221,8 +222,8 @@ export async function updateLecture(formState: FormState, formData: FormData): P
 }
 
 export async function updateLectureStatus(lectureId: string, status: Lecture['status']) {
-  const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  // Require teacher/admin access
+  await requireTeacherAction()
 
   try {
     await eventSystem.updateEventStatus(lectureId, status)
@@ -233,8 +234,8 @@ export async function updateLectureStatus(lectureId: string, status: Lecture['st
 }
 
 export async function endLecture(formState: FormState, formData: FormData) {
-  const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  // Require teacher/admin access
+  await requireTeacherAction()
 
   const lectureId = formData.get('lectureId') as string
 

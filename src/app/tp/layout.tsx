@@ -1,11 +1,22 @@
+import { requireTeacher } from '@/lib/teacherHelpers'
 import TeachingPlaygroundNavbar from "./components/TeachingPlaygroundNavbar"
 import TeachingPlaygroundSidebar from "./components/TeachingPlaygroundSidebar"
+import { Metadata } from 'next'
 
-export default function TeachingPlaygroundLayout({
+export const metadata: Metadata = {
+  title: 'Teaching Playground - Wolfmed',
+  description: 'Wirtualna sala lekcyjna dla nauczycieli i studentów',
+  robots: 'noindex, nofollow',
+}
+
+export default async function TeachingPlaygroundLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  // Check teacher access (redirects if not teacher/admin)
+  await requireTeacher()
+
   return (
     <section className="h-[calc(100vh-6px)] bg-zinc-900 text-zinc-100">
       <TeachingPlaygroundNavbar />
