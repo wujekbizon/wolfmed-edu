@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import clsx from 'clsx'
 
 interface Participant {
@@ -28,25 +28,27 @@ export default function VideoTile({
   isHighlighted = false,
   className
 }: VideoTileProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const videoElementRef = useRef<HTMLVideoElement | null>(null)
   const [hasVideo, setHasVideo] = useState(false)
   const lastEnabledStateRef = useRef<boolean | null>(null)
 
-  // Attach stream to video element
-  useEffect(() => {
-    console.log(`[VideoTile] Stream attachment effect running for ${participant.username}:`, {
-      hasVideoRef: !!videoRef.current,
+  // Callback ref to attach stream when video element is mounted
+  const videoRef = useCallback((videoElement: HTMLVideoElement | null) => {
+    console.log(`[VideoTile] Callback ref fired for ${participant.username}:`, {
+      hasVideoElement: !!videoElement,
       hasStream: !!participant.stream,
       streamId: participant.stream?.id
     })
 
-    if (!videoRef.current) {
-      console.warn(`[VideoTile] videoRef.current is null for ${participant.username}`)
+    videoElementRef.current = videoElement
+
+    if (!videoElement) {
+      console.log(`[VideoTile] Video element unmounted for ${participant.username}`)
       return
     }
 
     if (!participant.stream) {
-      console.warn(`[VideoTile] participant.stream is null for ${participant.username}`)
+      console.warn(`[VideoTile] No stream available for ${participant.username}`)
       return
     }
 
@@ -61,21 +63,14 @@ export default function VideoTile({
       isLocal: participant.isLocal
     })
 
-    videoRef.current.srcObject = participant.stream
+    videoElement.srcObject = participant.stream
 
     // Check if stream has video tracks
     const videoTracks = participant.stream.getVideoTracks()
     const hasVideoTrack = videoTracks.length > 0 && videoTracks[0]?.enabled === true
     setHasVideo(hasVideoTrack)
 
-    console.log(`[VideoTile] ${participant.username} initial hasVideo:`, hasVideoTrack)
-
-    return () => {
-      console.log(`[VideoTile] Cleaning up stream for ${participant.username}`)
-      if (videoRef.current) {
-        videoRef.current.srcObject = null
-      }
-    }
+    console.log(`[VideoTile] ${participant.username} stream attached, hasVideo:`, hasVideoTrack)
   }, [participant.stream, participant.username, participant.isLocal])
 
   // Monitor video track enabled state - ONLY update when it changes to prevent re-render loops
