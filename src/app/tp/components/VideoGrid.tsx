@@ -14,6 +14,7 @@ interface Participant {
   connectionQuality?: 'excellent' | 'good' | 'poor'
   audioEnabled?: boolean
   videoEnabled?: boolean
+  isScreenSharing?: boolean
 }
 
 interface VideoGridProps {

@@ -1,13 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import type { EventEmitter } from 'events'
-
-// STUN servers for NAT traversal
-const ICE_SERVERS = {
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' },
-    { urls: 'stun:stun1.l.google.com:19302' }
-  ]
-}
+import type { RoomConnection } from '@teaching-playground/core'
 
 interface Participant {
   id: string
@@ -18,12 +10,13 @@ interface Participant {
   connectionQuality?: 'excellent' | 'good' | 'poor'
   audioEnabled?: boolean
   videoEnabled?: boolean
+  isScreenSharing?: boolean
 }
 
 interface UseWebRTCOptions {
   roomId: string
   userId: string
-  connection: EventEmitter | null
+  connection: RoomConnection | null
   enabled: boolean
 }
 
@@ -32,6 +25,7 @@ interface WebRTCState {
   localStream: MediaStream | null
   isVideoEnabled: boolean
   isAudioEnabled: boolean
+  isScreenSharing: boolean
   connectionStatus: 'connecting' | 'connected' | 'disconnected'
 }
 
@@ -41,14 +35,9 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     localStream: null,
     isVideoEnabled: false,
     isAudioEnabled: false,
+    isScreenSharing: false,
     connectionStatus: 'disconnected'
   })
-
-  // Store peer connections for each remote participant
-  const peerConnectionsRef = useRef<Map<string, RTCPeerConnection>>(new Map())
-
-  // Store remote streams
-  const remoteStreamsRef = useRef<Map<string, MediaStream>>(new Map())
 
   // Store local stream reference
   const localStreamRef = useRef<MediaStream | null>(null)
@@ -135,163 +124,45 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
   }, [])
 
   /**
-   * Create peer connection for a remote participant
+   * Start screen sharing (v1.3.0)
    */
-  const createPeerConnection = useCallback((participantId: string): RTCPeerConnection => {
-    console.log(`Creating peer connection for participant ${participantId}`)
-
-    const pc = new RTCPeerConnection(ICE_SERVERS)
-
-    // Add local stream tracks to the connection
-    if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => {
-        pc.addTrack(track, localStreamRef.current!)
-      })
+  const startScreenShare = useCallback(async () => {
+    if (!connection) {
+      console.error('No connection available for screen sharing')
+      return
     }
 
-    // Handle ICE candidates
-    pc.onicecandidate = (event) => {
-      if (event.candidate && connection) {
-        console.log(`Sending ICE candidate to ${participantId}`)
-        connection.emit('webrtc:ice_candidate', {
-          roomId,
-          targetUserId: participantId,
-          candidate: event.candidate
-        })
-      }
+    try {
+      console.log('Starting screen share...')
+      // Package handles screen sharing internally
+      await (connection as any).startScreenShare()
+      setState(prev => ({ ...prev, isScreenSharing: true }))
+      console.log('Screen sharing started')
+    } catch (error) {
+      console.error('Failed to start screen sharing:', error)
+      throw error
     }
-
-    // Handle incoming remote stream
-    pc.ontrack = (event) => {
-      console.log(`Received remote track from ${participantId}`)
-      const [remoteStream] = event.streams
-
-      if (!remoteStream) {
-        console.warn(`No remote stream received for ${participantId}`)
-        return
-      }
-
-      remoteStreamsRef.current.set(participantId, remoteStream)
-
-      // Set up voice activity detection for remote stream
-      if (remoteStream.getAudioTracks().length > 0) {
-        setupVoiceActivityDetection(participantId, remoteStream)
-      }
-
-      // Update participants state
-      updateParticipantStream(participantId, remoteStream)
-    }
-
-    // Handle connection state changes
-    pc.onconnectionstatechange = () => {
-      console.log(`Peer connection state for ${participantId}: ${pc.connectionState}`)
-
-      if (pc.connectionState === 'connected') {
-        updateParticipantConnectionQuality(participantId, 'excellent')
-      } else if (pc.connectionState === 'failed' || pc.connectionState === 'disconnected') {
-        updateParticipantConnectionQuality(participantId, 'poor')
-      }
-    }
-
-    // Handle ICE connection state changes
-    pc.oniceconnectionstatechange = () => {
-      console.log(`ICE connection state for ${participantId}: ${pc.iceConnectionState}`)
-
-      if (pc.iceConnectionState === 'failed') {
-        console.warn(`ICE connection failed for ${participantId}, attempting restart`)
-        pc.restartIce()
-      }
-    }
-
-    peerConnectionsRef.current.set(participantId, pc)
-    return pc
-  }, [roomId, connection])
+  }, [connection])
 
   /**
-   * Create and send WebRTC offer
+   * Stop screen sharing (v1.3.0)
    */
-  const createOffer = useCallback(async (participantId: string) => {
-    try {
-      let pc = peerConnectionsRef.current.get(participantId)
-      if (!pc) {
-        pc = createPeerConnection(participantId)
-      }
-
-      console.log(`Creating offer for ${participantId}`)
-      const offer = await pc.createOffer()
-      await pc.setLocalDescription(offer)
-
-      if (connection) {
-        connection.emit('webrtc:offer', {
-          roomId,
-          targetUserId: participantId,
-          offer
-        })
-      }
-    } catch (error) {
-      console.error(`Failed to create offer for ${participantId}:`, error)
+  const stopScreenShare = useCallback(async () => {
+    if (!connection) {
+      console.error('No connection available to stop screen sharing')
+      return
     }
-  }, [roomId, connection, createPeerConnection])
 
-  /**
-   * Handle incoming WebRTC offer
-   */
-  const handleOffer = useCallback(async (fromUserId: string, offer: RTCSessionDescriptionInit) => {
     try {
-      console.log(`Received offer from ${fromUserId}`)
-
-      let pc = peerConnectionsRef.current.get(fromUserId)
-      if (!pc) {
-        pc = createPeerConnection(fromUserId)
-      }
-
-      await pc.setRemoteDescription(new RTCSessionDescription(offer))
-
-      const answer = await pc.createAnswer()
-      await pc.setLocalDescription(answer)
-
-      if (connection) {
-        connection.emit('webrtc:answer', {
-          roomId,
-          targetUserId: fromUserId,
-          answer
-        })
-      }
+      console.log('Stopping screen share...')
+      await (connection as any).stopScreenShare()
+      setState(prev => ({ ...prev, isScreenSharing: false }))
+      console.log('Screen sharing stopped')
     } catch (error) {
-      console.error(`Failed to handle offer from ${fromUserId}:`, error)
+      console.error('Failed to stop screen sharing:', error)
+      throw error
     }
-  }, [roomId, connection, createPeerConnection])
-
-  /**
-   * Handle incoming WebRTC answer
-   */
-  const handleAnswer = useCallback(async (fromUserId: string, answer: RTCSessionDescriptionInit) => {
-    try {
-      console.log(`Received answer from ${fromUserId}`)
-
-      const pc = peerConnectionsRef.current.get(fromUserId)
-      if (pc) {
-        await pc.setRemoteDescription(new RTCSessionDescription(answer))
-      }
-    } catch (error) {
-      console.error(`Failed to handle answer from ${fromUserId}:`, error)
-    }
-  }, [])
-
-  /**
-   * Handle incoming ICE candidate
-   */
-  const handleIceCandidate = useCallback(async (fromUserId: string, candidate: RTCIceCandidateInit) => {
-    try {
-      const pc = peerConnectionsRef.current.get(fromUserId)
-      if (pc) {
-        await pc.addIceCandidate(new RTCIceCandidate(candidate))
-        console.log(`Added ICE candidate from ${fromUserId}`)
-      }
-    } catch (error) {
-      console.error(`Failed to add ICE candidate from ${fromUserId}:`, error)
-    }
-  }, [])
+  }, [connection])
 
   /**
    * Voice activity detection setup
@@ -334,93 +205,16 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
   }, [])
 
   /**
-   * Update participant stream in state
-   */
-  const updateParticipantStream = useCallback((participantId: string, stream: MediaStream) => {
-    setState(prev => {
-      const existingParticipant = prev.participants.find(p => p.id === participantId)
-
-      if (existingParticipant) {
-        return {
-          ...prev,
-          participants: prev.participants.map(p =>
-            p.id === participantId
-              ? {
-                  ...p,
-                  stream,
-                  videoEnabled: stream.getVideoTracks().some(t => t.enabled),
-                  audioEnabled: stream.getAudioTracks().some(t => t.enabled)
-                }
-              : p
-          )
-        }
-      }
-
-      return prev
-    })
-  }, [])
-
-  /**
-   * Update participant connection quality
-   */
-  const updateParticipantConnectionQuality = useCallback((
-    participantId: string,
-    quality: 'excellent' | 'good' | 'poor'
-  ) => {
-    setState(prev => ({
-      ...prev,
-      participants: prev.participants.map(p =>
-        p.id === participantId ? { ...p, connectionQuality: quality } : p
-      )
-    }))
-  }, [])
-
-  /**
-   * Close peer connection
-   */
-  const closePeerConnection = useCallback((participantId: string) => {
-    const pc = peerConnectionsRef.current.get(participantId)
-    if (pc) {
-      pc.close()
-      peerConnectionsRef.current.delete(participantId)
-      console.log(`Closed peer connection for ${participantId}`)
-    }
-
-    remoteStreamsRef.current.delete(participantId)
-    analyserNodesRef.current.delete(participantId)
-
-    setState(prev => ({
-      ...prev,
-      participants: prev.participants.filter(p => p.id !== participantId)
-    }))
-  }, [])
-
-  /**
-   * Set up WebRTC event listeners
+   * Set up WebRTC event listeners (using actual package events from v1.2.0)
    */
   useEffect(() => {
     if (!connection || !enabled) return
 
-    console.log('Setting up WebRTC event listeners')
+    console.log('Setting up WebRTC event listeners (package v1.2.0)')
 
-    // Handle incoming offers
-    connection.on('webrtc:offer', ({ fromUserId, offer }: { fromUserId: string; offer: RTCSessionDescriptionInit }) => {
-      handleOffer(fromUserId, offer)
-    })
-
-    // Handle incoming answers
-    connection.on('webrtc:answer', ({ fromUserId, answer }: { fromUserId: string; answer: RTCSessionDescriptionInit }) => {
-      handleAnswer(fromUserId, answer)
-    })
-
-    // Handle incoming ICE candidates
-    connection.on('webrtc:ice_candidate', ({ fromUserId, candidate }: { fromUserId: string; candidate: RTCIceCandidateInit }) => {
-      handleIceCandidate(fromUserId, candidate)
-    })
-
-    // Handle participant joined - initiate WebRTC connection
-    connection.on('participant_joined', ({ user }: { user: { id: string; username: string } }) => {
-      console.log(`Participant ${user.username} joined, initiating WebRTC connection`)
+    // Handle user joined - setup peer connection (v1.2.0)
+    const handleUserJoined = async ({ user }: { user: { id: string; username: string } }) => {
+      console.log(`User ${user.username} joined, setting up peer connection`)
 
       // Add participant to state
       setState(prev => ({
@@ -436,28 +230,105 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         ]
       }))
 
-      // Only create offer if we have a local stream
-      if (localStreamRef.current) {
-        createOffer(user.id)
+      // Setup peer connection if we have a local stream
+      if (localStreamRef.current && (connection as any).setupPeerConnection) {
+        try {
+          await (connection as any).setupPeerConnection(user.id, localStreamRef.current)
+          await (connection as any).createOffer(user.id)
+          console.log(`Peer connection setup complete for ${user.username}`)
+        } catch (error) {
+          console.error(`Failed to setup peer connection for ${user.username}:`, error)
+        }
       }
-    })
+    }
+
+    // Handle remote stream added (v1.2.0)
+    const handleRemoteStreamAdded = ({ peerId, stream }: { peerId: string; stream: MediaStream }) => {
+      console.log(`Remote stream added for peer ${peerId}`)
+
+      setState(prev => ({
+        ...prev,
+        participants: prev.participants.map(p =>
+          p.id === peerId
+            ? {
+                ...p,
+                stream,
+                videoEnabled: stream.getVideoTracks().some(t => t.enabled),
+                audioEnabled: stream.getAudioTracks().some(t => t.enabled)
+              }
+            : p
+        )
+      }))
+
+      // Set up voice activity detection for remote stream
+      if (stream.getAudioTracks().length > 0) {
+        setupVoiceActivityDetection(peerId, stream)
+      }
+    }
+
+    // Handle remote stream removed (v1.2.0)
+    const handleRemoteStreamRemoved = ({ peerId }: { peerId: string }) => {
+      console.log(`Remote stream removed for peer ${peerId}`)
+
+      setState(prev => ({
+        ...prev,
+        participants: prev.participants.map(p => {
+          if (p.id === peerId) {
+            const { stream, ...rest } = p
+            return rest
+          }
+          return p
+        })
+      }))
+
+      // Cleanup voice activity detection
+      analyserNodesRef.current.delete(peerId)
+    }
 
     // Handle participant left
-    connection.on('participant_left', ({ userId }: { userId: string }) => {
-      console.log(`Participant ${userId} left`)
-      closePeerConnection(userId)
-    })
+    const handleUserLeft = ({ userId }: { userId: string }) => {
+      console.log(`User ${userId} left`)
+
+      setState(prev => ({
+        ...prev,
+        participants: prev.participants.filter(p => p.id !== userId)
+      }))
+
+      // Cleanup voice activity detection
+      analyserNodesRef.current.delete(userId)
+    }
+
+    // Handle screen share started (v1.3.0)
+    const handleScreenShareStarted = () => {
+      console.log('Screen share started')
+      setState(prev => ({ ...prev, isScreenSharing: true }))
+    }
+
+    // Handle screen share stopped (v1.3.0)
+    const handleScreenShareStopped = () => {
+      console.log('Screen share stopped')
+      setState(prev => ({ ...prev, isScreenSharing: false }))
+    }
+
+    // Register event listeners
+    connection.on('user_joined', handleUserJoined)
+    connection.on('remote_stream_added', handleRemoteStreamAdded)
+    connection.on('remote_stream_removed', handleRemoteStreamRemoved)
+    connection.on('user_left', handleUserLeft)
+    connection.on('screen_share_started', handleScreenShareStarted)
+    connection.on('screen_share_stopped', handleScreenShareStopped)
 
     return () => {
       if (connection.removeAllListeners) {
-        connection.removeAllListeners('webrtc:offer')
-        connection.removeAllListeners('webrtc:answer')
-        connection.removeAllListeners('webrtc:ice_candidate')
-        connection.removeAllListeners('participant_joined')
-        connection.removeAllListeners('participant_left')
+        connection.removeAllListeners('user_joined')
+        connection.removeAllListeners('remote_stream_added')
+        connection.removeAllListeners('remote_stream_removed')
+        connection.removeAllListeners('user_left')
+        connection.removeAllListeners('screen_share_started')
+        connection.removeAllListeners('screen_share_stopped')
       }
     }
-  }, [connection, enabled, handleOffer, handleAnswer, handleIceCandidate, createOffer, closePeerConnection])
+  }, [connection, enabled, setupVoiceActivityDetection])
 
   /**
    * Cleanup on unmount
@@ -471,20 +342,12 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         localStreamRef.current.getTracks().forEach(track => track.stop())
       }
 
-      // Close all peer connections
-      peerConnectionsRef.current.forEach((pc, participantId) => {
-        pc.close()
-        console.log(`Closed peer connection for ${participantId}`)
-      })
-      peerConnectionsRef.current.clear()
-
       // Clean up audio context
       if (audioContextRef.current) {
         audioContextRef.current.close()
       }
 
       // Clear references
-      remoteStreamsRef.current.clear()
       analyserNodesRef.current.clear()
     }
   }, [])
@@ -495,6 +358,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     stopLocalStream,
     toggleVideo,
     toggleAudio,
-    createOffer
+    startScreenShare,
+    stopScreenShare
   }
 }

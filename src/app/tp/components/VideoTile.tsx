@@ -12,6 +12,7 @@ interface Participant {
   connectionQuality?: 'excellent' | 'good' | 'poor'
   audioEnabled?: boolean
   videoEnabled?: boolean
+  isScreenSharing?: boolean
 }
 
 interface VideoTileProps {
@@ -145,6 +146,16 @@ export default function VideoTile({
           {participant.isLocal && (
             <span className="px-2 py-0.5 bg-blue-600 text-white text-xs rounded-md font-medium">
               You
+            </span>
+          )}
+
+          {/* Screen sharing indicator (v1.3.0) */}
+          {participant.isScreenSharing && (
+            <span className="px-2 py-0.5 bg-purple-600 text-white text-xs rounded-md font-medium flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm2 1v8h10V5H5z" clipRule="evenodd" />
+              </svg>
+              Screen
             </span>
           )}
         </div>

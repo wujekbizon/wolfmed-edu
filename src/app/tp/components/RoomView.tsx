@@ -87,12 +87,13 @@ export default function RoomView({ room }: RoomViewProps) {
         stream: webrtc.localStream,
         isLocal: true,
         audioEnabled: webrtc.isAudioEnabled,
-        videoEnabled: webrtc.isVideoEnabled
+        videoEnabled: webrtc.isVideoEnabled,
+        isScreenSharing: webrtc.isScreenSharing
       })
     }
 
     return participants
-  }, [webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, roomUser.id, roomUser.username])
+  }, [webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
 
   // Detect active speaker
   useEffect(() => {
@@ -249,6 +250,9 @@ export default function RoomView({ room }: RoomViewProps) {
               onToggleAudio={webrtc.toggleAudio}
               isVideoEnabled={webrtc.isVideoEnabled}
               isAudioEnabled={webrtc.isAudioEnabled}
+              onStartScreenShare={webrtc.startScreenShare}
+              onStopScreenShare={webrtc.stopScreenShare}
+              isScreenSharing={webrtc.isScreenSharing}
             />
           </div>
 

@@ -19,6 +19,9 @@ interface RoomControlsProps {
   onToggleAudio?: () => void
   isVideoEnabled?: boolean
   isAudioEnabled?: boolean
+  onStartScreenShare?: () => void | Promise<void>
+  onStopScreenShare?: () => void | Promise<void>
+  isScreenSharing?: boolean
 }
 
 export default function RoomControls({
@@ -31,7 +34,10 @@ export default function RoomControls({
   onToggleVideo,
   onToggleAudio,
   isVideoEnabled: externalVideoEnabled,
-  isAudioEnabled: externalAudioEnabled
+  isAudioEnabled: externalAudioEnabled,
+  onStartScreenShare,
+  onStopScreenShare,
+  isScreenSharing = false
 }: RoomControlsProps) {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [videoEnabled, setVideoEnabled] = useState(true)
@@ -159,6 +165,34 @@ export default function RoomControls({
             )}
           </svg>
         </button>
+
+        {/* Screen share control (v1.3.0) - only for teachers */}
+        {canStream && onStartScreenShare && onStopScreenShare && (
+          <button
+            onClick={() => {
+              if (isScreenSharing) {
+                onStopScreenShare()
+              } else {
+                onStartScreenShare()
+              }
+            }}
+            disabled={!isConnected || !localStream}
+            className={`p-3 rounded-full ${
+              isScreenSharing
+                ? 'bg-purple-600 hover:bg-purple-700'
+                : 'bg-zinc-600 hover:bg-zinc-500'
+            } ${(!isConnected || !localStream) && 'opacity-50 cursor-not-allowed'}`}
+            title={isScreenSharing ? "Stop Screen Share" : "Start Screen Share"}
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isScreenSharing ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              )}
+            </svg>
+          </button>
+        )}
 
         {/* Stream control - only show for users who can stream */}
         {canStream && (
