@@ -38,6 +38,8 @@ interface RoomStateUpdate {
     canChat: boolean
     canScreenShare: boolean
     isStreaming?: boolean
+    handRaised?: boolean
+    handRaisedAt?: string
   }>
 }
 
@@ -64,6 +66,8 @@ interface RoomState {
     canStream: boolean
     canChat: boolean
     canScreenShare: boolean
+    handRaised?: boolean
+    handRaisedAt?: string
   }>
   systemMessage?: string;
 }
@@ -274,6 +278,91 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }, 5000);
         });
 
+        // Participant Controls (v1.3.1)
+        // Hand raise events
+        connection.on('hand_raised', ({ userId, username, timestamp }: { userId: string, username: string, timestamp: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`${username} raised their hand`);
+
+          setState(prev => ({
+            ...prev,
+            participants: prev.participants.map(p =>
+              p.id === userId
+                ? { ...p, handRaised: true, handRaisedAt: timestamp }
+                : p
+            )
+          }));
+        });
+
+        connection.on('hand_lowered', ({ userId }: { userId: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`Hand lowered by ${userId}`);
+
+          setState(prev => ({
+            ...prev,
+            participants: prev.participants.map(p => {
+              if (p.id === userId) {
+                const { handRaised, handRaisedAt, ...rest } = p;
+                return { ...rest, handRaised: false } as typeof p;
+              }
+              return p;
+            })
+          }));
+        });
+
+        // Participant kicked
+        connection.on('participant_kicked', ({ userId, reason }: { userId: string, reason: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`${userId} was removed: ${reason}`);
+
+          setState(prev => ({
+            ...prev,
+            participants: prev.participants.filter(p => p.id !== userId)
+          }));
+        });
+
+        // Client-side event handling (v1.3.1)
+        // Mute all participants
+        connection.on('mute_all', () => {
+          if (!mountedRef.current) return;
+          console.log('Teacher muted all participants');
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: 'Teacher has muted all participants'
+          }));
+        });
+
+        // Individual participant muted by teacher
+        connection.on('muted_by_teacher', ({ teacherId, teacherName }: { teacherId: string, teacherName: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`You were muted by ${teacherName}`);
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: `You have been muted by ${teacherName}`
+          }));
+        });
+
+        // Kicked from room
+        connection.on('kicked_from_room', ({ reason, kickedBy }: { reason: string, kickedBy: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`You were kicked from the room: ${reason}`);
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: `You have been removed from the room: ${reason}`,
+            isConnected: false
+          }));
+
+          // Disconnect after a brief delay to show the message
+          setTimeout(() => {
+            if (connectionRef.current && mountedRef.current) {
+              connectionRef.current.disconnect();
+            }
+          }, 2000);
+        });
+
         await connection.connect();
         return connection;
       } catch (error) {
@@ -400,6 +489,67 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     }
   };
 
+  // Participant Controls (v1.3.1)
+  const raiseHand = useCallback(() => {
+    if (connectionRef.current) {
+      connectionRef.current.emit('raise_hand', {
+        roomId,
+        userId: userRef.current.id
+      });
+    }
+  }, [roomId]);
+
+  const lowerHand = useCallback(() => {
+    if (connectionRef.current) {
+      connectionRef.current.emit('lower_hand', {
+        roomId,
+        userId: userRef.current.id
+      });
+    }
+  }, [roomId]);
+
+  const muteAllParticipants = useCallback(() => {
+    if (connectionRef.current) {
+      if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
+        throw new Error('Only teachers can mute all participants');
+      }
+
+      connectionRef.current.emit('mute_all_participants', {
+        roomId,
+        requesterId: userRef.current.id
+      });
+    }
+  }, [roomId]);
+
+  const muteParticipant = useCallback((targetUserId: string) => {
+    if (connectionRef.current) {
+      if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
+        throw new Error('Only teachers can mute participants');
+      }
+
+      connectionRef.current.emit('mute_participant', {
+        roomId,
+        targetUserId,
+        requesterId: userRef.current.id
+      });
+    }
+  }, [roomId]);
+
+  const kickParticipant = useCallback((targetUserId: string, reason?: string) => {
+    if (connectionRef.current) {
+      if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
+        throw new Error('Only teachers can kick participants');
+      }
+
+      connectionRef.current.emit('kick_participant', {
+        roomId,
+        targetUserId,
+        requesterId: userRef.current.id,
+        reason
+      });
+    }
+  }, [roomId]);
+
   return {
     state,
     localStream,
@@ -408,6 +558,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     startStream,
     stopStream,
     exitRoom,
-    connection: connectionRef.current // Expose for event listeners (v1.1.3+)
+    connection: connectionRef.current, // Expose for event listeners (v1.1.3+)
+    // Participant Controls (v1.3.1)
+    raiseHand,
+    lowerHand,
+    muteAllParticipants,
+    muteParticipant,
+    kickParticipant
   };
 } 

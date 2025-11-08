@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import type { Room } from '@teaching-playground/core'
+import type { Room, User } from '@teaching-playground/core'
 import { useUser } from '@clerk/nextjs'
 
 interface RoomControlsProps {
@@ -22,6 +22,18 @@ interface RoomControlsProps {
   onStartScreenShare?: () => void | Promise<void>
   onStopScreenShare?: () => void | Promise<void>
   isScreenSharing?: boolean
+  // Participant Controls (v1.3.1)
+  currentUser?: User
+  participants?: Array<{
+    id: string
+    username: string
+    role: "teacher" | "student" | "admin"
+    handRaised?: boolean
+    handRaisedAt?: string
+  }>
+  onRaiseHand?: () => void
+  onLowerHand?: () => void
+  onMuteAllParticipants?: () => void
 }
 
 export default function RoomControls({
@@ -37,7 +49,13 @@ export default function RoomControls({
   isAudioEnabled: externalAudioEnabled,
   onStartScreenShare,
   onStopScreenShare,
-  isScreenSharing = false
+  isScreenSharing = false,
+  // Participant Controls (v1.3.1)
+  currentUser,
+  participants = [],
+  onRaiseHand,
+  onLowerHand,
+  onMuteAllParticipants
 }: RoomControlsProps) {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [videoEnabled, setVideoEnabled] = useState(true)
@@ -126,6 +144,11 @@ export default function RoomControls({
   // WebRTC mode: Camera button enabled when connected, media buttons when stream exists
   const isCameraButtonDisabled = !isConnected
   const isMediaButtonDisabled = !isConnected || !hasLocalStream
+
+  // Participant Controls (v1.3.1)
+  const currentUserParticipant = participants.find(p => p.id === currentUser?.id)
+  const isHandRaised = currentUserParticipant?.handRaised || false
+  const isTeacherOrAdmin = userRole === 'teacher' || userRole === 'admin'
 
   return (
     <div className="bg-zinc-800 rounded-lg border border-zinc-700 p-4">
@@ -216,6 +239,40 @@ export default function RoomControls({
               ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               )}
+            </svg>
+          </button>
+        )}
+
+        {/* Mute All Participants (v1.3.1) - teachers/admins only */}
+        {isTeacherOrAdmin && onMuteAllParticipants && (
+          <button
+            onClick={onMuteAllParticipants}
+            disabled={!isConnected}
+            className={`p-3 rounded-full bg-orange-600 hover:bg-orange-700 ${
+              !isConnected && 'opacity-50 cursor-not-allowed'
+            }`}
+            title="Mute All Participants"
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+            </svg>
+          </button>
+        )}
+
+        {/* Hand Raise (v1.3.1) - students */}
+        {!isTeacherOrAdmin && onRaiseHand && onLowerHand && (
+          <button
+            onClick={isHandRaised ? onLowerHand : onRaiseHand}
+            disabled={!isConnected}
+            className={`p-3 rounded-full ${
+              isHandRaised
+                ? 'bg-yellow-500 hover:bg-yellow-600'
+                : 'bg-zinc-600 hover:bg-zinc-500'
+            } ${!isConnected && 'opacity-50 cursor-not-allowed'}`}
+            title={isHandRaised ? "Lower Hand" : "Raise Hand"}
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
             </svg>
           </button>
         )}

@@ -50,7 +50,13 @@ export default function RoomView({ room }: RoomViewProps) {
     startStream,
     stopStream,
     exitRoom,
-    connection
+    connection,
+    // Participant Controls (v1.3.1)
+    raiseHand,
+    lowerHand,
+    muteAllParticipants,
+    muteParticipant,
+    kickParticipant
   } = useRoomConnection({
     roomId: room.id,
     user: roomUser,
@@ -267,6 +273,12 @@ export default function RoomView({ room }: RoomViewProps) {
               onStartScreenShare={webrtc.startScreenShare}
               onStopScreenShare={webrtc.stopScreenShare}
               isScreenSharing={webrtc.isScreenSharing}
+              // Participant Controls (v1.3.1)
+              currentUser={roomUser}
+              participants={state.participants}
+              onRaiseHand={raiseHand}
+              onLowerHand={lowerHand}
+              onMuteAllParticipants={muteAllParticipants}
             />
           </div>
 
@@ -276,6 +288,10 @@ export default function RoomView({ room }: RoomViewProps) {
                 <RoomParticipants
                   roomId={room.id}
                   participants={state.participants as RoomParticipant[]}
+                  currentUserId={roomUser.id}
+                  currentUserRole={roomUser.role}
+                  onMuteParticipant={muteParticipant}
+                  onKickParticipant={kickParticipant}
                 />
               </div>
               <div className="row-span-1 bg-zinc-800 rounded-lg border border-zinc-700 overflow-hidden">

@@ -4,14 +4,35 @@ import { useEffect, useState } from 'react'
 import type { RoomParticipant } from '@teaching-playground/core'
 import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
+// Extended participant interface with v1.3.1 fields
+interface ExtendedRoomParticipant extends RoomParticipant {
+  handRaised?: boolean
+  handRaisedAt?: string
+}
+
 interface RoomParticipantsProps {
   roomId: string
   participants?: Array<any> // Can be RoomParticipant objects or socket IDs (strings)
+  // Participant Controls (v1.3.1)
+  currentUserId?: string
+  currentUserRole?: 'teacher' | 'student' | 'admin'
+  onMuteParticipant?: (targetUserId: string) => void
+  onKickParticipant?: (targetUserId: string, reason?: string) => void
 }
 
-export default function RoomParticipants({ roomId, participants: wsParticipants }: RoomParticipantsProps) {
+export default function RoomParticipants({
+  roomId,
+  participants: wsParticipants,
+  // Participant Controls (v1.3.1)
+  currentUserId,
+  currentUserRole,
+  onMuteParticipant,
+  onKickParticipant
+}: RoomParticipantsProps) {
   // v1.1.0 sends full participant objects!
-  const participants = (wsParticipants || []) as RoomParticipant[]
+  const participants = (wsParticipants || []) as ExtendedRoomParticipant[]
+
+  const isTeacherOrAdmin = currentUserRole === 'teacher' || currentUserRole === 'admin'
 
   useEffect(() => {
     console.log('Participants updated:', participants.length, participants)
@@ -34,17 +55,33 @@ export default function RoomParticipants({ roomId, participants: wsParticipants 
           <ul className="divide-y divide-zinc-700">
             {participants.map((participant) => (
               <li key={participant.id} className="p-3 flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full ${participant.isStreaming ? 'bg-green-500' : 'bg-blue-500'} flex items-center justify-center text-white font-medium`}>
+                <div className={`w-8 h-8 rounded-full ${participant.isStreaming ? 'bg-green-500' : 'bg-blue-500'} flex items-center justify-center text-white font-medium relative`}>
                   {participant.username.charAt(0).toUpperCase()}
+                  {/* Hand Raised Indicator (v1.3.1) */}
+                  {participant.handRaised && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 rounded-full flex items-center justify-center" title={participant.handRaisedAt ? `Hand raised at ${new Date(participant.handRaisedAt).toLocaleTimeString()}` : 'Hand raised'}>
+                      <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                      </svg>
+                    </span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-2">
                     <p className="text-zinc-200 font-medium truncate">
                       {participant.username}
                     </p>
                     {participant.isStreaming && (
-                      <span className="ml-2 px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
+                      <span className="px-1.5 py-0.5 bg-green-500/20 text-green-400 text-xs rounded">
                         Streaming
+                      </span>
+                    )}
+                    {participant.handRaised && (
+                      <span className="px-1.5 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11" />
+                        </svg>
+                        Hand raised
                       </span>
                     )}
                   </div>
@@ -52,7 +89,8 @@ export default function RoomParticipants({ roomId, participants: wsParticipants 
                     {participant.role === 'teacher' ? 'Teacher' : 'Student'} • Joined {new Date(participant.joinedAt).toLocaleTimeString()}
                   </p>
                 </div>
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
+                  {/* Capability icons */}
                   {participant.canStream && (
                     <span className="w-6 h-6 rounded-full bg-zinc-800 flex items-center justify-center" title="Can stream">
                       <svg className="w-4 h-4 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -73,6 +111,41 @@ export default function RoomParticipants({ roomId, participants: wsParticipants 
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </span>
+                  )}
+
+                  {/* Teacher/Admin Controls (v1.3.1) - Don't show for current user */}
+                  {isTeacherOrAdmin && participant.id !== currentUserId && (
+                    <>
+                      {/* Mute Participant */}
+                      {onMuteParticipant && (
+                        <button
+                          onClick={() => onMuteParticipant(participant.id)}
+                          className="w-7 h-7 rounded-full bg-orange-600 hover:bg-orange-700 flex items-center justify-center transition-colors"
+                          title="Mute participant"
+                        >
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* Kick Participant */}
+                      {onKickParticipant && (
+                        <button
+                          onClick={() => {
+                            if (confirm(`Are you sure you want to remove ${participant.username} from the room?`)) {
+                              onKickParticipant(participant.id, 'Removed by teacher')
+                            }
+                          }}
+                          className="w-7 h-7 rounded-full bg-red-600 hover:bg-red-700 flex items-center justify-center transition-colors"
+                          title="Remove participant"
+                        >
+                          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </li>
