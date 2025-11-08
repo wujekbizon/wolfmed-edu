@@ -57,19 +57,38 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       localStreamRef.current = stream
 
+      // Debug: Log stream details
+      const videoTracks = stream.getVideoTracks()
+      const audioTracks = stream.getAudioTracks()
+      console.log('[useWebRTC] Stream created:', {
+        videoTracks: videoTracks.map(t => ({
+          id: t.id,
+          label: t.label,
+          enabled: t.enabled,
+          muted: t.muted,
+          readyState: t.readyState
+        })),
+        audioTracks: audioTracks.map(t => ({
+          id: t.id,
+          label: t.label,
+          enabled: t.enabled,
+          muted: t.muted,
+          readyState: t.readyState
+        }))
+      })
+
       setState(prev => ({
         ...prev,
         localStream: stream,
-        isVideoEnabled: stream.getVideoTracks().length > 0,
-        isAudioEnabled: stream.getAudioTracks().length > 0
+        isVideoEnabled: videoTracks.length > 0 && videoTracks[0]?.enabled,
+        isAudioEnabled: audioTracks.length > 0 && audioTracks[0]?.enabled
       }))
 
-      // Set up voice activity detection for local stream
-      if (stream.getAudioTracks().length > 0) {
-        setupVoiceActivityDetection(userId, stream)
-      }
+      // Note: We don't set up voice activity detection for local stream
+      // The local user's speaking indicator can be shown through mic level UI
+      // Voice activity detection is only needed for remote participants
 
-      console.log('Local stream started successfully')
+      console.log('[useWebRTC] Local stream started successfully')
       return stream
     } catch (error) {
       console.error('Failed to start local media stream:', error)

@@ -34,11 +34,25 @@ export default function VideoTile({
   // Attach stream to video element
   useEffect(() => {
     if (videoRef.current && participant.stream) {
+      console.log(`[VideoTile] Attaching stream for ${participant.username}:`, {
+        streamId: participant.stream.id,
+        videoTracks: participant.stream.getVideoTracks().map(t => ({
+          id: t.id,
+          enabled: t.enabled,
+          muted: t.muted,
+          readyState: t.readyState
+        })),
+        isLocal: participant.isLocal
+      })
+
       videoRef.current.srcObject = participant.stream
 
       // Check if stream has video tracks
       const videoTracks = participant.stream.getVideoTracks()
-      setHasVideo(videoTracks.length > 0 && videoTracks[0]?.enabled === true)
+      const hasVideoTrack = videoTracks.length > 0 && videoTracks[0]?.enabled === true
+      setHasVideo(hasVideoTrack)
+
+      console.log(`[VideoTile] ${participant.username} hasVideo:`, hasVideoTrack)
     }
 
     return () => {
@@ -46,7 +60,7 @@ export default function VideoTile({
         videoRef.current.srcObject = null
       }
     }
-  }, [participant.stream])
+  }, [participant.stream, participant.username, participant.isLocal])
 
   // Monitor video track enabled state
   useEffect(() => {
@@ -117,6 +131,15 @@ export default function VideoTile({
           playsInline
           muted={participant.isLocal}
           className="absolute inset-0 w-full h-full object-cover"
+          onLoadedMetadata={(e) => {
+            console.log(`[VideoTile] Video metadata loaded for ${participant.username}:`, {
+              videoWidth: e.currentTarget.videoWidth,
+              videoHeight: e.currentTarget.videoHeight,
+              readyState: e.currentTarget.readyState
+            })
+          }}
+          onPlay={() => console.log(`[VideoTile] Video playing for ${participant.username}`)}
+          onError={(e) => console.error(`[VideoTile] Video error for ${participant.username}:`, e)}
         />
       ) : (
         /* Avatar fallback when video is off */
