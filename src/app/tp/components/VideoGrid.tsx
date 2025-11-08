@@ -32,6 +32,23 @@ export default function VideoGrid({
 }: VideoGridProps) {
   const gridRef = useRef<HTMLDivElement>(null)
 
+  // Debug: Log participants received
+  useEffect(() => {
+    console.log('[VideoGrid] Received participants:', participants.length)
+    participants.forEach(p => {
+      console.log('[VideoGrid] Participant:', {
+        id: p.id,
+        username: p.username,
+        hasStream: !!p.stream,
+        streamId: p.stream?.id,
+        videoTracks: p.stream?.getVideoTracks().length,
+        isLocal: p.isLocal,
+        videoEnabled: p.videoEnabled,
+        audioEnabled: p.audioEnabled
+      })
+    })
+  }, [participants])
+
   // Calculate grid dimensions based on participant count
   const getGridLayout = (count: number) => {
     if (count === 1) return 'grid-cols-1'

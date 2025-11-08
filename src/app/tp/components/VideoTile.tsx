@@ -71,18 +71,34 @@ export default function VideoTile({
 
     const checkVideoState = () => {
       setHasVideo(videoTrack.enabled)
+      console.log(`[VideoTile] ${participant.username} track enabled state:`, videoTrack.enabled)
     }
 
     // Check immediately
     checkVideoState()
 
-    // Listen for track enabled/disabled events
+    // Listen for track ended event
     videoTrack.addEventListener('ended', checkVideoState)
+
+    // Poll track enabled state since MediaStreamTrack doesn't fire events when enabled changes
+    const pollInterval = setInterval(checkVideoState, 500)
 
     return () => {
       videoTrack.removeEventListener('ended', checkVideoState)
+      clearInterval(pollInterval)
     }
-  }, [participant.stream])
+  }, [participant.stream, participant.username])
+
+  // Also sync with participant.videoEnabled prop changes
+  useEffect(() => {
+    if (participant.stream && participant.videoEnabled !== undefined) {
+      const videoTrack = participant.stream.getVideoTracks()[0]
+      if (videoTrack) {
+        setHasVideo(videoTrack.enabled)
+        console.log(`[VideoTile] ${participant.username} syncing hasVideo with prop:`, participant.videoEnabled, 'track enabled:', videoTrack.enabled)
+      }
+    }
+  }, [participant.videoEnabled, participant.stream, participant.username])
 
   // Get connection quality color
   const getConnectionColor = (quality?: 'excellent' | 'good' | 'poor') => {

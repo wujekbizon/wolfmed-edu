@@ -81,7 +81,7 @@ export default function RoomView({ room }: RoomViewProps) {
 
     // Add local user if they have a stream
     if (webrtc.localStream) {
-      participants.unshift({
+      const localParticipant = {
         id: roomUser.id,
         username: roomUser.username,
         stream: webrtc.localStream,
@@ -89,9 +89,23 @@ export default function RoomView({ room }: RoomViewProps) {
         audioEnabled: webrtc.isAudioEnabled,
         videoEnabled: webrtc.isVideoEnabled,
         isScreenSharing: webrtc.isScreenSharing
+      }
+
+      console.log('[RoomView] Adding local participant to videoParticipants:', {
+        id: localParticipant.id,
+        username: localParticipant.username,
+        hasStream: !!localParticipant.stream,
+        streamId: localParticipant.stream?.id,
+        videoTracks: localParticipant.stream?.getVideoTracks().length,
+        audioEnabled: localParticipant.audioEnabled,
+        videoEnabled: localParticipant.videoEnabled,
+        isScreenSharing: localParticipant.isScreenSharing
       })
+
+      participants.unshift(localParticipant)
     }
 
+    console.log('[RoomView] videoParticipants count:', participants.length)
     return participants
   }, [webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
 
