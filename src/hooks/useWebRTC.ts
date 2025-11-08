@@ -239,31 +239,49 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     console.log('Setting up WebRTC event listeners (package v1.2.0)')
 
     // Handle user joined - setup peer connection (v1.2.0)
-    const handleUserJoined = async ({ user }: { user: { id: string; username: string } }) => {
-      console.log(`User ${user.username} joined, setting up peer connection`)
+    const handleUserJoined = async (data: any) => {
+      // v1.3.1 package sends { userId, socketId } instead of { user }
+      const userId = data.userId || data.user?.id
+      const socketId = data.socketId
+      const username = data.username || data.user?.username || 'Unknown User'
 
-      // Add participant to state
-      setState(prev => ({
-        ...prev,
-        participants: [
-          ...prev.participants,
-          {
-            id: user.id,
-            username: user.username,
-            isLocal: false,
-            connectionQuality: 'good'
-          }
-        ]
-      }))
+      if (!userId && !socketId) {
+        console.error('user_joined event missing userId/socketId:', data)
+        return
+      }
+
+      const peerId = userId || socketId
+      console.log(`User ${username} (${peerId}) joined, setting up peer connection`)
+
+      // Add participant to state (only if not already present)
+      setState(prev => {
+        if (prev.participants.some(p => p.id === peerId)) {
+          console.log(`Participant ${peerId} already in state`)
+          return prev
+        }
+
+        return {
+          ...prev,
+          participants: [
+            ...prev.participants,
+            {
+              id: peerId,
+              username,
+              isLocal: false,
+              connectionQuality: 'good'
+            }
+          ]
+        }
+      })
 
       // Setup peer connection if we have a local stream
       if (localStreamRef.current && (connection as any).setupPeerConnection) {
         try {
-          await (connection as any).setupPeerConnection(user.id, localStreamRef.current)
-          await (connection as any).createOffer(user.id)
-          console.log(`Peer connection setup complete for ${user.username}`)
+          await (connection as any).setupPeerConnection(peerId, localStreamRef.current)
+          await (connection as any).createOffer(peerId)
+          console.log(`Peer connection setup complete for ${username}`)
         } catch (error) {
-          console.error(`Failed to setup peer connection for ${user.username}:`, error)
+          console.error(`Failed to setup peer connection for ${username}:`, error)
         }
       }
     }
@@ -313,8 +331,17 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     }
 
     // Handle participant left
-    const handleUserLeft = ({ userId }: { userId: string }) => {
-      console.log(`User ${userId} left`)
+    const handleUserLeft = (data: any) => {
+      // v1.3.1 package may send { socketId } or { userId }
+      const userId = data.userId || data.socketId
+      const username = data.username || 'Unknown User'
+
+      if (!userId) {
+        console.error('user_left event missing userId/socketId:', data)
+        return
+      }
+
+      console.log(`User ${username} (${userId}) left`)
 
       setState(prev => ({
         ...prev,
