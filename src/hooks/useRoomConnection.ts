@@ -118,9 +118,13 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         connection.on('disconnected', async () => {
           console.log('Disconnected from room:', roomId);
           if (!mountedRef.current) return;
-          
-          setState(prev => ({ ...prev, isConnected: false }));
-          
+
+          setState(prev => ({
+            ...prev,
+            isConnected: false,
+            systemMessage: 'Disconnected from server. Attempting to reconnect...'
+          }));
+
           // If we're unmounting, this is handled in the cleanup function
           // If this is an unexpected disconnection, we still want to be in the room
         });
@@ -364,10 +368,19 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         });
 
         await connection.connect();
+        isConnectingRef.current = false;
         return connection;
       } catch (error) {
         console.error('Failed to setup connection:', error);
         isConnectingRef.current = false;
+
+        // Show user-friendly error message
+        setState(prev => ({
+          ...prev,
+          isConnected: false,
+          systemMessage: 'Unable to connect to server. Please check your internet connection or try again later.'
+        }));
+
         return null;
       }
     };

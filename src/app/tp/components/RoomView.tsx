@@ -80,10 +80,26 @@ export default function RoomView({ room }: RoomViewProps) {
   const [cleanupReason, setCleanupReason] = useState('')
 
   console.log('Room participants from state:', state.participants)
+  console.log('WebRTC participants:', webrtc.participants)
 
-  // Combine local user and WebRTC participants for video display
+  // Build video participants from room state + WebRTC streams
   const videoParticipants = useMemo(() => {
-    const participants = [...webrtc.participants]
+    // Start with room state participants (authoritative source)
+    const participants = state.participants.map(p => {
+      // Find matching WebRTC participant by looking for stream with matching socketId
+      const webrtcParticipant = webrtc.participants.find(wp => wp.id === p.socketId)
+
+      return {
+        id: p.id, // Use user ID for consistency
+        username: p.username,
+        stream: webrtcParticipant?.stream,
+        isLocal: false,
+        audioEnabled: webrtcParticipant?.audioEnabled,
+        videoEnabled: webrtcParticipant?.videoEnabled,
+        isSpeaking: webrtcParticipant?.isSpeaking,
+        connectionQuality: webrtcParticipant?.connectionQuality
+      }
+    })
 
     // Add local user if they have a stream
     if (webrtc.localStream) {
@@ -108,12 +124,19 @@ export default function RoomView({ room }: RoomViewProps) {
         isScreenSharing: localParticipant.isScreenSharing
       })
 
-      participants.unshift(localParticipant)
+      // Add local user if not already in the list
+      if (!participants.some(p => p.id === roomUser.id)) {
+        participants.unshift(localParticipant)
+      } else {
+        // Update existing entry with local stream
+        const index = participants.findIndex(p => p.id === roomUser.id)
+        participants[index] = { ...participants[index], ...localParticipant }
+      }
     }
 
     console.log('[RoomView] videoParticipants count:', participants.length)
     return participants
-  }, [webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
+  }, [state.participants, webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
 
   // Detect active speaker
   useEffect(() => {

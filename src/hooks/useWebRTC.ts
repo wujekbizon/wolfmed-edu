@@ -245,13 +245,14 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       const socketId = data.socketId
       const username = data.username || data.user?.username || 'Unknown User'
 
-      if (!userId && !socketId) {
-        console.error('user_joined event missing userId/socketId:', data)
+      if (!socketId) {
+        console.error('user_joined event missing socketId:', data)
         return
       }
 
-      const peerId = userId || socketId
-      console.log(`User ${username} (${peerId}) joined, setting up peer connection`)
+      // IMPORTANT: Use socketId for peer connections since ICE candidates come with socketId
+      const peerId = socketId
+      console.log(`User ${username} (userId: ${userId}, socketId: ${socketId}) joined, setting up peer connection`)
 
       // Add participant to state (only if not already present)
       setState(prev => {
@@ -279,7 +280,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         try {
           await (connection as any).setupPeerConnection(peerId, localStreamRef.current)
           await (connection as any).createOffer(peerId)
-          console.log(`Peer connection setup complete for ${username}`)
+          console.log(`Peer connection setup complete for ${username} (socketId: ${peerId})`)
         } catch (error) {
           console.error(`Failed to setup peer connection for ${username}:`, error)
         }
@@ -332,25 +333,27 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle participant left
     const handleUserLeft = (data: any) => {
-      // v1.3.1 package may send { socketId } or { userId }
-      const userId = data.userId || data.socketId
+      // v1.3.1 package sends { socketId } for user_left event
+      const socketId = data.socketId
       const username = data.username || 'Unknown User'
 
-      if (!userId) {
-        console.error('user_left event missing userId/socketId:', data)
+      if (!socketId) {
+        console.error('user_left event missing socketId:', data)
         return
       }
 
-      console.log(`User ${username} (${userId}) left`)
+      // Use socketId as peerId (consistent with handleUserJoined)
+      const peerId = socketId
+      console.log(`User ${username} (socketId: ${peerId}) left`)
 
       setState(prev => ({
         ...prev,
-        participants: prev.participants.filter(p => p.id !== userId)
+        participants: prev.participants.filter(p => p.id !== peerId)
       }))
 
       // Cleanup voice activity detection
-      analyserNodesRef.current.delete(userId)
-      speakingStateRef.current.delete(userId)
+      analyserNodesRef.current.delete(peerId)
+      speakingStateRef.current.delete(peerId)
     }
 
     // Handle screen share started (v1.3.0)

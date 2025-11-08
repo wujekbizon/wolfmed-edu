@@ -13,12 +13,11 @@ export function WaitingRoomView({ lectureDate, minutesUntilStart }: WaitingRoomV
   const router = useRouter()
   const [isChecking, setIsChecking] = useState(false)
 
-  // Less aggressive polling - check every 30 seconds
-  // Teacher starting the lecture will trigger revalidatePath automatically
+  // Poll every 10 seconds to check if lecture has started
   useEffect(() => {
     const interval = setInterval(() => {
       router.refresh()
-    }, 30000)
+    }, 10000)
 
     return () => clearInterval(interval)
   }, [router])
@@ -26,7 +25,6 @@ export function WaitingRoomView({ lectureDate, minutesUntilStart }: WaitingRoomV
   const handleCheckAgain = () => {
     setIsChecking(true)
     router.refresh()
-    // Reset button state after a brief moment
     setTimeout(() => setIsChecking(false), 1000)
   }
 
