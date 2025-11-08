@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 
 const isProtectedRoute = createRouteMatcher(['/panel(.*)', '/blog(.*)', '/forum(.*)', '/tp(.*)'])
 const isAdminRoute = createRouteMatcher(['/blog/admin(.*)'])
-const isTeacherRoute = createRouteMatcher(['/tp', '/tp/settings', '/tp/communication', '/tp/lectures(.*)'])
+const isTeacherRoute = createRouteMatcher(['/tp', '/tp/rooms', '/tp/settings', '/tp/communication', '/tp/lectures(.*)'])
 const isRoomRoute = createRouteMatcher(['/tp/rooms/(.*)'])
 
 export default clerkMiddleware(async (auth, request) => {
