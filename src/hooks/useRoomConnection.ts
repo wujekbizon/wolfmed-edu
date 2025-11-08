@@ -181,12 +181,13 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         connection.on('room_state', handleRoomState);
 
         // Handle message history (v1.1.0)
-        connection.on('message_history', ({ messages }: { messages: RoomMessage[] }) => {
+        connection.on('message_history', (data: { messages?: RoomMessage[] }) => {
           if (!mountedRef.current) return;
+          const messages = data?.messages || [];
           console.log('Received message history:', messages.length, 'messages');
           setState(prev => ({
             ...prev,
-            messages: messages || []
+            messages
           }));
         });
 
