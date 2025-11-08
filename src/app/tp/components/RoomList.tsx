@@ -1,7 +1,3 @@
-'use client'
-
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { Room } from '@/types/room'
 import { RoomCard } from './RoomCard'
 
@@ -10,16 +6,6 @@ interface RoomListProps {
 }
 
 export function RoomList({ rooms }: RoomListProps) {
-  const router = useRouter()
-
-  // Poll for updates every 5 seconds to show new rooms/lectures in real-time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      router.refresh() // Revalidate server component data
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [router])
 
   if (rooms.length === 0) {
     return (

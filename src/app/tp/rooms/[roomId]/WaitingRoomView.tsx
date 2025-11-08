@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
@@ -11,15 +11,24 @@ interface WaitingRoomViewProps {
 
 export function WaitingRoomView({ lectureDate, minutesUntilStart }: WaitingRoomViewProps) {
   const router = useRouter()
+  const [isChecking, setIsChecking] = useState(false)
 
-  // Poll every 10 seconds to check if lecture has started
+  // Less aggressive polling - check every 30 seconds
+  // Teacher starting the lecture will trigger revalidatePath automatically
   useEffect(() => {
     const interval = setInterval(() => {
-      router.refresh() // Revalidate to check if lecture started
-    }, 10000)
+      router.refresh()
+    }, 30000)
 
     return () => clearInterval(interval)
   }, [router])
+
+  const handleCheckAgain = () => {
+    setIsChecking(true)
+    router.refresh()
+    // Reset button state after a brief moment
+    setTimeout(() => setIsChecking(false), 1000)
+  }
 
   return (
     <div className="flex items-center justify-center h-[calc(100vh-12rem)]">
@@ -54,12 +63,21 @@ export function WaitingRoomView({ lectureDate, minutesUntilStart }: WaitingRoomV
         <p className="text-xs text-zinc-600 mb-4">
           This page will automatically refresh when the lecture starts
         </p>
-        <Link
-          href="/tp/rooms"
-          className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-        >
-          Back to Rooms
-        </Link>
+        <div className="flex gap-3 justify-center">
+          <button
+            onClick={handleCheckAgain}
+            disabled={isChecking}
+            className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+          >
+            {isChecking ? 'Checking...' : 'Check Again'}
+          </button>
+          <Link
+            href="/tp/rooms"
+            className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+          >
+            Back to Rooms
+          </Link>
+        </div>
       </div>
     </div>
   )

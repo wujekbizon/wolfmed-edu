@@ -115,6 +115,7 @@ export async function createLecture(formState: FormState, formData: FormData): P
   }
 
   revalidatePath('/tp')
+  revalidatePath('/tp/rooms')
   return toFormState('SUCCESS', 'Wykład został utworzony pomyślnie! ')
 }
 
@@ -138,6 +139,7 @@ export async function cancelLecture(formState: FormState, formData: FormData) {
   }
 
   revalidatePath('/tp')
+  revalidatePath('/tp/rooms')
   return toFormState('SUCCESS', 'Lecture cancelled successfully')
 }
 
@@ -176,6 +178,7 @@ export async function updateLecture(formState: FormState, formData: FormData): P
   }
 
   revalidatePath('/tp')
+  revalidatePath('/tp/rooms')
   return toFormState('SUCCESS', 'Lecture updated successfully')
 }
 
@@ -185,6 +188,16 @@ export async function updateLectureStatus(lectureId: string, status: Lecture['st
 
   try {
     await eventSystem.updateEventStatus(lectureId, status)
+
+    // Get the lecture to find its roomId for targeted revalidation
+    const lecture = await db.findOne('events', { id: lectureId })
+    if (lecture?.roomId) {
+      revalidatePath(`/tp/rooms/${lecture.roomId}`)
+    }
+
+    // Revalidate lists
+    revalidatePath('/tp')
+    revalidatePath('/tp/rooms')
   } catch (error) {
     console.error('Error updating lecture status:', error)
     throw error
@@ -205,6 +218,7 @@ export async function endLecture(formState: FormState, formData: FormData) {
 
   // Force revalidation
   revalidatePath('/tp')
+  revalidatePath('/tp/rooms')
   return toFormState('SUCCESS', 'Lecture completed successfully')
 }
 
