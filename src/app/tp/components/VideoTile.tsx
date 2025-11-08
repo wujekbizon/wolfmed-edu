@@ -30,6 +30,7 @@ export default function VideoTile({
 }: VideoTileProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [hasVideo, setHasVideo] = useState(false)
+  const lastEnabledStateRef = useRef<boolean | null>(null)
 
   // Attach stream to video element
   useEffect(() => {
@@ -62,7 +63,7 @@ export default function VideoTile({
     }
   }, [participant.stream, participant.username, participant.isLocal])
 
-  // Monitor video track enabled state
+  // Monitor video track enabled state - ONLY update when it changes to prevent re-render loops
   useEffect(() => {
     if (!participant.stream) return
 
@@ -70,8 +71,13 @@ export default function VideoTile({
     if (!videoTrack) return
 
     const checkVideoState = () => {
-      setHasVideo(videoTrack.enabled)
-      console.log(`[VideoTile] ${participant.username} track enabled state:`, videoTrack.enabled)
+      const currentEnabled = videoTrack.enabled
+      // Only update if the value actually changed
+      if (lastEnabledStateRef.current !== currentEnabled) {
+        console.log(`[VideoTile] ${participant.username} track enabled changed:`, lastEnabledStateRef.current, '->', currentEnabled)
+        lastEnabledStateRef.current = currentEnabled
+        setHasVideo(currentEnabled)
+      }
     }
 
     // Check immediately
@@ -86,19 +92,9 @@ export default function VideoTile({
     return () => {
       videoTrack.removeEventListener('ended', checkVideoState)
       clearInterval(pollInterval)
+      lastEnabledStateRef.current = null
     }
   }, [participant.stream, participant.username])
-
-  // Also sync with participant.videoEnabled prop changes
-  useEffect(() => {
-    if (participant.stream && participant.videoEnabled !== undefined) {
-      const videoTrack = participant.stream.getVideoTracks()[0]
-      if (videoTrack) {
-        setHasVideo(videoTrack.enabled)
-        console.log(`[VideoTile] ${participant.username} syncing hasVideo with prop:`, participant.videoEnabled, 'track enabled:', videoTrack.enabled)
-      }
-    }
-  }, [participant.videoEnabled, participant.stream, participant.username])
 
   // Get connection quality color
   const getConnectionColor = (quality?: 'excellent' | 'good' | 'poor') => {
@@ -127,6 +123,15 @@ export default function VideoTile({
   const showVideo = hasVideo && participant.videoEnabled !== false
   const audioEnabled = participant.audioEnabled !== false
 
+  // Debug: Log rendering state
+  console.log(`[VideoTile] ${participant.username} render:`, {
+    hasVideo,
+    'participant.videoEnabled': participant.videoEnabled,
+    showVideo,
+    hasStream: !!participant.stream,
+    isLocal: participant.isLocal
+  })
+
   return (
     <div
       onClick={onClick}
@@ -146,7 +151,7 @@ export default function VideoTile({
           autoPlay
           playsInline
           muted={participant.isLocal}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-0"
           onLoadedMetadata={(e) => {
             console.log(`[VideoTile] Video metadata loaded for ${participant.username}:`, {
               videoWidth: e.currentTarget.videoWidth,
@@ -156,10 +161,13 @@ export default function VideoTile({
           }}
           onPlay={() => console.log(`[VideoTile] Video playing for ${participant.username}`)}
           onError={(e) => console.error(`[VideoTile] Video error for ${participant.username}:`, e)}
+          onSuspend={() => console.log(`[VideoTile] Video suspended for ${participant.username}`)}
+          onWaiting={() => console.log(`[VideoTile] Video waiting for ${participant.username}`)}
+          onCanPlay={() => console.log(`[VideoTile] Video can play for ${participant.username}`)}
         />
       ) : (
         /* Avatar fallback when video is off */
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-700 to-zinc-800">
+        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-700 to-zinc-800 z-0">
           <div className="w-20 h-20 rounded-full bg-zinc-600 flex items-center justify-center text-2xl font-bold text-zinc-200">
             {getInitials(participant.username)}
           </div>
@@ -167,7 +175,7 @@ export default function VideoTile({
       )}
 
       {/* Overlay with participant info */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none">
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10">
         {/* Top indicators */}
         <div className="absolute top-2 left-2 flex items-center gap-2">
           {/* Connection quality indicator */}
