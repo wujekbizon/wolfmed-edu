@@ -3,8 +3,8 @@ import { NextResponse } from 'next/server'
 
 const isProtectedRoute = createRouteMatcher(['/panel(.*)', '/blog(.*)', '/forum(.*)', '/tp(.*)'])
 const isAdminRoute = createRouteMatcher(['/blog/admin(.*)'])
-const isTeacherRoute = createRouteMatcher(['/tp', '/tp/rooms', '/tp/settings', '/tp/communication', '/tp/lectures(.*)'])
-const isRoomRoute = createRouteMatcher(['/tp/rooms/(.*)'])
+const isTeacherRoute = createRouteMatcher(['/tp', '/tp/settings', '/tp/communication', '/tp/lectures(.*)'])
+const isStudentAccessibleRoute = createRouteMatcher(['/tp/rooms', '/tp/rooms/(.*)'])
 
 export default clerkMiddleware(async (auth, request) => {
   // First: Protect all blog/panel/forum/tp routes from unauthenticated users
@@ -41,8 +41,8 @@ export default clerkMiddleware(async (auth, request) => {
     }
   }
 
-  // Fourth: Room pages allow any authenticated user (already protected by isProtectedRoute)
-  // Students can access rooms, but not other /tp pages
+  // Fourth: Rooms list and room pages allow any authenticated user (already protected by isProtectedRoute)
+  // Students can browse and join rooms, but cannot access dashboard/settings/communication
 })
 
 export const config = {
