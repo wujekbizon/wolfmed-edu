@@ -1,791 +1,782 @@
-# Frontend Implementation Plan
+# Frontend Implementation Documentation
 
-**Strategy**: Build UI/UX assuming package APIs exist. Use mock implementations for testing until backend is ready.
+**Last Updated**: 2025-11-08
+**Package Version**: @teaching-playground/core v1.2.0
+**Status**: ✅ MVP Foundation Complete (v1.1.3 - v1.3.0)
 
 ---
 
-## Phase 1: Room Cleanup UI (v1.1.3)
+## Table of Contents
+1. [Architecture Overview](#architecture-overview)
+2. [Completed Features](#completed-features)
+3. [Component Documentation](#component-documentation)
+4. [Hooks Documentation](#hooks-documentation)
+5. [Integration Guide](#integration-guide)
+6. [Testing Notes](#testing-notes)
 
-### Components to Create/Update
+---
 
-#### 1. RoomView.tsx - Enhanced State Management
+## Architecture Overview
+
+### Industry-Standard Pattern
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend (React)                      │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  RoomView (Main Component)                          │   │
+│  │  ├─ useRoomConnection (WebSocket state)             │   │
+│  │  ├─ useWebRTC (Media streaming)                     │   │
+│  │  ├─ VideoGrid (Layout management)                   │   │
+│  │  │  └─ VideoTile[] (Individual video displays)      │   │
+│  │  ├─ RoomControls (Audio/Video/Screen share)         │   │
+│  │  ├─ RoomChat (Text messaging)                       │   │
+│  │  └─ RoomParticipants (Participant list)             │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                            ↓ WebSocket + WebRTC
+┌─────────────────────────────────────────────────────────────┐
+│              @teaching-playground/core Package               │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  RoomConnection (Client API)                        │   │
+│  │  ├─ WebSocket Events (Signaling)                    │   │
+│  │  ├─ RTCPeerConnection Management                    │   │
+│  │  ├─ STUN Server Configuration                       │   │
+│  │  └─ Screen Sharing API                              │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+                            ↓ Socket.IO
+┌─────────────────────────────────────────────────────────────┐
+│                    Backend (Node.js)                         │
+│  ├─ WebSocket Signaling Relay                               │
+│  ├─ Room State Management                                   │
+│  └─ Event Broadcasting                                      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Key Architectural Decisions
+
+1. **Package-Managed WebRTC**: The `@teaching-playground/core` package handles all WebRTC complexity internally
+   - Frontend calls high-level methods: `setupPeerConnection()`, `createOffer()`
+   - Package manages RTCPeerConnection lifecycle
+   - Simplifies frontend to ~360 lines (down from initial ~500 lines)
+
+2. **Event-Driven Communication**: Clean event interfaces
+   - `remote_stream_added` / `remote_stream_removed` (instead of low-level signaling)
+   - `screen_share_started` / `screen_share_stopped`
+   - `room_cleared` for cleanup notifications
+
+3. **State Management**:
+   - **Database**: Persistent data (lectures, rooms)
+   - **WebSocket**: Ephemeral data (participants, streams, messages)
+   - **Zustand**: UI-only state (layout preferences, modals)
+
+---
+
+## Completed Features
+
+### ✅ v1.1.3 - Room Cleanup UI
+
+**Purpose**: Prevent stale data from previous sessions showing when entering a room.
+
+**Components**:
+- `RoomCleanupNotice.tsx` - Notification component
+- `RoomView.tsx` - Event handling integration
+
+**Implementation**:
 ```typescript
-// Add room cleanup handling
+// src/app/tp/components/RoomView.tsx
 useEffect(() => {
-  // Listen for room_cleared event
-  connection.on('room_cleared', ({ roomId, reason }) => {
-    setShowCleanupNotice(true)
+  if (!connection) return
+
+  const handleRoomCleared = ({ roomId, reason }: { roomId: string; reason: string }) => {
+    console.log(`Room ${roomId} was cleared: ${reason}`)
     setCleanupReason(reason)
-
-    // Clear all local state
-    setState({
-      messages: [],
-      participants: [],
-      stream: null,
-      systemMessage: `Room was cleared: ${reason}`
-    })
-
-    // Auto-hide notice after 5 seconds
-    setTimeout(() => setShowCleanupNotice(false), 5000)
-  })
-}, [connection])
-
-// Reset state when entering "available" room
-useEffect(() => {
-  if (room.status === 'available') {
-    setState({
-      messages: [],
-      participants: [],
-      stream: null,
-      isConnected: false
-    })
+    setShowCleanupNotice(true)
   }
-}, [room.status])
+
+  connection.on('room_cleared', handleRoomCleared)
+
+  return () => {
+    connection.off('room_cleared', handleRoomCleared)
+  }
+}, [connection])
 ```
 
-#### 2. RoomCleanupNotice.tsx - New Component
+**Backend Event** (from package v1.1.3):
 ```typescript
-interface RoomCleanupNoticeProps {
-  visible: boolean
-  reason: string
-  onDismiss: () => void
-}
-
-export function RoomCleanupNotice({ visible, reason, onDismiss }: RoomCleanupNoticeProps) {
-  if (!visible) return null
-
-  return (
-    <div className="fixed top-4 right-4 bg-blue-600 text-white px-4 py-3 rounded-lg shadow-lg animate-slide-in">
-      <div className="flex items-center gap-3">
-        <svg className="w-5 h-5" /* info icon */>
-        <div>
-          <p className="font-medium">Room Cleared</p>
-          <p className="text-sm opacity-90">{reason}</p>
-        </div>
-        <button onClick={onDismiss} className="ml-4">
-          <svg className="w-4 h-4" /* close icon */>
-        </button>
-      </div>
-    </div>
-  )
+// Emitted by RealTimeCommunicationSystem.clearRoom()
+{
+  event: 'room_cleared',
+  data: {
+    roomId: string,
+    reason: string  // "Lecture ended", "Lecture cancelled", etc.
+  }
 }
 ```
 
-#### 3. RoomLoadingState.tsx - New Component
-```typescript
-export function RoomLoadingState() {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto" />
-        <p className="mt-4 text-zinc-400">Preparing room...</p>
-        <p className="text-sm text-zinc-500">Clearing previous session data</p>
-      </div>
-    </div>
-  )
-}
-```
+**User Experience**:
+- Blue notification appears in top-right corner
+- Shows cleanup reason
+- Auto-dismisses after 5 seconds
+- Manual dismiss with X button
+- Smooth slide-in animation
 
 ---
 
-## Phase 2: WebRTC Video Streaming UI (v1.2.0)
+### ✅ v1.2.0 - WebRTC Video Streaming
 
-### Components to Create
+**Purpose**: Peer-to-peer video/audio communication for 2-6 participants.
 
-#### 1. VideoGrid.tsx - Main Video Layout
+**Components**:
+- `VideoGrid.tsx` - Layout manager (3 modes: gallery/speaker/sidebar)
+- `VideoTile.tsx` - Individual video display with overlays
+- `useWebRTC.ts` - WebRTC state management hook
+- `RoomView.tsx` - Integration layer
+
+**Architecture**: Package-managed peer connections (simplified from initial implementation)
+
+#### VideoGrid Component
+
+**File**: `src/app/tp/components/VideoGrid.tsx`
+
+**Layouts**:
+1. **Gallery** - Equal-size grid for all participants
+   - 1 participant: 1 column
+   - 2 participants: 2 columns
+   - 3-4 participants: 2×2 grid
+   - 5-6 participants: 3×2 grid
+   - 7-9 participants: 3×3 grid
+   - 10-12 participants: 4×3 grid
+
+2. **Speaker** - Main speaker with thumbnail strip
+   - Large video for active speaker
+   - Horizontal thumbnail strip at bottom (h-32, w-40)
+   - Click thumbnail to switch active speaker
+
+3. **Sidebar** - Main speaker with vertical sidebar
+   - Large video for active speaker
+   - Vertical sidebar on right (w-64)
+   - Scrollable when many participants
+
+**Props**:
 ```typescript
 interface VideoGridProps {
-  localStream: MediaStream | null
-  remoteStreams: Map<string, MediaStream>
-  participants: RoomParticipant[]
-  layout: 'gallery' | 'speaker' | 'sidebar'
-}
-
-export function VideoGrid({
-  localStream,
-  remoteStreams,
-  participants,
-  layout
-}: VideoGridProps) {
-  const gridClass = {
-    gallery: 'grid grid-cols-2 md:grid-cols-3 gap-4',
-    speaker: 'flex flex-col',
-    sidebar: 'grid grid-cols-4 gap-4'
-  }
-
-  return (
-    <div className={gridClass[layout]}>
-      {/* Local video */}
-      <VideoTile
-        stream={localStream}
-        participant={currentUser}
-        isLocal={true}
-      />
-
-      {/* Remote videos */}
-      {Array.from(remoteStreams.entries()).map(([peerId, stream]) => {
-        const participant = participants.find(p => p.socketId === peerId)
-        return (
-          <VideoTile
-            key={peerId}
-            stream={stream}
-            participant={participant}
-            isLocal={false}
-          />
-        )
-      })}
-    </div>
-  )
+  participants: Participant[]
+  layout: VideoLayout  // 'gallery' | 'speaker' | 'sidebar'
+  activeSpeakerId?: string | undefined
+  onParticipantClick?: (participantId: string) => void
 }
 ```
 
-#### 2. VideoTile.tsx - Individual Video Display
+**Responsive Design**:
+- Desktop: All layouts available
+- Tablet: Gallery and speaker work well
+- Mobile: Gallery recommended (auto-stacks)
+
+#### VideoTile Component
+
+**File**: `src/app/tp/components/VideoTile.tsx`
+
+**Features**:
+- **Video Display**: Renders MediaStream in `<video>` element
+- **Avatar Fallback**: Shows initials when video disabled
+- **Connection Quality**: Colored dot (green/yellow/red)
+- **Speaking Indicator**: Green glowing border when speaking
+- **Mute Indicators**: Red badges for audio/video off
+- **Local Badge**: Blue "You" badge for current user
+- **Screen Share Badge**: Purple "Screen" badge (v1.3.0)
+- **Click to Pin**: Click to set as active speaker
+
+**Props**:
 ```typescript
 interface VideoTileProps {
-  stream: MediaStream | null
-  participant?: RoomParticipant
-  isLocal: boolean
+  participant: Participant
+  onClick?: () => void
+  isHighlighted?: boolean  // Border highlight for active speaker
+  className?: string
 }
 
-export function VideoTile({ stream, participant, isLocal }: VideoTileProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [audioLevel, setAudioLevel] = useState(0)
-  const [connectionQuality, setConnectionQuality] = useState<'good' | 'fair' | 'poor'>('good')
-
-  useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream
-    }
-  }, [stream])
-
-  // Monitor audio level for visual indicator
-  useEffect(() => {
-    if (!stream) return
-
-    const audioContext = new AudioContext()
-    const audioSource = audioContext.createMediaStreamSource(stream)
-    const analyser = audioContext.createAnalyser()
-    audioSource.connect(analyser)
-
-    const dataArray = new Uint8Array(analyser.frequencyBinCount)
-    const checkLevel = () => {
-      analyser.getByteFrequencyData(dataArray)
-      const level = dataArray.reduce((a, b) => a + b) / dataArray.length
-      setAudioLevel(level)
-      requestAnimationFrame(checkLevel)
-    }
-    checkLevel()
-
-    return () => audioContext.close()
-  }, [stream])
-
-  return (
-    <div className="relative bg-zinc-800 rounded-lg overflow-hidden aspect-video">
-      {/* Video element */}
-      <video
-        ref={videoRef}
-        autoPlay
-        playsInline
-        muted={isLocal} // Mute local to prevent echo
-        className="w-full h-full object-cover"
-      />
-
-      {/* Overlay info */}
-      <div className="absolute bottom-2 left-2 flex items-center gap-2">
-        {/* Name badge */}
-        <div className="bg-black/60 px-2 py-1 rounded text-white text-sm">
-          {participant?.displayName || participant?.username}
-          {isLocal && ' (You)'}
-        </div>
-
-        {/* Audio indicator */}
-        {audioLevel > 10 && (
-          <div className="bg-green-500 w-6 h-6 rounded-full flex items-center justify-center">
-            <svg className="w-4 h-4 text-white" /* microphone icon */>
-          </div>
-        )}
-
-        {/* Connection quality */}
-        <ConnectionQualityIndicator quality={connectionQuality} />
-      </div>
-
-      {/* No video placeholder */}
-      {!stream && (
-        <div className="absolute inset-0 flex items-center justify-center bg-zinc-700">
-          <div className="text-center">
-            <div className="w-16 h-16 bg-zinc-600 rounded-full mx-auto mb-2 flex items-center justify-center">
-              <span className="text-2xl text-white">
-                {participant?.displayName?.[0] || '?'}
-              </span>
-            </div>
-            <p className="text-zinc-400">No video</p>
-          </div>
-        </div>
-      )}
-    </div>
-  )
+interface Participant {
+  id: string
+  username: string
+  stream?: MediaStream
+  isLocal?: boolean
+  isSpeaking?: boolean
+  connectionQuality?: 'excellent' | 'good' | 'poor'
+  audioEnabled?: boolean
+  videoEnabled?: boolean
+  isScreenSharing?: boolean  // v1.3.0
 }
 ```
 
-#### 3. ConnectionQualityIndicator.tsx
-```typescript
-interface ConnectionQualityIndicatorProps {
-  quality: 'excellent' | 'good' | 'fair' | 'poor'
-}
-
-export function ConnectionQualityIndicator({ quality }: ConnectionQualityIndicatorProps) {
-  const colors = {
-    excellent: 'bg-green-500',
-    good: 'bg-blue-500',
-    fair: 'bg-yellow-500',
-    poor: 'bg-red-500'
-  }
-
-  const bars = {
-    excellent: 4,
-    good: 3,
-    fair: 2,
-    poor: 1
-  }
-
-  return (
-    <div className="flex items-end gap-0.5 h-4">
-      {[1, 2, 3, 4].map((bar) => (
-        <div
-          key={bar}
-          className={`w-1 rounded-sm transition-colors ${
-            bar <= bars[quality] ? colors[quality] : 'bg-zinc-600'
-          }`}
-          style={{ height: `${bar * 25}%` }}
-        />
-      ))}
-    </div>
-  )
-}
-```
-
-#### 4. VideoLayoutSelector.tsx
-```typescript
-export function VideoLayoutSelector({
-  currentLayout,
-  onLayoutChange
-}: {
-  currentLayout: 'gallery' | 'speaker' | 'sidebar'
-  onLayoutChange: (layout: 'gallery' | 'speaker' | 'sidebar') => void
-}) {
-  return (
-    <div className="flex gap-2 p-2 bg-zinc-800 rounded-lg">
-      <button
-        onClick={() => onLayoutChange('gallery')}
-        className={`p-2 rounded ${currentLayout === 'gallery' ? 'bg-blue-500' : 'bg-zinc-700'}`}
-        title="Gallery View"
-      >
-        <svg /* grid icon */>
-      </button>
-
-      <button
-        onClick={() => onLayoutChange('speaker')}
-        className={`p-2 rounded ${currentLayout === 'speaker' ? 'bg-blue-500' : 'bg-zinc-700'}`}
-        title="Speaker View"
-      >
-        <svg /* single large icon */>
-      </button>
-
-      <button
-        onClick={() => onLayoutChange('sidebar')}
-        className={`p-2 rounded ${currentLayout === 'sidebar' ? 'bg-blue-500' : 'bg-zinc-700'}`}
-        title="Sidebar View"
-      >
-        <svg /* sidebar icon */>
-      </button>
-    </div>
-  )
-}
-```
-
-#### 5. useWebRTC.ts - WebRTC Hook
-```typescript
-export function useWebRTC(
-  connection: RoomConnection,
-  roomId: string,
-  user: User
-) {
-  const [localStream, setLocalStream] = useState<MediaStream | null>(null)
-  const [remoteStreams, setRemoteStreams] = useState<Map<string, MediaStream>>(new Map())
-  const [isStreamActive, setIsStreamActive] = useState(false)
-
-  // Get local media
-  const startLocalStream = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: 1280, height: 720 },
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true
-        }
-      })
-
-      setLocalStream(stream)
-      return stream
-    } catch (error) {
-      console.error('Failed to get media:', error)
-      throw error
-    }
-  }
-
-  // Setup peer connections when new user joins
-  useEffect(() => {
-    if (!localStream || !connection) return
-
-    const handleUserJoined = async ({ socketId }: { socketId: string }) => {
-      console.log(`Setting up peer connection with ${socketId}`)
-
-      // Setup peer connection
-      await connection.setupPeerConnection(socketId, localStream)
-
-      // If we're the teacher, initiate connection
-      if (user.role === 'teacher') {
-        await connection.createOffer(socketId)
-      }
-    }
-
-    connection.on('user_joined', handleUserJoined)
-
-    return () => {
-      connection.off('user_joined', handleUserJoined)
-    }
-  }, [connection, localStream, user.role])
-
-  // Handle remote streams
-  useEffect(() => {
-    if (!connection) return
-
-    const handleRemoteStreamAdded = ({ peerId, stream }: { peerId: string, stream: MediaStream }) => {
-      console.log(`Remote stream added from ${peerId}`)
-      setRemoteStreams(prev => new Map(prev).set(peerId, stream))
-    }
-
-    const handleRemoteStreamRemoved = ({ peerId }: { peerId: string }) => {
-      console.log(`Remote stream removed from ${peerId}`)
-      setRemoteStreams(prev => {
-        const next = new Map(prev)
-        next.delete(peerId)
-        return next
-      })
-    }
-
-    connection.on('remote_stream_added', handleRemoteStreamAdded)
-    connection.on('remote_stream_removed', handleRemoteStreamRemoved)
-
-    return () => {
-      connection.off('remote_stream_added', handleRemoteStreamAdded)
-      connection.off('remote_stream_removed', handleRemoteStreamRemoved)
-    }
-  }, [connection])
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (localStream) {
-        localStream.getTracks().forEach(track => track.stop())
-      }
-    }
-  }, [localStream])
-
-  return {
-    localStream,
-    remoteStreams,
-    isStreamActive,
-    startLocalStream,
-    setIsStreamActive
-  }
-}
-```
-
-#### 6. Updated RoomView.tsx
-```typescript
-export default function RoomView({ room }: RoomViewProps) {
-  const { user } = useUser()
-  const [layout, setLayout] = useState<'gallery' | 'speaker' | 'sidebar'>('gallery')
-
-  const {
-    localStream,
-    remoteStreams,
-    isStreamActive,
-    startLocalStream
-  } = useWebRTC(connection, room.id, roomUser)
-
-  const handleStartStream = async () => {
-    try {
-      const stream = await startLocalStream()
-      // Now call package's startStream
-      await connection.startStream('high')
-    } catch (error) {
-      console.error('Failed to start stream:', error)
-    }
-  }
-
-  return (
-    <div className="container mx-auto px-4 py-6">
-      {/* Layout selector */}
-      <div className="mb-4">
-        <VideoLayoutSelector
-          currentLayout={layout}
-          onLayoutChange={setLayout}
-        />
-      </div>
-
-      {/* Video grid */}
-      <VideoGrid
-        localStream={localStream}
-        remoteStreams={remoteStreams}
-        participants={state.participants}
-        layout={layout}
-      />
-
-      {/* Controls */}
-      <RoomControls
-        room={room}
-        isConnected={state.isConnected}
-        stream={state.stream}
-        localStream={localStream}
-        onStartStream={handleStartStream}
-        onStopStream={stopStream}
-      />
-
-      {/* Sidebar with chat and participants */}
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        <RoomParticipants participants={state.participants} />
-        <RoomChat messages={state.messages} onSendMessage={sendMessage} />
-      </div>
-    </div>
-  )
-}
-```
-
----
-
-## Phase 3: Screen Sharing UI (v1.3.0)
-
-### Components to Create/Update
-
-#### 1. ScreenShareButton.tsx
-```typescript
-export function ScreenShareButton({
-  isSharing,
-  onToggle,
-  disabled
-}: {
-  isSharing: boolean
-  onToggle: () => void
-  disabled: boolean
-}) {
-  return (
-    <button
-      onClick={onToggle}
-      disabled={disabled}
-      className={`p-3 rounded-full ${
-        isSharing
-          ? 'bg-blue-500 hover:bg-blue-600'
-          : 'bg-zinc-700 hover:bg-zinc-600'
-      } ${disabled && 'opacity-50 cursor-not-allowed'}`}
-      title={isSharing ? 'Stop Screen Share' : 'Share Screen'}
-    >
-      {isSharing ? (
-        <svg className="w-6 h-6 text-white" /* stop share icon */>
-      ) : (
-        <svg className="w-6 h-6 text-white" /* screen share icon */>
-      )}
-    </button>
-  )
-}
-```
-
-#### 2. Updated RoomControls.tsx
-```typescript
-export default function RoomControls({ ... }: RoomControlsProps) {
-  const [isScreenSharing, setIsScreenSharing] = useState(false)
-
-  const handleScreenShare = async () => {
-    try {
-      if (isScreenSharing) {
-        connection.stopScreenShare()
-        setIsScreenSharing(false)
-      } else {
-        await connection.startScreenShare()
-        setIsScreenSharing(true)
-      }
-    } catch (error) {
-      console.error('Screen share error:', error)
-    }
-  }
-
-  return (
-    <div className="flex items-center justify-center space-x-4">
-      {/* Audio */}
-      <button onClick={toggleAudio}>...</button>
-
-      {/* Video */}
-      <button onClick={toggleVideo}>...</button>
-
-      {/* Screen Share */}
-      {canStream && (
-        <ScreenShareButton
-          isSharing={isScreenSharing}
-          onToggle={handleScreenShare}
-          disabled={!isConnected || !localStream}
-        />
-      )}
-
-      {/* Stream toggle */}
-      {canStream && (
-        <button onClick={toggleStream}>...</button>
-      )}
-    </div>
-  )
-}
-```
-
-#### 3. ScreenShareIndicator.tsx
-```typescript
-export function ScreenShareIndicator({ username }: { username: string }) {
-  return (
-    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
-      <svg className="w-5 h-5 animate-pulse" /* screen icon */>
-      <span className="font-medium">{username} is sharing their screen</span>
-    </div>
-  )
-}
-```
-
----
-
-## Mock Implementations (For Testing Before Backend Ready)
-
-### MockRoomConnection.ts
-```typescript
-export class MockRoomConnection {
-  private mockSocket: any
-  private mockPeerConnections: Map<string, RTCPeerConnection> = new Map()
-
-  async setupPeerConnection(peerId: string, localStream: MediaStream) {
-    console.log('[MOCK] Setting up peer connection with', peerId)
-
-    // Simulate delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Create real RTCPeerConnection for testing
-    const pc = new RTCPeerConnection({
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-    })
-
-    this.mockPeerConnections.set(peerId, pc)
-    return pc
-  }
-
-  async createOffer(peerId: string) {
-    console.log('[MOCK] Creating offer for', peerId)
-    await new Promise(resolve => setTimeout(resolve, 500))
-  }
-
-  async handleOffer(fromPeerId: string, offer: any) {
-    console.log('[MOCK] Handling offer from', fromPeerId)
-    await new Promise(resolve => setTimeout(resolve, 500))
-  }
-
-  async startScreenShare() {
-    console.log('[MOCK] Starting screen share')
-
-    // Use real getDisplayMedia for testing
-    const stream = await navigator.mediaDevices.getDisplayMedia({
-      video: true
-    })
-
-    return stream
-  }
-
-  stopScreenShare() {
-    console.log('[MOCK] Stopping screen share')
-  }
-}
-```
-
----
-
-## UI/UX Design Principles
-
-### Visual Hierarchy
-1. **Video** - Primary focus, largest area
-2. **Controls** - Always visible, bottom center
-3. **Participants** - Sidebar, shows who's in room
-4. **Chat** - Sidebar, secondary communication
-
-### Responsive Layouts
-
-**Desktop (1920x1080)**:
-```
-┌─────────────────────────────────────────┐
-│  Video Grid (3x2 gallery)               │
-│                                         │
-│  ┌────┐ ┌────┐ ┌────┐                  │
-│  │    │ │    │ │    │                  │
-│  └────┘ └────┘ └────┘                  │
-│  ┌────┐ ┌────┐ ┌────┐                  │
-│  │    │ │    │ │    │                  │
-│  └────┘ └────┘ └────┘                  │
-│                                         │
-│       [Controls Bar]                    │
-├──────────────────┬──────────────────────┤
-│  Participants    │   Chat               │
-│  - Teacher       │   [Messages]         │
-│  - Student 1     │                      │
-│  - Student 2     │   [Input]            │
-└──────────────────┴──────────────────────┘
-```
-
-**Tablet (1024x768)**:
+**Visual Indicators**:
 ```
 ┌─────────────────────────────────────┐
-│  Video Grid (2x2 gallery)           │
-│  ┌────────┐ ┌────────┐              │
-│  │        │ │        │              │
-│  └────────┘ └────────┘              │
-│  ┌────────┐ ┌────────┐              │
-│  │        │ │        │              │
-│  └────────┘ └────────┘              │
+│ 🟢 You  📺 Screen          [Top-Left] │
 │                                     │
-│         [Controls]                  │
+│         [Video or Avatar]           │
 │                                     │
-│  [Chat Tab] [Participants Tab]      │
+│ John Doe              🔇 📹  [Bottom] │
 └─────────────────────────────────────┘
+  └─ Green ring when speaking
+  └─ Blue border when pinned
 ```
 
-**Mobile (375x667)**:
-```
-┌───────────────┐
-│   Main Video  │
-│   (Speaker)   │
-│               │
-│               │
-│               │
-├───────────────┤
-│ [Thumbnails]  │
-│ ○ ○ ○ ○       │
-├───────────────┤
-│  [Controls]   │
-└───────────────┘
+#### useWebRTC Hook
+
+**File**: `src/hooks/useWebRTC.ts`
+
+**Purpose**: Manages WebRTC state and package integration (simplified in v1.2.0 refactor)
+
+**Package Integration** (v1.2.0):
+```typescript
+// User joins - setup peer connection
+connection.on('user_joined', async ({ user }) => {
+  if (localStream) {
+    await connection.setupPeerConnection(user.id, localStream)
+    await connection.createOffer(user.id)
+  }
+})
+
+// Receive remote stream (package handles WebRTC negotiation)
+connection.on('remote_stream_added', ({ peerId, stream }) => {
+  // Display stream in VideoTile
+  updateParticipant(peerId, { stream })
+})
+
+// Stream removed
+connection.on('remote_stream_removed', ({ peerId }) => {
+  updateParticipant(peerId, { stream: undefined })
+})
 ```
 
-### Color Scheme (Matches Current Design)
-- Background: `zinc-900`
-- Cards: `zinc-800`
-- Borders: `zinc-700`
-- Text: `zinc-100` (primary), `zinc-400` (secondary)
-- Accents: `blue-500` (primary), `green-500` (success), `red-500` (error)
+**API**:
+```typescript
+const {
+  // State
+  participants,           // Participant[]
+  localStream,           // MediaStream | null
+  isVideoEnabled,        // boolean
+  isAudioEnabled,        // boolean
+  isScreenSharing,       // boolean (v1.3.0)
+  connectionStatus,      // 'connecting' | 'connected' | 'disconnected'
 
-### Accessibility
-- ARIA labels on all buttons
-- Keyboard navigation support
-- Screen reader friendly
-- High contrast mode support
-- Focus indicators
+  // Methods
+  startLocalStream,      // (constraints) => Promise<MediaStream>
+  stopLocalStream,       // () => void
+  toggleVideo,           // () => void
+  toggleAudio,           // () => void
+  startScreenShare,      // () => Promise<void> (v1.3.0)
+  stopScreenShare,       // () => Promise<void> (v1.3.0)
+} = useWebRTC({ roomId, userId, connection, enabled })
+```
+
+**Voice Activity Detection**:
+- Uses Web Audio API AnalyserNode
+- Monitors frequency data for speaking detection
+- Threshold: average frequency > 20
+- Applied to both local and remote streams
+- Updates `participant.isSpeaking` in real-time
+
+**Simplified Implementation** (vs initial version):
+- **Removed**: Manual RTCPeerConnection management
+- **Removed**: Direct offer/answer/ICE handling
+- **Added**: Package event integration (`remote_stream_added`, etc.)
+- **Result**: 360 lines (down from 500 lines)
+
+#### RoomView Integration
+
+**File**: `src/app/tp/components/RoomView.tsx`
+
+**Setup**:
+```typescript
+// Initialize WebRTC
+const webrtc = useWebRTC({
+  roomId: room.id,
+  userId: roomUser.id,
+  connection,
+  enabled: state.isConnected && room.features.hasVideo
+})
+
+// Combine local + remote participants for video display
+const videoParticipants = useMemo(() => {
+  const participants = [...webrtc.participants]
+
+  if (webrtc.localStream) {
+    participants.unshift({
+      id: roomUser.id,
+      username: roomUser.username,
+      stream: webrtc.localStream,
+      isLocal: true,
+      audioEnabled: webrtc.isAudioEnabled,
+      videoEnabled: webrtc.isVideoEnabled,
+      isScreenSharing: webrtc.isScreenSharing
+    })
+  }
+
+  return participants
+}, [webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled,
+    webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
+```
+
+**Layout Controls**:
+```typescript
+// Layout selector buttons
+<div className="flex gap-2">
+  <button onClick={() => setVideoLayout('gallery')}>Gallery</button>
+  <button onClick={() => setVideoLayout('speaker')}>Speaker</button>
+  <button onClick={() => setVideoLayout('sidebar')}>Sidebar</button>
+</div>
+
+// Participant count display
+<div className="text-sm text-zinc-400">
+  {videoParticipants.length} {videoParticipants.length === 1 ? 'participant' : 'participants'}
+</div>
+```
+
+**Active Speaker Detection**:
+```typescript
+useEffect(() => {
+  const speakingParticipant = videoParticipants.find(p => p.isSpeaking)
+  if (speakingParticipant && speakingParticipant.id !== activeSpeakerId) {
+    setActiveSpeakerId(speakingParticipant.id)
+  }
+}, [videoParticipants, activeSpeakerId])
+```
 
 ---
 
-## Testing Frontend Before Backend Ready
+### ✅ v1.3.0 - Screen Sharing
 
-### 1. Use Mock Data
+**Purpose**: Allow teachers to share their screen during lectures.
+
+**Package Integration**:
 ```typescript
-const mockParticipants = [
-  { id: '1', username: 'teacher', role: 'teacher', ... },
-  { id: '2', username: 'student1', role: 'student', ... },
-  { id: '3', username: 'student2', role: 'student', ... }
-]
-
-const mockMessages = [
-  { userId: '1', username: 'teacher', content: 'Welcome!', timestamp: '...' },
-  { userId: '2', username: 'student1', content: 'Hi!', timestamp: '...' }
-]
+// Package handles screen capture internally
+await connection.startScreenShare()  // Replaces camera with screen
+await connection.stopScreenShare()   // Switches back to camera
 ```
 
-### 2. Local Media Testing
-```typescript
-// Test getUserMedia
-const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+**Components Updated**:
+1. **RoomControls** - Added screen share button
+2. **VideoTile** - Added screen share indicator
+3. **useWebRTC** - Added screen sharing state management
 
-// Test screen share
-const screenStream = await navigator.mediaDevices.getDisplayMedia({ video: true })
+#### RoomControls Updates
+
+**File**: `src/app/tp/components/RoomControls.tsx:169-195`
+
+**Screen Share Button**:
+```typescript
+{canStream && onStartScreenShare && onStopScreenShare && (
+  <button
+    onClick={() => isScreenSharing ? onStopScreenShare() : onStartScreenShare()}
+    disabled={!isConnected || !localStream}
+    className={`p-3 rounded-full ${
+      isScreenSharing
+        ? 'bg-purple-600 hover:bg-purple-700'    // Active: purple
+        : 'bg-zinc-600 hover:bg-zinc-500'        // Inactive: gray
+    }`}
+    title={isScreenSharing ? "Stop Screen Share" : "Start Screen Share"}
+  >
+    <svg>{/* Monitor icon */}</svg>
+  </button>
+)}
 ```
 
-### 3. RTCPeerConnection Testing
+**Permissions**: Only teachers can screen share (matches streaming permissions)
+
+**Props Added**:
 ```typescript
-// Create two peer connections locally
-const pc1 = new RTCPeerConnection()
-const pc2 = new RTCPeerConnection()
-
-// Simulate offer/answer exchange
-const offer = await pc1.createOffer()
-await pc1.setLocalDescription(offer)
-await pc2.setRemoteDescription(offer)
-
-const answer = await pc2.createAnswer()
-await pc2.setLocalDescription(answer)
-await pc1.setRemoteDescription(answer)
+interface RoomControlsProps {
+  // ... existing props
+  onStartScreenShare?: () => void | Promise<void>
+  onStopScreenShare?: () => void | Promise<void>
+  isScreenSharing?: boolean
+}
 ```
+
+#### VideoTile Screen Share Indicator
+
+**File**: `src/app/tp/components/VideoTile.tsx:152-160`
+
+**Purple "Screen" Badge**:
+```typescript
+{participant.isScreenSharing && (
+  <span className="px-2 py-0.5 bg-purple-600 text-white text-xs rounded-md font-medium flex items-center gap-1">
+    <svg className="w-3 h-3">{/* Monitor icon */}</svg>
+    Screen
+  </span>
+)}
+```
+
+**Positioning**: Top-left corner, displayed alongside "You" badge
+
+#### useWebRTC Screen Sharing Methods
+
+**File**: `src/hooks/useWebRTC.ts:125-164`
+
+**Implementation**:
+```typescript
+const startScreenShare = useCallback(async () => {
+  if (!connection) return
+
+  try {
+    await (connection as any).startScreenShare()
+    setState(prev => ({ ...prev, isScreenSharing: true }))
+  } catch (error) {
+    console.error('Failed to start screen sharing:', error)
+    throw error
+  }
+}, [connection])
+
+const stopScreenShare = useCallback(async () => {
+  if (!connection) return
+
+  try {
+    await (connection as any).stopScreenShare()
+    setState(prev => ({ ...prev, isScreenSharing: false }))
+  } catch (error) {
+    console.error('Failed to stop screen sharing:', error)
+    throw error
+  }
+}, [connection])
+```
+
+**Event Handling**:
+```typescript
+// Package emits events when screen sharing state changes
+connection.on('screen_share_started', () => {
+  setState(prev => ({ ...prev, isScreenSharing: true }))
+})
+
+connection.on('screen_share_stopped', () => {
+  setState(prev => ({ ...prev, isScreenSharing: false }))
+})
+```
+
+**User Experience**:
+- Click screen share button → Browser prompts to select screen/window
+- Screen replaces camera feed in VideoTile
+- Purple "Screen" badge appears
+- Browser "Stop Sharing" button also works (package handles this)
+- Video automatically reverts to camera when stopped
 
 ---
 
-## File Structure
+## Component Documentation
 
+### File Structure
 ```
 src/
-├── components/
-│   └── teaching-playground/
-│       ├── video/
-│       │   ├── VideoGrid.tsx
-│       │   ├── VideoTile.tsx
-│       │   ├── ConnectionQualityIndicator.tsx
-│       │   └── VideoLayoutSelector.tsx
-│       ├── controls/
-│       │   ├── RoomControls.tsx
-│       │   ├── ScreenShareButton.tsx
-│       │   └── MediaControlButton.tsx
-│       ├── notifications/
-│       │   ├── RoomCleanupNotice.tsx
-│       │   └── ScreenShareIndicator.tsx
-│       └── loading/
-│           └── RoomLoadingState.tsx
-├── hooks/
-│   ├── useRoomConnection.ts (existing)
-│   └── useWebRTC.ts (new)
-└── mocks/
-    └── MockRoomConnection.ts
+├── app/tp/components/
+│   ├── RoomView.tsx                    # Main room component
+│   ├── RoomControls.tsx                # Media controls
+│   ├── RoomChat.tsx                    # Text chat
+│   ├── RoomParticipants.tsx            # Participant list
+│   ├── RoomCleanupNotice.tsx           # Cleanup notification (v1.1.3)
+│   ├── VideoGrid.tsx                   # Video layout manager (v1.2.0)
+│   └── VideoTile.tsx                   # Individual video display (v1.2.0)
+└── hooks/
+    ├── useRoomConnection.ts            # WebSocket state
+    └── useWebRTC.ts                    # WebRTC state (v1.2.0)
+```
+
+### Component Hierarchy
+```
+RoomView
+├── RoomCleanupNotice (v1.1.3)
+├── Layout Controls (Gallery/Speaker/Sidebar buttons)
+├── VideoGrid (v1.2.0)
+│   └── VideoTile[] (with screen share indicator v1.3.0)
+├── RoomControls (with screen share button v1.3.0)
+├── RoomParticipants
+└── RoomChat
 ```
 
 ---
 
-## Next Steps
+## Hooks Documentation
 
-1. **Week 1**: Room cleanup UI
-   - [ ] Create RoomCleanupNotice
-   - [ ] Add cleanup event handling
-   - [ ] Test with room state reset
+### useRoomConnection
 
-2. **Week 2-3**: WebRTC video UI
-   - [ ] Create VideoGrid component
-   - [ ] Create VideoTile component
-   - [ ] Implement useWebRTC hook
-   - [ ] Test with local peer connections
+**File**: `src/hooks/useRoomConnection.ts`
 
-3. **Week 4**: Screen sharing UI
-   - [ ] Add screen share button
-   - [ ] Implement screen share toggle
-   - [ ] Test with getDisplayMedia
+**Purpose**: Manages WebSocket connection and room state
 
-4. **Integration**: Connect with backend when ready
-   - [ ] Replace mocks with real package
-   - [ ] Test multi-user scenarios
-   - [ ] Performance optimization
+**API**:
+```typescript
+const {
+  state: {
+    isConnected,      // boolean
+    participants,     // RoomParticipant[]
+    messages,         // RoomMessage[]
+    stream,           // { isActive, streamerId, quality } | null
+    systemMessage,    // string | null
+  },
+  localStream,        // MediaStream | null
+  remoteStreams,      // Map<string, MediaStream>
+  sendMessage,        // (content: string) => void
+  startStream,        // (quality) => void
+  stopStream,         // () => void
+  exitRoom,           // () => Promise<void>
+  connection,         // RoomConnection | null
+} = useRoomConnection({ roomId, user, serverUrl })
+```
 
-**Ready to start building!** 🚀
+**Events Handled**:
+- `connected` / `disconnected`
+- `room_state` - Initial room state
+- `user_joined` / `user_left`
+- `message` - New chat message
+- `message_history` - Historical messages
+- `room_cleared` - Room cleanup (v1.1.3)
+
+### useWebRTC
+
+**File**: `src/hooks/useWebRTC.ts`
+
+**Purpose**: Manages WebRTC media streaming (refactored in v1.2.0)
+
+**API**: (See v1.2.0 section above)
+
+**Key Changes in v1.2.0 Refactor**:
+- Now uses package events instead of manual peer connection management
+- Simplified from 500 lines to 360 lines
+- Package handles all WebRTC complexity
+- Frontend only manages local stream and voice activity detection
+
+---
+
+## Integration Guide
+
+### Step 1: Room Entry
+```typescript
+// 1. User navigates to /tp/rooms/[roomId]
+// 2. RoomView loads room data from database
+// 3. useRoomConnection establishes WebSocket connection
+// 4. Backend sends room_state event
+// 5. useWebRTC initializes (if hasVideo feature enabled)
+```
+
+### Step 2: Start Video
+```typescript
+// User clicks "Start Streaming" button in RoomControls
+const constraints = {
+  video: { width: 1920, height: 1080 },  // 'high' quality
+  audio: true
+}
+const stream = await webrtc.startLocalStream(constraints)
+
+// Stream displayed in local VideoTile
+// Other participants receive 'user_joined' event
+```
+
+### Step 3: Join WebRTC Mesh
+```typescript
+// When remote user joins:
+connection.on('user_joined', async ({ user }) => {
+  // Package automatically:
+  // 1. Creates RTCPeerConnection
+  // 2. Adds local stream tracks
+  // 3. Creates SDP offer
+  // 4. Sends offer via WebSocket
+  await connection.setupPeerConnection(user.id, localStream)
+  await connection.createOffer(user.id)
+})
+
+// When remote stream ready:
+connection.on('remote_stream_added', ({ peerId, stream }) => {
+  // Display in VideoTile
+})
+```
+
+### Step 4: Screen Sharing (Teacher Only)
+```typescript
+// Teacher clicks screen share button
+await webrtc.startScreenShare()
+
+// Package automatically:
+// 1. Calls getDisplayMedia()
+// 2. Replaces video track in all peer connections
+// 3. Emits 'screen_share_started' event
+
+// Stop screen sharing
+await webrtc.stopScreenShare()
+// Automatically reverts to camera feed
+```
+
+### Step 5: Room Exit
+```typescript
+// User clicks "Exit Room"
+await exitRoom()
+
+// Cleanup:
+// 1. Stops local stream (camera/mic)
+// 2. Closes all peer connections
+// 3. Disconnects WebSocket
+// 4. Navigates to /tp/rooms
+```
+
+---
+
+## Testing Notes
+
+### TypeScript Compliance
+- ✅ All strict mode checks passing
+- ✅ `exactOptionalPropertyTypes` compliance
+- ✅ No any types except for package method calls (startScreenShare, etc.)
+
+### Browser Compatibility
+- **Chrome/Edge**: Full support (recommended)
+- **Firefox**: Full support
+- **Safari**: WebRTC supported, test screen sharing
+- **Mobile**: getUserMedia requires HTTPS
+
+### Testing Scenarios
+
+#### 1. Room Cleanup (v1.1.3)
+```
+Test: Lecture ends while student in room
+Expected:
+- Blue notification appears "Room Cleared: Lecture ended"
+- Auto-dismisses after 5 seconds
+- Can manually dismiss with X button
+```
+
+#### 2. Video Streaming (v1.2.0)
+```
+Test: 2 users join room and start video
+Expected:
+- Both see each other's video
+- Speaking indicators work
+- Can toggle audio/video
+- Can switch layouts (Gallery/Speaker/Sidebar)
+- Connection quality indicators update
+```
+
+#### 3. Screen Sharing (v1.3.0)
+```
+Test: Teacher shares screen
+Expected:
+- Screen replaces camera in VideoTile
+- Purple "Screen" badge appears
+- Students see screen feed
+- Stop button reverts to camera
+- Browser "Stop Sharing" also works
+```
+
+### Performance Considerations
+- **2-4 participants**: Excellent (P2P mesh ideal)
+- **5-6 participants**: Good (multiple peer connections)
+- **7-10 participants**: Moderate (CPU/bandwidth intensive)
+- **10+ participants**: Consider SFU architecture (v2.0 roadmap)
+
+### Known Limitations
+1. **P2P Mesh**: Doesn't scale beyond ~10 participants
+2. **NAT Traversal**: Requires STUN servers (using Google's public STUN)
+3. **Firewall Issues**: Some corporate firewalls block WebRTC
+4. **Mobile Safari**: Screen sharing not supported on iOS
+
+---
+
+## Next Steps (v1.4.x - v1.9.x)
+
+Per roadmap (docs/ROADMAP.md), the MVP foundation is complete. Next phase focuses on production polish:
+
+### v1.4.0 - Recording (2 weeks)
+- Record button in RoomControls
+- Recording indicator in VideoTile
+- Server-side recording (MediaRecorder API)
+- Download/playback UI
+
+### v1.5.0 - Advanced Chat (1 week)
+- File sharing
+- Emoji reactions
+- @mentions
+- Read receipts
+
+### v1.6.0 - Interactive Whiteboard (3 weeks)
+- Canvas-based drawing
+- Real-time synchronization
+- Shape tools, text, images
+- Save/export whiteboard
+
+### v1.7.0 - Breakout Rooms (2 weeks)
+- Create sub-rooms
+- Move participants
+- Broadcast messages to all rooms
+- Rejoin main room
+
+### v1.8.0 - Polling & Q&A (1 week)
+- Live polls with real-time results
+- Q&A queue management
+- Upvoting questions
+
+### v1.9.0 - Advanced Moderation (1 week)
+- Kick/ban participants
+- Mute all students
+- Disable features per room
+- Activity monitoring
+
+---
+
+## Appendix: Event Reference
+
+### WebSocket Events (Handled by Frontend)
+
+#### v1.1.3 Events
+```typescript
+room_cleared: {
+  roomId: string
+  reason: string
+}
+```
+
+#### v1.2.0 Events
+```typescript
+user_joined: {
+  user: { id: string, username: string }
+}
+
+user_left: {
+  userId: string
+}
+
+remote_stream_added: {
+  peerId: string
+  stream: MediaStream
+}
+
+remote_stream_removed: {
+  peerId: string
+}
+```
+
+#### v1.3.0 Events
+```typescript
+screen_share_started: {}
+
+screen_share_stopped: {}
+```
+
+### Package Methods (Called by Frontend)
+
+#### v1.2.0 Methods
+```typescript
+connection.setupPeerConnection(peerId: string, localStream: MediaStream): Promise<void>
+connection.createOffer(peerId: string): Promise<void>
+```
+
+#### v1.3.0 Methods
+```typescript
+connection.startScreenShare(): Promise<void>
+connection.stopScreenShare(): Promise<void>
+connection.isScreenSharing(): boolean
+```
+
+---
+
+**Document Version**: 2.0
+**Last Updated**: 2025-11-08
+**Contributors**: Claude (AI), Teaching Playground Team
