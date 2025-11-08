@@ -46,14 +46,12 @@ export default function RoomControls({
   const username = user?.username || user?.emailAddresses[0]?.emailAddress || 'Guest'
   const userRole = user?.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student'
 
-  // Check if the current user is the streamer
-  // The package uses username as streamerId, not user.id
-  const isStreamer = stream?.streamerId === username
-  console.log("Stream ID: ", stream?.streamerId)
-  console.log("User username: ", username)
-  console.log("Is user a streamer", isStreamer)
   // Check if the user has permission to stream
   const canStream = userRole === 'teacher'
+
+  // For WebRTC mode (v1.2.0+), we don't need the old streaming API
+  // Media controls should work based on localStream, not old stream state
+  const hasLocalStream = !!localStream
 
   // Use external state if provided (from WebRTC hook), otherwise track internally
   const actualAudioEnabled = externalAudioEnabled !== undefined ? externalAudioEnabled : audioEnabled
@@ -108,20 +106,26 @@ export default function RoomControls({
     }
   }
 
-  // Start/Stop streaming
-  const toggleStream = () => {
+  // Start/Stop camera/mic (WebRTC mode)
+  const toggleCamera = async () => {
     if (!canStream) return
-    if (stream?.isActive) {
-      if (isStreamer) {
-        onStopStream?.()
-      }
+
+    if (hasLocalStream) {
+      // Stop local stream
+      onStopStream?.()
     } else {
-      onStartStream?.('high')
+      // Start local stream
+      try {
+        await onStartStream?.('high')
+      } catch (error) {
+        console.error('Failed to start camera:', error)
+      }
     }
   }
 
-  const isStreamButtonDisabled = !isConnected || (stream?.isActive && !isStreamer)
-  const isMediaButtonDisabled = !isConnected || !localStream || !isStreamer
+  // WebRTC mode: Camera button enabled when connected, media buttons when stream exists
+  const isCameraButtonDisabled = !isConnected
+  const isMediaButtonDisabled = !isConnected || !hasLocalStream
 
   return (
     <div className="bg-zinc-800 rounded-lg border border-zinc-700 p-4">
@@ -166,6 +170,28 @@ export default function RoomControls({
           </svg>
         </button>
 
+        {/* Camera control - Start/Stop local stream (v1.2.0 WebRTC) */}
+        {canStream && (
+          <button
+            onClick={toggleCamera}
+            disabled={isCameraButtonDisabled}
+            className={`p-3 rounded-full ${
+              hasLocalStream
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-green-500 hover:bg-green-600'
+            } ${isCameraButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+            title={hasLocalStream ? "Stop Camera" : "Start Camera"}
+          >
+            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {hasLocalStream ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              )}
+            </svg>
+          </button>
+        )}
+
         {/* Screen share control (v1.3.0) - only for teachers */}
         {canStream && onStartScreenShare && onStopScreenShare && (
           <button
@@ -193,40 +219,18 @@ export default function RoomControls({
             </svg>
           </button>
         )}
-
-        {/* Stream control - only show for users who can stream */}
-        {canStream && (
-          <button
-            onClick={toggleStream}
-            disabled={isStreamButtonDisabled}
-            className={`p-3 rounded-full ${
-              stream?.isActive
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-green-500 hover:bg-green-600'
-            } ${isStreamButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
-            title={stream?.isActive ? "Stop Streaming" : "Start Streaming"}
-          >
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              {stream?.isActive ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              )}
-            </svg>
-          </button>
-        )}
       </div>
 
       {/* Connection status */}
       <div className="mt-4 text-center text-sm text-zinc-400">
         {isConnected ? (
           <>
-            {stream?.isActive ? (
+            {hasLocalStream ? (
               <span className="text-green-400">
-                {isStreamer ? 'You are streaming' : `${stream.streamerId} is streaming`}
+                Camera active {isScreenSharing && '• Screen sharing'}
               </span>
             ) : (
-              canStream ? 'Ready to stream' : 'Waiting for teacher to start streaming'
+              canStream ? 'Click camera button to start' : 'Waiting for teacher'
             )}
           </>
         ) : (
