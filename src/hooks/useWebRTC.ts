@@ -45,6 +45,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
   // Voice activity detection
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserNodesRef = useRef<Map<string, AnalyserNode>>(new Map())
+  const speakingStateRef = useRef<Map<string, boolean>>(new Map())
 
   /**
    * Start local media stream
@@ -133,13 +134,14 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     }
 
     try {
-      console.log('Starting screen share...')
+      console.log('[useWebRTC] User initiated screen share request')
+      console.log('[useWebRTC] Call stack:', new Error().stack)
       // Package handles screen sharing internally
       await (connection as any).startScreenShare()
       setState(prev => ({ ...prev, isScreenSharing: true }))
-      console.log('Screen sharing started')
+      console.log('[useWebRTC] Screen sharing started successfully')
     } catch (error) {
-      console.error('Failed to start screen sharing:', error)
+      console.error('[useWebRTC] Failed to start screen sharing:', error)
       throw error
     }
   }, [connection])
@@ -191,12 +193,17 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       const average = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length
       const isSpeaking = average > 20 // Threshold for speaking detection
 
-      setState(prev => ({
-        ...prev,
-        participants: prev.participants.map(p =>
-          p.id === participantId ? { ...p, isSpeaking } : p
-        )
-      }))
+      // Only update state if speaking status changed
+      const previousState = speakingStateRef.current.get(participantId)
+      if (previousState !== isSpeaking) {
+        speakingStateRef.current.set(participantId, isSpeaking)
+        setState(prev => ({
+          ...prev,
+          participants: prev.participants.map(p =>
+            p.id === participantId ? { ...p, isSpeaking } : p
+          )
+        }))
+      }
 
       requestAnimationFrame(checkVoiceActivity)
     }
@@ -283,6 +290,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       // Cleanup voice activity detection
       analyserNodesRef.current.delete(peerId)
+      speakingStateRef.current.delete(peerId)
     }
 
     // Handle participant left
@@ -296,6 +304,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       // Cleanup voice activity detection
       analyserNodesRef.current.delete(userId)
+      speakingStateRef.current.delete(userId)
     }
 
     // Handle screen share started (v1.3.0)
@@ -349,6 +358,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       // Clear references
       analyserNodesRef.current.clear()
+      speakingStateRef.current.clear()
     }
   }, [])
 
