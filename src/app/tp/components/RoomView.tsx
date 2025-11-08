@@ -79,18 +79,16 @@ export default function RoomView({ room }: RoomViewProps) {
   const [showCleanupNotice, setShowCleanupNotice] = useState(false)
   const [cleanupReason, setCleanupReason] = useState('')
 
-  console.log('Room participants from state:', state.participants)
-  console.log('WebRTC participants:', webrtc.participants)
-
-  // Build video participants from room state + WebRTC streams
+  // Build video participants from room state + WebRTC streams (v1.4.1)
+  // state.participants now includes ALL participants (backend fix in v1.4.1)
   const videoParticipants = useMemo(() => {
-    // Start with room state participants (authoritative source)
+    // Start with room state participants (authoritative source - fixed in v1.4.1)
     const participants = state.participants.map(p => {
-      // Find matching WebRTC participant by looking for stream with matching socketId
+      // Find matching WebRTC participant by socketId to get stream data
       const webrtcParticipant = webrtc.participants.find(wp => wp.id === p.socketId)
 
       return {
-        id: p.id, // Use user ID for consistency
+        id: p.id, // User ID for consistency
         username: p.username,
         stream: webrtcParticipant?.stream,
         isLocal: false,
@@ -101,7 +99,7 @@ export default function RoomView({ room }: RoomViewProps) {
       }
     })
 
-    // Add local user if they have a stream
+    // Add local user with their stream
     if (webrtc.localStream) {
       const localParticipant = {
         id: roomUser.id,
@@ -113,28 +111,15 @@ export default function RoomView({ room }: RoomViewProps) {
         isScreenSharing: webrtc.isScreenSharing
       }
 
-      console.log('[RoomView] Adding local participant to videoParticipants:', {
-        id: localParticipant.id,
-        username: localParticipant.username,
-        hasStream: !!localParticipant.stream,
-        streamId: localParticipant.stream?.id,
-        videoTracks: localParticipant.stream?.getVideoTracks().length,
-        audioEnabled: localParticipant.audioEnabled,
-        videoEnabled: localParticipant.videoEnabled,
-        isScreenSharing: localParticipant.isScreenSharing
-      })
-
-      // Add local user if not already in the list
+      // Add or update local user in participants list
       if (!participants.some(p => p.id === roomUser.id)) {
         participants.unshift(localParticipant)
       } else {
-        // Update existing entry with local stream
         const index = participants.findIndex(p => p.id === roomUser.id)
         participants[index] = { ...participants[index], ...localParticipant }
       }
     }
 
-    console.log('[RoomView] videoParticipants count:', participants.length)
     return participants
   }, [state.participants, webrtc.participants, webrtc.localStream, webrtc.isAudioEnabled, webrtc.isVideoEnabled, webrtc.isScreenSharing, roomUser.id, roomUser.username])
 
