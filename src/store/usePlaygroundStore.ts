@@ -1,22 +1,21 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Lecture, User, TeachingPlayground } from "@teaching-playground/core";
+import { Lecture } from "@teaching-playground/core";
 
+/**
+ * Playground Store - UI State Only
+ *
+ * This store manages ONLY UI state like modals and selections.
+ * For user data: use Clerk's useUser() hook
+ * For server operations: use server actions from @/actions/teachingPlayground
+ */
 interface PlaygroundState {
   selectedLecture: Lecture | null;
   isCreateModalOpen: boolean;
   error: string | null;
-  user: User | null;
-  username: string | null;
-  playground: TeachingPlayground | null;
-  isAuthenticated: boolean;
   setSelectedLecture: (lecture: Lecture | null) => void;
   setCreateModalOpen: (isOpen: boolean) => void;
   setError: (error: string | null) => void;
-  setUser: (user: User | null) => void;
-  setUsername: (username: string | null) => void;
-  setPlayground: (playground: TeachingPlayground | null) => void;
-  setIsAuthenticated: (isAuthenticated: boolean) => void;
   reset: () => void;
 }
 
@@ -26,26 +25,14 @@ export const usePlaygroundStore = create<PlaygroundState>()(
       selectedLecture: null,
       isCreateModalOpen: false,
       error: null,
-      user: null,
-      username: null,
-      playground: null,
-      isAuthenticated: false,
       setSelectedLecture: (lecture) => set({ selectedLecture: lecture }),
       setCreateModalOpen: (isOpen) => set({ isCreateModalOpen: isOpen }),
       setError: (error) => set({ error }),
-      setUser: (user) => set({ user, username: user?.username || null }),
-      setUsername: (username) => set({ username }),
-      setPlayground: (playground) => set({ playground }),
-      setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
       reset: () => {
         set({
           selectedLecture: null,
           isCreateModalOpen: false,
           error: null,
-          user: null,
-          username: null,
-          playground: null,
-          isAuthenticated: false,
         });
       },
     }),

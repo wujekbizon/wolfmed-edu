@@ -4,7 +4,6 @@ import { LecturesLoadingState } from "./components/LecturesLoadingState";
 import { initializeTeachingPlayground, getLectures } from "@/actions/teachingPlayground";
 import { currentUser } from "@clerk/nextjs/server";
 import PlaygroundControls from "./components/PlaygroundControls";
-import { PlaygroundInitializer } from "./components/PlaygroundInitializer";
 
 async function LectureList() {
   const events = await getLectures();
@@ -29,18 +28,8 @@ export default async function TeachingPlaygroundPage() {
   }
 
   return (
-    <>
-      {/* Initialize client-side store with Clerk user data */}
-      <PlaygroundInitializer
-        userId={user.id}
-        username={user.username || user.emailAddresses[0]?.emailAddress || 'Guest'}
-        role={userRole}
-        email={user.emailAddresses[0]?.emailAddress}
-        displayName={user.fullName || user.username || undefined}
-      />
-      <Suspense fallback={<LecturesLoadingState />}>
-        <LectureList />
-      </Suspense>
-    </>
+    <Suspense fallback={<LecturesLoadingState />}>
+      <LectureList />
+    </Suspense>
   );
 }

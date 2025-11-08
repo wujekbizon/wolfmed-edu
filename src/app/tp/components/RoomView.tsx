@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import type { Room, RoomParticipant, User } from '@teaching-playground/core'
 import { useRoomConnection } from '@/hooks/useRoomConnection'
-import { usePlaygroundStore } from '@/store/usePlaygroundStore'
+import { useUser } from '@clerk/nextjs'
 import RoomControls from './RoomControls'
 import RoomChat from './RoomChat'
 import RoomParticipants from './RoomParticipants'
@@ -14,12 +14,11 @@ interface RoomViewProps {
 }
 
 export default function RoomView({ room }: RoomViewProps) {
-
-  const { user } = usePlaygroundStore()
+  const { user, isLoaded } = useUser()
   const router = useRouter()
 
-  // Use actual user from store (initialized by PlaygroundInitializer)
-  if (!user) {
+  // Wait for Clerk to load user data
+  if (!isLoaded || !user) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
@@ -29,13 +28,15 @@ export default function RoomView({ room }: RoomViewProps) {
     )
   }
 
+  const userRole = user.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student'
+
   const roomUser: User = {
     id: user.id,
-    username: user.username,
-    role: user.role,
+    username: user.username || user.emailAddresses[0]?.emailAddress || 'Guest',
+    role: userRole,
     status: 'online',
-    email: user.email,
-    displayName: user.displayName
+    email: user.emailAddresses[0]?.emailAddress ?? null,
+    displayName: user.fullName || user.username || null
   }
 
   const {

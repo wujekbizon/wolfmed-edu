@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import type { Room } from '@teaching-playground/core'
-import { usePlaygroundStore } from '@/store/usePlaygroundStore'
+import { useUser } from '@clerk/nextjs'
 
 interface RoomControlsProps {
   room: Room
@@ -27,16 +27,19 @@ export default function RoomControls({
 }: RoomControlsProps) {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [videoEnabled, setVideoEnabled] = useState(true)
-  const {user} = usePlaygroundStore()
+  const { user } = useUser()
+
+  const username = user?.username || user?.emailAddresses[0]?.emailAddress || 'Guest'
+  const userRole = user?.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student'
 
   // Check if the current user is the streamer
   // The package uses username as streamerId, not user.id
-  const isStreamer = stream?.streamerId === user?.username
-  console.log("Stream ID: ",stream?.streamerId)
-  console.log("User username: ",user?.username)
+  const isStreamer = stream?.streamerId === username
+  console.log("Stream ID: ", stream?.streamerId)
+  console.log("User username: ", username)
   console.log("Is user a streamer", isStreamer)
   // Check if the user has permission to stream
-  const canStream = user?.role === 'teacher'
+  const canStream = userRole === 'teacher'
 
   // Keep track of enabled states based on actual track states
   useEffect(() => {

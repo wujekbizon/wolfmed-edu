@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { usePlaygroundStore } from '@/store/usePlaygroundStore'
 
 interface ChatMessage {
   userId: string
@@ -19,7 +18,6 @@ interface RoomChatProps {
 export default function RoomChat({ messages, onSendMessage, isEnabled }: RoomChatProps) {
   const [inputValue, setInputValue] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const username = usePlaygroundStore((state) => state.username)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
