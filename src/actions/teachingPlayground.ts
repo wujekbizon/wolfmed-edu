@@ -7,14 +7,14 @@ import { FormState } from '@/types/actionTypes'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { requireTeacherAction } from '@/lib/teacherHelpers'
 import { manageRoomForLecture, cleanupExpiredRooms } from '@/utils/teachingPlaygroundUtils'
-import { EventManagementSystem } from '@/lib/teaching-playground/systems'
-import { Lecture, User } from '@/lib/teaching-playground/interfaces'
-import { JsonDatabase } from '@/lib/teaching-playground/db/JsonDatabase'
+import { EventManagementSystem, Lecture, User, JsonDatabase, TeachingPlayground } from '@teaching-playground/core'
 import { createServerPlaygroundInstance } from '@/helpers/createServerPlaygroundInstance'
-import TeachingPlayground from '@/lib/teaching-playground/engine/TeachingPlayground'
 
 // Use singleton JsonDatabase instance
 const db = JsonDatabase.getInstance()
+
+// Use EventManagementSystem instance
+const eventSystem = new EventManagementSystem()
 
 export async function initializeTeachingPlayground():Promise<TeachingPlayground | null> {
   try {
@@ -225,11 +225,7 @@ export async function updateLectureStatus(lectureId: string, status: Lecture['st
   await requireTeacherAction()
 
   try {
-    const playground = await initializeTeachingPlayground()
-    if (!playground) {
-      throw new Error('Failed to initialize TeachingPlayground on server')
-    }
-    await playground.eventSystem.updateEventStatus(lectureId, status)
+    await eventSystem.updateEventStatus(lectureId, status)
   } catch (error) {
     console.error('Error updating lecture status:', error)
     throw error
@@ -243,11 +239,7 @@ export async function endLecture(formState: FormState, formData: FormData) {
   const lectureId = formData.get('lectureId') as string
 
   try {
-    const playground = await initializeTeachingPlayground()
-    if (!playground) {
-      throw new Error('Failed to initialize TeachingPlayground on server')
-    }
-    await playground.eventSystem.updateEventStatus(lectureId, 'completed')
+    await eventSystem.updateEventStatus(lectureId, 'completed')
   } catch (error) {
     return fromErrorToFormState(error)
   }

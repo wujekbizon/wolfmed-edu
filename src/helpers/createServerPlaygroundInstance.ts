@@ -1,4 +1,4 @@
-import TeachingPlayground from '@/lib/teaching-playground/engine/TeachingPlayground'
+import { TeachingPlayground } from '@teaching-playground/core'
 let playgroundInstance: TeachingPlayground | null = null
 
 export const createServerPlaygroundInstance = (): TeachingPlayground => {

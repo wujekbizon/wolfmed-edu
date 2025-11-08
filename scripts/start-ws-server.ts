@@ -18,7 +18,7 @@
  */
 
 import { createServer } from 'http';
-import { RealTimeCommunicationSystem } from '@teaching-playground/core/dist/systems/comms/RealTimeCommunicationSystem.js';
+import { RealTimeCommunicationSystem } from '@teaching-playground/core';
 import * as dotenv from 'dotenv';
 
 // Load environment variables

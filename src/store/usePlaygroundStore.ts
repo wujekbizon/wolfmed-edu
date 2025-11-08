@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { Lecture, User } from "@/lib/teaching-playground/interfaces";
-import TeachingPlayground from "@/lib/teaching-playground/engine/TeachingPlayground";
+import { Lecture, User, TeachingPlayground } from "@teaching-playground/core";
 
 interface PlaygroundState {
   selectedLecture: Lecture | null;
