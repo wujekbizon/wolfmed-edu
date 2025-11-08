@@ -1,11 +1,13 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const isProtectedRoute = createRouteMatcher(['/panel(.*)', '/blog(.*)', '/forum(.*)'])
+const isProtectedRoute = createRouteMatcher(['/panel(.*)', '/blog(.*)', '/forum(.*)', '/tp(.*)'])
 const isAdminRoute = createRouteMatcher(['/blog/admin(.*)'])
+const isTeacherRoute = createRouteMatcher(['/tp', '/tp/settings', '/tp/communication', '/tp/lectures(.*)'])
+const isRoomRoute = createRouteMatcher(['/tp/rooms/(.*)'])
 
 export default clerkMiddleware(async (auth, request) => {
-  // First: Protect all blog/panel/forum routes from unauthenticated users
+  // First: Protect all blog/panel/forum/tp routes from unauthenticated users
   if (isProtectedRoute(request)) {
     await auth.protect({
       unauthorizedUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
@@ -25,6 +27,22 @@ export default clerkMiddleware(async (auth, request) => {
       return NextResponse.redirect(url)
     }
   }
+
+  // Third: Check teacher role for teaching playground routes (except room pages)
+  if (isTeacherRoute(request)) {
+    const { sessionClaims } = await auth()
+
+    // Check if user has teacher or admin role
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+    if (userRole !== 'teacher' && userRole !== 'admin') {
+      // Redirect non-teachers to home
+      const url = new URL('/', request.url)
+      return NextResponse.redirect(url)
+    }
+  }
+
+  // Fourth: Room pages allow any authenticated user (already protected by isProtectedRoute)
+  // Students can access rooms, but not other /tp pages
 })
 
 export const config = {

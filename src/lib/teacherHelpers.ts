@@ -100,3 +100,39 @@ export async function requireTeacherAction(): Promise<{
 export async function hasTeacherAccess(): Promise<boolean> {
   return isUserTeacher()
 }
+
+/**
+ * Require authentication but allow any role (teacher, student, admin)
+ * Use this for room pages where both teachers and students can participate
+ */
+export async function requireAuth(): Promise<void> {
+  const { userId } = await auth()
+  if (!userId) {
+    redirect('/sign-in')
+  }
+}
+
+/**
+ * Get current user role
+ * @returns 'teacher', 'admin', 'student', or null if not authenticated
+ */
+export async function getUserRole(): Promise<'teacher' | 'admin' | 'student' | null> {
+  try {
+    const { userId } = await auth()
+    if (!userId) return null
+
+    const user = await currentUser()
+    if (!user) return null
+
+    const role = user.publicMetadata?.role as string | undefined
+    if (role === 'teacher' || role === 'admin') {
+      return role as 'teacher' | 'admin'
+    }
+
+    // Default to student if no role specified
+    return 'student'
+  } catch (error) {
+    console.error('Error getting user role:', error)
+    return null
+  }
+}

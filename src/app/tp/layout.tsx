@@ -1,4 +1,4 @@
-import { requireTeacher } from '@/lib/teacherHelpers'
+import { getUserRole } from '@/lib/teacherHelpers'
 import TeachingPlaygroundNavbar from "./components/TeachingPlaygroundNavbar"
 import TeachingPlaygroundSidebar from "./components/TeachingPlaygroundSidebar"
 import { Metadata } from 'next'
@@ -14,16 +14,18 @@ export default async function TeachingPlaygroundLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Check teacher access (redirects if not teacher/admin)
-  await requireTeacher()
+  // Middleware handles access control, just get the role for UI
+  const userRole = await getUserRole()
+  const isTeacher = userRole === 'teacher' || userRole === 'admin'
 
   return (
     <section className="h-[calc(100vh-6px)] bg-zinc-900 text-zinc-100">
       <TeachingPlaygroundNavbar />
       <div className="flex h-[calc(100vh-73px)]">
-        <TeachingPlaygroundSidebar />
+        {/* Only show sidebar for teachers */}
+        {isTeacher && <TeachingPlaygroundSidebar />}
         <section className="flex-1 overflow-auto scrollbar-webkit">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className={`${isTeacher ? 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8' : 'h-full'}`}>
             {children}
           </div>
         </section>
