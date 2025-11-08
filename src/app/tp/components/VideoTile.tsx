@@ -34,29 +34,44 @@ export default function VideoTile({
 
   // Attach stream to video element
   useEffect(() => {
-    if (videoRef.current && participant.stream) {
-      console.log(`[VideoTile] Attaching stream for ${participant.username}:`, {
-        streamId: participant.stream.id,
-        videoTracks: participant.stream.getVideoTracks().map(t => ({
-          id: t.id,
-          enabled: t.enabled,
-          muted: t.muted,
-          readyState: t.readyState
-        })),
-        isLocal: participant.isLocal
-      })
+    console.log(`[VideoTile] Stream attachment effect running for ${participant.username}:`, {
+      hasVideoRef: !!videoRef.current,
+      hasStream: !!participant.stream,
+      streamId: participant.stream?.id
+    })
 
-      videoRef.current.srcObject = participant.stream
-
-      // Check if stream has video tracks
-      const videoTracks = participant.stream.getVideoTracks()
-      const hasVideoTrack = videoTracks.length > 0 && videoTracks[0]?.enabled === true
-      setHasVideo(hasVideoTrack)
-
-      console.log(`[VideoTile] ${participant.username} hasVideo:`, hasVideoTrack)
+    if (!videoRef.current) {
+      console.warn(`[VideoTile] videoRef.current is null for ${participant.username}`)
+      return
     }
 
+    if (!participant.stream) {
+      console.warn(`[VideoTile] participant.stream is null for ${participant.username}`)
+      return
+    }
+
+    console.log(`[VideoTile] Attaching stream for ${participant.username}:`, {
+      streamId: participant.stream.id,
+      videoTracks: participant.stream.getVideoTracks().map(t => ({
+        id: t.id,
+        enabled: t.enabled,
+        muted: t.muted,
+        readyState: t.readyState
+      })),
+      isLocal: participant.isLocal
+    })
+
+    videoRef.current.srcObject = participant.stream
+
+    // Check if stream has video tracks
+    const videoTracks = participant.stream.getVideoTracks()
+    const hasVideoTrack = videoTracks.length > 0 && videoTracks[0]?.enabled === true
+    setHasVideo(hasVideoTrack)
+
+    console.log(`[VideoTile] ${participant.username} initial hasVideo:`, hasVideoTrack)
+
     return () => {
+      console.log(`[VideoTile] Cleaning up stream for ${participant.username}`)
       if (videoRef.current) {
         videoRef.current.srcObject = null
       }
