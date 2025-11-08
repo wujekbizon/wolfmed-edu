@@ -79,7 +79,7 @@ export function RoomCard({ room, currentLecture }: RoomCardProps) {
                 currentLecture.communicationStatus?.websocket ? 'bg-green-400' : 'bg-red-400'
               )} />
               <span className="text-xs text-zinc-400">
-                {room.participants.length} connected
+                WebSocket {currentLecture.communicationStatus?.websocket ? "connected" : "disconnected"}
               </span>
             </div>
           </div>

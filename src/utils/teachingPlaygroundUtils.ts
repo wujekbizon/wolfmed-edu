@@ -36,7 +36,7 @@ export async function manageRoomForLecture(lecture: Lecture): Promise<Room> {
         teacherId: lecture.teacherId,
         status: lecture.status
       },
-      participants: [],
+      // v1.1.2: Participants no longer stored in database, only in WebSocket memory
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }

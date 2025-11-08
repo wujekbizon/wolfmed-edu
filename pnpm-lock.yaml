@@ -63,8 +63,8 @@ importers:
         specifier: ^5.90.5
         version: 5.90.5(react@19.2.0)
       '@teaching-playground/core':
-        specifier: 1.1.1
-        version: 1.1.1(bufferutil@4.0.9)(typescript@5.9.3)
+        specifier: 1.1.2
+        version: 1.1.2(bufferutil@4.0.9)(typescript@5.9.3)
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -1994,8 +1994,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@teaching-playground/core@1.1.1':
-    resolution: {integrity: sha512-g1ZMm15thrQmxS1quy6753OTuXicIFZuvIm3DVo0nXQTwyNCkkU46xWi8tA0DxKxGsYvywWJ9nDqPjCTKbZQQA==}
+  '@teaching-playground/core@1.1.2':
+    resolution: {integrity: sha512-tnzLZCw26uKmEQ4tgj/+pXHOOHjCWglKFjzUTH8aZ3ngmxegi/vJuwojlce1nLt/BRAKahFQn8xXCi6arEsXhw==}
     peerDependencies:
       typescript: ^5.0.0
 
@@ -6823,7 +6823,7 @@ snapshots:
       '@tanstack/query-core': 5.90.5
       react: 19.2.0
 
-  '@teaching-playground/core@1.1.1(bufferutil@4.0.9)(typescript@5.9.3)':
+  '@teaching-playground/core@1.1.2(bufferutil@4.0.9)(typescript@5.9.3)':
     dependencies:
       '@trpc/client': 10.45.2(@trpc/server@10.45.2)
       '@trpc/server': 10.45.2
@@ -6856,7 +6856,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.9.1
+      '@types/node': 24.10.0
 
   '@types/cors@2.8.19':
     dependencies:
@@ -6902,7 +6902,7 @@ snapshots:
 
   '@types/mysql@2.15.26':
     dependencies:
-      '@types/node': 24.9.1
+      '@types/node': 24.10.0
 
   '@types/node@22.18.12':
     dependencies:
@@ -6934,7 +6934,7 @@ snapshots:
 
   '@types/pg@8.6.1':
     dependencies:
-      '@types/node': 24.9.1
+      '@types/node': 24.10.0
       pg-protocol: 1.10.3
       pg-types: 2.2.0
 
@@ -6950,7 +6950,7 @@ snapshots:
 
   '@types/simple-peer@9.11.9':
     dependencies:
-      '@types/node': 24.9.1
+      '@types/node': 24.10.0
 
   '@types/socket.io-client@3.0.0(bufferutil@4.0.9)':
     dependencies:
@@ -6970,7 +6970,7 @@ snapshots:
 
   '@types/tedious@4.0.14':
     dependencies:
-      '@types/node': 24.9.1
+      '@types/node': 24.10.0
 
   '@types/unist@2.0.11': {}
 
