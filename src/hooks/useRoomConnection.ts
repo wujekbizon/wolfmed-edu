@@ -294,9 +294,9 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }));
         });
 
-        connection.on('hand_lowered', ({ userId }: { userId: string }) => {
+        connection.on('hand_lowered', ({ userId, timestamp }: { userId: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`Hand lowered by ${userId}`);
+          console.log(`Hand lowered by ${userId} at ${timestamp}`);
 
           setState(prev => ({
             ...prev,
@@ -323,9 +323,9 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         // Client-side event handling (v1.3.1)
         // Mute all participants
-        connection.on('mute_all', () => {
+        connection.on('mute_all', ({ requestedBy, timestamp }: { requestedBy: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log('Teacher muted all participants');
+          console.log(`Teacher ${requestedBy} muted all participants at ${timestamp}`);
 
           setState(prev => ({
             ...prev,
@@ -334,20 +334,20 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         });
 
         // Individual participant muted by teacher
-        connection.on('muted_by_teacher', ({ teacherId, teacherName }: { teacherId: string, teacherName: string }) => {
+        connection.on('muted_by_teacher', ({ requestedBy, reason, timestamp }: { requestedBy: string, reason?: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`You were muted by ${teacherName}`);
+          console.log(`You were muted by ${requestedBy} at ${timestamp}${reason ? `: ${reason}` : ''}`);
 
           setState(prev => ({
             ...prev,
-            systemMessage: `You have been muted by ${teacherName}`
+            systemMessage: `You have been muted by the teacher${reason ? `: ${reason}` : ''}`
           }));
         });
 
         // Kicked from room
-        connection.on('kicked_from_room', ({ reason, kickedBy }: { reason: string, kickedBy: string }) => {
+        connection.on('kicked_from_room', ({ roomId, reason, kickedBy, timestamp }: { roomId: string, reason: string, kickedBy: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`You were kicked from the room: ${reason}`);
+          console.log(`You were kicked from room ${roomId} by ${kickedBy} at ${timestamp}: ${reason}`);
 
           setState(prev => ({
             ...prev,
