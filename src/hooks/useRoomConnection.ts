@@ -138,8 +138,8 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }));
 
           // Request message history after room_state
-          if (connectionRef.current?.socket) {
-            connectionRef.current.socket.emit('request_message_history', roomId)
+          if (connectionRef.current) {
+            connectionRef.current.emit('request_message_history', roomId)
           }
         };
 
@@ -407,6 +407,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     sendMessage,
     startStream,
     stopStream,
-    exitRoom
+    exitRoom,
+    connection: connectionRef.current // Expose for event listeners (v1.1.3+)
   };
 } 
