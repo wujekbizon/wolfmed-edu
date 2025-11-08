@@ -1,12 +1,15 @@
 # @teaching-playground/core Backend Hotfix Requirements
 
 ## Package Version
-Current: `v1.3.1`
-Recommended hotfix version: `v1.3.2`
+Current: `v1.4.0` (includes recording features)
+Recommended hotfix version: `v1.4.1`
 
 ---
 
 ## Issue #1: room_state Event Missing Existing Participants (CRITICAL)
+
+### Affected Versions
+v1.3.1, v1.4.0
 
 ### Problem
 When a user joins a room where other participants already exist, the `room_state` event only includes the new user, not the existing participants.
@@ -63,6 +66,9 @@ socket.on('join_room', async (data) => {
 
 ## Issue #2: Kick Participant Not Working
 
+### Affected Versions
+v1.3.1, v1.4.0
+
 ### Problem
 When teacher clicks "Kick Participant" button and confirms the dialog, nothing happens. No error on backend, participant stays in room.
 
@@ -115,6 +121,9 @@ Check if the `kick_participant` event handler is properly:
 ---
 
 ## Issue #3: Mute Participant Status (UNTESTED - Needs Verification)
+
+### Affected Versions
+v1.3.1, v1.4.0
 
 ### Current Implementation
 Teacher can emit `mute_participant` and `mute_all_participants` events. Need to verify:
@@ -190,7 +199,7 @@ console.log(`Emitting room_state to ${socketId} with ${participants.length} part
 
 ## Additional Context
 
-### Event Structure (v1.3.1)
+### Event Structure (v1.3.1+, v1.4.0)
 Current event structures being used:
 
 **user_joined:**
