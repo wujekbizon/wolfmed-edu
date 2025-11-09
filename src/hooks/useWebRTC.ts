@@ -267,13 +267,11 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle user joined - setup peer connection (v1.2.0)
     const handleUserJoined = async (data: any) => {
-      // BACKEND PACKAGE BUG: Missing userId field in user_joined event
-      // Expected: { userId, username, socketId }
-      // Actual: { username, socketId }
-      // TODO: Remove this comment once backend fixes the package
-      const userId = data.userId || data.user?.id
+      // v1.4.4: Backend now properly emits userId in user_joined event ✅
+      const userId = data.userId
       const socketId = data.socketId
-      const username = data.username || data.user?.username || 'Unknown User'
+      const username = data.username || 'Unknown User'
+      const role = data.role
 
       if (!socketId) {
         console.error('[WebRTC] user_joined event missing socketId:', data)
@@ -281,12 +279,13 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       }
 
       if (!userId) {
-        console.warn('[WebRTC] BACKEND BUG: user_joined event missing userId field. This should be fixed in the package!', data)
+        console.error('[WebRTC] user_joined event missing userId - this should not happen in v1.4.4+:', data)
+        return
       }
 
       // IMPORTANT: Use socketId for peer connections since ICE candidates come with socketId
       const peerId = socketId
-      console.log(`[WebRTC] User ${username} (userId: ${userId || 'MISSING'}, socketId: ${socketId}) joined, setting up peer connection`)
+      console.log(`[WebRTC v1.4.4] User ${username} (userId: ${userId}, role: ${role}, socketId: ${socketId}) joined, setting up peer connection`)
 
       // Add participant to state (only if not already present)
       setState(prev => {
