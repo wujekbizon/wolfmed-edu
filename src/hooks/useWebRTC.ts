@@ -302,24 +302,19 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         }
       })
 
-      // CRITICAL FIX: Always setup peer connection, even without local stream
-      // This allows us to receive WebRTC offers from the other peer
-      // We'll add our tracks later when we start our stream
-      if ((connection as any).setupPeerConnection) {
+      // Only setup peer connection if we have a local stream
+      // Backend will automatically handle incoming offers even without explicit setupPeerConnection call
+      // When we start our stream later, startLocalStream() will setup connections with all existing participants
+      if (localStreamRef.current && (connection as any).setupPeerConnection) {
         try {
-          await (connection as any).setupPeerConnection(peerId, localStreamRef.current || null)
-
-          // Only create offer if WE have a stream (we're the offerer)
-          // If we don't have a stream, we'll be the answerer
-          if (localStreamRef.current && (connection as any).createOffer) {
-            await (connection as any).createOffer(peerId)
-            console.log(`Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
-          } else {
-            console.log(`Peer connection setup complete for ${username} (socketId: ${peerId}), waiting for their offer`)
-          }
+          await (connection as any).setupPeerConnection(peerId, localStreamRef.current)
+          await (connection as any).createOffer(peerId)
+          console.log(`Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
         } catch (error) {
           console.error(`Failed to setup peer connection for ${username}:`, error)
         }
+      } else {
+        console.log(`Participant ${username} (socketId: ${peerId}) added to state. Peer connection will be setup when we start streaming.`)
       }
     }
 
