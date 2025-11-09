@@ -567,65 +567,76 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   };
 
   // Participant Controls (v1.3.1)
+  // v1.4.4: Use RoomConnection methods instead of raw emit
   const raiseHand = useCallback(() => {
     if (connectionRef.current) {
-      connectionRef.current.emit('raise_hand', {
-        roomId,
-        userId: userRef.current.id
-      });
+      try {
+        connectionRef.current.raiseHand();
+        console.log('[v1.4.4] Raised hand');
+      } catch (error) {
+        console.error('[v1.4.4] Failed to raise hand:', error);
+      }
     }
-  }, [roomId]);
+  }, []);
 
   const lowerHand = useCallback(() => {
     if (connectionRef.current) {
-      connectionRef.current.emit('lower_hand', {
-        roomId,
-        userId: userRef.current.id
-      });
+      try {
+        connectionRef.current.lowerHand();
+        console.log('[v1.4.4] Lowered hand');
+      } catch (error) {
+        console.error('[v1.4.4] Failed to lower hand:', error);
+      }
     }
-  }, [roomId]);
+  }, []);
 
   const muteAllParticipants = useCallback(() => {
     if (connectionRef.current) {
       if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
-        throw new Error('Only teachers can mute all participants');
+        console.error('[v1.4.4] Only teachers/admins can mute all participants');
+        return;
       }
 
-      connectionRef.current.emit('mute_all_participants', {
-        roomId,
-        requesterId: userRef.current.id
-      });
+      try {
+        connectionRef.current.muteAllParticipants();
+        console.log('[v1.4.4] Muted all participants');
+      } catch (error) {
+        console.error('[v1.4.4] Failed to mute all participants:', error);
+      }
     }
-  }, [roomId]);
+  }, []);
 
   const muteParticipant = useCallback((targetUserId: string) => {
     if (connectionRef.current) {
       if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
-        throw new Error('Only teachers can mute participants');
+        console.error('[v1.4.4] Only teachers/admins can mute participants');
+        return;
       }
 
-      connectionRef.current.emit('mute_participant', {
-        roomId,
-        targetUserId,
-        requesterId: userRef.current.id
-      });
+      try {
+        connectionRef.current.muteParticipant(targetUserId);
+        console.log('[v1.4.4] Muted participant:', targetUserId);
+      } catch (error) {
+        console.error('[v1.4.4] Failed to mute participant:', error);
+      }
     }
-  }, [roomId]);
+  }, []);
 
   const kickParticipant = useCallback((targetUserId: string, reason?: string) => {
     if (connectionRef.current) {
       if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
-        throw new Error('Only teachers can kick participants');
+        console.error('[v1.4.4] Only teachers/admins can kick participants');
+        return;
       }
 
-      connectionRef.current.emit('kick_participant', {
-        roomId,
-        targetUserId,
-        requesterId: userRef.current.id,
-        reason
-      });
+      try {
+        connectionRef.current.kickParticipant(targetUserId, reason || 'Removed from room');
+        console.log('[v1.4.4] Kicked participant:', targetUserId, 'reason:', reason);
+      } catch (error) {
+        console.error('[v1.4.4] Failed to kick participant:', error);
+      }
     }
-  }, [roomId]);
+  }, []);
 
   return {
     state,
