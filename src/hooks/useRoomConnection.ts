@@ -251,7 +251,7 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
               status: status || 'online',
               socketId,
               joinedAt: new Date().toISOString(),
-              canStream: role === 'teacher' || role === 'admin',
+              canStream: true,  // v1.4.4: All participants can stream (WebRTC P2P)
               canChat: true,
               canScreenShare: role === 'teacher' || role === 'admin',
               handRaised: false

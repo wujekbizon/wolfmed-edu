@@ -65,7 +65,10 @@ export default function RoomControls({
   const userRole = user?.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student'
 
   // Check if the user has permission to stream
-  const canStream = userRole === 'teacher'
+  // v1.4.4: Allow all participants to stream (WebRTC supports P2P mesh)
+  // Only screen sharing remains teacher/admin only
+  const canStream = true  // Previously: userRole === 'teacher'
+  const canScreenShare = userRole === 'teacher' || userRole === 'admin'
 
   // For WebRTC mode (v1.2.0+), we don't need the old streaming API
   // Media controls should work based on localStream, not old stream state
@@ -215,8 +218,8 @@ export default function RoomControls({
           </button>
         )}
 
-        {/* Screen share control (v1.3.0) - only for teachers */}
-        {canStream && onStartScreenShare && onStopScreenShare && (
+        {/* Screen share control (v1.3.0) - only for teachers/admins */}
+        {canScreenShare && onStartScreenShare && onStopScreenShare && (
           <button
             onClick={() => {
               if (isScreenSharing) {
@@ -287,7 +290,7 @@ export default function RoomControls({
                 Camera active {isScreenSharing && '• Screen sharing'}
               </span>
             ) : (
-              canStream ? 'Click camera button to start' : 'Waiting for teacher'
+              'Click camera button to start'
             )}
           </>
         ) : (
