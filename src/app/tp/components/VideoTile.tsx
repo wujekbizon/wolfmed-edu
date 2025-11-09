@@ -49,6 +49,12 @@ export default function VideoTile({
 
     if (!participant.stream) {
       console.warn(`[VideoTile] No stream available for ${participant.username}`)
+      // v1.4.4 FIX: Clear srcObject to prevent showing frozen last frame
+      if (videoElement.srcObject) {
+        videoElement.srcObject = null
+        console.log(`[VideoTile] Cleared srcObject for ${participant.username}`)
+      }
+      setHasVideo(false)
       return
     }
 

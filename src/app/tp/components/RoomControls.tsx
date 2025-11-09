@@ -110,8 +110,19 @@ export default function RoomControls({
     }
   }
 
-  // Toggle video
-  const toggleVideo = () => {
+  // Toggle video - smart button that starts camera if needed
+  const toggleVideo = async () => {
+    // If no local stream exists, start camera first
+    if (!hasLocalStream && onStartStream) {
+      try {
+        await onStartStream('high')
+      } catch (error) {
+        console.error('Failed to start camera:', error)
+      }
+      return
+    }
+
+    // Otherwise, just toggle video track
     if (onToggleVideo) {
       // Use external callback (WebRTC hook)
       onToggleVideo()
@@ -146,7 +157,10 @@ export default function RoomControls({
 
   // WebRTC mode: Camera button enabled when connected, media buttons when stream exists
   const isCameraButtonDisabled = !isConnected
-  const isMediaButtonDisabled = !isConnected || !hasLocalStream
+  // v1.4.4: Video button can start camera for students, so only require connection
+  const isVideoButtonDisabled = !isConnected
+  // Audio button still requires stream to exist
+  const isAudioButtonDisabled = !isConnected || !hasLocalStream
 
   // Participant Controls (v1.3.1)
   const currentUserParticipant = participants.find(p => p.id === currentUser?.id)
@@ -159,12 +173,12 @@ export default function RoomControls({
         {/* Audio control */}
         <button
           onClick={toggleAudio}
-          disabled={isMediaButtonDisabled}
+          disabled={isAudioButtonDisabled}
           className={`p-3 rounded-full ${
             actualAudioEnabled
               ? 'bg-blue-500 hover:bg-blue-600'
               : 'bg-red-500 hover:bg-red-600'
-          } ${isMediaButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+          } ${isAudioButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
           title={actualAudioEnabled ? "Mute Audio" : "Unmute Audio"}
         >
           <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -179,13 +193,13 @@ export default function RoomControls({
         {/* Video control */}
         <button
           onClick={toggleVideo}
-          disabled={isMediaButtonDisabled}
+          disabled={isVideoButtonDisabled}
           className={`p-3 rounded-full ${
             actualVideoEnabled
               ? 'bg-blue-500 hover:bg-blue-600'
               : 'bg-red-500 hover:bg-red-600'
-          } ${isMediaButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
-          title={actualVideoEnabled ? "Stop Video" : "Start Video"}
+          } ${isVideoButtonDisabled && 'opacity-50 cursor-not-allowed'}`}
+          title={hasLocalStream ? (actualVideoEnabled ? "Stop Video" : "Start Video") : "Start Camera"}
         >
           <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             {actualVideoEnabled ? (
@@ -197,7 +211,8 @@ export default function RoomControls({
         </button>
 
         {/* Camera control - Start/Stop local stream (v1.2.0 WebRTC) */}
-        {canStream && (
+        {/* v1.4.4: Only show for teachers/admins - students use video toggle button */}
+        {isTeacherOrAdmin && (
           <button
             onClick={toggleCamera}
             disabled={isCameraButtonDisabled}
