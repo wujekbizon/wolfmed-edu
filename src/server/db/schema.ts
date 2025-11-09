@@ -441,6 +441,45 @@ export const materialsRelations = relations(materials, ({ one }) => ({
   }),
 }));
 
+// v1.4.4 Sprint 2: Lecture recordings table
+export const lectureRecordings = createTable(
+  "lecture_recordings",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    lectureId: varchar("lectureId", { length: 256 }), // Optional: link to lecture if applicable
+    roomId: varchar("roomId", { length: 256 }), // Teaching Playground room ID
+    title: varchar("title", { length: 256 }).notNull(),
+    description: text("description"),
+    key: varchar("key", { length: 256 }).notNull().unique(), // UploadThing file key
+    url: text("url").notNull(), // UploadThing file URL
+    thumbnailUrl: text("thumbnailUrl"), // Optional thumbnail
+    duration: integer("duration"), // Duration in seconds
+    size: integer("size").notNull(), // File size in bytes
+    mimeType: varchar("mimeType", { length: 64 }).notNull(), // video/webm, video/mp4, etc.
+    viewCount: integer("viewCount").default(0).notNull(),
+    isPublic: boolean("isPublic").default(false).notNull(), // Whether students can access
+    recordedAt: timestamp("recordedAt").defaultNow().notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("recordings_user_id_idx").on(table.userId),
+    index("recordings_lecture_id_idx").on(table.lectureId),
+    index("recordings_room_id_idx").on(table.roomId),
+    index("recordings_recorded_at_idx").on(table.recordedAt),
+  ]
+);
+
+export const lectureRecordingsRelations = relations(lectureRecordings, ({ one }) => ({
+  user: one(users, {
+    fields: [lectureRecordings.userId],
+    references: [users.userId],
+  }),
+}));
+
 export const userLimits = createTable(
   "user_limits", 
   {
