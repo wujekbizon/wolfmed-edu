@@ -51,6 +51,10 @@ interface StreamAddedEvent {
 interface UserEvent {
   userId: string
   socketId: string
+  username: string
+  role: "teacher" | "student" | "admin"
+  displayName?: string
+  status?: string
 }
 
 interface RoomState {
@@ -226,16 +230,50 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           });
         });
 
-        connection.on('user_joined', ({ userId, socketId }: UserEvent) => {
+        connection.on('user_joined', ({ userId, socketId, username, role, displayName, status }: UserEvent) => {
           if (!mountedRef.current) return;
-          console.log('User joined:', userId, socketId);
-          // Participants are updated via room_state event
+          console.log('[v1.4.4 FIX] User joined:', username, 'userId:', userId, 'socketId:', socketId);
+
+          // v1.4.4 FIX: Add participant to state when they join
+          setState(prev => {
+            // Check if participant already exists (prevent duplicates)
+            const exists = prev.participants.some(p => p.socketId === socketId || p.id === userId)
+            if (exists) {
+              console.log('[v1.4.4] Participant already in state, skipping')
+              return prev
+            }
+
+            const newParticipant = {
+              id: userId,
+              username,
+              role,
+              displayName: displayName || username,
+              status: status || 'online',
+              socketId,
+              joinedAt: new Date().toISOString(),
+              canStream: role === 'teacher' || role === 'admin',
+              canChat: true,
+              canScreenShare: role === 'teacher' || role === 'admin',
+              handRaised: false
+            }
+
+            console.log('[v1.4.4] Adding participant to state:', newParticipant)
+            return {
+              ...prev,
+              participants: [...prev.participants, newParticipant]
+            }
+          })
         });
 
         connection.on('user_left', ({ socketId }: { socketId: string }) => {
           if (!mountedRef.current) return;
-          console.log('User left:', socketId);
-          // Participants are updated via room_state event
+          console.log('[v1.4.4 FIX] User left, socketId:', socketId);
+
+          // v1.4.4 FIX: Remove participant from state when they leave
+          setState(prev => ({
+            ...prev,
+            participants: prev.participants.filter(p => p.socketId !== socketId)
+          }))
         });
 
         connection.on('stream_status_change', ({ isStreaming, userId, username }) => {
