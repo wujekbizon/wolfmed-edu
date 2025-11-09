@@ -84,9 +84,36 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         isAudioEnabled: audioTracks.length > 0 && audioTracks[0]?.enabled
       }))
 
-      // Note: We don't set up voice activity detection for local stream
-      // The local user's speaking indicator can be shown through mic level UI
-      // Voice activity detection is only needed for remote participants
+      // CRITICAL: Add tracks to existing peer connections
+      // When a user starts their stream after peers have already joined,
+      // we need to add tracks and renegotiate with all existing peers
+      if (connection && (connection as any).addTracksToAllPeers) {
+        console.log('[useWebRTC] Adding tracks to existing peer connections')
+        try {
+          await (connection as any).addTracksToAllPeers(stream)
+        } catch (error) {
+          console.error('[useWebRTC] Failed to add tracks to peers:', error)
+        }
+      } else {
+        // Fallback: manually add tracks to each peer
+        console.log('[useWebRTC] Manually adding tracks to existing peers')
+        setState(prev => {
+          prev.participants.forEach(async (participant) => {
+            if (!participant.isLocal && (connection as any).setupPeerConnection) {
+              try {
+                console.log(`[useWebRTC] Adding tracks to peer ${participant.id}`)
+                await (connection as any).setupPeerConnection(participant.id, stream)
+                if ((connection as any).createOffer) {
+                  await (connection as any).createOffer(participant.id)
+                }
+              } catch (error) {
+                console.error(`[useWebRTC] Failed to add tracks to ${participant.id}:`, error)
+              }
+            }
+          })
+          return prev
+        })
+      }
 
       console.log('[useWebRTC] Local stream started successfully')
       return stream
@@ -94,7 +121,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       console.error('Failed to start local media stream:', error)
       throw error
     }
-  }, [userId])
+  }, [connection])
 
   /**
    * Stop local media stream
@@ -240,7 +267,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle user joined - setup peer connection (v1.2.0)
     const handleUserJoined = async (data: any) => {
-      // v1.3.1 package sends { userId, socketId } instead of { user }
+      // v1.3.1+ package sends { userId, socketId } instead of { user }
       const userId = data.userId || data.user?.id
       const socketId = data.socketId
       const username = data.username || data.user?.username || 'Unknown User'
@@ -275,12 +302,21 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         }
       })
 
-      // Setup peer connection if we have a local stream
-      if (localStreamRef.current && (connection as any).setupPeerConnection) {
+      // CRITICAL FIX: Always setup peer connection, even without local stream
+      // This allows us to receive WebRTC offers from the other peer
+      // We'll add our tracks later when we start our stream
+      if ((connection as any).setupPeerConnection) {
         try {
-          await (connection as any).setupPeerConnection(peerId, localStreamRef.current)
-          await (connection as any).createOffer(peerId)
-          console.log(`Peer connection setup complete for ${username} (socketId: ${peerId})`)
+          await (connection as any).setupPeerConnection(peerId, localStreamRef.current || null)
+
+          // Only create offer if WE have a stream (we're the offerer)
+          // If we don't have a stream, we'll be the answerer
+          if (localStreamRef.current && (connection as any).createOffer) {
+            await (connection as any).createOffer(peerId)
+            console.log(`Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
+          } else {
+            console.log(`Peer connection setup complete for ${username} (socketId: ${peerId}), waiting for their offer`)
+          }
         } catch (error) {
           console.error(`Failed to setup peer connection for ${username}:`, error)
         }
