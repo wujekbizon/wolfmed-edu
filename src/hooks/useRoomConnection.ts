@@ -87,6 +87,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   const hasJoinedRoomRef = useRef(false)
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  // v1.4.3 FIX: Track if this is a React Strict Mode remount
+  // React 18 Strict Mode causes mount -> unmount -> remount in dev
+  // We need to prevent disconnecting during this cycle
+  const strictModeRemountTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isStrictModeRemountRef = useRef(false)
+
   // Store user in ref to avoid dependency issues
   const userRef = useRef(user);
   useEffect(() => {
@@ -97,6 +103,21 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     mountedRef.current = true;
     isConnectingRef.current = false;
     hasJoinedRoomRef.current = false;
+
+    // v1.4.3 FIX: Check if this is a Strict Mode remount
+    // If we detect a remount within 100ms, it's Strict Mode
+    if (isStrictModeRemountRef.current) {
+      console.log('[v1.4.3 FIX] Detected React Strict Mode remount, reusing existing connection')
+      isStrictModeRemountRef.current = false
+      if (strictModeRemountTimeoutRef.current) {
+        clearTimeout(strictModeRemountTimeoutRef.current)
+        strictModeRemountTimeoutRef.current = null
+      }
+      // Don't setup new connection if we're remounting
+      if (connectionRef.current) {
+        return
+      }
+    }
 
     const setupConnection = async () => {
       if (!mountedRef.current || isConnectingRef.current) return;
@@ -388,8 +409,24 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     setupConnection();
 
     return () => {
-      console.log('Starting connection cleanup...')
+      console.log('[v1.4.3 FIX] Starting connection cleanup...')
+
+      // v1.4.3 FIX: Mark as potential Strict Mode remount
+      // If component remounts within 100ms, we'll know it was Strict Mode
+      isStrictModeRemountRef.current = true
+      strictModeRemountTimeoutRef.current = setTimeout(() => {
+        isStrictModeRemountRef.current = false
+        console.log('[v1.4.3 FIX] Cleanup was NOT a Strict Mode remount')
+      }, 100)
+
       mountedRef.current = false
+
+      // v1.4.3 FIX: In development, Strict Mode causes immediate remount
+      // Don't disconnect if we detect this pattern
+      if (process.env.NODE_ENV === 'development' && isStrictModeRemountRef.current) {
+        console.log('[v1.4.3 FIX] Skipping disconnect - likely Strict Mode remount')
+        return
+      }
 
       // 1. Clean up local stream
       if (localStream) {
@@ -417,28 +454,17 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       hasJoinedRoomRef.current = false
       console.log('Cleanup complete')
 
-      // Add this to the cleanup:
-      const cleanup = () => {
-        console.log('[Cleanup] Starting...')
-
-        // Cancel any pending operations
-        if (reconnectTimeoutRef.current) {
-          clearTimeout(reconnectTimeoutRef.current)
-        }
-
-        // Force disconnect
-        if (connectionRef.current) {
-          console.log('[Cleanup] Force-disconnecting')
-          connectionRef.current.disconnect()
-        }
-
-        // Clear remote streams
-        setRemoteStreams(new Map())
-        console.log('[Cleanup] Completed')
+      // Cancel any pending operations
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current)
+        reconnectTimeoutRef.current = null
       }
-      cleanup()
+
+      // Clear remote streams
+      setRemoteStreams(new Map())
+      console.log('[Cleanup] Completed')
     };
-  }, [roomId, serverUrl]); // Stable dependencies only
+  }, [roomId, serverUrl, localStream]); // Added localStream to deps
 
   const startStream = async (quality?: 'low' | 'medium' | 'high') => {
     try {

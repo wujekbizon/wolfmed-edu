@@ -267,19 +267,20 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle user joined - setup peer connection (v1.2.0)
     const handleUserJoined = async (data: any) => {
-      // v1.3.1+ package sends { userId, socketId } instead of { user }
-      const userId = data.userId || data.user?.id
+      // v1.4.3 HOTFIX: Backend sends { username, socketId }, missing userId
+      // Fallback chain: userId > user?.id > socketId (last resort)
+      const userId = data.userId || data.user?.id || data.socketId
       const socketId = data.socketId
       const username = data.username || data.user?.username || 'Unknown User'
 
       if (!socketId) {
-        console.error('user_joined event missing socketId:', data)
+        console.error('[v1.4.3] user_joined event missing socketId:', data)
         return
       }
 
       // IMPORTANT: Use socketId for peer connections since ICE candidates come with socketId
       const peerId = socketId
-      console.log(`User ${username} (userId: ${userId}, socketId: ${socketId}) joined, setting up peer connection`)
+      console.log(`[v1.4.3] User ${username} (userId: ${userId || 'undefined'}, socketId: ${socketId}) joined, setting up peer connection`)
 
       // Add participant to state (only if not already present)
       setState(prev => {
@@ -405,8 +406,78 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       setState(prev => ({ ...prev, isScreenSharing: false }))
     }
 
+    // v1.4.3 CRITICAL FIX: Handle room_state for late joiners
+    // When user joins a room with existing participants, they receive room_state
+    // instead of individual user_joined events. We need to setup peer connections
+    // for all existing participants.
+    const handleRoomState = async (data: any) => {
+      const participants = data.participants || []
+      console.log(`[v1.4.3 FIX] room_state received with ${participants.length} existing participants`)
+
+      if (participants.length === 0) return
+
+      // Setup peer connections for all existing participants (except self)
+      for (const participant of participants) {
+        const socketId = participant.socketId
+        const username = participant.username || 'Unknown User'
+        const userId = participant.id || socketId
+
+        if (!socketId) {
+          console.warn('[v1.4.3 FIX] Skipping participant without socketId:', participant)
+          continue
+        }
+
+        // Skip if already in state (from previous user_joined)
+        const alreadyExists = await new Promise<boolean>((resolve) => {
+          setState(prev => {
+            resolve(prev.participants.some(p => p.id === socketId))
+            return prev
+          })
+        })
+
+        if (alreadyExists) {
+          console.log(`[v1.4.3 FIX] Participant ${username} already exists, skipping`)
+          continue
+        }
+
+        console.log(`[v1.4.3 FIX] Setting up peer connection for existing participant ${username} (socketId: ${socketId})`)
+
+        // Add to state
+        setState(prev => ({
+          ...prev,
+          participants: [
+            ...prev.participants,
+            {
+              id: socketId,
+              username,
+              isLocal: false,
+              connectionQuality: 'good' as const
+            }
+          ]
+        }))
+
+        // Setup peer connection (receive-only initially)
+        if ((connection as any).setupPeerConnection) {
+          try {
+            await (connection as any).setupPeerConnection(socketId, localStreamRef.current || null)
+
+            // Only create offer if WE have a stream (we're the initiator)
+            if (localStreamRef.current && (connection as any).createOffer) {
+              await (connection as any).createOffer(socketId)
+              console.log(`[v1.4.3 FIX] Peer connection setup and offer sent to ${username}`)
+            } else {
+              console.log(`[v1.4.3 FIX] Peer connection ready to receive offer from ${username}`)
+            }
+          } catch (error) {
+            console.error(`[v1.4.3 FIX] Failed to setup peer connection for ${username}:`, error)
+          }
+        }
+      }
+    }
+
     // Register event listeners
     connection.on('user_joined', handleUserJoined)
+    connection.on('room_state', handleRoomState) // v1.4.3 CRITICAL FIX
     connection.on('remote_stream_added', handleRemoteStreamAdded)
     connection.on('remote_stream_removed', handleRemoteStreamRemoved)
     connection.on('user_left', handleUserLeft)
@@ -416,6 +487,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     return () => {
       if (connection.removeAllListeners) {
         connection.removeAllListeners('user_joined')
+        connection.removeAllListeners('room_state') // v1.4.3 cleanup
         connection.removeAllListeners('remote_stream_added')
         connection.removeAllListeners('remote_stream_removed')
         connection.removeAllListeners('user_left')
