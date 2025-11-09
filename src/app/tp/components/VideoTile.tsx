@@ -31,6 +31,11 @@ export default function VideoTile({
   const videoElementRef = useRef<HTMLVideoElement | null>(null)
   const [hasVideo, setHasVideo] = useState(false)
   const lastEnabledStateRef = useRef<boolean | null>(null)
+  // v1.4.4 Sprint 1: Volume and fullscreen controls
+  const [volume, setVolume] = useState(1) // 0 to 1
+  const [showControls, setShowControls] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const containerRef = useRef<HTMLDivElement | null>(null)
 
   // Callback ref to attach stream when video element is mounted
   const videoRef = useCallback((videoElement: HTMLVideoElement | null) => {
@@ -112,6 +117,40 @@ export default function VideoTile({
     }
   }, [participant.stream, participant.username])
 
+  // v1.4.4 Sprint 1: Apply volume to video element
+  useEffect(() => {
+    if (videoElementRef.current && !participant.isLocal) {
+      videoElementRef.current.volume = volume
+    }
+  }, [volume, participant.isLocal])
+
+  // v1.4.4 Sprint 1: Fullscreen handlers
+  const toggleFullscreen = useCallback(async () => {
+    if (!containerRef.current) return
+
+    try {
+      if (!isFullscreen) {
+        await containerRef.current.requestFullscreen()
+        setIsFullscreen(true)
+      } else {
+        await document.exitFullscreen()
+        setIsFullscreen(false)
+      }
+    } catch (error) {
+      console.error('[VideoTile] Fullscreen error:', error)
+    }
+  }, [isFullscreen])
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement)
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
   // Get connection quality color
   const getConnectionColor = (quality?: 'excellent' | 'good' | 'poor') => {
     switch (quality) {
@@ -150,9 +189,12 @@ export default function VideoTile({
 
   return (
     <div
+      ref={containerRef}
       onClick={onClick}
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
       className={clsx(
-        'relative w-full h-full bg-zinc-800 rounded-lg overflow-hidden',
+        'relative w-full h-full bg-zinc-800 rounded-lg overflow-hidden group',
         'border-2 transition-all duration-200',
         isHighlighted ? 'border-blue-500' : 'border-transparent',
         participant.isSpeaking && 'ring-2 ring-green-400 ring-offset-2 ring-offset-zinc-900',
@@ -256,6 +298,69 @@ export default function VideoTile({
       {/* Speaking indicator - glowing border animation */}
       {participant.isSpeaking && (
         <div className="absolute inset-0 border-4 border-green-400 rounded-lg animate-pulse pointer-events-none" />
+      )}
+
+      {/* v1.4.4 Sprint 1: Volume and Fullscreen Controls */}
+      {showControls && (
+        <div className="absolute top-2 right-2 flex items-center gap-2 z-20 pointer-events-auto">
+          {/* Volume Control (only for remote participants) */}
+          {!participant.isLocal && participant.stream && (
+            <div className="flex items-center gap-2 bg-black/70 backdrop-blur-sm rounded-lg px-3 py-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setVolume(volume === 0 ? 1 : 0)
+                }}
+                className="p-1 hover:bg-white/10 rounded transition-colors"
+                title={volume === 0 ? "Unmute" : "Mute"}
+              >
+                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  {volume === 0 ? (
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  ) : (
+                    <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+                  )}
+                </svg>
+              </button>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={volume}
+                onChange={(e) => {
+                  e.stopPropagation()
+                  setVolume(parseFloat(e.target.value))
+                }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-20 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer
+                  [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3
+                  [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
+                  [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full
+                  [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+                title={`Volume: ${Math.round(volume * 100)}%`}
+              />
+            </div>
+          )}
+
+          {/* Fullscreen Button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFullscreen()
+            }}
+            className="p-2 bg-black/70 backdrop-blur-sm hover:bg-black/90 rounded-lg transition-colors"
+            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+          >
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              {isFullscreen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              )}
+            </svg>
+          </button>
+        </div>
       )}
     </div>
   )
