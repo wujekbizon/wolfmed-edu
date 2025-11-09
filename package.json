@@ -30,7 +30,7 @@
     "@sentry/nextjs": "^9.46.0",
     "@tailwindcss/postcss": "^4.1.15",
     "@tanstack/react-query": "^5.90.5",
-    "@teaching-playground/core": "1.4.2",
+    "@teaching-playground/core": "1.4.3",
     "@types/uuid": "^10.0.0",
     "@uploadthing/react": "^7.3.3",
     "@vercel/postgres": "^0.10.0",
