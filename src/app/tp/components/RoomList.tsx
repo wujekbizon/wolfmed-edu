@@ -12,11 +12,12 @@ interface RoomListProps {
 export function RoomList({ rooms }: RoomListProps) {
   const router = useRouter()
 
-  // Poll for updates every 5 seconds to show new rooms/lectures in real-time
+  // Poll for updates every 30 seconds (reduced from 5s to minimize database load)
+  // TODO: Remove when backend implements proper caching
   useEffect(() => {
     const interval = setInterval(() => {
       router.refresh() // Revalidate server component data
-    }, 5000)
+    }, 30000) // 30 seconds instead of 5
 
     return () => clearInterval(interval)
   }, [router])

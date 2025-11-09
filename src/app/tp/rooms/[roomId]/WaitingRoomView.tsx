@@ -13,11 +13,12 @@ export function WaitingRoomView({ lectureDate, minutesUntilStart }: WaitingRoomV
   const router = useRouter()
   const [isChecking, setIsChecking] = useState(false)
 
-  // Poll every 10 seconds to check if lecture has started
+  // Poll every 30 seconds to check if lecture has started (reduced from 10s)
+  // TODO: Remove when backend implements proper caching
   useEffect(() => {
     const interval = setInterval(() => {
       router.refresh()
-    }, 10000)
+    }, 30000) // 30 seconds instead of 10
 
     return () => clearInterval(interval)
   }, [router])
