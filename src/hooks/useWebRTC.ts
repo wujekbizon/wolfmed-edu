@@ -95,7 +95,12 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         })
 
         for (const participant of currentParticipants) {
-          if (!participant.isLocal && (connection as any).setupPeerConnection) {
+          // Skip local participant and self
+          if (participant.isLocal || participant.id === userId) {
+            continue
+          }
+
+          if ((connection as any).setupPeerConnection) {
             try {
               console.log(`[v1.4.4] Setting up peer connection with new stream for ${participant.username}`)
               await (connection as any).setupPeerConnection(participant.id, stream)
@@ -118,7 +123,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       console.error('Failed to start local media stream:', error)
       throw error
     }
-  }, [connection])
+  }, [connection, userId])
 
   /**
    * Stop local media stream
@@ -140,7 +145,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       if (connection && (connection as any).closePeerConnection) {
         setState(prev => {
           prev.participants.forEach(async (participant) => {
-            if (!participant.isLocal) {
+            // Skip local participant and self
+            if (!participant.isLocal && participant.id !== userId) {
               try {
                 await (connection as any).closePeerConnection(participant.id)
                 console.log(`[v1.4.4] Closed peer connection for ${participant.id}`)
@@ -155,7 +161,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       console.log('Local stream stopped')
     }
-  }, [connection])
+  }, [connection, userId])
 
   /**
    * Toggle video track
@@ -440,10 +446,16 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       for (const participant of participants) {
         const socketId = participant.socketId
         const username = participant.username || 'Unknown User'
-        const userId = participant.id || socketId
+        const participantUserId = participant.id || socketId
 
         if (!socketId) {
           console.warn('[v1.4.3 FIX] Skipping participant without socketId:', participant)
+          continue
+        }
+
+        // v1.4.4 FIX: Skip creating peer connection to ourselves!
+        if (participantUserId === userId) {
+          console.log(`[v1.4.4 FIX] Skipping peer connection to self (userId: ${userId})`)
           continue
         }
 
