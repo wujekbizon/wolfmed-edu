@@ -302,19 +302,25 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         }
       })
 
-      // Only setup peer connection if we have a local stream
-      // Backend will automatically handle incoming offers even without explicit setupPeerConnection call
-      // When we start our stream later, startLocalStream() will setup connections with all existing participants
-      if (localStreamRef.current && (connection as any).setupPeerConnection) {
+      // ALWAYS setup peer connection, even without local stream (v1.4.2 fix)
+      // Backend now supports null streams - this allows receive-only connections
+      // Students can join without camera and still receive teacher's video
+      if ((connection as any).setupPeerConnection) {
         try {
-          await (connection as any).setupPeerConnection(peerId, localStreamRef.current)
-          await (connection as any).createOffer(peerId)
-          console.log(`Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
+          // Pass null/undefined if we don't have a stream yet
+          await (connection as any).setupPeerConnection(peerId, localStreamRef.current || null)
+
+          // Only create offer if WE have a stream (we're the initiator)
+          // Otherwise, we'll receive and answer their offer
+          if (localStreamRef.current && (connection as any).createOffer) {
+            await (connection as any).createOffer(peerId)
+            console.log(`[v1.4.2] Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
+          } else {
+            console.log(`[v1.4.2] Peer connection ready to receive offer from ${username} (socketId: ${peerId})`)
+          }
         } catch (error) {
           console.error(`Failed to setup peer connection for ${username}:`, error)
         }
-      } else {
-        console.log(`Participant ${username} (socketId: ${peerId}) added to state. Peer connection will be setup when we start streaming.`)
       }
     }
 
