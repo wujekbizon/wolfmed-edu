@@ -84,38 +84,14 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         isAudioEnabled: audioTracks.length > 0 && audioTracks[0]?.enabled
       }))
 
-      // CRITICAL: Add tracks to existing peer connections
-      // When a user starts their stream after peers have already joined,
-      // we need to add tracks and renegotiate with all existing peers
-      if (connection && (connection as any).addTracksToAllPeers) {
-        console.log('[useWebRTC] Adding tracks to existing peer connections')
-        try {
-          await (connection as any).addTracksToAllPeers(stream)
-        } catch (error) {
-          console.error('[useWebRTC] Failed to add tracks to peers:', error)
-        }
-      } else {
-        // Fallback: manually add tracks to each peer
-        console.log('[useWebRTC] Manually adding tracks to existing peers')
-        setState(prev => {
-          prev.participants.forEach(async (participant) => {
-            if (!participant.isLocal && (connection as any).setupPeerConnection) {
-              try {
-                console.log(`[useWebRTC] Adding tracks to peer ${participant.id}`)
-                await (connection as any).setupPeerConnection(participant.id, stream)
-                if ((connection as any).createOffer) {
-                  await (connection as any).createOffer(participant.id)
-                }
-              } catch (error) {
-                console.error(`[useWebRTC] Failed to add tracks to ${participant.id}:`, error)
-              }
-            }
-          })
-          return prev
-        })
-      }
-
-      console.log('[useWebRTC] Local stream started successfully')
+      // v1.4.4 FIX: Don't manually add tracks to peers!
+      // Calling setupPeerConnection twice causes WebRTC error:
+      // "The order of m-lines in subsequent offer doesn't match"
+      //
+      // The backend package (RoomConnection) should handle track management.
+      // We just store the stream reference and let peer connections created
+      // in handleUserJoined/handleRoomState handle the tracks naturally.
+      console.log('[useWebRTC v1.4.4] Local stream started - peer connections will use it automatically')
       return stream
     } catch (error) {
       console.error('Failed to start local media stream:', error)
