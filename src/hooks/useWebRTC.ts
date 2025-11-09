@@ -84,14 +84,35 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         isAudioEnabled: audioTracks.length > 0 && audioTracks[0]?.enabled
       }))
 
-      // v1.4.4 FIX: Don't manually add tracks to peers!
-      // Calling setupPeerConnection twice causes WebRTC error:
-      // "The order of m-lines in subsequent offer doesn't match"
-      //
-      // The backend package (RoomConnection) should handle track management.
-      // We just store the stream reference and let peer connections created
-      // in handleUserJoined/handleRoomState handle the tracks naturally.
-      console.log('[useWebRTC v1.4.4] Local stream started - peer connections will use it automatically')
+      // v1.4.4 FIX: Recreate peer connections with new stream
+      // When stream restarts, we need to setup new peer connections with the new tracks
+      if (connection) {
+        const currentParticipants = await new Promise<typeof state.participants>((resolve) => {
+          setState(prev => {
+            resolve(prev.participants)
+            return prev
+          })
+        })
+
+        for (const participant of currentParticipants) {
+          if (!participant.isLocal && (connection as any).setupPeerConnection) {
+            try {
+              console.log(`[v1.4.4] Setting up peer connection with new stream for ${participant.username}`)
+              await (connection as any).setupPeerConnection(participant.id, stream)
+
+              // Create offer to send our new stream
+              if ((connection as any).createOffer) {
+                await (connection as any).createOffer(participant.id)
+                console.log(`[v1.4.4] Sent offer with new stream to ${participant.username}`)
+              }
+            } catch (error) {
+              console.error(`[v1.4.4] Failed to setup peer with new stream for ${participant.username}:`, error)
+            }
+          }
+        }
+      }
+
+      console.log('[useWebRTC v1.4.4] Local stream started and peer connections updated')
       return stream
     } catch (error) {
       console.error('Failed to start local media stream:', error)
@@ -114,9 +135,27 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         isAudioEnabled: false
       }))
 
+      // v1.4.4 FIX: Close peer connections when stopping stream
+      // This ensures they get recreated with new tracks when stream restarts
+      if (connection && (connection as any).closePeerConnection) {
+        setState(prev => {
+          prev.participants.forEach(async (participant) => {
+            if (!participant.isLocal) {
+              try {
+                await (connection as any).closePeerConnection(participant.id)
+                console.log(`[v1.4.4] Closed peer connection for ${participant.id}`)
+              } catch (error) {
+                console.error(`[v1.4.4] Failed to close peer for ${participant.id}:`, error)
+              }
+            }
+          })
+          return prev
+        })
+      }
+
       console.log('Local stream stopped')
     }
-  }, [])
+  }, [connection])
 
   /**
    * Toggle video track
