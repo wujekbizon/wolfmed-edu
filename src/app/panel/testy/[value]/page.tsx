@@ -1,10 +1,11 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
+import { auth } from '@clerk/nextjs/server'
 import { fileData } from '@/server/fetchData'
+import { getSupporterByUserId, getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
-import { getTestSessionDetails } from '@/server/queries';
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -22,7 +23,14 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 }
 
 async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
-  const categoryTests = await fileData.getTestsByCategory(decodeURIComponent(category))
+  const { userId } = await auth()
+  const isSupporter = userId ? await getSupporterByUserId(userId) : false
+
+  // Merge tests if supporter, otherwise only official
+  const categoryTests = isSupporter
+    ? await fileData.mergedGetTestsByCategory(decodeURIComponent(category), userId || "")
+    : await fileData.getTestsByCategory(decodeURIComponent(category))
+
   const sessionDetails = await getTestSessionDetails(sessionId);
 
   if (!categoryTests || categoryTests.length === 0) {

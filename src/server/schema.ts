@@ -22,6 +22,13 @@ export const DeleteMaterialIdSchema = z.object({
     .trim(),
 });
 
+export const DeleteCategorySchema = z.object({
+  category: z
+    .string()
+    .min(1, "Kategoria jest wymagana.")
+    .trim(),
+});
+
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
   return z
     .array(

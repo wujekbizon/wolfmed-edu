@@ -26,6 +26,7 @@ export const sideMenuNavigationLinks = [
     url: '/panel/dodaj-test',
     label: 'Dodaj Test',
     icon: <FeadbackIcon width={26} height={26} />,
+    requiresSupporter: true, // Premium feature
   },
   {
     url: '/panel/nauka',

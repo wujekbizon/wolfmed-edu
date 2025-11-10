@@ -16,12 +16,14 @@ import {
   testSessions,
   users,
   userLimits,
+  userCustomTests,
 } from "@/server/db/schema"
 import {
   CreateAnswersSchema,
   CreateMessageSchema,
   DeleteTestIdSchema,
   DeleteMaterialIdSchema,
+  DeleteCategorySchema,
   UpdateMottoSchema,
   UpdateUsernameSchema,
   CreatePostSchema,
@@ -51,6 +53,7 @@ import {
   getSupporterByUserId,
   deleteMaterial,
   getUserStorageUsage,
+  deleteUserCustomTest,
 } from "@/server/queries"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -686,46 +689,51 @@ export async function createTestAction(
   formState: FormState,
   formData: FormData
 ) {
-  // Check user authorization
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
+  const isSupporter = await getSupporterByUserId(user.userId)
+  if (!isSupporter) {
+    return toFormState(
+      "ERROR",
+      "Ta funkcja jest dostępna tylko dla użytkowników premium."
+    )
+  }
+
   try {
-    // Extract answers from formData
     const answersData = extractAnswerData(formData)
 
-    // Determine the chosen category
     const testCategory = determineTestCategory(formData)
 
-    // Validate and destructure form data using Zod schema
     const { answers, category, question } = CreateTestSchema.parse({
       category: testCategory,
       question: formData.get("question"),
       answers: answersData,
     })
 
-    // Additional validation for exactly one correct answer
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
     if (correctAnswers.length !== 1) {
-      return toFormState("ERROR", "Please select exactly one correct answer.")
+      return toFormState("ERROR", "Wybierz dokładnie jedną poprawną odpowiedź.")
     }
 
-    // Prepare data for database insertion
     const data = {
       question,
       answers,
     }
 
-    // // Insert test data into database
-    // await db
-    //   .insert(tests)
-    //   .values({ userId: user.userId, data, category: category.toLowerCase() });
-    console.log(data)
+    await db.insert(userCustomTests).values({
+      userId: user.userId,
+      category: category.toLowerCase(),
+      data,
+    })
   } catch (error) {
     return fromErrorToFormState(error)
   }
 
-  return toFormState("SUCCESS", "Test Utworzony")
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Test został utworzony pomyślnie")
 }
 
 // Function to upload tests from a file
@@ -733,16 +741,27 @@ export async function uploadTestsFromFile(
   FormState: FormState,
   formData: FormData
 ) {
-  // Check user authorization
+
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
-  // Get the uploaded file
+  const isSupporter = await getSupporterByUserId(user.userId)
+  if (!isSupporter) {
+    return toFormState(
+      "ERROR",
+      "Ta funkcja jest dostępna tylko dla użytkowników premium."
+    )
+  }
+
   const file = formData.get("file") as File
-  if (!file) throw new Error("Please select file!")
+  if (!file) throw new Error("Proszę wybrać plik!")
+
+  if (file.size > 5_000_000) {
+    return toFormState("ERROR", "Plik jest zbyt duży. Maksymalny rozmiar: 5MB")
+  }
 
   try {
-    // Read the file content chunk by chunk
+ 
     const fileReader = file.stream().getReader()
     const testsDataU8: Uint8Array[] = []
 
@@ -752,53 +771,59 @@ export async function uploadTestsFromFile(
       testsDataU8.push(value as Uint8Array)
     }
 
-    // Reconstruct the file content from chunks
     const testsBinary = Buffer.concat(testsDataU8)
-    const fileContent = testsBinary.toString("utf8") // Decode Buffer as UTF-8 string
+    const fileContent = testsBinary.toString("utf8")
 
     if (!fileContent)
       return toFormState("ERROR", "Proszę wybrać plik do przesłania!")
 
-    // Parse the JSON content from the file
     const parsedData = JSON.parse(fileContent)
 
-    // Validate the parsed JSON data using Zod schema
     const validationResult = await TestFileSchema.safeParseAsync(parsedData)
 
     if (!validationResult.success) {
       console.error("Validation Errors:", validationResult.error.issues)
       return toFormState(
         "ERROR",
-        "Nieprawidłowy format danych. Sprawdź dokumentację, jak przygotować plik z danymi testowymi."
+        "Nieprawidłowy format danych. Sprawdź dokumentację."
       )
     }
 
-    // Data is valid, proceed with processing
     const validatedData = validationResult.data
 
-    console.log(validatedData)
+    if (validatedData.length > 1000) {
+      return toFormState(
+        "ERROR",
+        "Plik zawiera zbyt wiele pytań. Maksymalnie 1000 pytań na plik."
+      )
+    }
 
-    // const insertPromises = validatedData.map(async (testData) => {
-    //   await db.insert(tests).values({
-    //     userId: user.userId,
-    //     data: testData.data,
-    //     category: testData.category,
-    //   });
-    // });
-
-    // await Promise.all(insertPromises);
+    await db.transaction(async (tx) => {
+      const insertPromises = validatedData.map((testData) =>
+        tx.insert(userCustomTests).values({
+          userId: user.userId,
+          category: testData.category.toLowerCase(),
+          data: testData.data,
+        })
+      )
+      await Promise.all(insertPromises)
+    })
   } catch (error) {
     if (error instanceof SyntaxError) {
       console.error("Error parsing JSON:", error.message)
       return toFormState(
         "ERROR",
-        "Wygląda na to, że treść jest nieprawidłowym kodem JSON. Upewnij się, że dane JSON są prawidłowe."
+        "Nieprawidłowy format JSON. Upewnij się, że dane są poprawne."
       )
     } else {
       return fromErrorToFormState(error)
     }
   }
-  return toFormState("SUCCESS", "Plik poprawnie przesłany")
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Testy zostały pomyślnie dodane")
 }
 
 export async function expireSessionAction(sessionId: string) {
@@ -852,7 +877,6 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
 
     // Use transaction to insert material and update storage atomically
     await db.transaction(async (tx) => {
-      // Insert material
       await tx.insert(materials).values({
         userId,
         title: validationResult.data.title,
@@ -863,7 +887,6 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
         size: validationResult.data.size
       });
 
-      // Update storage used
       await tx
         .update(userLimits)
         .set({
@@ -898,14 +921,12 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
       return toFormState("ERROR", "Brak materiału do usunięcia")
     }
 
-    // Delete material and get the deleted record (includes size)
     const deletedMaterial = await deleteMaterial(userId, materialId)
 
     if (!deletedMaterial) {
       return toFormState("ERROR", "Materiał nie został znaleziony")
     }
-
-    // Update storage used
+    
     await db
       .update(userLimits)
       .set({
@@ -919,4 +940,81 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
 
   revalidatePath("/panel/nauka")
   return toFormState("SUCCESS", "Materiał został usunięty pomyślnie")
+}
+
+/**
+ * Delete user-created test with ownership verification
+ */
+export async function deleteUserCustomTestAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const testId = formData.get("testId") as string
+
+  if (!testId) {
+    return toFormState("ERROR", "Nieprawidłowe ID testu")
+  }
+
+  try {
+    const result = await deleteUserCustomTest(userId, testId)
+
+    if (!result || result.rowCount === 0) {
+      return toFormState("ERROR", "Test nie został znaleziony")
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Test został usunięty pomyślnie")
+}
+
+/**
+ * Delete all user-created tests in a specific category
+ */
+export async function deleteUserCustomTestsByCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const category = formData.get("category") as string
+
+  const validationResult = DeleteCategorySchema.safeParse({ category })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { category }
+    }
+  }
+
+  try {
+    const result = await db
+      .delete(userCustomTests)
+      .where(
+        and(
+          eq(userCustomTests.userId, userId),
+          eq(userCustomTests.category, validationResult.data.category)
+        )
+      )
+
+    if (!result || result.rowCount === 0) {
+      return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+  revalidatePath("/panel/nauka")
+
+  return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
 }

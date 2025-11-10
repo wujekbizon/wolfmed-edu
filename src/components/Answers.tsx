@@ -37,17 +37,22 @@ const Answers: React.FC<AnswersProps> = ({ formState }) => {
           <div className="flex w-full flex-col">
             <Label
               htmlFor={answer.id}
-              className="pb-1 text-sm text-muted-foreground"
+              className="text-xs sm:text-sm text-zinc-700 font-medium"
               label={answer.label}
             />
 
-            <Input id={answer.id} type="text" name={answer.name} />
+            <Input
+              id={answer.id}
+              type="text"
+              name={answer.name}
+              className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm"
+            />
             <FieldError formState={formState} name="answers" />
           </div>
           <div className="flex h-16 w-24 flex-col items-center justify-center gap-1">
             <Label
               htmlFor={`checkbox${answer.id}`}
-              className="text-sm text-muted-foreground"
+              className="text-xs sm:text-sm text-zinc-700 font-medium"
               label="Is correct?"
             />
             <Input

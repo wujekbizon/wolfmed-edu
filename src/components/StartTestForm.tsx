@@ -11,9 +11,12 @@ import getDeviceMeta from "@/helpers/getDeviceMeta";
 import { useState } from "react";
 import Label from "./ui/Label";
 import { PopulatedCategories } from "@/types/categoryType";
+import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
 
 export default function StartTestForm({ category }: { category: PopulatedCategories }) {
-  const { duration, numberOfQuestions, status } = category.data
+  const categoryData = category.data || DEFAULT_CATEGORY_METADATA;
+  const { duration, numberOfQuestions, status } = categoryData;
+  const availableQuestions = category.count;
   const [state, action] = useActionState(startTestAction, EMPTY_FORM_STATE);
   const noScriptFallback = useToastMessage(state);
   const router = useRouter();
@@ -40,13 +43,18 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
           <select
             id="numberOfQuestions"
             name="numberOfQuestions"
-            defaultValue={numberOfQuestions[0]}
+            defaultValue={numberOfQuestions.find((n: number) => n <= availableQuestions) || numberOfQuestions[0]}
             className="block w-full px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
           >{
-              numberOfQuestions.map((n) => (
-                // we assume that exam will always have only 40 questions, rest will be practice test
-                <option key={n} value={n}>{n !== 40 ? "Praktyka" : "Egzamin"} ({n} pytań)</option>
-              ))
+              numberOfQuestions.map((n: number) => {
+                const isDisabled = n > availableQuestions;
+                const label = n !== 40 ? "Praktyka" : "Egzamin";
+                return (
+                  <option key={n} value={n} disabled={isDisabled}>
+                    {label} ({n} pytań) {isDisabled ? `- Potrzebujesz ${n} pytań` : ''}
+                  </option>
+                );
+              })
             }
           </select>
         </div>
@@ -59,7 +67,7 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
             className="block w-full px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
           >
             {
-              category.data.duration.map((d) => (
+              duration.map((d: number) => (
                 <option key={d} value={d}>{d} minut</option>
               ))
             }
@@ -67,9 +75,9 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
         </div>
       </div>
       <SubmitButton
-        disabled={!status}
-        label="Rozpocznij Test"
-        loading="Rozpoczyniane..."
+        disabled={!status || availableQuestions < 10}
+        label={availableQuestions < 10 ? `Potrzebujesz minimum 10 pytań (masz ${availableQuestions})` : "Rozpocznij Test"}
+        loading="Rozpoczynanie..."
       />
       {noScriptFallback}
     </form>

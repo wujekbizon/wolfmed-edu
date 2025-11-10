@@ -109,6 +109,22 @@ export const tests = createTable("tests", {
   updatedAt: timestamp("updatedAt"),
 })
 
+export const userCustomTests = createTable(
+  "user_custom_tests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    category: varchar("category", { length: 256 }).notNull(),
+    data: jsonb("data").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (userCustomTests) => ({
+    userIdIdx: index("user_custom_tests_userId_idx").on(userCustomTests.userId),
+    categoryIdx: index("user_custom_tests_category_idx").on(userCustomTests.category),
+  })
+)
+
 export const procedures = createTable("procedures", {
   id: uuid("id").primaryKey().defaultRandom(),
   data: jsonb("data").notNull(),
@@ -520,3 +536,7 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
     references: [users.userId],
   }),
 }));
+
+// Type exports
+export type UserCustomTest = typeof userCustomTests.$inferSelect
+export type NewUserCustomTest = typeof userCustomTests.$inferInsert

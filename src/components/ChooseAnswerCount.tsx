@@ -8,12 +8,12 @@ import { NUMBER_OF_ANSWERS } from "@/constants/categoryOptions";
 function ChooseAnswerCount() {
   const { answersNumber, setAnswersNumber } = useTestFormStore();
   return (
-    <div className="flex w-full flex-col justify-end sm:flex-row lg:w-2/3">
+    <div className="w-48">
       <div className="flex flex-col">
-        <Label htmlFor="select" label="How many answers?" />
+        <Label htmlFor="select" label="Ile odpowiedzi?" className="text-xs sm:text-sm text-zinc-700 font-medium" />
         <select
           id="select"
-          className="h-10 cursor-pointer rounded-lg border border-border/40 bg-neutral-900 px-2 text-sm focus:border-amber-200/10 focus-visible:outline-none"
+          className="px-4 py-2.5 cursor-pointer rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm text-zinc-700 text-sm focus:ring-2 focus:ring-[#ff9898]/50 focus:border-transparent outline-none transition-all duration-300"
           value={answersNumber}
           onChange={(event) => setAnswersNumber(parseInt(event.target.value))}
         >

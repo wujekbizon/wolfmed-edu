@@ -2,7 +2,7 @@ import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import LearningHubDashboard from '@/components/LearningHubDashboard'
-import { getAllUserNotes, getMaterialsByUser } from '@/server/queries'
+import { getAllUserNotes, getMaterialsByUser, getSupporterByUserId } from '@/server/queries'
 import {  currentUser } from '@clerk/nextjs/server'
 import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
@@ -18,8 +18,12 @@ export const metadata: Metadata = {
 
 export default async function NaukaPage() {
   const user = await currentUser()
+  const isSupporter = user?.id ? await getSupporterByUserId(user?.id) : false
 
-  const populatedCategories = await getPopulatedCategories(fileData)
+  const populatedCategories = await getPopulatedCategories(
+    fileData,
+    isSupporter ? (user?.id || undefined) : undefined
+  )
   const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
 
   const materials = user ? await getMaterialsByUser(user.id) as MaterialsType[] : []

@@ -2,7 +2,7 @@ export interface PopulatedCategories {
   category: string
   value: string
   count: number
-  data: CategoryMetadata
+  data?: CategoryMetadata
 }
 
 export interface CategoryPageProps {

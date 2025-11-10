@@ -1,9 +1,21 @@
+import { CategoryMetadata as CategoryMetadataType } from "@/types/categoryType";
+
 type CategoryKey = "opiekun-medyczny" | "pielegniarstwo";
 
 type CategoryMetadata = {
   title: string;
   description: string;
   keywords: string[];
+};
+
+export const DEFAULT_CATEGORY_METADATA: CategoryMetadataType = {
+  category: '',
+  image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KkQtwIbr79T0mSRj6eAJqPf4kEid2ncgM5Nu',
+  description: 'Twoja własna kategoria testów',
+  duration: [30],
+  popularity: 'Kategoria niestandardowa',
+  status: true,
+  numberOfQuestions: [10, 40]
 };
 
 export const CATEGORY_METADATA: Record<CategoryKey, CategoryMetadata> = {

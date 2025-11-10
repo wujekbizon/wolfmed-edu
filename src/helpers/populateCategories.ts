@@ -1,12 +1,22 @@
 import "server-only";
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType";
+import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
 
-export async function getPopulatedCategories(fileData: {
-  getTestsCategories: () => Promise<{ category: string }[]>,
-  countTestsByCategory: (cat: string) => Promise<number>,
-  getCategoriesMetadata: () => Promise<CategoryMetadata[]>
-}): Promise<PopulatedCategories[]> {
-  const categories = await fileData.getTestsCategories();
+export async function getPopulatedCategories(
+  fileData: {
+    getTestsCategories: () => Promise<{ category: string }[]>,
+    countTestsByCategory: (cat: string) => Promise<number>,
+    getCategoriesMetadata: () => Promise<CategoryMetadata[]>,
+    mergedGetTestsCategories: (userId?: string) => Promise<{ category: string }[]>,
+    mergedCountTestsByCategory: (cat: string, userId?: string) => Promise<number>
+  },
+  userId?: string
+): Promise<PopulatedCategories[]> {
+  // Use merged functions if userId provided, otherwise use original
+  const categories = userId
+    ? await fileData.mergedGetTestsCategories(userId)
+    : await fileData.getTestsCategories();
+
   const categoriesMetadata = await fileData.getCategoriesMetadata();
   const seen = new Set<string>();
   const uniqueCategories = categories.filter(cat => {
@@ -18,14 +28,17 @@ export async function getPopulatedCategories(fileData: {
 
   return Promise.all(
     uniqueCategories.map(async (cat) => {
-      const count = await fileData.countTestsByCategory(cat.category);
+      const count = userId
+        ? await fileData.mergedCountTestsByCategory(cat.category, userId)
+        : await fileData.countTestsByCategory(cat.category);
+
       const metadata = categoriesMetadata.find(meta => meta.category === cat.category);
 
       return {
         category: formatCategoryName(cat.category),
         value: cat.category,
         count,
-        data: metadata,
+        data: metadata || { ...DEFAULT_CATEGORY_METADATA, category: cat.category },
       } as PopulatedCategories;
     })
   );
