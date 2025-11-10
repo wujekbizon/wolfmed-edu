@@ -9,7 +9,7 @@ export default function LearningCategoryCard({ item }: { item: PopulatedCategori
 
     return (
         <Link href={`/panel/nauka/${item.value}`} className="flex items-center justify-center">
-            <div className="relative flex flex-col w-full overflow-hidden rounded-2xl h-[450px] bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-lg transform transition-all duration-300 cursor-pointer backdrop-blur-sm backdrop-filter">
+            <div className="relative flex flex-col w-full overflow-hidden rounded-2xl h-[450px] bg-linear-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-lg transform transition-all duration-300 cursor-pointer backdrop-blur-sm backdrop-filter">
                 <div className="relative w-full h-72 p-4 flex flex-col justify-end items-start">
                     {categoryData.image ? (
                         <Image
@@ -20,13 +20,13 @@ export default function LearningCategoryCard({ item }: { item: PopulatedCategori
                             className="h-full w-full object-cover rounded-t-xl opacity-75 group-hover:opacity-100 transition-opacity duration-300"
                         />
                     ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-600 to-purple-600">
+                        <div className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-blue-600 to-purple-600">
                             <span className="text-9xl font-bold text-white uppercase opacity-75">
                                 {item.category.charAt(0)}
                             </span>
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent z-10"></div>
+                    <div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-transparent to-transparent z-10"></div>
                     <h3 className="relative z-20 text-2xl font-bold text-white drop-shadow-md leading-tight">
                         {item.category}
                     </h3>
