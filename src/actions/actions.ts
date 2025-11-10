@@ -689,11 +689,9 @@ export async function createTestAction(
   formState: FormState,
   formData: FormData
 ) {
-  // 1. Authentication
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
-  // 2. Supporter check
   const isSupporter = await getSupporterByUserId(user.userId)
   if (!isSupporter) {
     return toFormState(
@@ -703,32 +701,26 @@ export async function createTestAction(
   }
 
   try {
-    // 3. Extract answers from formData
     const answersData = extractAnswerData(formData)
 
-    // 4. Determine the chosen category
     const testCategory = determineTestCategory(formData)
 
-    // 5. Validate and destructure form data using Zod schema
     const { answers, category, question } = CreateTestSchema.parse({
       category: testCategory,
       question: formData.get("question"),
       answers: answersData,
     })
 
-    // 6. Additional validation for exactly one correct answer
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
     if (correctAnswers.length !== 1) {
       return toFormState("ERROR", "Wybierz dokładnie jedną poprawną odpowiedź.")
     }
 
-    // 7. Prepare data for database insertion
     const data = {
       question,
       answers,
     }
 
-    // 8. Insert into userCustomTests table
     await db.insert(userCustomTests).values({
       userId: user.userId,
       category: category.toLowerCase(),
@@ -738,7 +730,6 @@ export async function createTestAction(
     return fromErrorToFormState(error)
   }
 
-  // 9. Revalidate paths
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -750,11 +741,10 @@ export async function uploadTestsFromFile(
   FormState: FormState,
   formData: FormData
 ) {
-  // 1. Authentication
+
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
-  // 2. Supporter check
   const isSupporter = await getSupporterByUserId(user.userId)
   if (!isSupporter) {
     return toFormState(
@@ -763,17 +753,15 @@ export async function uploadTestsFromFile(
     )
   }
 
-  // 3. Get the uploaded file
   const file = formData.get("file") as File
   if (!file) throw new Error("Proszę wybrać plik!")
 
-  // 4. File size check (5MB limit)
   if (file.size > 5_000_000) {
     return toFormState("ERROR", "Plik jest zbyt duży. Maksymalny rozmiar: 5MB")
   }
 
   try {
-    // 5. Read the file content chunk by chunk
+ 
     const fileReader = file.stream().getReader()
     const testsDataU8: Uint8Array[] = []
 
@@ -783,17 +771,14 @@ export async function uploadTestsFromFile(
       testsDataU8.push(value as Uint8Array)
     }
 
-    // 6. Reconstruct the file content from chunks
     const testsBinary = Buffer.concat(testsDataU8)
     const fileContent = testsBinary.toString("utf8")
 
     if (!fileContent)
       return toFormState("ERROR", "Proszę wybrać plik do przesłania!")
 
-    // 7. Parse the JSON content from the file
     const parsedData = JSON.parse(fileContent)
 
-    // 8. Validate the parsed JSON data using Zod schema
     const validationResult = await TestFileSchema.safeParseAsync(parsedData)
 
     if (!validationResult.success) {
@@ -804,10 +789,8 @@ export async function uploadTestsFromFile(
       )
     }
 
-    // 9. Data is valid, proceed with processing
     const validatedData = validationResult.data
 
-    // 10. Question count limit (prevent abuse, TODO: implement proper rate limiting)
     if (validatedData.length > 1000) {
       return toFormState(
         "ERROR",
@@ -815,7 +798,6 @@ export async function uploadTestsFromFile(
       )
     }
 
-    // 11. Batch insert with transaction into userCustomTests
     await db.transaction(async (tx) => {
       const insertPromises = validatedData.map((testData) =>
         tx.insert(userCustomTests).values({
@@ -838,7 +820,6 @@ export async function uploadTestsFromFile(
     }
   }
 
-  // 12. Revalidate paths
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -896,7 +877,6 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
 
     // Use transaction to insert material and update storage atomically
     await db.transaction(async (tx) => {
-      // Insert material
       await tx.insert(materials).values({
         userId,
         title: validationResult.data.title,
@@ -907,7 +887,6 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
         size: validationResult.data.size
       });
 
-      // Update storage used
       await tx
         .update(userLimits)
         .set({
@@ -942,14 +921,12 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
       return toFormState("ERROR", "Brak materiału do usunięcia")
     }
 
-    // Delete material and get the deleted record (includes size)
     const deletedMaterial = await deleteMaterial(userId, materialId)
 
     if (!deletedMaterial) {
       return toFormState("ERROR", "Materiał nie został znaleziony")
     }
-
-    // Update storage used
+    
     await db
       .update(userLimits)
       .set({
@@ -982,7 +959,6 @@ export async function deleteUserCustomTestAction(
   }
 
   try {
-    // Verify ownership and delete
     const result = await deleteUserCustomTest(userId, testId)
 
     if (!result || result.rowCount === 0) {
@@ -1020,7 +996,6 @@ export async function deleteUserCustomTestsByCategoryAction(
   }
 
   try {
-    // Delete all tests in category for this user
     const result = await db
       .delete(userCustomTests)
       .where(
