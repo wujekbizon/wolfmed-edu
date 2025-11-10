@@ -53,7 +53,7 @@ export default function RichPathLayout({
         </div>
       </section>
 
-      {features && features.length > 0 && (
+      {/* {features && features.length > 0 && (
         <section aria-labelledby="features-title" className="w-full relative p-0 lg:p-4 xl:p-8 2xl:p-16">
           <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
             <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
@@ -73,8 +73,8 @@ export default function RichPathLayout({
             ))}
           </div>
         </section>
-      )}
-      {pricing && (
+      )} */}
+      {/* {pricing && (
         <section aria-labelledby="pricing-title" className="w-full min-h-[65vh] flex items-center relative">
           <div className="mx-auto w-full max-w-none lg:max-w-6xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
             <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
@@ -150,7 +150,45 @@ export default function RichPathLayout({
             </div>
           </div>
         </section>
-      )}
+      )} */}
+
+      <section aria-labelledby="coming-soon-title" className="w-full min-h-[65vh] flex items-center relative">
+        <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+          <div className="text-center bg-white rounded-3xl p-8 sm:p-12 lg:p-16 shadow-xl ring-1 ring-zinc-200">
+            <span className="inline-block rounded-full bg-red-100 text-red-700 px-4 py-2 text-sm font-semibold tracking-wide mb-6">
+              Już wkrótce!
+            </span>
+{/* 
+            <h2 id="coming-soon-title" className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
+              Premiera kursu Pielęgniarstwo
+            </h2> */}
+
+            <p className="text-lg md:text-xl text-zinc-600 mb-4 max-w-2xl mx-auto">
+              Premiera programu Pielęgniarstwo planowana jest na <strong className="text-slate-900">1 kwartał 2026 roku</strong>.
+            </p>
+
+            <p className="text-base md:text-lg text-zinc-600 mb-8 max-w-2xl mx-auto">
+              Chcesz być na bieżąco? Skontaktuj się z nami, a poinformujemy Cię o starcie kursu!
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                href="/#contact"
+                className="inline-flex items-center justify-center rounded-xl px-8 py-4 bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors duration-200 shadow-lg hover:shadow-xl"
+              >
+                Skontaktuj się z nami
+              </Link>
+
+              <Link
+                href="/"
+                className="inline-flex items-center justify-center rounded-xl px-8 py-4 bg-slate-100 text-slate-700 font-semibold hover:bg-slate-200 transition-colors duration-200"
+              >
+                Wróć do strony głównej
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </section>
   );
 }
