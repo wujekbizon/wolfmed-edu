@@ -20,7 +20,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
             priority
           />
         ) : (
-          <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-blue-600 to-purple-600 border border-zinc-600 rounded-xl lg:rounded-l-xl lg:rounded-r-none">
+          <div className="flex items-center justify-center h-full w-full bg-linear-to-br from-blue-600 to-purple-600 border border-zinc-600 rounded-xl lg:rounded-l-xl lg:rounded-r-none">
             <span className="text-8xl font-bold text-white uppercase">
               {item.category.charAt(0)}
             </span>
