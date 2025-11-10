@@ -21,7 +21,7 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
 
   return (
     <form
-      className="flex w-full text-white flex-col rounded-lg border border-border/40 bg-zinc-800/50 backdrop-blur-sm px-4 py-6 lg:w-2/3"
+      className="flex w-full text-zinc-800 flex-col bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300 px-4 py-6"
       action={action}
     >
       <div className="flex w-full flex-col items-end sm:flex-row">
@@ -31,8 +31,8 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
         </div>
       </div>
       <div className="flex flex-col">
-        <Label htmlFor="question" label="Question:" />
-        <Textarea id="question" name="question" />
+        <Label htmlFor="question" label="Question:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
+        <Textarea id="question" name="question" className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-transparent" />
         <FieldError formState={formState} name="question" />
       </div>
       <div className="flex flex-col items-center ">

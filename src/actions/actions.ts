@@ -23,6 +23,7 @@ import {
   CreateMessageSchema,
   DeleteTestIdSchema,
   DeleteMaterialIdSchema,
+  DeleteCategorySchema,
   UpdateMottoSchema,
   UpdateUsernameSchema,
   CreatePostSchema,
@@ -995,4 +996,50 @@ export async function deleteUserCustomTestAction(
   revalidatePath("/panel/testy")
 
   return toFormState("SUCCESS", "Test został usunięty pomyślnie")
+}
+
+/**
+ * Delete all user-created tests in a specific category
+ */
+export async function deleteUserCustomTestsByCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const category = formData.get("category") as string
+
+  const validationResult = DeleteCategorySchema.safeParse({ category })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { category }
+    }
+  }
+
+  try {
+    // Delete all tests in category for this user
+    const result = await db
+      .delete(userCustomTests)
+      .where(
+        and(
+          eq(userCustomTests.userId, userId),
+          eq(userCustomTests.category, validationResult.data.category)
+        )
+      )
+
+    if (!result || result.rowCount === 0) {
+      return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+  revalidatePath("/panel/nauka")
+
+  return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
 }

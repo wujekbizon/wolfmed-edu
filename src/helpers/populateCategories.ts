@@ -1,5 +1,6 @@
 import "server-only";
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType";
+import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
 
 export async function getPopulatedCategories(
   fileData: {
@@ -37,7 +38,7 @@ export async function getPopulatedCategories(
         category: formatCategoryName(cat.category),
         value: cat.category,
         count,
-        data: metadata,
+        data: metadata || { ...DEFAULT_CATEGORY_METADATA, category: cat.category },
       } as PopulatedCategories;
     })
   );

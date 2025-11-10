@@ -17,7 +17,6 @@ export default async function SelectedQuestionsPage() {
 
   const isSupporter = userId ? await getSupporterByUserId(userId) : false
 
-  // Merge tests if supporter, otherwise only official
   const tests = isSupporter
     ? await fileData.mergedGetAllTests(userId || "")
     : await fileData.getAllTests()

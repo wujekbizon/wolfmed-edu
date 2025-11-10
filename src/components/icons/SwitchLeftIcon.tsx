@@ -2,7 +2,7 @@ export default function SwitchLeftIcon({
     onClick,
     width = 45,
     strokeColor,
-    color = "rgb(251 191 36)",
+    color = "rgb(245, 138, 138)",
   }: {
     onClick: React.MouseEventHandler<SVGSVGElement> | undefined;
     strokeColor?: string;

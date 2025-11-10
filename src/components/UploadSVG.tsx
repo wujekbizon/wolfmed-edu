@@ -1,7 +1,7 @@
 export default function UploadSVG() {
     return (
       <svg
-        className="mb-4 h-6 w-6 animate-ping text-gray-500 dark:text-gray-400"
+        className="mb-4 h-4 xs:h-6 w-4 xs:w-6 animate-ping text-gray-500 dark:text-gray-400"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 20 16"
