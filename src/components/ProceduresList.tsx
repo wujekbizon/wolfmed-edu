@@ -1,5 +1,4 @@
 import { Procedure, ProcedureStatus } from '@/types/dataTypes'
-import ProcedureContent from './ProcedureContent'
 import ProcedureModal from './ProcedureModal'
 import GridProcedureCard from './GridProcedureCard'
 import { useState } from 'react'
@@ -14,11 +13,7 @@ export default function ProceduresList({
   procedures, 
   isLoading, 
   error 
-}: { 
-  procedures: Procedure[]
-  isLoading: boolean
-  error?: Error | null
-}) {
+}: ProceduresListProps) {
   const [statuses, setStatuses] = useState<Record<string, ProcedureStatus>>({})
   const [modalProcedure, setModalProcedure] = useState<Procedure | null>(null)
 

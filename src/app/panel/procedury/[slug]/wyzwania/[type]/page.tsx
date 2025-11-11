@@ -1,12 +1,14 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { fileData } from '@/server/fetchData'
+import { getSupporterByUserId } from '@/server/queries'
 import { ChallengeType } from '@/types/challengeTypes'
 import OrderStepsChallenge from '@/components/OrderStepsChallenge'
 import QuizChallengeForm from '@/components/QuizChallengeForm'
 import VisualRecognitionChallengeForm from '@/components/VisualRecognitionChallengeForm'
 import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
 import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
+import SupporterRequired from '@/components/SupporterRequired'
 import {
   generateSpotErrorChallenge,
   generateQuizChallenge,
@@ -27,6 +29,11 @@ interface Props {
 export default async function ChallengeTypePage({ params }: Props) {
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
+
+  const isSupporter = await getSupporterByUserId(userId)
+  if (!isSupporter) {
+    return <SupporterRequired />
+  }
 
   const { slug, type: challengeType } = await params
 
