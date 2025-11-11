@@ -41,6 +41,7 @@ export const useCarousel = ({
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.on("select", onSelect);
+    emblaApi.on("pointerDown", () => setIsPlaying(false));
   }, [emblaApi, onSelect]);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export default function PathCarousel({ paths }: CarouselProps) {
             {paths.map((p, idx) => (
               <motion.div
                 key={p.slug}
-                className="relative flex-shrink-0 w-full flex items-center justify-center"
+                className="relative shrink-0 w-full flex items-center justify-center"
                 style={{ display: Math.abs(selected - idx) <= 1 || (selected === 0 && idx === paths.length - 1) || (selected === paths.length - 1 && idx === 0) ? 'block' : 'none' }}
               >
                 <div className="relative w-full lg:max-w-[80%] flex flex-col md:flex-row px-4 lg:px-8 mx-auto">
