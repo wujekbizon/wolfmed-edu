@@ -7,6 +7,7 @@ import NotesSection from "./NotesSection";
 import CellList from "./cells/CellList";
 import UploadMaterialForm from "./UploadMaterialForm";
 import MaterialCard from "./MaterialCard";
+import PremiumLock from "./PremiumLock";
 import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
@@ -16,10 +17,12 @@ export default function LearningHubDashboard({
   categories,
   notes,
   materials,
+  isSupporter = false,
 }: {
   categories: PopulatedCategories[];
   notes: NotesType[];
   materials: MaterialsType[];
+  isSupporter?: boolean;
 }) {
   const [selectedPdf, setSelectedPdf] = useState<{
     src: string;
@@ -88,44 +91,60 @@ export default function LearningHubDashboard({
           Twoje osobiste środowisko do nauki i rozwoju
         </p>
       </div>
-      <CellList />
-      <NotesSection notes={notes} />
       <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
         <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
         <CategoryGrid categories={categories} />
       </div>
-      <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-zinc-800">
-            Materiały i Zasoby
-          </h2>
-          <button
-            className="bg-slate-600 text-white px-4 py-2 cursor-pointer rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
-            onClick={() => setIsUploadModalOpen(true)}
-          >
-            Dodaj Materiał
-          </button>
+      <div className="relative">
+        {!isSupporter && <PremiumLock />}
+        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
+          <CellList />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {materials.map((material) => (
-            <MaterialCard
-              key={material.id}
-              material={material}
-              onOpenPdf={openPdfPreview}
-              onOpenVideo={openVideoPreview}
-              onOpenText={openTextPreview}
-            />
-          ))}
+      </div>
+      <div className="relative">
+        {!isSupporter && <PremiumLock />}
+        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
+          <NotesSection notes={notes} />
         </div>
-        {materials.length === 0 && (
-          <div className="flex w-full flex-col items-center justify-center">
-            <div className="text-5xl mb-4 text-zinc-300">📝</div>
-            <h3 className="text-xl text-zinc-500 mb-2 font-medium">
-              Brak dostepnych materiałów
-            </h3>
-            <p className="text-zinc-400">Dodaj swój pierwszy materiał!</p>
+      </div>
+      
+      <div className="relative">
+        {!isSupporter && <PremiumLock />}
+        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
+          <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-zinc-800">
+                Materiały i Zasoby
+              </h2>
+              <button
+                className="bg-slate-600 text-white px-4 py-2 cursor-pointer rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
+                onClick={() => setIsUploadModalOpen(true)}
+              >
+                Dodaj Materiał
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {materials.map((material) => (
+                <MaterialCard
+                  key={material.id}
+                  material={material}
+                  onOpenPdf={openPdfPreview}
+                  onOpenVideo={openVideoPreview}
+                  onOpenText={openTextPreview}
+                />
+              ))}
+            </div>
+            {materials.length === 0 && (
+              <div className="flex w-full flex-col items-center justify-center">
+                <div className="text-5xl mb-4 text-zinc-300">📝</div>
+                <h3 className="text-xl text-zinc-500 mb-2 font-medium">
+                  Brak dostepnych materiałów
+                </h3>
+                <p className="text-zinc-400">Dodaj swój pierwszy materiał!</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
       {selectedPdf && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
