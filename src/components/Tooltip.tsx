@@ -4,9 +4,10 @@ import { ReactNode, useState, useRef, useEffect } from 'react';
 interface TooltipProps {
   message: string;
   children: ReactNode;
+  position?: 'top' | 'right' | 'bottom' | 'left';
 }
 
-export function Tooltip({ message, children }: TooltipProps) {
+export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
   const [open, setOpen] = useState(false);
   const id = useRef(`tooltip-${Math.random().toString(36).slice(2)}`).current;
 
@@ -15,6 +16,13 @@ export function Tooltip({ message, children }: TooltipProps) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, []);
+
+  const positionClasses = {
+    top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
+    right: 'left-full top-1/2 -translate-y-1/2 ml-2',
+    bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
+    left: 'right-full top-1/2 -translate-y-1/2 mr-2'
+  };
 
   return (
     <div
@@ -30,12 +38,14 @@ export function Tooltip({ message, children }: TooltipProps) {
         <div
           id={id}
           role="tooltip"
-          className="
-            absolute top-0 mt-1 left-1/2 transform -translate-x-1/2
-            bg-gray-800 text-white text-sm px-2 py-1 rounded-md shadow-lg
-            max-w-xs whitespace-normal text-center
-            transition-opacity duration-150 opacity-100 z-50
-          "
+          className={`
+            absolute ${positionClasses[position]}
+            bg-linear-to-r from-[#f58a8a] to-[#ffc5c5] text-zinc-900
+            text-sm font-medium px-3 py-1.5 rounded-lg shadow-lg
+            backdrop-blur-sm border border-red-200/40
+            whitespace-nowrap
+            transition-all duration-200 opacity-100 z-50
+          `}
         >
           {message}
         </div>

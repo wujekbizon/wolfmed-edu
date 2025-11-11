@@ -1,12 +1,14 @@
 import Link from 'next/link'
+import { Tooltip } from './Tooltip'
 
 export default function CustomButton(props: {
   children?: React.ReactNode
   href: string
   text: string
   active?: boolean
+  showTooltip?: boolean
 }) {
-  return (
+  const linkContent = (
     <Link
       href={props.href}
       className={`${
@@ -19,4 +21,14 @@ export default function CustomButton(props: {
       </p>
     </Link>
   )
+
+  if (props.showTooltip) {
+    return (
+      <Tooltip message={props.text} position="right">
+        {linkContent}
+      </Tooltip>
+    )
+  }
+
+  return linkContent
 }
