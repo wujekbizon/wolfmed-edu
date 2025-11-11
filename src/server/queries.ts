@@ -22,6 +22,7 @@ import {
   blogLikes,
   userCustomTests,
   userCustomCategories,
+  customersMessages,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -1512,4 +1513,87 @@ export const getUserBadges = cache(async (userId: string) => {
     ...badge,
     earnedAt: badge.earnedAt.toISOString(),
   }))
+})
+
+/**
+ * Get all customer messages with pagination
+ */
+export const getAllMessages = cache(async (page: number = 1, limit: number = 20) => {
+  const offset = (page - 1) * limit
+
+  const messages = await db.query.customersMessages.findMany({
+    orderBy: (model, { desc }) => desc(model.createdAt),
+    limit,
+    offset,
+  })
+
+  const [totalResult] = await db.select({ count: count() }).from(customersMessages)
+  const total = totalResult?.count || 0
+
+  return {
+    messages,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    }
+  }
+})
+
+/**
+ * Get message statistics
+ */
+export const getMessageStats = cache(async () => {
+  const [totalResult] = await db.select({ count: count() }).from(customersMessages)
+
+  const [unreadResult] = await db
+    .select({ count: count() })
+    .from(customersMessages)
+    .where(eq(customersMessages.isRead, false))
+
+  const oneWeekAgo = new Date()
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+  const [weeklyResult] = await db
+    .select({ count: count() })
+    .from(customersMessages)
+    .where(sql`${customersMessages.createdAt} >= ${oneWeekAgo}`)
+
+  const oneMonthAgo = new Date()
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+
+  const [monthlyResult] = await db
+    .select({ count: count() })
+    .from(customersMessages)
+    .where(sql`${customersMessages.createdAt} >= ${oneMonthAgo}`)
+
+  return {
+    total: totalResult?.count || 0,
+    unread: unreadResult?.count || 0,
+    thisWeek: weeklyResult?.count || 0,
+    thisMonth: monthlyResult?.count || 0,
+  }
+})
+
+/**
+ * Mark a message as read
+ */
+export const markMessageAsRead = async (id: number) => {
+  await db
+    .update(customersMessages)
+    .set({ isRead: true, updatedAt: new Date() })
+    .where(eq(customersMessages.id, id))
+}
+
+/**
+ * Get unread message count
+ */
+export const getUnreadMessageCount = cache(async () => {
+  const [result] = await db
+    .select({ count: count() })
+    .from(customersMessages)
+    .where(eq(customersMessages.isRead, false))
+
+  return result?.count || 0
 })

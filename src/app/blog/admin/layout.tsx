@@ -46,6 +46,12 @@ export default async function AdminLayout({
                   Nowy Post
                 </Link>
                 <Link
+                  href="/blog/admin/messages"
+                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Wiadomości
+                </Link>
+                <Link
                   href="/blog/admin/categories"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
@@ -84,6 +90,12 @@ export default async function AdminLayout({
               Nowy Post
             </Link>
             <Link
+              href="/blog/admin/messages"
+              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Wiadomości
+            </Link>
+            <Link
               href="/blog/admin/categories"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
@@ -93,7 +105,6 @@ export default async function AdminLayout({
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </main>

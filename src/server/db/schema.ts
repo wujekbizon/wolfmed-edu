@@ -151,6 +151,7 @@ export const customersMessages = createTable("messages", {
   id: serial("id").primaryKey(),
   email: text("email").notNull(),
   message: text("message").notNull(),
+  isRead: boolean("isRead").default(false).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt"),
 })
