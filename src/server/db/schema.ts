@@ -125,6 +125,21 @@ export const userCustomTests = createTable(
   })
 )
 
+export const userCustomCategories = createTable(
+  "user_custom_categories",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    categoryName: varchar("categoryName", { length: 255 }).notNull(),
+    questionIds: jsonb("questionIds").$type<string[]>().notNull().default([]),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (userCustomCategories) => ({
+    userIdIdx: index("user_custom_categories_userId_idx").on(userCustomCategories.userId),
+  })
+)
+
 export const procedures = createTable("procedures", {
   id: uuid("id").primaryKey().defaultRandom(),
   data: jsonb("data").notNull(),
@@ -540,3 +555,5 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
 // Type exports
 export type UserCustomTest = typeof userCustomTests.$inferSelect
 export type NewUserCustomTest = typeof userCustomTests.$inferInsert
+export type UserCustomCategory = typeof userCustomCategories.$inferSelect
+export type NewUserCustomCategory = typeof userCustomCategories.$inferInsert

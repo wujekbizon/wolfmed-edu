@@ -17,6 +17,7 @@ import {
   users,
   userLimits,
   userCustomTests,
+  userCustomCategories,
 } from "@/server/db/schema"
 import {
   CreateAnswersSchema,
@@ -33,6 +34,10 @@ import {
   TestFileSchema,
   StartTestSchema,
   MaterialsSchema,
+  CreateCustomCategorySchema,
+  AddQuestionToCategorySchema,
+  DeleteCustomCategorySchema,
+  UpdateCategoryNameSchema,
 } from "@/server/schema"
 import { auth } from "@clerk/nextjs/server"
 import { eq, sql, and, gt } from "drizzle-orm"
@@ -54,6 +59,8 @@ import {
   deleteMaterial,
   getUserStorageUsage,
   deleteUserCustomTest,
+  getUserCustomCategoryById,
+  deleteUserCustomCategory,
 } from "@/server/queries"
 import { revalidatePath, revalidateTag } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -1017,4 +1024,224 @@ export async function deleteUserCustomTestsByCategoryAction(
   revalidatePath("/panel/nauka")
 
   return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
+}
+
+// ============================================================================
+// CUSTOM CATEGORY ACTIONS
+// ============================================================================
+
+/**
+ * Create a new custom category
+ */
+export async function createCustomCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const categoryName = formData.get("categoryName") as string
+
+  const validationResult = CreateCustomCategorySchema.safeParse({ categoryName })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { categoryName }
+    }
+  }
+
+  try {
+    await db.insert(userCustomCategories).values({
+      userId,
+      categoryName: validationResult.data.categoryName,
+      questionIds: [],
+    })
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/nauka")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Kategoria została utworzona pomyślnie")
+}
+
+/**
+ * Add question to custom category
+ */
+export async function addQuestionToCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const categoryId = formData.get("categoryId") as string
+  const questionId = formData.get("questionId") as string
+
+  const validationResult = AddQuestionToCategorySchema.safeParse({
+    categoryId,
+    questionId,
+  })
+
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: { categoryId, questionId }
+    }
+  }
+
+  try {
+    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+
+    if (!category) {
+      return toFormState("ERROR", "Kategoria nie została znaleziona")
+    }
+
+    const currentIds = category.questionIds as string[]
+    if (!currentIds.includes(validationResult.data.questionId)) {
+      const updatedIds = [...currentIds, validationResult.data.questionId]
+
+      await db
+        .update(userCustomCategories)
+        .set({
+          questionIds: updatedIds,
+          updatedAt: new Date()
+        })
+        .where(eq(userCustomCategories.id, validationResult.data.categoryId))
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  return toFormState("SUCCESS", "Pytanie dodane do kategorii")
+}
+
+/**
+ * Remove question from custom category
+ */
+export async function removeQuestionFromCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const categoryId = formData.get("categoryId") as string
+  const questionId = formData.get("questionId") as string
+
+  const validationResult = AddQuestionToCategorySchema.safeParse({
+    categoryId,
+    questionId,
+  })
+
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
+  }
+
+  try {
+    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+
+    if (!category) {
+      return toFormState("ERROR", "Kategoria nie została znaleziona")
+    }
+
+    const currentIds = category.questionIds as string[]
+    const updatedIds = currentIds.filter(id => id !== validationResult.data.questionId)
+
+    await db
+      .update(userCustomCategories)
+      .set({
+        questionIds: updatedIds,
+        updatedAt: new Date()
+      })
+      .where(eq(userCustomCategories.id, validationResult.data.categoryId))
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  return toFormState("SUCCESS", "Pytanie usunięte z kategorii")
+}
+
+/**
+ * Delete custom category
+ */
+export async function deleteCustomCategoryAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const categoryId = formData.get("categoryId") as string
+
+  const validationResult = DeleteCustomCategorySchema.safeParse({ categoryId })
+
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
+  }
+
+  try {
+    const result = await deleteUserCustomCategory(userId, validationResult.data.categoryId)
+
+    if (!result || result.rowCount === 0) {
+      return toFormState("ERROR", "Kategoria nie została znaleziona")
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/nauka")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Kategoria została usunięta pomyślnie")
+}
+
+/**
+ * Update category name
+ */
+export async function updateCategoryNameAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const categoryId = formData.get("categoryId") as string
+  const categoryName = formData.get("categoryName") as string
+
+  const validationResult = UpdateCategoryNameSchema.safeParse({
+    categoryId,
+    categoryName,
+  })
+
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
+  }
+
+  try {
+    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+
+    if (!category) {
+      return toFormState("ERROR", "Kategoria nie została znaleziona")
+    }
+
+    await db
+      .update(userCustomCategories)
+      .set({
+        categoryName: validationResult.data.categoryName,
+        updatedAt: new Date()
+      })
+      .where(eq(userCustomCategories.id, validationResult.data.categoryId))
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  return toFormState("SUCCESS", "Nazwa kategorii została zaktualizowana")
 }

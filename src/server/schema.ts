@@ -506,6 +506,38 @@ export const UnlikeBlogPostSchema = z.object({
   postId: z.string().uuid('Nieprawidłowe ID posta'),
 });
 
+// Custom category schemas
+export const CreateCustomCategorySchema = z.object({
+  categoryName: z
+    .string()
+    .min(1, "Nazwa kategorii jest wymagana")
+    .max(100, "Nazwa kategorii nie może być dłuższa niż 100 znaków")
+    .trim(),
+});
+
+export const UpdateCategoryQuestionsSchema = z.object({
+  categoryId: z.string().uuid("Nieprawidłowy identyfikator kategorii"),
+  questionIds: z.array(z.string()).min(1, "Kategoria musi zawierać przynajmniej jedno pytanie"),
+});
+
+export const DeleteCustomCategorySchema = z.object({
+  categoryId: z.string().uuid("Nieprawidłowy identyfikator kategorii"),
+});
+
+export const AddQuestionToCategorySchema = z.object({
+  categoryId: z.string().uuid("Nieprawidłowy identyfikator kategorii"),
+  questionId: z.string().min(1, "Identyfikator pytania jest wymagany"),
+});
+
+export const UpdateCategoryNameSchema = z.object({
+  categoryId: z.string().uuid("Nieprawidłowy identyfikator kategorii"),
+  categoryName: z
+    .string()
+    .min(1, "Nazwa kategorii jest wymagana")
+    .max(100, "Nazwa kategorii nie może być dłuższa niż 100 znaków")
+    .trim(),
+});
+
 // Type exports
 export type CreateBlogPostInput = z.infer<typeof CreateBlogPostSchema>;
 export type UpdateBlogPostInput = z.infer<typeof UpdateBlogPostSchema>;

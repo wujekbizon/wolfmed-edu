@@ -21,6 +21,7 @@ import {
   blogPostTags,
   blogLikes,
   userCustomTests,
+  userCustomCategories,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -82,6 +83,44 @@ export const deleteUserCustomTest = async (userId: string, testId: string) => {
   return await db
     .delete(userCustomTests)
     .where(and(eq(userCustomTests.id, testId), eq(userCustomTests.userId, userId)))
+}
+
+/**
+ * Get all custom categories for a user
+ */
+export const getUserCustomCategories = cache(async (userId: string) => {
+  return await db.query.userCustomCategories.findMany({
+    where: eq(userCustomCategories.userId, userId),
+    orderBy: [desc(userCustomCategories.createdAt)],
+  })
+})
+
+/**
+ * Get single category with ownership verification
+ */
+export const getUserCustomCategoryById = cache(
+  async (userId: string, categoryId: string) => {
+    return await db.query.userCustomCategories.findFirst({
+      where: and(
+        eq(userCustomCategories.id, categoryId),
+        eq(userCustomCategories.userId, userId)
+      ),
+    })
+  }
+)
+
+/**
+ * Delete category with ownership verification
+ */
+export const deleteUserCustomCategory = async (userId: string, categoryId: string) => {
+  return await db
+    .delete(userCustomCategories)
+    .where(
+      and(
+        eq(userCustomCategories.id, categoryId),
+        eq(userCustomCategories.userId, userId)
+      )
+    )
 }
 
 // Get all medical procedures, ordered by newest first

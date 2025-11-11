@@ -9,18 +9,24 @@ interface CustomCategory {
 
 interface QuestionSelection {
   customCategories: CustomCategory[]
+  isDeleteModalOpen: boolean
+  categoryToDelete: string | null
   createCategory: (name: string) => void
   editCategory: (id: string, newName: string) => void
   deleteCategory: (id: string) => void
   addQuestionToCategory: (categoryId: string, questionId: string) => void
   removeQuestionFromCategory: (categoryId: string, questionId: string) => void
   clearAll: () => void
+  openDeleteModal: (categoryId: string) => void
+  closeDeleteModal: () => void
 }
 
 export const useQuestionSelectionStore = create<QuestionSelection>()(
   persist(
     (set) => ({
       customCategories: [],
+      isDeleteModalOpen: false,
+      categoryToDelete: null,
       createCategory: (name) =>
         set((state) => ({
           customCategories: [...state.customCategories, { id: crypto.randomUUID(), name, questionIds: [] }],
@@ -48,6 +54,16 @@ export const useQuestionSelectionStore = create<QuestionSelection>()(
       clearAll: () =>
         set(() => ({
           customCategories: [],
+        })),
+      openDeleteModal: (categoryId) =>
+        set(() => ({
+          isDeleteModalOpen: true,
+          categoryToDelete: categoryId,
+        })),
+      closeDeleteModal: () =>
+        set(() => ({
+          isDeleteModalOpen: false,
+          categoryToDelete: null,
         })),
     }),
     {

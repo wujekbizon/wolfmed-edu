@@ -27,7 +27,6 @@ async function TestsCategories() {
   const { userId } = await auth()
   const isSupporter = userId ? await getSupporterByUserId(userId) : false
 
-  // Pass userId if supporter, to merge official + custom tests
   const populatedCategories = await getPopulatedCategories(
     fileData,
     isSupporter ? (userId || undefined) : undefined
