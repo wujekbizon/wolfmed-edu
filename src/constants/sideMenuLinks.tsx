@@ -3,7 +3,6 @@ import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
 import ProceduresIcon from '@/components/icons/ProceduresIcon'
 import ProgressIcon from '@/components/icons/ProgressIcon'
-import SelectedIcon from '@/components/icons/SelectedIcon'
 import UserProfileIcon from '@/components/icons/UserProfileIcon'
 
 export const sideMenuNavigationLinks = [
@@ -18,15 +17,10 @@ export const sideMenuNavigationLinks = [
     icon: <DashboardIcon width={26} height={26} />,
   },
   {
-    url: '/panel/wybrane-pytania',
-    label: 'Wybrane',
-    icon: <SelectedIcon width={26} height={26} />,
-  },
-  {
     url: '/panel/dodaj-test',
     label: 'Dodaj Test',
     icon: <FeadbackIcon width={26} height={26} />,
-    requiresSupporter: true, // Premium feature
+    requiresSupporter: true,
   },
   {
     url: '/panel/nauka',

@@ -6,6 +6,7 @@ import CreateTestTabs from '@/components/CreateTestTabs'
 import DeleteTestModal from '@/components/DeleteTestModal'
 import DeleteCategoryModal from '@/components/DeleteCategoryModal'
 import CategoryDeleteModalWrapper from '@/components/CategoryDeleteModalWrapper'
+import SupporterRequired from '@/components/SupporterRequired'
 
 export default async function CreateTestPage() {
   const { userId } = await auth()
@@ -13,7 +14,7 @@ export default async function CreateTestPage() {
 
   const isSupporter = await getSupporterByUserId(userId)
   if (!isSupporter) {
-    redirect('/wsparcie-projektu')
+    return <SupporterRequired />
   }
 
   return (
