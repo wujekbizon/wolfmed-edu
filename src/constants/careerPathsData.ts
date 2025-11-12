@@ -188,10 +188,10 @@ export const careerPathsData: Record<string, PathData> = {
         title: "Testy egzaminacyjne",
         titleBtn: "Duża baza testów!",
         description:
-          "Darmowa baza testów oparta na egzaminach z ostatnich 2 lat i kursie na opiekuna medycznego. Trzy poziomy trudności – losowe pytania z całej dostępnej puli.",
-        text: "Wybierz kierunek OM",
+          "Darmowa baza testów oparta na egzaminach z ostatnich 2 lat i kursie na opiekuna medycznego. Losowe pytania z całej dostępnej puli.",
+        text: "Testy praktyczne i Egzaminy",
         imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
-        url: "/sign-up",
+        url: "/panel/testy",
         icon: "tests",
       },
       {
@@ -199,31 +199,31 @@ export const careerPathsData: Record<string, PathData> = {
         titleBtn: "Procedury",
         description:
           "Lista procedur i algorytmów dla opiekunów medycznych. Ponad 31 dostępnych algorytmów, które każdy przyszły opiekun medyczny powinien znać.",
-        text: "Wybierz kierunek OM",
+        text: "Procedury medyczne",
         imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Rgqyd4roJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
-        url: "/sign-up",
+        url: "/panel/procedury",
         icon: "procedure",
       },
-      // {
-        
-      //   title: "Szczegółowe wyniki testów",
-      //   titleBtn: "Twój wynik!",
-      //   description:
-      //     "Dostęp do szczegółowych wyników ukonczonych testów. Ocena i data wykonania. Możliwość sprawdzenia szczegółów i w przypadku błednych odpowiedzi podana jest też odpowiedz prawidłowa.",
-      //   text: "Wybierz kierunek OM",
-      //   imgSrc: img1,
-      //   url: "/sign-up",
-      //   icon: "score",
-      // },
       {
         
-        title: "Wyzwanie Procedury - Quiz",
+        title: "Szczegółowe wyniki testów",
+        titleBtn: "Twój wynik!",
+        description:
+          "Dostęp do szczegółowych wyników ukonczonych testów. Ocena i data wykonania. Możliwość sprawdzenia szczegółów odpowiedzi.",
+        text: "Szczegółowe wyniki",
+        imgSrc: "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k510BmDcqGqbaom6K7MQNgznelwU0cYLvsXOjS",
+        url: "/panel/wyniki",
+        icon: "score",
+      },
+      {
+        
+        title: "Wyzwania Procedur - Quizy",
         titleBtn: "Gry i quizy",
         description:
-          "Zweryfikuj swoją znajomość procedur obowiązujących opiekuna medycznego. Wylosuj jedną z nich i sprawdź, czy pamiętasz, jak należy ją prawidłowo wykonać.",
-        text: "Wybierz kierunek OM",
+          "5 quizów i wyzwań dla każdej procedury. Ukończ wszystkie i zdobądż odznakę.",
+        text: "Quizy i wyzwania",
         imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Nyh9LK2M1UuCEmiKr7chszHj6GeZpqAJ4w2g',
-        url: "/sign-up",
+        url: "/panel/procedury",
         icon: "game",
       },
       {
@@ -232,20 +232,21 @@ export const careerPathsData: Record<string, PathData> = {
         titleBtn: "Ucz się w swoim tempie!",
         description:
           "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
-        text: "Wybierz kierunek OM",
+        text: "Centrum Nauki",
         imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
-        url: "/sign-up",
+        url: "/panel/nauka",
         icon: "learn",
       }
     ],
     pricing: {
       standard: {
-        price: "Plan standard: 0zł/mies.",
+        price: "Plan standard: 0zł",
         features: [
-          "Darmowa bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
+          "Bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
-          "Przegląd postępów",
-          "Testy Praktycznye i Egzamin Próbny"
+          "Przegląd postępów i wyników testów",
+          "Testy Praktycznye i Egzamin Próbny",
+          "Forum i Blog Medyczny"
         ]
       },
       premium: {
@@ -254,7 +255,7 @@ export const careerPathsData: Record<string, PathData> = {
           "Wszystko z planu darmowego",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
-          "Dostęp do modułu praktycznego",
+          "Dostęp do modułu praktycznego i tablicy",
           "Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki"
         ]
       }
