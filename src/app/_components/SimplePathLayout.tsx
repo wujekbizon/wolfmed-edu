@@ -121,7 +121,7 @@ export default function SimplePathLayout({
           pricingInView ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="mx-auto w-full max-w-none lg:max-w-6xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+        <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16">
           <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
             <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
               Cennik
@@ -136,7 +136,6 @@ export default function SimplePathLayout({
               Wybierz plan dopasowany do Twoich potrzeb.
             </p>
           </header>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
             {Object.entries(pricing || {}).map(
               ([plan, { price, features }]) => {
@@ -155,10 +154,14 @@ export default function SimplePathLayout({
                       }
                     `}
                     >
-                      {isPremium && (
+                      {isPremium ? (
                         <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
                           Najlepszy wybór
                         </span>
+                      ): (
+                        <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
+                        Dostęp darmowy
+                      </span>
                       )}
 
                       <h3 className="text-xl md:text-2xl font-extrabold mb-2 text-slate-900">
@@ -175,7 +178,7 @@ export default function SimplePathLayout({
                             className="flex items-start gap-3 text-sm md:text-base leading-relaxed"
                           >
                             <svg
-                              className="mt-0.5 w-5 h-5 md:w-6 md:h-6 flex-shrink-0 text-slate-500"
+                              className="mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500"
                               fill="none"
                               stroke="currentColor"
                               strokeWidth="2"
@@ -196,7 +199,7 @@ export default function SimplePathLayout({
 
                       <div className="mt-auto w-full pt-6 md:pt-8">
                         <Link
-                          href="/sign-up"
+                          href={isPremium ? "/wsparcie-projektu" : "/panel"}
                           className={`
                           inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
                           font-semibold transition-colors duration-200
@@ -208,8 +211,8 @@ export default function SimplePathLayout({
                         `}
                         >
                           {isPremium
-                            ? "Wybierz Premium"
-                            : "Rozpocznij za darmo"}
+                            ? "Poszerz o Premium"
+                            : "Rozpocznij naukę"}
                         </Link>
                       </div>
                     </div>

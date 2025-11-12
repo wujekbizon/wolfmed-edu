@@ -15,7 +15,9 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
     const [theme, setTheme] = useState<'light' | 'dark'>('dark');
 
-    const { updateCell,data } = useCellsStore()
+    const {  data } = useCellsStore()
+    const updateCell = useCellsStore((s) => s.updateCell);
+    const cellContent = useCellsStore((s) => s.data[cell.id]?.content);
 
     useHandleLibrary({ excalidrawAPI });
 
@@ -55,16 +57,16 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     };
 
     const initialData = useMemo(() => {
-        return data[cell.id]?.content
-            ? {
-                  ...JSON.parse(data[cell.id]!.content),
-                  appState: {
-                      ...(JSON.parse(data[cell.id]!.content).appState || {}),
-                      collaborators: [],
-                  },
-              }
-            : {};
-    }, [data, cell.id]);
+        if (!cellContent) return {};
+        const parsed = JSON.parse(cellContent);
+        return {
+          ...parsed,
+          appState: {
+            ...(parsed.appState || {}),
+            collaborators: [],
+          },
+        };
+      }, [cellContent]);
 
     return (
         <div className="relative h-full w-full">

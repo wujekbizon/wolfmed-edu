@@ -35,12 +35,21 @@ export const useCellsStore = create<CellsState>()(
       setLoading: (loading) => set({ loading }),
 
       updateCell: (id, content) =>
-        set((state) => ({
-          data: {
-            ...state.data,
-            [id]: { ...state.data[id], content } as Cell,
-          },
-        })),
+        set((state) => {
+          const prev = state.data[id];
+          if (!prev) return state; // safeguard
+      
+          if (prev.content === content) {
+            return state;
+          }
+      
+          return {
+            data: {
+              ...state.data,
+              [id]: { ...prev, content } as Cell,
+            },
+          };
+        }),
 
       deleteCell: (id) =>
         set((state) => {

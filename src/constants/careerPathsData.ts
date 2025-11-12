@@ -240,21 +240,22 @@ export const careerPathsData: Record<string, PathData> = {
     ],
     pricing: {
       standard: {
-        price: "Dostęp darmowy: 0 zł/mies.",
+        price: "Plan standard: 0zł/mies.",
         features: [
-          "Dostęp do wszystkich pytań egzaminacyjnych",
-          "Podstawowe materiały szkoleniowe",
-          "Testy z ostatnich 2 lat"
+          "Darmowa bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
+          "Procedury Opiekuna Medycznego",
+          "Przegląd postępów",
+          "Testy Praktycznye i Egzamin Próbny"
         ]
       },
       premium: {
-        price: "49,99 zł/mies.",
+        price: "Plan premium: 49,99 zł",
         features: [
           "Wszystko z planu darmowego",
-          "Ponad 31 algorytmów i procedur",
-          "Materiały i książki dydaktyczne (cyfrowe)",
+          "Materiały i zasoby - 20MB miejsce na dysku",
+          "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego",
-          "Wyzwania i quizy procedur"
+          "Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki"
         ]
       }
     },

@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, useState, useRef, useEffect } from 'react';
+import { ReactNode, useState, useEffect, useId } from 'react';
 
 interface TooltipProps {
   message: string;
@@ -9,7 +9,7 @@ interface TooltipProps {
 
 export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
   const [open, setOpen] = useState(false);
-  const id = useRef(`tooltip-${Math.random().toString(36).slice(2)}`).current;
+  const id = `tooltip-${useId()}`;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
