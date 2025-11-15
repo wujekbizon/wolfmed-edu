@@ -19,7 +19,7 @@ export default function SimplePathLayout({
   const { ref: featuresRef, inView: featuresInView } = useInView({ triggerOnce: false, threshold: 0.1 });
   const { ref: pricingRef, inView: pricingInView } = useInView({ triggerOnce:false, threshold: 0.1 });
   return (
-    <section className="relative @container flex flex-col w-full bg-white p-4 sm:p-8 md:p-16 gap-12 overflow-hidden">
+    <section className="relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden">
       <TriangleDivider
         direction="right"
         className="border-b-[5vh] lg:border-b-[10vh] border-r-transparent border-b-transparent"
@@ -33,41 +33,80 @@ export default function SimplePathLayout({
         }`}
       >
         <div className="flex flex-col items-center text-center">
-          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-600">
+          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-600">
             Kierunek Edukacyjny
           </span>
-          <h1 className="mb-2 lg:mb-4 max-w-2xl text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-700 p-2 leading-14 underline">
+          <h1 className="mb-2 lg:mb-4 max-w-2xl text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-slate-700 p-2 leading-14">
             {title}
           </h1>
-          <p className="mb-8 sm:mb-16 max-w-3xl text-zinc-500 text-base sm:text-xl font-normal leading-5 tracking-[-0.14px] text-center">
+          <p className="mb-6 sm:mb-8 md:mb-10 max-w-3xl text-zinc-500 text-base sm:text-xl font-normal leading-5 tracking-[-0.14px] text-center">
             Zyskaj solidne przygotowanie teoretyczne i praktyczne niezbędne do
             pracy w roli opiekuna medycznego.
           </p>
-          <div className="w-full h-full flex flex-col gap-0 sm:gap-6 2xl:flex-row items-center shadow-lg bg-white rounded-2xl border border-zinc-900/20 p-4 sm:p-6 md:px-16 md:py-10">
+          <div className="w-full h-full flex flex-col gap-0 sm:gap-6 2xl:flex-row items-center shadow-xl ring-2 ring-slate-900/10 bg-white rounded-2xl p-4 sm:p-6 md:px-16 md:py-10">
             <TestsSelection />
-            <div className="min-h-full lg:min-h-[800px] w-full flex flex-col justify-around items-center gap-8 @sm:gap-16 flex-3/5 rounded-2xl bg-black/5 p-4 md:p-8 lg:p-12">
-              <h2 className="text-zinc-950 text-lg @md:text-xl @lg:text-2xl font-semibold text-center">
-                Rekomendacja Prezes Wolfmed Edukacja
-              </h2>
-              <div className="flex flex-col items-center">
-                <p className="max-w-4xl italic border-b border-t border-slate-950/20 py-8 text-zinc-900 text-base @md:text-lg @lg:text-xl xl:text-2xl font-normal leading-8 @lg:leading-10 tracking-[-0.14px] text-center">
-                  {description}
-                </p>
-              </div>
-              <div className="flex flex-col items-center w-full">
+            <div className="relative min-h-fit w-full flex flex-col lg:flex-row gap-6 lg:gap-8 flex-3/5 rounded-2xl bg-gradient-to-br from-slate-50/50 via-white to-slate-50/30 backdrop-blur-sm ring-1 ring-slate-900/5 shadow-inner p-6 md:p-8 lg:p-10 overflow-hidden">
+              <div className="absolute -top-24 -right-24 w-64 h-64 bg-gradient-to-br from-[#ff9898]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+              <div className="hidden lg:flex flex-col items-center justify-center gap-4 lg:min-w-[200px] xl:min-w-[240px] relative z-10">
+                <div className="absolute -top-4 -left-4 text-[120px] text-[#ff9898]/15 font-serif leading-none pointer-events-none">&ldquo;</div>
                 <Image
-                  className="rounded-full border border-zinc-900/50 h-32 w-32 md:h-40 md:w-40 object-cover object-top"
+                  className="relative rounded-2xl ring-2 ring-slate-900/10 shadow-lg h-36 w-36 xl:h-40 xl:w-40 object-cover object-top"
                   src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5lJJEon5QZL8RnOt9ME3WgkVAFJaXBNK7HC5q"
                   alt="CEO Wolfmed Edukacja"
-                  width={150}
-                  height={150}
+                  width={160}
+                  height={160}
                 />
-                <p className="text-black text-2xl md:text-3xl text-center font-thin mt-2">
-                  Kinga Wolfinger
-                </p>
-                <p className="text-red-500 text-sm @lg:text-base @xl:text-lg font-normal text-center">
-                  CEO Wolfmed Edukacja
-                </p>
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-slate-900 text-xl xl:text-2xl font-light tracking-tight">
+                    Kinga Wolfinger
+                  </p>
+                  <div className="h-px w-12 bg-[#ff9898]/40" />
+                  <p className="text-[#ff9898] text-xs xl:text-sm font-medium uppercase tracking-wider">
+                    CEO
+                  </p>
+                  <p className="text-slate-600 text-xs xl:text-sm font-medium">
+                    Wolfmed Edukacja
+                  </p>
+                </div>
+              </div>
+
+              <div className="lg:hidden flex flex-col items-center gap-4 relative z-10">
+                <Image
+                  className="relative rounded-2xl ring-2 ring-slate-900/10 shadow-lg h-32 w-32 object-cover object-top"
+                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5lJJEon5QZL8RnOt9ME3WgkVAFJaXBNK7HC5q"
+                  alt="CEO Wolfmed Edukacja"
+                  width={128}
+                  height={128}
+                />
+                <div className="flex flex-col items-center gap-1">
+                  <p className="text-slate-900 text-xl font-light tracking-tight">
+                    Kinga Wolfinger
+                  </p>
+                  <div className="h-px w-12 bg-[#ff9898]/40" />
+                  <p className="text-[#ff9898] text-xs font-medium uppercase tracking-wider">
+                    CEO
+                  </p>
+                  <p className="text-slate-600 text-xs font-medium">
+                    Wolfmed Edukacja
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center items-start gap-6 flex-1 relative z-10">
+                <div className="flex items-center gap-2 w-full">
+                  <div className="h-px flex-1 bg-slate-900/10" />
+                  <span className="text-slate-500 text-xs @lg:text-sm font-medium uppercase tracking-wider">
+                    Rekomendacja
+                  </span>
+                  <div className="h-px flex-1 bg-slate-900/10" />
+                </div>
+                <blockquote className="relative">
+                  <p className="text-slate-800 text-base @md:text-lg @lg:text-xl font-normal leading-relaxed italic text-center lg:text-left">
+                    {description}
+                  </p>
+                  <span className="absolute -bottom-2 right-0 text-5xl text-[#ff9898]/20 font-serif leading-none">&rdquo;</span>
+                </blockquote>
               </div>
             </div>
           </div>
@@ -76,12 +115,12 @@ export default function SimplePathLayout({
       <section
         aria-labelledby="features-title"
         ref={featuresRef}
-        className={`w-full relative p-0 lg:p-4 xl:p-8 2xl:p-16 transition-all duration-800 ease-in-out ${
+        className={`w-full relative transition-all duration-800 ease-in-out ${
           featuresInView ? "opacity-100" : "opacity-0"
         }`}
       >
         <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
-          <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
+          <span className="inline-block rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
             Co oferujemy
           </span>
           <h2
@@ -96,7 +135,7 @@ export default function SimplePathLayout({
           </p>
         </header>
 
-        <div className="grid gap-10 grid-cols-[repeat(auto-fit,_minmax(280px,_1fr))] justify-items-center">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {features?.map(
             ({ description, title, icon, imgSrc, text, url }, index) => (
               <SimplePathCard
@@ -117,13 +156,13 @@ export default function SimplePathLayout({
       <section
         aria-labelledby="pricing-title"
         ref={pricingRef}
-        className={`w-full min-h-[65vh] flex items-center relative transition-all duration-800 ease-in-out ${
+        className={`w-full flex items-center relative transition-all duration-800 ease-in-out ${
           pricingInView ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16">
           <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
-            <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
+            <span className="inline-block rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
               Cennik
             </span>
             <h2
@@ -155,47 +194,69 @@ export default function SimplePathLayout({
                     `}
                     >
                       {isPremium ? (
-                        <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
-                          Najlepszy wybór
-                        </span>
-                      ): (
-                        <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
-                        Dostęp darmowy
-                      </span>
-                      )}
-
-                      <h3 className="text-xl md:text-2xl font-extrabold mb-2 text-slate-900">
-                        {plan}
-                      </h3>
-                      <p className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight text-slate-700">
-                        {price}
-                      </p>
-
-                      <ul className="grow space-y-3 md:space-y-4 text-left w-full max-w-sm text-zinc-700">
-                        {features.map((feature, i) => (
-                          <li
-                            key={i}
-                            className="flex items-start gap-3 text-sm md:text-base leading-relaxed"
-                          >
-                            <svg
-                              className="mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              viewBox="0 0 24 24"
-                              aria-hidden="true"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                              />
+                        <>
+                          <span className="self-end mb-4 inline-flex items-center gap-1.5 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-gradient-to-r from-slate-800 via-[#ff9898] to-[#ffc5c5] text-white shadow-md">
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                             </svg>
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                            Promocja -69%
+                          </span>
+                          <h3 className="text-xl md:text-2xl font-extrabold mb-4 text-slate-900">
+                            {plan}
+                          </h3>
+                          <div className="mb-4">
+                            <span className="text-lg text-zinc-500 line-through">159,99 zł</span>
+                            <div className="flex items-baseline gap-2 mt-2">
+                              <span className="text-4xl md:text-5xl font-bold text-zinc-900">49,99</span>
+                              <span className="text-2xl text-zinc-600">zł</span>
+                            </div>
+                            <p className="text-sm text-zinc-500 mt-1">Jednorazowa wpłata · Oferta limitowana</p>
+                          </div>
+                          <p className="text-base md:text-lg text-zinc-700 mb-6 leading-relaxed">
+                            Odblokuj wszystkie funkcje premium dla Opiekuna Medycznego. Wspieraj rozwój platformy i zyskaj dostęp do zaawansowanych narzędzi edukacyjnych.
+                          </p>
+                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+                            <p className="text-sm text-amber-900 font-medium">⏰ Ta oferta jest dostępna tylko przez ograniczony czas</p>
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
+                            Dostęp darmowy
+                          </span>
+                          <h3 className="text-xl md:text-2xl font-extrabold mb-2 text-slate-900">
+                            {plan}
+                          </h3>
+                          <p className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight text-slate-700">
+                            {price}
+                          </p>
+                          <ul className="grow space-y-3 md:space-y-4 text-left w-full max-w-sm text-zinc-700">
+                            {features.map((feature, i) => (
+                              <li
+                                key={i}
+                                className="flex items-start gap-3 text-sm md:text-base leading-relaxed"
+                              >
+                                <svg
+                                  className="mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  viewBox="0 0 24 24"
+                                  aria-hidden="true"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                <span>{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </>
+                      )}
 
                       <div className="mt-auto w-full pt-6 md:pt-8">
                         <Link
@@ -211,7 +272,7 @@ export default function SimplePathLayout({
                         `}
                         >
                           {isPremium
-                            ? "Poszerz o Premium"
+                            ? "Skorzystaj z promocji"
                             : "Rozpocznij naukę"}
                         </Link>
                       </div>

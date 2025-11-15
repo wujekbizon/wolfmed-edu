@@ -7,10 +7,10 @@ export const products: Product[] = [
     price: 49.99,
     description: 'Tutaj możesz nas wesprzeć. Twoja pomoc pozwoli dalej budować i rozwijać naszą aplikację.',
   },
-  {
-    id: 'basic',
-    name: 'Wolfmed Basic',
-    price: 14.99,
-    description: 'Wspieraj nas w mniejszym zakresie. Każda pomoc jest cenna dla rozwoju naszej aplikacji.',
-  },
+  // {
+  //   id: 'basic',
+  //   name: 'Wolfmed Basic',
+  //   price: 14.99,
+  //   description: 'Wspieraj nas w mniejszym zakresie. Każda pomoc jest cenna dla rozwoju naszej aplikacji.',
+  // },
 ]
