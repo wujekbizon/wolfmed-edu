@@ -48,7 +48,6 @@ export default async function TestsPage() {
                 <BadgeWidget />
               </Suspense>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {/* Admin Blog Widget - Only visible to admins */}
                 <Suspense fallback={null}>
                   <AdminBlogWidget />
                 </Suspense>
