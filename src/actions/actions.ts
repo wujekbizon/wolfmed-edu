@@ -385,7 +385,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
     }
   }
   revalidatePath("/panel")
-  return toFormState("SUCCESS", "Username updated successfully!")
+  return toFormState("SUCCESS", "Nazwa użytkownika została pomyślnie zaktualizowana!")
 }
 
 /**
