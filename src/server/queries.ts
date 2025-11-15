@@ -1597,3 +1597,155 @@ export const getUnreadMessageCount = cache(async () => {
 
   return result?.count || 0
 })
+
+export const getDetailedTestHistory = cache(
+  async (userId: string, limit: number = 50) => {
+    const tests = await db
+      .select({
+        id: completedTestes.id,
+        score: completedTestes.score,
+        testResult: completedTestes.testResult,
+        completedAt: completedTestes.completedAt,
+        category: testSessions.category,
+        numberOfQuestions: testSessions.numberOfQuestions,
+        durationMinutes: testSessions.durationMinutes,
+      })
+      .from(completedTestes)
+      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+      .where(eq(completedTestes.userId, userId))
+      .orderBy(desc(completedTestes.completedAt))
+      .limit(limit)
+
+    return tests.map((test) => ({
+      ...test,
+      completedAt: test.completedAt.toISOString(),
+    }))
+  }
+)
+
+export const getQuestionAccuracyAnalytics = cache(async (userId: string) => {
+  const tests = await db
+    .select({
+      testResult: completedTestes.testResult,
+    })
+    .from(completedTestes)
+    .where(eq(completedTestes.userId, userId))
+
+  const questionStats = new Map<
+    string,
+    { timesAnswered: number; timesCorrect: number }
+  >()
+
+  tests.forEach((test) => {
+    const results = test.testResult as Array<{ questionId: string; answer: boolean }>
+    if (Array.isArray(results)) {
+      results.forEach((result) => {
+        const stats = questionStats.get(result.questionId) || {
+          timesAnswered: 0,
+          timesCorrect: 0,
+        }
+        stats.timesAnswered++
+        if (result.answer) stats.timesCorrect++
+        questionStats.set(result.questionId, stats)
+      })
+    }
+  })
+
+  const problemQuestions = Array.from(questionStats.entries())
+    .map(([questionId, stats]) => ({
+      questionId,
+      timesAnswered: stats.timesAnswered,
+      timesCorrect: stats.timesCorrect,
+      accuracy: (stats.timesCorrect / stats.timesAnswered) * 100,
+    }))
+    .filter((q) => q.accuracy < 50)
+    .sort((a, b) => a.accuracy - b.accuracy)
+
+  return problemQuestions
+})
+
+export const getCategoryPerformance = cache(async (userId: string) => {
+  const tests = await db
+    .select({
+      score: completedTestes.score,
+      category: testSessions.category,
+      numberOfQuestions: testSessions.numberOfQuestions,
+    })
+    .from(completedTestes)
+    .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+    .where(eq(completedTestes.userId, userId))
+
+  const categoryStats = new Map<
+    string,
+    { totalTests: number; totalScore: number; totalQuestions: number }
+  >()
+
+  tests.forEach((test) => {
+    const stats = categoryStats.get(test.category) || {
+      totalTests: 0,
+      totalScore: 0,
+      totalQuestions: 0,
+    }
+    stats.totalTests++
+    stats.totalScore += test.score
+    stats.totalQuestions += test.numberOfQuestions
+    categoryStats.set(test.category, stats)
+  })
+
+  return Array.from(categoryStats.entries()).map(([category, stats]) => ({
+    category,
+    totalTests: stats.totalTests,
+    avgScore: ((stats.totalScore / stats.totalQuestions) * 100).toFixed(2),
+    totalQuestions: stats.totalQuestions,
+    correctAnswers: stats.totalScore,
+  }))
+})
+
+export const getProgressTimeline = cache(
+  async (userId: string, days: number = 30) => {
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - days)
+
+    const tests = await db
+      .select({
+        score: completedTestes.score,
+        completedAt: completedTestes.completedAt,
+        numberOfQuestions: testSessions.numberOfQuestions,
+      })
+      .from(completedTestes)
+      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+      .where(
+        and(
+          eq(completedTestes.userId, userId),
+          sql`${completedTestes.completedAt} >= ${startDate}`
+        )
+      )
+      .orderBy(asc(completedTestes.completedAt))
+
+    const dateMap = new Map<
+      string,
+      { totalScore: number; totalQuestions: number; count: number }
+    >()
+
+    tests.forEach((test) => {
+      const date = test.completedAt.toISOString().split('T')[0] || ''
+      if (!date) return
+
+      const stats = dateMap.get(date) || {
+        totalScore: 0,
+        totalQuestions: 0,
+        count: 0,
+      }
+      stats.totalScore += test.score
+      stats.totalQuestions += test.numberOfQuestions
+      stats.count++
+      dateMap.set(date, stats)
+    })
+
+    return Array.from(dateMap.entries()).map(([date, stats]) => ({
+      date,
+      avgScore: ((stats.totalScore / stats.totalQuestions) * 100).toFixed(2),
+      testsCount: stats.count,
+    }))
+  }
+)

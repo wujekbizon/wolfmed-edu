@@ -1,14 +1,16 @@
+'use client'
+
 import { calculateAverageScore } from '@/helpers/calculateAverageScore'
 import CircularProgressBar from './CircularProgressBar'
 import LinearProgressBar from './LinearProgressBar'
-import { getUserStats } from '@/server/queries'
-import { currentUser } from '@clerk/nextjs/server'
-import { notFound } from 'next/navigation'
 
-export default async function UserProgress() {
-  const user = await currentUser()
-  if (!user) notFound()
-  const { totalScore, totalQuestions, testsAttempted } = await getUserStats(user.id)
+interface UserProgressProps {
+  totalScore: number
+  totalQuestions: number
+  testsAttempted: number
+}
+
+export default function UserProgress({ totalScore, totalQuestions, testsAttempted }: UserProgressProps) {
   const overallProgressPercentage = totalQuestions > 0 ? (totalScore / totalQuestions) * 100 : 0
   const averageScore = calculateAverageScore(totalScore, totalQuestions)
 

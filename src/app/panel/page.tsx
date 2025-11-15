@@ -2,11 +2,11 @@
 import { Suspense } from "react"
 import UsernameForm from "@/components/UsernameForm"
 import MottoForm from "@/components/MottoForm"
-import UserProgress from "@/components/UserProgress"
+import UserAnalytics from "@/components/UserAnalytics"
 import SupporterStatus from "@/components/SupporterStatus"
 import UserMotto from "@/components/UserMotto"
 import UserMottoSkeleton from "@/components/skeletons/UserMottoSkeleton"
-import UserProgressSkeleton from "@/components/skeletons/UserProgressSkeleton"
+import UserAnalyticsSkeleton from "@/components/skeletons/UserAnalyticsSkeleton"
 import UsernameSkeleton from "@/components/skeletons/UsernameSkeleton"
 import Username from "@/components/Username"
 import SupporterStatusSkeleton from "@/components/skeletons/SupporterStatusSkeleton"
@@ -40,8 +40,8 @@ export default async function TestsPage() {
                 <UserMotto />
               </Suspense>
             </div>
-            <Suspense fallback={<UserProgressSkeleton />}>
-              <UserProgress />
+            <Suspense fallback={<UserAnalyticsSkeleton />}>
+              <UserAnalytics />
             </Suspense>
             <div className="flex flex-col gap-6">
               <Suspense fallback={<BadgeWidgetSkeleton />}>
