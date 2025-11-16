@@ -10,15 +10,16 @@ import type { NotesType } from '@/types/notesTypes'
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser()
   const notes = user ? ((await getAllUserNotes(user.id)) as NotesType[]) : []
+  const pinnedNotes = notes.filter((note) => note.pinned)
   const pinnedCount = notes.filter((n) => n.pinned).length
 
   return (
     <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-white">
       <SidePanel />
-      <div id="scroll-container" className="flex-1 overflow-y-auto">
+      <div id="scroll-container" className="flex-1 overflow-y-scroll scrollbar-webkit">
         <TopPanel pinnedCount={pinnedCount}>
           <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
-            <PinnedNotesFeature />
+            <PinnedNotesFeature pinnedNotes={pinnedNotes} />
           </Suspense>
         </TopPanel>
         <div className="px-4 pb-10">

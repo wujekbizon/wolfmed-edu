@@ -13,7 +13,7 @@ export default function SidePanel() {
 
   return (
     <nav
-      className={`z-50 hidden h-full min-w-20 flex-col gap-20 text-zinc-900 bg-zinc-800 p-5 lg:flex transition-all duration-500 ${
+      className={`z-50 hidden h-full min-w-20 flex-col gap-20 text-zinc-900 bg-zinc-800 px-5 py-1 lg:flex transition-all duration-500 ${
         isSidePanelOpen ? 'w-75' : 'w-20'
       }`}
     >
