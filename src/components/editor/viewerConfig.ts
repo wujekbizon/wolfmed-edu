@@ -4,8 +4,8 @@ import { LinkNode } from '@lexical/link'
 import { CodeNode } from '@lexical/code'
 import { HighlightNode } from './nodes/HighlightNode'
 import { CommentNode } from './nodes/CommentNode'
+import { FlashcardNode } from './nodes/FlashcardNode'
 
-// Light theme optimized for reading and studying
 export const viewerConfig = {
   namespace: 'StudyViewer',
   theme: {
@@ -31,7 +31,7 @@ export const viewerConfig = {
     link: 'text-[#ff9898] hover:text-[#ff7878] underline decoration-[#ff9898]/30 hover:decoration-[#ff9898] transition-all duration-200',
     paragraph: 'text-zinc-700 leading-relaxed mb-4 text-base sm:text-lg',
   },
-  nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, CodeNode, HighlightNode, CommentNode],
+  nodes: [HeadingNode, QuoteNode, ListNode, ListItemNode, LinkNode, CodeNode, HighlightNode, CommentNode, FlashcardNode],
   onError: (error: Error) => {
     console.error('StudyViewer error:', error)
   },

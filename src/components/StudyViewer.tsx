@@ -8,6 +8,7 @@ import { viewerConfig } from './editor/viewerConfig'
 import StudyToolbar from './StudyToolbar'
 import HighlightPlugin from './editor/plugins/HighlightPlugin'
 import CommentPlugin from './editor/plugins/CommentPlugin'
+import FlashcardPlugin from './editor/plugins/FlashcardPlugin'
 import { LexicalEditor } from 'lexical'
 import type { SerializedEditorState } from 'lexical'
 
@@ -91,11 +92,9 @@ export default function StudyViewer({ content, plainTextFallback }: StudyViewerP
                             placeholder={null}
                             ErrorBoundary={LexicalErrorBoundary}
                         />
-
-                        {/* Study Plugins */}
                         <HighlightPlugin />
                         <CommentPlugin />
-                        {/* <FlashcardPlugin /> */}
+                        <FlashcardPlugin />
                         {/* <CollapsiblePlugin /> */}
                     </div>
                 </div>
