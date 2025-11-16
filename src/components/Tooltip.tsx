@@ -4,7 +4,7 @@ import { ReactNode, useState, useEffect, useId } from 'react';
 interface TooltipProps {
   message: string;
   children: ReactNode;
-  position?: 'top' | 'right' | 'bottom' | 'left';
+  position?: 'top' | 'right' | 'bottom' | 'left' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 }
 
 export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
@@ -21,7 +21,11 @@ export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
     right: 'left-full top-1/2 -translate-y-1/2 ml-2',
     bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
-    left: 'right-full top-1/2 -translate-y-1/2 mr-2'
+    left: 'right-full top-1/2 -translate-y-1/2 mr-2',
+    'top-left': 'bottom-full right-0 mb-2',
+    'top-right': 'bottom-full left-0 mb-2',
+    'bottom-left': 'top-full right-0 mt-2',
+    'bottom-right': 'top-full left-0 mt-2'
   };
 
   return (
@@ -44,7 +48,7 @@ export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
             text-sm font-medium px-3 py-1.5 rounded-lg shadow-lg
             backdrop-blur-sm border border-red-200/40
             whitespace-nowrap
-            transition-all duration-200 opacity-100 z-50
+            transition-all duration-200 opacity-100 z-[100]
           `}
         >
           {message}
