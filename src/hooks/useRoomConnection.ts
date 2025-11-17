@@ -163,6 +163,18 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }));
         });
 
+        // Handle join room errors (v1.4.4 Bug Fix)
+        connection.on('join_room_error', ({ error, roomId: errorRoomId }: { error: string, roomId?: string }) => {
+          if (!mountedRef.current) return;
+          console.error('Failed to join room:', error);
+
+          setState(prev => ({
+            ...prev,
+            systemMessage: `Failed to join room: ${error}`,
+            isConnected: false
+          }));
+        });
+
         const handleRoomState = (stateUpdate: RoomStateUpdate) => {
           setState(prev => ({
             ...prev,

@@ -515,6 +515,75 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       console.log(`[WebRTC] Cleanup complete after being kicked`)
     }
 
+    // Handle room cleared (v1.4.4 Bug Fix)
+    const handleRoomCleared = ({ roomId }: { roomId: string }) => {
+      console.log(`[WebRTC] Room ${roomId} has been cleared (lecture ended)`)
+
+      // Stop local stream
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop())
+        localStreamRef.current = null
+        console.log(`[WebRTC] Local stream stopped after room cleared`)
+      }
+
+      // Close all peer connections
+      if (connection && (connection as any).closePeerConnection) {
+        setState(prev => {
+          prev.participants.forEach(async (participant) => {
+            if (!participant.isLocal) {
+              try {
+                await (connection as any).closePeerConnection(participant.id)
+                console.log(`[WebRTC] Closed peer connection for ${participant.id} after room cleared`)
+              } catch (error) {
+                console.error(`[WebRTC] Failed to close peer for ${participant.id}:`, error)
+              }
+            }
+          })
+          return prev
+        })
+      }
+
+      // Clear all participants and reset state
+      setState({
+        participants: [],
+        localStream: null,
+        isVideoEnabled: false,
+        isAudioEnabled: false,
+        isScreenSharing: false,
+        connectionStatus: 'disconnected'
+      })
+
+      // Cleanup voice activity detection
+      analyserNodesRef.current.clear()
+      speakingStateRef.current.clear()
+
+      console.log(`[WebRTC] Cleanup complete after room cleared`)
+    }
+
+    // Handle join room error (v1.4.4 Bug Fix)
+    const handleJoinRoomError = ({ error, roomId }: { error: string, roomId?: string }) => {
+      console.error(`[WebRTC] Failed to join room${roomId ? ` ${roomId}` : ''}: ${error}`)
+
+      // Stop local stream if it was started
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop())
+        localStreamRef.current = null
+        console.log(`[WebRTC] Local stream stopped after join error`)
+      }
+
+      // Reset state
+      setState({
+        participants: [],
+        localStream: null,
+        isVideoEnabled: false,
+        isAudioEnabled: false,
+        isScreenSharing: false,
+        connectionStatus: 'disconnected'
+      })
+
+      console.log(`[WebRTC] Cleanup complete after join error`)
+    }
+
     // v1.4.3 CRITICAL FIX: Handle room_state for late joiners
     // When user joins a room with existing participants, they receive room_state
     // instead of individual user_joined events. We need to setup peer connections
@@ -601,6 +670,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     connection.on('muted_by_teacher', handleMutedByTeacher) // v1.4.4 Bug Fix
     connection.on('mute_all', handleMuteAll) // v1.4.4 Bug Fix
     connection.on('kicked_from_room', handleKickedFromRoom) // v1.4.4 Bug Fix
+    connection.on('room_cleared', handleRoomCleared) // v1.4.4 Bug Fix
+    connection.on('join_room_error', handleJoinRoomError) // v1.4.4 Bug Fix
 
     return () => {
       if (connection.removeAllListeners) {
@@ -614,6 +685,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         connection.removeAllListeners('muted_by_teacher') // v1.4.4 cleanup
         connection.removeAllListeners('mute_all') // v1.4.4 cleanup
         connection.removeAllListeners('kicked_from_room') // v1.4.4 cleanup
+        connection.removeAllListeners('room_cleared') // v1.4.4 cleanup
+        connection.removeAllListeners('join_room_error') // v1.4.4 cleanup
       }
     }
   }, [connection, enabled, setupVoiceActivityDetection])
