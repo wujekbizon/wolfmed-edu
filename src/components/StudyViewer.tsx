@@ -73,7 +73,6 @@ export default function StudyViewer({ content, plainTextFallback }: StudyViewerP
             const initialState = editor.parseEditorState(serialized)
             editor.setEditorState(initialState)
         },
-        editable: true,
     }
 
     return (

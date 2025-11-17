@@ -12,6 +12,9 @@ export const HIGHLIGHT_COLORS: { color: HighlightColor; label: string; className
 // StudyToolbar UI text
 export const STUDY_TOOLBAR_TEXT = {
   studyMode: 'Tryb nauki',
+  readOnlyMode: 'Tryb odczytu',
+  enableStudyMode: 'Włącz tryb nauki',
+  disableStudyMode: 'Wyłącz tryb nauki',
   highlightButton: 'Zaznacz',
   highlightTitle: 'Zaznacz tekst',
   chooseColor: 'Wybierz kolor',
