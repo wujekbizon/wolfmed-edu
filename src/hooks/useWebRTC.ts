@@ -432,6 +432,44 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       setState(prev => ({ ...prev, isScreenSharing: false }))
     }
 
+    // Handle being muted by teacher (v1.4.4 Bug Fix)
+    const handleMutedByTeacher = ({ requestedBy, reason, timestamp }: { requestedBy: string, reason?: string, timestamp: string }) => {
+      console.log(`[WebRTC] Muted by teacher ${requestedBy} at ${timestamp}${reason ? `: ${reason}` : ''}`)
+
+      if (localStreamRef.current) {
+        const audioTracks = localStreamRef.current.getAudioTracks()
+        audioTracks.forEach(track => {
+          track.enabled = false
+        })
+
+        setState(prev => ({
+          ...prev,
+          isAudioEnabled: false
+        }))
+
+        console.log(`[WebRTC] Audio muted by teacher`)
+      }
+    }
+
+    // Handle mute all participants (v1.4.4 Bug Fix)
+    const handleMuteAll = ({ requestedBy, timestamp }: { requestedBy: string, timestamp: string }) => {
+      console.log(`[WebRTC] All participants muted by ${requestedBy} at ${timestamp}`)
+
+      if (localStreamRef.current) {
+        const audioTracks = localStreamRef.current.getAudioTracks()
+        audioTracks.forEach(track => {
+          track.enabled = false
+        })
+
+        setState(prev => ({
+          ...prev,
+          isAudioEnabled: false
+        }))
+
+        console.log(`[WebRTC] Audio muted (mute all)`)
+      }
+    }
+
     // v1.4.3 CRITICAL FIX: Handle room_state for late joiners
     // When user joins a room with existing participants, they receive room_state
     // instead of individual user_joined events. We need to setup peer connections
@@ -515,6 +553,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     connection.on('user_left', handleUserLeft)
     connection.on('screen_share_started', handleScreenShareStarted)
     connection.on('screen_share_stopped', handleScreenShareStopped)
+    connection.on('muted_by_teacher', handleMutedByTeacher) // v1.4.4 Bug Fix
+    connection.on('mute_all', handleMuteAll) // v1.4.4 Bug Fix
 
     return () => {
       if (connection.removeAllListeners) {
@@ -525,6 +565,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         connection.removeAllListeners('user_left')
         connection.removeAllListeners('screen_share_started')
         connection.removeAllListeners('screen_share_stopped')
+        connection.removeAllListeners('muted_by_teacher') // v1.4.4 cleanup
+        connection.removeAllListeners('mute_all') // v1.4.4 cleanup
       }
     }
   }, [connection, enabled, setupVoiceActivityDetection])
