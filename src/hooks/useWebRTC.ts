@@ -470,6 +470,51 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       }
     }
 
+    // Handle being kicked from room (v1.4.4 Bug Fix)
+    const handleKickedFromRoom = ({ roomId, reason, kickedBy, timestamp }: { roomId: string, reason: string, kickedBy: string, timestamp: string }) => {
+      console.log(`[WebRTC] Kicked from room ${roomId} by ${kickedBy}: ${reason}`)
+
+      // Stop local stream
+      if (localStreamRef.current) {
+        localStreamRef.current.getTracks().forEach(track => track.stop())
+        localStreamRef.current = null
+        console.log(`[WebRTC] Local stream stopped after being kicked`)
+      }
+
+      // Close all peer connections
+      if (connection && (connection as any).closePeerConnection) {
+        setState(prev => {
+          prev.participants.forEach(async (participant) => {
+            if (!participant.isLocal) {
+              try {
+                await (connection as any).closePeerConnection(participant.id)
+                console.log(`[WebRTC] Closed peer connection for ${participant.id} after being kicked`)
+              } catch (error) {
+                console.error(`[WebRTC] Failed to close peer for ${participant.id}:`, error)
+              }
+            }
+          })
+          return prev
+        })
+      }
+
+      // Clear all participants and reset state
+      setState({
+        participants: [],
+        localStream: null,
+        isVideoEnabled: false,
+        isAudioEnabled: false,
+        isScreenSharing: false,
+        connectionStatus: 'disconnected'
+      })
+
+      // Cleanup voice activity detection
+      analyserNodesRef.current.clear()
+      speakingStateRef.current.clear()
+
+      console.log(`[WebRTC] Cleanup complete after being kicked`)
+    }
+
     // v1.4.3 CRITICAL FIX: Handle room_state for late joiners
     // When user joins a room with existing participants, they receive room_state
     // instead of individual user_joined events. We need to setup peer connections
@@ -555,6 +600,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     connection.on('screen_share_stopped', handleScreenShareStopped)
     connection.on('muted_by_teacher', handleMutedByTeacher) // v1.4.4 Bug Fix
     connection.on('mute_all', handleMuteAll) // v1.4.4 Bug Fix
+    connection.on('kicked_from_room', handleKickedFromRoom) // v1.4.4 Bug Fix
 
     return () => {
       if (connection.removeAllListeners) {
@@ -567,6 +613,7 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         connection.removeAllListeners('screen_share_stopped')
         connection.removeAllListeners('muted_by_teacher') // v1.4.4 cleanup
         connection.removeAllListeners('mute_all') // v1.4.4 cleanup
+        connection.removeAllListeners('kicked_from_room') // v1.4.4 cleanup
       }
     }
   }, [connection, enabled, setupVoiceActivityDetection])
