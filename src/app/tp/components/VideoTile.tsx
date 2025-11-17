@@ -33,9 +33,14 @@ export default function VideoTile({
   const lastEnabledStateRef = useRef<boolean | null>(null)
   // v1.4.4 Sprint 1: Volume and fullscreen controls
   const [volume, setVolume] = useState(1) // 0 to 1
+  const [isMuted, setIsMuted] = useState(false)
   const [showControls, setShowControls] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
+  // Web Audio API for volume control
+  const audioContextRef = useRef<AudioContext | null>(null)
+  const gainNodeRef = useRef<GainNode | null>(null)
+  const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null)
 
   // Callback ref to attach stream when video element is mounted
   const videoRef = useCallback((videoElement: HTMLVideoElement | null) => {
@@ -117,12 +122,87 @@ export default function VideoTile({
     }
   }, [participant.stream, participant.username])
 
-  // v1.4.4 Sprint 1: Apply volume to video element
+  // v1.4.5 Bug Fix: Set up Web Audio API for volume control (remote participants only)
   useEffect(() => {
-    if (videoElementRef.current && !participant.isLocal) {
-      videoElementRef.current.volume = volume
+    // Only set up audio processing for remote participants with streams
+    if (participant.isLocal || !participant.stream) {
+      return
     }
-  }, [volume, participant.isLocal])
+
+    const audioTracks = participant.stream.getAudioTracks()
+    if (audioTracks.length === 0) {
+      return
+    }
+
+    try {
+      // Create audio context if it doesn't exist
+      if (!audioContextRef.current) {
+        audioContextRef.current = new AudioContext()
+      }
+
+      const audioContext = audioContextRef.current
+
+      // Clean up previous nodes if they exist
+      if (sourceNodeRef.current) {
+        sourceNodeRef.current.disconnect()
+      }
+      if (gainNodeRef.current) {
+        gainNodeRef.current.disconnect()
+      }
+
+      // Create source from media stream
+      const source = audioContext.createMediaStreamSource(participant.stream)
+      sourceNodeRef.current = source
+
+      // Create gain node for volume control
+      const gainNode = audioContext.createGain()
+      gainNode.gain.value = isMuted ? 0 : volume
+      gainNodeRef.current = gainNode
+
+      // Create destination stream
+      const destination = audioContext.createMediaStreamDestination()
+
+      // Connect: source -> gain -> destination
+      source.connect(gainNode)
+      gainNode.connect(destination)
+
+      // Also connect to actual audio output
+      gainNode.connect(audioContext.destination)
+
+      console.log(`[VideoTile] Web Audio API setup for ${participant.username}, volume: ${volume}, muted: ${isMuted}`)
+    } catch (error) {
+      console.error(`[VideoTile] Failed to setup Web Audio API for ${participant.username}:`, error)
+      // Fallback to video element volume control
+      if (videoElementRef.current) {
+        videoElementRef.current.volume = isMuted ? 0 : volume
+        videoElementRef.current.muted = isMuted
+      }
+    }
+
+    return () => {
+      // Cleanup on unmount or stream change
+      if (sourceNodeRef.current) {
+        sourceNodeRef.current.disconnect()
+        sourceNodeRef.current = null
+      }
+      if (gainNodeRef.current) {
+        gainNodeRef.current.disconnect()
+        gainNodeRef.current = null
+      }
+    }
+  }, [participant.stream, participant.isLocal, participant.username])
+
+  // v1.4.5 Bug Fix: Update gain when volume or mute changes
+  useEffect(() => {
+    if (gainNodeRef.current) {
+      gainNodeRef.current.gain.value = isMuted ? 0 : volume
+      console.log(`[VideoTile] Volume updated for ${participant.username}: ${isMuted ? 'muted' : volume}`)
+    } else if (videoElementRef.current && !participant.isLocal) {
+      // Fallback for when Web Audio API isn't available
+      videoElementRef.current.volume = isMuted ? 0 : volume
+      videoElementRef.current.muted = isMuted
+    }
+  }, [volume, isMuted, participant.isLocal, participant.username])
 
   // v1.4.4 Sprint 1: Fullscreen handlers
   const toggleFullscreen = useCallback(async () => {
@@ -149,6 +229,16 @@ export default function VideoTile({
 
     document.addEventListener('fullscreenchange', handleFullscreenChange)
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+  }, [])
+
+  // v1.4.5 Bug Fix: Cleanup audio context on unmount
+  useEffect(() => {
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close()
+        audioContextRef.current = null
+      }
+    }
   }, [])
 
   // Get connection quality color
@@ -309,13 +399,14 @@ export default function VideoTile({
               <button
                 onClick={(e) => {
                   e.stopPropagation()
-                  setVolume(volume === 0 ? 1 : 0)
+                  // Toggle mute state
+                  setIsMuted(!isMuted)
                 }}
                 className="p-1 hover:bg-white/10 rounded transition-colors"
-                title={volume === 0 ? "Unmute" : "Mute"}
+                title={isMuted ? "Unmute" : "Mute"}
               >
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  {volume === 0 ? (
+                  {isMuted ? (
                     <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z" clipRule="evenodd" />
                   ) : (
                     <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
@@ -326,11 +417,16 @@ export default function VideoTile({
                 type="range"
                 min="0"
                 max="1"
-                step="0.1"
+                step="0.01"
                 value={volume}
                 onChange={(e) => {
                   e.stopPropagation()
-                  setVolume(parseFloat(e.target.value))
+                  const newVolume = parseFloat(e.target.value)
+                  setVolume(newVolume)
+                  // v1.4.5 Bug Fix: Sync mute state with volume
+                  // If volume is 0, set muted to true
+                  // If volume > 0, set muted to false
+                  setIsMuted(newVolume === 0)
                 }}
                 onClick={(e) => e.stopPropagation()}
                 className="w-20 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer
