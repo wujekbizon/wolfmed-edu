@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { X, Shuffle, ChevronLeft, ChevronRight } from 'lucide-react'
-import type { FlashcardData } from './editor/plugins/FlashcardPlugin'
+import type { FlashcardData } from '@/hooks/useFlashcards'
 import { FLASHCARD_REVIEW_TEXT } from '@/constants/studyViewer'
 
 interface FlashcardReviewModalProps {

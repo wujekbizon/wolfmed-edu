@@ -5,8 +5,9 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { Highlighter, MessageSquare, BookmarkPlus, ChevronDown, X, GraduationCap } from 'lucide-react'
 import { HIGHLIGHT_COMMAND } from './editor/plugins/HighlightPlugin'
 import { ADD_COMMENT_COMMAND } from './editor/plugins/CommentPlugin'
-import { CREATE_FLASHCARD_COMMAND, useFlashcards } from './editor/plugins/FlashcardPlugin'
+import { CREATE_FLASHCARD_COMMAND } from './editor/plugins/FlashcardPlugin'
 import type { HighlightColor } from './editor/nodes/HighlightNode'
+import { useFlashcards } from '@/hooks/useFlashcards'
 import FlashcardReviewModal from './FlashcardReviewModal'
 import {
   HIGHLIGHT_COLORS,
