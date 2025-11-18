@@ -281,20 +281,24 @@ export default function RoomControls({
         {/* Recording control (v1.4.0) - only for teachers/admins */}
         {isTeacherOrAdmin && onStartRecording && onStopRecording && (
           <button
-            onClick={() => {
+            onClick={async () => {
               if (isRecording) {
                 onStopRecording()
               } else {
-                onStartRecording()
+                try {
+                  await onStartRecording()
+                } catch (error) {
+                  console.error('Failed to start recording:', error)
+                }
               }
             }}
-            disabled={!isConnected || !localStream}
+            disabled={!isConnected}
             className={`p-3 rounded-full ${
               isRecording
                 ? 'bg-red-600 hover:bg-red-700 animate-pulse'
                 : 'bg-zinc-600 hover:bg-zinc-500'
-            } ${(!isConnected || !localStream) && 'opacity-50 cursor-not-allowed'}`}
-            title={isRecording ? `Stop Recording (${formatDuration(recordingDuration)})` : "Start Recording"}
+            } ${!isConnected && 'opacity-50 cursor-not-allowed'}`}
+            title={isRecording ? `Stop Recording (${formatDuration(recordingDuration)})` : "Start Recording (camera will start automatically)"}
           >
             <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
               {isRecording ? (

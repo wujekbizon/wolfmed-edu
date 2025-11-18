@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { RoomConnection } from '@teaching-playground/core/dist/services/RoomConnection'
 import type { User } from '@teaching-playground/core'
+import { toast } from 'react-hot-toast'
 
 interface UseRoomConnectionOptions {
   roomId: string
@@ -663,17 +664,34 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       return;
     }
 
-    if (!localStream) {
-      console.error('[v1.4.0] No local stream available to record');
-      return;
-    }
-
     try {
-      await connectionRef.current.startRecording(localStream, {
+      // v1.4.7 FIX: Automatically start stream if not active
+      let streamToRecord = localStream;
+
+      if (!streamToRecord) {
+        console.log('[v1.4.0] No local stream available, starting stream first...');
+        toast.loading('Starting camera and microphone...', { id: 'recording-start' });
+
+        // Start the stream with default quality
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        });
+
+        setLocalStream(stream);
+        await connectionRef.current.startStream(stream, 'medium');
+        streamToRecord = stream;
+
+        toast.success('Camera started, now recording...', { id: 'recording-start' });
+      }
+
+      // Now start recording with the stream
+      await connectionRef.current.startRecording(streamToRecord, {
         videoBitsPerSecond: 2500000 // 2.5 Mbps
       });
     } catch (error) {
       console.error('[v1.4.0] Failed to start recording:', error);
+      toast.error('Failed to start recording. Please check camera permissions.', { id: 'recording-start' });
       throw error;
     }
   }, [localStream]);
