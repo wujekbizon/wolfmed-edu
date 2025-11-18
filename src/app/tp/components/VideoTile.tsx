@@ -266,7 +266,8 @@ export default function VideoTile({
   }
 
   const showVideo = hasVideo && participant.videoEnabled !== false
-  const audioEnabled = participant.audioEnabled !== false
+  // v1.4.6: Audio is considered disabled if participant's mic is off OR we muted them via volume
+  const audioEnabled = (participant.audioEnabled !== false) && !isMuted
 
   // Debug: Log rendering state
   console.log(`[VideoTile] ${participant.username} render:`, {

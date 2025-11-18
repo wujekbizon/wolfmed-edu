@@ -163,6 +163,41 @@ export default function RoomView({ room }: RoomViewProps) {
     }
   }, [connection])
 
+  // Handle kicked_from_room event - redirect immediately (v1.4.6)
+  useEffect(() => {
+    if (!connection) return
+
+    const handleKickedFromRoom = ({ roomId, reason, kickedBy }: { roomId: string; reason: string; kickedBy: string }) => {
+      console.log(`[RoomView] Kicked from room ${roomId} by ${kickedBy}: ${reason}`)
+      // Exit room and redirect immediately
+      exitRoom().catch(err => console.error('Error exiting room after being kicked:', err))
+      router.push('/tp')
+    }
+
+    connection.on('kicked_from_room', handleKickedFromRoom)
+
+    return () => {
+      connection.off('kicked_from_room', handleKickedFromRoom)
+    }
+  }, [connection, exitRoom, router])
+
+  // Handle join_room_error event - redirect immediately (v1.4.6)
+  useEffect(() => {
+    if (!connection) return
+
+    const handleJoinRoomError = ({ code, message, lectureStatus }: { code: string; message: string; lectureStatus?: string }) => {
+      console.error(`[RoomView] Failed to join room: ${message} (code: ${code}, lectureStatus: ${lectureStatus})`)
+      // Redirect to lectures page
+      router.push('/tp')
+    }
+
+    connection.on('join_room_error', handleJoinRoomError)
+
+    return () => {
+      connection.off('join_room_error', handleJoinRoomError)
+    }
+  }, [connection, router])
+
   // Reset state when entering an "available" room (prevents old data from showing)
   useEffect(() => {
     if (room.status === 'available') {
