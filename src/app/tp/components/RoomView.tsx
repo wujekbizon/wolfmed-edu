@@ -11,6 +11,7 @@ import RoomParticipants from './RoomParticipants'
 import { RoomCleanupNotice } from './RoomCleanupNotice'
 import VideoGrid, { type VideoLayout } from './VideoGrid'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-hot-toast'
 
 interface RoomViewProps {
   room: Room
@@ -169,9 +170,11 @@ export default function RoomView({ room }: RoomViewProps) {
 
     const handleKickedFromRoom = ({ roomId, reason, kickedBy }: { roomId: string; reason: string; kickedBy: string }) => {
       console.log(`[RoomView] Kicked from room ${roomId} by ${kickedBy}: ${reason}`)
+      // Show error notification
+      toast.error(`You have been removed from the room: ${reason}`)
       // Exit room and redirect immediately
       exitRoom().catch(err => console.error('Error exiting room after being kicked:', err))
-      router.push('/tp')
+      setTimeout(() => router.push('/tp'), 1000) // Brief delay to show toast
     }
 
     connection.on('kicked_from_room', handleKickedFromRoom)
@@ -187,8 +190,13 @@ export default function RoomView({ room }: RoomViewProps) {
 
     const handleJoinRoomError = ({ code, message, lectureStatus }: { code: string; message: string; lectureStatus?: string }) => {
       console.error(`[RoomView] Failed to join room: ${message} (code: ${code}, lectureStatus: ${lectureStatus})`)
+      // Show error notification with lecture status context
+      const errorMessage = lectureStatus
+        ? `Cannot join room: This lecture is ${lectureStatus}`
+        : message
+      toast.error(errorMessage)
       // Redirect to lectures page
-      router.push('/tp')
+      setTimeout(() => router.push('/tp'), 2000) // Brief delay to show toast
     }
 
     connection.on('join_room_error', handleJoinRoomError)
