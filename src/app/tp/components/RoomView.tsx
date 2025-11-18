@@ -141,26 +141,19 @@ export default function RoomView({ room }: RoomViewProps) {
   }, [videoParticipants, activeSpeakerId])
 
   const handleExitRoom = async () => {
-    console.log('User initiated room exit')
     try {
       await exitRoom()
-      console.log('Room exit completed successfully')
     } catch (error) {
       console.error('Error during room exit:', error)
     }
     router.push('/tp/rooms')
   }
 
-  useEffect(() => {
-    console.log('Connection state changed:', state.isConnected ? 'CONNECTED' : 'DISCONNECTED')
-  }, [state.isConnected])
-
   // Handle room_cleared event from backend (v1.1.3)
   useEffect(() => {
     if (!connection) return
 
     const handleRoomCleared = ({ roomId, reason }: { roomId: string; reason: string }) => {
-      console.log(`Room ${roomId} was cleared: ${reason}`)
       setCleanupReason(reason)
       setShowCleanupNotice(true)
     }
@@ -248,8 +241,7 @@ export default function RoomView({ room }: RoomViewProps) {
   // Reset state when entering an "available" room (prevents old data from showing)
   useEffect(() => {
     if (room.status === 'available') {
-      console.log('Entering available room - resetting state to prevent old data')
-      // State is managed by useRoomConnection, so just log for now
+      // State is managed by useRoomConnection, so nothing to do here
       // The backend should ensure room is clean via clearRoom()
     }
   }, [room.status])

@@ -44,40 +44,20 @@ export default function VideoTile({
 
   // Callback ref to attach stream when video element is mounted
   const videoRef = useCallback((videoElement: HTMLVideoElement | null) => {
-    console.log(`[VideoTile] Callback ref fired for ${participant.username}:`, {
-      hasVideoElement: !!videoElement,
-      hasStream: !!participant.stream,
-      streamId: participant.stream?.id
-    })
-
     videoElementRef.current = videoElement
 
     if (!videoElement) {
-      console.log(`[VideoTile] Video element unmounted for ${participant.username}`)
       return
     }
 
     if (!participant.stream) {
-      console.warn(`[VideoTile] No stream available for ${participant.username}`)
       // v1.4.4 FIX: Clear srcObject to prevent showing frozen last frame
       if (videoElement.srcObject) {
         videoElement.srcObject = null
-        console.log(`[VideoTile] Cleared srcObject for ${participant.username}`)
       }
       setHasVideo(false)
       return
     }
-
-    console.log(`[VideoTile] Attaching stream for ${participant.username}:`, {
-      streamId: participant.stream.id,
-      videoTracks: participant.stream.getVideoTracks().map(t => ({
-        id: t.id,
-        enabled: t.enabled,
-        muted: t.muted,
-        readyState: t.readyState
-      })),
-      isLocal: participant.isLocal
-    })
 
     videoElement.srcObject = participant.stream
 
@@ -85,8 +65,6 @@ export default function VideoTile({
     const videoTracks = participant.stream.getVideoTracks()
     const hasVideoTrack = videoTracks.length > 0 && videoTracks[0]?.enabled === true
     setHasVideo(hasVideoTrack)
-
-    console.log(`[VideoTile] ${participant.username} stream attached, hasVideo:`, hasVideoTrack)
   }, [participant.stream, participant.username, participant.isLocal])
 
   // Monitor video track enabled state - ONLY update when it changes to prevent re-render loops
@@ -100,7 +78,6 @@ export default function VideoTile({
       const currentEnabled = videoTrack.enabled
       // Only update if the value actually changed
       if (lastEnabledStateRef.current !== currentEnabled) {
-        console.log(`[VideoTile] ${participant.username} track enabled changed:`, lastEnabledStateRef.current, '->', currentEnabled)
         lastEnabledStateRef.current = currentEnabled
         setHasVideo(currentEnabled)
       }
@@ -168,8 +145,6 @@ export default function VideoTile({
 
       // Also connect to actual audio output
       gainNode.connect(audioContext.destination)
-
-      console.log(`[VideoTile] Web Audio API setup for ${participant.username}, volume: ${volume}, muted: ${isMuted}`)
     } catch (error) {
       console.error(`[VideoTile] Failed to setup Web Audio API for ${participant.username}:`, error)
       // Fallback to video element volume control
@@ -196,7 +171,6 @@ export default function VideoTile({
   useEffect(() => {
     if (gainNodeRef.current) {
       gainNodeRef.current.gain.value = isMuted ? 0 : volume
-      console.log(`[VideoTile] Volume updated for ${participant.username}: ${isMuted ? 'muted' : volume}`)
     } else if (videoElementRef.current && !participant.isLocal) {
       // Fallback for when Web Audio API isn't available
       videoElementRef.current.volume = isMuted ? 0 : volume
@@ -269,15 +243,6 @@ export default function VideoTile({
   // v1.4.6: Audio is considered disabled if participant's mic is off OR we muted them via volume
   const audioEnabled = (participant.audioEnabled !== false) && !isMuted
 
-  // Debug: Log rendering state
-  console.log(`[VideoTile] ${participant.username} render:`, {
-    hasVideo,
-    'participant.videoEnabled': participant.videoEnabled,
-    showVideo,
-    hasStream: !!participant.stream,
-    isLocal: participant.isLocal
-  })
-
   return (
     <div
       ref={containerRef}
@@ -301,18 +266,7 @@ export default function VideoTile({
           playsInline
           muted={participant.isLocal}
           className="absolute inset-0 w-full h-full object-cover z-0"
-          onLoadedMetadata={(e) => {
-            console.log(`[VideoTile] Video metadata loaded for ${participant.username}:`, {
-              videoWidth: e.currentTarget.videoWidth,
-              videoHeight: e.currentTarget.videoHeight,
-              readyState: e.currentTarget.readyState
-            })
-          }}
-          onPlay={() => console.log(`[VideoTile] Video playing for ${participant.username}`)}
           onError={(e) => console.error(`[VideoTile] Video error for ${participant.username}:`, e)}
-          onSuspend={() => console.log(`[VideoTile] Video suspended for ${participant.username}`)}
-          onWaiting={() => console.log(`[VideoTile] Video waiting for ${participant.username}`)}
-          onCanPlay={() => console.log(`[VideoTile] Video can play for ${participant.username}`)}
         />
       ) : (
         /* Avatar fallback when video is off */

@@ -52,30 +52,12 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
    */
   const startLocalStream = useCallback(async (constraints: MediaStreamConstraints = { video: true, audio: true }) => {
     try {
-      console.log('Starting local media stream...')
       const stream = await navigator.mediaDevices.getUserMedia(constraints)
 
       localStreamRef.current = stream
 
-      // Debug: Log stream details
       const videoTracks = stream.getVideoTracks()
       const audioTracks = stream.getAudioTracks()
-      console.log('[useWebRTC] Stream created:', {
-        videoTracks: videoTracks.map(t => ({
-          id: t.id,
-          label: t.label,
-          enabled: t.enabled,
-          muted: t.muted,
-          readyState: t.readyState
-        })),
-        audioTracks: audioTracks.map(t => ({
-          id: t.id,
-          label: t.label,
-          enabled: t.enabled,
-          muted: t.muted,
-          readyState: t.readyState
-        }))
-      })
 
       setState(prev => ({
         ...prev,
@@ -102,13 +84,11 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
           if ((connection as any).setupPeerConnection) {
             try {
-              console.log(`[v1.4.4] Setting up peer connection with new stream for ${participant.username}`)
               await (connection as any).setupPeerConnection(participant.id, stream)
 
               // Create offer to send our new stream
               if ((connection as any).createOffer) {
                 await (connection as any).createOffer(participant.id)
-                console.log(`[v1.4.4] Sent offer with new stream to ${participant.username}`)
               }
             } catch (error) {
               console.error(`[v1.4.4] Failed to setup peer with new stream for ${participant.username}:`, error)
@@ -117,7 +97,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         }
       }
 
-      console.log('[useWebRTC v1.4.4] Local stream started and peer connections updated')
       return stream
     } catch (error) {
       console.error('Failed to start local media stream:', error)
@@ -149,7 +128,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
             if (!participant.isLocal && participant.id !== userId) {
               try {
                 await (connection as any).closePeerConnection(participant.id)
-                console.log(`[v1.4.4] Closed peer connection for ${participant.id}`)
               } catch (error) {
                 console.error(`[v1.4.4] Failed to close peer for ${participant.id}:`, error)
               }
@@ -158,8 +136,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
           return prev
         })
       }
-
-      console.log('Local stream stopped')
     }
   }, [connection, userId])
 
@@ -173,7 +149,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     if (videoTrack) {
       videoTrack.enabled = !videoTrack.enabled
       setState(prev => ({ ...prev, isVideoEnabled: videoTrack.enabled }))
-      console.log(`Video ${videoTrack.enabled ? 'enabled' : 'disabled'}`)
     }
   }, [])
 
@@ -187,7 +162,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     if (audioTrack) {
       audioTrack.enabled = !audioTrack.enabled
       setState(prev => ({ ...prev, isAudioEnabled: audioTrack.enabled }))
-      console.log(`Audio ${audioTrack.enabled ? 'enabled' : 'disabled'}`)
     }
   }, [])
 
@@ -201,12 +175,9 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     }
 
     try {
-      console.log('[useWebRTC] User initiated screen share request')
-      console.log('[useWebRTC] Call stack:', new Error().stack)
       // Package handles screen sharing internally
       await (connection as any).startScreenShare()
       setState(prev => ({ ...prev, isScreenSharing: true }))
-      console.log('[useWebRTC] Screen sharing started successfully')
     } catch (error) {
       console.error('[useWebRTC] Failed to start screen sharing:', error)
       throw error
@@ -223,10 +194,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     }
 
     try {
-      console.log('Stopping screen share...')
       await (connection as any).stopScreenShare()
       setState(prev => ({ ...prev, isScreenSharing: false }))
-      console.log('Screen sharing stopped')
     } catch (error) {
       console.error('Failed to stop screen sharing:', error)
       throw error
@@ -284,8 +253,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
   useEffect(() => {
     if (!connection || !enabled) return
 
-    console.log('Setting up WebRTC event listeners (package v1.2.0)')
-
     // Handle user joined - setup peer connection (v1.2.0)
     const handleUserJoined = async (data: any) => {
       // v1.4.4: Backend now properly emits userId in user_joined event ✅
@@ -306,12 +273,10 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       // IMPORTANT: Use socketId for peer connections since ICE candidates come with socketId
       const peerId = socketId
-      console.log(`[WebRTC v1.4.4] User ${username} (userId: ${userId}, role: ${role}, socketId: ${socketId}) joined, setting up peer connection`)
 
       // Add participant to state (only if not already present)
       setState(prev => {
         if (prev.participants.some(p => p.id === peerId)) {
-          console.log(`Participant ${peerId} already in state`)
           return prev
         }
 
@@ -341,9 +306,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
           // Otherwise, we'll receive and answer their offer
           if (localStreamRef.current && (connection as any).createOffer) {
             await (connection as any).createOffer(peerId)
-            console.log(`[v1.4.2] Peer connection setup and offer sent to ${username} (socketId: ${peerId})`)
-          } else {
-            console.log(`[v1.4.2] Peer connection ready to receive offer from ${username} (socketId: ${peerId})`)
           }
         } catch (error) {
           console.error(`Failed to setup peer connection for ${username}:`, error)
@@ -353,8 +315,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle remote stream added (v1.2.0)
     const handleRemoteStreamAdded = ({ peerId, stream }: { peerId: string; stream: MediaStream }) => {
-      console.log(`Remote stream added for peer ${peerId}`)
-
       setState(prev => ({
         ...prev,
         participants: prev.participants.map(p =>
@@ -377,8 +337,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle remote stream removed (v1.2.0)
     const handleRemoteStreamRemoved = ({ peerId }: { peerId: string }) => {
-      console.log(`Remote stream removed for peer ${peerId}`)
-
       setState(prev => ({
         ...prev,
         participants: prev.participants.map(p => {
@@ -399,7 +357,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     const handleUserLeft = (data: any) => {
       // v1.3.1 package sends { socketId } for user_left event
       const socketId = data.socketId
-      const username = data.username || 'Unknown User'
 
       if (!socketId) {
         console.error('user_left event missing socketId:', data)
@@ -408,7 +365,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
       // Use socketId as peerId (consistent with handleUserJoined)
       const peerId = socketId
-      console.log(`User ${username} (socketId: ${peerId}) left`)
 
       setState(prev => ({
         ...prev,
@@ -422,13 +378,11 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
 
     // Handle screen share started (v1.3.0)
     const handleScreenShareStarted = () => {
-      console.log('Screen share started')
       setState(prev => ({ ...prev, isScreenSharing: true }))
     }
 
     // Handle screen share stopped (v1.3.0)
     const handleScreenShareStopped = () => {
-      console.log('Screen share stopped')
       setState(prev => ({ ...prev, isScreenSharing: false }))
     }
 
@@ -446,8 +400,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
           ...prev,
           isAudioEnabled: false
         }))
-
-        console.log(`[WebRTC] Audio muted by teacher`)
       }
     }
 
@@ -465,8 +417,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
           ...prev,
           isAudioEnabled: false
         }))
-
-        console.log(`[WebRTC] Audio muted (mute all)`)
       }
     }
 
@@ -478,7 +428,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach(track => track.stop())
         localStreamRef.current = null
-        console.log(`[WebRTC] Local stream stopped after being kicked`)
       }
 
       // Close all peer connections
@@ -488,7 +437,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
             if (!participant.isLocal) {
               try {
                 await (connection as any).closePeerConnection(participant.id)
-                console.log(`[WebRTC] Closed peer connection for ${participant.id} after being kicked`)
               } catch (error) {
                 console.error(`[WebRTC] Failed to close peer for ${participant.id}:`, error)
               }
@@ -511,8 +459,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       // Cleanup voice activity detection
       analyserNodesRef.current.clear()
       speakingStateRef.current.clear()
-
-      console.log(`[WebRTC] Cleanup complete after being kicked`)
     }
 
     // Handle room cleared (v1.4.4 Bug Fix)
@@ -523,7 +469,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach(track => track.stop())
         localStreamRef.current = null
-        console.log(`[WebRTC] Local stream stopped after room cleared`)
       }
 
       // Close all peer connections
@@ -533,7 +478,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
             if (!participant.isLocal) {
               try {
                 await (connection as any).closePeerConnection(participant.id)
-                console.log(`[WebRTC] Closed peer connection for ${participant.id} after room cleared`)
               } catch (error) {
                 console.error(`[WebRTC] Failed to close peer for ${participant.id}:`, error)
               }
@@ -556,8 +500,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       // Cleanup voice activity detection
       analyserNodesRef.current.clear()
       speakingStateRef.current.clear()
-
-      console.log(`[WebRTC] Cleanup complete after room cleared`)
     }
 
     // Handle join room error (v1.4.4 Bug Fix)
@@ -568,7 +510,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach(track => track.stop())
         localStreamRef.current = null
-        console.log(`[WebRTC] Local stream stopped after join error`)
       }
 
       // Reset state
@@ -580,8 +521,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         isScreenSharing: false,
         connectionStatus: 'disconnected'
       })
-
-      console.log(`[WebRTC] Cleanup complete after join error`)
     }
 
     // v1.4.3 CRITICAL FIX: Handle room_state for late joiners
@@ -590,7 +529,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
     // for all existing participants.
     const handleRoomState = async (data: any) => {
       const participants = data.participants || []
-      console.log(`[v1.4.3 FIX] room_state received with ${participants.length} existing participants`)
 
       if (participants.length === 0) return
 
@@ -601,13 +539,11 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         const participantUserId = participant.id || socketId
 
         if (!socketId) {
-          console.warn('[v1.4.3 FIX] Skipping participant without socketId:', participant)
           continue
         }
 
         // v1.4.4 FIX: Skip creating peer connection to ourselves!
         if (participantUserId === userId) {
-          console.log(`[v1.4.4 FIX] Skipping peer connection to self (userId: ${userId})`)
           continue
         }
 
@@ -620,11 +556,8 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
         })
 
         if (alreadyExists) {
-          console.log(`[v1.4.3 FIX] Participant ${username} already exists, skipping`)
           continue
         }
-
-        console.log(`[v1.4.3 FIX] Setting up peer connection for existing participant ${username} (socketId: ${socketId})`)
 
         // Add to state
         setState(prev => ({
@@ -648,9 +581,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
             // Only create offer if WE have a stream (we're the initiator)
             if (localStreamRef.current && (connection as any).createOffer) {
               await (connection as any).createOffer(socketId)
-              console.log(`[v1.4.3 FIX] Peer connection setup and offer sent to ${username}`)
-            } else {
-              console.log(`[v1.4.3 FIX] Peer connection ready to receive offer from ${username}`)
             }
           } catch (error) {
             console.error(`[v1.4.3 FIX] Failed to setup peer connection for ${username}:`, error)
@@ -696,8 +626,6 @@ export function useWebRTC({ roomId, userId, connection, enabled }: UseWebRTCOpti
    */
   useEffect(() => {
     return () => {
-      console.log('Cleaning up WebRTC resources')
-
       // Stop local stream
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach(track => track.stop())

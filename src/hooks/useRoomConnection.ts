@@ -117,7 +117,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     // v1.4.3 FIX: Check if this is a Strict Mode remount
     // If we detect a remount within 100ms, it's Strict Mode
     if (isStrictModeRemountRef.current) {
-      console.log('[v1.4.3 FIX] Detected React Strict Mode remount, reusing existing connection')
       isStrictModeRemountRef.current = false
       if (strictModeRemountTimeoutRef.current) {
         clearTimeout(strictModeRemountTimeoutRef.current)
@@ -134,20 +133,16 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
       try {
         isConnectingRef.current = true;
-        console.log('Connecting to WebSocket server:', serverUrl);
 
         const connection = new RoomConnection(roomId, userRef.current, serverUrl);
         connectionRef.current = connection;
 
         connection.on('connected', async () => {
-          console.log('Connected to room:', roomId);
           if (!mountedRef.current) return;
-
           setState(prev => ({ ...prev, isConnected: true }));
         });
 
         connection.on('disconnected', async () => {
-          console.log('Disconnected from room:', roomId);
           if (!mountedRef.current) return;
 
           setState(prev => ({
@@ -162,7 +157,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         // Listen for the 'welcome' event
         connection.on('welcome', (data: { message: string, timestamp: string }) => {
-          console.log('Server welcome:', data.message);
           setState(prev => ({
             ...prev,
             systemMessage: data.message
@@ -200,7 +194,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         connection.on('message_history', (data: { messages?: RoomMessage[] }) => {
           if (!mountedRef.current) return;
           const messages = data?.messages || [];
-          console.log('Received message history:', messages.length, 'messages');
           setState(prev => ({
             ...prev,
             messages
@@ -234,13 +227,11 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('stream_added', ({ peerId, stream }: StreamAddedEvent) => {
           if (!mountedRef.current) return;
-          console.log('Stream added from peer:', peerId);
           setRemoteStreams(prev => new Map(prev).set(peerId, stream));
         });
 
         connection.on('stream_removed', (peerId: string) => {
           if (!mountedRef.current) return;
-          console.log('Stream removed from peer:', peerId);
           setRemoteStreams(prev => {
             const next = new Map(prev);
             next.delete(peerId);
@@ -250,14 +241,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('user_joined', ({ userId, socketId, username, role, displayName, status }: UserEvent) => {
           if (!mountedRef.current) return;
-          console.log('[v1.4.4 FIX] User joined:', username, 'userId:', userId, 'socketId:', socketId);
 
           // v1.4.4 FIX: Add participant to state when they join
           setState(prev => {
             // Check if participant already exists (prevent duplicates)
             const exists = prev.participants.some(p => p.socketId === socketId || p.id === userId)
             if (exists) {
-              console.log('[v1.4.4] Participant already in state, skipping')
               return prev
             }
 
@@ -275,7 +264,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
               handRaised: false
             }
 
-            console.log('[v1.4.4] Adding participant to state:', newParticipant)
             return {
               ...prev,
               participants: [...prev.participants, newParticipant]
@@ -285,7 +273,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('user_left', ({ socketId }: { socketId: string }) => {
           if (!mountedRef.current) return;
-          console.log('[v1.4.4 FIX] User left, socketId:', socketId);
 
           // v1.4.4 FIX: Remove participant from state when they leave
           setState(prev => ({
@@ -296,13 +283,11 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('stream_status_change', ({ isStreaming, userId, username }) => {
           if (!mountedRef.current) return;
-          console.log(`Stream status changed for ${username} (${userId}): ${isStreaming ? 'streaming' : 'not streaming'}`);
           // Streaming status is managed by the WebSocket server
         });
 
         connection.on('room_cleared', ({ roomId: clearedRoomId }: { roomId: string }) => {
           if (!mountedRef.current) return;
-          console.log(`Room ${clearedRoomId} has been cleared (lecture ended)`);
 
           setState(prev => ({
             ...prev,
@@ -313,7 +298,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
           setTimeout(() => {
             if (connectionRef.current && mountedRef.current) {
-              console.log('Disconnecting due to room cleared event');
               connectionRef.current.disconnect();
             }
           }, 2000);
@@ -322,7 +306,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         // Handle automatic room closure (v1.1.0)
         connection.on('room_closed', ({ roomId: closedRoomId, reason }: { roomId: string, reason: string }) => {
           if (!mountedRef.current) return;
-          console.log(`Room ${closedRoomId} was closed: ${reason}`);
 
           setState(prev => ({
             ...prev,
@@ -342,7 +325,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         // Handle server shutdown (v1.1.0)
         connection.on('server_shutdown', ({ message }: { message: string }) => {
           if (!mountedRef.current) return;
-          console.log('Server shutdown:', message);
 
           setState(prev => ({
             ...prev,
@@ -353,7 +335,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           // Auto-reconnect after 5 seconds
           setTimeout(() => {
             if (mountedRef.current && connectionRef.current) {
-              console.log('Attempting reconnect after server shutdown...');
               connectionRef.current.connect();
             }
           }, 5000);
@@ -363,7 +344,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         // Hand raise events
         connection.on('hand_raised', ({ userId, username, timestamp }: { userId: string, username: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`${username} raised their hand`);
 
           setState(prev => ({
             ...prev,
@@ -377,7 +357,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
         connection.on('hand_lowered', ({ userId, timestamp }: { userId: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`Hand lowered by ${userId} at ${timestamp}`);
 
           setState(prev => ({
             ...prev,
@@ -394,7 +373,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         // Participant kicked
         connection.on('participant_kicked', ({ userId, reason }: { userId: string, reason: string }) => {
           if (!mountedRef.current) return;
-          console.log(`${userId} was removed: ${reason}`);
 
           setState(prev => ({
             ...prev,
@@ -406,7 +384,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         // Mute all participants
         connection.on('mute_all', ({ requestedBy, timestamp }: { requestedBy: string, timestamp: string }) => {
           if (!mountedRef.current) return;
-          console.log(`Teacher ${requestedBy} muted all participants at ${timestamp}`);
 
           setState(prev => ({
             ...prev,
@@ -502,14 +479,11 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     setupConnection();
 
     return () => {
-      console.log('[v1.4.3 FIX] Starting connection cleanup...')
-
       // v1.4.3 FIX: Mark as potential Strict Mode remount
       // If component remounts within 100ms, we'll know it was Strict Mode
       isStrictModeRemountRef.current = true
       strictModeRemountTimeoutRef.current = setTimeout(() => {
         isStrictModeRemountRef.current = false
-        console.log('[v1.4.3 FIX] Cleanup was NOT a Strict Mode remount')
       }, 100)
 
       mountedRef.current = false
@@ -517,27 +491,22 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       // v1.4.3 FIX: In development, Strict Mode causes immediate remount
       // Don't disconnect if we detect this pattern
       if (process.env.NODE_ENV === 'development' && isStrictModeRemountRef.current) {
-        console.log('[v1.4.3 FIX] Skipping disconnect - likely Strict Mode remount')
         return
       }
 
       // 1. Clean up local stream
       if (localStream) {
-        console.log('Stopping local stream tracks')
         localStream.getTracks().forEach(track => {
           track.stop()
-          console.log(`Stopped ${track.kind} track`)
         })
         setLocalStream(null)
       }
 
       // 3. Clean up remote streams
-      console.log('Clearing remote streams')
       setRemoteStreams(new Map())
 
       // 4. Disconnect WebSocket/WebRTC
       if (connectionRef.current) {
-        console.log('Disconnecting RoomConnection')
         connectionRef.current.disconnect()
         connectionRef.current = null
       }
@@ -545,7 +514,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       // 5. Reset state
       isConnectingRef.current = false
       hasJoinedRoomRef.current = false
-      console.log('Cleanup complete')
 
       // Cancel any pending operations
       if (reconnectTimeoutRef.current) {
@@ -561,7 +529,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
       // Clear remote streams
       setRemoteStreams(new Map())
-      console.log('[Cleanup] Completed')
     };
   }, [roomId, serverUrl, localStream]); // Added localStream to deps
 
@@ -572,18 +539,13 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
         return;
       }
 
-      console.log('Requesting media stream...');
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true
       });
-      console.log('Media stream obtained:', stream.id);
 
       setLocalStream(stream);
       await connectionRef.current.startStream(stream, quality);
-      
-      // The streaming status will be updated via the stream_status_change event
-      console.log('Stream started with quality:', quality);
     } catch (error) {
       console.error('Failed to start stream:', error);
       throw error;
@@ -596,19 +558,14 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       return;
     }
 
-    console.log('Stopping stream');
-    
     if (localStream) {
       localStream.getTracks().forEach(track => {
         track.stop();
-        console.log('Stopped track:', track.kind);
       });
       setLocalStream(null);
     }
-    
+
     connectionRef.current.stopStream();
-    // The streaming status will be updated via the stream_status_change event
-    console.log('Stream stopped');
   };
 
   const sendMessage = (content: string) => {
@@ -633,7 +590,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     if (connectionRef.current) {
       try {
         connectionRef.current.raiseHand();
-        console.log('[v1.4.4] Raised hand');
       } catch (error) {
         console.error('[v1.4.4] Failed to raise hand:', error);
       }
@@ -644,7 +600,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     if (connectionRef.current) {
       try {
         connectionRef.current.lowerHand();
-        console.log('[v1.4.4] Lowered hand');
       } catch (error) {
         console.error('[v1.4.4] Failed to lower hand:', error);
       }
@@ -660,7 +615,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
       try {
         connectionRef.current.muteAllParticipants();
-        console.log('[v1.4.4] Muted all participants');
       } catch (error) {
         console.error('[v1.4.4] Failed to mute all participants:', error);
       }
@@ -676,7 +630,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
       try {
         connectionRef.current.muteParticipant(targetUserId);
-        console.log('[v1.4.4] Muted participant:', targetUserId);
       } catch (error) {
         console.error('[v1.4.4] Failed to mute participant:', error);
       }
@@ -692,7 +645,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
 
       try {
         connectionRef.current.kickParticipant(targetUserId, reason || 'Removed from room');
-        console.log('[v1.4.4] Kicked participant:', targetUserId, 'reason:', reason);
       } catch (error) {
         console.error('[v1.4.4] Failed to kick participant:', error);
       }
@@ -717,11 +669,9 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     }
 
     try {
-      console.log('[v1.4.0] Starting lecture recording...');
       await connectionRef.current.startRecording(localStream, {
         videoBitsPerSecond: 2500000 // 2.5 Mbps
       });
-      console.log('[v1.4.0] Recording started successfully');
     } catch (error) {
       console.error('[v1.4.0] Failed to start recording:', error);
       throw error;
@@ -735,7 +685,6 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     }
 
     try {
-      console.log('[v1.4.0] Stopping lecture recording...');
       connectionRef.current.stopRecording();
     } catch (error) {
       console.error('[v1.4.0] Failed to stop recording:', error);
