@@ -57,7 +57,12 @@ export default function RoomView({ room }: RoomViewProps) {
     lowerHand,
     muteAllParticipants,
     muteParticipant,
-    kickParticipant
+    kickParticipant,
+    // Recording Controls (v1.4.0)
+    startRecording,
+    stopRecording,
+    isRecording,
+    recordingDuration
   } = useRoomConnection({
     roomId: room.id,
     user: roomUser,
@@ -79,6 +84,9 @@ export default function RoomView({ room }: RoomViewProps) {
   // Room cleanup notification state
   const [showCleanupNotice, setShowCleanupNotice] = useState(false)
   const [cleanupReason, setCleanupReason] = useState('')
+
+  // Recording indicator state (v1.4.0) - for students to see when teacher is recording
+  const [isLectureRecording, setIsLectureRecording] = useState(false)
 
   // Build video participants from room state + WebRTC streams (v1.4.1)
   // state.participants now includes ALL participants (backend fix in v1.4.1)
@@ -206,6 +214,37 @@ export default function RoomView({ room }: RoomViewProps) {
     }
   }, [connection, router])
 
+  // Handle recording broadcast events (v1.4.0)
+  useEffect(() => {
+    if (!connection) return
+
+    const handleLectureRecordingStarted = ({ teacherId, timestamp }: { teacherId: string, timestamp: string }) => {
+      console.log(`[RoomView] Teacher ${teacherId} started recording at ${timestamp}`)
+      setIsLectureRecording(true)
+      if (roomUser.role === 'student') {
+        toast.info('Teacher started recording this lecture', { duration: 3000 })
+      }
+    }
+
+    const handleLectureRecordingStopped = ({ teacherId, duration }: { teacherId: string, duration: number }) => {
+      console.log(`[RoomView] Teacher ${teacherId} stopped recording, duration: ${duration}s`)
+      setIsLectureRecording(false)
+      if (roomUser.role === 'student') {
+        const mins = Math.floor(duration / 60)
+        const secs = duration % 60
+        toast.info(`Recording stopped (${mins}:${secs.toString().padStart(2, '0')})`, { duration: 3000 })
+      }
+    }
+
+    connection.on('lecture_recording_started', handleLectureRecordingStarted)
+    connection.on('lecture_recording_stopped', handleLectureRecordingStopped)
+
+    return () => {
+      connection.off('lecture_recording_started', handleLectureRecordingStarted)
+      connection.off('lecture_recording_stopped', handleLectureRecordingStopped)
+    }
+  }, [connection, roomUser.role])
+
   // Reset state when entering an "available" room (prevents old data from showing)
   useEffect(() => {
     if (room.status === 'available') {
@@ -223,6 +262,21 @@ export default function RoomView({ room }: RoomViewProps) {
         reason={cleanupReason}
         onDismiss={() => setShowCleanupNotice(false)}
       />
+
+      {/* Recording Indicator (v1.4.0) */}
+      {(isRecording || isLectureRecording) && (
+        <div className="fixed top-4 right-4 z-50 bg-red-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-3 animate-pulse">
+          <div className="w-3 h-3 bg-white rounded-full animate-ping" />
+          <div>
+            <div className="font-semibold">Recording in Progress</div>
+            {isRecording && (
+              <div className="text-sm font-mono">
+                {Math.floor(recordingDuration / 60)}:{(recordingDuration % 60).toString().padStart(2, '0')}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-4">
@@ -330,6 +384,11 @@ export default function RoomView({ room }: RoomViewProps) {
               onRaiseHand={raiseHand}
               onLowerHand={lowerHand}
               onMuteAllParticipants={muteAllParticipants}
+              // Recording Controls (v1.4.0)
+              onStartRecording={startRecording}
+              onStopRecording={stopRecording}
+              isRecording={isRecording}
+              recordingDuration={recordingDuration}
             />
           </div>
 

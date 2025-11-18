@@ -34,6 +34,11 @@ interface RoomControlsProps {
   onRaiseHand?: () => void
   onLowerHand?: () => void
   onMuteAllParticipants?: () => void
+  // Recording Controls (v1.4.0)
+  onStartRecording?: () => void | Promise<void>
+  onStopRecording?: () => void
+  isRecording?: boolean
+  recordingDuration?: number
 }
 
 export default function RoomControls({
@@ -55,7 +60,12 @@ export default function RoomControls({
   participants = [],
   onRaiseHand,
   onLowerHand,
-  onMuteAllParticipants
+  onMuteAllParticipants,
+  // Recording Controls (v1.4.0)
+  onStartRecording,
+  onStopRecording,
+  isRecording = false,
+  recordingDuration = 0
 }: RoomControlsProps) {
   const [audioEnabled, setAudioEnabled] = useState(true)
   const [videoEnabled, setVideoEnabled] = useState(true)
@@ -63,6 +73,13 @@ export default function RoomControls({
 
   const username = user?.username || user?.emailAddresses[0]?.emailAddress || 'Guest'
   const userRole = user?.publicMetadata?.role as 'teacher' | 'student' | 'admin' || 'student'
+
+  // v1.4.0: Format recording duration
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
 
   // Check if the user has permission to stream
   // v1.4.4: Allow all participants to stream (WebRTC supports P2P mesh)
@@ -256,6 +273,34 @@ export default function RoomControls({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
               ) : (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              )}
+            </svg>
+          </button>
+        )}
+
+        {/* Recording control (v1.4.0) - only for teachers/admins */}
+        {isTeacherOrAdmin && onStartRecording && onStopRecording && (
+          <button
+            onClick={() => {
+              if (isRecording) {
+                onStopRecording()
+              } else {
+                onStartRecording()
+              }
+            }}
+            disabled={!isConnected || !localStream}
+            className={`p-3 rounded-full ${
+              isRecording
+                ? 'bg-red-600 hover:bg-red-700 animate-pulse'
+                : 'bg-zinc-600 hover:bg-zinc-500'
+            } ${(!isConnected || !localStream) && 'opacity-50 cursor-not-allowed'}`}
+            title={isRecording ? `Stop Recording (${formatDuration(recordingDuration)})` : "Start Recording"}
+          >
+            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+              {isRecording ? (
+                <rect x="6" y="6" width="12" height="12" rx="1" />
+              ) : (
+                <circle cx="12" cy="12" r="6" />
               )}
             </svg>
           </button>

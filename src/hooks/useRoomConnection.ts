@@ -97,6 +97,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
   const strictModeRemountTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isStrictModeRemountRef = useRef(false)
 
+  // v1.4.0 Recording state
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordingDuration, setRecordingDuration] = useState(0)
+  const recordingBlobRef = useRef<Blob | null>(null)
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null)
+
   // Store user in ref to avoid dependency issues
   const userRef = useRef(user);
   useEffect(() => {
@@ -438,6 +444,43 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
           }, 2000);
         });
 
+        // Recording Events (v1.4.0)
+        connection.on('recording_started', ({ timestamp }: { timestamp: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`[v1.4.0] Recording started at ${timestamp}`);
+          setIsRecording(true);
+          setRecordingDuration(0);
+
+          // Start duration counter
+          recordingIntervalRef.current = setInterval(() => {
+            setRecordingDuration(prev => prev + 1);
+          }, 1000);
+        });
+
+        connection.on('recording_stopped', ({ blob, duration, size, mimeType, timestamp }: { blob: Blob, duration: number, size: number, mimeType: string, timestamp: string }) => {
+          if (!mountedRef.current) return;
+          console.log(`[v1.4.0] Recording stopped at ${timestamp}, duration: ${duration}s, size: ${size} bytes`);
+          setIsRecording(false);
+          recordingBlobRef.current = blob;
+
+          // Clear duration counter
+          if (recordingIntervalRef.current) {
+            clearInterval(recordingIntervalRef.current);
+            recordingIntervalRef.current = null;
+          }
+
+          // Auto-download the recording
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `lecture-${roomId}-${Date.now()}.webm`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          console.log(`[v1.4.0] Recording downloaded as lecture-${roomId}-${Date.now()}.webm`);
+        });
+
         await connection.connect();
         isConnectingRef.current = false;
         return connection;
@@ -508,6 +551,12 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current)
         reconnectTimeoutRef.current = null
+      }
+
+      // v1.4.0: Clear recording interval
+      if (recordingIntervalRef.current) {
+        clearInterval(recordingIntervalRef.current)
+        recordingIntervalRef.current = null
       }
 
       // Clear remote streams
@@ -650,6 +699,50 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     }
   }, []);
 
+  // Recording Controls (v1.4.0)
+  const startRecording = useCallback(async () => {
+    if (!connectionRef.current) {
+      console.error('[v1.4.0] No connection available for recording');
+      return;
+    }
+
+    if (userRef.current.role !== 'teacher' && userRef.current.role !== 'admin') {
+      console.error('[v1.4.0] Only teachers/admins can record lectures');
+      return;
+    }
+
+    if (!localStream) {
+      console.error('[v1.4.0] No local stream available to record');
+      return;
+    }
+
+    try {
+      console.log('[v1.4.0] Starting lecture recording...');
+      await connectionRef.current.startRecording(localStream, {
+        videoBitsPerSecond: 2500000 // 2.5 Mbps
+      });
+      console.log('[v1.4.0] Recording started successfully');
+    } catch (error) {
+      console.error('[v1.4.0] Failed to start recording:', error);
+      throw error;
+    }
+  }, [localStream]);
+
+  const stopRecording = useCallback(() => {
+    if (!connectionRef.current) {
+      console.error('[v1.4.0] No connection available');
+      return;
+    }
+
+    try {
+      console.log('[v1.4.0] Stopping lecture recording...');
+      connectionRef.current.stopRecording();
+    } catch (error) {
+      console.error('[v1.4.0] Failed to stop recording:', error);
+      throw error;
+    }
+  }, []);
+
   return {
     state,
     localStream,
@@ -664,6 +757,11 @@ export function useRoomConnection({ roomId, user, serverUrl }: UseRoomConnection
     lowerHand,
     muteAllParticipants,
     muteParticipant,
-    kickParticipant
+    kickParticipant,
+    // Recording Controls (v1.4.0)
+    startRecording,
+    stopRecording,
+    isRecording,
+    recordingDuration
   };
 } 
