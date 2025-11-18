@@ -63,8 +63,8 @@ importers:
         specifier: ^5.90.5
         version: 5.90.7(react@19.2.0)
       '@teaching-playground/core':
-        specifier: 1.4.4
-        version: 1.4.4(bufferutil@4.0.9)(typescript@5.9.3)
+        specifier: 1.4.6
+        version: 1.4.6(bufferutil@4.0.9)(typescript@5.9.3)
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -2005,8 +2005,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@teaching-playground/core@1.4.4':
-    resolution: {integrity: sha512-NynaQfmegdglu/plOP4B27kiTzK4kGhDfuGIkUFDDC7EH6h/SKtl8K7jXt48IRx28r7sap4SWyXMPlMz5mrbWg==}
+  '@teaching-playground/core@1.4.6':
+    resolution: {integrity: sha512-ij0uq9rJJWmlCDrcOeZ/WGlBbIU1xFqkqBJ53fey3XiIug9wsdCzbR8RsKPlW1eh6nB/K27Ow02GDhlpM1rGBQ==}
     peerDependencies:
       typescript: ^5.0.0
 
@@ -6844,7 +6844,7 @@ snapshots:
       '@tanstack/query-core': 5.90.7
       react: 19.2.0
 
-  '@teaching-playground/core@1.4.4(bufferutil@4.0.9)(typescript@5.9.3)':
+  '@teaching-playground/core@1.4.6(bufferutil@4.0.9)(typescript@5.9.3)':
     dependencies:
       '@trpc/client': 10.45.2(@trpc/server@10.45.2)
       '@trpc/server': 10.45.2
