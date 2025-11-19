@@ -37,7 +37,6 @@ export const createNoteAction = async (
     }
   }
 
-  // Safely parse and validate Lexical content
   const contentResult = parseLexicalContent(validationResult.data.content)
 
   if (!contentResult.success) {

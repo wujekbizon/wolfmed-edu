@@ -41,7 +41,6 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
-import { auth } from "@clerk/nextjs/server" // Added auth import
 import { parseLexicalContent } from "@/lib/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
@@ -1194,7 +1193,6 @@ export const getNoteById = cache(async (userId: string, noteId: string) => {
 })
 
 export const createNote = cache(async (userId: string, data: NoteInput) => {
-  // Safely parse and validate Lexical content
   const contentResult = parseLexicalContent(data.content)
 
   if (!contentResult.success) {
@@ -1217,7 +1215,6 @@ export const createNote = cache(async (userId: string, data: NoteInput) => {
 
 export const updateNote = cache(
   async (userId: string, noteId: string, data: Partial<NoteInput>) => {
-    // Safely parse content if provided
     let parsedContent = undefined
     if (data.content) {
       const contentResult = parseLexicalContent(data.content)
