@@ -2,12 +2,12 @@
 
 import { notes } from "@/server/db/schema"
 import { db } from "@/server/db/index"
-import { DeleteNoteIdSchema, NoteInput, NoteSchema } from "@/server/schema"
+import { DeleteNoteIdSchema, NoteInput, NoteSchema, NoteUpdateSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
-import { deleteNote } from "@/server/queries"
+import { deleteNote, updateNote } from "@/server/queries"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -81,4 +81,46 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
 
   revalidatePath("panel/nauka")
   return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
+}
+
+export const updateNoteContentAction = async (
+  formState: FormState,
+  formData: FormData
+) => {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const noteId = formData.get("noteId") as string
+  const data = {
+    content: formData.get("content") as string,
+    plainText: (formData.get("plainText") as string) || "",
+    excerpt: (formData.get("excerpt") as string) || "",
+  }
+
+  const ContentOnlySchema = NoteUpdateSchema.pick({
+    content: true,
+    plainText: true,
+    excerpt: true
+  }).required()
+
+  const validationResult = ContentOnlySchema.safeParse(data)
+  if (!validationResult.success) {
+    return {
+      ...fromErrorToFormState(validationResult.error),
+      values: data,
+    }
+  }
+
+  try {
+    await updateNote(userId, noteId, validationResult.data)
+  } catch (error) {
+    return {
+      ...fromErrorToFormState(error),
+      values: data,
+    }
+  }
+
+  revalidatePath("/panel/nauka")
+  revalidatePath(`/panel/nauka/notatki/${noteId}`)
+  return toFormState("SUCCESS", "Zaktualizowano treść notatki")
 }

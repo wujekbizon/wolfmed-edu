@@ -9,6 +9,7 @@ export const EditorField = memo(function EditorField({
     contentRef,
     plainTextRef,
     excerptRef,
+    initialContent,
 }: {
     formState: any
     editorKey: number
@@ -16,14 +17,21 @@ export const EditorField = memo(function EditorField({
     contentRef: React.RefObject<HTMLInputElement>
     plainTextRef: React.RefObject<HTMLInputElement>
     excerptRef: React.RefObject<HTMLInputElement>
+    initialContent?: unknown
 }) {
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full">
             <input type="hidden" name="content" ref={contentRef} defaultValue="" />
             <input type="hidden" name="plainText" ref={plainTextRef} defaultValue="" />
             <input type="hidden" name="excerpt" ref={excerptRef} defaultValue="" />
-            <Editor key={editorKey} onChange={onChange} placeholder="Napisz swoją notatkę..." className="min-h-64 overflow-y-auto scrollbar-webkit"  />
+            <Editor
+                key={editorKey}
+                onChange={onChange}
+                placeholder="Napisz swoją notatkę..."
+                className="min-h-64 overflow-y-auto scrollbar-webkit"
+                initialContent={initialContent ? JSON.stringify(initialContent) : ''}
+            />
             <FieldError name="content" formState={formState} />
         </div>
     )

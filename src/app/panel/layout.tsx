@@ -5,6 +5,7 @@ import SidePanel from '@/app/_components/SidePanel'
 import TopPanel from '@/components/TopPanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
+import ConfirmModal from '@/components/ConfirmModal'
 import type { NotesType } from '@/types/notesTypes'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -26,6 +27,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           {children}
         </div>
       </div>
+      <ConfirmModal />
     </main>
   )
 }

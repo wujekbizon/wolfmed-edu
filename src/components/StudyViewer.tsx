@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
@@ -9,15 +10,65 @@ import StudyToolbar from './StudyToolbar'
 import HighlightPlugin from './editor/plugins/HighlightPlugin'
 import CommentPlugin from './editor/plugins/CommentPlugin'
 import FlashcardPlugin from './editor/plugins/FlashcardPlugin'
+import FlashcardReviewModal from './FlashcardReviewModal'
+import CommentModal from './CommentModal'
+import FlashcardCreateModal from './FlashcardCreateModal'
+import { useFlashcards } from '@/hooks/useFlashcards'
 import { LexicalEditor } from 'lexical'
 import type { SerializedEditorState } from 'lexical'
 
 interface StudyViewerProps {
+    noteId: string
     content: unknown
     plainTextFallback?: string | null
+    onEditClick: () => void
 }
 
-export default function StudyViewer({ content, plainTextFallback }: StudyViewerProps) {
+function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; content: unknown; onEditClick: () => void }) {
+    const [showCommentModal, setShowCommentModal] = useState(false)
+    const [showFlashcardModal, setShowFlashcardModal] = useState(false)
+    const [showReviewModal, setShowReviewModal] = useState(false)
+    const [isStudyMode, setIsStudyMode] = useState(false)
+    const { flashcards, refreshFlashcards } = useFlashcards()
+
+    return (
+        <>
+            <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden animate-fadeInUp opacity-0" style={{ '--slidein-delay': '0.1s' } as React.CSSProperties}>
+                <StudyToolbar
+                    noteId={noteId}
+                    content={content}
+                    onEditClick={onEditClick}
+                    onCommentClick={() => setShowCommentModal(true)}
+                    onFlashcardClick={() => setShowFlashcardModal(true)}
+                    onReviewClick={() => setShowReviewModal(true)}
+                    flashcardsCount={flashcards.length}
+                    isStudyMode={isStudyMode}
+                    onToggleStudyMode={() => setIsStudyMode(!isStudyMode)}
+                />
+                <div className="p-6 sm:p-8 md:p-10 selection:bg-[#ff9898]/20 selection:text-zinc-900">
+                    <RichTextPlugin
+                        contentEditable={
+                            <ContentEditable
+                                className="outline-none text-zinc-700 min-h-[200px] focus:ring-0 leading-relaxed"
+                                aria-label="Podgląd notatki w trybie nauki"
+                            />
+                        }
+                        placeholder={null}
+                        ErrorBoundary={LexicalErrorBoundary}
+                    />
+                    <HighlightPlugin />
+                    <CommentPlugin />
+                    <FlashcardPlugin />
+                </div>
+            </div>
+            {showCommentModal && <CommentModal onClose={() => setShowCommentModal(false)} />}
+            {showFlashcardModal && <FlashcardCreateModal onClose={() => setShowFlashcardModal(false)} onSuccess={refreshFlashcards} />}
+            {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}
+        </>
+    )
+}
+
+export default function StudyViewer({ noteId, content, plainTextFallback, onEditClick }: StudyViewerProps) {
     let parsedContent: SerializedEditorState | null = null
     let hasError = false
     if (typeof content === 'string') {
@@ -34,7 +85,6 @@ export default function StudyViewer({ content, plainTextFallback }: StudyViewerP
     if (hasError && plainTextFallback) {
         return (
             <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden">
-                <StudyToolbar />
                 <div className="p-6 sm:p-8 md:p-10">
                     <div className="prose prose-lg prose-zinc max-w-none">
                         <p className="whitespace-pre-wrap text-zinc-700 leading-relaxed text-base sm:text-lg">
@@ -49,7 +99,6 @@ export default function StudyViewer({ content, plainTextFallback }: StudyViewerP
     if (hasError) {
         return (
             <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden">
-                <StudyToolbar />
                 <div className="p-6 sm:p-8 md:p-10">
                     <div className="text-center py-12">
                         <p className="text-zinc-500 italic text-sm">
@@ -78,25 +127,7 @@ export default function StudyViewer({ content, plainTextFallback }: StudyViewerP
     return (
         <div className="relative">
             <LexicalComposer initialConfig={config}>
-                <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden animate-fadeInUp opacity-0" style={{ '--slidein-delay': '0.1s' } as React.CSSProperties}>
-                    <StudyToolbar />
-                    <div className="p-6 sm:p-8 md:p-10 selection:bg-[#ff9898]/20 selection:text-zinc-900">
-                        <RichTextPlugin
-                            contentEditable={
-                                <ContentEditable
-                                    className="outline-none text-zinc-700 min-h-[200px] focus:ring-0 leading-relaxed"
-                                    aria-label="Podgląd notatki w trybie nauki"
-                                />
-                            }
-                            placeholder={null}
-                            ErrorBoundary={LexicalErrorBoundary}
-                        />
-                        <HighlightPlugin />
-                        <CommentPlugin />
-                        <FlashcardPlugin />
-                        {/* <CollapsiblePlugin /> */}
-                    </div>
-                </div>
+                <StudyViewerContent noteId={noteId} content={content} onEditClick={onEditClick} />
             </LexicalComposer>
         </div>
     )
