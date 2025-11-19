@@ -8,6 +8,7 @@ import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
+import { parseLexicalContent } from "@/lib/safeJsonParse"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -36,18 +37,26 @@ export const createNoteAction = async (
     }
   }
 
+  // Safely parse and validate Lexical content
+  const contentResult = parseLexicalContent(validationResult.data.content)
+
+  if (!contentResult.success) {
+    return toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+  }
+
   try {
     await db
       .insert(notes)
       .values({
         ...validationResult.data,
-        content: JSON.parse(validationResult.data.content),
+        content: contentResult.content,
         userId,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning()
   } catch (error) {
+    console.error('Database error creating note:', error)
     return {
       ...fromErrorToFormState(error),
       values: data,

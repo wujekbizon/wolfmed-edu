@@ -42,6 +42,7 @@ import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { auth } from "@clerk/nextjs/server" // Added auth import
+import { parseLexicalContent } from "@/lib/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -1193,11 +1194,18 @@ export const getNoteById = cache(async (userId: string, noteId: string) => {
 })
 
 export const createNote = cache(async (userId: string, data: NoteInput) => {
+  // Safely parse and validate Lexical content
+  const contentResult = parseLexicalContent(data.content)
+
+  if (!contentResult.success) {
+    throw new Error(`Invalid note content: ${contentResult.error}`)
+  }
+
   const note = await db
     .insert(notes)
     .values({
       ...data,
-      content: JSON.parse(data.content),
+      content: contentResult.content,
       userId,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -1209,11 +1217,21 @@ export const createNote = cache(async (userId: string, data: NoteInput) => {
 
 export const updateNote = cache(
   async (userId: string, noteId: string, data: Partial<NoteInput>) => {
+    // Safely parse content if provided
+    let parsedContent = undefined
+    if (data.content) {
+      const contentResult = parseLexicalContent(data.content)
+      if (!contentResult.success) {
+        throw new Error(`Invalid note content: ${contentResult.error}`)
+      }
+      parsedContent = contentResult.content
+    }
+
     const note = await db
       .update(notes)
       .set({
         ...data,
-        ...(data.content ? { content: JSON.parse(data.content) } : {}),
+        ...(parsedContent ? { content: parsedContent } : {}),
         updatedAt: new Date(),
       })
       .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
