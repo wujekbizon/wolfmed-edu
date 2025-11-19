@@ -9,7 +9,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
 
   return (
     <div className="relative flex flex-col lg:flex-row w-full p-2 rounded-2xl bg-slate-900 transition-all duration-300 opacity-95 hover:opacity-100">
-      <div className="relative h-72 lg:h-full w-full lg:w-1/3 rounded-xl">
+      <div className="relative h-72 lg:h-auto w-full lg:w-1/3 rounded-xl">
         {categoryData.image ? (
           <Image
             src={categoryData.image}

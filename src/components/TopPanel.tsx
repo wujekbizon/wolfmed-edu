@@ -98,7 +98,7 @@ const { isScrolled } = useScroll(0, scrollContainer)
           ref={drawerRef}
           className={`fixed z-35 bg-zinc-800 border border-zinc-700 rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shadow-2xl transition-all duration-500 left-0 right-0 lg:right-auto lg:w-80 ${
             isSidePanelOpen ? 'lg:left-75' : 'lg:left-20'
-          } ${isScrolled ? 'top-12' : 'top-[128px]'}`}
+          } ${isScrolled ? 'top-32' : 'top-[128px]'}`}
         >
           {children}
         </div>

@@ -21,7 +21,7 @@ export default function NoteMetadataCard({
   const tagArray = Array.isArray(tags) ? tags : []
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-xl overflow-hidden animate-[scaleIn_0.5s_ease-out_forwards] opacity-0 hover:shadow-2xl transition-shadow duration-300 mb-6" style={{ '--slidein-delay': '0.3s' } as React.CSSProperties}>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-xl overflow-hidden animate-scaleIn opacity-0 hover:shadow-2xl transition-shadow duration-300 mb-6" style={{ '--slidein-delay': '0.3s' } as React.CSSProperties}>
       <div className="p-6 sm:p-8 bg-linear-to-br from-white/60 to-rose-50/20">
         <div className="flex items-start justify-between gap-4 mb-6">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 flex-1 leading-tight">
