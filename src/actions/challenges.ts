@@ -4,6 +4,7 @@ import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { db } from '@/server/db/index'
+import { checkRateLimit } from '@/lib/rateLimit'
 import {
   saveChallengeCompletion,
   checkAllChallengesComplete,
@@ -91,6 +92,16 @@ export async function submitQuizAction(
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
+  // Rate limiting: 30 challenge submissions per hour
+  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      'ERROR',
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const procedureId = formData.get('procedureId') as string
   const procedureName = formData.get('procedureName') as string
   const answers = formData.get('answers') as string
@@ -171,6 +182,16 @@ export async function submitOrderStepsAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
+
+  // Rate limiting: 30 challenge submissions per hour
+  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      'ERROR',
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const procedureId = formData.get('procedureId') as string
   const procedureName = formData.get('procedureName') as string
@@ -257,6 +278,16 @@ export async function submitVisualRecognitionAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 30 challenge submissions per hour
+  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      'ERROR',
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const procedureId = formData.get("procedureId") as string
   const procedureName = formData.get("procedureName") as string
   const selectedOption = formData.get("selectedOption") as string
@@ -328,6 +359,16 @@ export async function submitScenarioAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 30 challenge submissions per hour
+  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      'ERROR',
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const procedureId = formData.get("procedureId") as string
   const procedureName = formData.get("procedureName") as string
   const selectedOption = formData.get("selectedOption") as string
@@ -397,6 +438,16 @@ export async function submitSpotErrorAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 30 challenge submissions per hour
+  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      'ERROR',
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const procedureId = formData.get("procedureId") as string
   const procedureName = formData.get("procedureName") as string

@@ -5,6 +5,7 @@ import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { UserCellsListSchema } from "@/server/schema"
+import { checkRateLimit } from "@/lib/rateLimit"
 import {
   checkUserCellsList,
   createUserCellsList,
@@ -19,6 +20,16 @@ export async function saveCellsAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 50 cell updates per hour
+  const rateLimit = await checkRateLimit(userId, 'cells:update')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const rawOrder = formData.get("order") as string
   const rawCells = formData.get("cells") as string

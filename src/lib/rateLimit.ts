@@ -13,12 +13,52 @@ interface RateLimitConfig {
  * Format: action -> { interval (ms), maxRequests }
  */
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  // Notes
   'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
   'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 }, // 30 per hour
   'note:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
+
+  // Materials & Uploads
   'material:upload': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
+  'file:upload': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+
+  // Flashcards
   'flashcard:create': { interval: 60 * 60 * 1000, maxRequests: 50 }, // 50 per hour
-  'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
+
+  // Communication
+  'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour (contact form)
+  'email:send': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
+
+  // Forum
+  'forum:post:create': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 posts per hour
+  'forum:post:delete': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+  'forum:comment:create': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 comments per hour
+  'forum:comment:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
+
+  // Blog
+  'blog:post:create': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
+  'blog:post:update': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+  'blog:post:delete': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
+  'blog:like': { interval: 60 * 60 * 1000, maxRequests: 100 }, // 100 per hour
+
+  // Tests
+  'test:start': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 tests per hour
+  'test:submit': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
+  'test:create': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
+  'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+
+  // Challenges/Procedures
+  'challenge:submit': { interval: 60 * 60 * 1000, maxRequests: 30 }, // 30 per hour
+
+  // User Profile
+  'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour (prevent abuse)
+  'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
+
+  // Testimonials
+  'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 }, // 2 per hour (prevent spam)
+
+  // Cells (scratch board)
+  'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 }, // 50 per hour
 }
 
 export interface RateLimitResult {

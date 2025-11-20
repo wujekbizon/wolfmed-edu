@@ -9,6 +9,7 @@ import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { calculateReadingTime } from '@/lib/blogUtils'
 import { requireAdminAction, requireAuth } from '@/lib/adminHelpers'
+import { checkRateLimit } from '@/lib/rateLimit'
 import {
   CreateBlogPostSchema,
   UpdateBlogPostSchema,
@@ -386,6 +387,16 @@ export async function likeBlogPostAction(
   try {
     // Check authentication
     const userId = await requireAuth()
+
+    // Rate limiting: 100 likes per hour
+    const rateLimit = await checkRateLimit(userId, 'blog:like')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      return toFormState(
+        'ERROR',
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
+    }
 
     const postId = formData.get('postId') as string
 
