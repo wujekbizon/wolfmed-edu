@@ -24,8 +24,6 @@ export const STUDY_TOOLBAR_TEXT = {
   flashcardTitle: 'Utwórz fiszkę',
   reviewButton: 'Przeglądaj fiszki',
   reviewButtonShort: 'Fiszki',
-  sectionsButton: 'Sekcje',
-  sectionsTitle: 'Przełącz sekcje zwijane (Wkrótce)',
 }
 
 // Comment modal text
