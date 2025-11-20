@@ -8,6 +8,8 @@ import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
+import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { checkRateLimit } from "@/lib/rateLimit"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -15,6 +17,15 @@ export const createNoteAction = async (
 ) => {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  const rateLimit = await checkRateLimit(userId, 'note:create')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const data: Partial<NoteInput> = {
     title: formData.get("title") as string,
@@ -36,18 +47,25 @@ export const createNoteAction = async (
     }
   }
 
+  const contentResult = parseLexicalContent(validationResult.data.content)
+
+  if (!contentResult.success) {
+    return toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+  }
+
   try {
     await db
       .insert(notes)
       .values({
         ...validationResult.data,
-        content: JSON.parse(validationResult.data.content),
+        content: contentResult.content,
         userId,
         createdAt: new Date(),
         updatedAt: new Date(),
       })
       .returning()
   } catch (error) {
+    console.error('Database error creating note:', error)
     return {
       ...fromErrorToFormState(error),
       values: data,
@@ -60,6 +78,15 @@ export const createNoteAction = async (
 export async function deleteNoteAction(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  const rateLimit = await checkRateLimit(userId, 'note:delete')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   try {
     const noteId = formData.get("noteId") as string
@@ -89,6 +116,15 @@ export const updateNoteContentAction = async (
 ) => {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  const rateLimit = await checkRateLimit(userId, 'note:update')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const noteId = formData.get("noteId") as string
   const data = {

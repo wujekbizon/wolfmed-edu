@@ -4,11 +4,11 @@ import { revalidatePath } from 'next/cache'
 import { db } from '@/server/db/index'
 import { blogPosts, blogPostTags, blogLikes } from '@/server/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
-import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { calculateReadingTime } from '@/lib/blogUtils'
 import { requireAdminAction, requireAuth } from '@/lib/adminHelpers'
+import { checkRateLimit } from '@/lib/rateLimit'
 import {
   CreateBlogPostSchema,
   UpdateBlogPostSchema,
@@ -26,10 +26,8 @@ export async function createBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     const admin = await requireAdminAction()
 
-    // Extract data from formData
     const title = formData.get('title') as string
     const slug = formData.get('slug') as string
     const excerpt = formData.get('excerpt') as string
@@ -44,7 +42,6 @@ export async function createBlogPostAction(
     // Extract tags array (multiple checkboxes with same name)
     const tags = formData.getAll('tags') as string[]
 
-    // Validate input
     const validationResult = CreateBlogPostSchema.safeParse({
       title,
       slug,
@@ -68,10 +65,8 @@ export async function createBlogPostAction(
 
     const validatedData = validationResult.data
 
-    // Calculate reading time
     const readingTime = calculateReadingTime(validatedData.content)
 
-    // Create post
     const [newPost] = await db
       .insert(blogPosts)
       .values({
@@ -93,7 +88,6 @@ export async function createBlogPostAction(
       })
       .returning({ id: blogPosts.id, slug: blogPosts.slug })
 
-    // Add tags if provided
     if (validatedData.tags && validatedData.tags.length > 0 && newPost) {
       await db.insert(blogPostTags).values(
         validatedData.tags.map((tagId) => ({
@@ -103,7 +97,6 @@ export async function createBlogPostAction(
       )
     }
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     revalidatePath('/blog/admin/posts')
@@ -122,10 +115,8 @@ export async function updateBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
-    // Extract data from formData
     const id = formData.get('id') as string
     const title = formData.get('title') as string | null
     const slug = formData.get('slug') as string | null
@@ -138,11 +129,9 @@ export async function updateBlogPostAction(
     const metaDescription = formData.get('metaDescription') as string | null
     const metaKeywords = formData.get('metaKeywords') as string | null
 
-    // Extract tags array (multiple checkboxes with same name)
     const tagsArray = formData.getAll('tags') as string[]
     const tags = tagsArray.length > 0 ? tagsArray : undefined
 
-    // Build validation object (only include fields that are present)
     const validationInput: any = { id }
     if (title) validationInput.title = title
     if (slug) validationInput.slug = slug
@@ -156,7 +145,6 @@ export async function updateBlogPostAction(
     if (metaDescription !== null) validationInput.metaDescription = metaDescription || undefined
     if (metaKeywords !== null) validationInput.metaKeywords = metaKeywords || undefined
 
-    // Validate input
     const validationResult = UpdateBlogPostSchema.safeParse(validationInput)
 
     if (!validationResult.success) {
@@ -168,7 +156,6 @@ export async function updateBlogPostAction(
 
     const validatedData = validationResult.data
 
-    // Build update object
     const updateData: Record<string, unknown> = {
       updatedAt: new Date(),
     }
@@ -199,19 +186,15 @@ export async function updateBlogPostAction(
     if (validatedData.metaKeywords !== undefined)
       updateData.metaKeywords = validatedData.metaKeywords
 
-    // Update post
     const [updatedPost] = await db
       .update(blogPosts)
       .set(updateData)
       .where(eq(blogPosts.id, validatedData.id))
       .returning({ id: blogPosts.id, slug: blogPosts.slug })
 
-    // Update tags if provided
     if (validatedData.tags) {
-      // Delete existing tags
       await db.delete(blogPostTags).where(eq(blogPostTags.postId, validatedData.id))
 
-      // Add new tags
       if (validatedData.tags.length > 0) {
         await db.insert(blogPostTags).values(
           validatedData.tags.map((tagId) => ({
@@ -222,7 +205,6 @@ export async function updateBlogPostAction(
       }
     }
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     revalidatePath('/blog/admin/posts')
@@ -244,7 +226,6 @@ export async function deleteBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
     const id = formData.get('id') as string
@@ -253,17 +234,14 @@ export async function deleteBlogPostAction(
       return toFormState('ERROR', 'Nieprawidłowe ID posta')
     }
 
-    // Validate input
     const validationResult = DeleteBlogPostSchema.safeParse({ id })
 
     if (!validationResult.success) {
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Delete post (cascade will delete tags and likes)
     await db.delete(blogPosts).where(eq(blogPosts.id, validationResult.data.id))
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     revalidatePath('/blog/admin/posts')
@@ -282,7 +260,6 @@ export async function publishBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
     const id = formData.get('id') as string
@@ -292,7 +269,6 @@ export async function publishBlogPostAction(
       return toFormState('ERROR', 'Nieprawidłowe ID posta')
     }
 
-    // Validate input
     const validationResult = PublishBlogPostSchema.safeParse({
       id,
       publishedAt: publishedAtStr ? new Date(publishedAtStr) : undefined,
@@ -302,7 +278,6 @@ export async function publishBlogPostAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Update post status to published
     await db
       .update(blogPosts)
       .set({
@@ -312,7 +287,6 @@ export async function publishBlogPostAction(
       })
       .where(eq(blogPosts.id, validationResult.data.id))
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 
@@ -330,7 +304,6 @@ export async function archiveBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
     const id = formData.get('id') as string
@@ -339,7 +312,6 @@ export async function archiveBlogPostAction(
       return toFormState('ERROR', 'Nieprawidłowe ID posta')
     }
 
-    // Update post status to archived
     await db
       .update(blogPosts)
       .set({
@@ -348,7 +320,6 @@ export async function archiveBlogPostAction(
       })
       .where(eq(blogPosts.id, id))
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 
@@ -384,8 +355,16 @@ export async function likeBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check authentication
     const userId = await requireAuth()
+
+    const rateLimit = await checkRateLimit(userId, 'blog:like')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      return toFormState(
+        'ERROR',
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
+    }
 
     const postId = formData.get('postId') as string
 
@@ -393,14 +372,12 @@ export async function likeBlogPostAction(
       return toFormState('ERROR', 'Nieprawidłowe ID posta')
     }
 
-    // Validate input
     const validationResult = LikeBlogPostSchema.safeParse({ postId })
 
     if (!validationResult.success) {
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Check if already liked
     const existing = await db
       .select()
       .from(blogLikes)
@@ -416,13 +393,11 @@ export async function likeBlogPostAction(
       return toFormState('ERROR', 'Już polubiłeś ten post')
     }
 
-    // Add like
     await db.insert(blogLikes).values({
       postId: validationResult.data.postId,
       userId,
     })
 
-    // Revalidate post page
     revalidatePath('/blog')
 
     return toFormState('SUCCESS', 'Post został polubiony!')
@@ -439,7 +414,6 @@ export async function unlikeBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check authentication
     const userId = await requireAuth()
 
     const postId = formData.get('postId') as string
@@ -448,14 +422,12 @@ export async function unlikeBlogPostAction(
       return toFormState('ERROR', 'Nieprawidłowe ID posta')
     }
 
-    // Validate input
     const validationResult = UnlikeBlogPostSchema.safeParse({ postId })
 
     if (!validationResult.success) {
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Remove like
     await db
       .delete(blogLikes)
       .where(
@@ -465,7 +437,6 @@ export async function unlikeBlogPostAction(
         )
       )
 
-    // Revalidate post page
     revalidatePath('/blog')
 
     return toFormState('SUCCESS', 'Polubienie zostało usunięte')

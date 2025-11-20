@@ -16,10 +16,6 @@ import {
   DeleteBlogTagSchema,
 } from '@/server/schema'
 
-// ============================================================================
-// CATEGORY ACTIONS
-// ============================================================================
-
 /**
  * Create a new blog category (Admin only)
  */
@@ -28,10 +24,8 @@ export async function createBlogCategoryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
-    // Extract data from formData
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
     const description = formData.get('description') as string | null
@@ -39,7 +33,6 @@ export async function createBlogCategoryAction(
     const icon = formData.get('icon') as string | null
     const order = Number(formData.get('order')) || 0
 
-    // Validate input
     const validationResult = CreateBlogCategorySchema.safeParse({
       name,
       slug,
@@ -58,7 +51,6 @@ export async function createBlogCategoryAction(
 
     const validatedData = validationResult.data
 
-    // Create category
     await db.insert(blogCategories).values({
       name: validatedData.name,
       slug: validatedData.slug,
@@ -68,7 +60,6 @@ export async function createBlogCategoryAction(
       order: validatedData.order || 0,
     })
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 
@@ -86,10 +77,8 @@ export async function updateBlogCategoryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
-    // Extract data from formData
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
     const slug = formData.get('slug') as string | null
@@ -99,7 +88,6 @@ export async function updateBlogCategoryAction(
     const orderStr = formData.get('order') as string | null
     const order = orderStr ? Number(orderStr) : null
 
-    // Build validation object (only include fields that are present)
     const validationInput: any = { id }
     if (name) validationInput.name = name
     if (slug) validationInput.slug = slug
@@ -108,7 +96,6 @@ export async function updateBlogCategoryAction(
     if (icon !== null) validationInput.icon = icon || undefined
     if (order !== null) validationInput.order = order
 
-    // Validate input
     const validationResult = UpdateBlogCategorySchema.safeParse(validationInput)
 
     if (!validationResult.success) {
@@ -120,7 +107,6 @@ export async function updateBlogCategoryAction(
 
     const validatedData = validationResult.data
 
-    // Build update object
     const updateData: Record<string, unknown> = {}
     if (validatedData.name) updateData.name = validatedData.name
     if (validatedData.slug) updateData.slug = validatedData.slug
@@ -130,14 +116,12 @@ export async function updateBlogCategoryAction(
     if (validatedData.icon !== undefined) updateData.icon = validatedData.icon
     if (validatedData.order !== undefined) updateData.order = validatedData.order
 
-    // Update category
     const [updatedCategory] = await db
       .update(blogCategories)
       .set(updateData)
       .where(eq(blogCategories.id, validatedData.id))
       .returning({ id: blogCategories.id, slug: blogCategories.slug })
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     if (updatedCategory) {
@@ -159,7 +143,6 @@ export async function deleteBlogCategoryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
     const id = formData.get('id') as string
@@ -168,7 +151,6 @@ export async function deleteBlogCategoryAction(
       return toFormState('ERROR', 'Nieprawidłowe ID kategorii')
     }
 
-    // Validate input
     const validationResult = DeleteBlogCategorySchema.safeParse({ id })
 
     if (!validationResult.success) {
@@ -178,7 +160,6 @@ export async function deleteBlogCategoryAction(
     // Delete category (posts will have categoryId set to NULL due to 'set null' cascade)
     await db.delete(blogCategories).where(eq(blogCategories.id, validationResult.data.id))
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 
@@ -188,10 +169,6 @@ export async function deleteBlogCategoryAction(
   }
 }
 
-// ============================================================================
-// TAG ACTIONS
-// ============================================================================
-
 /**
  * Create a new blog tag (Admin only)
  */
@@ -200,14 +177,11 @@ export async function createBlogTagAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
-    // Extract data from formData
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
 
-    // Validate input
     const validationResult = CreateBlogTagSchema.safeParse({
       name,
       slug,
@@ -222,13 +196,11 @@ export async function createBlogTagAction(
 
     const validatedData = validationResult.data
 
-    // Create tag
     await db.insert(blogTags).values({
       name: validatedData.name,
       slug: validatedData.slug,
     })
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 
@@ -246,20 +218,16 @@ export async function updateBlogTagAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
-    // Extract data from formData
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
     const slug = formData.get('slug') as string | null
 
-    // Build validation object (only include fields that are present)
     const validationInput: any = { id }
     if (name) validationInput.name = name
     if (slug) validationInput.slug = slug
 
-    // Validate input
     const validationResult = UpdateBlogTagSchema.safeParse(validationInput)
 
     if (!validationResult.success) {
@@ -271,19 +239,16 @@ export async function updateBlogTagAction(
 
     const validatedData = validationResult.data
 
-    // Build update object
     const updateData: Record<string, unknown> = {}
     if (validatedData.name) updateData.name = validatedData.name
     if (validatedData.slug) updateData.slug = validatedData.slug
 
-    // Update tag
     const [updatedTag] = await db
       .update(blogTags)
       .set(updateData)
       .where(eq(blogTags.id, validatedData.id))
       .returning({ id: blogTags.id, slug: blogTags.slug })
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     if (updatedTag) {
@@ -305,7 +270,6 @@ export async function deleteBlogTagAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin access
     await requireAdminAction()
 
     const id = formData.get('id') as string
@@ -314,17 +278,14 @@ export async function deleteBlogTagAction(
       return toFormState('ERROR', 'Nieprawidłowe ID tagu')
     }
 
-    // Validate input
     const validationResult = DeleteBlogTagSchema.safeParse({ id })
 
     if (!validationResult.success) {
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Delete tag (cascade will delete post-tag relationships)
     await db.delete(blogTags).where(eq(blogTags.id, validationResult.data.id))
 
-    // Revalidate blog pages
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
 

@@ -70,36 +70,49 @@ export const processedEvents = createTable("processed_events", {
   processedAt: timestamp("processedAt").defaultNow(),
 })
 
-export const completedTestes = createTable("completed_tests", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 })
-    .notNull()
-    .references(() => users.userId, { onDelete: "cascade" }),
-  sessionId: uuid("sessionId")
-  .notNull()
-  .references(() => testSessions.id, { onDelete: "cascade" }),
-  testResult: jsonb("testResult").default([]),
-  score: integer("score").notNull(),
-  completedAt: timestamp("completedAt").notNull().defaultNow(),
-})
+export const completedTestes = createTable(
+  "completed_tests",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    sessionId: uuid("sessionId")
+      .notNull()
+      .references(() => testSessions.id, { onDelete: "cascade" }),
+    testResult: jsonb("testResult").default([]),
+    score: integer("score").notNull(),
+    completedAt: timestamp("completedAt").notNull().defaultNow(),
+  },
+  (table) => [
+    index("completed_tests_user_id_idx").on(table.userId),
+  ]
+)
 
-export const testSessions = createTable("test_sessions", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 })
-    .notNull()
-    .references(() => users.userId, { onDelete: "cascade" }),
-  category: varchar("category", { length: 128 }).notNull(),
-  numberOfQuestions: integer("numberOfQuestions").notNull(),
-  durationMinutes: integer("durationMinutes").notNull(),
-  startedAt: timestamp("startedAt").notNull().defaultNow(),
-  expiresAt: timestamp("expiresAt").notNull(),
-  finishedAt: timestamp("finishedAt"),
-  status: varchar("status", { length: 32 })
-    .$type<"ACTIVE" | "EXPIRED" | "COMPLETED" | "CANCELLED">()
-    .notNull()
-    .default("ACTIVE"),
-  meta: jsonb("meta").default({}),
-});
+export const testSessions = createTable(
+  "test_sessions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    category: varchar("category", { length: 128 }).notNull(),
+    numberOfQuestions: integer("numberOfQuestions").notNull(),
+    durationMinutes: integer("durationMinutes").notNull(),
+    startedAt: timestamp("startedAt").notNull().defaultNow(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    finishedAt: timestamp("finishedAt"),
+    status: varchar("status", { length: 32 })
+      .$type<"ACTIVE" | "EXPIRED" | "COMPLETED" | "CANCELLED">()
+      .notNull()
+      .default("ACTIVE"),
+    meta: jsonb("meta").default({}),
+  },
+  (table) => [
+    // Composite index: Covers both "WHERE userId = ?" and "WHERE userId = ? AND status = ?"
+    index("test_sessions_user_status_idx").on(table.userId, table.status),
+  ]
+);
 
 export const tests = createTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),

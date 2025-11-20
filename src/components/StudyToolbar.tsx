@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { Highlighter, MessageSquare, BookmarkPlus, ChevronDown, X, GraduationCap, Eye, BookOpen, Pencil } from 'lucide-react'
+import { Highlighter, MessageSquare, BookmarkPlus, X, GraduationCap, Eye, BookOpen, Pencil } from 'lucide-react'
 import { HIGHLIGHT_COMMAND } from './editor/plugins/HighlightPlugin'
 import type { HighlightColor } from './editor/nodes/HighlightNode'
 import {
@@ -121,15 +121,6 @@ export default function StudyToolbar({
               <span className="sm:hidden">{flashcardsCount}</span>
             </button>
           )}
-          <button
-            type="button"
-            className="inline-flex items-center gap-2 px-3 py-2 bg-white hover:bg-gradient-to-r hover:from-[#ff9898]/10 hover:to-[#ffc5c5]/10 text-zinc-700 hover:text-[#ff9898] border border-zinc-200 hover:border-[#ff9898]/30 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md opacity-50 cursor-not-allowed"
-            title={STUDY_TOOLBAR_TEXT.sectionsTitle}
-            disabled
-          >
-            <ChevronDown className="w-4 h-4" />
-            <span className="hidden sm:inline">{STUDY_TOOLBAR_TEXT.sectionsButton}</span>
-          </button>
 
           {!isStudyMode && (
             <button

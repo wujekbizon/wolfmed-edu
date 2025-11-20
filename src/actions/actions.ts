@@ -65,6 +65,7 @@ import {
 import { revalidatePath, revalidateTag } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
+import { checkRateLimit } from "@/lib/rateLimit"
 
 export async function startTestAction(
   formState: FormState,
@@ -72,6 +73,16 @@ export async function startTestAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 20 test starts per hour
+  const rateLimit = await checkRateLimit(userId, 'test:start')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   try {
     const validationResult = StartTestSchema.safeParse({
@@ -141,6 +152,16 @@ export async function submitTestAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 20 test submits per hour
+  const rateLimit = await checkRateLimit(userId, 'test:submit')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const sessionId = formData.get("sessionId")
   if (!sessionId) {
@@ -299,6 +320,16 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   const email = formData.get("email") as string
   const message = formData.get("message") as string
 
+  // Rate limiting: 3 emails per hour (using email as identifier for unauthenticated action)
+  const rateLimit = await checkRateLimit(email || 'anonymous', 'email:send')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const validationResult = CreateMessageSchema.safeParse({ email, message })
 
   if (!validationResult.success) {
@@ -335,6 +366,16 @@ export async function deleteTestAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 10 test deletes per hour
+  const rateLimit = await checkRateLimit(userId, 'test:delete')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   try {
     const testId = formData.get("testId") as string
 
@@ -364,6 +405,16 @@ export async function deleteTestAction(
 export async function updateUsername(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 3 username updates per hour
+  const rateLimit = await checkRateLimit(userId, 'profile:update:username')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const username = formData.get("username") as string
 
@@ -396,6 +447,16 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 5 motto updates per hour
+  const rateLimit = await checkRateLimit(userId, 'profile:update:motto')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const motto = formData.get("motto") as string
 
   const validationResult = UpdateMottoSchema.safeParse({ motto })
@@ -421,7 +482,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
 }
 
 /**
- * Creates a forum post with rate limiting (1 post per hour)
+ * Creates a forum post with rate limiting (5 posts per hour)
  * Handles: content validation, rate limiting, and user verification
  */
 export async function createForumPostAction(
@@ -430,6 +491,16 @@ export async function createForumPostAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 5 posts per hour
+  const rateLimit = await checkRateLimit(userId, 'forum:post:create')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const title = formData.get("title") as string
   const content = formData.get("content") as string
@@ -449,23 +520,6 @@ export async function createForumPostAction(
   }
 
   try {
-    // Check when user's last post was created
-    const lastPostTime = await getLastUserPostTime(userId)
-
-    if (lastPostTime) {
-      const timeSinceLastPost = Date.now() - lastPostTime.getTime()
-      const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
-
-      if (timeSinceLastPost < ONE_HOUR) {
-        const minutesRemaining = Math.ceil(
-          (ONE_HOUR - timeSinceLastPost) / (60 * 1000)
-        )
-        return toFormState(
-          "ERROR",
-          `Możesz utworzyć następny post za ${minutesRemaining} minut.`
-        )
-      }
-    }
 
     const post = await db.transaction(async (tx) => {
       // Get username first
@@ -509,6 +563,16 @@ export async function deletePostAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 10 post deletes per hour
+  const rateLimit = await checkRateLimit(userId, 'forum:post:delete')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const postId = formData.get("postId") as string
   const authorId = formData.get("authorId") as string
 
@@ -527,7 +591,7 @@ export async function deletePostAction(
 }
 
 /**
- * Creates a forum comment with rate limiting (5 comments per hour)
+ * Creates a forum comment with rate limiting (20 comments per hour)
  * Handles: content validation, rate limiting, readonly check, and user verification
  */
 export async function createCommentAction(
@@ -536,6 +600,16 @@ export async function createCommentAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 20 comments per hour
+  const rateLimit = await checkRateLimit(userId, 'forum:comment:create')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const content = formData.get("content") as string
   const postId = formData.get("postId") as string
@@ -550,35 +624,6 @@ export async function createCommentAction(
   }
 
   try {
-    // Check when user's last comment was created
-    const lastCommentTime = await getLastUserCommentTime(userId)
-
-    if (lastCommentTime) {
-      const timeSinceLastComment = Date.now() - lastCommentTime.getTime()
-      const ONE_HOUR = 60 * 60 * 1000 // 1 hour in milliseconds
-      const MAX_COMMENTS_PER_HOUR = 5
-
-      // Get count of comments in the last hour
-      const commentCount = await db
-        .select({ count: sql<number>`count(*)` })
-        .from(forumComments)
-        .where(
-          and(
-            eq(forumComments.authorId, userId),
-            gt(forumComments.createdAt, new Date(Date.now() - ONE_HOUR))
-          )
-        )
-
-      if ((commentCount[0]?.count ?? 0) >= MAX_COMMENTS_PER_HOUR) {
-        const minutesRemaining = Math.ceil(
-          (ONE_HOUR - timeSinceLastComment) / (60 * 1000)
-        )
-        return toFormState(
-          "ERROR",
-          `Przekroczono limit 5 komentarzy na godzinę. Spróbuj ponownie za ${minutesRemaining} minut.`
-        )
-      }
-    }
 
     const post = await db.transaction(async (tx) => {
       // Get username and check post in transaction
@@ -628,6 +673,16 @@ export async function deleteCommentAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
+  // Rate limiting: 20 comment deletes per hour
+  const rateLimit = await checkRateLimit(userId, 'forum:comment:delete')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   const commentId = formData.get("commentId") as string
   const authorId = formData.get("authorId") as string
 
@@ -654,6 +709,16 @@ export async function createTestimonialAction(
 ) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  // Rate limiting: 2 testimonials per hour
+  const rateLimit = await checkRateLimit(userId, 'testimonial:create')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
 
   const content = formData.get("content") as string
   const rating = Number(formData.get("rating")) || 0
@@ -707,6 +772,16 @@ export async function createTestAction(
     )
   }
 
+  // Rate limiting: 5 test creations per hour
+  const rateLimit = await checkRateLimit(user.userId, 'test:create')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    )
+  }
+
   try {
     const answersData = extractAnswerData(formData)
 
@@ -757,6 +832,16 @@ export async function uploadTestsFromFile(
     return toFormState(
       "ERROR",
       "Ta funkcja jest dostępna tylko dla użytkowników premium."
+    )
+  }
+
+  // Rate limiting: 10 file uploads per hour
+  const rateLimit = await checkRateLimit(user.userId, 'file:upload')
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState(
+      "ERROR",
+      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
 
@@ -851,6 +936,16 @@ export async function uploadMaterialAction(  FormState: FormState, formData: For
   try {
     const {userId} = await auth();
     if (!userId) throw new Error("Unauthorized");
+
+    // Rate limiting: 5 material uploads per hour
+    const rateLimit = await checkRateLimit(userId, 'material:upload')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      return toFormState(
+        "ERROR",
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
+    }
 
     const title = String(formData.get("title") ?? "");
     const key = String(formData.get("key") ?? "");
