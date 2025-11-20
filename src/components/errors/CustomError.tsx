@@ -16,7 +16,6 @@ interface ErrorMessage {
 }
 
 const ERROR_MESSAGES: Record<string, ErrorMessage> = {
-  // Specific error types (detected by error name/message)
   LexicalError: {
     title: 'Błąd edytora notatek',
     message: 'Edytor napotkał problem. Twoje notatki są bezpieczne.',
@@ -33,7 +32,6 @@ const ERROR_MESSAGES: Record<string, ErrorMessage> = {
     action: 'Spróbuj ponownie'
   },
 
-  // Context-specific fallbacks
   notes: {
     title: 'Problem z notatkami',
     message: 'Nie udało się załadować notatek. Twoje dane są bezpieczne.',
@@ -80,7 +78,6 @@ const ERROR_MESSAGES: Record<string, ErrorMessage> = {
     action: 'Spróbuj ponownie'
   },
 
-  // Default fallback
   default: {
     title: 'Ups, coś się wydarzyło',
     message: 'Jeśli problem się powtarza, skontaktuj się z naszym biurem obsługi.',
@@ -94,7 +91,7 @@ const ERROR_MESSAGES: Record<string, ErrorMessage> = {
 function getErrorMessage(error: Error, context?: ErrorContext): ErrorMessage {
   // Check for specific error types first
   if (error.name === 'LexicalError' || error.message.includes('Lexical')) {
-    return ERROR_MESSAGES.LexicalError
+    return ERROR_MESSAGES.LexicalError!
   }
 
   if (
@@ -103,7 +100,7 @@ function getErrorMessage(error: Error, context?: ErrorContext): ErrorMessage {
     error.message.includes('fetch') ||
     error.message.includes('Failed to fetch')
   ) {
-    return ERROR_MESSAGES.NetworkError
+    return ERROR_MESSAGES.NetworkError!
   }
 
   if (
@@ -112,27 +109,16 @@ function getErrorMessage(error: Error, context?: ErrorContext): ErrorMessage {
     error.message.includes('query') ||
     error.message.includes('ECONNREFUSED')
   ) {
-    return ERROR_MESSAGES.DatabaseError
+    return ERROR_MESSAGES.DatabaseError!
   }
 
-  // Context-specific fallback
   if (context && context in ERROR_MESSAGES) {
-    return ERROR_MESSAGES[context]
+    return ERROR_MESSAGES[context]!
   }
 
-  // Default fallback
-  return ERROR_MESSAGES.default
+  return ERROR_MESSAGES.default!
 }
 
-/**
- * User-friendly error UI component
- *
- * Features:
- * - Context-aware error messages
- * - Reset/retry functionality
- * - Contact link for persistent issues
- * - Development debugging info
- */
 export default function CustomError({
   error,
   reset,
