@@ -1,35 +1,32 @@
-'use server'
+"use server"
 
-import { auth } from '@clerk/nextjs/server'
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
-import { db } from '@/server/db/index'
-import { checkRateLimit } from '@/lib/rateLimit'
+import { auth } from "@clerk/nextjs/server"
+import { revalidatePath } from "next/cache"
+import { db } from "@/server/db/index"
+import { checkRateLimit } from "@/lib/rateLimit"
 import {
   saveChallengeCompletion,
   checkAllChallengesComplete,
   awardBadge,
   getChallengeCompletionsByProcedure,
   getProcedureBadge,
-} from '@/server/queries'
-import { fileData } from '@/server/fetchData'
-import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+} from "@/server/queries"
+import { fileData } from "@/server/fetchData"
+import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import {
   SubmitOrderStepsSchema,
   SubmitQuizSchema,
   SubmitVisualRecognitionSchema,
   SubmitScenarioSchema,
   SubmitSpotErrorSchema,
-} from '@/server/schema'
-import {
-  generateQuizChallenge,
-  generateVisualRecognitionChallenge,
-  generateScenarioChallenge,
-  generateSpotErrorChallenge,
-} from '@/helpers/challengeGenerator'
-import type { FormState } from '@/types/actionTypes'
-import type { ActionResult, ChallengeType, ProcedureProgress } from '@/types/challengeTypes'
-import type { StepWithId } from '@/types/dataTypes'
+} from "@/server/schema"
+import type { FormState } from "@/types/actionTypes"
+import type {
+  ActionResult,
+  ChallengeType,
+  ProcedureProgress,
+} from "@/types/challengeTypes"
+import type { StepWithId } from "@/types/dataTypes"
 
 /**
  * Get challenge progress for a specific procedure
@@ -41,12 +38,15 @@ export async function getChallengeProgressAction(
   const { userId } = await auth()
 
   if (!userId) {
-    return { success: false, error: 'Unauthorized' }
+    return { success: false, error: "Unauthorized" }
   }
 
   try {
     // Get all completions for this procedure
-    const completions = await getChallengeCompletionsByProcedure(userId, procedureId)
+    const completions = await getChallengeCompletionsByProcedure(
+      userId,
+      procedureId
+    )
 
     // Get badge if earned
     const badge = await getProcedureBadge(userId, procedureId)
@@ -61,7 +61,7 @@ export async function getChallengeProgressAction(
         attempts: completion.attempts,
       }
       return acc
-    }, {} as ProcedureProgress['completions'])
+    }, {} as ProcedureProgress["completions"])
 
     return {
       success: true,
@@ -74,10 +74,10 @@ export async function getChallengeProgressAction(
       },
     }
   } catch (error) {
-    console.error('Get challenge progress failed:', error)
+    console.error("Get challenge progress failed:", error)
     return {
       success: false,
-      error: 'Failed to load progress',
+      error: "Failed to load progress",
     }
   }
 }
@@ -90,23 +90,22 @@ export async function submitQuizAction(
   formData: FormData
 ) {
   const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 challenge submissions per hour
-  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  const rateLimit = await checkRateLimit(userId, "challenge:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
-      'ERROR',
+      "ERROR",
       `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
 
-  const procedureId = formData.get('procedureId') as string
-  const procedureName = formData.get('procedureName') as string
-  const answers = formData.get('answers') as string
-  const correctAnswers = formData.get('correctAnswers') as string
-  const timeSpent = formData.get('timeSpent') as string
+  const procedureId = formData.get("procedureId") as string
+  const procedureName = formData.get("procedureName") as string
+  const answers = formData.get("answers") as string
+  const correctAnswers = formData.get("correctAnswers") as string
+  const timeSpent = formData.get("timeSpent") as string
 
   const validationResult = SubmitQuizSchema.safeParse({
     procedureId,
@@ -119,16 +118,29 @@ export async function submitQuizAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, answers, correctAnswers, timeSpent },
+      values: {
+        procedureId,
+        procedureName,
+        answers,
+        correctAnswers,
+        timeSpent,
+      },
     }
   }
 
   try {
-    const { procedureId, procedureName, answers: answersJson, correctAnswers: correctAnswersJson, timeSpent } = validationResult.data
+    const {
+      procedureId,
+      procedureName,
+      answers: answersJson,
+      correctAnswers: correctAnswersJson,
+      timeSpent,
+    } = validationResult.data
 
     // Parse user answers and correct answers from client
     const userAnswers: Record<string, number> = JSON.parse(answersJson)
-    const correctAnswersMap: Record<string, number> = JSON.parse(correctAnswersJson)
+    const correctAnswersMap: Record<string, number> =
+      JSON.parse(correctAnswersJson)
 
     // Calculate score by comparing against correct answers sent from client
     let correctCount = 0
@@ -146,13 +158,17 @@ export async function submitQuizAction(
       await saveChallengeCompletion(tx, {
         userId,
         procedureId,
-        challengeType: 'knowledge-quiz',
+        challengeType: "knowledge-quiz",
         score,
         timeSpent,
       })
 
       // Check if all 5 challenges are complete
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+      const allComplete = await checkAllChallengesComplete(
+        tx,
+        userId,
+        procedureId
+      )
 
       // Award badge if all challenges complete
       if (allComplete) {
@@ -165,9 +181,9 @@ export async function submitQuizAction(
     })
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
-    revalidatePath('/panel')
+    revalidatePath("/panel")
 
-    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -181,22 +197,21 @@ export async function submitOrderStepsAction(
   formData: FormData
 ) {
   const { userId } = await auth()
-  if (!userId) throw new Error('Unauthorized')
+  if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 challenge submissions per hour
-  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  const rateLimit = await checkRateLimit(userId, "challenge:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
-      'ERROR',
+      "ERROR",
       `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
 
-  const procedureId = formData.get('procedureId') as string
-  const procedureName = formData.get('procedureName') as string
-  const stepOrderString = formData.get('stepOrder') as string
-  const timeSpent = formData.get('timeSpent') as string
+  const procedureId = formData.get("procedureId") as string
+  const procedureName = formData.get("procedureName") as string
+  const stepOrderString = formData.get("stepOrder") as string
+  const timeSpent = formData.get("timeSpent") as string
 
   const validationResult = SubmitOrderStepsSchema.safeParse({
     procedureId,
@@ -208,12 +223,22 @@ export async function submitOrderStepsAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, stepOrder: stepOrderString, timeSpent },
+      values: {
+        procedureId,
+        procedureName,
+        stepOrder: stepOrderString,
+        timeSpent,
+      },
     }
   }
 
   try {
-    const { procedureId, procedureName, stepOrder: stepOrderJson, timeSpent } = validationResult.data
+    const {
+      procedureId,
+      procedureName,
+      stepOrder: stepOrderJson,
+      timeSpent,
+    } = validationResult.data
 
     // Parse step order
     const userStepOrder: StepWithId[] = JSON.parse(stepOrderJson)
@@ -221,7 +246,7 @@ export async function submitOrderStepsAction(
     // Load procedure from DB (server-side)
     const procedure = await fileData.getProcedureById(procedureId)
     if (!procedure) {
-      return toFormState('ERROR', 'Procedura nie została znaleziona')
+      return toFormState("ERROR", "Procedura nie została znaleziona")
     }
 
     const correctSteps = procedure.data.algorithm
@@ -240,13 +265,17 @@ export async function submitOrderStepsAction(
       await saveChallengeCompletion(tx, {
         userId,
         procedureId,
-        challengeType: 'order-steps',
+        challengeType: "order-steps",
         score,
         timeSpent,
       })
 
       // Check if all 5 challenges are complete
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+      const allComplete = await checkAllChallengesComplete(
+        tx,
+        userId,
+        procedureId
+      )
 
       // Award badge if all challenges complete
       if (allComplete) {
@@ -259,14 +288,12 @@ export async function submitOrderStepsAction(
     })
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
-    revalidatePath('/panel')
-    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+    revalidatePath("/panel")
+    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
   }
-
 }
-
 
 /**
  * Submit visual recognition challenge with server-side score calculation
@@ -278,12 +305,11 @@ export async function submitVisualRecognitionAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 challenge submissions per hour
-  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  const rateLimit = await checkRateLimit(userId, "challenge:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
-      'ERROR',
+      "ERROR",
       `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
@@ -305,12 +331,24 @@ export async function submitVisualRecognitionAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, selectedOption, correctAnswer, timeSpent },
+      values: {
+        procedureId,
+        procedureName,
+        selectedOption,
+        correctAnswer,
+        timeSpent,
+      },
     }
   }
 
   try {
-    const { procedureId, procedureName, selectedOption, correctAnswer, timeSpent } = validationResult.data
+    const {
+      procedureId,
+      procedureName,
+      selectedOption,
+      correctAnswer,
+      timeSpent,
+    } = validationResult.data
 
     const procedure = await fileData.getProcedureById(procedureId)
     if (!procedure) {
@@ -330,7 +368,11 @@ export async function submitVisualRecognitionAction(
         timeSpent,
       })
 
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+      const allComplete = await checkAllChallengesComplete(
+        tx,
+        userId,
+        procedureId
+      )
 
       if (allComplete) {
         await awardBadge(tx, {
@@ -343,7 +385,7 @@ export async function submitVisualRecognitionAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
-    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -359,12 +401,11 @@ export async function submitScenarioAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 challenge submissions per hour
-  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  const rateLimit = await checkRateLimit(userId, "challenge:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
-      'ERROR',
+      "ERROR",
       `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
@@ -386,12 +427,24 @@ export async function submitScenarioAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, selectedOption, correctAnswer, timeSpent },
+      values: {
+        procedureId,
+        procedureName,
+        selectedOption,
+        correctAnswer,
+        timeSpent,
+      },
     }
   }
 
   try {
-    const { procedureId, procedureName, selectedOption, correctAnswer, timeSpent } = validationResult.data
+    const {
+      procedureId,
+      procedureName,
+      selectedOption,
+      correctAnswer,
+      timeSpent,
+    } = validationResult.data
 
     const procedure = await fileData.getProcedureById(procedureId)
     if (!procedure) {
@@ -410,7 +463,11 @@ export async function submitScenarioAction(
         timeSpent,
       })
 
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+      const allComplete = await checkAllChallengesComplete(
+        tx,
+        userId,
+        procedureId
+      )
 
       if (allComplete) {
         await awardBadge(tx, {
@@ -423,7 +480,7 @@ export async function submitScenarioAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
-    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -439,12 +496,11 @@ export async function submitSpotErrorAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 challenge submissions per hour
-  const rateLimit = await checkRateLimit(userId, 'challenge:submit')
+  const rateLimit = await checkRateLimit(userId, "challenge:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
-      'ERROR',
+      "ERROR",
       `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
     )
   }
@@ -466,12 +522,24 @@ export async function submitSpotErrorAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { procedureId, procedureName, selectedErrors: selectedErrorsString, actualErrors: actualErrorsString, timeSpent },
+      values: {
+        procedureId,
+        procedureName,
+        selectedErrors: selectedErrorsString,
+        actualErrors: actualErrorsString,
+        timeSpent,
+      },
     }
   }
 
   try {
-    const { procedureId, procedureName, selectedErrors: selectedErrorsJson, actualErrors: actualErrorsJson, timeSpent } = validationResult.data
+    const {
+      procedureId,
+      procedureName,
+      selectedErrors: selectedErrorsJson,
+      actualErrors: actualErrorsJson,
+      timeSpent,
+    } = validationResult.data
 
     const userSelectedErrors: string[] = JSON.parse(selectedErrorsJson)
     const actualErrors: string[] = JSON.parse(actualErrorsJson)
@@ -485,7 +553,11 @@ export async function submitSpotErrorAction(
 
     const score = Math.max(
       0,
-      Math.round(((correctIdentifications - incorrectIdentifications) / actualErrors.length) * 100)
+      Math.round(
+        ((correctIdentifications - incorrectIdentifications) /
+          actualErrors.length) *
+          100
+      )
     )
 
     await db.transaction(async (tx) => {
@@ -497,7 +569,11 @@ export async function submitSpotErrorAction(
         timeSpent,
       })
 
-      const allComplete = await checkAllChallengesComplete(tx, userId, procedureId)
+      const allComplete = await checkAllChallengesComplete(
+        tx,
+        userId,
+        procedureId
+      )
 
       if (allComplete) {
         await awardBadge(tx, {
@@ -510,9 +586,8 @@ export async function submitSpotErrorAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
-    return toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`)
+    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
   }
 }
-

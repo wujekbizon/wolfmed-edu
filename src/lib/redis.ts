@@ -7,12 +7,10 @@ import { Redis } from '@upstash/redis'
 let redis: Redis | null = null
 
 export function getRedis(): Redis | null {
-  // In development, use in-memory fallback (no Redis setup needed)
   if (process.env.NODE_ENV === 'development') {
     return null
   }
 
-  // In production, use Upstash Redis
   if (!redis) {
     const url = process.env.UPSTASH_REDIS_REST_URL
     const token = process.env.UPSTASH_REDIS_REST_TOKEN

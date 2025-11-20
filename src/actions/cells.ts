@@ -1,4 +1,4 @@
-'use server'
+"use server"
 
 import { db } from "@/server/db/index"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
@@ -21,8 +21,7 @@ export async function saveCellsAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 50 cell updates per hour
-  const rateLimit = await checkRateLimit(userId, 'cells:update')
+  const rateLimit = await checkRateLimit(userId, "cells:update")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -60,20 +59,23 @@ export async function saveCellsAction(
   return toFormState("SUCCESS", "Zapisano pomyślnie")
 }
 
+export const syncCellsAction = async (): Promise<{
+  success: boolean
+  data?: UserCellsList
+  error?: string
+}> => {
+  try {
+    const user = await currentUser()
+    if (!user?.id) return { success: false, error: "Unauthorized" }
 
-export const syncCellsAction = async (): Promise<{ success: boolean; data?: UserCellsList; error?: string }> => {
-    try {
-      const user = await currentUser();
-      if (!user?.id) return { success: false, error: "Unauthorized" };
-  
-      const fetchedCells = await getUserCellsList(user.id);
-      if (!fetchedCells) {
-        return { success: false, error: "No saved cells found" };
-      }
-  
-      return { success: true, data: fetchedCells };
-    } catch (err) {
-      console.error("Sync error:", err);
-      return { success: false, error: "Unexpected error" };
+    const fetchedCells = await getUserCellsList(user.id)
+    if (!fetchedCells) {
+      return { success: false, error: "No saved cells found" }
     }
-  };
+
+    return { success: true, data: fetchedCells }
+  } catch (err) {
+    console.error("Sync error:", err)
+    return { success: false, error: "Unexpected error" }
+  }
+}

@@ -13,59 +13,48 @@ interface RateLimitConfig {
  * Format: action -> { interval (ms), maxRequests }
  */
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
-  // Notes
-  'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
-  'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 }, // 30 per hour
-  'note:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
+  'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 },
+  'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'note:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
 
-  // Materials & Uploads
-  'material:upload': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
-  'file:upload': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+  'material:upload': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'file:upload': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
-  // Flashcards
-  'flashcard:create': { interval: 60 * 60 * 1000, maxRequests: 50 }, // 50 per hour
+  'flashcard:create': { interval: 60 * 60 * 1000, maxRequests: 50 },
 
-  // Communication
-  'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour (contact form)
-  'email:send': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
+  'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 },
+  'email:send': { interval: 60 * 60 * 1000, maxRequests: 3 },
 
-  // Forum
-  'forum:post:create': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 posts per hour
-  'forum:post:delete': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
-  'forum:comment:create': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 comments per hour
-  'forum:comment:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
+  'forum:post:create': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'forum:post:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
+  'forum:comment:create': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'forum:comment:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
 
-  // Blog
-  'blog:post:create': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour
-  'blog:post:update': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
-  'blog:post:delete': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
-  'blog:like': { interval: 60 * 60 * 1000, maxRequests: 100 }, // 100 per hour
+  'blog:post:create': { interval: 60 * 60 * 1000, maxRequests: 3 },
+  'blog:post:update': { interval: 60 * 60 * 1000, maxRequests: 10 },
+  'blog:post:delete': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'blog:like': { interval: 60 * 60 * 1000, maxRequests: 100 },
 
-  // Tests
-  'test:start': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 tests per hour
-  'test:submit': { interval: 60 * 60 * 1000, maxRequests: 20 }, // 20 per hour
-  'test:create': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
-  'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 }, // 10 per hour
+  'test:start': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'test:submit': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'test:create': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
-  // Challenges/Procedures
-  'challenge:submit': { interval: 60 * 60 * 1000, maxRequests: 30 }, // 30 per hour
+  'challenge:submit': { interval: 60 * 60 * 1000, maxRequests: 30 },
 
-  // User Profile
-  'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 }, // 3 per hour (prevent abuse)
-  'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 }, // 5 per hour
+  'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 },
+  'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 },
 
-  // Testimonials
-  'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 }, // 2 per hour (prevent spam)
+  'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
 
-  // Cells (scratch board)
-  'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 }, // 50 per hour
+  'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
 }
 
 export interface RateLimitResult {
   success: boolean
   limit: number
   remaining: number
-  reset: number // timestamp
+  reset: number
 }
 
 /**

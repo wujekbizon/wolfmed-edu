@@ -18,7 +18,6 @@ export const createNoteAction = async (
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 10 notes per hour
   const rateLimit = await checkRateLimit(userId, 'note:create')
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
@@ -80,7 +79,6 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 20 deletes per hour
   const rateLimit = await checkRateLimit(userId, 'note:delete')
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
@@ -119,7 +117,6 @@ export const updateNoteContentAction = async (
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 30 updates per hour
   const rateLimit = await checkRateLimit(userId, 'note:update')
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
