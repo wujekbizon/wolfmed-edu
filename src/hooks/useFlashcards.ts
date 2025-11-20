@@ -1,7 +1,4 @@
-import { useState, useCallback } from 'react'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { $nodesOfType } from 'lexical'
-import { FlashcardNode } from '@/components/editor/nodes/FlashcardNode'
+import { useFlashcardStore, type Flashcard } from '@/store/flashcardStore'
 
 export type FlashcardData = {
   cardId: string
@@ -9,24 +6,21 @@ export type FlashcardData = {
   answerText: string
 }
 
-export function useFlashcards() {
-  const [editor] = useLexicalComposerContext()
-  const [flashcards, setFlashcards] = useState<FlashcardData[]>([])
+export function useFlashcards(noteId: string) {
+  const getFlashcardsByNoteId = useFlashcardStore((state) => state.getFlashcardsByNoteId)
+  const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
 
-  const refreshFlashcards = useCallback(() => {
-    const cards: FlashcardData[] = []
-    editor.read(() => {
-      const flashcardNodes = $nodesOfType(FlashcardNode)
-      flashcardNodes.forEach((node) => {
-        cards.push({
-          cardId: node.getCardId(),
-          questionText: node.getQuestionText(),
-          answerText: node.getAnswerText(),
-        })
-      })
-    })
-    setFlashcards(cards)
-  }, [editor])
+  // Get flashcards for the current note
+  const flashcards: FlashcardData[] = getFlashcardsByNoteId(noteId).map((card: Flashcard) => ({
+    cardId: card.id,
+    questionText: card.questionText,
+    answerText: card.answerText,
+  }))
 
-  return { flashcards, refreshFlashcards }
+  // Keep the same interface for compatibility
+  const refreshFlashcards = () => {
+    // No-op since Zustand auto-updates
+  }
+
+  return { flashcards, refreshFlashcards, removeFlashcard }
 }

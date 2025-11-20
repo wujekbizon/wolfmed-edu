@@ -5,6 +5,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { viewerConfig } from './editor/viewerConfig'
 import StudyToolbar from './StudyToolbar'
 import HighlightPlugin from './editor/plugins/HighlightPlugin'
@@ -14,7 +15,7 @@ import FlashcardReviewModal from './FlashcardReviewModal'
 import CommentModal from './CommentModal'
 import FlashcardCreateModal from './FlashcardCreateModal'
 import { useFlashcards } from '@/hooks/useFlashcards'
-import { LexicalEditor } from 'lexical'
+import { LexicalEditor, $getSelection, $isRangeSelection } from 'lexical'
 import type { SerializedEditorState } from 'lexical'
 
 interface StudyViewerProps {
@@ -25,11 +26,27 @@ interface StudyViewerProps {
 }
 
 function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; content: unknown; onEditClick: () => void }) {
+    const [editor] = useLexicalComposerContext()
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showFlashcardModal, setShowFlashcardModal] = useState(false)
     const [showReviewModal, setShowReviewModal] = useState(false)
     const [isStudyMode, setIsStudyMode] = useState(false)
-    const { flashcards, refreshFlashcards } = useFlashcards()
+    const [selectedText, setSelectedText] = useState('')
+    const { flashcards, refreshFlashcards } = useFlashcards(noteId)
+
+    const handleFlashcardClick = () => {
+        // Get selected text from editor
+        editor.read(() => {
+            const selection = $getSelection()
+            if ($isRangeSelection(selection)) {
+                const text = selection.getTextContent()
+                setSelectedText(text)
+            } else {
+                setSelectedText('')
+            }
+        })
+        setShowFlashcardModal(true)
+    }
 
     return (
         <>
@@ -39,7 +56,7 @@ function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; 
                     content={content}
                     onEditClick={onEditClick}
                     onCommentClick={() => setShowCommentModal(true)}
-                    onFlashcardClick={() => setShowFlashcardModal(true)}
+                    onFlashcardClick={handleFlashcardClick}
                     onReviewClick={() => setShowReviewModal(true)}
                     flashcardsCount={flashcards.length}
                     isStudyMode={isStudyMode}
@@ -62,7 +79,17 @@ function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; 
                 </div>
             </div>
             {showCommentModal && <CommentModal onClose={() => setShowCommentModal(false)} />}
-            {showFlashcardModal && <FlashcardCreateModal onClose={() => setShowFlashcardModal(false)} onSuccess={refreshFlashcards} />}
+            {showFlashcardModal && (
+                <FlashcardCreateModal
+                    noteId={noteId}
+                    selectedText={selectedText}
+                    onClose={() => {
+                        setShowFlashcardModal(false)
+                        setSelectedText('')
+                    }}
+                    onSuccess={refreshFlashcards}
+                />
+            )}
             {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}
         </>
     )

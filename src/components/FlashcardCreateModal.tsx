@@ -1,27 +1,32 @@
 'use client'
 
-import { useState } from 'react'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { useState, useEffect } from 'react'
 import { BookmarkPlus, X } from 'lucide-react'
-import { CREATE_FLASHCARD_COMMAND } from './editor/plugins/FlashcardPlugin'
 import { FLASHCARD_MODAL_TEXT } from '@/constants/studyViewer'
+import { useFlashcardStore } from '@/store/flashcardStore'
 
 interface FlashcardCreateModalProps {
+  noteId: string
+  selectedText?: string
   onClose: () => void
   onSuccess: () => void
 }
 
-export default function FlashcardCreateModal({ onClose, onSuccess }: FlashcardCreateModalProps) {
-  const [editor] = useLexicalComposerContext()
+export default function FlashcardCreateModal({ noteId, selectedText, onClose, onSuccess }: FlashcardCreateModalProps) {
+  const addFlashcard = useFlashcardStore((state) => state.addFlashcard)
   const [flashcardQuestion, setFlashcardQuestion] = useState('')
   const [flashcardAnswer, setFlashcardAnswer] = useState('')
 
+  // Pre-populate question with selected text
+  useEffect(() => {
+    if (selectedText) {
+      setFlashcardQuestion(selectedText)
+    }
+  }, [selectedText])
+
   const handleCreateFlashcard = () => {
     if (flashcardQuestion.trim() && flashcardAnswer.trim()) {
-      editor.dispatchCommand(CREATE_FLASHCARD_COMMAND, {
-        questionText: flashcardQuestion.trim(),
-        answerText: flashcardAnswer.trim(),
-      })
+      addFlashcard(noteId, flashcardQuestion.trim(), flashcardAnswer.trim())
       setFlashcardQuestion('')
       setFlashcardAnswer('')
       onSuccess()
