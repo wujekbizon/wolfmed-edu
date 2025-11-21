@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import { BookmarkPlus, X } from 'lucide-react'
 import { FLASHCARD_MODAL_TEXT } from '@/constants/studyViewer'
-import { useFlashcardStore } from '@/store/flashcardStore'
+import { useFlashcardStore } from '@/store/useFlashcardStore'
+
 
 interface FlashcardCreateModalProps {
   noteId: string
@@ -17,7 +18,6 @@ export default function FlashcardCreateModal({ noteId, selectedText, onClose, on
   const [flashcardQuestion, setFlashcardQuestion] = useState('')
   const [flashcardAnswer, setFlashcardAnswer] = useState('')
 
-  // Pre-populate question with selected text
   useEffect(() => {
     if (selectedText) {
       setFlashcardQuestion(selectedText)
