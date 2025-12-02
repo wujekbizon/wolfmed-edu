@@ -22,7 +22,7 @@ const Answers: React.FC<AnswersProps> = ({ formState }) => {
   for (let i = 1; i <= answersNumber; i++) {
     answers.push({
       id: `option${i}`,
-      label: `Answer #${i}`,
+      label: `Odpowiedź #${i}`,
       name: `option${i}`,
     });
   }
@@ -53,7 +53,7 @@ const Answers: React.FC<AnswersProps> = ({ formState }) => {
             <Label
               htmlFor={`checkbox${answer.id}`}
               className="text-xs sm:text-sm text-zinc-700 font-medium"
-              label="Is correct?"
+              label="Czy poprawna?"
             />
             <Input
              type="checkbox"

@@ -11,10 +11,10 @@ export default function CategorySelection(props: { categories: PopulatedCategori
   return (
     <div className="flex w-full items-end gap-6">
       {selectionMethod === "existingCategory" ? (
-        <Select categories={props.categories} label="Select a category: " className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm" />
+        <Select categories={props.categories} label="Wybierz kategorię:" className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm" />
       ) : (
         <div className="flex w-full flex-col">
-          <Label label="Add new category:" htmlFor="addCategory" className="text-xs sm:text-sm text-zinc-700 font-medium" />
+          <Label label="Dodaj nową kategorię:" htmlFor="addCategory" className="text-xs sm:text-sm text-zinc-700 font-medium" />
           <Input
             type="text"
             id="addCategory"

@@ -31,7 +31,7 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
         </div>
       </div>
       <div className="flex flex-col">
-        <Label htmlFor="question" label="Question:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
+        <Label htmlFor="question" label="Pytanie:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
         <Textarea id="question" name="question" className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-transparent" />
         <FieldError formState={formState} name="question" />
       </div>
