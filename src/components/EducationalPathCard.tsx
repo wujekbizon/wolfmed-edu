@@ -26,7 +26,7 @@ const EducationalPathCard = ({
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } ${ className || ""} flex items-center flex-col w-full h-full p-4 xs:p-8 xl:p-4 2xl:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out`}
+          } ${ className || ""} flex items-center flex-col w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out`}
         >
           <div className="w-full h-[55vh] flex flex-col items-center justify-center gap-14 flex-1/2">
             <div className="w-full flex flex-col items-center gap-16">
@@ -62,7 +62,7 @@ const EducationalPathCard = ({
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } flex items-center flex-col lg:flex-row w-full h-full p-4 xs:p-8 xl:p-4 2xl:p-14 gap-12 2xl:gap-24 transition-all duration-800 ease-in-out ${
+          } flex items-center flex-col lg:flex-row w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-12 2xl:gap-24 transition-all duration-800 ease-in-out ${
             className || ""
           }`}
         >

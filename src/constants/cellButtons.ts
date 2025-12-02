@@ -13,11 +13,11 @@ export const cellButtons: CellButtons[] = [
       cellName: 'Notatka',
       type: 'note',
     },
-    {
-      id: 2,
-      cellName: 'Edytor',
-      type: 'text',
-    },
+    // {
+    //   id: 2,
+    //   cellName: 'Edytor',
+    //   type: 'text',
+    // },
     {
       id: 3,
       cellName: 'Tablica',

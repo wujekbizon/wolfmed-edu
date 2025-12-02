@@ -6,7 +6,6 @@ import DeleteIcon from '../icons/DeleteIcon'
 import ActionButton from './ActionButton'
 import ArrowUpIcon from '../icons/ArrowUpIcon'
 import ArrowDownIcon from '../icons/ArrowDownIcon'
-import SyncIcon from '../icons/SyncIcon'
 import SaveCellsButton from './SaveCellsButton'
 import { SyncCellsButton } from './SyncCellsButton'
 

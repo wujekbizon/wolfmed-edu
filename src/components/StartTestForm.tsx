@@ -22,7 +22,6 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
   const router = useRouter();
   const [meta, setMeta] = useState<string>("");
 
-  // We collect meta data from the user device, for future anti-cheat implementation.
   useEffect(() => {
     setMeta(JSON.stringify(getDeviceMeta()));
   }, []);

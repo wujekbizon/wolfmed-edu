@@ -1,4 +1,4 @@
-const NUMBER_OF_TESTS = 624
+const NUMBER_OF_TESTS = 664
 const NUMBER_OF_PROCEDURES = 31
 
 export interface TestCardContent {

@@ -2,7 +2,7 @@ export default function ConfirmLeaveModal({ onConfirm, onCancel }: { onConfirm: 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
             <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 max-w-sm text-center">
-                <p className="mb-4 text-lg font-semibold">
+                <p className="mb-4 text-lg font-semibold text-white">
                    Czy na pewno chcesz zakończyć test?
                 </p>
                 <div className="flex justify-center gap-4">

@@ -12,7 +12,6 @@ import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
 import CloseIcon from "./icons/Close";
-import Excalidraw  from "@/components/excalidraw/Excalidraw";
 
 export default function LearningHubDashboard({
   categories,
