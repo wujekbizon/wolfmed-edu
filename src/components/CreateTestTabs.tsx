@@ -32,14 +32,14 @@ export default async function CreateTestTabs({ userId }: Props) {
       label: "Dokumentacja",
       content: <DocumentationTab />
     },
-    {
-      id: "custom-categories",
-      label: "Wybrane pytania",
-      content: <CustomCategoriesTab
-        initialCategories={userCustomCategories}
-        questions={allTests}
-      />
-    }
+    // {
+    //   id: "custom-categories",
+    //   label: "Wybrane pytania",
+    //   content: <CustomCategoriesTab
+    //     initialCategories={userCustomCategories}
+    //     questions={allTests}
+    //   />
+    // }
   ]
 
   return <TabNavigation tabs={tabs} />
