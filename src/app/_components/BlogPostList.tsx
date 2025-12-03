@@ -38,7 +38,7 @@ export default function BlogPostList({ posts }: BlogPostListProps) {
       {paginatedPosts.map((post: BlogPost) => (
         <article
           key={post.id}
-          className="group bg-[#2A2A3F]/40 rounded-2xl shadow-lg border border-[#3A3A5A]/30 hover:border-[#BB86FC]/30 transition-all duration-300 overflow-hidden hover:shadow-xl hover:shadow-[#BB86FC]/5 min-h-[350px]"
+          className="group bg-[#2A2A3F]/40 rounded-2xl shadow-lg border border-[#3A3A5A]/30 hover:border-[#BB86FC]/10 transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-[#BB86FC]/5 min-h-[340px]"
         >
           <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row gap-0 sm:gap-6 h-full">
             <div className="relative w-full sm:w-72 h-48 sm:h-auto shrink-0 bg-linear-to-br from-[#3A3A5E]/30 to-[#30304B]/30">
@@ -46,13 +46,13 @@ export default function BlogPostList({ posts }: BlogPostListProps) {
                 src={post.coverImage || DEFAULT_BLOG_IMAGE}
                 alt={post.title}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 opacity-90"
+                className="object-cover group-hover:scale-102 transition-transform duration-500 opacity-90"
                 sizes="(max-width: 640px) 100vw, 288px"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F2D]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-linear-to-t from-[#1F1F2D]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
               <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#1F1F2D]/60 backdrop-blur-sm border border-[#BB86FC]/20">
-                <span className="text-xs font-medium text-[#BB86FC]/80">Artykuł</span>
+                <span className="text-xs font-medium text-[#dec5fc]/80">Artykuł</span>
               </div>
             </div>
 

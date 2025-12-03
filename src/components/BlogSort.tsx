@@ -16,14 +16,14 @@ export default function BlogSort() {
   const currentOption = SORT_OPTIONS.find(opt => opt.value === sortBy) || SORT_OPTIONS[0]
 
   return (
-    <div className="relative w-full max-w-xs">
+    <div className="relative w-full sm:w-xs">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
           relative group w-full
           bg-[#2A2A3F]/50 backdrop-blur-md
           border ${isOpen ? 'border-[#BB86FC]/50' : 'border-[#3A3A5A]/50'}
-          rounded-2xl
+          rounded-xl
           shadow-lg ${isOpen ? 'shadow-[#BB86FC]/10' : 'shadow-black/20'}
           transition-all duration-300
           hover:shadow-xl hover:shadow-[#BB86FC]/10
@@ -31,7 +31,7 @@ export default function BlogSort() {
           flex items-center justify-between
         `}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#BB86FC]/0 via-[#BB86FC]/5 to-[#8686D7]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#BB86FC]/0 via-[#BB86FC]/5 to-[#8686D7]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <div className="relative z-10 flex items-center gap-3">
           <svg

@@ -76,9 +76,7 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
     <section className="w-full bg-[#09060c]/95">
       <div className="px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
         <BlogHero />
-
-        {/* Elegant Divider with Medical Icon */}
-        <div className="relative w-full mb-12 flex items-center justify-center">
+        <div className="h-32 relative w-full mb-8 flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full h-px bg-gradient-to-r from-transparent via-[#3A3A5A]/50 to-transparent" />
           </div>
@@ -98,16 +96,12 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
             </div>
           </div>
         </div>
-
-        {/* Search & Sort Controls */}
-        <div className="w-full mb-8 flex flex-col sm:flex-row gap-4 items-center">
-          <div className="flex-1 w-full">
+        <div className="w-full mb-8 flex flex-col sm:flex-row gap-8 justify-between items-center">
+          <div className="flex w-full">
             <BlogSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} title="Najnowsze Artykuły" />
           </div>
           <BlogSort />
         </div>
-
-        {/* Blog Post List Container */}
         <div className="w-full flex flex-col gap-6 p-4 sm:p-8 lg:p-10 rounded-2xl shadow-2xl border border-[#3A3A5A]/50 bg-[#1F1F2D]">
           <BlogPostList posts={sortedPosts} isLoading={searchLoading} error={error} />
         </div>

@@ -12,19 +12,19 @@ export default function BlogSearch({ searchTerm, setSearchTerm }: BlogSearchProp
   const [isFocused, setIsFocused] = useState(false)
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full">
       <div
         className={`
           relative group
           bg-[#2A2A3F]/50 backdrop-blur-md
           border ${isFocused ? 'border-[#BB86FC]/50' : 'border-[#3A3A5A]/50'}
-          rounded-2xl
+          rounded-xl
           shadow-lg ${isFocused ? 'shadow-[#BB86FC]/10' : 'shadow-black/20'}
           transition-all duration-300
           hover:shadow-xl hover:shadow-[#BB86FC]/10
         `}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#BB86FC]/0 via-[#BB86FC]/5 to-[#8686D7]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#BB86FC]/0 via-[#BB86FC]/5 to-[#8686D7]/0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         <div className="absolute left-5 top-1/2 -translate-y-1/2 z-10">
           <svg
@@ -57,11 +57,9 @@ export default function BlogSearch({ searchTerm, setSearchTerm }: BlogSearchProp
             text-[#E6E6F5] placeholder-[#A5A5C3]/50
             text-base
             focus:outline-none
-            rounded-2xl
+            rounded-xl
           "
         />
-
-        {/* Clear Button */}
         {searchTerm && (
           <button
             onClick={() => setSearchTerm('')}
