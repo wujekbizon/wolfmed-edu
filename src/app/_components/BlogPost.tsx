@@ -1,32 +1,158 @@
 import { Post } from '@/types/dataTypes'
 import Link from 'next/link'
+import Image from 'next/image'
 
 type BlogPostProps = {
   post: Post
 }
 
 export default function BlogPost({ post }: BlogPostProps) {
-  return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-start p-4 sm:p-8 bg-linear-to-b from-[#f5d4cf] via-[#e8b8b1] to-[#f5d4cf] rounded-br-3xl sm:rounded-br-[50px] rounded-bl-3xl sm:rounded-bl-[50px]">
-      <article className="w-full max-w-3xl bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-red-200/40">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-zinc-900 mb-4">{post.title}</h1>
-        <div className="text-sm text-zinc-500 mb-6">
-          <span>{post.date}</span>
-        </div>
-        <div className="prose prose-zinc max-w-none">
-          {post.content.split('\n').map((paragraph, index) => (
-            <p key={index} className="mb-4 text-base sm:text-lg leading-relaxed">
-              {paragraph}
-            </p>
+  const defaultImage = 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&h=600&fit=crop'
+
+  // Better content parsing
+  const parseContent = (content: string) => {
+    // Split by double newlines but keep single newlines within paragraphs
+    const sections = content.split(/\n\n+/)
+
+    return sections.map((section, index) => {
+      const trimmed = section.trim()
+      if (!trimmed) return null
+
+      // Handle headings
+      if (trimmed.startsWith('# ')) {
+        return (
+          <h2 key={index} className="text-2xl sm:text-3xl font-bold text-[#E6E6F5] mt-12 mb-6">
+            {trimmed.replace('# ', '')}
+          </h2>
+        )
+      }
+      if (trimmed.startsWith('## ')) {
+        return (
+          <h3 key={index} className="text-xl sm:text-2xl font-bold text-[#E6E6F5] mt-8 mb-4">
+            {trimmed.replace('## ', '')}
+          </h3>
+        )
+      }
+
+      // Handle numbered lists (1., 2., etc.)
+      if (/^\d+\./.test(trimmed)) {
+        const items = trimmed.split(/\n(?=\d+\.)/).filter(Boolean)
+        return (
+          <ol key={index} className="list-decimal list-inside space-y-2 mb-6 text-[#A5A5C3] leading-relaxed">
+            {items.map((item, i) => (
+              <li key={i} className="text-base sm:text-lg">
+                {item.replace(/^\d+\.\s*/, '')}
+              </li>
+            ))}
+          </ol>
+        )
+      }
+
+      // Handle bullet lists
+      if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        const items = trimmed.split(/\n(?=[-*]\s)/).filter(Boolean)
+        return (
+          <ul key={index} className="list-disc list-inside space-y-2 mb-6 text-[#A5A5C3] leading-relaxed">
+            {items.map((item, i) => (
+              <li key={i} className="text-base sm:text-lg">
+                {item.replace(/^[-*]\s*/, '')}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      // Regular paragraph - preserve internal newlines as <br>
+      return (
+        <p key={index} className="mb-6 text-base sm:text-lg leading-relaxed text-[#A5A5C3]">
+          {trimmed.split('\n').map((line, i, arr) => (
+            <span key={i}>
+              {line}
+              {i < arr.length - 1 && <br />}
+            </span>
           ))}
-        </div>
+        </p>
+      )
+    }).filter(Boolean)
+  }
+
+  return (
+    <section className="min-h-screen w-full p-4 sm:p-8">
+      <div className="w-full max-w-5xl mx-auto">
+        {/* Back Button */}
         <Link
           href="/blog"
-          className="mt-8 inline-block bg-[#ffb1b1] hover:bg-[#ffa5a5] text-zinc-900 hover:text-white border border-red-100/50 shadow-sm text-sm font-semibold py-2 px-4 rounded-full transition-colors"
+          className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-[#2A2A3F] border border-[#3A3A5A] text-[#E6E6F5] hover:text-[#BB86FC] hover:border-[#BB86FC]/50 font-medium text-sm transition-all duration-300"
         >
-          Powrót do listy postów
+          <span className="hover:-translate-x-1 transition-transform">←</span>
+          Powrót do bloga
         </Link>
-      </article>
+
+        {/* Article Container */}
+        <article className="bg-[#2A2A3F] rounded-2xl shadow-2xl border border-[#3A3A5A] overflow-hidden">
+          {/* Featured Image */}
+          {post.image && (
+            <div className="relative w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-[#3A3A5E] to-[#30304B]">
+              <Image src={post.image || defaultImage} alt={post.title} fill className="object-cover" priority />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F2D]/80 via-transparent to-transparent" />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="p-6 sm:p-8 md:p-12 lg:p-16">
+            {/* Header Section */}
+            <header className="mb-10">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E6E6F5] mb-6 leading-tight">
+                {post.title}
+              </h1>
+
+              {/* Metadata */}
+              <div className="flex flex-wrap items-center gap-4 pb-6 border-b border-[#3A3A5A]">
+                {post.author && (
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#BB86FC]/20 to-[#8686D7]/20 border border-[#BB86FC]/30 flex items-center justify-center">
+                      <span className="text-[#BB86FC] font-semibold text-base">
+                        {post.author
+                          .split(' ')
+                          .map((n) => n[0])
+                          .join('')
+                          .toUpperCase()}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#E6E6F5]">{post.author}</p>
+                      <time className="text-xs text-[#A5A5C3]">{post.date}</time>
+                    </div>
+                  </div>
+                )}
+                {!post.author && <time className="text-sm text-[#A5A5C3]">{post.date}</time>}
+              </div>
+            </header>
+
+            {/* Article Content */}
+            <div className="prose prose-zinc prose-lg max-w-none">
+              {parseContent(post.content)}
+            </div>
+
+            {/* Footer CTA */}
+            <div className="mt-16 pt-8 border-t border-[#3A3A5A]">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 rounded-xl bg-gradient-to-br from-[#BB86FC]/5 to-[#8686D7]/5 border border-[#BB86FC]/20">
+                <div>
+                  <h3 className="text-lg font-semibold text-[#E6E6F5] mb-2">Podobał Ci się artykuł?</h3>
+                  <p className="text-sm text-[#A5A5C3]">Odkryj więcej artykułów medycznych</p>
+                </div>
+                <Link
+                  href="/blog"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#BB86FC] hover:bg-[#8686D7] text-[#1F1F2D] font-semibold text-sm shadow-lg hover:shadow-xl hover:shadow-[#BB86FC]/20 transition-all duration-300 hover:scale-105"
+                >
+                  Zobacz więcej
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
     </section>
   )
 }

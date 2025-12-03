@@ -11,9 +11,9 @@ export default function PaginationButton({ disabled, onClick, children }: Pagina
       disabled={disabled}
       className={`${
         disabled
-          ? 'bg-white disabled:cursor-not-allowed shadow-sm opacity-50'
-          : 'bg-[#ffc5c5] hover:scale-95 hover:bg-[#f58a8a] hover:text-white hover:border-zinc-900 hover:shadow-sm'
-      } cursor-pointer min-w-[60px] xs:min-w-[80px] sm:min-w-24 stroke-neutral-400 stroke-[0.75] text-xs xs:text-sm sm:text-base px-1 sm:px-3 py-1 text-zinc-900 transition-all rounded-md border border-red-200/60 shadow shadow-zinc-500 hover:stroke-neutral-100`}
+          ? 'bg-[#2A2A3F]/30 disabled:cursor-not-allowed opacity-50 text-[#A5A5C3]'
+          : 'bg-[#BB86FC]/10 hover:bg-[#BB86FC]/20 hover:text-[#E6E6F5] hover:border-[#BB86FC]/50 text-[#BB86FC]'
+      } cursor-pointer min-w-[60px] xs:min-w-[80px] sm:min-w-24 text-xs xs:text-sm sm:text-base px-3 sm:px-4 py-2 transition-all duration-300 rounded-lg border border-[#3A3A5A]/50 font-medium`}
     >
       {children}
     </button>

@@ -6,11 +6,11 @@ import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useBlogSearchStore } from '@/store/useBlogSearch'
 import BlogPostList from '@/app/_components/BlogPostList'
 import BlogHero from '@/components/BlogHero'
-import SearchTerm from '@/components/SearchTerm'
+import BlogSearch from '@/components/BlogSearch'
 import type { Post } from '@/types/dataTypes'
 
 export default function AllPosts(props: { posts: Post[] }) {
-  const { searchTerm, setSearchTerm, isExpanded, toggleExpand, currentPage } = useBlogSearchStore()
+  const { searchTerm, setSearchTerm, currentPage } = useBlogSearchStore()
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
 
   const listRef = useRef<HTMLDivElement>(null)
@@ -52,20 +52,13 @@ export default function AllPosts(props: { posts: Post[] }) {
   })
 
   return (
-    <section className="w-full rounded-br-3xl sm:rounded-br-[50px] rounded-bl-3xl sm:rounded-bl-[50px]">
-      <div className="max-w-7xl mx-auto px-0 xs:px-6 lg:px-8 py-0 xs:py-4 sm:py-8 md:py-12" ref={listRef}>
+    <section className="w-full bg-[#BB86FC]/5">
+      <div className="px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
         <BlogHero />
-        <div className="min-h-screen flex flex-col items-center w-full bg-zinc-50 rounded-br-3xl rounded-bl-3xl rounded-none xs:rounded-3xl p-4 sm:p-8">
-          <div className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] pb-4">
-            <SearchTerm
-              label="Szukaj postu"
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              isExpanded={isExpanded}
-              toggleExpand={toggleExpand}
-              title="Najnowsze Artykuły"
-            />
-          </div>
+        <div className="w-full mb-8">
+          <BlogSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} title="Najnowsze Artykuły" />
+        </div>
+        <div className="w-full flex flex-col gap-6 p-4 sm:p-8 lg:p-10 rounded-2xl shadow-2xl border border-[#3A3A5A] bg-[#1F1F2D]">
           <BlogPostList posts={filteredBlogPosts ?? cachedBlogPosts} isLoading={searchLoading} error={error} />
         </div>
       </div>
