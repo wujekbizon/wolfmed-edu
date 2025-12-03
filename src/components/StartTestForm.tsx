@@ -50,7 +50,7 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
                 const label = n !== 40 ? "Praktyka" : "Egzamin";
                 return (
                   <option key={n} value={n} disabled={isDisabled}>
-                    {label} ({n} pytań) {isDisabled ? `- Potrzebujesz ${n} pytań` : ''}
+                    {label} ({n} pytań) 
                   </option>
                 );
               })
@@ -75,7 +75,7 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
       </div>
       <SubmitButton
         disabled={!status || availableQuestions < 10}
-        label={availableQuestions < 10 ? `Potrzebujesz minimum 10 pytań (masz ${availableQuestions})` : "Rozpocznij Test"}
+        label={availableQuestions < 10 ? `Minimum 10 pytań (masz ${availableQuestions})` : "Rozpocznij Test"}
         loading="Rozpoczynanie..."
       />
       {noScriptFallback}

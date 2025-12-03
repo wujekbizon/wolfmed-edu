@@ -8,72 +8,75 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
   const isCustomCategory = !item.data;
 
   return (
-    <div className="relative flex flex-col lg:flex-row w-full p-2 rounded-2xl bg-slate-900 transition-all duration-300 opacity-95 hover:opacity-100">
-      <div className="relative h-72 lg:h-auto w-full lg:w-1/3 rounded-xl">
+    <div className="relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 transition-all duration-300 opacity-95 hover:opacity-100 overflow-hidden">
+      <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
         {categoryData.image ? (
           <Image
             src={categoryData.image}
             alt={item.category}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover border border-zinc-600 rounded-xl lg:rounded-l-xl lg:rounded-r-none"
+            sizes="(max-width: 1024px) 100vw, 40vw"
+            className="object-cover"
             priority
           />
         ) : (
-          <div className="flex items-center justify-center h-full w-full bg-linear-to-br from-blue-600 to-purple-600 border border-zinc-600 rounded-xl lg:rounded-l-xl lg:rounded-r-none">
-            <span className="text-8xl font-bold text-white uppercase">
+          <div className="flex items-center justify-center h-full w-full bg-linear-to-br from-blue-600 to-purple-600">
+            <span className="text-7xl sm:text-8xl font-bold text-white uppercase">
               {item.category.charAt(0)}
             </span>
           </div>
         )}
       </div>
-      <div className="relative z-10 flex w-full lg:w-2/3 flex-col gap-4 p-2 lg:p-6">
-        <div className="flex flex-col items-start">
-          <div className="flex gap-2 mb-4">
+
+      <div className="flex flex-col gap-4 sm:gap-5 lg:gap-6 p-4 sm:p-5 lg:p-6 xl:p-8 w-full">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex flex-wrap gap-2">
             {categoryData.status ? (
-              <p className="rounded-full bg-green-500/20 px-2 py-1 text-sm text-green-500 border border-green-500/30">
+              <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs sm:text-sm text-green-500 border border-green-500/30 font-medium">
                 Dostępny online
-              </p>
+              </span>
             ) : (
-              <p className="rounded-full bg-red-500/20 px-2 py-1 text-sm text-red-500 border border-red-500/30">
+              <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs sm:text-sm text-red-500 border border-red-500/30 font-medium">
                 Niedostępny online
-              </p>
+              </span>
             )}
             {isCustomCategory && (
-              <p className="rounded-full bg-purple-500/20 px-2 py-1 text-sm text-purple-400 border border-purple-500/30">
+              <span className="rounded-full bg-purple-500/20 px-3 py-1 text-xs sm:text-sm text-purple-400 border border-purple-500/30 font-medium">
                 Twoja kategoria
-              </p>
+              </span>
             )}
           </div>
-          <h3 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow-md leading-tight">
+
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white drop-shadow-md leading-tight">
             {item.category}
           </h3>
-          <p className="mt-2 text-zinc-300  text-sm md:text-base xl:text:lg leading-relaxed">
+
+          <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
             {categoryData.description}
           </p>
         </div>
 
-        <div className="flex justify-between items-center text-sm md:text-base xl:text:lg text-zinc-400">
-          <p className="flex items-center max-h-3/4 text-zinc-800 bg-red-100 rounded-lg p-2">
-            <span className="font-bold">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-start sm:items-center">
+          <div className="flex items-center bg-red-100 rounded-lg px-3 py-2 min-h-[44px]">
+            <span className="font-bold text-zinc-800 text-sm sm:text-base">
               {categoryData.popularity}
             </span>
-          </p>
-          <div className="flex flex-col justify-between items-start">
-            <p className="text-zinc-200 text-sm md:text-base xl:text:lg">
-              Dostępne pytania:
-              <span className="font-bold text-red-300 mx-2">
-                {item.count}
-              </span>
-            </p>
-            <p className="flex items-center justify-end text-sm md:text-base xl:text:lg text-white">
-              Czas trwania:
-              <span className="text-red-300 font-bold mx-2">{categoryData.duration[0]}</span>
-              minut
-            </p>
+          </div>
+
+          <div className="flex flex-col gap-1.5 w-full sm:w-auto">
+            <div className="flex items-center gap-2 text-sm sm:text-base">
+              <span className="text-zinc-200">Dostępne pytania:</span>
+              <span className="font-bold text-red-300">{item.count}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm sm:text-base">
+              <span className="text-zinc-200">Czas trwania:</span>
+              <span className="font-bold text-red-300">{categoryData.duration[0]}</span>
+              <span className="text-zinc-200">minut</span>
+            </div>
           </div>
         </div>
-        <div className="w-full border border-zinc-600 p-2 rounded-md bg-slate-950">
+
+        <div className="w-full border border-zinc-600 rounded-lg bg-slate-950 p-3 sm:p-4">
           <StartTestForm category={item} />
         </div>
       </div>
