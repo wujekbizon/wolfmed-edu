@@ -18,16 +18,5 @@ export default async function BlogPage() {
     sortOrder: 'desc',
   })
 
-  const transformedPosts = posts.map((post) => ({
-    id: post.id,
-    title: post.title,
-    slug: post.slug,
-    date: post.date || post.publishedAt?.toISOString().split('T')[0] || '',
-    excerpt: post.excerpt,
-    content: post.content,
-    createdAt: post.createdAt,
-    updatedAt: post.updatedAt,
-  }))
-
-  return <AllPosts posts={transformedPosts} />
+  return <AllPosts posts={posts} />
 }

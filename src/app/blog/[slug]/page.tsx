@@ -28,16 +28,5 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     notFound()
   }
 
-  const transformedPost = {
-    id: post.id,
-    title: post.title,
-    slug: post.slug,
-    date: post.date || post.publishedAt?.toISOString().split('T')[0] || '',
-    excerpt: post.excerpt,
-    content: post.content,
-    createdAt: post.createdAt,
-    updatedAt: post.updatedAt,
-  }
-
-  return <BlogPost post={transformedPost} />
+  return <BlogPost post={post} />
 }
