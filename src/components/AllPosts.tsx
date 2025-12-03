@@ -78,10 +78,10 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
         <BlogHero />
         <div className="h-32 relative w-full mb-8 flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#3A3A5A]/50 to-transparent" />
+            <div className="w-full h-px bg-linear-to-r from-transparent via-[#3A3A5A]/50 to-transparent" />
           </div>
           <div className="relative flex items-center justify-center px-4">
-            <div className="bg-gradient-to-r from-[#2A2A3F] via-[#3A3A5E] to-[#2A2A3F] p-3 rounded-full border border-[#3A3A5A]/50 shadow-lg shadow-[#BB86FC]/5">
+            <div className="bg-linear-to-r from-[#2A2A3F] via-[#3A3A5E] to-[#2A2A3F] p-3 rounded-full border border-[#3A3A5A]/50 shadow-lg shadow-[#BB86FC]/5">
               <svg
                 className="w-5 h-5 text-[#BB86FC]/80"
                 fill="none"
@@ -96,13 +96,13 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
             </div>
           </div>
         </div>
-        <div className="w-full mb-8 flex flex-col sm:flex-row gap-8 justify-between items-center">
+        <div className="w-full mb-8 flex flex-col sm:flex-row sm:gap-8 gap-4 justify-between items-center">
           <div className="flex w-full">
             <BlogSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} title="Najnowsze Artykuły" />
           </div>
           <BlogSort />
         </div>
-        <div className="w-full flex flex-col gap-6 p-4 sm:p-8 lg:p-10 rounded-2xl shadow-2xl border border-[#3A3A5A]/50 bg-[#1F1F2D]">
+        <div className="w-full flex flex-col gap-6 p-4 sm:p-8 lg:p-10 rounded-xl border border-[#3A3A5A]/50 bg-[#1F1F2D]">
           <BlogPostList posts={sortedPosts} isLoading={searchLoading} error={error} />
         </div>
       </div>

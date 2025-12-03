@@ -41,12 +41,12 @@ export default function BlogPostList({ posts }: BlogPostListProps) {
           className="group bg-[#2A2A3F]/40 rounded-2xl shadow-lg border border-[#3A3A5A]/30 hover:border-[#BB86FC]/10 transition-all duration-300 overflow-hidden hover:shadow-lg hover:shadow-[#BB86FC]/5 min-h-[340px]"
         >
           <Link href={`/blog/${post.slug}`} className="flex flex-col sm:flex-row gap-0 sm:gap-6 h-full">
-            <div className="relative w-full sm:w-72 h-48 sm:h-auto shrink-0 bg-linear-to-br from-[#3A3A5E]/30 to-[#30304B]/30">
+            <div className="relative w-full sm:w-80 h-64 sm:h-auto shrink-0 bg-linear-to-br from-[#3A3A5E]/30 to-[#30304B]/30">
               <Image
                 src={post.coverImage || DEFAULT_BLOG_IMAGE}
                 alt={post.title}
                 fill
-                className="object-cover group-hover:scale-102 transition-transform duration-500 opacity-90"
+                className="object-cover group-hover:scale-102 transition-transform duration-500 opacity-95"
                 sizes="(max-width: 640px) 100vw, 288px"
               />
               <div className="absolute inset-0 bg-linear-to-t from-[#1F1F2D]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
