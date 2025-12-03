@@ -28,7 +28,6 @@ import {
   ExtendedCompletedTest,
   ExtendedProcedures,
   ExtendedTest,
-  Post,
   BlogPost,
   BlogCategory,
   BlogTag,
@@ -133,15 +132,6 @@ export const getAllProcedures = cache(
     return procedures
   }
 )
-
-// Get all blog posts, ordered by newest first (legacy - kept for backward compatibility)
-export const getAllPosts = cache(async (): Promise<Post[]> => {
-  const posts = await db.query.blogPosts.findMany({
-    orderBy: (model, { desc }) => desc(model.id),
-    where: (model, { eq }) => eq(model.status, 'published'),
-  })
-  return posts as Post[]
-})
 
 // ============================================================================
 // BLOG QUERIES

@@ -1,6 +1,6 @@
 import path from "path"
 import fs from "fs"
-import { Post, Procedure, Test } from "@/types/dataTypes"
+import { BlogPost, Procedure, Test } from "@/types/dataTypes"
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType"
 import { getProcedureIdFromSlug } from "@/constants/procedureSlugs"
 import {
@@ -11,8 +11,8 @@ import {
 } from "@/helpers/mergeTests"
 
 interface FileDataOperations {
-  getAllPosts: () => Promise<Post[]>
-  getPostById: (id: string) => Promise<Post | null>
+  getAllPosts: () => Promise<BlogPost[]>
+  getPostById: (id: string) => Promise<BlogPost | null>
   getAllProcedures: () => Promise<Procedure[]>
   getProcedureById: (id: string) => Promise<Procedure | null>
   getProcedureBySlug: (slug: string) => Promise<Procedure | null>
@@ -38,7 +38,7 @@ async function readJsonFile<T>(filename: string): Promise<T> {
 export const fileData: FileDataOperations = {
   getAllPosts: async () => {
     try {
-      const posts = await readJsonFile<Post[]>("blogPosts.json")
+      const posts = await readJsonFile<BlogPost[]>("blogPosts.json")
       return posts
     } catch (error) {
       console.error("Error fetching blog posts:", error)
@@ -48,7 +48,7 @@ export const fileData: FileDataOperations = {
 
   getPostById: async (id: string) => {
     try {
-      const posts = await readJsonFile<Post[]>("blogPosts.json")
+      const posts = await readJsonFile<BlogPost[]>("blogPosts.json")
       return posts.find((post) => post.id === id) || null
     } catch (error) {
       console.error("Error fetching blog post:", error)

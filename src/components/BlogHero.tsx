@@ -1,6 +1,6 @@
 export default function BlogHero() {
   return (
-    <div className="relative w-full bg-gradient-to-b from-[#3a3a54] via-[#2A2A3F] to-[#1F1F2D] border-b border-[#3A3A5A]/50 mb-8 rounded-2xl">
+    <div className="relative w-full bg-gradient-to-b from-[#3a3a54] via-[#2A2A3F] to-[#1F1F2D] border-b border-[#3A3A5A]/50 rounded-2xl mb-8">
       <div className="absolute inset-0 bg-gradient-to-br from-[#BB86FC]/5 via-transparent to-[#8686D7]/5 animate-gradient" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24 text-center">

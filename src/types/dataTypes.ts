@@ -1,6 +1,4 @@
-import { Usable } from 'react'
 
-// tests related types
 type Answer = {
   option: string
   isCorrect: boolean
@@ -44,7 +42,7 @@ export interface Procedure {
 }
 export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
 
-export type ServerData = Procedure[] | Test[] | Post[]
+export type ServerData = Procedure[] | Test[]
 export type QuestionAnswer = Record<string, string>
 export type FormattedAnswer = { questionId: string; answer: boolean }
 
@@ -66,17 +64,6 @@ export interface UserData {
   username?: string
   motto?: string
   createdAt?: Date
-}
-
-export interface Post {
-  id: string
-  title: string
-  slug: string
-  date: string
-  excerpt: string
-  content: string
-  createdAt?: Date | null
-  updatedAt?: Date | null
 }
 
 // Enhanced blog types
@@ -105,7 +92,7 @@ export interface BlogPost {
   title: string
   slug: string
   excerpt: string
-  content: string // MDX/Markdown
+  content: string
   coverImage: string | null
   categoryId: string | null
   authorId: string
@@ -117,11 +104,10 @@ export interface BlogPost {
   metaKeywords: string | null
   viewCount: number
   readingTime: number | null
-  date: string | null // Legacy field
+  date: string | null
   createdAt: Date
   updatedAt: Date
 
-  // Relations (populated by queries)
   category?: BlogCategory | null
   tags?: BlogTag[]
   likes?: BlogLike[]
@@ -211,7 +197,6 @@ export interface StepWithId extends Step {
   id: string
 }
 
-// Add this to your existing types
 export interface User {
   id: string
   userId: string
@@ -226,7 +211,6 @@ export interface User {
   total_questions: number
 }
 
-// Add this to your existing types
 export interface CompletedTestData {
   id: string
   userId: string

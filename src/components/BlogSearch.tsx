@@ -52,7 +52,7 @@ export default function BlogSearch({ searchTerm, setSearchTerm }: BlogSearchProp
             relative z-10
             w-full
             pl-14 pr-14
-            h-10
+            py-2.5
             bg-transparent
             text-[#E6E6F5] placeholder-[#A5A5C3]/50
             text-base

@@ -11,6 +11,8 @@ interface BlogSearchState {
   perPage: number
   setCurrentPage: (page: number) => void
   setPerPage: (perPage: number) => void
+  sortBy: 'newest' | 'oldest' | 'popular'
+  setSortBy: (sortBy: 'newest' | 'oldest' | 'popular') => void
 }
 
 export const useBlogSearchStore = create<BlogSearchState>()(
@@ -19,10 +21,12 @@ export const useBlogSearchStore = create<BlogSearchState>()(
       searchTerm: '',
       currentPage: 1,
       perPage: 6,
+      sortBy: 'newest',
       setSearchTerm: (term: string) => set({ searchTerm: term, currentPage: 1 }),
       clearSearchTerm: () => set({ searchTerm: '', currentPage: 1 }),
       setCurrentPage: (page: number) => set({ currentPage: page }),
       setPerPage: (perPage: number) => set({ perPage }),
+      setSortBy: (sortBy: 'newest' | 'oldest' | 'popular') => set({ sortBy, currentPage: 1 }),
       isExpanded: false,
       toggleExpand: () => set((state) => ({ isExpanded: !state.isExpanded })),
     }),
