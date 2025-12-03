@@ -4,7 +4,7 @@ import { careerPathsData } from "@/constants/careerPathsData"
 export default function UserOnboard() {
   return (
     <div className="w-full h-full flex justify-between">
-      <div className="h-full p-8 bg-white rounded-2xl shadow-xl border border-zinc-200/50">
+      <div className="h-full p-3 sm:p-8 bg-white rounded-2xl shadow-xl border border-zinc-200/50">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-4 leading-tight">
             Witamy w naszej społeczności!
@@ -38,7 +38,7 @@ export default function UserOnboard() {
                     }`}
                 >
                   {slug === "opiekun-medyczny" && (
-                    <span className="absolute top-3 right-3 bg-slate-950 text-white text-xs font-bold px-3 py-1 rounded-full animate-bounce-custom">
+                    <span className="absolute top-1 right-1 bg-slate-950 text-white text-xs font-bold px-3 py-1 rounded-full animate-bounce-custom">
                       Darmowy Plan!
                     </span>
                   )}

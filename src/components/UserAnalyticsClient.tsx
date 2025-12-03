@@ -43,7 +43,7 @@ export default function UserAnalyticsClient({
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics'>('overview')
 
   return (
-    <div className="bg-gradient-to-br from-white/25 via-white/35 to-white/25 backdrop-blur-xl border border-white/50 rounded-2xl p-6 shadow-lg hover:shadow-xl hover:border-white/70 transition-all duration-300">
+    <div className="bg-linear-to-br from-white/25 via-white/35 to-white/25 backdrop-blur-xl border border-white/50 rounded-2xl p-2 sm:p-6 shadow-lg hover:shadow-xl hover:border-white/70 transition-all duration-300">
       <div className="flex gap-2 mb-6 border-b border-white/40 pb-4">
         <button
           onClick={() => setActiveTab('overview')}

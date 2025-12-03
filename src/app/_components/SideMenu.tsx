@@ -20,7 +20,6 @@ export default function SideMenu() {
       </div>
 
       <nav className="flex flex-col h-full px-5 pb-8">
-        {/* Main Navigation */}
         <div>
           <h3 className="text-red-200 text-sm font-medium mb-3 px-1">Menu główne</h3>
           <div className="space-y-3">
@@ -45,7 +44,6 @@ export default function SideMenu() {
           </div>
         </div>
 
-        {/* Dashboard Navigation */}
         <div className="mt-16">
           <h3 className="text-red-200 text-sm font-medium mb-3 px-1">Panel użytkownika</h3>
           <div className="grid grid-cols-2 gap-3">

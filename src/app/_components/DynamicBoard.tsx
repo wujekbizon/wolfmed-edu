@@ -20,29 +20,28 @@ export default async function DynamicBoard() {
             </h3>
             <div className="space-y-4">
               <div className="border-l-4 border-red-500 pl-4">
-                <p className="text-sm text-zinc-500">12 Kwiecień 2025</p>
+                <p className="text-sm text-zinc-500">5 Grudzień 2025</p>
                 <h4 className="font-medium text-zinc-800">
-                  Aktualizacja bazy testów
+                 Nowa wersja aplikacji
                 </h4>
                 <p className="text-sm text-red-400 hover:text-red-500 transition-colors">
-                  Poszerzyliśmy nasza bazę danych o najnowsze 40 testów z
-                  egzaminów ze Stycznia 2025
+                  Wprowadziliśmy nową wersję aplikacji, z nowymi funkcjami i ulepszeniami.
                 </p>
               </div>
               <div className="border-l-4 border-zinc-300 pl-4">
-                <p className="text-sm text-zinc-500">12 Kwiecień 2025</p>
+                <p className="text-sm text-zinc-500">5 Grudzień 2025</p>
                 <h4 className="font-medium text-zinc-800">
                   Rozwój Społeczności
                 </h4>
                 <p className="text-sm text-zinc-600">
-                  Już ponad 2500 aktywnych użytkowników!
+                  Już ponad 5500 aktywnych użytkowników!
                 </p>
               </div>
             </div>
           </div>
           <div className="bg-linear-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
             <h3 className="text-xl font-bold mb-3">
-              🎉 Zapraszamy na forum 🎉
+              Zapraszamy na forum
             </h3>
             <p className="text-sm opacity-90 mb-4">
               Właśnie uruchomiliśmy forum, gdzie możesz dzielić się swoją wiedzą

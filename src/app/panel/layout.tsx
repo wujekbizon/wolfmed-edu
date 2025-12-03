@@ -23,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <PinnedNotesFeature pinnedNotes={pinnedNotes} />
           </Suspense>
         </TopPanel>
-        <div className="px-4 py-10">
+        <div className="py-10">
           {children}
         </div>
       </div>

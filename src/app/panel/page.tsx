@@ -23,7 +23,7 @@ export const dynamic = 'force-dynamic'
 export default async function TestsPage() {
   return (
     <section className="h-full w-full">
-      <div className="w-full h-full flex flex-col items-center gap-8 p-4">
+      <div className="w-full h-full flex flex-col items-center gap-8">
         <DynamicBoard />
         <section className="container mx-auto">
           <div className="backdrop-blur-sm w-full gap-8 flex flex-col p-3 xs:-p-4 sm:p-10 rounded-2xl shadow-lg border border-zinc-200/60 transition-all duration-300 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80">
