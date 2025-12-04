@@ -1,8 +1,13 @@
+import { Suspense } from 'react'
 import SupportersList from './SupportersList'
+import SupportersListSkeleton from './skeletons/SupportersListSkeleton'
+import { getSupportersWithUsernames } from '@/server/queries'
 
-export default function EarlySupporters() {
+export default async function EarlySupporters() {
+  const supportersUsernames = await getSupportersWithUsernames()
+  
   return (
-    <section className="w-full py-8 sm:py-16 bg-gradient-to-b from-zinc-100 to-zinc-200">
+    <section className="w-full py-8 sm:py-16 bg-linear-to-b from-zinc-100 to-zinc-200">
       <div className="container mx-auto px-4 xs:px-8 relative">
         <div className="animate-fadeInUp text-center">
           <span className="mb-3 sm:mb-4 inline-block rounded-full bg-zinc-200 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-zinc-800">
@@ -17,9 +22,11 @@ export default function EarlySupporters() {
           </p>
         </div>
         <div className="relative bg-white rounded-2xl shadow-xl overflow-hidden animate-scaleIn">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-50"></div>
+          <div className="absolute inset-0 bg-linear-to-br from-blue-50 to-purple-50 opacity-50"></div>
           <div className="relative z-10 p-4 sm:p-8 lg:p-12">
-            <SupportersList />
+            <Suspense fallback={<SupportersListSkeleton/>}>
+              <SupportersList supporters={supportersUsernames} />
+            </Suspense>
           </div>
         </div>
         <div className="mt-12 text-center animate-fadeInUp" style={{ animationDelay: '400ms' }}>

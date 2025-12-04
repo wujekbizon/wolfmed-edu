@@ -1,0 +1,72 @@
+import { StaticImageData } from "next/image";
+import React from "react";
+import LearnIcon from "@/components/icons/LearnIcon";
+import ProgressIcon from "@/components/icons/ProgressIcon";
+import BlogIcon from "@/components/icons/BlogIcon";
+
+export interface CardProps {
+  description: string;
+  customDescriptions?: { title: string; description: string , id:number, icon?:React.JSX.Element}[];
+  title: string;
+  titleBtn: string;
+  imgSrc: string | StaticImageData;
+  text: string;
+  url: string;
+  className?: string;
+  icon: string;
+  vertical?: boolean;
+}
+
+const CAREGIVER: CardProps = {
+  title: "Opiekun Medyczny",
+  titleBtn: "Najczęściej wybierany!",
+  description:
+    "Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny. Korzystaj z setek testów, procedur krok po kroku oraz wsparcia aktywnej społeczności. Nasza ścieżka edukacyjna została stworzona z myślą zarówno o osobach, które dopiero rozpoczynają swoją karierę i przygotowują się do egzaminu zawodowego, jak i o tych, którzy już pracują w zawodzie i chcą pogłębić swoją wiedzę, utrwalić procedury lub odświeżyć materiał przed kolejnym etapem kariery.",
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN',
+  text: "Sprawdź kierunek opiekun medyczny",
+  url: "/kierunki/opiekun-medyczny",
+  icon: "caregiver",
+};
+
+const NURSE: CardProps = {
+  title: "Pielęgniarstwo",
+  titleBtn: "W krótce dostępny!",
+  description:
+    "Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.",
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ICz8koequML1BazyDiNo5UcxtTn3s6YgW47C',
+  text: "Sprawdź kierunek pielęgniarstwo",
+  url: "/kierunki/pielegniarstwo",
+  icon: "nurse",
+};
+
+const INFO: CardProps = {
+  title: "Dołącz do naszej społeczności",
+  titleBtn: "Nauka może być prostsza!",
+  description: "Stawiamy na rozwój, nowoczesność i technologie.",
+  customDescriptions: [
+    {
+      id:1,
+      title: "Sprawdzona Wiedza",
+      description: "Z naszą platformą uczysz się skutecznie, rozwijasz kompetencje i budujesz swoją karierę. Zyskaj dostęp do bazy pytań testowych, procedur oraz materiałów edukacyjnych.",
+      icon: <LearnIcon color="white" width={56} height={56}/>
+    },
+    {
+      id:2,
+      title: "Artykuły i Porady",
+      description: "Czytaj praktyczne artykuły tworzone przez doświadczonych specjalistów. Poznaj realia pracy w służbie zdrowia i rozwijaj się razem z nami.",
+      icon: <BlogIcon color="white" width={56} height={56}/>
+    },
+    {
+      id:3,
+      title: "Rozwój i Analiza",
+      description: "Śledź swoje postępy, analizuj wyniki testów i doskonal umiejętności – we własnym tempie i z pełnym wsparciem narzędzi platformy.",
+      icon: <ProgressIcon color="white" width={56} height={56}/>
+    },
+  ],
+  imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5p5q9UmXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb',
+  text: "Dołącz już dziś",
+  url: "/sign-up",
+  icon: "info",
+};
+
+export { CAREGIVER, NURSE, INFO };

@@ -30,15 +30,28 @@ export default function CountdownTimer({
   }
 
   return (
-    <div className="flex justify-between gap-2 sm:gap-4 text-center max-w-xl mx-auto">
-      {TIME_SEGMENTS.map(({ key, label }) => (
-        <div key={key} className="flex-1 flex flex-col items-center bg-zinc-800/50 rounded-lg p-1.5 sm:p-3">
-          <div className="text-lg sm:text-3xl font-bold text-[#f58a8a] animate-pulse">
-            {timeLeft[key]?.toString().padStart(2, '0')}
-          </div>
-          <div className="text-[10px] sm:text-sm text-zinc-400 mt-0.5 sm:mt-1">{label}</div>
-        </div>
-      ))}
+<div className="grid grid-cols-4 gap-2 sm:gap-3 text-center max-w-full">
+  {TIME_SEGMENTS.map(({ key, label }) => (
+    <div
+      key={key}
+      className="
+        min-w-0 flex flex-col items-center
+        bg-zinc-800/60 rounded-lg px-1.5 py-2 sm:px-3 sm:py-4
+      "
+    >
+      <div className="text-lg sm:text-2xl font-bold text-[#f58a8a] tabular-nums">
+        {timeLeft[key]?.toString().padStart(2, '0')}
+      </div>
+
+      <div
+        className="text-[9px] sm:text-xs text-zinc-400 leading-none truncate w-full"
+        title={label}
+      >
+        {label}
+      </div>
     </div>
+  ))}
+</div>
+
   )
 }

@@ -1,7 +1,7 @@
 [
     {
       "id": "0005ebb5-5728-48b9-9963-88cacfacc6bd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -28,7 +28,7 @@
     },
     {
       "id": "0139e82c-79fc-46fc-b45e-da76e3e1212b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -51,7 +51,7 @@
     },
     {
       "id": "015d3965-087b-4eef-b26d-dcd2ee8814a7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -74,7 +74,7 @@
     },
     {
       "id": "017f9fb5-2d7f-472e-82cd-046b1fdcf5c5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -97,7 +97,7 @@
     },
     {
       "id": "01c9ad65-222d-4d41-b0f6-223e3423a0ba",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -124,7 +124,7 @@
     },
     {
       "id": "01ecdf50-b9be-4dd8-ba40-bfbcdb84881e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -151,7 +151,7 @@
     },
     {
       "id": "01f59f90-3006-4671-9767-1f2da498a776",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -174,7 +174,7 @@
     },
     {
       "id": "027511bf-59f2-477d-8762-02cbe53d690f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -197,7 +197,7 @@
     },
     {
       "id": "02db7c16-0e75-4ade-beba-de2c8a2abe9c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -224,7 +224,7 @@
     },
     {
       "id": "03328b4b-4efe-42bb-9c9c-7351e1ff6cdf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -247,7 +247,7 @@
     },
     {
       "id": "04019a0a-667e-4c1f-bea2-df2b4560767c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -274,7 +274,7 @@
     },
     {
       "id": "04927c83-8aa5-468e-9d14-ba10b02c0883",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -297,7 +297,7 @@
     },
     {
       "id": "0495ddef-3f19-40cf-9adb-ea604eb739e2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -320,7 +320,7 @@
     },
     {
       "id": "05410d6d-a247-41a3-b4b9-c4f86ca17060",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -343,7 +343,7 @@
     },
     {
       "id": "0560ffda-f106-4a26-a6ec-9e4bb6baca92",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -366,7 +366,7 @@
     },
     {
       "id": "059adbf6-06dc-465d-806c-c01043629f9e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -389,7 +389,7 @@
     },
     {
       "id": "05a132dd-4030-4ce0-8516-1059ef87378c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -412,7 +412,7 @@
     },
     {
       "id": "05c86019-2f17-43f4-bda6-5e706e072166",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -439,7 +439,7 @@
     },
     {
       "id": "05f8a4bb-f163-4849-9a8e-1993daeaa4c9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -462,7 +462,7 @@
     },
     {
       "id": "0662e365-f0de-4075-86d4-07afbcbc6565",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -485,7 +485,7 @@
     },
     {
       "id": "06d2e1b0-d4f6-4402-bc51-346bf9cfb6a0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -512,7 +512,7 @@
     },
     {
       "id": "06fd86d6-6ab3-448a-afd4-d2034e55e633",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -539,7 +539,7 @@
     },
     {
       "id": "075061c3-3bbe-46a7-ae6b-b7786481388d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -562,7 +562,7 @@
     },
     {
       "id": "07a211e0-6d1f-491c-a815-7bc5ce7a26aa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -585,7 +585,7 @@
     },
     {
       "id": "07b0a510-782d-4afc-95e3-6b979366be54",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -612,7 +612,7 @@
     },
     {
       "id": "07bea753-d1f9-435e-8f4e-2f05d5663b1a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -639,7 +639,7 @@
     },
     {
       "id": "08fec36d-756e-4f13-a50e-2fc97f4a5a6b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -666,7 +666,7 @@
     },
     {
       "id": "09103012-d5c5-47fa-8aa0-666e367516fa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -689,7 +689,7 @@
     },
     {
       "id": "09705f79-90a8-4065-ab18-6671d34463e3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -716,7 +716,7 @@
     },
     {
       "id": "097613de-76fe-4d0e-9069-11373778a529",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -739,7 +739,7 @@
     },
     {
       "id": "09b9fa6b-df78-4d23-a6c7-23181ec0b8a5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -762,7 +762,7 @@
     },
     {
       "id": "0b0ce7ce-73ff-4c9b-b9af-aa86b630ecde",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -785,7 +785,7 @@
     },
     {
       "id": "0b587614-ce50-40a0-bc1c-dac7c6d292df",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -808,7 +808,7 @@
     },
     {
       "id": "0b6a5876-a832-4048-bf3e-c054adf86cbc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -835,7 +835,7 @@
     },
     {
       "id": "0c478166-23d7-48b0-bfc2-9c88005948a6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -858,7 +858,7 @@
     },
     {
       "id": "0cb6c249-99ad-4a19-bd82-dc19b53fc780",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -881,7 +881,7 @@
     },
     {
       "id": "0d1d6d66-4c9d-409e-88f1-3ece8d019971",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -908,7 +908,7 @@
     },
     {
       "id": "0d4641a2-bbf3-4456-868f-d7473e80bd2b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -931,7 +931,7 @@
     },
     {
       "id": "0da1b351-46e4-4ec3-a01b-3d32bd95b0be",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -958,7 +958,7 @@
     },
     {
       "id": "0da42a9c-872e-4329-8553-740daa95e79c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -981,7 +981,7 @@
     },
     {
       "id": "0e00b552-e317-4ec4-ba41-5bd1bef8abf5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1008,7 +1008,7 @@
     },
     {
       "id": "0e5759ef-2471-442e-9560-4e8ecf7ae60a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1031,7 +1031,7 @@
     },
     {
       "id": "0e9810fa-0143-41ec-8fb5-bdce280e63f9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1054,7 +1054,7 @@
     },
     {
       "id": "0eb6cab9-3167-4734-9fd4-a760cbe0b10f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1077,7 +1077,7 @@
     },
     {
       "id": "0ecd5e47-fa3a-416a-afd5-3af04042fb89",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1100,7 +1100,7 @@
     },
     {
       "id": "0efb4729-291b-4c29-b1ac-ea921f4235ea",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1127,7 +1127,7 @@
     },
     {
       "id": "0f01a77e-1200-4bf9-8b45-aba4d07c1e14",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1150,7 +1150,7 @@
     },
     {
       "id": "0f53a697-9735-4e0a-9ec7-7e3aca6ab118",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1173,7 +1173,7 @@
     },
     {
       "id": "0f68382c-5f15-4ddc-aab5-44f36b55cfd2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1200,7 +1200,7 @@
     },
     {
       "id": "0f874b60-e2b3-4eee-8ba0-10917933b116",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1223,7 +1223,7 @@
     },
     {
       "id": "1009d9c7-d8c2-4979-a33c-2f8b5652a17b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1246,7 +1246,7 @@
     },
     {
       "id": "1010cd0e-1c78-4018-947f-5f0c020e70c5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1273,7 +1273,7 @@
     },
     {
       "id": "101a8d24-7b6a-4327-9cc5-b6573c51cee6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1296,7 +1296,7 @@
     },
     {
       "id": "11465a17-5f8d-4945-b18d-53651da1440f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1319,7 +1319,7 @@
     },
     {
       "id": "11a29a8a-2203-4add-be32-0a75bd8a0bbe",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1346,7 +1346,7 @@
     },
     {
       "id": "120be6a5-466b-4dec-8bfc-9d302855f610",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1369,7 +1369,7 @@
     },
     {
       "id": "121daf87-13c6-4e3b-b5fa-76a8e56e3bac",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1396,7 +1396,7 @@
     },
     {
       "id": "12af5658-903e-4c6d-bfd2-74ed479cc1d9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1423,7 +1423,7 @@
     },
     {
       "id": "12fc40a8-0f06-48f2-af32-8a8222976930",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1446,7 +1446,7 @@
     },
     {
       "id": "1372f5e7-64a0-4701-92fb-4efd56bf7c5b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1469,7 +1469,7 @@
     },
     {
       "id": "1396a8ab-1ee6-4f2d-b7f8-0f7f1ca6edc0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1492,7 +1492,7 @@
     },
     {
       "id": "14a0df78-dc07-4e90-8e45-8e447bf63423",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1515,7 +1515,7 @@
     },
     {
       "id": "14efb5f8-0957-47ff-a79b-e5ffb617e7c3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1538,7 +1538,7 @@
     },
     {
       "id": "153c8345-2717-45b8-9bb3-54d964daa3ae",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1565,7 +1565,7 @@
     },
     {
       "id": "15dbf8d3-780c-4947-a445-48bed640ebb1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1592,7 +1592,7 @@
     },
     {
       "id": "162d4fc1-9ae6-4089-9728-38bab0f11291",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1615,7 +1615,7 @@
     },
     {
       "id": "16a8224b-13e0-418b-89e1-57f92cef8985",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1638,7 +1638,7 @@
     },
     {
       "id": "170f3644-9c43-4742-b8ef-5a6661b2ef4f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1665,7 +1665,7 @@
     },
     {
       "id": "175d9f14-bb24-4381-b617-e306cfc7b205",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1688,7 +1688,7 @@
     },
     {
       "id": "17809c29-6a24-48d6-a9ea-974ae7209cf8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1715,7 +1715,7 @@
     },
     {
       "id": "183a53d9-3e3c-4071-9f26-4e81aa7b0575",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1742,7 +1742,7 @@
     },
     {
       "id": "1a3d016e-d3d7-4cff-bb64-4a8fc633ebc1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1765,7 +1765,7 @@
     },
     {
       "id": "1a4ee95d-33b5-4330-9430-2b4fdeeb1bc1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1792,7 +1792,7 @@
     },
     {
       "id": "1b0efb88-89d1-471f-b489-63c398bf2cfd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1815,7 +1815,7 @@
     },
     {
       "id": "1b535c5d-13b6-42f8-a720-8c397cc0a58d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1842,7 +1842,7 @@
     },
     {
       "id": "1ba4755b-1e65-4869-93c4-51439d857116",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1865,7 +1865,7 @@
     },
     {
       "id": "1bb2d85c-7378-46de-8086-9cfd526b05b5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1888,7 +1888,7 @@
     },
     {
       "id": "1bc35a10-38db-4234-b0ff-f61332720bfa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1915,7 +1915,7 @@
     },
     {
       "id": "1c226c90-992f-49a7-bce0-a1ef66f8d11c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1938,7 +1938,7 @@
     },
     {
       "id": "1ca7b69c-1edf-482e-98cf-2a900f489829",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1965,7 +1965,7 @@
     },
     {
       "id": "1cfb20e5-0200-4426-ba5b-e824e34ade4c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -1988,7 +1988,7 @@
     },
     {
       "id": "1d16564f-2431-4a73-933c-15abc27ea884",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2011,7 +2011,7 @@
     },
     {
       "id": "1dc3bdfb-650c-4907-90e8-a703cdd05d40",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2034,7 +2034,7 @@
     },
     {
       "id": "1e9a3a94-f488-49b9-bc5e-5b38c43990db",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2057,7 +2057,7 @@
     },
     {
       "id": "1ec992e4-ad44-4db2-8c5c-258b4cc1315c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2080,7 +2080,7 @@
     },
     {
       "id": "1efaf036-a8a6-40c9-bb22-29d04170cb63",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2103,7 +2103,7 @@
     },
     {
       "id": "1f28d57a-ed91-4c05-9138-df84504401dc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2130,7 +2130,7 @@
     },
     {
       "id": "1f8512b2-2faf-4578-bbe9-f8ce0b46d96c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2153,7 +2153,7 @@
     },
     {
       "id": "1fbc0ed9-dd43-4efe-80ce-b141290eb79b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2180,7 +2180,7 @@
     },
     {
       "id": "1fdb29f7-7f4a-4b79-acbb-b2734931bb0c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2203,7 +2203,7 @@
     },
     {
       "id": "2073fd30-d511-4c6c-a8e7-7b19a2e73d14",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2226,7 +2226,7 @@
     },
     {
       "id": "21700f39-3bab-496a-a209-1a267a6ada58",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2249,7 +2249,7 @@
     },
     {
       "id": "218ce42b-6aa2-499a-93cf-fa6b42975402",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2272,7 +2272,7 @@
     },
     {
       "id": "21b794e5-d776-44cd-a833-99e53e4e6768",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2299,7 +2299,7 @@
     },
     {
       "id": "21c3ccdb-af12-4892-931d-e6678f246450",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2322,7 +2322,7 @@
     },
     {
       "id": "221c0980-5734-4ec6-ab8c-f508b5bc13c1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2345,7 +2345,7 @@
     },
     {
       "id": "22391407-575c-4f10-8ea7-10a6e93ad94f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2368,7 +2368,7 @@
     },
     {
       "id": "223f7d85-8c98-44c8-93b4-ea3179263153",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2395,7 +2395,7 @@
     },
     {
       "id": "22bc8931-938b-4a7c-816a-9123aee3f169",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2418,7 +2418,7 @@
     },
     {
       "id": "22eb7471-138a-44cd-9592-92e82ca9cb34",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2445,7 +2445,7 @@
     },
     {
       "id": "23110052-8217-4a7a-91fd-33fe5e817267",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2468,7 +2468,7 @@
     },
     {
       "id": "244c32ca-93fa-4c3a-a541-bd81a5f34391",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2491,7 +2491,7 @@
     },
     {
       "id": "245c1b61-d347-41a5-a8b1-a073f766d72a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2518,7 +2518,7 @@
     },
     {
       "id": "246e7ab2-53f4-4ebc-bb9e-fddc52f87060",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2541,7 +2541,7 @@
     },
     {
       "id": "24f73056-3365-49c4-a026-9273a91f563f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2564,7 +2564,7 @@
     },
     {
       "id": "254395d6-6300-447a-b934-a564138f5959",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2587,7 +2587,7 @@
     },
     {
       "id": "26059c19-57f2-407e-add5-f60ae9730179",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2610,7 +2610,7 @@
     },
     {
       "id": "26a0abf9-adce-42af-912c-17c20762b44f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2637,7 +2637,7 @@
     },
     {
       "id": "26f18d7a-1f7f-4802-9963-ca4daceb7f01",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2660,7 +2660,7 @@
     },
     {
       "id": "2704e67c-dd9e-4f80-b1b0-e9e314c645e6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2683,7 +2683,7 @@
     },
     {
       "id": "272ad3ff-2164-44c3-b655-82f2ba845194",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2706,7 +2706,7 @@
     },
     {
       "id": "278843b1-76ed-471f-b510-97b50a4f570e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2729,7 +2729,7 @@
     },
     {
       "id": "27d3936f-d914-443a-9de7-e7eae4c6d22e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2756,7 +2756,7 @@
     },
     {
       "id": "27d6bb8e-f80c-4477-b7cb-15869ccb3e6d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2779,7 +2779,7 @@
     },
     {
       "id": "282342f4-9406-42dd-bd5b-6ef2edcfa8f3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2806,7 +2806,7 @@
     },
     {
       "id": "28947704-f29d-4b3f-a850-1b9c29a61aa2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2829,7 +2829,7 @@
     },
     {
       "id": "28bb9898-3eb8-45a8-9029-590af0aab1a5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2856,7 +2856,7 @@
     },
     {
       "id": "28cf36b7-668c-4627-8db7-aadb845af1f9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2879,7 +2879,7 @@
     },
     {
       "id": "290a3b4f-be3c-4749-8142-3972aade0322",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2906,7 +2906,7 @@
     },
     {
       "id": "299b30c6-ea3e-419f-8694-f127ba1f02bb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2929,7 +2929,7 @@
     },
     {
       "id": "29fc6eed-7bfd-4b8b-83ce-c47b8137c198",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2952,7 +2952,7 @@
     },
     {
       "id": "2a0da850-8c0c-4c93-8cc4-3e194bc85741",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2975,7 +2975,7 @@
     },
     {
       "id": "2a62e555-7f36-4ea1-a00e-055f7e30f500",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -2998,7 +2998,7 @@
     },
     {
       "id": "2af37079-e051-49e1-aa03-3548248dcdde",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3025,7 +3025,7 @@
     },
     {
       "id": "2b9d3861-fc5c-4a15-a920-29307473e4d5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3048,7 +3048,7 @@
     },
     {
       "id": "2ca28fb5-0f5e-47ff-bdf2-38586fd45fe0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3075,7 +3075,7 @@
     },
     {
       "id": "2cd9af61-a1d5-4064-b8b7-49eb795d5aed",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3098,7 +3098,7 @@
     },
     {
       "id": "2ce78138-a4d7-42b5-a61b-ffba6d3b315e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3121,7 +3121,7 @@
     },
     {
       "id": "2d0f5aef-2bfd-4826-a866-afae56dba565",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3144,7 +3144,7 @@
     },
     {
       "id": "2d297b01-15d2-4164-b89c-e03258183e06",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3167,7 +3167,7 @@
     },
     {
       "id": "2d3f2983-dc17-4232-a460-7e8c2fb328b8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3194,7 +3194,7 @@
     },
     {
       "id": "2da04ab7-a4dd-4166-9ff5-d8fdd3f3c457",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3217,7 +3217,7 @@
     },
     {
       "id": "2daac059-2b0f-4ce8-97f0-6cb01e855abb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3240,7 +3240,7 @@
     },
     {
       "id": "2e57fdeb-cf52-4af0-a630-e76d08916be3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3263,7 +3263,7 @@
     },
     {
       "id": "2ed2347b-3368-46dc-a70f-ed96b41d805c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3290,7 +3290,7 @@
     },
     {
       "id": "2fa5537d-08a9-40f8-9cd1-373a48ff0ee6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3313,7 +3313,7 @@
     },
     {
       "id": "30341e4f-97ce-4b43-9fca-4e3e0ecfa89d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3336,7 +3336,7 @@
     },
     {
       "id": "305ecb97-67ae-47e7-a66d-eb3b4c19ac9d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3359,7 +3359,7 @@
     },
     {
       "id": "30613693-2a88-40b4-9fb8-c7cc7c7ccc99",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3382,7 +3382,7 @@
     },
     {
       "id": "30863f07-1062-4726-986d-9077661c97f8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3405,7 +3405,7 @@
     },
     {
       "id": "309b2011-bd53-4a63-a498-b3297777c76e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3428,7 +3428,7 @@
     },
     {
       "id": "30a387a2-a02a-436a-a122-22ecc1ea4bbc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3455,7 +3455,7 @@
     },
     {
       "id": "31add66e-d501-420a-89d3-3baa2cd16ef9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3482,7 +3482,7 @@
     },
     {
       "id": "31b16fa4-301a-45a2-a7b9-407b00bbb4c1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3509,7 +3509,7 @@
     },
     {
       "id": "3274b298-00e7-4f18-a2f4-dfccbab9c2b3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3536,7 +3536,7 @@
     },
     {
       "id": "32eb1e16-4be6-4ee1-9433-fbf8d15991a5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3563,7 +3563,7 @@
     },
     {
       "id": "33e39905-1532-444a-8292-96e39755f5ba",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3586,7 +3586,7 @@
     },
     {
       "id": "34240a8b-8d08-449c-be0d-bb1b0f60fa4e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3617,7 +3617,7 @@
     },
     {
       "id": "3445e731-ba8b-4df1-9ba2-732892e77657",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3640,7 +3640,7 @@
     },
     {
       "id": "3491890b-1435-4546-9e94-2246e13de031",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3663,7 +3663,7 @@
     },
     {
       "id": "3599f921-20a3-4e39-bbbc-36cabfd80c78",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3690,7 +3690,7 @@
     },
     {
       "id": "36e51255-23b5-40cd-a0ca-4b684d470296",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3717,7 +3717,7 @@
     },
     {
       "id": "3713946b-60ae-4294-aa4b-9741d94eebc6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3740,7 +3740,7 @@
     },
     {
       "id": "38175d19-b40a-48b0-b5f1-a5898999cb32",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3763,7 +3763,7 @@
     },
     {
       "id": "39711476-c9ca-42b0-af58-bd7afdced2b0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3790,7 +3790,7 @@
     },
     {
       "id": "3a14b2c5-10e2-48b9-a65f-5aab16e6643f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3813,7 +3813,7 @@
     },
     {
       "id": "3a278b43-dea8-4e16-a8d9-4d4753f5cb6f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3836,7 +3836,7 @@
     },
     {
       "id": "3a2969f4-1739-47a2-a4cc-f24af3bc161a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3863,7 +3863,7 @@
     },
     {
       "id": "3a808d20-d735-43d9-b613-de15c52163f6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3890,7 +3890,7 @@
     },
     {
       "id": "3adc43ec-9720-455a-b881-45051d8cc8ca",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3913,7 +3913,7 @@
     },
     {
       "id": "3b617714-5c67-4f17-a9be-07e9a7a8a6c0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3936,7 +3936,7 @@
     },
     {
       "id": "3c1e5c92-bb0e-403b-bc7c-a9f3078065e8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3959,7 +3959,7 @@
     },
     {
       "id": "3c2dc21e-fc1c-4640-bbae-af42d03d949b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -3982,7 +3982,7 @@
     },
     {
       "id": "3c98886f-302a-40ec-bcb4-dcbd6c0b4a08",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4005,7 +4005,7 @@
     },
     {
       "id": "3caae30b-a611-4b23-9e51-4164eb1e8d1f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4028,7 +4028,7 @@
     },
     {
       "id": "3d0a744c-3d42-41b4-972d-3b5293a88bc0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4055,7 +4055,7 @@
     },
     {
       "id": "3d0bab56-f98c-40d4-ad0e-937842540f22",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4078,7 +4078,7 @@
     },
     {
       "id": "3e3d6231-e045-41b7-8809-b87bc2aac65d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4105,7 +4105,7 @@
     },
     {
       "id": "3e4b37ee-6560-4be1-8379-e03aeeff266d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4128,7 +4128,7 @@
     },
     {
       "id": "3e8aef4c-c245-46b9-acef-221849675ea1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4155,7 +4155,7 @@
     },
     {
       "id": "3f0cca6f-b85a-42cf-ad9d-6d7b9c9b7e02",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4178,7 +4178,7 @@
     },
     {
       "id": "3f688721-2efb-4705-aac4-c27db65146db",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4201,7 +4201,7 @@
     },
     {
       "id": "3f7ddb8d-ecd9-43c7-88f0-d0fffa9ee150",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4228,7 +4228,7 @@
     },
     {
       "id": "3f8084ab-9205-4aca-8206-c21720471eba",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4251,7 +4251,7 @@
     },
     {
       "id": "3fc0c3b1-1502-45c7-aac1-af46301f68d5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4278,7 +4278,7 @@
     },
     {
       "id": "4025ce96-b2ea-409a-9ae0-8d713be01740",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4301,7 +4301,7 @@
     },
     {
       "id": "402c7f35-6f32-462e-9976-12fa2ef1dfe8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4328,7 +4328,7 @@
     },
     {
       "id": "40a9b1cc-390c-4c0b-a2f5-6243f478721a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4351,7 +4351,7 @@
     },
     {
       "id": "415826a3-3609-40ac-aa3f-70abba5f4aa2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4374,7 +4374,7 @@
     },
     {
       "id": "41b6d397-becf-4912-b3e3-3c29713b0f70",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4401,7 +4401,7 @@
     },
     {
       "id": "41e96ba6-d272-49e1-895c-0daf40b41cfe",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4428,7 +4428,7 @@
     },
     {
       "id": "4225d847-2139-410e-a8d9-720324844028",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4451,7 +4451,7 @@
     },
     {
       "id": "42398a8e-359a-4be7-b71e-a9e7b94607cf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4474,7 +4474,7 @@
     },
     {
       "id": "426c501c-5152-4895-8fd7-d51fc737b200",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4497,7 +4497,7 @@
     },
     {
       "id": "4291d3cc-7f15-4074-b742-c4683679f41a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4524,7 +4524,7 @@
     },
     {
       "id": "43484e43-a909-4b46-9b66-b59e7b9815e5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4547,7 +4547,7 @@
     },
     {
       "id": "43fb953a-cdce-49f3-bafe-a3ac207a963f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4574,7 +4574,7 @@
     },
     {
       "id": "441e6eeb-6ec5-453a-a344-ae85a60b9deb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4597,7 +4597,7 @@
     },
     {
       "id": "44eb6897-f66e-480d-97a2-80c243f86cad",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4620,7 +4620,7 @@
     },
     {
       "id": "45027052-f10d-4a85-a61a-2bf2048bc40a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4643,7 +4643,7 @@
     },
     {
       "id": "4522f6b0-43f0-46de-9309-11457fb43796",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4666,7 +4666,7 @@
     },
     {
       "id": "456ff92e-80bc-48b3-92dd-ddf89c81c847",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4689,7 +4689,7 @@
     },
     {
       "id": "45e59cad-d969-4483-b88b-d9f0b48af9d1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4712,7 +4712,7 @@
     },
     {
       "id": "46346dd2-64c6-439a-b347-cf595337bd92",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4739,7 +4739,7 @@
     },
     {
       "id": "4712514b-a0b3-4c96-987e-0d3b44666b8a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4766,7 +4766,7 @@
     },
     {
       "id": "48c7afee-330a-4a67-b508-3edfc4f4ae34",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4793,7 +4793,7 @@
     },
     {
       "id": "4a85140a-d138-47b6-a3d1-7c30d07e0f18",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4816,7 +4816,7 @@
     },
     {
       "id": "4aa154af-072d-4475-82d4-eb7a5cee14a2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4839,7 +4839,7 @@
     },
     {
       "id": "4afc5dd8-edb1-4b91-8676-b50c7755bd6e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4866,7 +4866,7 @@
     },
     {
       "id": "4b9a36c0-28af-4f8c-a15a-80064af38c94",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4893,7 +4893,7 @@
     },
     {
       "id": "4bbc2b38-ef8b-4271-9b5e-aa135d9ae5c0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4920,7 +4920,7 @@
     },
     {
       "id": "4bde5ad8-95c4-44a9-b2c8-52ade4cdf1d9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4943,7 +4943,7 @@
     },
     {
       "id": "4c19f3f8-01a2-45bd-bfbc-b6b0fff995fc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4966,7 +4966,7 @@
     },
     {
       "id": "4c2956b2-928a-4b49-9d6f-2a4ea2a926e8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -4993,7 +4993,7 @@
     },
     {
       "id": "4c900313-bc56-48e5-b9d8-12c6741a8d42",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5020,7 +5020,7 @@
     },
     {
       "id": "4ca2b01e-01dc-4a9e-a2d4-caab6f4a5fa7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5047,7 +5047,7 @@
     },
     {
       "id": "4d179357-2b07-461d-b956-3efce7c6debd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5070,7 +5070,7 @@
     },
     {
       "id": "4d71e1a4-406c-4e02-ba22-1e315c1769ce",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5093,7 +5093,7 @@
     },
     {
       "id": "4deedd06-1749-4f25-8f77-c2da05be8f75",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5116,7 +5116,7 @@
     },
     {
       "id": "4ea54617-7a82-4c21-81dd-ad18257fa77d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5139,7 +5139,7 @@
     },
     {
       "id": "4fe2eeea-402a-4282-9e71-f3c23b646615",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5166,7 +5166,7 @@
     },
     {
       "id": "503aa7aa-9166-4524-81fc-ab044b5a5c82",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5189,7 +5189,7 @@
     },
     {
       "id": "5076b9c1-45c8-4b4e-90b4-a09de1784c60",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5216,7 +5216,7 @@
     },
     {
       "id": "50e81e18-21ac-4ca9-97ca-db8aaa88c5f0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5243,7 +5243,7 @@
     },
     {
       "id": "51504625-5b10-46ad-b8b8-80b47549a8cf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5266,7 +5266,7 @@
     },
     {
       "id": "51edf723-1bfc-4777-a6f3-0d0a5310ed36",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5289,7 +5289,7 @@
     },
     {
       "id": "52c70717-353a-47f2-a66c-d88a7b570c72",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5316,7 +5316,7 @@
     },
     {
       "id": "530fc13f-28d8-45f0-b016-79b6abd16987",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5339,7 +5339,7 @@
     },
     {
       "id": "53186fc8-9ac8-4dee-83d2-296f30afddc2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5362,7 +5362,7 @@
     },
     {
       "id": "53413bae-09ae-44b1-8b4a-009f2adcb2c7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5389,7 +5389,7 @@
     },
     {
       "id": "53ff2911-3b7e-445a-9ecf-4ad95daa34d6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5412,7 +5412,7 @@
     },
     {
       "id": "55639144-03c6-4c76-8381-034079d9e3b9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5435,7 +5435,7 @@
     },
     {
       "id": "558ce806-48c1-4e06-87e5-e16470d35aa7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5462,7 +5462,7 @@
     },
     {
       "id": "56b58477-a01e-4b81-94a1-d4401fe8526c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5489,7 +5489,7 @@
     },
     {
       "id": "571cd05b-51ce-4047-a593-b84e64c31dd1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5512,7 +5512,7 @@
     },
     {
       "id": "579f4b41-70d8-4dc2-a054-5e0931dbb82e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5535,7 +5535,7 @@
     },
     {
       "id": "57a2362b-4ee2-43b6-b306-781fc8a3f32c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5562,7 +5562,7 @@
     },
     {
       "id": "57c4d5e2-6d17-41b1-95cb-22c4777833f2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5589,7 +5589,7 @@
     },
     {
       "id": "58093606-5768-4660-a10e-99e6329042b9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5616,7 +5616,7 @@
     },
     {
       "id": "58165e09-05a3-4734-b1bf-fba44c4e5b78",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5639,7 +5639,7 @@
     },
     {
       "id": "5827327d-4bca-4332-83a5-988c66a51250",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5662,7 +5662,7 @@
     },
     {
       "id": "5835af1e-8cd8-4b72-94d0-e06d783885a0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5689,7 +5689,7 @@
     },
     {
       "id": "583d1609-4895-4b5e-bedf-3dc58d8dfa94",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5712,7 +5712,7 @@
     },
     {
       "id": "5885e6dd-a765-46b8-97cd-a8fdaa5b8167",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5735,7 +5735,7 @@
     },
     {
       "id": "590d3f2d-079b-4f98-a176-49d6dd1a54df",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5762,7 +5762,7 @@
     },
     {
       "id": "5924c318-84e8-44a2-a49b-f5f22f0ec788",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5785,7 +5785,7 @@
     },
     {
       "id": "5960572a-5d0e-4802-84bf-7a5e93cdeecf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5812,7 +5812,7 @@
     },
     {
       "id": "598ab4b1-dbe0-4a8e-beea-bcc55da11dfb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5839,7 +5839,7 @@
     },
     {
       "id": "59ab0b02-b446-4107-8f83-456b6cff4305",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5862,7 +5862,7 @@
     },
     {
       "id": "5a6230e1-7a1f-466e-a17b-bf9f0b01f354",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5885,7 +5885,7 @@
     },
     {
       "id": "5a8f8b11-eb4a-4004-8371-6704ed8e6638",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5908,7 +5908,7 @@
     },
     {
       "id": "5b7259de-34e1-449f-afd7-95bc443106c0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5935,7 +5935,7 @@
     },
     {
       "id": "5c9d4f4c-9c20-4fcb-b3e4-c0de6eb2e910",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5958,7 +5958,7 @@
     },
     {
       "id": "5d3b2abe-1d42-4e62-ac81-8f9a1a5c4878",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -5981,7 +5981,7 @@
     },
     {
       "id": "5d3d1d43-29cb-4650-af05-7afa64c74ac5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6008,7 +6008,7 @@
     },
     {
       "id": "5dc4f47c-0952-49a1-aade-f4d455a2e15a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6031,7 +6031,7 @@
     },
     {
       "id": "5e048dd4-1493-4c70-b636-151077bfaf74",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6054,7 +6054,7 @@
     },
     {
       "id": "5eb86735-7915-4d9a-82c3-512dc41c17ea",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6081,7 +6081,7 @@
     },
     {
       "id": "5ede5fe2-670c-44ef-915f-5a86c0cebe29",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6104,7 +6104,7 @@
     },
     {
       "id": "5f27e045-6def-4e75-9b37-752dd8485476",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6131,7 +6131,7 @@
     },
     {
       "id": "5f561372-f413-4996-a5ec-8cf4a2128735",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6154,7 +6154,7 @@
     },
     {
       "id": "5f954a38-f7fa-4e50-84a4-104afbc70398",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6181,7 +6181,7 @@
     },
     {
       "id": "610045f8-9b65-4845-aa48-e676e8761ab0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6204,7 +6204,7 @@
     },
     {
       "id": "61db2781-1e04-4836-856c-4cec480d2fda",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6231,7 +6231,7 @@
     },
     {
       "id": "6221b777-4c40-4f38-9ab3-a26181841dd4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6254,7 +6254,7 @@
     },
     {
       "id": "625f6d68-ee3d-4e47-97bd-ede850caf0e0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6277,7 +6277,7 @@
     },
     {
       "id": "62dd594e-7c58-491d-a251-95edc93cab8d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6304,7 +6304,7 @@
     },
     {
       "id": "632dad62-d5b0-4e0e-b022-38403b14259f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6327,7 +6327,7 @@
     },
     {
       "id": "6365df92-0a25-4c10-9816-786a953de4c5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6350,7 +6350,7 @@
     },
     {
       "id": "63e962ce-4f78-4029-8242-aaa04a34220f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6373,7 +6373,7 @@
     },
     {
       "id": "64231682-a63b-4734-89d1-934e4e9fafd6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6396,7 +6396,7 @@
     },
     {
       "id": "6443217d-0289-46e9-9e4f-0c04a93318ec",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6419,7 +6419,7 @@
     },
     {
       "id": "645f492a-f3bc-4dcc-9b50-89f9b269db11",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6446,7 +6446,7 @@
     },
     {
       "id": "64d08aec-d990-4d09-82a9-120ebc4aea3c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6469,7 +6469,7 @@
     },
     {
       "id": "6503eeb1-0043-40e3-ae01-7c4b1e8044e1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6496,7 +6496,7 @@
     },
     {
       "id": "6553ce8d-684f-418f-b1d5-ba9ef5b6f16b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6523,7 +6523,7 @@
     },
     {
       "id": "67202429-b664-443d-922d-10298f1bd19e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6546,7 +6546,7 @@
     },
     {
       "id": "67ca0356-6d1d-4b65-8645-8611f5d0bf83",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6569,7 +6569,7 @@
     },
     {
       "id": "69486d24-a810-41e8-8c38-1d8376fb8c85",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6592,7 +6592,7 @@
     },
     {
       "id": "69b65a08-1390-40d3-96eb-def311e5d777",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6615,7 +6615,7 @@
     },
     {
       "id": "69c284a2-cdf2-4640-a330-4446d5a90621",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6642,7 +6642,7 @@
     },
     {
       "id": "6a69d9cb-3eaa-46f4-87bc-7aeeb912afe1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6665,7 +6665,7 @@
     },
     {
       "id": "6a982550-f738-42d4-b691-4f2b26877946",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6688,7 +6688,7 @@
     },
     {
       "id": "6adf71c7-b5af-4eae-8d2e-d05401b62b28",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6711,7 +6711,7 @@
     },
     {
       "id": "6b99b829-eea7-49a9-870e-54618fb81e49",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6734,7 +6734,7 @@
     },
     {
       "id": "6bab0e9d-84f5-4184-997b-ae10e3d51809",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6761,7 +6761,7 @@
     },
     {
       "id": "6bb0d4d3-a5fa-4a78-b145-cef20a089563",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6784,7 +6784,7 @@
     },
     {
       "id": "6c8c15f0-2ee2-4138-8738-6bcafaf97627",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6807,7 +6807,7 @@
     },
     {
       "id": "6de2fd79-e7e2-4265-b3ce-fe9f0924a9d3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6834,7 +6834,7 @@
     },
     {
       "id": "6ebc9442-cdbc-4878-946d-1bb353cba09f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6857,7 +6857,7 @@
     },
     {
       "id": "6ec8787b-04f7-4412-9171-fb7d450eb464",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6880,7 +6880,7 @@
     },
     {
       "id": "6f6c212e-3351-45b7-ad70-be46c5e91dd9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6903,7 +6903,7 @@
     },
     {
       "id": "7030980b-4e83-401f-97a9-ff3abbedf717",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6926,7 +6926,7 @@
     },
     {
       "id": "70468988-6237-48dc-89d1-94ddf18c3313",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6949,7 +6949,7 @@
     },
     {
       "id": "715f6996-fc19-44f0-a747-43f3ae6bef03",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6972,7 +6972,7 @@
     },
     {
       "id": "71d3e778-4a55-4458-9d64-b68a1d1d9ad1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -6995,7 +6995,7 @@
     },
     {
       "id": "72150810-8132-4005-89f8-2c80b6e67698",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7018,7 +7018,7 @@
     },
     {
       "id": "727e94ee-d84f-4f2f-9f90-8e1dbd0b8de1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7041,7 +7041,7 @@
     },
     {
       "id": "73fbfb9e-3eef-486e-9dc5-3ef456d4578f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7064,7 +7064,7 @@
     },
     {
       "id": "74481e6e-9e94-4130-b4de-104e53890827",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7091,7 +7091,7 @@
     },
     {
       "id": "744e3a6f-e779-4534-bae4-2fb19833b822",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7118,7 +7118,7 @@
     },
     {
       "id": "745b071b-a09a-4d51-ae75-86a5bf8ab4d7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7141,7 +7141,7 @@
     },
     {
       "id": "74820863-5eaf-44a3-bb9a-548f1bebd040",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7168,7 +7168,7 @@
     },
     {
       "id": "74cfb304-b743-4925-9d99-19ee93759442",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7195,7 +7195,7 @@
     },
     {
       "id": "74fca311-270a-4d3d-92ff-8c2db26d6432",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7222,7 +7222,7 @@
     },
     {
       "id": "7577a828-2b83-4f3d-bdff-d5ecf16949ae",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7245,7 +7245,7 @@
     },
     {
       "id": "76016e03-9629-4845-85df-c656fe606efc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7268,7 +7268,7 @@
     },
     {
       "id": "760bb874-e221-431f-8eec-56eabd9b6416",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7291,7 +7291,7 @@
     },
     {
       "id": "768f3c9e-ccae-4e10-a909-ec3dc9ce1073",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7314,7 +7314,7 @@
     },
     {
       "id": "769754cc-71e7-426e-9ac0-dab3cc6301c6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7341,7 +7341,7 @@
     },
     {
       "id": "76ad0739-7fdd-4c91-8127-b744394556de",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7364,7 +7364,7 @@
     },
     {
       "id": "76b3e656-0f01-4a96-8cca-d85677a9547b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7391,7 +7391,7 @@
     },
     {
       "id": "76db5dc3-1dcc-4f55-9c04-49e6718fbb3d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7418,7 +7418,7 @@
     },
     {
       "id": "78749ea7-7cba-4438-bc78-25efc425f23c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7445,7 +7445,7 @@
     },
     {
       "id": "7878f302-85f7-4830-bf66-a81ec3256ec4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7468,7 +7468,7 @@
     },
     {
       "id": "78da7bd9-fe46-42c6-9b04-d0626574be9b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7491,7 +7491,7 @@
     },
     {
       "id": "78f29ea8-1aa0-4929-b292-6b5a889475b6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7514,7 +7514,7 @@
     },
     {
       "id": "795636a8-19f9-4bb1-8103-d999bc4e70f9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7537,7 +7537,7 @@
     },
     {
       "id": "79876698-3d2c-4739-8110-eae8771c5a98",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7564,7 +7564,7 @@
     },
     {
       "id": "7a3df241-787e-48f7-8916-b2809e10eed8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7587,7 +7587,7 @@
     },
     {
       "id": "7ab1e248-920f-4c45-8894-ddf26b53f4b9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7610,7 +7610,7 @@
     },
     {
       "id": "7b23e32e-0509-45cb-b654-e7e51e68cf05",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7633,7 +7633,7 @@
     },
     {
       "id": "7b42cce9-311e-4333-8b83-f04cad44272e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7656,7 +7656,7 @@
     },
     {
       "id": "7bfffe40-a2d5-46ff-9123-01b1045a4ce7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7679,7 +7679,7 @@
     },
     {
       "id": "7ccf0c0a-a3c7-47be-99ed-d3c1ba4c333c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7706,7 +7706,7 @@
     },
     {
       "id": "7e41c90a-5e40-4f3d-8fac-1d25ea8b4fe6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7733,7 +7733,7 @@
     },
     {
       "id": "7f49df80-f00a-4e22-8731-a8fb6ec5cf9f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7756,7 +7756,7 @@
     },
     {
       "id": "7f9a55e7-b22c-475f-bdf6-890f8798085e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7783,7 +7783,7 @@
     },
     {
       "id": "7ff06b44-c9e0-4147-b2c8-7d2ee84156db",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7810,7 +7810,7 @@
     },
     {
       "id": "7ff63380-2c26-4e89-b6bf-8f8ad5ca492e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7837,7 +7837,7 @@
     },
     {
       "id": "81334f07-998c-4c04-8226-e270c945287c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7864,7 +7864,7 @@
     },
     {
       "id": "81636d10-0ecd-4e1b-9b16-43ae18bb92b1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7891,7 +7891,7 @@
     },
     {
       "id": "8213a852-1879-432d-90bb-14e88ba0ff47",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7918,7 +7918,7 @@
     },
     {
       "id": "825d30ce-9149-43b9-9452-6980853f7567",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7941,7 +7941,7 @@
     },
     {
       "id": "826a53ee-39ee-4782-81dc-25312a1fbcdf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7964,7 +7964,7 @@
     },
     {
       "id": "82a9e02b-2a7f-4507-904b-f6efe04ca72d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -7987,7 +7987,7 @@
     },
     {
       "id": "83068209-2b63-41bb-93ed-d28a92ea234b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8010,7 +8010,7 @@
     },
     {
       "id": "834fe0a9-765d-4353-87a6-2c38efc896e9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8037,7 +8037,7 @@
     },
     {
       "id": "83638c1e-d906-4417-842a-f6a6bef286e5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8060,7 +8060,7 @@
     },
     {
       "id": "84115fa4-7cb2-486e-8e20-11a4255617f6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8083,7 +8083,7 @@
     },
     {
       "id": "842d7a32-cc71-428e-9165-8e6bafc6a686",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8106,7 +8106,7 @@
     },
     {
       "id": "843cfdfd-d476-411a-99c9-fb2f58107ee4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8129,7 +8129,7 @@
     },
     {
       "id": "847818c3-a8f0-4d82-94c5-fac29e67ecc1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8152,7 +8152,7 @@
     },
     {
       "id": "84dcbfb9-5d2f-424e-8279-c85098a61a1a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8175,7 +8175,7 @@
     },
     {
       "id": "84ee87c7-2b48-483a-8c80-d206c45d78f0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8198,7 +8198,7 @@
     },
     {
       "id": "851b4b57-edfe-4000-99f0-42009c69153f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8221,7 +8221,7 @@
     },
     {
       "id": "854148af-c88a-4317-af29-e9ee56c21778",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8244,7 +8244,7 @@
     },
     {
       "id": "858295f4-8f02-4a1f-b160-e74e55930b16",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8267,7 +8267,7 @@
     },
     {
       "id": "8643c8f7-c37a-4d3c-8049-d3f7f7978dcb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8290,7 +8290,7 @@
     },
     {
       "id": "8750b411-5f3d-453f-b0a5-42bfc066ed6a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8317,7 +8317,7 @@
     },
     {
       "id": "87e3b646-6552-4510-9910-3daf0c94bbec",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8340,7 +8340,7 @@
     },
     {
       "id": "87f45f37-1080-406f-ae60-60514ed00b50",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8367,7 +8367,7 @@
     },
     {
       "id": "883b05c5-b027-48dc-932e-7cc41661a749",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8390,7 +8390,7 @@
     },
     {
       "id": "8894782b-ed16-4cbc-b733-f236cc569836",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8417,7 +8417,7 @@
     },
     {
       "id": "88a9bcff-26da-4dc1-9cbe-3318666dce6b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8444,7 +8444,7 @@
     },
     {
       "id": "8900446e-65b9-47ee-b146-e202498a2ba8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8467,7 +8467,7 @@
     },
     {
       "id": "892c838d-e4ef-4211-ad0e-6b628774e411",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8490,7 +8490,7 @@
     },
     {
       "id": "8970747a-5e37-4747-beaf-ff6a886625ca",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8513,7 +8513,7 @@
     },
     {
       "id": "89ed27d3-f0b1-4ff4-9f2f-98992d5a8631",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8536,7 +8536,7 @@
     },
     {
       "id": "8a8e6dfe-e178-463d-86e6-45dc12fc8ce6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8563,7 +8563,7 @@
     },
     {
       "id": "8ac1efb9-4846-4bcf-95d9-0e0b2b32c597",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8586,7 +8586,7 @@
     },
     {
       "id": "8ad579bd-1150-4870-9cc3-c2f665c712af",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8609,7 +8609,7 @@
     },
     {
       "id": "8c4221bd-cf76-43d0-a163-189adadb72aa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8632,7 +8632,7 @@
     },
     {
       "id": "8d255af9-bf6a-4838-be52-dbfd62401987",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8655,7 +8655,7 @@
     },
     {
       "id": "8d2ce88b-6c9f-44bc-ad11-3ba15fe3c413",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8682,7 +8682,7 @@
     },
     {
       "id": "8e2dc3b4-5de7-49c7-b1b4-7811932f30aa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8705,7 +8705,7 @@
     },
     {
       "id": "8ee90840-c83b-4b1b-9375-78ef6790f0de",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8728,7 +8728,7 @@
     },
     {
       "id": "8f206717-4413-462d-8462-3c1dff91b6f5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8755,7 +8755,7 @@
     },
     {
       "id": "8f783b98-ef33-4e91-a488-d8afb6015bc7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8778,7 +8778,7 @@
     },
     {
       "id": "8fe0698a-402a-45f8-990e-c6c816a7c661",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8801,7 +8801,7 @@
     },
     {
       "id": "90176549-6e5d-4f2f-9a7c-d92646d0e059",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8824,7 +8824,7 @@
     },
     {
       "id": "9112a880-ede6-4230-a16a-0c413813a85a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8847,7 +8847,7 @@
     },
     {
       "id": "914438f4-60d2-4e40-a26a-267b2d12d581",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8870,7 +8870,7 @@
     },
     {
       "id": "915d1e7d-0c1f-41ac-a1ac-0bb55ec7f93e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8893,7 +8893,7 @@
     },
     {
       "id": "91e92a57-33a8-49c5-87a0-83bcf60a02ec",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8916,7 +8916,7 @@
     },
     {
       "id": "929218ce-0ed0-4f3f-8181-f2d8f4aaf50b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8943,7 +8943,7 @@
     },
     {
       "id": "929efe34-7a51-4c81-b9d7-216e118c031c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8966,7 +8966,7 @@
     },
     {
       "id": "92b5388e-2678-446e-a756-ad475b6227b9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -8989,7 +8989,7 @@
     },
     {
       "id": "92badb40-e5f0-4087-80e1-af2cf45947c9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9012,7 +9012,7 @@
     },
     {
       "id": "92bdbca1-2ff1-4e9a-8b98-188c8909c0b8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9039,7 +9039,7 @@
     },
     {
       "id": "92e55c87-875d-48ce-b579-8e5a374ab2e3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9062,7 +9062,7 @@
     },
     {
       "id": "92f1c213-1c9d-4f28-a40d-075113e54998",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9085,7 +9085,7 @@
     },
     {
       "id": "93381121-5527-47ff-bcb3-d593e88f2c97",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9108,7 +9108,7 @@
     },
     {
       "id": "93c31424-a89d-403d-977d-1e95a5a502bb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9135,7 +9135,7 @@
     },
     {
       "id": "93fa0aad-fcb1-4b9a-9dbb-c8c76161286c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9162,7 +9162,7 @@
     },
     {
       "id": "94143e0c-6cc6-4fdc-a050-197bd16a3b2b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9189,7 +9189,7 @@
     },
     {
       "id": "95474f3a-ca6a-4fa3-92a9-b42163ca0966",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9212,7 +9212,7 @@
     },
     {
       "id": "9565137c-78f8-4d83-b0c1-218e00ffe21d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9239,7 +9239,7 @@
     },
     {
       "id": "95ab4cee-bb0e-4487-8b1e-4263e1c8c5de",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9266,7 +9266,7 @@
     },
     {
       "id": "95faafc2-ea23-4c13-a135-9f394c3548db",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9289,7 +9289,7 @@
     },
     {
       "id": "96856c94-ac07-4436-8cde-bedeb224348d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9312,7 +9312,7 @@
     },
     {
       "id": "968b5d56-47d1-480d-80f7-4b31b335a73d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9335,7 +9335,7 @@
     },
     {
       "id": "96a5099a-fbde-41a3-8921-dd2b7973adcf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9358,7 +9358,7 @@
     },
     {
       "id": "97222303-e8ae-4764-be91-9d78a2777761",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9381,7 +9381,7 @@
     },
     {
       "id": "978bed6d-c864-4976-a09a-64534e8c9043",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9408,7 +9408,7 @@
     },
     {
       "id": "97b64282-fff8-43d9-9441-13c02df3e8b8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9431,7 +9431,7 @@
     },
     {
       "id": "97f9b904-07a1-4a6b-bb0e-ee80d228e15d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9458,7 +9458,7 @@
     },
     {
       "id": "98296fa1-de33-4502-9b31-d84a28024e1c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9481,7 +9481,7 @@
     },
     {
       "id": "98614f78-794a-445a-a211-218f55354619",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9504,7 +9504,7 @@
     },
     {
       "id": "988ab5d5-043f-48f0-b019-6ec3a0d2547c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9527,7 +9527,7 @@
     },
     {
       "id": "9920a613-b1b7-4b7e-a914-ea74fe58115e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9554,7 +9554,7 @@
     },
     {
       "id": "99360b94-f26a-4e46-af48-763c68a21202",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9577,7 +9577,7 @@
     },
     {
       "id": "99416ed8-edd1-4d63-a4bd-b09e18cf602c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9604,7 +9604,7 @@
     },
     {
       "id": "9970f651-5201-4a98-84a0-1a5e2980bcae",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9627,7 +9627,7 @@
     },
     {
       "id": "99a1fdfa-29ef-40b3-9daa-7323c67d4c41",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9650,7 +9650,7 @@
     },
     {
       "id": "99aa2816-a459-4adb-a04e-17f0074373d0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9677,7 +9677,7 @@
     },
     {
       "id": "9b36a39d-c665-4cee-a43d-6fa738bfa3f7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9700,7 +9700,7 @@
     },
     {
       "id": "9b512d67-abb2-4ffa-bce8-4e767c45423a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9723,7 +9723,7 @@
     },
     {
       "id": "9b747126-773e-4f00-9d9d-1973906a0316",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9750,7 +9750,7 @@
     },
     {
       "id": "9bb9a342-2e15-4c9f-b2b0-6865a8a9c05e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9773,7 +9773,7 @@
     },
     {
       "id": "9bfa2196-d893-4ebe-9034-37e6a815d0fc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9796,7 +9796,7 @@
     },
     {
       "id": "9c06b04e-4437-49d6-9d0b-7677de3256b6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9823,7 +9823,7 @@
     },
     {
       "id": "9c06ed10-d8a5-44ab-bca1-0244e005849c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9846,7 +9846,7 @@
     },
     {
       "id": "9c7f4bf5-c62d-4f0d-955f-d0037d6dff6a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9873,7 +9873,7 @@
     },
     {
       "id": "9d4b5a28-4227-4ca3-8091-20d42607209a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9896,7 +9896,7 @@
     },
     {
       "id": "9d65af97-fe03-4646-8d3d-2cdbd37709e7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9919,7 +9919,7 @@
     },
     {
       "id": "9ddbd490-ed20-40f0-b1b7-c6aa70f2a467",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9946,7 +9946,7 @@
     },
     {
       "id": "9e270b3f-32dc-4b30-811f-1b1ea2f27496",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9969,7 +9969,7 @@
     },
     {
       "id": "9e2f6a11-ce10-4ef9-8c49-07c15218fa20",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -9992,7 +9992,7 @@
     },
     {
       "id": "9e4f4d96-4a4b-449b-a4ed-7c2781264bfd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10015,7 +10015,7 @@
     },
     {
       "id": "a0969203-44f3-484c-9db0-66ad3498313a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10038,7 +10038,7 @@
     },
     {
       "id": "a0a1d476-e027-4dcf-9d87-5d158771b383",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10065,7 +10065,7 @@
     },
     {
       "id": "a0d878b1-e20b-491f-9e2a-ac992c52fdd7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10092,7 +10092,7 @@
     },
     {
       "id": "a157382e-62d8-443d-890e-e97e891b19b7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10115,7 +10115,7 @@
     },
     {
       "id": "a1865b46-2c4c-46d8-aac8-1ab5c7eb5639",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10138,7 +10138,7 @@
     },
     {
       "id": "a1f856d5-5b0a-4914-a1d9-9e1d48b4a905",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10161,7 +10161,7 @@
     },
     {
       "id": "a20eede5-ce1c-4c40-adfe-bedba67a703a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10188,7 +10188,7 @@
     },
     {
       "id": "a2f9f0db-2995-4041-a75a-3462e892928d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10211,7 +10211,7 @@
     },
     {
       "id": "a316f7e2-b27a-4b9d-9c39-9d77cfe37c6a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10234,7 +10234,7 @@
     },
     {
       "id": "a317192d-f073-474d-af6b-3fe9b66aa4f4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10257,7 +10257,7 @@
     },
     {
       "id": "a40ccfe7-0e2c-4f35-b769-bec63260c2bd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10284,7 +10284,7 @@
     },
     {
       "id": "a41fdb4b-6c94-485e-9a1d-c4b8be157a88",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10307,7 +10307,7 @@
     },
     {
       "id": "a506df06-c870-4e4a-85c4-3244bfaf5736",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10330,7 +10330,7 @@
     },
     {
       "id": "a5532245-7af1-405b-9f11-fe6c425754a2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10353,7 +10353,7 @@
     },
     {
       "id": "a55de485-9ea3-4f55-89f6-5298a6ca8390",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10380,7 +10380,7 @@
     },
     {
       "id": "a5b22848-4a46-4689-9a64-cf175b9e91e6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10399,7 +10399,7 @@
     },
     {
       "id": "a5d290a8-0e55-40ba-aca4-317e1c10f196",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10422,7 +10422,7 @@
     },
     {
       "id": "a5dcf971-02fc-42ac-9a7a-78c238ad6a2c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10445,7 +10445,7 @@
     },
     {
       "id": "a676e1d5-a4a4-46f1-87f2-d2a82b5ff995",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10468,7 +10468,7 @@
     },
     {
       "id": "a6961b78-3b25-421f-b4d8-e13f970d34ce",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10491,7 +10491,7 @@
     },
     {
       "id": "a7ba0f91-248e-4ef4-9002-a7479cee0b1f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10518,7 +10518,7 @@
     },
     {
       "id": "a7f79d40-2b77-4914-91ab-4b389f8728a7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10541,7 +10541,7 @@
     },
     {
       "id": "a833b41d-d9a4-49d9-a489-e01529289e9a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10564,7 +10564,7 @@
     },
     {
       "id": "a85d7ca1-3735-4ac9-a879-b2fa371e90a9",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10587,7 +10587,7 @@
     },
     {
       "id": "a8dd52a0-860c-42aa-8376-acd5246968d6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10610,7 +10610,7 @@
     },
     {
       "id": "a945ea8f-8f7d-4dcf-bd7e-41357e155ba3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10637,7 +10637,7 @@
     },
     {
       "id": "a9d0bff6-7b43-4bfb-9d80-e5a66ca0d160",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10664,7 +10664,7 @@
     },
     {
       "id": "aa28f334-2bde-46b9-9505-3de20cb58231",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10691,7 +10691,7 @@
     },
     {
       "id": "aaf9393a-c334-4a83-9b61-94a882aab140",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10714,7 +10714,7 @@
     },
     {
       "id": "ab262338-3761-4fd7-a679-87edd64a5283",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10737,7 +10737,7 @@
     },
     {
       "id": "ac41fd11-b798-467e-9669-19bafe2fa2db",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10764,7 +10764,7 @@
     },
     {
       "id": "ac8d45dd-7796-4304-a27e-50b6e592d3fb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10787,7 +10787,7 @@
     },
     {
       "id": "aca88cd9-7d8f-4cff-a25d-5622e1194399",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10814,7 +10814,7 @@
     },
     {
       "id": "acbdc7cc-9bfe-4ddf-b829-a16f703a4c4d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10837,7 +10837,7 @@
     },
     {
       "id": "acc87f6f-a9cc-4f9b-81ab-7e1c48a90b0d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10860,7 +10860,7 @@
     },
     {
       "id": "ad152657-0064-4028-b241-8156f6813b70",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10883,7 +10883,7 @@
     },
     {
       "id": "ad1c84a7-4dc4-42f1-83be-2c319850c20a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10906,7 +10906,7 @@
     },
     {
       "id": "ad65ef22-a2a5-4f03-bea4-bbd9380d96da",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10933,7 +10933,7 @@
     },
     {
       "id": "adb59ccb-d56b-4003-bcf6-13d52d621a34",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10956,7 +10956,7 @@
     },
     {
       "id": "add4dd07-f59f-42bf-81e9-d9e778055161",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -10979,7 +10979,7 @@
     },
     {
       "id": "adf33848-ab8b-4bce-8b7f-4121329fae09",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11002,7 +11002,7 @@
     },
     {
       "id": "af089ef5-20ec-436b-886e-efdf8ac87332",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11025,7 +11025,7 @@
     },
     {
       "id": "af36856d-0558-4044-be25-c5dd405a4289",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11052,7 +11052,7 @@
     },
     {
       "id": "af573233-caf3-4080-9fb8-b47df75ea49d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11079,7 +11079,7 @@
     },
     {
       "id": "af5d3f12-effe-4919-8e03-291172b17349",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11102,7 +11102,7 @@
     },
     {
       "id": "afb1cb21-7c9b-423c-b409-ec8a762d9738",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11125,7 +11125,7 @@
     },
     {
       "id": "afc12d0b-51b0-41cf-922b-ee394c97007e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11148,7 +11148,7 @@
     },
     {
       "id": "b048925c-e7a9-4eaa-a57d-6a500df7b0c1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11171,7 +11171,7 @@
     },
     {
       "id": "b0b77db3-190d-483b-8247-0305b4959a4f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11194,7 +11194,7 @@
     },
     {
       "id": "b0dd419b-f539-4f57-a357-ab4f6c20f85c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11217,7 +11217,7 @@
     },
     {
       "id": "b0f86107-902d-4e66-9f30-1b13ae081022",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11240,7 +11240,7 @@
     },
     {
       "id": "b14b9c56-8585-4ffa-914b-2df76becc073",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11267,7 +11267,7 @@
     },
     {
       "id": "b1703d5e-2c91-409c-907b-b77ff44a5b10",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11294,7 +11294,7 @@
     },
     {
       "id": "b1997909-dd87-41eb-93f3-b92dbbadf69d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11317,7 +11317,7 @@
     },
     {
       "id": "b1a71055-bce5-4635-8d4f-cc083234a1aa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11340,7 +11340,7 @@
     },
     {
       "id": "b1c430f2-a4eb-4505-9d37-6fc68b5c3136",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11367,7 +11367,7 @@
     },
     {
       "id": "b26aa783-109f-4717-ac50-63d23d839630",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11390,7 +11390,7 @@
     },
     {
       "id": "b286acc8-2776-4e3f-926b-c5f595a0e5e0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11417,7 +11417,7 @@
     },
     {
       "id": "b2b8fce7-607f-43e1-9510-0490fac92c35",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11440,7 +11440,7 @@
     },
     {
       "id": "b2d898f5-8018-45c1-8310-f10e7261a48b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11463,7 +11463,7 @@
     },
     {
       "id": "b32c0e27-1f64-4feb-a494-a9be56e4bbc1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11490,7 +11490,7 @@
     },
     {
       "id": "b47c07c3-9e92-4275-ac0c-0283e049b126",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11517,7 +11517,7 @@
     },
     {
       "id": "b53c361b-8bd7-42d9-8f40-50a7551a075b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11540,7 +11540,7 @@
     },
     {
       "id": "b5aaf4b1-2f67-4d66-8865-daae3297ac73",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11563,7 +11563,7 @@
     },
     {
       "id": "b5b8fe9f-b6d4-45e8-8a8b-1f78933034c7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11586,7 +11586,7 @@
     },
     {
       "id": "b5df2c20-babb-4fb9-abcd-6ea65f197eae",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11609,7 +11609,7 @@
     },
     {
       "id": "b5eedc32-2643-4dd2-b3d7-2512e1a50298",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11636,7 +11636,7 @@
     },
     {
       "id": "b6113b51-0350-424d-851e-e5fdb145f14c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11663,7 +11663,7 @@
     },
     {
       "id": "b6660ca0-43e2-4399-ac6c-d400bba9e607",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11686,7 +11686,7 @@
     },
     {
       "id": "b6f7f2ec-a111-4f86-bfe2-a652ff7c2bd6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11709,7 +11709,7 @@
     },
     {
       "id": "b70d7800-51e4-421e-bb4a-698a0a27da22",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11732,7 +11732,7 @@
     },
     {
       "id": "b7235f61-c944-4799-be91-41a451444ce6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11755,7 +11755,7 @@
     },
     {
       "id": "b8132b27-a18d-4647-b99f-4be6e8705e88",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11778,7 +11778,7 @@
     },
     {
       "id": "b8227c47-e29b-4879-91e8-a1d069b514a6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11805,7 +11805,7 @@
     },
     {
       "id": "b8521cad-bc65-4c6e-b8bd-0a3d317fc694",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11828,7 +11828,7 @@
     },
     {
       "id": "b9bacad4-11de-4c19-81d6-9f046a4a892c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11855,7 +11855,7 @@
     },
     {
       "id": "b9c85f9e-6552-48c2-9084-aed3cf457845",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11878,7 +11878,7 @@
     },
     {
       "id": "b9ca997a-d260-4fde-b66f-206472503ce1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11901,7 +11901,7 @@
     },
     {
       "id": "b9e3aa52-2470-490a-a06c-042756f98aab",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11928,7 +11928,7 @@
     },
     {
       "id": "ba257b92-32f8-4c04-8e12-9fde87b05adc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11951,7 +11951,7 @@
     },
     {
       "id": "bab9f175-5fe9-4e1c-a2a1-0eb00b80e992",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -11978,7 +11978,7 @@
     },
     {
       "id": "bb416104-a0cc-4869-9fb7-5a6c0acbfe97",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12001,7 +12001,7 @@
     },
     {
       "id": "bb783b3e-45bf-4ea0-bab9-28ae69eaea77",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12024,7 +12024,7 @@
     },
     {
       "id": "bbce4f35-8b0a-46a9-8dcd-af182e02e96f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12051,7 +12051,7 @@
     },
     {
       "id": "bbcee0b4-9938-46a8-b03a-0bdc01f4ef42",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12074,7 +12074,7 @@
     },
     {
       "id": "bc0747cb-3e45-420a-baa3-eca6f5eb8dab",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12101,7 +12101,7 @@
     },
     {
       "id": "bc725966-b042-4f13-9e37-cd5398937c59",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12128,7 +12128,7 @@
     },
     {
       "id": "bc91e2d8-5338-4e34-aefa-57d0cbd16028",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12151,7 +12151,7 @@
     },
     {
       "id": "bcb212b5-a547-4d96-86bd-17af82305eaf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12174,7 +12174,7 @@
     },
     {
       "id": "bd554bde-1f8f-4e6d-be1a-743e53b73c7d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12197,7 +12197,7 @@
     },
     {
       "id": "bd995ae2-6a36-4bc7-9a54-9fe3f40f5396",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12220,7 +12220,7 @@
     },
     {
       "id": "be2f4d75-6678-40f0-9419-20c0712dc610",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12243,7 +12243,7 @@
     },
     {
       "id": "be7e9005-baed-4b69-b0e7-8974f35c3723",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12270,7 +12270,7 @@
     },
     {
       "id": "bf01703e-bfba-44a0-b756-5197c4e83ae8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12297,7 +12297,7 @@
     },
     {
       "id": "bf1af58d-8dce-496a-a2cf-c64dd2e7aaa0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12320,7 +12320,7 @@
     },
     {
       "id": "bf2feb25-cc20-421a-bb90-bf551bef8aa6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12343,7 +12343,7 @@
     },
     {
       "id": "bf82510c-5ded-4d47-89aa-5c78c22e19df",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12366,7 +12366,7 @@
     },
     {
       "id": "c09ca46e-8476-4053-ba82-5e8b2bdf3add",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12389,7 +12389,7 @@
     },
     {
       "id": "c0f5a5dc-fb01-4392-9a8d-034a0632fdc0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12412,7 +12412,7 @@
     },
     {
       "id": "c102d15b-df87-4b4a-829b-5ea524088057",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12439,7 +12439,7 @@
     },
     {
       "id": "c186857b-9e5d-4f98-bf68-3d06af634126",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12462,7 +12462,7 @@
     },
     {
       "id": "c18afed2-ff2f-4e52-9fea-ff2bd422224c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12485,7 +12485,7 @@
     },
     {
       "id": "c2782f51-9254-469f-97fa-95bbf4b03552",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12512,7 +12512,7 @@
     },
     {
       "id": "c2caf148-5fec-4339-b291-0aae9caf8627",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12539,7 +12539,7 @@
     },
     {
       "id": "c38ac941-79e4-4172-bf53-6fed21b567a3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12562,7 +12562,7 @@
     },
     {
       "id": "c3afb563-aa68-46ab-8696-f3c94d99547b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12585,7 +12585,7 @@
     },
     {
       "id": "c3c0debf-5fbb-4935-a9d2-cdd203794c33",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12608,7 +12608,7 @@
     },
     {
       "id": "c49efd0b-efe4-499a-a084-88c1803ade3d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12635,7 +12635,7 @@
     },
     {
       "id": "c4a4ec35-38d6-48d2-ae24-c10f78b5459d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12658,7 +12658,7 @@
     },
     {
       "id": "c5d8fef7-7e44-4a96-8ea2-78c1a90f0fd0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12685,7 +12685,7 @@
     },
     {
       "id": "c5f6fe0a-6441-468e-9c04-d25cfd77ade0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12708,7 +12708,7 @@
     },
     {
       "id": "c650254f-fe8f-482f-a2e7-4f4b2815ea18",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12735,7 +12735,7 @@
     },
     {
       "id": "c7b6c797-fbaf-4cfa-80fe-d8b6d159280b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12762,7 +12762,7 @@
     },
     {
       "id": "c852dc50-57a8-420c-a12c-5ba127ccc7a8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12785,7 +12785,7 @@
     },
     {
       "id": "c8e938ee-c8a0-46df-a7eb-e07e94da0227",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12808,7 +12808,7 @@
     },
     {
       "id": "c97db809-8590-44eb-bc22-b20439da9f6d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12831,7 +12831,7 @@
     },
     {
       "id": "c9b8bd89-baa1-4037-8248-3bfd13810788",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12854,7 +12854,7 @@
     },
     {
       "id": "c9b92d3a-aa12-4fb3-bc62-42207b65445f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12877,7 +12877,7 @@
     },
     {
       "id": "ca703c9a-f567-4395-9840-23be48cbeda5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12904,7 +12904,7 @@
     },
     {
       "id": "caafcf1c-e268-46e5-9479-da53d5f0e3d4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12931,7 +12931,7 @@
     },
     {
       "id": "cb098923-df41-4995-8ebe-20b97feb1dff",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12958,7 +12958,7 @@
     },
     {
       "id": "cb32b463-a883-4427-814c-cba6d0ab0b6e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -12981,7 +12981,7 @@
     },
     {
       "id": "cbed4280-eac3-456d-8c6d-127715fef562",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13004,7 +13004,7 @@
     },
     {
       "id": "cbf293a0-8dfb-4f42-897c-5515704cb5c7",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13031,7 +13031,7 @@
     },
     {
       "id": "cc3ac172-38e2-429a-beb8-fe5fe6e230f6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13054,7 +13054,7 @@
     },
     {
       "id": "cc95b6a6-6a22-485e-a3ea-125ce1c8eb12",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13077,7 +13077,7 @@
     },
     {
       "id": "ccaee212-0d31-4f9c-9ad5-44989b481d30",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13100,7 +13100,7 @@
     },
     {
       "id": "ccc4bc94-6f41-4c52-8753-9e5f8c8d4af1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13123,7 +13123,7 @@
     },
     {
       "id": "ccd6b4f8-857c-4d71-bbb3-06ec2f63dbe3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13150,7 +13150,7 @@
     },
     {
       "id": "ce9ba0a0-237a-4424-a323-3c003e21ff3a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13177,7 +13177,7 @@
     },
     {
       "id": "cf315bfc-a244-4682-b9f5-5e4267d29d9a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13200,7 +13200,7 @@
     },
     {
       "id": "cfeeb03f-19f8-4f21-bafe-f5cba521d1fe",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13223,7 +13223,7 @@
     },
     {
       "id": "d07380bd-210b-4fb7-902a-91803f0d7f88",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13250,7 +13250,7 @@
     },
     {
       "id": "d0e8f3a3-6cb6-48be-9462-dc1548b443ce",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13277,7 +13277,7 @@
     },
     {
       "id": "d0f10896-add9-4af1-81b6-98e90b41473b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13304,7 +13304,7 @@
     },
     {
       "id": "d1c68cf3-cfc3-49ee-b1a7-bc0baca461a3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13331,7 +13331,7 @@
     },
     {
       "id": "d381ba35-7557-4dbf-b5f9-ac93df05ccf2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13358,7 +13358,7 @@
     },
     {
       "id": "d3ab4dff-4521-4de2-ad7b-975a7f31d173",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13381,7 +13381,7 @@
     },
     {
       "id": "d3f99e22-4497-49c3-991b-c945401c4593",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13404,7 +13404,7 @@
     },
     {
       "id": "d40cf572-11a4-4c8d-bfa1-35f7c8d0fe6d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13431,7 +13431,7 @@
     },
     {
       "id": "d421151b-0199-4722-8cc6-3a4771d1ec67",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13454,7 +13454,7 @@
     },
     {
       "id": "d458cc3b-e5b9-49d6-9ef6-e2f713f2f57c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13477,7 +13477,7 @@
     },
     {
       "id": "d4656d3f-220e-4da2-bcd3-f898428a87d8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13500,7 +13500,7 @@
     },
     {
       "id": "d486b52f-7100-46b3-b7f4-97e6d90c3e36",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13523,7 +13523,7 @@
     },
     {
       "id": "d4c4d4e8-12e9-458d-82e1-18cdf42a54b8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13546,7 +13546,7 @@
     },
     {
       "id": "d50bb817-822d-4fd1-8f32-b9ea7451f80f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13573,7 +13573,7 @@
     },
     {
       "id": "d5c49d13-daa4-4d69-a4db-ded33c5a1b05",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13596,7 +13596,7 @@
     },
     {
       "id": "d5e8931c-a520-4e98-b1d2-47c76ef96ab5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13619,7 +13619,7 @@
     },
     {
       "id": "d641ef07-d56d-42a3-b107-fba0a6773a40",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13642,7 +13642,7 @@
     },
     {
       "id": "d657bf89-836c-4769-9b9c-ac0468d09ee5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13665,7 +13665,7 @@
     },
     {
       "id": "d71b3130-1197-4936-9ff3-4475bfb09191",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13692,7 +13692,7 @@
     },
     {
       "id": "d757cb4f-8d56-40c2-9414-1710714f246c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13715,7 +13715,7 @@
     },
     {
       "id": "d75ee4a4-970e-43d9-8fd7-a7d66ecffe9a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13742,7 +13742,7 @@
     },
     {
       "id": "d7c6d194-4341-4ae4-8a73-51126c80ad44",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13765,7 +13765,7 @@
     },
     {
       "id": "d85ed0d5-8039-4724-83a4-b1b0d411c1d3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13788,7 +13788,7 @@
     },
     {
       "id": "d899d0e9-e52f-4691-ac3d-b0d566a54564",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13811,7 +13811,7 @@
     },
     {
       "id": "d8c6407d-ec26-469f-91d4-761689a0a108",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13834,7 +13834,7 @@
     },
     {
       "id": "d97c9e8f-0f14-4d22-9e74-10afd461fe00",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13857,7 +13857,7 @@
     },
     {
       "id": "d9af9181-4f18-49d2-9168-3d2f45ede3fe",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13880,7 +13880,7 @@
     },
     {
       "id": "da9023b4-dd6d-4210-8d92-ba7936adf283",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13903,7 +13903,7 @@
     },
     {
       "id": "db275f9e-f178-475e-afd9-a77ff92da6f8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13926,7 +13926,7 @@
     },
     {
       "id": "dbc9cf09-6ed7-4375-bfdb-2329cb80e42a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13953,7 +13953,7 @@
     },
     {
       "id": "dc834c75-8b6c-432a-9f70-b73681b5d5f1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13976,7 +13976,7 @@
     },
     {
       "id": "dd777b5f-e57a-4f0f-8696-3f18f55cc901",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -13999,7 +13999,7 @@
     },
     {
       "id": "dee5614b-ca78-4192-ac07-9e8ce3db1b7a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14026,7 +14026,7 @@
     },
     {
       "id": "def55e89-e69f-4945-85fd-cfa80dedd9ab",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14049,7 +14049,7 @@
     },
     {
       "id": "df91ed3f-1ee8-4039-bb30-bc6862f95854",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14072,7 +14072,7 @@
     },
     {
       "id": "e039e75d-24cd-4a36-8f1c-5b49dc9b382a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14095,7 +14095,7 @@
     },
     {
       "id": "e0463692-f0d4-46c1-af39-e32f1ec3023b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14118,7 +14118,7 @@
     },
     {
       "id": "e048ae55-bbe7-4f0d-adb2-de10b647c3b1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14145,7 +14145,7 @@
     },
     {
       "id": "e0a83438-404a-465a-96f8-d73a6f8f9a42",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14168,7 +14168,7 @@
     },
     {
       "id": "e0b0e2d2-a744-44e9-82fe-088053401fb4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14191,7 +14191,7 @@
     },
     {
       "id": "e0b64386-aa2f-4171-9a81-9db80bf0da61",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14214,7 +14214,7 @@
     },
     {
       "id": "e0b96438-5105-4b36-a6aa-a38f536b4e49",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14237,7 +14237,7 @@
     },
     {
       "id": "e1154c96-4a49-4b39-bd96-865d8157ae5c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14260,7 +14260,7 @@
     },
     {
       "id": "e142ffd3-9978-4a98-964a-11db89d0bd0c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14283,7 +14283,7 @@
     },
     {
       "id": "e1f5fd47-edb2-4152-abaf-0b50813025d0",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14306,7 +14306,7 @@
     },
     {
       "id": "e252d284-b821-4d08-9068-33c7d8ecfb4a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14329,7 +14329,7 @@
     },
     {
       "id": "e260b484-2c0b-4f8e-b958-023d5a7d74a8",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14356,7 +14356,7 @@
     },
     {
       "id": "e33c3621-7105-48c2-aa5c-8c7fa69beaac",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14379,7 +14379,7 @@
     },
     {
       "id": "e355a655-997b-4165-8e59-4de1395a314f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14402,7 +14402,7 @@
     },
     {
       "id": "e3682d05-bfab-41e1-9618-88ca0b2b6b54",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14425,7 +14425,7 @@
     },
     {
       "id": "e36b4980-575a-4af9-8058-7957c699fb15",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14448,7 +14448,7 @@
     },
     {
       "id": "e38b3abe-e33a-44e3-bd21-e4307df2481a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14475,7 +14475,7 @@
     },
     {
       "id": "e3b65b9a-c4a4-4d6a-a4d6-40ae8e0285c1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14498,7 +14498,7 @@
     },
     {
       "id": "e4005e0c-bad1-4ae3-a05c-48fa696a9304",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14521,7 +14521,7 @@
     },
     {
       "id": "e45c94f0-2568-44ce-953b-47be0a8fcf4d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14544,7 +14544,7 @@
     },
     {
       "id": "e4735029-7dab-4179-b9aa-c60b9703011e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14571,7 +14571,7 @@
     },
     {
       "id": "e6764f19-16a2-42ff-8dbc-5551616f82e5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14594,7 +14594,7 @@
     },
     {
       "id": "e7e05ae9-18bd-4de2-b19d-b8e91fd52c96",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14621,7 +14621,7 @@
     },
     {
       "id": "e7efcb10-5dce-4fdc-8281-7ca2a76c1788",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14648,7 +14648,7 @@
     },
     {
       "id": "e8b0b7c2-fe01-409e-9b82-9410ace8f2dd",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14671,7 +14671,7 @@
     },
     {
       "id": "e97fb476-02b0-4217-b0f2-c8fef75c3928",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14694,7 +14694,7 @@
     },
     {
       "id": "ea406301-55e2-41d8-ab6c-f7895012dedc",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14717,7 +14717,7 @@
     },
     {
       "id": "ea6654e3-6321-4f3a-9732-27c1f00c86bf",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14744,7 +14744,7 @@
     },
     {
       "id": "ea709a37-3a32-4d5a-a7b9-056e03458e40",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14767,7 +14767,7 @@
     },
     {
       "id": "eac3bb59-830a-4874-a1db-f26cfcbd27d3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14790,7 +14790,7 @@
     },
     {
       "id": "ead52cbc-9fac-465b-beb7-4d09a017869d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14813,7 +14813,7 @@
     },
     {
       "id": "eb32491f-0161-475e-8440-03810d71cafa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14836,7 +14836,7 @@
     },
     {
       "id": "eb51b59a-b48a-425a-874d-df8bbab0475e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14859,7 +14859,7 @@
     },
     {
       "id": "ebd2fdd5-b324-4514-a220-966830b0c27a",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14886,7 +14886,7 @@
     },
     {
       "id": "ec7745a7-5d58-4afa-a475-18eafa541337",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14913,7 +14913,7 @@
     },
     {
       "id": "ecc21ba1-5c72-45dc-bbed-40ccffbd261d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14936,7 +14936,7 @@
     },
     {
       "id": "ed5d62e9-236e-49d7-b2c1-289e0d1e6c47",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14959,7 +14959,7 @@
     },
     {
       "id": "ed7f0623-32b1-4356-b8eb-80f7cf4c0f40",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -14982,7 +14982,7 @@
     },
     {
       "id": "eda90e8c-21bf-42a9-994f-864ddbfcd01c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15005,7 +15005,7 @@
     },
     {
       "id": "ee14bef4-25a9-4a0b-a2c3-f0c8cc5c6b88",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15028,7 +15028,7 @@
     },
     {
       "id": "ef28c176-2547-491c-91b1-d350c8419681",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15055,7 +15055,7 @@
     },
     {
       "id": "ef4b6bd5-48be-463e-a05b-2e7ae2b0e4e1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15082,7 +15082,7 @@
     },
     {
       "id": "ef805c72-cd7e-495e-a20a-f287bacd23a6",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15109,7 +15109,7 @@
     },
     {
       "id": "eff6dbca-9768-4e3b-a609-8d08b1063a44",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15132,7 +15132,7 @@
     },
     {
       "id": "efff7bef-a4a6-4efe-a99a-9479f8e7cea1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15155,7 +15155,7 @@
     },
     {
       "id": "f0b33817-f4ea-4945-8c6a-75cd091eb27f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15178,7 +15178,7 @@
     },
     {
       "id": "f1199c85-ea00-4165-a34c-957c73499b2f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15205,7 +15205,7 @@
     },
     {
       "id": "f1a56074-0fab-43e8-b577-ccf3717c294d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15232,7 +15232,7 @@
     },
     {
       "id": "f28e4fbd-d4ff-427a-ba89-22339cb9a752",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15255,7 +15255,7 @@
     },
     {
       "id": "f2bcdda3-407a-4b9e-9c6a-cbaf512f5033",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15278,7 +15278,7 @@
     },
     {
       "id": "f3546eda-04e7-4c78-8d57-5ccb65a05182",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15305,7 +15305,7 @@
     },
     {
       "id": "f3da2c59-2069-4045-a440-7fcc66b844f1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15328,7 +15328,7 @@
     },
     {
       "id": "f3def375-664a-4328-be67-ff7d9132ec63",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15351,7 +15351,7 @@
     },
     {
       "id": "f42e506f-d8d7-4dd2-9a50-2e74b1908909",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15374,7 +15374,7 @@
     },
     {
       "id": "f55c0e6a-b578-443f-96e5-be5c7bb3f44f",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15397,7 +15397,7 @@
     },
     {
       "id": "f5c5063e-0065-40ed-98a1-843d4e6b5230",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15420,7 +15420,7 @@
     },
     {
       "id": "f62be4cf-7731-4ac1-b753-e04540c6af65",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15447,7 +15447,7 @@
     },
     {
       "id": "f6a4d403-3ba9-4208-9e72-7dbf4767fac4",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15474,7 +15474,7 @@
     },
     {
       "id": "f7b9d775-463d-4acf-8a87-13940fe5d56e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15497,7 +15497,7 @@
     },
     {
       "id": "f7f5c67b-9efa-4fd9-9796-1f59dea0204e",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15520,7 +15520,7 @@
     },
     {
       "id": "f86489fd-307a-499a-b921-ddf999d37693",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15547,7 +15547,7 @@
     },
     {
       "id": "f89f363d-0d0c-4041-98f7-32aa953591d3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15570,7 +15570,7 @@
     },
     {
       "id": "f92fe833-0022-4916-8a87-d41ef2174d2b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15597,7 +15597,7 @@
     },
     {
       "id": "f9b66243-999c-46cb-863c-8b0e774fff73",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15620,7 +15620,7 @@
     },
     {
       "id": "f9de2106-4944-4f29-8128-3b03ff0a85f2",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15643,7 +15643,7 @@
     },
     {
       "id": "f9e6953d-917c-47c5-8d19-16c405c4c3fa",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15666,7 +15666,7 @@
     },
     {
       "id": "f9f3b292-bbe8-487a-8394-25757049a444",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15689,7 +15689,7 @@
     },
     {
       "id": "fa0860a4-7ae2-4a4e-ae44-f0612ccff58d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15712,7 +15712,7 @@
     },
     {
       "id": "fa4716ff-dc51-4960-9402-06c10ad24c9b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15735,7 +15735,7 @@
     },
     {
       "id": "fa6d8329-8ae4-4031-a39a-c883450dd13c",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15758,7 +15758,7 @@
     },
     {
       "id": "faf56c62-e1c9-4974-85dc-8e099ad9008b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15785,7 +15785,7 @@
     },
     {
       "id": "faf6efb5-8948-459a-9c7c-b55d44d4ae10",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15808,7 +15808,7 @@
     },
     {
       "id": "fb1086c3-53db-42b7-a9ba-ac6093a74fc1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15831,7 +15831,7 @@
     },
     {
       "id": "fb8fbdc1-6e21-4ab1-91a2-1b66f795edda",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15854,7 +15854,7 @@
     },
     {
       "id": "fc1f3442-abb2-41d0-99ca-e48ccd0e56be",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15881,7 +15881,7 @@
     },
     {
       "id": "fc5d7822-c111-4adc-a134-2fd1f3f3c4c5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15908,7 +15908,7 @@
     },
     {
       "id": "fc9a4ea2-df75-4e56-a3f5-29a77267e606",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15931,7 +15931,7 @@
     },
     {
       "id": "fcd976a3-0bbe-481d-a6dd-158be667f10b",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15954,7 +15954,7 @@
     },
     {
       "id": "fd36468f-3a08-4fa2-817a-95331af5ae92",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -15977,7 +15977,7 @@
     },
     {
       "id": "fda7c967-8c4b-40ff-a291-f26a07a6a9ac",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16000,7 +16000,7 @@
     },
     {
       "id": "fdd100a7-9b46-47f0-a6b0-38da782aa925",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16023,7 +16023,7 @@
     },
     {
       "id": "fdf31c84-5b11-4b99-9841-261fe380d172",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16046,7 +16046,7 @@
     },
     {
       "id": "feb7770f-0b07-4bda-9c90-a720b5ffbee1",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16069,7 +16069,7 @@
     },
     {
       "id": "febff143-3e07-449b-9f6d-35683411c2a3",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16096,7 +16096,7 @@
     },
     {
       "id": "fed39162-a72f-412a-8d6c-6aae463c6ce5",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16119,7 +16119,7 @@
     },
     {
       "id": "ff71116b-d10f-4618-a525-2cd86001aefb",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {
@@ -16142,7 +16142,7 @@
     },
     {
       "id": "ff9dec0a-a4cc-4129-b8da-6898a387a54d",
-      "category": "medical",
+      "category": "opiekun-medyczny",
       "data": {
         "answers": [
           {

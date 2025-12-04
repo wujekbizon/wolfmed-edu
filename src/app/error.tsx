@@ -1,7 +1,7 @@
 'use client'
 
-import CustomError from './_components/CustomError'
+import { ErrorBoundary } from '@/components/errors'
 
-export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
-  return <CustomError error={error} reset={reset} />
+export default function Error(props: { error: Error & { digest?: string }; reset: () => void }) {
+  return <ErrorBoundary {...props} context="root" />
 }

@@ -6,7 +6,7 @@ interface ScrollState {
   scrollY: number
 }
 
-export function useScroll(threshold: number = 50) {
+export function useScroll(threshold: number = 50, container?: HTMLElement | null) {
   const [scrollState, setScrollState] = useState<ScrollState>({
     isScrolled: false,
     scrollDirection: null,
@@ -14,22 +14,29 @@ export function useScroll(threshold: number = 50) {
   })
 
   useEffect(() => {
-    let lastScrollY = window.scrollY
+    const target: HTMLElement | Window = container ?? window
+
+    let lastScrollY =
+      target instanceof Window ? window.scrollY : (target as HTMLElement).scrollTop
+
     let ticking = false
 
     const updateScrollState = () => {
-      const currentScrollY = window.scrollY
+      const currentScrollY =
+        target instanceof Window ? window.scrollY : (target as HTMLElement).scrollTop
+
       const direction = currentScrollY > lastScrollY ? 'down' : 'up'
       const isScrolled = currentScrollY > threshold
 
-      // Avoid state update if no changes in scroll state
-      if (
-        isScrolled !== scrollState.isScrolled ||
-        direction !== scrollState.scrollDirection ||
-        currentScrollY !== scrollState.scrollY
-      ) {
-        setScrollState({ isScrolled, scrollDirection: direction, scrollY: currentScrollY })
-      }
+      setScrollState(prev => {
+        if (
+          prev.isScrolled === isScrolled &&
+          prev.scrollDirection === direction &&
+          prev.scrollY === currentScrollY
+        ) return prev
+
+        return { isScrolled, scrollDirection: direction, scrollY: currentScrollY }
+      })
 
       lastScrollY = currentScrollY
       ticking = false
@@ -42,9 +49,9 @@ export function useScroll(threshold: number = 50) {
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [threshold, scrollState])
+    target.addEventListener('scroll', onScroll, { passive: true })
+    return () => target.removeEventListener('scroll', onScroll)
+  }, [threshold, container])
 
   return scrollState
 }

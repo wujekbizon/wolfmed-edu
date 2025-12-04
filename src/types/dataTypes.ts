@@ -1,6 +1,4 @@
-import { Usable } from 'react'
 
-// tests related types
 type Answer = {
   option: string
   isCorrect: boolean
@@ -24,6 +22,8 @@ export interface Test {
 // this is because Drizzle doesn't support typed JSON in their schemas
 export type ExtendedTest = Omit<Test, 'data'> & { data: unknown }
 
+export type ProcedureStatus = 'normal' | 'ukończone' | 'trudne'
+
 // procedures related types
 export type Step = {
   step: string
@@ -31,6 +31,7 @@ export type Step = {
 
 interface ProcedureData {
   name: string
+  image:string
   procedure: string
   algorithm: Step[]
 }
@@ -41,7 +42,7 @@ export interface Procedure {
 }
 export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
 
-export type ServerData = Procedure[] | Test[] | Post[]
+export type ServerData = Procedure[] | Test[]
 export type QuestionAnswer = Record<string, string>
 export type FormattedAnswer = { questionId: string; answer: boolean }
 
@@ -50,6 +51,7 @@ export interface CompletedTest {
   id: string
   userId: string
   score: number
+  sessionId: string | null
   testResult: FormattedAnswer[]
 }
 
@@ -64,14 +66,126 @@ export interface UserData {
   createdAt?: Date
 }
 
-export interface Post {
+// Enhanced blog types
+export type BlogStatus = 'draft' | 'published' | 'archived'
+
+export interface BlogCategory {
+  id: string
+  name: string
+  slug: string
+  description: string | null
+  color: string
+  icon: string | null
+  order: number
+  createdAt: Date
+}
+
+export interface BlogTag {
+  id: string
+  name: string
+  slug: string
+  createdAt: Date
+}
+
+export interface BlogPost {
   id: string
   title: string
-  date: string
+  slug: string
   excerpt: string
   content: string
-  createdAt?: Date | null
-  updatedAt?: Date | null
+  coverImage: string | null
+  categoryId: string | null
+  authorId: string
+  authorName: string
+  status: BlogStatus
+  publishedAt: Date | null
+  metaTitle: string | null
+  metaDescription: string | null
+  metaKeywords: string | null
+  viewCount: number
+  readingTime: number | null
+  date: string | null
+  createdAt: Date
+  updatedAt: Date
+
+  category?: BlogCategory | null
+  tags?: BlogTag[]
+  likes?: BlogLike[]
+  _count?: {
+    likes: number
+  }
+}
+
+export interface BlogLike {
+  userId: string
+  postId: string
+  createdAt: Date
+}
+
+export interface BlogPostTag {
+  postId: string
+  tagId: string
+}
+
+// Form input types
+export interface CreateBlogPostInput {
+  title: string
+  slug: string
+  excerpt: string
+  content: string
+  coverImage?: string | null
+  categoryId?: string | null
+  tags?: string[]
+  status: BlogStatus
+  publishedAt?: Date | null
+  metaTitle?: string
+  metaDescription?: string
+  metaKeywords?: string
+}
+
+export interface UpdateBlogPostInput extends Partial<CreateBlogPostInput> {
+  id: string
+}
+
+export interface CreateBlogCategoryInput {
+  name: string
+  slug: string
+  description?: string
+  color?: string
+  icon?: string
+  order?: number
+}
+
+export interface CreateBlogTagInput {
+  name: string
+  slug: string
+}
+
+// Query filter types
+export interface BlogPostFilters {
+  categoryId?: string
+  categorySlug?: string
+  tagId?: string
+  tagSlug?: string
+  status?: BlogStatus
+  authorId?: string
+  search?: string
+  limit?: number
+  offset?: number
+  sortBy?: 'publishedAt' | 'viewCount' | 'createdAt' | 'updatedAt'
+  sortOrder?: 'asc' | 'desc'
+}
+
+// Statistics type
+export interface BlogStatistics {
+  totalPosts: number
+  publishedPosts: number
+  draftPosts: number
+  archivedPosts: number
+  totalViews: number
+  totalLikes: number
+  totalCategories: number
+  totalTags: number
 }
 
 export type PostProps = {
@@ -83,7 +197,6 @@ export interface StepWithId extends Step {
   id: string
 }
 
-// Add this to your existing types
 export interface User {
   id: string
   userId: string
@@ -98,7 +211,6 @@ export interface User {
   total_questions: number
 }
 
-// Add this to your existing types
 export interface CompletedTestData {
   id: string
   userId: string
@@ -109,3 +221,4 @@ export interface CompletedTestData {
   score: number
   completedAt: Date | null
 }
+

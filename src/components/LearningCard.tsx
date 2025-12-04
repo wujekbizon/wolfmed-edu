@@ -20,11 +20,11 @@ export default function LearningCard({ test, questionNumber }: { test: Test; que
       <h3 className="mt-4 md:mt-5 mb-2 sm:mb-3 md:mb-4 text-xs xs:text-sm sm:text-base md:text-lg font-semibold leading-none">
         {question}
       </h3>
-      <ul className="flex-grow space-y-2 sm:space-y-3 md:space-y-4 overflow-y-auto mt-4 md:mt-0 scrollbar-webkit justify-center">
+      <ul className="grow space-y-2 sm:space-y-3 md:space-y-4 overflow-y-auto mt-4 md:mt-0 scrollbar-webkit justify-center">
         {answers.map(({ option, isCorrect }, index) => (
           <li key={option} className="flex items-center">
             <span
-              className={`mr-1 sm:mr-2 flex h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 items-center justify-center rounded-full ${
+              className={`mr-1 sm:mr-2 flex h-5 w-5 sm:h-6 sm:w-6 shrink-0 items-center justify-center rounded-full ${
                 showCorrectAnswer && isCorrect ? 'bg-red-500 text-white' : 'bg-red-100 text-red-500'
               } text-xs sm:text-sm font-bold transition-all`}
             >

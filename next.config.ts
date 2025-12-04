@@ -11,9 +11,10 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  reactCompiler: true,
+  serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],
+  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app'],
   experimental: {
-    reactCompiler: true,
-    ppr: 'incremental',
   },
   images: {
     remotePatterns: [
@@ -23,7 +24,13 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/a/zw3dk8dyy9/**',
       },
-    ],
+      {
+        protocol: 'https',
+        hostname: 'zw3dk8dyy9.ufs.sh',
+        port: '',
+        pathname: '/f/**',
+      }
+    ]
   },
   webpack: (config) => {
     config.cache = {

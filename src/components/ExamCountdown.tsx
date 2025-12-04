@@ -1,5 +1,6 @@
 import { calculateTimeLeft } from '@/utils/dateUtils'
 import CountdownTimer from './CountdownTimer'
+import { EXAM_PERIODS } from '@/constants/examDates'
 
 export default function ExamCountdown() {
   const { timeLeft, currentPeriod } = calculateTimeLeft()
@@ -16,6 +17,20 @@ export default function ExamCountdown() {
 
   const formatDate = (date: Date) => {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+  }
+
+  let displayStartDate = currentPeriod.startDate
+  let displayEndDate = currentPeriod.endDate
+
+  // If it's a countdown, find the next 'in_progress' period to display its dates
+  if (currentPeriod.type === 'countdown') {
+    const nextExamPeriod = EXAM_PERIODS.find(
+      (period) => period.startDate.getTime() >= currentPeriod.endDate.getTime() && period.type === 'in_progress'
+    )
+    if (nextExamPeriod) {
+      displayStartDate = nextExamPeriod.startDate
+      displayEndDate = nextExamPeriod.endDate
+    }
   }
 
   return (
@@ -44,8 +59,8 @@ export default function ExamCountdown() {
         ) : (
           <>
             Egzaminy odbędą się od{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.startDate)}</span> do{' '}
-            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(currentPeriod.endDate)}</span>
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(displayStartDate)}</span> do{' '}
+            <span className="text-[#ff9898] ml-1 font-medium">{formatDate(displayEndDate)}</span>
           </>
         )}
       </p>

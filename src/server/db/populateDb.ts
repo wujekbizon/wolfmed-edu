@@ -1,6 +1,6 @@
 import { db } from '@/server/db/index'
 import { procedures, tests, blogPosts, users, completedTestes } from '@/server/db/schema'
-import { Post, Procedure, Test, User, CompletedTestData } from '@/types/dataTypes'
+import { BlogPost, Procedure, Test, User, CompletedTestData } from '@/types/dataTypes'
 import { readFile } from 'node:fs/promises'
 import * as path from 'node:path'
 
@@ -49,7 +49,7 @@ export async function populateProcedures() {
 
 export async function populatePosts() {
   try {
-    const postsData = (await readDataFileAndParse('blogPosts.json')) as Post[]
+    const postsData = (await readDataFileAndParse('blogPosts.json')) as BlogPost[]
 
     await insertData(postsData, blogPosts, (post) => ({
       title: post.title,

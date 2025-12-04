@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuestionSelectionStore } from '@/store/useQuestionSelectionStore'
+import { useQuery } from '@tanstack/react-query'
 import { Test } from '@/types/dataTypes'
+import { UserCustomCategory } from '@/server/db/schema'
 import CategoriesPanel from './CategoriesPanel'
 import QuestionsPanel from './QuestionsPanel'
 import { useQuestionsQuery } from '@/hooks/useQuestionsQuery'
@@ -10,32 +11,42 @@ import { useQuestionsQuery } from '@/hooks/useQuestionsQuery'
 const QUESTIONS_PER_PAGE = 12
 
 interface Props {
+  initialCategories: UserCustomCategory[]
   questions: Test[]
 }
 
-export default function CustomCategoryManager({ questions }: Props) {
-  const { customCategories, addQuestionToCategory, removeQuestionFromCategory } = useQuestionSelectionStore()
+export default function CustomCategoryManager({ initialCategories, questions }: Props) {
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
+  const testsArr = Array.isArray(questions) ? questions : Object.values(questions)
+
+  const { data: cachedTests = []} = useQuery({
+    queryKey: ['allTests', questions[0]?.category ?? 'custom-categories'],
+    queryFn: async () => testsArr,
+    initialData: testsArr,
+    staleTime: 10 * 60 * 1000,
+  })
+  
+  const customCategories = initialCategories.map(cat => ({
+    id: cat.id,
+    name: cat.categoryName,
+    questionIds: cat.questionIds as string[]
+  }))
+
   const { currentQuestions, totalPages } = useQuestionsQuery({
-    questions,
+    questions: cachedTests as Test [],
     searchQuery,
     currentPage,
     questionsPerPage: QUESTIONS_PER_PAGE,
   })
 
-  const handleToggleCategory = (categoryId: string, questionId: string) => {
-    if (customCategories.find((cat) => cat.id === categoryId)?.questionIds.includes(questionId)) {
-      removeQuestionFromCategory(categoryId, questionId)
-    } else {
-      addQuestionToCategory(categoryId, questionId)
-    }
-  }
-
   return (
-    <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 min-h-[calc(100vh_-_64px)]">
-      <CategoriesPanel questions={questions} />
+    <div className="flex flex-col lg:flex-row gap-2 sm:gap-4 min-h-[calc(100vh-64px)]">
+      <CategoriesPanel
+        categories={customCategories}
+        questions={cachedTests as Test []}
+      />
       <QuestionsPanel
         questions={currentQuestions}
         customCategories={customCategories}
@@ -45,7 +56,6 @@ export default function CustomCategoryManager({ questions }: Props) {
         onSearch={setSearchQuery}
         onPrevPage={() => currentPage > 1 && setCurrentPage(currentPage - 1)}
         onNextPage={() => currentPage < totalPages && setCurrentPage(currentPage + 1)}
-        onToggleCategory={handleToggleCategory}
       />
     </div>
   )

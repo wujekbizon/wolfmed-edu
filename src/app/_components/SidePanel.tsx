@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import Image from 'next/image'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import CustomButton from '@/components/CustomButton'
+import { Tooltip } from '@/components/Tooltip'
 
 export default function SidePanel() {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
@@ -12,12 +13,12 @@ export default function SidePanel() {
 
   return (
     <nav
-      className={`z-10 hidden h-full min-w-20 flex-col gap-20 rounded-xl rounded-bl-[42px] text-zinc-900 p-5 lg:flex bg-zinc-800/30 backdrop-blur-md border border-zinc-600/20 shadow-md transition-all duration-500 ${
-        isSidePanelOpen ? 'w-64' : 'w-20'
+      className={`z-50 hidden h-full min-w-20 flex-col gap-20 text-zinc-900 bg-zinc-800 px-5 py-1 lg:flex transition-all duration-500 ${
+        isSidePanelOpen ? 'w-75' : 'w-20'
       }`}
     >
       <div className="flex w-full flex-row place-items-center justify-between gap-1">
-        <div className="h-10 w-10 bg-white/70 rounded-full flex justify-center items-center border-red-300/20 shadow-sm">
+        <div className="h-10 w-10 flex justify-center items-center">
           <Image
             className="h-8 w-8 object-cover"
             src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
@@ -27,27 +28,35 @@ export default function SidePanel() {
             priority
           />
         </div>
-        <button
-          className="flex justify-center bg-[#ffc5c5]/70 backdrop-blur-sm items-center pr-0.5 transition-all hover:scale-95 rounded-md border border-red-100/20 hover:border-zinc-900/10 hover:shadow-sm hover:bg-[#f58a8a]/70 shadow-sm"
-          onClick={toggleSidePanel}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1}
-            stroke="currentColor"
-            className={`h-8 w-8 stroke-zinc-800 transition-transform duration-500 ${
-              isSidePanelOpen ? 'rotate-180' : 'rotate-0'
-            }`}
+        <Tooltip message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'} position="right">
+          <button
+            className="flex justify-center bg-[#ffc5c5]/70 backdrop-blur-sm items-center pr-0.5 transition-all hover:scale-95 rounded-md border border-red-100/20 hover:border-zinc-900/10 hover:shadow-sm hover:bg-[#f58a8a]/70 shadow-sm"
+            onClick={toggleSidePanel}
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1}
+              stroke="currentColor"
+              className={`h-8 w-8 stroke-zinc-800 transition-transform duration-500 ${
+                isSidePanelOpen ? 'rotate-180' : 'rotate-0'
+              }`}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </Tooltip>
       </div>
       <div className="flex flex-col gap-5">
         {sideMenuNavigationLinks.map((navLink) => (
-          <CustomButton text={navLink.label} key={navLink.label} href={navLink.url} active={navLink.url === pathname}>
+          <CustomButton
+            text={navLink.label}
+            key={navLink.label}
+            href={navLink.url}
+            active={navLink.url === pathname}
+            showTooltip={!isSidePanelOpen}
+          >
             {navLink.icon}
           </CustomButton>
         ))}

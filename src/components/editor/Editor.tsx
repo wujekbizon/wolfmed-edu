@@ -25,7 +25,12 @@ export default function Editor({
 }: Props) {
   const config = {
     ...editorConfig,
-    editorState: initialContent ? JSON.parse(initialContent) : undefined,
+    editorState: initialContent
+      ? (editor: any) => {
+          const initialState = editor.parseEditorState(initialContent)
+          editor.setEditorState(initialState)
+        }
+      : () => {},
   }
 
   return (

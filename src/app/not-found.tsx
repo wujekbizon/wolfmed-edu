@@ -3,7 +3,7 @@ import Image from 'next/image'
 
 export default function NotFound() {
   return (
-    <div className="relative flex h-[calc(100vh_-_70px)] rounded-br-3xl lg:rounded-br-[50px] rounded-bl-3xl lg:rounded-bl-[50px] flex-col items-center justify-end">
+    <div className="relative flex h-[calc(100vh-80px)] rounded-br-3xl lg:rounded-br-[50px] rounded-bl-3xl lg:rounded-bl-[50px] flex-col items-center justify-end">
       <Image
         src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5WKS1n8uB5MlwXOa6c4ysqzvIDSAEFVTYor7Q"
         alt="404 background"

@@ -1,5 +1,5 @@
 import { EXAM_PERIODS } from '@/constants/examDates'
-import type { ExamStatus } from '@/types/examCountdownTypes'
+import type { ExamPeriod, ExamStatus } from '@/types/examCountdownTypes'
 
 /**
  * Calculates the time remaining until the next exam event or during current exam period
@@ -11,22 +11,13 @@ export function calculateTimeLeft(): ExamStatus {
   const polandTime = new Date(now)
   const polandTimestamp = polandTime.getTime()
 
-  // Find current period using timestamp comparison
-  const currentPeriod = EXAM_PERIODS.find((period) => {
+  // 1. First, try to find an ACTIVE period (in_progress, waiting_results, or a long countdown that is currently active)
+  const activePeriod = EXAM_PERIODS.find((period) => {
     return polandTimestamp >= period.startDate.getTime() && polandTimestamp <= period.endDate.getTime()
   })
 
-  if (!currentPeriod) {
-    const nextPeriod = EXAM_PERIODS.find((period) => polandTimestamp < period.startDate.getTime())
-    if (!nextPeriod) {
-      return {
-        timeLeft: { days: 0, hours: 0, minutes: 0, seconds: 0 },
-        currentPeriod: null,
-      }
-    }
-
-    const difference = nextPeriod.startDate.getTime() - polandTimestamp
-
+  if (activePeriod) {
+    const difference = activePeriod.endDate.getTime() - polandTimestamp
     return {
       timeLeft: {
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -34,11 +25,32 @@ export function calculateTimeLeft(): ExamStatus {
         minutes: Math.floor((difference / 1000 / 60) % 60),
         seconds: Math.floor((difference / 1000) % 60),
       },
-      currentPeriod: nextPeriod,
+      currentPeriod: activePeriod,
     }
   }
 
-  const difference = currentPeriod.endDate.getTime() - polandTimestamp
+  // 2. If no period is currently active, find the NEXT upcoming period to countdown to
+  const nextUpcomingPeriod = EXAM_PERIODS.find((period) => polandTimestamp < period.startDate.getTime())
+
+  if (!nextUpcomingPeriod) {
+    // No future periods
+    return {
+      timeLeft: { days: 0, hours: 0, minutes: 0, seconds: 0 },
+      currentPeriod: null,
+    }
+  }
+
+  // Construct a temporary ExamPeriod for the countdown state
+  const difference = nextUpcomingPeriod.startDate.getTime() - polandTimestamp
+  const countdownToNextPeriod: ExamPeriod = {
+    startDate: polandTime, // Conceptual start for the countdown itself
+    endDate: nextUpcomingPeriod.startDate, // Countdown until this date
+    type: 'countdown',
+    label:
+      nextUpcomingPeriod.type === 'in_progress'
+        ? `Czas do ${nextUpcomingPeriod.label.replace('Trwa', '').trim()}`
+        : nextUpcomingPeriod.label,
+  }
 
   return {
     timeLeft: {
@@ -47,7 +59,7 @@ export function calculateTimeLeft(): ExamStatus {
       minutes: Math.floor((difference / 1000 / 60) % 60),
       seconds: Math.floor((difference / 1000) % 60),
     },
-    currentPeriod,
+    currentPeriod: countdownToNextPeriod,
   }
 }
 

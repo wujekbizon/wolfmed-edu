@@ -1,5 +1,6 @@
 import { Test } from '@/types/dataTypes'
 import QuestionTitlePreview from './QuestionTitlePreview'
+import CategoryToggleButton from './CategoryToggleButton'
 import SearchIcon from './icons/SearchIcon'
 
 interface Props {
@@ -15,7 +16,6 @@ interface Props {
   onSearch: (query: string) => void
   onPrevPage: () => void
   onNextPage: () => void
-  onToggleCategory: (categoryId: string, questionId: string) => void
 }
 
 export default function QuestionsPanel({
@@ -27,7 +27,6 @@ export default function QuestionsPanel({
   onSearch,
   onPrevPage,
   onNextPage,
-  onToggleCategory,
 }: Props) {
   return (
     <div className="lg:w-2/3 xl:w-3/4 flex flex-col bg-zinc-200/50 backdrop-blur-md border border-zinc-600/20 rounded-xl p-2 sm:p-4 shadow-md">
@@ -53,17 +52,13 @@ export default function QuestionsPanel({
             >
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {customCategories.map((category) => (
-                  <button
+                  <CategoryToggleButton
                     key={category.id}
-                    onClick={() => onToggleCategory(category.id, question.id)}
-                    className={`text-xs px-2.5 py-1 rounded-full transition-colors ${
-                      category.questionIds.includes(question.id)
-                        ? 'bg-[#ffc5c5]/70 backdrop-blur-sm text-zinc-800 hover:bg-[#f58a8a]/70 border border-red-100/20'
-                        : 'bg-zinc-100/70 text-zinc-700 hover:bg-zinc-200/70 border border-zinc-600/20'
-                    }`}
-                  >
-                    {category.name}
-                  </button>
+                    categoryId={category.id}
+                    categoryName={category.name}
+                    questionId={question.id}
+                    isAdded={category.questionIds.includes(question.id)}
+                  />
                 ))}
               </div>
               <div className="flex-1">

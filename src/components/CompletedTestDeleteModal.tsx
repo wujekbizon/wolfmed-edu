@@ -19,10 +19,9 @@ export default function CompletedTestDeleteModal({ testId }: { testId: string | 
   }, [state.status, closeDeleteModal])
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70">
       <div className="bg-white p-10 rounded-xl text-center">
         <h2 className="text-base sm:text-lg font-semibold mb-4">Czy napewno chesz usunąć ten test?</h2>
-
         <form action={action}>
           <input type="hidden" name="testId" value={testId} />
           <FieldError name="testId" formState={state} />

@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import AllPosts from '@/components/AllPosts'
-import { fileData } from '@/server/fetchData'
-
-export const dynamic = 'force-static'
+import { getAllBlogPosts } from '@/server/queries'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -13,7 +11,12 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
-  // file data
-  const posts = await fileData.getAllPosts()
+
+  const posts = await getAllBlogPosts({
+    status: 'published',
+    sortBy: 'publishedAt',
+    sortOrder: 'desc',
+  })
+
   return <AllPosts posts={posts} />
 }

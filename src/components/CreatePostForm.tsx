@@ -4,19 +4,17 @@ import { useActionState, useEffect, useState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { createForumPostAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
-import Input from '@/components/Input'
-import Label from '@/components/Label'
+import Input from '@/components/ui/Input'
+import Label from '@/components/ui/Label'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import Editor from './editor/Editor'
 import { EditorState } from 'lexical'
 import Checkbox from './Checkbox'
 
-type Props = {
+export default function CreatePostForm({ onClose }: {
   onClose: () => void
-}
-
-export default function CreatePostForm({ onClose }: Props) {
+}) {
   const [state, action] = useActionState(createForumPostAction, EMPTY_FORM_STATE)
   const [editorContent, setEditorContent] = useState('')
   const [readonly, setReadonly] = useState(false)
@@ -46,7 +44,7 @@ export default function CreatePostForm({ onClose }: Props) {
               id="title"
               name="title"
               placeholder="Tytuł posta"
-              defaultValue={state.values?.title || ''}
+              defaultValue={state.values?.title?.toString() || ''}
               className="w-full px-4 py-2 bg-zinc-800 rounded-lg border border-zinc-700 text-zinc-100 placeholder:text-zinc-600 outline-none"
             />
             <FieldError name="title" formState={state} />
