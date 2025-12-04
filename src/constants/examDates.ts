@@ -8,12 +8,12 @@ const generateExamPeriods = (startYear: number, yearsToGenerate: number): ExamPe
     periods.push(
       {
         startDate: createPolandDate(year - 1, 1, 1, 0, 0, 0),
-        endDate: createPolandDate(year, 1, 9, 5),
+        endDate: createPolandDate(year, 1, 8, 5),
         type: 'countdown',
         label: `Czas do zimowej sesji egzaminacyjnej ${year}`,
       },
       {
-        startDate: createPolandDate(year, 1, 9, 6),
+        startDate: createPolandDate(year, 1, 8, 6),
         endDate: createPolandDate(year, 1, 20, 23, 59, 59),
         type: 'in_progress',
         label: `Trwa zimowa sesja egzaminacyjna ${year}`,
