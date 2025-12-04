@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { uploadMaterialAction } from "@/actions/actions";
 import { useActionState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import { EMPTY_FORM_STATE } from "@/constants/formState";
 import { useToastMessage, showToast } from "@/hooks/useToastMessage";
 import { UploadButton } from "@/utils/uploadthing";
+import { parseUploadError } from "@/helpers/uploadErrors";
 import Input from "./ui/Input";
 import Label from "./ui/Label";
 import FieldError from "./FieldError";
@@ -25,6 +26,7 @@ export default function UploadMaterialForm({
   const [fileType, setFileType] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileSize, setFileSize] = useState<number | null>(null);
+  const fileTypeRef = useRef<string | null>(null);
   const noScriptFallback = useToastMessage(state);
 
   useEffect(() => {
@@ -50,12 +52,17 @@ export default function UploadMaterialForm({
 
       <UploadButton
         endpoint="materialUploader"
+        onBeforeUploadBegin={(files) => {
+          if (files[0]) {
+            fileTypeRef.current = files[0].type;
+            setFileType(files[0].type);
+          }
+          return files;
+        }}
         onUploadError={(err) => {
           console.error("Upload error:", err);
-          showToast(
-            "ERROR",
-            "Błąd podczas wysyłania pliku: " + (err?.message ?? "Nieznany błąd")
-          );
+          const errorMessage = parseUploadError(err, fileTypeRef.current);
+          showToast("ERROR", errorMessage);
         }}
         onClientUploadComplete={(res) => {
           const uploaded = res?.[0];
