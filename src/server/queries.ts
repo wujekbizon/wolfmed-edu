@@ -43,12 +43,13 @@ import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/lib/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
-export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
+export async function getAllTests(): Promise<ExtendedTest[]> {
+  "use cache"
   const tests = await db.query.tests.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
   return tests
-})
+}
 
 // ============================================================================
 // USER CUSTOM TESTS QUERIES
@@ -57,24 +58,26 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
 /**
  * Fetch all tests created by specific user
  */
-export const getUserCustomTests = cache(async (userId: string) => {
+export async function getUserCustomTests(userId: string) {
+  "use cache: private"
   const tests = await db.query.userCustomTests.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
     orderBy: (model, { desc }) => desc(model.createdAt),
   })
   return tests
-})
+}
 
 /**
  * Fetch single user test with ownership verification
  */
-export const getUserCustomTestById = cache(async (userId: string, testId: string) => {
+export async function getUserCustomTestById(userId: string, testId: string) {
+  "use cache: private"
   const test = await db.query.userCustomTests.findFirst({
     where: (model, { eq, and }) =>
       and(eq(model.id, testId), eq(model.userId, userId)),
   })
   return test
-})
+}
 
 /**
  * Delete user test with ownership verification
@@ -88,12 +91,13 @@ export const deleteUserCustomTest = async (userId: string, testId: string) => {
 /**
  * Get all custom categories for a user
  */
-export const getUserCustomCategories = cache(async (userId: string) => {
+export async function getUserCustomCategories(userId: string) {
+  "use cache: private"
   return await db.query.userCustomCategories.findMany({
     where: eq(userCustomCategories.userId, userId),
     orderBy: [desc(userCustomCategories.createdAt)],
   })
-})
+}
 
 /**
  * Get single category with ownership verification
@@ -795,15 +799,14 @@ export const updateUsernameByUserId = cache(
 )
 
 // Get username for a specific user
-export const getUserUsername = cache(
-  async (userId: string): Promise<string> => {
-    const user = await db.query.users.findFirst({
-      where: (model, { eq }) => eq(model.userId, userId),
-      columns: { username: true },
-    })
-    return user?.username || ""
-  }
-)
+export async function getUserUsername(userId: string): Promise<string> {
+  "use cache: private"
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+    columns: { username: true },
+  })
+  return user?.username || ""
+}
 
 // Update motto for a specific user
 export const updateMottoByUserId = cache(
@@ -816,13 +819,14 @@ export const updateMottoByUserId = cache(
 )
 
 // Get motto for a specific user
-export const getUserMotto = cache(async (userId: string): Promise<string> => {
+export async function getUserMotto(userId: string): Promise<string> {
+  "use cache: private"
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
     columns: { motto: true },
   })
   return user?.motto || ""
-})
+}
 
 // Get early supporters list, limited to specified number
 export const getEarlySupporters = cache(
@@ -883,7 +887,8 @@ export const getUserStats = cache(
 )
 
 // Get all forum posts with their comments, ordered by creation date
-export const getAllForumPosts = cache(async (): Promise<ForumPost[]> => {
+export async function getAllForumPosts(): Promise<ForumPost[]> {
+  "use cache"
   const posts = await db.query.forumPosts.findMany({
     orderBy: (model, { desc }) => desc(model.createdAt),
     with: {
@@ -902,7 +907,7 @@ export const getAllForumPosts = cache(async (): Promise<ForumPost[]> => {
       createdAt: comment.createdAt.toISOString(),
     })),
   }))
-})
+}
 
 // Get a specific forum post with its comments
 export const getForumPostById = cache(
@@ -1139,7 +1144,8 @@ export const expireTestSession = cache(async (sessionId: string) => {
     )
 })
 
-export const getAllUserNotes = cache(async (userId: string) => {
+export async function getAllUserNotes(userId: string) {
+  "use cache: private"
   const notesList = await db.query.notes.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
     orderBy: (model, { desc }) => desc(model.createdAt),
@@ -1150,7 +1156,7 @@ export const getAllUserNotes = cache(async (userId: string) => {
     createdAt: note.createdAt.toISOString(),
     updatedAt: note.updatedAt.toISOString(),
   }))
-})
+}
 
 export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
   const notesList = await db.query.notes.findMany({
@@ -1295,7 +1301,8 @@ export const checkUserCellsList = cache(async (userId: string) => {
   return existing[0] || null
 })
 
-export const getMaterialsByUser = cache(async (userId: string) => {
+export async function getMaterialsByUser(userId: string) {
+  "use cache: private"
   const rows = await db.query.materials.findMany({
     where: (m, { eq }) => eq(m.userId, userId),
     orderBy: (m, { desc }) => desc(m.createdAt),
@@ -1306,7 +1313,7 @@ export const getMaterialsByUser = cache(async (userId: string) => {
     createdAt: r.createdAt?.toISOString?.() ?? null,
     updatedAt: r.updatedAt?.toISOString?.() ?? null,
   }))
-})
+}
 
 export const getUserStorageUsage = async (userId: string) => {
   const userStorage = await db

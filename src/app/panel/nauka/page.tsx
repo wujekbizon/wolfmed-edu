@@ -7,7 +7,6 @@ import {  currentUser } from '@clerk/nextjs/server'
 import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
 
-export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Baza pytań Nauka',

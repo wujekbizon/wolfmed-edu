@@ -21,7 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export const dynamic = 'force-dynamic'
 
 async function TestsCategories() {
   const { userId } = await auth()

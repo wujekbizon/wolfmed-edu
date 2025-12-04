@@ -37,6 +37,7 @@ async function readJsonFile<T>(filename: string): Promise<T> {
 
 export const fileData: FileDataOperations = {
   getAllPosts: async () => {
+    "use cache"
     try {
       const posts = await readJsonFile<BlogPost[]>("blogPosts.json")
       return posts
@@ -47,6 +48,7 @@ export const fileData: FileDataOperations = {
   },
 
   getPostById: async (id: string) => {
+    "use cache"
     try {
       const posts = await readJsonFile<BlogPost[]>("blogPosts.json")
       return posts.find((post) => post.id === id) || null
@@ -57,6 +59,7 @@ export const fileData: FileDataOperations = {
   },
 
   getAllProcedures: async () => {
+    "use cache"
     try {
       const procedures = await readJsonFile<Procedure[]>("procedures.json")
       return procedures
@@ -67,6 +70,7 @@ export const fileData: FileDataOperations = {
   },
 
   getProcedureById: async (id: string) => {
+    "use cache"
     try {
       const procedures = await readJsonFile<Procedure[]>("procedures.json")
       return procedures.find((procedure) => procedure.id === id) || null
@@ -77,6 +81,7 @@ export const fileData: FileDataOperations = {
   },
 
   getProcedureBySlug: async (slug: string) => {
+    "use cache"
     try {
       // Get ID from slug mapping
       const procedureId = getProcedureIdFromSlug(slug)
@@ -94,6 +99,7 @@ export const fileData: FileDataOperations = {
   },
 
   getAllTests: async () => {
+    "use cache"
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
       return tests
@@ -104,6 +110,7 @@ export const fileData: FileDataOperations = {
   },
 
   getTestsCategories: async () => {
+    "use cache"
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
       const categories = [...new Set(tests.map((test) => test.category))].map(
@@ -117,6 +124,7 @@ export const fileData: FileDataOperations = {
   },
 
   countTestsByCategory: async (category: string) => {
+    "use cache"
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
       const count = tests.filter((test) => test.category === category).length
@@ -128,6 +136,7 @@ export const fileData: FileDataOperations = {
   },
 
   getTestsByCategory: async (category: string) => {
+    "use cache"
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
       const filteredTests = tests
@@ -147,6 +156,7 @@ export const fileData: FileDataOperations = {
   },
 
   getCategoriesMetadata: async () => {
+    "use cache"
     try {
       const metadata = await readJsonFile<CategoryMetadata[]>("categoryMetadata.json");
       return metadata;

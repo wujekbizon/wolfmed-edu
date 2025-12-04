@@ -3,7 +3,6 @@ import { getAllMessages } from '@/server/queries'
 import MessageManagement from '@/components/MessageManagement'
 import { MessageListSkeleton } from '@/components/skeletons/MessageListSkeleton'
 
-export const dynamic = 'force-dynamic'
 
 async function AsyncMessageList({ page }: { page: number }) {
   const { messages, pagination } = await getAllMessages(page, 20)

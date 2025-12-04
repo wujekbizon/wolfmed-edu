@@ -5,7 +5,6 @@ import CreatePostButton from '@/components/CreatePostButton'
 import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
 import { Metadata } from 'next'
 
-export const experimental_ppr = true
 
 export const metadata: Metadata = {
   title: 'Wolfmed Forum Dyskusyjne ',

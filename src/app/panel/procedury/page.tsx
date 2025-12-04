@@ -2,7 +2,6 @@ import AllProcedures from '@/components/AllProcedures'
 import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 
-export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Procedury Opiekuna Medycznego',

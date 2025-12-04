@@ -3,7 +3,6 @@ import TagForm from '@/components/blog/admin/TagForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-export const dynamic = 'force-dynamic'
 
 interface EditTagPageProps {
   params: Promise<{
