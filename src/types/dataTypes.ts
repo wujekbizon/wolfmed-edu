@@ -51,7 +51,7 @@ export interface CompletedTest {
   id: string
   userId: string
   score: number
-  sessionId:string
+  sessionId: string | null
   testResult: FormattedAnswer[]
 }
 
