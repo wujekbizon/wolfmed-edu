@@ -77,8 +77,7 @@ export const completedTestes = createTable(
     userId: varchar("userId", { length: 256 })
       .notNull()
       .references(() => users.userId, { onDelete: "cascade" }),
-    sessionId: uuid("sessionId")
-      .notNull()
+    sessionId: uuid("sessionId") 
       .references(() => testSessions.id, { onDelete: "cascade" }),
     testResult: jsonb("testResult").default([]),
     score: integer("score").notNull(),
