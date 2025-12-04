@@ -1,3 +1,4 @@
+
 import Hero from "./_components/Hero"
 import Contact from "./_components/Contact"
 import Footer from "./_components/Footer"
@@ -7,8 +8,10 @@ import TriangleDivider from "@/components/TriangleDivider"
 import About from "./_components/About"
 import EducationPathsSection from "./_components/EducationalPaths"
 import Testimonials from "./_components/Testimonials"
+import { connection } from "next/server"
 
 export default function HomePage() {
+  connection()
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
       <Hero />

@@ -849,15 +849,15 @@ export const getEarlySupporters = cache(
 )
 
 // Check if a user is a supporter
-export const getSupporterByUserId = cache(
-  async (userId: string): Promise<boolean> => {
-    const user = await db.query.users.findFirst({
-      where: (model, { eq }) => eq(model.userId, userId),
-      columns: { supporter: true },
-    })
-    return user?.supporter || false
-  }
-)
+export async function getSupporterByUserId(userId: string): Promise<boolean> {
+  "use cache: private"
+  
+  const user = await db.query.users.findFirst({
+    where: (model, { eq }) => eq(model.userId, userId),
+    columns: { supporter: true },
+  })
+  return user?.supporter || false
+}
 
 // Get user statistics (total score, questions, tests attempted)
 export const getUserStats = cache(
@@ -1033,6 +1033,7 @@ export const getSupportersUserIds = cache(async (): Promise<string[]> => {
 
 export const getSupportersWithUsernames = cache(
   async (): Promise<Supporter[]> => {
+    "use cache"
     const supporters = await db
       .select({
         id: users.id,
@@ -1072,6 +1073,7 @@ export const getTestimonials = cache(async (visibleOnly = true) => {
 
 export const getTestimonialsWithUsernames = cache(
   async (visibleOnly = true) => {
+     "use cache"
     const results = await db
       .select({
         id: testimonials.id,

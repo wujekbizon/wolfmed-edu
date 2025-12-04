@@ -9,6 +9,7 @@ import CategoryDeleteModalWrapper from '@/components/CategoryDeleteModalWrapper'
 import SupporterRequired from '@/components/SupporterRequired'
 
 export default async function CreateTestPage() {
+  "use cache: private"
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
 
