@@ -1,6 +1,5 @@
 'use client'
 
-import React from "react";
 import type { MaterialsType } from "@/types/materialsTypes";
 import { formatDate } from "@/helpers/formatDate";
 import { resolveSrc } from "@/helpers/resolveSource";
@@ -38,7 +37,7 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
         />
       )}
       <article
-        className="flex flex-col justify-between relative bg-zinc-50 border border-zinc-300/50 rounded-xl hover:border-slate-300 transition-all duration-200 p-3"
+        className="flex flex-col justify-between relative bg-zinc-50 border border-zinc-300/50 rounded-xl hover:border-slate-300 transition-all duration-200 px-3 pt-8 pb-3"
         aria-labelledby={`material-${material.id}-title`}
       >
       <header className="flex item-center gap-4">
