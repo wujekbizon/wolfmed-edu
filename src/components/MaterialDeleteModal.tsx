@@ -6,7 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from './SubmitButton'
 import FieldError from './FieldError'
-import { deleteMaterialAction } from '@/actions/actions'
+import { deleteMaterialAction } from '@/actions/materials'
 
 interface Props {
   materialId: string

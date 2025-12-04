@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { uploadMaterialAction } from "@/actions/actions";
+import { uploadMaterialAction } from "@/actions/materials";
 import { useActionState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import { EMPTY_FORM_STATE } from "@/constants/formState";

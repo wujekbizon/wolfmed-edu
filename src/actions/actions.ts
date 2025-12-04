@@ -6,6 +6,7 @@ import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { QuestionAnswer } from "@/types/dataTypes"
 import { redirect } from "next/navigation"
+import { UTApi } from "uploadthing/server"
 import { db } from "@/server/db/index"
 import {
   completedTestes,
@@ -56,7 +57,6 @@ import {
   expireTestSession,
   sessionExists,
   getSupporterByUserId,
-  deleteMaterial,
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
@@ -930,118 +930,6 @@ export async function expireSessionAction(sessionId: string) {
   } catch (error) {
     return { status: "ERROR", message: "Nie udało się zakończyć sesji." }
   }
-}
-
-export async function uploadMaterialAction(  FormState: FormState, formData: FormData) {
-  try {
-    const {userId} = await auth();
-    if (!userId) throw new Error("Unauthorized");
-
-    // Rate limiting: 5 material uploads per hour
-    const rateLimit = await checkRateLimit(userId, 'material:upload')
-    if (!rateLimit.success) {
-      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      return toFormState(
-        "ERROR",
-        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-      )
-    }
-
-    const title = String(formData.get("title") ?? "");
-    const key = String(formData.get("key") ?? "");
-    const fileUrl = String(formData.get("fileUrl") ?? "");
-    const type = String(formData.get("type") ?? "");
-    const category = String(formData.get("category") ?? "");
-    const size = Number(formData.get("size") ?? "");
-
-    const validationResult = MaterialsSchema.safeParse({
-      title,
-      key,
-      url:fileUrl,
-      type,
-      category,
-      size
-    });
-
-    if (!validationResult.success) {
-      return {
-        ...fromErrorToFormState(validationResult.error),
-        values: {size, title, key, fileUrl, type, category },
-      }
-    }
-
-    // Check quota before uploading
-    const { storageUsed, storageLimit } = await getUserStorageUsage(userId);
-
-    if (storageUsed + validationResult.data.size > storageLimit) {
-      return toFormState("ERROR", "Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce.");
-    }
-
-    // Use transaction to insert material and update storage atomically
-    await db.transaction(async (tx) => {
-      await tx.insert(materials).values({
-        userId,
-        title: validationResult.data.title,
-        key: validationResult.data.key,
-        url: validationResult.data.url,
-        type: validationResult.data.type,
-        category: validationResult.data.category,
-        size: validationResult.data.size
-      });
-
-      await tx
-        .update(userLimits)
-        .set({
-          storageUsed: sql`${userLimits.storageUsed} + ${validationResult.data.size}`,
-          updatedAt: new Date(),
-        })
-        .where(eq(userLimits.userId, userId));
-    });
-
-  } catch (error: any) {
-    return toFormState("ERROR", error.message );
-  }
-
-  revalidatePath("/panel/nauka");
-  return toFormState("SUCCESS","Plik został pomyślnie wrzucony")
-}
-
-export async function deleteMaterialAction(formState: FormState, formData: FormData) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthorized")
-
-  try {
-    const materialId = formData.get("materialId") as string
-
-    if (!materialId) {
-      return toFormState("ERROR", "Niepoprawne ID materiału")
-    }
-
-    const validationResult = DeleteMaterialIdSchema.safeParse({ materialId })
-
-    if (!validationResult.success) {
-      return toFormState("ERROR", "Brak materiału do usunięcia")
-    }
-
-    const deletedMaterial = await deleteMaterial(userId, materialId)
-
-    if (!deletedMaterial) {
-      return toFormState("ERROR", "Materiał nie został znaleziony")
-    }
-    
-    await db
-      .update(userLimits)
-      .set({
-        storageUsed: sql`GREATEST(0, ${userLimits.storageUsed} - ${deletedMaterial.size})`,
-        updatedAt: new Date(),
-      })
-      .where(eq(userLimits.userId, userId))
-  } catch (error) {
-    return fromErrorToFormState(error)
-  }
-
-  revalidatePath("/panel/nauka")
-  return toFormState("SUCCESS", "Materiał został usunięty pomyślnie")
 }
 
 /**
