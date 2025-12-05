@@ -12,22 +12,16 @@ export async function insertUserToDb(userData: UserData): Promise<void> {
       // Insert user
       await tx.insert(users).values(userData)
 
-      // Create userLimits with default values (20MB)
-      await tx.insert(userLimits).values({
-        userId: userData.userId,
-        storageLimit: 20_000_000, // 20MB in bytes
-        storageUsed: 0,
-      })
     })
   } catch (error) {
     console.error('Error inserting users:', error)
     // Ensure the error is actually an Error object before re-throwing
     if (error instanceof Error) {
-      throw new Error(`An error occurred while inserting the user into the database: ${error.message}`)
+      throw new Error(`Wystąpił błąd podczas tworzenia konta użytkownika: ${error.message}`)
     } else {
       // Handle non-Error type errors
       console.error('Unexpected error type:', error)
-      // DO IT LATER: throw a custom error or handle it differently here
+      throw new Error('Wystąpił nieoczekiwany błąd podczas tworzenia konta')
     }
   }
 }
@@ -39,11 +33,11 @@ export async function deleteUserFromDb(id: string): Promise<void> {
     console.error('Error deleting user:', error)
     // Ensure the error is actually an Error object before re-throwing
     if (error instanceof Error) {
-      throw new Error(`An error occurred while deleting the user from the database: ${error.message}`)
+      throw new Error(`Wystąpił błąd podczas usuwania użytkownika: ${error.message}`)
     } else {
       // Handle non-Error type errors
       console.error('Unexpected error type:', error)
-      // DO IT LATER: throw a custom error or handle it differently here
+      throw new Error('Wystąpił nieoczekiwany błąd podczas usuwania użytkownika')
     }
   }
 }
@@ -75,7 +69,7 @@ export async function updateTestLimit(id: string, testLimit: number, eventId: st
     console.log(`Updated testLimit to ${testLimit} for user with ID: ${id}`)
   } catch (error) {
     console.error(`Failed to update testLimit for user with ID: ${id}`, error)
-    throw new Error('Error updating test limit')
+    throw new Error('Błąd aktualizacji limitu testów')
   }
 }
 
@@ -99,6 +93,13 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
       // Update the user's test limit
       await tx.update(users).set({ testLimit: 1000 }).where(eq(users.userId, id))
 
+      // CREATE userLimits for the new supporter
+      await tx.insert(userLimits).values({
+        userId: id,
+        storageLimit: 20_000_000,
+        storageUsed: 0,
+      })
+
       // Log the processed event for idempotency
       await tx.insert(processedEvents).values({
         eventId,
@@ -110,7 +111,7 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
     console.log(`User with ID: ${id} is now a supporter.`)
   } catch (error) {
     console.error(`Failed to update supporter status for user with ID: ${id}`, error)
-    throw new Error('Error updating supporter status')
+    throw new Error('Błąd aktualizacji statusu wspierającego')
   }
 }
 
@@ -142,7 +143,7 @@ export async function insertSubscription({
     console.log(`Subscription for user ${userId} inserted successfully.`)
   } catch (error) {
     console.error(`Failed to insert subscription for user ${userId}:`, error)
-    throw new Error('Error inserting subscription')
+    throw new Error('Błąd dodawania subskrypcji')
   }
 }
 
@@ -165,6 +166,6 @@ export async function insertPayment({
     })
   } catch (error) {
     console.error(`Failed to insert payment for user ${userId}:`, error)
-    throw new Error('Error inserting payment')
+    throw new Error('Błąd dodawania płatności')
   }
 }

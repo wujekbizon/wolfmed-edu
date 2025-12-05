@@ -2,8 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/server/db/index"
-import { userLimits, materials } from "@/server/db/schema"
-import { getUserStorageUsage } from "@/server/queries"
+import { userLimits, materials, users } from "@/server/db/schema"
 import { DeleteMaterialIdSchema, MaterialsSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
@@ -107,13 +106,47 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       }
     }
 
-    const { storageUsed, storageLimit } = await getUserStorageUsage(userId);
-
-    if (storageUsed + validationResult.data.size > storageLimit) {
-      return toFormState("ERROR", "Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce.");
-    }
-
     await db.transaction(async (tx) => {
+      // Ensure userLimits exists
+      const existingLimit = await tx
+        .select()
+        .from(userLimits)
+        .where(eq(userLimits.userId, userId))
+        .limit(1);
+
+      let currentUsage = 0;
+      let currentLimit = 20_000_000;
+
+      if (existingLimit.length === 0) {
+        // Create record only for supporters
+        const user = await tx
+          .select({ supporter: users.supporter })
+          .from(users)
+          .where(eq(users.userId, userId))
+          .limit(1);
+
+        if (user[0]?.supporter) {
+          await tx.insert(userLimits).values({
+            userId,
+            storageLimit: 20_000_000,
+            storageUsed: 0,
+          });
+          currentUsage = 0;
+          currentLimit = 20_000_000;
+        } else {
+          throw new Error("Tylko wspierający mogą dodawać materiały");
+        }
+      } else {
+        currentUsage = existingLimit[0]?.storageUsed ?? 0;
+        currentLimit = existingLimit[0]?.storageLimit ?? 20_000_000;
+      }
+
+      // Validate storage limit within transaction
+      if (currentUsage + validationResult.data.size > currentLimit) {
+        throw new Error("Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce.");
+      }
+
+      // Insert material
       await tx.insert(materials).values({
         userId,
         title: validationResult.data.title,
@@ -124,6 +157,7 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         size: validationResult.data.size
       });
 
+      // Update storage atomically
       await tx
         .update(userLimits)
         .set({
