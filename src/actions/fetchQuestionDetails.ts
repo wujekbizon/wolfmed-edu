@@ -1,21 +1,37 @@
-import { getQuestionById } from '@/server/queries'
 import { FormattedAnswer, Test } from '@/types/dataTypes'
+import { db } from '@/server/db/index'
+import { tests } from '@/server/db/schema'
+import { inArray } from 'drizzle-orm'
 
 export async function fetchQuestionDetails(results: FormattedAnswer[]) {
-  // Fetch question details in parallel for each formatted answer
-  const questionDetailsPromises = results.map(async (result) => {
-    const testData = (await getQuestionById(result.questionId)) as Test
-    const userCorrectAnswer = testData?.data.answers.find((answer) => answer.isCorrect === result.answer)
+  // Extract unique question IDs
+  const questionIds = [...new Set(results.map((r) => r.questionId))]
 
-    if (!userCorrectAnswer) {
-      return
-    }
-
-    return { testData, userCorrectAnswer }
+  // Batch fetch all tests in ONE query (instead of 12,984 individual queries!)
+  const testsData = await db.query.tests.findMany({
+    where: inArray(tests.id, questionIds),
   })
 
-  // Wait for all promises to resolve and return the details
-  const resolvedDetails = await Promise.all(questionDetailsPromises)
+  // Create a Map for O(1) lookups
+  const testsMap = new Map<string, Test>(
+    testsData.map((test) => [test.id, test as Test])
+  )
 
-  return resolvedDetails
+  // Map results to details
+  const details = results
+    .map((result) => {
+      const testData = testsMap.get(result.questionId)
+      if (!testData) return undefined
+
+      const userCorrectAnswer = testData.data.answers.find(
+        (answer) => answer.isCorrect === result.answer
+      )
+
+      if (!userCorrectAnswer) return undefined
+
+      return { testData, userCorrectAnswer }
+    })
+    .filter((detail) => detail !== undefined)
+
+  return details
 }

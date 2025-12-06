@@ -48,3 +48,5 @@ detail_layers.txt
 /inputs
 
 *.md
+
+*.sql

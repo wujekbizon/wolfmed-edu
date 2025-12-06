@@ -4892,33 +4892,6 @@
       "updatedAt": null
     },
     {
-      "id": "4bbc2b38-ef8b-4271-9b5e-aa135d9ae5c0",
-      "category": "opiekun-medyczny",
-      "data": {
-        "answers": [
-          {
-            "option": "osłonić łóżko parawanem, umieścić kaczkę między udami pacjenta, opróżnić kaczkę, usunąć parawan, przygotować przybory do mycia.",
-            "isCorrect": false
-          },
-          {
-            "option": "osłonić łóżko parawanem, umieścić kaczkę między udami pacjenta, opróżnić kaczkę, usunąć parawan, przygotować przybory do mycia.",
-            "isCorrect": true
-          },
-          {
-            "option": "umieścić kaczkę między udami pacjenta, podać pacjentowi dzwonek, osłonić łóżko parawanem, opróżnić kaczkę, umyć ręce pacjenta, wywietrzyć salę.",
-            "isCorrect": false
-          },
-          {
-            "option": "umieścić kaczkę między udami pacjentami, osłonić łóżko parawanem, przygotować ręce do mycia, opróżnić kaczkę, wywietrzyć salę.",
-            "isCorrect": false
-          }
-        ],
-        "question": "Podczas podawania pacjentowi leżącemu kaczki należy kolejno:"
-      },
-      "createdAt": "2024-11-03 19:59:12.788153",
-      "updatedAt": null
-    },
-    {
       "id": "4bde5ad8-95c4-44a9-b2c8-52ade4cdf1d9",
       "category": "opiekun-medyczny",
       "data": {
