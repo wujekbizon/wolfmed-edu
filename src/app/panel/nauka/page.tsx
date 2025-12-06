@@ -2,6 +2,10 @@ import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import LearningHubDashboard from '@/components/LearningHubDashboard'
+import PdfPreviewModal from '@/components/PdfPreviewModal'
+import VideoPreviewModal from '@/components/VideoPreviewModal'
+import TextPreviewModal from '@/components/TextPreviewModal'
+import UploadMaterialModal from '@/components/UploadMaterialModal'
 import { getAllUserNotes, getMaterialsByUser, getSupporterByUserId } from '@/server/queries'
 import {  currentUser } from '@clerk/nextjs/server'
 import type { NotesType } from '@/types/notesTypes'
@@ -31,6 +35,10 @@ export default async function NaukaPage() {
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
       <LearningHubDashboard materials={materials} categories={populatedCategories} notes={userAllNotes} isSupporter={isSupporter}/>
+      <PdfPreviewModal />
+      <VideoPreviewModal />
+      <TextPreviewModal />
+      <UploadMaterialModal />
     </section>
   )
 }

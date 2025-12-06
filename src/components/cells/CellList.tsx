@@ -1,3 +1,5 @@
+"use client"
+
 import { Fragment } from 'react'
 import AddCell from './AddCell'
 import CellListItem from './CellListItem'
