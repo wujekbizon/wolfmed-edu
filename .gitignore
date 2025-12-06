@@ -50,3 +50,4 @@ detail_layers.txt
 *.md
 
 sentryError.txt
+*.sql

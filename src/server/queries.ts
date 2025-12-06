@@ -1548,36 +1548,30 @@ export const getAllMessages = cache(async (page: number = 1, limit: number = 20)
 
 /**
  * Get message statistics
+ * Optimized: 1 query instead of 4 separate queries
  */
 export const getMessageStats = cache(async () => {
-  const [totalResult] = await db.select({ count: count() }).from(customersMessages)
-
-  const [unreadResult] = await db
-    .select({ count: count() })
-    .from(customersMessages)
-    .where(eq(customersMessages.isRead, false))
-
   const oneWeekAgo = new Date()
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-
-  const [weeklyResult] = await db
-    .select({ count: count() })
-    .from(customersMessages)
-    .where(sql`${customersMessages.createdAt} >= ${oneWeekAgo}`)
 
   const oneMonthAgo = new Date()
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
 
-  const [monthlyResult] = await db
-    .select({ count: count() })
+  // Single query with conditional aggregations
+  const [stats] = await db
+    .select({
+      total: count(),
+      unread: sql<number>`COUNT(*) FILTER (WHERE ${customersMessages.isRead} = false)`,
+      thisWeek: sql<number>`COUNT(*) FILTER (WHERE ${customersMessages.createdAt} >= ${oneWeekAgo})`,
+      thisMonth: sql<number>`COUNT(*) FILTER (WHERE ${customersMessages.createdAt} >= ${oneMonthAgo})`,
+    })
     .from(customersMessages)
-    .where(sql`${customersMessages.createdAt} >= ${oneMonthAgo}`)
 
   return {
-    total: totalResult?.count || 0,
-    unread: unreadResult?.count || 0,
-    thisWeek: weeklyResult?.count || 0,
-    thisMonth: monthlyResult?.count || 0,
+    total: stats?.total || 0,
+    unread: Number(stats?.unread) || 0,
+    thisWeek: Number(stats?.thisWeek) || 0,
+    thisMonth: Number(stats?.thisMonth) || 0,
   }
 })
 
