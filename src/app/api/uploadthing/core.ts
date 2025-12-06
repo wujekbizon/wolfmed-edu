@@ -8,7 +8,6 @@ export const ourFileRouter = {
   materialUploader: f({
     "pdf": { maxFileSize: "4MB", maxFileCount: 1 },
     "video/mp4": { maxFileSize: "8MB", maxFileCount: 1 },
-    "text/plain": { maxFileSize: "1MB", maxFileCount: 1 },
     "application/json": { maxFileSize: "1MB", maxFileCount: 1 },
   })
     .middleware(async ({ req }) => {

@@ -250,7 +250,6 @@ export const UserCellsListSchema = z.object({
 
 export const allowedFileTypes = [
   "application/pdf",
-  "text/plain",
   "video/mp4",
   "application/json",
 ] as const;

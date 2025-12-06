@@ -4,19 +4,18 @@ import type { MaterialsType } from "@/types/materialsTypes";
 import { formatDate } from "@/helpers/formatDate";
 import { resolveSrc } from "@/helpers/resolveSource";
 import { useDashboardStore } from '@/store/useDashboardStore'
+import { useMaterialModalStore } from '@/store/useMaterialModalStore'
 import MaterialDeleteButton from './MaterialDeleteButton'
 import MaterialDeleteModal from './MaterialDeleteModal'
 import { formatBytes } from '@/helpers/formatBytes'
 
 type Props = {
   material: MaterialsType;
-  onOpenPdf: (src: string, title?: string) => void;
-  onOpenVideo: (src: string, title?: string) => void;
-  onOpenText: (src: string, title?: string) => void;
 };
 
-export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenText }: Props) {
+export default function MaterialCard({ material }: Props) {
   const { isDeleteModalOpen, materialIdToDelete } = useDashboardStore()
+  const { openPdfModal, openVideoModal, openTextModal } = useMaterialModalStore()
   const src = resolveSrc(material);
 
   const isPdf = material.type === "application/pdf";
@@ -84,7 +83,7 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
             <MaterialDeleteButton materialId={material.id} />
             {isPdf && (
               <button
-                onClick={() => onOpenPdf(src, material.title)}
+                onClick={() => openPdfModal(src, material.title)}
                 className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Podgląd PDF ${material.title ?? ""}`}
               >
@@ -93,7 +92,7 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
             )}
             {isVideo && (
               <button
-                onClick={() => onOpenVideo(src, material.title)}
+                onClick={() => openVideoModal(src, material.title)}
                 className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Podgląd Video ${material.title ?? ""}`}
               >
@@ -103,7 +102,7 @@ export default function MaterialCard({ material, onOpenPdf, onOpenVideo, onOpenT
 
             {isText && (
               <button
-                onClick={() => onOpenText(src, material.title)}
+                onClick={async () => await openTextModal(src, material.title)}
                 className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Podgląd Tekst ${material.title ?? ""}`}
               >
