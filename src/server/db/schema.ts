@@ -34,7 +34,6 @@ export const users = createTable(
     totalQuestions: integer("total_questions").default(0).notNull(),
   },
   (table) => [
-    index("usersUserId").on(table.userId),
     index("usersUsername").on(table.username),
   ]
 )
@@ -497,10 +496,7 @@ export const userLimits = createTable(
   storageUsed: integer("storage_used").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-},
-(table) => [
-  index("user_limits_user_id_idx").on(table.userId),
-]
+  }
 );
 
 export const userLimitsRelations = relations(userLimits, ({ one }) => ({
@@ -526,8 +522,6 @@ export const challengeCompletions = createTable(
     completedAt: timestamp("completedAt").defaultNow().notNull(),
   },
   (table) => [
-    index("challenge_completions_user_id_idx").on(table.userId),
-    index("challenge_completions_procedure_id_idx").on(table.procedureId),
     index("challenge_completions_user_procedure_idx").on(table.userId, table.procedureId),
   ]
 );
