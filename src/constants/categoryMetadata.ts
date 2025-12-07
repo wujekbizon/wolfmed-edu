@@ -12,7 +12,7 @@ export const DEFAULT_CATEGORY_METADATA: CategoryMetadataType = {
   category: '',
   image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KkQtwIbr79T0mSRj6eAJqPf4kEid2ncgM5Nu',
   description: 'Twoja własna kategoria testów',
-  duration: [30],
+  duration: [25,40,60],
   popularity: 'Kategoria niestandardowa',
   status: true,
   numberOfQuestions: [10, 40]

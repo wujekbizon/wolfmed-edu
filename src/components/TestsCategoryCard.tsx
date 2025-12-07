@@ -70,7 +70,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
             </div>
             <div className="flex items-center gap-2 text-sm sm:text-base">
               <span className="text-zinc-200">Czas trwania:</span>
-              <span className="font-bold text-red-300">{categoryData.duration[0]}</span>
+              <span className="font-bold text-red-300">{categoryData.duration.join(', ')}</span>
               <span className="text-zinc-200">minut</span>
             </div>
           </div>
