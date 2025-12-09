@@ -43,12 +43,7 @@ export default function LearningHubDashboard({
         </div>
       </div>
       
-      <div className="relative">
-        {!isSupporter && <PremiumLock />}
-        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
-          <MaterialsSection materials={materials} />
-        </div>
-      </div>
+      <MaterialsSection materials={materials} isSupporter={isSupporter} />
     </div>
   );
 }

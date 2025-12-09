@@ -80,7 +80,9 @@ export default function MaterialCard({ material }: Props) {
             )}
           </div>
           <div className="flex gap-2 items-center">
-            <MaterialDeleteButton materialId={material.id} />
+            {material.userId !== "system" && (
+              <MaterialDeleteButton materialId={material.id} />
+            )}
             {isPdf && (
               <button
                 onClick={() => openPdfModal(src, material.title)}

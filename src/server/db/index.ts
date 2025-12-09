@@ -8,9 +8,9 @@ if (!process.env.NEON_DATABASE_URL) {
 
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
-  max: 10, // Maximum number of connections in the pool
-  idleTimeoutMillis: 30000, // Close idle connections after 30 seconds
-  connectionTimeoutMillis: 10000, // Connection timeout after 10 seconds
+  max: 3, // Maximum number of connections in the pool
+  idleTimeoutMillis: 5000, // Close idle connections after 30 seconds
+  connectionTimeoutMillis: 5000, // Connection timeout after 10 seconds
   maxUses: 7500, // Maximum number of times a connection can be used before being destroyed
 })
 
