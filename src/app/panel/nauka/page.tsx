@@ -1,6 +1,7 @@
 import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
+import { getMergedMaterials } from '@/helpers/mergeMaterials'
 import LearningHubDashboard from '@/components/LearningHubDashboard'
 import PdfPreviewModal from '@/components/PdfPreviewModal'
 import VideoPreviewModal from '@/components/VideoPreviewModal'
@@ -30,7 +31,8 @@ export default async function NaukaPage() {
   )
   const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
 
-  const materials = user ? await getMaterialsByUser(user.id) as MaterialsType[] : []
+  const userMaterials = user ? await getMaterialsByUser(user.id) as MaterialsType[] : []
+  const materials = await getMergedMaterials(userMaterials)
 
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>

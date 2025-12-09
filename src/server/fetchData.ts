@@ -2,6 +2,7 @@ import path from "path"
 import fs from "fs"
 import { BlogPost, Procedure, Test } from "@/types/dataTypes"
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType"
+import { MaterialsType } from "@/types/materialsTypes"
 import { getProcedureIdFromSlug } from "@/constants/procedureSlugs"
 import {
   getMergedTests,
@@ -21,6 +22,7 @@ interface FileDataOperations {
   countTestsByCategory: (category: string) => Promise<number>
   getTestsByCategory: (category: string) => Promise<Test[]>
   getCategoriesMetadata: () => Promise<CategoryMetadata[]>
+  getOfficialMaterials: () => Promise<MaterialsType[]>
   // Merged variants (JSON official + DB user custom tests)
   // See @/helpers/mergeTests.ts for architecture details
   mergedGetAllTests: (userId?: string) => Promise<Test[]>
@@ -171,5 +173,15 @@ export const fileData: FileDataOperations = {
 
   mergedCountTestsByCategory: async (category: string, userId?: string) => {
     return countMergedTestsByCategory(category, userId)
+  },
+
+  getOfficialMaterials: async () => {
+    try {
+      const materials = await readJsonFile<MaterialsType[]>("materials.json")
+      return materials
+    } catch (error) {
+      console.error("Error fetching official materials:", error)
+      return []
+    }
   },
 }

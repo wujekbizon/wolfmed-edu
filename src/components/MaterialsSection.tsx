@@ -3,24 +3,37 @@
 import MaterialCard from "./MaterialCard"
 import type { MaterialsType } from "@/types/materialsTypes"
 import { useMaterialModalStore } from "@/store/useMaterialModalStore"
+import { Tooltip } from "./Tooltip"
 
 type Props = {
   materials: MaterialsType[]
+  isSupporter?: boolean
 }
 
-export default function MaterialsSection({ materials }: Props) {
+export default function MaterialsSection({ materials, isSupporter = false }: Props) {
   const { openUploadModal } = useMaterialModalStore()
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-xl font-bold text-zinc-800">Materiały i Zasoby</h2>
-        <button
-          className="bg-slate-600 text-white px-4 py-2 cursor-pointer rounded-full text-sm font-medium hover:bg-slate-700 transition-colors"
-          onClick={openUploadModal}
-        >
-          Dodaj Materiał
-        </button>
+        {!isSupporter ? (
+          <Tooltip message="Dostępne dla wspierających" position="bottom-left">
+            <button
+              className="bg-slate-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors opacity-50 cursor-not-allowed"
+              disabled
+            >
+              Dodaj Materiał
+            </button>
+          </Tooltip>
+        ) : (
+          <button
+            className="bg-slate-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer hover:bg-slate-700"
+            onClick={openUploadModal}
+          >
+            Dodaj Materiał
+          </button>
+        )}
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {materials.map((material) => (
