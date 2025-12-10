@@ -6,6 +6,8 @@ import { getSupporterByUserId, getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
+import { isUserAdmin } from '@/lib/adminHelpers'
+import { redirect } from 'next/navigation'
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -23,12 +25,20 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 }
 
 async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
+  const decodedCategory = decodeURIComponent(category)
+
+  // Protect socjologia
+  if (decodedCategory === 'socjologia') {
+    const isAdmin = await isUserAdmin()
+    if (!isAdmin) redirect('/panel/testy')
+  }
+
   const { userId } = await auth()
   const isSupporter = userId ? await getSupporterByUserId(userId) : false
 
   const categoryTests = isSupporter
-    ? await fileData.mergedGetTestsByCategory(decodeURIComponent(category), userId || "")
-    : await fileData.getTestsByCategory(decodeURIComponent(category))
+    ? await fileData.mergedGetTestsByCategory(decodedCategory, userId || "")
+    : await fileData.getTestsByCategory(decodedCategory)
 
   const sessionDetails = await getTestSessionDetails(sessionId);
 

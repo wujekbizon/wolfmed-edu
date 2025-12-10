@@ -1,6 +1,6 @@
 import { CategoryMetadata as CategoryMetadataType } from "@/types/categoryType";
 
-type CategoryKey = "opiekun-medyczny" | "pielegniarstwo";
+type CategoryKey = "opiekun-medyczny" | "pielegniarstwo" | "socjologia" | "socjologia2";
 
 type CategoryMetadata = {
   title: string;
@@ -29,4 +29,14 @@ export const CATEGORY_METADATA: Record<CategoryKey, CategoryMetadata> = {
       description: "Baza testów oparta na programie studiów medycznych kierunku pielęgniarstwo.",
       keywords: ["pielęgniarstwo", "zdrowie", "opieka", "studia pielęgniarskie", "egzamin", "testy", "pytania", "zagadnienia"],
     },
+    "socjologia": {
+      title: "Testy - Kategoria: Socjologia (Admin)",
+      description: "Testy z socjologii obejmujące teorię społeczną i metody badawcze.",
+      keywords: ["socjologia", "teoria", "społeczeństwo", "badania"],
+    },
+    "socjologia2": {
+      title: "Testy - Kategoria: Socjologia (Fakty)",
+      description: "Testy z socjologii - fakty.",
+      keywords: ["socjologia", "fakty", "testy", "pytania", "zagadnienia"],
+    }
   };
