@@ -1,0 +1,1353 @@
+[
+    {
+      "id": "f3a4b5c6-7d8e-4f3a-8b1c-9d0e1f2a3b4c",
+      "category": "socjologia2",
+      "data": {
+        "question": "Kto jest uznawany za ojca socjologii i twórcę terminu 'socjologia2'?",
+        "answers": [
+          {"option": "Karol Marks", "isCorrect": false},
+          {"option": "Auguste Comte", "isCorrect": true},
+          {"option": "Emil Durkheim", "isCorrect": false},
+          {"option": "Max Weber", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:01.123456",
+      "updatedAt": null
+    },
+    {
+      "id": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+      "category": "socjologia2",
+      "data": {
+        "question": "Z jakich słów pochodzi termin 'socjologia2' wprowadzony w 1838 roku?",
+        "answers": [
+          {"option": "Greckich 'socius' i 'logos'", "isCorrect": false},
+          {"option": "Łacińskiego 'socius' i greckiego 'logos'", "isCorrect": true},
+          {"option": "Łacińskich 'societas' i 'logica'", "isCorrect": false},
+          {"option": "Greckiego 'socialis' i łacińskiego 'logos'", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:02.234567",
+      "updatedAt": null
+    },
+    {
+      "id": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+      "category": "socjologia2",
+      "data": {
+        "question": "Czym, według pozytywizmu, powinna zajmować się nauka?",
+        "answers": [
+          {"option": "Interpretacją subiektywnych znaczeń", "isCorrect": false},
+          {"option": "Spekulacjami metafizycznymi", "isCorrect": false},
+          {"option": "Wyłącznie rzeczami namacalnymi i doświadczalnymi", "isCorrect": true},
+          {"option": "Analizą tekstów i dyskursu", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:03.345678",
+      "updatedAt": null
+    },
+    {
+      "id": "c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+      "category": "socjologia2",
+      "data": {
+        "question": "Który z etapów w prawie trzech etapów Comte'a charakteryzuje się dominacją myślenia religijnego?",
+        "answers": [
+          {"option": "Etap metafizyczny", "isCorrect": false},
+          {"option": "Etap pozytywny", "isCorrect": false},
+          {"option": "Etap naukowy", "isCorrect": false},
+          {"option": "Etap teologiczny", "isCorrect": true}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:04.456789",
+      "updatedAt": null
+    },
+    {
+      "id": "d4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f90",
+      "category": "socjologia2",
+      "data": {
+        "question": "W jakim okresie historycznym, według Comte'a, ukształtował się etap metafizyczny?",
+        "answers": [
+          {"option": "W okresie Renesansu", "isCorrect": true},
+          {"option": "W starożytnej Grecji", "isCorrect": false},
+          {"option": "W średniowieczu", "isCorrect": false},
+          {"option": "W epoce oświecenia", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:05.567890",
+      "updatedAt": null
+    },
+    {
+      "id": "e5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f90a1",
+      "category": "socjologia2",
+      "data": {
+        "question": "Jakie wydarzenia historyczne są uważane za kluczowe dla początków socjologii?",
+        "answers": [
+          {"option": "Wojny napoleońskie i rewolucja agrarna", "isCorrect": false},
+          {"option": "Rewolucja francuska i rewolucja przemysłowa", "isCorrect": true},
+          {"option": "Odkrycia geograficzne i reformacja", "isCorrect": false},
+          {"option": "Wiosna Ludów i zjednoczenie Włoch", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:06.678901",
+      "updatedAt": null
+    },
+    {
+      "id": "f6a7b8c9-0d1e-2f3a-4b5c-6d7e8f90a1b2",
+      "category": "socjologia2",
+      "data": {
+        "question": "Która z cech NIE opisuje wiedzy potocznej jako formy wiedzy przed-socjologicznej?",
+        "answers": [
+          {"option": "Jest fragmentaryczna i niespójna", "isCorrect": false},
+          {"option": "Jest systematyczna i precyzyjna", "isCorrect": true},
+          {"option": "Jest pochopna", "isCorrect": false},
+          {"option": "Jest apodyktyczna", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:07.789012",
+      "updatedAt": null
+    },
+    {
+      "id": "a7b8c9d0-1e2f-3a4b-5c6d-7e8f90a1b2c3",
+      "category": "socjologia2",
+      "data": {
+        "question": "Co odróżnia filozofię społeczną od wiedzy potocznej?",
+        "answers": [
+          {"option": "Opiera się na osobistych spostrzeżeniach", "isCorrect": false},
+          {"option": "Jest niespójna i fragmentaryczna", "isCorrect": false},
+          {"option": "Jest uprawiana profesjonalnie i tworzy systemy", "isCorrect": true},
+          {"option": "Unika wartościowania i normatywności", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:08.890123",
+      "updatedAt": null
+    },
+    {
+      "id": "b8c9d0e1-2f3a-4b5c-6d7e-8f90a1b2c3d4",
+      "category": "socjologia2",
+      "data": {
+        "question": "Który punkt widzenia na społeczeństwo definiuje je jako populację, czyli zbiór jednostek?",
+        "answers": [
+          {"option": "Grupowy", "isCorrect": false},
+          {"option": "Demograficzny", "isCorrect": true},
+          {"option": "Strukturalny", "isCorrect": false},
+          {"option": "Systemowy", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:09.901234",
+      "updatedAt": null
+    },
+    {
+      "id": "c9d0e1f2-3a4b-5c6d-7e8f-90a1b2c3d4e5",
+      "category": "socjologia2",
+      "data": {
+        "question": "W ujęciu grupowym (Comte, Spencer), do czego przyrównywane jest społeczeństwo?",
+        "answers": [
+          {"option": "Do maszyny", "isCorrect": false},
+          {"option": "Do organizmu", "isCorrect": true},
+          {"option": "Do pola bitwy", "isCorrect": false},
+          {"option": "Do rynku", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:10.012345",
+      "updatedAt": null
+    },
+    {
+      "id": "d0e1f2a3-4b5c-6d7e-8f90-a1b2c3d4e5f6",
+      "category": "socjologia2",
+      "data": {
+        "question": "Definiowanie społeczeństwa jako sieci relacji międzyludzkich i schematów odnoszenia się ludzi do siebie to perspektywa:",
+        "answers": [
+          {"option": "Aktywistyczna", "isCorrect": false},
+          {"option": "Kulturalistyczna", "isCorrect": false},
+          {"option": "Strukturalna", "isCorrect": true},
+          {"option": "Zdarzeniowa", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:11.123456",
+      "updatedAt": null
+    },
+    {
+      "id": "e1f2a3b4-5c6d-7e8f-90a1-b2c3d4e5f6a7",
+      "category": "socjologia2",
+      "data": {
+        "question": "Która perspektywa postrzega społeczeństwo jako matrycę podzielanych znaczeń, symboli i reguł?",
+        "answers": [
+          {"option": "Kulturalistyczna", "isCorrect": true},
+          {"option": "Systemowa", "isCorrect": false},
+          {"option": "Demograficzna", "isCorrect": false},
+          {"option": "Grupowa", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:12.234567",
+      "updatedAt": null
+    },
+    {
+      "id": "f2a3b4c5-6d7e-8f90-a1b2-c3d4e5f6a7b8",
+      "category": "socjologia2",
+      "data": {
+        "question": "Co Charles Wright Mills nazwał 'wyobraźnią socjologiczną'?",
+        "answers": [
+          {"option": "Zdolność do tworzenia utopijnych wizji społeczeństwa", "isCorrect": false},
+          {"option": "Umiejętność przewidywania przyszłych trendów społecznych", "isCorrect": false},
+          {"option": "Zdolność zdystansowania się od rutynowych czynności i nowego spojrzenia na nie", "isCorrect": true},
+          {"option": "Empatyczne rozumienie przeżyć innych ludzi", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:13.345678",
+      "updatedAt": null
+    },
+    {
+      "id": "a3b4c5d6-7e8f-90a1-b2c3-d4e5f6a7b8c9",
+      "category": "socjologia2",
+      "data": {
+        "question": "Która z poniższych cech teorii naukowej oznacza, że jej stwierdzenia są wyrażone w terminach ogólnych w celu wyjaśnienia zjawisk w każdym czasie i miejscu?",
+        "answers": [
+          {"option": "Empiryczność", "isCorrect": false},
+          {"option": "Abstrakcyjność", "isCorrect": true},
+          {"option": "Falsyfikowalność", "isCorrect": false},
+          {"option": "Intersubiektywność", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:14.456789",
+      "updatedAt": null
+    },
+    {
+      "id": "b4c5d6e7-8f90-a1b2-c3d4-e5f6a7b8c9d0",
+      "category": "socjologia2",
+      "data": {
+        "question": "Co oznacza cecha 'falsyfikowalności' teorii naukowej?",
+        "answers": [
+          {"option": "Teoria musi być zgodna z intuicją badacza.", "isCorrect": false},
+          {"option": "Teoria musi być sformułowana tak, aby można było udowodnić jej fałszywość.", "isCorrect": true},
+          {"option": "Teoria musi być potwierdzona przez wszystkie dostępne dane.", "isCorrect": false},
+          {"option": "Teoria musi być ostatecznie prawdziwa.", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:15.567890",
+      "updatedAt": null
+    },
+    {
+      "id": "c5d6e7f8-90a1-b2c3-d4e5-f6a7b8c9d0e1",
+      "category": "socjologia2",
+      "data": {
+        "question": "Co się dzieje z teorią naukową, jeśli nie zgadza się z faktami empirycznymi?",
+        "answers": [
+          {"option": "Jest modyfikowana, aby pasowała do preferencji badacza.", "isCorrect": false},
+          {"option": "Fakty empiryczne są ignorowane.", "isCorrect": false},
+          {"option": "Zostaje bezwzględnie odrzucona lub zmieniona.", "isCorrect": true},
+          {"option": "Jest utrzymywana do czasu znalezienia lepszej teorii.", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:16.678901",
+      "updatedAt": null
+    },
+    {
+      "id": "d6e7f8a9-0a1b-2c3d-4e5f-6a7b8c9d0e1f",
+      "category": "socjologia2",
+      "data": {
+        "question": "Czym jest 'hipoteza' w procesie badawczym?",
+        "answers": [
+          {"option": "Ostatecznym wnioskiem z badania", "isCorrect": false},
+          {"option": "Sformułowaniem oczekiwanych rezultatów", "isCorrect": true},
+          {"option": "Zestawieniem procedur gromadzenia informacji", "isCorrect": false},
+          {"option": "Określeniem tego, co chcemy odkryć", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:17.789012",
+      "updatedAt": null
+    },
+    {
+      "id": "e7f8a9b0-a1b2-c3d4-e5f6-a7b8c9d0e1f2",
+      "category": "socjologia2",
+      "data": {
+        "question": "W metodzie eksperymentalnej, która grupa nie otrzymuje bodźca, którego wpływ jest badany?",
+        "answers": [
+          {"option": "Grupa eksperymentalna", "isCorrect": false},
+          {"option": "Grupa fokusowa", "isCorrect": false},
+          {"option": "Grupa odniesienia", "isCorrect": false},
+          {"option": "Grupa kontrolna", "isCorrect": true}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:18.890123",
+      "updatedAt": null
+    },
+    {
+      "id": "f8a9b0c1-b2c3-d4e5-f6a7-b8c9d0e1f2a3",
+      "category": "socjologia2",
+      "data": {
+        "question": "Która metoda badań socjologicznych jest uznawana za najczęstszą?",
+        "answers": [
+          {"option": "Badania historyczne", "isCorrect": false},
+          {"option": "Obserwacja", "isCorrect": false},
+          {"option": "Eksperyment", "isCorrect": false},
+          {"option": "Badania ankietowe", "isCorrect": true}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:19.901234",
+      "updatedAt": null
+    },
+    {
+      "id": "a9b0c1d2-c3d4-e5f6-a7b8-c9d0e1f2a3b4",
+      "category": "socjologia2",
+      "data": {
+        "question": "Na czym polega 'obserwacja uczestnicząca'?",
+        "answers": [
+          {"option": "Badacz analizuje dane statystyczne.", "isCorrect": false},
+          {"option": "Badacz obserwuje grupę z ukrycia, nie biorąc udziału w jej życiu.", "isCorrect": false},
+          {"option": "Badacz zostaje członkiem badanej grupy, aby ją zrozumieć od wewnątrz.", "isCorrect": true},
+          {"option": "Badacz przeprowadza wywiady z członkami grupy.", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:20.012345",
+      "updatedAt": null
+    },
+    {
+      "id": "b0c1d2e3-d4e5-f6a7-b8c9-d0e1f2a3b4c5",
+      "category": "socjologia2",
+      "data": {
+        "question": "Czym jest 'obserwacja ukryta' w badaniach socjologicznych?",
+        "answers": [
+          {"option": "Badacz aktywnie uczestniczy w życiu badanej grupy", "isCorrect": false},
+          {"option": "Badacz informuje grupę, że jest obserwowana", "isCorrect": false},
+          {"option": "Badacz nie jest uczestnikiem grupy i obserwuje ją 'z boku'", "isCorrect": true},
+          {"option": "Badacz wykorzystuje ukryte kamery i mikrofony", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:21.123456",
+      "updatedAt": null
+    },
+    {
+      "id": "c1d2e3f4-e5f6-a7b8-c9d0-e1f2a3b4c5d6",
+      "category": "socjologia2",
+      "data": {
+        "question": "Do czego primarily służą badania historyczne w socjologii?",
+        "answers": [
+          {"option": "Do tworzenia prognoz na przyszłość", "isCorrect": false},
+          {"option": "Do weryfikowania bądź ilustrowania teorii socjologicznych", "isCorrect": true},
+          {"option": "Do przeprowadzania eksperymentów na danych archiwalnych", "isCorrect": false},
+          {"option": "Do subiektywnej interpretacji przeszłych zdarzeń", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:22.234567",
+      "updatedAt": null
+    },
+    {
+      "id": "d2e3f4a5-f6a7-b8c9-d0e1-f2a3b4c5d6e7",
+      "category": "socjologia2",
+      "data": {
+        "question": "Który myśliciel jest związany z perspektywą strukturalną, obok Simmela i Mertona?",
+        "answers": [
+          {"option": "Talcott Parsons", "isCorrect": false},
+          {"option": "Max Weber", "isCorrect": false},
+          {"option": "Claude Lévi-Strauss", "isCorrect": true},
+          {"option": "Norbert Elias", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:23.345678",
+      "updatedAt": null
+    },
+    {
+      "id": "e3f4a5b6-a7b8-c9d0-e1f2-a3b4c5d6e7f8",
+      "category": "socjologia2",
+      "data": {
+        "question": "Perspektywa aktywistyczna, reprezentowana m.in. przez Webera i Cooleya, definiuje społeczeństwo jako:",
+        "answers": [
+          {"option": "Układ pozycji i ról społecznych", "isCorrect": false},
+          {"option": "Sieć relacji międzyludzkich", "isCorrect": false},
+          {"option": "Konglomerat wzajemnie zorientowanych działań", "isCorrect": true},
+          {"option": "Nieustannie zmienne pole zdarzeń społecznych", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:24.456789",
+      "updatedAt": null
+    },
+    {
+      "id": "f4a5b6c7-b8c9-d0e1-f2a3-b4c5d6e7f8a9",
+      "category": "socjologia2",
+      "data": {
+        "question": "Myśliciele tacy jak Elias i Giddens reprezentują perspektywę, która postrzega społeczeństwo jako:",
+        "answers": [
+          {"option": "Stabilny system ról", "isCorrect": false},
+          {"option": "Zintegrowaną całość przypominającą organizm", "isCorrect": false},
+          {"option": "Nieustannie zmienne, płynne pole zdarzeń", "isCorrect": true},
+          {"option": "Zbiór jednostek w sensie demograficznym", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:25.567890",
+      "updatedAt": null
+    },
+    {
+      "id": "a5b6c7d8-c9d0-e1f2-a3b4-c5d6e7f8a9b0",
+      "category": "socjologia2",
+      "data": {
+        "question": "Co jest celem 'problemu badawczego' w metodologii nauk społecznych?",
+        "answers": [
+          {"option": "Sformułowanie oczekiwanych rezultatów", "isCorrect": false},
+          {"option": "Zaplanowanie procedur gromadzenia informacji", "isCorrect": false},
+          {"option": "Określenie tego, co badacz chce odkryć", "isCorrect": true},
+          {"option": "Udowodnienie z góry założonej tezy", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:26.678901",
+      "updatedAt": null
+    },
+    {
+      "id": "b6c7d8e9-d0e1-f2a3-b4c5-d6e7f8a9b0c1",
+      "category": "socjologia2",
+      "data": {
+        "question": "Czym charakteryzuje się 'schemat badań'?",
+        "answers": [
+          {"option": "Jest to ogólne pytanie o naturę społeczeństwa", "isCorrect": false},
+          {"option": "Jest to plan działań i zestawienie procedur gromadzenia informacji", "isCorrect": true},
+          {"option": "Jest to niepotwierdzona empirycznie teoria", "isCorrect": false},
+          {"option": "Jest to opis wyników końcowych badania", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:27.789012",
+      "updatedAt": null
+    },
+    {
+      "id": "c7d8e9f0-e1f2-a3b4-c5d6-e7f8a9b0c1d2",
+      "category": "socjologia2",
+      "data": {
+        "question": "Odkrycia jakich naukowców, według Comte'a, zapoczątkowały etap pozytywny?",
+        "answers": [
+          {"option": "Platona i Arystotelesa", "isCorrect": false},
+          {"option": "Einsteina i Plancka", "isCorrect": false},
+          {"option": "Kopernika, Galileusza i Newtona", "isCorrect": true},
+          {"option": "Darwina i Mendla", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:28.890123",
+      "updatedAt": null
+    },
+    {
+      "id": "d8e9f0a1-f2a3-b4c5-d6e7-f8a9b0c1d2e3",
+      "category": "socjologia2",
+      "data": {
+        "question": "Która forma wiedzy przed-socjologicznej cechuje się normatywnym, wartościującym punktem widzenia?",
+        "answers": [
+          {"option": "Wrażliwość artystyczna", "isCorrect": false},
+          {"option": "Wiedza potoczna", "isCorrect": false},
+          {"option": "Filozofia społeczna", "isCorrect": true},
+          {"option": "Myślenie mityczne", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:29.901234",
+      "updatedAt": null
+    },
+    {
+      "id": "e9f0a1b2-a3b4-c5d6-e7f8-a9b0c1d2e3f4",
+      "category": "socjologia2",
+      "data": {
+        "question": "W perspektywie systemowej (Parsons, Luhmann), społeczeństwo jest postrzegane jako:",
+        "answers": [
+          {"option": "Konglomerat działań", "isCorrect": false},
+          {"option": "Matryca symboli i reguł", "isCorrect": false},
+          {"option": "Układ pozycji i typowych dla nich ról", "isCorrect": true},
+          {"option": "Płynne pole zdarzeń społecznych", "isCorrect": false}
+        ]
+      },
+      "createdAt": "2025-12-10 09:00:30.012345",
+      "updatedAt": null
+    },
+    {
+        "id": "f8a9b2c1-6e3d-4f7b-8a1e-5d9c2b3a4f1a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Z czego, na najbardziej podstawowym poziomie, składają się struktury społeczne?",
+          "answers": [
+            {"option": "Z pozycji społecznych", "isCorrect": true},
+            {"option": "Z norm kulturowych", "isCorrect": false},
+            {"option": "Z indywidualnych jednostek", "isCorrect": false},
+            {"option": "Z systemów politycznych", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:01.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "c3d4e5f2-7a8b-4c6d-8e9f-1a2b3c4d5e6f",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest 'rola społeczna' w kontekście struktury społecznej?",
+          "answers": [
+            {"option": "Statycznym przypisaniem do danej pozycji", "isCorrect": false},
+            {"option": "Dynamicznym aspektem pozycji społecznej, obrazującym sposób odwoływania się do systemów kulturowych", "isCorrect": true},
+            {"option": "Zbiorem wszystkich posiadanych przez jednostkę pozycji", "isCorrect": false},
+            {"option": "Osobistymi przekonaniami jednostki", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:02.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co to jest 'układ pozycji'?",
+          "answers": [
+            {"option": "Kompleks pozycji, które jednostka zajmuje w różnych sferach życia", "isCorrect": true},
+            {"option": "Hierarchia ważności ról społecznych", "isCorrect": false},
+            {"option": "Suma wszystkich zachowań związanych z jedną pozycją", "isCorrect": false},
+            {"option": "Sieć powiązań między grupami społecznymi", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:03.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "e7f8a9b0-c1d2-e3f4-a5b6-c7d8e9f0a1b2",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest 'układ ról'?",
+          "answers": [
+            {"option": "Ustalonym zbiorem zachowań odpowiadającym każdej pozycji społecznej", "isCorrect": true},
+            {"option": "Konfliktem wynikającym z posiadania wielu ról", "isCorrect": false},
+            {"option": "Procesem uczenia się ról społecznych", "isCorrect": false},
+            {"option": "Zbiorem wszystkich pozycji posiadanych przez jednostkę", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:04.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "d1e2f3a4-b5c6-d7e8-f9a0-b1c2d3e4f5a6",
+        "category": "socjologia2",
+        "data": {
+          "question": "Kiedy występuje 'ciśnienie roli'?",
+          "answers": [
+            {"option": "Gdy dana rola jest bardzo prestiżowa", "isCorrect": false},
+            {"option": "Gdy zajmowanie określonych pozycji wymaga zbyt wielu różnych, a nawet wykluczających się nawzajem zachowań", "isCorrect": true},
+            {"option": "Gdy jednostka nie chce pełnić danej roli", "isCorrect": false},
+            {"option": "Gdy dwie role społeczne są ze sobą w konflikcie", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:05.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "b5c6d7e8-f9a0-b1c2-d3e4-f5a6b7c8d9e0",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest 'konflikt ról'?",
+          "answers": [
+            {"option": "Sytuacją, gdy zajmujemy różne, wzajemnie wykluczające się pozycje społeczne", "isCorrect": true},
+            {"option": "Nadmiarem obowiązków w ramach jednej roli", "isCorrect": false},
+            {"option": "Nieporozumieniem między osobami pełniącymi te same role", "isCorrect": false},
+            {"option": "Wewnętrznym konfliktem jednostki co do wyboru roli", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:06.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "f0a1b2c3-d4e5-f6a7-b8c9-d0e1f2a3b4c5",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jak można łagodzić konflikt ról w społeczeństwach złożonych?",
+          "answers": [
+            {"option": "Rezygnując z jednej z posiadanych ról", "isCorrect": false},
+            {"option": "Ignorując wymagania jednej z ról", "isCorrect": false},
+            {"option": "Oddzielając od siebie miejsce i czas działania w ramach zajmowanych pozycji", "isCorrect": true},
+            {"option": "Poprzez formalne zdefiniowanie priorytetów ról", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:07.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b9",
+        "category": "socjologia2",
+        "data": {
+          "question": "Który z poniższych NIE jest jednym z wymiarów struktury według podanego materiału?",
+          "answers": [
+            {"option": "Liczba osób zajmująca pozycję określonego rodzaju", "isCorrect": false},
+            {"option": "Gęstość sieci", "isCorrect": false},
+            {"option": "Siła powiązań", "isCorrect": false},
+            {"option": "Poziom zadowolenia jednostek", "isCorrect": true}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:08.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "a8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym charakteryzują się 'grupy pierwotne'?",
+          "answers": [
+            {"option": "Są duże, bezosobowe i formalne", "isCorrect": false},
+            {"option": "Są małe, zwarte i oparte na bliskich, osobistych kontaktach", "isCorrect": true},
+            {"option": "Powstają w celu rozwiązania konkretnego problemu", "isCorrect": false},
+            {"option": "Ich głównym celem jest zysk ekonomiczny", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:09.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7",
+        "category": "socjologia2",
+        "data": {
+          "question": "Która z poniższych jest podstawową instytucją w prostych społeczeństwach?",
+          "answers": [
+            {"option": "Rząd", "isCorrect": false},
+            {"option": "Rodzina", "isCorrect": true},
+            {"option": "Medycyna", "isCorrect": false},
+            {"option": "Nauka", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:10.012345",
+        "updatedAt": null
+      },
+      {
+        "id": "d5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są 'struktury kategoryzujące'?",
+          "answers": [
+            {"option": "Strukturami, które powstają, by rozwiązywać podstawowe problemy ludzi", "isCorrect": false},
+            {"option": "Strukturami, gdzie ludzie klasyfikują się nawzajem za pomocą cech wyróżniających", "isCorrect": true},
+            {"option": "Strukturami organizującymi miejsce zamieszkania ludzi", "isCorrect": false},
+            {"option": "Strukturami opartymi na bliskich, osobistych kontaktach", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:11.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "f9a0b1c2-d3e4-f5a6-b7c8-d9e0f1a2b3c4",
+        "category": "socjologia2",
+        "data": {
+          "question": "Które z wymienionych kategorii są uniwersalnymi kategoriami kategoryzacji społecznej?",
+          "answers": [
+            {"option": "Etniczne i klasowe", "isCorrect": false},
+            {"option": "Płeć i wiek", "isCorrect": true},
+            {"option": "Zawodowe i regionalne", "isCorrect": false},
+            {"option": "Narodowościowe i religijne", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:12.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "a2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest 'stratyfikacja społeczna'?",
+          "answers": [
+            {"option": "Procesem tworzenia grup społecznych", "isCorrect": false},
+            {"option": "Nierównym rozdziałem wartościowych zasobów i dóbr w społeczeństwie", "isCorrect": true},
+            {"option": "Systemem norm i wartości kulturowych", "isCorrect": false},
+            {"option": "Podziałem społeczeństwa na społeczności lokalne", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:13.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "c6d7e8f9-a0b1-c2d3-e4f5-a6b7c8d9e0f1",
+        "category": "socjologia2",
+        "data": {
+          "question": "Dyskryminacja na podstawie koloru skóry to przykład jakiego rodzaju stratyfikacji?",
+          "answers": [
+            {"option": "Stratyfikacji płci", "isCorrect": false},
+            {"option": "Stratyfikacji etnicznej", "isCorrect": true},
+            {"option": "Stratyfikacji klasowej", "isCorrect": false},
+            {"option": "Stratyfikacji wiekowej", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:14.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "e0f1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+        "category": "socjologia2",
+        "data": {
+          "question": "Który typ społeczeństwa charakteryzował się dominacją przez dwie trzecie okresu istnienia człowieka i pracą maksymalnie 15 godzin w tygodniu?",
+          "answers": [
+            {"option": "Społeczeństwo rolnicze", "isCorrect": false},
+            {"option": "Społeczeństwo industrialne", "isCorrect": false},
+            {"option": "Społeczeństwo zbieraczy i myśliwych", "isCorrect": true},
+            {"option": "Społeczeństwo postindustrialne", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:15.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "a4b5c6d7-e8f9-a0b1-c2d3-e4f5a6b7c8d9",
+        "category": "socjologia2",
+        "data": {
+          "question": "W którym typie społeczeństwa po raz pierwszy pojawiły się wojny?",
+          "answers": [
+            {"option": "W społeczeństwach zbieraczy i myśliwych", "isCorrect": false},
+            {"option": "W społeczeństwach kopieniaczych", "isCorrect": true},
+            {"option": "W społeczeństwach rolniczych", "isCorrect": false},
+            {"option": "W społeczeństwach industrialnych", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:16.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "c8d9e0f1-a2b3-c4d5-e6f7-a8b9c0d1e2f3",
+        "category": "socjologia2",
+        "data": {
+          "question": "Wykorzystanie siły zwierząt, wiatru i wody oraz wielkie nierówności między szlachtą a wieśniakami to cechy charakterystyczne dla...",
+          "answers": [
+            {"option": "społeczeństw rolniczych", "isCorrect": true},
+            {"option": "społeczeństw industrialnych", "isCorrect": false},
+            {"option": "społeczeństw kopieniaczych", "isCorrect": false},
+            {"option": "społeczeństw postindustrialnych", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:17.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "e2f3a4b5-c6d7-e8f9-a0b1-c2d3e4f5a6b7",
+        "category": "socjologia2",
+        "data": {
+          "question": "Fabryki, biurokracja, wielkie miasta i masowe kształcenie to cechy jakiego społeczeństwa?",
+          "answers": [
+            {"option": "Społeczeństwa rolniczego", "isCorrect": false},
+            {"option": "Społeczeństwa postindustrialnego", "isCorrect": false},
+            {"option": "Społeczeństwa industrialnego", "isCorrect": true},
+            {"option": "Społeczeństwa kopieniaczego", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:18.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "a6b7c8d9-e0f1-a2b3-c4d5-e6f7a8b9c0d1",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co jest główną cechą społeczeństwa postindustrialnego?",
+          "answers": [
+            {"option": "Większość ludzi nie zajmuje się pracą fizyczną", "isCorrect": true},
+            {"option": "Pojawienie się prymitywnej uprawy ziemi", "isCorrect": false},
+            {"option": "Wykorzystywanie nieożywionych źródeł energii", "isCorrect": false},
+            {"option": "Organizacja w małe, koczujące hordy", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:19.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "c0d1e2f3-a4b5-c6d7-e8f9-a0b1c2d3e4f5",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest 'światowy system' w kontekście socjologii?",
+          "answers": [
+            {"option": "Globalnym systemem wartości kulturowych", "isCorrect": false},
+            {"option": "Siecią handlowych i politycznych powiązań oddziałujących na niemal całe nasze życie", "isCorrect": true},
+            {"option": "Zbiorem wszystkich społeczeństw na świecie", "isCorrect": false},
+            {"option": "Międzynarodową organizacją polityczną", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:20.012345",
+        "updatedAt": null
+      },
+      {
+        "id": "e4f5a6b7-c8d9-e0f1-a2b3-c4d5e6f7a8b9",
+        "category": "socjologia2",
+        "data": {
+          "question": "Definicja 'społeczności lokalnej' kładzie nacisk na...",
+          "answers": [
+            {"option": "organizację miejsca zamieszkania i działań w przestrzeni fizycznej lub geograficznej.", "isCorrect": true},
+            {"option": "wspólne interesy ekonomiczne jej członków.", "isCorrect": false},
+            {"option": "bliskie, osobiste kontakty między mieszkańcami.", "isCorrect": false},
+            {"option": "jednolitość etniczną i kulturową.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:21.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "a8b9c0d1-e2f3-a4b5-c6d7-e8f9a0b1c2d3",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaki jest cel powstawania 'instytucji' społecznych?",
+          "answers": [
+            {"option": "Rozwiązywanie podstawowych problemów ludzi oraz organizacji", "isCorrect": true},
+            {"option": "Zastąpienie grup pierwotnych w nowoczesnym świecie", "isCorrect": false},
+            {"option": "Zapewnienie rozrywki i rekreacji członkom społeczeństwa", "isCorrect": false},
+            {"option": "Klasyfikowanie ludzi według ich statusu materialnego", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:22.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "c2d3e4f5-a6b7-c8d9-e0f1-a2b3c4d5e6f7",
+        "category": "socjologia2",
+        "data": {
+          "question": "Które z poniższych NIE jest dodatkową instytucją w złożonych społeczeństwach?",
+          "answers": [
+            {"option": "Rząd", "isCorrect": false},
+            {"option": "Gospodarka", "isCorrect": true},
+            {"option": "Edukacja", "isCorrect": false},
+            {"option": "Medycyna", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:23.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "d5e6f7a8-b9c0-d1e2-f3a4-b5c6d7e8f9a0",
+        "category": "socjologia2",
+        "data": {
+          "question": "Termin 'organizacje złożone' jest proponowany jako lepszy niż...",
+          "answers": [
+            {"option": "instytucja.", "isCorrect": false},
+            {"option": "grupa społeczna.", "isCorrect": false},
+            {"option": "biurokracja.", "isCorrect": true},
+            {"option": "społeczność lokalna.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:24.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "f9a0b1c2-d3e4-f5a6-b7c8-d9e0f1a2b3c4",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co to jest 'gęstość sieci' w kontekście wymiarów struktury?",
+          "answers": [
+            {"option": "Liczba osób w sieci.", "isCorrect": false},
+            {"option": "Stopień, w jakim każda pozycja w sieci jest związana ze wszystkimi innymi.", "isCorrect": true},
+            {"option": "Siła emocjonalna powiązań.", "isCorrect": false},
+            {"option": "Czas trwania znajomości w sieci.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:25.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "a2b3c4d5-e6f7-a8b9-c0d1-e2f3a4b5c6d7",
+        "category": "socjologia2",
+        "data": {
+          "question": "Różnice w dostępie do pracy, dochodów i władzy między mężczyznami a kobietami to przykład...",
+          "answers": [
+            {"option": "stratyfikacji klasowej.", "isCorrect": false},
+            {"option": "stratyfikacji etnicznej.", "isCorrect": false},
+            {"option": "stratyfikacji płci.", "isCorrect": true},
+            {"option": "konfliktu ról.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:26.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "c6d7e8f9-a0b1-c2d3-e4f5-a6b7c8d9e0f1",
+        "category": "socjologia2",
+        "data": {
+          "question": "Podziały na ubogich, klasę robotniczą, klasę średnią i bogatych to...",
+          "answers": [
+            {"option": "stratyfikacja etniczna.", "isCorrect": false},
+            {"option": "stratyfikacja płci.", "isCorrect": false},
+            {"option": "stratyfikacja regionalna.", "isCorrect": false},
+            {"option": "stratyfikacja klasowa.", "isCorrect": true}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:27.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "e0f1a2b3-c4d5-e6f7-a8b9-c0d1e2f3a4b5",
+        "category": "socjologia2",
+        "data": {
+          "question": "W społeczeństwach kopieniaczych większość pracy wykonywały...",
+          "answers": [
+            {"option": "dzieci.", "isCorrect": false},
+            {"option": "kobiety.", "isCorrect": true},
+            {"option": "mężczyźni.", "isCorrect": false},
+            {"option": "starsi plemienia.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:28.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "a4b5c6d7-e8f9-a0b1-c2d3-e4f5a6b7c8d9",
+        "category": "socjologia2",
+        "data": {
+          "question": "Nowe sposoby transportu i komunikacji zmniejszające fizyczne odległości są cechą charakterystyczną społeczeństwa...",
+          "answers": [
+            {"option": "industrialnego.", "isCorrect": false},
+            {"option": "rolniczego.", "isCorrect": false},
+            {"option": "postindustrialnego.", "isCorrect": true},
+            {"option": "kopieniaczego.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:29.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "c8d9e0f1-a2b3-c4d5-e6f7-a8b9c0d1e2f3",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym, według materiału, są 'grupy wtórne'?",
+          "answers": [
+            {"option": "Małe i zwarte, oparte na osobistych kontaktach", "isCorrect": false},
+            {"option": "Większe i bardziej bezosobowe", "isCorrect": true},
+            {"option": "Skupione na pokrewieństwie", "isCorrect": false},
+            {"option": "Zawsze o charakterze formalnym", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:30.012345",
+        "updatedAt": null
+      },
+      {
+        "id": "e4a2b1c8-3d5e-4f7a-8b9c-6a1d2e3f4b5a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym, według przedstawionych definicji, są symbole?",
+          "answers": [
+            {"option": "Arbitralnymi znakami, których znaczenie zostało uzgodnione przez ludzi.", "isCorrect": true},
+            {"option": "Wrodzonymi odruchami wspólnymi dla całej populacji ludzkiej.", "isCorrect": false},
+            {"option": "Fizycznymi obiektami mającymi uniwersalne, niezmienne znaczenie.", "isCorrect": false},
+            {"option": "Genetycznymi kodami determinującymi zachowania społeczne.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:01.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "f5b3c2d9-4e6f-4a8b-9c0d-7b2e3f4a5b6c",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jak zdefiniowano kulturę w kontekście systemów symboli?",
+          "answers": [
+            {"option": "Suma systemów symboli w całej ludzkiej populacji.", "isCorrect": true},
+            {"option": "Wyłącznie wytwory fizyczne danego społeczeństwa.", "isCorrect": false},
+            {"option": "Genetycznie przekazywane wzorce zachowań.", "isCorrect": false},
+            {"option": "Zbiór indywidualnych przekonań każdej jednostki.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:02.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co odróżnia kulturę materialną od niematerialnej?",
+          "answers": [
+            {"option": "Kultura materialna to wytwory fizyczne, a niematerialna to systemy symboli i zachowań.", "isCorrect": true},
+            {"option": "Kultura materialna jest przekazywana genetycznie, a niematerialna przez naukę.", "isCorrect": false},
+            {"option": "Kultura materialna dotyczy sztuki, a niematerialna technologii.", "isCorrect": false},
+            {"option": "Kultura materialna jest stała, a niematerialna ulega ciągłym zmianom.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:03.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaką rolę, według tekstu, pełnią symbole w społeczeństwie?",
+          "answers": [
+            {"option": "Są funkcjonalnym odpowiednikiem kodów genetycznych u owadów społecznych.", "isCorrect": true},
+            {"option": "Są jedynie formą artystycznej ekspresji bez wpływu na organizację społeczną.", "isCorrect": false},
+            {"option": "Ograniczają możliwość komunikacji między ludźmi.", "isCorrect": false},
+            {"option": "Są niezmienne i odporne na jakiekolwiek przekształcenia.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:04.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co obejmują systemy językowe oprócz mowy?",
+          "answers": [
+            {"option": "Słowa drukowane, symbole matematyczne i programy komputerowe.", "isCorrect": true},
+            {"option": "Wyłącznie gesty i mowę ciała.", "isCorrect": false},
+            {"option": "Tylko i wyłącznie komunikację werbalną.", "isCorrect": false},
+            {"option": "Wrodzone instynkty i zachowania.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:05.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "d4e5f6a7-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jak rozwój technologii wpływa na społeczeństwo?",
+          "answers": [
+            {"option": "W miarę rozwoju technologii, zwiększa się społeczeństwo.", "isCorrect": true},
+            {"option": "Rozwój technologii nie ma żadnego wpływu na organizację społeczną.", "isCorrect": false},
+            {"option": "Technologia prowadzi do zmniejszenia się populacji.", "isCorrect": false},
+            {"option": "Technologia jest siłą hamującą organizowanie się ludzi.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:06.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "e5f6a7b8-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są 'wartości' w kontekście socjologicznym?",
+          "answers": [
+            {"option": "Wyobrażeniami o tym, co dobre i złe, właściwe i niewłaściwe.", "isCorrect": true},
+            {"option": "Konkretnymi instrukcjami postępowania w danej sytuacji.", "isCorrect": false},
+            {"option": "Materialnymi przedmiotami o dużej wartości rynkowej.", "isCorrect": false},
+            {"option": "Obiektywnymi i uniwersalnymi prawami natury.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:07.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "f6a7b8c9-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaką cechę wartości, która pozwala na ich szerokie zastosowanie, wymienia tekst?",
+          "answers": [
+            {"option": "Są abstrakcyjne i ogólne.", "isCorrect": true},
+            {"option": "Są konkretne i szczegółowe.", "isCorrect": false},
+            {"option": "Są niezmienne i sztywne.", "isCorrect": false},
+            {"option": "Są zrozumiałe tylko dla jednej grupy społecznej.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:08.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "a7b8c9d0-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Która z wymienionych wartości NIE jest zaliczana do 'amerykańskich ogólnych wartości'?",
+          "answers": [
+            {"option": "Bierność i akceptacja losu.", "isCorrect": true},
+            {"option": "Dążenie do sukcesu.", "isCorrect": false},
+            {"option": "Wolność.", "isCorrect": false},
+            {"option": "Materializm.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:09.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "b8c9d0e1-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są 'przekonania' w ujęciu przedstawionym w materiale?",
+          "answers": [
+            {"option": "Poglądami i ideami, które ludzie odnoszą do różnych sytuacji.", "isCorrect": true},
+            {"option": "Zawsze zgodnymi z rzeczywistością faktami naukowymi.", "isCorrect": false},
+            {"option": "Niezmiennymi zasadami moralnymi.", "isCorrect": false},
+            {"option": "Instynktownymi reakcjami na bodźce.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:10.012345",
+        "updatedAt": null
+      },
+      {
+        "id": "c9d0e1f2-3a4b-5c6d-7e8f-9a0b1c2d3e4f",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaka jest relacja między przekonaniami a wartościami?",
+          "answers": [
+            {"option": "Przekonania są w dużym stopniu kształtowane przez wartości.", "isCorrect": true},
+            {"option": "Przekonania i wartości są od siebie całkowicie niezależne.", "isCorrect": false},
+            {"option": "Wartości są zawsze odbiciem obiektywnych przekonań.", "isCorrect": false},
+            {"option": "Przekonania zawsze są zgodne z rzeczywistością, a wartości nie.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:11.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "d0e1f2a3-4b5c-6d7e-8f9a-0b1c2d3e4f5a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są normy społeczne?",
+          "answers": [
+            {"option": "Symbolami mówiącymi, czego się od nas oczekuje w konkretnej sytuacji.", "isCorrect": true},
+            {"option": "Osobistymi preferencjami, które nie mają wpływu na innych.", "isCorrect": false},
+            {"option": "Prawami fizyki rządzącymi interakcjami międzyludzkimi.", "isCorrect": false},
+            {"option": "Wartościami, które są zawsze i wszędzie takie same.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:12.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "e1f2a3b4-5c6d-7e8f-9a0b-1c2d3e4f5a6b",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaka jest różnica między ogólnymi normami instytucjonalnymi a normami szczegółowymi?",
+          "answers": [
+            {"option": "Normy ogólne zawierają ogólne instrukcje, a szczegółowe mówią jak postępować w konkretnych sytuacjach.", "isCorrect": true},
+            {"option": "Normy ogólne dotyczą rodziny, a szczegółowe miejsca pracy.", "isCorrect": false},
+            {"option": "Normy ogólne są niepisane, a szczegółowe zawsze są zapisane w prawie.", "isCorrect": false},
+            {"option": "Nie ma między nimi żadnej różnicy, to synonimy.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:13.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "f2a3b4c5-6d7e-8f9a-0b1c-2d3e4f5a6b7c",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są 'podręczne zasoby wiedzy' według Alfreda Schutza?",
+          "answers": [
+            {"option": "Zbiorem informacji wykorzystywanych do dostosowania się do konkretnych sytuacji.", "isCorrect": true},
+            {"option": "Wiedzą zapisaną w podręcznikach akademickich.", "isCorrect": false},
+            {"option": "Wiedzą dostępną tylko dla ekspertów w danej dziedzinie.", "isCorrect": false},
+            {"option": "Wrodzoną, instynktowną wiedzą o świecie.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:14.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "a3b4c5d6-7e8f-9a0b-1c2d-3e4f5a6b7c8d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co może się wydarzyć, gdy ludzie mają podobne zasoby wiedzy?",
+          "answers": [
+            {"option": "Mogą wytworzyć wspólny pogląd na daną sytuację.", "isCorrect": true},
+            {"option": "Zawsze prowadzi to do konfliktu.", "isCorrect": false},
+            {"option": "Tracą zdolność do przystosowywania się.", "isCorrect": false},
+            {"option": "Stają się całkowicie odizolowani od siebie.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:15.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "b4c5d6e7-8f9a-0b1c-2d3e-4f5a6b7c8d9e",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jak w materiale zdefiniowano 'konflikt kultur'?",
+          "answers": [
+            {"option": "Jako sytuację, w której systemy kulturowe działają jak pryzmaty, przez które patrzymy na świat.", "isCorrect": true},
+            {"option": "Jako zbrojną walkę między dwoma narodami.", "isCorrect": false},
+            {"option": "Jako debatę naukową na temat wyższości jednej kultury nad drugą.", "isCorrect": false},
+            {"option": "Jako wewnętrzne sprzeczności w obrębie jednego systemu wartości.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:16.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "c5d6e7f8-9a0b-1c2d-3e4f-5a6b7c8d9e0f",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaką postawę napotkała nauka ze strony innych systemów przekonań, takich jak religia czy filozofia?",
+          "answers": [
+            {"option": "Wielki opór.", "isCorrect": true},
+            {"option": "Natychmiastową akceptację.", "isCorrect": false},
+            {"option": "Całkowitą obojętność.", "isCorrect": false},
+            {"option": "Chęć pełnej współpracy.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:17.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "d6e7f8a9-0b1c-2d3e-4f5a-6b7c8d9e0f1a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym są subkultury?",
+          "answers": [
+            {"option": "Subpopulacjami o nieco odmiennych przekonaniach i wartościach w ramach większego społeczeństwa.", "isCorrect": true},
+            {"option": "Grupami, które całkowicie odrzucają kulturę dominującą.", "isCorrect": false},
+            {"option": "Kulturami, które są obiektywnie gorsze od kultury dominującej.", "isCorrect": false},
+            {"option": "Społeczeństwami, które nie wytworzyły jeszcze własnej kultury.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:18.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "e7f8a9b0-1c2d-3e4f-5a6b-7c8d9e0f1a2b",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co często towarzyszy różnicom między subkulturami i wywołuje konflikty?",
+          "answers": [
+            {"option": "Różnice w posiadaniu władzy, dochodów i bogactwa.", "isCorrect": true},
+            {"option": "Wspólny język i cele.", "isCorrect": false},
+            {"option": "Identyczne normy i wartości.", "isCorrect": false},
+            {"option": "Brak jakichkolwiek interakcji.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:19.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "f8a9b0c1-2d3e-4f5a-6b7c-8d9e0f1a2b3c",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co to są 'sprzeczności kulturowe'?",
+          "answers": [
+            {"option": "Sytuacja, gdy uznawane wartości, normy i przekonania są niespójne i sprzeczne.", "isCorrect": true},
+            {"option": "Konflikt zbrojny między dwiema różnymi kulturami.", "isCorrect": false},
+            {"option": "Brak jakichkolwiek norm w społeczeństwie.", "isCorrect": false},
+            {"option": "Pełna harmonia między wszystkimi elementami kultury.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:20.012345",
+        "updatedAt": null
+      },
+      {
+        "id": "a9b0c1d2-3e4f-5a6b-7c8d-9e0f1a2b3c4d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Co, według tekstu, umożliwia ludziom radzenie sobie ze sprzecznościami kulturowymi?",
+          "answers": [
+            {"option": "Posiadanie dużych mózgów.", "isCorrect": true},
+            {"option": "Całkowite ignorowanie norm.", "isCorrect": false},
+            {"option": "Instynktowne zachowania.", "isCorrect": false},
+            {"option": "Odrzucenie własnej kultury.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:21.123456",
+        "updatedAt": null
+      },
+      {
+        "id": "b0c1d2e3-4f5a-6b7c-8d9e-0f1a2b3c4d5e",
+        "category": "socjologia2",
+        "data": {
+          "question": "Do czego mogą prowadzić poważne sprzeczności w wartościach, normach i przekonaniach?",
+          "answers": [
+            {"option": "Do zamętu w głowach ludzi i zamieszek społecznych.", "isCorrect": true},
+            {"option": "Do wzmocnienia spójności społecznej.", "isCorrect": false},
+            {"option": "Do szybkiego rozwoju gospodarczego.", "isCorrect": false},
+            {"option": "Do całkowitej izolacji jednostek.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:22.234567",
+        "updatedAt": null
+      },
+      {
+        "id": "c1d2e3f4-5a6b-7c8d-9e0f-1a2b3c4d5e6f",
+        "category": "socjologia2",
+        "data": {
+          "question": "Czym jest etnocentryzm?",
+          "answers": [
+            {"option": "Postawą polegającą na postrzeganiu własnego systemu wartości, przekonań i norm jako lepszego od innych.", "isCorrect": true},
+            {"option": "Naukowym badaniem różnych kultur w celu ich obiektywnej oceny.", "isCorrect": false},
+            {"option": "Postawą akceptacji i tolerancji dla wszystkich kultur.", "isCorrect": false},
+            {"option": "Zdolnością do płynnego przechodzenia między różnymi kulturami.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:23.345678",
+        "updatedAt": null
+      },
+      {
+        "id": "d2e3f4a5-6b7c-8d9e-0f1a-2b3c4d5e6f7a",
+        "category": "socjologia2",
+        "data": {
+          "question": "Do czego, według tekstu, prowadzi etnocentryzm?",
+          "answers": [
+            {"option": "Do nietolerancji, konfliktów i napięć.", "isCorrect": true},
+            {"option": "Do wzajemnego zrozumienia i pokoju.", "isCorrect": false},
+            {"option": "Do zaniku własnej kultury.", "isCorrect": false},
+            {"option": "Do obiektywizmu w postrzeganiu świata.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:24.456789",
+        "updatedAt": null
+      },
+      {
+        "id": "e3f4a5b6-7c8d-9e0f-1a2b-3c4d5e6f7a8b",
+        "category": "socjologia2",
+        "data": {
+          "question": "Gdzie, oprócz relacji międzykulturowych, może funkcjonować etnocentryzm?",
+          "answers": [
+            {"option": "Wewnątrz danego społeczeństwa, między jego subkulturami.", "isCorrect": true},
+            {"option": "Tylko i wyłącznie w relacjach międzynarodowych.", "isCorrect": false},
+            {"option": "W świecie zwierząt.", "isCorrect": false},
+            {"option": "W systemach komputerowych.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:25.567890",
+        "updatedAt": null
+      },
+      {
+        "id": "f4a5b6c7-8d9e-0f1a-2b3c-4d5e6f7a8b9c",
+        "category": "socjologia2",
+        "data": {
+          "question": "Który z procesów NIE jest wymieniony jako element uczenia się norm?",
+          "answers": [
+            {"option": "Genetyczne dziedziczenie.", "isCorrect": true},
+            {"option": "Obserwowanie zachowań innych ludzi.", "isCorrect": false},
+            {"option": "Odczytywanie gestów innych.", "isCorrect": false},
+            {"option": "Tworzenie i uzgadnianie wspólnych norm.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:26.678901",
+        "updatedAt": null
+      },
+      {
+        "id": "a5b6c7d8-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaki wpływ na organizację społeczną ma posiadanie języka pisanego?",
+          "answers": [
+            {"option": "Umożliwia skuteczniejsze gromadzenie informacji i wypracowanie własnych form organizacji.", "isCorrect": true},
+            {"option": "Powoduje zanik mowy i komunikacji werbalnej.", "isCorrect": false},
+            {"option": "Nie ma żadnego wpływu na organizację społeczną.", "isCorrect": false},
+            {"option": "Prowadzi do dezorganizacji i chaosu w społeczeństwie.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:27.789012",
+        "updatedAt": null
+      },
+      {
+        "id": "b6c7d8e9-e0f1-a2b3-c4d5-e6f7a8b9c0d1",
+        "category": "socjologia2",
+        "data": {
+          "question": "Kiedy technologia staje się potężną siłą kulturową?",
+          "answers": [
+            {"option": "Gdy osiągnie odpowiedni poziom i splecie się z nauką oraz inżynierią.", "isCorrect": true},
+            {"option": "Od samego początku swojego istnienia.", "isCorrect": false},
+            {"option": "Gdy zostanie całkowicie odrzucona przez społeczeństwo.", "isCorrect": false},
+            {"option": "Gdy jest używana wyłącznie do celów militarnych.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:28.890123",
+        "updatedAt": null
+      },
+      {
+        "id": "c7d8e9f0-f1a2-b3c4-d5e6-f7a8b9c0d1e2",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jaką rolę pełnią wartości w utrzymaniu społeczeństwa?",
+          "answers": [
+            {"option": "Są rodzajem 'spoiwa' utrzymującego społeczeństwo w całości.", "isCorrect": true},
+            {"option": "Dzielą społeczeństwo i prowadzą do jego rozpadu.", "isCorrect": false},
+            {"option": "Nie mają żadnego wpływu na spójność społeczną.", "isCorrect": false},
+            {"option": "Są istotne tylko dla jednostki, a nie dla całej grupy.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:29.901234",
+        "updatedAt": null
+      },
+      {
+        "id": "d8e9f0a1-a2b3-c4d5-e6f7-a8b9c0d1e2f3",
+        "category": "socjologia2",
+        "data": {
+          "question": "Jakie jest główne założenie 'badania postaw i opinii'?",
+          "answers": [
+            {"option": "Jest to podstawowa metoda w badaniach rynku i public relations.", "isCorrect": true},
+            {"option": "Jest to metoda badania wyłącznie przekonań religijnych.", "isCorrect": false},
+            {"option": "Jest to badanie niemające żadnego praktycznego zastosowania.", "isCorrect": false},
+            {"option": "Jest to metoda manipulowania opinią publiczną, a nie jej badania.", "isCorrect": false}
+          ]
+        },
+        "createdAt": "2025-12-10 08:30:30.012345",
+        "updatedAt": null
+      }
+  ]
+  

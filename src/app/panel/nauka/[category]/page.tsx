@@ -4,6 +4,8 @@ import { getSupporterByUserId } from '@/server/queries';
 import { currentUser } from '@clerk/nextjs/server';
 import { Metadata } from 'next'
 import { Suspense } from 'react';
+import { isUserAdmin } from '@/lib/adminHelpers'
+import { redirect } from 'next/navigation'
 
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
@@ -26,14 +28,21 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
     const { category } = await params;
+    const decodedCategory = decodeURIComponent(category)
+
+    // Protect socjologia
+    if (decodedCategory === 'socjologia') {
+        const isAdmin = await isUserAdmin()
+        if (!isAdmin) redirect('/panel/nauka')
+    }
+
     const user = await currentUser()
     const isSupporter = user?.id ? await getSupporterByUserId(user.id) : false
 
-    // decodeURIComponent is used to decode the category name because it is encoded in the URL, we are using polish letters in the category name
     // Merge tests if supporter, otherwise only official
     const tests = isSupporter
-      ? await fileData.mergedGetTestsByCategory(decodeURIComponent(category), user?.id)
-      : await fileData.getTestsByCategory(decodeURIComponent(category))
+      ? await fileData.mergedGetTestsByCategory(decodedCategory, user?.id)
+      : await fileData.getTestsByCategory(decodedCategory)
 
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
