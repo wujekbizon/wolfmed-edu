@@ -15,7 +15,7 @@ export const navLinks = [
     {
     id: '2',
     linkUrl: '/kierunki',
-    label: 'Kieurnki',
+    label: 'Kierunki',
     icon: <InnovationIcon />,
     title: "Kierunki Edukacyjne"
   },
