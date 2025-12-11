@@ -568,6 +568,7 @@ export async function deletePostAction(
     return fromErrorToFormState(error)
   }
 
+  revalidateTag(`forum-post-${postId}`, "max")
   revalidateTag('forum-posts', 'max')
   redirect("/forum")
   return toFormState("SUCCESS", "Post został usunięty")
@@ -669,6 +670,7 @@ export async function deleteCommentAction(
 
   const commentId = formData.get("commentId") as string
   const authorId = formData.get("authorId") as string
+  const postId = formData.get("postId") as string
 
   if (userId !== authorId) {
     return toFormState(
@@ -684,6 +686,10 @@ export async function deleteCommentAction(
   }
 
   revalidatePath("/forum")
+  if (postId) {
+    revalidateTag(`forum-post-${postId}`, "max")
+  }
+  revalidateTag('forum-posts', 'max')
   return toFormState("SUCCESS", "Komentarz został usunięty")
 }
 
