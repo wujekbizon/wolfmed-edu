@@ -1,3 +1,5 @@
+"use client";
+
 import { useInView } from "react-intersection-observer";
 import Title from "./Title";
 import ExploreLink from "./ExploreLink";

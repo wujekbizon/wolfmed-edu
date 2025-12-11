@@ -18,8 +18,6 @@ import BadgeWidget from "@/components/BadgeWidget"
 import BadgeWidgetSkeleton from "@/components/BadgeWidgetSkeleton"
 import AdminBlogWidget from "@/components/AdminBlogWidget"
 
-export const dynamic = 'force-dynamic'
-
 export default async function TestsPage() {
   return (
     <section className="h-full w-full">

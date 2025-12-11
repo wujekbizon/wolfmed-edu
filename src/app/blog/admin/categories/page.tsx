@@ -1,10 +1,8 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { getBlogCategories, getBlogTags } from '@/server/queries'
 
-// Force dynamic rendering for admin pages (requires auth check)
-export const dynamic = 'force-dynamic'
-
-export default async function CategoriesManagementPage() {
+async function CategoriesManagementWithData() {
   const [categories, tags] = await Promise.all([
     getBlogCategories(),
     getBlogTags(),
@@ -156,5 +154,13 @@ export default async function CategoriesManagementPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CategoriesManagementPage() {
+  return (
+    <Suspense fallback={<div className="animate-pulse">Ładowanie...</div>}>
+      <CategoriesManagementWithData />
+    </Suspense>
   )
 }

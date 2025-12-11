@@ -9,8 +9,6 @@ import ForumDetailComments from '@/components/ForumDetailComments'
 import Loading from './loading'
 import { Metadata } from 'next'
 
-export const experimental_ppr = true
-
 type Props = {
   params: Promise<{
     postId: string

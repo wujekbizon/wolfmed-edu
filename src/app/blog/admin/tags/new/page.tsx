@@ -1,9 +1,7 @@
 import TagForm from '@/components/blog/admin/TagForm'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
-
-export default async function NewTagPage() {
+export default function NewTagPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">

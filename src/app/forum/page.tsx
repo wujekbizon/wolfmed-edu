@@ -1,11 +1,9 @@
-import ForumPosts from '@/components/ForumPosts'
-import { getAllForumPosts } from '@/server/queries'
 import { Suspense } from 'react'
+import { getAllForumPosts } from '@/server/queries'
+import ForumPosts from '@/components/ForumPosts'
 import CreatePostButton from '@/components/CreatePostButton'
 import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
 import { Metadata } from 'next'
-
-export const experimental_ppr = true
 
 export const metadata: Metadata = {
   title: 'Wolfmed Forum Dyskusyjne ',
@@ -15,9 +13,12 @@ export const metadata: Metadata = {
     'opiekun, forum, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja, dyskusja, problemy',
 }
 
-export default async function ForumPage() {
+async function ForumPostsWithData() {
   const posts = await getAllForumPosts()
+  return <ForumPosts posts={posts} />
+}
 
+export default function ForumPage() {
   return (
     <section className="min-h-screen w-full max-w-7xl mx-auto px-0 xs:px-4 py-0 xs:py-8">
       <div className="bg-zinc-900 rounded-tr-lg rounded-tl-lg overflow-hidden">
@@ -36,7 +37,7 @@ export default async function ForumPage() {
         </div>
       </div>
       <Suspense fallback={<ForumPostsSkeleton />}>
-        <ForumPosts posts={posts} />
+        <ForumPostsWithData />
       </Suspense>
     </section>
   )

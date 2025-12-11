@@ -1,3 +1,5 @@
+'use client'
+
 export default function Loading() {
   const randomHeight = () => {
     const heights = ['min-h-40 md:min-h-20', 'min-h-44 md:min-h-24', 'min-h-48 md:min-h-28', 'min-h-52 md:min-h-32']

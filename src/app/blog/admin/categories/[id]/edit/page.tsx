@@ -1,10 +1,8 @@
+import { Suspense } from 'react'
 import { getBlogCategoryById } from '@/server/queries'
 import CategoryForm from '@/components/blog/admin/CategoryForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-
-// Force dynamic rendering for admin pages (requires auth check)
-export const dynamic = 'force-dynamic'
 
 interface EditCategoryPageProps {
   params: Promise<{
@@ -12,8 +10,8 @@ interface EditCategoryPageProps {
   }>
 }
 
-export default async function EditCategoryPage({ params }: EditCategoryPageProps) {
-  const { id } = await params
+async function EditCategoryWithData(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params
   const category = await getBlogCategoryById(id)
 
   if (!category) {
@@ -42,5 +40,13 @@ export default async function EditCategoryPage({ params }: EditCategoryPageProps
 
       <CategoryForm mode="edit" category={category} />
     </div>
+  )
+}
+
+export default function EditCategoryPage(props: EditCategoryPageProps) {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto animate-pulse">Ładowanie...</div>}>
+      <EditCategoryWithData params={props.params} />
+    </Suspense>
   )
 }

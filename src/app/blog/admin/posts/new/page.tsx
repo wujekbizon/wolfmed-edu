@@ -1,15 +1,20 @@
+import { Suspense } from 'react'
 import { getBlogCategories, getBlogTags } from '@/server/queries'
 import BlogPostForm from '@/components/blog/admin/BlogPostForm'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
-
-export default async function NewPostPage() {
+async function NewPostWithData() {
   const [categories, tags] = await Promise.all([
     getBlogCategories(),
     getBlogTags(),
   ])
 
+  return (
+    <BlogPostForm mode="create" categories={categories} tags={tags} />
+  )
+}
+
+export default function NewPostPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
@@ -29,8 +34,9 @@ export default async function NewPostPage() {
           Wypełnij formularz poniżej, aby utworzyć nowy wpis na blogu
         </p>
       </div>
-
-      <BlogPostForm mode="create" categories={categories} tags={tags} />
+      <Suspense fallback={<div className="max-w-4xl mx-auto animate-pulse">Ładowanie...</div>}>
+        <NewPostWithData />
+      </Suspense>
     </div>
   )
 }

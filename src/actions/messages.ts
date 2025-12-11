@@ -1,7 +1,7 @@
 "use server"
 
 import { auth } from "@clerk/nextjs/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { markMessageAsRead } from "@/server/queries"
 import { requireAdmin } from "@/lib/adminHelpers"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
@@ -28,6 +28,7 @@ export async function markMessageAsReadAction(
     await markMessageAsRead(messageId)
 
     revalidatePath("/blog/admin/messages")
+    revalidateTag('message-stats', 'max')
 
     return toFormState("SUCCESS", "Wiadomość oznaczona jako przeczytana")
   } catch (error) {

@@ -4,7 +4,6 @@ import SupportersListSkeleton from './skeletons/SupportersListSkeleton'
 import { getSupportersWithUsernames } from '@/server/queries'
 
 export default async function EarlySupporters() {
-  const supportersUsernames = await getSupportersWithUsernames()
   
   return (
     <section className="w-full py-8 sm:py-16 bg-linear-to-b from-zinc-100 to-zinc-200">
@@ -25,7 +24,7 @@ export default async function EarlySupporters() {
           <div className="absolute inset-0 bg-linear-to-br from-blue-50 to-purple-50 opacity-50"></div>
           <div className="relative z-10 p-4 sm:p-8 lg:p-12">
             <Suspense fallback={<SupportersListSkeleton/>}>
-              <SupportersList supporters={supportersUsernames} />
+              <SupportersListWithData />
             </Suspense>
           </div>
         </div>
@@ -35,4 +34,9 @@ export default async function EarlySupporters() {
       </div>
     </section>
   )
+}
+
+async function SupportersListWithData () {
+  const supportersUsernames = await getSupportersWithUsernames()
+  return <SupportersList supporters={supportersUsernames} />
 }

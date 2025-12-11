@@ -4,6 +4,7 @@ import "@excalidraw/excalidraw/index.css";
 
 import type { Metadata } from 'next'
 import { Open_Sans, Poppins } from 'next/font/google'
+import { Suspense } from 'react'
 import Navbar from './_components/Navbar'
 import Providers from './providers'
 import ToastProvider from './_components/ToastProvider'
@@ -57,22 +58,24 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProviderWrapper>
-      <html lang="pl">
-        <head>
-          <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
-          <GoogleAnalytics />
-        </head>
-        <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-          <GoogleAnalyticsNoscript />
-          <main>
-            <Providers>
-              <Navbar />
-              <ToastProvider>{children}</ToastProvider>
-            </Providers>
-          </main>
-        </body>
-      </html>
-    </ClerkProviderWrapper>
+    <html lang="pl">
+      <head>
+        <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
+        <GoogleAnalytics />
+      </head>
+      <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
+        <GoogleAnalyticsNoscript />
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+          <ClerkProviderWrapper>
+            <main>
+              <Providers>
+                <Navbar />
+                <ToastProvider>{children}</ToastProvider>
+              </Providers>
+            </main>
+          </ClerkProviderWrapper>
+        </Suspense>
+      </body>
+    </html>
   )
 }

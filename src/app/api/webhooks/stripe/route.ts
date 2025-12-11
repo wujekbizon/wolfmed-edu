@@ -5,6 +5,7 @@ import Stripe from 'stripe'
 import { insertPayment, insertSubscription, updateUserSupporterStatus } from '@/server/db'
 import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
 import { getUserIdByCustomer, getUserIdByCustomerEmail } from '@/server/queries'
+import { revalidateTag } from 'next/cache'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -58,6 +59,10 @@ export async function POST(req: Request) {
         }
         // Insert subscription into database
         await insertSubscription({ ...newSubscription })
+
+        revalidateTag(`user-${client_reference_id}`, 'max')
+        revalidateTag('user-profile', 'max')
+        revalidateTag('supporters', 'max')
       }
 
       if (mode === 'payment') {

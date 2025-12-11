@@ -14,8 +14,6 @@ type Props = {
     }>
 }
 
-export const dynamic = 'force-dynamic'
-
 async function NoteData({ noteId, userId }: { noteId: string; userId: string }) {
     const note = await getNoteById(userId, noteId)
 
