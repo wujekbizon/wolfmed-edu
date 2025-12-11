@@ -295,7 +295,7 @@ export const getBlogPostBySlug = async (
  */
 export const getBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
-    "use cache"
+    ;("use cache")
     cacheLife("days")
     cacheTag("blog-posts", `blog-post-${id}`)
     const post = await db
@@ -816,25 +816,29 @@ export async function getUserTestLimit(id: string) {
 }
 
 // Get userId by Stripe customer ID
-export const getUserIdByCustomer = cache(
-  async (customerId: string): Promise<string | null> => {
-    try {
-      const subscription = await db
-        .select()
-        .from(subscriptions)
-        .where(eq(subscriptions.customerId, customerId))
-        .limit(1)
-      if (subscription) {
-        return subscription[0]?.userId || null
-      } else {
-        throw new Error("Subscription not found")
-      }
-    } catch (error) {
-      console.error("Error fetching subscription:", error)
-      throw error
+export async function getUserIdByCustomer(
+  customerId: string
+): Promise<string | null> {
+  "use cache"
+  cacheLife("max")
+  cacheTag("subscriptions", `customer-${customerId}`)
+
+  try {
+    const subscription = await db
+      .select()
+      .from(subscriptions)
+      .where(eq(subscriptions.customerId, customerId))
+      .limit(1)
+    if (subscription) {
+      return subscription[0]?.userId || null
+    } else {
+      throw new Error("Subscription not found")
     }
+  } catch (error) {
+    console.error("Error fetching subscription:", error)
+    throw error
   }
-)
+}
 
 export async function getTestSessionDetails(sessionId: string) {
   const session = await db.query.testSessions.findFirst({
@@ -848,48 +852,57 @@ export async function getTestSessionDetails(sessionId: string) {
 }
 
 // Get userId by customer email
-export const getUserIdByCustomerEmail = cache(
-  async (customerEmail: string): Promise<string | null> => {
-    try {
-      const payment = await db
-        .select()
-        .from(payments)
-        .where(eq(payments.customerEmail, customerEmail))
-        .limit(1)
-      if (payment) {
-        return payment[0]?.userId || null
-      } else {
-        throw new Error("Payment not found")
-      }
-    } catch (error) {
-      console.error("Error fetching payment:", error)
-      throw error
+export async function getUserIdByCustomerEmail(
+  customerEmail: string
+): Promise<string | null> {
+  "use cache"
+  cacheLife("max")
+  cacheTag("payments", `customer-email-${customerEmail}`)
+
+  try {
+    const payment = await db
+      .select()
+      .from(payments)
+      .where(eq(payments.customerEmail, customerEmail))
+      .limit(1)
+    if (payment) {
+      return payment[0]?.userId || null
+    } else {
+      throw new Error("Payment not found")
     }
+  } catch (error) {
+    console.error("Error fetching payment:", error)
+    throw error
   }
-)
+}
 
 // Get a blog post by its ID
-export const getPostById = cache(async (id: string) => {
+export async function getPostById(id: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("blog-posts", `blog-post-${id}`)
+
   const post = await db.query.blogPosts.findFirst({
     where: (model, { eq }) => eq(model.id, id),
   })
   return post
-})
+}
 
 // Delete a completed test by its ID
-export const deleteCompletedTest = cache(async (testId: string) => {
+export const deleteCompletedTest = async (testId: string) => {
   await db.delete(completedTestes).where(eq(completedTestes.id, testId))
-})
+}
 
 // Update username for a specific user
-export const updateUsernameByUserId = cache(
-  async (userId: string, newUsername: string) => {
-    await db
-      .update(users)
-      .set({ username: newUsername })
-      .where(eq(users.userId, userId))
-  }
-)
+export const updateUsernameByUserId = async (
+  userId: string,
+  newUsername: string
+) => {
+  await db
+    .update(users)
+    .set({ username: newUsername })
+    .where(eq(users.userId, userId))
+}
 
 // Get username for a specific user
 export async function getUserUsername(userId: string): Promise<string> {
@@ -926,24 +939,28 @@ export async function getUserMotto(userId: string): Promise<string> {
 }
 
 // Get early supporters list, limited to specified number
-export const getEarlySupporters = cache(
-  async (limit: number = 5): Promise<{ id: string; username: string }[]> => {
-    const supporters = await db
-      .select({
-        userId: users.userId,
-        username: users.username,
-      })
-      .from(users)
-      .where(eq(users.supporter, true))
-      .orderBy(asc(users.createdAt))
-      .limit(limit)
+export async function getEarlySupporters(
+  limit: number = 5
+): Promise<{ id: string; username: string }[]> {
+  "use cache"
+  cacheLife("max")
+  cacheTag("supporters", "user-profile")
 
-    return supporters.map((supporter) => ({
-      id: supporter.userId,
-      username: supporter.username || "Anonymous",
-    }))
-  }
-)
+  const supporters = await db
+    .select({
+      userId: users.userId,
+      username: users.username,
+    })
+    .from(users)
+    .where(eq(users.supporter, true))
+    .orderBy(asc(users.createdAt))
+    .limit(limit)
+
+  return supporters.map((supporter) => ({
+    id: supporter.userId,
+    username: supporter.username || "Anonymous",
+  }))
+}
 
 // Check if a user is a supporter
 export async function getSupporterByUserId(userId: string): Promise<boolean> {
@@ -1043,100 +1060,112 @@ export async function getForumPostById(
 }
 
 // Create a new forum post
-export const createForumPost = cache(
-  async (data: {
-    title: string
-    content: string
-    authorId: string
-    authorName: string
-    readonly: boolean
-  }) => {
-    const post = await db
-      .insert(forumPosts)
-      .values({
-        ...data,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .returning()
+export const createForumPost = async (data: {
+  title: string
+  content: string
+  authorId: string
+  authorName: string
+  readonly: boolean
+}) => {
+  const post = await db
+    .insert(forumPosts)
+    .values({
+      ...data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .returning()
 
-    return post[0]
-  }
-)
+  return post[0]
+}
 
 // Delete a forum post and its associated comments
-export const deleteForumPost = cache(async (postId: string) => {
+export const deleteForumPost = async (postId: string) => {
   await db.delete(forumPosts).where(eq(forumPosts.id, postId))
-})
+}
 
 // Create a new comment on a forum post
-export const createForumComment = cache(
-  async (data: {
-    postId: string
-    content: string
-    authorId: string
-    authorName: string
-  }) => {
-    const comment = await db
-      .insert(forumComments)
-      .values({
-        ...data,
-        createdAt: new Date(),
-      })
-      .returning()
+export const createForumComment = async (data: {
+  postId: string
+  content: string
+  authorId: string
+  authorName: string
+}) => {
+  const comment = await db
+    .insert(forumComments)
+    .values({
+      ...data,
+      createdAt: new Date(),
+    })
+    .returning()
 
-    return comment[0]
-  }
-)
+  return comment[0]
+}
 
 // Delete a specific comment
-export const deleteForumComment = cache(async (commentId: string) => {
+export const deleteForumComment = async (commentId: string) => {
   await db.delete(forumComments).where(eq(forumComments.id, commentId))
-})
+}
 
 // Get the timestamp of user's last forum post
-export const getLastUserPostTime = cache(
-  async (userId: string): Promise<Date | null> => {
-    const [lastPost] = await db
-      .select({ createdAt: forumPosts.createdAt })
-      .from(forumPosts)
-      .where(eq(forumPosts.authorId, userId))
-      .orderBy(desc(forumPosts.createdAt))
-      .limit(1)
+export async function getLastUserPostTime(
+  userId: string
+): Promise<Date | null> {
+  "use cache"
+  cacheLife("minutes")
+  cacheTag("forum-posts", `user-posts-${userId}`)
 
-    return lastPost?.createdAt ?? null
-  }
-)
+  const [lastPost] = await db
+    .select({ createdAt: forumPosts.createdAt })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+    .orderBy(desc(forumPosts.createdAt))
+    .limit(1)
+
+  return lastPost?.createdAt ?? null
+}
 
 // Get the timestamp of user's last comment
-export const getLastUserCommentTime = cache(
-  async (userId: string): Promise<Date | null> => {
-    const [lastComment] = await db
-      .select({ createdAt: forumComments.createdAt })
-      .from(forumComments)
-      .where(eq(forumComments.authorId, userId))
-      .orderBy(desc(forumComments.createdAt))
-      .limit(1)
+export async function getLastUserCommentTime(
+  userId: string
+): Promise<Date | null> {
+  "use cache"
+  cacheLife("minutes")
+  cacheTag("forum-comments", `user-comments-${userId}`)
 
-    return lastComment?.createdAt ?? null
-  }
-)
+  const [lastComment] = await db
+    .select({ createdAt: forumComments.createdAt })
+    .from(forumComments)
+    .where(eq(forumComments.authorId, userId))
+    .orderBy(desc(forumComments.createdAt))
+    .limit(1)
+
+  return lastComment?.createdAt ?? null
+}
 
 // Get stripe support payments
-export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
+export async function getStripeSupportPayments(): Promise<Payment[]> {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("payments")
+
   const payments = await db.query.payments.findMany()
   return payments.map((p) => ({
     ...p,
     createdAt: p.createdAt ?? new Date(),
   }))
-})
+}
 
 // Get supporters userId from stripe support payments
-export const getSupportersUserIds = cache(async (): Promise<string[]> => {
+export async function getSupportersUserIds(): Promise<string[]> {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("supporters", "payments")
+
   const payments = await getStripeSupportPayments()
   const supportersUserId = payments.map((payment) => payment.userId)
   return supportersUserId
-})
+}
 
 export async function getSupportersWithUsernames(): Promise<Supporter[]> {
   "use cache"
@@ -1170,12 +1199,16 @@ export const createTestimonial = async (data: {
   return testimonial[0]
 }
 
-export const getTestimonials = cache(async (visibleOnly = true) => {
+export async function getTestimonials(visibleOnly = true) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("testimonials")
+
   return db.query.testimonials.findMany({
     where: visibleOnly ? (t, { eq }) => eq(t.visible, true) : undefined,
     orderBy: (t, { desc }) => [desc(t.createdAt)],
   })
-})
+}
 
 export async function getTestimonialsWithUsernames(visibleOnly = true) {
   "use cache"
@@ -1201,12 +1234,16 @@ export async function getTestimonialsWithUsernames(visibleOnly = true) {
   return results
 }
 
-export const getUserTestimonials = cache(async (userId: string) => {
+export async function getUserTestimonials(userId: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("testimonials", `user-testimonials-${userId}`)
+
   return db.query.testimonials.findMany({
     where: (t, { eq }) => eq(t.userId, userId),
     orderBy: (t, { desc }) => [desc(t.createdAt)],
   })
-})
+}
 
 export const updateTestimonial = async (
   id: string,
@@ -1221,25 +1258,29 @@ export const updateTestimonial = async (
   return updated[0]
 }
 
-export const deleteTestimonial = cache(async (id: string) => {
+export async function deleteTestimonial(id: string) {
   const deleted = await db
     .delete(testimonials)
     .where(eq(testimonials.id, id))
     .returning()
 
   return deleted[0]
-})
+}
 
-export const sessionExists = cache(async (sessionId: string) => {
+export async function sessionExists(sessionId: string) {
+  "use cache"
+  cacheLife("minutes")
+  cacheTag("test-sessions", `test-session-${sessionId}`)
+
   const [session] = await db
     .select({ id: testSessions.id })
     .from(testSessions)
     .where(eq(testSessions.id, sessionId))
     .limit(1)
   return !!session
-})
+}
 
-export const expireTestSession = cache(async (sessionId: string) => {
+export async function expireTestSession(sessionId: string) {
   const now = new Date()
   await db
     .update(testSessions)
@@ -1251,7 +1292,7 @@ export const expireTestSession = cache(async (sessionId: string) => {
         sql`${testSessions.expiresAt} <= ${now}`
       )
     )
-})
+}
 
 export async function getAllUserNotes(userId: string) {
   "use cache"
@@ -1270,7 +1311,11 @@ export async function getAllUserNotes(userId: string) {
   }))
 }
 
-export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
+export async function getTopPinnedNotes(userId: string, limit = 5) {
+  "use cache"
+  cacheLife("days")
+  cacheTag("user-notes", `user-${userId}`)
+
   const notesList = await db.query.notes.findMany({
     where: (model, { and, eq }) =>
       and(eq(model.userId, userId), eq(model.pinned, true)),
@@ -1283,9 +1328,12 @@ export const getTopPinnedNotes = cache(async (userId: string, limit = 5) => {
     createdAt: note.createdAt.toISOString(),
     updatedAt: note.updatedAt.toISOString(),
   }))
-})
+}
 
-export const getNoteById = cache(async (userId: string, noteId: string) => {
+export const getNoteById = async (userId: string, noteId: string) => {
+  "use cache"
+  cacheLife("max")
+  cacheTag("user-notes", `user-${userId}`, `note-${noteId}`)
   const note = await db.query.notes.findFirst({
     where: (model, { and, eq }) =>
       and(eq(model.id, noteId), eq(model.userId, userId)),
@@ -1298,9 +1346,9 @@ export const getNoteById = cache(async (userId: string, noteId: string) => {
     createdAt: note.createdAt.toISOString(),
     updatedAt: note.updatedAt.toISOString(),
   }
-})
+}
 
-export const createNote = cache(async (userId: string, data: NoteInput) => {
+export const createNote = async (userId: string, data: NoteInput) => {
   const contentResult = parseLexicalContent(data.content)
 
   if (!contentResult.success) {
@@ -1319,95 +1367,107 @@ export const createNote = cache(async (userId: string, data: NoteInput) => {
     .returning()
 
   return note[0]
-})
+}
 
-export const updateNote = cache(
-  async (userId: string, noteId: string, data: Partial<NoteInput>) => {
-    let parsedContent = undefined
-    if (data.content) {
-      const contentResult = parseLexicalContent(data.content)
-      if (!contentResult.success) {
-        throw new Error(`Invalid note content: ${contentResult.error}`)
-      }
-      parsedContent = contentResult.content
+export const updateNote = async (
+  userId: string,
+  noteId: string,
+  data: Partial<NoteInput>
+) => {
+  let parsedContent = undefined
+  if (data.content) {
+    const contentResult = parseLexicalContent(data.content)
+    if (!contentResult.success) {
+      throw new Error(`Invalid note content: ${contentResult.error}`)
     }
-
-    const note = await db
-      .update(notes)
-      .set({
-        ...data,
-        ...(parsedContent ? { content: parsedContent } : {}),
-        updatedAt: new Date(),
-      })
-      .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
-      .returning()
-
-    return note[0] || null
+    parsedContent = contentResult.content
   }
-)
 
-export const deleteNote = cache(async (userId: string, noteId: string) => {
+  const note = await db
+    .update(notes)
+    .set({
+      ...data,
+      ...(parsedContent ? { content: parsedContent } : {}),
+      updatedAt: new Date(),
+    })
+    .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
+    .returning()
+
+  return note[0] || null
+}
+
+export const deleteNote = async (userId: string, noteId: string) => {
   const deleted = await db
     .delete(notes)
     .where(and(eq(notes.id, noteId), eq(notes.userId, userId)))
     .returning()
   return deleted[0] || null
-})
+}
 
-export const deleteMaterial = cache(
-  async (userId: string, materialId: string) => {
-    const deleted = await db
-      .delete(materials)
-      .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
-      .returning()
-    return deleted[0] || null
+export const deleteMaterial = async (userId: string, materialId: string) => {
+  const deleted = await db
+    .delete(materials)
+    .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
+    .returning()
+  return deleted[0] || null
+}
+
+export async function getUserCellsList(
+  userId: string
+): Promise<UserCellsList | null> {
+  "use cache"
+  cacheLife("max")
+  cacheTag("user-cells", `user-${userId}`)
+
+  const rows = await db
+    .select()
+    .from(userCellsList)
+    .where(eq(userCellsList.userId, userId))
+    .limit(1)
+
+  const userCells = rows[0] ?? null
+
+  if (!userCells) return null
+
+  return {
+    id: userCells.id,
+    cells: userCells.cells as Record<string, Cell>,
+    order: userCells.order as string[],
   }
-)
+}
 
-export const getUserCellsList = cache(
-  async (userId: string): Promise<UserCellsList | null> => {
-    const rows = await db
-      .select()
-      .from(userCellsList)
-      .where(eq(userCellsList.userId, userId))
-      .limit(1)
+export const createUserCellsList = async (
+  userId: string,
+  cells: Record<string, Cell>,
+  order: string[]
+) => {
+  await db.insert(userCellsList).values({
+    userId,
+    cells,
+    order,
+  })
+}
 
-    const userCells = rows[0] ?? null
-
-    if (!userCells) return null
-
-    return {
-      id: userCells.id,
-      cells: userCells.cells as Record<string, Cell>,
-      order: userCells.order as string[],
-    }
-  }
-)
-
-export const createUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db.insert(userCellsList).values({
-      userId,
+export const updateUserCellsList = async (
+  userId: string,
+  cells: Record<string, Cell>,
+  order: string[]
+) => {
+  await db
+    .update(userCellsList)
+    .set({
       cells,
       order,
+      updatedAt: new Date(),
     })
-  }
-)
+    .where(eq(userCellsList.userId, userId))
+}
 
-export const updateUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db
-      .update(userCellsList)
-      .set({
-        cells,
-        order,
-        updatedAt: new Date(),
-      })
-      .where(eq(userCellsList.userId, userId))
-  }
-)
+export async function checkUserCellsList(userId: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("user-cells", `user-${userId}`)
 
-export const checkUserCellsList = cache(async (userId: string) => {
   const existing = await db
     .select()
     .from(userCellsList)
@@ -1415,9 +1475,13 @@ export const checkUserCellsList = cache(async (userId: string) => {
     .limit(1)
 
   return existing[0] || null
-})
+}
 
-export const getMaterialsByUser = cache(async (userId: string) => {
+export async function getMaterialsByUser(userId: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("materials", `user-materials-${userId}`)
+
   const rows = await db.query.materials.findMany({
     where: (m, { eq }) => eq(m.userId, userId),
     orderBy: (m, { desc }) => desc(m.createdAt),
@@ -1428,7 +1492,7 @@ export const getMaterialsByUser = cache(async (userId: string) => {
     createdAt: r.createdAt?.toISOString?.() ?? null,
     updatedAt: r.updatedAt?.toISOString?.() ?? null,
   }))
-})
+}
 
 export const getUserStorageUsage = async (userId: string) => {
   const userStorage = await db
@@ -1450,46 +1514,61 @@ export const getUserStorageUsage = async (userId: string) => {
   }
 }
 
-// ============================================================================
-// Challenge Completions & Badges Queries
-// ============================================================================
-
 /**
  * Get all challenge completions for a specific procedure
  */
-export const getChallengeCompletionsByProcedure = cache(
-  async (userId: string, procedureId: string) => {
-    const completions = await db.query.challengeCompletions.findMany({
-      where: (model, { and, eq }) =>
-        and(
-          eq(model.userId, userId),
-          eq(model.procedureId, procedureId),
-          eq(model.passed, true)
-        ),
-      orderBy: (model, { desc }) => desc(model.completedAt),
-    })
+export async function getChallengeCompletionsByProcedure(
+  userId: string,
+  procedureId: string
+) {
+  "use cache"
+  cacheLife("max")
+  cacheTag(
+    "challenge-completions",
+    `user-${userId}`,
+    `procedure-${procedureId}`
+  )
 
-    return completions
-  }
-)
+  const completions = await db.query.challengeCompletions.findMany({
+    where: (model, { and, eq }) =>
+      and(
+        eq(model.userId, userId),
+        eq(model.procedureId, procedureId),
+        eq(model.passed, true)
+      ),
+    orderBy: (model, { desc }) => desc(model.completedAt),
+  })
+
+  return completions
+}
 
 /**
  * Get a specific challenge completion
  */
-export const getChallengeCompletion = cache(
-  async (userId: string, procedureId: string, challengeType: string) => {
-    const completion = await db.query.challengeCompletions.findFirst({
-      where: (model, { and, eq }) =>
-        and(
-          eq(model.userId, userId),
-          eq(model.procedureId, procedureId),
-          eq(model.challengeType, challengeType)
-        ),
-    })
+export async function getChallengeCompletion(
+  userId: string,
+  procedureId: string,
+  challengeType: string
+) {
+  "use cache"
+  cacheLife("max")
+  cacheTag(
+    "challenge-completions",
+    `user-${userId}`,
+    `procedure-${procedureId}`
+  )
 
-    return completion
-  }
-)
+  const completion = await db.query.challengeCompletions.findFirst({
+    where: (model, { and, eq }) =>
+      and(
+        eq(model.userId, userId),
+        eq(model.procedureId, procedureId),
+        eq(model.challengeType, challengeType)
+      ),
+  })
+
+  return completion
+}
 
 /**
  * Save or update a challenge completion
@@ -1616,21 +1695,27 @@ export const awardBadge = async (
 /**
  * Get a specific badge for a procedure
  */
-export const getProcedureBadge = cache(
-  async (userId: string, procedureId: string) => {
-    const badge = await db.query.procedureBadges.findFirst({
-      where: (model, { and, eq }) =>
-        and(eq(model.userId, userId), eq(model.procedureId, procedureId)),
-    })
+export async function getProcedureBadge(userId: string, procedureId: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("procedure-badges", `user-${userId}`, `procedure-${procedureId}`)
 
-    return badge
-  }
-)
+  const badge = await db.query.procedureBadges.findFirst({
+    where: (model, { and, eq }) =>
+      and(eq(model.userId, userId), eq(model.procedureId, procedureId)),
+  })
+
+  return badge
+}
 
 /**
  * Get all badges earned by a user
  */
-export const getUserBadges = cache(async (userId: string) => {
+export async function getUserBadges(userId: string) {
+  "use cache"
+  cacheLife("max")
+  cacheTag("procedure-badges", `user-${userId}`)
+
   const badges = await db.query.procedureBadges.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
     orderBy: (model, { desc }) => desc(model.earnedAt),
@@ -1640,46 +1725,48 @@ export const getUserBadges = cache(async (userId: string) => {
     ...badge,
     earnedAt: badge.earnedAt.toISOString(),
   }))
-})
+}
 
 /**
  * Get all customer messages with pagination
  */
-export const getAllMessages = cache(
-  async (page: number = 1, limit: number = 20) => {
-    const offset = (page - 1) * limit
+export async function getAllMessages(page: number = 1, limit: number = 20) {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("messages")
 
-    const messages = await db.query.customersMessages.findMany({
-      orderBy: (model, { desc }) => desc(model.createdAt),
+  const offset = (page - 1) * limit
+
+  const messages = await db.query.customersMessages.findMany({
+    orderBy: (model, { desc }) => desc(model.createdAt),
+    limit,
+    offset,
+  })
+
+  const [totalResult] = await db
+    .select({ count: count() })
+    .from(customersMessages)
+  const total = totalResult?.count || 0
+
+  return {
+    messages,
+    pagination: {
+      page,
       limit,
-      offset,
-    })
-
-    const [totalResult] = await db
-      .select({ count: count() })
-      .from(customersMessages)
-    const total = totalResult?.count || 0
-
-    return {
-      messages,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    }
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
   }
-)
+}
 
 /**
  * Get message statistics
  * Optimized: 1 query instead of 4 separate queries
  */
 export async function getMessageStats() {
-  'use cache'
-  cacheLife('max')
-  cacheTag('message-stats')
+  "use cache"
+  cacheLife("max")
+  cacheTag("message-stats")
 
   const oneWeekAgo = new Date()
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
@@ -1718,41 +1805,54 @@ export const markMessageAsRead = async (id: number) => {
 /**
  * Get unread message count
  */
-export const getUnreadMessageCount = cache(async () => {
+export async function getUnreadMessageCount() {
+  "use cache"
+  cacheLife("minutes")
+  cacheTag("messages", "message-stats")
+
   const [result] = await db
     .select({ count: count() })
     .from(customersMessages)
     .where(eq(customersMessages.isRead, false))
 
   return result?.count || 0
-})
+}
 
-export const getDetailedTestHistory = cache(
-  async (userId: string, limit: number = 50) => {
-    const tests = await db
-      .select({
-        id: completedTestes.id,
-        score: completedTestes.score,
-        testResult: completedTestes.testResult,
-        completedAt: completedTestes.completedAt,
-        category: testSessions.category,
-        numberOfQuestions: testSessions.numberOfQuestions,
-        durationMinutes: testSessions.durationMinutes,
-      })
-      .from(completedTestes)
-      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
-      .where(eq(completedTestes.userId, userId))
-      .orderBy(desc(completedTestes.completedAt))
-      .limit(limit)
+export async function getDetailedTestHistory(
+  userId: string,
+  limit: number = 50
+) {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("completed-tests", `user-${userId}`)
 
-    return tests.map((test) => ({
-      ...test,
-      completedAt: test.completedAt.toISOString(),
-    }))
-  }
-)
+  const tests = await db
+    .select({
+      id: completedTestes.id,
+      score: completedTestes.score,
+      testResult: completedTestes.testResult,
+      completedAt: completedTestes.completedAt,
+      category: testSessions.category,
+      numberOfQuestions: testSessions.numberOfQuestions,
+      durationMinutes: testSessions.durationMinutes,
+    })
+    .from(completedTestes)
+    .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+    .where(eq(completedTestes.userId, userId))
+    .orderBy(desc(completedTestes.completedAt))
+    .limit(limit)
 
-export const getQuestionAccuracyAnalytics = cache(async (userId: string) => {
+  return tests.map((test) => ({
+    ...test,
+    completedAt: test.completedAt.toISOString(),
+  }))
+}
+
+export async function getQuestionAccuracyAnalytics(userId: string) {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("completed-tests", `user-${userId}`, "analytics")
+
   const tests = await db
     .select({
       testResult: completedTestes.testResult,
@@ -1794,9 +1894,13 @@ export const getQuestionAccuracyAnalytics = cache(async (userId: string) => {
     .sort((a, b) => a.accuracy - b.accuracy)
 
   return problemQuestions
-})
+}
 
-export const getCategoryPerformance = cache(async (userId: string) => {
+export async function getCategoryPerformance(userId: string) {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("completed-tests", `user-${userId}`, "analytics")
+
   const tests = await db
     .select({
       score: completedTestes.score,
@@ -1831,53 +1935,55 @@ export const getCategoryPerformance = cache(async (userId: string) => {
     totalQuestions: stats.totalQuestions,
     correctAnswers: stats.totalScore,
   }))
-})
+}
 
-export const getProgressTimeline = cache(
-  async (userId: string, days: number = 30) => {
-    const startDate = new Date()
-    startDate.setDate(startDate.getDate() - days)
+export async function getProgressTimeline(userId: string, days: number = 30) {
+  "use cache"
+  cacheLife("hours")
+  cacheTag("completed-tests", `user-${userId}`, "analytics")
 
-    const tests = await db
-      .select({
-        score: completedTestes.score,
-        completedAt: completedTestes.completedAt,
-        numberOfQuestions: testSessions.numberOfQuestions,
-      })
-      .from(completedTestes)
-      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
-      .where(
-        and(
-          eq(completedTestes.userId, userId),
-          sql`${completedTestes.completedAt} >= ${startDate}`
-        )
-      )
-      .orderBy(asc(completedTestes.completedAt))
+  const startDate = new Date()
+  startDate.setDate(startDate.getDate() - days)
 
-    const dateMap = new Map<
-      string,
-      { totalScore: number; totalQuestions: number; count: number }
-    >()
-
-    tests.forEach((test) => {
-      const date = test.completedAt.toISOString().split("T")[0] || ""
-      if (!date) return
-
-      const stats = dateMap.get(date) || {
-        totalScore: 0,
-        totalQuestions: 0,
-        count: 0,
-      }
-      stats.totalScore += test.score
-      stats.totalQuestions += test.numberOfQuestions
-      stats.count++
-      dateMap.set(date, stats)
+  const tests = await db
+    .select({
+      score: completedTestes.score,
+      completedAt: completedTestes.completedAt,
+      numberOfQuestions: testSessions.numberOfQuestions,
     })
+    .from(completedTestes)
+    .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+    .where(
+      and(
+        eq(completedTestes.userId, userId),
+        sql`${completedTestes.completedAt} >= ${startDate}`
+      )
+    )
+    .orderBy(asc(completedTestes.completedAt))
 
-    return Array.from(dateMap.entries()).map(([date, stats]) => ({
-      date,
-      avgScore: ((stats.totalScore / stats.totalQuestions) * 100).toFixed(2),
-      testsCount: stats.count,
-    }))
-  }
-)
+  const dateMap = new Map<
+    string,
+    { totalScore: number; totalQuestions: number; count: number }
+  >()
+
+  tests.forEach((test) => {
+    const date = test.completedAt.toISOString().split("T")[0] || ""
+    if (!date) return
+
+    const stats = dateMap.get(date) || {
+      totalScore: 0,
+      totalQuestions: 0,
+      count: 0,
+    }
+    stats.totalScore += test.score
+    stats.totalQuestions += test.numberOfQuestions
+    stats.count++
+    dateMap.set(date, stats)
+  })
+
+  return Array.from(dateMap.entries()).map(([date, stats]) => ({
+    date,
+    avgScore: ((stats.totalScore / stats.totalQuestions) * 100).toFixed(2),
+    testsCount: stats.count,
+  }))
+}

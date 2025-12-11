@@ -6,6 +6,7 @@ import { FormState } from "@/types/actionTypes"
 import { auth, currentUser } from "@clerk/nextjs/server"
 import { UserCellsListSchema } from "@/server/schema"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { revalidateTag } from "next/cache"
 import {
   checkUserCellsList,
   createUserCellsList,
@@ -56,6 +57,9 @@ export async function saveCellsAction(
   } catch (err) {
     return fromErrorToFormState(err)
   }
+
+  revalidateTag('user-cells', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Zapisano pomyślnie")
 }
 

@@ -7,13 +7,16 @@ import { DeleteMaterialIdSchema, MaterialsSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { and, eq, sql } from "drizzle-orm"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { UTApi } from "uploadthing/server"
 import { checkRateLimit } from "@/lib/rateLimit"
 
 const utapi = new UTApi()
 
-export async function deleteMaterialAction(formState: FormState, formData: FormData) {
+export async function deleteMaterialAction(
+  formState: FormState,
+  formData: FormData
+) {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
@@ -35,7 +38,7 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
       .from(materials)
       .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
       .limit(1)
-      .then(rows => rows[0])
+      .then((rows) => rows[0])
 
     if (!materialToDelete) {
       return toFormState("ERROR", "Materiał nie został znaleziony")
@@ -62,19 +65,24 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
     }
 
     revalidatePath("/panel/nauka")
+    revalidateTag("materials", "max")
+    revalidateTag(`user-materials-${userId}`, "max")
     return toFormState("SUCCESS", "Materiał został usunięty pomyślnie")
   } catch (error) {
     return fromErrorToFormState(error)
   }
 }
 
-export async function uploadMaterialAction(FormState: FormState, formData: FormData) {
+export async function uploadMaterialAction(
+  FormState: FormState,
+  formData: FormData
+) {
   try {
-    const { userId } = await auth();
-    if (!userId) throw new Error("Unauthorized");
+    const { userId } = await auth()
+    if (!userId) throw new Error("Unauthorized")
 
     // Rate limiting: 5 material uploads per hour
-    const rateLimit = await checkRateLimit(userId, 'material:upload')
+    const rateLimit = await checkRateLimit(userId, "material:upload")
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
       return toFormState(
@@ -83,12 +91,12 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       )
     }
 
-    const title = String(formData.get("title") ?? "");
-    const key = String(formData.get("key") ?? "");
-    const fileUrl = String(formData.get("fileUrl") ?? "");
-    const type = String(formData.get("type") ?? "");
-    const category = String(formData.get("category") ?? "");
-    const size = Number(formData.get("size") ?? "");
+    const title = String(formData.get("title") ?? "")
+    const key = String(formData.get("key") ?? "")
+    const fileUrl = String(formData.get("fileUrl") ?? "")
+    const type = String(formData.get("type") ?? "")
+    const category = String(formData.get("category") ?? "")
+    const size = Number(formData.get("size") ?? "")
 
     const validationResult = MaterialsSchema.safeParse({
       title,
@@ -96,8 +104,8 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       url: fileUrl,
       type,
       category,
-      size
-    });
+      size,
+    })
 
     if (!validationResult.success) {
       return {
@@ -112,10 +120,10 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         .select()
         .from(userLimits)
         .where(eq(userLimits.userId, userId))
-        .limit(1);
+        .limit(1)
 
-      let currentUsage = 0;
-      let currentLimit = 20_000_000;
+      let currentUsage = 0
+      let currentLimit = 20_000_000
 
       if (existingLimit.length === 0) {
         // Create record only for supporters
@@ -123,27 +131,29 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
           .select({ supporter: users.supporter })
           .from(users)
           .where(eq(users.userId, userId))
-          .limit(1);
+          .limit(1)
 
         if (user[0]?.supporter) {
           await tx.insert(userLimits).values({
             userId,
             storageLimit: 20_000_000,
             storageUsed: 0,
-          });
-          currentUsage = 0;
-          currentLimit = 20_000_000;
+          })
+          currentUsage = 0
+          currentLimit = 20_000_000
         } else {
-          throw new Error("Tylko wspierający mogą dodawać materiały");
+          throw new Error("Tylko wspierający mogą dodawać materiały")
         }
       } else {
-        currentUsage = existingLimit[0]?.storageUsed ?? 0;
-        currentLimit = existingLimit[0]?.storageLimit ?? 20_000_000;
+        currentUsage = existingLimit[0]?.storageUsed ?? 0
+        currentLimit = existingLimit[0]?.storageLimit ?? 20_000_000
       }
 
       // Validate storage limit within transaction
       if (currentUsage + validationResult.data.size > currentLimit) {
-        throw new Error("Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce.");
+        throw new Error(
+          "Przekroczono limit 20MB. Usuń niektóre pliki aby zwolnić miejsce."
+        )
       }
 
       // Insert material
@@ -154,8 +164,8 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         url: validationResult.data.url,
         type: validationResult.data.type,
         category: validationResult.data.category,
-        size: validationResult.data.size
-      });
+        size: validationResult.data.size,
+      })
 
       // Update storage atomically
       await tx
@@ -164,13 +174,14 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
           storageUsed: sql`${userLimits.storageUsed} + ${validationResult.data.size}`,
           updatedAt: new Date(),
         })
-        .where(eq(userLimits.userId, userId));
-    });
+        .where(eq(userLimits.userId, userId))
+    })
 
+    revalidatePath("/panel/nauka")
+    revalidateTag("materials", "max")
+    revalidateTag(`user-materials-${userId}`, "max")
   } catch (error: any) {
-    return toFormState("ERROR", error.message);
+    return toFormState("ERROR", error.message)
   }
-
-  revalidatePath("/panel/nauka");
   return toFormState("SUCCESS", "Plik został pomyślnie wrzucony")
 }

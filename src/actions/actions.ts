@@ -282,6 +282,7 @@ export async function submitTestAction(
   revalidateTag("score", "max")
   revalidateTag("completed-tests", "max")
   revalidateTag("user-stats", "max")
+  revalidateTag("analytics", "max")
   revalidateTag(`user-${userId}`, "max")
   redirect("/panel/wyniki")
 }
@@ -371,6 +372,7 @@ export async function deleteTestAction(
 
   revalidatePath("panel/wyniki")
   revalidateTag("completed-tests", "max")
+  revalidateTag("analytics", "max")
   revalidateTag(`user-${userId}`, "max")
   return toFormState("SUCCESS", "Test usunięty pomyślnie")
 }
@@ -531,6 +533,7 @@ export async function createForumPostAction(
 
   revalidatePath("/forum")
   revalidateTag('forum-posts', 'max')
+  revalidateTag(`user-posts-${userId}`, 'max')
   return toFormState("SUCCESS", "Post został dodany pomyślnie!")
 }
 
@@ -644,6 +647,8 @@ export async function createCommentAction(
   revalidatePath("/forum")
   revalidateTag(`forum-post-${postId}`, "max")
   revalidateTag('forum-posts', 'max')
+  revalidateTag('forum-comments', 'max')
+  revalidateTag(`user-comments-${userId}`, 'max')
   return toFormState("SUCCESS", "Komentarz został dodany")
 }
 
@@ -690,6 +695,8 @@ export async function deleteCommentAction(
     revalidateTag(`forum-post-${postId}`, "max")
   }
   revalidateTag('forum-posts', 'max')
+  revalidateTag('forum-comments', 'max')
+  revalidateTag(`user-comments-${userId}`, 'max')
   return toFormState("SUCCESS", "Komentarz został usunięty")
 }
 
@@ -737,6 +744,7 @@ export async function createTestimonialAction(
     })
 
     revalidateTag("testimonials", "max")
+    revalidateTag(`user-testimonials-${userId}`, "max")
   } catch (error) {
     return {
       ...fromErrorToFormState(error),

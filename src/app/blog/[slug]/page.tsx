@@ -5,11 +5,9 @@ import BlogPost from '@/app/_components/BlogPost'
 import AllBlogPostsSkeleton from '@/components/skeletons/AllBlogPostsSkeleton'
 
 
-export function generateMetadata() {
-  return {
+export const metadata = {
     title: 'Wolfmed Blog Medyczny',
     description: 'Artykuł medyczny na blogu Wolfmed.',
-  }
 }
 
 async function BlogPostContent(props: { params: Promise<{ slug: string }> }) {

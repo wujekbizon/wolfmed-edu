@@ -15,20 +15,9 @@ type Props = {
   }>
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ postId: string }> }): Promise<Metadata> {
-  const { postId } = await params
-  const forumPost = await getForumPostById(postId)
-
-  if (!forumPost) {
-    return {
-      title: 'Wolfmed Forum Dyskusyjne',
-    }
-  }
-
-  return {
-    title: forumPost.title,
-    description: forumPost.content.substring(0, 120) + '...',
-  }
+export const metadata: Metadata = {
+  title: 'Wolfmed Forum Dyskusyjne',
+  description: 'Dyskusje na temat edukacji medycznej',
 }
 
 async function ForumPost({ postId }: { postId: string }) {

@@ -8,7 +8,7 @@ import Loading from './loading'
 
 
 export const metadata: Metadata = {
-  title: 'Szczegółowe Wyniku Testu',
+  title: 'Szczegółowe Wyniki Testów',
   description: 'Sprawdź swoje wyniki testów i zobacz, gdzie popełniłeś błędy!',
 }
 

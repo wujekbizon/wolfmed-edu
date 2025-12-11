@@ -19,7 +19,7 @@ export default function LearningHubDashboardSkeleton() {
 
       {/* CellList skeleton with premium lock overlay */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-100/90 via-zinc-100/60 to-transparent z-10 rounded-2xl" />
+        <div className="absolute inset-0 bg-linear-to-t from-zinc-100/90 via-zinc-100/60 to-transparent z-10 rounded-2xl" />
         <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60 opacity-30">
           <div className="h-7 w-48 bg-zinc-200 rounded mb-4" />
           <div className="space-y-3">
@@ -32,7 +32,7 @@ export default function LearningHubDashboardSkeleton() {
 
       {/* NotesSection skeleton with premium lock overlay */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-100/90 via-zinc-100/60 to-transparent z-10 rounded-2xl" />
+        <div className="absolute inset-0 bg-linear-to-t from-zinc-100/90 via-zinc-100/60 to-transparent z-10 rounded-2xl" />
         <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60 opacity-30">
           <div className="h-7 w-48 bg-zinc-200 rounded mb-4" />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

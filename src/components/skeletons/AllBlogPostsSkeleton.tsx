@@ -8,7 +8,7 @@ export default function AllBlogPostsSkeleton() {
           {/* Hero skeleton */}
           <div className="mb-16 text-center animate-pulse">
             <div className="h-16 w-96 bg-zinc-700/30 rounded-lg mx-auto mb-4" />
-            <div className="h-6 w-128 bg-zinc-700/20 rounded-lg mx-auto" />
+            <div className="h-6 w-lg bg-zinc-700/20 rounded-lg mx-auto" />
           </div>
 
           {/* Search and sort skeleton */}

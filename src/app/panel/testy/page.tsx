@@ -9,17 +9,15 @@ import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { isUserAdmin } from '@/lib/adminHelpers'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const categories = Object.entries(CATEGORY_METADATA);
-  const categoryKeys = categories.map(([key]) => key).join(", ");
-  const categoryDescriptions = categories.map(([_, meta]) => meta.description).join(" | ");
-  const categoryKeywords = categories.flatMap(([_, meta]) => meta.keywords).join(", ")
+const categories = Object.entries(CATEGORY_METADATA);
+const categoryKeys = categories.map(([key]) => key).join(", ");
+const categoryDescriptions = categories.map(([_, meta]) => meta.description).join(" | ");
+const categoryKeywords = categories.flatMap(([_, meta]) => meta.keywords).join(", ")
 
-  return {
-    title: `Oferujemy testy sprawdzające dla wszystkich kategorii: ${categoryKeys}`,
-    description: `Przeglądaj bazę testów obejmującą kategorie: ${categoryKeys}. ${categoryDescriptions}`,
-    keywords: categoryKeywords,
-  }
+export const metadata: Metadata = {
+  title: `Oferujemy testy sprawdzające dla wszystkich kategorii: ${categoryKeys}`,
+  description: `Przeglądaj bazę testów obejmującą kategorie: ${categoryKeys}. ${categoryDescriptions}`,
+  keywords: categoryKeywords,
 }
 
 async function TestsCategories() {
