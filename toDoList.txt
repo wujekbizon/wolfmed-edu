@@ -1,5 +1,3 @@
 migrate from file system getAllTests to db query
-addQuestionToCategoryAction and removeQuestionFromCategoryAction thos actions are related to 
+addQuestionToCategoryAction and removeQuestionFromCategoryAction those actions are related to 
 CreateTestTabs -> CustomCategoriesTab that we not using for now. This need to be fixed
-Add Skeleton for /panel/nauka/[category] -> now is text Loading and make this better : <LearningHubDashboardSkeleton />
-fix generateMetadata in /blog/[slug] and /panel/nauka/[category]

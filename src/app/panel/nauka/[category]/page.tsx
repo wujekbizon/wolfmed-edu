@@ -1,8 +1,8 @@
 import AllTests from '@/components/AllTests'
+import AllTestsSkeleton from '@/components/skeletons/AllTestsSkeleton'
 import { fileData } from '@/server/fetchData'
 import { getSupporterByUserId } from '@/server/queries';
 import { currentUser } from '@clerk/nextjs/server';
-import { Metadata } from 'next'
 import { Suspense } from 'react';
 import { isUserAdmin } from '@/lib/adminHelpers'
 import { redirect } from 'next/navigation'
@@ -11,24 +11,17 @@ interface CategoryPageProps {
     params: Promise<{ category: string }>;
 }
 
-// export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-//     const { category } = await params;
-//     const categoryName = category
-//         .replace(/-/g, ' ')
-//         .split(' ')
-//         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-//         .join(' ');
-//     return {
-//         title: `Testy z kategorii: ${categoryName}`,
-//         description: `Przygotuj się do egzaminu z testów z kategorii ${categoryName}.`,
-//     };
-// }
+export async function generateMetadata() {
+    return {
+        title: `Testy z kategorii medycznej / opiekun-medyczny`,
+        description: `Przygotuj się do egzaminu z testów z kategorii medycznej / opiekun-medyczny.`,
+    };
+}
 
 export default function CategoryPage(props: CategoryPageProps) {
-
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<AllTestsSkeleton />}>
                 <CategoryContentWrapper params={props.params} />
             </Suspense>
         </section>
