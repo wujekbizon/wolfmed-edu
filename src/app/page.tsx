@@ -8,7 +8,7 @@ import About from "./_components/About"
 import EducationPathsSection from "./_components/EducationalPaths"
 import Testimonials from "./_components/Testimonials"
 
-export default function HomePage() {
+export default async function HomePage() {
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">
       <Hero />

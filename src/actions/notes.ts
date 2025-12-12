@@ -6,7 +6,7 @@ import { DeleteNoteIdSchema, NoteInput, NoteSchema, NoteUpdateSchema } from "@/s
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
 import { parseLexicalContent } from "@/lib/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
@@ -72,6 +72,8 @@ export const createNoteAction = async (
     }
   }
   revalidatePath("panel/nauka")
+  revalidateTag('user-notes', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Notatka została utworzona pomyślnie!")
 }
 
@@ -107,6 +109,8 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
   }
 
   revalidatePath("panel/nauka")
+  revalidateTag('user-notes', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
 }
 
@@ -158,5 +162,7 @@ export const updateNoteContentAction = async (
 
   revalidatePath("/panel/nauka")
   revalidatePath(`/panel/nauka/notatki/${noteId}`)
+  revalidateTag('user-notes', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Zaktualizowano treść notatki")
 }

@@ -1,7 +1,7 @@
 "use server"
 
 import { auth } from "@clerk/nextjs/server"
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { db } from "@/server/db/index"
 import { checkRateLimit } from "@/lib/rateLimit"
 import {
@@ -182,6 +182,10 @@ export async function submitQuizAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
+    revalidateTag('challenge-completions', 'max')
+    revalidateTag('procedure-badges', 'max')
+    revalidateTag(`user-${userId}`, 'max')
+    revalidateTag(`procedure-${procedureId}`, 'max')
 
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
@@ -289,6 +293,10 @@ export async function submitOrderStepsAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
+    revalidateTag('challenge-completions', 'max')
+    revalidateTag('procedure-badges', 'max')
+    revalidateTag(`user-${userId}`, 'max')
+    revalidateTag(`procedure-${procedureId}`, 'max')
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
@@ -385,6 +393,10 @@ export async function submitVisualRecognitionAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
+    revalidateTag('challenge-completions', 'max')
+    revalidateTag('procedure-badges', 'max')
+    revalidateTag(`user-${userId}`, 'max')
+    revalidateTag(`procedure-${procedureId}`, 'max')
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
@@ -480,6 +492,10 @@ export async function submitScenarioAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
+    revalidateTag('challenge-completions', 'max')
+    revalidateTag('procedure-badges', 'max')
+    revalidateTag(`user-${userId}`, 'max')
+    revalidateTag(`procedure-${procedureId}`, 'max')
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)
@@ -586,6 +602,10 @@ export async function submitSpotErrorAction(
 
     revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
     revalidatePath("/panel")
+    revalidateTag('challenge-completions', 'max')
+    revalidateTag('procedure-badges', 'max')
+    revalidateTag(`user-${userId}`, 'max')
+    revalidateTag(`procedure-${procedureId}`, 'max')
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
     return fromErrorToFormState(error)

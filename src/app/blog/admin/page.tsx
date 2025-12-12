@@ -3,9 +3,6 @@ import { getBlogStatistics, getAllBlogPosts, getMessageStats } from '@/server/qu
 import AdminBlogPanel from '@/components/AdminBlogPanel'
 import AdminBlogPanelSkeleton from '@/components/skeletons/AdminBlogPanelSkeleton'
 
-
-export const dynamic = 'force-dynamic'
-
 async function AsyncAdminDashboard() {
   const [stats, recentPosts, messageStats] = await Promise.all([
     getBlogStatistics(),

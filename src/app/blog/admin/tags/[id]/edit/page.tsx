@@ -1,9 +1,8 @@
+import { Suspense } from 'react'
 import { getBlogTagById } from '@/server/queries'
 import TagForm from '@/components/blog/admin/TagForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-
-export const dynamic = 'force-dynamic'
 
 interface EditTagPageProps {
   params: Promise<{
@@ -11,8 +10,8 @@ interface EditTagPageProps {
   }>
 }
 
-export default async function EditTagPage({ params }: EditTagPageProps) {
-  const { id } = await params
+async function EditTagWithData(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params
   const tag = await getBlogTagById(id)
 
   if (!tag) {
@@ -41,5 +40,13 @@ export default async function EditTagPage({ params }: EditTagPageProps) {
 
       <TagForm mode="edit" tag={tag} />
     </div>
+  )
+}
+
+export default function EditTagPage(props: EditTagPageProps) {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto animate-pulse">Ładowanie...</div>}>
+      <EditTagWithData params={props.params} />
+    </Suspense>
   )
 }

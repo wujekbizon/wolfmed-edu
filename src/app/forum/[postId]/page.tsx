@@ -9,28 +9,15 @@ import ForumDetailComments from '@/components/ForumDetailComments'
 import Loading from './loading'
 import { Metadata } from 'next'
 
-export const experimental_ppr = true
-
 type Props = {
   params: Promise<{
     postId: string
   }>
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ postId: string }> }): Promise<Metadata> {
-  const { postId } = await params
-  const forumPost = await getForumPostById(postId)
-
-  if (!forumPost) {
-    return {
-      title: 'Wolfmed Forum Dyskusyjne',
-    }
-  }
-
-  return {
-    title: forumPost.title,
-    description: forumPost.content.substring(0, 120) + '...',
-  }
+export const metadata: Metadata = {
+  title: 'Wolfmed Forum Dyskusyjne',
+  description: 'Dyskusje na temat edukacji medycznej',
 }
 
 async function ForumPost({ postId }: { postId: string }) {

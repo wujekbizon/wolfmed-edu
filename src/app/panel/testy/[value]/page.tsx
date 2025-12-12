@@ -5,26 +5,18 @@ import { fileData } from '@/server/fetchData'
 import { getSupporterByUserId, getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
-import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { isUserAdmin } from '@/lib/adminHelpers'
 import { redirect } from 'next/navigation'
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const { value: category } = await params;
-  const metadata = CATEGORY_METADATA[category as keyof typeof CATEGORY_METADATA];
-
-  if (!metadata) {
-    return CATEGORY_METADATA["opiekun-medyczny"]
-  }
-
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    keywords: metadata.keywords.join(", "),
-  };
+export const metadata: Metadata = {
+  title: 'Testy medyczne | Wolfmed',
+  description: 'Rozwiązuj testy z kategorii medycznych',
 }
 
-async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
+async function TestsByCategoryContent(props: CategoryPageProps) {
+  const { value: category } = await props.params
+  const { sessionId } = await props.searchParams
+
   const decodedCategory = decodeURIComponent(category)
 
   // Protect socjologia
@@ -54,14 +46,11 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   return <GenerateTests tests={categoryTests} sessionId={sessionId} duration={durationMinutes} questions={numberOfQuestions} />;
 }
 
-export default async function CategoryTestPage(props: CategoryPageProps) {
-  const { value } = await props.params
-  const { sessionId } = await props.searchParams;
-
+export default function CategoryTestPage(props: CategoryPageProps) {
   return (
     <section className='flex w-full flex-col items-center gap-8 p-0 sm:p-4'>
-      <Suspense>
-        <TestsByCategory category={value} sessionId={sessionId} />
+      <Suspense fallback={<div className="animate-pulse">Ładowanie testu...</div>}>
+        <TestsByCategoryContent params={props.params} searchParams={props.searchParams} />
       </Suspense>
     </section>
   );

@@ -169,23 +169,6 @@ export async function submitTestAction(
   }
 
   try {
-    const userTestLimit = await getUserTestLimit(userId)
-
-    if (!userTestLimit) {
-      console.log("No user is found!")
-      return toFormState("ERROR", "No user is found!")
-    }
-
-    if (userTestLimit.testLimit !== null) {
-      if (userTestLimit.testLimit <= 0) {
-        // user exceeded his test limit
-        return toFormState(
-          "ERROR",
-          "Wyczerpałes limit 150 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
-        )
-      }
-    }
-
     // Extract answer data from the submitted form data
     const answers: QuestionAnswer[] = []
     formData.forEach((value, key) => {
@@ -225,24 +208,7 @@ export async function submitTestAction(
       validationResult?.data as QuestionAnswer[]
     )
 
-    // // Execute all database operations in one transaction
-    // await db.transaction(async (tx) => {
-    //   if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
-    //     // Update user test limit
-    //     await tx
-    //       .update(users)
-    //       .set({
-    //         testLimit: userTestLimit.testLimit - 1,
-    //         testsAttempted: sql`${users.testsAttempted} + 1`,
-    //         totalScore: sql`${users.totalScore} + ${correct}`,
-    //         totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
-    //       })
-    //       .where(eq(users.userId, userId))
-    //   }
-    //   await tx.insert(completedTestes).values(completedTest)
-    // })
-
-    // 5. Run everything in transaction
+    // Run everything in transaction
     await db.transaction(async (tx) => {
       // (a) Lock the session by ID instead of searching
       const result = await tx.execute(
@@ -269,12 +235,18 @@ export async function submitTestAction(
         throw new Error("Session expired — your time is up")
       }
 
-      // (c) Update user stats if they have limits
+      // (c) Check user test limit and update stats
       const userTestLimit = await getUserTestLimit(userId)
       if (!userTestLimit) {
         throw new Error("No user is found!")
       }
 
+      // Check if user exceeded their limit
+      if (userTestLimit.testLimit !== null && userTestLimit.testLimit <= 0) {
+        throw new Error("Wyczerpałes limit 150 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów.")
+      }
+
+      // Update user stats if they have limits
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
         await tx
           .update(users)
@@ -307,8 +279,11 @@ export async function submitTestAction(
 
   // Update form state and redirect on success and redirect user to result page
   toFormState("SUCCESS", "Test został wypełniony pomyślnie")
-  // revalidatePath('/panel', 'page')
   revalidateTag("score", "max")
+  revalidateTag("completed-tests", "max")
+  revalidateTag("user-stats", "max")
+  revalidateTag("analytics", "max")
+  revalidateTag(`user-${userId}`, "max")
   redirect("/panel/wyniki")
 }
 
@@ -352,6 +327,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
     }
   }
 
+  revalidateTag('message-stats', 'max')
   return toFormState("SUCCESS", "Wiadomość wysłana pomyślnie!")
 }
 
@@ -395,6 +371,9 @@ export async function deleteTestAction(
   }
 
   revalidatePath("panel/wyniki")
+  revalidateTag("completed-tests", "max")
+  revalidateTag("analytics", "max")
+  revalidateTag(`user-${userId}`, "max")
   return toFormState("SUCCESS", "Test usunięty pomyślnie")
 }
 
@@ -436,6 +415,8 @@ export async function updateUsername(formState: FormState, formData: FormData) {
     }
   }
   revalidatePath("/panel")
+  revalidateTag('user-profile', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Nazwa użytkownika została pomyślnie zaktualizowana!")
 }
 
@@ -478,6 +459,8 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   }
 
   revalidatePath("/panel")
+  revalidateTag('user-profile', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   return toFormState("SUCCESS", "Motto zaktualizowane pomyślnie!")
 }
 
@@ -549,6 +532,8 @@ export async function createForumPostAction(
   }
 
   revalidatePath("/forum")
+  revalidateTag('forum-posts', 'max')
+  revalidateTag(`user-posts-${userId}`, 'max')
   return toFormState("SUCCESS", "Post został dodany pomyślnie!")
 }
 
@@ -586,6 +571,8 @@ export async function deletePostAction(
     return fromErrorToFormState(error)
   }
 
+  revalidateTag(`forum-post-${postId}`, "max")
+  revalidateTag('forum-posts', 'max')
   redirect("/forum")
   return toFormState("SUCCESS", "Post został usunięty")
 }
@@ -657,8 +644,11 @@ export async function createCommentAction(
       values: { content },
     }
   }
-
   revalidatePath("/forum")
+  revalidateTag(`forum-post-${postId}`, "max")
+  revalidateTag('forum-posts', 'max')
+  revalidateTag('forum-comments', 'max')
+  revalidateTag(`user-comments-${userId}`, 'max')
   return toFormState("SUCCESS", "Komentarz został dodany")
 }
 
@@ -685,6 +675,7 @@ export async function deleteCommentAction(
 
   const commentId = formData.get("commentId") as string
   const authorId = formData.get("authorId") as string
+  const postId = formData.get("postId") as string
 
   if (userId !== authorId) {
     return toFormState(
@@ -700,6 +691,12 @@ export async function deleteCommentAction(
   }
 
   revalidatePath("/forum")
+  if (postId) {
+    revalidateTag(`forum-post-${postId}`, "max")
+  }
+  revalidateTag('forum-posts', 'max')
+  revalidateTag('forum-comments', 'max')
+  revalidateTag(`user-comments-${userId}`, 'max')
   return toFormState("SUCCESS", "Komentarz został usunięty")
 }
 
@@ -745,6 +742,9 @@ export async function createTestimonialAction(
       ...validationResult.data,
       visible: true,
     })
+
+    revalidateTag("testimonials", "max")
+    revalidateTag(`user-testimonials-${userId}`, "max")
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
@@ -812,6 +812,9 @@ export async function createTestAction(
     return fromErrorToFormState(error)
   }
 
+
+  revalidateTag('user-custom-tests','max')
+  revalidateTag(`user-${user.userId}`,'max')
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -911,7 +914,8 @@ export async function uploadTestsFromFile(
       return fromErrorToFormState(error)
     }
   }
-
+  revalidateTag('user-custom-tests', 'max')
+  revalidateTag(`user-${user.userId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -958,6 +962,9 @@ export async function deleteUserCustomTestAction(
     return fromErrorToFormState(error)
   }
 
+  revalidateTag('user-custom-tests', 'max')
+  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag(`test-${testId}`, 'max') 
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -1009,10 +1016,6 @@ export async function deleteUserCustomTestsByCategoryAction(
   return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
 }
 
-// ============================================================================
-// CUSTOM CATEGORY ACTIONS
-// ============================================================================
-
 /**
  * Create a new custom category
  */
@@ -1044,6 +1047,8 @@ export async function createCustomCategoryAction(
     return fromErrorToFormState(error)
   }
 
+  revalidateTag('user-custom-categories', 'max')
+  revalidateTag(`user-${userId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/nauka")
   revalidatePath("/panel/testy")
@@ -1098,7 +1103,9 @@ export async function addQuestionToCategoryAction(
   } catch (error) {
     return fromErrorToFormState(error)
   }
-
+  revalidateTag('user-custom-categories', 'max')
+  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag(`category-${categoryId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Pytanie dodane do kategorii")
 }
@@ -1145,7 +1152,9 @@ export async function removeQuestionFromCategoryAction(
   } catch (error) {
     return fromErrorToFormState(error)
   }
-
+  revalidateTag('user-custom-categories', 'max')
+  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag(`category-${categoryId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Pytanie usunięte z kategorii")
 }
@@ -1177,7 +1186,9 @@ export async function deleteCustomCategoryAction(
   } catch (error) {
     return fromErrorToFormState(error)
   }
-
+  revalidateTag('user-custom-categories', 'max')
+  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag(`category-${categoryId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/nauka")
   revalidatePath("/panel/testy")
@@ -1225,6 +1236,9 @@ export async function updateCategoryNameAction(
     return fromErrorToFormState(error)
   }
 
+  revalidateTag('user-custom-categories', 'max')
+  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag(`category-${categoryId}`, 'max')
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Nazwa kategorii została zaktualizowana")
 }

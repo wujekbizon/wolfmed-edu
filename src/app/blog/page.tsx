@@ -1,6 +1,8 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
 import AllPosts from '@/components/AllPosts'
 import { getAllBlogPosts } from '@/server/queries'
+import AllBlogPostsSkeleton from '@/components/skeletons/AllBlogPostsSkeleton'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -10,13 +12,19 @@ export const metadata: Metadata = {
     'opiekun, blog, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja',
 }
 
-export default async function BlogPage() {
-
+async function AllBlogPostsWithData() {
   const posts = await getAllBlogPosts({
     status: 'published',
     sortBy: 'publishedAt',
     sortOrder: 'desc',
   })
-
   return <AllPosts posts={posts} />
+}
+
+export default function BlogPage() {
+  return (
+    <Suspense fallback={<AllBlogPostsSkeleton />}>
+      <AllBlogPostsWithData />
+    </Suspense>
+  )
 }

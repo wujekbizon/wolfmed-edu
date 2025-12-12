@@ -9,7 +9,6 @@ export default function Footer() {
   return (
     <footer className="bg-zinc-100 text-zinc-800 flex w-full h-full justify-center">
       <div className="container px-4 py-12">
-        {/* Logo and tagline */}
         <div className="flex items-center justify-center mb-8 gap-3 flex-col sm:flex-row ">
           <div className="w-14 h-14 bg-zinc-200 rounded-full border justify-center items-center border-zinc-400">
             <Image
@@ -29,7 +28,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Navigation and legal links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Nawigacja</h4>
@@ -89,8 +87,6 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
-        {/* Copyright and attribution */}
         <div className="border-t border-zinc-200 pt-8 mt-8 text-sm text-center">
           <p>© 2025 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
           <Link href="https://wesa.vercel.app/" target="_blank" className="hover:text-red-500 transition-colors ">

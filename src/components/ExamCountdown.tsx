@@ -1,3 +1,5 @@
+'use client'
+
 import { calculateTimeLeft } from '@/utils/dateUtils'
 import CountdownTimer from './CountdownTimer'
 import { EXAM_PERIODS } from '@/constants/examDates'

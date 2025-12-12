@@ -1,5 +1,3 @@
-"use client";
-
 import EducationalPathCard from "@/components/EducationalPathCard";
 import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 

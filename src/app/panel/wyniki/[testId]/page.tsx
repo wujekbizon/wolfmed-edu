@@ -8,11 +8,12 @@ import Loading from './loading'
 
 
 export const metadata: Metadata = {
-  title: 'Szczegółowe Wyniku Testu',
+  title: 'Szczegółowe Wyniki Testów',
   description: 'Sprawdź swoje wyniki testów i zobacz, gdzie popełniłeś błędy!',
 }
 
-async function CompletedTest({ testId }: { testId: string }) {
+async function CompletedTest(props: { params: Promise<{ testId: string }> }) {
+  const { testId } = await props.params
   const completedTest = await getCompletedTest(testId)
 
   if (!completedTest) {
@@ -22,14 +23,13 @@ async function CompletedTest({ testId }: { testId: string }) {
   return <TestResultCard completedTest={completedTest as CompletedTest} />
 }
 
-export default async function TestResultPage(props: {
+export default function TestResultPage(props: {
   params: Promise<{ testId: string }>
   searchParams: Promise<{}>
 }) {
-  const { testId } = await props.params
   return (
     <Suspense fallback={<Loading />}>
-      <CompletedTest testId={testId} />
+      <CompletedTest params={props.params} />
     </Suspense>
   )
 }

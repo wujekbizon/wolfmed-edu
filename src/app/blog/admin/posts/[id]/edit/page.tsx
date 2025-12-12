@@ -1,10 +1,8 @@
+import { Suspense } from 'react'
 import { getBlogPostById, getBlogCategories, getBlogTags } from '@/server/queries'
 import BlogPostForm from '@/components/blog/admin/BlogPostForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-
-
-export const dynamic = 'force-dynamic'
 
 interface EditPostPageProps {
   params: Promise<{
@@ -12,8 +10,8 @@ interface EditPostPageProps {
   }>
 }
 
-export default async function EditPostPage({ params }: EditPostPageProps) {
-  const { id } = await params
+async function EditPostWithData(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params
   const [post, categories, tags] = await Promise.all([
     getBlogPostById(id),
     getBlogCategories(),
@@ -46,5 +44,13 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
 
       <BlogPostForm mode="edit" post={post} categories={categories} tags={tags} />
     </div>
+  )
+}
+
+export default function EditPostPage(props: EditPostPageProps) {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto animate-pulse">Ładowanie...</div>}>
+      <EditPostWithData params={props.params} />
+    </Suspense>
   )
 }

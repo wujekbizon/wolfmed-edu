@@ -1,10 +1,9 @@
-import TestimonialsCarouselSkeleton from "@/components/skeletons/TestimonialsCarouselSkeleton"
-import TestimonialsCarousel from "@/components/TestimonialsCarousel"
-import { getTestimonialsWithUsernames } from "@/server/queries"
 import { Suspense } from "react"
+import { getTestimonialsWithUsernames } from "@/server/queries"
+import TestimonialsCarousel from "@/components/TestimonialsCarousel"
+import TestimonialsCarouselSkeleton from "@/components/skeletons/TestimonialsCarouselSkeleton"
 
 export default async function Testimonials() {
-  const testimonials = await getTestimonialsWithUsernames()
 
   return (
     <section
@@ -28,9 +27,14 @@ export default async function Testimonials() {
 
       <div className="relative mx-auto w-full max-w-4xl">
         <Suspense fallback={<TestimonialsCarouselSkeleton/>}>
-          <TestimonialsCarousel testimonials={testimonials} />
+        <TestimonialsCarouselWithData />
         </Suspense>
       </div>
     </section>
   )
+}
+
+async function TestimonialsCarouselWithData() {
+  const testimonials = await getTestimonialsWithUsernames()
+  return <TestimonialsCarousel testimonials={testimonials} />
 }
