@@ -41,6 +41,7 @@ import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { fileData } from "./fetchData"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -1480,15 +1481,17 @@ export const awardBadge = async (
     )
     .limit(1)
 
-  if (existing.length === 0) {
-    await tx.insert(procedureBadges).values({
-      userId: data.userId,
-      procedureId: data.procedureId,
-      procedureName: data.procedureName,
-      badgeImageUrl: data.badgeImageUrl || "/images/badge-placeholder.png",
-      earnedAt: new Date(),
-    })
-  }
+    if (existing.length === 0) {
+      const procedure = await fileData.getProcedureById(data.procedureId)
+  
+      await tx.insert(procedureBadges).values({
+        userId: data.userId,
+        procedureId: data.procedureId,
+        procedureName: data.procedureName,
+        badgeImageUrl: procedure?.data.image || "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
+        earnedAt: new Date(),
+      })
+    }
 }
 
 /**

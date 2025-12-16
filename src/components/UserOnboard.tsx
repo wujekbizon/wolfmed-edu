@@ -102,21 +102,14 @@ export default function UserOnboard() {
               Ważne informacje organizacyjne
             </h3>
             <p className="mb-2">
-              Ze względu na ograniczenia techniczne i koszty utrzymania
-              infrastruktury, tymczasowo wprowadzamy limit 150 rozwiązanych
-              testów dla każdego użytkownika. Jednak dla wszystkich osób
-              wspierających nasz projekt, jako wyraz wdzięczności, zdejmujemy to
-              ograniczenie.
+            Ze względu na rosnącą popularność platformy oraz koszty infrastruktury, wprowadzamy limit 25 testów miesięcznie dla użytkowników korzystających z darmowego planu.
+            Wszyscy użytkownicy premium mają nielimitowany dostęp do wszystkich funkcji platformy.
             </p>
             <p className="mb-2">
-              Aktywnie poszukujemy sponsorów i osób chętnych do długoterminowego
-              wsparcia projektu. Gdy tylko uda nam się pozyskać odpowiednie
-              wsparcie, planujemy całkowicie znieść limity dla wszystkich
-              użytkowników.
+            Aktywnie rozwijamy projekt i poszukujemy partnerów do długoterminowej współpracy. Naszym celem jest w przyszłości zwiększenie limitów dla użytkowników darmowych.
             </p>
             <p className="mb-4">
-              Jeśli chcesz uzyskać nielimitowany dostęp do testów oraz pomóc nam
-              w rozwoju projektu, rozważ wsparcie naszego startupu.
+            Jeśli chcesz uzyskać nielimitowany dostęp oraz wesprzeć rozwój projektu, sprawdź naszą ofertę premium.
             </p>
             <Link
               href="/wsparcie-projektu"

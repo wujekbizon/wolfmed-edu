@@ -23,7 +23,7 @@ export const users = createTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull().unique(),
-    testLimit: integer("testLimit").default(150),
+    testLimit: integer("testLimit").default(25),
     createdAt: timestamp("createdAt").defaultNow(),
     motto: varchar("motto").default("").notNull(),
     supporter: boolean("supporter").default(false).notNull(),
@@ -35,6 +35,7 @@ export const users = createTable(
   },
   (table) => [
     index("usersUsername").on(table.username),
+    index("usersUserId").on(table.userId), 
   ]
 )
 
@@ -46,7 +47,11 @@ export const payments = createTable("stripe_payments", {
   customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
-})
+}, (table) => [
+  index("stripe_payments_user_id_idx").on(table.userId),
+  index("stripe_payments_status_idx").on(table.paymentStatus),
+  index("stripe_payments_created_at_idx").on(table.createdAt),
+])
 
 export const subscriptions = createTable("stripe_subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -84,6 +89,9 @@ export const completedTestes = createTable(
   },
   (table) => [
     index("completed_tests_user_id_idx").on(table.userId),
+    index("completed_tests_session_id_idx").on(table.sessionId),
+    index("completed_tests_completed_at_idx").on(table.completedAt),
+    index("completed_tests_user_date_idx").on(table.userId, table.completedAt),
   ]
 )
 
@@ -107,7 +115,6 @@ export const testSessions = createTable(
     meta: jsonb("meta").default({}),
   },
   (table) => [
-    // Composite index: Covers both "WHERE userId = ?" and "WHERE userId = ? AND status = ?"
     index("test_sessions_user_status_idx").on(table.userId, table.status),
   ]
 );
@@ -211,40 +218,24 @@ export const blogPosts = createTable(
   'blog_posts',
   {
     id: uuid('id').primaryKey().defaultRandom(),
-
-    // Content fields
     title: varchar('title', { length: 256 }).notNull(),
     slug: varchar('slug', { length: 256 }).notNull().unique(),
     excerpt: text('excerpt').notNull(),
-    content: text('content').notNull(), // MDX/Markdown content
+    content: text('content').notNull(),
     coverImage: varchar('coverImage', { length: 512 }),
-
-    // Organization
     categoryId: uuid('categoryId').references(() => blogCategories.id, {
       onDelete: 'set null',
     }),
-
-    // Metadata
     authorId: varchar('authorId', { length: 256 }).notNull(),
     authorName: varchar('authorName', { length: 256 }).notNull(),
-
-    // Publishing
     status: blogStatusEnum('status').notNull().default('draft'),
     publishedAt: timestamp('publishedAt'),
-
-    // SEO
     metaTitle: varchar('metaTitle', { length: 256 }),
     metaDescription: text('metaDescription'),
     metaKeywords: text('metaKeywords'),
-
-    // Analytics
     viewCount: integer('viewCount').default(0).notNull(),
-    readingTime: integer('readingTime'), // in minutes
-
-    // Legacy date field (for backward compatibility)
+    readingTime: integer('readingTime'),
     date: varchar('date', { length: 64 }),
-
-    // Timestamps
     createdAt: timestamp('createdAt').defaultNow().notNull(),
     updatedAt: timestamp('updatedAt').defaultNow().notNull(),
   },
@@ -257,7 +248,6 @@ export const blogPosts = createTable(
   ]
 )
 
-// Blog post tags (many-to-many relationship)
 export const blogPostTags = createTable(
   'blog_post_tags',
   {
@@ -275,7 +265,6 @@ export const blogPostTags = createTable(
   ]
 )
 
-// Blog likes table
 export const blogLikes = createTable(
   'blog_likes',
   {
@@ -496,7 +485,10 @@ export const userLimits = createTable(
   storageUsed: integer("storage_used").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-  }
+  },
+  (table) => [
+    index("user_limits_user_id_idx").on(table.userId),
+  ]
 );
 
 export const userLimitsRelations = relations(userLimits, ({ one }) => ({
@@ -523,6 +515,8 @@ export const challengeCompletions = createTable(
   },
   (table) => [
     index("challenge_completions_user_procedure_idx").on(table.userId, table.procedureId),
+    index("challenge_completions_user_id_idx").on(table.userId),
+    index("challenge_completions_procedure_id_idx").on(table.procedureId),
   ]
 );
 
