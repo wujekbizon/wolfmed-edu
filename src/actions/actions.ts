@@ -243,7 +243,7 @@ export async function submitTestAction(
 
       // Check if user exceeded their limit
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit <= 0) {
-        throw new Error("Wyczerpałes limit 150 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów.")
+        throw new Error("Wyczerpałes limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów.")
       }
 
       // Update user stats if they have limits
@@ -284,6 +284,8 @@ export async function submitTestAction(
   revalidateTag("user-stats", "max")
   revalidateTag("analytics", "max")
   revalidateTag(`user-${userId}`, "max")
+  revalidatePath("/panel/testy")
+  revalidatePath("/panel")
   redirect("/panel/wyniki")
 }
 

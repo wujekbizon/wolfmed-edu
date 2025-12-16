@@ -38,9 +38,9 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
       <Input type="hidden" name="meta" value={meta} />
       <div className="flex flex-col lg:flex-row w-full gap-4">
         <div className="flex-1">
-          <Label htmlFor="numberOfQuestions" className="text-zinc-300" label="Ilość pytań" />
+          <Label htmlFor={`numberOfQuestions-${category.value}`} className="text-zinc-300" label="Ilość pytań" />
           <select
-            id="numberOfQuestions"
+            id={`numberOfQuestions-${category.value}`}
             name="numberOfQuestions"
             defaultValue={numberOfQuestions.find((n: number) => n <= availableQuestions) || numberOfQuestions[0]}
             className="block w-full px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"
@@ -58,9 +58,9 @@ export default function StartTestForm({ category }: { category: PopulatedCategor
           </select>
         </div>
         <div className="flex-1">
-          <Label htmlFor="durationMinutes" className="text-zinc-300" label="Czas trwania" />
+          <Label htmlFor={`durationMinutes-${category.value}`} className="text-zinc-300" label="Czas trwania" />
           <select
-            id="durationMinutes"
+            id={`durationMinutes-${category.value}`}
             name="durationMinutes"
             defaultValue={duration[0]}
             className="block w-full px-2 py-2 rounded-md text-zinc-800 bg-white border outline-none border-zinc-300 focus:ring focus:ring-red-200 transition sm:text-sm"

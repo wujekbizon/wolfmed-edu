@@ -35,7 +35,6 @@ import {
   BlogPostFilters,
   BlogStatistics,
 } from "@/types/dataTypes"
-import { cache } from "react"
 import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
@@ -296,7 +295,7 @@ export const getBlogPostBySlug = async (
  */
 export const getBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
-    ;("use cache")
+    "use cache"
     cacheLife("days")
     cacheTag("blog-posts", `blog-post-${id}`)
     const post = await db
@@ -649,10 +648,6 @@ export const hasUserLikedPost = async (
   postId: string,
   userId: string
 ): Promise<boolean> => {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("blog-likes", `user-${userId}`, `post-${postId}`)
-
   try {
     const like = await db
       .select()
@@ -1269,10 +1264,6 @@ export async function deleteTestimonial(id: string) {
 }
 
 export async function sessionExists(sessionId: string) {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("test-sessions", `test-session-${sessionId}`)
-
   const [session] = await db
     .select({ id: testSessions.id })
     .from(testSessions)
