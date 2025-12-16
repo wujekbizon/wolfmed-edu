@@ -6,17 +6,16 @@ import { getSupporterByUserId } from '@/server/queries'
 import ChallengesList from '@/components/ChallengesList'
 import SupporterRequired from '@/components/SupporterRequired'
 import { Metadata } from 'next'
+import ChallengesListSkeleton from '@/components/skeletons/ChallengesListSkeleton'
+import { Suspense } from 'react'
 
 export const metadata: Metadata = {
   title: 'Wyzwania Procedury',
   description: 'Ukończ wszystkie wyzwania aby zdobyć odznakę',
 }
 
-interface Props {
-  params: Promise<{ slug: string }>
-}
 
-export default async function ChallengePage({ params }: Props) {
+async function ChallengeContent(props: { params: Promise<{ slug: string }> }) {
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
 
@@ -25,7 +24,7 @@ export default async function ChallengePage({ params }: Props) {
     return <SupporterRequired />
   }
 
-  const { slug } = await params
+  const { slug } = await props.params
 
   const procedure = await fileData.getProcedureBySlug(slug)
 
@@ -40,4 +39,12 @@ export default async function ChallengePage({ params }: Props) {
   }
 
   return <ChallengesList procedure={procedure} progress={progressResult.data!} />
+}
+
+export default function ChallengePage(props: { params: Promise<{ slug: string }> }) {
+  return (
+    <Suspense fallback={<ChallengesListSkeleton />}>
+      <ChallengeContent params={props.params} />
+    </Suspense>
+  )
 }

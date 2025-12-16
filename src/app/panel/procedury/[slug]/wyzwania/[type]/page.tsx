@@ -16,17 +16,15 @@ import {
   generateScenarioChallenge
 } from '@/helpers/challengeGenerator'
 import { Metadata } from 'next'
+import { Suspense } from 'react'
+import ChallengeSkeleton from '@/components/skeletons/ChallengeSkeleton'
 
 export const metadata: Metadata = {
   title: 'Wyzwanie Procedury',
   description: 'Rozwiąż wyzwanie aby zdobyć postęp',
 }
 
-interface Props {
-  params: Promise<{ slug: string; type: string }>
-}
-
-export default async function ChallengeTypePage({ params }: Props) {
+async function ChallengeContent(props: { params: Promise<{ slug: string; type: string }> }) {
   const { userId } = await auth()
   if (!userId) redirect('/sign-in')
 
@@ -35,9 +33,8 @@ export default async function ChallengeTypePage({ params }: Props) {
     return <SupporterRequired />
   }
 
-  const { slug, type: challengeType } = await params
+  const { slug, type: challengeType } = await props.params
 
-  // Get procedure data
   const procedure = await fileData.getProcedureBySlug(slug)
   const procedures = await fileData.getAllProcedures()
 
@@ -45,7 +42,6 @@ export default async function ChallengeTypePage({ params }: Props) {
     redirect('/panel/procedury')
   }
 
-  // Render appropriate challenge based on type
   try {
     switch (challengeType) {
       case ChallengeType.ORDER_STEPS:
@@ -57,7 +53,11 @@ export default async function ChallengeTypePage({ params }: Props) {
 
       case ChallengeType.VISUAL_RECOGNITION:
         const visualChallenge = await generateVisualRecognitionChallenge(procedure, procedures)
-        return <VisualRecognitionChallengeForm procedure={procedure} allProcedures={procedures} challenge={visualChallenge} />
+        return <VisualRecognitionChallengeForm
+          procedure={procedure}
+          allProcedures={procedures}
+          challenge={visualChallenge}
+        />
 
       case ChallengeType.SPOT_ERROR:
         const spotErrorChallenge = await generateSpotErrorChallenge(procedure)
@@ -74,4 +74,12 @@ export default async function ChallengeTypePage({ params }: Props) {
     console.error('Challenge generation failed:', error)
     redirect(`/panel/procedury/${slug}/wyzwania`)
   }
+}
+
+export default function ChallengeTypePage(props: { params: Promise<{ slug: string; type: string }> }) {
+  return (
+    <Suspense fallback={<ChallengeSkeleton />}>
+      <ChallengeContent params={props.params} />
+    </Suspense>
+  )
 }

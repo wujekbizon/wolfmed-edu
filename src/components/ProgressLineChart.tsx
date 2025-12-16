@@ -58,7 +58,10 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
             }}
             labelStyle={{ color: '#18181b', fontWeight: 600 }}
             itemStyle={{ color: '#ff9898' }}
-            formatter={(value: number) => [`${value.toFixed(2)}%`, 'Wynik']}
+            formatter={(value) => {
+              const numeric = typeof value === 'number' ? value : parseFloat(String(value)) || 0
+              return [`${numeric.toFixed(2)}%`, 'Wynik']
+            }}
           />
           <Line
             type="monotone"

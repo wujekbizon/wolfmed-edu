@@ -1,3 +1,7 @@
 migrate from file system getAllTests to db query
 addQuestionToCategoryAction and removeQuestionFromCategoryAction those actions are related to 
 CreateTestTabs -> CustomCategoriesTab that we not using for now. This need to be fixed
+
+Bug with cells not being fresh every time we reload . it works when user press refresh button twice
+cell.ts
+

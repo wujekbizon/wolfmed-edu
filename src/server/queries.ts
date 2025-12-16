@@ -23,7 +23,7 @@ import {
   blogLikes,
   userCustomTests,
   userCustomCategories,
-  customersMessages,
+  customersMessages
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -42,6 +42,7 @@ import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { fileData } from "./fetchData"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = async (): Promise<ExtendedTest[]> => {
@@ -1415,9 +1416,6 @@ export const deleteMaterial = async (userId: string, materialId: string) => {
 export async function getUserCellsList(
   userId: string
 ): Promise<UserCellsList | null> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-cells", `user-${userId}`)
 
   const rows = await db
     .select()
@@ -1464,9 +1462,6 @@ export const updateUserCellsList = async (
 }
 
 export async function checkUserCellsList(userId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-cells", `user-${userId}`)
 
   const existing = await db
     .select()
@@ -1521,14 +1516,7 @@ export async function getChallengeCompletionsByProcedure(
   userId: string,
   procedureId: string
 ) {
-  "use cache"
-  cacheLife("max")
-  cacheTag(
-    "challenge-completions",
-    `user-${userId}`,
-    `procedure-${procedureId}`
-  )
-
+ 
   const completions = await db.query.challengeCompletions.findMany({
     where: (model, { and, eq }) =>
       and(
@@ -1550,14 +1538,7 @@ export async function getChallengeCompletion(
   procedureId: string,
   challengeType: string
 ) {
-  "use cache"
-  cacheLife("max")
-  cacheTag(
-    "challenge-completions",
-    `user-${userId}`,
-    `procedure-${procedureId}`
-  )
-
+  
   const completion = await db.query.challengeCompletions.findFirst({
     where: (model, { and, eq }) =>
       and(
@@ -1666,7 +1647,6 @@ export const awardBadge = async (
     userId: string
     procedureId: string
     procedureName: string
-    badgeImageUrl?: string
   }
 ) => {
   // Check if badge already exists
@@ -1682,11 +1662,14 @@ export const awardBadge = async (
     .limit(1)
 
   if (existing.length === 0) {
+
+    const procedure = await fileData.getProcedureById(data.procedureId)
+
     await tx.insert(procedureBadges).values({
       userId: data.userId,
       procedureId: data.procedureId,
       procedureName: data.procedureName,
-      badgeImageUrl: data.badgeImageUrl || "/images/badge-placeholder.png",
+      badgeImageUrl: procedure?.data.image || "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
       earnedAt: new Date(),
     })
   }
