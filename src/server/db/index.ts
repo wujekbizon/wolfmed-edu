@@ -9,9 +9,8 @@ if (!process.env.NEON_DATABASE_URL) {
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
   max: 3,
-  idleTimeoutMillis: 5000,
-  connectionTimeoutMillis: 5000, 
-  maxUses: 7500,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 })
 
 pool.on('error', (err: Error, client: Client) => {
