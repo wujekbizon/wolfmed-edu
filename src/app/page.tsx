@@ -8,6 +8,7 @@ import About from "./_components/About"
 import EducationPathsSection from "./_components/EducationalPaths"
 import Testimonials from "./_components/Testimonials"
 
+export const dynamic = 'force-static'
 export default function HomePage() {
   return (
     <section className="w-full h-full flex flex-col items-center overflow-hidden">

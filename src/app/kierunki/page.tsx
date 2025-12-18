@@ -17,6 +17,8 @@ const paths = [
   }
 ];
 
+export const dynamic = 'force-static'
+
 export default function KierunkiPage() {
   return (
       <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 bg-gradient-to-b from-slate-900 to-zinc-900">

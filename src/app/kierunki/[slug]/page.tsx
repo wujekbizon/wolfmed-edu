@@ -3,6 +3,8 @@ import SimplePathLayout from '@/app/_components/SimplePathLayout';
 import RichPathLayout from '@/app/_components/RichPathLayout';
 import { careerPathsData } from '@/constants/careerPathsData';
 
+
+export const dynamic = 'force-static'
 export async function generateStaticParams() {
   return Object.keys(careerPathsData).map((slug) => ({ slug }));
 }

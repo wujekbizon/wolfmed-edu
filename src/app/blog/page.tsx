@@ -10,6 +10,8 @@ export const metadata: Metadata = {
     'opiekun, blog, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja',
 }
 
+export const dynamic = 'force-static'
+
 export default async function BlogPage() {
 
   const posts = await getAllBlogPosts({

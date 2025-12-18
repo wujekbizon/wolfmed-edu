@@ -1,6 +1,9 @@
-import { Pool, Client} from '@neondatabase/serverless'
+import { Pool, Client, neonConfig} from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-serverless'
 import * as schema from './schema'
+import ws from 'ws'
+
+neonConfig.webSocketConstructor = ws
 
 if (!process.env.NEON_DATABASE_URL) {
   throw new Error('NEON_DATABASE_URL is not defined')
