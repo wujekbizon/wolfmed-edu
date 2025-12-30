@@ -16,7 +16,7 @@ export default function TestsSelection() {
             Szeroki wybór testów i procedur
           </h2>
           <p className="mb-6 sm:mb-8 max-w-3xl text-base sm:text-lg text-zinc-700 px-3">
-            Wybieraj spośród ponad 600 testów obejmujących szeroką gamę odpowiednich tematów rozwoju zawodowego
+            Wybieraj spośród ponad 930 testów obejmujących szeroką gamę odpowiednich tematów rozwoju zawodowego
             opiekunów medycznych!
           </p>
         </div>

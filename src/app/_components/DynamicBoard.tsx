@@ -18,6 +18,15 @@ export default async function DynamicBoard() {
             <h3 className="text-xl font-bold text-zinc-800 mb-4">
               Najnowsze Aktualizacje
             </h3>
+            <div className="border-l-4 border-zinc-300 pl-4">
+                <p className="text-sm text-zinc-500">30 Grudzień 2025</p>
+                <h4 className="font-medium text-zinc-800">
+                  Dodano nowe pytania egzaminacyjne
+                </h4>
+                <p className="text-sm text-zinc-600">
+                  Nasza baza testów zawiera już 931 pytań.
+                </p>
+              </div>
             <div className="space-y-4">
               <div className="border-l-4 border-red-500 pl-4">
                 <p className="text-sm text-zinc-500">5 Grudzień 2025</p>
@@ -28,15 +37,7 @@ export default async function DynamicBoard() {
                   Wprowadziliśmy nową wersję aplikacji, z nowymi funkcjami i ulepszeniami.
                 </p>
               </div>
-              <div className="border-l-4 border-zinc-300 pl-4">
-                <p className="text-sm text-zinc-500">5 Grudzień 2025</p>
-                <h4 className="font-medium text-zinc-800">
-                  Rozwój Społeczności
-                </h4>
-                <p className="text-sm text-zinc-600">
-                  Już ponad 5500 aktywnych użytkowników!
-                </p>
-              </div>
+             
             </div>
           </div>
           <div className="bg-linear-to-br from-red-500 to-red-600 rounded-2xl shadow-xl p-6 text-white border border-zinc-400/20">
