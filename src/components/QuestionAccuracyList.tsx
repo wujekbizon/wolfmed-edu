@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useProblematicQuestionsStore } from '@/store/useProblematicQuestionsStore'
-import PaginationControls from './PaginationControls'
+import LearningPaginationControls from './LearningPaginationControls'
 
 interface EnrichedProblematicQuestion {
   questionId: string
@@ -175,7 +175,7 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
 
           {totalPages > 1 && (
             <div className="bg-white/60 rounded-lg border border-zinc-200/60">
-              <PaginationControls totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+              <LearningPaginationControls totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
             </div>
           )}
         </>

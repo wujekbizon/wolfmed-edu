@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Test } from '@/types/dataTypes'
 import LearningCard from './LearningCard'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
-import PaginationControls from './PaginationControls'
+import LearningPaginationControls from './LearningPaginationControls'
 
 interface FilteredTestsListProps {
   tests: Test[]
@@ -14,10 +14,10 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
   const { currentPage, perPage, setCurrentPage } = useSearchTermStore()
   const listRef = useRef<HTMLDivElement>(null)
 
-  // Scroll to top when the current page changes
+  // Scroll to top of list when page changes
   useEffect(() => {
     if (listRef.current) {
-      listRef.current.scroll({ top: 0, behavior: 'auto' })
+      listRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [currentPage])
 
@@ -47,7 +47,7 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
 
   return (
     <div
-      className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] flex flex-col gap-6 pb-2 pr-1 overflow-y-auto scrollbar-webkit"
+      className="w-full md:w-[85%] lg:w-3/4 xl:w-2/3 2xl:w-[60%] flex flex-col gap-6 pb-2 pr-1 overflow-y-auto scrollbar-webkit [scroll-margin-top:128px]"
       ref={listRef}
     >
       {paginatedTests.map((item, index) => (
@@ -58,7 +58,7 @@ export default function FilteredTestsList({ tests, isLoading, error }: FilteredT
         />
       ))}
       <div className="flex w-full justify-center bg-zinc-50 rounded-lg shadow-md shadow-zinc-500 border border-red-200/60">
-        <PaginationControls totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
+        <LearningPaginationControls totalPages={totalPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </div>
   )
