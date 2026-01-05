@@ -40,17 +40,11 @@ export default function GenerateTests(props: { tests: Test[], sessionId: string,
       }),
   })
 
-  // we allow user to navigate away from test, that's why we need to expire session.
   const confirmLeave = async () => {
     try {
       const result = await expireSessionAction(props.sessionId)
-
-      if (result.status === 'SUCCESS') {
-        resolver?.(true)
-      } else {
-        showToast('ERROR', result.message || 'Nie udało się zakończyć sesji.')
-        resolver?.(false)
-      }
+      // Always succeeds now
+      resolver?.(true)
     } catch (err) {
       console.error('Expire session failed:', err)
       showToast('ERROR', 'Błąd serwera przy kończeniu sesji.')

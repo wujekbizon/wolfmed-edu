@@ -953,12 +953,13 @@ export async function expireSessionAction(sessionId: string) {
 
   try {
     await expireTestSession(sessionId, userId)
-    return { status: "SUCCESS" as const }
+    return { 
+      status: "SUCCESS" as const, 
+      message: "Sesja została zakończona" 
+    }
   } catch (error) {
     console.error("Error expiring session:", error)
-    // Even if there's an error, return success to avoid showing errors to users
-    // The session either doesn't exist or is already handled
-    return { status: "SUCCESS" as const }
+    return { status: "SUCCESS" as const, message: "Sesja została zakończona" }
   }
 }
 
