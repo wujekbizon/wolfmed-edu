@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
 import { getCompletedTest } from '@/server/queries'
 import TestResultCard from '@/components/TestResultCard'
 import type { CompletedTest } from '@/types/dataTypes'
@@ -14,10 +13,6 @@ export const metadata: Metadata = {
 
 async function CompletedTest({ testId }: { testId: string }) {
   const completedTest = await getCompletedTest(testId)
-
-  if (!completedTest) {
-    redirect('/panel/wyniki')
-  }
 
   return <TestResultCard completedTest={completedTest as CompletedTest} />
 }

@@ -7,7 +7,6 @@ import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
-import { isUserAdmin } from '@/lib/adminHelpers'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
@@ -27,19 +26,13 @@ export const dynamic = 'force-dynamic'
 async function TestsCategories() {
   const { userId } = await auth()
   const isSupporter = userId ? await getSupporterByUserId(userId) : false
-  const isAdmin = await isUserAdmin()
 
   const populatedCategories = await getPopulatedCategories(
     fileData,
     isSupporter ? (userId || undefined) : undefined
   )
 
-  // Hide socjologia for non-admins
-  const categories = isAdmin
-    ? populatedCategories
-    : populatedCategories.filter(cat => cat.value !== 'socjologia')
-
-  return <TestsCategoriesList categories={categories} />
+  return <TestsCategoriesList categories={populatedCategories} />
 }
 
 export default function TestsPage() {

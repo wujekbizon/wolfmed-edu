@@ -9039,15 +9039,15 @@
     "data": {
       "answers": [
         {
-          "option": "żołądku",
+          "option": "żołądku.",
           "isCorrect": false
         },
         {
-          "option": "jelicie cienkim",
+          "option": "jelicie cienkim.",
           "isCorrect": false
         },
         {
-          "option": "jelicie grubym",
+          "option": "jelicie grubym.",
           "isCorrect": true
         }
       ],

@@ -69,13 +69,15 @@ export const getUserCustomTests = cache(async (userId: string) => {
 /**
  * Fetch single user test with ownership verification
  */
-export const getUserCustomTestById = cache(async (userId: string, testId: string) => {
-  const test = await db.query.userCustomTests.findFirst({
-    where: (model, { eq, and }) =>
-      and(eq(model.id, testId), eq(model.userId, userId)),
-  })
-  return test
-})
+export const getUserCustomTestById = cache(
+  async (userId: string, testId: string) => {
+    const test = await db.query.userCustomTests.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.id, testId), eq(model.userId, userId)),
+    })
+    return test
+  }
+)
 
 /**
  * Delete user test with ownership verification
@@ -83,7 +85,9 @@ export const getUserCustomTestById = cache(async (userId: string, testId: string
 export const deleteUserCustomTest = async (userId: string, testId: string) => {
   return await db
     .delete(userCustomTests)
-    .where(and(eq(userCustomTests.id, testId), eq(userCustomTests.userId, userId)))
+    .where(
+      and(eq(userCustomTests.id, testId), eq(userCustomTests.userId, userId))
+    )
 }
 
 /**
@@ -113,7 +117,10 @@ export const getUserCustomCategoryById = cache(
 /**
  * Delete category with ownership verification
  */
-export const deleteUserCustomCategory = async (userId: string, categoryId: string) => {
+export const deleteUserCustomCategory = async (
+  userId: string,
+  categoryId: string
+) => {
   return await db
     .delete(userCustomCategories)
     .where(
@@ -151,7 +158,7 @@ export const getAllBlogPosts = cache(
         conditions.push(eq(blogPosts.status, filters.status))
       } else if (filters?.status !== undefined) {
         // If status is explicitly undefined, show all
-        conditions.push(eq(blogPosts.status, 'published'))
+        conditions.push(eq(blogPosts.status, "published"))
       }
 
       // Category filter
@@ -183,10 +190,10 @@ export const getAllBlogPosts = cache(
         .$dynamic()
 
       // Sorting
-      const sortBy = filters?.sortBy || 'publishedAt'
-      const sortOrder = filters?.sortOrder || 'desc'
+      const sortBy = filters?.sortBy || "publishedAt"
+      const sortOrder = filters?.sortOrder || "desc"
 
-      if (sortOrder === 'desc') {
+      if (sortOrder === "desc") {
         query = query.orderBy(desc(blogPosts[sortBy]))
       } else {
         query = query.orderBy(asc(blogPosts[sortBy]))
@@ -204,7 +211,7 @@ export const getAllBlogPosts = cache(
 
       return posts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching blog posts:', error)
+      console.error("Error fetching blog posts:", error)
       return []
     }
   }
@@ -219,7 +226,7 @@ export const getBlogPostBySlug = cache(
       const post = await db
         .select()
         .from(blogPosts)
-        .where(and(eq(blogPosts.slug, slug), eq(blogPosts.status, 'published')))
+        .where(and(eq(blogPosts.slug, slug), eq(blogPosts.status, "published")))
         .limit(1)
 
       if (post.length === 0) return null
@@ -262,7 +269,7 @@ export const getBlogPostBySlug = cache(
         },
       } as BlogPost
     } catch (error) {
-      console.error('Error fetching blog post by slug:', error)
+      console.error("Error fetching blog post by slug:", error)
       return null
     }
   }
@@ -271,45 +278,51 @@ export const getBlogPostBySlug = cache(
 /**
  * Get blog post by ID (for admin editing)
  */
-export const getBlogPostById = cache(async (id: string): Promise<BlogPost | null> => {
-  try {
-    const post = await db.select().from(blogPosts).where(eq(blogPosts.id, id)).limit(1)
-
-    if (post.length === 0) return null
-
-    // Get category if exists
-    let category = null
-    if (post[0]?.categoryId) {
-      const categoryResult = await db
+export const getBlogPostById = cache(
+  async (id: string): Promise<BlogPost | null> => {
+    try {
+      const post = await db
         .select()
-        .from(blogCategories)
-        .where(eq(blogCategories.id, post[0].categoryId))
+        .from(blogPosts)
+        .where(eq(blogPosts.id, id))
         .limit(1)
-      category = categoryResult[0] || null
+
+      if (post.length === 0) return null
+
+      // Get category if exists
+      let category = null
+      if (post[0]?.categoryId) {
+        const categoryResult = await db
+          .select()
+          .from(blogCategories)
+          .where(eq(blogCategories.id, post[0].categoryId))
+          .limit(1)
+        category = categoryResult[0] || null
+      }
+
+      // Get tags
+      const tagsResult = await db
+        .select({
+          id: blogTags.id,
+          name: blogTags.name,
+          slug: blogTags.slug,
+          createdAt: blogTags.createdAt,
+        })
+        .from(blogPostTags)
+        .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
+        .where(eq(blogPostTags.postId, post[0]!.id))
+
+      return {
+        ...post[0],
+        category,
+        tags: tagsResult,
+      } as BlogPost
+    } catch (error) {
+      console.error("Error fetching blog post by ID:", error)
+      return null
     }
-
-    // Get tags
-    const tagsResult = await db
-      .select({
-        id: blogTags.id,
-        name: blogTags.name,
-        slug: blogTags.slug,
-        createdAt: blogTags.createdAt,
-      })
-      .from(blogPostTags)
-      .innerJoin(blogTags, eq(blogPostTags.tagId, blogTags.id))
-      .where(eq(blogPostTags.postId, post[0]!.id))
-
-    return {
-      ...post[0],
-      category,
-      tags: tagsResult,
-    } as BlogPost
-  } catch (error) {
-    console.error('Error fetching blog post by ID:', error)
-    return null
   }
-})
+)
 
 /**
  * Get featured blog posts (most viewed)
@@ -320,13 +333,13 @@ export const getFeaturedBlogPosts = cache(
       const posts = await db
         .select()
         .from(blogPosts)
-        .where(eq(blogPosts.status, 'published'))
+        .where(eq(blogPosts.status, "published"))
         .orderBy(desc(blogPosts.viewCount))
         .limit(limit)
 
       return posts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching featured blog posts:', error)
+      console.error("Error fetching featured blog posts:", error)
       return []
     }
   }
@@ -343,7 +356,7 @@ export const getRelatedBlogPosts = cache(
       if (!currentPost) return []
 
       const conditions = [
-        eq(blogPosts.status, 'published'),
+        eq(blogPosts.status, "published"),
         sql`${blogPosts.id} != ${postId}`, // Exclude current post
       ]
 
@@ -361,7 +374,7 @@ export const getRelatedBlogPosts = cache(
 
       return relatedPosts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching related blog posts:', error)
+      console.error("Error fetching related blog posts:", error)
       return []
     }
   }
@@ -376,13 +389,13 @@ export const getPopularBlogPosts = cache(
       const posts = await db
         .select()
         .from(blogPosts)
-        .where(eq(blogPosts.status, 'published'))
+        .where(eq(blogPosts.status, "published"))
         .orderBy(desc(blogPosts.viewCount))
         .limit(limit)
 
       return posts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching popular blog posts:', error)
+      console.error("Error fetching popular blog posts:", error)
       return []
     }
   }
@@ -400,7 +413,7 @@ export const getBlogCategories = cache(async (): Promise<BlogCategory[]> => {
 
     return categories as BlogCategory[]
   } catch (error) {
-    console.error('Error fetching blog categories:', error)
+    console.error("Error fetching blog categories:", error)
     return []
   }
 })
@@ -419,7 +432,7 @@ export const getBlogCategoryBySlug = cache(
 
       return (category[0] as BlogCategory) || null
     } catch (error) {
-      console.error('Error fetching blog category by slug:', error)
+      console.error("Error fetching blog category by slug:", error)
       return null
     }
   }
@@ -439,7 +452,7 @@ export const getBlogCategoryById = cache(
 
       return (category[0] as BlogCategory) || null
     } catch (error) {
-      console.error('Error fetching blog category by id:', error)
+      console.error("Error fetching blog category by id:", error)
       return null
     }
   }
@@ -450,14 +463,11 @@ export const getBlogCategoryById = cache(
  */
 export const getBlogTags = cache(async (): Promise<BlogTag[]> => {
   try {
-    const tags = await db
-      .select()
-      .from(blogTags)
-      .orderBy(asc(blogTags.name))
+    const tags = await db.select().from(blogTags).orderBy(asc(blogTags.name))
 
     return tags as BlogTag[]
   } catch (error) {
-    console.error('Error fetching blog tags:', error)
+    console.error("Error fetching blog tags:", error)
     return []
   }
 })
@@ -465,38 +475,42 @@ export const getBlogTags = cache(async (): Promise<BlogTag[]> => {
 /**
  * Get blog tag by slug
  */
-export const getBlogTagBySlug = cache(async (slug: string): Promise<BlogTag | null> => {
-  try {
-    const tag = await db
-      .select()
-      .from(blogTags)
-      .where(eq(blogTags.slug, slug))
-      .limit(1)
+export const getBlogTagBySlug = cache(
+  async (slug: string): Promise<BlogTag | null> => {
+    try {
+      const tag = await db
+        .select()
+        .from(blogTags)
+        .where(eq(blogTags.slug, slug))
+        .limit(1)
 
-    return (tag[0] as BlogTag) || null
-  } catch (error) {
-    console.error('Error fetching blog tag by slug:', error)
-    return null
+      return (tag[0] as BlogTag) || null
+    } catch (error) {
+      console.error("Error fetching blog tag by slug:", error)
+      return null
+    }
   }
-})
+)
 
 /**
  * Get blog tag by ID
  */
-export const getBlogTagById = cache(async (id: string): Promise<BlogTag | null> => {
-  try {
-    const tag = await db
-      .select()
-      .from(blogTags)
-      .where(eq(blogTags.id, id))
-      .limit(1)
+export const getBlogTagById = cache(
+  async (id: string): Promise<BlogTag | null> => {
+    try {
+      const tag = await db
+        .select()
+        .from(blogTags)
+        .where(eq(blogTags.id, id))
+        .limit(1)
 
-    return (tag[0] as BlogTag) || null
-  } catch (error) {
-    console.error('Error fetching blog tag by id:', error)
-    return null
+      return (tag[0] as BlogTag) || null
+    } catch (error) {
+      console.error("Error fetching blog tag by id:", error)
+      return null
+    }
   }
-})
+)
 
 /**
  * Get posts by category slug
@@ -511,7 +525,10 @@ export const getBlogPostsByCategorySlug = cache(
         .select()
         .from(blogPosts)
         .where(
-          and(eq(blogPosts.categoryId, category.id), eq(blogPosts.status, 'published'))
+          and(
+            eq(blogPosts.categoryId, category.id),
+            eq(blogPosts.status, "published")
+          )
         )
         .orderBy(desc(blogPosts.publishedAt))
         .$dynamic()
@@ -523,7 +540,7 @@ export const getBlogPostsByCategorySlug = cache(
       const posts = await query
       return posts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching posts by category slug:', error)
+      console.error("Error fetching posts by category slug:", error)
       return []
     }
   }
@@ -554,7 +571,7 @@ export const getBlogPostsByTagSlug = cache(
               blogPosts.id,
               postIds.map((p) => p.postId)
             ),
-            eq(blogPosts.status, 'published')
+            eq(blogPosts.status, "published")
           )
         )
         .orderBy(desc(blogPosts.publishedAt))
@@ -567,7 +584,7 @@ export const getBlogPostsByTagSlug = cache(
       const posts = await query
       return posts as BlogPost[]
     } catch (error) {
-      console.error('Error fetching posts by tag slug:', error)
+      console.error("Error fetching posts by tag slug:", error)
       return []
     }
   }
@@ -587,7 +604,7 @@ export const hasUserLikedPost = cache(
 
       return like.length > 0
     } catch (error) {
-      console.error('Error checking if user liked post:', error)
+      console.error("Error checking if user liked post:", error)
       return false
     }
   }
@@ -598,28 +615,32 @@ export const hasUserLikedPost = cache(
  */
 export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
   try {
-    const [totalPostsResult] = await db.select({ count: count() }).from(blogPosts)
+    const [totalPostsResult] = await db
+      .select({ count: count() })
+      .from(blogPosts)
 
     const [publishedPostsResult] = await db
       .select({ count: count() })
       .from(blogPosts)
-      .where(eq(blogPosts.status, 'published'))
+      .where(eq(blogPosts.status, "published"))
 
     const [draftPostsResult] = await db
       .select({ count: count() })
       .from(blogPosts)
-      .where(eq(blogPosts.status, 'draft'))
+      .where(eq(blogPosts.status, "draft"))
 
     const [archivedPostsResult] = await db
       .select({ count: count() })
       .from(blogPosts)
-      .where(eq(blogPosts.status, 'archived'))
+      .where(eq(blogPosts.status, "archived"))
 
     const [totalViewsResult] = await db
       .select({ total: sql<number>`SUM(${blogPosts.viewCount})` })
       .from(blogPosts)
 
-    const [totalLikesResult] = await db.select({ count: count() }).from(blogLikes)
+    const [totalLikesResult] = await db
+      .select({ count: count() })
+      .from(blogLikes)
 
     const [totalCategoriesResult] = await db
       .select({ count: count() })
@@ -638,7 +659,7 @@ export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
       totalTags: totalTagsResult?.count || 0,
     }
   } catch (error) {
-    console.error('Error fetching blog statistics:', error)
+    console.error("Error fetching blog statistics:", error)
     return {
       totalPosts: 0,
       publishedPosts: 0,
@@ -655,33 +676,35 @@ export const getBlogStatistics = cache(async (): Promise<BlogStatistics> => {
 /**
  * Search blog posts
  */
-export const searchBlogPosts = cache(async (query: string): Promise<BlogPost[]> => {
-  try {
-    if (!query || query.trim().length < 3) return []
+export const searchBlogPosts = cache(
+  async (query: string): Promise<BlogPost[]> => {
+    try {
+      if (!query || query.trim().length < 3) return []
 
-    const searchTerm = `%${query}%`
-    const posts = await db
-      .select()
-      .from(blogPosts)
-      .where(
-        and(
-          eq(blogPosts.status, 'published'),
-          or(
-            like(blogPosts.title, searchTerm),
-            like(blogPosts.excerpt, searchTerm),
-            like(blogPosts.content, searchTerm)
-          )!
+      const searchTerm = `%${query}%`
+      const posts = await db
+        .select()
+        .from(blogPosts)
+        .where(
+          and(
+            eq(blogPosts.status, "published"),
+            or(
+              like(blogPosts.title, searchTerm),
+              like(blogPosts.excerpt, searchTerm),
+              like(blogPosts.content, searchTerm)
+            )!
+          )
         )
-      )
-      .orderBy(desc(blogPosts.publishedAt))
-      .limit(20)
+        .orderBy(desc(blogPosts.publishedAt))
+        .limit(20)
 
-    return posts as BlogPost[]
-  } catch (error) {
-    console.error('Error searching blog posts:', error)
-    return []
+      return posts as BlogPost[]
+    } catch (error) {
+      console.error("Error searching blog posts:", error)
+      return []
+    }
   }
-})
+)
 
 // Get all completed tests for a specific user, ordered by completion date
 export const getCompletedTestsByUser = cache(
@@ -1117,28 +1140,34 @@ export const deleteTestimonial = cache(async (id: string) => {
   return deleted[0]
 })
 
-export const sessionExists = cache(async (sessionId: string) => {
-  const [session] = await db
-    .select({ id: testSessions.id })
-    .from(testSessions)
-    .where(eq(testSessions.id, sessionId))
-    .limit(1)
-  return !!session
-})
-
-export const expireTestSession = cache(async (sessionId: string) => {
+export const expireTestSession = async (sessionId: string, userId: string) => {
   const now = new Date()
-  await db
-    .update(testSessions)
-    .set({ status: "EXPIRED", finishedAt: now })
-    .where(
-      and(
-        eq(testSessions.id, sessionId),
-        eq(testSessions.status, "ACTIVE"),
-        sql`${testSessions.expiresAt} <= ${now}`
+
+  await db.transaction(async (tx) => {
+    // Lock and verify session ownership and status
+    const [session] = await tx
+      .select()
+      .from(testSessions)
+      .where(
+        and(
+          eq(testSessions.id, sessionId),
+          eq(testSessions.userId, userId),
+          eq(testSessions.status, "ACTIVE")
+        )
       )
-    )
-})
+      .for("update")
+
+    if (!session) {
+      throw new Error("Nie znaleziono aktywnej sesji")
+    }
+
+    // Expire the session
+    await tx
+      .update(testSessions)
+      .set({ status: "EXPIRED", finishedAt: now })
+      .where(eq(testSessions.id, sessionId))
+  })
+}
 
 export const getAllUserNotes = cache(async (userId: string) => {
   const notesList = await db.query.notes.findMany({
@@ -1237,31 +1266,35 @@ export const deleteNote = cache(async (userId: string, noteId: string) => {
   return deleted[0] || null
 })
 
-export const deleteMaterial = cache(async (userId: string, materialId: string) => {
-  const deleted = await db
-    .delete(materials)
-    .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
-    .returning()
-  return deleted[0] || null
-})
-
-export const getUserCellsList = cache(async (userId: string): Promise<UserCellsList | null> => {
-  const rows = await db
-    .select()
-    .from(userCellsList)
-    .where(eq(userCellsList.userId, userId))
-    .limit(1)
-
-  const userCells = rows[0] ?? null
-
-  if (!userCells) return null
-
-  return {
-    id: userCells.id,
-    cells: userCells.cells as Record<string, Cell>,
-    order: userCells.order as string[],
+export const deleteMaterial = cache(
+  async (userId: string, materialId: string) => {
+    const deleted = await db
+      .delete(materials)
+      .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
+      .returning()
+    return deleted[0] || null
   }
-})
+)
+
+export const getUserCellsList = cache(
+  async (userId: string): Promise<UserCellsList | null> => {
+    const rows = await db
+      .select()
+      .from(userCellsList)
+      .where(eq(userCellsList.userId, userId))
+      .limit(1)
+
+    const userCells = rows[0] ?? null
+
+    if (!userCells) return null
+
+    return {
+      id: userCells.id,
+      cells: userCells.cells as Record<string, Cell>,
+      order: userCells.order as string[],
+    }
+  }
+)
 
 export const createUserCellsList = cache(
   async (userId: string, cells: Record<string, Cell>, order: string[]) => {
@@ -1481,17 +1514,19 @@ export const awardBadge = async (
     )
     .limit(1)
 
-    if (existing.length === 0) {
-      const procedure = await fileData.getProcedureById(data.procedureId)
-  
-      await tx.insert(procedureBadges).values({
-        userId: data.userId,
-        procedureId: data.procedureId,
-        procedureName: data.procedureName,
-        badgeImageUrl: procedure?.data.image || "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
-        earnedAt: new Date(),
-      })
-    }
+  if (existing.length === 0) {
+    const procedure = await fileData.getProcedureById(data.procedureId)
+
+    await tx.insert(procedureBadges).values({
+      userId: data.userId,
+      procedureId: data.procedureId,
+      procedureName: data.procedureName,
+      badgeImageUrl:
+        procedure?.data.image ||
+        "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
+      earnedAt: new Date(),
+    })
+  }
 }
 
 /**
@@ -1526,28 +1561,32 @@ export const getUserBadges = cache(async (userId: string) => {
 /**
  * Get all customer messages with pagination
  */
-export const getAllMessages = cache(async (page: number = 1, limit: number = 20) => {
-  const offset = (page - 1) * limit
+export const getAllMessages = cache(
+  async (page: number = 1, limit: number = 20) => {
+    const offset = (page - 1) * limit
 
-  const messages = await db.query.customersMessages.findMany({
-    orderBy: (model, { desc }) => desc(model.createdAt),
-    limit,
-    offset,
-  })
-
-  const [totalResult] = await db.select({ count: count() }).from(customersMessages)
-  const total = totalResult?.count || 0
-
-  return {
-    messages,
-    pagination: {
-      page,
+    const messages = await db.query.customersMessages.findMany({
+      orderBy: (model, { desc }) => desc(model.createdAt),
       limit,
-      total,
-      totalPages: Math.ceil(total / limit),
+      offset,
+    })
+
+    const [totalResult] = await db
+      .select({ count: count() })
+      .from(customersMessages)
+    const total = totalResult?.count || 0
+
+    return {
+      messages,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
     }
   }
-})
+)
 
 /**
  * Get message statistics
@@ -1639,7 +1678,10 @@ export const getQuestionAccuracyAnalytics = cache(async (userId: string) => {
   >()
 
   tests.forEach((test) => {
-    const results = test.testResult as Array<{ questionId: string; answer: boolean }>
+    const results = test.testResult as Array<{
+      questionId: string
+      answer: boolean
+    }>
     if (Array.isArray(results)) {
       results.forEach((result) => {
         const stats = questionStats.get(result.questionId) || {
@@ -1730,7 +1772,7 @@ export const getProgressTimeline = cache(
     >()
 
     tests.forEach((test) => {
-      const date = test.completedAt.toISOString().split('T')[0] || ''
+      const date = test.completedAt.toISOString().split("T")[0] || ""
       if (!date) return
 
       const stats = dateMap.get(date) || {

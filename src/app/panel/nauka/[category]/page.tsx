@@ -4,9 +4,6 @@ import { getSupporterByUserId } from '@/server/queries';
 import { currentUser } from '@clerk/nextjs/server';
 import { Metadata } from 'next'
 import { Suspense } from 'react';
-import { isUserAdmin } from '@/lib/adminHelpers'
-import { redirect } from 'next/navigation'
-
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
 }
@@ -28,13 +25,9 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
     const { category } = await params;
+    // decodeURIComponent is used to decode the category name because it is encoded in the URL, 
+    // we are using polish letters in the category name
     const decodedCategory = decodeURIComponent(category)
-
-    // Protect socjologia
-    if (decodedCategory === 'socjologia') {
-        const isAdmin = await isUserAdmin()
-        if (!isAdmin) redirect('/panel/nauka')
-    }
 
     const user = await currentUser()
     const isSupporter = user?.id ? await getSupporterByUserId(user.id) : false

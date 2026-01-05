@@ -6,7 +6,6 @@ import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { QuestionAnswer } from "@/types/dataTypes"
 import { redirect } from "next/navigation"
-import { UTApi } from "uploadthing/server"
 import { db } from "@/server/db/index"
 import {
   completedTestes,
@@ -44,7 +43,6 @@ import { auth } from "@clerk/nextjs/server"
 import { eq, sql, and, gt } from "drizzle-orm"
 import {
   deleteCompletedTest,
-  getUserTestLimit,
   updateMottoByUserId,
   updateUsernameByUserId,
   createForumPost,
@@ -55,14 +53,13 @@ import {
   getLastUserCommentTime,
   createTestimonial,
   expireTestSession,
-  sessionExists,
   getSupporterByUserId,
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
   deleteUserCustomCategory,
 } from "@/server/queries"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
@@ -75,7 +72,7 @@ export async function startTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 test starts per hour
-  const rateLimit = await checkRateLimit(userId, 'test:start')
+  const rateLimit = await checkRateLimit(userId, "test:start")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -96,14 +93,87 @@ export async function startTestAction(
       console.log(`Validation error: ${validationResult.error.issues}`)
       return toFormState(
         "ERROR",
-        validationResult.error.issues[0]?.message || "Nieprawidłowe dane wejściowe."
+        validationResult.error.issues[0]?.message ||
+          "Nieprawidłowe dane wejściowe."
       )
     }
 
-    const { category, numberOfQuestions, durationMinutes, meta } = validationResult.data
+    const { category, numberOfQuestions, durationMinutes, meta } =
+      validationResult.data
 
     const now = new Date()
     const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
+
+    let parsedMeta = {}
+    try {
+      parsedMeta = JSON.parse(meta)
+    } catch {
+      console.warn("Invalid meta JSON, using empty object")
+    }
+
+    const result = await db.transaction(async (tx) => {
+      // Check user permissions and limits
+      const [user] = await tx
+        .select({
+          supporter: users.supporter,
+          testLimit: users.testLimit,
+        })
+        .from(users)
+        .where(eq(users.userId, userId))
+
+      if (!user) {
+        throw new Error("Nie znaleziono użytkownika")
+      }
+
+      // Check supporter status for 40-question tests
+      if (numberOfQuestions === 40 && !user.supporter) {
+        throw new Error(
+          "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
+        )
+      }
+
+      // Check test limit
+      if (user.testLimit !== null && user.testLimit <= 0) {
+        throw new Error(
+          "Wyczerpałeś limit testów. Wesprzyj nasz projekt, aby kontynuować."
+        )
+      }
+
+      // Lock and check for existing active session
+      const existingSessions = await tx
+        .select({ id: testSessions.id })
+        .from(testSessions)
+        .where(
+          and(
+            eq(testSessions.userId, userId),
+            eq(testSessions.status, "ACTIVE")
+          )
+        )
+        .for("update")
+
+      if (existingSessions.length > 0) {
+        throw new Error(
+          "Masz już aktywną sesję testową. Zakończ ją przed rozpoczęciem nowej."
+        )
+      }
+
+      // Create new session
+      const [session] = await tx
+        .insert(testSessions)
+        .values({
+          userId,
+          category,
+          numberOfQuestions,
+          durationMinutes,
+          startedAt: now,
+          expiresAt,
+          status: "ACTIVE",
+          meta: parsedMeta,
+        })
+        .returning()
+
+      return session
+    })
 
     // Check if the user is a supporter if numberOfQuestions is 40
     if (numberOfQuestions === 40) {
@@ -116,26 +186,12 @@ export async function startTestAction(
       }
     }
 
-    const [session] = await db
-      .insert(testSessions)
-      .values({
-        userId,
-        category,
-        numberOfQuestions,
-        durationMinutes,
-        startedAt: now,
-        expiresAt,
-        status: "ACTIVE",
-        meta: JSON.parse(meta),
-      })
-      .returning()
-
     return {
       ...toFormState("SUCCESS", "Sesja testowa została rozpoczęta."),
-      sessionId: session?.id,
-      expiresAt: session?.expiresAt,
-      durationMinutes: session?.durationMinutes,
-      numberOfQuestions: session?.numberOfQuestions,
+      sessionId: result?.id,
+      expiresAt: result?.expiresAt,
+      durationMinutes: result?.durationMinutes,
+      numberOfQuestions: result?.numberOfQuestions,
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -154,7 +210,7 @@ export async function submitTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 test submits per hour
-  const rateLimit = await checkRateLimit(userId, 'test:submit')
+  const rateLimit = await checkRateLimit(userId, "test:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -168,83 +224,46 @@ export async function submitTestAction(
     return toFormState("ERROR", "No session ID provided")
   }
 
-  try {
-    const userTestLimit = await getUserTestLimit(userId)
-
-    if (!userTestLimit) {
-      console.log("No user is found!")
-      return toFormState("ERROR", "No user is found!")
+  // Extract answer data from the submitted form data
+  const answers: QuestionAnswer[] = []
+  formData.forEach((value, key) => {
+    if (key.slice(0, 6) === "answer") {
+      answers.push({ [key]: value.toString() })
     }
+  })
 
-    if (userTestLimit.testLimit !== null) {
-      if (userTestLimit.testLimit <= 0) {
-        // user exceeded his test limit
-        return toFormState(
-          "ERROR",
-          "Wyczerpałes limit 150 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
-        )
-      }
-    }
+  const allowedLengths = [10, 20, 40]
+  const answersSchema = CreateAnswersSchema(allowedLengths)
+  const validationResult = answersSchema.safeParse(answers)
 
-    // Extract answer data from the submitted form data
-    const answers: QuestionAnswer[] = []
+  if (!validationResult.success) {
+    console.log(`Validation error: ${validationResult.error.issues}`)
+    const formValues: Record<string, string> = {}
     formData.forEach((value, key) => {
-      if (key.slice(0, 6) === "answer") {
-        answers.push({ [key]: value.toString() })
+      if (key.startsWith("answer-")) {
+        formValues[key] = value.toString()
       }
     })
-
-    const allowedLengths = [10, 20, 40]
-    const answersSchema = CreateAnswersSchema(allowedLengths)
-
-    // Validate the parsed JSON data using Zod schema
-    const validationResult = answersSchema.safeParse(answers)
-
-    if (!validationResult.success) {
-      console.log(`Validation error: ${validationResult.error.issues}`)
-      const formValues: Record<string, string> = {}
-      formData.forEach((value, key) => {
-        if (key.startsWith("answer-")) {
-          formValues[key] = value.toString()
-        }
-      })
-      return {
-        ...toFormState(
-          "ERROR",
-          validationResult.error.issues[0]?.message || "Wybierz jedną odpowiedź"
-        ),
-        values: formValues,
-      }
+    return {
+      ...toFormState(
+        "ERROR",
+        validationResult.error.issues[0]?.message || "Wybierz jedną odpowiedź"
+      ),
+      values: formValues,
     }
+  }
 
-    // Calculate score and prepare completed test data
-    const { correct } = countTestScore(
-      validationResult?.data as QuestionAnswer[]
-    )
-    const testResult = parseAnswerRecord(
-      validationResult?.data as QuestionAnswer[]
-    )
+  // Calculate score and prepare completed test data
+  const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
+  const testResult = parseAnswerRecord(
+    validationResult?.data as QuestionAnswer[]
+  )
 
-    // // Execute all database operations in one transaction
-    // await db.transaction(async (tx) => {
-    //   if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
-    //     // Update user test limit
-    //     await tx
-    //       .update(users)
-    //       .set({
-    //         testLimit: userTestLimit.testLimit - 1,
-    //         testsAttempted: sql`${users.testsAttempted} + 1`,
-    //         totalScore: sql`${users.totalScore} + ${correct}`,
-    //         totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
-    //       })
-    //       .where(eq(users.userId, userId))
-    //   }
-    //   await tx.insert(completedTestes).values(completedTest)
-    // })
-
-    // 5. Run everything in transaction
+  try {
     await db.transaction(async (tx) => {
-      // (a) Lock the session by ID instead of searching
+      const now = new Date()
+
+      // Lock and verify session FIRST
       const result = await tx.execute(
         sql`SELECT * FROM ${testSessions}
             WHERE ${testSessions.id} = ${sessionId}
@@ -255,24 +274,36 @@ export async function submitTestAction(
       const session = result.rows?.[0] as any
 
       if (!session) {
-        throw new Error("No active session found")
+        throw new Error("Nie znaleziono aktywnej sesji testu")
       }
 
-      const now = new Date()
-
-      // (b) Check expiry
+      // Check expiry BEFORE checking test limit
       if (now > session.expiresAt) {
         await tx
           .update(testSessions)
           .set({ status: "EXPIRED", finishedAt: now })
           .where(eq(testSessions.id, session.id))
-        throw new Error("Session expired — your time is up")
+        throw new Error("Sesja wygasła — czas się skończył")
       }
 
-      // (c) Update user stats if they have limits
-      const userTestLimit = await getUserTestLimit(userId)
+      // We check test limit (inside transaction for consistency and to avoid race conditions)
+      const [userTestLimit] = await tx
+        .select({
+          testLimit: users.testLimit,
+          userId: users.userId,
+        })
+        .from(users)
+        .where(eq(users.userId, userId))
+
       if (!userTestLimit) {
-        throw new Error("No user is found!")
+        throw new Error("Nie znaleziono użytkownika")
+      }
+
+      // Check if user has tests remaining
+      if (userTestLimit.testLimit !== null && userTestLimit.testLimit <= 0) {
+        throw new Error(
+          "Wyczerpałeś limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
+        )
       }
 
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
@@ -287,7 +318,7 @@ export async function submitTestAction(
           .where(eq(users.userId, userId))
       }
 
-      // (d) Insert into completed_tests
+      // Insert completed test
       await tx.insert(completedTestes).values({
         userId,
         sessionId: session.id,
@@ -295,7 +326,7 @@ export async function submitTestAction(
         testResult,
       })
 
-      // (e) Mark session as completed
+      // Mark session as completed
       await tx
         .update(testSessions)
         .set({ status: "COMPLETED", finishedAt: now })
@@ -307,8 +338,7 @@ export async function submitTestAction(
 
   // Update form state and redirect on success and redirect user to result page
   toFormState("SUCCESS", "Test został wypełniony pomyślnie")
-  // revalidatePath('/panel', 'page')
-  revalidateTag("score", "max")
+  revalidatePath("/panel", "page")
   redirect("/panel/wyniki")
 }
 
@@ -321,7 +351,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   const message = formData.get("message") as string
 
   // Rate limiting: 3 emails per hour (using email as identifier for unauthenticated action)
-  const rateLimit = await checkRateLimit(email || 'anonymous', 'email:send')
+  const rateLimit = await checkRateLimit(email || "anonymous", "email:send")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -367,7 +397,7 @@ export async function deleteTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 10 test deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'test:delete')
+  const rateLimit = await checkRateLimit(userId, "test:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -407,7 +437,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 3 username updates per hour
-  const rateLimit = await checkRateLimit(userId, 'profile:update:username')
+  const rateLimit = await checkRateLimit(userId, "profile:update:username")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -436,7 +466,10 @@ export async function updateUsername(formState: FormState, formData: FormData) {
     }
   }
   revalidatePath("/panel")
-  return toFormState("SUCCESS", "Nazwa użytkownika została pomyślnie zaktualizowana!")
+  return toFormState(
+    "SUCCESS",
+    "Nazwa użytkownika została pomyślnie zaktualizowana!"
+  )
 }
 
 /**
@@ -448,7 +481,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 5 motto updates per hour
-  const rateLimit = await checkRateLimit(userId, 'profile:update:motto')
+  const rateLimit = await checkRateLimit(userId, "profile:update:motto")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -493,7 +526,7 @@ export async function createForumPostAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 5 posts per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:post:create')
+  const rateLimit = await checkRateLimit(userId, "forum:post:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -520,7 +553,6 @@ export async function createForumPostAction(
   }
 
   try {
-
     const post = await db.transaction(async (tx) => {
       // Get username first
       const [user] = await tx
@@ -564,7 +596,7 @@ export async function deletePostAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 10 post deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:post:delete')
+  const rateLimit = await checkRateLimit(userId, "forum:post:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -602,7 +634,7 @@ export async function createCommentAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 comments per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:comment:create')
+  const rateLimit = await checkRateLimit(userId, "forum:comment:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -624,7 +656,6 @@ export async function createCommentAction(
   }
 
   try {
-
     const post = await db.transaction(async (tx) => {
       // Get username and check post in transaction
       const [user] = await tx
@@ -674,7 +705,7 @@ export async function deleteCommentAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 comment deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:comment:delete')
+  const rateLimit = await checkRateLimit(userId, "forum:comment:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -711,7 +742,7 @@ export async function createTestimonialAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 2 testimonials per hour
-  const rateLimit = await checkRateLimit(userId, 'testimonial:create')
+  const rateLimit = await checkRateLimit(userId, "testimonial:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -773,7 +804,7 @@ export async function createTestAction(
   }
 
   // Rate limiting: 5 test creations per hour
-  const rateLimit = await checkRateLimit(user.userId, 'test:create')
+  const rateLimit = await checkRateLimit(user.userId, "test:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -823,7 +854,6 @@ export async function uploadTestsFromFile(
   FormState: FormState,
   formData: FormData
 ) {
-
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
@@ -836,7 +866,7 @@ export async function uploadTestsFromFile(
   }
 
   // Rate limiting: 10 file uploads per hour
-  const rateLimit = await checkRateLimit(user.userId, 'file:upload')
+  const rateLimit = await checkRateLimit(user.userId, "file:upload")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -853,7 +883,6 @@ export async function uploadTestsFromFile(
   }
 
   try {
- 
     const fileReader = file.stream().getReader()
     const testsDataU8: Uint8Array[] = []
 
@@ -919,16 +948,18 @@ export async function uploadTestsFromFile(
 }
 
 export async function expireSessionAction(sessionId: string) {
-  try {
-    const exists = await sessionExists(sessionId)
-    if (!exists) {
-      return { status: "ERROR", message: "Nie znaleziono sesji o podanym ID." }
-    }
-    await expireTestSession(sessionId)
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
 
-    return { status: "SUCCESS" }
+  try {
+    await expireTestSession(sessionId, userId)
+    return { status: "SUCCESS" as const }
   } catch (error) {
-    return { status: "ERROR", message: "Nie udało się zakończyć sesji." }
+    console.error("Error expiring session:", error)
+    return { 
+      status: "ERROR" as const, 
+      message: error instanceof Error ? error.message : "Nie udało się zakończyć sesji." 
+    }
   }
 }
 
@@ -981,7 +1012,7 @@ export async function deleteUserCustomTestsByCategoryAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { category }
+      values: { category },
     }
   }
 
@@ -1006,12 +1037,11 @@ export async function deleteUserCustomTestsByCategoryAction(
   revalidatePath("/panel/testy")
   revalidatePath("/panel/nauka")
 
-  return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
+  return toFormState(
+    "SUCCESS",
+    `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`
+  )
 }
-
-// ============================================================================
-// CUSTOM CATEGORY ACTIONS
-// ============================================================================
 
 /**
  * Create a new custom category
@@ -1025,12 +1055,14 @@ export async function createCustomCategoryAction(
 
   const categoryName = formData.get("categoryName") as string
 
-  const validationResult = CreateCustomCategorySchema.safeParse({ categoryName })
+  const validationResult = CreateCustomCategorySchema.safeParse({
+    categoryName,
+  })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryName }
+      values: { categoryName },
     }
   }
 
@@ -1072,12 +1104,15 @@ export async function addQuestionToCategoryAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryId, questionId }
+      values: { categoryId, questionId },
     }
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1091,7 +1126,7 @@ export async function addQuestionToCategoryAction(
         .update(userCustomCategories)
         .set({
           questionIds: updatedIds,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         })
         .where(eq(userCustomCategories.id, validationResult.data.categoryId))
     }
@@ -1126,20 +1161,25 @@ export async function removeQuestionFromCategoryAction(
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
     }
 
     const currentIds = category.questionIds as string[]
-    const updatedIds = currentIds.filter(id => id !== validationResult.data.questionId)
+    const updatedIds = currentIds.filter(
+      (id) => id !== validationResult.data.questionId
+    )
 
     await db
       .update(userCustomCategories)
       .set({
         questionIds: updatedIds,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {
@@ -1169,7 +1209,10 @@ export async function deleteCustomCategoryAction(
   }
 
   try {
-    const result = await deleteUserCustomCategory(userId, validationResult.data.categoryId)
+    const result = await deleteUserCustomCategory(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1208,7 +1251,10 @@ export async function updateCategoryNameAction(
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1218,7 +1264,7 @@ export async function updateCategoryNameAction(
       .update(userCustomCategories)
       .set({
         categoryName: validationResult.data.categoryName,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {

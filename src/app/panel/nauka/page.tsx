@@ -11,7 +11,6 @@ import { getAllUserNotes, getMaterialsByUser, getSupporterByUserId } from '@/ser
 import {  currentUser } from '@clerk/nextjs/server'
 import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
-import { isUserAdmin } from '@/lib/adminHelpers'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,26 +24,20 @@ export const metadata: Metadata = {
 export default async function NaukaPage() {
   const user = await currentUser()
   const isSupporter = user?.id ? await getSupporterByUserId(user?.id) : false
-  const isAdmin = await isUserAdmin()
 
   const populatedCategories = await getPopulatedCategories(
     fileData,
     isSupporter ? (user?.id || undefined) : undefined
   )
 
-  // Hide socjologia for non-admins
-  const categories = isAdmin
-    ? populatedCategories
-    : populatedCategories.filter(cat => cat.value !== 'socjologia')
-
   const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
-
+  
   const userMaterials = user ? await getMaterialsByUser(user.id) as MaterialsType[] : []
   const materials = await getMergedMaterials(userMaterials)
 
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubDashboard materials={materials} categories={categories} notes={userAllNotes} isSupporter={isSupporter}/>
+      <LearningHubDashboard materials={materials} categories={populatedCategories} notes={userAllNotes} isSupporter={isSupporter}/>
       <PdfPreviewModal />
       <VideoPreviewModal />
       <TextPreviewModal />
