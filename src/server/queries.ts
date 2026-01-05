@@ -1151,21 +1151,21 @@ export const expireTestSession = async (sessionId: string, userId: string) => {
       .where(
         and(
           eq(testSessions.id, sessionId),
-          eq(testSessions.userId, userId),
-          eq(testSessions.status, "ACTIVE")
+          eq(testSessions.userId, userId)
         )
       )
       .for("update")
 
     if (!session) {
-      throw new Error("Nie znaleziono aktywnej sesji")
+      return;
     }
 
-    // Expire the session
-    await tx
-      .update(testSessions)
-      .set({ status: "EXPIRED", finishedAt: now })
-      .where(eq(testSessions.id, sessionId))
+    if (session.status === "ACTIVE") {
+      await tx
+        .update(testSessions)
+        .set({ status: "EXPIRED", finishedAt: now })
+        .where(eq(testSessions.id, sessionId))
+    }
   })
 }
 

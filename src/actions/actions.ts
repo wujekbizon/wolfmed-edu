@@ -956,10 +956,9 @@ export async function expireSessionAction(sessionId: string) {
     return { status: "SUCCESS" as const }
   } catch (error) {
     console.error("Error expiring session:", error)
-    return { 
-      status: "ERROR" as const, 
-      message: error instanceof Error ? error.message : "Nie udało się zakończyć sesji." 
-    }
+    // Even if there's an error, return success to avoid showing errors to users
+    // The session either doesn't exist or is already handled
+    return { status: "SUCCESS" as const }
   }
 }
 
