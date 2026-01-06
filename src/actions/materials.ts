@@ -7,7 +7,7 @@ import { DeleteMaterialIdSchema, MaterialsSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { and, eq, sql } from "drizzle-orm"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { UTApi } from "uploadthing/server"
 import { checkRateLimit } from "@/lib/rateLimit"
 
@@ -65,8 +65,6 @@ export async function deleteMaterialAction(
     }
 
     revalidatePath("/panel/nauka")
-    revalidateTag("materials", "max")
-    revalidateTag(`user-materials-${userId}`, "max")
     return toFormState("SUCCESS", "Materiał został usunięty pomyślnie")
   } catch (error) {
     return fromErrorToFormState(error)
@@ -178,8 +176,6 @@ export async function uploadMaterialAction(
     })
 
     revalidatePath("/panel/nauka")
-    revalidateTag("materials", "max")
-    revalidateTag(`user-materials-${userId}`, "max")
   } catch (error: any) {
     return toFormState("ERROR", error.message)
   }

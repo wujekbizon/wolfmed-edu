@@ -4,7 +4,6 @@ import { db } from '@/server/db/index'
 import { eq } from 'drizzle-orm'
 import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
-import { revalidateTag } from 'next/dist/server/web/spec-extension/revalidate'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {

@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import { db } from '@/server/db/index'
 import { blogCategories, blogTags } from '@/server/db/schema'
 import { eq } from 'drizzle-orm'
@@ -62,7 +62,6 @@ export async function createBlogCategoryAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-categories', 'max')
 
     return toFormState('SUCCESS', 'Kategoria została utworzona pomyślnie!')
   } catch (error) {
@@ -128,7 +127,6 @@ export async function updateBlogCategoryAction(
     if (updatedCategory) {
       revalidatePath(`/blog/category/${updatedCategory.slug}`)
     }
-    revalidateTag('blog-categories', 'max')
 
     return toFormState('SUCCESS', 'Kategoria została zaktualizowana pomyślnie!')
   } catch (error) {
@@ -164,7 +162,6 @@ export async function deleteBlogCategoryAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-categories', 'max')
 
     return toFormState('SUCCESS', 'Kategoria została usunięta pomyślnie!')
   } catch (error) {
@@ -206,7 +203,6 @@ export async function createBlogTagAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-tags', 'max')
 
     return toFormState('SUCCESS', 'Tag został utworzony pomyślnie!')
   } catch (error) {
@@ -258,7 +254,6 @@ export async function updateBlogTagAction(
     if (updatedTag) {
       revalidatePath(`/blog/tag/${updatedTag.slug}`)
     }
-    revalidateTag('blog-tags', 'max')
 
     return toFormState('SUCCESS', 'Tag został zaktualizowany pomyślnie!')
   } catch (error) {
@@ -293,7 +288,6 @@ export async function deleteBlogTagAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-tags', 'max')
 
     return toFormState('SUCCESS', 'Tag został usunięty pomyślnie!')
   } catch (error) {

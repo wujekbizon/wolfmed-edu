@@ -1,5 +1,6 @@
+"use cache"
+
 import "server-only"
-import { cacheLife, cacheTag } from "next/cache"
 import { db } from "@/server/db/index"
 import {
   completedTestes,
@@ -45,9 +46,6 @@ import { fileData } from "./fetchData"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = async (): Promise<ExtendedTest[]> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("all-tests")
   const tests = await db.query.tests.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
@@ -58,9 +56,6 @@ export const getAllTests = async (): Promise<ExtendedTest[]> => {
  * Fetch all tests created by specific user
  */
 export const getUserCustomTests = async (userId: string) => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-custom-tests", `user-${userId}`)
   const tests = await db.query.userCustomTests.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
     orderBy: (model, { desc }) => desc(model.createdAt),
@@ -72,9 +67,6 @@ export const getUserCustomTests = async (userId: string) => {
  * Fetch single user test with ownership verification
  */
 export const getUserCustomTestById = async (userId: string, testId: string) => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-custom-tests", `user-${userId}`, `test-${testId}`)
   const test = await db.query.userCustomTests.findFirst({
     where: (model, { eq, and }) =>
       and(eq(model.id, testId), eq(model.userId, userId)),
@@ -97,9 +89,6 @@ export const deleteUserCustomTest = async (userId: string, testId: string) => {
  * Get all custom categories for a user
  */
 export const getUserCustomCategories = async (userId: string) => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-custom-categories", `user-${userId}`)
   return await db.query.userCustomCategories.findMany({
     where: eq(userCustomCategories.userId, userId),
     orderBy: [desc(userCustomCategories.createdAt)],
@@ -113,9 +102,6 @@ export const getUserCustomCategoryById = async (
   userId: string,
   categoryId: string
 ) => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-custom-categories", `user-${userId}`, `category-${categoryId}`)
   return await db.query.userCustomCategories.findFirst({
     where: and(
       eq(userCustomCategories.id, categoryId),
@@ -143,9 +129,6 @@ export const deleteUserCustomCategory = async (
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = async (): Promise<ExtendedProcedures[]> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("all-procedures")
   const procedures = await db.query.procedures.findMany({
     orderBy: (model, { desc }) => desc(model.id),
   })
@@ -158,10 +141,6 @@ export const getAllProcedures = async (): Promise<ExtendedProcedures[]> => {
 export async function getAllBlogPosts(
   filters?: BlogPostFilters
 ): Promise<BlogPost[]> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-posts")
-
   try {
     const conditions = []
 
@@ -234,9 +213,6 @@ export async function getAllBlogPosts(
 export const getBlogPostBySlug = async (
   slug: string
 ): Promise<BlogPost | null> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-posts", `blog-post-${slug}`)
 
   try {
     const post = await db
@@ -295,9 +271,6 @@ export const getBlogPostBySlug = async (
  */
 export const getBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
-    ;("use cache")
-    cacheLife("days")
-    cacheTag("blog-posts", `blog-post-${id}`)
     const post = await db
       .select()
       .from(blogPosts)
@@ -346,9 +319,6 @@ export const getBlogPostById = async (id: string): Promise<BlogPost | null> => {
 export const getFeaturedBlogPosts = async (
   limit: number = 3
 ): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", "featured-posts")
   try {
     const posts = await db
       .select()
@@ -371,9 +341,7 @@ export const getRelatedBlogPosts = async (
   postId: string,
   limit: number = 4
 ): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", `related-${postId}`)
+
   try {
     const currentPost = await getBlogPostById(postId)
     if (!currentPost) return []
@@ -407,9 +375,7 @@ export const getRelatedBlogPosts = async (
 export const getPopularBlogPosts = async (
   limit: number = 5
 ): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", "popular-posts")
+
   try {
     const posts = await db
       .select()
@@ -429,9 +395,6 @@ export const getPopularBlogPosts = async (
  * Get all blog categories
  */
 export const getBlogCategories = async (): Promise<BlogCategory[]> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-categories")
 
   try {
     const categories = await db
@@ -452,9 +415,6 @@ export const getBlogCategories = async (): Promise<BlogCategory[]> => {
 export const getBlogCategoryBySlug = async (
   slug: string
 ): Promise<BlogCategory | null> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-categories", `category-${slug}`)
 
   try {
     const category = await db
@@ -476,9 +436,6 @@ export const getBlogCategoryBySlug = async (
 export const getBlogCategoryById = async (
   id: string
 ): Promise<BlogCategory | null> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-categories", `category-${id}`)
 
   try {
     const category = await db
@@ -498,9 +455,7 @@ export const getBlogCategoryById = async (
  * Get all blog tags
  */
 export const getBlogTags = async (): Promise<BlogTag[]> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-tags")
+
   try {
     const tags = await db.select().from(blogTags).orderBy(asc(blogTags.name))
 
@@ -517,9 +472,7 @@ export const getBlogTags = async (): Promise<BlogTag[]> => {
 export const getBlogTagBySlug = async (
   slug: string
 ): Promise<BlogTag | null> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-tags", `tag-${slug}`)
+
   try {
     const tag = await db
       .select()
@@ -538,9 +491,7 @@ export const getBlogTagBySlug = async (
  * Get blog tag by ID
  */
 export const getBlogTagById = async (id: string): Promise<BlogTag | null> => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-tags", `tag-${id}`)
+
   try {
     const tag = await db
       .select()
@@ -562,9 +513,7 @@ export const getBlogPostsByCategorySlug = async (
   categorySlug: string,
   limit?: number
 ): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", `category-${categorySlug}`)
+
   try {
     const category = await getBlogCategoryBySlug(categorySlug)
     if (!category) return []
@@ -600,9 +549,7 @@ export const getBlogPostsByTagSlug = async (
   tagSlug: string,
   limit?: number
 ): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", `tag-${tagSlug}`)
+
   try {
     const tag = await getBlogTagBySlug(tagSlug)
     if (!tag) return []
@@ -666,9 +613,7 @@ export const hasUserLikedPost = async (
  * Get blog statistics for admin dashboard
  */
 export const getBlogStatistics = async (): Promise<BlogStatistics> => {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("blog-stats")
+
   try {
     const [totalPostsResult] = await db
       .select({ count: count() })
@@ -732,9 +677,7 @@ export const getBlogStatistics = async (): Promise<BlogStatistics> => {
  * Search blog posts
  */
 export const searchBlogPosts = async (query: string): Promise<BlogPost[]> => {
-  "use cache"
-  cacheLife("days")
-  cacheTag("blog-posts", `search-${query}`)
+
   try {
     if (!query || query.trim().length < 3) return []
 
@@ -766,9 +709,6 @@ export const searchBlogPosts = async (query: string): Promise<BlogPost[]> => {
 export async function getCompletedTestsByUser(
   userId: string
 ): Promise<ExtendedCompletedTest[]> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("completed-tests", `user-${userId}`)
 
   const completedTest = await db.query.completedTestes.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -779,9 +719,6 @@ export async function getCompletedTestsByUser(
 
 // Get a specific completed test by its ID
 export async function getCompletedTest(testId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("completed-tests", `test-${testId}`)
 
   const completedTest = await db.query.completedTestes.findFirst({
     where: (model, { eq }) => eq(model.id, testId),
@@ -791,9 +728,6 @@ export async function getCompletedTest(testId: string) {
 
 // Get a specific question by its test ID
 export async function getQuestionById(testId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("all-tests", `test-${testId}`)
 
   const question = await db.query.tests.findFirst({
     where: (model, { eq }) => eq(model.id, testId),
@@ -815,9 +749,6 @@ export async function getUserTestLimit(id: string) {
 export async function getUserIdByCustomer(
   customerId: string
 ): Promise<string | null> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("subscriptions", `customer-${customerId}`)
 
   try {
     const subscription = await db
@@ -851,9 +782,6 @@ export async function getTestSessionDetails(sessionId: string) {
 export async function getUserIdByCustomerEmail(
   customerEmail: string
 ): Promise<string | null> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("payments", `customer-email-${customerEmail}`)
 
   try {
     const payment = await db
@@ -874,9 +802,6 @@ export async function getUserIdByCustomerEmail(
 
 // Get a blog post by its ID
 export async function getPostById(id: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("blog-posts", `blog-post-${id}`)
 
   const post = await db.query.blogPosts.findFirst({
     where: (model, { eq }) => eq(model.id, id),
@@ -902,9 +827,6 @@ export const updateUsernameByUserId = async (
 
 // Get username for a specific user
 export async function getUserUsername(userId: string): Promise<string> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-profile", `user-${userId}`)
 
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -923,9 +845,6 @@ export async function updateMottoByUserId(userId: string, newMotto: string) {
 
 // Get motto for a specific user
 export async function getUserMotto(userId: string): Promise<string> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-profile", `user-${userId}`)
 
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -938,9 +857,6 @@ export async function getUserMotto(userId: string): Promise<string> {
 export async function getEarlySupporters(
   limit: number = 5
 ): Promise<{ id: string; username: string }[]> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("supporters", "user-profile")
 
   const supporters = await db
     .select({
@@ -960,9 +876,6 @@ export async function getEarlySupporters(
 
 // Check if a user is a supporter
 export async function getSupporterByUserId(userId: string): Promise<boolean> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-profile", `user-${userId}`)
 
   const user = await db.query.users.findFirst({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -977,9 +890,6 @@ export async function getUserStats(userId: string): Promise<{
   totalQuestions: number
   testsAttempted: number
 }> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-stats", `user-${userId}`)
 
   const result = await db
     .select({
@@ -1000,9 +910,6 @@ export async function getUserStats(userId: string): Promise<{
 
 // Get all forum posts with their comments, ordered by creation date
 export async function getAllForumPosts(): Promise<ForumPost[]> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("forum-posts")
 
   const posts = await db.query.forumPosts.findMany({
     orderBy: (model, { desc }) => desc(model.createdAt),
@@ -1028,10 +935,6 @@ export async function getAllForumPosts(): Promise<ForumPost[]> {
 export async function getForumPostById(
   postId: string
 ): Promise<ForumPost | null> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("forum-posts")
-  cacheTag(`forum-post-${postId}`)
 
   const post = await db.query.forumPosts.findFirst({
     where: (model, { eq }) => eq(model.id, postId),
@@ -1107,9 +1010,6 @@ export const deleteForumComment = async (commentId: string) => {
 export async function getLastUserPostTime(
   userId: string
 ): Promise<Date | null> {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("forum-posts", `user-posts-${userId}`)
 
   const [lastPost] = await db
     .select({ createdAt: forumPosts.createdAt })
@@ -1125,9 +1025,6 @@ export async function getLastUserPostTime(
 export async function getLastUserCommentTime(
   userId: string
 ): Promise<Date | null> {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("forum-comments", `user-comments-${userId}`)
 
   const [lastComment] = await db
     .select({ createdAt: forumComments.createdAt })
@@ -1141,9 +1038,6 @@ export async function getLastUserCommentTime(
 
 // Get stripe support payments
 export async function getStripeSupportPayments(): Promise<Payment[]> {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("payments")
 
   const payments = await db.query.payments.findMany()
   return payments.map((p) => ({
@@ -1154,9 +1048,6 @@ export async function getStripeSupportPayments(): Promise<Payment[]> {
 
 // Get supporters userId from stripe support payments
 export async function getSupportersUserIds(): Promise<string[]> {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("supporters", "payments")
 
   const payments = await getStripeSupportPayments()
   const supportersUserId = payments.map((payment) => payment.userId)
@@ -1164,9 +1055,6 @@ export async function getSupportersUserIds(): Promise<string[]> {
 }
 
 export async function getSupportersWithUsernames(): Promise<Supporter[]> {
-  "use cache"
-  cacheLife("max")
-  cacheTag("supporters")
 
   const supporters = await db
     .select({
@@ -1196,9 +1084,6 @@ export const createTestimonial = async (data: {
 }
 
 export async function getTestimonials(visibleOnly = true) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("testimonials")
 
   return db.query.testimonials.findMany({
     where: visibleOnly ? (t, { eq }) => eq(t.visible, true) : undefined,
@@ -1207,9 +1092,6 @@ export async function getTestimonials(visibleOnly = true) {
 }
 
 export async function getTestimonialsWithUsernames(visibleOnly = true) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("testimonials")
 
   const results = await db
     .select({
@@ -1231,9 +1113,6 @@ export async function getTestimonialsWithUsernames(visibleOnly = true) {
 }
 
 export async function getUserTestimonials(userId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("testimonials", `user-testimonials-${userId}`)
 
   return db.query.testimonials.findMany({
     where: (t, { eq }) => eq(t.userId, userId),
@@ -1290,9 +1169,6 @@ export async function expireTestSession(sessionId: string, userId: string) {
 }
 
 export async function getAllUserNotes(userId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-notes", `user-${userId}`)
 
   const notesList = await db.query.notes.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -1307,9 +1183,6 @@ export async function getAllUserNotes(userId: string) {
 }
 
 export async function getTopPinnedNotes(userId: string, limit = 5) {
-  "use cache"
-  cacheLife("days")
-  cacheTag("user-notes", `user-${userId}`)
 
   const notesList = await db.query.notes.findMany({
     where: (model, { and, eq }) =>
@@ -1326,9 +1199,7 @@ export async function getTopPinnedNotes(userId: string, limit = 5) {
 }
 
 export const getNoteById = async (userId: string, noteId: string) => {
-  "use cache"
-  cacheLife("max")
-  cacheTag("user-notes", `user-${userId}`, `note-${noteId}`)
+
   const note = await db.query.notes.findFirst({
     where: (model, { and, eq }) =>
       and(eq(model.id, noteId), eq(model.userId, userId)),
@@ -1465,9 +1336,6 @@ export async function checkUserCellsList(userId: string) {
 }
 
 export async function getMaterialsByUser(userId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("materials", `user-materials-${userId}`)
 
   const rows = await db.query.materials.findMany({
     where: (m, { eq }) => eq(m.userId, userId),
@@ -1670,9 +1538,6 @@ export const awardBadge = async (
  * Get a specific badge for a procedure
  */
 export async function getProcedureBadge(userId: string, procedureId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("procedure-badges", `user-${userId}`, `procedure-${procedureId}`)
 
   const badge = await db.query.procedureBadges.findFirst({
     where: (model, { and, eq }) =>
@@ -1686,9 +1551,6 @@ export async function getProcedureBadge(userId: string, procedureId: string) {
  * Get all badges earned by a user
  */
 export async function getUserBadges(userId: string) {
-  "use cache"
-  cacheLife("max")
-  cacheTag("procedure-badges", `user-${userId}`)
 
   const badges = await db.query.procedureBadges.findMany({
     where: (model, { eq }) => eq(model.userId, userId),
@@ -1705,9 +1567,6 @@ export async function getUserBadges(userId: string) {
  * Get all customer messages with pagination
  */
 export async function getAllMessages(page: number = 1, limit: number = 20) {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("messages")
 
   const offset = (page - 1) * limit
 
@@ -1738,9 +1597,6 @@ export async function getAllMessages(page: number = 1, limit: number = 20) {
  * Optimized: 1 query instead of 4 separate queries
  */
 export async function getMessageStats() {
-  "use cache"
-  cacheLife("max")
-  cacheTag("message-stats")
 
   const oneWeekAgo = new Date()
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
@@ -1780,9 +1636,6 @@ export const markMessageAsRead = async (id: number) => {
  * Get unread message count
  */
 export async function getUnreadMessageCount() {
-  "use cache"
-  cacheLife("minutes")
-  cacheTag("messages", "message-stats")
 
   const [result] = await db
     .select({ count: count() })
@@ -1796,9 +1649,6 @@ export async function getDetailedTestHistory(
   userId: string,
   limit: number = 50
 ) {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("completed-tests", `user-${userId}`)
 
   const tests = await db
     .select({
@@ -1823,9 +1673,6 @@ export async function getDetailedTestHistory(
 }
 
 export async function getQuestionAccuracyAnalytics(userId: string) {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("completed-tests", `user-${userId}`, "analytics")
 
   const tests = await db
     .select({
@@ -1871,9 +1718,6 @@ export async function getQuestionAccuracyAnalytics(userId: string) {
 }
 
 export async function getCategoryPerformance(userId: string) {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("completed-tests", `user-${userId}`, "analytics")
 
   const tests = await db
     .select({
@@ -1912,9 +1756,6 @@ export async function getCategoryPerformance(userId: string) {
 }
 
 export async function getProgressTimeline(userId: string, days: number = 30) {
-  "use cache"
-  cacheLife("hours")
-  cacheTag("completed-tests", `user-${userId}`, "analytics")
 
   const startDate = new Date()
   startDate.setDate(startDate.getDate() - days)

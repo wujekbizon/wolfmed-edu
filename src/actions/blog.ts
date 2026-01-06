@@ -1,6 +1,6 @@
 'use server'
 
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import { db } from '@/server/db/index'
 import { blogPosts, blogPostTags, blogLikes } from '@/server/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
@@ -100,7 +100,6 @@ export async function createBlogPostAction(
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     revalidatePath('/blog/admin/posts')
-    revalidateTag('blog-posts', 'max')
 
     return toFormState('SUCCESS', 'Post został utworzony pomyślnie!')
   } catch (error) {
@@ -212,7 +211,6 @@ export async function updateBlogPostAction(
     if (updatedPost) {
       revalidatePath(`/blog/${updatedPost.slug}`)
     }
-    revalidateTag('blog-posts', 'max')
 
     return toFormState('SUCCESS', 'Post został zaktualizowany pomyślnie!')
   } catch (error) {
@@ -247,7 +245,6 @@ export async function deleteBlogPostAction(
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
     revalidatePath('/blog/admin/posts')
-    revalidateTag('blog-posts', 'max')
 
     return toFormState('SUCCESS', 'Post został usunięty pomyślnie!')
   } catch (error) {
@@ -292,7 +289,6 @@ export async function publishBlogPostAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-posts', 'max')
 
     return toFormState('SUCCESS', 'Post został opublikowany pomyślnie!')
   } catch (error) {
@@ -326,7 +322,6 @@ export async function archiveBlogPostAction(
 
     revalidatePath('/blog')
     revalidatePath('/blog/admin')
-    revalidateTag('blog-posts', 'max')
 
     return toFormState('SUCCESS', 'Post został zarchiwizowany pomyślnie!')
   } catch (error) {

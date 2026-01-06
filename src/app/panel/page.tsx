@@ -46,9 +46,9 @@ export default async function TestsPage() {
                 <BadgeWidget />
               </Suspense>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <Suspense fallback={null}>
+                {/* <Suspense fallback={<p>Loading</p>}>
                   <AdminBlogWidget />
-                </Suspense>
+                </Suspense> */}
                 <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
                   <UsernameForm />
                 </div>

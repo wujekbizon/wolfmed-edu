@@ -4,12 +4,6 @@ import CategoryForm from '@/components/blog/admin/CategoryForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-interface EditCategoryPageProps {
-  params: Promise<{
-    id: string
-  }>
-}
-
 async function EditCategoryWithData(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params
   const category = await getBlogCategoryById(id)
@@ -43,7 +37,7 @@ async function EditCategoryWithData(props: { params: Promise<{ id: string }> }) 
   )
 }
 
-export default function EditCategoryPage(props: EditCategoryPageProps) {
+export default function EditCategoryPage(props: { params: Promise<{ id: string }>}) {
   return (
     <Suspense fallback={<div className="max-w-4xl mx-auto animate-pulse">Ładowanie...</div>}>
       <EditCategoryWithData params={props.params} />
