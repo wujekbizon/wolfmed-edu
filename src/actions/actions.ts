@@ -54,13 +54,13 @@ import {
   getLastUserPostTime,
   getLastUserCommentTime,
   createTestimonial,
-  expireTestSession,
   getSupporterByUserId,
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
   deleteUserCustomCategory,
 } from "@/server/queries"
+import { expireTestSession } from "@/server/mutations"
 import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
@@ -896,13 +896,11 @@ export async function expireSessionAction(sessionId: string) {
   try {
     await expireTestSession(sessionId, userId)
 
-    return {
-      status: "SUCCESS" as const,
-      message: "Sesja została zakończona",
-    }
+    revalidatePath("/panel/testy")
+    return toFormState("SUCCESS", "Sesja została zakończona")
   } catch (error) {
     console.error("Error expiring session:", error)
-    return { status: "SUCCESS" as const, message: "Sesja została zakończona" }
+    return fromErrorToFormState(error)
   }
 }
 
