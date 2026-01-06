@@ -98,9 +98,7 @@ export const fileData: FileDataOperations = {
   getAllTests: async () => {
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
-      const socjologiaTests = await readJsonFile<Test[]>("socjologia.json")
-      const socjologiaTests2 = await readJsonFile<Test[]>("socjologia_fakty.json")
-      return [...tests, ...socjologiaTests, ...socjologiaTests2]
+      return tests
     } catch (error) {
       console.error("Error fetching tests:", error)
       return []

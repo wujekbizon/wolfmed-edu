@@ -13,7 +13,6 @@ import { getAllUserNotes, getMaterialsByUser, getSupporterByUserId } from '@/ser
 import { currentUser } from '@clerk/nextjs/server'
 import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
-import { isUserAdmin } from '@/lib/adminHelpers'
 
 export const metadata: Metadata = {
   title: 'Baza pytań Nauka',
@@ -25,17 +24,11 @@ export const metadata: Metadata = {
 async function LearningHubWithData() {
   const user = await currentUser()
   const isSupporter = user?.id ? await getSupporterByUserId(user?.id) : false
-  const isAdmin = await isUserAdmin()
 
   const populatedCategories = await getPopulatedCategories(
     fileData,
     isSupporter ? (user?.id || undefined) : undefined
   )
-
-  // Hide socjologia for non-admins
-  const categories = isAdmin
-    ? populatedCategories
-    : populatedCategories.filter(cat => cat.value !== 'socjologia')
 
   const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
 
@@ -45,7 +38,7 @@ async function LearningHubWithData() {
   return (
     <LearningHubDashboard
       materials={materials}
-      categories={categories}
+      categories={populatedCategories}
       notes={userAllNotes}
       isSupporter={isSupporter}
     />

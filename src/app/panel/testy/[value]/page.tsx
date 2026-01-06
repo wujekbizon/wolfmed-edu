@@ -5,8 +5,6 @@ import { fileData } from '@/server/fetchData'
 import { getSupporterByUserId, getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
-import { isUserAdmin } from '@/lib/adminHelpers'
-import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   title: 'Testy medyczne | Wolfmed',
@@ -18,12 +16,6 @@ async function TestsByCategoryContent(props: CategoryPageProps) {
   const { sessionId } = await props.searchParams
 
   const decodedCategory = decodeURIComponent(category)
-
-  // Protect socjologia
-  if (decodedCategory === 'socjologia') {
-    const isAdmin = await isUserAdmin()
-    if (!isAdmin) redirect('/panel/testy')
-  }
 
   const { userId } = await auth()
   const isSupporter = userId ? await getSupporterByUserId(userId) : false

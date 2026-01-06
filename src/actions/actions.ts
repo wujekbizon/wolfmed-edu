@@ -55,7 +55,6 @@ import {
   getLastUserCommentTime,
   createTestimonial,
   expireTestSession,
-  sessionExists,
   getSupporterByUserId,
   getUserStorageUsage,
   deleteUserCustomTest,
@@ -75,7 +74,7 @@ export async function startTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 test starts per hour
-  const rateLimit = await checkRateLimit(userId, 'test:start')
+  const rateLimit = await checkRateLimit(userId, "test:start")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -96,11 +95,13 @@ export async function startTestAction(
       console.log(`Validation error: ${validationResult.error.issues}`)
       return toFormState(
         "ERROR",
-        validationResult.error.issues[0]?.message || "Nieprawidłowe dane wejściowe."
+        validationResult.error.issues[0]?.message ||
+          "Nieprawidłowe dane wejściowe."
       )
     }
 
-    const { category, numberOfQuestions, durationMinutes, meta } = validationResult.data
+    const { category, numberOfQuestions, durationMinutes, meta } =
+      validationResult.data
 
     const now = new Date()
     const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
@@ -154,7 +155,7 @@ export async function submitTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 test submits per hour
-  const rateLimit = await checkRateLimit(userId, 'test:submit')
+  const rateLimit = await checkRateLimit(userId, "test:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -243,7 +244,9 @@ export async function submitTestAction(
 
       // Check if user exceeded their limit
       if (userTestLimit.testLimit !== null && userTestLimit.testLimit <= 0) {
-        throw new Error("Wyczerpałes limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów.")
+        throw new Error(
+          "Wyczerpałes limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
+        )
       }
 
       // Update user stats if they have limits
@@ -298,7 +301,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   const message = formData.get("message") as string
 
   // Rate limiting: 3 emails per hour (using email as identifier for unauthenticated action)
-  const rateLimit = await checkRateLimit(email || 'anonymous', 'email:send')
+  const rateLimit = await checkRateLimit(email || "anonymous", "email:send")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -329,7 +332,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
     }
   }
 
-  revalidateTag('message-stats', 'max')
+  revalidateTag("message-stats", "max")
   return toFormState("SUCCESS", "Wiadomość wysłana pomyślnie!")
 }
 
@@ -345,7 +348,7 @@ export async function deleteTestAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 10 test deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'test:delete')
+  const rateLimit = await checkRateLimit(userId, "test:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -388,7 +391,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 3 username updates per hour
-  const rateLimit = await checkRateLimit(userId, 'profile:update:username')
+  const rateLimit = await checkRateLimit(userId, "profile:update:username")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -417,9 +420,12 @@ export async function updateUsername(formState: FormState, formData: FormData) {
     }
   }
   revalidatePath("/panel")
-  revalidateTag('user-profile', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  return toFormState("SUCCESS", "Nazwa użytkownika została pomyślnie zaktualizowana!")
+  revalidateTag("user-profile", "max")
+  revalidateTag(`user-${userId}`, "max")
+  return toFormState(
+    "SUCCESS",
+    "Nazwa użytkownika została pomyślnie zaktualizowana!"
+  )
 }
 
 /**
@@ -431,7 +437,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 5 motto updates per hour
-  const rateLimit = await checkRateLimit(userId, 'profile:update:motto')
+  const rateLimit = await checkRateLimit(userId, "profile:update:motto")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -461,8 +467,8 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   }
 
   revalidatePath("/panel")
-  revalidateTag('user-profile', 'max')
-  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag("user-profile", "max")
+  revalidateTag(`user-${userId}`, "max")
   return toFormState("SUCCESS", "Motto zaktualizowane pomyślnie!")
 }
 
@@ -478,7 +484,7 @@ export async function createForumPostAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 5 posts per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:post:create')
+  const rateLimit = await checkRateLimit(userId, "forum:post:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -505,7 +511,6 @@ export async function createForumPostAction(
   }
 
   try {
-
     const post = await db.transaction(async (tx) => {
       // Get username first
       const [user] = await tx
@@ -534,8 +539,8 @@ export async function createForumPostAction(
   }
 
   revalidatePath("/forum")
-  revalidateTag('forum-posts', 'max')
-  revalidateTag(`user-posts-${userId}`, 'max')
+  revalidateTag("forum-posts", "max")
+  revalidateTag(`user-posts-${userId}`, "max")
   return toFormState("SUCCESS", "Post został dodany pomyślnie!")
 }
 
@@ -551,7 +556,7 @@ export async function deletePostAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 10 post deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:post:delete')
+  const rateLimit = await checkRateLimit(userId, "forum:post:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -574,7 +579,7 @@ export async function deletePostAction(
   }
 
   revalidateTag(`forum-post-${postId}`, "max")
-  revalidateTag('forum-posts', 'max')
+  revalidateTag("forum-posts", "max")
   redirect("/forum")
   return toFormState("SUCCESS", "Post został usunięty")
 }
@@ -591,7 +596,7 @@ export async function createCommentAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 comments per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:comment:create')
+  const rateLimit = await checkRateLimit(userId, "forum:comment:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -613,7 +618,6 @@ export async function createCommentAction(
   }
 
   try {
-
     const post = await db.transaction(async (tx) => {
       // Get username and check post in transaction
       const [user] = await tx
@@ -648,9 +652,9 @@ export async function createCommentAction(
   }
   revalidatePath("/forum")
   revalidateTag(`forum-post-${postId}`, "max")
-  revalidateTag('forum-posts', 'max')
-  revalidateTag('forum-comments', 'max')
-  revalidateTag(`user-comments-${userId}`, 'max')
+  revalidateTag("forum-posts", "max")
+  revalidateTag("forum-comments", "max")
+  revalidateTag(`user-comments-${userId}`, "max")
   return toFormState("SUCCESS", "Komentarz został dodany")
 }
 
@@ -666,7 +670,7 @@ export async function deleteCommentAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 20 comment deletes per hour
-  const rateLimit = await checkRateLimit(userId, 'forum:comment:delete')
+  const rateLimit = await checkRateLimit(userId, "forum:comment:delete")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -696,9 +700,9 @@ export async function deleteCommentAction(
   if (postId) {
     revalidateTag(`forum-post-${postId}`, "max")
   }
-  revalidateTag('forum-posts', 'max')
-  revalidateTag('forum-comments', 'max')
-  revalidateTag(`user-comments-${userId}`, 'max')
+  revalidateTag("forum-posts", "max")
+  revalidateTag("forum-comments", "max")
+  revalidateTag(`user-comments-${userId}`, "max")
   return toFormState("SUCCESS", "Komentarz został usunięty")
 }
 
@@ -710,7 +714,7 @@ export async function createTestimonialAction(
   if (!userId) throw new Error("Unauthorized")
 
   // Rate limiting: 2 testimonials per hour
-  const rateLimit = await checkRateLimit(userId, 'testimonial:create')
+  const rateLimit = await checkRateLimit(userId, "testimonial:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -775,7 +779,7 @@ export async function createTestAction(
   }
 
   // Rate limiting: 5 test creations per hour
-  const rateLimit = await checkRateLimit(user.userId, 'test:create')
+  const rateLimit = await checkRateLimit(user.userId, "test:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -814,9 +818,8 @@ export async function createTestAction(
     return fromErrorToFormState(error)
   }
 
-
-  revalidateTag('user-custom-tests','max')
-  revalidateTag(`user-${user.userId}`,'max')
+  revalidateTag("user-custom-tests", "max")
+  revalidateTag(`user-${user.userId}`, "max")
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -828,7 +831,6 @@ export async function uploadTestsFromFile(
   FormState: FormState,
   formData: FormData
 ) {
-
   const user = await auth()
   if (!user.userId) throw new Error("Unauthorized")
 
@@ -841,7 +843,7 @@ export async function uploadTestsFromFile(
   }
 
   // Rate limiting: 10 file uploads per hour
-  const rateLimit = await checkRateLimit(user.userId, 'file:upload')
+  const rateLimit = await checkRateLimit(user.userId, "file:upload")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
     return toFormState(
@@ -858,7 +860,6 @@ export async function uploadTestsFromFile(
   }
 
   try {
- 
     const fileReader = file.stream().getReader()
     const testsDataU8: Uint8Array[] = []
 
@@ -916,8 +917,8 @@ export async function uploadTestsFromFile(
       return fromErrorToFormState(error)
     }
   }
-  revalidateTag('user-custom-tests', 'max')
-  revalidateTag(`user-${user.userId}`, 'max')
+  revalidateTag("user-custom-tests", "max")
+  revalidateTag(`user-${user.userId}`, "max")
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -925,16 +926,19 @@ export async function uploadTestsFromFile(
 }
 
 export async function expireSessionAction(sessionId: string) {
-  try {
-    const exists = await sessionExists(sessionId)
-    if (!exists) {
-      return { status: "ERROR", message: "Nie znaleziono sesji o podanym ID." }
-    }
-    await expireTestSession(sessionId)
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
 
-    return { status: "SUCCESS" }
+  try {
+    await expireTestSession(sessionId, userId)
+
+    return {
+      status: "SUCCESS" as const,
+      message: "Sesja została zakończona",
+    }
   } catch (error) {
-    return { status: "ERROR", message: "Nie udało się zakończyć sesji." }
+    console.error("Error expiring session:", error)
+    return { status: "SUCCESS" as const, message: "Sesja została zakończona" }
   }
 }
 
@@ -964,9 +968,9 @@ export async function deleteUserCustomTestAction(
     return fromErrorToFormState(error)
   }
 
-  revalidateTag('user-custom-tests', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  revalidateTag(`test-${testId}`, 'max') 
+  revalidateTag("user-custom-tests", "max")
+  revalidateTag(`user-${userId}`, "max")
+  revalidateTag(`test-${testId}`, "max")
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
 
@@ -990,7 +994,7 @@ export async function deleteUserCustomTestsByCategoryAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { category }
+      values: { category },
     }
   }
 
@@ -1015,7 +1019,10 @@ export async function deleteUserCustomTestsByCategoryAction(
   revalidatePath("/panel/testy")
   revalidatePath("/panel/nauka")
 
-  return toFormState("SUCCESS", `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`)
+  return toFormState(
+    "SUCCESS",
+    `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`
+  )
 }
 
 /**
@@ -1030,12 +1037,14 @@ export async function createCustomCategoryAction(
 
   const categoryName = formData.get("categoryName") as string
 
-  const validationResult = CreateCustomCategorySchema.safeParse({ categoryName })
+  const validationResult = CreateCustomCategorySchema.safeParse({
+    categoryName,
+  })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryName }
+      values: { categoryName },
     }
   }
 
@@ -1049,8 +1058,8 @@ export async function createCustomCategoryAction(
     return fromErrorToFormState(error)
   }
 
-  revalidateTag('user-custom-categories', 'max')
-  revalidateTag(`user-${userId}`, 'max')
+  revalidateTag("user-custom-categories", "max")
+  revalidateTag(`user-${userId}`, "max")
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/nauka")
   revalidatePath("/panel/testy")
@@ -1079,12 +1088,15 @@ export async function addQuestionToCategoryAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryId, questionId }
+      values: { categoryId, questionId },
     }
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1098,16 +1110,16 @@ export async function addQuestionToCategoryAction(
         .update(userCustomCategories)
         .set({
           questionIds: updatedIds,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         })
         .where(eq(userCustomCategories.id, validationResult.data.categoryId))
     }
   } catch (error) {
     return fromErrorToFormState(error)
   }
-  revalidateTag('user-custom-categories', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  revalidateTag(`category-${categoryId}`, 'max')
+  revalidateTag("user-custom-categories", "max")
+  revalidateTag(`user-${userId}`, "max")
+  revalidateTag(`category-${categoryId}`, "max")
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Pytanie dodane do kategorii")
 }
@@ -1135,28 +1147,33 @@ export async function removeQuestionFromCategoryAction(
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
     }
 
     const currentIds = category.questionIds as string[]
-    const updatedIds = currentIds.filter(id => id !== validationResult.data.questionId)
+    const updatedIds = currentIds.filter(
+      (id) => id !== validationResult.data.questionId
+    )
 
     await db
       .update(userCustomCategories)
       .set({
         questionIds: updatedIds,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {
     return fromErrorToFormState(error)
   }
-  revalidateTag('user-custom-categories', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  revalidateTag(`category-${categoryId}`, 'max')
+  revalidateTag("user-custom-categories", "max")
+  revalidateTag(`user-${userId}`, "max")
+  revalidateTag(`category-${categoryId}`, "max")
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Pytanie usunięte z kategorii")
 }
@@ -1180,7 +1197,10 @@ export async function deleteCustomCategoryAction(
   }
 
   try {
-    const result = await deleteUserCustomCategory(userId, validationResult.data.categoryId)
+    const result = await deleteUserCustomCategory(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1188,9 +1208,9 @@ export async function deleteCustomCategoryAction(
   } catch (error) {
     return fromErrorToFormState(error)
   }
-  revalidateTag('user-custom-categories', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  revalidateTag(`category-${categoryId}`, 'max')
+  revalidateTag("user-custom-categories", "max")
+  revalidateTag(`user-${userId}`, "max")
+  revalidateTag(`category-${categoryId}`, "max")
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/nauka")
   revalidatePath("/panel/testy")
@@ -1221,7 +1241,10 @@ export async function updateCategoryNameAction(
   }
 
   try {
-    const category = await getUserCustomCategoryById(userId, validationResult.data.categoryId)
+    const category = await getUserCustomCategoryById(
+      userId,
+      validationResult.data.categoryId
+    )
 
     if (!category) {
       return toFormState("ERROR", "Kategoria nie została znaleziona")
@@ -1231,16 +1254,16 @@ export async function updateCategoryNameAction(
       .update(userCustomCategories)
       .set({
         categoryName: validationResult.data.categoryName,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {
     return fromErrorToFormState(error)
   }
 
-  revalidateTag('user-custom-categories', 'max')
-  revalidateTag(`user-${userId}`, 'max')
-  revalidateTag(`category-${categoryId}`, 'max')
+  revalidateTag("user-custom-categories", "max")
+  revalidateTag(`user-${userId}`, "max")
+  revalidateTag(`category-${categoryId}`, "max")
   revalidatePath("/panel/dodaj-test")
   return toFormState("SUCCESS", "Nazwa kategorii została zaktualizowana")
 }

@@ -4,8 +4,6 @@ import { fileData } from '@/server/fetchData'
 import { getSupporterByUserId } from '@/server/queries';
 import { currentUser } from '@clerk/nextjs/server';
 import { Suspense } from 'react';
-import { isUserAdmin } from '@/lib/adminHelpers'
-import { redirect } from 'next/navigation'
 
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
@@ -31,11 +29,6 @@ export default function CategoryPage(props: CategoryPageProps) {
 async function CategoryContentWrapper(props: { params: Promise<{ category: string }> }) {
     const { category } = await props.params
     const decodedCategory = decodeURIComponent(category)
-
-    if (decodedCategory === 'socjologia') {
-        const isAdmin = await isUserAdmin()
-        if (!isAdmin) redirect('/panel/nauka')
-    }
 
     const user = await currentUser()
     const isSupporter = user?.id ? await getSupporterByUserId(user.id) : false

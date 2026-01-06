@@ -23,7 +23,7 @@ import {
   blogLikes,
   userCustomTests,
   userCustomCategories,
-  customersMessages
+  customersMessages,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -295,7 +295,7 @@ export const getBlogPostBySlug = async (
  */
 export const getBlogPostById = async (id: string): Promise<BlogPost | null> => {
   try {
-    "use cache"
+    ;("use cache")
     cacheLife("days")
     cacheTag("blog-posts", `blog-post-${id}`)
     const post = await db
@@ -1263,27 +1263,30 @@ export async function deleteTestimonial(id: string) {
   return deleted[0]
 }
 
-export async function sessionExists(sessionId: string) {
-  const [session] = await db
-    .select({ id: testSessions.id })
-    .from(testSessions)
-    .where(eq(testSessions.id, sessionId))
-    .limit(1)
-  return !!session
-}
-
-export async function expireTestSession(sessionId: string) {
+export async function expireTestSession(sessionId: string, userId: string) {
   const now = new Date()
-  await db
-    .update(testSessions)
-    .set({ status: "EXPIRED", finishedAt: now })
-    .where(
-      and(
-        eq(testSessions.id, sessionId),
-        eq(testSessions.status, "ACTIVE"),
-        sql`${testSessions.expiresAt} <= ${now}`
+
+  await db.transaction(async (tx) => {
+    // Lock and verify session ownership and status
+    const [session] = await tx
+      .select()
+      .from(testSessions)
+      .where(
+        and(eq(testSessions.id, sessionId), eq(testSessions.userId, userId))
       )
-    )
+      .for("update")
+
+    if (!session) {
+      return
+    }
+
+    if (session.status === "ACTIVE") {
+      await tx
+        .update(testSessions)
+        .set({ status: "EXPIRED", finishedAt: now })
+        .where(eq(testSessions.id, sessionId))
+    }
+  })
 }
 
 export async function getAllUserNotes(userId: string) {
@@ -1407,7 +1410,6 @@ export const deleteMaterial = async (userId: string, materialId: string) => {
 export async function getUserCellsList(
   userId: string
 ): Promise<UserCellsList | null> {
-
   const rows = await db
     .select()
     .from(userCellsList)
@@ -1453,7 +1455,6 @@ export const updateUserCellsList = async (
 }
 
 export async function checkUserCellsList(userId: string) {
-
   const existing = await db
     .select()
     .from(userCellsList)
@@ -1507,7 +1508,6 @@ export async function getChallengeCompletionsByProcedure(
   userId: string,
   procedureId: string
 ) {
- 
   const completions = await db.query.challengeCompletions.findMany({
     where: (model, { and, eq }) =>
       and(
@@ -1529,7 +1529,6 @@ export async function getChallengeCompletion(
   procedureId: string,
   challengeType: string
 ) {
-  
   const completion = await db.query.challengeCompletions.findFirst({
     where: (model, { and, eq }) =>
       and(
@@ -1653,14 +1652,15 @@ export const awardBadge = async (
     .limit(1)
 
   if (existing.length === 0) {
-
     const procedure = await fileData.getProcedureById(data.procedureId)
 
     await tx.insert(procedureBadges).values({
       userId: data.userId,
       procedureId: data.procedureId,
       procedureName: data.procedureName,
-      badgeImageUrl: procedure?.data.image || "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
+      badgeImageUrl:
+        procedure?.data.image ||
+        "https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5R8iqyMoJ4bO3G5lMSTzfQXhE0VIeNdPaZLnk",
       earnedAt: new Date(),
     })
   }
