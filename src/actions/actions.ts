@@ -175,17 +175,6 @@ export async function startTestAction(
       return session
     })
 
-    // Check if the user is a supporter if numberOfQuestions is 40
-    if (numberOfQuestions === 40) {
-      const isSupporter = await getSupporterByUserId(userId)
-      if (!isSupporter) {
-        return toFormState(
-          "ERROR",
-          "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
-        )
-      }
-    }
-
     return {
       ...toFormState("SUCCESS", "Sesja testowa została rozpoczęta."),
       sessionId: result?.id,
