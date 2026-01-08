@@ -868,17 +868,6 @@ export const getEarlySupporters = cache(
   }
 )
 
-// Check if a user is a supporter
-export const getSupporterByUserId = cache(
-  async (userId: string): Promise<boolean> => {
-    const user = await db.query.users.findFirst({
-      where: (model, { eq }) => eq(model.userId, userId),
-      columns: { supporter: true },
-    })
-    return user?.supporter || false
-  }
-)
-
 // Get user statistics (total score, questions, tests attempted)
 export const getUserStats = cache(
   async (

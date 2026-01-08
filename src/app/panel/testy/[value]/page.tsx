@@ -1,11 +1,12 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { auth } from '@clerk/nextjs/server'
 import { fileData } from '@/server/fetchData'
-import { getSupporterByUserId, getTestSessionDetails } from '@/server/queries'
+import { getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
+import { getCurrentUser } from "@/server/user";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -25,11 +26,11 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
   const decodedCategory = decodeURIComponent(category)
 
-  const { userId } = await auth()
-  const isSupporter = userId ? await getSupporterByUserId(userId) : false
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
 
-  const categoryTests = isSupporter
-    ? await fileData.mergedGetTestsByCategory(decodedCategory, userId || "")
+  const categoryTests = user.supporter
+    ? await fileData.mergedGetTestsByCategory(decodedCategory, user.userId)
     : await fileData.getTestsByCategory(decodedCategory)
 
   const sessionDetails = await getTestSessionDetails(sessionId);

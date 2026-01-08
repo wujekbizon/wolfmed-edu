@@ -1,8 +1,8 @@
 import AllTests from '@/components/AllTests'
 import { fileData } from '@/server/fetchData'
-import { getSupporterByUserId } from '@/server/queries';
-import { currentUser } from '@clerk/nextjs/server';
+import { getCurrentUser } from '@/server/user';
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
@@ -29,12 +29,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     // we are using polish letters in the category name
     const decodedCategory = decodeURIComponent(category)
 
-    const user = await currentUser()
-    const isSupporter = user?.id ? await getSupporterByUserId(user.id) : false
+    const user = await getCurrentUser()
+    if (!user) redirect('/sign-in')
 
     // Merge tests if supporter, otherwise only official
-    const tests = isSupporter
-      ? await fileData.mergedGetTestsByCategory(decodedCategory, user?.id)
+    const tests = user.supporter
+      ? await fileData.mergedGetTestsByCategory(decodedCategory, user.userId)
       : await fileData.getTestsByCategory(decodedCategory)
 
     return (

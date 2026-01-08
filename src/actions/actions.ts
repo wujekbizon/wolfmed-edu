@@ -53,7 +53,6 @@ import {
   getLastUserCommentTime,
   createTestimonial,
   expireTestSession,
-  getSupporterByUserId,
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
@@ -63,6 +62,7 @@ import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { getCurrentUser } from "@/server/user"
 
 export async function startTestAction(
   formState: FormState,
@@ -777,11 +777,10 @@ export async function createTestAction(
   formState: FormState,
   formData: FormData
 ) {
-  const user = await auth()
-  if (!user.userId) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  if (!user) throw new Error("Unauthorized")
 
-  const isSupporter = await getSupporterByUserId(user.userId)
-  if (!isSupporter) {
+  if (!user.supporter) {
     return toFormState(
       "ERROR",
       "Ta funkcja jest dostępna tylko dla użytkowników premium."
@@ -839,11 +838,10 @@ export async function uploadTestsFromFile(
   FormState: FormState,
   formData: FormData
 ) {
-  const user = await auth()
-  if (!user.userId) throw new Error("Unauthorized")
+  const user = await getCurrentUser()
+  if (!user) throw new Error("Unauthorized")
 
-  const isSupporter = await getSupporterByUserId(user.userId)
-  if (!isSupporter) {
+  if (!user.supporter) {
     return toFormState(
       "ERROR",
       "Ta funkcja jest dostępna tylko dla użytkowników premium."

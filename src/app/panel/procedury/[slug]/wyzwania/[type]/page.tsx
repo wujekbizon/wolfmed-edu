@@ -1,7 +1,5 @@
-import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { fileData } from '@/server/fetchData'
-import { getSupporterByUserId } from '@/server/queries'
 import { ChallengeType } from '@/types/challengeTypes'
 import OrderStepsChallenge from '@/components/OrderStepsChallenge'
 import QuizChallengeForm from '@/components/QuizChallengeForm'
@@ -16,6 +14,7 @@ import {
   generateScenarioChallenge
 } from '@/helpers/challengeGenerator'
 import { Metadata } from 'next'
+import { getCurrentUser } from '@/server/user'
 
 export const metadata: Metadata = {
   title: 'Wyzwanie Procedury',
@@ -27,17 +26,15 @@ interface Props {
 }
 
 export default async function ChallengeTypePage({ params }: Props) {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
 
-  const isSupporter = await getSupporterByUserId(userId)
-  if (!isSupporter) {
+  if (!user.supporter) {
     return <SupporterRequired />
   }
 
   const { slug, type: challengeType } = await params
 
-  // Get procedure data
   const procedure = await fileData.getProcedureBySlug(slug)
   const procedures = await fileData.getAllProcedures()
 
@@ -45,7 +42,6 @@ export default async function ChallengeTypePage({ params }: Props) {
     redirect('/panel/procedury')
   }
 
-  // Render appropriate challenge based on type
   try {
     switch (challengeType) {
       case ChallengeType.ORDER_STEPS:

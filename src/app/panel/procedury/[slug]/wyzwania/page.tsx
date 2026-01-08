@@ -1,11 +1,10 @@
-import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
 import { fileData } from '@/server/fetchData'
-import { getSupporterByUserId } from '@/server/queries'
 import ChallengesList from '@/components/ChallengesList'
 import SupporterRequired from '@/components/SupporterRequired'
 import { Metadata } from 'next'
+import { getCurrentUser } from '@/server/user'
 
 export const metadata: Metadata = {
   title: 'Wyzwania Procedury',
@@ -17,11 +16,10 @@ interface Props {
 }
 
 export default async function ChallengePage({ params }: Props) {
-  const { userId } = await auth()
-  if (!userId) redirect('/sign-in')
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
 
-  const isSupporter = await getSupporterByUserId(userId)
-  if (!isSupporter) {
+  if (!user.supporter) {
     return <SupporterRequired />
   }
 

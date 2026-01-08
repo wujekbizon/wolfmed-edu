@@ -1,11 +1,8 @@
-import { getUserMotto } from '@/server/queries'
-import { currentUser } from '@clerk/nextjs/server'
-import { notFound } from 'next/navigation'
+import { getCurrentUser } from '@/server/user'
 
 export default async function UserMotto() {
-  const user = await currentUser()
-  if (!user) notFound()
-  const motto = await getUserMotto(user.id)
+  const user = await getCurrentUser()
+  if (!user) return null
 
   return (
     <div
@@ -29,7 +26,7 @@ export default async function UserMotto() {
           className="text-base sm:text-lg md:text-xl font-serif italic text-zinc-700 text-center 
           group-hover:text-zinc-800 transition-colors"
         >
-          &quot;{motto}&quot;
+          &quot;{user.motto}&quot;
         </p>
       </div>
     </div>

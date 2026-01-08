@@ -7,10 +7,10 @@ import PdfPreviewModal from '@/components/PdfPreviewModal'
 import VideoPreviewModal from '@/components/VideoPreviewModal'
 import TextPreviewModal from '@/components/TextPreviewModal'
 import UploadMaterialModal from '@/components/UploadMaterialModal'
-import { getAllUserNotes, getMaterialsByUser, getSupporterByUserId } from '@/server/queries'
-import {  currentUser } from '@clerk/nextjs/server'
+import { getAllUserNotes, getMaterialsByUser } from '@/server/queries'
 import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
+import { getCurrentUser } from '@/server/user'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,22 +22,22 @@ export const metadata: Metadata = {
 }
 
 export default async function NaukaPage() {
-  const user = await currentUser()
-  const isSupporter = user?.id ? await getSupporterByUserId(user?.id) : false
+  const user = await getCurrentUser()
+  if (!user) return null
 
-  const populatedCategories = await getPopulatedCategories(
-    fileData,
-    isSupporter ? (user?.id || undefined) : undefined
-  )
-
-  const userAllNotes = user ? (await getAllUserNotes(user.id) as NotesType[]) : []
-  
-  const userMaterials = user ? await getMaterialsByUser(user.id) as MaterialsType[] : []
+  const [populatedCategories, userAllNotes, userMaterials] = await Promise.all([
+    getPopulatedCategories(
+      fileData,
+      user.supporter ? user.userId : undefined
+    ),
+    getAllUserNotes(user.userId) as Promise<NotesType[]>,
+    getMaterialsByUser(user.userId) as Promise<MaterialsType[]>,
+  ])
   const materials = await getMergedMaterials(userMaterials)
 
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubDashboard materials={materials} categories={populatedCategories} notes={userAllNotes} isSupporter={isSupporter}/>
+      <LearningHubDashboard materials={materials} categories={populatedCategories} notes={userAllNotes} isSupporter={user.supporter} />
       <PdfPreviewModal />
       <VideoPreviewModal />
       <TextPreviewModal />

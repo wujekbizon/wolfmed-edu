@@ -1,15 +1,12 @@
-import { getSupporterByUserId } from '@/server/queries'
-import { currentUser } from '@clerk/nextjs/server'
+import { getCurrentUser } from '@/server/user'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 
 export default async function SupporterStatus() {
-  const user = await currentUser()
-  if (!user) notFound()
+  const user = await getCurrentUser()
+  if (!user) return null
 
-  const isSupporter = await getSupporterByUserId(user.id)
 
-  if (isSupporter) {
+  if (user.supporter) {
     return (
       <div
         className="flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-[#ff9898]/20 to-rose-200/20 

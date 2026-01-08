@@ -1,24 +1,27 @@
-import { auth } from '@clerk/nextjs/server'
-import { getUserStats, getProgressTimeline, getCategoryPerformance, getQuestionAccuracyAnalytics } from '@/server/queries'
+import { getProgressTimeline, getCategoryPerformance, getQuestionAccuracyAnalytics } from '@/server/queries'
 import { fetchProblematicQuestionDetails } from '@/actions/fetchProblematicQuestionDetails'
 import UserAnalyticsClient from './UserAnalyticsClient'
+import { getCurrentUser } from '@/server/user'
 
 export default async function UserAnalytics() {
-  const { userId } = await auth()
-  if (!userId) return null
+  const user = await getCurrentUser()
+  if (!user) return null
 
-  const [stats, timeline, categories, problemQuestions] = await Promise.all([
-    getUserStats(userId),
-    getProgressTimeline(userId, 30),
-    getCategoryPerformance(userId),
-    getQuestionAccuracyAnalytics(userId),
+  const [timeline, categories, problemQuestions] = await Promise.all([
+    getProgressTimeline(user.userId, 30),
+    getCategoryPerformance(user.userId),
+    getQuestionAccuracyAnalytics(user.userId),
   ])
 
   const enrichedProblemQuestions = await fetchProblematicQuestionDetails(problemQuestions)
 
   return (
     <UserAnalyticsClient
-      stats={stats}
+      stats={{
+        totalScore: user.totalScore,
+        totalQuestions: user.totalQuestions,
+        testsAttempted: user.testsAttempted,
+      }}
       timeline={timeline}
       categories={categories}
       problemQuestions={enrichedProblemQuestions}

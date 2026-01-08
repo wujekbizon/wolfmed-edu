@@ -1,12 +1,12 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { auth } from '@clerk/nextjs/server'
 import { fileData } from '@/server/fetchData'
-import { getSupporterByUserId } from '@/server/queries'
 import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
+import { redirect } from 'next/navigation'
+import { getCurrentUser } from '@/server/user'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
@@ -24,12 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export const dynamic = 'force-dynamic'
 
 async function TestsCategories() {
-  const { userId } = await auth()
-  const isSupporter = userId ? await getSupporterByUserId(userId) : false
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
 
   const populatedCategories = await getPopulatedCategories(
     fileData,
-    isSupporter ? (userId || undefined) : undefined
+    user.supporter ? user.userId : undefined
   )
 
   return <TestsCategoriesList categories={populatedCategories} />
