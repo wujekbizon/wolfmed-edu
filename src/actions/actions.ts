@@ -40,7 +40,7 @@ import {
   UpdateCategoryNameSchema,
 } from "@/server/schema"
 import { auth } from "@clerk/nextjs/server"
-import { eq, sql, and, gt } from "drizzle-orm"
+import { eq, sql, and, gt, lt } from "drizzle-orm"
 import {
   deleteCompletedTest,
   updateMottoByUserId,
@@ -71,7 +71,6 @@ export async function startTestAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 20 test starts per hour
   const rateLimit = await checkRateLimit(userId, "test:start")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
@@ -90,7 +89,6 @@ export async function startTestAction(
     })
 
     if (!validationResult.success) {
-      console.log(`Validation error: ${validationResult.error.issues}`)
       return toFormState(
         "ERROR",
         validationResult.error.issues[0]?.message ||
@@ -101,9 +99,6 @@ export async function startTestAction(
     const { category, numberOfQuestions, durationMinutes, meta } =
       validationResult.data
 
-    const now = new Date()
-    const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
-
     let parsedMeta = {}
     try {
       parsedMeta = JSON.parse(meta)
@@ -112,7 +107,6 @@ export async function startTestAction(
     }
 
     const result = await db.transaction(async (tx) => {
-      // Check user permissions and limits
       const [user] = await tx
         .select({
           supporter: users.supporter,
@@ -120,36 +114,47 @@ export async function startTestAction(
         })
         .from(users)
         .where(eq(users.userId, userId))
+        .for("update")
 
       if (!user) {
         throw new Error("Nie znaleziono użytkownika")
       }
 
-      // Check supporter status for 40-question tests
       if (numberOfQuestions === 40 && !user.supporter) {
         throw new Error(
           "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
         )
       }
 
-      // Check test limit
       if (user.testLimit !== null && user.testLimit <= 0) {
         throw new Error(
           "Wyczerpałeś limit testów. Wesprzyj nasz projekt, aby kontynuować."
         )
       }
 
-      // Lock and check for existing active session
+      const now = new Date()
+
+      await tx
+        .update(testSessions)
+        .set({ status: "EXPIRED" })
+        .where(
+          and(
+            eq(testSessions.userId, userId),
+            eq(testSessions.status, "ACTIVE"),
+            lt(testSessions.expiresAt, now)
+          )
+        )
+
       const existingSessions = await tx
         .select({ id: testSessions.id })
         .from(testSessions)
         .where(
           and(
             eq(testSessions.userId, userId),
-            eq(testSessions.status, "ACTIVE")
+            eq(testSessions.status, "ACTIVE"),
+            gt(testSessions.expiresAt, now)
           )
         )
-        .for("update")
 
       if (existingSessions.length > 0) {
         throw new Error(
@@ -157,7 +162,8 @@ export async function startTestAction(
         )
       }
 
-      // Create new session
+      const expiresAt = new Date(now.getTime() + durationMinutes * 60 * 1000)
+
       const [session] = await tx
         .insert(testSessions)
         .values({
@@ -198,7 +204,6 @@ export async function submitTestAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  // Rate limiting: 20 test submits per hour
   const rateLimit = await checkRateLimit(userId, "test:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
@@ -213,7 +218,6 @@ export async function submitTestAction(
     return toFormState("ERROR", "No session ID provided")
   }
 
-  // Extract answer data from the submitted form data
   const answers: QuestionAnswer[] = []
   formData.forEach((value, key) => {
     if (key.slice(0, 6) === "answer") {
@@ -226,7 +230,6 @@ export async function submitTestAction(
   const validationResult = answersSchema.safeParse(answers)
 
   if (!validationResult.success) {
-    console.log(`Validation error: ${validationResult.error.issues}`)
     const formValues: Record<string, string> = {}
     formData.forEach((value, key) => {
       if (key.startsWith("answer-")) {
@@ -242,17 +245,13 @@ export async function submitTestAction(
     }
   }
 
-  // Calculate score and prepare completed test data
   const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
-  const testResult = parseAnswerRecord(
-    validationResult?.data as QuestionAnswer[]
-  )
+  const testResult = parseAnswerRecord(validationResult?.data as QuestionAnswer[])
 
   try {
     await db.transaction(async (tx) => {
       const now = new Date()
 
-      // Lock and verify session FIRST
       const result = await tx.execute(
         sql`SELECT * FROM ${testSessions}
             WHERE ${testSessions.id} = ${sessionId}
@@ -266,7 +265,6 @@ export async function submitTestAction(
         throw new Error("Nie znaleziono aktywnej sesji testu")
       }
 
-      // Check expiry BEFORE checking test limit
       if (now > session.expiresAt) {
         await tx
           .update(testSessions)
@@ -275,39 +273,39 @@ export async function submitTestAction(
         throw new Error("Sesja wygasła — czas się skończył")
       }
 
-      // We check test limit (inside transaction for consistency and to avoid race conditions)
-      const [userTestLimit] = await tx
+      const [user] = await tx
         .select({
           testLimit: users.testLimit,
-          userId: users.userId,
         })
         .from(users)
         .where(eq(users.userId, userId))
 
-      if (!userTestLimit) {
+      if (!user) {
         throw new Error("Nie znaleziono użytkownika")
       }
 
-      // Check if user has tests remaining
-      if (userTestLimit.testLimit !== null && userTestLimit.testLimit <= 0) {
+      if (user.testLimit !== null && user.testLimit <= 0) {
         throw new Error(
           "Wyczerpałeś limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
         )
       }
 
-      if (userTestLimit.testLimit !== null && userTestLimit.testLimit > 0) {
+      if (user.testLimit !== null) {
         await tx
           .update(users)
-          .set({
-            testLimit: userTestLimit.testLimit - 1,
-            testsAttempted: sql`${users.testsAttempted} + 1`,
-            totalScore: sql`${users.totalScore} + ${correct}`,
-            totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
-          })
+          .set({ testLimit: user.testLimit - 1 })
           .where(eq(users.userId, userId))
       }
 
-      // Insert completed test
+      await tx
+        .update(users)
+        .set({
+          testsAttempted: sql`${users.testsAttempted} + 1`,
+          totalScore: sql`${users.totalScore} + ${correct}`,
+          totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
+        })
+        .where(eq(users.userId, userId))
+
       await tx.insert(completedTestes).values({
         userId,
         sessionId: session.id,
@@ -315,7 +313,6 @@ export async function submitTestAction(
         testResult,
       })
 
-      // Mark session as completed
       await tx
         .update(testSessions)
         .set({ status: "COMPLETED", finishedAt: now })
@@ -325,7 +322,6 @@ export async function submitTestAction(
     return fromErrorToFormState(error)
   }
 
-  // Update form state and redirect on success and redirect user to result page
   toFormState("SUCCESS", "Test został wypełniony pomyślnie")
   revalidatePath("/panel", "page")
   redirect("/panel/wyniki")
