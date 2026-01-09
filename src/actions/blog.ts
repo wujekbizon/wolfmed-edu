@@ -98,8 +98,8 @@ export async function createBlogPostAction(
     }
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
-    revalidatePath('/blog/admin/posts')
+    revalidatePath('/admin')
+    revalidatePath('/admin/posts')
 
     return toFormState('SUCCESS', 'Post został utworzony pomyślnie!')
   } catch (error) {
@@ -206,8 +206,8 @@ export async function updateBlogPostAction(
     }
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
-    revalidatePath('/blog/admin/posts')
+    revalidatePath('/admin')
+    revalidatePath('/admin/posts')
     if (updatedPost) {
       revalidatePath(`/blog/${updatedPost.slug}`)
     }
@@ -243,8 +243,8 @@ export async function deleteBlogPostAction(
     await db.delete(blogPosts).where(eq(blogPosts.id, validationResult.data.id))
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
-    revalidatePath('/blog/admin/posts')
+    revalidatePath('/admin')
+    revalidatePath('/admin/posts')
 
     return toFormState('SUCCESS', 'Post został usunięty pomyślnie!')
   } catch (error) {
@@ -288,7 +288,7 @@ export async function publishBlogPostAction(
       .where(eq(blogPosts.id, validationResult.data.id))
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Post został opublikowany pomyślnie!')
   } catch (error) {
@@ -321,7 +321,7 @@ export async function archiveBlogPostAction(
       .where(eq(blogPosts.id, id))
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Post został zarchiwizowany pomyślnie!')
   } catch (error) {
@@ -473,7 +473,7 @@ export async function deleteBlogPost(input: { id: string }): Promise<ActionResul
 
     await db.delete(blogPosts).where(eq(blogPosts.id, validationResult.data.id))
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return { success: true }
   } catch (error) {
@@ -533,7 +533,7 @@ export async function createBlogPost(input: any): Promise<ActionResult<{ id: str
     }
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return { success: true, data: newPost || { id: '', slug: '' } }
   } catch (error) {
@@ -607,7 +607,7 @@ export async function updateBlogPost(input: any): Promise<ActionResult<{ id: str
     }
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
     if (updatedPost) {
       revalidatePath(`/blog/${updatedPost.slug}`)
     }

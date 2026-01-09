@@ -27,7 +27,7 @@ export async function markMessageAsReadAction(
 
     await markMessageAsRead(messageId)
 
-    revalidatePath("/blog/admin/messages")
+    revalidatePath("/admin/messages")
 
     return toFormState("SUCCESS", "Wiadomość oznaczona jako przeczytana")
   } catch (error) {

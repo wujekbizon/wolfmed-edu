@@ -28,31 +28,31 @@ export default async function AdminLayout({
               </h1>
               <nav className="hidden md:flex space-x-4">
                 <Link
-                  href="/blog/admin"
+                  href="/admin"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Dashboard
                 </Link>
                 <Link
-                  href="/blog/admin/posts"
+                  href="/admin/posts"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Posty
                 </Link>
                 <Link
-                  href="/blog/admin/posts/new"
+                  href="/admin/posts/new"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Nowy Post
                 </Link>
                 <Link
-                  href="/blog/admin/messages"
+                  href="/admin/messages"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Wiadomości
                 </Link>
                 <Link
-                  href="/blog/admin/categories"
+                  href="/admin/categories"
                   className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Kategorie
@@ -72,31 +72,31 @@ export default async function AdminLayout({
           {/* Mobile Navigation */}
           <nav className="md:hidden pb-4 flex flex-wrap gap-2">
             <Link
-              href="/blog/admin"
+              href="/admin"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Dashboard
             </Link>
             <Link
-              href="/blog/admin/posts"
+              href="/admin/posts"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Posty
             </Link>
             <Link
-              href="/blog/admin/posts/new"
+              href="/admin/posts/new"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Nowy Post
             </Link>
             <Link
-              href="/blog/admin/messages"
+              href="/admin/messages"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Wiadomości
             </Link>
             <Link
-              href="/blog/admin/categories"
+              href="/admin/categories"
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Kategorie

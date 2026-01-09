@@ -1,5 +1,5 @@
 import { getAllBlogPosts } from '@/server/queries'
-import PostsManagementContent from '@/components/blog/admin/PostsManagementContent'
+import PostsManagementContent from '@/components/admin/PostsManagementContent'
 
 export const dynamic = 'force-dynamic'
 

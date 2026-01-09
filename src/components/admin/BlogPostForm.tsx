@@ -45,7 +45,7 @@ export default function BlogPostForm({
   // Redirect on success
   useEffect(() => {
     if (state.status === 'SUCCESS') {
-      router.push('/blog/admin/posts')
+      router.push('/admin/posts')
       router.refresh()
     }
   }, [state.status, router])

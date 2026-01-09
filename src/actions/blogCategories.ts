@@ -61,7 +61,7 @@ export async function createBlogCategoryAction(
     })
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Kategoria została utworzona pomyślnie!')
   } catch (error) {
@@ -123,7 +123,7 @@ export async function updateBlogCategoryAction(
       .returning({ id: blogCategories.id, slug: blogCategories.slug })
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
     if (updatedCategory) {
       revalidatePath(`/blog/category/${updatedCategory.slug}`)
     }
@@ -161,7 +161,7 @@ export async function deleteBlogCategoryAction(
     await db.delete(blogCategories).where(eq(blogCategories.id, validationResult.data.id))
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Kategoria została usunięta pomyślnie!')
   } catch (error) {
@@ -202,7 +202,7 @@ export async function createBlogTagAction(
     })
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Tag został utworzony pomyślnie!')
   } catch (error) {
@@ -250,7 +250,7 @@ export async function updateBlogTagAction(
       .returning({ id: blogTags.id, slug: blogTags.slug })
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
     if (updatedTag) {
       revalidatePath(`/blog/tag/${updatedTag.slug}`)
     }
@@ -287,7 +287,7 @@ export async function deleteBlogTagAction(
     await db.delete(blogTags).where(eq(blogTags.id, validationResult.data.id))
 
     revalidatePath('/blog')
-    revalidatePath('/blog/admin')
+    revalidatePath('/admin')
 
     return toFormState('SUCCESS', 'Tag został usunięty pomyślnie!')
   } catch (error) {

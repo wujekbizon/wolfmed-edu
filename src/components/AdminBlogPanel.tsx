@@ -117,7 +117,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-zinc-900">Ostatnie Posty</h2>
             <Link
-              href="/blog/admin/posts"
+              href="/admin/posts"
               className="text-sm text-red-600 hover:text-red-700 font-medium"
             >
               Zobacz wszystkie →
@@ -129,7 +129,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
           <div className="p-8 text-center">
             <p className="text-zinc-500">Brak postów</p>
             <Link
-              href="/blog/admin/posts/new"
+              href="/admin/posts/new"
               className="mt-4 inline-block text-red-600 hover:text-red-700 font-medium"
             >
               Utwórz pierwszy post →
@@ -177,7 +177,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
                   </div>
                   <div className="flex items-center gap-2">
                     <Link
-                      href={`/blog/admin/posts/${post.id}/edit`}
+                      href={`/admin/posts/${post.id}/edit`}
                       className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
                     >
                       Edytuj
@@ -202,7 +202,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Link
-          href="/blog/admin/posts/new"
+          href="/admin/posts/new"
           className="bg-red-600 hover:bg-red-700 text-white p-6 rounded-lg shadow-sm transition-colors group"
         >
           <div className="flex items-center gap-4">
@@ -219,7 +219,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
         </Link>
 
         <Link
-          href="/blog/admin/messages"
+          href="/admin/messages"
           className="bg-emerald-600 hover:bg-emerald-700 text-white p-6 rounded-lg shadow-sm transition-colors group"
         >
           <div className="flex items-center gap-4">
@@ -236,7 +236,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
         </Link>
 
         <Link
-          href="/blog/admin/categories"
+          href="/admin/categories"
           className="bg-white hover:bg-zinc-50 text-zinc-900 p-6 rounded-lg shadow-sm border border-zinc-200 transition-colors group"
         >
           <div className="flex items-center gap-4">

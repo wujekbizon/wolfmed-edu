@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { formatDate } from '@/lib/blogUtils'
 import { useDashboardStore } from '@/store/useDashboardStore'
-import DeletePostButton from '@/components/blog/admin/DeletePostButton'
-import DeletePostModal from '@/components/blog/admin/DeletePostModal'
+import DeletePostButton from '@/components/admin/DeletePostButton'
+import DeletePostModal from '@/components/admin/DeletePostModal'
 import type { BlogPost } from '@/types/dataTypes'
 
 interface PostsManagementContentProps {
@@ -27,7 +27,7 @@ export default function PostsManagementContent({ posts }: PostsManagementContent
           </p>
         </div>
         <Link
-          href="/blog/admin/posts/new"
+          href="/admin/posts/new"
           className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
         >
           + Nowy Post
@@ -58,7 +58,7 @@ export default function PostsManagementContent({ posts }: PostsManagementContent
               Zacznij od utworzenia pierwszego posta na blogu
             </p>
             <Link
-              href="/blog/admin/posts/new"
+              href="/admin/posts/new"
               className="inline-block px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium"
             >
               Utwórz Pierwszy Post
@@ -142,7 +142,7 @@ export default function PostsManagementContent({ posts }: PostsManagementContent
                           </Link>
                         )}
                         <Link
-                          href={`/blog/admin/posts/${post.id}/edit`}
+                          href={`/admin/posts/${post.id}/edit`}
                           className="text-red-600 hover:text-red-900"
                         >
                           Edytuj
@@ -201,7 +201,7 @@ export default function PostsManagementContent({ posts }: PostsManagementContent
                     </Link>
                   )}
                   <Link
-                    href={`/blog/admin/posts/${post.id}/edit`}
+                    href={`/admin/posts/${post.id}/edit`}
                     className="flex-1 text-center px-3 py-1.5 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-md"
                   >
                     Edytuj

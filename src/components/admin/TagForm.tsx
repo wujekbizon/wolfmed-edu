@@ -38,7 +38,7 @@ export default function TagForm({ tag, mode }: TagFormProps) {
   // Redirect on success
   useEffect(() => {
     if (state.status === 'SUCCESS') {
-      router.push('/blog/admin/categories')
+      router.push('/admin/categories')
       router.refresh()
     }
   }, [state.status, router])
@@ -101,7 +101,7 @@ export default function TagForm({ tag, mode }: TagFormProps) {
       <div className="flex items-center justify-end gap-4">
         <button
           type="button"
-          onClick={() => router.push('/blog/admin/categories')}
+          onClick={() => router.push('/admin/categories')}
           className="px-6 py-2 border border-zinc-300 text-zinc-700 rounded-md hover:bg-zinc-50 font-medium"
         >
           Anuluj

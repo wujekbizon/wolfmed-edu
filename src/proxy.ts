@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
 const isProtectedRoute = createRouteMatcher(['/panel(.*)', '/blog(.*)', '/forum(.*)'])
-const isAdminRoute = createRouteMatcher(['/blog/admin(.*)'])
+const isAdminRoute = createRouteMatcher(['/admin(.*)'])
 
 export default clerkMiddleware(async (auth, request) => {
   if (isProtectedRoute(request)) {
@@ -17,7 +17,7 @@ export default clerkMiddleware(async (auth, request) => {
 
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
     if (userRole !== 'admin') {
-      const url = new URL('/blog', request.url)
+      const url = new URL('/admin', request.url)
       return NextResponse.redirect(url)
     }
   }

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { getBlogCategories, getBlogTags } from '@/server/queries'
 
-// Force dynamic rendering for admin pages (requires auth check)
 export const dynamic = 'force-dynamic'
 
 export default async function CategoriesManagementPage() {
@@ -14,7 +13,7 @@ export default async function CategoriesManagementPage() {
     <div className="space-y-8">
       <div>
         <div className="flex items-center gap-2 text-sm text-zinc-600 mb-2">
-          <Link href="/blog/admin" className="hover:text-red-600">
+          <Link href="/admin" className="hover:text-red-600">
             Dashboard
           </Link>
           <span>/</span>
@@ -34,7 +33,7 @@ export default async function CategoriesManagementPage() {
               Kategorie ({categories.length})
             </h2>
             <Link
-              href="/blog/admin/categories/new"
+              href="/admin/categories/new"
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium text-sm"
             >
               + Nowa Kategoria
@@ -46,7 +45,7 @@ export default async function CategoriesManagementPage() {
           <div className="p-8 text-center">
             <p className="text-zinc-500">Brak kategorii</p>
             <Link
-              href="/blog/admin/categories/new"
+              href="/admin/categories/new"
               className="mt-4 inline-block text-red-600 hover:text-red-700 font-medium"
             >
               Utwórz pierwszą kategorię →
@@ -81,7 +80,7 @@ export default async function CategoriesManagementPage() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Link
-                      href={`/blog/admin/categories/${category.id}/edit`}
+                      href={`/admin/categories/${category.id}/edit`}
                       className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors"
                     >
                       Edytuj
@@ -102,7 +101,7 @@ export default async function CategoriesManagementPage() {
               Tagi ({tags.length})
             </h2>
             <Link
-              href="/blog/admin/tags/new"
+              href="/admin/tags/new"
               className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
             >
               + Nowy Tag
@@ -114,7 +113,7 @@ export default async function CategoriesManagementPage() {
           <div className="p-8 text-center">
             <p className="text-zinc-500">Brak tagów</p>
             <Link
-              href="/blog/admin/tags/new"
+              href="/admin/tags/new"
               className="mt-4 inline-block text-indigo-600 hover:text-indigo-700 font-medium"
             >
               Utwórz pierwszy tag →
@@ -126,7 +125,7 @@ export default async function CategoriesManagementPage() {
               {tags.map((tag) => (
                 <Link
                   key={tag.id}
-                  href={`/blog/admin/tags/${tag.id}/edit`}
+                  href={`/admin/tags/${tag.id}/edit`}
                   className="group inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium transition-colors border border-indigo-200"
                 >
                   <span>{tag.name}</span>

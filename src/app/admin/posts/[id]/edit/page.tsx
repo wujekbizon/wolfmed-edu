@@ -1,5 +1,5 @@
 import { getBlogPostById, getBlogCategories, getBlogTags } from '@/server/queries'
-import BlogPostForm from '@/components/blog/admin/BlogPostForm'
+import BlogPostForm from '@/components/admin/BlogPostForm'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -28,11 +28,11 @@ export default async function EditPostPage({ params }: EditPostPageProps) {
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
         <div className="flex items-center gap-2 text-sm text-zinc-600 mb-2">
-          <Link href="/blog/admin" className="hover:text-red-600">
+          <Link href="/admin" className="hover:text-red-600">
             Dashboard
           </Link>
           <span>/</span>
-          <Link href="/blog/admin/posts" className="hover:text-red-600">
+          <Link href="/admin/posts" className="hover:text-red-600">
             Posty
           </Link>
           <span>/</span>

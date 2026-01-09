@@ -63,13 +63,13 @@ export default async function AdminBlogWidget() {
 
       <div className="flex flex-col gap-2">
         <Link
-          href="/blog/admin"
+          href="/admin"
           className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-center text-sm"
         >
           Panel Administracyjny
         </Link>
         <Link
-          href="/blog/admin/posts/new"
+          href="/admin/posts/new"
           className="w-full px-4 py-2 bg-white text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors font-medium text-center text-sm"
         >
           + Nowy Post
