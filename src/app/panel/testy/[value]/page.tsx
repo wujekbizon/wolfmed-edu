@@ -7,6 +7,8 @@ import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { getCurrentUser } from "@/server/user";
 import { redirect } from "next/navigation";
+import { checkCourseAccessAction } from "@/actions/course-actions";
+import { getCourseForCategory } from "@/constants/courseCategoryMapping";
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -29,6 +31,27 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
+  // Check if this category requires specific course enrollment
+  const requiredCourse = getCourseForCategory(decodedCategory)
+
+  // If category is mapped to a course, check access
+  if (requiredCourse && requiredCourse !== "opiekun-medyczny") {
+    const courseAccess = await checkCourseAccessAction(requiredCourse)
+
+    // If user doesn't have access to the required course, show access denied
+    if (!courseAccess.hasAccess) {
+      return (
+        <div className="flex flex-col items-center gap-4 p-8">
+          <h2 className="text-2xl font-bold text-red-600">Brak dostępu</h2>
+          <p className="text-gray-600 text-center">
+            Nie masz dostępu do tego kursu. Kup kurs, aby uzyskać dostęp do testów.
+          </p>
+        </div>
+      )
+    }
+  }
+
+  // Original logic - keep backward compatibility for opiekun-medyczny
   const categoryTests = user.supporter
     ? await fileData.mergedGetTestsByCategory(decodedCategory, user.userId)
     : await fileData.getTestsByCategory(decodedCategory)

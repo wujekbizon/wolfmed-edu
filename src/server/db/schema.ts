@@ -46,6 +46,7 @@ export const payments = createTable("stripe_payments", {
   currency: currencyEnum("currency"),
   customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
+  courseSlug: varchar("courseSlug", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow(),
 }, (table) => [
   index("stripe_payments_user_id_idx").on(table.userId),
@@ -64,6 +65,7 @@ export const subscriptions = createTable("stripe_subscriptions", {
   invoiceId: varchar("invoiceId", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   subscriptionId: varchar("subscriptionId", { length: 256 }).notNull(),
+  courseSlug: varchar("courseSlug", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 })
 
@@ -495,6 +497,53 @@ export const userLimitsRelations = relations(userLimits, ({ one }) => ({
   user: one(users, {
     fields: [userLimits.userId],
     references: [users.userId],
+  }),
+}));
+
+// Multi-Course System
+export const courses = createTable(
+  "courses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("courses_slug_idx").on(table.slug),
+    index("courses_is_active_idx").on(table.isActive),
+  ]
+);
+
+export const courseEnrollments = createTable(
+  "course_enrollments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    courseSlug: varchar("course_slug", { length: 100 }).notNull(),
+    accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at"),
+  },
+  (table) => [
+    index("enrollments_user_id_idx").on(table.userId),
+    index("enrollments_course_slug_idx").on(table.courseSlug),
+    index("enrollments_is_active_idx").on(table.isActive),
+    index("enrollments_user_course_idx").on(table.userId, table.courseSlug),
+  ]
+);
+
+export const courseEnrollmentsRelations = relations(courseEnrollments, ({ one }) => ({
+  user: one(users, {
+    fields: [courseEnrollments.userId],
+    references: [users.userId],
+  }),
+  course: one(courses, {
+    fields: [courseEnrollments.courseSlug],
+    references: [courses.slug],
   }),
 }));
 
