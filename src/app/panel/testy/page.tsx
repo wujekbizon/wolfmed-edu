@@ -31,7 +31,6 @@ async function TestsCategories() {
     fileData,
     user.supporter ? user.userId : undefined
   )
-
   return <TestsCategoriesList categories={populatedCategories} />
 }
 

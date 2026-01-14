@@ -9,10 +9,15 @@ export interface TestData {
   answers: Answer[]
 }
 
+export interface TestMeta {
+  course: string
+  category: string
+}
+
 export interface Test {
   id: string
   data: TestData
-  category: string
+  meta: TestMeta
   createdAt?: Date | null
   updatedAt?: Date | null
 }

@@ -18,7 +18,7 @@ interface FileDataOperations {
   getProcedureById: (id: string) => Promise<Procedure | null>
   getProcedureBySlug: (slug: string) => Promise<Procedure | null>
   getAllTests: () => Promise<Test[]>
-  getTestsCategories: () => Promise<{ category: string }[]>
+  getTestsCategories: () => Promise<{ meta: { category: string; course: string } }[]>
   countTestsByCategory: (category: string) => Promise<number>
   getTestsByCategory: (category: string) => Promise<Test[]>
   getCategoriesMetadata: () => Promise<CategoryMetadata[]>
@@ -27,7 +27,7 @@ interface FileDataOperations {
   // See @/helpers/mergeTests.ts for architecture details
   mergedGetAllTests: (userId?: string) => Promise<Test[]>
   mergedGetTestsByCategory: (category: string, userId?: string) => Promise<Test[]>
-  mergedGetTestsCategories: (userId?: string) => Promise<{ category: string }[]>
+  mergedGetTestsCategories: (userId?: string) => Promise<{ meta: { category: string; course: string } }[]>
   mergedCountTestsByCategory: (category: string, userId?: string) => Promise<number>
 }
 
@@ -86,7 +86,6 @@ export const fileData: FileDataOperations = {
         return null
       }
 
-      // Fetch procedure by ID
       const procedures = await readJsonFile<Procedure[]>("procedures.json")
       return procedures.find((procedure) => procedure.id === procedureId) || null
     } catch (error) {
@@ -109,12 +108,11 @@ export const fileData: FileDataOperations = {
   getTestsCategories: async () => {
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
-      const categories = [...new Set(tests.map((test) => test.category))].map(
-        (category) => ({ category })
-      )
-      return categories
+      const categories = tests.map(test => ({ meta: test.meta }))
+      const uniqueCategories = Array.from(new Map(categories.map(item => [item.meta.category, item])).values());
+      return uniqueCategories
     } catch (error) {
-      console.error("Error fetching tests:", error)
+      console.error("Error fetching test categories:", error)
       return []
     }
   },
@@ -122,7 +120,7 @@ export const fileData: FileDataOperations = {
   countTestsByCategory: async (category: string) => {
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
-      const count = tests.filter((test) => test.category === category).length
+      const count = tests.filter((test) => test.meta.category === category).length
       return count
     } catch (error) {
       console.error(`Error counting tests for category ${category}:`, error)
@@ -134,7 +132,7 @@ export const fileData: FileDataOperations = {
     try {
       const tests = await readJsonFile<Test[]>("tests.json")
       const filteredTests = tests
-        .filter((test) => test.category === category)
+        .filter((test) => test.meta.category === category)
         .sort((a, b) => {
           // Assuming 'id' can be compared as strings or numbers for consistent ordering
           // For truly descending ID, you might need a more robust comparison if IDs are not simple numbers

@@ -13,11 +13,11 @@ export default function CustomTestsList({ tests }: CustomTestsListProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const { openDeleteCategoryModal } = useCustomTestsStore()
 
-  const categories = Array.from(new Set(tests.map(test => test.category)))
+  const categories = Array.from(new Set(tests.map(test => test.meta.category)))
 
   const filteredTests = selectedCategory === "all"
     ? tests
-    : tests.filter(test => test.category === selectedCategory)
+    : tests.filter(test => test.meta.category === selectedCategory)
 
 
   const categoryCount = filteredTests.length
@@ -60,7 +60,7 @@ export default function CustomTestsList({ tests }: CustomTestsListProps) {
             <option value="all">Wszystkie kategorie ({tests.length})</option>
             {categories.map((category) => (
               <option key={category} value={category}>
-                {category} ({tests.filter(t => t.category === category).length})
+                {category} ({tests.filter(t => t.meta.category === category).length})
               </option>
             ))}
           </select>

@@ -14,6 +14,11 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
+interface TestMeta {
+  course: string;
+  category: string;
+}
+
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
 
 export const currencyEnum = pgEnum("currency", ["pln", "usd", "eur"])
@@ -123,7 +128,7 @@ export const testSessions = createTable(
 
 export const tests = createTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  category: varchar("category", { length: 256 }).notNull(),
+  meta: jsonb("meta").$type<TestMeta>().notNull(),
   data: jsonb("data").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt"),
@@ -134,14 +139,14 @@ export const userCustomTests = createTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull(),
-    category: varchar("category", { length: 256 }).notNull(),
+    meta: jsonb("meta").$type<TestMeta>().notNull(),
     data: jsonb("data").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt"),
   },
   (userCustomTests) => ({
     userIdIdx: index("user_custom_tests_userId_idx").on(userCustomTests.userId),
-    categoryIdx: index("user_custom_tests_category_idx").on(userCustomTests.category),
+    metaIdx: index("user_custom_tests_meta_idx").on(userCustomTests.meta),
   })
 )
 

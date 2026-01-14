@@ -40,7 +40,10 @@ export async function getMergedTests(userId?: string): Promise<Test[]> {
   // 4. Transform DB format to Test format
   const transformedUserTests: Test[] = userTestsData.map((ut: UserCustomTest) => ({
     id: ut.id,
-    category: ut.category,
+    meta: {
+      category: ut.meta.category,
+      course: ut.meta.course,
+    },
     data: ut.data as { question: string; answers: Array<{ option: string; isCorrect: boolean }> },
     createdAt: ut.createdAt,
     updatedAt: ut.updatedAt,
@@ -58,7 +61,7 @@ export async function getMergedTestsByCategory(
   userId?: string
 ): Promise<Test[]> {
   const allTests = await getMergedTests(userId)
-  return allTests.filter(test => test.category === category)
+  return allTests.filter(test => test.meta.category === category)
 }
 
 /**
@@ -66,8 +69,8 @@ export async function getMergedTestsByCategory(
  */
 export async function getMergedCategories(userId?: string) {
   const allTests = await getMergedTests(userId)
-  const uniqueCategories = [...new Set(allTests.map(t => t.category))]
-  return uniqueCategories.map(cat => ({ category: cat }))
+  const uniqueCategories = Array.from(new Map(allTests.map(test => [test.meta.category, { meta: test.meta }])).values());
+  return uniqueCategories
 }
 
 /**
