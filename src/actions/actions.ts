@@ -63,6 +63,7 @@ import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
+import { populateTests } from "@/server/db/populateDb"
 
 export async function startTestAction(
   formState: FormState,
@@ -494,7 +495,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
       values: { motto },
     }
   }
-
+  populateTests()
   revalidatePath("/panel")
   return toFormState("SUCCESS", "Motto zaktualizowane pomyślnie!")
 }
