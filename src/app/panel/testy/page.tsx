@@ -38,11 +38,7 @@ async function TestsCategories() {
       const courseAccess = await checkCourseAccessAction(metadata.course)
 
       if (!courseAccess.hasAccess) {
-        return {
-          ...cat,
-          hasAccess: false,
-          lockedReason: 'Wymagane zakupienie kursu'
-        }
+        return { ...cat, hasAccess: false }
       }
 
       const hasTierAccess = hasAccessToTier(
@@ -50,19 +46,14 @@ async function TestsCategories() {
         metadata.requiredTier
       )
 
-      if (!hasTierAccess) {
-        return {
-          ...cat,
-          hasAccess: false,
-          lockedReason: `Wymagana wyższa wersja (${metadata.requiredTier})`
-        }
-      }
-
-      return { ...cat, hasAccess: true }
+      return { ...cat, hasAccess: hasTierAccess }
     })
   )
 
-  return <TestsCategoriesList categories={categoriesWithAccess} />
+  // Only show categories user has access to
+  const accessibleCategories = categoriesWithAccess.filter(cat => cat.hasAccess)
+
+  return <TestsCategoriesList categories={accessibleCategories} />
 }
 
 export default function TestsPage() {
