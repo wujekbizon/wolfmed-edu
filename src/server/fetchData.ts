@@ -10,6 +10,12 @@ import {
   getMergedCategories,
   countMergedTestsByCategory
 } from "@/helpers/mergeTests"
+import {
+  getAllTests as getAllTestsFromDb,
+  getTestsByCategory as getTestsByCategoryFromDb,
+  getCategories as getCategoriesFromDb,
+  countTestsByCategory as countTestsByCategoryFromDb,
+} from "@/server/queries"
 
 interface FileDataOperations {
   getAllPosts: () => Promise<BlogPost[]>
@@ -31,6 +37,8 @@ interface FileDataOperations {
   mergedCountTestsByCategory: (category: string, userId?: string) => Promise<number>
 }
 
+// DEPRECATED: Use database queries instead of reading from JSON files
+// Kept for backward compatibility with procedures, blog posts, and materials
 async function readJsonFile<T>(filename: string): Promise<T> {
   const dataPath = path.join(process.cwd(), "data", filename)
   const fileContents = await fs.promises.readFile(dataPath, "utf8")
@@ -96,9 +104,8 @@ export const fileData: FileDataOperations = {
 
   getAllTests: async () => {
     try {
-      const tests = await readJsonFile<Test[]>("tests.json")
-
-      return tests
+      const tests = await getAllTestsFromDb()
+      return tests as Test[]
     } catch (error) {
       console.error("Error fetching tests:", error)
       return []
@@ -107,10 +114,8 @@ export const fileData: FileDataOperations = {
 
   getTestsCategories: async () => {
     try {
-      const tests = await readJsonFile<Test[]>("tests.json")
-      const categories = tests.map(test => ({ meta: test.meta }))
-      const uniqueCategories = Array.from(new Map(categories.map(item => [item.meta.category, item])).values());
-      return uniqueCategories
+      const categories = await getCategoriesFromDb()
+      return categories
     } catch (error) {
       console.error("Error fetching test categories:", error)
       return []
@@ -119,8 +124,7 @@ export const fileData: FileDataOperations = {
 
   countTestsByCategory: async (category: string) => {
     try {
-      const tests = await readJsonFile<Test[]>("tests.json")
-      const count = tests.filter((test) => test.meta.category === category).length
+      const count = await countTestsByCategoryFromDb(category)
       return count
     } catch (error) {
       console.error(`Error counting tests for category ${category}:`, error)
@@ -130,17 +134,8 @@ export const fileData: FileDataOperations = {
 
   getTestsByCategory: async (category: string) => {
     try {
-      const tests = await readJsonFile<Test[]>("tests.json")
-      const filteredTests = tests
-        .filter((test) => test.meta.category === category)
-        .sort((a, b) => {
-          // Assuming 'id' can be compared as strings or numbers for consistent ordering
-          // For truly descending ID, you might need a more robust comparison if IDs are not simple numbers
-          if (a.id > b.id) return -1
-          if (a.id < b.id) return 1
-          return 0
-        })
-      return filteredTests
+      const tests = await getTestsByCategoryFromDb(category)
+      return tests as Test[]
     } catch (error) {
       console.error(`Error fetching tests for category ${category}:`, error)
       return []
@@ -157,7 +152,9 @@ export const fileData: FileDataOperations = {
     }
   },
 
-  // Merged variants for supporter users (official + custom tests)
+  // DEPRECATED: Merged variants are no longer used
+  // User custom tests functionality will be refactored separately
+  // These methods are kept for backward compatibility but should not be used
   mergedGetAllTests: async (userId?: string) => {
     return getMergedTests(userId)
   },
