@@ -10,9 +10,12 @@ export interface CategoryPageProps {
   searchParams: Promise<{ sessionId: string }>
 }
 
+export type AccessTier = "free" | "basic" | "premium" | "pro"
+
 export interface CategoryMetadata {
   category: string
   course: string
+  requiredTier: AccessTier
   image: string
   description: string
   duration: number[]

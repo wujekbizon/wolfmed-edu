@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
-import { getTestsByCategory, countTestsByCategory } from '@/server/queries'
+import { countTestsByCategory } from '@/server/queries'
 import { checkCourseAccessAction } from '@/actions/course-actions'
 import { CATEGORY_METADATA, DEFAULT_CATEGORY_METADATA } from '@/constants/categoryMetadata'
+import { hasAccessToTier } from '@/lib/accessTiers'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
@@ -53,10 +54,16 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
   }
 
   // Check if user has access to the parent course
+  let hasAccess = false
+  let userTier = 'free'
+
   if (categoryData.course) {
     const courseAccess = await checkCourseAccessAction(categoryData.course)
+    hasAccess = courseAccess.hasAccess
+    userTier = courseAccess.accessTier || 'free'
 
-    if (!courseAccess.hasAccess) {
+    // Check if user is enrolled in course
+    if (!hasAccess) {
       return (
         <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
           <div className='max-w-4xl mx-auto'>
@@ -76,13 +83,44 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
         </section>
       )
     }
+
+    // Check if user's tier is sufficient for this category
+    const hasTierAccess = hasAccessToTier(userTier, categoryData.requiredTier)
+    if (!hasTierAccess) {
+      return (
+        <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
+          <div className='max-w-4xl mx-auto'>
+            <div className='bg-white rounded-lg shadow p-8'>
+              <h2 className='text-2xl font-bold text-orange-600 mb-4'>🔒 Wymagana wyższa wersja</h2>
+              <p className='text-gray-600 mb-4'>
+                Ta kategoria wymaga pakietu <span className='font-semibold'>{categoryData.requiredTier}</span>.
+              </p>
+              <p className='text-gray-600 mb-6'>
+                Twój aktualny pakiet: <span className='font-semibold'>{userTier}</span>
+              </p>
+              <div className='flex gap-4'>
+                <Link
+                  href='/panel/kursy'
+                  className='inline-block bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors'
+                >
+                  Wróć do moich kursów
+                </Link>
+                <Link
+                  href='#'
+                  className='inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
+                >
+                  Ulepsz pakiet
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
   }
 
-  // Get tests for this category
-  const [tests, testCount] = await Promise.all([
-    getTestsByCategory(decodedCategory),
-    countTestsByCategory(decodedCategory),
-  ])
+  // Get test count for this category
+  const testCount = await countTestsByCategory(decodedCategory)
 
   const categoryName = decodedCategory
     .replace(/-/g, ' ')
@@ -132,53 +170,19 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           </div>
         </div>
 
-        {/* Tests Section */}
-        {tests.length > 0 ? (
-          <div className='bg-white rounded-lg shadow-md p-6'>
-            <h2 className='text-2xl font-bold mb-4'>Dostępne testy</h2>
-            <p className='text-gray-600 mb-6'>
-              Wybierz test, aby rozpocząć naukę z kategorii {categoryName}
-            </p>
-
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-              {tests.slice(0, 12).map((test) => (
-                <Link
-                  key={test.id}
-                  href={`/panel/testy/${decodedCategory}?sessionId=new`}
-                  className='block p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors border border-gray-200 hover:border-blue-300'
-                >
-                  <h3 className='font-medium text-gray-900 mb-2 line-clamp-2'>
-                    {(test.data as any)?.question || 'Pytanie testowe'}
-                  </h3>
-                  <span className='text-sm text-blue-600 font-medium'>
-                    Rozpocznij test →
-                  </span>
-                </Link>
-              ))}
-            </div>
-
-            <div className='mt-6'>
-              <Link
-                href={`/panel/testy/${decodedCategory}?sessionId=new`}
-                className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
-              >
-                Przejdź do wszystkich testów
-              </Link>
-            </div>
-          </div>
-        ) : (
-          <div className='bg-white rounded-lg shadow-md p-8 text-center'>
-            <p className='text-gray-600 mb-4'>
-              Brak dostępnych testów w tej kategorii.
-            </p>
-            <Link
-              href='/panel/kursy'
-              className='inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors'
-            >
-              Wróć do moich kursów
-            </Link>
-          </div>
-        )}
+        {/* Start Exam CTA */}
+        <div className='bg-white rounded-lg shadow-md p-8'>
+          <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
+          <p className='text-gray-600 mb-6'>
+            Gotowy do sprawdzenia swojej wiedzy? Rozpocznij egzamin z kategorii {categoryName}
+          </p>
+          <Link
+            href={`/panel/testy/${decodedCategory}?sessionId=new`}
+            className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
+          >
+            Rozpocznij Egzamin
+          </Link>
+        </div>
       </div>
     </section>
   )
