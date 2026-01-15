@@ -8,6 +8,7 @@ import { getCurrentUser } from "@/server/user";
 import { redirect } from "next/navigation";
 import { checkCourseAccessAction } from "@/actions/course-actions";
 import { getCourseForCategory } from "@/constants/courseCategoryMapping";
+import { Test } from "@/types/dataTypes";
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -50,8 +51,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
     }
   }
 
-  // Get tests from database (no longer using merge logic)
-  const categoryTests = await getTestsByCategory(decodedCategory)
+  const categoryTests = await getTestsByCategory(decodedCategory) as Test[]
 
   const sessionDetails = await getTestSessionDetails(sessionId);
 
