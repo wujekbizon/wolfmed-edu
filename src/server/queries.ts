@@ -2,6 +2,8 @@ import "server-only"
 import { db } from "@/server/db/index"
 import {
   tests,
+  courses,
+  courseEnrollments,
   completedTestes,
   payments,
   subscriptions,
@@ -201,6 +203,53 @@ export const getProcedureBySlug = cache(
     return getProcedureById(procedureId)
   }
 )
+
+// ============================================================================
+// COURSE & ENROLLMENT QUERIES
+// ============================================================================
+
+// Get all active courses
+export const getAllCourses = cache(async () => {
+  const allCourses = await db.query.courses.findMany({
+    where: (model, { eq }) => eq(model.isActive, true),
+    orderBy: (model, { asc }) => asc(model.createdAt),
+  })
+  return allCourses
+})
+
+// Get course by slug
+export const getCourseBySlug = cache(async (slug: string) => {
+  const course = await db.query.courses.findFirst({
+    where: (model, { eq, and }) => and(eq(model.slug, slug), eq(model.isActive, true)),
+  })
+  return course || null
+})
+
+// Get user's enrolled courses with details
+export const getUserEnrolledCourses = cache(async (userId: string) => {
+  const enrollments = await db
+    .select({
+      enrollment: courseEnrollments,
+      course: courses,
+    })
+    .from(courseEnrollments)
+    .innerJoin(courses, eq(courseEnrollments.courseSlug, courses.slug))
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.isActive, true),
+        eq(courses.isActive, true)
+      )
+    )
+    .orderBy(asc(courseEnrollments.enrolledAt))
+
+  return enrollments.map((row) => ({
+    ...row.course,
+    enrolledAt: row.enrollment.enrolledAt,
+    accessTier: row.enrollment.accessTier,
+    expiresAt: row.enrollment.expiresAt,
+  }))
+})
 
 // ============================================================================
 // BLOG QUERIES
