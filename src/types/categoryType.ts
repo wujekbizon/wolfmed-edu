@@ -12,10 +12,14 @@ export interface CategoryPageProps {
 
 export interface CategoryMetadata {
   category: string
+  course: string
   image: string
   description: string
   duration: number[]
   popularity: string
   status: boolean
   numberOfQuestions: number[]
+  // SEO fields
+  title?: string
+  keywords?: string[]
 }

@@ -42,7 +42,6 @@ import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/lib/safeJsonParse"
-import { fileData } from "./fetchData"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -176,6 +175,30 @@ export const getAllProcedures = cache(
       orderBy: (model, { desc }) => desc(model.id),
     })
     return procedures
+  }
+)
+
+// Get procedure by ID
+export const getProcedureById = cache(
+  async (id: string): Promise<ExtendedProcedures | null> => {
+    const procedure = await db.query.procedures.findFirst({
+      where: (model, { eq }) => eq(model.id, id),
+    })
+    return procedure || null
+  }
+)
+
+// Get procedure by slug
+export const getProcedureBySlug = cache(
+  async (slug: string): Promise<ExtendedProcedures | null> => {
+    const { getProcedureIdFromSlug } = await import("@/constants/procedureSlugs")
+    const procedureId = getProcedureIdFromSlug(slug)
+
+    if (!procedureId) {
+      return null
+    }
+
+    return getProcedureById(procedureId)
   }
 )
 
@@ -1542,7 +1565,7 @@ export const awardBadge = async (
     .limit(1)
 
   if (existing.length === 0) {
-    const procedure = await fileData.getProcedureById(data.procedureId)
+    const procedure = await getProcedureById(data.procedureId)
 
     await tx.insert(procedureBadges).values({
       userId: data.userId,

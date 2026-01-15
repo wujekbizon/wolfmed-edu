@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { fileData } from '@/server/fetchData'
+import { getProcedureBySlug, getAllProcedures } from '@/server/queries'
 import { ChallengeType } from '@/types/challengeTypes'
 import OrderStepsChallenge from '@/components/OrderStepsChallenge'
 import QuizChallengeForm from '@/components/QuizChallengeForm'
@@ -35,8 +35,8 @@ export default async function ChallengeTypePage({ params }: Props) {
 
   const { slug, type: challengeType } = await params
 
-  const procedure = await fileData.getProcedureBySlug(slug)
-  const procedures = await fileData.getAllProcedures()
+  const procedure = await getProcedureBySlug(slug)
+  const procedures = await getAllProcedures()
 
   if (!procedure) {
     redirect('/panel/procedury')

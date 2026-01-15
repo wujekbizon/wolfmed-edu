@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
-import { fileData } from '@/server/fetchData'
+import { getProcedureBySlug } from '@/server/queries'
 import ChallengesList from '@/components/ChallengesList'
 import SupporterRequired from '@/components/SupporterRequired'
 import { Metadata } from 'next'
@@ -25,7 +25,7 @@ export default async function ChallengePage({ params }: Props) {
 
   const { slug } = await params
 
-  const procedure = await fileData.getProcedureBySlug(slug)
+  const procedure = await getProcedureBySlug(slug)
 
   if (!procedure) {
     redirect('/panel/procedury')

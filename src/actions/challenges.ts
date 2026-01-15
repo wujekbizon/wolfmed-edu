@@ -10,8 +10,8 @@ import {
   awardBadge,
   getChallengeCompletionsByProcedure,
   getProcedureBadge,
+  getProcedureById,
 } from "@/server/queries"
-import { fileData } from "@/server/fetchData"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import {
   SubmitOrderStepsSchema,
@@ -244,7 +244,7 @@ export async function submitOrderStepsAction(
     const userStepOrder: StepWithId[] = JSON.parse(stepOrderJson)
 
     // Load procedure from DB (server-side)
-    const procedure = await fileData.getProcedureById(procedureId)
+    const procedure = await getProcedureById(procedureId)
     if (!procedure) {
       return toFormState("ERROR", "Procedura nie została znaleziona")
     }
@@ -350,7 +350,7 @@ export async function submitVisualRecognitionAction(
       timeSpent,
     } = validationResult.data
 
-    const procedure = await fileData.getProcedureById(procedureId)
+    const procedure = await getProcedureById(procedureId)
     if (!procedure) {
       return toFormState("ERROR", "Procedura nie została znaleziona")
     }
@@ -446,7 +446,7 @@ export async function submitScenarioAction(
       timeSpent,
     } = validationResult.data
 
-    const procedure = await fileData.getProcedureById(procedureId)
+    const procedure = await getProcedureById(procedureId)
     if (!procedure) {
       return toFormState("ERROR", "Procedura nie została znaleziona")
     }
