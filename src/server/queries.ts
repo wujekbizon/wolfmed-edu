@@ -24,7 +24,6 @@ import {
   userCustomTests,
   userCustomCategories,
   customersMessages,
-  tests,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
