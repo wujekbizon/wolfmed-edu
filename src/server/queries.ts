@@ -205,10 +205,6 @@ export const getProcedureBySlug = cache(
   }
 )
 
-// ============================================================================
-// COURSE & ENROLLMENT QUERIES
-// ============================================================================
-
 // Get all active courses
 export const getAllCourses = cache(async () => {
   const allCourses = await db.query.courses.findMany({

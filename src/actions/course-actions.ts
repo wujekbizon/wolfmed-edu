@@ -22,7 +22,6 @@ export async function checkCourseAccessAction(courseSlug: string) {
     const ownedCourses = (user?.publicMetadata?.ownedCourses as string[]) || [];
 
     if (ownedCourses.includes(courseSlug)) {
-      // Get access tier from database
       const [enrollment] = await db
         .select()
         .from(courseEnrollments)

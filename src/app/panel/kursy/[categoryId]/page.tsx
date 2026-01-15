@@ -46,14 +46,11 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  // Get category metadata
   const categoryData = CATEGORY_METADATA[decodedCategory] || {
     ...DEFAULT_CATEGORY_METADATA,
     category: decodedCategory,
     course: '',
   }
-
-  // Check if user has access to the parent course
   let hasAccess = false
   let userTier = 'free'
 
@@ -84,7 +81,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
       )
     }
 
-    // Check if user's tier is sufficient for this category
     const hasTierAccess = hasAccessToTier(userTier, categoryData.requiredTier)
     if (!hasTierAccess) {
       return (
@@ -119,7 +115,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
     }
   }
 
-  // Get test count for this category
   const testCount = await countTestsByCategory(decodedCategory)
 
   const categoryName = decodedCategory
@@ -131,7 +126,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
       <div className='max-w-6xl mx-auto'>
-        {/* Breadcrumb */}
         <nav className='mb-6 text-sm'>
           <Link href='/panel/kursy' className='text-blue-600 hover:underline'>
             Moje Kursy
@@ -140,7 +134,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           <span className='text-gray-600'>{categoryName}</span>
         </nav>
 
-        {/* Category Header */}
         <div className='bg-white rounded-lg shadow-md overflow-hidden mb-6'>
           <div className='p-6 md:p-8'>
             <div className='flex items-start gap-6'>
@@ -170,7 +163,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           </div>
         </div>
 
-        {/* Start Exam CTA */}
         <div className='bg-white rounded-lg shadow-md p-8'>
           <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
           <p className='text-gray-600 mb-6'>
