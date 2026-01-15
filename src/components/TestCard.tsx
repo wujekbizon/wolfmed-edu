@@ -29,6 +29,8 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
       <h3 className="border-b border-border/40 px-1 xs:px-4 pb-2 text-base">{question}</h3>
       <div className="flex h-full w-full flex-col gap-1 px-1 xs:px-4 pt-4 ">
         {answers.map((answer, index) => {
+          const uniqueId = `${props.test.id}-answer-${index}`
+
           return (
             <div
               className={`flex w-full items-center gap-4 rounded-lg px-1 py-1 ${
@@ -37,7 +39,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                 props.formState.status === 'SUCCESS' &&
                 (answer.isCorrect ? 'bg-green-300/40' : 'bg-red-300/40 opacity-50')
               }`}
-              key={`${answer.option}/${index}`}
+              key={uniqueId}
             >
               <span className="w-3 text-balance text-sm leading-relaxed text-zinc-500">{LETTERS[index]})</span>
 
@@ -50,7 +52,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                   } before:content[''] border-zinc-500 before:bg-blue-gray-500 peer relative h-3.5 min-h-3.5 w-3.5 min-w-3.5 cursor-pointer appearance-none rounded-full border text-gray-900 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-6 before:w-6 before:-translate-x-2/4 before:-translate-y-2/4 before:animate-pulse before:rounded-full before:opacity-0 before:transition-opacity checked:border-zinc-800 checked:bg-[#ff6060] checked:before:bg-[#ff6060] hover:before:opacity-5 disabled:pointer-events-none`}
                   type="radio"
                   value={answer.isCorrect ? 'true' : 'false'}
-                  id={answer.option}
+                  id={uniqueId}
                   disabled={props.formState.status === 'SUCCESS'}
                   name={`answer-${props.test.id}`}
                   defaultChecked={activeIndex === index}
@@ -58,7 +60,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                 <Label
                   className="text-sm text-muted-foreground cursor-pointer"
                   label={answer.option}
-                  htmlFor={answer.option}
+                  htmlFor={uniqueId}
                 />
               </div>
             </div>
