@@ -1,4 +1,3 @@
-import { fileData } from '@/server/fetchData'
 import { Metadata } from 'next'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { getMergedMaterials } from '@/helpers/mergeMaterials'
@@ -26,10 +25,7 @@ export default async function NaukaPage() {
   if (!user) return null
 
   const [populatedCategories, userAllNotes, userMaterials] = await Promise.all([
-    getPopulatedCategories(
-      fileData,
-      user.supporter ? user.userId : undefined
-    ),
+    getPopulatedCategories(),
     getAllUserNotes(user.userId) as Promise<NotesType[]>,
     getMaterialsByUser(user.userId) as Promise<MaterialsType[]>,
   ])

@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { fileData } from '@/server/fetchData'
 import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
@@ -27,10 +26,7 @@ async function TestsCategories() {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  const populatedCategories = await getPopulatedCategories(
-    fileData,
-    user.supporter ? user.userId : undefined
-  )
+  const populatedCategories = await getPopulatedCategories()
   return <TestsCategoriesList categories={populatedCategories} />
 }
 

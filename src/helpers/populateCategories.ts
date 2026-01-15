@@ -1,23 +1,14 @@
 import "server-only";
 import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType";
 import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
+import { getCategories, countTestsByCategory } from "@/server/queries";
+import { fileData } from "@/server/fetchData";
 
-export async function getPopulatedCategories(
-  fileData: {
-    getTestsCategories: () => Promise<{ meta: { category: string; course: string } }[]>,
-    countTestsByCategory: (cat: string) => Promise<number>,
-    getCategoriesMetadata: () => Promise<CategoryMetadata[]>,
-    mergedGetTestsCategories: (userId?: string) => Promise<{ meta: { category: string; course: string } }[]>,
-    mergedCountTestsByCategory: (cat: string, userId?: string) => Promise<number>
-  },
-  userId?: string
-): Promise<PopulatedCategories[]> {
-  // Use merged functions if userId provided, otherwise use original
-  const categories = userId
-    ? await fileData.mergedGetTestsCategories(userId)
-    : await fileData.getTestsCategories();
-
+export async function getPopulatedCategories(): Promise<PopulatedCategories[]> {
+  // Get categories directly from database
+  const categories = await getCategories();
   const categoriesMetadata = await fileData.getCategoriesMetadata();
+
   const seen = new Set<string>();
   const uniqueCategories = categories.filter(cat => {
     const normalized = cat.meta.category.toLowerCase();
@@ -28,10 +19,7 @@ export async function getPopulatedCategories(
 
   return Promise.all(
     uniqueCategories.map(async (cat) => {
-      const count = userId
-        ? await fileData.mergedCountTestsByCategory(cat.meta.category, userId)
-        : await fileData.countTestsByCategory(cat.meta.category);
-
+      const count = await countTestsByCategory(cat.meta.category);
       const metadata = categoriesMetadata.find(meta => meta.category === cat.meta.category);
 
       return {

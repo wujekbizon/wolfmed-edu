@@ -1,5 +1,5 @@
 import AllTests from '@/components/AllTests'
-import { fileData } from '@/server/fetchData'
+import { getTestsByCategory } from '@/server/queries'
 import { getCurrentUser } from '@/server/user';
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation';
@@ -32,10 +32,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     const user = await getCurrentUser()
     if (!user) redirect('/sign-in')
 
-    // Merge tests if supporter, otherwise only official
-    const tests = user.supporter
-      ? await fileData.mergedGetTestsByCategory(decodedCategory, user.userId)
-      : await fileData.getTestsByCategory(decodedCategory)
+    // Get tests directly from database
+    const tests = await getTestsByCategory(decodedCategory)
 
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
