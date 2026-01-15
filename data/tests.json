@@ -26706,36 +26706,6 @@
     "updatedAt": null
   },
   {
-    "id": "51ff77a3-3550-461e-95f9-5e02fb4c8f81",
-    "meta": {
-      "course": "pielegniarstwo",
-      "category": "fizjologia"
-    },
-    "data": {
-      "question": "Automatyzm pracy serca polega na:",
-      "answers": [
-        {
-          "option": "samoistnej depolaryzacji układu bodźcoprzewodzącego",
-          "isCorrect": true
-        },
-        {
-          "option": "Odpowiedź odnosi się do innego układu",
-          "isCorrect": false
-        },
-        {
-          "option": "Prawidłowa odpowiedź to inna struktura",
-          "isCorrect": false
-        },
-        {
-          "option": "To nie jest poprawna odpowiedź",
-          "isCorrect": false
-        }
-      ]
-    },
-    "createdAt": "2026-01-11 13:28:02.593176",
-    "updatedAt": null
-  },
-  {
     "id": "5617fa80-bf7f-40f0-81fb-7175f658f55b",
     "meta": {
       "course": "pielegniarstwo",
