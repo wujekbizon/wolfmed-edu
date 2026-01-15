@@ -3,6 +3,8 @@ export interface PopulatedCategories {
   value: string
   count: number
   data?: CategoryMetadata
+  hasAccess?: boolean
+  lockedReason?: string
 }
 
 export interface CategoryPageProps {
