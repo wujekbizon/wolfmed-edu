@@ -51,6 +51,47 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   return tests
 })
 
+// Get tests filtered by category
+export const getTestsByCategory = cache(async (category: string): Promise<ExtendedTest[]> => {
+  const tests = await db.query.tests.findMany({
+    where: (model) => sql`${model.meta}->>'category' = ${category}`,
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+  return tests
+})
+
+// Get unique categories from tests
+export const getCategories = cache(async (): Promise<{ meta: { category: string; course: string } }[]> => {
+  const tests = await db.query.tests.findMany({
+    columns: {
+      meta: true,
+    },
+  })
+
+  // Extract unique categories
+  const seen = new Set<string>()
+  const uniqueCategories = tests
+    .filter((test) => {
+      const category = (test.meta as any).category
+      if (seen.has(category)) return false
+      seen.add(category)
+      return true
+    })
+    .map((test) => ({ meta: test.meta as { category: string; course: string } }))
+
+  return uniqueCategories
+})
+
+// Count tests in a specific category
+export const countTestsByCategory = cache(async (category: string): Promise<number> => {
+  const result = await db
+    .select({ count: count() })
+    .from(db.query.tests)
+    .where(sql`${db.query.tests.meta}->>'category' = ${category}`)
+
+  return result[0]?.count || 0
+})
+
 // ============================================================================
 // USER CUSTOM TESTS QUERIES
 // ============================================================================

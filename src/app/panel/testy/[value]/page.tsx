@@ -51,10 +51,8 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
     }
   }
 
-  // Original logic - keep backward compatibility for opiekun-medyczny
-  const categoryTests = user.supporter
-    ? await fileData.mergedGetTestsByCategory(decodedCategory, user.userId)
-    : await fileData.getTestsByCategory(decodedCategory)
+  // Get tests from database (no longer using merge logic)
+  const categoryTests = await fileData.getTestsByCategory(decodedCategory)
 
   const sessionDetails = await getTestSessionDetails(sessionId);
 
