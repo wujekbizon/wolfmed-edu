@@ -1,5 +1,5 @@
 import "server-only";
-import { CategoryMetadata, PopulatedCategories } from "@/types/categoryType";
+import { PopulatedCategories } from "@/types/categoryType";
 import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { getCategories, countTestsByCategory } from "@/server/queries";
 import { fileData } from "@/server/fetchData";

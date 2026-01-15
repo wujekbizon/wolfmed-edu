@@ -23,6 +23,7 @@ import {
   userCustomTests,
   userCustomCategories,
   customersMessages,
+  tests,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -86,15 +87,11 @@ export const getCategories = cache(async (): Promise<{ meta: { category: string;
 export const countTestsByCategory = cache(async (category: string): Promise<number> => {
   const result = await db
     .select({ count: count() })
-    .from(db.query.tests)
-    .where(sql`${db.query.tests.meta}->>'category' = ${category}`)
+    .from(tests)
+    .where(sql`${tests.meta}->>'category' = ${category}`)
 
   return result[0]?.count || 0
 })
-
-// ============================================================================
-// USER CUSTOM TESTS QUERIES
-// ============================================================================
 
 /**
  * Fetch all tests created by specific user
