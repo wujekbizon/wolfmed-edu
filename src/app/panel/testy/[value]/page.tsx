@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { fileData } from '@/server/fetchData'
-import { getTestSessionDetails } from '@/server/queries'
+import { getTestSessionDetails, getTestsByCategory } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
@@ -52,7 +51,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   }
 
   // Get tests from database (no longer using merge logic)
-  const categoryTests = await fileData.getTestsByCategory(decodedCategory)
+  const categoryTests = await getTestsByCategory(decodedCategory)
 
   const sessionDetails = await getTestSessionDetails(sessionId);
 
