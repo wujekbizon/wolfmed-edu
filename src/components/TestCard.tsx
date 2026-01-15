@@ -22,6 +22,10 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
     }
   }, [props.formState.values, answers, props.test.id])
 
+  const handleAnswerChange = (index: number) => {
+    setActiveIndex(index)
+  }
+
   return (
     <div className="relative flex h-full min-h-80 w-full flex-col rounded-lg shadow-md shadow-zinc-500 border border-red-100/50 bg-white px-4 py-6 text-zinc-900">
       <p className="absolute right-2 top-1 text-sm text-muted-foreground">{props.questionNumber}</p>
@@ -30,7 +34,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
       <div className="flex h-full w-full flex-col gap-1 px-1 xs:px-4 pt-4 ">
         {answers.map((answer, index) => {
           const uniqueId = `${props.test.id}-answer-${index}`
-
+          
           return (
             <div
               className={`flex w-full items-center gap-4 rounded-lg px-1 py-1 ${
@@ -43,7 +47,7 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
             >
               <span className="w-3 text-balance text-sm leading-relaxed text-zinc-500">{LETTERS[index]})</span>
 
-              <div className="flex items-center gap-4" onClick={() => setActiveIndex(index)}>
+              <div className="flex items-center gap-4">
                 <input
                   className={`${
                     props.formState.status === 'SUCCESS' &&
@@ -55,7 +59,8 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                   id={uniqueId}
                   disabled={props.formState.status === 'SUCCESS'}
                   name={`answer-${props.test.id}`}
-                  defaultChecked={activeIndex === index}
+                  checked={activeIndex === index}
+                  onChange={() => handleAnswerChange(index)}
                 />
                 <Label
                   className="text-sm text-muted-foreground cursor-pointer"
