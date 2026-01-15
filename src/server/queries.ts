@@ -36,6 +36,7 @@ import {
   BlogTag,
   BlogPostFilters,
   BlogStatistics,
+  Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
 import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
@@ -1614,7 +1615,7 @@ export const awardBadge = async (
     .limit(1)
 
   if (existing.length === 0) {
-    const procedure = await getProcedureById(data.procedureId)
+    const procedure = await getProcedureById(data.procedureId) as Procedure
 
     await tx.insert(procedureBadges).values({
       userId: data.userId,

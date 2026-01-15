@@ -15,13 +15,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   const metadata = CATEGORY_METADATA[category as keyof typeof CATEGORY_METADATA];
 
   if (!metadata) {
-    return CATEGORY_METADATA["opiekun-medyczny"]
+    return CATEGORY_METADATA["opiekun-medyczny"] ?? { title: "", description: "", keywords: "" }
   }
 
   return {
     title: metadata.title,
     description: metadata.description,
-    keywords: metadata.keywords.join(", "),
+    keywords: metadata.keywords?.join(", "),
   };
 }
 
@@ -31,7 +31,6 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  // Check if this category requires specific course enrollment
   const requiredCourse = getCourseForCategory(decodedCategory)
 
   // If category is mapped to a course, check access

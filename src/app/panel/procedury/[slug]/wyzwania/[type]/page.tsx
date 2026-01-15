@@ -15,6 +15,7 @@ import {
 } from '@/helpers/challengeGenerator'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
+import { Procedure } from '@/types/dataTypes'
 
 export const metadata: Metadata = {
   title: 'Wyzwanie Procedury',
@@ -35,8 +36,8 @@ export default async function ChallengeTypePage({ params }: Props) {
 
   const { slug, type: challengeType } = await params
 
-  const procedure = await getProcedureBySlug(slug)
-  const procedures = await getAllProcedures()
+  const procedure = await getProcedureBySlug(slug) as Procedure
+  const procedures = await getAllProcedures() as Procedure[]
 
   if (!procedure) {
     redirect('/panel/procedury')

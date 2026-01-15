@@ -177,7 +177,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             Gotowy do sprawdzenia swojej wiedzy? Rozpocznij egzamin z kategorii {categoryName}
           </p>
           <Link
-            href={`/panel/testy/${decodedCategory}?sessionId=new`}
+            href="/panel/testy"
             className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
           >
             Rozpocznij Egzamin
