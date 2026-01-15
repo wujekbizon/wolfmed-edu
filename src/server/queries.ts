@@ -1,6 +1,7 @@
 import "server-only"
 import { db } from "@/server/db/index"
 import {
+  tests,
   completedTestes,
   payments,
   subscriptions,
