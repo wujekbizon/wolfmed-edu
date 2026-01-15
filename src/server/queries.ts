@@ -1,6 +1,7 @@
 import "server-only"
 import { db } from "@/server/db/index"
 import {
+  tests,
   completedTestes,
   payments,
   subscriptions,
@@ -86,8 +87,8 @@ export const getCategories = cache(async (): Promise<{ meta: { category: string;
 export const countTestsByCategory = cache(async (category: string): Promise<number> => {
   const result = await db
     .select({ count: count() })
-    .from(db.query.tests)
-    .where(sql`${db.query.tests.meta}->>'category' = ${category}`)
+    .from(tests)
+    .where(sql`${tests.meta}->>'category' = ${category}`)
 
   return result[0]?.count || 0
 })

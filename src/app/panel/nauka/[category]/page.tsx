@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
             <Suspense fallback={<div>Loading...</div>}>
-                <AllTests tests={tests} />
+                <AllTests tests={tests as any} />
             </Suspense>
         </section>
     )
