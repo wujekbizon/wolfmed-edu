@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
+import { hasAccessToTier } from '@/lib/accessTiers'
+import type { AccessTier } from '@/types/categoryType'
 
 interface EnrolledCourse {
   id: string
@@ -79,31 +81,68 @@ export default function EnrolledCoursesList({ courses }: EnrolledCoursesListProp
                     Kategorie testów:
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {course.categories.map((category) => (
-                      <Link
-                        key={category.category}
-                        href={`/panel/kursy/${category.category}`}
-                        className="group block p-4 bg-zinc-50 rounded-xl hover:bg-blue-50 transition-all duration-200 border border-zinc-200 hover:border-blue-300 hover:shadow-md"
-                      >
-                        <div className="flex items-center gap-3">
-                          {category.image && (
-                            <img
-                              src={category.image}
-                              alt={category.category}
-                              className="w-12 h-12 rounded-lg object-cover"
-                            />
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-zinc-900 group-hover:text-blue-600 transition-colors capitalize truncate">
-                              {category.category.replace(/-/g, ' ')}
-                            </h4>
-                            <p className="text-sm text-zinc-500 truncate">
-                              {category.popularity}
-                            </p>
+                    {course.categories.map((category) => {
+                      const hasTierAccess = hasAccessToTier(
+                        course.accessTier as AccessTier,
+                        category.requiredTier
+                      )
+
+                      if (!hasTierAccess) {
+                        return (
+                          <div
+                            key={category.category}
+                            className="block p-4 bg-zinc-50 rounded-xl border border-zinc-200 opacity-50 cursor-not-allowed"
+                          >
+                            <div className="flex items-center gap-3">
+                              {category.image && (
+                                <img
+                                  src={category.image}
+                                  alt={category.category}
+                                  className="w-12 h-12 rounded-lg object-cover grayscale"
+                                />
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <h4 className="font-medium text-zinc-600 capitalize truncate">
+                                    {category.category.replace(/-/g, ' ')}
+                                  </h4>
+                                  <span className="text-lg">🔒</span>
+                                </div>
+                                <p className="text-xs text-zinc-400 truncate">
+                                  Wymagana: {category.requiredTier}
+                                </p>
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </Link>
-                    ))}
+                        )
+                      }
+
+                      return (
+                        <Link
+                          key={category.category}
+                          href={`/panel/kursy/${category.category}`}
+                          className="group block p-4 bg-zinc-50 rounded-xl hover:bg-blue-50 transition-all duration-200 border border-zinc-200 hover:border-blue-300 hover:shadow-md"
+                        >
+                          <div className="flex items-center gap-3">
+                            {category.image && (
+                              <img
+                                src={category.image}
+                                alt={category.category}
+                                className="w-12 h-12 rounded-lg object-cover"
+                              />
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-medium text-zinc-900 group-hover:text-blue-600 transition-colors capitalize truncate">
+                                {category.category.replace(/-/g, ' ')}
+                              </h4>
+                              <p className="text-sm text-zinc-500 truncate">
+                                {category.popularity}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </div>
               )}
