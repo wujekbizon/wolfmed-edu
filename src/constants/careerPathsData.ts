@@ -241,9 +241,9 @@ export const careerPathsData: Record<string, PathData> = {
     pricing: {
       courseSlug: "opiekun-medyczny",
       standard: {
-        price: "0 zł",
+        price: "49,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
-        accessTier: "free",
+        accessTier: "basic",
         features: [
           "Bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
@@ -255,9 +255,9 @@ export const careerPathsData: Record<string, PathData> = {
       premium: {
         price: "159,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
-        accessTier: "basic",
+        accessTier: "premium",
         features: [
-          "Wszystko z planu darmowego",
+          "Wszystko z planu standard",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego i tablicy",
