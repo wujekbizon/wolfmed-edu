@@ -1,7 +1,6 @@
-'use client'
-
-import { useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
+import { createCheckoutSession } from '@/actions/stripe'
+import { auth } from '@clerk/nextjs/server'
+import Link from 'next/link'
 
 interface CoursePricingCardProps {
   tierName: string
@@ -13,7 +12,7 @@ interface CoursePricingCardProps {
   isPremium?: boolean
 }
 
-export default function CoursePricingCard({
+export default async function CoursePricingCard({
   tierName,
   price,
   priceId,
@@ -22,50 +21,7 @@ export default function CoursePricingCard({
   features,
   isPremium = false,
 }: CoursePricingCardProps) {
-  const { user, isLoaded } = useUser()
-  const router = useRouter()
-
-  const handlePurchase = async () => {
-    if (!isLoaded) return
-
-    if (!user) {
-      // Redirect to sign-in if not authenticated
-      router.push('/sign-in')
-      return
-    }
-
-    try {
-      // Call API to create checkout session with course metadata
-      const response = await fetch('/api/stripe/create-checkout-session', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          priceId,
-          courseSlug,
-          accessTier,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const { sessionUrl } = await response.json()
-
-      if (!sessionUrl) {
-        throw new Error('No session URL returned from the server')
-      }
-
-      // Redirect to Stripe checkout
-      window.location.href = sessionUrl
-    } catch (error) {
-      console.error('Error creating checkout session:', error)
-      alert('Wystąpił błąd podczas tworzenia sesji płatności. Spróbuj ponownie.')
-    }
-  }
+  const { userId } = await auth()
 
   return (
     <article className="h-full">
@@ -116,21 +72,42 @@ export default function CoursePricingCard({
         </ul>
 
         <div className="mt-auto w-full pt-6 md:pt-8">
-          <button
-            onClick={handlePurchase}
-            disabled={!isLoaded}
-            className={`
-              inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
-              font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-              ${
-                isPremium
-                  ? 'bg-slate-900 text-white hover:bg-slate-800'
-                  : 'bg-slate-700 text-white hover:bg-slate-800'
-              }
-            `}
-          >
-            {!isLoaded ? 'Ładowanie...' : user ? 'Kup teraz' : 'Zaloguj się aby kupić'}
-          </button>
+          {userId ? (
+            <form action={createCheckoutSession}>
+              <input type="hidden" name="priceId" value={priceId} />
+              <input type="hidden" name="courseSlug" value={courseSlug} />
+              <input type="hidden" name="accessTier" value={accessTier} />
+              <button
+                type="submit"
+                className={`
+                  inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
+                  font-semibold transition-colors duration-200
+                  ${
+                    isPremium
+                      ? 'bg-slate-900 text-white hover:bg-slate-800'
+                      : 'bg-slate-700 text-white hover:bg-slate-800'
+                  }
+                `}
+              >
+                Kup teraz
+              </button>
+            </form>
+          ) : (
+            <Link
+              href="/sign-in"
+              className={`
+                inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
+                font-semibold transition-colors duration-200
+                ${
+                  isPremium
+                    ? 'bg-slate-900 text-white hover:bg-slate-800'
+                    : 'bg-slate-700 text-white hover:bg-slate-800'
+                }
+              `}
+            >
+              Zaloguj się aby kupić
+            </Link>
+          )}
         </div>
       </div>
     </article>
