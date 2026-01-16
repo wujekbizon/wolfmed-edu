@@ -24,7 +24,6 @@ export interface CategoryMetadata {
   popularity: string
   status: boolean
   numberOfQuestions: number[]
-  // SEO fields
   title?: string
   keywords?: string[]
 }

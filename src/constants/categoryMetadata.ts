@@ -23,7 +23,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Bardzo popularny",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Testy - Kategoria: Opiekun Medyczny",
+    title: "Egzamin - Opiekun Medyczny",
     keywords: ["opiekun", "med-14", "egzamin", "testy", "pytania", "zagadnienia", "medyczno-pielęgnacyjnych", "opiekuńczych", "baza"],
   },
   "anatomia": {
@@ -36,7 +36,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Sprawdź swoją wiedzę już teraz!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Anatomia - Testy dla Kierunku Pielęgniarstwo",
+    title: "Anatomia",
     keywords: ["anatomia", "pielęgniarstwo", "budowa ciała", "układy narządowe", "struktura anatomiczna", "kości", "mięśnie", "narządy", "egzamin pielęgniarski", "testy wiedzy", "pytania egzaminacyjne"],
   },
    "fizjologia": {
@@ -49,7 +49,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Sprawdź swoją wiedzę już teraz!",
     status: true,
     numberOfQuestions: [10,40],
-    title: "Fizjologia - Testy dla Kierunku Pielęgniarstwo",
+    title: "Fizjologia",
     keywords: ["fizjologia", "pielęgniarstwo", "układ krążenia", "układ oddechowy", "zdrowie", "opieka", "egzamin pielęgniarski", "testy wiedzy", "pytania egzaminacyjne"],
   },
   "biochemia-biofizyka": {
@@ -62,7 +62,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Sprawdź swoją wiedzę już teraz!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Biochemia z Biofizyką - Testy dla Kierunku Pielęgniarstwo",
+    title: "Biochemia z Biofizyką",
     keywords: ["biochemia", "biofizyka", "pielęgniarstwo", "metabolizm", "białka", "enzymy", "homeostaza", "procesy biochemiczne", "egzamin pielęgniarski", "testy wiedzy", "pytania egzaminacyjne"],
   },
   "socjologia": {
@@ -75,7 +75,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Sprawdź swoją wiedzę już teraz!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Socjologia - Testy dla Kierunku Pielęgniarstwo",
+    title: "Socjologia",
     keywords: ["socjologia", "pielęgniarstwo", "struktury społeczne", "komunikacja", "relacje interpersonalne", "pacjent", "opieka zdrowotna", "role społeczne", "egzamin pielęgniarski", "testy wiedzy", "pytania egzaminacyjne"],
   },
   "mikrobiologia-parazytologia": {
@@ -88,7 +88,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Mikrobiologia z Parazytologią - Testy Premium",
+    title: "Mikrobiologia z Parazytologią",
     keywords: ["mikrobiologia", "parazytologia", "bakterie", "wirusy", "grzyby", "pasożyty", "zakażenia", "patogeny", "egzamin pielęgniarski", "testy premium"],
   },
   "psychologia": {
@@ -101,7 +101,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Psychologia - Testy Premium dla Pielęgniarstwa",
+    title: "Psychologia",
     keywords: ["psychologia", "pielęgniarstwo", "psychologia kliniczna", "komunikacja z pacjentem", "wsparcie emocjonalne", "choroba", "pacjent", "testy premium"],
   },
   "pedagogika": {
@@ -114,7 +114,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Pedagogika - Testy Premium dla Pielęgniarstwa",
+    title: "Pedagogika",
     keywords: ["pedagogika", "pielęgniarstwo", "edukacja zdrowotna", "nauczanie pacjentów", "promocja zdrowia", "metody dydaktyczne", "testy premium"],
   },
   "zdrowie-publiczne": {
@@ -127,7 +127,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Zdrowie Publiczne - Testy Premium",
+    title: "Zdrowie Publiczne",
     keywords: ["zdrowie publiczne", "epidemiologia", "profilaktyka", "polityka zdrowotna", "statystyka medyczna", "ochrona zdrowia", "pielęgniarstwo", "testy premium"],
   },
   "prawo-medyczne": {
@@ -140,7 +140,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Prawo Medyczne - Testy Premium",
+    title: "Prawo Medyczne",
     keywords: ["prawo medyczne", "prawa pacjenta", "odpowiedzialność zawodowa", "dokumentacja medyczna", "tajemnica lekarska", "regulacje prawne", "pielęgniarstwo", "testy premium"],
   },
   "podstawy-pielegniarstwa": {
@@ -153,7 +153,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Podstawy Pielęgniarstwa - Testy Premium",
+    title: "Podstawy Pielęgniarstwa",
     keywords: ["podstawy pielęgniarstwa", "procedury pielęgnacyjne", "techniki", "higiena", "bezpieczeństwo pacjenta", "standardy opieki", "zawód pielęgniarki", "testy premium"],
   },
   "etyka-zawodowa": {
@@ -166,7 +166,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Etyka Zawodu Pielęgniarki - Testy Premium",
+    title: "Etyka Zawodu Pielęgniarki",
     keywords: ["etyka", "kodeks etyki", "dylematy etyczne", "godność pacjenta", "autonomia", "wartości etyczne", "zawód pielęgniarki", "testy premium"],
   },
   "promocja-zdrowia": {
@@ -179,7 +179,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Promocja Zdrowia - Testy Premium",
+    title: "Promocja Zdrowia",
     keywords: ["promocja zdrowia", "profilaktyka", "edukacja zdrowotna", "zdrowy styl życia", "prewencja", "nawyki zdrowotne", "pielęgniarstwo", "testy premium"],
   },
   "zakazenia-szpitalne": {
@@ -192,7 +192,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     popularity: "Treść Premium!",
     status: true,
     numberOfQuestions: [10, 40],
-    title: "Zakażenia Szpitalne - Testy Premium",
+    title: "Zakażenia Szpitalne",
     keywords: ["zakażenia szpitalne", "profilaktyka", "sterylizacja", "dezynfekcja", "aseptyka", "antyseptyka", "kontrola zakażeń", "higiena szpitalna", "testy premium"],
   }
 };
