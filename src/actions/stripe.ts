@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import stripe from '@/lib/stripeClient'
 
 export async function createCheckoutSession(formData: FormData): Promise<void> {
   const { userId } = await auth()
@@ -9,7 +10,6 @@ export async function createCheckoutSession(formData: FormData): Promise<void> {
     redirect('/sign-in')
   }
 
-  const productId = formData.get('productId') as string
   const priceId = formData.get('priceId') as string
   const courseSlug = formData.get('courseSlug') as string
   const accessTier = formData.get('accessTier') as string
@@ -18,30 +18,34 @@ export async function createCheckoutSession(formData: FormData): Promise<void> {
     throw new Error('Price ID is required')
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/create-checkout-session`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userId,
-      priceId,
-      courseSlug: courseSlug || '',
-      accessTier: accessTier || 'basic'
-    }),
-  })
+  try {
+    const session = await stripe.checkout.sessions.create({
+      billing_address_collection: 'auto',
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/canceled`,
+      client_reference_id: userId,
+      metadata: {
+        courseSlug: courseSlug || '',
+        accessTier: accessTier || 'basic',
+      },
+    })
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    if (!session.url) {
+      throw new Error('No session URL returned from Stripe')
+    }
+
+    redirect(session.url)
+  } catch (error) {
+    console.error('Error creating Stripe checkout session:', error)
+    throw error
   }
-
-  const { sessionUrl } = await response.json()
-
-  if (!sessionUrl) {
-    throw new Error('No session URL returned from the server')
-  }
-
-  redirect(sessionUrl)
 }
 
 // Legacy support for old /wsparcie-projektu page
@@ -67,23 +71,28 @@ export async function createCheckoutSessionLegacy(formData: FormData): Promise<v
     throw new Error('Invalid product ID')
   }
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/stripe/create-checkout-session`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ userId, priceId }),
-  })
+  try {
+    const session = await stripe.checkout.sessions.create({
+      billing_address_collection: 'auto',
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/canceled`,
+      client_reference_id: userId,
+    })
 
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
+    if (!session.url) {
+      throw new Error('No session URL returned from Stripe')
+    }
+
+    redirect(session.url)
+  } catch (error) {
+    console.error('Error creating Stripe checkout session:', error)
+    throw error
   }
-
-  const { sessionUrl } = await response.json()
-
-  if (!sessionUrl) {
-    throw new Error('No session URL returned from the server')
-  }
-
-  redirect(sessionUrl)
 }
