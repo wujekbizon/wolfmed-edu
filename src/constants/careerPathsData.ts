@@ -253,7 +253,7 @@ export const careerPathsData: Record<string, PathData> = {
         ]
       },
       premium: {
-        price: "49,99 zł",
+        price: "159,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
         accessTier: "basic",
         features: [
