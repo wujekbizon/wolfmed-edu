@@ -1,6 +1,9 @@
+'use client'
+
+import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
-import { auth } from '@clerk/nextjs/server'
-import Link from 'next/link'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import SubmitButton from './SubmitButton'
 
 interface CoursePricingCardProps {
   tierName: string
@@ -12,7 +15,7 @@ interface CoursePricingCardProps {
   isPremium?: boolean
 }
 
-export default async function CoursePricingCard({
+export default function CoursePricingCard({
   tierName,
   price,
   priceId,
@@ -21,7 +24,7 @@ export default async function CoursePricingCard({
   features,
   isPremium = false,
 }: CoursePricingCardProps) {
-  const { userId } = await auth()
+  const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
 
   return (
     <article className="h-full">
@@ -71,43 +74,29 @@ export default async function CoursePricingCard({
           ))}
         </ul>
 
+        {state.status === 'ERROR' && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-600">{state.message}</p>
+          </div>
+        )}
+
         <div className="mt-auto w-full pt-6 md:pt-8">
-          {userId ? (
-            <form action={createCheckoutSession}>
-              <input type="hidden" name="priceId" value={priceId} />
-              <input type="hidden" name="courseSlug" value={courseSlug} />
-              <input type="hidden" name="accessTier" value={accessTier} />
-              <button
-                type="submit"
-                className={`
-                  inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
-                  font-semibold transition-colors duration-200
-                  ${
-                    isPremium
-                      ? 'bg-slate-900 text-white hover:bg-slate-800'
-                      : 'bg-slate-700 text-white hover:bg-slate-800'
-                  }
-                `}
-              >
-                Kup teraz
-              </button>
-            </form>
-          ) : (
-            <Link
-              href="/sign-in"
+          <form action={action}>
+            <input type="hidden" name="priceId" value={priceId} />
+            <input type="hidden" name="courseSlug" value={courseSlug} />
+            <input type="hidden" name="accessTier" value={accessTier} />
+            <SubmitButton
+              label="Kup teraz"
+              loading="Przekierowywanie..."
               className={`
-                inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
-                font-semibold transition-colors duration-200
                 ${
                   isPremium
                     ? 'bg-slate-900 text-white hover:bg-slate-800'
                     : 'bg-slate-700 text-white hover:bg-slate-800'
                 }
               `}
-            >
-              Zaloguj się aby kupić
-            </Link>
-          )}
+            />
+          </form>
         </div>
       </div>
     </article>

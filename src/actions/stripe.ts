@@ -3,22 +3,27 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import stripe from '@/lib/stripeClient'
+import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+import { FormState } from '@/types/actionTypes'
 
-export async function createCheckoutSession(formData: FormData): Promise<void> {
-  const { userId } = await auth()
-  if (!userId) {
-    redirect('/sign-in')
-  }
-
-  const priceId = formData.get('priceId') as string
-  const courseSlug = formData.get('courseSlug') as string
-  const accessTier = formData.get('accessTier') as string
-
-  if (!priceId) {
-    throw new Error('Price ID is required')
-  }
-
+export async function createCheckoutSession(
+  _prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
   try {
+    const { userId } = await auth()
+    if (!userId) {
+      redirect('/sign-in')
+    }
+
+    const priceId = formData.get('priceId') as string
+    const courseSlug = formData.get('courseSlug') as string
+    const accessTier = formData.get('accessTier') as string
+
+    if (!priceId) {
+      return toFormState('ERROR', 'Brak ID ceny produktu')
+    }
+
     const session = await stripe.checkout.sessions.create({
       billing_address_collection: 'auto',
       line_items: [
@@ -38,13 +43,13 @@ export async function createCheckoutSession(formData: FormData): Promise<void> {
     })
 
     if (!session.url) {
-      throw new Error('No session URL returned from Stripe')
+      return toFormState('ERROR', 'Nie udało się utworzyć sesji płatności')
     }
 
     redirect(session.url)
   } catch (error) {
     console.error('Error creating Stripe checkout session:', error)
-    throw error
+    return fromErrorToFormState(error)
   }
 }
 
