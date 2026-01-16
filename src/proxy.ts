@@ -11,10 +11,9 @@ export default clerkMiddleware(async (auth, request) => {
       unauthenticatedUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-in`,
     })
 
-    // Check course ownership for /panel routes
     if (request.nextUrl.pathname.startsWith('/panel')) {
       const { sessionClaims } = await auth()
-      const ownedCourses = sessionClaims?.publicMetadata?.ownedCourses as string[] | undefined
+      const ownedCourses = (sessionClaims?.metadata as {ownedCourses: string[] | undefined})?.ownedCourses 
 
       if (!ownedCourses || ownedCourses.length === 0) {
         const url = new URL('/kierunki', request.url)
