@@ -176,8 +176,10 @@ export default function SimplePathLayout({
             </p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
-            {Object.entries(pricing || {}).map(
-              ([plan, { price, features }]) => {
+            {Object.entries(pricing || {})
+              .filter(([key]) => key !== 'courseSlug')
+              .map(([plan, tierData]) => {
+                const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[] }
                 const isPremium = plan.toLowerCase().includes("premium");
 
                 return (
@@ -228,10 +230,10 @@ export default function SimplePathLayout({
                             {plan}
                           </h3>
                           <p className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight text-slate-700">
-                            {price}
+                            {tier.price}
                           </p>
                           <ul className="grow space-y-3 md:space-y-4 text-left w-full max-w-sm text-zinc-700">
-                            {features.map((feature, i) => (
+                            {tier.features.map((feature: string, i: number) => (
                               <li
                                 key={i}
                                 className="flex items-start gap-3 text-sm md:text-base leading-relaxed"
