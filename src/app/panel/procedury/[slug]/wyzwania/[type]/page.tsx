@@ -6,7 +6,6 @@ import QuizChallengeForm from '@/components/QuizChallengeForm'
 import VisualRecognitionChallengeForm from '@/components/VisualRecognitionChallengeForm'
 import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
 import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
-import SupporterRequired from '@/components/SupporterRequired'
 import {
   generateSpotErrorChallenge,
   generateQuizChallenge,
@@ -29,10 +28,6 @@ interface Props {
 export default async function ChallengeTypePage({ params }: Props) {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
-
-  if (!user.supporter) {
-    return <SupporterRequired />
-  }
 
   const { slug, type: challengeType } = await params
 

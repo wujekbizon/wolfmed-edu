@@ -4,16 +4,11 @@ import CreateTestTabs from '@/components/CreateTestTabs'
 import DeleteTestModal from '@/components/DeleteTestModal'
 import DeleteCategoryModal from '@/components/DeleteCategoryModal'
 import CategoryDeleteModalWrapper from '@/components/CategoryDeleteModalWrapper'
-import SupporterRequired from '@/components/SupporterRequired'
 import { getCurrentUser } from '@/server/user'
 
 export default async function CreateTestPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
-
-  if (!user.supporter) {
-    return <SupporterRequired />
-  }
 
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4">

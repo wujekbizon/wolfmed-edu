@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
 import { getProcedureBySlug } from '@/server/queries'
 import ChallengesList from '@/components/ChallengesList'
-import SupporterRequired from '@/components/SupporterRequired'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
 import { Procedure } from '@/types/dataTypes'
@@ -19,10 +18,6 @@ interface Props {
 export default async function ChallengePage({ params }: Props) {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
-
-  if (!user.supporter) {
-    return <SupporterRequired />
-  }
 
   const { slug } = await params
 
