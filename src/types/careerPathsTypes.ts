@@ -18,15 +18,18 @@ export type CurriculumBlock = {
   }[];
 };
 
+type PricingTier = {
+  price: string;
+  features: string[];
+  priceId: string;
+  accessTier: string;
+};
+
 type PricingTable = {
-  standard: {
-    price: string;
-    features: string[];
-  };
-  premium?: {
-    price: string;
-    features: string[];
-  };
+  courseSlug: string;
+  standard: PricingTier;
+  premium?: PricingTier;
+  pro?: PricingTier;
 };
 
 export type Testimonial = {

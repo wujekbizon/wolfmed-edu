@@ -290,22 +290,29 @@ export const careerPathsData: Record<string, PathData> = {
       }
     ],
     pricing: {
+      courseSlug: "pielegniarstwo",
       standard: {
-        price: "Dostęp podstawowy: 39 zł/mies.",
+        price: "199 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
+        accessTier: "basic",
         features: [
-          "Dostęp do wszystkich pytań egzaminacyjnych",
+          "Dostęp do podstawowych kategorii (Anatomia, Fizjologia, Biochemia, Socjologia)",
+          "Ponad 1000 pytań egzaminacyjnych",
           "Podstawowe materiały szkoleniowe",
           "Testy z ostatnich 2 lat"
         ]
       },
       premium: {
-        price: "Dostęp rozszerzony: 59 zł/mies.",
+        price: "399 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
+        accessTier: "premium",
         features: [
-          "Wszystko z planu darmowego",
-          "Ponad 31 algorytmów i procedur",
+          "Wszystko z planu podstawowego",
+          "Dostęp do wszystkich kategorii (Farmakologia, Patologia, Mikrobiologia, itp.)",
+          "Ponad 5000 pytań egzaminacyjnych",
           "Materiały i książki dydaktyczne (cyfrowe)",
           "Dostęp do modułu praktycznego",
-          "Wyzwania i quizy procedur"
+          "Wyzwania i quizy"
         ]
       }
     }
