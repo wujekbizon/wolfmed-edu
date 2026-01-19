@@ -13,7 +13,7 @@ export default function CanceledPage() {
           <h1 className="text-3xl font-bold text-zinc-800">Płatność anulowana</h1>
           <p className="text-lg text-zinc-600">Twoja płatność została anulowana. Nie zostały naliczane żadne opłaty.</p>
           <Link
-            href="/wsparcie-projektu"
+            href="/"
             className="flex items-center justify-center gap-2 w-full p-3 bg-zinc-800 text-white rounded-lg font-semibold transition-colors duration-300 hover:bg-zinc-700"
           >
             <span className="mr-2">&larr;</span>
