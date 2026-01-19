@@ -6,6 +6,7 @@ import { checkCourseAccessAction } from '@/actions/course-actions'
 import { CATEGORY_METADATA, DEFAULT_CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { hasAccessToTier } from '@/lib/accessTiers'
 import Link from 'next/link'
+import { Presentation, Users, BookOpen } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -169,36 +170,36 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
               <div className='grid md:grid-cols-2 gap-6 mb-6'>
                 <div>
-                  <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Informacje o przedmiocie</h3>
+                  <h3 className='text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2'>Informacje o przedmiocie</h3>
                   <div className='space-y-2'>
                     <p className='text-gray-700'><span className='font-semibold'>ECTS:</span> {categoryData.details.ects}</p>
                     <p className='text-gray-700'><span className='font-semibold'>Semestr:</span> {categoryData.details.semester}</p>
                   </div>
                 </div>
                 <div>
-                  <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Wymagania wstępne</h3>
+                  <h3 className='text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2'>Co powinieneś już wiedzieć?</h3>
                   <p className='text-gray-700'>{categoryData.details.prerequisites || 'Brak'}</p>
                 </div>
               </div>
 
               <div>
-                <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Cele przedmiotu</h3>
+                <h3 className='text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2'>O czym jest ten kurs?</h3>
                 <p className='text-gray-700 leading-relaxed'>{categoryData.details.objectives}</p>
               </div>
             </div>
 
             {/* Learning Outcomes */}
             <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
-              <h2 className='text-2xl font-bold mb-6'>Efekty uczenia się</h2>
+              <h2 className='text-2xl font-bold mb-6'>Czego się nauczysz?</h2>
 
               {/* Knowledge */}
               {categoryData.details.learningOutcomes.knowledge.length > 0 && (
                 <div className='mb-6'>
-                  <h3 className='text-lg font-semibold text-blue-700 mb-3'>📘 Wiedza</h3>
+                  <h3 className='text-lg font-semibold text-zinc-700 mb-3'>Wiedza</h3>
                   <div className='space-y-3'>
                     {categoryData.details.learningOutcomes.knowledge.map((item, idx) => (
-                      <div key={idx} className='flex gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200'>
-                        <span className='font-mono text-sm font-bold text-blue-700 shrink-0'>{item.code}</span>
+                      <div key={idx} className='flex gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200'>
+                        <span className='font-mono text-sm font-bold text-zinc-700 shrink-0'>{item.code}</span>
                         <p className='text-gray-700 text-sm'>{item.desc}</p>
                       </div>
                     ))}
@@ -209,11 +210,11 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               {/* Skills */}
               {categoryData.details.learningOutcomes.skills.length > 0 && (
                 <div className='mb-6'>
-                  <h3 className='text-lg font-semibold text-green-700 mb-3'>🎯 Umiejętności</h3>
+                  <h3 className='text-lg font-semibold text-slate-700 mb-3'>Umiejętności</h3>
                   <div className='space-y-3'>
                     {categoryData.details.learningOutcomes.skills.map((item, idx) => (
-                      <div key={idx} className='flex gap-3 p-3 bg-green-50 rounded-lg border border-green-200'>
-                        <span className='font-mono text-sm font-bold text-green-700 shrink-0'>{item.code}</span>
+                      <div key={idx} className='flex gap-3 p-3 bg-slate-50 rounded-lg border border-slate-200'>
+                        <span className='font-mono text-sm font-bold text-slate-700 shrink-0'>{item.code}</span>
                         <p className='text-gray-700 text-sm'>{item.desc}</p>
                       </div>
                     ))}
@@ -224,11 +225,11 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               {/* Competencies */}
               {categoryData.details.learningOutcomes.competencies && categoryData.details.learningOutcomes.competencies.length > 0 && (
                 <div>
-                  <h3 className='text-lg font-semibold text-purple-700 mb-3'>🤝 Kompetencje społeczne</h3>
+                  <h3 className='text-lg font-semibold text-zinc-700 mb-3'>Kompetencje społeczne</h3>
                   <div className='space-y-3'>
                     {categoryData.details.learningOutcomes.competencies.map((item, idx) => (
-                      <div key={idx} className='flex gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200'>
-                        <span className='font-mono text-sm font-bold text-purple-700 shrink-0'>{item.code}</span>
+                      <div key={idx} className='flex gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200'>
+                        <span className='font-mono text-sm font-bold text-zinc-700 shrink-0'>{item.code}</span>
                         <p className='text-gray-700 text-sm'>{item.desc}</p>
                       </div>
                     ))}
@@ -239,16 +240,19 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
 
             {/* Program Content */}
             <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
-              <h2 className='text-2xl font-bold mb-6'>Treści programowe</h2>
+              <h2 className='text-2xl font-bold mb-6'>Program kursu</h2>
 
               {/* Lectures */}
               {categoryData.details.programContent.lectures.length > 0 && (
                 <div className='mb-6'>
-                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Wykłady</h3>
+                  <div className='flex items-center gap-2 mb-3'>
+                    <Presentation className='w-5 h-5 text-zinc-600' />
+                    <h3 className='text-lg font-semibold text-gray-800'>Wykłady</h3>
+                  </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.lectures.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
-                        <span className='text-blue-600 shrink-0'>•</span>
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
+                        <span className='text-zinc-400 shrink-0'>•</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -259,11 +263,14 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               {/* Seminars */}
               {categoryData.details.programContent.seminars.length > 0 && (
                 <div className='mb-6'>
-                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Seminaria / Ćwiczenia</h3>
+                  <div className='flex items-center gap-2 mb-3'>
+                    <Users className='w-5 h-5 text-slate-600' />
+                    <h3 className='text-lg font-semibold text-gray-800'>Seminaria / Ćwiczenia</h3>
+                  </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.seminars.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
-                        <span className='text-green-600 shrink-0'>•</span>
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
+                        <span className='text-slate-400 shrink-0'>•</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -274,11 +281,14 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               {/* Self-Study */}
               {categoryData.details.programContent.selfStudy.length > 0 && (
                 <div>
-                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Samokształcenie</h3>
+                  <div className='flex items-center gap-2 mb-3'>
+                    <BookOpen className='w-5 h-5 text-zinc-600' />
+                    <h3 className='text-lg font-semibold text-gray-800'>Samokształcenie</h3>
+                  </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.selfStudy.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
-                        <span className='text-purple-600 shrink-0'>•</span>
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
+                        <span className='text-zinc-400 shrink-0'>•</span>
                         <span>{item}</span>
                       </li>
                     ))}
