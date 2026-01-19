@@ -1,7 +1,5 @@
 import Link from 'next/link'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
-import { hasAccessToTier } from '@/lib/accessTiers'
-import type { AccessTier } from '@/types/categoryType'
 import { CategoryCard } from './kursy/CategoryCard'
 
 interface EnrolledCourse {

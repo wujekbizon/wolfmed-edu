@@ -61,7 +61,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
     hasAccess = courseAccess.hasAccess
     userTier = courseAccess.accessTier || 'free'
 
-    // Check if user is enrolled in course
     if (!hasAccess) {
       return (
         <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
@@ -167,7 +166,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
 
         {categoryData.details ? (
           <>
-            {/* Course Information */}
+
             <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
               <div className='grid md:grid-cols-2 gap-6 mb-6'>
                 <div>
@@ -248,7 +247,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                 <div className='mb-6'>
                   <div className='flex items-center gap-2 mb-3'>
                     <Presentation className='w-5 h-5 text-zinc-600' />
-                    <h3 className='text-lg font-semibold text-gray-800'>Wykłady</h3>
+                    <h3 className='text-lg font-semibold text-gray-800'>Podstawy teoretyczne</h3>
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.lectures.map((item, idx) => (
@@ -263,7 +262,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                 <div className='mb-6'>
                   <div className='flex items-center gap-2 mb-3'>
                     <Users className='w-5 h-5 text-slate-600' />
-                    <h3 className='text-lg font-semibold text-gray-800'>Seminaria / Ćwiczenia</h3>
+                    <h3 className='text-lg font-semibold text-gray-800'>Praktyczne zastosowanie</h3>
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.seminars.map((item, idx) => (
@@ -272,13 +271,11 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   </ul>
                 </div>
               )}
-
-              {/* Self-Study */}
               {categoryData.details.programContent.selfStudy.length > 0 && (
                 <div>
                   <div className='flex items-center gap-2 mb-3'>
                     <BookOpen className='w-5 h-5 text-zinc-600' />
-                    <h3 className='text-lg font-semibold text-gray-800'>Samokształcenie</h3>
+                    <h3 className='text-lg font-semibold text-gray-800'>Wiedza rozszerzona</h3>
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.selfStudy.map((item, idx) => (
@@ -288,8 +285,6 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                 </div>
               )}
             </div>
-
-            {/* CTA */}
             <div className='bg-white rounded-lg shadow-md p-8'>
               <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
               <p className='text-gray-600 mb-6'>
@@ -297,7 +292,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
               </p>
               <Link
                 href="/panel/testy"
-                className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
+                className='inline-block bg-slate-700 text-white px-8 py-3 rounded-lg hover:bg-slate-800 transition-colors font-medium'
               >
                 Rozpocznij Egzamin
               </Link>
@@ -311,7 +306,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
             </p>
             <Link
               href="/panel/testy"
-              className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
+              className='inline-block bg-slate-600 text-white px-8 py-3 rounded-lg hover:bg-slate-900 transition-colors font-medium'
             >
               Rozpocznij Egzamin
             </Link>
