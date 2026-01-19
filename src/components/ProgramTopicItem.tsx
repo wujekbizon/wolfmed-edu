@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { Sparkles } from 'lucide-react'
 
 interface ProgramTopicItemProps {
   item: string
@@ -20,7 +21,7 @@ export default function ProgramTopicItem({ item, categoryId }: ProgramTopicItemP
 
   return (
     <li
-      className='relative flex gap-2 text-gray-700 text-sm pl-7 group'
+      className='relative flex gap-2 text-gray-700 text-sm pl-7 py-1'
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -29,9 +30,10 @@ export default function ProgramTopicItem({ item, categoryId }: ProgramTopicItemP
       {isHovered && (
         <Link
           href={`/panel/nauka?category=${categoryId}&topic=${encodeURIComponent(topicSlug)}`}
-          className='absolute right-0 px-3 py-1 bg-zinc-800 text-white text-xs rounded hover:bg-zinc-700 transition-colors whitespace-nowrap'
+          className='absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-violet-600 to-indigo-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-violet-700 hover:to-indigo-700 transition-all whitespace-nowrap'
         >
-          Rozpocznij naukę interaktywną
+          <Sparkles className='w-3.5 h-3.5' />
+          <span>Wyjaśnij z AI</span>
         </Link>
       )}
     </li>
