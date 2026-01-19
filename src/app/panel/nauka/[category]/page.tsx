@@ -33,13 +33,12 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     const user = await getCurrentUser()
     if (!user) redirect('/sign-in')
 
-    // Get tests directly from database
     const tests = await getTestsByCategory(decodedCategory) as Test[]
 
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>
             <Suspense fallback={<div>Loading...</div>}>
-                <AllTests tests={tests as any} />
+                <AllTests tests={tests} />
             </Suspense>
         </section>
     )
