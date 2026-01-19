@@ -14,6 +14,23 @@ export interface CategoryPageProps {
 
 export type AccessTier = "free" | "basic" | "premium" | "pro"
 
+export interface CategoryDetails {
+  ects: number
+  semester: string
+  objectives: string
+  prerequisites: string
+  learningOutcomes: {
+    knowledge: Array<{ code: string; desc: string }>
+    skills: Array<{ code: string; desc: string }>
+    competencies?: Array<{ code: string; desc: string }>
+  }
+  programContent: {
+    lectures: string[]
+    seminars: string[]
+    selfStudy: string[]
+  }
+}
+
 export interface CategoryMetadata {
   category: string
   course: string
@@ -26,4 +43,5 @@ export interface CategoryMetadata {
   numberOfQuestions: number[]
   title?: string
   keywords?: string[]
+  details?: CategoryDetails
 }

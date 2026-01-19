@@ -163,18 +163,158 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
           </div>
         </div>
 
-        <div className='bg-white rounded-lg shadow-md p-8'>
-          <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
-          <p className='text-gray-600 mb-6'>
-            Gotowy do sprawdzenia swojej wiedzy? Rozpocznij egzamin z kategorii {categoryName}
-          </p>
-          <Link
-            href="/panel/testy"
-            className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
-          >
-            Rozpocznij Egzamin
-          </Link>
-        </div>
+        {categoryData.details ? (
+          <>
+            {/* Course Information */}
+            <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
+              <div className='grid md:grid-cols-2 gap-6 mb-6'>
+                <div>
+                  <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Informacje o przedmiocie</h3>
+                  <div className='space-y-2'>
+                    <p className='text-gray-700'><span className='font-semibold'>ECTS:</span> {categoryData.details.ects}</p>
+                    <p className='text-gray-700'><span className='font-semibold'>Semestr:</span> {categoryData.details.semester}</p>
+                  </div>
+                </div>
+                <div>
+                  <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Wymagania wstępne</h3>
+                  <p className='text-gray-700'>{categoryData.details.prerequisites || 'Brak'}</p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className='text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2'>Cele przedmiotu</h3>
+                <p className='text-gray-700 leading-relaxed'>{categoryData.details.objectives}</p>
+              </div>
+            </div>
+
+            {/* Learning Outcomes */}
+            <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
+              <h2 className='text-2xl font-bold mb-6'>Efekty uczenia się</h2>
+
+              {/* Knowledge */}
+              {categoryData.details.learningOutcomes.knowledge.length > 0 && (
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-blue-700 mb-3'>📘 Wiedza</h3>
+                  <div className='space-y-3'>
+                    {categoryData.details.learningOutcomes.knowledge.map((item, idx) => (
+                      <div key={idx} className='flex gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200'>
+                        <span className='font-mono text-sm font-bold text-blue-700 shrink-0'>{item.code}</span>
+                        <p className='text-gray-700 text-sm'>{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Skills */}
+              {categoryData.details.learningOutcomes.skills.length > 0 && (
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-green-700 mb-3'>🎯 Umiejętności</h3>
+                  <div className='space-y-3'>
+                    {categoryData.details.learningOutcomes.skills.map((item, idx) => (
+                      <div key={idx} className='flex gap-3 p-3 bg-green-50 rounded-lg border border-green-200'>
+                        <span className='font-mono text-sm font-bold text-green-700 shrink-0'>{item.code}</span>
+                        <p className='text-gray-700 text-sm'>{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Competencies */}
+              {categoryData.details.learningOutcomes.competencies && categoryData.details.learningOutcomes.competencies.length > 0 && (
+                <div>
+                  <h3 className='text-lg font-semibold text-purple-700 mb-3'>🤝 Kompetencje społeczne</h3>
+                  <div className='space-y-3'>
+                    {categoryData.details.learningOutcomes.competencies.map((item, idx) => (
+                      <div key={idx} className='flex gap-3 p-3 bg-purple-50 rounded-lg border border-purple-200'>
+                        <span className='font-mono text-sm font-bold text-purple-700 shrink-0'>{item.code}</span>
+                        <p className='text-gray-700 text-sm'>{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Program Content */}
+            <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
+              <h2 className='text-2xl font-bold mb-6'>Treści programowe</h2>
+
+              {/* Lectures */}
+              {categoryData.details.programContent.lectures.length > 0 && (
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Wykłady</h3>
+                  <ul className='space-y-2'>
+                    {categoryData.details.programContent.lectures.map((item, idx) => (
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
+                        <span className='text-blue-600 shrink-0'>•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Seminars */}
+              {categoryData.details.programContent.seminars.length > 0 && (
+                <div className='mb-6'>
+                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Seminaria / Ćwiczenia</h3>
+                  <ul className='space-y-2'>
+                    {categoryData.details.programContent.seminars.map((item, idx) => (
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
+                        <span className='text-green-600 shrink-0'>•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Self-Study */}
+              {categoryData.details.programContent.selfStudy.length > 0 && (
+                <div>
+                  <h3 className='text-lg font-semibold text-gray-800 mb-3'>Samokształcenie</h3>
+                  <ul className='space-y-2'>
+                    {categoryData.details.programContent.selfStudy.map((item, idx) => (
+                      <li key={idx} className='flex gap-2 text-gray-700 text-sm'>
+                        <span className='text-purple-600 shrink-0'>•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {/* CTA */}
+            <div className='bg-white rounded-lg shadow-md p-8'>
+              <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
+              <p className='text-gray-600 mb-6'>
+                Gotowy do sprawdzenia swojej wiedzy? Rozpocznij egzamin z kategorii {categoryName}
+              </p>
+              <Link
+                href="/panel/testy"
+                className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
+              >
+                Rozpocznij Egzamin
+              </Link>
+            </div>
+          </>
+        ) : (
+          <div className='bg-white rounded-lg shadow-md p-8'>
+            <h2 className='text-2xl font-bold mb-4'>Rozpocznij naukę</h2>
+            <p className='text-gray-600 mb-6'>
+              Gotowy do sprawdzenia swojej wiedzy? Rozpocznij egzamin z kategorii {categoryName}
+            </p>
+            <Link
+              href="/panel/testy"
+              className='inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium'
+            >
+              Rozpocznij Egzamin
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   )
