@@ -19,7 +19,7 @@ export default function CellListItem ({cell}: {cell: Cell}) {
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
-          <DynamicRagCell />
+          <DynamicRagCell cell={cell} />
         </div>
       )}
       {cell.type === 'draw' && (
