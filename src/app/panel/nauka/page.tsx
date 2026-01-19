@@ -34,7 +34,6 @@ export default async function NaukaPage() {
   ])
   const materials = await getMergedMaterials(userMaterials)
 
-  // Filter categories based on course ownership and tier access
   const categoriesWithAccess = await Promise.all(
     populatedCategories.map(async (cat) => {
       const metadata = CATEGORY_METADATA[cat.value]
@@ -55,7 +54,6 @@ export default async function NaukaPage() {
     })
   )
 
-  // Only show categories user has access to
   const accessibleCategories = categoriesWithAccess.filter(cat => cat.hasAccess)
 
   return (
