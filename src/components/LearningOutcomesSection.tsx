@@ -18,7 +18,6 @@ export default function LearningOutcomesSection({
     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
       <h2 className='text-2xl font-bold mb-6'>Czego się nauczysz?</h2>
 
-      {/* Knowledge */}
       {knowledge.length > 0 && (
         <div className='mb-6'>
           <h3 className='text-lg font-semibold text-zinc-700 mb-3'>Wiedza</h3>
@@ -38,7 +37,6 @@ export default function LearningOutcomesSection({
         </div>
       )}
 
-      {/* Skills */}
       {skills.length > 0 && (
         <div className='mb-6'>
           <h3 className='text-lg font-semibold text-slate-700 mb-3'>Umiejętności</h3>
@@ -58,7 +56,6 @@ export default function LearningOutcomesSection({
         </div>
       )}
 
-      {/* Competencies */}
       {competencies && competencies.length > 0 && (
         <div>
           <h3 className='text-lg font-semibold text-zinc-700 mb-3'>

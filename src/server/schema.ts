@@ -240,7 +240,7 @@ export type NoteInput = z.infer<typeof NoteSchema>;
  */
 export const CellSchema = z.object({
   id: z.string(),
-  type: z.enum(["note", "text", "draw"]),
+  type: z.enum(["note", "rag", "draw"]),
   content: z.string(),
 });
 

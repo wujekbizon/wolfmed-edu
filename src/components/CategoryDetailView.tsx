@@ -18,6 +18,8 @@ export default function CategoryDetailView({
   testCount,
   decodedCategory,
 }: CategoryDetailViewProps) {
+
+  const competencies = categoryData?.details?.learningOutcomes.competencies ?? []
   return (
     <div className='max-w-6xl mx-auto'>
       <CategoryHeader
@@ -40,7 +42,7 @@ export default function CategoryDetailView({
           <LearningOutcomesSection
             knowledge={categoryData.details.learningOutcomes.knowledge}
             skills={categoryData.details.learningOutcomes.skills}
-            competencies={categoryData.details.learningOutcomes.competencies}
+            competencies={competencies}
           />
 
           <ProgramContentSection

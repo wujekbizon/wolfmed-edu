@@ -18,7 +18,6 @@ export default function ProgramContentSection({
     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
       <h2 className='text-2xl font-bold mb-6'>Program kursu</h2>
 
-      {/* Lectures */}
       {lectures.length > 0 && (
         <div className='mb-6'>
           <div className='flex items-center gap-2 mb-3'>
@@ -33,7 +32,6 @@ export default function ProgramContentSection({
         </div>
       )}
 
-      {/* Seminars */}
       {seminars.length > 0 && (
         <div className='mb-6'>
           <div className='flex items-center gap-2 mb-3'>
@@ -48,7 +46,6 @@ export default function ProgramContentSection({
         </div>
       )}
 
-      {/* Self-Study */}
       {selfStudy.length > 0 && (
         <div>
           <div className='flex items-center gap-2 mb-3'>
