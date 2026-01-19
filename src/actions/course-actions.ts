@@ -34,10 +34,14 @@ export async function checkCourseAccessAction(courseSlug: string) {
         )
         .limit(1);
 
-      return {
-        hasAccess: true,
-        accessTier: enrollment?.accessTier || "basic",
-      };
+      // Only return hasAccess: true if active enrollment exists in DB
+      if (enrollment) {
+        return {
+          hasAccess: true,
+          accessTier: enrollment.accessTier,
+        };
+      }
+      // If enrollment doesn't exist or is inactive, fall through to fallback check
     }
 
     // Fallback: check database directly
