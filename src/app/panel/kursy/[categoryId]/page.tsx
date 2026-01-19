@@ -7,6 +7,7 @@ import { CATEGORY_METADATA, DEFAULT_CATEGORY_METADATA } from '@/constants/catego
 import { hasAccessToTier } from '@/lib/accessTiers'
 import Link from 'next/link'
 import { Presentation, Users, BookOpen } from 'lucide-react'
+import ProgramTopicItem from '@/components/ProgramTopicItem'
 
 export const dynamic = 'force-dynamic'
 
@@ -251,10 +252,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.lectures.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
-                        <span className='text-zinc-400 shrink-0'>•</span>
-                        <span>{item}</span>
-                      </li>
+                      <ProgramTopicItem key={idx} item={item} categoryId={decodedCategory} />
                     ))}
                   </ul>
                 </div>
@@ -269,10 +267,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.seminars.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
-                        <span className='text-slate-400 shrink-0'>•</span>
-                        <span>{item}</span>
-                      </li>
+                      <ProgramTopicItem key={idx} item={item} categoryId={decodedCategory} />
                     ))}
                   </ul>
                 </div>
@@ -287,10 +282,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
                   </div>
                   <ul className='space-y-2'>
                     {categoryData.details.programContent.selfStudy.map((item, idx) => (
-                      <li key={idx} className='flex gap-2 text-gray-700 text-sm pl-7'>
-                        <span className='text-zinc-400 shrink-0'>•</span>
-                        <span>{item}</span>
-                      </li>
+                      <ProgramTopicItem key={idx} item={item} categoryId={decodedCategory} />
                     ))}
                   </ul>
                 </div>

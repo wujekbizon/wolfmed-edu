@@ -1,4 +1,4 @@
-import { DynamicExcalidraw, DynamicNoteCell } from '.'
+import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell } from '.'
 import ActionBar from './ActionBar'
 import type { Cell } from '@/types/cellTypes'
 
@@ -14,12 +14,12 @@ export default function CellListItem ({cell}: {cell: Cell}) {
           <DynamicNoteCell />
         </div>
       )}
-      {cell.type === 'text' && (
+      {cell.type === 'rag' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
-          <DynamicNoteCell />
+          <DynamicRagCell />
         </div>
       )}
       {cell.type === 'draw' && (
