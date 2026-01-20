@@ -58,9 +58,10 @@ export async function createFileSearchStoreAction(
 
     revalidatePath('/admin/rag')
 
-    return toFormState('SUCCESS', 'File Search Store utworzony pomyślnie', {
+    return {
+      ...toFormState('SUCCESS', 'File Search Store utworzony pomyślnie'),
       storeName,
-    })
+    }
   } catch (error) {
     console.error('Error creating file search store:', error)
     return fromErrorToFormState(error)
@@ -104,20 +105,12 @@ export async function uploadMedicalDocsAction(
     if (results.success) {
       return toFormState(
         'SUCCESS',
-        `Przesłano ${results.uploaded.length} dokumentów pomyślnie`,
-        {
-          uploaded: results.uploaded,
-          failed: results.failed,
-        }
+        `Przesłano ${results.uploaded.length} dokumentów pomyślnie`
       )
     } else {
       return toFormState(
         'ERROR',
-        `Przesłano ${results.uploaded.length} dokumentów. Błędy: ${results.failed.length}`,
-        {
-          uploaded: results.uploaded,
-          failed: results.failed,
-        }
+        `Przesłano ${results.uploaded.length} dokumentów. Błędy: ${results.failed.length}`
       )
     }
   } catch (error) {
@@ -254,10 +247,10 @@ export async function testRagQueryAction(
       validationResult.data.storeName
     )
 
-    return toFormState('SUCCESS', 'Zapytanie wykonane pomyślnie', {
-      answer: result.answer,
+    return {
+      ...toFormState('SUCCESS', result.answer),
       sources: result.sources,
-    })
+    }
   } catch (error) {
     console.error('Error testing RAG query:', error)
     return fromErrorToFormState(error)
