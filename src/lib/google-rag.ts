@@ -58,11 +58,16 @@ export async function uploadDocumentToStore(
   try {
     const ai = getGoogleAI()
 
+    const mimeType = filePath.endsWith(".md")
+          ? "text/markdown"
+          : "text/plain"
     // Upload and import the file
     let operation = await ai.fileSearchStores.uploadToFileSearchStore({
       file: filePath,
       fileSearchStoreName: storeName,
-      config: { displayName }
+      config: { 
+        displayName,
+        mimeType }
     })
 
     // Poll until the operation is complete
@@ -161,7 +166,7 @@ export async function queryWithFileSearch(
 
     // Query with file search tool
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash-exp',
+      model: 'gemini-2.5-flash',
       contents: question,
       config: {
         tools: [{
