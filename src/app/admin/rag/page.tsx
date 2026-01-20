@@ -3,11 +3,12 @@ import {
   getStoreStatusAction,
   listStoreDocumentsAction,
 } from '@/actions/admin-rag-actions'
-import CreateStoreSection from './components/CreateStoreSection'
-import UploadDocsSection from './components/UploadDocsSection'
-import StoreStatusCard from './components/StoreStatusCard'
-import DocumentListTable from './components/DocumentListTable'
-import TestQueryForm from './components/TestQueryForm'
+import StoreStatusCard from '@/components/rag/StoreStatusCard'
+import CreateStoreSection from '@/components/rag/CreateStoreSection'
+import UploadDocsSection from '@/components/rag/UploadDocsSection'
+import DocumentListTable from '@/components/rag/DocumentListTable'
+import TestQueryForm from '@/components/rag/TestQueryForm'
+
 
 export const dynamic = 'force-dynamic'
 
