@@ -8,7 +8,7 @@ import SubmitButton from '@/components/SubmitButton'
 import { useToastMessage } from '@/hooks/useToastMessage'
 
 interface TestQueryFormProps {
-  storeName?: string
+  storeName?: string | undefined
 }
 
 export default function TestQueryForm({ storeName }: TestQueryFormProps) {

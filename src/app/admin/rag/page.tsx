@@ -18,7 +18,7 @@ async function AsyncRagDashboard() {
     listStoreDocumentsAction(),
   ])
 
-  const isConfigured = storeStatus.success && storeStatus.data?.isConfigured
+  const isConfigured = !!(storeStatus.success && storeStatus.data?.isConfigured)
   const documents = documentsResult.success ? documentsResult.data || [] : []
 
   return (
@@ -65,7 +65,7 @@ async function AsyncRagDashboard() {
             <p className="text-zinc-600 mb-6">
               Przetestuj system RAG z przykładowym pytaniem
             </p>
-            <TestQueryForm storeName={storeStatus.data?.storeName || undefined} />
+            <TestQueryForm storeName={storeStatus.data?.storeName ?? undefined} />
           </div>
         </>
       )}

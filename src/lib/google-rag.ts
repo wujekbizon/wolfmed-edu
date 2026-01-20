@@ -210,7 +210,7 @@ export async function queryWithFileSearch(
  */
 export async function getStoreInfo(storeName: string): Promise<{
   name: string
-  displayName?: string
+  displayName?: string | undefined
 }> {
   try {
     const ai = getGoogleAI()
@@ -220,7 +220,7 @@ export async function getStoreInfo(storeName: string): Promise<{
 
     return {
       name: store.name || storeName,
-      displayName: store.displayName
+      displayName: store.displayName ?? undefined
     }
   } catch (error) {
     console.error('Error getting store info:', error)
@@ -243,13 +243,16 @@ export async function listStoreDocuments(storeName: string): Promise<
     const ai = getGoogleAI()
 
     // List files in the store
-    const response = await ai.fileSearchStores.listDocuments({
-      fileSearchStoreName: storeName
+    const response = await ai.fileSearchStores.documents.list({
+      parent: storeName
     })
 
-    const documents = response.documents || []
+    const documents: any[] = []
+    for await (const doc of response) {
+      documents.push(doc)
+    }
 
-    return documents.map(doc => ({
+    return documents.map((doc: any) => ({
       name: doc.name || '',
       displayName: doc.displayName || doc.name || 'Unknown'
     }))

@@ -1,7 +1,7 @@
 interface StoreStatusCardProps {
   isConfigured: boolean
   storeName: string | null
-  storeDisplayName?: string
+  storeDisplayName?: string | undefined
   documentCount: number
 }
 
