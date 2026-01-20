@@ -257,7 +257,7 @@ export const careerPathsData: Record<string, PathData> = {
     ],
     pricing: {
       courseSlug: "opiekun-medyczny",
-      standard: {
+      basic: {
         price: "49,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
         accessTier: "basic",
@@ -274,7 +274,7 @@ export const careerPathsData: Record<string, PathData> = {
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
         accessTier: "premium",
         features: [
-          "Wszystko z planu standard",
+          "Wszystko z planu basic",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego i tablicy",
@@ -313,7 +313,7 @@ export const careerPathsData: Record<string, PathData> = {
     ],
     pricing: {
       courseSlug: "pielegniarstwo",
-      standard: {
+      basic: {
         price: "199 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
         accessTier: "basic",
@@ -329,7 +329,7 @@ export const careerPathsData: Record<string, PathData> = {
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
         accessTier: "premium",
         features: [
-          "Wszystko z planu podstawowego",
+          "Wszystko z planu basic",
           "Dostęp do wszystkich kategorii (Farmakologia, Patologia, Mikrobiologia, itp.)",
           "Ponad 5000 pytań egzaminacyjnych",
           "Materiały i książki dydaktyczne (cyfrowe)",

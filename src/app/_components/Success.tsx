@@ -9,11 +9,11 @@ import { careerPathsData } from '@/constants/careerPathsData'
 export const Success = () => {
   const searchParams = useSearchParams()
   const courseSlug = searchParams.get('courseSlug')
-  const tier = searchParams.get('tier') || 'standard'
+  const tier = searchParams.get('tier') || 'basic'
 
   const courseData = courseSlug ? careerPathsData[courseSlug] : null
-  const tierData = courseData?.pricing?.[tier as 'standard' | 'premium']
-  
+  const tierData = courseData?.pricing?.[tier as 'basic' | 'premium' | 'pro']
+
   const isPremium = tier === 'premium'
 
   if (!courseData || !tierData) {
@@ -79,7 +79,7 @@ export const Success = () => {
               }
             `}
           >
-            Plan {isPremium ? 'Premium' : 'Standard'}
+            Plan {isPremium ? 'Premium' : 'Basic'}
           </span>
 
           <div

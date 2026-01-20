@@ -22,7 +22,7 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}&courseSlug=${courseSlug}&tier=${accessTier}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/canceled`,
       client_reference_id: userId,
       metadata: {
