@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 interface RagResponseProps {
   answer: string
-  sources?: string[]
+  sources?: string[] | undefined
 }
 
 export default function RagResponse({ answer, sources }: RagResponseProps) {
