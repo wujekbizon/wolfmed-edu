@@ -60,7 +60,7 @@ export async function createFileSearchStoreAction(
 
     return {
       ...toFormState('SUCCESS', 'File Search Store utworzony pomyślnie'),
-      storeName,
+      values: { storeName }
     }
   } catch (error) {
     console.error('Error creating file search store:', error)
@@ -127,7 +127,7 @@ export async function getStoreStatusAction(): Promise<{
   success: boolean
   data?: {
     storeName: string | null
-    storeDisplayName?: string
+    storeDisplayName?: string | undefined
     isConfigured: boolean
   }
   error?: string
@@ -155,7 +155,7 @@ export async function getStoreStatusAction(): Promise<{
       success: true,
       data: {
         storeName: storeInfo.name,
-        storeDisplayName: storeInfo.displayName,
+        storeDisplayName: storeInfo.displayName ?? undefined,
         isConfigured: true,
       },
     }
@@ -249,7 +249,7 @@ export async function testRagQueryAction(
 
     return {
       ...toFormState('SUCCESS', result.answer),
-      sources: result.sources,
+      values: { sources: result.sources }
     }
   } catch (error) {
     console.error('Error testing RAG query:', error)
