@@ -1,5 +1,5 @@
 import AllProcedures from '@/components/AllProcedures'
-import { fileData } from '@/server/fetchData'
+import { getAllProcedures } from '@/server/queries'
 import { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
@@ -11,6 +11,6 @@ export const metadata: Metadata = {
 }
 
 export default async function ProceduresPage() {
-  const procedures = await fileData.getAllProcedures()
-  return <AllProcedures procedures={procedures} />
+  const procedures = await getAllProcedures()
+  return <AllProcedures procedures={procedures as any} />
 }
