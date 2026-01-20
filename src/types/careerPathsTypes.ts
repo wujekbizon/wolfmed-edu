@@ -27,7 +27,7 @@ type PricingTier = {
 
 type PricingTable = {
   courseSlug: string;
-  standard: PricingTier;
+  basic: PricingTier;
   premium?: PricingTier;
   pro?: PricingTier;
 };
