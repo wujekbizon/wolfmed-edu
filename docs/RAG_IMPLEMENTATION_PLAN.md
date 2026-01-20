@@ -2,79 +2,95 @@
 
 ## Architecture Overview
 
-**Pattern**: Server-first with Server Actions + Google File Search Store (FSS)
+**Pattern**: Server-first with Server Actions + Google File Search Store
+**SDK**: `@google/genai` (official Google GenAI SDK)
 
-## SDK Decision
+## Key Changes from Original Plan
 
-**Use: Google Generative AI SDK (Direct)**
+✅ **Correct API**: Using `fileSearchStore` (not "corpus")
+✅ **Correct SDK**: `@google/genai` (not `@google/generative-ai`)
+✅ **Admin Dashboard**: Manage stores via `/admin` route
+✅ **Zod**: Already installed, using existing
 
-**Why:**
-- Native File API support for File Search Store
-- Direct access to file uploads and corpus management
-- Gemini 1.5 Pro supports grounding with files
-- Vercel AI SDK doesn't support File Search Store
+---
 
-**Dependencies:**
+## Dependencies
+
 ```bash
-npm install @google/generative-ai
+pnpm install @google/genai
 ```
 
-## File Search Store Strategy
-
-### Admin Setup (One-time):
-
-1. **Upload Script** (`/scripts/upload-medical-docs.ts`)
-   - Reads `/docs/*.md` files
-   - Uploads to Google File Search Store
-   - Creates corpus with medical documentation
-   - Stores corpus ID in database or `.env`
-
-2. **Store Corpus Reference**
-   - Option A: Environment variable `GOOGLE_CORPUS_ID`
-   - Option B: Database table `rag_corpus` with metadata
-
-### Query Flow:
-
-1. User asks question
-2. Server action sends to Gemini with corpus grounding
-3. Gemini searches files and generates contextualized answer
-4. Return answer with sources (if available)
+---
 
 ## Implementation Steps
 
-### 1. Install Dependencies
-
-```bash
-npm install @google/generative-ai zod
-```
-
-### 2. Environment Setup
+### 1. Environment Setup
 
 ```env
-GOOGLE_API_KEY=...
-GOOGLE_CORPUS_ID=...  # After upload
+GOOGLE_API_KEY=your_api_key_here
+GOOGLE_FILE_SEARCH_STORE_NAME=projects/.../fileSearchStores/...
 ```
 
-### 3. Create Upload Script
-
-**File:** `/scripts/upload-medical-docs.ts`
-
-- Read all `/docs/*.md` files
-- Upload via Google File API
-- Create corpus
-- Store corpus ID
-- CLI tool for admin
-
-### 4. Create Google RAG Helper
+### 2. Create Google RAG Helper
 
 **File:** `/src/lib/google-rag.ts`
 
-- Initialize Gemini client
-- Query with file grounding
-- Parse response with sources
+```typescript
+import { GoogleGenAI } from '@google/genai';
+
+// Initialize client
+// Create/get fileSearchStore
+// Upload files to store
+// Query with fileSearch tool
+```
+
+**Functions:**
+- `createFileSearchStore(displayName)` → storeName
+- `uploadDocumentsToStore(storeName, files[])` → operation status
+- `queryWithFileSearch(question, storeName)` → response
 - Error handling
 
-### 5. Create Server Action
+### 3. Admin Dashboard Components
+
+**Route:** `/admin/rag-management`
+
+**File:** `/src/app/(admin)/admin/rag-management/page.tsx`
+
+**Features:**
+- **Create Store**: Button to create new fileSearchStore
+- **Upload Documents**: Bulk upload `/docs/*.md` files
+- **Store Status**: Display store name, file count, status
+- **Document List**: Show uploaded documents
+- **Test Query**: Input to test RAG queries
+- **Store Info**: Display current `GOOGLE_FILE_SEARCH_STORE_NAME`
+
+**Components:**
+- `CreateStoreButton.tsx` - Create new store
+- `UploadDocsButton.tsx` - Upload all medical docs
+- `StoreStatusCard.tsx` - Display store info
+- `DocumentListTable.tsx` - List uploaded documents
+- `TestQueryForm.tsx` - Test RAG functionality
+
+### 4. Admin Server Actions
+
+**File:** `/src/actions/admin-rag-actions.ts`
+
+```typescript
+// Admin-only actions (check auth + admin role)
+export async function createFileSearchStore(formData)
+export async function uploadMedicalDocs(formData)
+export async function getStoreStatus()
+export async function listStoreDocuments()
+export async function testRagQuery(formData)
+```
+
+**Security:**
+- Check `userId` from Clerk
+- Verify admin role/permissions
+- Rate limiting for uploads
+- Zod validation
+
+### 5. User-Facing Server Action
 
 **File:** `/src/actions/rag-actions.ts`
 
@@ -85,56 +101,41 @@ export async function askRagQuestion(
 ): Promise<FormState>
 ```
 
-**Responsibilities:**
+**Pattern:** Follow existing `updateMotto` action:
+- `useActionState` hook
 - Auth check with Clerk
-- Rate limiting (10 queries/hour)
-- Zod validation with `RagQuerySchema`
-- Call google-rag helper
+- Rate limiting: **10 queries/hour per user**
+- Zod validation: `RagQuerySchema`
+- Call `queryWithFileSearch()`
 - Return formatted response
-
-**Pattern:** Follow `updateMotto` action in `/src/actions/actions.ts`:
-- Use `useActionState` hook
-- FormState return type
-- Rate limiting with `checkRateLimit`
-- Zod validation
-- Error handling with `fromErrorToFormState`
 
 ### 6. Update RagCell Component
 
 **File:** `/src/components/cells/RagCell.tsx`
 
-**Current State:** Basic input with placeholder
-
-**Updates Needed:**
-- Convert to form with `useActionState` hook
+**Updates:**
+- Convert to form with `useActionState`
 - Import `askRagQuestion` action
-- Add `SubmitButton` component
-- Add response display area
+- Add `SubmitButton` component (reuse existing)
+- Add `<RagResponse>` component
 - Add loading state
-- Add error handling with `FieldError`
-- Keep input pre-filled with `cell.content`
+- Add `<FieldError>` for validation (reuse existing)
+- Pre-fill input with `cell.content`
 
-### 7. Create Supporting Components
+### 7. Create Response Components
 
-#### New Components:
-
-**`/src/components/cells/RagResponse.tsx`**
-- Display AI response
-- Markdown rendering (use `react-markdown` or similar)
-- Source citations (if available from FSS)
+**File:** `/src/components/cells/RagResponse.tsx`
+- Display AI response with markdown rendering
+- Source citations (if available)
 - Copy button for response
-- Styling: zinc/slate theme
+- Zinc/slate theme styling
 
-**`/src/components/cells/RagLoadingState.tsx`**
+**File:** `/src/components/cells/RagLoadingState.tsx`
 - Animated loading indicator
-- Message: "Szukam odpowiedzi w dokumentach..."
+- Polish message: "Szukam odpowiedzi w dokumentach..."
 - Pulsing dots animation
 
-#### Reuse Existing:
-- `FieldError` - validation errors
-- `SubmitButton` - form submission with loading state
-
-### 8. Create Zod Schema
+### 8. Zod Schema
 
 **File:** `/src/server/schema.ts`
 
@@ -145,59 +146,65 @@ export const RagQuerySchema = z.object({
     .max(500, "Pytanie zbyt długie"),
   cellId: z.string(),
 })
+
+// Admin schemas
+export const CreateStoreSchema = z.object({
+  displayName: z.string().min(3),
+})
 ```
 
-### 9. Database (Optional)
+### 9. Database (Optional) - ⏭️ SKIP
 
-If storing corpus metadata:
-
-```sql
-CREATE TABLE rag_corpus (
-  id TEXT PRIMARY KEY,
-  name TEXT,
-  file_count INTEGER,
-  created_at TIMESTAMP,
-  updated_at TIMESTAMP
-)
-```
+---
 
 ## File Structure
 
 ```
-/scripts
-  upload-medical-docs.ts      # NEW - admin tool
-
-/docs
-  *.md                         # Existing medical documentation
-
 /src
+  /app
+    /(admin)
+      /admin
+        /rag-management
+          page.tsx                    # NEW - Admin dashboard
+          /components
+            CreateStoreButton.tsx     # NEW
+            UploadDocsButton.tsx      # NEW
+            StoreStatusCard.tsx       # NEW
+            DocumentListTable.tsx     # NEW
+            TestQueryForm.tsx         # NEW
+
   /actions
-    rag-actions.ts            # NEW - server action
+    rag-actions.ts                    # NEW - User actions
+    admin-rag-actions.ts              # NEW - Admin actions
 
   /components
     /cells
-      RagCell.tsx             # UPDATE - add form + action
-      RagResponse.tsx         # NEW - display response
-      RagLoadingState.tsx     # NEW - loading state
+      RagCell.tsx                     # UPDATE - Add form
+      RagResponse.tsx                 # NEW
+      RagLoadingState.tsx             # NEW
 
   /lib
-    google-rag.ts             # NEW - Google FSS integration
+    google-rag.ts                     # NEW - Core RAG logic
 
   /server
-    schema.ts                 # UPDATE - add RagQuerySchema
+    schema.ts                         # UPDATE - Add schemas
 
-  /store
-    useCellsStore.ts          # UPDATE if needed for persistence
+/docs
+  *.md                                # Existing medical docs (13 files)
 ```
 
-## Implementation Flow
+---
+
+## User Flow
 
 ### Admin Setup (One-time):
 
-1. Run: `npm run upload-docs`
-2. Script uploads `/docs/*.md` → Google File Search Store
-3. Returns corpus ID
-4. Add to `.env`: `GOOGLE_CORPUS_ID=...`
+1. Navigate to `/admin/rag-management`
+2. Click "Create File Search Store" → store created
+3. Copy store name → Add to `.env`: `GOOGLE_FILE_SEARCH_STORE_NAME=...`
+4. Click "Upload Medical Documents" → uploads all `/docs/*.md`
+5. Wait for upload operation to complete
+6. Test query to verify setup
 
 ### User Query Flow:
 
@@ -207,131 +214,124 @@ CREATE TABLE rag_corpus (
 4. User edits/reviews question
 5. Clicks "Wyjaśnij" button
 6. Form submits → `askRagQuestion` server action
-7. Action validates, rate-limits, checks auth
-8. Calls `queryRagWithFiles(question, corpusId)`
-9. Gemini searches corpus + generates contextualized answer
-10. Response displayed in `RagResponse` component
+7. Action: validates, rate-limits, checks auth
+8. Calls `queryWithFileSearch(question, storeName)`
+9. Gemini searches store + generates answer
+10. Response displays in `<RagResponse>` component
 11. Optional: Save response to cell for persistence
+
+---
+
+## Correct API Usage
+
+### Create Store:
+```typescript
+const store = await ai.fileSearchStores.create({
+  config: { displayName: 'wolfmed-medical-docs' }
+});
+// Returns: { name: 'projects/.../fileSearchStores/...' }
+```
+
+### Upload Files:
+```typescript
+let operation = await ai.fileSearchStores.uploadToFileSearchStore({
+  file: 'docs/Anatomia.md',
+  fileSearchStoreName: store.name,
+  config: { displayName: 'Anatomia' }
+});
+
+// Poll until done
+while (!operation.done) {
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  operation = await ai.operations.get({ operation });
+}
+```
+
+### Query with File Search:
+```typescript
+const response = await ai.models.generateContent({
+  model: "gemini-2.0-flash-exp",
+  contents: question,
+  config: {
+    tools: [{
+      fileSearch: {
+        fileSearchStoreNames: [storeName]
+      }
+    }]
+  }
+});
+```
+
+---
 
 ## Rate Limiting
 
-- **10 queries per hour per user**
-- Key: `"rag:query"`
+- **User Queries**: 10 per hour per user (key: `"rag:query"`)
+- **Admin Uploads**: 5 per hour (key: `"rag:admin:upload"`)
 - Use existing `checkRateLimit` helper
-- Error message: "Zbyt wiele zapytań, spróbuj za X minut"
+- Error: "Zbyt wiele zapytań, spróbuj za X minut"
+
+---
 
 ## Error Handling
 
 | Error Type | User Message |
 |------------|--------------|
-| File Search Store connection | "Nie mogę połączyć się z bazą wiedzy" |
+| Store not found | "Skonfiguruj File Search Store w panelu admina" |
 | API errors | "Wystąpił błąd, spróbuj ponownie" |
-| Rate limit exceeded | "Zbyt wiele zapytań, spróbuj za X minut" |
+| Rate limit | "Zbyt wiele zapytań, spróbuj za X minut" |
 | Empty response | "Nie znalazłem odpowiedzi w dokumentach" |
-| Validation errors | Display via `FieldError` component |
-
-## Google File Search Store Integration
-
-### Upload Format:
-
-- Text files (.md, .txt)
-- Each file tagged with category metadata
-- Create single corpus for all medical docs
-- Files from `/docs` directory:
-  - Anatomia.md
-  - Fizjologia.md
-  - Biochemia_z_Biofizyka.md
-  - ... (13 total files)
-
-### Query Format:
-
-```typescript
-const result = await model.generateContent({
-  contents: [{ role: "user", parts: [{ text: question }] }],
-  tools: [{
-    fileData: { corpusId: CORPUS_ID }
-  }]
-})
-```
-
-### Response Includes:
-
-- Answer text
-- Source file references (optional)
-- Confidence scores (optional)
-- Grounded in uploaded medical documentation
-
-## Security Considerations
-
-1. **API Key Protection**: Store in `.env.local`, never commit
-2. **Rate Limiting**: Prevent abuse with per-user limits
-3. **Auth Required**: All queries require Clerk authentication
-4. **Input Validation**: Zod schema validation on all inputs
-5. **Error Messages**: Don't expose internal errors to users
-
-## Testing Checklist
-
-- [ ] Upload script successfully creates corpus
-- [ ] Environment variables configured
-- [ ] RAG cell auto-creates with topic
-- [ ] Form validation works (min 5 chars, max 500)
-- [ ] Rate limiting triggers correctly
-- [ ] Auth check prevents unauthorized access
-- [ ] Gemini returns relevant answers
-- [ ] Response displays correctly with markdown
-- [ ] Loading states show during query
-- [ ] Error messages display appropriately
-- [ ] Sources/citations display (if available)
-
-## Future Enhancements
-
-1. **Streaming Responses**: Real-time streaming of AI responses
-2. **Response Caching**: Cache common queries
-3. **Source Citations**: Display which document sections were used
-4. **Follow-up Questions**: Context-aware follow-ups
-5. **Response Rating**: Let users rate answer quality
-6. **Admin Dashboard**: Manage corpus, view analytics
-7. **Multi-language**: Support English queries
-
-## Dependencies Summary
-
-```json
-{
-  "dependencies": {
-    "@google/generative-ai": "latest",
-    "zod": "^3.x",
-    "react-markdown": "^9.x" // Optional for markdown rendering
-  }
-}
-```
-
-## Environment Variables
-
-```env
-# Required
-GOOGLE_API_KEY=your_api_key_here
-GOOGLE_CORPUS_ID=corpus_id_after_upload
-
-# Optional
-RAG_RATE_LIMIT_PER_HOUR=10
-RAG_MAX_QUESTION_LENGTH=500
-```
-
-## Next Steps
-
-1. ✅ Plan approved
-2. ⬜ Install dependencies
-3. ⬜ Set up environment variables
-4. ⬜ Create upload script
-5. ⬜ Upload medical docs (admin task)
-6. ⬜ Create google-rag helper
-7. ⬜ Create server action
-8. ⬜ Update RagCell component
-9. ⬜ Create response components
-10. ⬜ Test complete flow
-11. ⬜ Deploy to production
+| Validation | Display via `FieldError` component |
+| Upload failure | "Nie można przesłać dokumentów" |
 
 ---
 
-**Plan Status:** Approved - Ready for Implementation
-**Last Updated:** 2026-01-19
+## Security
+
+1. **API Key**: Store in `.env.local`, never commit
+2. **Admin Auth**: Verify admin role for all admin actions
+3. **User Auth**: Clerk authentication required for queries
+4. **Rate Limiting**: Prevent abuse
+5. **Input Validation**: Zod schemas on all inputs
+6. **Error Messages**: Don't expose internal errors
+
+---
+
+## Testing Checklist
+
+- [ ] Install `@google/genai` with pnpm
+- [ ] Admin dashboard accessible at `/admin/rag-management`
+- [ ] Create fileSearchStore works
+- [ ] Upload documents to store works
+- [ ] Store status displays correctly
+- [ ] Environment variable configured
+- [ ] User RAG cell creates with topic
+- [ ] Form validation works (5-500 chars)
+- [ ] Rate limiting triggers
+- [ ] Auth checks work (user + admin)
+- [ ] Gemini returns relevant answers
+- [ ] Response displays with markdown
+- [ ] Loading states show
+- [ ] Error messages display properly
+
+---
+
+## Next Steps
+
+1. ⬜ Install `@google/genai` with pnpm
+2. ⬜ Create `/src/lib/google-rag.ts` helper
+3. ⬜ Create admin dashboard route + components
+4. ⬜ Create admin server actions
+5. ⬜ Create user server action
+6. ⬜ Update `RagCell.tsx` component
+7. ⬜ Create `RagResponse.tsx` + `RagLoadingState.tsx`
+8. ⬜ Add Zod schemas
+9. ⬜ Admin: Create store via dashboard
+10. ⬜ Admin: Upload medical docs
+11. ⬜ Test complete user flow
+12. ⬜ Commit + Push to `claude/review-rag-plan-CBfZE`
+
+---
+
+**Plan Status:** Ready for Review → Implementation
+**Last Updated:** 2026-01-20
