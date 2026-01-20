@@ -3,15 +3,14 @@
 import { useActionState } from 'react'
 import { uploadMedicalDocsAction } from '@/actions/admin-rag-actions'
 import { SubmitButton } from '@/components/SubmitButton'
+import { EMPTY_FORM_STATE } from '@/types/actionTypes'
 
 interface UploadDocsSectionProps {
   storeName: string
 }
 
 export default function UploadDocsSection({ storeName }: UploadDocsSectionProps) {
-  const [formState, action] = useActionState(uploadMedicalDocsAction, {
-    status: 'INITIAL' as const,
-  })
+  const [formState, action] = useActionState(uploadMedicalDocsAction, EMPTY_FORM_STATE)
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">

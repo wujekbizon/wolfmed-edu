@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import { requireAdmin } from '@/lib/adminHelpers'
 import {
   getStoreStatusAction,
   listStoreDocumentsAction,
@@ -75,9 +74,6 @@ async function AsyncRagDashboard() {
 }
 
 export default async function AdminRagPage() {
-  // Require admin authentication
-  await requireAdmin()
-
   return (
     <Suspense
       fallback={

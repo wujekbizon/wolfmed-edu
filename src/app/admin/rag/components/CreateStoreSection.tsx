@@ -4,11 +4,10 @@ import { useActionState } from 'react'
 import { createFileSearchStoreAction } from '@/actions/admin-rag-actions'
 import { SubmitButton } from '@/components/SubmitButton'
 import { FieldError } from '@/components/FieldError'
+import { EMPTY_FORM_STATE } from '@/types/actionTypes'
 
 export default function CreateStoreSection() {
-  const [formState, action] = useActionState(createFileSearchStoreAction, {
-    status: 'INITIAL' as const,
-  })
+  const [formState, action] = useActionState(createFileSearchStoreAction, EMPTY_FORM_STATE)
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">

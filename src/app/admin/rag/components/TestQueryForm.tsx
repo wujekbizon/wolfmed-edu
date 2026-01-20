@@ -4,15 +4,14 @@ import { useActionState } from 'react'
 import { testRagQueryAction } from '@/actions/admin-rag-actions'
 import { SubmitButton } from '@/components/SubmitButton'
 import { FieldError } from '@/components/FieldError'
+import { EMPTY_FORM_STATE } from '@/types/actionTypes'
 
 interface TestQueryFormProps {
   storeName?: string
 }
 
 export default function TestQueryForm({ storeName }: TestQueryFormProps) {
-  const [formState, action] = useActionState(testRagQueryAction, {
-    status: 'INITIAL' as const,
-  })
+  const [formState, action] = useActionState(testRagQueryAction, EMPTY_FORM_STATE)
 
   return (
     <form action={action} className="space-y-4">
