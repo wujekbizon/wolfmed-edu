@@ -15,10 +15,8 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
   const formRef = useRef<HTMLFormElement>(null)
   const conversationRef = useRef<HTMLDivElement>(null)
 
-  // Track submitted question
   const submittedQuestion = useRef<string>('')
 
-  // Scroll to bottom when new response arrives
   useEffect(() => {
     if (state.status === 'SUCCESS' && conversationRef.current) {
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight
@@ -36,21 +34,18 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
 
   return (
     <div className="flex flex-col h-[500px] bg-zinc-50 rounded-lg border border-zinc-200">
-      {/* Conversation Area */}
       <div
         ref={conversationRef}
         className="flex-1 overflow-y-auto p-4 space-y-4"
       >
         {showConversation && (
           <>
-            {/* User Question Bubble */}
             <div className="flex justify-end">
               <div className="max-w-[80%] bg-zinc-800 text-white rounded-lg px-4 py-3 shadow-sm">
                 <p className="text-sm whitespace-pre-wrap">{userQuestion}</p>
               </div>
             </div>
 
-            {/* Loading State */}
             {isPending && (
               <div className="flex justify-start">
                 <div className="max-w-[80%]">
@@ -59,7 +54,6 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
               </div>
             )}
 
-            {/* AI Response Bubble */}
             {state.status === 'SUCCESS' && state.message && !isPending && (
               <div className="flex justify-start">
                 <div className="max-w-[80%]">
@@ -82,7 +76,6 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
         )}
       </div>
 
-      {/* Input Form - Fixed at Bottom */}
       <div className="border-t border-zinc-200 bg-white p-4">
         <form ref={formRef} action={handleSubmit} className="space-y-3">
           <input type="hidden" name="cellId" value={cell.id} />
@@ -104,9 +97,6 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
               loading="Wysyłam..."
               className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
             />
-            <span className="text-xs text-zinc-400">
-              Limit: 10 zapytań/godzinę
-            </span>
           </div>
 
           {noScriptFallback}
