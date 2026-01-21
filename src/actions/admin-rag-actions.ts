@@ -20,7 +20,9 @@ import {
   getStoreInfo,
   listStoreDocuments,
   queryWithFileSearch,
+  deleteFileSearchStore,
 } from '@/lib/google-rag'
+import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
 
 /**
  * Create a new File Search Store
@@ -56,6 +58,9 @@ export async function createFileSearchStoreAction(
     // Create the store
     const storeName = await createFileSearchStore(validationResult.data.displayName)
 
+    // Save to database
+    await setRagConfig(storeName, validationResult.data.displayName)
+
     revalidatePath('/admin/rag')
 
     return {
@@ -90,15 +95,15 @@ export async function uploadMedicalDocsAction(
       )
     }
 
-    // Get store name from form data
-    const storeName = formData.get('storeName') as string
+    // Get store name from database
+    const config = await getRagConfig()
 
-    if (!storeName) {
-      return toFormState('ERROR', 'Brak nazwy File Search Store')
+    if (!config) {
+      return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
     // Upload documents
-    const results = await uploadMedicalDocuments(storeName)
+    const results = await uploadMedicalDocuments(config.storeName)
 
     revalidatePath('/admin/rag')
 
@@ -136,9 +141,10 @@ export async function getStoreStatusAction(): Promise<{
     // Check admin authentication
     await requireAdminAction()
 
-    const storeName = process.env.GOOGLE_FILE_SEARCH_STORE_NAME
+    // Get store name from database
+    const config = await getRagConfig()
 
-    if (!storeName) {
+    if (!config) {
       return {
         success: true,
         data: {
@@ -148,14 +154,14 @@ export async function getStoreStatusAction(): Promise<{
       }
     }
 
-    // Get store information
-    const storeInfo = await getStoreInfo(storeName)
+    // Get store information from Google
+    const storeInfo = await getStoreInfo(config.storeName)
 
     return {
       success: true,
       data: {
-        storeName: storeInfo.name,
-        storeDisplayName: storeInfo.displayName ?? undefined,
+        storeName: config.storeName,
+        storeDisplayName: config.storeDisplayName ?? undefined,
         isConfigured: true,
       },
     }
@@ -181,9 +187,10 @@ export async function listStoreDocumentsAction(): Promise<{
     // Check admin authentication
     await requireAdminAction()
 
-    const storeName = process.env.GOOGLE_FILE_SEARCH_STORE_NAME
+    // Get store name from database
+    const config = await getRagConfig()
 
-    if (!storeName) {
+    if (!config) {
       return {
         success: false,
         error: 'File Search Store nie jest skonfigurowany',
@@ -191,7 +198,7 @@ export async function listStoreDocumentsAction(): Promise<{
     }
 
     // List documents
-    const documents = await listStoreDocuments(storeName)
+    const documents = await listStoreDocuments(config.storeName)
 
     return {
       success: true,
@@ -253,6 +260,50 @@ export async function testRagQueryAction(
     }
   } catch (error) {
     console.error('Error testing RAG query:', error)
+    return fromErrorToFormState(error)
+  }
+}
+
+/**
+ * Delete File Search Store and its configuration
+ * Admin only - Rate limited to 3 per hour
+ */
+export async function deleteFileSearchStoreAction(
+  formState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  try {
+    // Check admin authentication
+    const admin = await requireAdminAction()
+
+    // Rate limiting
+    const rateLimit = await checkRateLimit(admin.userId, 'rag:admin:delete-store')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      return toFormState(
+        'ERROR',
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
+    }
+
+    // Get store name from database
+    const config = await getRagConfig()
+
+    if (!config) {
+      return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
+    }
+
+    // Delete from Google
+    await deleteFileSearchStore(config.storeName)
+
+    // Delete from database
+    await deleteRagConfig()
+
+    revalidatePath('/admin/rag')
+
+    return toFormState('SUCCESS', 'File Search Store usunięty pomyślnie')
+  } catch (error) {
+    console.error('Error deleting file search store:', error)
     return fromErrorToFormState(error)
   }
 }

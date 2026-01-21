@@ -607,6 +607,15 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
   }),
 }));
 
+// RAG Configuration
+export const ragConfig = createTable("rag_config", {
+  id: text("id").primaryKey().default("default"),
+  storeName: text("store_name").notNull(),
+  storeDisplayName: text("store_display_name"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Type exports
 export type UserCustomTest = typeof userCustomTests.$inferSelect
 export type NewUserCustomTest = typeof userCustomTests.$inferInsert

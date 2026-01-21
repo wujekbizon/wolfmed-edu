@@ -50,9 +50,10 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
 
   'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
-  'rag:admin:test': {interval: 60 * 60 * 1000, maxRequests: 10 },
-  'rag:admin:upload':{interval: 60 * 60 * 1000, maxRequests: 3},
-  'rag:admin:create-store':{ interval: 60 * 60 * 1000, maxRequests: 3 }
+  'rag:admin:test': { interval: 60 * 60 * 1000, maxRequests: 10 },
+  'rag:admin:upload': { interval: 60 * 60 * 1000, maxRequests: 3 },
+  'rag:admin:create-store': { interval: 60 * 60 * 1000, maxRequests: 3 },
+  'rag:admin:delete-store': { interval: 60 * 60 * 1000, maxRequests: 3 }
 }
 
 export interface RateLimitResult {

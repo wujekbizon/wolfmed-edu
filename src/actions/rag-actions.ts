@@ -45,20 +45,8 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Check if store is configured
-    const storeName = process.env.GOOGLE_FILE_SEARCH_STORE_NAME
-    if (!storeName) {
-      return toFormState(
-        'ERROR',
-        'System RAG nie jest skonfigurowany. Skontaktuj się z administratorem.'
-      )
-    }
-
-    // Query RAG system
-    const result = await queryWithFileSearch(
-      validationResult.data.question,
-      storeName
-    )
+    // Query RAG system (will use database config or fallback to env var)
+    const result = await queryWithFileSearch(validationResult.data.question)
 
     return {
       ...toFormState('SUCCESS', result.answer),

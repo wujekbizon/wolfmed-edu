@@ -8,6 +8,7 @@ import { GoogleGenAI } from '@google/genai'
 import fs from 'fs/promises'
 import path from 'path'
 import { SYSTEM_PROMPT, enhanceUserQuery } from './rag-prompts'
+import { getRagConfig } from '@/server/rag-queries'
 
 // Initialize Google GenAI client
 function getGoogleAI() {
@@ -41,6 +42,23 @@ export async function createFileSearchStore(
   } catch (error) {
     console.error('Error creating file search store:', error)
     throw new Error('Nie można utworzyć File Search Store')
+  }
+}
+
+/**
+ * Delete a File Search Store
+ * @param storeName - The file search store name to delete
+ */
+export async function deleteFileSearchStore(
+  storeName: string
+): Promise<void> {
+  try {
+    const ai = getGoogleAI()
+
+    await ai.fileSearchStores.delete({ name: storeName })
+  } catch (error) {
+    console.error('Error deleting file search store:', error)
+    throw new Error('Nie można usunąć File Search Store')
   }
 }
 
@@ -148,7 +166,7 @@ export async function uploadMedicalDocuments(
 /**
  * Query the RAG system with file search
  * @param question - User's question
- * @param storeName - The file search store name (optional, uses env var if not provided)
+ * @param storeName - The file search store name (optional, uses database if not provided)
  * @returns AI response
  */
 export async function queryWithFileSearch(
@@ -158,11 +176,16 @@ export async function queryWithFileSearch(
   try {
     const ai = getGoogleAI()
 
-    // Get store name from parameter or environment variable
-    const fileSearchStoreName = storeName || process.env.GOOGLE_FILE_SEARCH_STORE_NAME
+    // Get store name from parameter, database, or environment variable
+    let fileSearchStoreName = storeName
 
     if (!fileSearchStoreName) {
-      throw new Error('GOOGLE_FILE_SEARCH_STORE_NAME is not configured')
+      const config = await getRagConfig()
+      fileSearchStoreName = config?.storeName || process.env.GOOGLE_FILE_SEARCH_STORE_NAME
+    }
+
+    if (!fileSearchStoreName) {
+      throw new Error('File Search Store nie jest skonfigurowany')
     }
 
     // Enhance user query with additional context
