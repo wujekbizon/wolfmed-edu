@@ -4,93 +4,162 @@
 
 **Pattern**: Server-first with Server Actions + Google File Search Store
 **SDK**: `@google/genai` (official Google GenAI SDK)
+**Storage**: PostgreSQL database for RAG configuration
+**AI Model**: `gemini-2.5-flash` (only model that works)
 
-## Key Changes from Original Plan
+## Key Implementation Details
 
 ✅ **Correct API**: Using `fileSearchStore` (not "corpus")
 ✅ **Correct SDK**: `@google/genai` (not `@google/generative-ai`)
-✅ **Admin Dashboard**: Manage stores via `/admin` route
-✅ **Zod**: Already installed, using existing
+✅ **Admin Dashboard**: `/admin/rag` route with full management
+✅ **Database Storage**: RAG config stored in database (not .env)
+✅ **Manual Upload**: File input with drag-drop (not bulk /docs folder)
+✅ **System Prompts**: Medical education assistant with Polish responses
+✅ **Chat UI**: Conversation-style interface for user queries
+✅ **Delete Functionality**: Admin can delete stores from UI and database
 
 ---
 
-## Dependencies
+## Implementation Status
 
-```bash
-pnpm install @google/genai
-```
-
----
-
-## Implementation Steps
-
-### 1. Environment Setup
+### ✅ 1. Environment Setup
 
 ```env
 GOOGLE_API_KEY=your_api_key_here
-GOOGLE_FILE_SEARCH_STORE_NAME=projects/.../fileSearchStores/...
+# GOOGLE_FILE_SEARCH_STORE_NAME - REMOVED (now stored in database)
 ```
 
-### 2. Create Google RAG Helper
+**Note:** Store configuration is now in database table `wolfmed_rag_config`, not environment variables.
+
+---
+
+### ✅ 2. Database Schema
+
+**File:** `/src/server/db/schema.ts`
+
+```typescript
+export const ragConfig = createTable("rag_config", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  storeName: text("store_name").notNull().unique(),
+  storeDisplayName: text("store_display_name"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+```
+
+**Migration:** `pnpm db:push` to create table
+
+**Queries:** `/src/server/rag-queries.ts`
+- `getRagConfig()` - Get active store configuration
+- `setRagConfig(storeName, displayName)` - Save/update store
+- `deleteRagConfig(storeName)` - Remove store from database
+
+---
+
+### ✅ 3. Google RAG Helper
 
 **File:** `/src/lib/google-rag.ts`
 
-```typescript
-import { GoogleGenAI } from '@google/genai';
-
-// Initialize client
-// Create/get fileSearchStore
-// Upload files to store
-// Query with fileSearch tool
-```
-
 **Functions:**
 - `createFileSearchStore(displayName)` → storeName
-- `uploadDocumentsToStore(storeName, files[])` → operation status
-- `queryWithFileSearch(question, storeName)` → response
-- Error handling
+- `uploadFiles(storeName, files[])` → upload results
+- `queryWithFileSearch(question, storeName?)` → AI response
+- `getStoreInfo(storeName)` → store metadata
+- `listStoreDocuments(storeName)` → document list
+- `deleteFileSearchStore(storeName)` → delete store from Google
 
-### 3. Admin Dashboard Components
+**Key Implementation:**
+- Converts browser `File` objects to buffers for upload
+- Polls Google operations until completion (5-second intervals, 60 max attempts)
+- Supports .md, .txt, .pdf files with proper mime type detection
+- Uses database config as primary source, env var as fallback
 
-**Route:** `/admin/rag-management`
+---
 
-**File:** `/src/app/(admin)/admin/rag-management/page.tsx`
+### ✅ 4. System Prompts
+
+**File:** `/src/lib/rag-prompts.ts`
+
+```typescript
+export const SYSTEM_PROMPT = `Jesteś asystentem edukacji medycznej Wolfmed.
+
+TWOJE ŹRÓDŁO WIEDZY:
+- Masz dostęp do dokumentacji medycznej przez file search
+- Dokumenty są po polsku i zawierają: materiały edukacyjne, procedury medyczne, terminologię
+
+ZASADY ODPOWIEDZI:
+1. Odpowiadaj TYLKO na podstawie informacji z dokumentów
+2. Jeśli odpowiedzi NIE MA w dokumentach, odpowiedz: "Nie mam tej informacji w dostępnej dokumentacji"
+3. Zawsze cytuj źródłowy dokument w odpowiedzi
+4. Używaj poprawnej polskiej terminologii medycznej
+5. Odpowiadaj jasno i edukacyjnie
+...`
+
+export function enhanceUserQuery(question: string): string
+```
 
 **Features:**
-- **Create Store**: Button to create new fileSearchStore
-- **Upload Documents**: Bulk upload `/docs/*.md` files
-- **Store Status**: Display store name, file count, status
-- **Document List**: Show uploaded documents
-- **Test Query**: Input to test RAG queries
-- **Store Info**: Display current `GOOGLE_FILE_SEARCH_STORE_NAME`
+- Medical education context
+- Polish language enforcement
+- Document citation requirements
+- Structured response format
 
-**Components:**
-- `CreateStoreButton.tsx` - Create new store
-- `UploadDocsButton.tsx` - Upload all medical docs
-- `StoreStatusCard.tsx` - Display store info
+---
+
+### ✅ 5. Admin Dashboard
+
+**Route:** `/admin/rag`
+
+**File:** `/src/app/admin/rag/page.tsx`
+
+**Components:** (All in `/src/components/rag/`)
+- `CreateStoreSection.tsx` - Create new file search store
+- `UploadDocsSection.tsx` - Manual file upload with drag-drop
+- `StoreStatusCard.tsx` - Display store info + delete button
 - `DocumentListTable.tsx` - List uploaded documents
 - `TestQueryForm.tsx` - Test RAG functionality
 
-### 4. Admin Server Actions
+**Features:**
+- Server component pattern with `Suspense`
+- No `requireAdmin()` in page (proxy.ts handles it)
+- Drag-drop file upload zone
+- File list with individual remove buttons
+- Delete store functionality with confirmation
+
+**Navigation:**
+- Desktop: Admin header → "RAG" link
+- Mobile: Admin header mobile nav → "RAG" link
+
+---
+
+### ✅ 6. Admin Server Actions
 
 **File:** `/src/actions/admin-rag-actions.ts`
 
 ```typescript
-// Admin-only actions (check auth + admin role)
-export async function createFileSearchStore(formData)
-export async function uploadMedicalDocs(formData)
-export async function getStoreStatus()
-export async function listStoreDocuments()
-export async function testRagQuery(formData)
+// All actions use database, not env vars
+export async function createFileSearchStoreAction(formState, formData): FormState
+export async function uploadFilesAction(formState, formData): FormState
+export async function getStoreStatusAction(): Promise<{success, data, error}>
+export async function listStoreDocumentsAction(): Promise<{success, data, error}>
+export async function testRagQueryAction(formState, formData): FormState
+export async function deleteFileSearchStoreAction(formState, formData): FormState
 ```
 
 **Security:**
-- Check `userId` from Clerk
-- Verify admin role/permissions
-- Rate limiting for uploads
-- Zod validation
+- `requireAdminAction()` in all actions
+- Rate limiting: create/upload/delete (3/hour), test (10/hour)
+- Zod validation on all inputs
+- Database integration for store management
 
-### 5. User-Facing Server Action
+**Pattern:**
+- Uses `EMPTY_FORM_STATE` from constants
+- Returns with spread operator: `{ ...toFormState('SUCCESS', msg), values: { data } }`
+- Never pass third parameter to `toFormState()`
+
+---
+
+### ✅ 7. User-Facing Server Action
 
 **File:** `/src/actions/rag-actions.ts`
 
@@ -101,43 +170,64 @@ export async function askRagQuestion(
 ): Promise<FormState>
 ```
 
-**Pattern:** Follow existing `updateMotto` action:
-- `useActionState` hook
+**Implementation:**
 - Auth check with Clerk
-- Rate limiting: **10 queries/hour per user**
+- Rate limiting: **10 queries/hour per user** (`rag:query`)
 - Zod validation: `RagQuerySchema`
-- Call `queryWithFileSearch()`
-- Return formatted response
+- Calls `queryWithFileSearch()` (auto-fetches store from database)
+- Returns answer in toast message (only for errors)
+- Success response displays in chat UI
 
-### 6. Update RagCell Component
+**Rate Limit Config:** `/src/lib/rateLimit.ts`
+```typescript
+'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
+'rag:admin:test': { interval: 60 * 60 * 1000, maxRequests: 10 },
+'rag:admin:upload': { interval: 60 * 60 * 1000, maxRequests: 3 },
+'rag:admin:create-store': { interval: 60 * 60 * 1000, maxRequests: 3 },
+'rag:admin:delete-store': { interval: 60 * 60 * 1000, maxRequests: 3 }
+```
+
+---
+
+### ✅ 8. RagCell Component
 
 **File:** `/src/components/cells/RagCell.tsx`
 
-**Updates:**
-- Convert to form with `useActionState`
-- Import `askRagQuestion` action
-- Add `SubmitButton` component (reuse existing)
-- Add `<RagResponse>` component
-- Add loading state
-- Add `<FieldError>` for validation (reuse existing)
-- Pre-fill input with `cell.content`
+**Design:** Chat-style interface
+- Fixed height container (500px) with scroll
+- User questions appear on right (dark bubbles)
+- AI responses appear on left (light bubbles)
+- Fixed input at bottom
+- Auto-scroll to new messages
+- Toast only for errors (not success responses)
 
-### 7. Create Response Components
+**Implementation:**
+- Uses `useActionState` hook
+- Form with textarea and SubmitButton
+- Conversation history in ref with auto-scroll
+- Conditional toast: `state.status === 'ERROR' ? useToastMessage(state) : null`
+
+---
+
+### ✅ 9. Response Components
 
 **File:** `/src/components/cells/RagResponse.tsx`
-- Display AI response with markdown rendering
-- Source citations (if available)
-- Copy button for response
-- Zinc/slate theme styling
+- Markdown rendering for AI response
+- Clean zinc/white styling
+- Answer text with proper formatting
 
 **File:** `/src/components/cells/RagLoadingState.tsx`
-- Animated loading indicator
-- Polish message: "Szukam odpowiedzi w dokumentach..."
-- Pulsing dots animation
+- Animated pulsing dots
+- Polish message: "Szukam odpowiedzi w dokumentach medycznych..."
+- Gray zinc theme
 
-### 8. Zod Schema
+---
 
-**File:** `/src/server/schema.ts`
+### ✅ 10. Zod Schemas
+
+**Files:**
+- `/src/lib/ragSchemas.ts` - RAG-specific schemas
+- `/src/lib/adminRagSchemas.ts` - Admin schemas
 
 ```typescript
 export const RagQuerySchema = z.object({
@@ -147,129 +237,134 @@ export const RagQuerySchema = z.object({
   cellId: z.string(),
 })
 
-// Admin schemas
 export const CreateStoreSchema = z.object({
-  displayName: z.string().min(3),
+  displayName: z.string()
+    .min(3, "Nazwa musi mieć min. 3 znaki")
+    .max(100, "Nazwa zbyt długa"),
+})
+
+export const UploadFilesSchema = z.object({
+  files: z.array(z.instanceof(File))
+    .min(1, "Wybierz co najmniej jeden plik")
+})
+
+export const TestQuerySchema = z.object({
+  question: z.string().min(5),
+  storeName: z.string().optional()
 })
 ```
 
-### 9. Database (Optional) - ⏭️ SKIP
-
 ---
 
-## File Structure
+## File Structure (Implemented)
 
 ```
 /src
   /app
-    /(admin)
-      /admin
-        /rag-management
-          page.tsx                    # NEW - Admin dashboard
-          /components
-            CreateStoreButton.tsx     # NEW
-            UploadDocsButton.tsx      # NEW
-            StoreStatusCard.tsx       # NEW
-            DocumentListTable.tsx     # NEW
-            TestQueryForm.tsx         # NEW
+    /admin
+      /rag
+        page.tsx                          # ✅ Admin dashboard (server component)
 
   /actions
-    rag-actions.ts                    # NEW - User actions
-    admin-rag-actions.ts              # NEW - Admin actions
+    rag-actions.ts                        # ✅ User actions
+    admin-rag-actions.ts                  # ✅ Admin actions
 
   /components
     /cells
-      RagCell.tsx                     # UPDATE - Add form
-      RagResponse.tsx                 # NEW
-      RagLoadingState.tsx             # NEW
+      RagCell.tsx                         # ✅ Chat-style UI
+      RagResponse.tsx                     # ✅ Response display
+      RagLoadingState.tsx                 # ✅ Loading animation
+
+    /rag
+      CreateStoreSection.tsx              # ✅ Create store form
+      UploadDocsSection.tsx               # ✅ File upload with drag-drop
+      StoreStatusCard.tsx                 # ✅ Status + delete button
+      DocumentListTable.tsx               # ✅ Document list
+      TestQueryForm.tsx                   # ✅ Test query form
 
   /lib
-    google-rag.ts                     # NEW - Core RAG logic
+    google-rag.ts                         # ✅ Core RAG logic
+    rag-prompts.ts                        # ✅ System prompts
+    ragSchemas.ts                         # ✅ User schemas
+    adminRagSchemas.ts                    # ✅ Admin schemas
+    rateLimit.ts                          # ✅ Updated with RAG limits
 
   /server
-    schema.ts                         # UPDATE - Add schemas
+    /db
+      schema.ts                           # ✅ Added ragConfig table
+    rag-queries.ts                        # ✅ Database queries
 
 /docs
-  *.md                                # Existing medical docs (13 files)
+  RAG_IMPLEMENTATION_PLAN.md              # ✅ This file (updated)
 ```
 
 ---
 
-## User Flow
+## User Flows
 
-### Admin Setup (One-time):
+### Admin Setup:
 
-1. Navigate to `/admin/rag-management`
-2. Click "Create File Search Store" → store created
-3. Copy store name → Add to `.env`: `GOOGLE_FILE_SEARCH_STORE_NAME=...`
-4. Click "Upload Medical Documents" → uploads all `/docs/*.md`
-5. Wait for upload operation to complete
-6. Test query to verify setup
+1. Navigate to `/admin/rag` (link in admin header)
+2. Click "Create File Search Store" → enter display name
+3. Store created and saved to database automatically
+4. Select files (.md, .txt, .pdf) via drag-drop or file input
+5. Click "Prześlij Pliki" → files upload to Google
+6. View uploaded documents in table
+7. Test query to verify setup
+8. (Optional) Delete store via "Usuń Store" button
 
 ### User Query Flow:
 
 1. User clicks "Wyjaśnij z AI" on topic
 2. Navigates to `/panel/nauka`
 3. RAG cell auto-created with topic pre-filled
-4. User edits/reviews question
-5. Clicks "Wyjaśnij" button
-6. Form submits → `askRagQuestion` server action
-7. Action: validates, rate-limits, checks auth
-8. Calls `queryWithFileSearch(question, storeName)`
-9. Gemini searches store + generates answer
-10. Response displays in `<RagResponse>` component
-11. Optional: Save response to cell for persistence
+4. User edits/reviews question in chat input
+5. Clicks "Wyślij" button
+6. Loading state shows
+7. AI response appears in chat bubble (left side)
+8. User can ask follow-up questions
+9. Conversation displays in chronological order
 
 ---
 
-## Correct API Usage
+## API Usage Examples
 
 ### Create Store:
 ```typescript
-const store = await ai.fileSearchStores.create({
-  config: { displayName: 'wolfmed-medical-docs' }
-});
-// Returns: { name: 'projects/.../fileSearchStores/...' }
+const storeName = await createFileSearchStore('wolfmed-medical-docs')
+await setRagConfig(storeName, 'wolfmed-medical-docs')
+// Stored in database automatically
 ```
 
 ### Upload Files:
 ```typescript
-let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-  file: 'docs/Anatomia.md',
-  fileSearchStoreName: store.name,
-  config: { displayName: 'Anatomia' }
-});
-
-// Poll until done
-while (!operation.done) {
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  operation = await ai.operations.get({ operation });
-}
+const files = formData.getAll('files') as File[]
+const results = await uploadFiles(storeName, files)
+// Returns: { success: true, uploaded: [...], failed: [...] }
 ```
 
 ### Query with File Search:
 ```typescript
 const response = await ai.models.generateContent({
-  model: "gemini-2.0-flash-exp",
-  contents: question,
+  model: 'gemini-2.5-flash',
+  contents: enhancedQuery,
   config: {
+    systemInstruction: SYSTEM_PROMPT,
     tools: [{
       fileSearch: {
         fileSearchStoreNames: [storeName]
       }
     }]
   }
-});
+})
 ```
 
----
-
-## Rate Limiting
-
-- **User Queries**: 10 per hour per user (key: `"rag:query"`)
-- **Admin Uploads**: 5 per hour (key: `"rag:admin:upload"`)
-- Use existing `checkRateLimit` helper
-- Error: "Zbyt wiele zapytań, spróbuj za X minut"
+### Delete Store:
+```typescript
+await deleteFileSearchStore(storeName)
+await deleteRagConfig(storeName)
+// Removes from Google and database
+```
 
 ---
 
@@ -277,61 +372,91 @@ const response = await ai.models.generateContent({
 
 | Error Type | User Message |
 |------------|--------------|
-| Store not found | "Skonfiguruj File Search Store w panelu admina" |
-| API errors | "Wystąpił błąd, spróbuj ponownie" |
-| Rate limit | "Zbyt wiele zapytań, spróbuj za X minut" |
+| Store not configured | "File Search Store nie jest skonfigurowany" |
+| API errors | "Wystąpił błąd podczas wyszukiwania odpowiedzi" |
+| Rate limit | "Zbyt wiele zapytań. Spróbuj ponownie za X minut." |
 | Empty response | "Nie znalazłem odpowiedzi w dokumentach" |
-| Validation | Display via `FieldError` component |
-| Upload failure | "Nie można przesłać dokumentów" |
+| Validation | Display via form state errors |
+| Upload failure | Shows failed files in result message |
+| No files selected | "Nie wybrano żadnych plików" |
+| Invalid file type | "Nieprawidłowe typy plików: ..." |
 
 ---
 
 ## Security
 
-1. **API Key**: Store in `.env.local`, never commit
-2. **Admin Auth**: Verify admin role for all admin actions
+1. **API Key**: Store in `.env`, never commit
+2. **Admin Auth**:
+   - `/admin` routes protected by `proxy.ts` middleware
+   - `requireAdminAction()` in all admin server actions
 3. **User Auth**: Clerk authentication required for queries
-4. **Rate Limiting**: Prevent abuse
+4. **Rate Limiting**: Redis-based with in-memory fallback
 5. **Input Validation**: Zod schemas on all inputs
-6. **Error Messages**: Don't expose internal errors
+6. **Error Messages**: Generic messages, detailed logs in console
+7. **Database Storage**: Production-ready (not .env hardcoding)
 
 ---
 
 ## Testing Checklist
 
-- [ ] Install `@google/genai` with pnpm
-- [ ] Admin dashboard accessible at `/admin/rag-management`
-- [ ] Create fileSearchStore works
-- [ ] Upload documents to store works
-- [ ] Store status displays correctly
-- [ ] Environment variable configured
-- [ ] User RAG cell creates with topic
-- [ ] Form validation works (5-500 chars)
-- [ ] Rate limiting triggers
-- [ ] Auth checks work (user + admin)
-- [ ] Gemini returns relevant answers
-- [ ] Response displays with markdown
-- [ ] Loading states show
-- [ ] Error messages display properly
+- [x] Install `@google/genai` with pnpm
+- [x] Create database migration for `ragConfig` table
+- [x] Admin dashboard accessible at `/admin/rag`
+- [x] Create fileSearchStore works and saves to database
+- [x] Upload files with drag-drop works
+- [x] File type validation (.md, .txt, .pdf)
+- [x] Store status displays correctly
+- [x] Delete store functionality works
+- [x] Admin navigation link added (desktop + mobile)
+- [x] User RAG cell displays chat UI
+- [x] Form validation works (5-500 chars)
+- [x] Rate limiting triggers for all actions
+- [x] Auth checks work (user + admin)
+- [x] System prompts enforce Polish medical responses
+- [x] Gemini returns document-grounded answers
+- [x] Response displays in chat bubbles
+- [x] Loading states show
+- [x] Toast only shows for errors (not success)
+- [x] Auto-scroll to new messages
+- [x] Error messages display properly
 
 ---
 
-## Next Steps
+## Key Decisions Made
 
-1. ⬜ Install `@google/genai` with pnpm
-2. ⬜ Create `/src/lib/google-rag.ts` helper
-3. ⬜ Create admin dashboard route + components
-4. ⬜ Create admin server actions
-5. ⬜ Create user server action
-6. ⬜ Update `RagCell.tsx` component
-7. ⬜ Create `RagResponse.tsx` + `RagLoadingState.tsx`
-8. ⬜ Add Zod schemas
-9. ⬜ Admin: Create store via dashboard
-10. ⬜ Admin: Upload medical docs
-11. ⬜ Test complete user flow
-12. ⬜ Commit + Push to `claude/review-rag-plan-CBfZE`
+1. **Database Storage**: Chose database over .env for production scalability
+2. **UUID Primary Key**: Used UUID for id, storeName as unique constraint for upsert
+3. **Manual Upload**: File input with drag-drop instead of bulk /docs folder
+4. **Chat UI**: Conversation-style interface for better UX
+5. **System Prompts**: Added medical education context for consistent responses
+6. **Model Selection**: `gemini-2.5-flash` (only working model)
+7. **Toast Pattern**: Conditional - errors only, success shows in chat
+8. **Delete Functionality**: Full delete (Google + database) via admin UI
+9. **Navigation**: Simple "RAG" link in admin header
+10. **Form Pattern**: Follow existing project patterns (EMPTY_FORM_STATE, spread operator)
 
 ---
 
-**Plan Status:** Ready for Review → Implementation
-**Last Updated:** 2026-01-20
+## Production Deployment
+
+1. Set `GOOGLE_API_KEY` in production environment
+2. Run `pnpm db:push` to create `wolfmed_rag_config` table
+3. Admin creates store via `/admin/rag` dashboard
+4. Upload medical documents (.md, .txt, .pdf files)
+5. Test queries to verify setup
+6. Users can access RAG via `/panel/nauka` cells
+
+**Note:** No `.env` variable needed for store name - automatically managed via database.
+
+---
+
+**Plan Status:** ✅ COMPLETED & IMPLEMENTED
+**Last Updated:** 2026-01-21
+**Branch:** `claude/review-rag-plan-CBfZE`
+**Commits:**
+- Database storage implementation
+- UUID schema refactor
+- File upload UI with drag-drop
+- Admin navigation
+- System prompts
+- Delete functionality
