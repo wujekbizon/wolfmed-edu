@@ -1,3 +1,11 @@
+'use client'
+
+import { useActionState } from 'react'
+import { deleteFileSearchStoreAction } from '@/actions/admin-rag-actions'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useToastMessage } from '@/hooks/useToastMessage'
+import SubmitButton from '@/components/SubmitButton'
+
 interface StoreStatusCardProps {
   isConfigured: boolean
   storeName: string | null
@@ -11,6 +19,11 @@ export default function StoreStatusCard({
   storeDisplayName,
   documentCount,
 }: StoreStatusCardProps) {
+  const [deleteState, deleteAction, isDeleting] = useActionState(
+    deleteFileSearchStoreAction,
+    EMPTY_FORM_STATE
+  )
+  const deleteToast = useToastMessage(deleteState)
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
       <div className="flex items-start justify-between">
@@ -47,16 +60,13 @@ export default function StoreStatusCard({
                 </div>
               </div>
 
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
-                <p className="text-sm text-blue-800">
-                  <span className="font-medium">Uwaga:</span> Upewnij się, że
-                  zmienna środowiskowa{' '}
-                  <code className="px-1 py-0.5 bg-blue-100 rounded">
-                    GOOGLE_FILE_SEARCH_STORE_NAME
-                  </code>{' '}
-                  jest ustawiona na powyższą wartość.
-                </p>
-              </div>
+              <form action={deleteAction} className="mt-4">
+                <SubmitButton
+                  label="Usuń Store"
+                  loading="Usuwam..."
+                  className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium disabled:bg-red-300 disabled:cursor-not-allowed"
+                />
+              </form>
             </div>
           ) : (
             <div className="space-y-3">
@@ -72,17 +82,6 @@ export default function StoreStatusCard({
                 formularza, aby utworzyć nowy store i przesłać dokumenty
                 medyczne.
               </p>
-
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-                <p className="text-sm text-yellow-800">
-                  <span className="font-medium">Wymagane:</span> Po utworzeniu
-                  store, dodaj jego nazwę do zmiennej środowiskowej{' '}
-                  <code className="px-1 py-0.5 bg-yellow-100 rounded">
-                    GOOGLE_FILE_SEARCH_STORE_NAME
-                  </code>{' '}
-                  w pliku <code className="px-1 py-0.5 bg-yellow-100 rounded">.env</code>
-                </p>
-              </div>
             </div>
           )}
         </div>
@@ -112,6 +111,7 @@ export default function StoreStatusCard({
           </svg>
         </div>
       </div>
+      {deleteToast}
     </div>
   )
 }
