@@ -7,6 +7,7 @@ import 'server-only'
 import { GoogleGenAI } from '@google/genai'
 import fs from 'fs/promises'
 import path from 'path'
+import { SYSTEM_PROMPT, enhanceUserQuery } from './rag-prompts'
 
 // Initialize Google GenAI client
 function getGoogleAI() {
@@ -164,11 +165,15 @@ export async function queryWithFileSearch(
       throw new Error('GOOGLE_FILE_SEARCH_STORE_NAME is not configured')
     }
 
-    // Query with file search tool
+    // Enhance user query with additional context
+    const enhancedQuery = enhanceUserQuery(question)
+
+    // Query with file search tool and system instruction
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: question,
+      model: 'gemini-2.0-flash-exp',
+      contents: enhancedQuery,
       config: {
+        systemInstruction: SYSTEM_PROMPT,
         tools: [{
           fileSearch: {
             fileSearchStoreNames: [fileSearchStoreName]

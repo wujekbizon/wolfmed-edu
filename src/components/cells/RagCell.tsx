@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useRef, useEffect } from 'react'
 import { askRagQuestion } from '@/actions/rag-actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
@@ -12,39 +12,106 @@ import RagLoadingState from './RagLoadingState'
 export default function RagCell({ cell }: { cell: { id: string; content: string } }) {
   const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
   const noScriptFallback = state.status === 'ERROR' ? useToastMessage(state) : null
+  const formRef = useRef<HTMLFormElement>(null)
+  const conversationRef = useRef<HTMLDivElement>(null)
+
+  // Track submitted question
+  const submittedQuestion = useRef<string>('')
+
+  // Scroll to bottom when new response arrives
+  useEffect(() => {
+    if (state.status === 'SUCCESS' && conversationRef.current) {
+      conversationRef.current.scrollTop = conversationRef.current.scrollHeight
+    }
+  }, [state.status])
+
+  const handleSubmit = (formData: FormData) => {
+    const question = formData.get('question') as string
+    submittedQuestion.current = question
+    action(formData)
+  }
+
+  const showConversation = state.status === 'SUCCESS' || isPending
+  const userQuestion = submittedQuestion.current || cell.content
 
   return (
-    <div className="p-4 space-y-4">
-      <form action={action} className="space-y-3">
-        <input type="hidden" name="cellId" value={cell.id} />
+    <div className="flex flex-col h-[500px] bg-zinc-50 rounded-lg border border-zinc-200">
+      {/* Conversation Area */}
+      <div
+        ref={conversationRef}
+        className="flex-1 overflow-y-auto p-4 space-y-4"
+      >
+        {showConversation && (
+          <>
+            {/* User Question Bubble */}
+            <div className="flex justify-end">
+              <div className="max-w-[80%] bg-zinc-800 text-white rounded-lg px-4 py-3 shadow-sm">
+                <p className="text-sm whitespace-pre-wrap">{userQuestion}</p>
+              </div>
+            </div>
 
-        <div>
-          <textarea
-            name="question"
-            defaultValue={cell.content}
-            placeholder="Zadaj pytanie dotyczące materiałów medycznych..."
-            rows={3}
-            className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-transparent resize-none"
-          />
-          <FieldError formState={state} name="question" />
-        </div>
+            {/* Loading State */}
+            {isPending && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%]">
+                  <RagLoadingState />
+                </div>
+              </div>
+            )}
 
-        <SubmitButton
-          label="Wyjaśnij"
-          loading="Szukam odpowiedzi..."
-          className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors"
-        />
-        {noScriptFallback}
-      </form>
+            {/* AI Response Bubble */}
+            {state.status === 'SUCCESS' && state.message && !isPending && (
+              <div className="flex justify-start">
+                <div className="max-w-[80%]">
+                  <RagResponse
+                    answer={state.message}
+                    sources={state.values?.sources as string[] | undefined}
+                  />
+                </div>
+              </div>
+            )}
+          </>
+        )}
 
-      {isPending && <RagLoadingState />}
+        {!showConversation && (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-sm text-zinc-400 text-center">
+              Zadaj pytanie aby rozpocząć rozmowę z asystentem AI
+            </p>
+          </div>
+        )}
+      </div>
 
-      {state.status === 'SUCCESS' && state.message && !isPending && (
-        <RagResponse
-          answer={state.message}
-          sources={state.values?.sources as string[] | undefined}
-        />
-      )}
+      {/* Input Form - Fixed at Bottom */}
+      <div className="border-t border-zinc-200 bg-white p-4">
+        <form ref={formRef} action={handleSubmit} className="space-y-3">
+          <input type="hidden" name="cellId" value={cell.id} />
+
+          <div>
+            <textarea
+              name="question"
+              defaultValue={cell.content}
+              placeholder="Zadaj pytanie dotyczące materiałów medycznych..."
+              rows={2}
+              className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-transparent resize-none text-sm"
+            />
+            <FieldError formState={state} name="question" />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <SubmitButton
+              label="Wyślij"
+              loading="Wysyłam..."
+              className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
+            />
+            <span className="text-xs text-zinc-400">
+              Limit: 10 zapytań/godzinę
+            </span>
+          </div>
+
+          {noScriptFallback}
+        </form>
+      </div>
     </div>
   )
 }
