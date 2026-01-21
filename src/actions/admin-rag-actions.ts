@@ -297,7 +297,7 @@ export async function deleteFileSearchStoreAction(
     await deleteFileSearchStore(config.storeName)
 
     // Delete from database
-    await deleteRagConfig()
+    await deleteRagConfig(config.storeName)
 
     revalidatePath('/admin/rag')
 

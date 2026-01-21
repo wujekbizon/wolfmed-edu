@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm'
 
 /**
  * Get the current RAG configuration
- * Returns the file search store configuration
+ * Returns the first/active file search store configuration
  */
 export async function getRagConfig(): Promise<{
   id: string
@@ -17,7 +17,7 @@ export async function getRagConfig(): Promise<{
   const [config] = await db
     .select()
     .from(ragConfig)
-    .where(eq(ragConfig.id, 'default'))
+    .orderBy(ragConfig.createdAt)
     .limit(1)
 
   return config || null
@@ -34,15 +34,13 @@ export async function setRagConfig(
   await db
     .insert(ragConfig)
     .values({
-      id: 'default',
       storeName,
       storeDisplayName: storeDisplayName || null,
       updatedAt: new Date(),
     })
     .onConflictDoUpdate({
-      target: ragConfig.id,
+      target: ragConfig.storeName,
       set: {
-        storeName,
         storeDisplayName: storeDisplayName || null,
         updatedAt: new Date(),
       },
@@ -50,9 +48,9 @@ export async function setRagConfig(
 }
 
 /**
- * Delete RAG configuration
+ * Delete RAG configuration by store name
  * Removes the store configuration from database
  */
-export async function deleteRagConfig(): Promise<void> {
-  await db.delete(ragConfig).where(eq(ragConfig.id, 'default'))
+export async function deleteRagConfig(storeName: string): Promise<void> {
+  await db.delete(ragConfig).where(eq(ragConfig.storeName, storeName))
 }

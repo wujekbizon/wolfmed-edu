@@ -609,8 +609,8 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
 
 // RAG Configuration
 export const ragConfig = createTable("rag_config", {
-  id: text("id").primaryKey().default("default"),
-  storeName: text("store_name").notNull(),
+  id: uuid("id").primaryKey().defaultRandom(),
+  storeName: text("store_name").notNull().unique(),
   storeDisplayName: text("store_display_name"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
