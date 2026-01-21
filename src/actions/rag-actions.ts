@@ -1,10 +1,5 @@
 'use server'
 
-/**
- * User-facing RAG server actions
- * Requires user authentication
- */
-
 import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'

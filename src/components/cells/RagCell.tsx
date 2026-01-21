@@ -11,7 +11,7 @@ import RagLoadingState from './RagLoadingState'
 
 export default function RagCell({ cell }: { cell: { id: string; content: string } }) {
   const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
-  const noScriptFallback = useToastMessage(state)
+  // const noScriptFallback = useToastMessage(state)
 
   return (
     <div className="p-4 space-y-4">
@@ -35,13 +35,10 @@ export default function RagCell({ cell }: { cell: { id: string; content: string 
           className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors"
         />
 
-        {noScriptFallback}
       </form>
 
-      {/* Loading State */}
       {isPending && <RagLoadingState />}
 
-      {/* Response Display */}
       {state.status === 'SUCCESS' && state.message && !isPending && (
         <RagResponse
           answer={state.message}
