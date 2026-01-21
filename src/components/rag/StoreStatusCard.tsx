@@ -19,11 +19,9 @@ export default function StoreStatusCard({
   storeDisplayName,
   documentCount,
 }: StoreStatusCardProps) {
-  const [deleteState, deleteAction, isDeleting] = useActionState(
-    deleteFileSearchStoreAction,
-    EMPTY_FORM_STATE
-  )
-  const deleteToast = useToastMessage(deleteState)
+  const [state, action] = useActionState(deleteFileSearchStoreAction,EMPTY_FORM_STATE)
+  
+  const noScriptFallback = useToastMessage(state)
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
       <div className="flex items-start justify-between">
@@ -60,7 +58,7 @@ export default function StoreStatusCard({
                 </div>
               </div>
 
-              <form action={deleteAction} className="mt-4">
+              <form action={action} className="mt-4">
                 <SubmitButton
                   label="Usuń Store"
                   loading="Usuwam..."
@@ -86,7 +84,6 @@ export default function StoreStatusCard({
           )}
         </div>
 
-        {/* Icon */}
         <div
           className={`w-16 h-16 rounded-lg flex items-center justify-center ${
             isConfigured
@@ -111,7 +108,7 @@ export default function StoreStatusCard({
           </svg>
         </div>
       </div>
-      {deleteToast}
+      {noScriptFallback}
     </div>
   )
 }

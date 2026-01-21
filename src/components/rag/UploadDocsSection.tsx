@@ -34,7 +34,6 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
     const files = Array.from(e.dataTransfer.files)
     setSelectedFiles(files)
 
-    // Update the file input
     if (fileInputRef.current && e.dataTransfer.files) {
       fileInputRef.current.files = e.dataTransfer.files
     }
@@ -51,7 +50,6 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
     const newFiles = selectedFiles.filter((_, i) => i !== index)
     setSelectedFiles(newFiles)
 
-    // Update the file input
     if (fileInputRef.current) {
       const dt = new DataTransfer()
       newFiles.forEach(file => dt.items.add(file))
@@ -69,7 +67,6 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
       </p>
 
       <form action={action} className="space-y-4">
-        {/* Drag & Drop Zone */}
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
@@ -116,7 +113,6 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
           </div>
         </div>
 
-        {/* Selected Files List */}
         {selectedFiles.length > 0 && (
           <div className="bg-zinc-50 rounded-lg p-4 border border-zinc-200">
             <h3 className="text-sm font-medium text-zinc-900 mb-2">
@@ -130,7 +126,7 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
                 >
                   <div className="flex items-center gap-2 flex-1 min-w-0">
                     <svg
-                      className="w-4 h-4 text-zinc-400 flex-shrink-0"
+                      className="w-4 h-4 text-zinc-400 shrink-0"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -143,14 +139,14 @@ export default function UploadDocsSection({ storeName }: UploadDocsSectionProps)
                       />
                     </svg>
                     <span className="text-sm text-zinc-700 truncate">{file.name}</span>
-                    <span className="text-xs text-zinc-500 flex-shrink-0">
+                    <span className="text-xs text-zinc-500 shrink-0">
                       ({(file.size / 1024).toFixed(1)} KB)
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={() => handleRemoveFile(index)}
-                    className="ml-2 text-red-600 hover:text-red-800 flex-shrink-0"
+                    className="ml-2 text-red-600 hover:text-red-800 shrink-0"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
