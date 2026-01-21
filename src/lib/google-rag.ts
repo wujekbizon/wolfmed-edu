@@ -5,8 +5,6 @@
 
 import 'server-only'
 import { GoogleGenAI } from '@google/genai'
-import fs from 'fs/promises'
-import path from 'path'
 import { SYSTEM_PROMPT, enhanceUserQuery } from './rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 
@@ -63,69 +61,15 @@ export async function deleteFileSearchStore(
 }
 
 /**
- * Upload a document to the File Search Store
+ * Upload files to the File Search Store
  * @param storeName - The file search store name
- * @param filePath - Path to the file to upload
- * @param displayName - Display name for the uploaded file
- * @returns Operation result
- */
-export async function uploadDocumentToStore(
-  storeName: string,
-  filePath: string,
-  displayName: string
-): Promise<{ success: boolean; fileName?: string }> {
-  try {
-    const ai = getGoogleAI()
-
-    const mimeType = filePath.endsWith(".md")
-          ? "text/markdown"
-          : "text/plain"
-    // Upload and import the file
-    let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-      file: filePath,
-      fileSearchStoreName: storeName,
-      config: { 
-        displayName,
-        mimeType }
-    })
-
-    // Poll until the operation is complete
-    let attempts = 0
-    const maxAttempts = 60 // 5 minutes with 5 second intervals
-
-    while (!operation.done && attempts < maxAttempts) {
-      await new Promise(resolve => setTimeout(resolve, 5000))
-      operation = await ai.operations.get({ operation })
-      attempts++
-    }
-
-    if (!operation.done) {
-      throw new Error(`Upload timed out after ${maxAttempts * 5} seconds`)
-    }
-
-    if (operation.error) {
-      throw new Error(`Upload failed: ${operation.error.message || 'Unknown error'}`)
-    }
-
-    return {
-      success: true,
-      fileName: displayName
-    }
-  } catch (error) {
-    console.error(`Error uploading document ${displayName}:`, error)
-    throw new Error(`Nie można przesłać dokumentu: ${displayName}`)
-  }
-}
-
-/**
- * Upload all medical documentation files to the store
- * @param storeName - The file search store name
+ * @param files - Array of File objects to upload
  * @returns Results of all uploads
  */
-export async function uploadMedicalDocuments(
-  storeName: string
+export async function uploadFiles(
+  storeName: string,
+  files: File[]
 ): Promise<{ success: boolean; uploaded: string[]; failed: string[] }> {
-  const docsPath = path.join(process.cwd(), 'docs')
   const results = {
     success: true,
     uploaded: [] as string[],
@@ -133,33 +77,70 @@ export async function uploadMedicalDocuments(
   }
 
   try {
-    // Read all .md files from docs directory
-    const files = await fs.readdir(docsPath)
-    const mdFiles = files.filter(file => file.endsWith('.md'))
+    const ai = getGoogleAI()
 
-    if (mdFiles.length === 0) {
-      throw new Error('No markdown files found in /docs directory')
+    if (files.length === 0) {
+      throw new Error('No files provided for upload')
     }
 
     // Upload each file
-    for (const file of mdFiles) {
-      const filePath = path.join(docsPath, file)
-      const displayName = file.replace('.md', '')
+    for (const file of files) {
+      const displayName = file.name.replace(/\.(md|txt|pdf)$/, '')
 
       try {
-        await uploadDocumentToStore(storeName, filePath, displayName)
-        results.uploaded.push(displayName)
+        // Convert File to buffer for upload
+        const arrayBuffer = await file.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
+
+        // Determine mime type
+        let mimeType = file.type
+        if (!mimeType) {
+          if (file.name.endsWith('.md')) mimeType = 'text/markdown'
+          else if (file.name.endsWith('.txt')) mimeType = 'text/plain'
+          else if (file.name.endsWith('.pdf')) mimeType = 'application/pdf'
+          else mimeType = 'application/octet-stream'
+        }
+
+        // Upload and import the file
+        let operation = await ai.fileSearchStores.uploadToFileSearchStore({
+          file: buffer,
+          fileSearchStoreName: storeName,
+          config: {
+            displayName: file.name,
+            mimeType
+          }
+        })
+
+        // Poll until the operation is complete
+        let attempts = 0
+        const maxAttempts = 60 // 5 minutes with 5 second intervals
+
+        while (!operation.done && attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 5000))
+          operation = await ai.operations.get({ operation })
+          attempts++
+        }
+
+        if (!operation.done) {
+          throw new Error(`Upload timed out after ${maxAttempts * 5} seconds`)
+        }
+
+        if (operation.error) {
+          throw new Error(`Upload failed: ${operation.error.message || 'Unknown error'}`)
+        }
+
+        results.uploaded.push(file.name)
       } catch (error) {
-        console.error(`Failed to upload ${file}:`, error)
-        results.failed.push(displayName)
+        console.error(`Failed to upload ${file.name}:`, error)
+        results.failed.push(file.name)
         results.success = false
       }
     }
 
     return results
   } catch (error) {
-    console.error('Error uploading medical documents:', error)
-    throw new Error('Nie można przesłać dokumentów medycznych')
+    console.error('Error uploading files:', error)
+    throw new Error('Nie można przesłać plików')
   }
 }
 

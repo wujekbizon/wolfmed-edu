@@ -57,6 +57,12 @@ export default async function AdminLayout({
                 >
                   Kategorie
                 </Link>
+                <Link
+                  href="/admin/rag"
+                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  RAG
+                </Link>
               </nav>
             </div>
             <div>
@@ -100,6 +106,12 @@ export default async function AdminLayout({
               className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
               Kategorie
+            </Link>
+            <Link
+              href="/admin/rag"
+              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              RAG
             </Link>
           </nav>
         </div>

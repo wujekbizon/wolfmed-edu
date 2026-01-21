@@ -16,7 +16,7 @@ import {
 } from '@/server/schema'
 import {
   createFileSearchStore,
-  uploadMedicalDocuments,
+  uploadFiles,
   getStoreInfo,
   listStoreDocuments,
   queryWithFileSearch,
@@ -74,10 +74,10 @@ export async function createFileSearchStoreAction(
 }
 
 /**
- * Upload all medical documents to the File Search Store
+ * Upload files to the File Search Store
  * Admin only - Rate limited to 3 per hour
  */
-export async function uploadMedicalDocsAction(
+export async function uploadFilesAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
@@ -102,15 +102,35 @@ export async function uploadMedicalDocsAction(
       return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
-    // Upload documents
-    const results = await uploadMedicalDocuments(config.storeName)
+    // Get files from FormData
+    const files = formData.getAll('files') as File[]
+
+    if (!files || files.length === 0) {
+      return toFormState('ERROR', 'Nie wybrano żadnych plików')
+    }
+
+    // Validate file types
+    const allowedTypes = ['.md', '.txt', '.pdf']
+    const invalidFiles = files.filter(
+      file => !allowedTypes.some(ext => file.name.endsWith(ext))
+    )
+
+    if (invalidFiles.length > 0) {
+      return toFormState(
+        'ERROR',
+        `Nieprawidłowe typy plików: ${invalidFiles.map(f => f.name).join(', ')}`
+      )
+    }
+
+    // Upload files
+    const results = await uploadFiles(config.storeName, files)
 
     revalidatePath('/admin/rag')
 
     if (results.success) {
       return toFormState(
         'SUCCESS',
-        `Przesłano ${results.uploaded.length} dokumentów pomyślnie`
+        `Przesłano ${results.uploaded.length} plików pomyślnie`
       )
     } else {
       return toFormState(
