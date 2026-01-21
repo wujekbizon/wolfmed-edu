@@ -85,13 +85,7 @@ export async function uploadFiles(
 
     // Upload each file
     for (const file of files) {
-      const displayName = file.name.replace(/\.(md|txt|pdf)$/, '')
-
       try {
-        // Convert File to buffer for upload
-        const arrayBuffer = await file.arrayBuffer()
-        const buffer = Buffer.from(arrayBuffer)
-
         // Determine mime type
         let mimeType = file.type
         if (!mimeType) {
@@ -101,9 +95,9 @@ export async function uploadFiles(
           else mimeType = 'application/octet-stream'
         }
 
-        // Upload and import the file
+        // Upload and import the file (File extends Blob)
         let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-          file: buffer,
+          file: file,
           fileSearchStoreName: storeName,
           config: {
             displayName: file.name,
