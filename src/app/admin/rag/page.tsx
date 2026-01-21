@@ -9,11 +9,10 @@ import UploadDocsSection from '@/components/rag/UploadDocsSection'
 import DocumentListTable from '@/components/rag/DocumentListTable'
 import TestQueryForm from '@/components/rag/TestQueryForm'
 
-
 export const dynamic = 'force-dynamic'
 
 async function AsyncRagDashboard() {
-  // Fetch store status and documents
+
   const [storeStatus, documentsResult] = await Promise.all([
     getStoreStatusAction(),
     listStoreDocumentsAction(),
@@ -24,7 +23,6 @@ async function AsyncRagDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <div>
         <h1 className="text-3xl font-bold text-zinc-900">
           RAG System Management
@@ -34,7 +32,6 @@ async function AsyncRagDashboard() {
         </p>
       </div>
 
-      {/* Store Status Card */}
       <StoreStatusCard
         isConfigured={isConfigured}
         storeName={storeStatus.data?.storeName || null}
@@ -42,15 +39,12 @@ async function AsyncRagDashboard() {
         documentCount={documents.length}
       />
 
-      {/* Create Store Section (if not configured) */}
       {!isConfigured && <CreateStoreSection />}
 
-      {/* Upload Documents Section (if configured) */}
       {isConfigured && (
         <>
           <UploadDocsSection storeName={storeStatus.data?.storeName || ''} />
 
-          {/* Documents List */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
             <h2 className="text-xl font-semibold text-zinc-900 mb-4">
               Przesłane Dokumenty ({documents.length})
@@ -58,7 +52,6 @@ async function AsyncRagDashboard() {
             <DocumentListTable documents={documents} />
           </div>
 
-          {/* Test Query Form */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
             <h2 className="text-xl font-semibold text-zinc-900 mb-4">
               Testuj RAG Query
