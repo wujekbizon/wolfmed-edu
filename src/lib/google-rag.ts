@@ -1,14 +1,8 @@
-/**
- * Google GenAI File Search Integration
- * Handles file search store creation, document uploads, and RAG queries
- */
-
 import 'server-only'
 import { GoogleGenAI } from '@google/genai'
 import { SYSTEM_PROMPT, enhanceUserQuery } from './rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 
-// Initialize Google GenAI client
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
   if (!apiKey) {
@@ -17,11 +11,6 @@ function getGoogleAI() {
   return new GoogleGenAI({ apiKey })
 }
 
-/**
- * Create a new File Search Store
- * @param displayName - Name for the file search store
- * @returns Store name (projects/.../fileSearchStores/...)
- */
 export async function createFileSearchStore(
   displayName: string
 ): Promise<string> {
@@ -43,10 +32,6 @@ export async function createFileSearchStore(
   }
 }
 
-/**
- * Delete a File Search Store
- * @param storeName - The file search store name to delete
- */
 export async function deleteFileSearchStore(
   storeName: string
 ): Promise<void> {
@@ -60,12 +45,6 @@ export async function deleteFileSearchStore(
   }
 }
 
-/**
- * Upload files to the File Search Store
- * @param storeName - The file search store name
- * @param files - Array of File objects to upload
- * @returns Results of all uploads
- */
 export async function uploadFiles(
   storeName: string,
   files: File[]
@@ -83,10 +62,8 @@ export async function uploadFiles(
       throw new Error('No files provided for upload')
     }
 
-    // Upload each file
     for (const file of files) {
       try {
-        // Determine mime type
         let mimeType = file.type
         if (!mimeType) {
           if (file.name.endsWith('.md')) mimeType = 'text/markdown'
@@ -95,7 +72,6 @@ export async function uploadFiles(
           else mimeType = 'application/octet-stream'
         }
 
-        // Upload and import the file (File extends Blob)
         let operation = await ai.fileSearchStores.uploadToFileSearchStore({
           file: file,
           fileSearchStoreName: storeName,
@@ -105,9 +81,8 @@ export async function uploadFiles(
           }
         })
 
-        // Poll until the operation is complete
         let attempts = 0
-        const maxAttempts = 60 // 5 minutes with 5 second intervals
+        const maxAttempts = 60
 
         while (!operation.done && attempts < maxAttempts) {
           await new Promise(resolve => setTimeout(resolve, 5000))
@@ -138,12 +113,6 @@ export async function uploadFiles(
   }
 }
 
-/**
- * Query the RAG system with file search
- * @param question - User's question
- * @param storeName - The file search store name (optional, uses database if not provided)
- * @returns AI response
- */
 export async function queryWithFileSearch(
   question: string,
   storeName?: string
@@ -151,22 +120,19 @@ export async function queryWithFileSearch(
   try {
     const ai = getGoogleAI()
 
-    // Get store name from parameter, database, or environment variable
     let fileSearchStoreName = storeName
 
     if (!fileSearchStoreName) {
       const config = await getRagConfig()
-      fileSearchStoreName = config?.storeName || process.env.GOOGLE_FILE_SEARCH_STORE_NAME
+      fileSearchStoreName = config?.storeName
     }
 
     if (!fileSearchStoreName) {
       throw new Error('File Search Store nie jest skonfigurowany')
     }
 
-    // Enhance user query with additional context
     const enhancedQuery = enhanceUserQuery(question)
 
-    // Query with file search tool and system instruction
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: enhancedQuery,
@@ -180,7 +146,6 @@ export async function queryWithFileSearch(
       }
     })
 
-    // Extract answer text
     const answer = response.text || ''
 
     if (!answer) {
@@ -192,12 +157,11 @@ export async function queryWithFileSearch(
 
     return {
       answer,
-      sources: [] // Placeholder for future implementation
+      sources: []
     }
   } catch (error) {
     console.error('Error querying with file search:', error)
 
-    // Handle specific error cases
     if (error instanceof Error) {
       if (error.message.includes('not configured')) {
         throw error
@@ -211,11 +175,6 @@ export async function queryWithFileSearch(
   }
 }
 
-/**
- * Get store information
- * @param storeName - The file search store name
- * @returns Store metadata
- */
 export async function getStoreInfo(storeName: string): Promise<{
   name: string
   displayName?: string | undefined
@@ -223,7 +182,6 @@ export async function getStoreInfo(storeName: string): Promise<{
   try {
     const ai = getGoogleAI()
 
-    // Get store details
     const store = await ai.fileSearchStores.get({ name: storeName })
 
     return {
@@ -236,11 +194,6 @@ export async function getStoreInfo(storeName: string): Promise<{
   }
 }
 
-/**
- * List documents in the store
- * @param storeName - The file search store name
- * @returns List of documents
- */
 export async function listStoreDocuments(storeName: string): Promise<
   Array<{
     name: string
@@ -250,7 +203,6 @@ export async function listStoreDocuments(storeName: string): Promise<
   try {
     const ai = getGoogleAI()
 
-    // List files in the store
     const response = await ai.fileSearchStores.documents.list({
       parent: storeName
     })

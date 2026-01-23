@@ -13,7 +13,7 @@ interface TestQueryFormProps {
 
 export default function TestQueryForm({ storeName }: TestQueryFormProps) {
   const [state, action] = useActionState(testRagQueryAction, EMPTY_FORM_STATE)
-  const noScriptFallback = useToastMessage(state)
+  const noScriptFallback = state.status === 'ERROR' ? useToastMessage(state) : null
   return (
     <form action={action} className="space-y-4">
       {storeName && (
