@@ -380,33 +380,35 @@ export async function askRagQuestion(
 
 ```json
 {
-  "title": "Test z Anatomii - Układ Krążenia",
-  "questions": [
-    {
-      "id": "q1",
-      "question": "Jaka jest główna funkcja serca?",
-      "type": "single",
+    "id": "0005ebb5-5728-48b9-9963-88cacfacc6bd",
+    "meta": {
+      "course": "opiekun-medyczny",
+      "category": "opiekun-medyczny"
+    },
+    "data": {
       "answers": [
         {
-          "id": "a1",
-          "text": "Pompowanie krwi",
+          "option": "Pogorszenie kontaktu",
+          "isCorrect": false
+        },
+        {
+          "option": "Blednięcie",
+          "isCorrect": false
+        },
+        {
+          "option": "Zawroty głowy",
+          "isCorrect": false
+        },
+        {
+          "option": "Wszystkie wyżej wymienione",
           "isCorrect": true
-        },
-        {
-          "id": "a2",
-          "text": "Filtrowanie krwi",
-          "isCorrect": false
-        },
-        {
-          "id": "a3",
-          "text": "Produkcja hormonów",
-          "isCorrect": false
         }
       ],
-      "explanation": "Serce jest pompą mięśniową odpowiedzialną za cyrkulację krwi w organizmie."
-    }
-  ]
-}
+      "question": "Objawy sugerujące, że należy przerwać pionizację to:"
+    },
+    "createdAt": "2024-11-03 19:59:06.184919",
+    "updatedAt": null
+  },
 ```
 
 ---
@@ -427,7 +429,7 @@ export async function askRagQuestion(
 {resources.length > 0 && (
   <div className="flex gap-2 mb-2">
     {resources.map(file => (
-      <span key={file} className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
+      <span key={file}>
         📄 {file}
       </span>
     ))}
@@ -436,8 +438,8 @@ export async function askRagQuestion(
 
 {/* Tool execution indicator */}
 {isExecutingTool && (
-  <div className="text-xs text-zinc-600">
-    ⚙️ Executing: {currentTool}...
+  <div>
+    Executing: {currentTool}...
   </div>
 )}
 ```
