@@ -87,14 +87,14 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
 ## Implementation Phases
 
 ### Phase 1: Foundation (Week 1)
-**Goal**: Basic MCP server + 2 tools + user materials storage
+**Goal**: Basic MCP server + 2 tools + cell persistence
 
 **Tasks**:
-1. **User Materials Storage**
-   - Add `user_materials` table (userId, filename, fileUrl, uploadedAt)
-   - PDF upload via UploadThing
-   - Store file URLs in database
-   - Secure access (user can only see own files)
+1. **Use Existing Materials System**
+   - Use existing `materials` table (already has UploadThing integration)
+   - Query user's materials: `SELECT * FROM materials WHERE userId = ? AND type = 'pdf'`
+   - Secure access already implemented (user can only see own files)
+   - @ commands reference materials by filename: `@anatomy.pdf` → match `title` field
 
 2. **MCP Server Setup**
    - Install `@modelcontextprotocol/sdk`
@@ -113,10 +113,18 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
    - Use Gemini function calling with MCP tools
    - Handle tool execution responses
 
+5. **Cell Persistence**
+   - Update RAG cell save logic to persist response in `userCellsList.cells`
+   - Store last response + tool results in cell data
+   - Load saved response on cell mount
+   - Show "Continue conversation" if previous response exists
+
 **Deliverables**:
-- ✅ Users can upload PDFs
+- ✅ Users upload materials (already works - using existing system)
 - ✅ Users can query: `@anatomy.pdf what is the heart?`
 - ✅ Users can use: `/utworz` to generate tests
+- ✅ RAG cell content persists to database like other cells
+- ✅ Last response shows when user reopens cell
 
 ---
 
@@ -161,22 +169,71 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
 
 ## Database Schema
 
-### New Tables:
+### Existing Tables (Already in Schema):
 
+**`materials` table** - User uploaded PDF/documents:
+```typescript
+{
+  id: uuid,
+  userId: string,
+  title: string,
+  key: string (unique),
+  url: string,         // UploadThing URL
+  type: string,        // "pdf", "md", "txt"
+  category: string,    // course category
+  size: number,        // file size in bytes
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+**`userCellsList` table** - Stores all user cells (including RAG cells):
+```typescript
+{
+  id: uuid,
+  userId: string,
+  cells: jsonb,        // Array of cell objects
+  order: jsonb,        // Array of cell IDs for ordering
+  createdAt: timestamp,
+  updatedAt: timestamp
+}
+```
+
+### Cell Persistence:
+
+**RAG Cell Structure (stored in `cells` JSONB)**:
+```typescript
+{
+  id: string,           // Cell UUID
+  type: "rag",          // Cell type
+  content: string,      // User's question
+  response?: {          // Optional: Last AI response
+    answer: string,
+    sources?: string[],
+    timestamp: string,
+    toolResults?: {     // Results from / commands
+      utworz?: TestQuestion[],
+      flashcards?: Flashcard[],
+      // ... other tool results
+    }
+  },
+  resources?: string[], // @ file references used
+  createdAt: string,
+  updatedAt: string
+}
+```
+
+**How Persistence Works**:
+1. User asks question in RAG cell
+2. Server action processes query + MCP tools
+3. Response saved to `userCellsList.cells[cellId].response`
+4. User can see conversation history on reload
+5. Only **last response** persisted (ephemeral 3-message history in UI only)
+
+### Optional Table (Phase 3):
+
+**`tool_executions` table** - Track tool usage for analytics:
 ```sql
--- User uploaded materials
-CREATE TABLE user_materials (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id TEXT NOT NULL REFERENCES users(user_id),
-  filename TEXT NOT NULL,
-  file_url TEXT NOT NULL, -- UploadThing URL
-  file_size INTEGER NOT NULL,
-  mime_type TEXT NOT NULL,
-  uploaded_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, filename)
-);
-
--- Tool execution history (optional - Phase 3)
 CREATE TABLE tool_executions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id TEXT NOT NULL,
@@ -347,7 +404,9 @@ export async function askRagQuestion(
   // Fetch user materials if @ references exist
   let additionalContext = '';
   if (resources.length > 0) {
-    additionalContext = await fetchUserMaterials(userId, resources);
+    // Query existing materials table
+    const materials = await getUserMaterials(userId, resources);
+    additionalContext = materials.map(m => m.content).join('\n\n');
   }
 
   // Query Gemini RAG with context
@@ -371,6 +430,169 @@ export async function askRagQuestion(
   };
 }
 ```
+
+---
+
+## Helper Functions
+
+### File: `/src/server/materials-queries.ts` (or add to existing queries)
+
+```typescript
+import { db } from './db/index'
+import { materials } from './db/schema'
+import { eq, and } from 'drizzle-orm'
+
+/**
+ * Get user's materials by filename
+ * @param userId - User ID
+ * @param filenames - Array of filenames (e.g. ["anatomy.pdf", "physiology.pdf"])
+ * @returns Array of material objects with content
+ */
+export async function getUserMaterials(
+  userId: string,
+  filenames: string[]
+): Promise<Array<{ title: string; url: string; content: string }>> {
+  const results = await db
+    .select()
+    .from(materials)
+    .where(
+      and(
+        eq(materials.userId, userId),
+        // Match any of the filenames in title field
+        // Note: You may need to add sql operator for IN clause
+      )
+    )
+
+  // Fetch PDF content from URLs (using pdf-parse or similar)
+  const withContent = await Promise.all(
+    results.map(async (material) => {
+      const content = await extractPdfText(material.url)
+      return {
+        title: material.title,
+        url: material.url,
+        content
+      }
+    })
+  )
+
+  return withContent
+}
+
+/**
+ * Extract text from PDF URL
+ * @param url - UploadThing URL
+ * @returns Extracted text content
+ */
+async function extractPdfText(url: string): Promise<string> {
+  // Implementation: fetch PDF, use pdf-parse to extract text
+  // Max 50KB text to avoid token limits
+  return "extracted text..."
+}
+```
+
+---
+
+## Cell Persistence
+
+### How RAG Cells Persist:
+
+**1. Cell Structure in Database**:
+```typescript
+// userCellsList.cells JSONB contains:
+{
+  "cell-uuid-123": {
+    id: "cell-uuid-123",
+    type: "rag",
+    content: "@anatomy.pdf explain the heart /utworz",
+    response: {
+      answer: "The heart is a muscular organ...",
+      sources: ["doc1", "doc2"],
+      timestamp: "2026-01-21T10:30:00Z",
+      toolResults: {
+        utworz: [
+          {
+            id: "q1",
+            meta: { course: "anatomy", category: "cardiology" },
+            data: {
+              question: "What is the function of the heart?",
+              answers: [...]
+            }
+          }
+        ]
+      }
+    },
+    resources: ["anatomy.pdf"],
+    createdAt: "2026-01-21T10:00:00Z",
+    updatedAt: "2026-01-21T10:30:00Z"
+  }
+}
+```
+
+**2. Save Cell Content** (after RAG query completes):
+```typescript
+// In RagCellForm or server action
+async function saveRagCellResponse(
+  userId: string,
+  cellId: string,
+  question: string,
+  response: {
+    answer: string,
+    sources?: string[],
+    toolResults?: any
+  },
+  resources: string[]
+) {
+  const userCellsList = await db
+    .select()
+    .from(userCellsList)
+    .where(eq(userCellsList.userId, userId))
+    .limit(1)
+
+  const cells = userCellsList[0].cells as Record<string, any>
+
+  // Update cell with response
+  cells[cellId] = {
+    ...cells[cellId],
+    content: question,
+    response: {
+      answer: response.answer,
+      sources: response.sources,
+      timestamp: new Date().toISOString(),
+      toolResults: response.toolResults
+    },
+    resources,
+    updatedAt: new Date().toISOString()
+  }
+
+  // Save back to database
+  await db
+    .update(userCellsList)
+    .set({
+      cells,
+      updatedAt: new Date()
+    })
+    .where(eq(userCellsList.userId, userId))
+}
+```
+
+**3. Load Cell on Mount**:
+```typescript
+// In RagCellForm
+useEffect(() => {
+  // Cell data comes from props (loaded server-side)
+  if (cell.response) {
+    // Show previous response
+    setLastResponse(cell.response)
+  }
+}, [cell])
+```
+
+**Key Points**:
+- Only **last response** saved (not full conversation history)
+- Ephemeral 3-message UI history (useState, not persisted)
+- When user saves/closes cell → response saved to DB
+- When user reopens cell → last response displays
+- User can continue with new question (old response lost in UI, but saved in DB)
 
 ---
 
