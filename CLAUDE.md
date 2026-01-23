@@ -132,11 +132,12 @@ Claude should defer to these files for deeper technical references.
 
 Claude (or any coding assistant) should follow these principles when interacting with this repository:
 
-1. **Use this `CLAUDE.md`** for high-level project context.  
-2. **Reference linked markdown files** for detailed instructions (e.g., queries, schema, or styling).  
-3. **Avoid duplication** — rely on existing implementations in `/server`, `/actions`, or `/lib`.  
-4. **Follow Zod validation and server-first architecture** as described in `server-actions.md`.  
-5. **Use TailwindCSS v4 conventions** defined in `tailwind-styles.md`.  
+1. **Use this `CLAUDE.md`** for high-level project context.
+2. **Reference linked markdown files** for detailed instructions (e.g., queries, schema, or styling).
+3. **Avoid duplication** — rely on existing implementations in `/server`, `/actions`, or `/lib`.
+4. **Follow Zod validation and server-first architecture** as described in `server-actions.md`.
+5. **Use TailwindCSS v4 conventions** defined in `tailwind-styles.md`.
+6. **Keep code clean and self-documenting** — Only add comments to code that is genuinely complex or difficult to understand. Prefer clear naming and simple logic over excessive commenting. Comments should explain "why", not "what".  
 
 ---
 
