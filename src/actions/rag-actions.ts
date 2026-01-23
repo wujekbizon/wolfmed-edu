@@ -7,19 +7,14 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch } from '@/server/google-rag'
 
-
 export async function askRagQuestion(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check user authentication
     const { userId } = await auth()
-    if (!userId) {
-      return toFormState('ERROR', 'Musisz być zalogowany')
-    }
-
-    // Rate limiting
+    if (!userId) throw new Error("Unauthorized")
+      
     const rateLimit = await checkRateLimit(userId, 'rag:query')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
@@ -29,7 +24,6 @@ export async function askRagQuestion(
       )
     }
 
-    // Validate input
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
 
@@ -42,7 +36,6 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Query RAG system (will use database config or fallback to env var)
     const result = await queryWithFileSearch(validationResult.data.question)
 
     return {
