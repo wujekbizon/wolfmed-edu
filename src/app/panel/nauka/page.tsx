@@ -12,7 +12,7 @@ import type { MaterialsType } from '@/types/materialsTypes'
 import { getCurrentUser } from '@/server/user'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { checkCourseAccessAction } from '@/actions/course-actions'
-import { hasAccessToTier } from '@/lib/accessTiers'
+import { hasAccessToTier } from '@/helpers/accessTiers'
 
 export const dynamic = 'force-dynamic'
 

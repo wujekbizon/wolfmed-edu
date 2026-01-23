@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { generateSlug } from '@/lib/blogUtils'
+import { generateSlug } from '@/helpers/blogUtils'
 import {
   createBlogCategoryAction,
   updateBlogCategoryAction,

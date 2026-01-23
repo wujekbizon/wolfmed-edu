@@ -1,15 +1,8 @@
 'use server'
 
-/**
- * Admin-only server actions for RAG File Search Store management
- * Requires admin authentication for all operations
- */
-
 import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
-import { requireAdminAction } from '@/lib/adminHelpers'
-import { checkRateLimit } from '@/lib/rateLimit'
 import {
   CreateStoreSchema,
   TestRagQuerySchema,
@@ -21,32 +14,14 @@ import {
   listStoreDocuments,
   queryWithFileSearch,
   deleteFileSearchStore,
-} from '@/lib/google-rag'
+} from '@/server/google-rag'
 import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
 
-/**
- * Create a new File Search Store
- * Admin only - Rate limited to 5 per hour
- */
 export async function createFileSearchStoreAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin authentication
-    const admin = await requireAdminAction()
-
-    // Rate limiting
-    const rateLimit = await checkRateLimit(admin.userId, 'rag:admin:create-store')
-    if (!rateLimit.success) {
-      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      return toFormState(
-        'ERROR',
-        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-      )
-    }
-
-    // Validate input
     const displayName = formData.get('displayName') as string
 
     const validationResult = CreateStoreSchema.safeParse({ displayName })
@@ -55,10 +30,8 @@ export async function createFileSearchStoreAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Create the store
     const storeName = await createFileSearchStore(validationResult.data.displayName)
 
-    // Save to database
     await setRagConfig(storeName, validationResult.data.displayName)
 
     revalidatePath('/admin/rag')
@@ -73,43 +46,23 @@ export async function createFileSearchStoreAction(
   }
 }
 
-/**
- * Upload files to the File Search Store
- * Admin only - Rate limited to 3 per hour
- */
 export async function uploadFilesAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin authentication
-    const admin = await requireAdminAction()
-
-    // Rate limiting
-    const rateLimit = await checkRateLimit(admin.userId, 'rag:admin:upload')
-    if (!rateLimit.success) {
-      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      return toFormState(
-        'ERROR',
-        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-      )
-    }
-
-    // Get store name from database
     const config = await getRagConfig()
 
     if (!config) {
       return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
-    // Get files from FormData
     const files = formData.getAll('files') as File[]
 
     if (!files || files.length === 0) {
       return toFormState('ERROR', 'Nie wybrano żadnych plików')
     }
 
-    // Validate file types
     const allowedTypes = ['.md', '.txt', '.pdf']
     const invalidFiles = files.filter(
       file => !allowedTypes.some(ext => file.name.endsWith(ext))
@@ -122,7 +75,6 @@ export async function uploadFilesAction(
       )
     }
 
-    // Upload files
     const results = await uploadFiles(config.storeName, files)
 
     revalidatePath('/admin/rag')
@@ -144,10 +96,6 @@ export async function uploadFilesAction(
   }
 }
 
-/**
- * Get File Search Store status and information
- * Admin only - No rate limit (read-only operation)
- */
 export async function getStoreStatusAction(): Promise<{
   success: boolean
   data?: {
@@ -158,10 +106,7 @@ export async function getStoreStatusAction(): Promise<{
   error?: string
 }> {
   try {
-    // Check admin authentication
-    await requireAdminAction()
 
-    // Get store name from database
     const config = await getRagConfig()
 
     if (!config) {
@@ -174,8 +119,7 @@ export async function getStoreStatusAction(): Promise<{
       }
     }
 
-    // Get store information from Google
-    const storeInfo = await getStoreInfo(config.storeName)
+    await getStoreInfo(config.storeName)
 
     return {
       success: true,
@@ -194,20 +138,12 @@ export async function getStoreStatusAction(): Promise<{
   }
 }
 
-/**
- * List all documents in the File Search Store
- * Admin only - No rate limit (read-only operation)
- */
 export async function listStoreDocumentsAction(): Promise<{
   success: boolean
   data?: Array<{ name: string; displayName: string }>
   error?: string
 }> {
   try {
-    // Check admin authentication
-    await requireAdminAction()
-
-    // Get store name from database
     const config = await getRagConfig()
 
     if (!config) {
@@ -217,7 +153,6 @@ export async function listStoreDocumentsAction(): Promise<{
       }
     }
 
-    // List documents
     const documents = await listStoreDocuments(config.storeName)
 
     return {
@@ -233,29 +168,11 @@ export async function listStoreDocumentsAction(): Promise<{
   }
 }
 
-/**
- * Test RAG query against the File Search Store
- * Admin only - Rate limited to 20 per hour
- */
 export async function testRagQueryAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin authentication
-    const admin = await requireAdminAction()
-
-    // Rate limiting
-    const rateLimit = await checkRateLimit(admin.userId, 'rag:admin:test')
-    if (!rateLimit.success) {
-      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      return toFormState(
-        'ERROR',
-        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-      )
-    }
-
-    // Validate input
     const question = formData.get('question') as string
     const storeName = (formData.get('storeName') as string) || undefined
 
@@ -268,7 +185,6 @@ export async function testRagQueryAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Query RAG system
     const result = await queryWithFileSearch(
       validationResult.data.question,
       validationResult.data.storeName
@@ -284,39 +200,19 @@ export async function testRagQueryAction(
   }
 }
 
-/**
- * Delete File Search Store and its configuration
- * Admin only - Rate limited to 3 per hour
- */
 export async function deleteFileSearchStoreAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    // Check admin authentication
-    const admin = await requireAdminAction()
-
-    // Rate limiting
-    const rateLimit = await checkRateLimit(admin.userId, 'rag:admin:delete-store')
-    if (!rateLimit.success) {
-      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      return toFormState(
-        'ERROR',
-        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-      )
-    }
-
-    // Get store name from database
     const config = await getRagConfig()
 
     if (!config) {
       return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
-    // Delete from Google
     await deleteFileSearchStore(config.storeName)
 
-    // Delete from database
     await deleteRagConfig(config.storeName)
 
     revalidatePath('/admin/rag')

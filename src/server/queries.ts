@@ -44,7 +44,7 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
-import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { parseLexicalContent } from "@/helpers/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {

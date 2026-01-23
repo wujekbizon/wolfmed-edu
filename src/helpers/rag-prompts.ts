@@ -1,12 +1,3 @@
-/**
- * RAG System Prompts and Query Enhancement
- * Provides system instructions and query formatting for medical education RAG
- */
-
-/**
- * System prompt for the RAG assistant
- * Instructs the AI on how to behave and respond
- */
 export const SYSTEM_PROMPT = `Jesteś asystentem edukacji medycznej Wolfmed.
 
 TWOJE ŹRÓDŁO WIEDZY:
@@ -24,11 +15,6 @@ ZASADY ODPOWIEDZI:
 
 WAŻNE: Wszystkie odpowiedzi MUSZĄ być po polsku.`
 
-/**
- * Enhance user query with context and instructions
- * @param question - User's question
- * @returns Enhanced query with additional context
- */
 export function enhanceUserQuery(question: string): string {
   return `Na podstawie dostępnej dokumentacji medycznej: ${question}
 
@@ -40,16 +26,10 @@ Proszę o szczegółową odpowiedź zawierającą:
 WAŻNE: Odpowiedź MUSI być po polsku.`
 }
 
-/**
- * Get message when no information found in documents
- */
 export function getNoDataFoundMessage(): string {
   return 'Nie znalazłem tej informacji w dostępnych dokumentach medycznych. Spróbuj zadać pytanie inaczej lub skontaktuj się z administratorem.'
 }
 
-/**
- * Get generic error message
- */
 export function getErrorMessage(): string {
   return 'Wystąpił błąd podczas przetwarzania zapytania. Proszę spróbować ponownie.'
 }

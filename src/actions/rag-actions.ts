@@ -5,12 +5,9 @@ import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
-import { queryWithFileSearch } from '@/lib/google-rag'
+import { queryWithFileSearch } from '@/server/google-rag'
 
-/**
- * Ask a question to the RAG system
- * User-facing - Rate limited to 10 per hour
- */
+
 export async function askRagQuestion(
   formState: FormState,
   formData: FormData

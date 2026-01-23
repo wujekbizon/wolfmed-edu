@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { formatDate } from '@/lib/blogUtils'
+import { formatDate } from '@/helpers/blogUtils'
 import { BlogPost, BlogStatistics } from '@/types/dataTypes'
 
 interface AdminBlogPanelProps {
@@ -23,7 +23,6 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
           <div className="flex items-center justify-between">

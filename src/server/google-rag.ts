@@ -1,6 +1,6 @@
 import 'server-only'
 import { GoogleGenAI } from '@google/genai'
-import { SYSTEM_PROMPT, enhanceUserQuery } from './rag-prompts'
+import { SYSTEM_PROMPT, enhanceUserQuery } from '../helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 
 function getGoogleAI() {

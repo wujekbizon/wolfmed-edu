@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { hasAccessToTier } from '@/lib/accessTiers'
+import { hasAccessToTier } from '@/helpers/accessTiers'
 import type { AccessTier, CategoryMetadata } from '@/types/categoryType'
 import { Clock, BookOpen, Lock } from 'lucide-react'
 

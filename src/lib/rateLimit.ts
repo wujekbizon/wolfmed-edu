@@ -8,10 +8,6 @@ interface RateLimitConfig {
   maxRequests: number
 }
 
-/**
- * Rate limit configurations for different actions
- * Format: action -> { interval (ms), maxRequests }
- */
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 },
   'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 },
@@ -48,12 +44,6 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
 
   'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
-
-  'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
-  'rag:admin:test': { interval: 60 * 60 * 1000, maxRequests: 10 },
-  'rag:admin:upload': { interval: 60 * 60 * 1000, maxRequests: 3 },
-  'rag:admin:create-store': { interval: 60 * 60 * 1000, maxRequests: 3 },
-  'rag:admin:delete-store': { interval: 60 * 60 * 1000, maxRequests: 3 }
 }
 
 export interface RateLimitResult {

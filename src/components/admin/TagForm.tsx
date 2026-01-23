@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { generateSlug } from '@/lib/blogUtils'
+import { generateSlug } from '@/helpers/blogUtils'
 import { createBlogTagAction, updateBlogTagAction } from '@/actions/blogCategories'
 import type { BlogTag } from '@/types/dataTypes'
 import { EMPTY_FORM_STATE } from '@/constants/formState'

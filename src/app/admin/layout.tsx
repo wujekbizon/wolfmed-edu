@@ -1,4 +1,3 @@
-import { requireAdmin } from '@/lib/adminHelpers'
 import Link from 'next/link'
 import { Metadata } from 'next'
 
@@ -13,12 +12,9 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Check admin access (redirects if not admin)
-  await requireAdmin()
 
   return (
     <div className="min-h-screen bg-zinc-50">
-      {/* Admin Header */}
       <header className="bg-zinc-900 border-b border-zinc-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -74,8 +70,6 @@ export default async function AdminLayout({
               </Link>
             </div>
           </div>
-
-          {/* Mobile Navigation */}
           <nav className="md:hidden pb-4 flex flex-wrap gap-2">
             <Link
               href="/admin"
