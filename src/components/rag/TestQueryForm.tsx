@@ -49,9 +49,8 @@ export default function TestQueryForm({ storeName }: TestQueryFormProps) {
         {noScriptFallback}
       </form>
 
-      {/* Response Container */}
       {state.status === 'SUCCESS' && state.message && (
-        <RagResponse answer={state.message} sources={state.values?.sources} />
+        <RagResponse answer={state.message} sources={state.values?.sources as string[] | undefined} />
       )}
     </div>
   )
