@@ -6,6 +6,7 @@ import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch } from '@/server/google-rag'
+import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 
 export async function askRagQuestion(
   formState: FormState,
@@ -36,7 +37,30 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const result = await queryWithFileSearch(validationResult.data.question)
+    const { cleanQuestion, tools } = parseMcpCommands(validationResult.data.question)
+
+    let additionalContext = ''
+    if (tools.length > 0) {
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      const mcpResults = await Promise.all(
+        tools.map(async (tool) => {
+          const response = await fetch(`${baseUrl}/api/mcp`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tool: tool.name, args: tool.args }),
+          })
+          const data = await response.json()
+          return data.content?.[0]?.text || ''
+        })
+      )
+      additionalContext = mcpResults.join('\n\n')
+    }
+
+    const finalQuestion = additionalContext
+      ? `Context from documents:\n${additionalContext}\n\nQuestion: ${cleanQuestion}`
+      : cleanQuestion
+
+    const result = await queryWithFileSearch(finalQuestion)
 
     return {
       ...toFormState('SUCCESS', result.answer),
