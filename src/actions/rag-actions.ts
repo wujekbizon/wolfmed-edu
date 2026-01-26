@@ -37,34 +37,99 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const { cleanQuestion, tools } = parseMcpCommands(validationResult.data.question)
+    const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    let additionalContext = ''
-    if (tools.length > 0) {
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-      const mcpResults = await Promise.all(
-        tools.map(async (tool) => {
-          const response = await fetch(`${baseUrl}/api/mcp`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ tool: tool.name, args: tool.args }),
-          })
-          const data = await response.json()
-          return data.content?.[0]?.text || ''
-        })
-      )
-      additionalContext = mcpResults.join('\n\n')
+    if (resources.length === 0 && tools.length === 0) {
+      const result = await queryWithFileSearch(validationResult.data.question)
+      return {
+        ...toFormState('SUCCESS', result.answer),
+        values: { sources: result.sources }
+      }
     }
 
-    const finalQuestion = additionalContext
-      ? `Context from documents:\n${additionalContext}\n\nQuestion: ${cleanQuestion}`
-      : cleanQuestion
+    let additionalContext = ''
+    if (resources.length > 0) {
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+        const resourceResults = await Promise.all(
+          resources.map(async (filename) => {
+            const response = await fetch(`${baseUrl}/api/mcp`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ tool: 'read', args: { filename } }),
+            })
+            const data = await response.json()
+            return data.content?.[0]?.text || ''
+          })
+        )
+        additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
+      } catch (error) {
+        console.error('Failed to fetch resources:', error)
+      }
+    }
 
-    const result = await queryWithFileSearch(finalQuestion)
+    const mcpTools = tools.length > 0 ? tools.map(toolName => {
+      switch (toolName) {
+        case 'utworz':
+          return {
+            name: 'utworz_test',
+            description: 'Generate test questions in Wolfmed JSON format based on the context',
+            parameters: {
+              type: 'object',
+              properties: {
+                questionCount: { type: 'number', description: 'Number of questions to generate' },
+                difficulty: { type: 'string', enum: ['easy', 'medium', 'hard'], description: 'Difficulty level' }
+              },
+              required: ['questionCount']
+            }
+          }
+        case 'podsumuj':
+          return {
+            name: 'podsumuj',
+            description: 'Summarize the answer in 50-100 words',
+            parameters: { type: 'object', properties: {} }
+          }
+        case 'flashcards':
+          return {
+            name: 'flashcards',
+            description: 'Generate flashcards in Q&A format',
+            parameters: {
+              type: 'object',
+              properties: {
+                count: { type: 'number', description: 'Number of flashcards' }
+              }
+            }
+          }
+        case 'quiz':
+          return {
+            name: 'quiz',
+            description: 'Generate a quick 3-question quiz',
+            parameters: { type: 'object', properties: {} }
+          }
+        case 'tlumacz':
+          return {
+            name: 'tlumacz',
+            description: 'Translate the answer to English',
+            parameters: { type: 'object', properties: {} }
+          }
+        default:
+          return null
+      }
+    }).filter(Boolean) as Array<{ name: string; description: string; parameters: any }> : undefined
+
+    const result = await queryWithFileSearch(
+      cleanQuestion,
+      undefined,
+      additionalContext || undefined,
+      mcpTools
+    )
 
     return {
       ...toFormState('SUCCESS', result.answer),
-      values: { sources: result.sources }
+      values: {
+        sources: result.sources,
+        toolResults: result.toolResults
+      }
     }
   } catch (error) {
     console.error('Error querying RAG:', error)

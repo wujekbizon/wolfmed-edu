@@ -115,8 +115,10 @@ export async function uploadFiles(
 
 export async function queryWithFileSearch(
   question: string,
-  storeName?: string
-): Promise<{ answer: string; sources?: string[] }> {
+  storeName?: string,
+  additionalContext?: string,
+  tools?: Array<{ name: string; description: string; parameters: any }>
+): Promise<{ answer: string; sources?: string[]; toolResults?: any }> {
   try {
     const ai = getGoogleAI()
 
@@ -131,18 +133,34 @@ export async function queryWithFileSearch(
       throw new Error('File Search Store nie jest skonfigurowany')
     }
 
-    const enhancedQuery = enhanceUserQuery(question)
+    const finalQuestion = additionalContext
+      ? `${additionalContext}\n\n${question}`
+      : question
+
+    const enhancedQuery = enhanceUserQuery(finalQuestion)
+
+    const configTools: any[] = [{
+      fileSearch: {
+        fileSearchStoreNames: [fileSearchStoreName]
+      }
+    }]
+
+    if (tools && tools.length > 0) {
+      configTools.push({
+        functionDeclarations: tools.map(tool => ({
+          name: tool.name,
+          description: tool.description,
+          parameters: tool.parameters
+        }))
+      })
+    }
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        tools: [{
-          fileSearch: {
-            fileSearchStoreNames: [fileSearchStoreName]
-          }
-        }]
+        tools: configTools
       }
     })
 
@@ -152,12 +170,24 @@ export async function queryWithFileSearch(
       throw new Error('Empty response from Gemini')
     }
 
-    // TODO: Extract source citations if available from response metadata
-    // This will depend on the actual response structure from Google GenAI
+    let toolResults: any = undefined
+
+    if (response.functionCalls && Array.isArray(response.functionCalls)) {
+      const results: Record<string, any> = {}
+      for (const call of response.functionCalls) {
+        if (call.name) {
+          results[call.name] = call.args
+        }
+      }
+      if (Object.keys(results).length > 0) {
+        toolResults = results
+      }
+    }
 
     return {
       answer,
-      sources: []
+      sources: [],
+      toolResults
     }
   } catch (error) {
     console.error('Error querying with file search:', error)

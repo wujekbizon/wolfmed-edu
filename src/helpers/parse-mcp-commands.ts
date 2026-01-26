@@ -1,30 +1,37 @@
 export interface ParsedMcpCommand {
   cleanQuestion: string;
-  tools: Array<{
-    name: string;
-    args: Record<string, unknown>;
-  }>;
+  resources: string[];
+  tools: string[];
 }
 
 export function parseMcpCommands(input: string): ParsedMcpCommand {
-  const tools: Array<{ name: string; args: Record<string, unknown> }> = [];
+  const resources: string[] = [];
+  const tools: string[] = [];
 
-  const readPattern = /\/read\s+([\w-]+\.md)/gi;
+  const resourcePattern = /@([\w-]+\.(?:md|pdf|txt))/gi;
   let match;
 
-  while ((match = readPattern.exec(input)) !== null) {
-    tools.push({
-      name: 'read',
-      args: {
-        filename: match[1],
-      },
-    });
+  while ((match = resourcePattern.exec(input)) !== null) {
+    if (match[1]) {
+      resources.push(match[1]);
+    }
   }
 
-  const cleanQuestion = input.replace(readPattern, '').trim();
+  const toolPattern = /\/(utworz|podsumuj|flashcards|quiz|tlumacz)/gi;
+  while ((match = toolPattern.exec(input)) !== null) {
+    if (match[1]) {
+      tools.push(match[1]);
+    }
+  }
+
+  const cleanQuestion = input
+    .replace(resourcePattern, '')
+    .replace(toolPattern, '')
+    .trim();
 
   return {
     cleanQuestion,
+    resources,
     tools,
   };
 }
