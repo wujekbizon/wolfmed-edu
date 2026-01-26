@@ -60,15 +60,23 @@ class WolfmedMcpServer {
   }
 
   async executeTool(toolName: string, args: unknown) {
-    const request = {
-      method: 'tools/call' as const,
-      params: {
-        name: toolName,
-        arguments: args,
-      },
-    };
+    try {
+      console.log('[MCP Server] Executing tool:', { toolName, args });
 
-    return this.server.request(request, CallToolRequestSchema);
+      switch (toolName) {
+        case 'read': {
+          const validatedInput = ReadDocInputSchema.parse(args);
+          const result = await readDocTool(validatedInput);
+          console.log('[MCP Server] Tool execution successful:', { toolName, hasContent: !!result.content });
+          return result;
+        }
+        default:
+          throw new Error(`Unknown tool: ${toolName}`);
+      }
+    } catch (error) {
+      console.error('[MCP Server] Tool execution error:', error);
+      throw error;
+    }
   }
 }
 
