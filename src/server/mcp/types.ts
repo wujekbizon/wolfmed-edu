@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 
 export const ReadDocInputSchema = z.object({
   filename: z.string().describe('Filename to read from /docs folder (e.g., MCP_INTEGRATION_PLAN.md)'),
@@ -6,9 +7,4 @@ export const ReadDocInputSchema = z.object({
 
 export type ReadDocInput = z.infer<typeof ReadDocInputSchema>;
 
-export interface ToolResponse {
-  content: Array<{
-    type: 'text';
-    text: string;
-  }>;
-}
+export type ToolResponse = CallToolResult;

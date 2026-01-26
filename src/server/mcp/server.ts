@@ -2,7 +2,6 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
-  type CallToolRequest,
 } from '@modelcontextprotocol/sdk/types.js';
 import { readDocTool } from './tools/read-doc';
 import { ReadDocInputSchema } from './types';
@@ -46,7 +45,7 @@ class WolfmedMcpServer {
       ],
     }));
 
-    this.server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
+    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       const { name, arguments: args } = request.params;
 
       switch (name) {
@@ -61,8 +60,8 @@ class WolfmedMcpServer {
   }
 
   async executeTool(toolName: string, args: unknown) {
-    const request: CallToolRequest = {
-      method: 'tools/call',
+    const request = {
+      method: 'tools/call' as const,
       params: {
         name: toolName,
         arguments: args,
