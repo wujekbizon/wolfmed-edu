@@ -2,7 +2,6 @@ export interface Resource {
   name: string;
   displayName: string;
   type: 'doc' | 'note' | 'material';
-  icon?: string;
   metadata?: {
     createdAt?: string;
     updatedAt?: string;

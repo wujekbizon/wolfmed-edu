@@ -51,10 +51,7 @@ export function ResourceAutocomplete({
             }
           `}
         >
-          <div className="flex items-center gap-2">
-            {resource.icon && <span>{resource.icon}</span>}
-            <span className="font-medium text-zinc-900">{resource.displayName}</span>
-          </div>
+          <span className="font-medium text-zinc-900">{resource.displayName}</span>
           <span className="text-sm text-zinc-500">
             {resource.type === 'doc'
               ? 'Dokument'

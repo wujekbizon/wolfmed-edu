@@ -17,7 +17,6 @@ export async function GET() {
       name: filename,
       displayName: filename.replace('.md', '').replace(/_/g, ' '),
       type: 'doc' as const,
-      icon: '📚',
     }));
 
     let userResources: Resource[] = [];
@@ -28,11 +27,13 @@ export async function GET() {
         getMaterialsByUser(userId),
       ]);
 
+      console.log('[Resources API] User notes count:', notes.length);
+      console.log('[Resources API] User materials count:', materials.length);
+
       const noteResources: Resource[] = notes.map((note) => ({
         name: `note://${note.id}`,
         displayName: note.title,
         type: 'note' as const,
-        icon: '📝',
         metadata: {
           createdAt: note.createdAt,
           updatedAt: note.updatedAt,
@@ -43,7 +44,6 @@ export async function GET() {
         name: `material://${material.id}`,
         displayName: material.title,
         type: 'material' as const,
-        icon: '📄',
         metadata: {
           fileType: material.type,
           createdAt: material.createdAt,
