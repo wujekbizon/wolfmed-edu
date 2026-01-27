@@ -137,6 +137,13 @@ export async function queryWithFileSearch(
       ? `${additionalContext}\n\n${question}`
       : question
 
+    console.log('[RAG] Preparing query:', {
+      hasAdditionalContext: !!additionalContext,
+      additionalContextLength: additionalContext?.length || 0,
+      questionLength: question.length,
+      finalQuestionLength: finalQuestion.length
+    })
+
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
     const configTools: any[] = [{
@@ -154,6 +161,13 @@ export async function queryWithFileSearch(
         }))
       })
     }
+
+    console.log('[RAG] Calling Gemini with:', {
+      model: 'gemini-2.5-flash',
+      hasTools: !!tools,
+      toolsCount: tools?.length || 0,
+      configToolsCount: configTools.length
+    })
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
