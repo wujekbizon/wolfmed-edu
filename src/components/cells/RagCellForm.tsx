@@ -1,12 +1,13 @@
 'use client'
 
-import { useActionState, useRef, useEffect, useState } from 'react'
+import { useActionState, useRef, useEffect } from 'react'
 import { askRagQuestion } from '@/actions/rag-actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { useResourceAutocomplete } from '@/hooks/useResourceAutocomplete'
+import { useResourceAutocompleteInput } from '@/hooks/useResourceAutocompleteInput'
 import RagResponse from './RagResponse'
 import RagLoadingState from './RagLoadingState'
 import { ResourceAutocomplete } from './ResourceAutocomplete'
@@ -16,14 +17,18 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const noScriptFallback = state.status === 'ERROR' ? useToastMessage(state) : null
   const formRef = useRef<HTMLFormElement>(null)
   const conversationRef = useRef<HTMLDivElement>(null)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
-
   const submittedQuestion = useRef<string>('')
 
-  const [showAutocomplete, setShowAutocomplete] = useState(false)
-  const [autocompleteQuery, setAutocompleteQuery] = useState('')
-  const [selectedIndex, setSelectedIndex] = useState(0)
   const { resources, loading } = useResourceAutocomplete()
+  const {
+    textareaRef,
+    showAutocomplete,
+    filteredResources,
+    selectedIndex,
+    handleInputChange,
+    handleKeyDown,
+    insertResource,
+  } = useResourceAutocompleteInput(resources)
 
   useEffect(() => {
     if (state.status === 'SUCCESS' && conversationRef.current) {
@@ -35,70 +40,6 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     const question = formData.get('question') as string
     submittedQuestion.current = question
     action(formData)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value
-    const cursorPos = e.target.selectionStart || 0
-
-    const textBeforeCursor = value.substring(0, cursorPos)
-    const lastAtIndex = textBeforeCursor.lastIndexOf('@')
-
-    if (lastAtIndex !== -1) {
-      const query = textBeforeCursor.substring(lastAtIndex + 1)
-      if (!query.includes(' ')) {
-        setAutocompleteQuery(query)
-        setShowAutocomplete(true)
-        setSelectedIndex(0)
-        return
-      }
-    }
-
-    setShowAutocomplete(false)
-  }
-
-  const filteredResources = resources.filter((r) =>
-    r.name.toLowerCase().includes(autocompleteQuery.toLowerCase())
-  )
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (!showAutocomplete) return
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setSelectedIndex((i) => Math.min(i + 1, filteredResources.length - 1))
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setSelectedIndex((i) => Math.max(i - 1, 0))
-    } else if (e.key === 'Enter' && filteredResources.length > 0) {
-      e.preventDefault()
-      const selected = filteredResources[selectedIndex]
-      if (selected) {
-        insertResource(selected.name)
-      }
-    } else if (e.key === 'Escape') {
-      setShowAutocomplete(false)
-    }
-  }
-
-  const insertResource = (filename: string) => {
-    const textarea = textareaRef.current
-    if (!textarea) return
-
-    const cursorPos = textarea.selectionStart || 0
-    const value = textarea.value
-
-    const textBefore = value.substring(0, cursorPos)
-    const atIndex = textBefore.lastIndexOf('@')
-
-    const newValue =
-      value.substring(0, atIndex) + `@${filename} ` + value.substring(cursorPos)
-
-    textarea.value = newValue
-    const newCursorPos = atIndex + filename.length + 2
-    textarea.setSelectionRange(newCursorPos, newCursorPos)
-    textarea.focus()
-    setShowAutocomplete(false)
   }
 
   const showConversation = state.status === 'SUCCESS' || isPending
