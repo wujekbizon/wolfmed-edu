@@ -169,7 +169,8 @@ export async function queryWithFileSearch(
       textLength: response.text?.length || 0,
       hasFunctionCalls: !!response.functionCalls,
       candidates: response.candidates?.length || 0,
-      finishReason: response.candidates?.[0]?.finishReason
+      finishReason: response.candidates?.[0]?.finishReason,
+      firstCandidate: response.candidates?.[0] ? JSON.stringify(response.candidates[0], null, 2) : 'none'
     })
 
     const answer = response.text || ''
