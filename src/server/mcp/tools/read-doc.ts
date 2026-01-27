@@ -5,7 +5,12 @@ import type { ReadDocInput, ToolResponse } from '../types';
 export async function readDocTool(input: ReadDocInput): Promise<ToolResponse> {
   try {
     const docsPath = join(process.cwd(), 'docs', input.filename);
-    const content = await readFile(docsPath, 'utf-8');
+    let content = await readFile(docsPath, 'utf-8');
+
+    const MAX_CHARS = 50000;
+    if (content.length > MAX_CHARS) {
+      content = content.substring(0, MAX_CHARS) + '\n\n[... content truncated due to size limit ...]';
+    }
 
     return {
       content: [
