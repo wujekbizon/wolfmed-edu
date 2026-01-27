@@ -1,8 +1,8 @@
 # MCP Integration Plan - Wolfmed RAG Enhancement
 
-**Date**: 2026-01-21
-**Branch**: `claude/review-rag-plan-CBfZE`
-**Status**: Planning Phase
+**Date**: 2026-01-27
+**Branch**: `claude/add-comment-guidelines-nWvcg`
+**Status**: Phase 1 - In Progress (@ Resources Working, Autocomplete Next)
 
 ---
 
@@ -81,6 +81,68 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
       ↓
 6. Response - Answer + test questions
 ```
+
+---
+
+## 🚀 Current Implementation Status
+
+### ✅ Completed (2026-01-27):
+
+**@ Resources - MVP Working**
+- ✅ Parser extracts `@filename.md` from input
+- ✅ MCP `/read` tool fetches file from `/docs` folder
+- ✅ HTTP-based MCP server (`/api/mcp`)
+- ✅ File content injected as context to Gemini
+- ✅ 50KB file size limit (prevents Gemini overload)
+- ✅ Original RAG flow preserved (backwards compatible)
+- ✅ Detailed logging for debugging
+
+**Architecture:**
+```
+User: "@MCP_INTEGRATION_PLAN.md what is phase 1?"
+  ↓
+Parser: resources=["MCP_INTEGRATION_PLAN.md"], cleanQuestion="what is phase 1?"
+  ↓
+MCP /read tool: Fetch file (max 50KB)
+  ↓
+Gemini: RAG search + file context → Answer
+```
+
+**Test Results:**
+- Works on first try with 20KB files ✅
+- Handles large files gracefully (truncation) ✅
+- Preserves RAG-only queries ✅
+
+### 🔄 In Progress:
+
+**@ Autocomplete UI**
+- Show dropdown when user types `@`
+- List available .md files from `/docs` folder
+- Keyboard navigation (↑↓ to select, Enter to insert)
+- Click to insert filename
+
+### 📋 Next Up:
+
+1. **Autocomplete Implementation** (Next task)
+   - API endpoint: `GET /api/mcp/resources` → list `/docs` files
+   - Update `RagCellForm` component with autocomplete logic
+   - UI dropdown with file suggestions
+
+2. **/ Tools Implementation** (After autocomplete)
+   - Implement actual tool handlers (obecnie tylko definicje)
+   - `/utworz` - Generate test JSON
+   - Handle Gemini function calling responses
+
+3. **User Materials Integration** (Future)
+   - Move from `/docs` to user-uploaded `materials` table
+   - File size validation on upload
+   - Graceful error handling for oversized context
+
+### 🐛 Known Issues:
+
+1. **File Size** - Need user-facing limits when materials come from DB
+2. **Tool Execution** - `/` tools defined but not implemented
+3. **Cell Persistence** - Response persistence not yet implemented
 
 ---
 
@@ -164,6 +226,234 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
 - ✅ Multi-file RAG queries
 - ✅ Combined tool execution
 - ✅ Tool result persistence
+
+---
+
+## 📝 Feature Deep Dive: @ Autocomplete
+
+**Priority**: High (Next task after current MVP)
+**Estimated Time**: 2-3 hours
+**Status**: Not started
+
+### User Experience:
+
+```
+User types: "@"
+  ↓
+Dropdown appears with list:
+┌─────────────────────────────┐
+│ 📄 MCP_INTEGRATION_PLAN.md  │
+│ 📄 Anatomia.md              │
+│ 📄 Fizjologia.md            │
+│ 📄 Biochemia_z_Biofizyka.md │
+│ ... (10 more files)         │
+└─────────────────────────────┘
+
+User types: "@mcp"
+  ↓
+Filtered dropdown:
+┌─────────────────────────────┐
+│ 📄 MCP_INTEGRATION_PLAN.md  │ ← Highlighted
+└─────────────────────────────┘
+
+User presses ↓ or clicks → Inserts "@MCP_INTEGRATION_PLAN.md "
+```
+
+### Implementation Plan:
+
+**1. Backend: Resource List API**
+
+Create `GET /api/mcp/resources` endpoint:
+
+```typescript
+// src/app/api/mcp/resources/route.ts
+import { NextResponse } from 'next/server';
+import { readdir } from 'fs/promises';
+import { join } from 'path';
+
+export async function GET() {
+  try {
+    const docsPath = join(process.cwd(), 'docs');
+    const files = await readdir(docsPath);
+
+    const mdFiles = files
+      .filter(f => f.endsWith('.md'))
+      .map(f => ({
+        name: f,
+        displayName: f.replace('.md', '').replace(/_/g, ' ')
+      }));
+
+    return NextResponse.json({ resources: mdFiles });
+  } catch (error) {
+    return NextResponse.json({ resources: [] });
+  }
+}
+```
+
+**2. Frontend: Autocomplete Hook**
+
+Create `useResourceAutocomplete` hook:
+
+```typescript
+// src/hooks/useResourceAutocomplete.ts
+import { useState, useEffect } from 'react';
+
+interface Resource {
+  name: string;
+  displayName: string;
+}
+
+export function useResourceAutocomplete() {
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchResources() {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/mcp/resources');
+        const data = await res.json();
+        setResources(data.resources || []);
+      } catch (error) {
+        console.error('Failed to fetch resources:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchResources();
+  }, []);
+
+  return { resources, loading };
+}
+```
+
+**3. Frontend: Autocomplete Component**
+
+Update `RagCellForm` with autocomplete logic:
+
+```typescript
+// In RagCellForm component:
+const [showAutocomplete, setShowAutocomplete] = useState(false);
+const [autocompleteQuery, setAutocompleteQuery] = useState('');
+const [selectedIndex, setSelectedIndex] = useState(0);
+const { resources } = useResourceAutocomplete();
+
+// Detect @ character
+const handleInputChange = (e) => {
+  const value = e.target.value;
+  const cursorPos = e.target.selectionStart;
+
+  // Find last @ before cursor
+  const textBeforeCursor = value.substring(0, cursorPos);
+  const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+
+  if (lastAtIndex !== -1) {
+    const query = textBeforeCursor.substring(lastAtIndex + 1);
+    // Check if still typing (no space after @)
+    if (!query.includes(' ')) {
+      setAutocompleteQuery(query);
+      setShowAutocomplete(true);
+      return;
+    }
+  }
+
+  setShowAutocomplete(false);
+};
+
+// Filter resources
+const filteredResources = resources.filter(r =>
+  r.name.toLowerCase().includes(autocompleteQuery.toLowerCase())
+);
+
+// Keyboard navigation
+const handleKeyDown = (e) => {
+  if (!showAutocomplete) return;
+
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    setSelectedIndex(i => Math.min(i + 1, filteredResources.length - 1));
+  } else if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    setSelectedIndex(i => Math.max(i - 1, 0));
+  } else if (e.key === 'Enter' && filteredResources.length > 0) {
+    e.preventDefault();
+    insertResource(filteredResources[selectedIndex].name);
+  } else if (e.key === 'Escape') {
+    setShowAutocomplete(false);
+  }
+};
+
+// Insert selected resource
+const insertResource = (filename) => {
+  const input = inputRef.current;
+  const cursorPos = input.selectionStart;
+  const value = input.value;
+
+  // Find @ position
+  const textBefore = value.substring(0, cursorPos);
+  const atIndex = textBefore.lastIndexOf('@');
+
+  // Replace @query with @filename
+  const newValue =
+    value.substring(0, atIndex) +
+    `@${filename} ` +
+    value.substring(cursorPos);
+
+  input.value = newValue;
+  input.focus();
+  setShowAutocomplete(false);
+};
+```
+
+**4. UI Component**
+
+```tsx
+{showAutocomplete && filteredResources.length > 0 && (
+  <div className="absolute z-50 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-64 overflow-y-auto">
+    {filteredResources.map((resource, index) => (
+      <button
+        key={resource.name}
+        onClick={() => insertResource(resource.name)}
+        className={cn(
+          "w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center gap-2",
+          index === selectedIndex && "bg-blue-50"
+        )}
+      >
+        <span>📄</span>
+        <span className="font-medium">{resource.name}</span>
+      </button>
+    ))}
+  </div>
+)}
+```
+
+### Edge Cases to Handle:
+
+1. **Multiple @ symbols**: Only show autocomplete for the @ closest to cursor
+2. **@ in middle of text**: Position dropdown relative to @ position
+3. **No matches**: Show "No files found" message
+4. **Loading state**: Show skeleton while fetching resources
+5. **Mobile**: Touch-friendly dropdown size
+6. **Accessibility**: ARIA labels, keyboard navigation
+
+### Testing Checklist:
+
+- [ ] Type `@` → dropdown appears
+- [ ] Type `@mcp` → filtered to MCP_INTEGRATION_PLAN.md
+- [ ] Arrow keys navigate dropdown
+- [ ] Enter inserts selected file
+- [ ] Click inserts file
+- [ ] Escape closes dropdown
+- [ ] Multiple `@` in text works correctly
+- [ ] Works on mobile
+
+### Future Enhancements:
+
+1. **Recently used**: Show recently used files first
+2. **File preview**: Hover shows first 3 lines
+3. **File icons**: Different icons for .md, .pdf, .txt
+4. **Fuzzy search**: Match "mcp" to "MCP_INTEGRATION_PLAN.md"
+5. **Categories**: Group by file type or subject
 
 ---
 
