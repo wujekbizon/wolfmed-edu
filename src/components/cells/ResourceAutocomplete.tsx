@@ -1,7 +1,4 @@
-interface Resource {
-  name: string;
-  displayName: string;
-}
+import type { Resource } from '@/types/resourceTypes';
 
 interface ResourceAutocompleteProps {
   resources: Resource[];
@@ -54,8 +51,17 @@ export function ResourceAutocomplete({
             }
           `}
         >
-          <span className="font-medium text-zinc-900">{resource.name}</span>
-          <span className="text-sm text-zinc-500">Zasób</span>
+          <div className="flex items-center gap-2">
+            {resource.icon && <span>{resource.icon}</span>}
+            <span className="font-medium text-zinc-900">{resource.displayName}</span>
+          </div>
+          <span className="text-sm text-zinc-500">
+            {resource.type === 'doc'
+              ? 'Dokument'
+              : resource.type === 'note'
+                ? 'Notatka'
+                : 'Materiał'}
+          </span>
         </button>
       ))}
     </div>

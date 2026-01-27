@@ -1,9 +1,5 @@
 import { useRef, useState } from 'react';
-
-interface Resource {
-  name: string;
-  displayName: string;
-}
+import type { Resource } from '@/types/resourceTypes';
 
 export function useResourceAutocompleteInput(resources: Resource[]) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -12,6 +8,7 @@ export function useResourceAutocompleteInput(resources: Resource[]) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const filteredResources = resources.filter((r) =>
+    r.displayName.toLowerCase().includes(autocompleteQuery.toLowerCase()) ||
     r.name.toLowerCase().includes(autocompleteQuery.toLowerCase())
   );
 
