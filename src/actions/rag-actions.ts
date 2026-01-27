@@ -63,11 +63,6 @@ export async function askRagQuestion(
           })
         )
         additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
-        console.log('[RAG Action] Fetched resources:', {
-          resourceCount: resources.length,
-          totalContextLength: additionalContext.length,
-          resourceLengths: resourceResults.map(r => r.length)
-        })
       } catch (error) {
         console.error('Failed to fetch resources:', error)
       }
