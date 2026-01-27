@@ -7,6 +7,51 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch } from '@/server/google-rag'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
+import { getNoteById } from '@/server/queries'
+import type { Resource } from '@/types/resourceTypes'
+
+async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/mcp/resources`)
+    const data = await response.json()
+
+    if (data.error || !data.resources) {
+      return null
+    }
+
+    const resource = data.resources.find((r: Resource) =>
+      r.displayName.toLowerCase() === displayName.toLowerCase()
+    )
+
+    return resource ? resource.name : null
+  } catch (error) {
+    console.error('Failed to resolve displayName to URI:', error)
+    return null
+  }
+}
+
+async function fetchResourceContent(uri: string, userId: string): Promise<string> {
+  if (uri.startsWith('note://')) {
+    const noteId = uri.replace('note://', '')
+    const note = await getNoteById(noteId, userId)
+    return note ? `# ${note.title}\n\n${note.body}` : ''
+  }
+
+  if (uri.startsWith('material://')) {
+    const materialId = uri.replace('material://', '')
+    return `[Material ${materialId} - content fetching not yet implemented]`
+  }
+
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+  const response = await fetch(`${baseUrl}/api/mcp`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ tool: 'read', args: { filename: uri } }),
+  })
+  const data = await response.json()
+  return data.content?.[0]?.text || ''
+}
 
 export async function askRagQuestion(
   formState: FormState,
@@ -50,19 +95,23 @@ export async function askRagQuestion(
     let additionalContext = ''
     if (resources.length > 0) {
       try {
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-        const resourceResults = await Promise.all(
-          resources.map(async (filename) => {
-            const response = await fetch(`${baseUrl}/api/mcp`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ tool: 'read', args: { filename } }),
-            })
-            const data = await response.json()
-            return data.content?.[0]?.text || ''
+        const resolvedUris = await Promise.all(
+          resources.map(async (displayName) => {
+            const uri = await resolveDisplayNameToUri(displayName, userId)
+            return uri ? { displayName, uri } : null
           })
         )
-        additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
+
+        const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
+
+        if (validResources.length > 0) {
+          const resourceResults = await Promise.all(
+            validResources.map(async ({ uri }) => {
+              return await fetchResourceContent(uri, userId)
+            })
+          )
+          additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
+        }
       } catch (error) {
         console.error('Failed to fetch resources:', error)
       }

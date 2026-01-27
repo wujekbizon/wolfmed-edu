@@ -45,14 +45,14 @@ export function useResourceAutocompleteInput(resources: Resource[]) {
       e.preventDefault();
       const selected = filteredResources[selectedIndex];
       if (selected) {
-        insertResource(selected.name);
+        insertResource(selected.displayName);
       }
     } else if (e.key === 'Escape') {
       setShowAutocomplete(false);
     }
   };
 
-  const insertResource = (filename: string) => {
+  const insertResource = (displayName: string) => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -63,10 +63,10 @@ export function useResourceAutocompleteInput(resources: Resource[]) {
     const atIndex = textBefore.lastIndexOf('@');
 
     const newValue =
-      value.substring(0, atIndex) + `@${filename} ` + value.substring(cursorPos);
+      value.substring(0, atIndex) + `@${displayName} ` + value.substring(cursorPos);
 
     textarea.value = newValue;
-    const newCursorPos = atIndex + filename.length + 2;
+    const newCursorPos = atIndex + displayName.length + 2;
     textarea.setSelectionRange(newCursorPos, newCursorPos);
     textarea.focus();
     setShowAutocomplete(false);

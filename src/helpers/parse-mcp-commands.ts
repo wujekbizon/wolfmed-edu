@@ -8,12 +8,12 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
   const resources: string[] = [];
   const tools: string[] = [];
 
-  const resourcePattern = /@([\w-]+\.(?:md|pdf|txt))/gi;
+  const resourcePattern = /@([\w\s-]+)/gi;
   let match;
 
   while ((match = resourcePattern.exec(input)) !== null) {
     if (match[1]) {
-      resources.push(match[1]);
+      resources.push(match[1].trim());
     }
   }
 

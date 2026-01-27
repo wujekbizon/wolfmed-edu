@@ -3,7 +3,7 @@ import type { Resource } from '@/types/resourceTypes';
 interface ResourceAutocompleteProps {
   resources: Resource[];
   selectedIndex: number;
-  onSelect: (filename: string) => void;
+  onSelect: (displayName: string) => void;
   loading?: boolean;
 }
 
@@ -39,7 +39,7 @@ export function ResourceAutocomplete({
         <button
           key={resource.name}
           type="button"
-          onClick={() => onSelect(resource.name)}
+          onClick={() => onSelect(resource.displayName)}
           className={`
             w-full px-4 py-3 flex items-center justify-between
             transition-colors border-b last:border-b-0
