@@ -22,6 +22,7 @@ class WolfmedMcpServer {
       {
         capabilities: {
           tools: {},
+          resources: {},
         },
       }
     );
