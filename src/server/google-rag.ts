@@ -164,6 +164,14 @@ export async function queryWithFileSearch(
       }
     })
 
+    console.log('[RAG] Gemini response received:', {
+      hasText: !!response.text,
+      textLength: response.text?.length || 0,
+      hasFunctionCalls: !!response.functionCalls,
+      candidates: response.candidates?.length || 0,
+      finishReason: response.candidates?.[0]?.finishReason
+    })
+
     const answer = response.text || ''
 
     if (!answer) {
