@@ -4,6 +4,7 @@ import XIcon from '@/components/icons/XIcon'
 import { navLinks } from '@/constants/navLinks'
 import Image from 'next/image'
 import Link from 'next/link'
+import CookieSettingsButton from './cookies/CookieSettingsButton'
 
 export default function Footer() {
   return (
@@ -55,6 +56,9 @@ export default function Footer() {
                 <Link href="/polityka-prywatnosci" className="hover:text-red-500 transition-colors">
                   Polityka Prywatności
                 </Link>
+              </li>
+              <li>
+                <CookieSettingsButton />
               </li>
             </ul>
           </div>
