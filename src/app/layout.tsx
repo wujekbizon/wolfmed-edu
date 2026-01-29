@@ -11,6 +11,7 @@ import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
 import ConditionalGoogleAnalytics from './_components/ConditionalGoogleAnalytics'
 import { CookieConsentBanner } from './_components/cookies'
 import GoogleAnalytics from './_components/GoogleAnalytics';
+import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -62,9 +63,10 @@ export default function RootLayout({
       <html lang="pl">
         <head>
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
+          <GoogleAnalytics />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-          <GoogleAnalytics />
+        <GoogleAnalyticsNoscript/>
           <main>
             <Providers>
               <Navbar />
