@@ -1,3 +1,4 @@
+import CourseLibraryIcon from '@/components/icons/CoursesLibraryIcon'
 import DashboardIcon from '@/components/icons/DashboardIcon'
 import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
@@ -10,6 +11,11 @@ export const sideMenuNavigationLinks = [
     url: '/panel',
     label: 'Panel Użytkownika',
     icon: <UserProfileIcon width={26} height={26} />,
+  },
+  {
+    url: '/panel/kursy',
+    label: 'Dostępne Kursy',
+    icon: <CourseLibraryIcon width={26} height={26} />,
   },
   {
     url: '/panel/testy',

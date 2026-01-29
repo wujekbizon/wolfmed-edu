@@ -6,9 +6,12 @@ import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
 export default async function TestsCategoryCard({ item }: { item: PopulatedCategories }) {
   const categoryData = item.data || DEFAULT_CATEGORY_METADATA;
   const isCustomCategory = !item.data;
+  const isLocked = item.hasAccess === false;
 
   return (
-    <div className="relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 transition-all duration-300 opacity-95 hover:opacity-100 overflow-hidden">
+    <div className={`relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 transition-all duration-300 overflow-hidden ${
+      isLocked ? 'opacity-50 cursor-not-allowed' : 'opacity-95 hover:opacity-100'
+    }`}>
       <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
         {categoryData.image ? (
           <Image
@@ -77,7 +80,16 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
         </div>
 
         <div className="w-full border border-zinc-600 rounded-lg bg-slate-950 p-3 sm:p-4">
-          <StartTestForm category={item} />
+          {isLocked ? (
+            <div className="flex flex-col items-center justify-center py-4 gap-2">
+              <div className="text-4xl">🔒</div>
+              <p className="text-zinc-400 text-center font-medium">
+                {item.lockedReason || 'Wymagane zakupienie kursu'}
+              </p>
+            </div>
+          ) : (
+            <StartTestForm category={item} />
+          )}
         </div>
       </div>
     </div>
