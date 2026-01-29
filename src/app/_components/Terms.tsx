@@ -4,19 +4,27 @@ export default function Terms() {
   return (
     <div className="h-full w-full max-w-4xl mx-auto bg-white flex flex-col p-4 sm:p-8 md:p-12 gap-4 rounded-2xl px-4 mb-8">
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
-        Witamy w Wolfmed Edukacja. Niniejsza strona wyjaśnia nasze zasady korzystania z aplikacji. Korzystając z Wolfmed
+        Witamy w Wolfmed Edukacja. Niniejsza strona wyjaśnia nasze zasady korzystania z platformy. Korzystając z Wolfmed
         Edukacja, zgadzasz się na wszystkie zasady zawarte na tej stronie. Część z nich musi być sformułowana w języku
         prawnym, ale dołożyliśmy wszelkich starań, aby przedstawić jasne i proste wyjaśnienia dotyczące ich znaczenia.
       </p>
+
+      <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">O platformie</h2>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
+        Wolfmed Edukacja to platforma edukacyjna oferująca kursy i materiały dla osób przygotowujących się do egzaminów
+        zawodowych w branży medycznej. Oferujemy kursy z zakresu opiekuna medycznego, pielęgniarstwa oraz innych
+        specjalizacji medycznych. Dostęp do kursów wymaga zakupu odpowiedniego pakietu.
+      </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Tworzenie konta</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Aby zarejestrować konto w Wolfmed Edukacja, musisz mieć co najmniej 18 lat. Jesteś odpowiedzialny za swoje konto
         oraz wszystkie działania na nim. Możesz przeglądać Wolfmed Edukacja bez rejestracji, ale aby skorzystać z
-        większości dostępnych funkcji, musisz założyć konto, podać ważny adres email i ustawić hasło. Informacje, które
-        nam podajesz, muszą być dokładne i pełne. Nie możesz podszywać się pod nikogo innego ani wybierać obraźliwych
-        nazw, które naruszają czyjeś prawa. Jeśli nie przestrzegasz tych zasad, możemy anulować twoje konto. Jesteś
-        odpowiedzialny za wszystkie działania na swoim koncie oraz za zachowanie poufności swojego hasła. Jeśli dowiesz
-        się, że ktoś użył twojego konta bez twojej zgody, powinieneś zgłosić to na adres{' '}
+        większości dostępnych funkcji i zakupić kursy, musisz założyć konto, podać ważny adres email i ustawić hasło.
+        Informacje, które nam podajesz, muszą być dokładne i pełne. Nie możesz podszywać się pod nikogo innego ani
+        wybierać obraźliwych nazw, które naruszają czyjeś prawa. Jeśli nie przestrzegasz tych zasad, możemy anulować
+        twoje konto. Jesteś odpowiedzialny za wszystkie działania na swoim koncie oraz za zachowanie poufności swojego
+        hasła. Jeśli dowiesz się, że ktoś użył twojego konta bez twojej zgody, powinieneś zgłosić to na adres{' '}
         <Link
           href="mailto:wolfmededu@gmail.com"
           target="_blank"
@@ -25,6 +33,7 @@ export default function Terms() {
           wolfmededu@gmail.com
         </Link>
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Zasady, których należy unikać</h2>
       <ul className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 flex flex-col gap-4">
         Wiele osób korzysta z Wolfmed Edukacja. Oczekujemy, że wszyscy będą się zachowywać odpowiedzialnie i pomogą
@@ -46,10 +55,11 @@ export default function Terms() {
           zniesławiających lub jakichkolwiek innych, które mogą naruszać prywatność lub prawa innych osób.
         </li>
         <li className="list-disc mx-8">
-          Nie oferuj zabronionych treści. Aplikacja Wolfmed Edukacja nie obsługuje nagród ani sprzedaży przedmiotów.
-          Zabronione jest publikowanie treści, które naruszają zasady naszej aplikacji lub obowiązujące przepisy prawne.
+          Nie udostępniaj zakupionych treści. Zakupione kursy i materiały są przeznaczone wyłącznie do osobistego
+          użytku. Zabronione jest udostępnianie, kopiowanie lub rozpowszechnianie treści kursów innym osobom.
         </li>
       </ul>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">
         Rzeczy, których nie robimy i za które nie ponosimy odpowiedzialności
       </h2>
@@ -59,16 +69,32 @@ export default function Terms() {
         z użytkowaniem naszych usług. Korzystanie z aplikacji odbywa się na własne ryzyko użytkownika, a wszelkie
         treści, które przeglądasz, są wyłącznie na Twoją odpowiedzialność.
       </p>
-      <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Opłaty</h2>
+
+      <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Opłaty i płatności</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
-        Korzystanie z aplikacji Wolfmed Edukacja jest obecnie całkowicie bezpłatne, a my nie pobieramy żadnych prowizji.
-        Liczymy na dobrowolne wsparcie w postaci donacji. Nasz partner płatniczy, Stripe, pobiera prowizję za
-        przetwarzanie płatności, która jest już wliczona w proponowane kwoty wsparcia wynoszące 49,99 zł lub 14,99 zł.
+        Wolfmed Edukacja oferuje płatne kursy edukacyjne. Ceny poszczególnych kursów są wyświetlane na stronie przed
+        dokonaniem zakupu. Płatności są przetwarzane przez naszego partnera płatniczego Stripe, który akceptuje płatności
+        kartą oraz BLIK.
       </p>
-      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
-        W przyszłości, w zależności od liczby użytkowników oraz obciążenia naszych darmowych serwerów i usług, możemy
-        być zmuszeni wprowadzić płatną subskrypcję lub zamknąć aplikację, jeśli dalsze utrzymanie okaże się niemożliwe.
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Po dokonaniu zakupu otrzymujesz dostęp do wybranego kursu na czas nieokreślony, pod warunkiem posiadania
+        aktywnego konta. Zastrzegamy sobie prawo do zmiany cen kursów, przy czym zmiana ceny nie wpływa na już zakupione
+        kursy.
       </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        <strong>Polityka zwrotów:</strong> Ze względu na cyfrowy charakter naszych produktów, zwroty są możliwe tylko w
+        uzasadnionych przypadkach i w ciągu 14 dni od zakupu, jeśli użytkownik nie rozpoczął korzystania z kursu.
+        Prosimy o kontakt pod adresem{' '}
+        <Link
+          href="mailto:wolfmededu@gmail.com"
+          target="_blank"
+          className="hover:text-red-500 transition-colors text-blue-400"
+        >
+          wolfmededu@gmail.com
+        </Link>{' '}
+        w celu rozpatrzenia wniosku o zwrot.
+      </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">
         O innych stronach internetowych i linkach
       </h2>
@@ -78,23 +104,42 @@ export default function Terms() {
         również pojawiać się w postach i artykułach na naszym blogu. Naszym partnerem do przetwarzania płatności jest
         Stripe, a korzystanie z płatności wiąże się z akceptacją warunków operatora.
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Prawa własności intelektualnej</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
-        Wszystkie testy oraz materiały edukacyjne udostępniane w aplikacji są oparte na programie nauczania MED-14:
-        &quot;Świadczenie usług medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej&quot;. Materiały
-        te są dostępne publicznie, dlatego użytkownicy mogą je wykorzystywać do własnego użytku edukacyjnego, jednakże
-        wszelkie ich rozpowszechnianie lub kopiowanie poza platformą Wolfmed Edukacja wymaga przestrzegania zasad prawa
-        autorskiego. Zastrzegamy sobie prawo do ograniczenia lub cofnięcia dostępu do treści w przypadku ich
-        niewłaściwego wykorzystania.
+        Wszystkie kursy, testy oraz materiały edukacyjne udostępniane w aplikacji są własnością Wolfmed Edukacja lub są
+        wykorzystywane na podstawie odpowiednich licencji. Oferujemy kursy z różnych dziedzin medycznych, w tym:
       </p>
+      <ul className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 flex flex-col gap-2 mt-3">
+        <li className="list-disc mx-8">
+          <strong>Opiekun medyczny (MED-14)</strong> – kursy oparte na programie nauczania „Świadczenie usług
+          medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej"
+        </li>
+        <li className="list-disc mx-8">
+          <strong>Pielęgniarstwo</strong> – materiały dla przyszłych pielęgniarek i pielęgniarzy
+        </li>
+        <li className="list-disc mx-8">
+          <strong>Inne specjalizacje</strong> – dodatkowe kursy medyczne (lista może się rozszerzać)
+        </li>
+      </ul>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Zakupione materiały są przeznaczone wyłącznie do osobistego użytku edukacyjnego. Wszelkie rozpowszechnianie,
+        kopiowanie lub udostępnianie treści kursów bez zgody Wolfmed Edukacja jest zabronione i może skutkować
+        zablokowaniem konta oraz podjęciem kroków prawnych.
+      </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Usunięcie konta</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Możesz zaprzestać korzystania z naszej aplikacji i usunąć swoje konto samodzielnie. W tym celu wystarczy kliknąć
         na zdjęcie swojego avatara w górnym rogu, otworzyć panel klienta oferowany przez Clerk, przejść do zakładki
-        „Zarządzaj kontem”, a następnie do sekcji „Bezpieczeństwo”. Tam możesz całkowicie usunąć swoje konto, co
+        „Zarządzaj kontem", a następnie do sekcji „Bezpieczeństwo". Tam możesz całkowicie usunąć swoje konto, co
         spowoduje usunięcie wszystkich stworzonych testów, całkowitego postępu w aplikacji oraz danych rejestracyjnych,
-        takich jak email i hasło, które zostaną usunięte również z bazy Clerk. W razie jakichkolwiek problemów możesz
-        skontaktować się z naszym zespołem pod adresem{' '}
+        takich jak email i hasło, które zostaną usunięte również z bazy Clerk.
+      </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        <strong>Uwaga:</strong> Usunięcie konta oznacza utratę dostępu do wszystkich zakupionych kursów. Historia
+        transakcji będzie przechowywana zgodnie z wymogami prawnymi. W razie jakichkolwiek problemów możesz skontaktować
+        się z naszym zespołem pod adresem{' '}
         <Link
           href="mailto:wolfmededu@gmail.com"
           target="_blank"
@@ -103,6 +148,7 @@ export default function Terms() {
           wolfmededu@gmail.com
         </Link>
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Odpowiedzialność Odszkodowawcza</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Zgadzasz się chronić Wolfmed Edukacja oraz naszych pracowników i partnerów przed wszelkimi roszczeniami,
@@ -110,12 +156,14 @@ export default function Terms() {
         Zastrzegamy sobie prawo do przejęcia obrony w sprawach, w których zgodziłeś się nas zabezpieczyć, a Ty
         zobowiązujesz się współpracować z nami w razie potrzeby.
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Rozwiązywanie Sporów</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Zachęcamy do kontaktu z Wolfmed Edukacja, jeśli masz jakiekolwiek problemy, zanim zdecydujesz się na działania
         prawne. W przypadku, gdy sprawa wymaga podjęcia kroków prawnych, te warunki będą regulowane przez przepisy prawa
         obowiązujące w Polsce, bez wpływu na zasady kolizji praw.
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Umowa między Tobą a Nami</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Niniejsze Warunki stanowią całość umowy między Tobą a Wolfmed Edukacja w odniesieniu do naszych usług. Zastępują
@@ -123,6 +171,7 @@ export default function Terms() {
         Warunków zostanie uznane za nieważne przez sąd, pozostałe postanowienia pozostaną w mocy. Niepodjęcie przez
         Wolfmed Edukacja żadnych działań w celu egzekwowania swoich praw nie oznacza rezygnacji z tych praw.
       </p>
+
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Różne postanowienia</h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Możemy modyfikować lub zaprzestać świadczenia usług w dowolnym momencie według własnego uznania. Zgadzasz się,
@@ -132,6 +181,10 @@ export default function Terms() {
         zgłoszone w ciągu jednego (1) roku od powstania przyczyny roszczenia, w przeciwnym razie roszczenie to jest na
         zawsze wykluczone.
       </p>
+
+      <div className="mt-8 pt-6 border-t border-zinc-200 text-sm text-zinc-500">
+        <p>Ostatnia aktualizacja: Styczeń 2026</p>
+      </div>
     </div>
   )
 }

@@ -8,8 +8,8 @@ import Navbar from './_components/Navbar'
 import Providers from './providers'
 import ToastProvider from './_components/ToastProvider'
 import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
-import GoogleAnalytics from './_components/GoogleAnalytics'
-import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript'
+import ConditionalGoogleAnalytics from './_components/ConditionalGoogleAnalytics'
+import { CookieConsentBanner } from './_components/cookies'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -61,16 +61,16 @@ export default function RootLayout({
       <html lang="pl">
         <head>
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
-          <GoogleAnalytics />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-          <GoogleAnalyticsNoscript />
+          <ConditionalGoogleAnalytics />
           <main>
             <Providers>
               <Navbar />
               <ToastProvider>{children}</ToastProvider>
             </Providers>
           </main>
+          <CookieConsentBanner />
         </body>
       </html>
     </ClerkProviderWrapper>
