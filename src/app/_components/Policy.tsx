@@ -77,7 +77,7 @@ export default function Policy() {
         zamówienia i zapewnienia dostępu do zakupionych treści.
       </p>
       <p className="text-base xs:text-lg text-zinc-800 mt-3">
-        Aktualnie oferujemy kursy z zakresu: opiekuna medycznego (MED-14), pielęgniarstwa oraz inne specjalistyczne
+        Aktualnie oferujemy kursy z zakresu: opiekuna medycznego, pielęgniarstwa oraz inne specjalistyczne
         kursy medyczne. Lista dostępnych kursów może się zmieniać.
       </p>
 
@@ -209,7 +209,7 @@ export default function Policy() {
         >
           wolfmededu@gmail.com
         </Link>
-        . Odpowiemy na Twoje żądanie w ciągu 30 dni.
+        . Odpowiemy na Twoje żądanie w ciągu miesiąca.
       </p>
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Prawo do skargi</h2>

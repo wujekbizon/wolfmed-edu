@@ -1,5 +1,5 @@
 export const COOKIE_CONSENT_KEY = 'wolfmed_cookie_consent'
-export const COOKIE_CONSENT_DURATION_DAYS = 180 // 6 months
+export const COOKIE_CONSENT_DURATION_DAYS = 180
 
 export type CookieCategory = 'necessary' | 'performance'
 
