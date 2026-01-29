@@ -3,7 +3,6 @@ import Link from 'next/link'
 export default function Policy() {
   return (
     <div className="h-full w-full max-w-4xl mx-auto bg-white flex flex-col p-4 sm:p-8 md:p-12 gap-4 rounded-2xl px-4 mb-8">
-      {/* Data Controller Section - RODO Art. 13 */}
       <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-6 mb-6">
         <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mb-4">Administrator Danych Osobowych</h2>
         <p className="text-base xs:text-lg text-zinc-800 mb-2">
@@ -25,7 +24,7 @@ export default function Policy() {
         <p className="text-sm text-zinc-600 mt-4">
           W sprawach związanych z ochroną danych osobowych możesz kontaktować się z nami pod powyższym adresem e-mail.
         </p>
-      </div>
+    </div>
 
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
         Wolfmed Edukacja to innowacyjna platforma edukacyjna, która oferuje kursy i testy medyczne dedykowane przyszłym
