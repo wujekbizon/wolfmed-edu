@@ -10,6 +10,7 @@ import ToastProvider from './_components/ToastProvider'
 import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
 import ConditionalGoogleAnalytics from './_components/ConditionalGoogleAnalytics'
 import { CookieConsentBanner } from './_components/cookies'
+import GoogleAnalytics from './_components/GoogleAnalytics';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -63,7 +64,7 @@ export default function RootLayout({
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-          <ConditionalGoogleAnalytics />
+          <GoogleAnalytics />
           <main>
             <Providers>
               <Navbar />

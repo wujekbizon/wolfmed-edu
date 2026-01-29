@@ -24,7 +24,7 @@ export default function CookieDetails() {
         >
           <span className="relative z-10">Deklaracja cookies</span>
           {activeTab === 'declaration' && (
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-800 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-zinc-800 to-transparent" />
           )}
         </button>
         <button
@@ -36,11 +36,11 @@ export default function CookieDetails() {
         >
           <span className="relative z-10">O cookies</span>
           {activeTab === 'about' && (
-            <div className="absolute inset-0 bg-gradient-to-l from-zinc-800 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-l from-zinc-800 to-transparent" />
           )}
         </button>
         <div
-          className="absolute bottom-0 left-0 h-[1px] bg-[#f58a8a] transition-all duration-300 ease-out"
+          className="absolute bottom-0 left-0 h-px bg-[#f58a8a] transition-all duration-300 ease-out"
           style={{
             width: '50%',
             transform: activeTab === 'about' ? 'translateX(100%)' : 'translateX(0)'
@@ -63,7 +63,7 @@ export default function CookieDetails() {
                 >
                   {activeCategory === category.id ? (
                     <>
-                      <div className="absolute inset-0 bg-gradient-to-r from-zinc-700 to-zinc-800" />
+                      <div className="absolute inset-0 bg-linear-to-r from-zinc-700 to-zinc-800" />
                       <span className="relative z-10">{category.label}</span>
                     </>
                   ) : (
