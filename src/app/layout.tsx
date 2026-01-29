@@ -9,6 +9,8 @@ import Providers from './providers'
 import ToastProvider from './_components/ToastProvider'
 import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
 import { CookieConsentBanner } from './_components/cookies'
+import GoogleAnalyticsHead from './_components/GoogleAnalyticsHead'
+import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript'
 import GoogleAnalytics from './_components/GoogleAnalytics'
 
 const poppins = Poppins({
@@ -56,8 +58,10 @@ export default function RootLayout({
       <html lang="pl">
         <head>
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
+          <GoogleAnalyticsHead />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
+          <GoogleAnalyticsNoscript />
           <GoogleAnalytics />
           <main>
             <Providers>
