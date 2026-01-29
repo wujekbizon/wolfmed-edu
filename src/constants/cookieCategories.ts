@@ -1,7 +1,4 @@
-export const COOKIE_CONSENT_KEY = 'wolfmed_cookie_consent'
-export const COOKIE_CONSENT_DURATION_DAYS = 180
-
-export type CookieCategory = 'necessary' | 'performance'
+export type CookieCategory = 'necessary' | 'performance' | 'marketing'
 
 export interface CookieInfo {
   name: string
@@ -39,10 +36,22 @@ export const cookieCategories: CookieCategoryInfo[] = [
         description: 'Token klienta do zarządzania stanem logowania',
       },
       {
-        name: '__clerk_db_jwt',
+        name: '__client_uat',
         provider: 'Clerk',
+        expiration: '7 dni',
+        description: 'Token uwierzytelniania użytkownika',
+      },
+      {
+        name: '__cf_bm',
+        provider: 'Cloudflare',
+        expiration: '30 minut',
+        description: 'Ochrona przed botami i zapewnienie bezpieczeństwa',
+      },
+      {
+        name: '__cfuvid',
+        provider: 'Cloudflare',
         expiration: 'Sesja',
-        description: 'Token JWT używany podczas uwierzytelniania',
+        description: 'Identyfikator sesji dla ochrony przed botami',
       },
     ],
   },
@@ -73,16 +82,19 @@ export const cookieCategories: CookieCategoryInfo[] = [
       },
     ],
   },
+  {
+    id: 'marketing',
+    label: 'Marketingowe',
+    description:
+      'Te pliki cookie służą do śledzenia skuteczności kampanii reklamowych i personalizacji reklam. Mogą być używane przez nas lub naszych partnerów reklamowych do wyświetlania odpowiednich treści.',
+    required: false,
+    cookies: [
+      {
+        name: '_gcl_au',
+        provider: 'Google Ads',
+        expiration: '90 dni',
+        description: 'Śledzenie konwersji reklamowych i mierzenie skuteczności kampanii',
+      },
+    ],
+  },
 ]
-
-export interface CookieConsent {
-  necessary: boolean
-  performance: boolean
-  timestamp: number
-}
-
-export const defaultConsent: CookieConsent = {
-  necessary: true,
-  performance: false,
-  timestamp: 0,
-}

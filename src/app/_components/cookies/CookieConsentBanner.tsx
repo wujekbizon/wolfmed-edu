@@ -1,18 +1,43 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useCookieConsent } from '@/hooks/useCookieConsent'
+import { useCookieConsentStore } from '@/store/useCookieConsentStore'
 import { cookieCategories, CookieCategory } from '@/constants/cookieCategories'
 import CookieDetails from './CookieDetails'
 
 export default function CookieConsentBanner() {
-  const { showBanner, isLoaded, acceptAll, declineAll, savePreferences } = useCookieConsent()
+  const {
+    consent,
+    showBanner,
+    isLoaded,
+    initialize,
+    declineAll,
+    savePreferences
+  } = useCookieConsentStore()
+
   const [showDetails, setShowDetails] = useState(false)
   const [preferences, setPreferences] = useState<Record<CookieCategory, boolean>>({
     necessary: true,
     performance: false,
+    marketing: false,
   })
+
+  // Initialize store on mount
+  useEffect(() => {
+    initialize()
+  }, [initialize])
+
+  // Pre-fill preferences with current consent when banner opens
+  useEffect(() => {
+    if (showBanner && consent) {
+      setPreferences({
+        necessary: true,
+        performance: consent.performance,
+        marketing: consent.marketing,
+      })
+    }
+  }, [showBanner, consent])
 
   if (!isLoaded || !showBanner) return null
 
@@ -27,6 +52,7 @@ export default function CookieConsentBanner() {
   const handleSave = () => {
     savePreferences({
       performance: preferences.performance,
+      marketing: preferences.marketing,
     })
   }
 

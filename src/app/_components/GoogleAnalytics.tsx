@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useCallback } from 'react'
-import { COOKIE_CONSENT_KEY, CookieConsent } from '@/constants/cookieCategories'
+import { COOKIE_CONSENT_KEY, CookieConsent } from '@/store/useCookieConsentStore'
 
 // Declare gtag on window for TypeScript
 declare global {
@@ -23,17 +23,18 @@ declare global {
  * @see https://developers.google.com/tag-platform/security/guides/consent
  */
 export default function GoogleAnalytics() {
-  // Update consent state based on user choice
-  const updateConsent = useCallback((hasAnalyticsConsent: boolean) => {
+  // Update consent state based on user choices
+  const updateConsent = useCallback((hasAnalyticsConsent: boolean, hasMarketingConsent: boolean) => {
     if (typeof window.gtag !== 'function') return
 
-    const consentState = hasAnalyticsConsent ? 'granted' : 'denied'
+    const analyticsState = hasAnalyticsConsent ? 'granted' : 'denied'
+    const marketingState = hasMarketingConsent ? 'granted' : 'denied'
 
     window.gtag('consent', 'update', {
-      'ad_storage': 'denied', // We don't use ads, always denied
-      'ad_user_data': 'denied', // We don't use ads, always denied
-      'ad_personalization': 'denied', // We don't use ads, always denied
-      'analytics_storage': consentState,
+      'ad_storage': marketingState,
+      'ad_user_data': marketingState,
+      'ad_personalization': marketingState,
+      'analytics_storage': analyticsState,
     })
   }, [])
 
@@ -43,10 +44,9 @@ export default function GoogleAnalytics() {
     if (stored) {
       try {
         const consent: CookieConsent = JSON.parse(stored)
-        const hasPerformanceConsent = consent.performance === true
-        updateConsent(hasPerformanceConsent)
+        updateConsent(consent.performance === true, consent.marketing === true)
       } catch {
-        updateConsent(false)
+        updateConsent(false, false)
       }
     }
   }, [updateConsent])
