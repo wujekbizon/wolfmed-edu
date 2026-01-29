@@ -3,24 +3,17 @@ import "@excalidraw/excalidraw/index.css";
 
 
 import type { Metadata } from 'next'
-import { Open_Sans, Poppins } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import Navbar from './_components/Navbar'
 import Providers from './providers'
 import ToastProvider from './_components/ToastProvider'
 import ClerkProviderWrapper from './_components/ClerkProviderWrapper'
-import ConditionalGoogleAnalytics from './_components/ConditionalGoogleAnalytics'
 import { CookieConsentBanner } from './_components/cookies'
-import GoogleAnalytics from './_components/GoogleAnalytics';
-import GoogleAnalyticsNoscript from './_components/GoogleAnalyticsNoscript';
+import GoogleAnalytics from './_components/GoogleAnalytics'
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['200','400', '600', '800'],
-})
-
-const openSans = Open_Sans({
-  subsets: ['latin'],
-  weight: ['400', '600', '800'],
 })
 
 export const metadata: Metadata = {
@@ -63,10 +56,9 @@ export default function RootLayout({
       <html lang="pl">
         <head>
           <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
-          <GoogleAnalytics />
         </head>
         <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
-        <GoogleAnalyticsNoscript/>
+          <GoogleAnalytics />
           <main>
             <Providers>
               <Navbar />
