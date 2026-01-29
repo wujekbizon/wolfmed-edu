@@ -62,27 +62,16 @@ export default function CookieConsentBanner() {
         <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-950 to-black backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50">
          
           <div className="relative p-5 md:p-7">
-            <div className="flex items-start justify-between gap-4 mb-5">
-              <div className="flex items-center gap-3">
-                <div className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-zinc-900 border border-white/15 flex items-center justify-center">
-                  <svg className="w-5 h-5 md:w-6 md:h-6 text-[#f58a8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                  </svg>
-                </div>
-                <div>
-                  <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Prywatność i cookies</h2>
-                  <p className="text-xs md:text-sm text-zinc-400 mt-0.5">Dbamy o Twoją prywatność</p>
-                </div>
-              </div>
-              <button
-                onClick={declineAll}
-                className="shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-xl hover:bg-white/5 text-zinc-400 hover:text-white transition-all duration-200 flex items-center justify-center group"
-                aria-label="Zamknij"
-              >
-                <svg className="w-5 h-5 transition-transform group-hover:rotate-90 duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <div className="flex items-center gap-3 mb-5">
+              <div className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-zinc-900 border border-white/15 flex items-center justify-center">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-[#f58a8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
-              </button>
+              </div>
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">Prywatność i cookies</h2>
+                <p className="text-xs md:text-sm text-zinc-400 mt-0.5">Dbamy o Twoją prywatność</p>
+              </div>
             </div>
 
             <p className="text-sm md:text-base text-zinc-300 leading-relaxed mb-6">
