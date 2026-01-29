@@ -1,8 +1,280 @@
 # MCP Integration Plan - Wolfmed RAG Enhancement
 
-**Date**: 2026-01-27
+**Date**: 2026-01-29
 **Branch**: `claude/add-comment-guidelines-nWvcg`
-**Status**: Phase 1 - In Progress (@ Resources Working, Autocomplete Next)
+**Status**: ✅ @ Resources MVP Complete | ✅ Autocomplete Complete | ✅ DisplayName Resolution Complete
+
+---
+
+## 🎯 Current Implementation Status (2026-01-29)
+
+### ✅ What's Working:
+
+1. **@ Resource Commands** - Users can reference docs, notes, and materials
+   - Parser extracts `@displayName` from input (e.g., `@test`, `@anatomy`, `@MCP_INTEGRATION_PLAN`)
+   - Autocomplete dropdown shows available resources when typing `@`
+   - DisplayName → URI resolution system working
+   - Content fetching from multiple sources (docs, database notes, materials placeholder)
+
+2. **Resource Autocomplete UI**
+   - Dropdown appears when user types `@`
+   - Keyboard navigation (↑↓, Enter, Escape)
+   - Filters resources as user types
+   - Inserts user-friendly displayName (not ugly URI)
+   - Polish language, zinc theme styling
+
+3. **MCP Server Foundation**
+   - HTTP-based MCP server at `/api/mcp`
+   - `/read` tool for fetching markdown files from `/docs` folder
+   - Resources API at `/api/mcp/resources`
+   - 50KB file size truncation limit
+
+4. **Database Integration**
+   - User notes fetched from database (`getNoteById`)
+   - Materials listed in autocomplete (content fetch placeholder)
+   - Proper user authentication and authorization
+
+### 🚧 What Needs Work:
+
+1. **Material Content Fetching** - Placeholder exists, needs PDF/file content extraction
+2. **/ Tool Implementations** - Definitions exist but no actual execution logic
+3. **Cell Persistence** - Response saving not yet implemented
+4. **Error Handling** - Need better UX for failed resource resolution
+
+---
+
+## 🏗️ Architecture Overview
+
+### Data Flow Diagram:
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                          USER INTERFACE                                  │
+│                                                                          │
+│  RagCellForm (src/components/cells/RagCellForm.tsx)                    │
+│  ┌────────────────────────────────────────────────────────┐            │
+│  │ Textarea: "explain heart @test /utworz"                 │            │
+│  │                                                          │            │
+│  │ [ResourceAutocomplete] ← Shows when user types @       │            │
+│  │  ┌─────────────────────────────────────┐              │            │
+│  │  │ 📝 test (Note)                       │ ← displayName│            │
+│  │  │ 📄 MCP INTEGRATION PLAN (Document)   │              │            │
+│  │  │ 📚 anatomy (Material)                │              │            │
+│  │  └─────────────────────────────────────┘              │            │
+│  └────────────────────────────────────────────────────────┘            │
+└──────────────────────────────┬───────────────────────────────────────────┘
+                               │ Form Submit
+                               ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      SERVER ACTION LAYER                                 │
+│                                                                          │
+│  askRagQuestion (src/actions/rag-actions.ts)                           │
+│  ┌──────────────────────────────────────────────────────────┐          │
+│  │ 1. Parse: parseMcpCommands(input)                         │          │
+│  │    → cleanQuestion: "explain heart"                       │          │
+│  │    → resources: ["test"]                                  │          │
+│  │    → tools: ["utworz"]                                    │          │
+│  │                                                            │          │
+│  │ 2. Resolve: resolveDisplayNameToUri("test", userId)      │          │
+│  │    → Fetch /api/mcp/resources                             │          │
+│  │    → Match "test" → "note://06a33d39-..."                 │          │
+│  │                                                            │          │
+│  │ 3. Fetch: fetchResourceContent(uri, userId)              │          │
+│  │    → note:// → getNoteById(id, userId)                    │          │
+│  │    → material:// → [placeholder]                          │          │
+│  │    → docs:// → MCP /read tool                             │          │
+│  │                                                            │          │
+│  │ 4. Query: queryWithFileSearch(question, context, tools)  │          │
+│  │    → Send to Gemini with additional context               │          │
+│  └──────────────────────────────────────────────────────────┘          │
+└──────────────────────────────┬───────────────────────────────────────────┘
+                               │
+                               ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        RESOURCE LAYER                                    │
+│                                                                          │
+│  /api/mcp/resources (GET)                                               │
+│  ┌──────────────────────────────────────────────────────────┐          │
+│  │ Aggregates all resource types:                            │          │
+│  │                                                            │          │
+│  │ 1. MCP Docs (from /docs folder)                          │          │
+│  │    mcpServer.readResource('docs://list')                 │          │
+│  │    → Returns: [{name: "file.md", displayName: "file"}]   │          │
+│  │                                                            │          │
+│  │ 2. User Notes (from database)                            │          │
+│  │    getAllUserNotes(userId)                                │          │
+│  │    → Returns: [{name: "note://id", displayName: "test"}] │          │
+│  │                                                            │          │
+│  │ 3. User Materials (from database)                        │          │
+│  │    getMaterialsByUser(userId)                             │          │
+│  │    → Returns: [{name: "material://id", displayName: ...}]│          │
+│  └──────────────────────────────────────────────────────────┘          │
+│                                                                          │
+│  /api/mcp (POST) - MCP Tool Execution                                   │
+│  ┌──────────────────────────────────────────────────────────┐          │
+│  │ Handles tool calls:                                       │          │
+│  │ - read: Fetch file from /docs folder (50KB max)          │          │
+│  │ - [Future]: utworz, podsumuj, flashcards, etc.          │          │
+│  └──────────────────────────────────────────────────────────┘          │
+└──────────────────────────────┬───────────────────────────────────────────┘
+                               │
+                               ↓
+┌─────────────────────────────────────────────────────────────────────────┐
+│                     MCP SERVER & DATABASE                                │
+│                                                                          │
+│  MCP Server (src/server/mcp/server.ts)                                  │
+│  ┌──────────────────────────────────────────────────────────┐          │
+│  │ - listTools(): Register available tools                   │          │
+│  │ - executeTool(): Call tool implementations               │          │
+│  │ - listResources(): List available resources              │          │
+│  │ - readResource(): Read resource content                  │          │
+│  └──────────────────────────────────────────────────────────┘          │
+│                                                                          │
+│  Database Queries (src/server/queries.ts)                               │
+│  ┌──────────────────────────────────────────────────────────┐          │
+│  │ - getAllUserNotes(userId)                                 │          │
+│  │ - getNoteById(noteId, userId)                            │          │
+│  │ - getMaterialsByUser(userId)                             │          │
+│  └──────────────────────────────────────────────────────────┘          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 File Responsibilities
+
+### Frontend Layer
+
+**`src/components/cells/RagCellForm.tsx`**
+- Main RAG cell component
+- Integrates autocomplete hooks
+- Handles form submission
+- Displays RAG responses
+
+**`src/components/cells/ResourceAutocomplete.tsx`**
+- Dropdown UI component
+- Shows filtered resource list
+- Handles keyboard navigation and clicks
+- Polish language, zinc theme styling
+
+**`src/hooks/useResourceAutocomplete.ts`**
+- Fetches available resources from `/api/mcp/resources`
+- Manages loading and error states
+- Runs on component mount
+
+**`src/hooks/useResourceAutocompleteInput.ts`**
+- Handles autocomplete logic (show/hide, filtering)
+- Keyboard navigation (↑↓, Enter, Escape)
+- Inserts displayName into textarea
+- Detects @ character and manages cursor position
+
+### Server Action Layer
+
+**`src/actions/rag-actions.ts`**
+- Main server action: `askRagQuestion()`
+- Parses MCP commands from user input
+- Resolves displayName → URI
+- Fetches resource content
+- Queries Gemini RAG with context
+- Returns response with sources and tool results
+
+**`src/helpers/parse-mcp-commands.ts`**
+- Extracts @ resource references (regex: `/@([\w\s-]+)/gi`)
+- Extracts / tool commands
+- Cleans question text
+- Returns: `{ cleanQuestion, resources[], tools[] }`
+
+### API Layer
+
+**`src/app/api/mcp/route.ts`**
+- POST endpoint for MCP tool execution
+- Validates tool names and arguments
+- Calls MCP server `executeTool()`
+- Returns tool results
+
+**`src/app/api/mcp/resources/route.ts`**
+- GET endpoint for listing all available resources
+- Aggregates:
+  - MCP docs (from /docs folder)
+  - User notes (from database)
+  - User materials (from database)
+- Returns unified Resource[] array
+- Includes counts for each resource type
+
+### MCP Server Layer
+
+**`src/server/mcp/server.ts`**
+- MCP server initialization
+- Tool registry (read, etc.)
+- Resource handlers (listResources, readResource)
+- Capability declarations
+
+**`src/server/mcp/tools/read-doc.ts`**
+- Reads .md files from /docs folder
+- 50KB truncation limit
+- Error handling
+
+**`src/server/mcp/types.ts`**
+- TypeScript type definitions for MCP
+- Tool input/output types
+
+### Database Layer
+
+**`src/server/queries.ts`**
+- `getAllUserNotes(userId)` - Fetch all user notes
+- `getNoteById(noteId, userId)` - Fetch specific note with auth check
+- `getMaterialsByUser(userId)` - Fetch user materials
+
+**`src/types/resourceTypes.ts`**
+- `Resource` interface:
+  ```typescript
+  {
+    name: string;           // URI: note://id, material://id, filename.md
+    displayName: string;    // User-friendly: "test", "anatomy"
+    type: 'doc' | 'note' | 'material';
+    metadata?: {...}
+  }
+  ```
+
+---
+
+## 🔄 Complete Request Flow Example
+
+**User Action**: Types `@test` and selects from autocomplete
+
+```
+1. RagCellForm
+   ├─ User types "@t"
+   ├─ useResourceAutocompleteInput detects @
+   ├─ Shows ResourceAutocomplete dropdown
+   └─ User selects "test" → inserts "@test " into textarea
+
+2. Form Submit: "@test explain the heart"
+   ↓
+3. askRagQuestion (Server Action)
+   ├─ parseMcpCommands("@test explain the heart")
+   │  └─ Returns: { cleanQuestion: "explain the heart", resources: ["test"], tools: [] }
+   │
+   ├─ resolveDisplayNameToUri("test", userId)
+   │  ├─ Fetches /api/mcp/resources
+   │  ├─ Finds resource: { name: "note://06a33d39-...", displayName: "test", type: "note" }
+   │  └─ Returns: "note://06a33d39-..."
+   │
+   ├─ fetchResourceContent("note://06a33d39-...", userId)
+   │  ├─ Detects note:// URI scheme
+   │  ├─ Calls getNoteById("06a33d39-...", userId)
+   │  └─ Returns: "# test\n\nThis is my note content about the heart..."
+   │
+   ├─ queryWithFileSearch(
+   │    cleanQuestion: "explain the heart",
+   │    context: "# test\n\nThis is my note content..."
+   │  )
+   │  └─ Sends to Gemini with additional context
+   │
+   └─ Returns FormState with answer and sources
+
+4. RagCellForm displays response to user
+```
 
 ---
 
@@ -84,65 +356,41 @@ User Input: "@anatomy.pdf explain cardiac cycle /utworz"
 
 ---
 
-## 🚀 Current Implementation Status
+## 📋 Next Steps & Roadmap
 
-### ✅ Completed (2026-01-27):
+### 🎯 Immediate Next Tasks:
 
-**@ Resources - MVP Working**
-- ✅ Parser extracts `@filename.md` from input
-- ✅ MCP `/read` tool fetches file from `/docs` folder
-- ✅ HTTP-based MCP server (`/api/mcp`)
-- ✅ File content injected as context to Gemini
-- ✅ 50KB file size limit (prevents Gemini overload)
-- ✅ Original RAG flow preserved (backwards compatible)
-- ✅ Detailed logging for debugging
+1. **Material Content Fetching** (High Priority)
+   - Implement PDF/file content extraction for `material://` URIs
+   - Use pdf-parse or similar library
+   - Apply 50KB truncation limit like docs
+   - Handle UploadThing URL fetching
 
-**Architecture:**
-```
-User: "@MCP_INTEGRATION_PLAN.md what is phase 1?"
-  ↓
-Parser: resources=["MCP_INTEGRATION_PLAN.md"], cleanQuestion="what is phase 1?"
-  ↓
-MCP /read tool: Fetch file (max 50KB)
-  ↓
-Gemini: RAG search + file context → Answer
-```
-
-**Test Results:**
-- Works on first try with 20KB files ✅
-- Handles large files gracefully (truncation) ✅
-- Preserves RAG-only queries ✅
-
-### 🔄 In Progress:
-
-**@ Autocomplete UI**
-- Show dropdown when user types `@`
-- List available .md files from `/docs` folder
-- Keyboard navigation (↑↓ to select, Enter to insert)
-- Click to insert filename
-
-### 📋 Next Up:
-
-1. **Autocomplete Implementation** (Next task)
-   - API endpoint: `GET /api/mcp/resources` → list `/docs` files
-   - Update `RagCellForm` component with autocomplete logic
-   - UI dropdown with file suggestions
-
-2. **/ Tools Implementation** (After autocomplete)
-   - Implement actual tool handlers (obecnie tylko definicje)
-   - `/utworz` - Generate test JSON
+2. **/ Tool Implementations** (Medium Priority)
+   - `/utworz` - Generate test questions in Wolfmed JSON format
+   - `/podsumuj` - Summarize response (50-100 words)
+   - `/flashcards` - Generate Q&A flashcards
+   - `/quiz` - Quick 3-question quiz
+   - `/tlumacz` - Translate to English
    - Handle Gemini function calling responses
 
-3. **User Materials Integration** (Future)
-   - Move from `/docs` to user-uploaded `materials` table
-   - File size validation on upload
-   - Graceful error handling for oversized context
+3. **Cell Persistence** (Medium Priority)
+   - Save RAG responses to `userCellsList.cells[cellId].response`
+   - Load saved response on cell mount
+   - Show "Continue conversation" UI
 
-### 🐛 Known Issues:
+4. **Error Handling & UX** (Low Priority)
+   - Better error messages for failed resource resolution
+   - Loading states for long-running queries
+   - User-facing file size warnings
+   - Retry mechanisms
 
-1. **File Size** - Need user-facing limits when materials come from DB
-2. **Tool Execution** - `/` tools defined but not implemented
-3. **Cell Persistence** - Response persistence not yet implemented
+### 🐛 Known Issues & Tech Debt:
+
+1. **Material Content** - Placeholder exists, needs implementation
+2. **Debug Logging** - Remove console.log statements from production
+3. **Multiple API Calls** - Each RagCellForm makes separate /api/mcp/resources call (consider caching)
+4. **Parser Edge Cases** - Test with special characters, multiple @, etc.
 
 ---
 
