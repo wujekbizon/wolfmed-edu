@@ -1,8 +1,26 @@
 # MCP Integration Plan - Wolfmed RAG Enhancement
 
-**Date**: 2026-01-29
+**Date**: 2026-01-29 | **Updated**: 2026-01-30
 **Branch**: `claude/add-comment-guidelines-nWvcg`
-**Status**: ✅ @ Resources MVP Complete | ✅ Autocomplete Complete | ✅ DisplayName Resolution Complete
+**Status**: ✅ @ Resources MVP Complete | ✅ Autocomplete Complete | ✅ DisplayName Resolution Complete | ⚠️ Gemini API Limitation Discovered
+
+---
+
+## ⚠️ IMPORTANT UPDATE (2026-01-30): Gemini API Limitation
+
+**Critical Issue Discovered**: Gemini 2.5 Pro has a known bug when combining `fileSearch` with custom `functionDeclarations`. When both are enabled simultaneously, the model incorrectly calls a non-existent `"query"` function instead of performing file search or calling our custom tools.
+
+**Impact**: Cannot implement fully automatic tool selection as originally planned.
+
+**Solution**: Implementing hybrid slash command approach where users explicitly trigger tools with `/notatka`, `/utworz`, `/diagram`, `/podsumuj` commands. This uses a two-phase execution pattern:
+1. RAG retrieval first (fileSearch only)
+2. Tool execution second (custom tools only, no fileSearch)
+
+**For Full Details**: See [TOOLS_CELL_CREATION_PLAN.md - Gemini API Limitation Section](./TOOLS_CELL_CREATION_PLAN.md#️-critical-limitation-gemini-api-filesearch--function-calling-conflict)
+
+**References**:
+- [Official Bug Report (Google AI Forum)](https://discuss.ai.google.dev/t/title-gemini-2-5-pro-file-search-and-function-declarations/109436)
+- [Community Discussion](https://discuss.ai.google.dev/t/combining-filesearch-e-functiondeclarations-in-gemini-api/111146)
 
 ---
 

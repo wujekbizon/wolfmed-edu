@@ -2,7 +2,211 @@
 
 **Date**: 2026-01-30
 **Vision**: Hybrid approach - some tools create cells, some return formatted responses
-**Status**: ✅ Week 1 Complete - Tools Implemented
+**Status**: ✅ Week 1 Complete - Tools Implemented | ⚠️ Gemini API Limitation Discovered
+
+---
+
+## ⚠️ CRITICAL LIMITATION: Gemini API FileSearch + Function Calling Conflict
+
+**Date Discovered**: 2026-01-30
+**Issue**: Known bug in Gemini 2.5 Pro API when combining `fileSearch` with `functionDeclarations`
+
+### The Problem
+
+When Gemini API's `generateContent` includes BOTH `fileSearch` tool AND custom `functionDeclarations`, the model incorrectly returns a `functionCall` with name `"query"` instead of performing file search or calling the intended custom tools.
+
+**Official Bug Report**: [Gemini 2.5 Pro file_search and function_declarations issue](https://discuss.ai.google.dev/t/title-gemini-2-5-pro-file-search-and-function-declarations/109436) (November 2025)
+
+**Expected Behavior**:
+- FileSearch should automatically ground responses using document store
+- Custom tools (notatka_tool, utworz_test, etc.) should be callable when appropriate
+- Both should work together seamlessly
+
+**Actual Behavior**:
+- When both are enabled, Gemini calls an unknown `"query"` function
+- This is NOT in our function declarations list
+- Our custom tools are never called
+- FileSearch doesn't execute automatically
+
+**Workaround Attempted (Failed)**:
+```typescript
+// Added handler for 'query' tool
+case 'query':
+  return {
+    content: 'File search is already active...',
+    metadata: { autoHandled: true }
+  }
+```
+Result: Gemini continues calling `query` instead of custom tools, even with explicit keyword detection and guidance prompts.
+
+### Root Cause Analysis
+
+The Gemini API appears to expose fileSearch as a callable tool named `"query"` when `functionDeclarations` are also present. This creates tool selection conflict where Gemini must choose between:
+1. `query` (file search)
+2. `notatka_tool` (custom)
+3. `utworz_test` (custom)
+4. etc.
+
+When user asks "Stwórz notatkę o fizjologii", Gemini interprets this as:
+- "User needs information about fizjologia" → calls `query`
+- Instead of: "User wants to CREATE a note" → calls `notatka_tool`
+
+### Community Reports
+
+Multiple developers have reported this issue:
+- When both tools work individually but fail when combined
+- Documentation search fails when both are enabled
+- Forum post: [Combining fileSearch e functionDeclarations](https://discuss.ai.google.dev/t/combining-filesearch-e-functiondeclarations-in-gemini-api/111146)
+
+### Google's Official Position
+
+No official fix or workaround documented as of 2026-01-30. The feature is marked as supported in Gemini 3 models, but the bug persists in practice.
+
+---
+
+## ✅ OUR SOLUTION: Hybrid Slash Command Approach
+
+Since Gemini API has this limitation, we're implementing a **two-phase execution pattern** triggered by explicit user commands.
+
+### Architecture Decision
+
+**Hybrid Approach**: Combine automatic RAG with explicit tool invocation
+
+**Phase 1: RAG Retrieval** (Always happens)
+```
+User: "/notatka Stwórz notatkę o działach w fizjologii"
+↓
+1. Detect /notatka command
+2. Extract topic: "działach w fizjologii"
+3. Perform fileSearch FIRST (without custom tools)
+4. Retrieve relevant documents → text content
+```
+
+**Phase 2: Tool Execution** (Only when slash command detected)
+```
+5. Disable fileSearch for this call
+6. Call Gemini with ONLY custom tools enabled
+7. Pass RAG results as 'content' parameter to tool
+8. Gemini MUST use specified tool (no fileSearch option available)
+9. Tool generates content → cellType + content
+10. Create cell in UI
+```
+
+### User Flow with Slash Commands
+
+**Available Commands**:
+- `/notatka` - Create note cell (50-150 words)
+- `/utworz` - Generate test questions JSON (response only)
+- `/podsumuj` - Generate summary (response only)
+- `/diagram` - Create diagram cell (Excalidraw)
+
+**Example: Create Note**
+```
+User types: "/notatka Stwórz notatkę o działach w fizjologii"
+
+System:
+1. Detects /notatka command
+2. Searches docs for "działach w fizjologii" → gets content
+3. Calls Gemini with ONLY notatka_tool enabled
+4. Passes doc content as tool parameter
+5. Tool generates note content
+6. Creates note cell automatically
+7. User can edit and save
+```
+
+**Example: Without Command (Regular RAG)**
+```
+User types: "Jakie są działy w fizjologii?"
+
+System:
+1. No slash command detected
+2. Uses fileSearch normally (no custom tools)
+3. Returns grounded answer from documents
+4. No cell creation
+```
+
+### Implementation Details
+
+**Slash Command Detection** (`parse-mcp-commands.ts`):
+```typescript
+const toolPattern = /\/(utworz|notatka|podsumuj|diagram)/gi;
+```
+
+**Conditional Tool Enabling** (`rag-actions.ts`):
+```typescript
+const { cleanQuestion, resources, tools } = parseMcpCommands(question)
+
+if (tools.includes('notatka')) {
+  // Two-phase approach
+  // 1. Get RAG content first
+  const ragContent = await manualFileSearch(cleanQuestion)
+
+  // 2. Call with ONLY custom tools (no fileSearch)
+  const result = await callGeminiWithTools(
+    cleanQuestion,
+    ragContent,
+    [NOTATKA_TOOL_DEFINITION] // Only this tool, no fileSearch
+  )
+}
+```
+
+### Why This Solution Works
+
+**Advantages**:
+1. **Explicit user intent**: Slash commands make tool usage clear
+2. **No tool selection conflict**: Only one tool enabled at a time
+3. **RAG still works**: We get document context first, manually
+4. **Reliable execution**: No guessing which tool Gemini should use
+5. **User control**: Users choose when to create content vs ask questions
+
+**Trade-offs**:
+1. **User training needed**: Users must learn slash commands
+2. **Less automatic**: Can't auto-detect "create note" intent
+3. **Two API calls**: One for RAG, one for tool execution
+4. **Hybrid complexity**: More conditional logic in code
+
+### Alternative Approaches Considered
+
+**Option 1: Keyword Detection Only** ❌
+- Tried detecting "stwórz", "utwórz", "wygeneruj" + content type
+- Added explicit guidance prompts to Gemini
+- Failed: Gemini still called `query` instead of custom tools
+- Unreliable for production use
+
+**Option 2: Separate Gemini Model for Routing** ❌
+- Use secondary Gemini call to determine intent
+- Route to either fileSearch OR custom tools
+- Rejected: Added latency, complexity, and cost
+- Still doesn't solve underlying API bug
+
+**Option 3: Wait for Google to Fix** ❌
+- Monitor official bug reports and changelogs
+- Implement workarounds until fixed
+- Rejected: No ETA on fix, blocks development
+
+**Option 4: Use Different LLM for Tools** ❌
+- Keep Gemini for RAG, use Claude/GPT for tools
+- Rejected: Added complexity, multiple API keys, inconsistent behavior
+
+### Future: Automatic Intent Detection
+
+Once Google fixes the API bug, we can enhance to automatic mode:
+```typescript
+// Future: No slash commands needed
+User: "Stwórz notatkę o fizjologii"
+System: Auto-detects intent, uses notatka_tool directly
+```
+
+Until then, slash commands provide reliable, explicit control.
+
+---
+
+### References
+
+- [Gemini 2.5 Pro file_search and function_declarations issue](https://discuss.ai.google.dev/t/title-gemini-2-5-pro-file-search-and-function-declarations/109436)
+- [File Search Tool Documentation](https://ai.google.dev/gemini-api/docs/file-search)
+- [Introducing File Search Tool](https://blog.google/technology/developers/file-search-gemini-api/)
+- [Combining fileSearch and functionDeclarations](https://discuss.ai.google.dev/t/combining-filesearch-e-functiondeclarations-in-gemini-api/111146)
 
 ---
 
