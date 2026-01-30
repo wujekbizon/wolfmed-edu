@@ -43,9 +43,11 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   useEffect(() => {
     if (state.status === 'SUCCESS' && state.values?.toolResults) {
       const toolResults = state.values.toolResults
+      console.log('🔍 Client received toolResults:', toolResults)
 
       if (typeof toolResults === 'object' && toolResults !== null && !Array.isArray(toolResults)) {
         Object.entries(toolResults).forEach(([toolName, result]) => {
+          console.log(`🔧 Processing tool: ${toolName}`, result)
           if (
             typeof result === 'object' &&
             result !== null &&
@@ -62,9 +64,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
               processedToolResults.current.add(resultKey)
+              console.log(`✨ Creating new ${typedResult.cellType} cell after ${cell.id}`)
 
               const newCellId = insertCellAfter(cell.id, typedResult.cellType)
+              console.log(`📝 Updating cell ${newCellId} with content (${typedResult.content.length} chars)`)
               updateCell(newCellId, typedResult.content)
+            } else if (!typedResult.cellType) {
+              console.log(`ℹ️ Tool ${toolName} has no cellType, skipping cell creation`)
+            } else {
+              console.log(`⏭️ Tool result already processed, skipping`)
             }
           }
         })

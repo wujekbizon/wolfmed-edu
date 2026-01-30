@@ -228,6 +228,8 @@ Based on the tool execution results above, please provide a comprehensive final 
         toolResultsFormatted[name] = result
       })
 
+      console.log('✅ Returning toolResults:', JSON.stringify(toolResultsFormatted, null, 2))
+
       return {
         answer: finalAnswer,
         sources: [],
