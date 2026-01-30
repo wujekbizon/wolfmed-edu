@@ -41,6 +41,13 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   }, [state.status])
 
   useEffect(() => {
+    console.log('🔄 State changed:', {
+      status: state.status,
+      hasValues: !!state.values,
+      hasToolResults: !!state.values?.toolResults,
+      values: state.values
+    })
+
     if (state.status === 'SUCCESS' && state.values?.toolResults) {
       const toolResults = state.values.toolResults
       console.log('🔍 Client received toolResults:', toolResults)

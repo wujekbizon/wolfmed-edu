@@ -85,14 +85,6 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    if (resources.length === 0 && tools.length === 0) {
-      const result = await queryWithFileSearch(validationResult.data.question)
-      return {
-        ...toFormState('SUCCESS', result.answer),
-        values: { sources: result.sources }
-      }
-    }
-
     let additionalContext = ''
     if (resources.length > 0) {
       try {
@@ -124,6 +116,8 @@ export async function askRagQuestion(
       additionalContext || undefined,
       [...TOOL_DEFINITIONS]
     )
+
+    console.log('📦 Server action returning toolResults:', result.toolResults)
 
     return {
       ...toFormState('SUCCESS', result.answer),

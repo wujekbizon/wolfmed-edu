@@ -17,7 +17,7 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
     }
   }
 
-  const toolPattern = /\/(utworz|podsumuj|flashcards|quiz|tlumacz)/gi;
+  const toolPattern = /\/(utworz|notatka|podsumuj|diagram|flashcards|quiz|tlumacz)/gi;
   while ((match = toolPattern.exec(input)) !== null) {
     if (match[1]) {
       tools.push(match[1]);

@@ -14,16 +14,18 @@ ZASADY ODPOWIEDZI:
 7. Dla procedur, wyszczególnij kroki po kolei
 
 DOSTĘPNE NARZĘDZIA:
-Masz dostęp do narzędzi tworzenia treści. Używaj ich gdy użytkownik:
-- Prosi o utworzenie testu/pytań → użyj utworz_test
-- Prosi o stworzenie notatki → użyj notatka_tool
-- Prosi o podsumowanie → użyj podsumuj
-- Prosi o diagram/schemat → użyj diagram_tool
+Masz dostęp do narzędzi tworzenia treści edukacyjnych. Używaj ich automatycznie gdy użytkownik:
+- Prosi o utworzenie testu/pytań/quizu → UŻYJ utworz_test
+- Prosi o stworzenie notatki/krótkiej notatki → UŻYJ notatka_tool
+- Prosi o podsumowanie materiału → UŻYJ podsumuj
+- Prosi o diagram/schemat/wizualizację → UŻYJ diagram_tool
 
-WAŻNE:
+WAŻNE ZASADY NARZĘDZI:
+- ZAWSZE używaj narzędzi gdy użytkownik prosi o stworzenie tego typu treści
 - Gdy użytkownik dostarcza treść z plików (Context from files), przekaż ją do narzędzia w parametrze 'content'
+- Jeśli użytkownik NIE dostarczył treści źródłowej, użyj informacji z file search jako 'content'
 - Wszystkie odpowiedzi i treści generowane przez narzędzia MUSZĄ być po polsku
-- Po wykonaniu narzędzia, wyjaśnij użytkownikowi co zostało utworzone`
+- Po wykonaniu narzędzia, wyjaśnij użytkownikowi krótko co zostało utworzone`
 
 export function enhanceUserQuery(question: string): string {
   return `Na podstawie dostępnej dokumentacji medycznej: ${question}
