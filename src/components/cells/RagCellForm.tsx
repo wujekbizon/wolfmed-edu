@@ -42,22 +42,33 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   useEffect(() => {
     if (state.status === 'SUCCESS' && state.values?.toolResults) {
-      const toolResults = state.values.toolResults as Record<string, {
-        cellType?: CellTypes;
-        content: string;
-        metadata?: Record<string, any>;
-      }>
+      const toolResults = state.values.toolResults
 
-      Object.entries(toolResults).forEach(([toolName, result]) => {
-        const resultKey = `${toolName}-${result.content.slice(0, 50)}`
+      if (typeof toolResults === 'object' && toolResults !== null && !Array.isArray(toolResults)) {
+        Object.entries(toolResults).forEach(([toolName, result]) => {
+          if (
+            typeof result === 'object' &&
+            result !== null &&
+            'content' in result &&
+            typeof result.content === 'string'
+          ) {
+            const typedResult = result as {
+              cellType?: CellTypes;
+              content: string;
+              metadata?: Record<string, any>;
+            }
 
-        if (result.cellType && !processedToolResults.current.has(resultKey)) {
-          processedToolResults.current.add(resultKey)
+            const resultKey = `${toolName}-${typedResult.content.slice(0, 50)}`
 
-          const newCellId = insertCellAfter(cell.id, result.cellType)
-          updateCell(newCellId, result.content)
-        }
-      })
+            if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
+              processedToolResults.current.add(resultKey)
+
+              const newCellId = insertCellAfter(cell.id, typedResult.cellType)
+              updateCell(newCellId, typedResult.content)
+            }
+          }
+        })
+      }
     }
   }, [state.status, state.values?.toolResults, cell.id, insertCellAfter, updateCell])
 
