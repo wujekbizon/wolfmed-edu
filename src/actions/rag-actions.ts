@@ -122,7 +122,7 @@ export async function askRagQuestion(
       cleanQuestion,
       undefined,
       additionalContext || undefined,
-      TOOL_DEFINITIONS
+      [...TOOL_DEFINITIONS]
     )
 
     return {
