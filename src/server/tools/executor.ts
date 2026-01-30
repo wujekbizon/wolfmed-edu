@@ -82,14 +82,13 @@ export async function executeToolLocally(
 }
 
 async function utworzTool(args: any): Promise<ToolResult> {
-  const { questionCount = 5, difficulty = 'medium', category = 'medycyna', content = '' } = args;
+  const { questionCount = 5, category = 'medycyna', content = '' } = args;
 
   const template = await getTestTemplate()
   const ai = getGoogleAI()
 
   const prompt = template.prompt
     .replace('{{questionCount}}', questionCount.toString())
-    .replace('{{difficulty}}', difficulty)
     .replace('{{category}}', category)
 
   const fullPrompt = `${prompt}
@@ -137,7 +136,6 @@ Return ONLY the JSON array, no additional text.`
     content: JSON.stringify({ questions }),
     metadata: {
       count: questions.length,
-      difficulty,
       category,
       generated: new Date().toISOString()
     }
