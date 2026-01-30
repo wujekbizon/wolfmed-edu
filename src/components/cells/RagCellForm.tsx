@@ -22,7 +22,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const submittedQuestion = useRef<string>('')
   const processedToolResults = useRef<Set<string>>(new Set())
 
-  const { insertCellAfter, updateCell } = useCellsStore()
+  const { insertCellAfterWithContent } = useCellsStore()
   const { resources, loading } = useResourceAutocomplete()
   const {
     textareaRef,
@@ -71,11 +71,9 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
               processedToolResults.current.add(resultKey)
-              console.log(`[RagCell] Creating new ${typedResult.cellType} cell after ${cell.id}`)
+              console.log(`[RagCell] Creating new ${typedResult.cellType} cell after ${cell.id} with content (${typedResult.content.length} chars)`)
 
-              const newCellId = insertCellAfter(cell.id, typedResult.cellType)
-              console.log(`[RagCell] Updating cell ${newCellId} with content (${typedResult.content.length} chars)`)
-              updateCell(newCellId, typedResult.content)
+              insertCellAfterWithContent(cell.id, typedResult.cellType, typedResult.content)
             } else if (!typedResult.cellType) {
               console.log(`[RagCell] Tool ${toolName} has no cellType, skipping cell creation`)
             } else {
@@ -85,7 +83,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
         })
       }
     }
-  }, [state.status, state.values?.toolResults, cell.id, insertCellAfter, updateCell])
+  }, [state.status, state.values?.toolResults, cell.id, insertCellAfterWithContent])
 
   const handleSubmit = (formData: FormData) => {
     const question = formData.get('question') as string
