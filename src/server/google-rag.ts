@@ -2,6 +2,7 @@ import 'server-only'
 import { GoogleGenAI } from '@google/genai'
 import { SYSTEM_PROMPT, enhanceUserQuery } from '../helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
+import { executeToolLocally, type ToolResult } from './tools/executor'
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -164,30 +165,86 @@ export async function queryWithFileSearch(
       }
     })
 
+    if (response.functionCalls && Array.isArray(response.functionCalls) && response.functionCalls.length > 0) {
+      console.log('🤖 Gemini requested tool execution:', response.functionCalls.map(c => c.name))
+
+      const executedTools: Array<{ name: string; result: ToolResult }> = []
+
+      for (const call of response.functionCalls) {
+        if (call.name) {
+          try {
+            const result = await executeToolLocally(call.name, call.args || {})
+            executedTools.push({ name: call.name, result })
+          } catch (error) {
+            console.error(`Failed to execute tool ${call.name}:`, error)
+            executedTools.push({
+              name: call.name,
+              result: {
+                content: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+                metadata: { error: true }
+              }
+            })
+          }
+        }
+      }
+
+      const functionResponseParts = executedTools.map(({ name, result }) => ({
+        functionResponse: {
+          name,
+          response: result
+        }
+      }))
+
+      console.log('📤 Sending tool results back to Gemini for final answer')
+
+      const toolResultsText = executedTools.map(({ name, result }) => {
+        return `Tool: ${name}\nResult: ${JSON.stringify(result, null, 2)}`
+      }).join('\n\n')
+
+      const finalPrompt = `${enhancedQuery}
+
+TOOL EXECUTION RESULTS:
+${toolResultsText}
+
+Based on the tool execution results above, please provide a comprehensive final answer incorporating the generated content.`
+
+      const finalResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: finalPrompt,
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          tools: configTools
+        }
+      })
+
+      const finalAnswer = finalResponse.text || ''
+
+      if (!finalAnswer) {
+        throw new Error('Empty response from Gemini after tool execution')
+      }
+
+      const toolResultsFormatted: Record<string, ToolResult> = {}
+      executedTools.forEach(({ name, result }) => {
+        toolResultsFormatted[name] = result
+      })
+
+      return {
+        answer: finalAnswer,
+        sources: [],
+        toolResults: toolResultsFormatted
+      }
+    }
+
     const answer = response.text || ''
 
     if (!answer) {
       throw new Error('Empty response from Gemini')
     }
 
-    let toolResults: any = undefined
-
-    if (response.functionCalls && Array.isArray(response.functionCalls)) {
-      const results: Record<string, any> = {}
-      for (const call of response.functionCalls) {
-        if (call.name) {
-          results[call.name] = call.args
-        }
-      }
-      if (Object.keys(results).length > 0) {
-        toolResults = results
-      }
-    }
-
     return {
       answer,
       sources: [],
-      toolResults
+      toolResults: undefined
     }
   } catch (error) {
     console.error('Error querying with file search:', error)
