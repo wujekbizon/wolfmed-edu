@@ -85,7 +85,21 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    let additionalContext = ''
+    const lowerQuestion = validationResult.data.question.toLowerCase()
+    let toolGuidance = ''
+    if (lowerQuestion.includes('stwórz') || lowerQuestion.includes('utwórz') || lowerQuestion.includes('wygeneruj')) {
+      if (lowerQuestion.includes('notat')) {
+        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE A NOTE. You MUST use the notatka_tool function.'
+      } else if (lowerQuestion.includes('test') || lowerQuestion.includes('pytań') || lowerQuestion.includes('quiz')) {
+        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE TEST QUESTIONS. You MUST use the utworz_test function.'
+      } else if (lowerQuestion.includes('podsumuj') || lowerQuestion.includes('podsumowanie')) {
+        toolGuidance = '\n\nIMPORTANT: User is requesting a SUMMARY. You MUST use the podsumuj function.'
+      } else if (lowerQuestion.includes('diagram') || lowerQuestion.includes('schemat') || lowerQuestion.includes('wizualizacj')) {
+        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE A DIAGRAM. You MUST use the diagram_tool function.'
+      }
+    }
+
+    let additionalContext = toolGuidance
     if (resources.length > 0) {
       try {
         const resolvedUris = await Promise.all(
@@ -103,7 +117,8 @@ export async function askRagQuestion(
               return await fetchResourceContent(uri, userId)
             })
           )
-          additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
+          const resourceContext = `Context from files:\n${resourceResults.join('\n\n')}`
+          additionalContext = toolGuidance ? `${toolGuidance}\n\n${resourceContext}` : resourceContext
         }
       } catch (error) {
         console.error('Failed to fetch resources:', error)
