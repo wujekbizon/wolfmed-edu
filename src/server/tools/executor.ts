@@ -1,9 +1,54 @@
 import 'server-only'
+import { readFile } from 'fs/promises'
+import { join } from 'path'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface ToolResult {
   cellType?: 'note' | 'test' | 'draw';
   content: string;
   metadata?: Record<string, any>;
+}
+
+interface TestQuestionTemplate {
+  prompt: string;
+  structure: any[];
+  example: any;
+}
+
+interface NoteTemplate {
+  prompt: string;
+  example: string;
+}
+
+let testTemplate: TestQuestionTemplate | null = null
+let noteTemplate: NoteTemplate | null = null
+let summaryTemplate: NoteTemplate | null = null
+
+async function loadTemplate<T>(filename: string): Promise<T> {
+  const templatePath = join(process.cwd(), 'templates', filename)
+  const content = await readFile(templatePath, 'utf-8')
+  return JSON.parse(content)
+}
+
+async function getTestTemplate(): Promise<TestQuestionTemplate> {
+  if (!testTemplate) {
+    testTemplate = await loadTemplate<TestQuestionTemplate>('test-question-template.json')
+  }
+  return testTemplate
+}
+
+async function getNoteTemplate(): Promise<NoteTemplate> {
+  if (!noteTemplate) {
+    noteTemplate = await loadTemplate<NoteTemplate>('note-template.json')
+  }
+  return noteTemplate
+}
+
+async function getSummaryTemplate(): Promise<NoteTemplate> {
+  if (!summaryTemplate) {
+    summaryTemplate = await loadTemplate<NoteTemplate>('summary-template.json')
+  }
+  return summaryTemplate
 }
 
 export async function executeToolLocally(
@@ -28,37 +73,43 @@ export async function executeToolLocally(
 }
 
 async function mockUtworzTool(args: any): Promise<ToolResult> {
-  const { questionCount = 5, difficulty = 'medium' } = args;
+  const { questionCount = 5, difficulty = 'medium', category = 'medycyna' } = args;
+
+  const template = await getTestTemplate()
+  const exampleQuestion = template.example
+
+  const questions = Array.from({ length: questionCount }, (_, i) => ({
+    ...exampleQuestion,
+    id: uuidv4(),
+    meta: {
+      course: category,
+      category: category
+    },
+    data: {
+      question: `Przykładowe pytanie ${i + 1} (${difficulty})`,
+      answers: exampleQuestion.data.answers
+    },
+    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 26)
+  }))
 
   return {
     cellType: 'test',
-    content: JSON.stringify({
-      questions: Array.from({ length: questionCount }, (_, i) => ({
-        id: `mock-q-${i + 1}`,
-        meta: { course: 'medycyna', category: 'general' },
-        data: {
-          question: `Mock question ${i + 1} (difficulty: ${difficulty})`,
-          answers: [
-            { option: 'Option A', isCorrect: false },
-            { option: 'Option B', isCorrect: true },
-            { option: 'Option C', isCorrect: false },
-            { option: 'Option D', isCorrect: false }
-          ]
-        }
-      }))
-    }),
+    content: JSON.stringify({ questions }),
     metadata: {
       count: questionCount,
       difficulty,
+      category,
       generated: new Date().toISOString()
     }
   };
 }
 
 async function mockNotatkaTool(args: any): Promise<ToolResult> {
+  const template = await getNoteTemplate()
+
   return {
     cellType: 'note',
-    content: '# Mock Note\n\nThis is a mock note created by notatka_tool.\n\n**Key points:**\n- Point 1\n- Point 2',
+    content: template.example,
     metadata: {
       type: 'quick-note',
       generated: new Date().toISOString()
@@ -67,9 +118,11 @@ async function mockNotatkaTool(args: any): Promise<ToolResult> {
 }
 
 async function mockPodsumujTool(args: any): Promise<ToolResult> {
+  const template = await getSummaryTemplate()
+
   return {
     cellType: 'note',
-    content: '# Summary\n\nThis is a mock summary created by podsumuj tool.',
+    content: template.example,
     metadata: {
       type: 'summary',
       generated: new Date().toISOString()
