@@ -11,6 +11,8 @@ import { useResourceAutocompleteInput } from '@/hooks/useResourceAutocompleteInp
 import RagResponse from './RagResponse'
 import RagLoadingState from './RagLoadingState'
 import { ResourceAutocomplete } from './ResourceAutocomplete'
+import { useCellsStore } from '@/store/useCellsStore'
+import type { CellTypes } from '@/types/cellTypes'
 
 export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
   const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
@@ -18,7 +20,9 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const formRef = useRef<HTMLFormElement>(null)
   const conversationRef = useRef<HTMLDivElement>(null)
   const submittedQuestion = useRef<string>('')
+  const processedToolResults = useRef<Set<string>>(new Set())
 
+  const { insertCellAfter, updateCell } = useCellsStore()
   const { resources, loading } = useResourceAutocomplete()
   const {
     textareaRef,
@@ -35,6 +39,27 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight
     }
   }, [state.status])
+
+  useEffect(() => {
+    if (state.status === 'SUCCESS' && state.values?.toolResults) {
+      const toolResults = state.values.toolResults as Record<string, {
+        cellType?: CellTypes;
+        content: string;
+        metadata?: Record<string, any>;
+      }>
+
+      Object.entries(toolResults).forEach(([toolName, result]) => {
+        const resultKey = `${toolName}-${result.content.slice(0, 50)}`
+
+        if (result.cellType && !processedToolResults.current.has(resultKey)) {
+          processedToolResults.current.add(resultKey)
+
+          const newCellId = insertCellAfter(cell.id, result.cellType)
+          updateCell(newCellId, result.content)
+        }
+      })
+    }
+  }, [state.status, state.values?.toolResults, cell.id, insertCellAfter, updateCell])
 
   const handleSubmit = (formData: FormData) => {
     const question = formData.get('question') as string

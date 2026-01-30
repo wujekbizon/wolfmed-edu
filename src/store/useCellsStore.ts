@@ -14,7 +14,7 @@ interface CellsState {
   updateCell: (id: string, content: string) => void
   deleteCell: (id: string) => void
   moveCell: (id: string, direction: "up" | "down") => void
-  insertCellAfter: (id: string | null, type: Cell["type"]) => void
+  insertCellAfter: (id: string | null, type: Cell["type"]) => string
 }
 
 export const useCellsStore = create<CellsState>()(
@@ -74,16 +74,18 @@ export const useCellsStore = create<CellsState>()(
           return { order: newOrder }
         }),
 
-      insertCellAfter: (id, type) =>
+      insertCellAfter: (id, type) => {
+        const newCell: Cell = { id: nanoid(), type, content: "" }
         set((state) => {
-          const newCell: Cell = { id: nanoid(), type, content: "" }
           const newData = { ...state.data, [newCell.id]: newCell }
           const foundIndex = state.order.findIndex((i) => i === id)
           const newOrder = [...state.order]
           if (foundIndex < 0) newOrder.unshift(newCell.id)
           else newOrder.splice(foundIndex + 1, 0, newCell.id)
           return { data: newData, order: newOrder }
-        }),
+        })
+        return newCell.id
+      },
     }),
     {
       name: "cells-storage",
