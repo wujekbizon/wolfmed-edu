@@ -12,6 +12,21 @@ function getGoogleAI() {
   return new GoogleGenAI({ apiKey })
 }
 
+function parseGoogleApiError(error: unknown): Error {
+  if (error instanceof Error) {
+    try {
+      const parsed = JSON.parse(error.message)
+      if (parsed.error?.message) {
+        return new Error(parsed.error.message)
+      }
+    } catch {
+      return error
+    }
+    return error
+  }
+  return new Error('Wystąpił nieznany błąd')
+}
+
 export async function createFileSearchStore(
   displayName: string
 ): Promise<string> {
@@ -364,10 +379,7 @@ export async function queryFileSearchOnly(
     }
   } catch (error) {
     console.error('Error in RAG-only query:', error)
-    if (error instanceof Error) {
-      throw error
-    }
-    throw new Error('Wystąpił błąd podczas wyszukiwania odpowiedzi')
+    throw parseGoogleApiError(error)
   }
 }
 
@@ -444,9 +456,6 @@ Please provide a brief confirmation message to the user about what was created.`
     throw new Error(`Tool ${toolName} was not called by Gemini`)
   } catch (error) {
     console.error('Error in tool execution:', error)
-    if (error instanceof Error) {
-      throw error
-    }
-    throw new Error('Wystąpił błąd podczas wykonywania narzędzia')
+    throw parseGoogleApiError(error)
   }
 }

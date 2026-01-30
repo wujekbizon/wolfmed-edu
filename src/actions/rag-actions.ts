@@ -11,21 +11,6 @@ import { getNoteById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 
-function parseApiError(error: unknown): string {
-  if (error instanceof Error) {
-    try {
-      const parsed = JSON.parse(error.message)
-      if (parsed.error && parsed.error.message) {
-        return parsed.error.message
-      }
-    } catch {
-      return error.message
-    }
-    return error.message
-  }
-  return 'Wystąpił nieznany błąd'
-}
-
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -181,7 +166,6 @@ export async function askRagQuestion(
     }
   } catch (error) {
     console.error('Error querying RAG:', error)
-    const errorMessage = parseApiError(error)
-    return toFormState('ERROR', errorMessage)
+    return fromErrorToFormState(error)
   }
 }
