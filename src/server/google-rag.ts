@@ -309,3 +309,138 @@ export async function listStoreDocuments(storeName: string): Promise<
     throw new Error('Nie można pobrać listy dokumentów')
   }
 }
+
+export async function queryFileSearchOnly(
+  question: string,
+  storeName?: string,
+  additionalContext?: string
+): Promise<{ answer: string; sources?: string[] }> {
+  try {
+    const ai = getGoogleAI()
+
+    let fileSearchStoreName = storeName
+
+    if (!fileSearchStoreName) {
+      const config = await getRagConfig()
+      fileSearchStoreName = config?.storeName
+    }
+
+    if (!fileSearchStoreName) {
+      throw new Error('File Search Store nie jest skonfigurowany')
+    }
+
+    const finalQuestion = additionalContext
+      ? `${additionalContext}\n\n${question}`
+      : question
+
+    const enhancedQuery = enhanceUserQuery(finalQuestion)
+
+    console.log('[RAG] Phase 1: RAG-only query (no tools)')
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: enhancedQuery,
+      config: {
+        systemInstruction: SYSTEM_PROMPT,
+        tools: [{
+          fileSearch: {
+            fileSearchStoreNames: [fileSearchStoreName]
+          }
+        }]
+      }
+    })
+
+    const answer = response.text || ''
+
+    if (!answer) {
+      throw new Error('Empty response from Gemini')
+    }
+
+    console.log('[RAG] Phase 1 complete: Retrieved context')
+
+    return {
+      answer,
+      sources: []
+    }
+  } catch (error) {
+    console.error('Error in RAG-only query:', error)
+    throw new Error('Wystąpił błąd podczas wyszukiwania odpowiedzi')
+  }
+}
+
+export async function executeToolWithContent(
+  toolName: string,
+  content: string,
+  toolDefinition: { name: string; description: string; parameters: any }
+): Promise<{ answer: string; toolResults: any }> {
+  try {
+    const ai = getGoogleAI()
+
+    console.log(`[RAG] Phase 2: Tool-only execution (${toolName})`)
+
+    const prompt = `User request: Use the ${toolName} tool to process the following content.
+
+Content from documents:
+${content}
+
+IMPORTANT: You MUST call the ${toolName} function now.`
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        systemInstruction: SYSTEM_PROMPT,
+        tools: [{
+          functionDeclarations: [toolDefinition]
+        }]
+      }
+    })
+
+    if (response.functionCalls && response.functionCalls.length > 0) {
+      const call = response.functionCalls[0]
+
+      if (!call || !call.name) {
+        throw new Error('Invalid function call from Gemini')
+      }
+
+      console.log('[RAG] Phase 2: Tool called:', call.name)
+
+      const args = { ...call.args, content }
+      const result = await executeToolLocally(call.name, args)
+
+      console.log('[RAG] Phase 2: Sending result back for final answer')
+
+      const finalPrompt = `Tool ${call.name} executed successfully.
+
+Result: ${JSON.stringify(result, null, 2)}
+
+Please provide a brief confirmation message to the user about what was created.`
+
+      const finalResponse = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: finalPrompt,
+        config: {
+          systemInstruction: SYSTEM_PROMPT
+        }
+      })
+
+      const finalAnswer = finalResponse.text || 'Content created successfully.'
+
+      const toolResultsFormatted: Record<string, ToolResult> = {
+        [call.name]: result
+      }
+
+      console.log('[RAG] Phase 2 complete: Tool executed, returning result')
+
+      return {
+        answer: finalAnswer,
+        toolResults: toolResultsFormatted
+      }
+    }
+
+    throw new Error(`Tool ${toolName} was not called by Gemini`)
+  } catch (error) {
+    console.error('Error in tool execution:', error)
+    throw new Error('Wystąpił błąd podczas wykonywania narzędzia')
+  }
+}

@@ -5,7 +5,7 @@ import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
-import { queryWithFileSearch } from '@/server/google-rag'
+import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
@@ -85,21 +85,7 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    const lowerQuestion = validationResult.data.question.toLowerCase()
-    let toolGuidance = ''
-    if (lowerQuestion.includes('stwórz') || lowerQuestion.includes('utwórz') || lowerQuestion.includes('wygeneruj')) {
-      if (lowerQuestion.includes('notat')) {
-        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE A NOTE. You MUST use the notatka_tool function.'
-      } else if (lowerQuestion.includes('test') || lowerQuestion.includes('pytań') || lowerQuestion.includes('quiz')) {
-        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE TEST QUESTIONS. You MUST use the utworz_test function.'
-      } else if (lowerQuestion.includes('podsumuj') || lowerQuestion.includes('podsumowanie')) {
-        toolGuidance = '\n\nIMPORTANT: User is requesting a SUMMARY. You MUST use the podsumuj function.'
-      } else if (lowerQuestion.includes('diagram') || lowerQuestion.includes('schemat') || lowerQuestion.includes('wizualizacj')) {
-        toolGuidance = '\n\nIMPORTANT: User is requesting to CREATE A DIAGRAM. You MUST use the diagram_tool function.'
-      }
-    }
-
-    let additionalContext = toolGuidance
+    let additionalContext = ''
     if (resources.length > 0) {
       try {
         const resolvedUris = await Promise.all(
@@ -117,28 +103,65 @@ export async function askRagQuestion(
               return await fetchResourceContent(uri, userId)
             })
           )
-          const resourceContext = `Context from files:\n${resourceResults.join('\n\n')}`
-          additionalContext = toolGuidance ? `${toolGuidance}\n\n${resourceContext}` : resourceContext
+          additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
         }
       } catch (error) {
         console.error('Failed to fetch resources:', error)
       }
     }
 
-    const result = await queryWithFileSearch(
+    if (tools.length > 0) {
+      console.log('[Action] Slash command detected, using two-phase execution:', tools)
+
+      const toolName = tools[0]
+      const toolMap: Record<string, any> = {
+        'notatka': TOOL_DEFINITIONS.find(t => t.name === 'notatka_tool'),
+        'utworz': TOOL_DEFINITIONS.find(t => t.name === 'utworz_test'),
+        'podsumuj': TOOL_DEFINITIONS.find(t => t.name === 'podsumuj'),
+        'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool')
+      }
+
+      if (!toolName || !toolMap[toolName]) {
+        return toFormState('ERROR', `Unknown tool: ${toolName}`)
+      }
+
+      const toolDefinition = toolMap[toolName]
+
+      const ragResult = await queryFileSearchOnly(
+        cleanQuestion,
+        undefined,
+        additionalContext || undefined
+      )
+
+      const toolResult = await executeToolWithContent(
+        toolDefinition.name,
+        ragResult.answer,
+        toolDefinition
+      )
+
+      console.log('[Action] Two-phase execution complete, returning toolResults:', toolResult.toolResults)
+
+      return {
+        ...toFormState('SUCCESS', toolResult.answer),
+        values: {
+          sources: [],
+          toolResults: toolResult.toolResults
+        }
+      }
+    }
+
+    console.log('[Action] No slash command, using regular RAG query')
+
+    const result = await queryFileSearchOnly(
       cleanQuestion,
       undefined,
-      additionalContext || undefined,
-      [...TOOL_DEFINITIONS]
+      additionalContext || undefined
     )
-
-    console.log('[Action] Server action returning toolResults:', result.toolResults)
 
     return {
       ...toFormState('SUCCESS', result.answer),
       values: {
-        sources: result.sources,
-        toolResults: result.toolResults
+        sources: result.sources
       }
     }
   } catch (error) {
