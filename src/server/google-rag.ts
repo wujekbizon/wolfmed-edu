@@ -364,6 +364,9 @@ export async function queryFileSearchOnly(
     }
   } catch (error) {
     console.error('Error in RAG-only query:', error)
+    if (error instanceof Error) {
+      throw error
+    }
     throw new Error('Wystąpił błąd podczas wyszukiwania odpowiedzi')
   }
 }
@@ -441,6 +444,9 @@ Please provide a brief confirmation message to the user about what was created.`
     throw new Error(`Tool ${toolName} was not called by Gemini`)
   } catch (error) {
     console.error('Error in tool execution:', error)
+    if (error instanceof Error) {
+      throw error
+    }
     throw new Error('Wystąpił błąd podczas wykonywania narzędzia')
   }
 }

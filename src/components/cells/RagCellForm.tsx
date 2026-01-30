@@ -16,11 +16,12 @@ import type { CellTypes } from '@/types/cellTypes'
 
 export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
   const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
-  const noScriptFallback = state.status === 'ERROR' ? useToastMessage(state) : null
   const formRef = useRef<HTMLFormElement>(null)
   const conversationRef = useRef<HTMLDivElement>(null)
   const submittedQuestion = useRef<string>('')
   const processedToolResults = useRef<Set<string>>(new Set())
+
+  const noScriptFallback = useToastMessage(state)
 
   const { insertCellAfterWithContent } = useCellsStore()
   const { resources, loading } = useResourceAutocomplete()
