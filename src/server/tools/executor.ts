@@ -2,6 +2,7 @@ import 'server-only'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
+import { GoogleGenAI } from '@google/genai'
 
 export interface ToolResult {
   cellType?: 'note' | 'test' | 'draw';
@@ -23,6 +24,14 @@ interface NoteTemplate {
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
+
+function getGoogleAI() {
+  const apiKey = process.env.GOOGLE_API_KEY
+  if (!apiKey) {
+    throw new Error('GOOGLE_API_KEY is not configured')
+  }
+  return new GoogleGenAI({ apiKey })
+}
 
 async function loadTemplate<T>(filename: string): Promise<T> {
   const templatePath = join(process.cwd(), 'templates', filename)
@@ -59,44 +68,75 @@ export async function executeToolLocally(
 
   switch (toolName) {
     case 'utworz_test':
-      return await mockUtworzTool(args);
+      return await utworzTool(args);
 
     case 'notatka_tool':
-      return await mockNotatkaTool(args);
+      return await notatkaTool(args);
 
     case 'podsumuj':
-      return await mockPodsumujTool(args);
+      return await podsumujTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
   }
 }
 
-async function mockUtworzTool(args: any): Promise<ToolResult> {
-  const { questionCount = 5, difficulty = 'medium', category = 'medycyna' } = args;
+async function utworzTool(args: any): Promise<ToolResult> {
+  const { questionCount = 5, difficulty = 'medium', category = 'medycyna', content = '' } = args;
 
   const template = await getTestTemplate()
-  const exampleQuestion = template.example
+  const ai = getGoogleAI()
 
-  const questions = Array.from({ length: questionCount }, (_, i) => ({
-    ...exampleQuestion,
-    id: uuidv4(),
-    meta: {
-      course: category,
-      category: category
-    },
-    data: {
-      question: `Przykładowe pytanie ${i + 1} (${difficulty})`,
-      answers: exampleQuestion.data.answers
-    },
-    createdAt: new Date().toISOString().replace('T', ' ').substring(0, 26)
-  }))
+  const prompt = template.prompt
+    .replace('{{questionCount}}', questionCount.toString())
+    .replace('{{difficulty}}', difficulty)
+    .replace('{{category}}', category)
+
+  const fullPrompt = `${prompt}
+
+CONTENT TO CREATE QUESTIONS FROM:
+${content}
+
+EXAMPLE STRUCTURE:
+${JSON.stringify(template.structure, null, 2)}
+
+Return ONLY the JSON array, no additional text.`
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: fullPrompt,
+    config: {
+      temperature: 0.7,
+      responseMimeType: 'application/json'
+    }
+  })
+
+  const generatedText = response.text || '[]'
+  let questions: any[]
+
+  try {
+    questions = JSON.parse(generatedText)
+
+    questions = questions.map(q => ({
+      ...q,
+      id: q.id || uuidv4(),
+      meta: {
+        course: category,
+        category: category
+      },
+      createdAt: q.createdAt || new Date().toISOString().replace('T', ' ').substring(0, 26),
+      updatedAt: null
+    }))
+  } catch (error) {
+    console.error('Failed to parse test questions:', error)
+    throw new Error('Failed to generate valid test questions')
+  }
 
   return {
     cellType: 'test',
     content: JSON.stringify({ questions }),
     metadata: {
-      count: questionCount,
+      count: questions.length,
       difficulty,
       category,
       generated: new Date().toISOString()
@@ -104,27 +144,77 @@ async function mockUtworzTool(args: any): Promise<ToolResult> {
   };
 }
 
-async function mockNotatkaTool(args: any): Promise<ToolResult> {
+async function notatkaTool(args: any): Promise<ToolResult> {
+  const { content = '', focus = '' } = args;
+
   const template = await getNoteTemplate()
+  const ai = getGoogleAI()
+
+  const fullPrompt = `${template.prompt}
+
+${focus ? `Focus specifically on: ${focus}` : ''}
+
+CONTENT:
+${content}
+
+EXAMPLE FORMAT:
+${template.example}
+
+Return ONLY the markdown note content.`
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: fullPrompt,
+    config: {
+      temperature: 0.7
+    }
+  })
+
+  const noteContent = response.text || template.example
 
   return {
     cellType: 'note',
-    content: template.example,
+    content: noteContent.trim(),
     metadata: {
       type: 'quick-note',
+      wordCount: noteContent.split(/\s+/).length,
       generated: new Date().toISOString()
     }
   };
 }
 
-async function mockPodsumujTool(args: any): Promise<ToolResult> {
+async function podsumujTool(args: any): Promise<ToolResult> {
+  const { content = '' } = args;
+
   const template = await getSummaryTemplate()
+  const ai = getGoogleAI()
+
+  const fullPrompt = `${template.prompt}
+
+CONTENT TO SUMMARIZE:
+${content}
+
+EXAMPLE FORMAT:
+${template.example}
+
+Return ONLY the markdown summary content.`
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: fullPrompt,
+    config: {
+      temperature: 0.7
+    }
+  })
+
+  const summaryContent = response.text || template.example
 
   return {
     cellType: 'note',
-    content: template.example,
+    content: summaryContent.trim(),
     metadata: {
       type: 'summary',
+      wordCount: summaryContent.split(/\s+/).length,
       generated: new Date().toISOString()
     }
   };
