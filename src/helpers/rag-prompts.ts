@@ -13,7 +13,17 @@ ZASADY ODPOWIEDZI:
 6. Jeśli dokumenty są sprzeczne, wskaż obie perspektywy
 7. Dla procedur, wyszczególnij kroki po kolei
 
-WAŻNE: Wszystkie odpowiedzi MUSZĄ być po polsku.`
+DOSTĘPNE NARZĘDZIA:
+Masz dostęp do narzędzi tworzenia treści. Używaj ich gdy użytkownik:
+- Prosi o utworzenie testu/pytań → użyj utworz_test
+- Prosi o stworzenie notatki → użyj notatka_tool
+- Prosi o podsumowanie → użyj podsumuj
+- Prosi o diagram/schemat → użyj diagram_tool
+
+WAŻNE:
+- Gdy użytkownik dostarcza treść z plików (Context from files), przekaż ją do narzędzia w parametrze 'content'
+- Wszystkie odpowiedzi i treści generowane przez narzędzia MUSZĄ być po polsku
+- Po wykonaniu narzędzia, wyjaśnij użytkownikowi co zostało utworzone`
 
 export function enhanceUserQuery(question: string): string {
   return `Na podstawie dostępnej dokumentacji medycznej: ${question}
