@@ -21,10 +21,16 @@ interface NoteTemplate {
   example: string;
 }
 
+interface DiagramTemplate {
+  prompt: string;
+  structure: any;
+  example: any;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
-let diagramTemplate: any = null
+let diagramTemplate: DiagramTemplate | null = null
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -61,11 +67,9 @@ async function getSummaryTemplate(): Promise<NoteTemplate> {
   return summaryTemplate
 }
 
-async function getDiagramTemplate(): Promise<any> {
+async function getDiagramTemplate(): Promise<DiagramTemplate> {
   if (!diagramTemplate) {
-    const templatePath = join(process.cwd(), 'docs', 'Excalidraw_Mock_Template.json')
-    const content = await readFile(templatePath, 'utf-8')
-    diagramTemplate = JSON.parse(content)
+    diagramTemplate = await loadTemplate<DiagramTemplate>('excalidraw-template.json')
   }
   return diagramTemplate
 }
@@ -233,42 +237,33 @@ Return ONLY the markdown summary content.`
 async function diagramTool(args: any): Promise<ToolResult> {
   const { content = '', diagramType = 'flowchart', focus = '' } = args;
 
-  const templateData = await getDiagramTemplate()
-  const exampleCell = templateData[0]
-  const cellKey = Object.keys(exampleCell)[0]
-  const exampleContent = JSON.parse(exampleCell[cellKey].content)
-
+  const template = await getDiagramTemplate()
   const ai = getGoogleAI()
 
-  const prompt = `You are an expert at creating Excalidraw diagrams.
+  const prompt = template.prompt.replace('{{diagramType}}', diagramType)
 
-Create a ${diagramType} diagram based on this content:
+  const fullPrompt = `${prompt}
 
+${focus ? `Focus specifically on: ${focus}` : ''}
+
+CONTENT:
 ${content}
 
-${focus ? `Focus on: ${focus}` : ''}
-
-Use this Excalidraw JSON structure as reference:
-${JSON.stringify(exampleContent, null, 2)}
-
-Generate a complete Excalidraw JSON with:
-- elements array containing shapes, arrows, and text
-- appState with viewBackgroundColor
-- Use proper Polish labels
-- Keep layout clear and organized
+EXAMPLE STRUCTURE:
+${JSON.stringify(template.example, null, 2)}
 
 Return ONLY valid Excalidraw JSON matching the structure shown above.`
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
-    contents: prompt,
+    contents: fullPrompt,
     config: {
       temperature: 0.7,
       responseMimeType: 'application/json'
     }
   })
 
-  const diagramContent = response.text || JSON.stringify(exampleContent)
+  const diagramContent = response.text || JSON.stringify(template.example)
 
   return {
     cellType: 'draw',

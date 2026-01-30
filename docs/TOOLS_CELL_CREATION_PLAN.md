@@ -1,53 +1,57 @@
 # AI-Powered Cell Creation Tools - Implementation Plan
 
-**Date**: 2026-01-29
-**Vision**: Tools that create cells for user approval, not just formatted responses
-**Status**: Architecture Finalized
+**Date**: 2026-01-30
+**Vision**: Hybrid approach - some tools create cells, some return formatted responses
+**Status**: ✅ Week 1 Complete - Tools Implemented
 
 ---
 
 ## 🎯 Core Concept
 
-**Traditional Approach** (What we DON'T want):
+**Hybrid Approach**: Some tools create cells, some return formatted responses
+
+**Response-Only Tools** (`/utworz`, `/podsumuj`):
 ```
-User: "Summarize this PDF"
-AI: Returns text summary in chat
-User: Copies to note manually
+User: "@cardiology.pdf /utworz 10"
+AI: Generates test questions JSON
+UI: Shows formatted JSON in RAG response
+User: Copies JSON for test import
 ```
 
-**Our Approach** (Cell-First AI Assistant):
+**Cell-Creating Tools** (`/notatka`, `/diagram`):
 ```
 User: "@cardiology.pdf /notatka"
-AI: Reads PDF, creates summary
+AI: Generates note content
 UI: Opens DRAFT note cell with content
 User: Reviews, edits, approves
 System: Saves cell to database
 ```
 
-**Key Insight**: Tools **generate cells** as draft outputs. User always has final approval before persistence.
+**Key Insight**:
+- Response tools = Immediate consumption (copy, read)
+- Cell tools = Long-term editing and reference
 
 ---
 
 ## 🛠️ Tool Definitions
 
-### 1. `/utworz` - Create Test Cell
+### 1. `/utworz` - Generate Test Questions (Response Only)
 
 **Purpose**: Generate multiple-choice test questions in Wolfmed JSON format
+**Behavior**: Returns JSON in RAG response for user to copy (does NOT create cell)
 
 **Input**:
 ```typescript
 {
   questionCount: number;
-  difficulty?: 'easy' | 'medium' | 'hard';
   category?: string;
-  context: string;  // From PDF/note content
+  content: string;  // From PDF/note content
 }
 ```
 
 **Output** (Tool Result):
 ```typescript
 {
-  cellType: "test",  // New cell type for tests
   content: JSON.stringify({
     questions: [
       {
@@ -62,11 +66,11 @@ System: Saves cell to database
         }
       }
     ]
-  }),
+  }, null, 2),  // Pretty-printed JSON
   metadata: {
     count: 10,
-    difficulty: 'medium',
-    source: '@cardiology.pdf'
+    category: 'cardiology',
+    displayFormat: 'json'
   }
 }
 ```
@@ -75,41 +79,38 @@ System: Saves cell to database
 ```
 User: "@cardiology.pdf /utworz 10 pytań o anatomii serca"
 ↓
-Gemini calls utworz_tool(questionCount: 10, category: 'anatomy')
+Gemini calls utworz_tool(questionCount: 10, category: 'cardiology', content: PDF)
 ↓
-Tool generates 10 test questions
+Tool generates 10 test questions in JSON format
 ↓
-UI opens DRAFT test cell (type: "test")
+RAG response shows formatted JSON
 ↓
-User reviews questions, can edit/delete
-↓
-User clicks "Save Test" → Creates test in database
+User copies JSON and uses separate test import flow
 ```
+
+**Why No Cell**: Tests have a dedicated import system, JSON is shown for copying
 
 ---
 
-### 2. `/podsumuj` - Create Summary Note Cell
+### 2. `/podsumuj` - Generate Summary (Response Only)
 
 **Purpose**: Generate comprehensive summary of provided resource(s)
+**Behavior**: Returns markdown summary in RAG response (does NOT create cell)
 
 **Input**:
 ```typescript
 {
-  content: string;     // Resource content to summarize
-  maxLength?: number;  // Optional word limit
-  format?: 'bullet' | 'paragraph';
+  content: string;  // Resource content to summarize
 }
 ```
 
 **Output**:
 ```typescript
 {
-  cellType: "note",
   content: "# Podsumowanie: Kardiologia\n\n## Kluczowe punkty:\n- Anatomia serca...\n- Cykl sercowy...",
   metadata: {
     type: 'summary',
-    wordCount: 250,
-    source: '@cardiology.pdf'
+    wordCount: 250
   }
 }
 ```
@@ -122,87 +123,110 @@ Gemini calls podsumuj_tool with PDF content
 ↓
 Tool generates structured summary (headings, bullet points)
 ↓
-UI opens DRAFT note cell
+RAG response shows formatted summary
 ↓
-User reviews, adds own notes
-↓
-User clicks "Save Note" → Note saved to database
+User reads summary in chat interface
 ```
+
+**Why No Cell**: Summary is for immediate consumption, displayed in RAG response
 
 ---
 
-### 3. `/notatka` - Create Short Note Cell
+### 3. `/notatka` - Create Quick Note Cell ✅
 
 **Purpose**: Extract key information and create concise note
+**Behavior**: Creates note cell for user editing and saving
 
 **Input**:
 ```typescript
 {
   content: string;
-  focus?: string;  // Optional: what to focus on ("key terms", "definitions", etc.)
+  focus?: string;  // Optional: what to focus on
 }
 ```
 
 **Output**:
 ```typescript
 {
-  cellType: "note",
+  cellType: "note",  // Creates note cell!
   content: "# Szybka notatka\n\n**Serce**: Mięsień pompujący krew...\n**Anatomia**: 4 komory...",
   metadata: {
     type: 'quick-note',
-    source: '@cardiology.pdf'
+    wordCount: 87
   }
 }
 ```
 
+**User Flow**:
+```
+User: "@cardiology.pdf /notatka heart anatomy"
+↓
+Gemini calls notatka_tool(content: PDF, focus: 'heart anatomy')
+↓
+Tool generates concise note (50-150 words)
+↓
+UI opens DRAFT note cell
+↓
+User reviews, edits as needed
+↓
+User clicks "Approve & Save" → Note cell created in database
+```
+
+**Why Cell**: Notes are meant for further editing and long-term reference
+
 **Difference from /podsumuj**:
-- `/podsumuj`: Comprehensive summary, structured, 200-500 words
-- `/notatka`: Quick reference, key points only, 50-150 words
+- `/podsumuj`: Longer summary (200-500 words), shown in response
+- `/notatka`: Quick note (50-150 words), creates editable cell
 
 ---
 
-### 4. `/draw` - Create Excalidraw Diagram Cell
+### 4. `/diagram` - Create Excalidraw Diagram Cell ✅
 
 **Purpose**: Generate visual diagram from resource content
+**Behavior**: Creates draw cell with Excalidraw JSON
 
 **Input**:
 ```typescript
 {
   content: string;
-  diagramType: 'flowchart' | 'anatomy' | 'concept-map' | 'timeline';
-  focus: string;  // e.g., "cardiac cycle", "heart anatomy"
+  diagramType?: 'flowchart' | 'anatomy' | 'concept-map' | 'timeline';
+  focus?: string;  // e.g., "cardiac cycle", "heart anatomy"
 }
 ```
 
 **Output**:
 ```typescript
 {
-  cellType: "draw",
+  cellType: "draw",  // Creates draw cell!
   content: JSON.stringify({
     elements: [
-      // Excalidraw elements (rectangles, arrows, text)
       {
+        id: "rect1",
         type: "rectangle",
         x: 100,
         y: 100,
-        width: 200,
-        height: 100,
-        backgroundColor: "#fff",
-        strokeColor: "#000",
-        // ... other Excalidraw props
+        width: 180,
+        height: 80,
+        strokeColor: "#1e1e1e",
+        backgroundColor: "#a5d8ff",
+        // ... full Excalidraw element props
       },
       {
-        type: "arrow",
-        x: 300,
-        y: 150,
-        // ...
-      },
-      {
+        id: "text1",
         type: "text",
         text: "Serce",
-        x: 150,
-        y: 130,
-        fontSize: 20
+        x: 130,
+        y: 125,
+        fontSize: 20,
+        // ... text props
+      },
+      {
+        id: "arrow1",
+        type: "arrow",
+        x: 280,
+        y: 140,
+        points: [[0, 0], [100, 0]],
+        // ... arrow props
       }
     ],
     appState: {
@@ -210,34 +234,30 @@ User clicks "Save Note" → Note saved to database
     }
   }),
   metadata: {
-    diagramType: 'anatomy',
-    source: '@cardiology.pdf'
+    type: 'flowchart'
   }
 }
 ```
 
 **User Flow**:
 ```
-User: "@anatomy.pdf /draw cardiac cycle diagram"
+User: "@anatomy.pdf /diagram cardiac cycle flowchart"
 ↓
-Gemini calls draw_tool
+Gemini calls diagram_tool(content: PDF, diagramType: 'flowchart')
 ↓
-Tool parses content, generates Excalidraw JSON:
-  - Boxes for heart chambers
-  - Arrows for blood flow
-  - Labels for anatomical structures
+Tool loads Excalidraw template structure
+↓
+Gemini generates diagram JSON based on template
 ↓
 UI opens DRAFT draw cell with diagram
 ↓
-User can edit diagram in Excalidraw (move elements, add annotations)
+User edits diagram in Excalidraw (move, resize, add elements)
 ↓
-User clicks "Save Diagram" → Draw cell saved to database
+User clicks "Approve & Save" → Draw cell created in database
 ```
 
-**Challenge**: Excalidraw JSON generation is complex. Solutions:
-1. **Use templates**: Pre-built diagram templates for common medical concepts
-2. **LLM-assisted generation**: Gemini generates simplified structure, we convert to Excalidraw format
-3. **Iterative approach**: Start with basic shapes, improve over time
+**Why Cell**: Diagrams are complex visual content that needs editing
+**Template**: Uses `/docs/Excalidraw_Mock_Template.json` as structure reference
 
 ---
 
