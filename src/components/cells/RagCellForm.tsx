@@ -41,7 +41,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   }, [state.status])
 
   useEffect(() => {
-    console.log('🔄 State changed:', {
+    console.log('[RagCell] State changed:', {
       status: state.status,
       hasValues: !!state.values,
       hasToolResults: !!state.values?.toolResults,
@@ -50,11 +50,11 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
     if (state.status === 'SUCCESS' && state.values?.toolResults) {
       const toolResults = state.values.toolResults
-      console.log('🔍 Client received toolResults:', toolResults)
+      console.log('[RagCell] Client received toolResults:', toolResults)
 
       if (typeof toolResults === 'object' && toolResults !== null && !Array.isArray(toolResults)) {
         Object.entries(toolResults).forEach(([toolName, result]) => {
-          console.log(`🔧 Processing tool: ${toolName}`, result)
+          console.log(`[RagCell] Processing tool: ${toolName}`, result)
           if (
             typeof result === 'object' &&
             result !== null &&
@@ -71,15 +71,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
               processedToolResults.current.add(resultKey)
-              console.log(`✨ Creating new ${typedResult.cellType} cell after ${cell.id}`)
+              console.log(`[RagCell] Creating new ${typedResult.cellType} cell after ${cell.id}`)
 
               const newCellId = insertCellAfter(cell.id, typedResult.cellType)
-              console.log(`📝 Updating cell ${newCellId} with content (${typedResult.content.length} chars)`)
+              console.log(`[RagCell] Updating cell ${newCellId} with content (${typedResult.content.length} chars)`)
               updateCell(newCellId, typedResult.content)
             } else if (!typedResult.cellType) {
-              console.log(`ℹ️ Tool ${toolName} has no cellType, skipping cell creation`)
+              console.log(`[RagCell] Tool ${toolName} has no cellType, skipping cell creation`)
             } else {
-              console.log(`⏭️ Tool result already processed, skipping`)
+              console.log(`[RagCell] Tool result already processed, skipping`)
             }
           }
         })

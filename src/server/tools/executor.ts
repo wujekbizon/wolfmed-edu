@@ -78,7 +78,7 @@ export async function executeToolLocally(
   toolName: string,
   args: any
 ): Promise<ToolResult> {
-  console.log(`🔧 Executing tool: ${toolName}`, args);
+  console.log(`[TOOL] Executing: ${toolName}`, args);
 
   switch (toolName) {
     case 'query':

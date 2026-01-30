@@ -117,7 +117,7 @@ export async function askRagQuestion(
       [...TOOL_DEFINITIONS]
     )
 
-    console.log('📦 Server action returning toolResults:', result.toolResults)
+    console.log('[Action] Server action returning toolResults:', result.toolResults)
 
     return {
       ...toFormState('SUCCESS', result.answer),

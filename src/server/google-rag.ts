@@ -166,7 +166,7 @@ export async function queryWithFileSearch(
     })
 
     if (response.functionCalls && Array.isArray(response.functionCalls) && response.functionCalls.length > 0) {
-      console.log('🤖 Gemini requested tool execution:', response.functionCalls.map(c => c.name))
+      console.log('[RAG] Gemini requested tool execution:', response.functionCalls.map(c => c.name))
 
       const executedTools: Array<{ name: string; result: ToolResult }> = []
 
@@ -195,7 +195,7 @@ export async function queryWithFileSearch(
         }
       }))
 
-      console.log('📤 Sending tool results back to Gemini for final answer')
+      console.log('[RAG] Sending tool results back to Gemini for final answer')
 
       const toolResultsText = executedTools.map(({ name, result }) => {
         return `Tool: ${name}\nResult: ${JSON.stringify(result, null, 2)}`
@@ -212,8 +212,7 @@ Based on the tool execution results above, please provide a comprehensive final 
         model: 'gemini-2.5-flash',
         contents: finalPrompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT,
-          tools: configTools
+          systemInstruction: SYSTEM_PROMPT
         }
       })
 
@@ -228,7 +227,7 @@ Based on the tool execution results above, please provide a comprehensive final 
         toolResultsFormatted[name] = result
       })
 
-      console.log('✅ Returning toolResults:', JSON.stringify(toolResultsFormatted, null, 2))
+      console.log('[RAG] Returning toolResults:', JSON.stringify(toolResultsFormatted, null, 2))
 
       return {
         answer: finalAnswer,
