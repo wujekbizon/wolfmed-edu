@@ -81,6 +81,12 @@ export async function executeToolLocally(
   console.log(`🔧 Executing tool: ${toolName}`, args);
 
   switch (toolName) {
+    case 'query':
+      return {
+        content: 'File search is already active. Please use the information from the documents already provided to answer the user question.',
+        metadata: { autoHandled: true }
+      };
+
     case 'utworz_test':
       return await utworzTool(args);
 
