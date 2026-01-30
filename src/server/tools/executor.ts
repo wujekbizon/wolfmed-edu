@@ -24,6 +24,7 @@ interface NoteTemplate {
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
+let diagramTemplate: any = null
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -60,6 +61,15 @@ async function getSummaryTemplate(): Promise<NoteTemplate> {
   return summaryTemplate
 }
 
+async function getDiagramTemplate(): Promise<any> {
+  if (!diagramTemplate) {
+    const templatePath = join(process.cwd(), 'docs', 'Excalidraw_Mock_Template.json')
+    const content = await readFile(templatePath, 'utf-8')
+    diagramTemplate = JSON.parse(content)
+  }
+  return diagramTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -75,6 +85,9 @@ export async function executeToolLocally(
 
     case 'podsumuj':
       return await podsumujTool(args);
+
+    case 'diagram_tool':
+      return await diagramTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -132,12 +145,12 @@ Return ONLY the JSON array, no additional text.`
   }
 
   return {
-    cellType: 'test',
-    content: JSON.stringify({ questions }),
+    content: JSON.stringify({ questions }, null, 2),
     metadata: {
       count: questions.length,
       category,
-      generated: new Date().toISOString()
+      generated: new Date().toISOString(),
+      displayFormat: 'json'
     }
   };
 }
@@ -208,11 +221,60 @@ Return ONLY the markdown summary content.`
   const summaryContent = response.text || template.example
 
   return {
-    cellType: 'note',
     content: summaryContent.trim(),
     metadata: {
       type: 'summary',
       wordCount: summaryContent.split(/\s+/).length,
+      generated: new Date().toISOString()
+    }
+  };
+}
+
+async function diagramTool(args: any): Promise<ToolResult> {
+  const { content = '', diagramType = 'flowchart', focus = '' } = args;
+
+  const templateData = await getDiagramTemplate()
+  const exampleCell = templateData[0]
+  const cellKey = Object.keys(exampleCell)[0]
+  const exampleContent = JSON.parse(exampleCell[cellKey].content)
+
+  const ai = getGoogleAI()
+
+  const prompt = `You are an expert at creating Excalidraw diagrams.
+
+Create a ${diagramType} diagram based on this content:
+
+${content}
+
+${focus ? `Focus on: ${focus}` : ''}
+
+Use this Excalidraw JSON structure as reference:
+${JSON.stringify(exampleContent, null, 2)}
+
+Generate a complete Excalidraw JSON with:
+- elements array containing shapes, arrows, and text
+- appState with viewBackgroundColor
+- Use proper Polish labels
+- Keep layout clear and organized
+
+Return ONLY valid Excalidraw JSON matching the structure shown above.`
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: prompt,
+    config: {
+      temperature: 0.7,
+      responseMimeType: 'application/json'
+    }
+  })
+
+  const diagramContent = response.text || JSON.stringify(exampleContent)
+
+  return {
+    cellType: 'draw',
+    content: diagramContent,
+    metadata: {
+      type: diagramType,
       generated: new Date().toISOString()
     }
   };
