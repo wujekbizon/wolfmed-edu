@@ -22,7 +22,7 @@ export default function CustomCategoryManager({ initialCategories, questions }: 
   const testsArr = Array.isArray(questions) ? questions : Object.values(questions)
 
   const { data: cachedTests = []} = useQuery({
-    queryKey: ['allTests', questions[0]?.category ?? 'custom-categories'],
+    queryKey: ['allTests', questions[0]?.meta.category ?? 'custom-categories'],
     queryFn: async () => testsArr,
     initialData: testsArr,
     staleTime: 10 * 60 * 1000,

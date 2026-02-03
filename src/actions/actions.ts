@@ -63,6 +63,7 @@ import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
+import { populateTests } from "@/server/db/populateDb"
 
 export async function startTestAction(
   formState: FormState,
@@ -495,7 +496,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
       values: { motto },
     }
   }
-
+  populateTests()
   revalidatePath("/panel")
   return toFormState("SUCCESS", "Motto zaktualizowane pomyślnie!")
 }
@@ -821,7 +822,10 @@ export async function createTestAction(
 
     await db.insert(userCustomTests).values({
       userId: user.userId,
-      category: category.toLowerCase(),
+      meta: {
+        category: category.toLowerCase(),
+        course: "kategoria-wlasna"
+      },
       data,
     })
   } catch (error) {
@@ -907,7 +911,7 @@ export async function uploadTestsFromFile(
       const insertPromises = validatedData.map((testData) =>
         tx.insert(userCustomTests).values({
           userId: user.userId,
-          category: testData.category.toLowerCase(),
+          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
           data: testData.data,
         })
       )
@@ -1006,7 +1010,7 @@ export async function deleteUserCustomTestsByCategoryAction(
       .where(
         and(
           eq(userCustomTests.userId, userId),
-          eq(userCustomTests.category, validationResult.data.category)
+          sql`${userCustomTests.meta}->>'category' = ${validationResult.data.meta.category}`
         )
       )
 
@@ -1023,7 +1027,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   return toFormState(
     "SUCCESS",
-    `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`
+    `Usunięto wszystkie testy z kategorii: ${validationResult.data.meta.category}`
   )
 }
 

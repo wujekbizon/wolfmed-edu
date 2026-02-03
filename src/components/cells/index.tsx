@@ -28,5 +28,14 @@ const DynamicNoteCell = dynamic(() => import('./NoteCell'), {
   ssr: false,
 })
 
+const DynamicRagCell = dynamic(() => import('./RagCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
-export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell}
+
+export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell }

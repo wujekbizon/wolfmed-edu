@@ -22,13 +22,33 @@ export async function populateTests() {
 
     await insertData(testsData, tests, (test) => ({
       id: test.id,
-      category: test.category,
+      meta: {
+        course: test.meta.course,
+        category: test.meta.category,
+      },
       data: test.data,
     }))
 
     console.log('Tests table populated successfully!')
   } catch (error) {
     console.error('Error populating tests table:', error)
+  }
+}
+
+export async function populateAnyCategoryTests(category: string) {
+  try {
+    const testsData = (await readDataFileAndParse(category)) as Test[]
+
+    await insertData(testsData, tests, (test) => ({
+      id: test.id,
+      meta: {
+        course: test.meta.course,
+        category: test.meta.category,
+      },
+      data: test.data,
+    }))
+  } catch (error) {
+    console.error('Error populating any category tests:', error)
   }
 }
 
