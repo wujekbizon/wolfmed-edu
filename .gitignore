@@ -50,5 +50,4 @@ detail_layers.txt
 /.claude
 
 *.sql
-
-CHANGELOG.md
+*.toml

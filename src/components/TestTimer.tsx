@@ -53,12 +53,17 @@ export default function TestTimer({ durationMinutes, sessionId, onExpiration, me
   const seconds = timeLeft % 60
 
   return (
-    <div
-      className={`flex items-center gap-4 font-mono text-lg font-bold px-4 py-2 rounded-lg backdrop-blur-sm shadow-lg ${isWarning ? 'bg-red-500/15 text-red-300' : 'bg-green-500/15 text-green-600'}`}
-    >
-      <span className="text-base font-normal text-zinc-700">{message}</span>
-      <span>
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+    <div className="flex flex-col items-end gap-1">
+      <div
+        className={`flex items-center gap-4 font-mono text-lg font-bold px-4 py-2 rounded-lg backdrop-blur-sm shadow-lg ${isWarning ? 'bg-red-500/15 text-red-300' : 'bg-green-500/15 text-green-600'}`}
+      >
+        <span className="text-base font-normal text-zinc-700">{message}</span>
+        <span>
+          {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        </span>
+      </div>
+      <span className="text-xs text-yellow-600">
+        ⚠️ Uwaga: Opuszczenie tej karty lub zamknięcie przeglądarki spowoduje zakończenie sesji egzaminacyjnej.
       </span>
     </div>
   )

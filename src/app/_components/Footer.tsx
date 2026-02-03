@@ -4,6 +4,7 @@ import XIcon from '@/components/icons/XIcon'
 import { navLinks } from '@/constants/navLinks'
 import Image from 'next/image'
 import Link from 'next/link'
+import CookieSettingsButton from './cookies/CookieSettingsButton'
 
 export default function Footer() {
   return (
@@ -56,6 +57,9 @@ export default function Footer() {
                   Polityka Prywatności
                 </Link>
               </li>
+              <li>
+                <CookieSettingsButton />
+              </li>
             </ul>
           </div>
           <div className="text-center sm:text-left">
@@ -92,7 +96,7 @@ export default function Footer() {
 
         {/* Copyright and attribution */}
         <div className="border-t border-zinc-200 pt-8 mt-8 text-sm text-center">
-          <p>© 2025 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
+          <p>© 2026 Wolfmed-Edukacja. Wszelkie prawa zastrzeżone.</p>
           <Link href="https://wesa.vercel.app/" target="_blank" className="hover:text-red-500 transition-colors ">
             Designed by <span className="font-bold">WESA</span>
           </Link>

@@ -174,6 +174,7 @@ export async function startTestAction(
           durationMinutes,
           startedAt: now,
           expiresAt,
+          lastActivityAt: now,
           status: "ACTIVE",
           meta: parsedMeta,
         })
