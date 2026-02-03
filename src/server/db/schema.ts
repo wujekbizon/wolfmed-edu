@@ -108,6 +108,7 @@ export const testSessions = createTable(
     startedAt: timestamp("startedAt").notNull().defaultNow(),
     expiresAt: timestamp("expiresAt").notNull(),
     finishedAt: timestamp("finishedAt"),
+    lastActivityAt: timestamp("lastActivityAt").defaultNow().notNull(), 
     status: varchar("status", { length: 32 })
       .$type<"ACTIVE" | "EXPIRED" | "COMPLETED" | "CANCELLED">()
       .notNull()
