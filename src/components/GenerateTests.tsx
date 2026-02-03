@@ -13,11 +13,16 @@ import FieldError from './FieldError'
 import Input from './ui/Input'
 import ConfirmLeaveModal from './ConfirmLeaveModal'
 import type { Test } from '@/types/dataTypes'
+import { useSessionHeartbeat } from '@/hooks/useSessionHeartbeat'
+import { useBeaconCleanup } from '@/hooks/useBeaconCleanup'
 
 export default function GenerateTests(props: { tests: Test[], sessionId: string, duration: number, questions: number }) {
   const [state, action, isPending] = useActionState(submitTestAction, EMPTY_FORM_STATE)
   const randomTest = useGeneratedTest(props.tests, props.questions)
   const noScriptFallback = useToastMessage(state);
+  useSessionHeartbeat(props.sessionId)
+  useBeaconCleanup(props.sessionId)
+
   const [showModal, setShowModal] = useState(false)
   const [resolver, setResolver] = useState<((val: boolean) => void) | null>(null)
   const [isTimerExpired, setIsTimerExpired] = useState(false)
