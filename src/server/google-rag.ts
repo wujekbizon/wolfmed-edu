@@ -352,6 +352,12 @@ export async function queryFileSearchOnly(
 
     console.log('[RAG] Phase 1: RAG-only query (no tools)')
 
+    console.log('[RAG] Phase 1: Querying with:', {
+      question: question.substring(0, 100),
+      hasContext: !!additionalContext,
+      store: fileSearchStoreName
+    })
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: enhancedQuery,
@@ -365,13 +371,22 @@ export async function queryFileSearchOnly(
       }
     })
 
+    console.log('[RAG] Phase 1: Raw response keys:', Object.keys(response))
+    console.log('[RAG] Phase 1: response.text exists:', !!response.text)
+    console.log('[RAG] Phase 1: candidates:', response.candidates?.length || 0)
+
     const answer = response.text || ''
 
     if (!answer) {
+      // Log more details for debugging
+      console.log('[RAG] Phase 1: Empty response details:', {
+        candidates: response.candidates,
+        promptFeedback: response.promptFeedback
+      })
       throw new Error('Empty response from Gemini')
     }
 
-    console.log('[RAG] Phase 1 complete: Retrieved context')
+    console.log('[RAG] Phase 1 complete: Retrieved', answer.length, 'chars')
 
     return {
       answer,
