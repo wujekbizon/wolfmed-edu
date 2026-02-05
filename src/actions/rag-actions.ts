@@ -72,7 +72,7 @@ async function resolveDisplayNameToUri(displayName: string, userId: string): Pro
 async function fetchResourceContent(uri: string, userId: string): Promise<string> {
   if (uri.startsWith('note://')) {
     const noteId = uri.replace('note://', '')
-    const note = await getNoteById(noteId, userId)
+    const note = await getNoteById(userId, noteId)
     return note ? `# ${note.title}\n\n${note.content}` : ''
   }
 
