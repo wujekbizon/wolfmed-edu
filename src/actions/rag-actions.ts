@@ -127,8 +127,24 @@ export async function askRagQuestion(
 
       const toolDefinition = toolMap[toolName]
 
+      // Handle empty question - need either a topic or resource context
+      if (!cleanQuestion.trim() && !additionalContext) {
+        return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
+      }
+
+      // If no explicit topic but has resource context, use a default query
+      const effectiveQuestion = cleanQuestion.trim()
+        ? cleanQuestion
+        : 'Przeanalizuj powyższą treść i przygotuj odpowiedź na jej podstawie'
+
+      console.log('[Action] Phase 1 query:', {
+        effectiveQuestion,
+        hasContext: !!additionalContext,
+        contextLength: additionalContext?.length || 0
+      })
+
       const ragResult = await queryFileSearchOnly(
-        cleanQuestion,
+        effectiveQuestion,
         undefined,
         additionalContext || undefined
       )
