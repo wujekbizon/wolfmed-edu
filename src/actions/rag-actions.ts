@@ -21,8 +21,14 @@ async function resolveDisplayNameToUri(displayName: string, userId: string): Pro
       return null
     }
 
+    // Log available resources for debugging
+    console.log('[Action] Available resources:', data.resources.map((r: Resource) => r.displayName))
+    console.log('[Action] Looking for:', displayName)
+
+    // Try exact match first, then normalized match
+    const normalizedSearch = displayName.toLowerCase().trim()
     const resource = data.resources.find((r: Resource) =>
-      r.displayName.toLowerCase() === displayName.toLowerCase()
+      r.displayName.toLowerCase().trim() === normalizedSearch
     )
 
     return resource ? resource.name : null
