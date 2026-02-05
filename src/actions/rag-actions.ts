@@ -143,15 +143,29 @@ export async function askRagQuestion(
         contextLength: additionalContext?.length || 0
       })
 
-      const ragResult = await queryFileSearchOnly(
-        effectiveQuestion,
-        undefined,
-        additionalContext || undefined
-      )
+      // Build merged content: user's @resource (PRIMARY) + RAG results (SECONDARY)
+      let toolInputContent = ''
+
+      // PRIMARY: User's @resource content (if provided)
+      if (additionalContext) {
+        toolInputContent += `=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${additionalContext}\n\n`
+      }
+
+      // SECONDARY: File Search results (supplementary info from knowledge base)
+      const ragResult = await queryFileSearchOnly(effectiveQuestion)
+      if (ragResult.answer) {
+        toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
+      }
+
+      console.log('[Action] Merged content for tool:', {
+        hasUserResource: !!additionalContext,
+        hasRagResult: !!ragResult.answer,
+        totalLength: toolInputContent.length
+      })
 
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
-        ragResult.answer,
+        toolInputContent,
         toolDefinition
       )
 
