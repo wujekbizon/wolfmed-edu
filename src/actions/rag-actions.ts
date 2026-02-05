@@ -73,7 +73,7 @@ async function fetchResourceContent(uri: string, userId: string): Promise<string
   if (uri.startsWith('note://')) {
     const noteId = uri.replace('note://', '')
     const note = await getNoteById(userId, noteId)
-    return note ? `# ${note.title}\n\n${note.content}` : ''
+    return note ? `# ${note.title}\n\n${note.plainText || ''}` : ''
   }
 
   if (uri.startsWith('material://')) {
