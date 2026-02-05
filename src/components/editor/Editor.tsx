@@ -57,7 +57,7 @@ export default function Editor({
 
   const config = {
     ...editorConfig,
-    editorState: isJSON ? initialContent : undefined,
+    ...(isJSON && { editorState: initialContent }),
   }
 
   return (
