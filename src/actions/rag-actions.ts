@@ -85,22 +85,32 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
+    console.log('[Action] Parsed commands:', {
+      resources,
+      tools,
+      cleanQuestion: cleanQuestion.substring(0, 50) + '...'
+    })
+
     let additionalContext = ''
     if (resources.length > 0) {
       try {
         const resolvedUris = await Promise.all(
           resources.map(async (displayName) => {
             const uri = await resolveDisplayNameToUri(displayName, userId)
+            console.log('[Action] Resolved URI:', { displayName, uri })
             return uri ? { displayName, uri } : null
           })
         )
 
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
+        console.log('[Action] Valid resources:', validResources.length)
 
         if (validResources.length > 0) {
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => {
-              return await fetchResourceContent(uri, userId)
+              const content = await fetchResourceContent(uri, userId)
+              console.log('[Action] Fetched content:', { uri, contentLength: content.length })
+              return content
             })
           )
           additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
