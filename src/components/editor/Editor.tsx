@@ -1,13 +1,15 @@
 'use client'
 
+import { useEffect } from 'react'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown'
-import { EditorState } from 'lexical'
+import { $getRoot, EditorState } from 'lexical'
 import EditorToolbar from './EditorToolbar'
 import { editorConfig } from './editorConfig'
 
@@ -30,26 +32,32 @@ function isLexicalJSON(content: string): boolean {
   }
 }
 
+function MarkdownInitPlugin({ markdown }: { markdown: string }) {
+  const [editor] = useLexicalComposerContext()
+
+  useEffect(() => {
+    if (!markdown) return
+    editor.update(() => {
+      const root = $getRoot()
+      root.clear()
+      $convertFromMarkdownString(markdown, TRANSFORMERS)
+    })
+  }, [editor, markdown])
+
+  return null
+}
+
 export default function Editor({
   onChange,
   initialContent = '',
   placeholder = 'Zacznij pisać...',
   className = '',
 }: Props) {
+  const isJSON = isLexicalJSON(initialContent)
+
   const config = {
     ...editorConfig,
-    editorState: initialContent
-      ? (editor: any) => {
-          if (isLexicalJSON(initialContent)) {
-            const initialState = editor.parseEditorState(initialContent)
-            editor.setEditorState(initialState)
-          } else {
-            editor.update(() => {
-              $convertFromMarkdownString(initialContent, TRANSFORMERS)
-            })
-          }
-        }
-      : () => {},
+    editorState: isJSON ? initialContent : undefined,
   }
 
   return (
@@ -81,6 +89,7 @@ export default function Editor({
           />
           <HistoryPlugin />
           {onChange && <OnChangePlugin onChange={onChange} />}
+          {!isJSON && initialContent && <MarkdownInitPlugin markdown={initialContent} />}
         </div>
       </div>
     </LexicalComposer>
