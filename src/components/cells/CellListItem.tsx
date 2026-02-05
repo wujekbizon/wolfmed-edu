@@ -11,7 +11,7 @@ export default function CellListItem ({cell}: {cell: Cell}) {
           <div className="relative w-full h-10">
             <ActionBar cell={cell} />
           </div>
-          <DynamicNoteCell />
+          <DynamicNoteCell cell={cell} />
         </div>
       )}
       {cell.type === 'rag' && (

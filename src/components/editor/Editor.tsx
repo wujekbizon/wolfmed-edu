@@ -6,6 +6,7 @@ import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
+import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown'
 import { EditorState } from 'lexical'
 import EditorToolbar from './EditorToolbar'
 import { editorConfig } from './editorConfig'
@@ -15,6 +16,18 @@ interface Props {
   initialContent?: string
   placeholder?: string
   className?: string
+}
+
+function isLexicalJSON(content: string): boolean {
+  if (!content) return false
+  const trimmed = content.trim()
+  if (!trimmed.startsWith('{')) return false
+  try {
+    const parsed = JSON.parse(trimmed)
+    return parsed.root !== undefined
+  } catch {
+    return false
+  }
 }
 
 export default function Editor({
@@ -27,8 +40,14 @@ export default function Editor({
     ...editorConfig,
     editorState: initialContent
       ? (editor: any) => {
-          const initialState = editor.parseEditorState(initialContent)
-          editor.setEditorState(initialState)
+          if (isLexicalJSON(initialContent)) {
+            const initialState = editor.parseEditorState(initialContent)
+            editor.setEditorState(initialState)
+          } else {
+            editor.update(() => {
+              $convertFromMarkdownString(initialContent, TRANSFORMERS)
+            })
+          }
         }
       : () => {},
   }
