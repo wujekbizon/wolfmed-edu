@@ -13,7 +13,7 @@ import { useNoteEditor } from "@/hooks/useNoteEditor"
 import ResizableComponent from "./Resizable"
 
 interface CreateNoteFormProps {
-  initialContent?: string
+  initialContent?: string | undefined
 }
 
 export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) {
