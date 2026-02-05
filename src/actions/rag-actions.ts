@@ -7,27 +7,58 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
-import { getNoteById } from '@/server/queries'
+import { getNoteById, getAllUserNotes, getMaterialsByUser } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
+import { mcpServer } from '@/server/mcp/server'
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-    const response = await fetch(`${baseUrl}/api/mcp/resources`)
-    const data = await response.json()
+    // Build resources list directly from DB (not API) to include user's notes/materials
+    const resources: Resource[] = []
 
-    if (data.error || !data.resources) {
-      return null
+    // Get docs from MCP server
+    const mcpResult = await mcpServer.readResource('docs://list')
+    const fileList = mcpResult.contents?.[0]?.text
+      ? JSON.parse(mcpResult.contents[0].text)
+      : []
+
+    const docResources: Resource[] = fileList.map((filename: string) => ({
+      name: filename,
+      displayName: filename.replace('.md', '').replace(/_/g, ' '),
+      type: 'doc' as const,
+    }))
+    resources.push(...docResources)
+
+    // Get user's notes and materials directly from DB
+    if (userId) {
+      const [notes, materials] = await Promise.all([
+        getAllUserNotes(userId),
+        getMaterialsByUser(userId),
+      ])
+
+      const noteResources: Resource[] = notes.map((note) => ({
+        name: `note://${note.id}`,
+        displayName: note.title,
+        type: 'note' as const,
+      }))
+
+      const materialResources: Resource[] = materials.map((material) => ({
+        name: `material://${material.id}`,
+        displayName: material.title,
+        type: 'material' as const,
+      }))
+
+      resources.push(...noteResources, ...materialResources)
     }
 
     // Log available resources for debugging
-    console.log('[Action] Available resources:', data.resources.map((r: Resource) => r.displayName))
+    console.log('[Action] Available resources:', resources.map((r: Resource) => r.displayName))
     console.log('[Action] Looking for:', displayName)
 
     // Try exact match first, then normalized match
     const normalizedSearch = displayName.toLowerCase().trim()
-    const resource = data.resources.find((r: Resource) =>
+    const resource = resources.find((r: Resource) =>
       r.displayName.toLowerCase().trim() === normalizedSearch
     )
 
