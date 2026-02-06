@@ -55,7 +55,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: 'diagram_tool',
-    description: 'Generate a visual diagram in Excalidraw format. Creates an editable diagram cell with shapes, arrows, and labels in Polish. Choose diagramType based on content: flowchart for processes/algorithms, sequence for time-based interactions, class for hierarchies/classifications.',
+    description: 'Generate a visual diagram in Excalidraw format. Creates an editable diagram cell with shapes, arrows, and labels in Polish. Choose diagramType based on content: flowchart for processes/algorithms, sequence for time-based interactions.',
     parameters: {
       type: 'object',
       properties: {
@@ -65,8 +65,8 @@ export const TOOL_DEFINITIONS = [
         },
         diagramType: {
           type: 'string',
-          enum: ['flowchart', 'sequence', 'class'],
-          description: 'Type of diagram: flowchart (processes, decisions), sequence (signaling, interactions over time), class (hierarchies, classifications). Default: flowchart'
+          enum: ['flowchart', 'sequence'], // 'class' - hierarchies/classifications (commented out for now)
+          description: 'Type of diagram: flowchart (processes, decisions), sequence (signaling, interactions over time). Default: flowchart'
         },
         focus: {
           type: 'string',
