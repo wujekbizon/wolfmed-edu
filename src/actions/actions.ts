@@ -17,7 +17,7 @@ import {
   users,
   userLimits,
   userCustomTests,
-  userCustomCategories,
+  userCustomCategories
 } from "@/server/db/schema"
 import {
   CreateAnswersSchema,
@@ -37,10 +37,10 @@ import {
   CreateCustomCategorySchema,
   AddQuestionToCategorySchema,
   DeleteCustomCategorySchema,
-  UpdateCategoryNameSchema,
+  UpdateCategoryNameSchema
 } from "@/server/schema"
 import { auth } from "@clerk/nextjs/server"
-import { eq, sql, and, gt, lt } from "drizzle-orm"
+import { eq, sql, and, gt, lt, or } from "drizzle-orm"
 import {
   deleteCompletedTest,
   updateMottoByUserId,
@@ -56,7 +56,7 @@ import {
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
-  deleteUserCustomCategory,
+  deleteUserCustomCategory
 } from "@/server/queries"
 import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -85,7 +85,7 @@ export async function startTestAction(
       category: formData.get("category"),
       numberOfQuestions: formData.get("numberOfQuestions"),
       durationMinutes: formData.get("durationMinutes"),
-      meta: formData.get("meta") ?? "{}",
+      meta: formData.get("meta") ?? "{}"
     })
 
     if (!validationResult.success) {
@@ -110,7 +110,7 @@ export async function startTestAction(
       const [user] = await tx
         .select({
           supporter: users.supporter,
-          testLimit: users.testLimit,
+          testLimit: users.testLimit
         })
         .from(users)
         .where(eq(users.userId, userId))
@@ -133,15 +133,19 @@ export async function startTestAction(
       }
 
       const now = new Date()
+      const heartbeatThreshold = new Date(now.getTime() - 2 * 60 * 1000)
 
       await tx
         .update(testSessions)
-        .set({ status: "EXPIRED" })
+        .set({ status: "EXPIRED", finishedAt: now })
         .where(
           and(
             eq(testSessions.userId, userId),
             eq(testSessions.status, "ACTIVE"),
-            lt(testSessions.expiresAt, now)
+            or(
+              lt(testSessions.expiresAt, now),
+              lt(testSessions.lastActivityAt, heartbeatThreshold)
+            )
           )
         )
 
@@ -175,7 +179,7 @@ export async function startTestAction(
           expiresAt,
           lastActivityAt: now,
           status: "ACTIVE",
-          meta: parsedMeta,
+          meta: parsedMeta
         })
         .returning()
 
@@ -187,7 +191,7 @@ export async function startTestAction(
       sessionId: result?.id,
       expiresAt: result?.expiresAt,
       durationMinutes: result?.durationMinutes,
-      numberOfQuestions: result?.numberOfQuestions,
+      numberOfQuestions: result?.numberOfQuestions
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -242,12 +246,14 @@ export async function submitTestAction(
         "ERROR",
         validationResult.error.issues[0]?.message || "Wybierz jedną odpowiedź"
       ),
-      values: formValues,
+      values: formValues
     }
   }
 
   const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
-  const testResult = parseAnswerRecord(validationResult?.data as QuestionAnswer[])
+  const testResult = parseAnswerRecord(
+    validationResult?.data as QuestionAnswer[]
+  )
 
   try {
     await db.transaction(async (tx) => {
@@ -276,7 +282,7 @@ export async function submitTestAction(
 
       const [user] = await tx
         .select({
-          testLimit: users.testLimit,
+          testLimit: users.testLimit
         })
         .from(users)
         .where(eq(users.userId, userId))
@@ -303,7 +309,7 @@ export async function submitTestAction(
         .set({
           testsAttempted: sql`${users.testsAttempted} + 1`,
           totalScore: sql`${users.totalScore} + ${correct}`,
-          totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`,
+          totalQuestions: sql`${users.totalQuestions} + ${testResult.length}`
         })
         .where(eq(users.userId, userId))
 
@@ -311,7 +317,7 @@ export async function submitTestAction(
         userId,
         sessionId: session.id,
         score: correct,
-        testResult,
+        testResult
       })
 
       await tx
@@ -351,7 +357,7 @@ export async function sendEmail(formState: FormState, formData: FormData) {
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { email, message },
+      values: { email, message }
     }
   }
 
@@ -359,12 +365,12 @@ export async function sendEmail(formState: FormState, formData: FormData) {
     await db.insert(customersMessages).values({
       email: validationResult.data.email,
       message: validationResult.data.message,
-      createdAt: new Date(),
+      createdAt: new Date()
     })
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { email, message },
+      values: { email, message }
     }
   }
 
@@ -439,7 +445,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { username },
+      values: { username }
     }
   }
 
@@ -448,7 +454,7 @@ export async function updateUsername(formState: FormState, formData: FormData) {
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { username },
+      values: { username }
     }
   }
   revalidatePath("/panel")
@@ -483,7 +489,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { motto },
+      values: { motto }
     }
   }
 
@@ -492,7 +498,7 @@ export async function updateMotto(formState: FormState, formData: FormData) {
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { motto },
+      values: { motto }
     }
   }
 
@@ -528,13 +534,13 @@ export async function createForumPostAction(
   const validationResult = CreatePostSchema.safeParse({
     title,
     content,
-    readonly,
+    readonly
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { title, content, readonly: readonly.toString() },
+      values: { title, content, readonly: readonly.toString() }
     }
   }
 
@@ -554,7 +560,7 @@ export async function createForumPostAction(
         content: validationResult.data.content,
         authorId: userId,
         authorName: user.username || "Anonymous",
-        readonly: validationResult.data.readonly,
+        readonly: validationResult.data.readonly
       })
     })
 
@@ -562,7 +568,7 @@ export async function createForumPostAction(
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { title, content, readonly: readonly.toString() },
+      values: { title, content, readonly: readonly.toString() }
     }
   }
 
@@ -637,7 +643,7 @@ export async function createCommentAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { content },
+      values: { content }
     }
   }
 
@@ -650,7 +656,7 @@ export async function createCommentAction(
         .where(eq(users.userId, userId))
       const postExists = await tx.query.forumPosts.findFirst({
         where: (posts, { eq }) => eq(posts.id, postId),
-        columns: { readonly: true },
+        columns: { readonly: true }
       })
 
       if (!user) throw new Error("Username not found")
@@ -663,7 +669,7 @@ export async function createCommentAction(
         postId,
         content: validationResult.data.content,
         authorId: userId,
-        authorName: user.username || "Anonymous",
+        authorName: user.username || "Anonymous"
       })
     })
 
@@ -671,7 +677,7 @@ export async function createCommentAction(
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { content },
+      values: { content }
     }
   }
 
@@ -746,13 +752,13 @@ export async function createTestimonialAction(
   const validationResult = CreateTestimonialSchema.safeParse({
     content,
     rating,
-    visible: true,
+    visible: true
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { content, rating, visible },
+      values: { content, rating, visible }
     }
   }
 
@@ -760,12 +766,12 @@ export async function createTestimonialAction(
     await createTestimonial({
       userId,
       ...validationResult.data,
-      visible: true,
+      visible: true
     })
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
-      values: { content, rating },
+      values: { content, rating }
     }
   }
 
@@ -806,7 +812,7 @@ export async function createTestAction(
     const { answers, category, question } = CreateTestSchema.parse({
       category: testCategory,
       question: formData.get("question"),
-      answers: answersData,
+      answers: answersData
     })
 
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
@@ -816,13 +822,13 @@ export async function createTestAction(
 
     const data = {
       question,
-      answers,
+      answers
     }
 
     await db.insert(userCustomTests).values({
       userId: user.userId,
       category: category.toLowerCase(),
-      data,
+      data
     })
   } catch (error) {
     return fromErrorToFormState(error)
@@ -908,7 +914,7 @@ export async function uploadTestsFromFile(
         tx.insert(userCustomTests).values({
           userId: user.userId,
           category: testData.category.toLowerCase(),
-          data: testData.data,
+          data: testData.data
         })
       )
       await Promise.all(insertPromises)
@@ -937,9 +943,9 @@ export async function expireSessionAction(sessionId: string) {
 
   try {
     await expireTestSession(sessionId, userId)
-    return { 
-      status: "SUCCESS" as const, 
-      message: "Sesja została zakończona" 
+    return {
+      status: "SUCCESS" as const,
+      message: "Sesja została zakończona"
     }
   } catch (error) {
     console.error("Error expiring session:", error)
@@ -996,7 +1002,7 @@ export async function deleteUserCustomTestsByCategoryAction(
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { category },
+      values: { category }
     }
   }
 
@@ -1040,13 +1046,13 @@ export async function createCustomCategoryAction(
   const categoryName = formData.get("categoryName") as string
 
   const validationResult = CreateCustomCategorySchema.safeParse({
-    categoryName,
+    categoryName
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryName },
+      values: { categoryName }
     }
   }
 
@@ -1054,7 +1060,7 @@ export async function createCustomCategoryAction(
     await db.insert(userCustomCategories).values({
       userId,
       categoryName: validationResult.data.categoryName,
-      questionIds: [],
+      questionIds: []
     })
   } catch (error) {
     return fromErrorToFormState(error)
@@ -1082,13 +1088,13 @@ export async function addQuestionToCategoryAction(
 
   const validationResult = AddQuestionToCategorySchema.safeParse({
     categoryId,
-    questionId,
+    questionId
   })
 
   if (!validationResult.success) {
     return {
       ...fromErrorToFormState(validationResult.error),
-      values: { categoryId, questionId },
+      values: { categoryId, questionId }
     }
   }
 
@@ -1110,7 +1116,7 @@ export async function addQuestionToCategoryAction(
         .update(userCustomCategories)
         .set({
           questionIds: updatedIds,
-          updatedAt: new Date(),
+          updatedAt: new Date()
         })
         .where(eq(userCustomCategories.id, validationResult.data.categoryId))
     }
@@ -1137,7 +1143,7 @@ export async function removeQuestionFromCategoryAction(
 
   const validationResult = AddQuestionToCategorySchema.safeParse({
     categoryId,
-    questionId,
+    questionId
   })
 
   if (!validationResult.success) {
@@ -1163,7 +1169,7 @@ export async function removeQuestionFromCategoryAction(
       .update(userCustomCategories)
       .set({
         questionIds: updatedIds,
-        updatedAt: new Date(),
+        updatedAt: new Date()
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {
@@ -1227,7 +1233,7 @@ export async function updateCategoryNameAction(
 
   const validationResult = UpdateCategoryNameSchema.safeParse({
     categoryId,
-    categoryName,
+    categoryName
   })
 
   if (!validationResult.success) {
@@ -1248,7 +1254,7 @@ export async function updateCategoryNameAction(
       .update(userCustomCategories)
       .set({
         categoryName: validationResult.data.categoryName,
-        updatedAt: new Date(),
+        updatedAt: new Date()
       })
       .where(eq(userCustomCategories.id, validationResult.data.categoryId))
   } catch (error) {
