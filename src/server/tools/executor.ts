@@ -126,7 +126,7 @@ ${JSON.stringify(template.structure, null, 2)}
 Return ONLY the JSON array, no additional text.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7,
@@ -185,7 +185,7 @@ ${template.example}
 Return ONLY the markdown note content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7
@@ -222,7 +222,7 @@ ${template.example}
 Return ONLY the markdown summary content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7
@@ -268,7 +268,7 @@ ${example}
 Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7

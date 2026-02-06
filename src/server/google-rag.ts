@@ -172,7 +172,7 @@ export async function queryWithFileSearch(
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash',
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
@@ -345,7 +345,7 @@ export async function queryFileSearchOnly(
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash',
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
@@ -422,7 +422,7 @@ ${content}
 
     // Wrap in role/parts structure for multimodal content
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3-flash',
       contents: [{
         role: 'user',
         parts: parts
@@ -454,7 +454,7 @@ Result: ${JSON.stringify(result, null, 2)}
 Please provide a brief confirmation message to the user about what was created.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash',
         contents: finalPrompt,
         config: {
           systemInstruction: SYSTEM_PROMPT
