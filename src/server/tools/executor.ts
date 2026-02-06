@@ -23,7 +23,11 @@ interface NoteTemplate {
 
 interface MermaidTemplate {
   prompt: string;
-  example: string;
+  examples: {
+    flowchart: string;
+    sequence: string;
+    class: string;
+  };
 }
 
 let testTemplate: TestQuestionTemplate | null = null
@@ -245,6 +249,12 @@ async function diagramTool(args: any): Promise<ToolResult> {
 
   const prompt = template.prompt.replace('{{diagramType}}', diagramType)
 
+  // Select appropriate example based on diagram type
+  const exampleKey = diagramType === 'sequence' ? 'sequence'
+    : diagramType === 'class' ? 'class'
+    : 'flowchart'
+  const example = template.examples[exampleKey]
+
   const fullPrompt = `${prompt}
 
 ${focus ? `Focus specifically on: ${focus}` : ''}
@@ -252,8 +262,8 @@ ${focus ? `Focus specifically on: ${focus}` : ''}
 CONTENT:
 ${content}
 
-EXAMPLE:
-${template.example}
+EXAMPLE FOR ${diagramType.toUpperCase()}:
+${example}
 
 Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
@@ -265,7 +275,7 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
     }
   })
 
-  let mermaidContent = response.text || template.example
+  let mermaidContent = response.text || example
 
   // Clean up any markdown code blocks if present
   mermaidContent = mermaidContent
