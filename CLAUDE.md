@@ -137,7 +137,8 @@ Claude (or any coding assistant) should follow these principles when interacting
 3. **Avoid duplication** — rely on existing implementations in `/server`, `/actions`, or `/lib`.
 4. **Follow Zod validation and server-first architecture** as described in `server-actions.md`.
 5. **Use TailwindCSS v4 conventions** defined in `tailwind-styles.md`.
-6. **Keep code clean and self-documenting** — Only add comments to code that is genuinely complex or difficult to understand. Prefer clear naming and simple logic over excessive commenting. Comments should explain "why", not "what".  
+6. **Keep code clean and self-documenting** — Only add comments to code that is genuinely complex or difficult to understand. Prefer clear naming and simple logic over excessive commenting. Comments should explain "why", not "what".
+7. **Check before creating** — Before adding any new function, query, or utility, search the codebase to verify it doesn't already exist. Use grep/search to check `/server/queries.ts`, `/actions`, and `/lib` for similar functionality.  
 
 ---
 
