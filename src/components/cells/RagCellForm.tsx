@@ -8,9 +8,11 @@ import SubmitButton from '@/components/SubmitButton'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { useResourceAutocomplete } from '@/hooks/useResourceAutocomplete'
 import { useResourceAutocompleteInput } from '@/hooks/useResourceAutocompleteInput'
+import { useCommandAutocompleteInput } from '@/hooks/useCommandAutocompleteInput'
 import RagResponse from './RagResponse'
 import RagLoadingState from './RagLoadingState'
 import { ResourceAutocomplete } from './ResourceAutocomplete'
+import { CommandAutocomplete } from './CommandAutocomplete'
 import { useCellsStore } from '@/store/useCellsStore'
 import type { CellTypes } from '@/types/cellTypes'
 
@@ -30,10 +32,39 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     showAutocomplete,
     filteredResources,
     selectedIndex,
-    handleInputChange,
-    handleKeyDown,
+    handleInputChange: handleResourceInputChange,
+    handleKeyDown: handleResourceKeyDown,
     insertResource,
   } = useResourceAutocompleteInput(resources)
+
+  const {
+    showCommandAutocomplete,
+    filteredCommands,
+    commandSelectedIndex,
+    handleCommandInputChange,
+    handleCommandKeyDown,
+    insertCommand,
+  } = useCommandAutocompleteInput(textareaRef)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value
+    const cursorPos = e.target.selectionStart || 0
+
+    const commandHandled = handleCommandInputChange(value, cursorPos)
+    if (!commandHandled) {
+      handleResourceInputChange(e)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (showCommandAutocomplete) {
+      const handled = handleCommandKeyDown(e)
+      if (handled) return
+    }
+    if (showAutocomplete) {
+      handleResourceKeyDown(e)
+    }
+  }
 
   useEffect(() => {
     if (state.status === 'SUCCESS' && conversationRef.current) {
@@ -135,19 +166,27 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
               ref={textareaRef}
               name="question"
               defaultValue={cell.content}
-              placeholder="Zadaj pytanie dotyczące materiałów medycznych... (użyj @ aby odwołać się do plików)"
+              placeholder="Zadaj pytanie... (@ pliki, / polecenia)"
               rows={2}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-transparent resize-none text-sm"
             />
 
-            {showAutocomplete && (
+            {showAutocomplete && !showCommandAutocomplete && (
               <ResourceAutocomplete
                 resources={filteredResources}
                 selectedIndex={selectedIndex}
                 onSelect={insertResource}
                 loading={loading}
+              />
+            )}
+
+            {showCommandAutocomplete && (
+              <CommandAutocomplete
+                commands={filteredCommands}
+                selectedIndex={commandSelectedIndex}
+                onSelect={insertCommand}
               />
             )}
 
