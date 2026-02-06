@@ -27,10 +27,16 @@ interface DiagramTemplate {
   example: any;
 }
 
+interface MermaidTemplate {
+  prompt: string;
+  example: string;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
 let diagramTemplate: DiagramTemplate | null = null
+let mermaidTemplate: MermaidTemplate | null = null
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -72,6 +78,13 @@ async function getDiagramTemplate(): Promise<DiagramTemplate> {
     diagramTemplate = await loadTemplate<DiagramTemplate>('excalidraw-template.json')
   }
   return diagramTemplate
+}
+
+async function getMermaidTemplate(): Promise<MermaidTemplate> {
+  if (!mermaidTemplate) {
+    mermaidTemplate = await loadTemplate<MermaidTemplate>('mermaid-template.json')
+  }
+  return mermaidTemplate
 }
 
 export async function executeToolLocally(
@@ -241,7 +254,7 @@ Return ONLY the markdown summary content.`
 async function diagramTool(args: any): Promise<ToolResult> {
   const { content = '', diagramType = 'flowchart', focus = '' } = args;
 
-  const template = await getDiagramTemplate()
+  const template = await getMermaidTemplate()
   const ai = getGoogleAI()
 
   const prompt = template.prompt.replace('{{diagramType}}', diagramType)
@@ -253,27 +266,33 @@ ${focus ? `Focus specifically on: ${focus}` : ''}
 CONTENT:
 ${content}
 
-EXAMPLE STRUCTURE:
-${JSON.stringify(template.example, null, 2)}
+EXAMPLE:
+${template.example}
 
-Return ONLY valid Excalidraw JSON matching the structure shown above.`
+Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7,
-      responseMimeType: 'application/json'
+      temperature: 0.7
     }
   })
 
-  const diagramContent = response.text || JSON.stringify(template.example)
+  let mermaidContent = response.text || template.example
+
+  // Clean up any markdown code blocks if present
+  mermaidContent = mermaidContent
+    .replace(/```mermaid\n?/g, '')
+    .replace(/```\n?/g, '')
+    .trim()
 
   return {
     cellType: 'draw',
-    content: diagramContent,
+    content: mermaidContent,
     metadata: {
       type: diagramType,
+      format: 'mermaid',
       generated: new Date().toISOString()
     }
   };
