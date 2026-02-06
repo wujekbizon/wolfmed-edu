@@ -415,12 +415,12 @@ export async function executeToolWithContent(
     })
 
     // Build content parts - text + any PDF files as inline data
-    const contentParts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = []
+    const parts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = []
 
     // Add PDF files as inline data (they become PRIMARY sources)
     if (pdfFiles && pdfFiles.length > 0) {
       for (const pdf of pdfFiles) {
-        contentParts.push({
+        parts.push({
           inlineData: {
             data: pdf.base64,
             mimeType: pdf.mimeType
@@ -428,25 +428,36 @@ export async function executeToolWithContent(
         })
         console.log(`[RAG] Added PDF to content: ${pdf.title}`)
       }
-
-      // Add instruction about the PDF
-      contentParts.push({
-        text: `The PDF file(s) above are the PRIMARY source(s) selected by the user. Use their content as the main source for the tool.`
-      })
     }
 
-    // Add the text prompt with any text content
-    const prompt = `User request: Use the ${toolName} tool to process the following content.
+    // Build the prompt - tell the model to READ the PDF and use it for the tool
+    let prompt = `ZADANIE: Użyj narzędzia ${toolName} aby przetworzyć treść.
 
-${content ? `Content from documents:\n${content}` : ''}
+`
+    if (pdfFiles && pdfFiles.length > 0) {
+      prompt += `GŁÓWNE ŹRÓDŁO: Powyższy plik PDF został wybrany przez użytkownika. Przeczytaj go dokładnie i użyj jego treści jako podstawy dla narzędzia.
 
-IMPORTANT: You MUST call the ${toolName} function now.`
+`
+    }
 
-    contentParts.push({ text: prompt })
+    if (content) {
+      prompt += `DODATKOWE INFORMACJE:
+${content}
 
+`
+    }
+
+    prompt += `WAŻNE: Musisz teraz wywołać funkcję ${toolName}, przekazując treść z PDF (jeśli jest) jako parametr 'content'.`
+
+    parts.push({ text: prompt })
+
+    // Wrap in role/parts structure for multimodal content
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: contentParts,
+      contents: [{
+        role: 'user',
+        parts: parts
+      }],
       config: {
         systemInstruction: SYSTEM_PROMPT,
         tools: [{
@@ -463,8 +474,14 @@ IMPORTANT: You MUST call the ${toolName} function now.`
       }
 
       console.log('[RAG] Phase 2: Tool called:', call.name)
+      console.log('[TOOL] Executing:', call.name, {
+        contentFromModel: call.args?.content ? `${String(call.args.content).substring(0, 100)}...` : 'none',
+        contentLength: call.args?.content ? String(call.args.content).length : 0
+      })
 
-      const args = { ...call.args, content }
+      // Use the content the model extracted from PDF, fallback to our text content
+      const toolContent = call.args?.content || content
+      const args = { ...call.args, content: toolContent }
       const result = await executeToolLocally(call.name, args)
 
       console.log('[RAG] Phase 2: Sending result back for final answer')
