@@ -1438,6 +1438,20 @@ export const getMaterialsByUser = cache(async (userId: string) => {
   }))
 })
 
+export const getMaterialById = cache(async (userId: string, materialId: string) => {
+  const material = await db.query.materials.findFirst({
+    where: (m, { eq, and }) => and(eq(m.id, materialId), eq(m.userId, userId)),
+  })
+
+  if (!material) return null
+
+  return {
+    ...material,
+    createdAt: material.createdAt?.toISOString?.() ?? null,
+    updatedAt: material.updatedAt?.toISOString?.() ?? null,
+  }
+})
+
 export const getUserStorageUsage = async (userId: string) => {
   const userStorage = await db
     .select()

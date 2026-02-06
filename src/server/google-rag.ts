@@ -398,26 +398,55 @@ export async function queryFileSearchOnly(
   }
 }
 
+type PdfFile = { title: string; base64: string; mimeType: string }
+
 export async function executeToolWithContent(
   toolName: string,
   content: string,
-  toolDefinition: { name: string; description: string; parameters: any }
+  toolDefinition: { name: string; description: string; parameters: any },
+  pdfFiles?: PdfFile[]
 ): Promise<{ answer: string; toolResults: any }> {
   try {
     const ai = getGoogleAI()
 
-    console.log(`[RAG] Phase 2: Tool-only execution (${toolName})`)
+    console.log(`[RAG] Phase 2: Tool-only execution (${toolName})`, {
+      hasTextContent: !!content,
+      pdfCount: pdfFiles?.length || 0
+    })
 
+    // Build content parts - text + any PDF files as inline data
+    const contentParts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = []
+
+    // Add PDF files as inline data (they become PRIMARY sources)
+    if (pdfFiles && pdfFiles.length > 0) {
+      for (const pdf of pdfFiles) {
+        contentParts.push({
+          inlineData: {
+            data: pdf.base64,
+            mimeType: pdf.mimeType
+          }
+        })
+        console.log(`[RAG] Added PDF to content: ${pdf.title}`)
+      }
+
+      // Add instruction about the PDF
+      contentParts.push({
+        text: `The PDF file(s) above are the PRIMARY source(s) selected by the user. Use their content as the main source for the tool.`
+      })
+    }
+
+    // Add the text prompt with any text content
     const prompt = `User request: Use the ${toolName} tool to process the following content.
 
-Content from documents:
-${content}
+${content ? `Content from documents:\n${content}` : ''}
 
 IMPORTANT: You MUST call the ${toolName} function now.`
 
+    contentParts.push({ text: prompt })
+
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: prompt,
+      contents: contentParts,
       config: {
         systemInstruction: SYSTEM_PROMPT,
         tools: [{

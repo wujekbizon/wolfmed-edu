@@ -7,7 +7,7 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
-import { getNoteById, getAllUserNotes, getMaterialsByUser } from '@/server/queries'
+import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
@@ -69,16 +69,48 @@ async function resolveDisplayNameToUri(displayName: string, userId: string): Pro
   }
 }
 
-async function fetchResourceContent(uri: string, userId: string): Promise<string> {
+type ResourceContent =
+  | { type: 'text'; content: string }
+  | { type: 'pdf'; title: string; base64: string; mimeType: string }
+
+async function fetchResourceContent(uri: string, userId: string): Promise<ResourceContent> {
   if (uri.startsWith('note://')) {
     const noteId = uri.replace('note://', '')
     const note = await getNoteById(userId, noteId)
-    return note ? `# ${note.title}\n\n${note.plainText || ''}` : ''
+    return { type: 'text', content: note ? `# ${note.title}\n\n${note.plainText || ''}` : '' }
   }
 
   if (uri.startsWith('material://')) {
     const materialId = uri.replace('material://', '')
-    return `[Material ${materialId} - content fetching not yet implemented]`
+    const material = await getMaterialById(userId, materialId)
+
+    if (!material) {
+      return { type: 'text', content: '' }
+    }
+
+    // Fetch PDF bytes from the URL
+    try {
+      const response = await fetch(material.url)
+      if (!response.ok) {
+        console.error('[Action] Failed to fetch material:', response.status)
+        return { type: 'text', content: `[Failed to fetch: ${material.title}]` }
+      }
+
+      const arrayBuffer = await response.arrayBuffer()
+      const base64 = Buffer.from(arrayBuffer).toString('base64')
+
+      console.log('[Action] Fetched PDF:', { title: material.title, size: arrayBuffer.byteLength })
+
+      return {
+        type: 'pdf',
+        title: material.title,
+        base64,
+        mimeType: material.type || 'application/pdf'
+      }
+    } catch (error) {
+      console.error('[Action] Error fetching material:', error)
+      return { type: 'text', content: `[Error fetching: ${material.title}]` }
+    }
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -88,7 +120,7 @@ async function fetchResourceContent(uri: string, userId: string): Promise<string
     body: JSON.stringify({ tool: 'read', args: { filename: uri } }),
   })
   const data = await response.json()
-  return data.content?.[0]?.text || ''
+  return { type: 'text', content: data.content?.[0]?.text || '' }
 }
 
 export async function askRagQuestion(
@@ -129,6 +161,8 @@ export async function askRagQuestion(
     })
 
     let additionalContext = ''
+    let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
+
     if (resources.length > 0) {
       try {
         const resolvedUris = await Promise.all(
@@ -146,11 +180,32 @@ export async function askRagQuestion(
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => {
               const content = await fetchResourceContent(uri, userId)
-              console.log('[Action] Fetched content:', { uri, contentLength: content.length })
+              if (content.type === 'text') {
+                console.log('[Action] Fetched text content:', { uri, contentLength: content.content.length })
+              } else {
+                console.log('[Action] Fetched PDF:', { uri, title: content.title })
+              }
               return content
             })
           )
-          additionalContext = `Context from files:\n${resourceResults.join('\n\n')}`
+
+          // Separate text content and PDF files
+          const textContents: string[] = []
+          for (const result of resourceResults) {
+            if (result.type === 'text' && result.content) {
+              textContents.push(result.content)
+            } else if (result.type === 'pdf') {
+              pdfFiles.push({
+                title: result.title,
+                base64: result.base64,
+                mimeType: result.mimeType
+              })
+            }
+          }
+
+          if (textContents.length > 0) {
+            additionalContext = `Context from files:\n${textContents.join('\n\n')}`
+          }
         }
       } catch (error) {
         console.error('Failed to fetch resources:', error)
@@ -175,7 +230,8 @@ export async function askRagQuestion(
       const toolDefinition = toolMap[toolName]
 
       // Handle empty question - need either a topic or resource context
-      if (!cleanQuestion.trim() && !additionalContext) {
+      const hasUserResource = !!additionalContext || pdfFiles.length > 0
+      if (!cleanQuestion.trim() && !hasUserResource) {
         return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
       }
 
@@ -186,8 +242,9 @@ export async function askRagQuestion(
 
       console.log('[Action] Phase 1 query:', {
         effectiveQuestion,
-        hasContext: !!additionalContext,
-        contextLength: additionalContext?.length || 0
+        hasTextContext: !!additionalContext,
+        textContextLength: additionalContext?.length || 0,
+        pdfCount: pdfFiles.length
       })
 
       // Build merged content: user's @resource (PRIMARY) + RAG results (SECONDARY)
@@ -205,7 +262,8 @@ export async function askRagQuestion(
       }
 
       console.log('[Action] Merged content for tool:', {
-        hasUserResource: !!additionalContext,
+        hasTextResource: !!additionalContext,
+        hasPdfResource: pdfFiles.length > 0,
         hasRagResult: !!ragResult.answer,
         totalLength: toolInputContent.length
       })
@@ -213,7 +271,8 @@ export async function askRagQuestion(
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
         toolInputContent,
-        toolDefinition
+        toolDefinition,
+        pdfFiles
       )
 
       console.log('[Action] Two-phase execution complete, returning toolResults:', toolResult.toolResults)
