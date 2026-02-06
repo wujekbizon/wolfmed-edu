@@ -42,8 +42,11 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
 
             if (isMermaidSyntax(cellContent)) {
                 setIsConverting(true);
+                console.log('[Excalidraw] Detected Mermaid syntax, content:', cellContent);
                 try {
                     const { elements, files } = await parseMermaidToExcalidraw(cellContent);
+                    console.log('[Excalidraw] Converted elements:', JSON.stringify(elements, null, 2));
+                    console.log('[Excalidraw] Converted files:', files);
                     const excalidrawData = {
                         elements,
                         files,
@@ -53,7 +56,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                     // Update cell with converted Excalidraw JSON so it's saved properly
                     updateCell(cell.id, JSON.stringify(excalidrawData));
                 } catch (error) {
-                    console.error('Failed to convert Mermaid to Excalidraw:', error);
+                    console.error('[Excalidraw] Failed to convert Mermaid to Excalidraw:', error);
                     setConvertedData({ elements: [], appState: { collaborators: [] } });
                 } finally {
                     setIsConverting(false);
