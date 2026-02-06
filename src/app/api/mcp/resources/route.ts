@@ -27,9 +27,6 @@ export async function GET() {
         getMaterialsByUser(userId),
       ]);
 
-      console.log('[Resources API] User notes count:', notes.length);
-      console.log('[Resources API] User materials count:', materials.length);
-
       const noteResources: Resource[] = notes.map((note) => ({
         name: `note://${note.id}`,
         displayName: note.title,

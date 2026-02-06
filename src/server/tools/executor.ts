@@ -78,8 +78,6 @@ export async function executeToolLocally(
   toolName: string,
   args: any
 ): Promise<ToolResult> {
-  console.log(`[TOOL] Executing: ${toolName}`, args);
-
   switch (toolName) {
     case 'query':
       return {

@@ -181,8 +181,6 @@ export async function queryWithFileSearch(
     })
 
     if (response.functionCalls && Array.isArray(response.functionCalls) && response.functionCalls.length > 0) {
-      console.log('[RAG] Gemini requested tool execution:', response.functionCalls.map(c => c.name))
-
       const executedTools: Array<{ name: string; result: ToolResult }> = []
 
       for (const call of response.functionCalls) {
@@ -209,8 +207,6 @@ export async function queryWithFileSearch(
           response: result
         }
       }))
-
-      console.log('[RAG] Sending tool results back to Gemini for final answer')
 
       const toolResultsText = executedTools.map(({ name, result }) => {
         return `Tool: ${name}\nResult: ${JSON.stringify(result, null, 2)}`
@@ -241,8 +237,6 @@ Based on the tool execution results above, please provide a comprehensive final 
       executedTools.forEach(({ name, result }) => {
         toolResultsFormatted[name] = result
       })
-
-      console.log('[RAG] Returning toolResults:', JSON.stringify(toolResultsFormatted, null, 2))
 
       return {
         answer: finalAnswer,
@@ -350,14 +344,6 @@ export async function queryFileSearchOnly(
 
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
-    console.log('[RAG] Phase 1: RAG-only query (no tools)')
-
-    console.log('[RAG] Phase 1: Querying with:', {
-      question: question.substring(0, 100),
-      hasContext: !!additionalContext,
-      store: fileSearchStoreName
-    })
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: enhancedQuery,
@@ -371,22 +357,11 @@ export async function queryFileSearchOnly(
       }
     })
 
-    console.log('[RAG] Phase 1: Raw response keys:', Object.keys(response))
-    console.log('[RAG] Phase 1: response.text exists:', !!response.text)
-    console.log('[RAG] Phase 1: candidates:', response.candidates?.length || 0)
-
     const answer = response.text || ''
 
     if (!answer) {
-      // Log more details for debugging
-      console.log('[RAG] Phase 1: Empty response details:', {
-        candidates: response.candidates,
-        promptFeedback: response.promptFeedback
-      })
       throw new Error('Empty response from Gemini')
     }
-
-    console.log('[RAG] Phase 1 complete: Retrieved', answer.length, 'chars')
 
     return {
       answer,
@@ -409,11 +384,6 @@ export async function executeToolWithContent(
   try {
     const ai = getGoogleAI()
 
-    console.log(`[RAG] Phase 2: Tool-only execution (${toolName})`, {
-      hasTextContent: !!content,
-      pdfCount: pdfFiles?.length || 0
-    })
-
     // Build content parts - text + any PDF files as inline data
     const parts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = []
 
@@ -426,7 +396,6 @@ export async function executeToolWithContent(
             mimeType: pdf.mimeType
           }
         })
-        console.log(`[RAG] Added PDF to content: ${pdf.title}`)
       }
     }
 
@@ -473,18 +442,10 @@ ${content}
         throw new Error('Invalid function call from Gemini')
       }
 
-      console.log('[RAG] Phase 2: Tool called:', call.name)
-      console.log('[TOOL] Executing:', call.name, {
-        contentFromModel: call.args?.content ? `${String(call.args.content).substring(0, 100)}...` : 'none',
-        contentLength: call.args?.content ? String(call.args.content).length : 0
-      })
-
       // Use the content the model extracted from PDF, fallback to our text content
       const toolContent = call.args?.content || content
       const args = { ...call.args, content: toolContent }
       const result = await executeToolLocally(call.name, args)
-
-      console.log('[RAG] Phase 2: Sending result back for final answer')
 
       const finalPrompt = `Tool ${call.name} executed successfully.
 
@@ -505,8 +466,6 @@ Please provide a brief confirmation message to the user about what was created.`
       const toolResultsFormatted: Record<string, ToolResult> = {
         [call.name]: result
       }
-
-      console.log('[RAG] Phase 2 complete: Tool executed, returning result')
 
       return {
         answer: finalAnswer,

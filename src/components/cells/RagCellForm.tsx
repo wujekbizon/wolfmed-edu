@@ -65,13 +65,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
               processedToolResults.current.add(resultKey)
-              console.log(`[RagCell] Creating new ${typedResult.cellType} cell after ${cell.id} with content (${typedResult.content.length} chars)`)
-
               insertCellAfterWithContent(cell.id, typedResult.cellType, typedResult.content)
-            } else if (!typedResult.cellType) {
-              console.log(`[RagCell] Tool ${toolName} has no cellType, skipping cell creation`)
-            } else {
-              console.log(`[RagCell] Tool result already processed, skipping`)
             }
           }
         })

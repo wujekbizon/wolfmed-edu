@@ -52,10 +52,6 @@ async function resolveDisplayNameToUri(displayName: string, userId: string): Pro
       resources.push(...noteResources, ...materialResources)
     }
 
-    // Log available resources for debugging
-    console.log('[Action] Available resources:', resources.map((r: Resource) => r.displayName))
-    console.log('[Action] Looking for:', displayName)
-
     // Try exact match first, then normalized match
     const normalizedSearch = displayName.toLowerCase().trim()
     const resource = resources.find((r: Resource) =>
@@ -98,8 +94,6 @@ async function fetchResourceContent(uri: string, userId: string): Promise<Resour
 
       const arrayBuffer = await response.arrayBuffer()
       const base64 = Buffer.from(arrayBuffer).toString('base64')
-
-      console.log('[Action] Fetched PDF:', { title: material.title, size: arrayBuffer.byteLength })
 
       return {
         type: 'pdf',
@@ -154,12 +148,6 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    console.log('[Action] Parsed commands:', {
-      resources,
-      tools,
-      cleanQuestion: cleanQuestion.substring(0, 50) + '...'
-    })
-
     let additionalContext = ''
     let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
 
@@ -168,25 +156,15 @@ export async function askRagQuestion(
         const resolvedUris = await Promise.all(
           resources.map(async (displayName) => {
             const uri = await resolveDisplayNameToUri(displayName, userId)
-            console.log('[Action] Resolved URI:', { displayName, uri })
             return uri ? { displayName, uri } : null
           })
         )
 
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
-        console.log('[Action] Valid resources:', validResources.length)
 
         if (validResources.length > 0) {
           const resourceResults = await Promise.all(
-            validResources.map(async ({ uri }) => {
-              const content = await fetchResourceContent(uri, userId)
-              if (content.type === 'text') {
-                console.log('[Action] Fetched text content:', { uri, contentLength: content.content.length })
-              } else {
-                console.log('[Action] Fetched PDF:', { uri, title: content.title })
-              }
-              return content
-            })
+            validResources.map(async ({ uri }) => fetchResourceContent(uri, userId))
           )
 
           // Separate text content and PDF files
@@ -213,8 +191,6 @@ export async function askRagQuestion(
     }
 
     if (tools.length > 0) {
-      console.log('[Action] Slash command detected, using two-phase execution:', tools)
-
       const toolName = tools[0]
       const toolMap: Record<string, any> = {
         'notatka': TOOL_DEFINITIONS.find(t => t.name === 'notatka_tool'),
@@ -240,13 +216,6 @@ export async function askRagQuestion(
         ? cleanQuestion
         : 'Przeanalizuj powyższą treść i przygotuj odpowiedź na jej podstawie'
 
-      console.log('[Action] Phase 1 query:', {
-        effectiveQuestion,
-        hasTextContext: !!additionalContext,
-        textContextLength: additionalContext?.length || 0,
-        pdfCount: pdfFiles.length
-      })
-
       // Build merged content: user's @resource (PRIMARY) + RAG results (SECONDARY)
       let toolInputContent = ''
 
@@ -261,21 +230,12 @@ export async function askRagQuestion(
         toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
       }
 
-      console.log('[Action] Merged content for tool:', {
-        hasTextResource: !!additionalContext,
-        hasPdfResource: pdfFiles.length > 0,
-        hasRagResult: !!ragResult.answer,
-        totalLength: toolInputContent.length
-      })
-
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
         toolInputContent,
         toolDefinition,
         pdfFiles
       )
-
-      console.log('[Action] Two-phase execution complete, returning toolResults:', toolResult.toolResults)
 
       return {
         ...toFormState('SUCCESS', toolResult.answer),
@@ -285,8 +245,6 @@ export async function askRagQuestion(
         }
       }
     }
-
-    console.log('[Action] No slash command, using regular RAG query')
 
     const result = await queryFileSearchOnly(
       cleanQuestion,
