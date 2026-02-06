@@ -224,7 +224,7 @@ ${toolResultsText}
 Based on the tool execution results above, please provide a comprehensive final answer incorporating the generated content.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-flash',
         contents: finalPrompt,
         config: {
           systemInstruction: SYSTEM_PROMPT
