@@ -2,7 +2,65 @@
 
 **Date**: 2026-01-30
 **Vision**: Hybrid approach - some tools create cells, some return formatted responses
-**Status**: ✅ Week 1 Complete - Tools Implemented | ⚠️ Gemini API Limitation Discovered
+**Status**: ✅ Week 1 Complete - Tools Implemented | ⚠️ Gemini API Limitation Discovered | ✅ Diagram Tool with Mermaid-to-Excalidraw
+
+---
+
+## ✅ LATEST UPDATE: Diagram Tool Implementation (2026-02-06)
+
+### Mermaid-to-Excalidraw Approach
+
+**Problem Solved**: LLMs cannot reliably predict pixel sizes for Excalidraw elements, resulting in overlapping text and cramped layouts.
+
+**Solution**: Use Mermaid syntax for diagram generation, then convert to Excalidraw with automatic layout.
+
+### Implementation Details
+
+**Package Added**: `@excalidraw/mermaid-to-excalidraw`
+
+**Flow**:
+```
+1. User: "/diagram utwórz schemat budowy serca"
+2. Gemini generates Mermaid syntax (flowchart/sequence)
+3. diagramTool returns: { cellType: 'draw', content: mermaidSyntax }
+4. Excalidraw component detects Mermaid syntax
+5. parseMermaidToExcalidraw() → skeleton elements
+6. convertToExcalidrawElements() → actual elements with text binding
+7. Cell updated with Excalidraw JSON
+```
+
+**Supported Diagram Types**:
+- `flowchart` - processes, algorithms, decision trees, anatomy structures
+- `sequence` - time-based interactions, signaling cascades, drug metabolism
+- `class` - (commented out, available for future use)
+
+**Key Files**:
+- `templates/mermaid-template.json` - Prompt template with examples for each diagram type
+- `src/server/tools/executor.ts` - `diagramTool()` generates Mermaid via Gemini
+- `src/components/excalidraw/Excalidraw.tsx` - Detects Mermaid, converts to Excalidraw
+
+**Mermaid Detection** (`Excalidraw.tsx`):
+```typescript
+function isMermaidSyntax(content: string): boolean {
+    const trimmed = content.trim();
+    return trimmed.startsWith('flowchart') ||
+           trimmed.startsWith('graph') ||
+           trimmed.startsWith('sequenceDiagram') ||
+           trimmed.startsWith('classDiagram');
+}
+```
+
+**Conversion** (`Excalidraw.tsx`):
+```typescript
+const { elements: skeletonElements, files } = await parseMermaidToExcalidraw(cellContent);
+const elements = convertToExcalidrawElements(skeletonElements);
+```
+
+**Why This Works**:
+- Mermaid handles layout automatically (no pixel guessing)
+- Text always fits in shapes
+- Consistent spacing and connections
+- LLM only needs to know Mermaid syntax (well-documented)
 
 ---
 
