@@ -42,20 +42,13 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   }, [state.status])
 
   useEffect(() => {
-    console.log('[RagCell] State changed:', {
-      status: state.status,
-      hasValues: !!state.values,
-      hasToolResults: !!state.values?.toolResults,
-      values: state.values
-    })
-
+   
     if (state.status === 'SUCCESS' && state.values?.toolResults) {
       const toolResults = state.values.toolResults
-      console.log('[RagCell] Client received toolResults:', toolResults)
 
       if (typeof toolResults === 'object' && toolResults !== null && !Array.isArray(toolResults)) {
         Object.entries(toolResults).forEach(([toolName, result]) => {
-          console.log(`[RagCell] Processing tool: ${toolName}`, result)
+          
           if (
             typeof result === 'object' &&
             result !== null &&

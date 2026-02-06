@@ -51,12 +51,10 @@ export class BioSimulation {
     if(this.areHostile(a,b)) {
       if(a.canAttack(b)) {
         a.attack(b);
-        console.log("Cell destroyed");
         this.removeEntity(b)
       }
       if(b.canAttack(a)) {
         b.attack(a);
-        console.log("Cell destroyed");
         this.removeEntity(a)
       }
       return;
@@ -66,7 +64,6 @@ export class BioSimulation {
       if (a.canReproduce(b)) {
         const newCell = a.reproduce(b);
         if (newCell) {
-          console.log("Reproduction happened");
           this.addEntity(newCell);
         }
         return;
@@ -75,7 +72,6 @@ export class BioSimulation {
       if (b.canReproduce(a)) {
         const newCell = b.reproduce(a);
         if (newCell) {
-          console.log("Reproduction happened");
           this.addEntity(newCell);
         }
         return;
@@ -85,7 +81,6 @@ export class BioSimulation {
     if (a.canMergeWith(b)) {
       const merged = a.mergeWith(b);
       if (merged) {
-        console.log("Enitity merged");
         this.replaceEntities([a, b], merged);
         return;
       }
@@ -94,7 +89,6 @@ export class BioSimulation {
     if (b.canMergeWith(a)) {
       const merged = b.mergeWith(a);
       if (merged) {
-        console.log("Enitity merged");
         this.replaceEntities([a, b], merged);
         return;
       }
