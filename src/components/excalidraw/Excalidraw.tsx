@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import {
     Excalidraw as Draw,
     useHandleLibrary,
+    convertToExcalidrawElements,
 } from '@excalidraw/excalidraw';
 import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import { MainMenu } from '@excalidraw/excalidraw';
@@ -44,9 +45,13 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                 setIsConverting(true);
                 console.log('[Excalidraw] Detected Mermaid syntax, content:', cellContent);
                 try {
-                    const { elements, files } = await parseMermaidToExcalidraw(cellContent);
-                    console.log('[Excalidraw] Converted elements:', JSON.stringify(elements, null, 2));
-                    console.log('[Excalidraw] Converted files:', files);
+                    const { elements: skeletonElements, files } = await parseMermaidToExcalidraw(cellContent);
+                    console.log('[Excalidraw] Skeleton elements:', JSON.stringify(skeletonElements, null, 2));
+
+                    // Convert skeleton elements to actual Excalidraw elements (with proper text binding)
+                    const elements = convertToExcalidrawElements(skeletonElements);
+                    console.log('[Excalidraw] Final elements:', JSON.stringify(elements, null, 2));
+
                     const excalidrawData = {
                         elements,
                         files,
