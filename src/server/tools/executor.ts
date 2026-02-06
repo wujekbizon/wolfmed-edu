@@ -21,12 +21,6 @@ interface NoteTemplate {
   example: string;
 }
 
-interface DiagramTemplate {
-  prompt: string;
-  structure: any;
-  example: any;
-}
-
 interface MermaidTemplate {
   prompt: string;
   example: string;
@@ -35,7 +29,6 @@ interface MermaidTemplate {
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
-let diagramTemplate: DiagramTemplate | null = null
 let mermaidTemplate: MermaidTemplate | null = null
 
 function getGoogleAI() {
@@ -71,13 +64,6 @@ async function getSummaryTemplate(): Promise<NoteTemplate> {
     summaryTemplate = await loadTemplate<NoteTemplate>('summary-template.json')
   }
   return summaryTemplate
-}
-
-async function getDiagramTemplate(): Promise<DiagramTemplate> {
-  if (!diagramTemplate) {
-    diagramTemplate = await loadTemplate<DiagramTemplate>('excalidraw-template.json')
-  }
-  return diagramTemplate
 }
 
 async function getMermaidTemplate(): Promise<MermaidTemplate> {
