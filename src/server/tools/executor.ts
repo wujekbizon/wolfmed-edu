@@ -277,15 +277,11 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
   let mermaidContent = response.text || example
 
-  console.log('[diagramTool] Raw response:', response.text)
-
   // Clean up any markdown code blocks if present
   mermaidContent = mermaidContent
     .replace(/```mermaid\n?/g, '')
     .replace(/```\n?/g, '')
     .trim()
-
-  console.log('[diagramTool] Cleaned Mermaid content:', mermaidContent)
 
   return {
     cellType: 'draw',
