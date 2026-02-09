@@ -64,7 +64,6 @@ export default function RagProgressIndicator({
           </span>
         )}
 
-        {/* Tool icon */}
         <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
         </svg>
@@ -76,11 +75,11 @@ export default function RagProgressIndicator({
         </span>
       </div>
 
-      {/* Progress section */}
-      <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs text-slate-500">
-          <span>Progress</span>
-          <span className="font-mono">{progress}/100</span>
+      {/* Progress section with simple message */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-slate-600">{message}</span>
+          <span className="text-slate-400 font-mono">{progress}/100</span>
         </div>
         <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div
@@ -92,24 +91,6 @@ export default function RagProgressIndicator({
         </div>
       </div>
 
-      {/* Live log terminal - always show latest messages */}
-      {logs.length > 0 && (
-        <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs space-y-1">
-          {logs.slice(-3).map((log, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="text-sky-400 select-none">{'>_'}</span>
-              <span className={
-                log.level === 'error' ? 'text-red-400' :
-                log.level === 'warn' ? 'text-amber-400' :
-                'text-sky-400'
-              }>
-                {log.message}
-              </span>
-            </div>
-          ))}
-        </div>
-      )}
-
       {/* Error message */}
       {error && (
         <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
@@ -117,47 +98,49 @@ export default function RagProgressIndicator({
         </div>
       )}
 
-      {/* Show details toggle */}
-      {logs.length > 3 && (
-        <button
-          onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors"
-        >
-          <svg
-            className={`w-3 h-3 transition-transform ${showDetails ? 'rotate-90' : ''}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      {/* Show details toggle - always available if there are logs */}
+      {logs.length > 0 && (
+        <>
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-          {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
-        </button>
-      )}
+            <svg
+              className={`w-3 h-3 transition-transform ${showDetails ? 'rotate-90' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
+          </button>
 
-      {/* Full log history when expanded */}
-      {showDetails && logs.length > 3 && (
-        <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1">
-          {logs.map((log, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="text-slate-500 shrink-0 w-16">
-                {new Date(log.timestamp).toLocaleTimeString('pl-PL', {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit'
-                })}
-              </span>
-              <span className="text-sky-400 select-none">{'>_'}</span>
-              <span className={
-                log.level === 'error' ? 'text-red-400' :
-                log.level === 'warn' ? 'text-amber-400' :
-                'text-sky-400'
-              }>
-                {log.message}
-              </span>
+          {/* Detailed log history when expanded */}
+          {showDetails && (
+            <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1">
+              {logs.map((log, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <span className="text-slate-500 shrink-0 w-16">
+                    {new Date(log.timestamp).toLocaleTimeString('pl-PL', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit'
+                    })}
+                  </span>
+                  <span className="text-sky-400 select-none">{'>_'}</span>
+                  <span className={
+                    log.level === 'error' ? 'text-red-400' :
+                    log.level === 'warn' ? 'text-amber-400' :
+                    'text-sky-400'
+                  }>
+                    {log.message}
+                  </span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   )
