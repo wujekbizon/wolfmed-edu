@@ -3,7 +3,6 @@
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { markMessageAsRead } from "@/server/queries"
-import { requireAdmin } from "@/lib/adminHelpers"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 
@@ -16,8 +15,6 @@ export async function markMessageAsReadAction(
     if (!userId) {
       return toFormState("ERROR", "Nieautoryzowany dostęp")
     }
-
-    await requireAdmin()
 
     const messageId = Number(formData.get("messageId"))
 

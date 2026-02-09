@@ -1,5 +1,22 @@
 import { CurriculumBlock, PathData } from "@/types/careerPathsTypes";
 
+export const careerPaths = [
+  {
+    slug: "opiekun-medyczny",
+    title: "Opiekun Medyczny",
+    teaser: "Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!",
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RgLCs7moJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
+    cta: "Sprawdź szczegóły",
+  },
+  {
+    slug: "pielegniarstwo",
+    title: "Pielęgniarstwo",
+    teaser: "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
+    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
+    cta: "Zarejestruj się już dziś",
+  }
+];
+
 export const curriculum: CurriculumBlock[] = [
   {
     id: "1",
@@ -239,8 +256,11 @@ export const careerPathsData: Record<string, PathData> = {
       }
     ],
     pricing: {
-      standard: {
-        price: "Plan standard: 0zł",
+      courseSlug: "opiekun-medyczny",
+      basic: {
+        price: "49,99 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
+        accessTier: "basic",
         features: [
           "Bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
@@ -250,9 +270,11 @@ export const careerPathsData: Record<string, PathData> = {
         ]
       },
       premium: {
-        price: "Plan premium: 49,99 zł",
+        price: "159,99 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
+        accessTier: "premium",
         features: [
-          "Wszystko z planu darmowego",
+          "Wszystko z planu basic",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego i tablicy",
@@ -290,22 +312,29 @@ export const careerPathsData: Record<string, PathData> = {
       }
     ],
     pricing: {
-      standard: {
-        price: "Dostęp podstawowy: 39 zł/mies.",
+      courseSlug: "pielegniarstwo",
+      basic: {
+        price: "199 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
+        accessTier: "basic",
         features: [
-          "Dostęp do wszystkich pytań egzaminacyjnych",
+          "Dostęp do podstawowych kategorii (Anatomia, Fizjologia, Biochemia, Socjologia)",
+          "Ponad 1000 pytań egzaminacyjnych",
           "Podstawowe materiały szkoleniowe",
           "Testy z ostatnich 2 lat"
         ]
       },
       premium: {
-        price: "Dostęp rozszerzony: 59 zł/mies.",
+        price: "399 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
+        accessTier: "premium",
         features: [
-          "Wszystko z planu darmowego",
-          "Ponad 31 algorytmów i procedur",
+          "Wszystko z planu basic",
+          "Dostęp do wszystkich kategorii (Farmakologia, Patologia, Mikrobiologia, itp.)",
+          "Ponad 5000 pytań egzaminacyjnych",
           "Materiały i książki dydaktyczne (cyfrowe)",
           "Dostęp do modułu praktycznego",
-          "Wyzwania i quizy procedur"
+          "Wyzwania i quizy"
         ]
       }
     }

@@ -23,10 +23,12 @@ export const DeleteMaterialIdSchema = z.object({
 });
 
 export const DeleteCategorySchema = z.object({
-  category: z
-    .string()
-    .min(1, "Kategoria jest wymagana.")
-    .trim(),
+  meta: z.object({
+    category: z
+      .string()
+      .min(1, "Kategoria jest wymagana.")
+      .trim(),
+  }),
 });
 
 export const CreateAnswersSchema = (allowedLengths: number[]) => {
@@ -181,7 +183,10 @@ export const TestFileSchema = z.array(
         .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
         .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
     }),
-    category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
+    meta: z.object({
+      course: z.string().min(1, { message: "Pole kursu jest wymagane" }),
+      category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
+    }),
   })
 );
 
@@ -235,7 +240,7 @@ export type NoteInput = z.infer<typeof NoteSchema>;
  */
 export const CellSchema = z.object({
   id: z.string(),
-  type: z.enum(["note", "text", "draw"]),
+  type: z.enum(["note", "rag", "draw"]),
   content: z.string(),
 });
 
@@ -550,3 +555,38 @@ export type UpdateBlogTagInput = z.infer<typeof UpdateBlogTagSchema>;
 export type DeleteBlogTagInput = z.infer<typeof DeleteBlogTagSchema>;
 export type LikeBlogPostInput = z.infer<typeof LikeBlogPostSchema>;
 export type UnlikeBlogPostInput = z.infer<typeof UnlikeBlogPostSchema>;
+
+/**
+ * RAG (Retrieval Augmented Generation) validation schemas
+ */
+
+// User-facing RAG query schema
+export const RagQuerySchema = z.object({
+  question: z
+    .string()
+    .min(5, "Pytanie musi mieć min. 5 znaków")
+    .max(500, "Pytanie zbyt długie (max 500 znaków)"),
+  cellId: z.string().min(1, "ID komórki jest wymagane"),
+});
+
+// Admin: Create File Search Store
+export const CreateStoreSchema = z.object({
+  displayName: z
+    .string()
+    .min(3, "Nazwa musi mieć min. 3 znaki")
+    .max(100, "Nazwa nie może przekraczać 100 znaków"),
+});
+
+// Admin: Test RAG query
+export const TestRagQuerySchema = z.object({
+  question: z
+    .string()
+    .min(5, "Pytanie musi mieć min. 5 znaków")
+    .max(500, "Pytanie zbyt długie (max 500 znaków)"),
+  storeName: z.string().optional(),
+});
+
+// Type exports
+export type RagQueryInput = z.infer<typeof RagQuerySchema>;
+export type CreateStoreInput = z.infer<typeof CreateStoreSchema>;
+export type TestRagQueryInput = z.infer<typeof TestRagQuerySchema>;

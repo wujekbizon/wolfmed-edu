@@ -30,7 +30,7 @@ export default function CustomTestCard({ test }: CustomTestCardProps) {
         <div className="flex-1">
           <div className="mb-3">
             <span className="inline-block px-3 py-1 bg-zinc-900/90 text-zinc-100 text-sm rounded-full border border-zinc-800">
-              {test.category}
+              {test.meta.category}
             </span>
           </div>
           <h3 className="text-lg font-semibold text-zinc-900 mb-4">

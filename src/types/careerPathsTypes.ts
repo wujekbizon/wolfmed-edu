@@ -1,7 +1,7 @@
 import { CardProps } from "@/constants/educationalPathCards";
 import { StaticImageData } from "next/image";
 
-type TemplateType = "simple" | "rich" | "advanced";
+type TemplateType = "simple" | "rich";
 
 export type CurriculumBlock = {
   id: string,
@@ -18,15 +18,18 @@ export type CurriculumBlock = {
   }[];
 };
 
+type PricingTier = {
+  price: string;
+  features: string[];
+  priceId: string;
+  accessTier: string;
+};
+
 type PricingTable = {
-  standard: {
-    price: string;
-    features: string[];
-  };
-  premium?: {
-    price: string;
-    features: string[];
-  };
+  courseSlug: string;
+  basic: PricingTier;
+  premium?: PricingTier;
+  pro?: PricingTier;
 };
 
 export type Testimonial = {

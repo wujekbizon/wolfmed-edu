@@ -35,7 +35,7 @@ export async function fetchProblematicQuestionDetails(questions: ProblematicQues
       return {
         questionId: question.questionId,
         questionText: testData.data.question,
-        category: testData.category,
+        category: testData.meta.category,
         correctAnswer: correctAnswer?.option || 'N/A',
         timesAnswered: question.timesAnswered,
         timesCorrect: question.timesCorrect,

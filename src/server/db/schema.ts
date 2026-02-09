@@ -14,6 +14,11 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
+interface TestMeta {
+  course: string;
+  category: string;
+}
+
 export const createTable = pgTableCreator((name) => `wolfmed_${name}`)
 
 export const currencyEnum = pgEnum("currency", ["pln", "usd", "eur"])
@@ -46,6 +51,7 @@ export const payments = createTable("stripe_payments", {
   currency: currencyEnum("currency"),
   customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
+  courseSlug: varchar("courseSlug", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow(),
 }, (table) => [
   index("stripe_payments_user_id_idx").on(table.userId),
@@ -64,6 +70,7 @@ export const subscriptions = createTable("stripe_subscriptions", {
   invoiceId: varchar("invoiceId", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   subscriptionId: varchar("subscriptionId", { length: 256 }).notNull(),
+  courseSlug: varchar("courseSlug", { length: 100 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 })
 
@@ -122,7 +129,7 @@ export const testSessions = createTable(
 
 export const tests = createTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  category: varchar("category", { length: 256 }).notNull(),
+  meta: jsonb("meta").$type<TestMeta>().notNull(),
   data: jsonb("data").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt"),
@@ -133,14 +140,14 @@ export const userCustomTests = createTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull(),
-    category: varchar("category", { length: 256 }).notNull(),
+    meta: jsonb("meta").$type<TestMeta>().notNull(),
     data: jsonb("data").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt"),
   },
   (userCustomTests) => ({
     userIdIdx: index("user_custom_tests_userId_idx").on(userCustomTests.userId),
-    categoryIdx: index("user_custom_tests_category_idx").on(userCustomTests.category),
+    metaIdx: index("user_custom_tests_meta_idx").on(userCustomTests.meta),
   })
 )
 
@@ -499,6 +506,53 @@ export const userLimitsRelations = relations(userLimits, ({ one }) => ({
   }),
 }));
 
+// Multi-Course System
+export const courses = createTable(
+  "courses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("courses_slug_idx").on(table.slug),
+    index("courses_is_active_idx").on(table.isActive),
+  ]
+);
+
+export const courseEnrollments = createTable(
+  "course_enrollments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    courseSlug: varchar("course_slug", { length: 100 }).notNull(),
+    accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at"),
+  },
+  (table) => [
+    index("enrollments_user_id_idx").on(table.userId),
+    index("enrollments_course_slug_idx").on(table.courseSlug),
+    index("enrollments_is_active_idx").on(table.isActive),
+    index("enrollments_user_course_idx").on(table.userId, table.courseSlug),
+  ]
+);
+
+export const courseEnrollmentsRelations = relations(courseEnrollments, ({ one }) => ({
+  user: one(users, {
+    fields: [courseEnrollments.userId],
+    references: [users.userId],
+  }),
+  course: one(courses, {
+    fields: [courseEnrollments.courseSlug],
+    references: [courses.slug],
+  }),
+}));
+
 export const challengeCompletions = createTable(
   "challenge_completions",
   {
@@ -553,6 +607,15 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
     references: [users.userId],
   }),
 }));
+
+// RAG Configuration
+export const ragConfig = createTable("rag_config", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  storeName: text("store_name").notNull().unique(),
+  storeDisplayName: text("store_display_name"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
 
 // Type exports
 export type UserCustomTest = typeof userCustomTests.$inferSelect

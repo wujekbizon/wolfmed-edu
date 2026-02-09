@@ -3,13 +3,11 @@ import { Suspense } from "react"
 import UsernameForm from "@/components/UsernameForm"
 import MottoForm from "@/components/MottoForm"
 import UserAnalytics from "@/components/UserAnalytics"
-import SupporterStatus from "@/components/SupporterStatus"
 import UserMotto from "@/components/UserMotto"
 import UserMottoSkeleton from "@/components/skeletons/UserMottoSkeleton"
 import UserAnalyticsSkeleton from "@/components/skeletons/UserAnalyticsSkeleton"
 import UsernameSkeleton from "@/components/skeletons/UsernameSkeleton"
 import Username from "@/components/Username"
-import SupporterStatusSkeleton from "@/components/skeletons/SupporterStatusSkeleton"
 import TestimonialForm from "@/components/TestimonialForm"
 import DynamicBoard from "../_components/DynamicBoard"
 import StorageQuotaWidget from "@/components/StorageQuotaWidget"
@@ -30,9 +28,6 @@ export default async function TestsPage() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <Suspense fallback={<UsernameSkeleton />}>
                 <Username />
-              </Suspense>
-              <Suspense fallback={<SupporterStatusSkeleton />}>
-                <SupporterStatus />
               </Suspense>
             </div>
             <div className="flex flex-col xs:flex-row gap-6">

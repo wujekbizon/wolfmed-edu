@@ -97,27 +97,6 @@ export default function UserOnboard() {
           <p className="text-base text-red-600 font-semibold mb-6">
             Zespół Wolfmed-Edukacja
           </p>
-          <small className="block text-xs text-zinc-500 max-w-2xl mx-auto px-4 leading-relaxed">
-            <h3 className="font-bold text-zinc-700 mb-2">
-              Ważne informacje organizacyjne
-            </h3>
-            <p className="mb-2">
-            Ze względu na rosnącą popularność platformy oraz koszty infrastruktury, wprowadzamy limit 25 testów miesięcznie dla użytkowników korzystających z darmowego planu.
-            Wszyscy użytkownicy premium mają nielimitowany dostęp do wszystkich funkcji platformy.
-            </p>
-            <p className="mb-2">
-            Aktywnie rozwijamy projekt i poszukujemy partnerów do długoterminowej współpracy. Naszym celem jest w przyszłości zwiększenie limitów dla użytkowników darmowych.
-            </p>
-            <p className="mb-4">
-            Jeśli chcesz uzyskać nielimitowany dostęp oraz wesprzeć rozwój projektu, sprawdź naszą ofertę premium.
-            </p>
-            <Link
-              href="/wsparcie-projektu"
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 focus:ring-red-700 text-white font-medium text-sm rounded-full transition-all duration-300 transform hover:scale-105 inline-block"
-            >
-              Wesprzyj nasz projekt
-            </Link>
-          </small>
         </div>
       </div>
     </div>

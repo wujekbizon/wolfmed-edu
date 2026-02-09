@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import stripe from '@/lib/stripeClient'
 
 export async function POST(req: Request) {
-  const { userId, priceId } = await req.json()
+  const { userId, priceId, courseSlug, accessTier } = await req.json()
 
   if (!userId) {
     return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
@@ -22,9 +22,13 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}&courseSlug=${courseSlug}&tier=${accessTier}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/canceled`,
       client_reference_id: userId,
+      metadata: {
+        courseSlug: courseSlug || '',
+        accessTier: accessTier || 'basic',
+      },
     })
 
     return NextResponse.json({ sessionUrl: session.url })

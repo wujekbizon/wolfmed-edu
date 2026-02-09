@@ -7,32 +7,5 @@
       "popularity": "Bardzo popularny",
       "status": true,
       "numberOfQuestions": [10,40]
-    },
-    {
-      "category": "pielęgniarstwo",
-      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ICz8koequML1BazyDiNo5UcxtTn3s6YgW47C",
-      "description": "Ogólne testy z kierunku pielęgniarstwo obejmujące wszystkie działy obowiązujące w ścieżce Pielęgniarstwo. Egzamin sprawdzający ogólną wiedzę niezbędną do zaliczenia kierunku.",
-      "duration": [60],
-      "popularity": "Nowość - wkrótce dostępne",
-      "status": false,
-      "numberOfQuestions": [10,40]
-    },
-    {
-      "category": "socjologia",
-      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KkQtwIbr79T0mSRj6eAJqPf4kEid2ncgM5Nu",
-      "description": "Testy z socjologii - teoria społeczna, metody badawcze. Dostępne tylko dla administratorów.",
-      "duration": [25,40,60],
-      "popularity": "Kategoria administracyjna",
-      "status": true,
-      "numberOfQuestions": [10,40]
-    },
-    {
-      "category": "socjologia2",
-      "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KkQtwIbr79T0mSRj6eAJqPf4kEid2ncgM5Nu",
-      "description": "Testy z socjologii - fakty.",
-      "duration": [25,40,60],
-      "popularity": "Kategoria administracyjna",
-      "status": true,
-      "numberOfQuestions": [10,40]
     }
   ]

@@ -14,7 +14,7 @@ export default function AllTests(props: { tests: Test[] }) {
   const testsArr = Object.values(props.tests)
 
   const { data: cachedTestsArr } = useQuery({
-    queryKey: ['allTests', props.tests[0]?.category ?? ''],
+    queryKey: ['allTests', props.tests[0]?.meta.category ?? ''],
     queryFn: async () => testsArr,
     initialData: testsArr,
     staleTime: 10 * 60 * 1000,
@@ -37,7 +37,7 @@ export default function AllTests(props: { tests: Test[] }) {
     isLoading: searchLoading,
     error,
   } = useQuery({
-    queryKey: ['filteredTests', debouncedSearchTerm, props.tests[0]?.category ?? ''],
+    queryKey: ['filteredTests', debouncedSearchTerm, props.tests[0]?.meta.category ?? ''],
     queryFn: filteredTestsQueryFn,
     enabled: !!searchTerm || true,
     staleTime: 10 * 60 * 1000,

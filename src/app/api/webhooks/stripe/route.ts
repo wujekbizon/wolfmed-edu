@@ -5,6 +5,8 @@ import Stripe from 'stripe'
 import { insertPayment, insertSubscription, updateUserSupporterStatus } from '@/server/db'
 import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
 import { getUserIdByCustomer, getUserIdByCustomerEmail } from '@/server/queries'
+import { enrollUserAction } from '@/actions/course-actions'
+import { clerkClient } from '@clerk/nextjs/server'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -41,7 +43,12 @@ export async function POST(req: Request) {
         subscription: subscription_id,
         created,
         mode,
+        metadata,
       } = event.data.object as Stripe.Checkout.Session
+
+      // Extract course information from metadata
+      const courseSlug = metadata?.courseSlug
+      const accessTier = metadata?.accessTier || 'basic'
 
       if (mode === 'subscription') {
         const newSubscription = {
@@ -54,6 +61,7 @@ export async function POST(req: Request) {
           invoiceId: invoice?.toString()!,
           paymentStatus: payment_status,
           subscriptionId: subscription_id?.toString()!,
+          courseSlug: courseSlug || null,
           createdAt: new Date(created * 1000),
         }
         // Insert subscription into database
@@ -66,12 +74,41 @@ export async function POST(req: Request) {
           amountTotal: amount_total!,
           currency: currency! as 'pln' | 'usd' | 'eur' | null,
           customerEmail: customer_details?.email!,
+          courseSlug: courseSlug || null,
           createdAt:  new Date(created * 1000),
           paymentStatus: payment_status,
         }
 
         // Insert payment into database
         await insertPayment(newPayment)
+      }
+
+      // Handle course enrollment if courseSlug is provided
+      if (client_reference_id && courseSlug && payment_status === 'paid') {
+        try {
+          // Create enrollment in database
+          await enrollUserAction(client_reference_id, courseSlug, accessTier)
+
+          // Update Clerk metadata
+          const clerk = await clerkClient()
+          const user = await clerk.users.getUser(client_reference_id)
+          const currentCourses = (user.publicMetadata?.ownedCourses as string[]) || []
+
+          // Add course if not already in the list
+          if (!currentCourses.includes(courseSlug)) {
+            await clerk.users.updateUser(client_reference_id, {
+              publicMetadata: {
+                ...user.publicMetadata,
+                ownedCourses: [...currentCourses, courseSlug],
+              },
+            })
+          }
+
+          console.log(`User ${client_reference_id} enrolled in ${courseSlug}`)
+        } catch (error) {
+          console.error('Error enrolling user in course:', error)
+          // Don't fail the webhook if enrollment fails
+        }
       }
       break
     case 'charge.succeeded':

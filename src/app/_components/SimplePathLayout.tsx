@@ -8,6 +8,7 @@ import TriangleDivider from "@/components/TriangleDivider";
 import Image from "next/image";
 import Link from "next/link";
 import { useInView } from "react-intersection-observer";
+import CoursePricingCard from "@/components/CoursePricingCard";
 
 export default function SimplePathLayout({
   features,
@@ -176,111 +177,24 @@ export default function SimplePathLayout({
             </p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
-            {Object.entries(pricing || {}).map(
-              ([plan, { price, features }]) => {
-                const isPremium = plan.toLowerCase().includes("premium");
-
+            {Object.entries(pricing || {})
+              .filter(([key]) => key !== 'courseSlug')
+              .map(([tierName, tierData]) => {
+                const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[] }
+                const isPremium = tierName.toLowerCase().includes('premium')
                 return (
-                  <article key={plan} className="h-full">
-                    <div
-                      className={`
-                      h-full min-h-[480px] md:min-h-[560px] flex flex-col rounded-3xl p-6 sm:p-8 md:p-10
-                      transition-all duration-300
-                      ${
-                        isPremium
-                          ? "bg-white ring-2 ring-slate-900/10 shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                          : "bg-white ring-1 ring-zinc-200 shadow-sm hover:shadow-md hover:-translate-y-0.5"
-                      }
-                    `}
-                    >
-                      {isPremium ? (
-                        <>
-                          <span className="self-end mb-4 inline-flex items-center gap-1.5 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-gradient-to-r from-slate-800 via-[#ff9898] to-[#ffc5c5] text-white shadow-md">
-                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                            </svg>
-                            Promocja -69%
-                          </span>
-                          <h3 className="text-xl md:text-2xl font-extrabold mb-4 text-slate-900">
-                            {plan}
-                          </h3>
-                          <div className="mb-4">
-                            <span className="text-lg text-zinc-500 line-through">159,99 zł</span>
-                            <div className="flex items-baseline gap-2 mt-2">
-                              <span className="text-4xl md:text-5xl font-bold text-zinc-900">49,99</span>
-                              <span className="text-2xl text-zinc-600">zł</span>
-                            </div>
-                            <p className="text-sm text-zinc-500 mt-1">Jednorazowa wpłata · Oferta limitowana</p>
-                          </div>
-                          <p className="text-base md:text-lg text-zinc-700 mb-6 leading-relaxed">
-                            Odblokuj wszystkie funkcje premium dla Opiekuna Medycznego. Wspieraj rozwój platformy i zyskaj dostęp do zaawansowanych narzędzi edukacyjnych.
-                          </p>
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-                            <p className="text-sm text-amber-900 font-medium">⏰ Ta oferta jest dostępna tylko przez ograniczony czas</p>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <span className="self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700">
-                            Dostęp darmowy
-                          </span>
-                          <h3 className="text-xl md:text-2xl font-extrabold mb-2 text-slate-900">
-                            {plan}
-                          </h3>
-                          <p className="text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight text-slate-700">
-                            {price}
-                          </p>
-                          <ul className="grow space-y-3 md:space-y-4 text-left w-full max-w-sm text-zinc-700">
-                            {features.map((feature, i) => (
-                              <li
-                                key={i}
-                                className="flex items-start gap-3 text-sm md:text-base leading-relaxed"
-                              >
-                                <svg
-                                  className="mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  viewBox="0 0 24 24"
-                                  aria-hidden="true"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M5 13l4 4L19 7"
-                                  />
-                                </svg>
-                                <span>{feature}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
-
-                      <div className="mt-auto w-full pt-6 md:pt-8">
-                        <Link
-                          href={isPremium ? "/wsparcie-projektu" : "/panel"}
-                          className={`
-                          inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
-                          font-semibold transition-colors duration-200
-                          ${
-                            isPremium
-                              ? "bg-slate-900 text-white hover:bg-slate-800"
-                              : "bg-slate-700 text-white hover:bg-slate-800"
-                          }
-                        `}
-                        >
-                          {isPremium
-                            ? "Skorzystaj z promocji"
-                            : "Rozpocznij naukę"}
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
-                );
-              }
-            )}
+                  <CoursePricingCard
+                    key={tierName}
+                    tierName={tierName}
+                    price={tier.price}
+                    priceId={tier.priceId}
+                    courseSlug={pricing?.courseSlug || ''}
+                    accessTier={tier.accessTier}
+                    features={tier.features}
+                    isPremium={isPremium}
+                  />
+                )
+              })}
           </div>
         </div>
       </section>

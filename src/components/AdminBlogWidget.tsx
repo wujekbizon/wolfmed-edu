@@ -1,17 +1,7 @@
 import Link from 'next/link'
-import { isUserAdmin } from '@/lib/adminHelpers'
 import { getBlogStatistics } from '@/server/queries'
 
 export default async function AdminBlogWidget() {
-  // Check if user is admin
-  const isAdmin = await isUserAdmin()
-
-  // Don't render anything if not admin
-  if (!isAdmin) {
-    return null
-  }
-
-  // Get blog statistics
   const stats = await getBlogStatistics()
 
   return (

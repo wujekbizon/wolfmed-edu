@@ -8,7 +8,7 @@ import { FormState } from "@/types/actionTypes"
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
-import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
 
 export const createNoteAction = async (
