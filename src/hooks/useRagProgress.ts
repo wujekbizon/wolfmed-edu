@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import type { ProgressStage, LogEntry, LogAudience } from '@/lib/progress-events'
+import type { ProgressStage, LogEntry, LogAudience } from '@/types/progressTypes'
 
 interface SSEProgressData {
   stage: ProgressStage

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import type { ProgressStage, LogEntry } from '@/lib/progress-events'
+import type { ProgressStage, LogEntry } from '@/types/progressTypes'
+import { getToolLabel } from '@/constants/progress'
 
 interface RagProgressIndicatorProps {
   stage: ProgressStage
@@ -11,18 +12,6 @@ interface RagProgressIndicatorProps {
   userLogs: LogEntry[]
   technicalLogs: LogEntry[]
   error: string | null
-}
-
-const TOOL_LABELS: Record<string, string> = {
-  notatka_tool: 'notatka',
-  utworz_test: 'test',
-  diagram_tool: 'diagram',
-  podsumuj: 'podsumowanie',
-}
-
-function getToolLabel(tool: string | null): string {
-  if (!tool) return 'wyszukiwanie'
-  return TOOL_LABELS[tool] || tool.replace('_tool', '').replace('_', ' ')
 }
 
 export default function RagProgressIndicator({

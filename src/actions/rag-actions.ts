@@ -12,9 +12,8 @@ import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/lib/progress-store'
-import type { ProgressStage } from '@/lib/progress-events'
-
-const PROGRESS_DELAY = 200 // ms between progress updates for SSE to catch up
+import type { ProgressStage } from '@/types/progressTypes'
+import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
 
 async function progressStep(
   jobId: string | null,
@@ -183,12 +182,6 @@ export async function askRagQuestion(
 
     if (tools.length > 0 && tools[0]) {
       const toolName = tools[0]
-      const toolLabels: Record<string, string> = {
-        'notatka': 'notatkę',
-        'diagram': 'diagram',
-        'utworz': 'test',
-        'podsumuj': 'podsumowanie'
-      }
       await progressStep(
         jobId, 'parsing', 15,
         `Wykryto polecenie: /${toolName}`,
@@ -196,7 +189,7 @@ export async function askRagQuestion(
       )
       await progressStep(
         jobId, 'parsing', 20,
-        `Przygotowuję ${toolLabels[toolName] || toolName}...`,
+        `Przygotowuję ${TOOL_LABELS_ACCUSATIVE[toolName] || toolName}...`,
         'PARSE', `Preparing to execute ${toolName}_tool`
       )
     }
@@ -275,19 +268,12 @@ export async function askRagQuestion(
 
       const toolDefinition = toolMap[toolName]
 
-      const toolDisplayNames: Record<string, string> = {
-        'notatka_tool': 'notatki',
-        'diagram_tool': 'diagramu',
-        'utworz_test': 'testu',
-        'podsumuj': 'podsumowania'
-      }
-
       if (jobId) {
         emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
       }
       await progressStep(
         jobId, 'calling_tool', 50,
-        `Rozpoczynam generowanie ${toolDisplayNames[toolDefinition.name] || 'zawartości'}...`,
+        `Rozpoczynam generowanie ${TOOL_LABELS_GENITIVE[toolDefinition.name] || 'zawartości'}...`,
         'TOOL', `Preparing to call ${toolDefinition.name}`
       )
 

@@ -1,9 +1,6 @@
 import { getJob, getEvents } from '@/lib/progress-store'
 import { formatSSEMessage, formatKeepAlive } from '@/lib/progress-events'
-
-const KEEP_ALIVE_INTERVAL = 15000 // 15 seconds
-const DEFAULT_RETRY = 3000 // 3 seconds
-const JOB_WAIT_TIMEOUT = 10000 // 10 seconds to wait for job creation
+import { KEEP_ALIVE_INTERVAL, DEFAULT_SSE_RETRY, JOB_WAIT_TIMEOUT, SSE_POLL_INTERVAL } from '@/constants/progress'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -32,7 +29,7 @@ export async function GET(request: Request) {
   const stream = new ReadableStream({
     start(controller) {
       // Send initial retry directive
-      controller.enqueue(encoder.encode(`retry: ${DEFAULT_RETRY}\n\n`))
+      controller.enqueue(encoder.encode(`retry: ${DEFAULT_SSE_RETRY}\n\n`))
 
       // Send any missed events on reconnection
       const missedEvents = getEvents(jobId, lastEventId)
@@ -107,7 +104,7 @@ export async function GET(request: Request) {
             // Already closed
           }
         }
-      }, 100) // Poll every 100ms
+      }, SSE_POLL_INTERVAL)
     },
     cancel() {
       isStreamClosed = true

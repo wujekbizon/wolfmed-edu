@@ -1,23 +1,8 @@
-type EventType = 'progress' | 'log' | 'complete' | 'error'
-type LogAudience = 'user' | 'technical'
-
-interface ProgressEvent {
-  id: number
-  type: EventType
-  data: Record<string, unknown>
-  timestamp: number
-}
-
-interface JobProgress {
-  events: ProgressEvent[]
-  status: 'active' | 'complete' | 'error'
-  lastEventId: number
-  createdAt: number
-}
-
-const JOB_TTL = 5 * 60 * 1000 // 5 minutes
+import type { EventType, JobProgress, ProgressEvent, LogAudience, LogLevel } from '@/types/progressTypes'
+import { STAGE_MESSAGES, JOB_TTL } from '@/constants/progress'
 
 // Use globalThis to ensure singleton across Next.js module boundaries
+// NOTE: This only works in development. For production, use Redis (Upstash).
 const globalForProgress = globalThis as unknown as {
   progressStore: Map<string, JobProgress> | undefined
 }
@@ -61,18 +46,19 @@ export function emitProgress(
   message?: string,
   extra?: Record<string, unknown>
 ): void {
+  const stageMessage = STAGE_MESSAGES[stage as keyof typeof STAGE_MESSAGES] ?? stage
   emitEvent(jobId, 'progress', {
     stage,
     progress,
     total: 100,
-    message: message ?? getStageMessage(stage),
+    message: message ?? stageMessage,
     ...extra,
   })
 }
 
 export function emitLog(
   jobId: string,
-  level: 'info' | 'warn' | 'error',
+  level: LogLevel,
   message: string,
   audience: LogAudience = 'user'
 ): void {
@@ -84,22 +70,19 @@ export function emitLog(
   })
 }
 
-// Helper for user-friendly messages
 export function logUser(jobId: string, message: string): void {
   emitLog(jobId, 'info', message, 'user')
 }
 
-// Helper for technical/debug messages
 export function logTechnical(
   jobId: string,
   category: string,
   message: string,
-  level: 'info' | 'warn' | 'error' = 'info'
+  level: LogLevel = 'info'
 ): void {
   emitLog(jobId, level, `[${category}] ${message}`, 'technical')
 }
 
-// Helper for errors (shown in both)
 export function logError(jobId: string, userMessage: string, technicalMessage: string): void {
   emitLog(jobId, 'error', userMessage, 'user')
   emitLog(jobId, 'error', technicalMessage, 'technical')
@@ -138,22 +121,6 @@ export function getEvents(jobId: string, fromId = 0): ProgressEvent[] {
 
 export function deleteJob(jobId: string): void {
   progressStore.delete(jobId)
-}
-
-function getStageMessage(stage: string): string {
-  const messages: Record<string, string> = {
-    idle: 'Oczekiwanie...',
-    parsing: 'Analizuję zapytanie...',
-    resolving: 'Rozwiązuję referencje...',
-    fetching: 'Pobieram zawartość zasobów...',
-    searching: 'Przeszukuję dokumenty...',
-    calling_tool: 'Wywołuję narzędzie...',
-    executing: 'Generuję zawartość...',
-    finalizing: 'Finalizuję odpowiedź...',
-    complete: 'Gotowe',
-    error: 'Wystąpił błąd',
-  }
-  return messages[stage] ?? stage
 }
 
 // Cleanup old jobs every minute
