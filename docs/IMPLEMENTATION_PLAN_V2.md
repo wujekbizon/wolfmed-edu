@@ -608,3 +608,150 @@ Expected: Answer from File Search, no tool calls
 ---
 
 **Status**: Ready to implement. Start with multi-turn execution in `google-rag.ts`.
+
+---
+
+## 🔄 SSE Progress System (Implemented)
+
+**Date Implemented**: 2026-02-09
+**Status**: ✅ Complete
+
+Real-time progress notifications for RAG/tool operations using Server-Sent Events (SSE) with Redis-backed state persistence.
+
+### Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           CLIENT (Browser)                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   useRagProgress (Hook)                 useProgressStore (Zustand)       │
+│   ┌─────────────────────────┐          ┌─────────────────────────────┐  │
+│   │ • Manage EventSource    │          │ • jobId, stage, progress    │  │
+│   │ • Handle reconnection   │          │ • logs[] (user/technical)   │  │
+│   │ • useMemo for logs      │          │ • connectionState           │  │
+│   │ • Expose progress state │          │ • Actions: update/reset     │  │
+│   └─────────────────────────┘          └─────────────────────────────┘  │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+                    │ SSE Connection
+                    ▼
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           SERVER (Next.js)                               │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│   /api/rag/progress (SSE Endpoint)        progress-store.ts (Server)    │
+│   ┌─────────────────────────┐             ┌─────────────────────────┐   │
+│   │ • Stream events from    │             │ • Upstash Redis storage │   │
+│   │   progress store        │◄────────────│ • In-memory fallback    │   │
+│   │ • Send keep-alive       │             │ • Async operations      │   │
+│   │ • Handle Last-Event-ID  │             │ • 5-min TTL cleanup     │   │
+│   └─────────────────────────┘             └─────────────────────────┘   │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### File Structure
+
+| File | Purpose |
+|------|---------|
+| `src/server/progress-store.ts` | Redis-backed job state with in-memory fallback |
+| `src/store/useProgressStore.ts` | Zustand store for client-side progress state |
+| `src/hooks/useRagProgress.ts` | SSE connection management hook |
+| `src/app/api/rag/progress/route.ts` | SSE streaming endpoint |
+| `src/types/progressTypes.ts` | All progress-related TypeScript types |
+| `src/constants/progress.ts` | Stage messages, progress values, timing constants |
+| `src/helpers/progress-helpers.ts` | SSE formatting, stage/tool label helpers |
+| `src/lib/redis.ts` | Upstash Redis singleton |
+
+### Progress Stages
+
+| Stage | Message (PL) | Progress |
+|-------|-------------|----------|
+| `idle` | Oczekiwanie... | 0% |
+| `parsing` | Analizuję zapytanie... | 10% |
+| `resolving` | Rozwiązuję referencje... | 20% |
+| `fetching` | Pobieram zawartość zasobów... | 30% |
+| `searching` | Przeszukuję dokumenty... | 45% |
+| `calling_tool` | Wywołuję narzędzie {tool}... | 60% |
+| `executing` | Generuję zawartość... | 75% |
+| `finalizing` | Finalizuję odpowiedź... | 90% |
+| `complete` | Gotowe | 100% |
+
+### Server-Side Progress Store
+
+The progress store uses Upstash Redis for persistence with an in-memory Map fallback when Redis is not configured:
+
+```typescript
+// src/server/progress-store.ts
+export async function createJob(jobId: string): Promise<void>
+export async function emitProgress(jobId: string, stage: ProgressStage, progress: number, tool?: string): Promise<void>
+export async function logUser(jobId: string, message: string): Promise<void>
+export async function logTechnical(jobId: string, message: string, level?: LogLevel): Promise<void>
+export async function completeJob(jobId: string): Promise<void>
+export async function errorJob(jobId: string, message: string): Promise<void>
+export async function getJob(jobId: string): Promise<JobProgress | undefined>
+export async function getEvents(jobId: string, fromId?: number): Promise<ProgressEvent[]>
+```
+
+### Client-Side Hook Usage
+
+```typescript
+// In component
+const {
+  jobId,
+  stage,
+  message,
+  progress,
+  userLogs,        // Filtered via useMemo
+  technicalLogs,   // Filtered via useMemo
+  connectionState,
+  isComplete,
+  error,
+  startListening,
+  stopListening,
+  reset,
+} = useRagProgress()
+
+// Start listening before form submit
+startListening()
+
+// Include jobId in form data
+<input type="hidden" name="jobId" value={jobId} />
+```
+
+### SSE Event Protocol
+
+```
+id: <incrementing-number>
+event: <progress|log|complete|error>
+retry: 3000
+data: <json-payload>
+```
+
+### Key Implementation Details
+
+1. **Async Redis Operations**: All progress-store functions are async and properly awaited in `rag-actions.ts`
+
+2. **Log Filtering with useMemo**: Replaced Zustand selectors with `useMemo` to prevent infinite re-render loops:
+   ```typescript
+   const userLogs = useMemo(
+     () => logs.filter((log) => log.audience === 'user' || !log.audience),
+     [logs]
+   )
+   ```
+
+3. **Connection Recovery**: SSE endpoint supports `Last-Event-ID` header for reconnection, sending missed events
+
+4. **Keep-Alive**: Server sends heartbeat comments every 15 seconds to prevent proxy buffering
+
+5. **Job TTL**: Jobs automatically expire after 5 minutes (300,000ms) to prevent memory leaks
+
+### Environment Variables
+
+```env
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxx
+```
+
+When not configured, the system falls back to in-memory storage with a console warning.
