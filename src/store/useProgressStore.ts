@@ -107,10 +107,3 @@ export const useProgressStore = create<ProgressStore>((set) => ({
 
   regenerateJobId: () => set({ jobId: uuidv4() }),
 }))
-
-// Derived selectors
-export const selectUserLogs = (state: ProgressStore): LogEntry[] =>
-  state.logs.filter((log) => log.audience === 'user' || !log.audience)
-
-export const selectTechnicalLogs = (state: ProgressStore): LogEntry[] =>
-  state.logs.filter((log) => log.audience === 'technical')

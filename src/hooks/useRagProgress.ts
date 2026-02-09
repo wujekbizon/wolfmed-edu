@@ -13,8 +13,8 @@
  *   // Progress updates will stream in real-time
  */
 
-import { useCallback, useRef, useEffect } from 'react'
-import { useProgressStore, selectUserLogs, selectTechnicalLogs } from '@/store/useProgressStore'
+import { useCallback, useRef, useEffect, useMemo } from 'react'
+import { useProgressStore } from '@/store/useProgressStore'
 import type { SSEProgressData, SSELogData, UseRagProgressReturn } from '@/types/progressTypes'
 
 export function useRagProgress(): UseRagProgressReturn {
@@ -24,6 +24,7 @@ export function useRagProgress(): UseRagProgressReturn {
     message,
     progress,
     tool,
+    logs,
     connectionState,
     isComplete,
     error,
@@ -35,8 +36,14 @@ export function useRagProgress(): UseRagProgressReturn {
     reset: resetStore,
   } = useProgressStore()
 
-  const userLogs = useProgressStore(selectUserLogs)
-  const technicalLogs = useProgressStore(selectTechnicalLogs)
+  const userLogs = useMemo(
+    () => logs.filter((log) => log.audience === 'user' || !log.audience),
+    [logs]
+  )
+  const technicalLogs = useMemo(
+    () => logs.filter((log) => log.audience === 'technical'),
+    [logs]
+  )
 
   const eventSourceRef = useRef<EventSource | null>(null)
 
