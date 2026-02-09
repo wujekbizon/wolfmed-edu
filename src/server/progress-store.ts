@@ -1,33 +1,59 @@
 import type { EventType, JobProgress, ProgressEvent, LogAudience, LogLevel } from '@/types/progressTypes'
 import { STAGE_MESSAGES, JOB_TTL } from '@/constants/progress'
+import { getRedis } from '@/lib/redis'
 
-// Use globalThis to ensure singleton across Next.js module boundaries
-// NOTE: This only works in development. For production, use Redis (Upstash).
-const globalForProgress = globalThis as unknown as {
-  progressStore: Map<string, JobProgress> | undefined
+const REDIS_KEY_PREFIX = 'progress:'
+const TTL_SECONDS = Math.floor(JOB_TTL / 1000)
+
+// In-memory fallback when Redis is not configured
+const memoryStore = new Map<string, JobProgress>()
+
+async function getJobData(jobId: string): Promise<JobProgress | null> {
+  const redis = getRedis()
+
+  if (redis) {
+    return await redis.get<JobProgress>(`${REDIS_KEY_PREFIX}${jobId}`)
+  }
+
+  return memoryStore.get(jobId) ?? null
 }
 
-const progressStore = globalForProgress.progressStore ?? new Map<string, JobProgress>()
+async function saveJobData(jobId: string, job: JobProgress): Promise<void> {
+  const redis = getRedis()
 
-if (process.env.NODE_ENV !== 'production') {
-  globalForProgress.progressStore = progressStore
+  if (redis) {
+    await redis.set(`${REDIS_KEY_PREFIX}${jobId}`, job, { ex: TTL_SECONDS })
+  } else {
+    memoryStore.set(jobId, job)
+  }
 }
 
-export function createJob(jobId: string): void {
-  progressStore.set(jobId, {
+async function deleteJobData(jobId: string): Promise<void> {
+  const redis = getRedis()
+
+  if (redis) {
+    await redis.del(`${REDIS_KEY_PREFIX}${jobId}`)
+  } else {
+    memoryStore.delete(jobId)
+  }
+}
+
+export async function createJob(jobId: string): Promise<void> {
+  const job: JobProgress = {
     events: [],
     status: 'active',
     lastEventId: 0,
     createdAt: Date.now(),
-  })
+  }
+  await saveJobData(jobId, job)
 }
 
-export function emitEvent(
+export async function emitEvent(
   jobId: string,
   type: EventType,
   data: Record<string, unknown>
-): void {
-  const job = progressStore.get(jobId)
+): Promise<void> {
+  const job = await getJobData(jobId)
   if (!job) return
 
   const event: ProgressEvent = {
@@ -37,17 +63,18 @@ export function emitEvent(
     timestamp: Date.now(),
   }
   job.events.push(event)
+  await saveJobData(jobId, job)
 }
 
-export function emitProgress(
+export async function emitProgress(
   jobId: string,
   stage: string,
   progress: number,
   message?: string,
   extra?: Record<string, unknown>
-): void {
+): Promise<void> {
   const stageMessage = STAGE_MESSAGES[stage as keyof typeof STAGE_MESSAGES] ?? stage
-  emitEvent(jobId, 'progress', {
+  await emitEvent(jobId, 'progress', {
     stage,
     progress,
     total: 100,
@@ -56,13 +83,13 @@ export function emitProgress(
   })
 }
 
-export function emitLog(
+export async function emitLog(
   jobId: string,
   level: LogLevel,
   message: string,
   audience: LogAudience = 'user'
-): void {
-  emitEvent(jobId, 'log', {
+): Promise<void> {
+  await emitEvent(jobId, 'log', {
     level,
     message,
     audience,
@@ -70,66 +97,69 @@ export function emitLog(
   })
 }
 
-export function logUser(jobId: string, message: string): void {
-  emitLog(jobId, 'info', message, 'user')
+export async function logUser(jobId: string, message: string): Promise<void> {
+  await emitLog(jobId, 'info', message, 'user')
 }
 
-export function logTechnical(
+export async function logTechnical(
   jobId: string,
   category: string,
   message: string,
   level: LogLevel = 'info'
-): void {
-  emitLog(jobId, level, `[${category}] ${message}`, 'technical')
+): Promise<void> {
+  await emitLog(jobId, level, `[${category}] ${message}`, 'technical')
 }
 
-export function logError(jobId: string, userMessage: string, technicalMessage: string): void {
-  emitLog(jobId, 'error', userMessage, 'user')
-  emitLog(jobId, 'error', technicalMessage, 'technical')
+export async function logError(jobId: string, userMessage: string, technicalMessage: string): Promise<void> {
+  await emitLog(jobId, 'error', userMessage, 'user')
+  await emitLog(jobId, 'error', technicalMessage, 'technical')
 }
 
-export function completeJob(jobId: string): void {
-  const job = progressStore.get(jobId)
+export async function completeJob(jobId: string): Promise<void> {
+  const job = await getJobData(jobId)
   if (!job) return
 
   job.status = 'complete'
-  emitLog(jobId, 'info', 'Zakończono pomyślnie', 'user')
-  emitLog(jobId, 'info', '[DONE] Job completed successfully', 'technical')
-  emitEvent(jobId, 'complete', { success: true })
+  await saveJobData(jobId, job)
+  await emitLog(jobId, 'info', 'Zakończono pomyślnie', 'user')
+  await emitLog(jobId, 'info', '[DONE] Job completed successfully', 'technical')
+  await emitEvent(jobId, 'complete', { success: true })
 }
 
-export function errorJob(jobId: string, userMessage: string, technicalMessage?: string): void {
-  const job = progressStore.get(jobId)
+export async function errorJob(jobId: string, userMessage: string, technicalMessage?: string): Promise<void> {
+  const job = await getJobData(jobId)
   if (!job) return
 
   job.status = 'error'
-  emitLog(jobId, 'error', userMessage, 'user')
-  emitLog(jobId, 'error', technicalMessage || userMessage, 'technical')
-  emitEvent(jobId, 'error', { message: userMessage, technicalMessage })
+  await saveJobData(jobId, job)
+  await emitLog(jobId, 'error', userMessage, 'user')
+  await emitLog(jobId, 'error', technicalMessage || userMessage, 'technical')
+  await emitEvent(jobId, 'error', { message: userMessage, technicalMessage })
 }
 
-export function getJob(jobId: string): JobProgress | undefined {
-  return progressStore.get(jobId)
+export async function getJob(jobId: string): Promise<JobProgress | undefined> {
+  const job = await getJobData(jobId)
+  return job ?? undefined
 }
 
-export function getEvents(jobId: string, fromId = 0): ProgressEvent[] {
-  const job = progressStore.get(jobId)
+export async function getEvents(jobId: string, fromId = 0): Promise<ProgressEvent[]> {
+  const job = await getJobData(jobId)
   if (!job) return []
 
   return job.events.filter((e) => e.id > fromId)
 }
 
-export function deleteJob(jobId: string): void {
-  progressStore.delete(jobId)
+export async function deleteJob(jobId: string): Promise<void> {
+  await deleteJobData(jobId)
 }
 
-// Cleanup old jobs every minute
+// Cleanup old jobs from memory store (only needed for fallback)
 if (typeof setInterval !== 'undefined') {
   setInterval(() => {
     const now = Date.now()
-    for (const [jobId, job] of progressStore) {
+    for (const [jobId, job] of memoryStore) {
       if (now - job.createdAt > JOB_TTL) {
-        progressStore.delete(jobId)
+        memoryStore.delete(jobId)
       }
     }
   }, 60 * 1000)

@@ -24,9 +24,9 @@ async function progressStep(
   technicalMessage: string
 ): Promise<void> {
   if (!jobId) return
-  emitProgress(jobId, stage, percent)
-  logUser(jobId, userMessage)
-  logTechnical(jobId, technicalCategory, technicalMessage)
+  await emitProgress(jobId, stage, percent)
+  await logUser(jobId, userMessage)
+  await logTechnical(jobId, technicalCategory, technicalMessage)
   await new Promise(resolve => setTimeout(resolve, PROGRESS_DELAY))
 }
 
@@ -142,7 +142,7 @@ export async function askRagQuestion(
   const jobId = formData.get('jobId') as string | null
 
   if (jobId) {
-    createJob(jobId)
+    await createJob(jobId)
   }
 
   try {
@@ -152,7 +152,7 @@ export async function askRagQuestion(
     const rateLimit = await checkRateLimit(userId, 'rag:query')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      if (jobId) errorJob(jobId, 'Rate limit exceeded')
+      if (jobId) await errorJob(jobId, 'Rate limit exceeded')
       return toFormState(
         'ERROR',
         `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`
@@ -174,7 +174,7 @@ export async function askRagQuestion(
     })
 
     if (!validationResult.success) {
-      if (jobId) errorJob(jobId, 'Nieprawidłowe zapytanie', `Validation error: ${validationResult.error.message}`)
+      if (jobId) await errorJob(jobId, 'Nieprawidłowe zapytanie', `Validation error: ${validationResult.error.message}`)
       return fromErrorToFormState(validationResult.error)
     }
 
@@ -269,7 +269,7 @@ export async function askRagQuestion(
       const toolDefinition = toolMap[toolName]
 
       if (jobId) {
-        emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
+        await emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
       }
       await progressStep(
         jobId, 'calling_tool', 50,
@@ -280,7 +280,7 @@ export async function askRagQuestion(
       // Handle empty question - need either a topic or resource context
       const hasUserResource = !!additionalContext || pdfFiles.length > 0
       if (!cleanQuestion.trim() && !hasUserResource) {
-        if (jobId) errorJob(jobId, 'Brak tematu lub zasobu', `Missing topic or resource for tool: ${toolName}`)
+        if (jobId) await errorJob(jobId, 'Brak tematu lub zasobu', `Missing topic or resource for tool: ${toolName}`)
         return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
       }
 
@@ -331,7 +331,7 @@ export async function askRagQuestion(
         'Generowanie zakończone!',
         'LLM', `Response received, tool execution complete`
       )
-      if (jobId) completeJob(jobId)
+      if (jobId) await completeJob(jobId)
 
       return {
         ...toFormState('SUCCESS', toolResult.answer),
@@ -365,7 +365,7 @@ export async function askRagQuestion(
       'Przetwarzanie zakończone!',
       'RAG', `Query completed successfully`
     )
-    if (jobId) completeJob(jobId)
+    if (jobId) await completeJob(jobId)
 
     return {
       ...toFormState('SUCCESS', result.answer),
@@ -377,7 +377,7 @@ export async function askRagQuestion(
     console.error('Error querying RAG:', error)
     if (jobId) {
       const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
-      errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
+      await errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
     }
     return fromErrorToFormState(error)
   }
