@@ -12,40 +12,16 @@ interface RagProgressIndicatorProps {
   error: string | null
 }
 
-const STAGE_ORDER: ProgressStage[] = [
-  'parsing',
-  'resolving',
-  'fetching',
-  'searching',
-  'calling_tool',
-  'executing',
-  'finalizing',
-  'complete',
-]
-
-function getStageIndex(stage: ProgressStage): number {
-  return STAGE_ORDER.indexOf(stage)
+const TOOL_LABELS: Record<string, string> = {
+  notatka_tool: 'notatka',
+  utworz_test: 'test',
+  diagram_tool: 'diagram',
+  podsumuj: 'podsumowanie',
 }
 
-function StageIcon({ stage, currentStage }: { stage: ProgressStage; currentStage: ProgressStage }) {
-  const stageIndex = getStageIndex(stage)
-  const currentIndex = getStageIndex(currentStage)
-
-  if (currentStage === 'error') {
-    return <span className="text-red-500">!</span>
-  }
-
-  if (stageIndex < currentIndex || currentStage === 'complete') {
-    return <span className="text-emerald-500">&#10003;</span>
-  }
-
-  if (stageIndex === currentIndex) {
-    return (
-      <span className="inline-block w-3 h-3 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-    )
-  }
-
-  return <span className="text-zinc-300">&#9679;</span>
+function getToolLabel(tool: string | null): string {
+  if (!tool) return 'wyszukiwanie'
+  return TOOL_LABELS[tool] || tool.replace('_tool', '').replace('_', ' ')
 }
 
 export default function RagProgressIndicator({
@@ -56,84 +32,131 @@ export default function RagProgressIndicator({
   logs,
   error,
 }: RagProgressIndicatorProps) {
-  const [showLogs, setShowLogs] = useState(false)
+  const [showDetails, setShowDetails] = useState(false)
 
   if (stage === 'idle') {
     return null
   }
 
+  const isComplete = stage === 'complete'
+  const isError = stage === 'error'
+  const toolLabel = getToolLabel(tool)
+
   return (
-    <div className="p-4 bg-zinc-50 border border-zinc-200 rounded-lg space-y-3">
-      {/* Header with tool name */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {stage !== 'complete' && stage !== 'error' && (
-            <span className="inline-block w-4 h-4 border-2 border-zinc-400 border-t-transparent rounded-full animate-spin" />
-          )}
-          {stage === 'complete' && <span className="text-emerald-500 text-lg">&#10003;</span>}
-          {stage === 'error' && <span className="text-red-500 text-lg">&#10007;</span>}
-          <span className="font-medium text-zinc-800">
-            {tool ? tool : 'RAG Query'}
+    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+      {/* Header: spinner + tool icon + name + badge */}
+      <div className="flex items-center gap-2">
+        {!isComplete && !isError && (
+          <span className="inline-block w-4 h-4 border-2 border-slate-400 border-t-slate-200 rounded-full animate-spin" />
+        )}
+        {isComplete && (
+          <span className="flex items-center justify-center w-4 h-4 bg-emerald-500 rounded-full">
+            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
           </span>
+        )}
+        {isError && (
+          <span className="flex items-center justify-center w-4 h-4 bg-red-500 rounded-full">
+            <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </span>
+        )}
+
+        {/* Tool icon */}
+        <svg className="w-4 h-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
+        </svg>
+
+        <span className="font-medium text-slate-800">{toolLabel}</span>
+
+        <span className="px-1.5 py-0.5 text-[10px] font-medium text-slate-500 bg-slate-200 rounded">
+          call
+        </span>
+      </div>
+
+      {/* Progress section */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <span>Progress</span>
+          <span className="font-mono">{progress}/100</span>
         </div>
-        <span className="text-xs text-zinc-500 font-mono">{progress}%</span>
+        <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div
+            className={`h-full transition-all duration-300 ease-out rounded-full ${
+              isError ? 'bg-red-500' : 'bg-slate-800'
+            }`}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
-        <div
-          className={`h-full transition-all duration-300 ease-out ${
-            stage === 'error' ? 'bg-red-400' : 'bg-emerald-400'
-          }`}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-
-      {/* Current stage message */}
-      <div className="flex items-center gap-2 text-sm text-zinc-600">
-        <StageIcon stage={stage} currentStage={stage} />
-        <span>{message}</span>
-      </div>
+      {/* Live log terminal - always show latest messages */}
+      {logs.length > 0 && (
+        <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs space-y-1">
+          {logs.slice(-3).map((log, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-sky-400 select-none">{'>_'}</span>
+              <span className={
+                log.level === 'error' ? 'text-red-400' :
+                log.level === 'warn' ? 'text-amber-400' :
+                'text-sky-400'
+              }>
+                {log.message}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Error message */}
       {error && (
-        <div className="p-2 bg-red-50 border border-red-200 rounded text-sm text-red-600">
+        <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
           {error}
         </div>
       )}
 
-      {/* Expandable logs */}
-      {logs.length > 0 && (
-        <div className="pt-2 border-t border-zinc-200">
-          <button
-            onClick={() => setShowLogs(!showLogs)}
-            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-zinc-700"
+      {/* Show details toggle */}
+      {logs.length > 3 && (
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700 transition-colors"
+        >
+          <svg
+            className={`w-3 h-3 transition-transform ${showDetails ? 'rotate-90' : ''}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <span className={`transition-transform ${showLogs ? 'rotate-90' : ''}`}>&#9654;</span>
-            {showLogs ? 'Ukryj szczegóły' : 'Pokaż szczegóły'} ({logs.length})
-          </button>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
+        </button>
+      )}
 
-          {showLogs && (
-            <div className="mt-2 p-2 bg-zinc-900 rounded text-xs font-mono max-h-40 overflow-y-auto">
-              {logs.map((log, i) => (
-                <div
-                  key={i}
-                  className={`${
-                    log.level === 'error'
-                      ? 'text-red-400'
-                      : log.level === 'warn'
-                        ? 'text-yellow-400'
-                        : 'text-zinc-400'
-                  }`}
-                >
-                  <span className="text-zinc-600">
-                    {new Date(log.timestamp).toLocaleTimeString('pl-PL')}
-                  </span>{' '}
-                  <span className="text-zinc-500">[{log.level.toUpperCase()}]</span> {log.message}
-                </div>
-              ))}
+      {/* Full log history when expanded */}
+      {showDetails && logs.length > 3 && (
+        <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1">
+          {logs.map((log, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-slate-500 shrink-0 w-16">
+                {new Date(log.timestamp).toLocaleTimeString('pl-PL', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })}
+              </span>
+              <span className="text-sky-400 select-none">{'>_'}</span>
+              <span className={
+                log.level === 'error' ? 'text-red-400' :
+                log.level === 'warn' ? 'text-amber-400' :
+                'text-sky-400'
+              }>
+                {log.message}
+              </span>
             </div>
-          )}
+          ))}
         </div>
       )}
     </div>
