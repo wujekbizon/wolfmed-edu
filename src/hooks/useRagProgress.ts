@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
-import { v4 as uuidv4 } from 'uuid'
+import { useCallback, useRef, useEffect } from 'react'
+import { useProgressStore, selectUserLogs, selectTechnicalLogs } from '@/store/useProgressStore'
 import type { ProgressStage, LogEntry, LogAudience } from '@/types/progressTypes'
 
 interface SSEProgressData {
@@ -38,28 +38,27 @@ interface UseRagProgressReturn {
 }
 
 export function useRagProgress(): UseRagProgressReturn {
-  const [jobId] = useState(() => uuidv4())
-  const [stage, setStage] = useState<ProgressStage>('idle')
-  const [message, setMessage] = useState('Oczekiwanie...')
-  const [progress, setProgress] = useState(0)
-  const [tool, setTool] = useState<string | null>(null)
-  const [logs, setLogs] = useState<LogEntry[]>([])
-  const [connectionState, setConnectionState] = useState<ConnectionState>('idle')
-  const [isComplete, setIsComplete] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const {
+    jobId,
+    stage,
+    message,
+    progress,
+    tool,
+    connectionState,
+    isComplete,
+    error,
+    setConnectionState,
+    updateProgress,
+    addLog,
+    setComplete,
+    setError,
+    reset: resetStore,
+  } = useProgressStore()
+
+  const userLogs = useProgressStore(selectUserLogs)
+  const technicalLogs = useProgressStore(selectTechnicalLogs)
 
   const eventSourceRef = useRef<EventSource | null>(null)
-  const lastEventTimeRef = useRef<number>(Date.now())
-
-  // Separate logs by audience
-  const userLogs = useMemo(
-    () => logs.filter((log) => log.audience === 'user' || !log.audience),
-    [logs]
-  )
-  const technicalLogs = useMemo(
-    () => logs.filter((log) => log.audience === 'technical'),
-    [logs]
-  )
 
   const startListening = useCallback(() => {
     if (eventSourceRef.current) {
@@ -67,89 +66,69 @@ export function useRagProgress(): UseRagProgressReturn {
     }
 
     setConnectionState('connecting')
-    setIsComplete(false)
-    setError(null)
-    setStage('idle')
-    setProgress(0)
-    setLogs([])
-    setTool(null)
+    resetStore()
 
     const eventSource = new EventSource(`/api/rag/progress?jobId=${jobId}`)
     eventSourceRef.current = eventSource
 
     eventSource.onopen = () => {
       setConnectionState('open')
-      lastEventTimeRef.current = Date.now()
     }
 
     eventSource.addEventListener('progress', (e) => {
-      lastEventTimeRef.current = Date.now()
       try {
         const data: SSEProgressData = JSON.parse(e.data)
-        setStage(data.stage)
-        setMessage(data.message)
-        setProgress(data.progress)
-        if (data.tool) {
-          setTool(data.tool)
-        }
+        updateProgress({
+          stage: data.stage,
+          message: data.message,
+          progress: data.progress,
+          ...(data.tool && { tool: data.tool }),
+        })
       } catch {
         // Ignore parse errors
       }
     })
 
     eventSource.addEventListener('log', (e) => {
-      lastEventTimeRef.current = Date.now()
       try {
         const data: SSELogData = JSON.parse(e.data)
-        const logEntry: LogEntry = {
+        addLog({
           level: data.level,
           message: data.message,
           timestamp: data.timestamp,
-          audience: data.audience || 'user',
-        }
-        setLogs((prev) => [...prev, logEntry])
+          ...(data.audience && { audience: data.audience }),
+        })
       } catch {
         // Ignore parse errors
       }
     })
 
     eventSource.addEventListener('complete', () => {
-      lastEventTimeRef.current = Date.now()
-      setStage('complete')
-      setMessage('Gotowe')
-      setProgress(100)
-      setIsComplete(true)
-      setConnectionState('closed')
+      setComplete()
       eventSource.close()
     })
 
-    // Custom error event from server (job failed)
     eventSource.addEventListener('error', (e: Event) => {
-      lastEventTimeRef.current = Date.now()
       const messageEvent = e as MessageEvent
       if (messageEvent.data) {
         try {
           const data = JSON.parse(messageEvent.data)
           setError(data.message || 'Wystąpił błąd')
-          setStage('error')
-          setConnectionState('error')
           eventSource.close()
         } catch {
-          // Not a valid JSON error event, ignore
+          // Not a valid JSON error event
         }
       }
     })
 
-    // Native EventSource error (connection issues)
     eventSource.onerror = () => {
       if (eventSource.readyState === EventSource.CLOSED) {
-        // Stream closed - this is normal when job completes
         setConnectionState('closed')
       } else if (eventSource.readyState === EventSource.CONNECTING) {
-        setConnectionState('connecting') // Reconnecting
+        setConnectionState('connecting')
       }
     }
-  }, [jobId])
+  }, [jobId, setConnectionState, resetStore, updateProgress, addLog, setComplete, setError])
 
   const stopListening = useCallback(() => {
     if (eventSourceRef.current) {
@@ -157,21 +136,13 @@ export function useRagProgress(): UseRagProgressReturn {
       eventSourceRef.current = null
     }
     setConnectionState('closed')
-  }, [])
+  }, [setConnectionState])
 
   const reset = useCallback(() => {
     stopListening()
-    setStage('idle')
-    setMessage('Oczekiwanie...')
-    setProgress(0)
-    setTool(null)
-    setLogs([])
-    setConnectionState('idle')
-    setIsComplete(false)
-    setError(null)
-  }, [stopListening])
+    resetStore()
+  }, [stopListening, resetStore])
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (eventSourceRef.current) {
