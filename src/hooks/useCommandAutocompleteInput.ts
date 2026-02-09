@@ -1,5 +1,6 @@
 import { useState, RefObject } from 'react'
-import { COMMANDS, type Command } from '@/lib/commands'
+import type { Command } from '@/types/commandTypes'
+import { COMMANDS } from '@/constants/commands'
 
 export function useCommandAutocompleteInput(
   textareaRef: RefObject<HTMLTextAreaElement | null>

@@ -1,8 +1,4 @@
-export interface Command {
-  name: string
-  description: string
-  example: string
-}
+import type { Command } from '@/types/commandTypes'
 
 export const COMMANDS: Command[] = [
   {

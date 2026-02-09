@@ -1,4 +1,4 @@
-import type { Command } from '@/lib/commands'
+import type { Command } from '@/types/commandTypes'
 
 interface CommandAutocompleteProps {
   commands: Command[]
