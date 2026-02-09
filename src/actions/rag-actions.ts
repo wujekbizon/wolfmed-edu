@@ -12,6 +12,24 @@ import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/lib/progress-store'
+import type { ProgressStage } from '@/lib/progress-events'
+
+const PROGRESS_DELAY = 200 // ms between progress updates for SSE to catch up
+
+async function progressStep(
+  jobId: string | null,
+  stage: ProgressStage,
+  percent: number,
+  userMessage: string,
+  technicalCategory: string,
+  technicalMessage: string
+): Promise<void> {
+  if (!jobId) return
+  emitProgress(jobId, stage, percent)
+  logUser(jobId, userMessage)
+  logTechnical(jobId, technicalCategory, technicalMessage)
+  await new Promise(resolve => setTimeout(resolve, PROGRESS_DELAY))
+}
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
@@ -145,11 +163,11 @@ export async function askRagQuestion(
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
 
-    if (jobId) {
-      emitProgress(jobId, 'parsing', 10)
-      logUser(jobId, 'Analizuję zapytanie...')
-      logTechnical(jobId, 'PARSE', `Input question: "${question.slice(0, 50)}${question.length > 50 ? '...' : ''}"`)
-    }
+    await progressStep(
+      jobId, 'parsing', 10,
+      'Analizuję zapytanie...',
+      'PARSE', `Input question: "${question.slice(0, 50)}${question.length > 50 ? '...' : ''}"`
+    )
 
     const validationResult = RagQuerySchema.safeParse({
       question,
@@ -163,7 +181,7 @@ export async function askRagQuestion(
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    if (jobId && tools.length > 0 && tools[0]) {
+    if (tools.length > 0 && tools[0]) {
       const toolName = tools[0]
       const toolLabels: Record<string, string> = {
         'notatka': 'notatkę',
@@ -171,25 +189,34 @@ export async function askRagQuestion(
         'utworz': 'test',
         'podsumuj': 'podsumowanie'
       }
-      logUser(jobId, `Wykryto polecenie: /${toolName}`)
-      logTechnical(jobId, 'PARSE', `Found tool command: ${toolName} -> will use ${toolName}_tool`)
-      emitProgress(jobId, 'parsing', 20)
-      logUser(jobId, `Przygotowuję ${toolLabels[toolName] || toolName}...`)
+      await progressStep(
+        jobId, 'parsing', 15,
+        `Wykryto polecenie: /${toolName}`,
+        'PARSE', `Found tool command: ${toolName} -> will use ${toolName}_tool`
+      )
+      await progressStep(
+        jobId, 'parsing', 20,
+        `Przygotowuję ${toolLabels[toolName] || toolName}...`,
+        'PARSE', `Preparing to execute ${toolName}_tool`
+      )
     }
-    if (jobId && resources.length > 0) {
-      logUser(jobId, `Wykryto ${resources.length} zasób(y) do pobrania`)
-      logTechnical(jobId, 'PARSE', `Found @resources: ${resources.join(', ')}`)
+    if (resources.length > 0) {
+      await progressStep(
+        jobId, 'parsing', 25,
+        `Wykryto ${resources.length} zasób(y) do pobrania`,
+        'PARSE', `Found @resources: ${resources.join(', ')}`
+      )
     }
 
     let additionalContext = ''
     let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
 
     if (resources.length > 0) {
-      if (jobId) {
-        emitProgress(jobId, 'resolving', 30)
-        logUser(jobId, 'Rozwiązuję referencje zasobów...')
-        logTechnical(jobId, 'RESOLVE', `Resolving ${resources.length} resource references`)
-      }
+      await progressStep(
+        jobId, 'resolving', 30,
+        'Rozwiązuję referencje zasobów...',
+        'RESOLVE', `Resolving ${resources.length} resource references`
+      )
       try {
         const resolvedUris = await Promise.all(
           resources.map(async (displayName) => {
@@ -201,13 +228,11 @@ export async function askRagQuestion(
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
 
         if (validResources.length > 0) {
-          if (jobId) {
-            emitProgress(jobId, 'fetching', 40)
-            for (const res of validResources) {
-              logUser(jobId, `Pobieram: ${res.displayName}`)
-            }
-            logTechnical(jobId, 'FETCH', `Fetching ${validResources.length} resources: ${validResources.map(r => r.uri).join(', ')}`)
-          }
+          await progressStep(
+            jobId, 'fetching', 40,
+            `Pobieram: ${validResources.map(r => r.displayName).join(', ')}`,
+            'FETCH', `Fetching ${validResources.length} resources: ${validResources.map(r => r.uri).join(', ')}`
+          )
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => fetchResourceContent(uri, userId))
           )
@@ -259,9 +284,12 @@ export async function askRagQuestion(
 
       if (jobId) {
         emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
-        logUser(jobId, `Rozpoczynam generowanie ${toolDisplayNames[toolDefinition.name] || 'zawartości'}...`)
-        logTechnical(jobId, 'TOOL', `Preparing to call ${toolDefinition.name}`)
       }
+      await progressStep(
+        jobId, 'calling_tool', 50,
+        `Rozpoczynam generowanie ${toolDisplayNames[toolDefinition.name] || 'zawartości'}...`,
+        'TOOL', `Preparing to call ${toolDefinition.name}`
+      )
 
       // Handle empty question - need either a topic or resource context
       const hasUserResource = !!additionalContext || pdfFiles.length > 0
@@ -284,26 +312,27 @@ export async function askRagQuestion(
       }
 
       // SECONDARY: File Search results (supplementary info from knowledge base)
-      if (jobId) {
-        emitProgress(jobId, 'searching', 60)
-        logUser(jobId, 'Przeszukuję bazę wiedzy...')
-        logTechnical(jobId, 'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`)
-      }
+      await progressStep(
+        jobId, 'searching', 60,
+        'Przeszukuję bazę wiedzy...',
+        'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
+      )
       const ragResult = await queryFileSearchOnly(effectiveQuestion)
       if (ragResult.answer) {
         toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
-        if (jobId) {
-          const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
-          logUser(jobId, `Znaleziono informacje na temat: ${topic}`)
-          logTechnical(jobId, 'RAG', `Found ${ragResult.answer.length} chars of context`)
-        }
+        const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+        await progressStep(
+          jobId, 'searching', 65,
+          `Znaleziono informacje na temat: ${topic}`,
+          'RAG', `Found ${ragResult.answer.length} chars of context`
+        )
       }
 
-      if (jobId) {
-        emitProgress(jobId, 'executing', 75)
-        logUser(jobId, 'Generuję zawartość z AI...')
-        logTechnical(jobId, 'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`)
-      }
+      await progressStep(
+        jobId, 'executing', 75,
+        'Generuję zawartość z AI...',
+        'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`
+      )
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
         toolInputContent,
@@ -311,12 +340,12 @@ export async function askRagQuestion(
         pdfFiles
       )
 
-      if (jobId) {
-        emitProgress(jobId, 'finalizing', 95)
-        logUser(jobId, 'Generowanie zakończone!')
-        logTechnical(jobId, 'LLM', `Response received, tool execution complete`)
-        completeJob(jobId)
-      }
+      await progressStep(
+        jobId, 'finalizing', 95,
+        'Generowanie zakończone!',
+        'LLM', `Response received, tool execution complete`
+      )
+      if (jobId) completeJob(jobId)
 
       return {
         ...toFormState('SUCCESS', toolResult.answer),
@@ -327,11 +356,11 @@ export async function askRagQuestion(
       }
     }
 
-    if (jobId) {
-      emitProgress(jobId, 'searching', 50)
-      logUser(jobId, 'Przeszukuję bazę wiedzy...')
-      logTechnical(jobId, 'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`)
-    }
+    await progressStep(
+      jobId, 'searching', 50,
+      'Przeszukuję bazę wiedzy...',
+      'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`
+    )
 
     const result = await queryFileSearchOnly(
       cleanQuestion,
@@ -339,14 +368,18 @@ export async function askRagQuestion(
       additionalContext || undefined
     )
 
-    if (jobId) {
-      emitProgress(jobId, 'executing', 80)
-      const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
-      logUser(jobId, `Znaleziono odpowiedź na temat: ${topic}`)
-      logTechnical(jobId, 'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length || 0}`)
-      emitProgress(jobId, 'finalizing', 95)
-      completeJob(jobId)
-    }
+    const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
+    await progressStep(
+      jobId, 'executing', 80,
+      `Znaleziono odpowiedź na temat: ${topic}`,
+      'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length || 0}`
+    )
+    await progressStep(
+      jobId, 'finalizing', 95,
+      'Przetwarzanie zakończone!',
+      'RAG', `Query completed successfully`
+    )
+    if (jobId) completeJob(jobId)
 
     return {
       ...toFormState('SUCCESS', result.answer),
