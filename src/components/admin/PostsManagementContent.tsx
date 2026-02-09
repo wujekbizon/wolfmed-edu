@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { formatDate } from '@/lib/blogUtils'
+import { formatDate } from '@/helpers/blogUtils'
 import { useDashboardStore } from '@/store/useDashboardStore'
 import DeletePostButton from '@/components/admin/DeletePostButton'
 import DeletePostModal from '@/components/admin/DeletePostModal'

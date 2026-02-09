@@ -1,6 +1,5 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import Logo1 from '@/images/Logo1.png'
 
 export default function Logo({ className }: { className: string }) {
   return (

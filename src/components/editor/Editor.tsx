@@ -1,12 +1,15 @@
 'use client'
 
+import { useEffect } from 'react'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { ContentEditable } from '@lexical/react/LexicalContentEditable'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
-import { EditorState } from 'lexical'
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
+import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown'
+import { $getRoot, EditorState } from 'lexical'
 import EditorToolbar from './EditorToolbar'
 import { editorConfig } from './editorConfig'
 
@@ -17,20 +20,44 @@ interface Props {
   className?: string
 }
 
+function isLexicalJSON(content: string): boolean {
+  if (!content) return false
+  const trimmed = content.trim()
+  if (!trimmed.startsWith('{')) return false
+  try {
+    const parsed = JSON.parse(trimmed)
+    return parsed.root !== undefined
+  } catch {
+    return false
+  }
+}
+
+function MarkdownInitPlugin({ markdown }: { markdown: string }) {
+  const [editor] = useLexicalComposerContext()
+
+  useEffect(() => {
+    if (!markdown) return
+    editor.update(() => {
+      const root = $getRoot()
+      root.clear()
+      $convertFromMarkdownString(markdown, TRANSFORMERS)
+    })
+  }, [editor, markdown])
+
+  return null
+}
+
 export default function Editor({
   onChange,
   initialContent = '',
   placeholder = 'Zacznij pisać...',
   className = '',
 }: Props) {
+  const isJSON = isLexicalJSON(initialContent)
+
   const config = {
     ...editorConfig,
-    editorState: initialContent
-      ? (editor: any) => {
-          const initialState = editor.parseEditorState(initialContent)
-          editor.setEditorState(initialState)
-        }
-      : () => {},
+    ...(isJSON && { editorState: initialContent }),
   }
 
   return (
@@ -62,6 +89,7 @@ export default function Editor({
           />
           <HistoryPlugin />
           {onChange && <OnChangePlugin onChange={onChange} />}
+          {!isJSON && initialContent && <MarkdownInitPlugin markdown={initialContent} />}
         </div>
       </div>
     </LexicalComposer>

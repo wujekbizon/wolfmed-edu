@@ -30,7 +30,7 @@ export const EditorField = memo(function EditorField({
                 onChange={onChange}
                 placeholder="Napisz swoją notatkę..."
                 className="min-h-64 overflow-y-auto scrollbar-webkit"
-                initialContent={initialContent ? JSON.stringify(initialContent) : ''}
+                initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
             <FieldError name="content" formState={formState} />
         </div>

@@ -8,12 +8,6 @@ export const TIER_HIERARCHY: Record<AccessTier, number> = {
   pro: 3,
 }
 
-/**
- * Check if user's access tier is sufficient for required tier
- * @param userTier - The user's current access tier
- * @param requiredTier - The tier required to access content
- * @returns true if user has access, false otherwise
- */
 export function hasAccessToTier(
   userTier: AccessTier | string,
   requiredTier: AccessTier

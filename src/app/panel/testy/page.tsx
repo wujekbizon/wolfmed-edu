@@ -7,7 +7,7 @@ import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { checkCourseAccessAction } from '@/actions/course-actions'
-import { hasAccessToTier } from '@/lib/accessTiers'
+import { hasAccessToTier } from '@/helpers/accessTiers'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);

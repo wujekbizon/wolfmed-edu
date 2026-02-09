@@ -6,7 +6,6 @@ import { blogCategories, blogTags } from '@/server/db/schema'
 import { eq } from 'drizzle-orm'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
-import { requireAdminAction } from '@/lib/adminHelpers'
 import {
   CreateBlogCategorySchema,
   UpdateBlogCategorySchema,
@@ -15,17 +14,17 @@ import {
   UpdateBlogTagSchema,
   DeleteBlogTagSchema,
 } from '@/server/schema'
+import { auth } from '@clerk/nextjs/server'
 
-/**
- * Create a new blog category (Admin only)
- */
 export async function createBlogCategoryAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
     const description = formData.get('description') as string | null
@@ -69,16 +68,15 @@ export async function createBlogCategoryAction(
   }
 }
 
-/**
- * Update a blog category (Admin only)
- */
 export async function updateBlogCategoryAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
     const slug = formData.get('slug') as string | null
@@ -134,17 +132,15 @@ export async function updateBlogCategoryAction(
   }
 }
 
-/**
- * Delete a blog category (Admin only)
- * Note: This will set categoryId to NULL for all posts in this category
- */
 export async function deleteBlogCategoryAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
     const id = formData.get('id') as string
 
     if (!id) {
@@ -169,16 +165,15 @@ export async function deleteBlogCategoryAction(
   }
 }
 
-/**
- * Create a new blog tag (Admin only)
- */
 export async function createBlogTagAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
 
@@ -210,16 +205,16 @@ export async function createBlogTagAction(
   }
 }
 
-/**
- * Update a blog tag (Admin only)
- */
 export async function updateBlogTagAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
     const slug = formData.get('slug') as string | null
@@ -261,17 +256,16 @@ export async function updateBlogTagAction(
   }
 }
 
-/**
- * Delete a blog tag (Admin only)
- * Note: This will delete all post-tag relationships
- */
 export async function deleteBlogTagAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    
     const id = formData.get('id') as string
 
     if (!id) {

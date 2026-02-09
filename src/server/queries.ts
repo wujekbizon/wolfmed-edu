@@ -44,7 +44,7 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
-import { parseLexicalContent } from "@/lib/safeJsonParse"
+import { parseLexicalContent } from "@/helpers/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -1436,6 +1436,20 @@ export const getMaterialsByUser = cache(async (userId: string) => {
     createdAt: r.createdAt?.toISOString?.() ?? null,
     updatedAt: r.updatedAt?.toISOString?.() ?? null,
   }))
+})
+
+export const getMaterialById = cache(async (userId: string, materialId: string) => {
+  const material = await db.query.materials.findFirst({
+    where: (m, { eq, and }) => and(eq(m.id, materialId), eq(m.userId, userId)),
+  })
+
+  if (!material) return null
+
+  return {
+    ...material,
+    createdAt: material.createdAt?.toISOString?.() ?? null,
+    updatedAt: material.updatedAt?.toISOString?.() ?? null,
+  }
 })
 
 export const getUserStorageUsage = async (userId: string) => {
