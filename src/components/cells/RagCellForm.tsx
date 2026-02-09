@@ -9,8 +9,9 @@ import { useToastMessage } from '@/hooks/useToastMessage'
 import { useResourceAutocomplete } from '@/hooks/useResourceAutocomplete'
 import { useResourceAutocompleteInput } from '@/hooks/useResourceAutocompleteInput'
 import { useCommandAutocompleteInput } from '@/hooks/useCommandAutocompleteInput'
+import { useRagProgress } from '@/hooks/useRagProgress'
 import RagResponse from './RagResponse'
-import RagLoadingState from './RagLoadingState'
+import RagProgressIndicator from './RagProgressIndicator'
 import { ResourceAutocomplete } from './ResourceAutocomplete'
 import { CommandAutocomplete } from './CommandAutocomplete'
 import { useCellsStore } from '@/store/useCellsStore'
@@ -46,6 +47,18 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     insertCommand,
   } = useCommandAutocompleteInput(textareaRef)
 
+  const {
+    jobId,
+    stage,
+    progress,
+    message: progressMessage,
+    tool,
+    logs,
+    error: progressError,
+    startListening,
+    reset: resetProgress,
+  } = useRagProgress()
+
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = e.target.value
     const cursorPos = e.target.selectionStart || 0
@@ -71,6 +84,13 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
       conversationRef.current.scrollTop = conversationRef.current.scrollHeight
     }
   }, [state.status])
+
+  // Reset progress when action completes
+  useEffect(() => {
+    if (!isPending && state.status !== 'UNSET') {
+      resetProgress()
+    }
+  }, [isPending, state.status, resetProgress])
 
   useEffect(() => {
    
@@ -107,6 +127,8 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const handleSubmit = (formData: FormData) => {
     const question = formData.get('question') as string
     submittedQuestion.current = question
+    formData.append('jobId', jobId)
+    startListening()
     action(formData)
   }
 
@@ -129,8 +151,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             {isPending && (
               <div className="flex justify-start">
-                <div className="max-w-[80%]">
-                  <RagLoadingState />
+                <div className="max-w-[80%] w-full">
+                  <RagProgressIndicator
+                    stage={stage}
+                    progress={progress}
+                    message={progressMessage}
+                    tool={tool}
+                    logs={logs}
+                    error={progressError}
+                  />
                 </div>
               </div>
             )}

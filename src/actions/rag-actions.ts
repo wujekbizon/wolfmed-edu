@@ -11,6 +11,7 @@ import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } fro
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
+import { createJob, emitProgress, emitLog, completeJob, errorJob } from '@/lib/progress-store'
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
@@ -121,13 +122,20 @@ export async function askRagQuestion(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const jobId = formData.get('jobId') as string | null
+
+  if (jobId) {
+    createJob(jobId)
+  }
+
   try {
     const { userId } = await auth()
     if (!userId) throw new Error("Unauthorized")
-      
+
     const rateLimit = await checkRateLimit(userId, 'rag:query')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      if (jobId) errorJob(jobId, 'Rate limit exceeded')
       return toFormState(
         'ERROR',
         `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`
@@ -137,21 +145,37 @@ export async function askRagQuestion(
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
 
+    if (jobId) {
+      emitProgress(jobId, 'parsing', 10)
+      emitLog(jobId, 'info', 'Analizuję zapytanie...')
+    }
+
     const validationResult = RagQuerySchema.safeParse({
       question,
       cellId,
     })
 
     if (!validationResult.success) {
+      if (jobId) errorJob(jobId, 'Validation failed')
       return fromErrorToFormState(validationResult.error)
     }
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
+    if (jobId && tools.length > 0) {
+      emitLog(jobId, 'info', `Wykryto polecenie: /${tools[0]}`)
+    }
+    if (jobId && resources.length > 0) {
+      emitLog(jobId, 'info', `Wykryto ${resources.length} zasób(y)`)
+    }
+
     let additionalContext = ''
     let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
 
     if (resources.length > 0) {
+      if (jobId) {
+        emitProgress(jobId, 'resolving', 20)
+      }
       try {
         const resolvedUris = await Promise.all(
           resources.map(async (displayName) => {
@@ -163,6 +187,10 @@ export async function askRagQuestion(
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
 
         if (validResources.length > 0) {
+          if (jobId) {
+            emitProgress(jobId, 'fetching', 30)
+            emitLog(jobId, 'info', `Pobieram ${validResources.length} zasób(y)...`)
+          }
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => fetchResourceContent(uri, userId))
           )
@@ -205,9 +233,15 @@ export async function askRagQuestion(
 
       const toolDefinition = toolMap[toolName]
 
+      if (jobId) {
+        emitProgress(jobId, 'calling_tool', 60, undefined, { tool: toolDefinition.name })
+        emitLog(jobId, 'info', `Wywołuję narzędzie ${toolDefinition.name}...`)
+      }
+
       // Handle empty question - need either a topic or resource context
       const hasUserResource = !!additionalContext || pdfFiles.length > 0
       if (!cleanQuestion.trim() && !hasUserResource) {
+        if (jobId) errorJob(jobId, 'Missing topic or resource')
         return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
       }
 
@@ -225,17 +259,30 @@ export async function askRagQuestion(
       }
 
       // SECONDARY: File Search results (supplementary info from knowledge base)
+      if (jobId) {
+        emitProgress(jobId, 'searching', 45)
+        emitLog(jobId, 'info', 'Przeszukuję bazę wiedzy...')
+      }
       const ragResult = await queryFileSearchOnly(effectiveQuestion)
       if (ragResult.answer) {
         toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
       }
 
+      if (jobId) {
+        emitProgress(jobId, 'executing', 75)
+        emitLog(jobId, 'info', 'Generuję zawartość...')
+      }
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
         toolInputContent,
         toolDefinition,
         pdfFiles
       )
+
+      if (jobId) {
+        emitProgress(jobId, 'finalizing', 90)
+        completeJob(jobId)
+      }
 
       return {
         ...toFormState('SUCCESS', toolResult.answer),
@@ -246,11 +293,21 @@ export async function askRagQuestion(
       }
     }
 
+    if (jobId) {
+      emitProgress(jobId, 'searching', 45)
+      emitLog(jobId, 'info', 'Przeszukuję bazę wiedzy...')
+    }
+
     const result = await queryFileSearchOnly(
       cleanQuestion,
       undefined,
       additionalContext || undefined
     )
+
+    if (jobId) {
+      emitProgress(jobId, 'finalizing', 90)
+      completeJob(jobId)
+    }
 
     return {
       ...toFormState('SUCCESS', result.answer),
@@ -260,6 +317,9 @@ export async function askRagQuestion(
     }
   } catch (error) {
     console.error('Error querying RAG:', error)
+    if (jobId) {
+      errorJob(jobId, error instanceof Error ? error.message : 'Unknown error')
+    }
     return fromErrorToFormState(error)
   }
 }
