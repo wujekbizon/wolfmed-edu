@@ -1,41 +1,21 @@
 'use client'
 
+/**
+ * useRagProgress - SSE-based progress tracking hook for RAG operations
+ *
+ * Connects to /api/rag/progress via Server-Sent Events to receive real-time
+ * progress updates during RAG queries. Manages connection lifecycle and
+ * separates user-friendly logs from technical logs.
+ *
+ * Usage:
+ *   const { startListening, progress, userLogs } = useRagProgress()
+ *   // Call startListening() when submitting a RAG query
+ *   // Progress updates will stream in real-time
+ */
+
 import { useCallback, useRef, useEffect } from 'react'
 import { useProgressStore, selectUserLogs, selectTechnicalLogs } from '@/store/useProgressStore'
-import type { ProgressStage, LogEntry, LogAudience } from '@/types/progressTypes'
-
-interface SSEProgressData {
-  stage: ProgressStage
-  message: string
-  progress: number
-  total: number
-  tool?: string
-}
-
-interface SSELogData {
-  level: 'info' | 'warn' | 'error'
-  message: string
-  timestamp: string
-  audience?: LogAudience
-}
-
-type ConnectionState = 'idle' | 'connecting' | 'open' | 'closed' | 'error'
-
-interface UseRagProgressReturn {
-  jobId: string
-  stage: ProgressStage
-  message: string
-  progress: number
-  tool: string | null
-  userLogs: LogEntry[]
-  technicalLogs: LogEntry[]
-  connectionState: ConnectionState
-  isComplete: boolean
-  error: string | null
-  startListening: () => void
-  stopListening: () => void
-  reset: () => void
-}
+import type { SSEProgressData, SSELogData, UseRagProgressReturn } from '@/types/progressTypes'
 
 export function useRagProgress(): UseRagProgressReturn {
   const {
