@@ -11,7 +11,7 @@ import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } fro
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
-import { createJob, emitProgress, emitLog, completeJob, errorJob } from '@/lib/progress-store'
+import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/lib/progress-store'
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
@@ -147,7 +147,8 @@ export async function askRagQuestion(
 
     if (jobId) {
       emitProgress(jobId, 'parsing', 10)
-      emitLog(jobId, 'info', 'Analizuję zapytanie...')
+      logUser(jobId, 'Analizuję zapytanie...')
+      logTechnical(jobId, 'PARSE', `Input question: "${question.slice(0, 50)}${question.length > 50 ? '...' : ''}"`)
     }
 
     const validationResult = RagQuerySchema.safeParse({
@@ -156,17 +157,28 @@ export async function askRagQuestion(
     })
 
     if (!validationResult.success) {
-      if (jobId) errorJob(jobId, 'Validation failed')
+      if (jobId) errorJob(jobId, 'Nieprawidłowe zapytanie', `Validation error: ${validationResult.error.message}`)
       return fromErrorToFormState(validationResult.error)
     }
 
     const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
 
-    if (jobId && tools.length > 0) {
-      emitLog(jobId, 'info', `Wykryto polecenie: /${tools[0]}`)
+    if (jobId && tools.length > 0 && tools[0]) {
+      const toolName = tools[0]
+      const toolLabels: Record<string, string> = {
+        'notatka': 'notatkę',
+        'diagram': 'diagram',
+        'utworz': 'test',
+        'podsumuj': 'podsumowanie'
+      }
+      logUser(jobId, `Wykryto polecenie: /${toolName}`)
+      logTechnical(jobId, 'PARSE', `Found tool command: ${toolName} -> will use ${toolName}_tool`)
+      emitProgress(jobId, 'parsing', 20)
+      logUser(jobId, `Przygotowuję ${toolLabels[toolName] || toolName}...`)
     }
     if (jobId && resources.length > 0) {
-      emitLog(jobId, 'info', `Wykryto ${resources.length} zasób(y)`)
+      logUser(jobId, `Wykryto ${resources.length} zasób(y) do pobrania`)
+      logTechnical(jobId, 'PARSE', `Found @resources: ${resources.join(', ')}`)
     }
 
     let additionalContext = ''
@@ -174,7 +186,9 @@ export async function askRagQuestion(
 
     if (resources.length > 0) {
       if (jobId) {
-        emitProgress(jobId, 'resolving', 20)
+        emitProgress(jobId, 'resolving', 30)
+        logUser(jobId, 'Rozwiązuję referencje zasobów...')
+        logTechnical(jobId, 'RESOLVE', `Resolving ${resources.length} resource references`)
       }
       try {
         const resolvedUris = await Promise.all(
@@ -188,8 +202,11 @@ export async function askRagQuestion(
 
         if (validResources.length > 0) {
           if (jobId) {
-            emitProgress(jobId, 'fetching', 30)
-            emitLog(jobId, 'info', `Pobieram ${validResources.length} zasób(y)...`)
+            emitProgress(jobId, 'fetching', 40)
+            for (const res of validResources) {
+              logUser(jobId, `Pobieram: ${res.displayName}`)
+            }
+            logTechnical(jobId, 'FETCH', `Fetching ${validResources.length} resources: ${validResources.map(r => r.uri).join(', ')}`)
           }
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => fetchResourceContent(uri, userId))
@@ -233,15 +250,23 @@ export async function askRagQuestion(
 
       const toolDefinition = toolMap[toolName]
 
+      const toolDisplayNames: Record<string, string> = {
+        'notatka_tool': 'notatki',
+        'diagram_tool': 'diagramu',
+        'utworz_test': 'testu',
+        'podsumuj': 'podsumowania'
+      }
+
       if (jobId) {
-        emitProgress(jobId, 'calling_tool', 60, undefined, { tool: toolDefinition.name })
-        emitLog(jobId, 'info', `Wywołuję narzędzie ${toolDefinition.name}...`)
+        emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
+        logUser(jobId, `Rozpoczynam generowanie ${toolDisplayNames[toolDefinition.name] || 'zawartości'}...`)
+        logTechnical(jobId, 'TOOL', `Preparing to call ${toolDefinition.name}`)
       }
 
       // Handle empty question - need either a topic or resource context
       const hasUserResource = !!additionalContext || pdfFiles.length > 0
       if (!cleanQuestion.trim() && !hasUserResource) {
-        if (jobId) errorJob(jobId, 'Missing topic or resource')
+        if (jobId) errorJob(jobId, 'Brak tematu lub zasobu', `Missing topic or resource for tool: ${toolName}`)
         return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
       }
 
@@ -260,17 +285,24 @@ export async function askRagQuestion(
 
       // SECONDARY: File Search results (supplementary info from knowledge base)
       if (jobId) {
-        emitProgress(jobId, 'searching', 45)
-        emitLog(jobId, 'info', 'Przeszukuję bazę wiedzy...')
+        emitProgress(jobId, 'searching', 60)
+        logUser(jobId, 'Przeszukuję bazę wiedzy...')
+        logTechnical(jobId, 'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`)
       }
       const ragResult = await queryFileSearchOnly(effectiveQuestion)
       if (ragResult.answer) {
         toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
+        if (jobId) {
+          const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+          logUser(jobId, `Znaleziono informacje na temat: ${topic}`)
+          logTechnical(jobId, 'RAG', `Found ${ragResult.answer.length} chars of context`)
+        }
       }
 
       if (jobId) {
         emitProgress(jobId, 'executing', 75)
-        emitLog(jobId, 'info', 'Generuję zawartość...')
+        logUser(jobId, 'Generuję zawartość z AI...')
+        logTechnical(jobId, 'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`)
       }
       const toolResult = await executeToolWithContent(
         toolDefinition.name,
@@ -280,7 +312,9 @@ export async function askRagQuestion(
       )
 
       if (jobId) {
-        emitProgress(jobId, 'finalizing', 90)
+        emitProgress(jobId, 'finalizing', 95)
+        logUser(jobId, 'Generowanie zakończone!')
+        logTechnical(jobId, 'LLM', `Response received, tool execution complete`)
         completeJob(jobId)
       }
 
@@ -294,8 +328,9 @@ export async function askRagQuestion(
     }
 
     if (jobId) {
-      emitProgress(jobId, 'searching', 45)
-      emitLog(jobId, 'info', 'Przeszukuję bazę wiedzy...')
+      emitProgress(jobId, 'searching', 50)
+      logUser(jobId, 'Przeszukuję bazę wiedzy...')
+      logTechnical(jobId, 'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`)
     }
 
     const result = await queryFileSearchOnly(
@@ -305,7 +340,11 @@ export async function askRagQuestion(
     )
 
     if (jobId) {
-      emitProgress(jobId, 'finalizing', 90)
+      emitProgress(jobId, 'executing', 80)
+      const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
+      logUser(jobId, `Znaleziono odpowiedź na temat: ${topic}`)
+      logTechnical(jobId, 'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length || 0}`)
+      emitProgress(jobId, 'finalizing', 95)
       completeJob(jobId)
     }
 
@@ -318,7 +357,8 @@ export async function askRagQuestion(
   } catch (error) {
     console.error('Error querying RAG:', error)
     if (jobId) {
-      errorJob(jobId, error instanceof Error ? error.message : 'Unknown error')
+      const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
+      errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
     }
     return fromErrorToFormState(error)
   }

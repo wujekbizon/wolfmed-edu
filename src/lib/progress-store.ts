@@ -1,4 +1,5 @@
 type EventType = 'progress' | 'log' | 'complete' | 'error'
+type LogAudience = 'user' | 'technical'
 
 interface ProgressEvent {
   id: number
@@ -72,13 +73,36 @@ export function emitProgress(
 export function emitLog(
   jobId: string,
   level: 'info' | 'warn' | 'error',
-  message: string
+  message: string,
+  audience: LogAudience = 'user'
 ): void {
   emitEvent(jobId, 'log', {
     level,
     message,
+    audience,
     timestamp: new Date().toISOString(),
   })
+}
+
+// Helper for user-friendly messages
+export function logUser(jobId: string, message: string): void {
+  emitLog(jobId, 'info', message, 'user')
+}
+
+// Helper for technical/debug messages
+export function logTechnical(
+  jobId: string,
+  category: string,
+  message: string,
+  level: 'info' | 'warn' | 'error' = 'info'
+): void {
+  emitLog(jobId, level, `[${category}] ${message}`, 'technical')
+}
+
+// Helper for errors (shown in both)
+export function logError(jobId: string, userMessage: string, technicalMessage: string): void {
+  emitLog(jobId, 'error', userMessage, 'user')
+  emitLog(jobId, 'error', technicalMessage, 'technical')
 }
 
 export function completeJob(jobId: string): void {
@@ -86,15 +110,19 @@ export function completeJob(jobId: string): void {
   if (!job) return
 
   job.status = 'complete'
+  emitLog(jobId, 'info', 'Zakończono pomyślnie', 'user')
+  emitLog(jobId, 'info', '[DONE] Job completed successfully', 'technical')
   emitEvent(jobId, 'complete', { success: true })
 }
 
-export function errorJob(jobId: string, message: string, code?: string): void {
+export function errorJob(jobId: string, userMessage: string, technicalMessage?: string): void {
   const job = progressStore.get(jobId)
   if (!job) return
 
   job.status = 'error'
-  emitEvent(jobId, 'error', { message, code })
+  emitLog(jobId, 'error', userMessage, 'user')
+  emitLog(jobId, 'error', technicalMessage || userMessage, 'technical')
+  emitEvent(jobId, 'error', { message: userMessage, technicalMessage })
 }
 
 export function getJob(jobId: string): JobProgress | undefined {

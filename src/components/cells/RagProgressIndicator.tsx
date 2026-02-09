@@ -8,7 +8,8 @@ interface RagProgressIndicatorProps {
   progress: number
   message: string
   tool: string | null
-  logs: LogEntry[]
+  userLogs: LogEntry[]
+  technicalLogs: LogEntry[]
   error: string | null
 }
 
@@ -29,7 +30,8 @@ export default function RagProgressIndicator({
   progress,
   message,
   tool,
-  logs,
+  userLogs,
+  technicalLogs,
   error,
 }: RagProgressIndicatorProps) {
   const [showDetails, setShowDetails] = useState(false)
@@ -91,10 +93,10 @@ export default function RagProgressIndicator({
         </div>
       </div>
 
-      {/* Live terminal - user friendly messages */}
-      {logs.length > 0 && (
+      {/* User-friendly terminal - shows what user cares about */}
+      {userLogs.length > 0 && (
         <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs space-y-1">
-          {logs.slice(-3).map((log, i) => (
+          {userLogs.slice(-4).map((log, i) => (
             <div key={i} className="flex items-start gap-2">
               <span className="text-sky-400 select-none">{'>_'}</span>
               <span className={
@@ -109,15 +111,15 @@ export default function RagProgressIndicator({
         </div>
       )}
 
-      {/* Error message */}
+      {/* Error message for user */}
       {error && (
         <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
           {error}
         </div>
       )}
 
-      {/* Show details toggle */}
-      {logs.length > 0 && (
+      {/* Show technical details toggle */}
+      {technicalLogs.length > 0 && (
         <>
           <button
             onClick={() => setShowDetails(!showDetails)}
@@ -134,13 +136,13 @@ export default function RagProgressIndicator({
             {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
           </button>
 
-          {/* Full technical details when expanded */}
+          {/* Technical details - what's happening under the hood */}
           {showDetails && (
             <div className="p-3 bg-slate-900 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1 border border-slate-700">
               <div className="text-slate-400 text-[10px] uppercase tracking-wider mb-2">
-                Szczegółowy dziennik operacji
+                Dziennik techniczny
               </div>
-              {logs.map((log, i) => (
+              {technicalLogs.map((log, i) => (
                 <div key={i} className="flex items-start gap-2 text-[11px]">
                   <span className="text-slate-600 shrink-0 w-16">
                     {new Date(log.timestamp).toLocaleTimeString('pl-PL', {
@@ -149,14 +151,11 @@ export default function RagProgressIndicator({
                       second: '2-digit'
                     })}
                   </span>
-                  <span className={`shrink-0 w-12 ${
-                    log.level === 'error' ? 'text-red-500' :
-                    log.level === 'warn' ? 'text-amber-500' :
-                    'text-emerald-500'
-                  }`}>
-                    [{log.level.toUpperCase()}]
-                  </span>
-                  <span className="text-slate-300">
+                  <span className={
+                    log.level === 'error' ? 'text-red-400' :
+                    log.level === 'warn' ? 'text-amber-400' :
+                    'text-emerald-400'
+                  }>
                     {log.message}
                   </span>
                 </div>

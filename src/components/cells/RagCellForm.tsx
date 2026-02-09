@@ -53,7 +53,8 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     progress,
     message: progressMessage,
     tool,
-    logs,
+    userLogs,
+    technicalLogs,
     error: progressError,
     startListening,
     reset: resetProgress,
@@ -157,7 +158,8 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
                     progress={progress}
                     message={progressMessage}
                     tool={tool}
-                    logs={logs}
+                    userLogs={userLogs}
+                    technicalLogs={technicalLogs}
                     error={progressError}
                   />
                 </div>

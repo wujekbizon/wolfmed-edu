@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import type { ProgressStage, LogEntry } from '@/lib/progress-events'
+import type { ProgressStage, LogEntry, LogAudience } from '@/lib/progress-events'
 
 interface SSEProgressData {
   stage: ProgressStage
@@ -16,6 +16,7 @@ interface SSELogData {
   level: 'info' | 'warn' | 'error'
   message: string
   timestamp: string
+  audience?: LogAudience
 }
 
 type ConnectionState = 'idle' | 'connecting' | 'open' | 'closed' | 'error'
@@ -26,7 +27,8 @@ interface UseRagProgressReturn {
   message: string
   progress: number
   tool: string | null
-  logs: LogEntry[]
+  userLogs: LogEntry[]
+  technicalLogs: LogEntry[]
   connectionState: ConnectionState
   isComplete: boolean
   error: string | null
@@ -48,6 +50,16 @@ export function useRagProgress(): UseRagProgressReturn {
 
   const eventSourceRef = useRef<EventSource | null>(null)
   const lastEventTimeRef = useRef<number>(Date.now())
+
+  // Separate logs by audience
+  const userLogs = useMemo(
+    () => logs.filter((log) => log.audience === 'user' || !log.audience),
+    [logs]
+  )
+  const technicalLogs = useMemo(
+    () => logs.filter((log) => log.audience === 'technical'),
+    [logs]
+  )
 
   const startListening = useCallback(() => {
     if (eventSourceRef.current) {
@@ -89,7 +101,13 @@ export function useRagProgress(): UseRagProgressReturn {
       lastEventTimeRef.current = Date.now()
       try {
         const data: SSELogData = JSON.parse(e.data)
-        setLogs((prev) => [...prev, data])
+        const logEntry: LogEntry = {
+          level: data.level,
+          message: data.message,
+          timestamp: data.timestamp,
+          audience: data.audience || 'user',
+        }
+        setLogs((prev) => [...prev, logEntry])
       } catch {
         // Ignore parse errors
       }
@@ -168,7 +186,8 @@ export function useRagProgress(): UseRagProgressReturn {
     message,
     progress,
     tool,
-    logs,
+    userLogs,
+    technicalLogs,
     connectionState,
     isComplete,
     error,

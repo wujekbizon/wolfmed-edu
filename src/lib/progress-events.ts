@@ -18,10 +18,13 @@ export interface ProgressData {
   tool?: string
 }
 
+export type LogAudience = 'user' | 'technical'
+
 export interface LogEntry {
   level: 'info' | 'warn' | 'error'
   message: string
   timestamp: string
+  audience: LogAudience
 }
 
 export const STAGE_PROGRESS: Record<ProgressStage, number> = {
