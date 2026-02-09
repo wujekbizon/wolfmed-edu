@@ -10,8 +10,12 @@ export type {
 export {
   STAGE_PROGRESS,
   STAGE_MESSAGES,
-  getStageMessage,
 } from '@/constants/progress'
+
+// Re-export helpers for backward compatibility
+export {
+  getStageMessage,
+} from '@/helpers/progress-helpers'
 
 // SSE formatting utilities
 export function formatSSEMessage(

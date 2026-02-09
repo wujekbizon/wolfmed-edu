@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import type { ProgressStage, LogEntry } from '@/types/progressTypes'
-import { getToolLabel } from '@/constants/progress'
+import { getToolLabel } from '@/helpers/progress-helpers'
 
 interface RagProgressIndicatorProps {
   stage: ProgressStage
