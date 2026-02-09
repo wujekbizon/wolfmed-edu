@@ -1,5 +1,5 @@
-import { getJob, getEvents } from '@/lib/progress-store'
-import { formatSSEMessage, formatKeepAlive } from '@/lib/progress-events'
+import { getJob, getEvents } from '@/server/progress-store'
+import { formatSSEMessage, formatKeepAlive } from '@/helpers/progress-helpers'
 import { KEEP_ALIVE_INTERVAL, DEFAULT_SSE_RETRY, JOB_WAIT_TIMEOUT, SSE_POLL_INTERVAL } from '@/constants/progress'
 
 export async function GET(request: Request) {

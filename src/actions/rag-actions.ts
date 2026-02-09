@@ -11,7 +11,7 @@ import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } fro
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { mcpServer } from '@/server/mcp/server'
-import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/lib/progress-store'
+import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
 
