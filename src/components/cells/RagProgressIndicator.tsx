@@ -75,11 +75,11 @@ export default function RagProgressIndicator({
         </span>
       </div>
 
-      {/* Progress section with simple message */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-slate-600">{message}</span>
-          <span className="text-slate-400 font-mono">{progress}/100</span>
+      {/* Progress section */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between text-xs text-slate-500">
+          <span>Progress</span>
+          <span className="font-mono">{progress}/100</span>
         </div>
         <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
           <div
@@ -91,6 +91,24 @@ export default function RagProgressIndicator({
         </div>
       </div>
 
+      {/* Live terminal - user friendly messages */}
+      {logs.length > 0 && (
+        <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs space-y-1">
+          {logs.slice(-3).map((log, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-sky-400 select-none">{'>_'}</span>
+              <span className={
+                log.level === 'error' ? 'text-red-400' :
+                log.level === 'warn' ? 'text-amber-400' :
+                'text-sky-400'
+              }>
+                {log.message}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       {/* Error message */}
       {error && (
         <div className="p-2 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
@@ -98,7 +116,7 @@ export default function RagProgressIndicator({
         </div>
       )}
 
-      {/* Show details toggle - always available if there are logs */}
+      {/* Show details toggle */}
       {logs.length > 0 && (
         <>
           <button
@@ -116,24 +134,29 @@ export default function RagProgressIndicator({
             {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
           </button>
 
-          {/* Detailed log history when expanded */}
+          {/* Full technical details when expanded */}
           {showDetails && (
-            <div className="p-3 bg-slate-800 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1">
+            <div className="p-3 bg-slate-900 rounded-lg font-mono text-xs max-h-48 overflow-y-auto space-y-1 border border-slate-700">
+              <div className="text-slate-400 text-[10px] uppercase tracking-wider mb-2">
+                Szczegółowy dziennik operacji
+              </div>
               {logs.map((log, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <span className="text-slate-500 shrink-0 w-16">
+                <div key={i} className="flex items-start gap-2 text-[11px]">
+                  <span className="text-slate-600 shrink-0 w-16">
                     {new Date(log.timestamp).toLocaleTimeString('pl-PL', {
                       hour: '2-digit',
                       minute: '2-digit',
                       second: '2-digit'
                     })}
                   </span>
-                  <span className="text-sky-400 select-none">{'>_'}</span>
-                  <span className={
-                    log.level === 'error' ? 'text-red-400' :
-                    log.level === 'warn' ? 'text-amber-400' :
-                    'text-sky-400'
-                  }>
+                  <span className={`shrink-0 w-12 ${
+                    log.level === 'error' ? 'text-red-500' :
+                    log.level === 'warn' ? 'text-amber-500' :
+                    'text-emerald-500'
+                  }`}>
+                    [{log.level.toUpperCase()}]
+                  </span>
+                  <span className="text-slate-300">
                     {log.message}
                   </span>
                 </div>
