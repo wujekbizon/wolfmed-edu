@@ -14,9 +14,18 @@ interface JobProgress {
   createdAt: number
 }
 
-const progressStore = new Map<string, JobProgress>()
-
 const JOB_TTL = 5 * 60 * 1000 // 5 minutes
+
+// Use globalThis to ensure singleton across Next.js module boundaries
+const globalForProgress = globalThis as unknown as {
+  progressStore: Map<string, JobProgress> | undefined
+}
+
+const progressStore = globalForProgress.progressStore ?? new Map<string, JobProgress>()
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForProgress.progressStore = progressStore
+}
 
 export function createJob(jobId: string): void {
   progressStore.set(jobId, {

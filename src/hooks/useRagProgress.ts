@@ -105,23 +105,29 @@ export function useRagProgress(): UseRagProgressReturn {
       eventSource.close()
     })
 
-    eventSource.addEventListener('error', (e) => {
+    // Custom error event from server (job failed)
+    eventSource.addEventListener('error', (e: Event) => {
       lastEventTimeRef.current = Date.now()
-      try {
-        const data = JSON.parse((e as MessageEvent).data)
-        setError(data.message || 'Wystąpił błąd')
-      } catch {
-        setError('Wystąpił błąd')
+      const messageEvent = e as MessageEvent
+      if (messageEvent.data) {
+        try {
+          const data = JSON.parse(messageEvent.data)
+          setError(data.message || 'Wystąpił błąd')
+          setStage('error')
+          setConnectionState('error')
+          eventSource.close()
+        } catch {
+          // Not a valid JSON error event, ignore
+        }
       }
-      setStage('error')
-      setConnectionState('error')
-      eventSource.close()
     })
 
+    // Native EventSource error (connection issues)
     eventSource.onerror = () => {
       if (eventSource.readyState === EventSource.CLOSED) {
+        // Stream closed - this is normal when job completes
         setConnectionState('closed')
-      } else {
+      } else if (eventSource.readyState === EventSource.CONNECTING) {
         setConnectionState('connecting') // Reconnecting
       }
     }
