@@ -29,7 +29,7 @@ The platform is moving from a **single-subscription supporter model** to a **per
 
 Before merging this PR, the following must be completed **in order**:
 
-1. [ ] Update Clerk webhook to initialise `ownedCourses: []` on registration (code change)
+1. [x] Update Clerk webhook to initialise `ownedCourses: []` on registration (code change) ✓ Done
 2. [ ] Run database migrations on production
 3. [ ] Seed `courses` table
 4. [ ] Archive old Stripe products and create 4 new products/prices
@@ -41,31 +41,22 @@ Before merging this PR, the following must be completed **in order**:
 
 ---
 
-## 1. Code Change — New User Registration
+## 1. Code Change — New User Registration ✅ Implemented
 
-### Problem
+### What Was Done
 
-The Clerk `user.created` webhook (`src/app/api/webhooks/clerk/route.ts`) currently inserts the user into the database but does **not** initialise `publicMetadata` on the Clerk user object.
+The Clerk `user.created` webhook (`src/app/api/webhooks/clerk/route.ts`) previously inserted the user into the database but did **not** initialise `publicMetadata`, leaving `ownedCourses` as `undefined` for all new accounts.
 
-As a result, new users have `publicMetadata.ownedCourses` as `undefined`. The Stripe webhook already handles the `undefined` case with a fallback (`|| []`), but for correctness and clarity the value should be an explicit empty array from the moment the account is created.
-
-### Required Code Change
-
-In `src/app/api/webhooks/clerk/route.ts`, after successfully inserting the user to the database, add a Clerk metadata update inside the `user.created` block:
+`clerkClient` was added to the import and the following was added inside the `user.created` handler, immediately after `insertUserToDb`:
 
 ```ts
-import { clerkClient } from '@clerk/nextjs/server'
-
-// Inside the user.created handler, after insertUserToDb:
 const clerk = await clerkClient()
 await clerk.users.updateUser(id, {
-  publicMetadata: {
-    ownedCourses: [],
-  },
+  publicMetadata: { ownedCourses: [] },
 })
 ```
 
-**This must be deployed before the Stripe migration goes live**, so every new registration starts with a clean, typed metadata shape.
+Every new registration now starts with a clean `publicMetadata.ownedCourses: []` shape, consistent with what the Stripe webhook expects when appending purchased courses.
 
 ---
 
@@ -410,7 +401,7 @@ Without Redis, the SSE progress system falls back to in-memory (fine for single-
 
 | Priority | Item | Notes |
 |----------|------|-------|
-| 🔴 Critical | Clerk webhook — initialise `ownedCourses: []` on registration | Section 1 |
+| ✅ Done | Clerk webhook — initialise `ownedCourses: []` on registration | Section 1 |
 | 🔴 Critical | RAG access gate (premium tier only) | Section 8 |
 | 🔴 Critical | Stripe webhook `metadata` validation | Ensure `courseSlug` is always present in checkout sessions |
 | 🟡 Important | Multi-turn tool execution | `/flashcards`, `/podsumuj`, etc. — core AI feature |
