@@ -1096,7 +1096,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
           'Opieka pielęgniarska oparta o założenia teoretyczne Betty Neuman.',
           'Opieka pielęgniarska oparta założenia teoretyczne Medeleine Leininger.',
           'Opieka pielęgniarska oparta założenia teoretyczne wg założeń innej teorii.',
-          'Życie i działalność Stefani Poznańskiej.',
+          'Życie i działalność Stefani Poznańskiej.'
         ]
       }
     }
@@ -1132,33 +1132,33 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       prerequisites: 'Podstawowa znajomość kodeksu zawodowego.',
       learningOutcomes: {
         knowledge: [
-          { code: 'EZP.W.12', desc: 'Przedmiot etyki ogólnej i zawodowej.' },
+          { code: 'C.W.12', desc: 'Przedmiot etyki ogólnej i zawodowej.' },
           {
-            code: 'EZP.W.13',
+            code: 'C.W.13',
             desc: 'Istotę podejmowania decyzji etycznych i rozwiązywania dylematów moralnych w pracy pielęgniarki.'
           },
           {
-            code: 'EZP.W.14',
+            code: 'C.W.14',
             desc: 'Problematykę etyki normatywnej, w tym aksjologii wartości, powinności i sprawności moralnych istotnych w pracy pielęgniarki.'
           },
           {
-            code: 'EZP.W.15',
+            code: 'C.W.15',
             desc: 'Kodeks etyki zawodowej pielęgniarki i położnej.'
           }
         ],
         skills: [
           {
-            code: 'EZP.U.27',
+            code: 'C.U.27',
             desc: 'Rozwiązywać dylematy etyczne i moralne w praktyce pielęgniarskiej.'
           }
         ],
         competencies: [
           {
-            code: 'EZP.S.4',
+            code: 'K.S.4',
             desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
           },
           {
-            code: 'EZP.S.5',
+            code: 'K.S.5',
             desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
           }
         ]
@@ -1220,47 +1220,47 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       learningOutcomes: {
         knowledge: [
           {
-            code: 'PZ.W.16',
+            code: 'C.W.16',
             desc: 'Zasady promocji zdrowia i profilaktyki zdrowotnej.'
           },
           {
-            code: 'PZ.W.17',
+            code: 'C.W.17',
             desc: 'Zasady konstruowania programów promocji zdrowia.'
           },
           {
-            code: 'PZ.W.18',
+            code: 'C.W.18',
             desc: 'Strategie promocji zdrowia o zasięgu lokalnym, krajowym i światowym.'
           }
         ],
         skills: [
           {
-            code: 'PZ.U.28',
+            code: 'C.U.28',
             desc: 'Oceniać potencjał zdrowotny pacjenta i jego rodziny z wykorzystaniem skal, siatek i pomiarów.'
           },
           {
-            code: 'PZ.U.29',
+            code: 'C.U.29',
             desc: 'Rozpoznawać uwarunkowania zachowań zdrowotnych pacjenta i czynniki ryzyka chorób wynikających ze stylu życia.'
           },
           {
-            code: 'PZ.U.30',
+            code: 'C.U.30',
             desc: 'Dobierać metody i formy profilaktyki i prewencji chorób oraz kształtować zachowania zdrowotne różnych grup społecznych.'
           },
           {
-            code: 'PZ.U.31',
+            code: 'C.U.31',
             desc: 'Uczyć pacjenta samokontroli stanu zdrowia.'
           },
           {
-            code: 'PZ.U.32',
+            code: 'C.U.32',
             desc: 'Opracowywać i wdrażać indywidualne programy promocji zdrowia pacjentów, rodzin i grup społecznych.'
           }
         ],
         competencies: [
           {
-            code: 'PZ.S.4',
+            code: 'K.S.4',
             desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
           },
           {
-            code: 'PZ.S.5',
+            code: 'K.S.5',
             desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
           }
         ]
@@ -1286,7 +1286,11 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
           'Strategia konstruowania programu promocji zdrowia.'
         ],
         selfStudy: [
-          'Opracowanie programu promocji zdrowia wg wskazówek i kryteriów oceny prowadzącego.'
+          'Promocja zdrowia w wybranych grupach społecznych (dzieci, młodzież, środowiskopracy, kobiety w poszczególnych okresach życia, mężczyźni, ludzie starsi.',
+          'Zadania i kompetencje pielęgniarki w promocji zdrowia i profilaktyka..',
+          'Rozwój promocji zdrowia w świetle obrad konferencji międzynarodowych. Podstawowe dokumenty związane z promocja zdrowia.',
+          'Doradztwo zdrowotne.',
+          'Rola mediów w promocji zdrowia.'
         ]
       }
     }
@@ -1325,39 +1329,39 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       learningOutcomes: {
         knowledge: [
           {
-            code: 'ZS.W.36',
+            code: 'C.W.36',
             desc: 'Pojęcie zakażeń związanych z udzielaniem świadczeń zdrowotnych, w tym zakażeń szpitalnych, z uwzględnieniem źródeł i rezerwuaru drobnoustrojów w środowisku pozaszpitalnym i szpitalnym, w tym dróg ich szerzenia.'
           },
           {
-            code: 'ZS.W.37',
+            code: 'C.W.37',
             desc: 'Sposoby kontroli szerzenia się, zapobiegania i zwalczania zakażeń szpitalnych.'
           },
           {
-            code: 'ZS.W.38',
+            code: 'C.W.38',
             desc: 'Mechanizm i sposoby postępowania w zakażeniu krwi, zakażeniu ogólnoustrojowym, szpitalnym zapaleniu płuc, zakażeniu dróg moczowych i zakażeniu miejsca operowanego.'
           }
         ],
         skills: [
           {
-            code: 'ZS.U.48',
+            code: 'C.U.48',
             desc: 'Wdrażać standardy postępowania zapobiegającego zakażeniom szpitalnym.'
           },
           {
-            code: 'ZS.U.49',
+            code: 'C.U.49',
             desc: 'Stosować środki ochrony własnej, pacjentów i współpracowników przed zakażeniami.'
           }
         ],
         competencies: [
           {
-            code: 'ZS.S.4',
+            code: 'K.S.4',
             desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
           },
           {
-            code: 'ZS.S.5',
+            code: 'K.S.5',
             desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
           },
           {
-            code: 'ZS.S.6',
+            code: 'K.S.6',
             desc: 'Przewidywania i uwzględniania czynników wpływających na reakcje własne i pacjenta.'
           }
         ]
