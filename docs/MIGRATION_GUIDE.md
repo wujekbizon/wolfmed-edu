@@ -25,6 +25,31 @@ The platform is moving from a **single-subscription supporter model** to a **per
 
 ---
 
+## Staging Environment (Neon Branch)
+
+**Neon branch**: `br-dark-unit-a260opob`
+
+This is a copy of the production database used for safe testing. Use it to validate schema changes and production code before touching the real DB.
+
+| Property | Value |
+|----------|-------|
+| Branch ID | `br-dark-unit-a260opob` |
+| Users | ❌ Missing (no real user data — not synced from main) |
+| Tests | ✅ Populated manually (664 test records seeded) |
+| Schema | Mirrors production at time of branch creation |
+
+### What We Learned From Testing Here
+
+1. **`db:push` is destructive on production** — Running `pnpm run db:push` against a DB that already has data in tables like `wolfmed_tests` will **truncate them** (Drizzle drops and recreates modified tables). All 664 test records would be lost.
+2. **Do NOT use `db:push` on the main production DB.** Use the raw SQL statements in Section 2 instead.
+3. This branch is safe for testing migrations, schema changes, and production code flows — but since it lacks real users, it cannot be used to validate user-specific flows end-to-end.
+
+### To Switch `.env` to the Staging Branch
+
+Swap `DATABASE_URL` to point to `br-dark-unit-a260opob` when testing locally against staging. Revert before any production operations.
+
+---
+
 ## Pre-Merge Checklist
 
 Before merging this PR, the following must be completed **in order**:
@@ -62,11 +87,14 @@ Every new registration now starts with a clean `publicMetadata.ownedCourses: []`
 
 ## 2. Database Migrations (Production)
 
-> **Important**: The production database (Neon) must be updated separately. `pnpm run db:push` targets the `DATABASE_URL` in your environment — confirm it points to production before running.
+> ⚠️ **CRITICAL — Do NOT run `pnpm run db:push` on production.**
+> Drizzle's `db:push` will **truncate tables with schema changes** (e.g. `wolfmed_tests`) to recreate them, destroying all existing data. This was confirmed on the staging Neon branch (`br-dark-unit-a260opob`) where 664 test records would have been lost.
+>
+> **For main production DB: run only the SQL statements below, manually via Neon SQL editor or `psql`.**
 
 ### New Tables Required
 
-Run `pnpm run db:push` after merging the schema. The following new tables will be created:
+Run the following SQL directly against the production DB. These tables do not yet exist so they are safe to create:
 
 #### `wolfmed_courses`
 ```sql
@@ -116,7 +144,7 @@ ALTER TABLE wolfmed_stripe_payments ADD COLUMN "courseSlug" VARCHAR(100);
 ALTER TABLE wolfmed_stripe_subscriptions ADD COLUMN "courseSlug" VARCHAR(100);
 ```
 
-> Drizzle will handle all of the above via `pnpm run db:push`. Review the generated diff carefully before applying to production.
+> Run the `ALTER TABLE` statements above manually. They are additive (new nullable column) and safe to run on a live production database without downtime or data loss.
 
 ---
 
