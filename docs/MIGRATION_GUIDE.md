@@ -59,7 +59,7 @@ Before merging this PR, the following must be completed **in order**:
 3. [ ] Seed `courses` table
 4. [ ] Archive old Stripe products and create 4 new products/prices
 5. [ ] Add all new environment variables, remove obsolete ones
-6. [ ] Run existing user migration (DB enrollment + Clerk metadata)
+6. [ ] ⚠️ Build + run `scripts/migrate-supporters.ts` — auto-enroll existing supporters → `opiekun-medyczny` basic tier
 7. [ ] Verify webhook works end-to-end with a test purchase
 8. [ ] Deploy and smoke-test access control
 9. [ ] Address critical TODOs (RAG access gate)
@@ -256,11 +256,19 @@ STRIPE_BASIC_PRICE_ID=
 
 ## 6. Existing User Migration (opiekun-medyczny buyers)
 
+> 🔧 **TODO: `scripts/migrate-supporters.ts` must be created before this step can run.**
+>
+> The script template below is complete — it needs to be implemented as an actual file (mirroring how `scripts/seed-courses.ts` was built) and run once against production. It queries all users where `supporter = true` and automatically:
+> 1. Creates a `wolfmed_course_enrollments` row for `opiekun-medyczny` / `basic`
+> 2. Patches Clerk `publicMetadata.ownedCourses` to include `opiekun-medyczny`
+>
+> This ensures no existing supporter loses access after the platform model changes.
+
 Users who previously paid via the old supporter model have `user.supporter = true` in the database but **no `courseEnrollments` record** and **no `ownedCourses` in Clerk metadata**. Without this migration they will lose access after the merge.
 
 **Tier assigned**: `basic` (existing supporters map to the basic tier in the new system)
 
-### Option A — Automated Script (Recommended)
+### Option A — Automated Script (Required)
 
 Create a one-time migration script (e.g. `scripts/migrate-supporters.ts`) and run it once against production:
 
@@ -441,6 +449,7 @@ Without Redis, the SSE progress system falls back to in-memory (fine for single-
 |----------|------|-------|
 | ✅ Done | Clerk webhook — initialise `ownedCourses: []` on registration | Section 1 |
 | 🔴 Critical | RAG access gate (premium tier only) | Section 8 |
+| 🔴 Critical | Build `scripts/migrate-supporters.ts` + run on production | Section 6 — auto-enroll all `supporter = true` users into `opiekun-medyczny` basic |
 | 🔴 Critical | Stripe webhook `metadata` validation | Ensure `courseSlug` is always present in checkout sessions |
 | 🟡 Important | Multi-turn tool execution | `/flashcards`, `/podsumuj`, etc. — core AI feature |
 | 🟡 Important | RAG cell response persistence | Save responses to DB so they reload on page refresh |
