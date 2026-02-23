@@ -57,7 +57,7 @@ Before merging this PR, the following must be completed **in order**:
 1. [x] Update Clerk webhook to initialise `ownedCourses: []` on registration (code change) ✓ Done
 2. [ ] Run database migrations on production
 3. [ ] Seed `courses` table
-4. [ ] Archive old Stripe products and create 4 new products/prices
+4. [ ] ⏸️ Archive old Stripe products and create 4 new products/prices *(deferred — finalise prices first)*
 5. [ ] Add all new environment variables, remove obsolete ones
 6. [ ] ⚠️ Build + run `scripts/migrate-supporters.ts` — auto-enroll existing supporters → `opiekun-medyczny` basic tier
 7. [ ] Verify webhook works end-to-end with a test purchase
@@ -172,6 +172,11 @@ VALUES
 ---
 
 ## 4. Stripe Setup
+
+> ⏸️ **DEFERRED — Do not complete this step until final prices are confirmed.**
+>
+> Product names and tiers are defined, but PLN amounts are not finalised yet. Creating products now with placeholder prices would require editing or recreating them later. Come back to this section once pricing is locked in.
+> Images can also be skipped during creation and added later at any time.
 
 ### Step 1 — Archive the Old Products
 
