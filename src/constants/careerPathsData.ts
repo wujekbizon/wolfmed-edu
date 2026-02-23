@@ -258,7 +258,7 @@ export const careerPathsData: Record<string, PathData> = {
     pricing: {
       courseSlug: "opiekun-medyczny",
       basic: {
-        price: "159,99 zł",
+        price: "199,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
         accessTier: "basic",
         features: [
@@ -274,7 +274,7 @@ export const careerPathsData: Record<string, PathData> = {
         ]
       },
       premium: {
-        price: "299,99 zł",
+        price: "499,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
         accessTier: "premium",
         features: [
