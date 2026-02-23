@@ -42,60 +42,21 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       ects: 0,
       semester: 'Egzamin Państwowy na Opiekuna Medycznego',
       objectives:
-        'Głównym celem kursu anatomii jest zapoznanie studentów z budową ciała ludzkiego oraz wzajemnymi relacjami poszczególnych jego części z nawiązaniem do aspektów klinicznych.',
+        '',
       prerequisites:
-        'Podstawowe wiadomości z zakresu biologii, obejmujące podstawy nauki o człowieku.',
+        '',
       learningOutcomes: {
         knowledge: [
-          {
-            code: 'AN.W.1',
-            desc: 'Omawia budowę ciała ludzkiego w podejściu topograficznym (kończyny górna i dolna, klatka piersiowa, brzuch, miednica, grzbiet, szyja, głowa) i czynnościowym (układ kostno-stawowy, układ mięśniowy, układ krążenia, układ oddechowy, układ pokarmowy, układ moczowy, układy płciowe, układ nerwowy, narządy zmysłów, powłoka wspólna).'
-          }
+       
         ],
         skills: [
-          {
-            code: 'AN.U.1',
-            desc: 'Posługuje się w praktyce mianownictwem anatomicznym oraz wykorzystuje znajomość topografii narządów ciała ludzkiego.'
-          }
+       
         ]
       },
       programContent: {
-        lectures: [
-          'Narządy i układy, części ciała i okolice, jamy ciała',
-          'Budowa narządu ruchu (kości, mięśnie, stawy)',
-          'Układ krążenia: budowa serca, podział i budowa naczyń krwionośnych, krążenie małe i duże, budowa śledziony',
-          'Układ chłonny: naczynia chłonne, węzły chłonne, chłonka i jej krążenie',
-          'Układ oddechowy: budowa nosa, krtani, tchawicy i oskrzeli, płuc i opłucnej',
-          'Układ trawienny: budowa jamy ustnej, gardzieli i gardła, przełyku, żołądka, jelita cienkiego, jelita grubego, wątroby, trzustki',
-          'Układ moczowo-płciowy: budowa nerek, moczowodów, pęcherza moczowego, cewki moczowej, budowa narządów płciowych męskich i żeńskich',
-          'Gruczoły dokrewne: budowa gruczołu tarczowego, gruczołów przytarczycznych, części wewnątrzwydzielniczej trzustki, grasicy',
-          'Układ nerwowy: budowa układu ośrodkowego, obwodowego i autonomicznego',
-          'Receptory i narządy zmysłów',
-          'Powłoka wspólna'
-        ],
-        seminars: [
-          'Kości szkieletu osiowego i kończyn. Czaszka. Ogólna budowa mięśni i ich narządów pomocniczych. Układ mięśniowy',
-          'Podział układu nerwowego. Morfologia centralnego układu nerwowego. Ośrodki i drogi nerwowe',
-          'Narządy zmysłów. Układ wewnątrzwydzielniczy',
-          'Układ autonomiczny. Nerwy rdzeniowe',
-          'Nerwy czaszkowe',
-          'Jama nosowa, gardło i krtań. Układ oddechowy',
-          'Jama ustna, ślinianki i przełyk. Układ trawienny. Otrzewna',
-          'Nerka. Układ moczowy. Układ płciowy męski',
-          'Układ płciowy żeński. Dno miednicy',
-          'Budowa ogólna i podział układu krążenia. Serce. Krążenie małe. Tętnice krążenia dużego. Żyły. Krążenie płodowe. Układ chłonny',
-          'Anatomia topograficzna'
-        ],
-        selfStudy: [
-          'Zaburzenia rozwojowe układów i narządów',
-          'Zmiany w strukturach anatomicznych poszczególnych układów i narządów występujące w wieku podeszłym (układ kostny, układ oddechowy, układ krążenia, układ nerwowy, układ moczowy, narządy zmysłów)',
-          'Zmiany w strukturach anatomicznych układów i narządów w przebiegu wybranych procesów patologicznych (np. cukrzycy, miażdżycy, choroby alkoholowej)',
-          'Biomechanika stawów kręgosłupa, głowy, kończyn',
-          'Wady wrodzone układu nerwowego',
-          'Anomalie układu naczyń, malformacje tętniczo-żylne, tętniaki, naczyniaki',
-          'Choroby związane z zaburzeniami czynności układu wewnątrzwydzielniczego (tarczycy, przytarczyc, przysadki mózgowej, nadnerczy, części wewnątrzwydzielniczej trzustki)',
-          'Anatomia radiologiczna układów i narządów, metody obrazowania (rtg, tomografia komputerowa, rezonans magnetyczny, ultrasonografia, angiografia)'
-        ]
+        lectures: [],
+        seminars: [],
+        selfStudy: []
       }
     }
   },
