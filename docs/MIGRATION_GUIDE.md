@@ -27,20 +27,51 @@ The platform is moving from a **single-subscription supporter model** to a **per
 
 ## Pre-Merge Checklist
 
-Before merging this PR, the following must be completed in order:
+Before merging this PR, the following must be completed **in order**:
 
-1. [ ] Run database migrations
-2. [ ] Seed `courses` table
-3. [ ] Create Stripe products and prices
-4. [ ] Add all new environment variables
-5. [ ] Migrate existing opiekun-medyczny users (DB enrollment + Clerk metadata)
-6. [ ] Verify webhook works end-to-end with a test purchase
-7. [ ] Deploy and smoke test access control
-8. [ ] Address critical TODOs (RAG access gate)
+1. [ ] Update Clerk webhook to initialise `ownedCourses: []` on registration (code change)
+2. [ ] Run database migrations on production
+3. [ ] Seed `courses` table
+4. [ ] Archive old Stripe products and create 4 new products/prices
+5. [ ] Add all new environment variables, remove obsolete ones
+6. [ ] Run existing user migration (DB enrollment + Clerk metadata)
+7. [ ] Verify webhook works end-to-end with a test purchase
+8. [ ] Deploy and smoke-test access control
+9. [ ] Address critical TODOs (RAG access gate)
 
 ---
 
-## 1. Database Migrations
+## 1. Code Change — New User Registration
+
+### Problem
+
+The Clerk `user.created` webhook (`src/app/api/webhooks/clerk/route.ts`) currently inserts the user into the database but does **not** initialise `publicMetadata` on the Clerk user object.
+
+As a result, new users have `publicMetadata.ownedCourses` as `undefined`. The Stripe webhook already handles the `undefined` case with a fallback (`|| []`), but for correctness and clarity the value should be an explicit empty array from the moment the account is created.
+
+### Required Code Change
+
+In `src/app/api/webhooks/clerk/route.ts`, after successfully inserting the user to the database, add a Clerk metadata update inside the `user.created` block:
+
+```ts
+import { clerkClient } from '@clerk/nextjs/server'
+
+// Inside the user.created handler, after insertUserToDb:
+const clerk = await clerkClient()
+await clerk.users.updateUser(id, {
+  publicMetadata: {
+    ownedCourses: [],
+  },
+})
+```
+
+**This must be deployed before the Stripe migration goes live**, so every new registration starts with a clean, typed metadata shape.
+
+---
+
+## 2. Database Migrations (Production)
+
+> **Important**: The production database (Neon) must be updated separately. `pnpm run db:push` targets the `DATABASE_URL` in your environment — confirm it points to production before running.
 
 ### New Tables Required
 
@@ -48,7 +79,6 @@ Run `pnpm run db:push` after merging the schema. The following new tables will b
 
 #### `wolfmed_courses`
 ```sql
--- Seed this table after creation (see Section 2)
 CREATE TABLE wolfmed_courses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug VARCHAR(100) NOT NULL UNIQUE,
@@ -95,10 +125,11 @@ ALTER TABLE wolfmed_stripe_payments ADD COLUMN "courseSlug" VARCHAR(100);
 ALTER TABLE wolfmed_stripe_subscriptions ADD COLUMN "courseSlug" VARCHAR(100);
 ```
 
-> **Note**: Drizzle will handle all of the above via `pnpm run db:push`. Review the diff carefully before applying to production.
+> Drizzle will handle all of the above via `pnpm run db:push`. Review the generated diff carefully before applying to production.
+
 ---
 
-## 2. Seed the `courses` Table
+## 3. Seed the `courses` Table
 
 After migration, insert the two active courses:
 
@@ -111,24 +142,34 @@ VALUES
 
 ---
 
-## 3. Stripe Setup
+## 4. Stripe Setup
 
-### Create 4 New Products and Prices
+### Step 1 — Archive the Old Products
 
-Go to [Stripe Dashboard](https://dashboard.stripe.com) and create the following one-time payment prices (mode: `payment`, not subscription):
+Before creating new products, archive the existing ones to avoid confusion and stale price IDs in the codebase.
 
-| Product | Tier | Currency | Description |
-|---------|------|----------|-------------|
+In the [Stripe Dashboard](https://dashboard.stripe.com) → **Products**:
+
+1. Find the old single-subscription/supporter products (currently referenced by `STRIPE_PRICE_ID` and `STRIPE_BASIC_PRICE_ID`)
+2. Open each product → click **Archive** (this disables new purchases but preserves historical payment data)
+3. Do **not** delete them — Stripe does not allow deletion of products with existing charges
+
+### Step 2 — Create 4 New Products and Prices
+
+Create the following as **one-time payment** prices (mode: `payment`, not subscription):
+
+| Product Name | Tier | Currency | Notes |
+|---|---|---|---|
 | Opiekun Medyczny Standard | basic | PLN | Basic access to opiekun-medyczny course |
 | Opiekun Medyczny Premium | premium | PLN | Premium access to opiekun-medyczny course |
 | Pielęgniarstwo Basic | basic | PLN | Basic access to pielegniarstwo course |
 | Pielęgniarstwo Premium | premium | PLN | Premium access to pielegniarstwo course |
 
-After creating each price, copy the `price_xxx` ID into the corresponding env variable (see Section 4).
+After creating each price, copy the `price_xxx` ID into the corresponding env variable (see Section 5).
 
 ### Webhook Configuration
 
-Ensure the Stripe webhook is configured to send **at minimum** the following events to `/api/webhooks/stripe`:
+Ensure the Stripe webhook is configured to send **at minimum** these events to `/api/webhooks/stripe`:
 
 - `checkout.session.completed`
 - `charge.succeeded`
@@ -136,77 +177,127 @@ Ensure the Stripe webhook is configured to send **at minimum** the following eve
 - `customer.subscription.updated`
 - `customer.subscription.deleted`
 
-The `checkout.session.completed` handler now reads `metadata.courseSlug` and `metadata.accessTier` from the session to enroll the user. **If these fields are missing, enrollment will be silently skipped** — verify your checkout session creation always passes them.
+The `checkout.session.completed` handler reads `metadata.courseSlug` and `metadata.accessTier` from the session to enroll the user. **If these fields are missing, enrollment will be silently skipped** — always verify your checkout session creation passes them.
 
 ---
 
-## 4. Environment Variables
+## 5. Environment Variables
 
-### New Variables Required
-
-Add these to your production `.env` (and `.env.local` for development):
+### New Variables — Add to Production
 
 ```env
-# Stripe — per-course price IDs
+# Stripe — per-course price IDs (from the 4 new products created above)
 NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID=price_xxx
 NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID=price_xxx
 NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID=price_xxx
 NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID=price_xxx
+
 # Google AI (Gemini) — required for RAG feature
 GOOGLE_API_KEY=AIza...
+
 # Upstash Redis — required for RAG progress SSE
-# Falls back to in-memory if not set (not suitable for production)
+# Falls back to in-memory if not set (not suitable for multi-instance production)
 UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
 UPSTASH_REDIS_REST_TOKEN=xxx
 ```
 
-### Existing Variables Still Required
+### Existing Variables — Keep
 
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
+CLERK_WEBHOOK_SECRET=
 STRIPE_SECRET_KEY=
 STRIPE_WEBHOOK_SECRET=
 DATABASE_URL=
 NEXT_PUBLIC_APP_URL=
 ```
 
-### Variables That Can Be Removed After Migration
+### Old Variables — Remove After Migration
+
+Once the old Stripe products are archived and all traffic is on the new flow, remove these:
 
 ```env
-# Old single-product Stripe IDs (no longer used in new-courses)
+# Old single-product Stripe IDs — no longer used
 STRIPE_PRICE_ID=
 STRIPE_BASIC_PRICE_ID=
 ```
 
 ---
 
-## 5. Existing User Migration (opiekun-medyczny buyers)
+## 6. Existing User Migration (opiekun-medyczny buyers)
 
 Users who previously paid via the old supporter model have `user.supporter = true` in the database but **no `courseEnrollments` record** and **no `ownedCourses` in Clerk metadata**. Without this migration they will lose access after the merge.
 
 **Tier assigned**: `basic` (existing supporters map to the basic tier in the new system)
 
-### Step 1 — Find All Existing Supporters
+### Option A — Automated Script (Recommended)
 
-Query your production database to get all current supporter user IDs:
+Create a one-time migration script (e.g. `scripts/migrate-supporters.ts`) and run it once against production:
 
-```sql
-SELECT "userId" FROM wolfmed_users WHERE supporter = true;
+```ts
+import 'dotenv/config'
+import { db } from '@/server/db'
+import { users } from '@/server/db/schema'
+import { eq } from 'drizzle-orm'
+import { clerkClient } from '@clerk/nextjs/server'
+
+async function migrateSupporters() {
+  // 1. Fetch all supporter users
+  const supporters = await db
+    .select({ userId: users.userId })
+    .from(users)
+    .where(eq(users.supporter, true))
+
+  console.log(`Found ${supporters.length} supporter(s) to migrate`)
+
+  const clerk = await clerkClient()
+
+  for (const { userId } of supporters) {
+    try {
+      // 2. Insert courseEnrollment record
+      await db.execute(`
+        INSERT INTO wolfmed_course_enrollments ("userId", course_slug, access_tier, is_active, enrolled_at)
+        VALUES ('${userId}', 'opiekun-medyczny', 'basic', true, NOW())
+        ON CONFLICT DO NOTHING
+      `)
+
+      // 3. Update Clerk publicMetadata — merge, do not overwrite
+      const user = await clerk.users.getUser(userId)
+      const currentCourses = (user.publicMetadata?.ownedCourses as string[]) || []
+
+      if (!currentCourses.includes('opiekun-medyczny')) {
+        await clerk.users.updateUser(userId, {
+          publicMetadata: {
+            ...user.publicMetadata,
+            ownedCourses: [...currentCourses, 'opiekun-medyczny'],
+          },
+        })
+      }
+
+      console.log(`✓ Migrated ${userId}`)
+    } catch (err) {
+      console.error(`✗ Failed for ${userId}:`, err)
+    }
+  }
+
+  console.log('Migration complete')
+  process.exit(0)
+}
+
+migrateSupporters()
 ```
 
-### Step 2 — Create `courseEnrollments` Records
-
-For each `userId` returned, insert an enrollment:
-
-```sql
-INSERT INTO wolfmed_course_enrollments ("userId", course_slug, access_tier, is_active, enrolled_at)
-VALUES
-  ('<userId>', 'opiekun-medyczny', 'basic', true, NOW())
-ON CONFLICT DO NOTHING;
+Run with:
+```bash
+npx tsx scripts/migrate-supporters.ts
 ```
 
-Or as a single bulk insert:
+### Option B — Manual SQL + Clerk API
+
+If running a script isn't feasible, do the following manually:
+
+**Step 1 — Bulk insert enrollments**
 
 ```sql
 INSERT INTO wolfmed_course_enrollments ("userId", course_slug, access_tier, is_active, enrolled_at)
@@ -216,9 +307,9 @@ WHERE supporter = true
 ON CONFLICT DO NOTHING;
 ```
 
-### Step 3 — Update Clerk `publicMetadata` for Each User
+**Step 2 — Update Clerk metadata per user**
 
-For each supporter `userId`, call the Clerk Backend API to add `ownedCourses`:
+For each `userId` returned by `SELECT "userId" FROM wolfmed_users WHERE supporter = true`:
 
 ```bash
 # Replace <USER_ID> and <CLERK_SECRET_KEY>
@@ -232,25 +323,23 @@ curl -X PATCH https://api.clerk.com/v1/users/<USER_ID> \
   }'
 ```
 
-> **Important**: If a user already has other fields in `publicMetadata`, you must first fetch the existing metadata and merge — do not overwrite it blindly. The webhook handler in `new-courses` already does this correctly (`{ ...user.publicMetadata, ownedCourses: [...] }`).
-### Step 4 — Verify
+> **Important**: Always fetch the user's existing `publicMetadata` first and merge — do not blindly overwrite other fields if any exist.
 
-After running the migration, pick a few supporter users and confirm:
+### Step 3 — Verify Migration
 
 ```sql
--- Should return rows for each migrated user
-SELECT * FROM wolfmed_course_enrollments
-WHERE course_slug = 'opiekun-medyczny'
-LIMIT 10;
+-- Should return a row for every migrated supporter
+SELECT u."userId", u.supporter, e.course_slug, e.access_tier, e.is_active
+FROM wolfmed_users u
+LEFT JOIN wolfmed_course_enrollments e ON u."userId" = e."userId"
+WHERE u.supporter = true;
 ```
 
-And verify their Clerk profile shows `publicMetadata.ownedCourses: ["opiekun-medyczny"]` in the Clerk dashboard.
+Then spot-check a few accounts in the Clerk Dashboard to confirm `publicMetadata.ownedCourses: ["opiekun-medyczny"]` is set.
 
 ---
 
-## 6. Access Control Logic (How it Works Post-Merge)
-
-Understanding this is critical before deploying:
+## 7. Access Control Logic (How it Works Post-Merge)
 
 ### Two-Level Check
 
@@ -261,7 +350,6 @@ Understanding this is critical before deploying:
 
 2. **Tier access** — Does the user's tier meet the category requirement?
    - Each category in `CATEGORY_METADATA` has a `requiredTier` field
-   - User's enrollment has an `accessTier` field
    - Hierarchy: `free (0) < basic (1) < premium (2) < pro (3)`
 
 ### Where Access is Checked
@@ -275,7 +363,7 @@ Understanding this is critical before deploying:
 
 ---
 
-## 7. RAG / AI Feature
+## 8. RAG / AI Feature
 
 ### Current Status
 
@@ -287,8 +375,6 @@ The RAG system (Gemini + MCP + SSE progress) is implemented and functional for:
 
 ### What Is NOT Yet Complete
 
-The following items are **in-progress** and should be resolved before or shortly after merging:
-
 | Item | Status | File |
 |------|--------|------|
 | Multi-turn tool execution (Gemini calls `/utworz`, `/podsumuj`, etc.) | Planned, not implemented | `src/server/google-rag.ts` |
@@ -298,6 +384,7 @@ The following items are **in-progress** and should be resolved before or shortly
 ### **CRITICAL TODO: RAG Access Gate**
 
 > The RAG notebook feature is currently **not gated by course tier**. Any authenticated user can access RAG cells.
+
 **Required before production**: RAG cells (and the AI notebook panel) must only be accessible to users with `premium` tier on either `opiekun-medyczny` or `pielegniarstwo`.
 
 The access check should:
@@ -309,8 +396,6 @@ The `hasAccessToTier` helper in `src/helpers/accessTiers.ts` is already set up f
 
 ### RAG Environment Requirements
 
-The RAG feature requires all three of these to be configured:
-
 ```env
 GOOGLE_API_KEY=          # Gemini API access
 UPSTASH_REDIS_REST_URL=  # SSE progress state storage
@@ -321,59 +406,62 @@ Without Redis, the SSE progress system falls back to in-memory (fine for single-
 
 ---
 
-## 8. What Is Still Missing Before Full Production Readiness
-
-Beyond the migration steps above, the following items remain open:
+## 9. What Is Still Missing Before Full Production Readiness
 
 | Priority | Item | Notes |
 |----------|------|-------|
-| 🔴 Critical | RAG access gate (premium tier only) | Described in Section 7 |
+| 🔴 Critical | Clerk webhook — initialise `ownedCourses: []` on registration | Section 1 |
+| 🔴 Critical | RAG access gate (premium tier only) | Section 8 |
 | 🔴 Critical | Stripe webhook `metadata` validation | Ensure `courseSlug` is always present in checkout sessions |
-| 🟡 Important | Multi-turn tool execution | `/criar`, `/podsumuj`, etc. — core AI feature |
+| 🟡 Important | Multi-turn tool execution | `/flashcards`, `/podsumuj`, etc. — core AI feature |
 | 🟡 Important | RAG cell response persistence | Save responses to DB so they reload on page refresh |
 | 🟡 Important | `pro` tier pricing structure | Currently only `basic` and `premium` defined — is `pro` planned? |
-| 🟠 Nice to have | Migration script for existing users | Currently manual; a one-time script would reduce risk of missed users |
 | 🟠 Nice to have | Subscription cancellation handling | `customer.subscription.deleted` webhook handler is a stub |
 | 🟠 Nice to have | Tier upgrade flow | User buys premium after basic — enrollment updates but UI path isn't tested |
 
 ---
 
-## 9. Post-Deploy Verification
+## 10. Post-Deploy Verification
 
 After deploying to production:
 
-1. **Test a new purchase end-to-end**
+1. **Test a new registration**
+   - Create a fresh account
+   - Confirm Clerk `publicMetadata.ownedCourses` is `[]` (not `undefined`)
+
+2. **Test a new purchase end-to-end**
    - Buy a course with a real or test Stripe card
-   - Confirm `courseEnrollments` record created
-   - Confirm `ownedCourses` in Clerk metadata updated
+   - Confirm `courseEnrollments` record created in DB
+   - Confirm `ownedCourses` in Clerk metadata updated to include the purchased course
    - Confirm `/panel/kursy` shows the purchased course
 
-2. **Test an existing supporter account**
+3. **Test an existing supporter account**
    - Log in with an account that had `supporter: true` before migration
    - Confirm `/panel/kursy` shows `opiekun-medyczny` with `basic` access
    - Confirm they can access categories with `requiredTier: "basic"` or lower
 
-3. **Test access denial**
+4. **Test access denial**
    - Use an account with no enrollments
    - Confirm `/panel/kursy` shows empty state (not an error)
    - Confirm navigating directly to `/panel/kursy/[category]` shows `NoAccessMessage`
 
-4. **Test tier gating**
+5. **Test tier gating**
    - Use a `basic` tier account
    - Confirm categories with `requiredTier: "premium"` show locked state in `CategoryCard`
    - Confirm direct URL access to a premium category shows `TierUpgradeMessage`
 
-5. **Verify webhook signature**
+6. **Verify webhook signature**
    - Check Stripe Dashboard → Webhooks → recent events
    - Confirm `checkout.session.completed` shows `200 OK` response
 
 ---
 
-## 10. Key Files Reference
+## 11. Key Files Reference
 
 | Category | File | Purpose |
 |----------|------|---------|
 | DB Schema | `src/server/db/schema.ts` | All table definitions including new `courses`, `courseEnrollments`, `ragConfig` |
+| Clerk webhook | `src/app/api/webhooks/clerk/route.ts` | `user.created` — must initialise `ownedCourses: []` |
 | Course actions | `src/actions/course-actions.ts` | `checkCourseAccessAction`, `enrollUserAction`, `getUserEnrollmentsAction` |
 | Stripe checkout | `src/actions/stripe.ts` | Creates checkout session with `courseSlug` + `accessTier` in metadata |
 | Stripe webhook | `src/app/api/webhooks/stripe/route.ts` | Handles `checkout.session.completed` → enrolls user + updates Clerk |
