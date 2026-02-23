@@ -279,14 +279,11 @@ export const careerPathsData: Record<string, PathData> = {
         accessTier: "premium",
         features: [
           "Wszystko z planu Standard",
-          "Asystent AI – zadaj pytanie, a AI przeszuka całą bazę wiedzy egzaminacyjnej i odpowie precyzyjnie na Twoje pytania",
-          "Automatyczne notatki z AI – polecenie /notatka generuje zwięzłe notatki z dowolnego tematu lub Twoich własnych materiałów",
-          "Streszczenia na żądanie – /podsumuj tworzy szczegółowe podsumowania z bazy wiedzy lub Twoich plików w kilka sekund",
-          "Wizualne schematy i diagramy – /diagram generuje interaktywne schematy procedur i algorytmów medycznych, które możesz dowolnie edytować",
-          "Twórz własne testy z AI – /utworz generuje zestawy pytań wielokrotnego wyboru na wybrany temat, gotowe do rozwiązania",
-          "Wyszukiwanie po własnych materiałach – użyj @ aby wskazać swoje notatki lub pliki jako kontekst dla AI",
-          "Interaktywna tablica rysunkowa – własna przestrzeń do tworzenia map myśli, schematów i notatek wizualnych",
-          "Większy dysk – 200MB miejsca na własne materiały, notatki i pliki (10x więcej niż w planie Standard)"
+          "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny",
+          "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
+          "Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne",
+          "Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu",
+          "Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu"
         ]
       }
     },
