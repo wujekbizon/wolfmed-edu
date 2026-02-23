@@ -38,25 +38,94 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       'opiekuńczych',
       'baza'
     ],
-     details: {
+    details: {
       ects: 0,
       semester: 'Egzamin Państwowy na Opiekuna Medycznego',
       objectives:
-        '',
+        'Kompleksowe przygotowanie do egzaminu państwowego potwierdzającego kwalifikację MED.14 – Świadczenie usług medyczno-pielęgnacyjnych i opiekuńczych osobie chorej i niesamodzielnej. Systematyczna weryfikacja wiedzy i umiejętności z anatomii, fizjologii, farmakologii, procedur pielęgnacyjnych i opieki nad pacjentem.',
       prerequisites:
-        '',
+        'Ukończenie kursu kwalifikacyjnego na Opiekuna Medycznego lub odpowiedniego kształcenia zawodowego. Podstawowa wiedza z zakresu nauk o zdrowiu człowieka.',
       learningOutcomes: {
         knowledge: [
-       
+          {
+            code: 'MED14.W.1',
+            desc: 'Zna budowę i funkcjonowanie układów i narządów człowieka w zakresie niezbędnym do sprawowania opieki nad osobą chorą i niesamodzielną.'
+          },
+          {
+            code: 'MED14.W.2',
+            desc: 'Zna objawy i powikłania chorób wymagających opieki medyczno-pielęgnacyjnej oraz zasady postępowania z pacjentem.'
+          },
+          {
+            code: 'MED14.W.3',
+            desc: 'Zna zasady farmakoterapii, przechowywania i podawania leków w zakresie uprawnień opiekuna medycznego.'
+          },
+          {
+            code: 'MED14.W.4',
+            desc: 'Zna zasady higieny, dezynfekcji, sterylizacji i profilaktyki zakażeń w placówkach ochrony zdrowia.'
+          },
+          {
+            code: 'MED14.W.5',
+            desc: 'Zna metody i techniki pomiaru podstawowych parametrów życiowych: tętna, ciśnienia, temperatury, oddechu, saturacji.'
+          },
+          {
+            code: 'MED14.W.6',
+            desc: 'Zna zasady żywienia, diety lecznicze oraz techniki podawania posiłków osobom z różnymi schorzeniami.'
+          },
+          {
+            code: 'MED14.W.7',
+            desc: 'Zna zasady rehabilitacji, aktywizacji ruchowej i profilaktyki powikłań wynikających z unieruchomienia pacjenta.'
+          },
+          {
+            code: 'MED14.W.8',
+            desc: 'Zna podstawy prawne i etyczne wykonywania zawodu opiekuna medycznego, prawa pacjenta oraz zasady dokumentowania opieki.'
+          }
         ],
         skills: [
-       
+          {
+            code: 'MED14.U.1',
+            desc: 'Wykonuje podstawowe procedury pielęgnacyjne: toaletę ciała, zmianę bielizny, pielęgnację skóry i błon śluzowych.'
+          },
+          {
+            code: 'MED14.U.2',
+            desc: 'Mierzy i rejestruje podstawowe parametry życiowe, rozpoznaje nieprawidłowości i informuje personel medyczny.'
+          },
+          {
+            code: 'MED14.U.3',
+            desc: 'Asystuje przy czynnościach higienicznych, karmieniu, pozycjonowaniu i przemieszczaniu pacjenta z zachowaniem zasad BHP.'
+          },
+          {
+            code: 'MED14.U.4',
+            desc: 'Rozpoznaje zagrożenia zdrowia i życia pacjenta, podejmuje działania w stanach nagłych i udziela pierwszej pomocy.'
+          },
+          {
+            code: 'MED14.U.5',
+            desc: 'Komunikuje się z pacjentem, jego rodziną i zespołem terapeutycznym z zachowaniem zasad etyki i poufności.'
+          }
         ]
       },
       programContent: {
-        lectures: [],
+        lectures: [
+          'Anatomia i fizjologia człowieka – układy i narządy istotne w opiece medycznej',
+          'Choroby i zaburzenia wymagające opieki – objawy, powikłania, postępowanie',
+          'Farmakologia dla opiekuna medycznego – rodzaje leków, zasady przechowywania i podawania',
+          'Procedury pielęgnacyjne i medyczne – techniki i standardy wykonania',
+          'Pomiar i monitorowanie parametrów życiowych – ciśnienie, tętno, temperatura, oddech, saturacja',
+          'Higiena, dezynfekcja i profilaktyka zakażeń szpitalnych',
+          'Żywienie i dietetyka w chorobie – diety lecznicze, techniki karmienia',
+          'Rehabilitacja i aktywizacja pacjenta – profilaktyka odleżyn i przykurczów',
+          'Komunikacja z pacjentem i zespołem terapeutycznym',
+          'Etyka zawodu opiekuna medycznego i prawa pacjenta',
+          'Podstawy prawne wykonywania zawodu – kwalifikacja MED.14',
+          'Postępowanie w stanach nagłych – pierwsza pomoc, resuscytacja, algorytmy BLS'
+        ],
         seminars: [],
-        selfStudy: []
+        selfStudy: [
+          'Samodzielne rozwiązywanie testów próbnych z bazy ponad 900 pytań egzaminacyjnych',
+          'Analiza pytań z egzaminów państwowych z ostatnich 2 lat',
+          'Utrwalanie 31 procedur i algorytmów opiekuna medycznego',
+          'Przeglądanie szczegółowych wyników testów i identyfikacja obszarów do poprawy',
+          'Rozwiązywanie wyzwań i quizów procedur'
+        ]
       }
     }
   },

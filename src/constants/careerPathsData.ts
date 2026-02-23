@@ -278,9 +278,15 @@ export const careerPathsData: Record<string, PathData> = {
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
         accessTier: "premium",
         features: [
-          "Wszystko z planu basic",
-          "AI features add here........"
-          // add here more
+          "Wszystko z planu Standard",
+          "Asystent AI – zadaj pytanie, a AI przeszuka całą bazę wiedzy egzaminacyjnej i odpowie precyzyjnie na Twoje pytania",
+          "Automatyczne notatki z AI – polecenie /notatka generuje zwięzłe notatki z dowolnego tematu lub Twoich własnych materiałów",
+          "Streszczenia na żądanie – /podsumuj tworzy szczegółowe podsumowania z bazy wiedzy lub Twoich plików w kilka sekund",
+          "Wizualne schematy i diagramy – /diagram generuje interaktywne schematy procedur i algorytmów medycznych, które możesz dowolnie edytować",
+          "Twórz własne testy z AI – /utworz generuje zestawy pytań wielokrotnego wyboru na wybrany temat, gotowe do rozwiązania",
+          "Wyszukiwanie po własnych materiałach – użyj @ aby wskazać swoje notatki lub pliki jako kontekst dla AI",
+          "Interaktywna tablica rysunkowa – własna przestrzeń do tworzenia map myśli, schematów i notatek wizualnych",
+          "Większy dysk – 200MB miejsca na własne materiały, notatki i pliki (10x więcej niż w planie Standard)"
         ]
       }
     },
