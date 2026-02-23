@@ -258,27 +258,29 @@ export const careerPathsData: Record<string, PathData> = {
     pricing: {
       courseSlug: "opiekun-medyczny",
       basic: {
-        price: "49,99 zł",
+        price: "159,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
         accessTier: "basic",
         features: [
-          "Bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
+          "Bogata baza pytań ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
           "Przegląd postępów i wyników testów",
           "Testy Praktycznye i Egzamin Próbny",
-          "Forum i Blog Medyczny"
-        ]
-      },
-      premium: {
-        price: "159,99 zł",
-        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
-        accessTier: "premium",
-        features: [
-          "Wszystko z planu basic",
+          "Forum i Blog Medyczny",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego i tablicy",
           "Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki"
+        ]
+      },
+      premium: {
+        price: "299,99 zł",
+        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
+        accessTier: "premium",
+        features: [
+          "Wszystko z planu basic",
+          "AI features add here........"
+          // add here more
         ]
       }
     },
