@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx --env-file=.env.local scripts/seed-courses.ts",
+    "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
     "lint": "eslint ."
