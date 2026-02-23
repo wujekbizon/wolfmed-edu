@@ -150,7 +150,17 @@ ALTER TABLE wolfmed_stripe_subscriptions ADD COLUMN "courseSlug" VARCHAR(100);
 
 ## 3. Seed the `courses` Table
 
-After migration, insert the two active courses:
+After migration, run the seed script:
+
+```bash
+pnpm run db:seed
+```
+
+This runs `scripts/seed-courses.ts` which:
+- Checks if rows already exist — **safe to re-run, will not duplicate**
+- Inserts `opiekun-medyczny` and `pielegniarstwo` if the table is empty
+
+Alternatively, run the SQL directly in the Neon SQL editor:
 
 ```sql
 INSERT INTO wolfmed_courses (slug, name, description, is_active)
