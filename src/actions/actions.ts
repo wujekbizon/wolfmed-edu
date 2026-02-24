@@ -133,7 +133,7 @@ export async function startTestAction(
       }
 
       const now = new Date()
-      const heartbeatThreshold = new Date(now.getTime() - 2 * 60 * 1000)
+      const heartbeatThreshold = new Date(now.getTime() - 5 * 60 * 1000)
 
       await tx
         .update(testSessions)
