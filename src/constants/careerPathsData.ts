@@ -319,27 +319,32 @@ export const careerPathsData: Record<string, PathData> = {
     pricing: {
       courseSlug: "pielegniarstwo",
       basic: {
-        price: "199 zł",
+        price: "279,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
         accessTier: "basic",
         features: [
-          "Dostęp do podstawowych kategorii (Anatomia, Fizjologia, Biochemia, Socjologia)",
-          "Ponad 1000 pytań egzaminacyjnych",
-          "Podstawowe materiały szkoleniowe",
-          "Testy z ostatnich 2 lat"
+          "Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne",
+          "Ponad 2000 pytań egzaminacyjnych z 1. semestru",
+          "Przegląd postępów i wyników testów",
+          "Testy praktyczne i egzaminy próbne",
+          "Forum i Blog Medyczny",
+          "Materiały i zasoby - 20MB miejsce na dysku",
+          "Moje Notatki - twórz notatki z nauki",
+          "Dostęp do modułu praktycznego i tablicy",
+          "Nowe kategorie z kolejnych semestrów w cenie – bez dodatkowych opłat"
         ]
       },
       premium: {
-        price: "399 zł",
+        price: "599,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
         accessTier: "premium",
         features: [
-          "Wszystko z planu basic",
-          "Dostęp do wszystkich kategorii (Farmakologia, Patologia, Mikrobiologia, itp.)",
-          "Ponad 5000 pytań egzaminacyjnych",
-          "Materiały i książki dydaktyczne (cyfrowe)",
-          "Dostęp do modułu praktycznego",
-          "Wyzwania i quizy"
+          "Wszystko z planu Standard",
+          "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski",
+          "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
+          "Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć",
+          "Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu",
+          "Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu"
         ]
       }
     }
