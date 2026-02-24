@@ -433,18 +433,57 @@ The RAG system (Gemini + MCP + SSE progress) is implemented and functional for:
 | Tool executor handler (`/flashcards`, `/quiz`, `/tlumacz`) | Partially implemented | `src/server/tools/executor.ts` |
 | RAG cell persistence (save/load responses) | Not implemented | Planned |
 
-### **CRITICAL TODO: RAG Access Gate**
+### RAG Access Gate — Implementation Plan
 
 > The RAG notebook feature is currently **not gated by course tier**. Any authenticated user can access RAG cells.
 
 **Required before production**: RAG cells (and the AI notebook panel) must only be accessible to users with `premium` tier on either `opiekun-medyczny` or `pielegniarstwo`.
 
-The access check should:
-1. Call `checkCourseAccessAction('opiekun-medyczny')` and `checkCourseAccessAction('pielegniarstwo')`
-2. Check if either enrollment has `accessTier === 'premium'` (or higher)
-3. If neither: hide the RAG panel or show a locked/upgrade prompt
+**Deployment strategy**: Launch basic and premium together (Option A). Both tiers go live at the same time — basic users get tests/content, premium users get RAG/AI on top.
 
-The `hasAccessToTier` helper in `src/helpers/accessTiers.ts` is already set up for this check.
+**What "premium" means**: Active enrollment on **either** course with `accessTier >= premium`. Clerk `publicMetadata.ownedCourses` is used as a fast-path (does the user own the course at all?); the DB `courseEnrollments.accessTier` is the source of truth for the tier level.
+
+#### Three-Layer Implementation (5 files, no schema changes)
+
+**Layer 1 — Shared helper** · `src/actions/course-actions.ts`
+
+Add `checkPremiumAccessAction()` — calls `checkCourseAccessAction` for both courses in parallel, returns `true` if either has `accessTier >= premium`:
+
+```ts
+export async function checkPremiumAccessAction(): Promise<boolean> {
+  const [opiekun, pielegniarstwo] = await Promise.all([
+    checkCourseAccessAction('opiekun-medyczny'),
+    checkCourseAccessAction('pielegniarstwo'),
+  ])
+  return (
+    (opiekun.hasAccess && hasAccessToTier(opiekun.accessTier ?? 'free', 'premium')) ||
+    (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium'))
+  )
+}
+```
+
+**Layer 2 — Server action gate** · `src/actions/rag-actions.ts`
+
+At the very top of `askRagQuestion`, before any processing:
+
+```ts
+const isPremium = await checkPremiumAccessAction()
+if (!isPremium) {
+  return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
+}
+```
+
+This is the hard security gate — even if the UI is bypassed, the action refuses.
+
+**Layer 3 — Page + UI gate** · 3 files
+
+| File | Change |
+|------|--------|
+| `src/app/panel/nauka/page.tsx` | Replace `isSupporter={user.supporter}` with `isPremium={await checkPremiumAccessAction()}` |
+| `src/components/LearningHubDashboard.tsx` | Rename prop `isSupporter` → `isPremium`; update `PremiumLock` href from `/wsparcie-projektu` to `/kursy` |
+| `src/components/PremiumLock.tsx` | Update link text/destination to point to the upgrade/pricing page |
+
+`CellList` (RAG notebook) and `NotesSection` remain behind the `!isPremium` overlay — same visual pattern, condition changes from old supporter boolean to new tier check.
 
 ### RAG Environment Requirements
 
