@@ -26,24 +26,24 @@ export default function TestimonialsCarousel({
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="relative rounded-2xl border border-white/10 bg-white p-8 sm:p-10 shadow-md backdrop-blur-md">
+              <figure className="relative rounded-2xl border border-zinc-200/70 bg-white/90 p-8 sm:p-10 shadow-lg backdrop-blur-sm">
               <div className="flex flex-col gap-4">
-                  <blockquote className="text-base sm:text-lg text-zinc-100/95 leading-relaxed">
+                  <blockquote className="text-base sm:text-lg text-zinc-700 leading-relaxed">
                     {t.content}
                   </blockquote>
 
                   <figcaption className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-white/10 ring-1 ring-white/20 grid place-items-center">
-                        <span className="text-lg font-semibold text-white/90">
+                      <div className="h-10 w-10 rounded-full bg-red-50 ring-1 ring-red-200 grid place-items-center">
+                        <span className="text-lg font-semibold text-red-600">
                           {getInitials(t.username ?? "")}
                         </span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm sm:text-base text-zinc-300 font-medium">
+                        <span className="text-sm sm:text-base text-zinc-700 font-medium">
                           {t.username}
                         </span>
-                        <span className="text-xs text-zinc-400">
+                        <span className="text-xs text-zinc-500">
                           {formatDaysAgo(t.createdAt)}
                         </span>
                       </div>
@@ -63,7 +63,7 @@ export default function TestimonialsCarousel({
       <div className="mt-4 flex items-center justify-center gap-4">
         <button
           onClick={() => setIsPlaying(!isPlaying)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-400 bg-white/10 hover:bg-white/20"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-300 bg-white shadow-sm hover:bg-zinc-50 text-zinc-600"
           aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
         >
           {isPlaying ? (
@@ -96,8 +96,8 @@ export default function TestimonialsCarousel({
               key={i}
               className={`h-2.5 w-2.5 rounded-full border transition-colors ${
                 selected === i
-                  ? "bg-zinc-800 border-zinc-400"
-                  : "border-zinc-400 hover:border-white"
+                  ? "bg-red-500 border-red-500"
+                  : "border-zinc-300 bg-transparent hover:bg-zinc-200"
               }`}
               aria-label={`Przejdź do opinii ${i + 1}`}
               aria-current={selected === i}
