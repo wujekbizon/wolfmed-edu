@@ -173,14 +173,14 @@ export default function SimplePathLayout({
               Plany cenowe
             </h2>
             <p className="mt-3 text-zinc-600 text-base md:text-lg">
-              Wybierz plan dopasowany do Twoich potrzeb.
+              Jednorazowa płatność. Dostęp na zawsze.
             </p>
           </header>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
             {Object.entries(pricing || {})
               .filter(([key]) => key !== 'courseSlug')
               .map(([tierName, tierData]) => {
-                const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[] }
+                const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
                 const isPremium = tierName.toLowerCase().includes('premium')
                 return (
                   <CoursePricingCard
@@ -192,6 +192,7 @@ export default function SimplePathLayout({
                     accessTier={tier.accessTier}
                     features={tier.features}
                     isPremium={isPremium}
+                    badge={tier.badge}
                   />
                 )
               })}

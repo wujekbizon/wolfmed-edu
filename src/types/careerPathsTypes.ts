@@ -23,6 +23,7 @@ type PricingTier = {
   features: string[];
   priceId: string;
   accessTier: string;
+  badge?: string;
 };
 
 type PricingTable = {

@@ -258,14 +258,15 @@ export const careerPathsData: Record<string, PathData> = {
     pricing: {
       courseSlug: "opiekun-medyczny",
       basic: {
-        price: "199,99 zł",
+        price: "159,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
         accessTier: "basic",
+        badge: "Oferta na start",
         features: [
-          "Bogata baza pytań ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego",
+          "Bogata baza pytań – ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
           "Przegląd postępów i wyników testów",
-          "Testy Praktycznye i Egzamin Próbny",
+          "Testy praktyczne i Egzamin Próbny",
           "Forum i Blog Medyczny",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
@@ -274,11 +275,13 @@ export const careerPathsData: Record<string, PathData> = {
         ]
       },
       premium: {
-        price: "499,99 zł",
+        price: "449,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
         accessTier: "premium",
+        badge: "Oferta na start",
         features: [
           "Wszystko z planu Standard",
+          "Każda nowa treść dla Opiekuna Medycznego dodawana automatycznie – bez dodatkowych opłat",
           "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny",
           "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
           "Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne",
@@ -322,6 +325,7 @@ export const careerPathsData: Record<string, PathData> = {
         price: "279,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
         accessTier: "basic",
+        badge: "Oferta na start",
         features: [
           "Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne",
           "Ponad 2000 pytań egzaminacyjnych z 1. semestru",
@@ -330,16 +334,17 @@ export const careerPathsData: Record<string, PathData> = {
           "Forum i Blog Medyczny",
           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
-          "Dostęp do modułu praktycznego i tablicy",
-          "Nowe kategorie z kolejnych semestrów w cenie – bez dodatkowych opłat"
+          "Dostęp do modułu praktycznego i tablicy"
         ]
       },
       premium: {
         price: "599,99 zł",
         priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
         accessTier: "premium",
+        badge: "Oferta na start",
         features: [
           "Wszystko z planu Standard",
+          "Pełne 3 lata nauki – nowe semestry i kategorie dodawane automatycznie przez cały tok studiów",
           "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski",
           "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
           "Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć",
