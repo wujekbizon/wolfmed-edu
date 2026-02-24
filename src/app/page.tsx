@@ -35,6 +35,10 @@ export default function HomePage() {
         className="border-t-[10vw] border-t-violet-200 border-l-zinc-950"
       />
       <About />
+      <TriangleDivider
+        direction="left"
+        className="border-t-[10vw] border-t-zinc-950 border-l-[#0d0b0b]"
+      />
       <Contact />
       <TriangleDivider
         direction="right"
