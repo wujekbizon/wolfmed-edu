@@ -8,14 +8,14 @@ export default function EducationPathsSection() {
     <section className="flex flex-col w-full py-6 px-4 md:px-12 xl:px-24 gap-8">
       <div className="container relative mx-auto px-3 sm:px-4">
         <div className="mb-10 sm:mb-16 flex flex-col items-center text-center">
-          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-500/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-300">
+          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-500/40 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white">
             Kariera Medyczna
           </span>
-          <h1 className="mb-4 lg:mb-6 max-w-2xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white px-2 leading-14">
-            Twoja <span className="animate-pulse text-rose-400">ścieżka</span> w
+          <h1 className="mb-4 lg:mb-6 max-w-2xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-zinc-800 px-2 leading-14">
+            Twoja <span className="animate-pulse text-[#ff5b5b]">ścieżka</span> w
             świecie medycyny
           </h1>
-          <p className="mb-6 sm:mb-8 max-w-3xl text-[#9ba2b2] text-base sm:text-xl font-normal leading-8 tracking-[-0.14px] text-center">
+          <p className="mb-6 sm:mb-8 max-w-3xl text-zinc-600 text-base sm:text-xl font-normal leading-8 tracking-[-0.14px] text-center">
             Znajdź program edukacyjny idealnie dopasowany do Twoich potrzeb,
             tempa nauki i planów zawodowych.
           </p>

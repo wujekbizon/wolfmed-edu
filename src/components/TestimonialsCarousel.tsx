@@ -26,7 +26,7 @@ export default function TestimonialsCarousel({
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="relative rounded-2xl border border-white/10 bg-zinc-900 p-8 sm:p-10 shadow-md backdrop-blur-md">
+              <figure className="relative rounded-2xl border border-white/10 bg-white p-8 sm:p-10 shadow-md backdrop-blur-md">
               <div className="flex flex-col gap-4">
                   <blockquote className="text-base sm:text-lg text-zinc-100/95 leading-relaxed">
                     {t.content}
