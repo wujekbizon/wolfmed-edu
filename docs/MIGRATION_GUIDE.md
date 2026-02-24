@@ -57,7 +57,7 @@ Before merging this PR, the following must be completed **in order**:
 1. [x] Update Clerk webhook to initialise `ownedCourses: []` on registration (code change) ✓ Done
 2. [ ] Run database migrations on production
 3. [ ] Seed `courses` table
-4. [ ] ⏸️ Archive old Stripe products and create 4 new products/prices *(deferred — finalise prices first)*
+4. [x] Archive old Stripe products and create 4 new products/prices ✓ Done
 5. [ ] Add all new environment variables, remove obsolete ones
 6. [ ] ⚠️ Build + run `scripts/migrate-supporters.ts` — auto-enroll existing supporters → `opiekun-medyczny` basic tier
 7. [ ] Verify webhook works end-to-end with a test purchase
@@ -200,6 +200,16 @@ Create the following as **one-time payment** prices (mode: `payment`, not subscr
 | Pielęgniarstwo Premium | premium | PLN | Premium access to pielegniarstwo course |
 
 After creating each price, copy the `price_xxx` ID into the corresponding env variable (see Section 5).
+
+### Step 3 — Remove Old Products (Post-Migration)
+
+Once the migration is fully live and no active subscriptions or refund windows remain on the old products:
+
+1. Go to Stripe Dashboard → **Products**
+2. Confirm the archived products have zero active subscribers and no pending charges
+3. Archive status already prevents new purchases — but if Stripe allows deletion at that point, you can delete them for a clean dashboard
+
+> **Note**: Stripe does not allow deleting products that have any associated charges or subscriptions (even historical ones). If deletion is blocked, leaving them archived is sufficient. Remove `STRIPE_PRICE_ID` and `STRIPE_BASIC_PRICE_ID` from your environment variables (see Section 5) once you are confident no code paths reference them.
 
 ### Webhook Configuration
 
@@ -453,6 +463,8 @@ Without Redis, the SSE progress system falls back to in-memory (fine for single-
 | Priority | Item | Notes |
 |----------|------|-------|
 | ✅ Done | Clerk webhook — initialise `ownedCourses: []` on registration | Section 1 |
+| ✅ Done | Archive old Stripe products + create 4 new products/prices | Section 4 |
+| 🟠 Post-migration | Delete old Stripe products (after all active subscriptions/charges settle) | Section 4 |
 | 🔴 Critical | RAG access gate (premium tier only) | Section 8 |
 | 🔴 Critical | Build `scripts/migrate-supporters.ts` + run on production | Section 6 — auto-enroll all `supporter = true` users into `opiekun-medyczny` basic |
 | 🔴 Critical | Stripe webhook `metadata` validation | Ensure `courseSlug` is always present in checkout sessions |
