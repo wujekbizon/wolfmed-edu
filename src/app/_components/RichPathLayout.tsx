@@ -34,6 +34,24 @@ export default function RichPathLayout({
           </p>
         </div>
       </div>
+
+      <section aria-labelledby="curriculum-title" className="relative w-full p-4 sm:p-8 bg-white">
+        <header className="mb-6 sm:mb-10 text-center">
+          <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
+            Program nauczania
+          </span>
+          <h2 id="curriculum-title" className="mt-3 text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
+            Szczegółowa mapa programu
+          </h2>
+          <p className="mt-3 text-zinc-600 text-base md:text-lg">
+            Przeglądaj przedmioty według roku. Rozwiń moduły, aby zobaczyć liczbę godzin, ECTS i formę zaliczenia.
+          </p>
+        </header>
+        <div className="mx-auto w-full max-w-none lg:max-w-6xl">
+          <CurriculumMap curriculum={curriculum ?? []} />
+        </div>
+      </section>
+
       {features && features.length > 0 && (
         <section aria-labelledby="features-title" className="w-full relative">
           <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
@@ -52,36 +70,13 @@ export default function RichPathLayout({
             </p>
           </header>
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {features.map(({ description, title, imgSrc, text, url }, index) => (
-              <SimplePathCard
-                key={index}
-                title={title}
-                description={description}
-                imgSrc={imgSrc}
-                text={text}
-                url={url}
-              />
+            {features.map((feature, index) => (
+              <SimplePathCard key={index} {...feature} />
             ))}
           </div>
         </section>
       )}
 
-      <section aria-labelledby="curriculum-title" className="relative w-full p-4 sm:p-8 bg-white">
-        <header className="mb-6 sm:mb-10 text-center">
-          <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
-            Program nauczania
-          </span>
-          <h2 id="curriculum-title" className="mt-3 text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900">
-            Szczegółowa mapa programu
-          </h2>
-          <p className="mt-3 text-zinc-600 text-base md:text-lg">
-            Przeglądaj przedmioty według roku. Rozwiń moduły, aby zobaczyć liczbę godzin, ECTS i formę zaliczenia.
-          </p>
-        </header>
-        <div className="mx-auto w-full max-w-none lg:max-w-6xl">
-          <CurriculumMap curriculum={curriculum ?? []} />
-        </div>
-      </section>
       {pricing && (
         <section aria-labelledby="pricing-title" className="w-full min-h-[65vh] flex items-center relative">
           <div className="mx-auto w-full max-w-none lg:max-w-6xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
