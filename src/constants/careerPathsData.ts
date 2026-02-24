@@ -471,23 +471,56 @@ export const careerPathsData: Record<string, PathData> = {
         title: 'Testy egzaminacyjne',
         titleBtn: 'Duża baza testów!',
         description:
-          'Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym.',
-        text: 'Wybierz kierunek Pielęgniarstwo',
+          'Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym. Ponad 2000 pytań z pierwszego semestru.',
+        text: 'Testy praktyczne i Egzaminy',
         imgSrc:
           'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
-        url: '/sign-up',
+        url: '/panel/testy',
         icon: 'tests'
+      },
+      {
+        title: 'Szczegółowe wyniki testów',
+        titleBtn: 'Twój wynik!',
+        description:
+          'Dostęp do szczegółowych wyników ukończonych testów. Ocena i data wykonania. Możliwość sprawdzenia szczegółów odpowiedzi.',
+        text: 'Szczegółowe wyniki',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k510BmDcqGqbaom6K7MQNgznelwU0cYLvsXOjS',
+        url: '/panel/wyniki',
+        icon: 'score'
       },
       {
         title: 'Moduł do nauki',
         titleBtn: 'Ucz się w swoim tempie!',
         description:
-          'Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.',
-        text: 'Wybierz kierunek Pielęgniarstwo',
+          'Każdy zarejestrowany użytkownik otrzymuje dostęp do wybranych pytań i odpowiedzi. Pełna baza pytań oraz materiały dydaktyczne dostępne są w ramach subskrypcji.',
+        text: 'Centrum Nauki',
         imgSrc:
           'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
-        url: '/sign-up',
+        url: '/panel/nauka',
         icon: 'learn'
+      },
+      {
+        title: 'Mapa programu nauczania',
+        titleBtn: 'Program studiów',
+        description:
+          'Przeglądaj pełny program studiów pielęgniarskich – wszystkie moduły, przedmioty, godziny i punkty ECTS według roku nauki.',
+        text: 'Zobacz program nauczania',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
+        url: '/sciezki/pielegniarstwo',
+        icon: 'curriculum'
+      },
+      {
+        title: 'Asystent AI',
+        titleBtn: 'Ucz się z pomocą AI!',
+        description:
+          'Zadawaj pytania, sprawdzaj wiedzę i otrzymuj natychmiastowe wyjaśnienia dopasowane do programu pielęgniarstwa. Asystent AI dostępny w ramach subskrypcji.',
+        text: 'AI Asystent',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5H6zCTyRXZAfUgQh6yMWki0EFjo5rbcJDS2mP',
+        url: '/panel/ai',
+        icon: 'ai'
       }
     ],
     pricing: {
