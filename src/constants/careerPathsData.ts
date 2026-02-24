@@ -1,357 +1,532 @@
-import { CurriculumBlock, PathData } from "@/types/careerPathsTypes";
+import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
 
 export const careerPaths = [
   {
-    slug: "opiekun-medyczny",
-    title: "Opiekun Medyczny",
-    teaser: "Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RgLCs7moJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
-    cta: "Sprawdź szczegóły",
+    slug: 'opiekun-medyczny',
+    title: 'Opiekun Medyczny',
+    teaser:
+      'Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RgLCs7moJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
+    cta: 'Sprawdź szczegóły'
   },
   {
-    slug: "pielegniarstwo",
-    title: "Pielęgniarstwo",
-    teaser: "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
-    cta: "Zarejestruj się już dziś",
+    slug: 'pielegniarstwo',
+    title: 'Pielęgniarstwo',
+    teaser:
+      'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
+    cta: 'Zarejestruj się już dziś'
   }
-];
+]
 
 export const curriculum: CurriculumBlock[] = [
   {
-    id: "1",
-    year: 1,  
-    module: "Moduł A - Nauki podstawowe",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k55TMQo0nBKUAhkYmyprxV4JznuWGliEwXqgb2',
+    id: '1',
+    year: 1,
+    module: 'Moduł A - Nauki podstawowe',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k55TMQo0nBKUAhkYmyprxV4JznuWGliEwXqgb2',
     subjects: [
-      { name: "Anatomia", hours: 90, ects: 4, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52G1vt6SEBiUD8sVXHObYqkj3TNfo4PKMGg6J' },
-      { name: "Fizjologia", hours: 75, ects: 3, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UN2L0ZIxs2k5EyuGdN4SRigYP6qreJDvtVZl' },
       {
-        name: "Patologia / Patomorfologia / Patofizjologia",
+        name: 'Anatomia',
+        hours: 90,
+        ects: 4,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52G1vt6SEBiUD8sVXHObYqkj3TNfo4PKMGg6J'
+      },
+      {
+        name: 'Fizjologia',
+        hours: 75,
+        ects: 3,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UN2L0ZIxs2k5EyuGdN4SRigYP6qreJDvtVZl'
+      },
+      {
+        name: 'Patologia / Patomorfologia / Patofizjologia',
         hours: 80,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kfYUFUA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kfYUFUA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R'
       },
-      { name: "Genetyka", hours: 45, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5D2kdG57Z2fx3PC4csA61VRoig5ELrXbvQz8K' },
-      { name: "Biochemia z biofizyką", hours: 50, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bHmZPN10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
-      { name: "Mikrobiologia z parazytologią", hours: 50, ects: 2, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QNXUuJYf6PZ5eKuhFM9REHkAy4n7s3aNYmWi' },
-      { name: "Farmakologia", hours: 85, ects: 4, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5pu33VvXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb' },
-      { name: "Radiologia", hours: 25, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k572wvLXLMpcn5R2Y4TWoEbjyPSwZtlvLxBXzi' },
-    ],
-  },
-  {
-    id: "2",
-    year: 1,
-    module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
-    subjects: [
-      { name: "Psychologia", hours: 55, ects: 3, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kbdfnVA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R' },
-      { name: "Socjologia", hours: 40, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nt6oObL9GQYxNri4Uw0MejlVEP63mgKp18FO' },
-      { name: "Pedagogika", hours: 50, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bp3ERm10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
-      { name: "Prawo medyczne", hours: 55, ects: 2, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JajIrkmQWsLSvF0ZVh7qXdCNxbjatwczey8g' },
-      { name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k54pC04HH9lLqODmv7er0SPRQB8C9VnfbTHisc' },
-    ],
-  },
-  {
-    id: "3",
-    year: 1,
-    module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
-    subjects: [
-      { name: "Podstawy pielęgniarstwa", hours: 205, ects: 8, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5gOhTeFK1JZolbvwfgWCAFPh8xz9BIKNsVjGk' },
-      { name: "Etyka zawodu pielęgniarki", hours: 45, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KqquTG6br79T0mSRj6eAJqPf4kEid2ncgM5N' },
-      { name: "Promocja zdrowia", hours: 55, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52bP49YSEBiUD8sVXHObYqkj3TNfo4PKMGg6J' },
-      { name: "Podstawowa opieka zdrowotna", hours: 55, ects: 3, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MuPZEoNpIgLRq2SWA1u9QmzbxiHJl47OaTGX' },
-      { name: "Dietetyka", hours: 40, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JrZfRllmQWsLSvF0ZVh7qXdCNxbjatwczey8' },
-      { name: "Badanie fizykalne", hours: 60, ects: 3, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5TrNkKU6spcKHld4CGX8o0kyJTPUwfnQEMegN' },
-      { name: "Zakażenia szpitalne", hours: 45, ects: 1, exam: false , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5s4bwXrWj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6' },
       {
-        name: "Systemy informacji w ochronie zdrowia",
+        name: 'Genetyka',
+        hours: 45,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5D2kdG57Z2fx3PC4csA61VRoig5ELrXbvQz8K'
+      },
+      {
+        name: 'Biochemia z biofizyką',
+        hours: 50,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bHmZPN10lAXCNeHTtQdjmyVvPInzGfZrLsw9'
+      },
+      {
+        name: 'Mikrobiologia z parazytologią',
+        hours: 50,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QNXUuJYf6PZ5eKuhFM9REHkAy4n7s3aNYmWi'
+      },
+      {
+        name: 'Farmakologia',
+        hours: 85,
+        ects: 4,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5pu33VvXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb'
+      },
+      {
+        name: 'Radiologia',
+        hours: 25,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k572wvLXLMpcn5R2Y4TWoEbjyPSwZtlvLxBXzi'
+      }
+    ]
+  },
+  {
+    id: '2',
+    year: 1,
+    module: 'Moduł B - Nauki społeczne i humanistyczne',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
+    subjects: [
+      {
+        name: 'Psychologia',
+        hours: 55,
+        ects: 3,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kbdfnVA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R'
+      },
+      {
+        name: 'Socjologia',
+        hours: 40,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nt6oObL9GQYxNri4Uw0MejlVEP63mgKp18FO'
+      },
+      {
+        name: 'Pedagogika',
+        hours: 50,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5bp3ERm10lAXCNeHTtQdjmyVvPInzGfZrLsw9'
+      },
+      {
+        name: 'Prawo medyczne',
+        hours: 55,
+        ects: 2,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JajIrkmQWsLSvF0ZVh7qXdCNxbjatwczey8g'
+      },
+      {
+        name: 'Zdrowie publiczne',
+        hours: 45,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k54pC04HH9lLqODmv7er0SPRQB8C9VnfbTHisc'
+      }
+    ]
+  },
+  {
+    id: '3',
+    year: 1,
+    module: 'Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
+    subjects: [
+      {
+        name: 'Podstawy pielęgniarstwa',
+        hours: 205,
+        ects: 8,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5gOhTeFK1JZolbvwfgWCAFPh8xz9BIKNsVjGk'
+      },
+      {
+        name: 'Etyka zawodu pielęgniarki',
+        hours: 45,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5KqquTG6br79T0mSRj6eAJqPf4kEid2ncgM5N'
+      },
+      {
+        name: 'Promocja zdrowia',
+        hours: 55,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52bP49YSEBiUD8sVXHObYqkj3TNfo4PKMGg6J'
+      },
+      {
+        name: 'Podstawowa opieka zdrowotna',
+        hours: 55,
+        ects: 3,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MuPZEoNpIgLRq2SWA1u9QmzbxiHJl47OaTGX'
+      },
+      {
+        name: 'Dietetyka',
+        hours: 40,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JrZfRllmQWsLSvF0ZVh7qXdCNxbjatwczey8'
+      },
+      {
+        name: 'Badanie fizykalne',
+        hours: 60,
+        ects: 3,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5TrNkKU6spcKHld4CGX8o0kyJTPUwfnQEMegN'
+      },
+      {
+        name: 'Zakażenia szpitalne',
+        hours: 45,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5s4bwXrWj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6'
+      },
+      {
+        name: 'Systemy informacji w ochronie zdrowia',
         hours: 30,
         ects: 1,
         exam: false,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5L6WOW0yT6ikNIWjyZsOdaGtHcBb3PAS8E7u5',
-      },
-    ],
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5L6WOW0yT6ikNIWjyZsOdaGtHcBb3PAS8E7u5'
+      }
+    ]
   },
   {
-    id: "4",
+    id: '4',
     year: 2,
-    module: "Moduł B - Nauki społeczne i humanistyczne",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
-    subjects: [{ name: "Zdrowie publiczne", hours: 45, ects: 2, exam: true , img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rKVZXnDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C' }],
-  },
-  {
-    id: "5",
-    year: 2,
-    module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
+    module: 'Moduł B - Nauki społeczne i humanistyczne',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52npmcHSEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
     subjects: [
       {
-        name: "Choroby wewnętrzne i pielęgniarstwo internistyczne",
+        name: 'Zdrowie publiczne',
+        hours: 45,
+        ects: 2,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rKVZXnDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C'
+      }
+    ]
+  },
+  {
+    id: '5',
+    year: 2,
+    module: 'Moduł D - Nauki w zakresie opieki specjalistycznej',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
+    subjects: [
+      {
+        name: 'Choroby wewnętrzne i pielęgniarstwo internistyczne',
         hours: 100,
         ects: 3,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp'
       },
       {
-        name: "Pediatra i pelęgniarstwo pediatryczne",
+        name: 'Pediatra i pelęgniarstwo pediatryczne',
         hours: 100,
         ects: 3,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UEui6vIxs2k5EyuGdN4SRigYP6qreJDvtVZl',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UEui6vIxs2k5EyuGdN4SRigYP6qreJDvtVZl'
       },
       {
-        name: "Chirurgia i pelęgniarstwo chirurgiczne",
+        name: 'Chirurgia i pelęgniarstwo chirurgiczne',
         hours: 100,
         ects: 3,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5G5GvuJptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5G5GvuJptmTzWn2MCIiBjAQoFa6kbwYUZJScD'
       },
       {
-        name: "Położnictwo i ginekologia i pielęgniarstwo położniczo-ginekologiczne",
+        name: 'Położnictwo i ginekologia i pielęgniarstwo położniczo-ginekologiczne',
         hours: 55,
         ects: 1,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5BiLJRlEFD1UJjByX9nEY7CcT26HaQ4iwRItP',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5BiLJRlEFD1UJjByX9nEY7CcT26HaQ4iwRItP'
       },
       {
-        name: "Neurologia i pielęgniarstwo neurologiczne",
+        name: 'Neurologia i pielęgniarstwo neurologiczne',
         hours: 60,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5arfwh6ktQrdmqhSKIRj5fanksB630Te2FpiO',
-      },
-    ],
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5arfwh6ktQrdmqhSKIRj5fanksB630Te2FpiO'
+      }
+    ]
   },
   {
-    id: "6",
+    id: '6',
     year: 3,
-    module: "Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej",
-    image:  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
+    module: 'Moduł C - Nauki w zakresie podstaw opieki pielęgniarskiej',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
     subjects: [
       {
-        name: "Organizacja pracy pielęgniarki",
+        name: 'Organizacja pracy pielęgniarki',
         hours: 45,
         ects: 2,
         exam: false,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rMpctujDJ4x1k8yEQjwiVOufWtG7U0K2FIB5',
-      },
-    ],
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rMpctujDJ4x1k8yEQjwiVOufWtG7U0K2FIB5'
+      }
+    ]
   },
   {
-    id: "7",
+    id: '7',
     year: 3,
-    module: "Moduł D - Nauki w zakresie opieki specjalistycznej",
-    image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
+    module: 'Moduł D - Nauki w zakresie opieki specjalistycznej',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wujuFw4stcXZNvjLlr5ady1QbVDuRB7qTC8f',
     subjects: [
       {
-        name: "Psychiatria i pielęgniarstwo psychiatryczne",
+        name: 'Psychiatria i pielęgniarstwo psychiatryczne',
         hours: 50,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Esgan2xcmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Esgan2xcmxY7yfWXOQoKS6ujlVhadLJtzgFp'
       },
       {
-        name: "Anestezjologia i pielęgniarstwo w zagrożeniu życia",
+        name: 'Anestezjologia i pielęgniarstwo w zagrożeniu życia',
         hours: 65,
         ects: 3,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5AyzkbsTmtJLFcNxMQbgSqKBWs3zA7RoEVreO',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5AyzkbsTmtJLFcNxMQbgSqKBWs3zA7RoEVreO'
       },
       {
-        name: "Pielęgniarstwo opieki długoterminowej",
+        name: 'Pielęgniarstwo opieki długoterminowej',
         hours: 55,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k553dSzbnBKUAhkYmyprxV4JznuWGliEwXqgb2',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k553dSzbnBKUAhkYmyprxV4JznuWGliEwXqgb2'
       },
       {
-        name: "Geriatria i pielęgniarstwo geriatryczne",
+        name: 'Geriatria i pielęgniarstwo geriatryczne',
         hours: 60,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GMV4f0ptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GMV4f0ptmTzWn2MCIiBjAQoFa6kbwYUZJScD'
       },
-      { name: "Opieka paliatywna", hours: 55, ects: 1, exam: true, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5buIgEa10lAXCNeHTtQdjmyVvPInzGfZrLsw9' },
-      { name: "Podstawy rehabilitacji", hours: 45, ects: 1, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GP9lE8ptmTzWn2MCIiBjAQoFa6kbwYUZJScD' },
       {
-        name: "Podstawy ratownictwa medycznego",
+        name: 'Opieka paliatywna',
+        hours: 55,
+        ects: 1,
+        exam: true,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5buIgEa10lAXCNeHTtQdjmyVvPInzGfZrLsw9'
+      },
+      {
+        name: 'Podstawy rehabilitacji',
+        hours: 45,
+        ects: 1,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5GP9lE8ptmTzWn2MCIiBjAQoFa6kbwYUZJScD'
+      },
+      {
+        name: 'Podstawy ratownictwa medycznego',
         hours: 50,
         ects: 2,
         exam: true,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k58iLAeJ4HBZxypP1UFjuAhJ4WoOXgcGSRqzCi',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k58iLAeJ4HBZxypP1UFjuAhJ4WoOXgcGSRqzCi'
       },
       {
-        name: "Badania naukowe w pielęgniarstwie",
+        name: 'Badania naukowe w pielęgniarstwie',
         hours: 45,
         ects: 2,
         exam: false,
-        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5J4d8yhmQWsLSvF0ZVh7qXdCNxbjatwczey8g',
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5J4d8yhmQWsLSvF0ZVh7qXdCNxbjatwczey8g'
       },
-      { name: "Seminarium dyplomowe", hours: 50, ects: 2, exam: false, img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuHh2dFstcXZNvjLlr5ady1QbVDuRB7qTC8f' },
-    ],
-  },
-];
+      {
+        name: 'Seminarium dyplomowe',
+        hours: 50,
+        ects: 2,
+        exam: false,
+        img: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5wuHh2dFstcXZNvjLlr5ady1QbVDuRB7qTC8f'
+      }
+    ]
+  }
+]
 
 export const careerPathsData: Record<string, PathData> = {
-  "opiekun-medyczny": {
-    title: "Opiekun Medyczny",
-    description: "Nasz program edukacyjny został zaprojektowany zarówno dla osób rozpoczynających swoją drogę zawodową i przygotowujących się do egzaminu, jak i dla tych, którzy już pracują w branży i chcą rozwijać swoje kompetencje, utrwalać wiedzę lub przypomnieć sobie kluczowe zagadnienia przed kolejnym zawodowym wyzwaniem.",
-    templateType: "simple",
-    features: [
-      {
-        title: "Testy egzaminacyjne",
-        titleBtn: "Duża baza testów!",
-        description:
-          "Darmowa baza testów oparta na egzaminach z ostatnich 2 lat i kursie na opiekuna medycznego. Losowe pytania z całej dostępnej puli.",
-        text: "Testy praktyczne i Egzaminy",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
-        url: "/panel/testy",
-        icon: "tests",
-      },
-      {
-        title: "Procedury Opiekuna Medycznego",
-        titleBtn: "Procedury",
-        description:
-          "Lista procedur i algorytmów dla opiekunów medycznych. Ponad 31 dostępnych algorytmów, które każdy przyszły opiekun medyczny powinien znać.",
-        text: "Procedury medyczne",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Rgqyd4roJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
-        url: "/panel/procedury",
-        icon: "procedure",
-      },
-      {
-        
-        title: "Szczegółowe wyniki testów",
-        titleBtn: "Twój wynik!",
-        description:
-          "Dostęp do szczegółowych wyników ukonczonych testów. Ocena i data wykonania. Możliwość sprawdzenia szczegółów odpowiedzi.",
-        text: "Szczegółowe wyniki",
-        imgSrc: "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k510BmDcqGqbaom6K7MQNgznelwU0cYLvsXOjS",
-        url: "/panel/wyniki",
-        icon: "score",
-      },
-      {
-        
-        title: "Wyzwania Procedur - Quizy",
-        titleBtn: "Gry i quizy",
-        description:
-          "5 quizów i wyzwań dla każdej procedury. Ukończ wszystkie i zdobądż odznakę.",
-        text: "Quizy i wyzwania",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Nyh9LK2M1UuCEmiKr7chszHj6GeZpqAJ4w2g',
-        url: "/panel/procedury",
-        icon: "game",
-      },
-      {
-        
-        title: "Moduł do nauki",
-        titleBtn: "Ucz się w swoim tempie!",
-        description:
-          "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
-        text: "Centrum Nauki",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
-        url: "/panel/nauka",
-        icon: "learn",
-      }
-    ],
-    pricing: {
-      courseSlug: "opiekun-medyczny",
-      basic: {
-        price: "159,99 zł",
-        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID || "price_standard_placeholder",
-        accessTier: "basic",
-        badge: "Oferta na start",
-        features: [
-          "Bogata baza pytań – ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego",
-          "Procedury Opiekuna Medycznego",
-          "Przegląd postępów i wyników testów",
-          "Testy praktyczne i Egzamin Próbny",
-          "Forum i Blog Medyczny",
-          "Materiały i zasoby - 20MB miejsce na dysku",
-          "Moje Notatki - twórz notatki z nauki",
-          "Dostęp do modułu praktycznego i tablicy",
-          "Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki"
-        ]
-      },
-      premium: {
-        price: "449,99 zł",
-        priceId: process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID || "price_opiekun_premium_placeholder",
-        accessTier: "premium",
-        badge: "Oferta na start",
-        features: [
-          "Wszystko z planu Standard",
-          "Każda nowa treść dla Opiekuna Medycznego dodawana automatycznie – bez dodatkowych opłat",
-          "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny",
-          "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
-          "Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne",
-          "Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu",
-          "Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu"
-        ]
-      }
-    },
-  },
-  pielegniarstwo: {
-    title: "Pielęgniarstwo",
+  'opiekun-medyczny': {
+    title: 'Opiekun Medyczny',
     description:
-      "Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !",
-    templateType: "rich",
-    curriculum,
+      'Nasz program edukacyjny wspiera zarówno osoby przygotowujące się do egzaminu, jak i tych, którzy już pracują w branży i chcą utrwalać wiedzę oraz rozwijać kompetencje przed kolejnym zawodowym wyzwaniem.',
+    templateType: 'simple',
     features: [
       {
-        title: "Testy egzaminacyjne",
-        titleBtn: "Duża baza testów!",
+        title: 'Testy egzaminacyjne',
+        titleBtn: 'Duża baza testów!',
         description:
-          "Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym.",
-        text: "Wybierz kierunek Pielęgniarstwo",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
-        url: "/sign-up",
-        icon: "tests",
+          'Baza testów oparta na skrypcie i egzaminach Opiekuna Medycznego. Losowe pytania z całej dostępnej puli.',
+        text: 'Testy praktyczne i Egzaminy',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
+        url: '/panel/testy',
+        icon: 'tests'
       },
       {
-        title: "Moduł do nauki",
-        titleBtn: "Ucz się w swoim tempie!",
+        title: 'Procedury Opiekuna Medycznego',
+        titleBtn: 'Procedury',
         description:
-          "Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.",
-        text: "Wybierz kierunek Pielęgniarstwo",
-        imgSrc: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
-        url: "/sign-up",
-        icon: "learn",
+          'Lista procedur i algorytmów dla opiekunów medycznych. Ponad 31 dostępnych algorytmów, które każdy przyszły opiekun medyczny powinien znać.',
+        text: 'Procedury medyczne',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Rgqyd4roJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
+        url: '/panel/procedury',
+        icon: 'procedure'
+      },
+      {
+        title: 'Szczegółowe wyniki testów',
+        titleBtn: 'Twój wynik!',
+        description:
+          'Dostęp do szczegółowych wyników ukonczonych testów. Ocena i data wykonania. Możliwość sprawdzenia szczegółów odpowiedzi.',
+        text: 'Szczegółowe wyniki',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k510BmDcqGqbaom6K7MQNgznelwU0cYLvsXOjS',
+        url: '/panel/wyniki',
+        icon: 'score'
+      },
+      {
+        title: 'Wyzwania Procedur - Quizy',
+        titleBtn: 'Gry i quizy',
+        description:
+          '5 quizów i wyzwań dla każdej procedury. Ukończ wszystkie i zdobądż odznakę.',
+        text: 'Quizy i wyzwania',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Nyh9LK2M1UuCEmiKr7chszHj6GeZpqAJ4w2g',
+        url: '/panel/procedury',
+        icon: 'game'
+      },
+      {
+        title: 'Moduł do nauki',
+        titleBtn: 'Ucz się w swoim tempie!',
+        description:
+          'Każdy zarejestrowany użytkownik otrzymuje dostęp do wybranych pytań i odpowiedzi. Pełna baza pytań, materiały oraz książki dydaktyczne w formie cyfrowej dostępne są w ramach subskrypcji.',
+        text: 'Centrum Nauki',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+        url: '/panel/nauka',
+        icon: 'learn'
+      },
+      {
+        title: 'Asystent AI',
+        titleBtn: 'Ucz się z pomocą AI!',
+        description:
+          'Zadawaj pytania, sprawdzaj wiedzę i otrzymuj natychmiastowe wyjaśnienia. Asystent AI dostępny w ramach subskrypcji.',
+        text: 'AI Asystent',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+        url: '/panel/ai',
+        icon: 'ai'
       }
     ],
     pricing: {
-      courseSlug: "pielegniarstwo",
+      courseSlug: 'opiekun-medyczny',
       basic: {
-        price: "279,99 zł",
-        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || "price_basic_placeholder",
-        accessTier: "basic",
-        badge: "Oferta na start",
+        price: '159,99 zł',
+        priceId:
+          process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID ||
+          'price_standard_placeholder',
+        accessTier: 'basic',
+        badge: 'Oferta na start',
         features: [
-          "Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne",
-          "Ponad 2000 pytań egzaminacyjnych z 1. semestru",
-          "Przegląd postępów i wyników testów",
-          "Testy praktyczne i egzaminy próbne",
-          "Forum i Blog Medyczny",
-          "Materiały i zasoby - 20MB miejsce na dysku",
-          "Moje Notatki - twórz notatki z nauki",
-          "Dostęp do modułu praktycznego i tablicy"
+          'Bogata baza pytań – ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego',
+          'Procedury Opiekuna Medycznego',
+          'Przegląd postępów i wyników testów',
+          'Testy praktyczne i Egzamin Próbny',
+          'Forum i Blog Medyczny',
+          'Materiały i zasoby - 20MB miejsce na dysku',
+          'Moje Notatki - twórz notatki z nauki',
+          'Dostęp do modułu praktycznego i tablicy',
+          'Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki'
         ]
       },
       premium: {
-        price: "599,99 zł",
-        priceId: process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || "price_premium_placeholder",
-        accessTier: "premium",
-        badge: "Oferta na start",
+        price: '449,99 zł',
+        priceId:
+          process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID ||
+          'price_opiekun_premium_placeholder',
+        accessTier: 'premium',
+        badge: 'Oferta na start',
         features: [
-          "Wszystko z planu Standard",
-          "Pełne 3 lata nauki – nowe semestry i kategorie dodawane automatycznie przez cały tok studiów",
-          "Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski",
-          "Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu",
-          "Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć",
-          "Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu",
-          "Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu"
+          'Wszystko z planu Standard',
+          'Każda nowa treść dla Opiekuna Medycznego dodawana automatycznie – bez dodatkowych opłat',
+          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny',
+          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
+          'Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne',
+          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
+          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
         ]
       }
     }
   },
-};
+  pielegniarstwo: {
+    title: 'Pielęgniarstwo',
+    description:
+      'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
+    templateType: 'rich',
+    curriculum,
+    features: [
+      {
+        title: 'Testy egzaminacyjne',
+        titleBtn: 'Duża baza testów!',
+        description:
+          'Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym.',
+        text: 'Wybierz kierunek Pielęgniarstwo',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',
+        url: '/sign-up',
+        icon: 'tests'
+      },
+      {
+        title: 'Moduł do nauki',
+        titleBtn: 'Ucz się w swoim tempie!',
+        description:
+          'Każdy zarejestrowany użytkownik otrzymuje darmowy dostęp do wszystkich pytań i odpowiedzi. Wkrótce także materiały i książki dydaktyczne w formie cyfrowej.',
+        text: 'Wybierz kierunek Pielęgniarstwo',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+        url: '/sign-up',
+        icon: 'learn'
+      }
+    ],
+    pricing: {
+      courseSlug: 'pielegniarstwo',
+      basic: {
+        price: '279,99 zł',
+        priceId:
+          process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID ||
+          'price_basic_placeholder',
+        accessTier: 'basic',
+        badge: 'Oferta na start',
+        features: [
+          'Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne',
+          'Ponad 2000 pytań egzaminacyjnych z 1. semestru',
+          'Przegląd postępów i wyników testów',
+          'Testy praktyczne i egzaminy próbne',
+          'Forum i Blog Medyczny',
+          'Materiały i zasoby - 20MB miejsce na dysku',
+          'Moje Notatki - twórz notatki z nauki',
+          'Dostęp do modułu praktycznego i tablicy'
+        ]
+      },
+      premium: {
+        price: '599,99 zł',
+        priceId:
+          process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID ||
+          'price_premium_placeholder',
+        accessTier: 'premium',
+        badge: 'Oferta na start',
+        features: [
+          'Wszystko z planu Standard',
+          'Pełne 3 lata nauki – nowe semestry i kategorie dodawane automatycznie przez cały tok studiów',
+          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski',
+          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
+          'Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć',
+          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
+          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
+        ]
+      }
+    }
+  }
+}
