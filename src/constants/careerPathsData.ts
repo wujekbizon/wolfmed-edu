@@ -471,7 +471,7 @@ export const careerPathsData: Record<string, PathData> = {
         title: 'Testy egzaminacyjne',
         titleBtn: 'Duża baza testów!',
         description:
-          'Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę na poziomie podstawowym, średnim i zaawansowanym. Ponad 2000 pytań z pierwszego semestru.',
+          'Stworzona na bazie programu studiów pielęgniarstwa, sprawdź swoją wiedzę. Ponad 2000 pytań z pierwszego semestru.',
         text: 'Testy praktyczne i Egzaminy',
         imgSrc:
           'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57DgZT4Mpcn5R2Y4TWoEbjyPSwZtlvLxBXziD',

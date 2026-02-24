@@ -13237,11 +13237,11 @@
         },
         {
           "option": "rdzeniowym zaniku mięśni",
-          "isCorrect": false
+          "isCorrect": true
         },
         {
           "option": "stwardnieniu zanikowym bocznym",
-          "isCorrect": true
+          "isCorrect": false
         }
       ],
       "question": "Objawy tej choroby mogą wystąpić w każdym wieku — od okresu płodowego po wiek dorosły. U większości pacjentów (ok. 90%) ujawniają się jednak do końca 2 roku życia. Wczesne wystąpienie objawów wiąże się z cięższym przebiegiem i poważniejszym rokowaniem. Mowa o:"
