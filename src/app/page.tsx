@@ -1,7 +1,6 @@
 import Hero from "./_components/Hero"
 import Contact from "./_components/Contact"
 import Footer from "./_components/Footer"
-import EarlySupporters from "@/components/EarlySupporters"
 import GradientOverlay from "@/components/GradientOverlay"
 import TriangleDivider from "@/components/TriangleDivider"
 import About from "./_components/About"
@@ -36,15 +35,6 @@ export default function HomePage() {
         className="border-t-[10vw] border-t-violet-200 border-l-zinc-950"
       />
       <About />
-      <TriangleDivider
-        direction="left"
-        className="border-t-[10vw] border-t-zinc-950  border-l-zinc-100"
-      />
-      <EarlySupporters />
-      <TriangleDivider
-        direction="left"
-        className="border-t-[10vw] border-t-zinc-200 border-l-[#0d0b0b]"
-      />
       <Contact />
       <TriangleDivider
         direction="right"
