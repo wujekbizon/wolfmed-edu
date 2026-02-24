@@ -415,7 +415,7 @@ export const careerPathsData: Record<string, PathData> = {
           'Zadawaj pytania, sprawdzaj wiedzę i otrzymuj natychmiastowe wyjaśnienia. Asystent AI dostępny w ramach subskrypcji.',
         text: 'AI Asystent',
         imgSrc:
-          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5H6zCTyRXZAfUgQh6yMWki0EFjo5rbcJDS2mP',
         url: '/panel/ai',
         icon: 'ai'
       }
