@@ -3,7 +3,7 @@ import ActionBar from './ActionBar'
 import type { Cell } from '@/types/cellTypes'
 
 
-export default function CellListItem ({cell}: {cell: Cell}) {
+export default function CellListItem ({ cell, isPremium = false }: { cell: Cell; isPremium?: boolean }) {
   return (
     <div className="relative">
       {cell.type === 'note' && (
@@ -19,7 +19,7 @@ export default function CellListItem ({cell}: {cell: Cell}) {
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
-          <DynamicRagCell cell={cell} />
+          <DynamicRagCell cell={cell} isPremium={isPremium} />
         </div>
       )}
       {cell.type === 'draw' && (

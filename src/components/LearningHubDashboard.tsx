@@ -2,7 +2,6 @@ import CategoryGrid from "./CategoryGrid";
 import NotesSection from "./NotesSection";
 import CellList from "./cells/CellList";
 import MaterialsSection from "./MaterialsSection";
-import PremiumLock from "./PremiumLock";
 import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
@@ -30,19 +29,8 @@ export default function LearningHubDashboard({
         <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
         <CategoryGrid categories={categories} />
       </div>
-      <div className="relative">
-        {!isPremium && <PremiumLock />}
-        <div className={!isPremium ? "opacity-30 pointer-events-none" : ""}>
-          <CellList />
-        </div>
-      </div>
-      <div className="relative">
-        {!isPremium && <PremiumLock />}
-        <div className={!isPremium ? "opacity-30 pointer-events-none" : ""}>
-          <NotesSection notes={notes} />
-        </div>
-      </div>
-
+      <CellList isPremium={isPremium} />
+      <NotesSection notes={notes} />
       <MaterialsSection materials={materials} isSupporter={isPremium} />
     </div>
   );

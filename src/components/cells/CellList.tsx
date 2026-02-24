@@ -6,7 +6,7 @@ import CellListItem from './CellListItem'
 import { useCellsStore } from '@/store/useCellsStore'
 import { useRagStore } from '@/store/useRagStore'
 
-export default function CellList() {
+export default function CellList({ isPremium = false }: { isPremium?: boolean }) {
   const { data, order, insertCellAfter, updateCell } = useCellsStore()
   const { pendingTopic, setPendingTopic } = useRagStore()
 
@@ -33,7 +33,7 @@ export default function CellList() {
       <AddCell prevCellId={null} forceVisible={order.length === 0} />
       {order.map((cell) => (
         <Fragment key={cell}>
-          <CellListItem cell={data[cell]!} />
+          <CellListItem cell={data[cell]!} isPremium={isPremium} />
           <AddCell prevCellId={cell} />
         </Fragment>
       ))}

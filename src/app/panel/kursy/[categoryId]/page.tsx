@@ -75,6 +75,7 @@ async function CategoryContent({ categoryId }: { categoryId: string }) {
     }
   }
 
+  const isPremium = hasAccess && hasAccessToTier(userTier, 'premium')
   const testCount = await countTestsByCategory(decodedCategory)
 
   const categoryName = decodedCategory
@@ -89,6 +90,7 @@ async function CategoryContent({ categoryId }: { categoryId: string }) {
       categoryName={categoryName}
       testCount={testCount}
       decodedCategory={decodedCategory}
+      isPremium={isPremium}
     />
   )
 }

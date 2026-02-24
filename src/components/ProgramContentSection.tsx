@@ -6,6 +6,7 @@ interface ProgramContentSectionProps {
   seminars: string[]
   selfStudy: string[]
   categoryId: string
+  isPremium?: boolean
 }
 
 export default function ProgramContentSection({
@@ -13,6 +14,7 @@ export default function ProgramContentSection({
   seminars,
   selfStudy,
   categoryId,
+  isPremium = false,
 }: ProgramContentSectionProps) {
   return (
     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
@@ -26,7 +28,7 @@ export default function ProgramContentSection({
           </div>
           <ul className='space-y-2'>
             {lectures.map((item, idx) => (
-              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} />
+              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}
           </ul>
         </div>
@@ -40,7 +42,7 @@ export default function ProgramContentSection({
           </div>
           <ul className='space-y-2'>
             {seminars.map((item, idx) => (
-              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} />
+              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}
           </ul>
         </div>
@@ -54,7 +56,7 @@ export default function ProgramContentSection({
           </div>
           <ul className='space-y-2'>
             {selfStudy.map((item, idx) => (
-              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} />
+              <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}
           </ul>
         </div>

@@ -10,6 +10,7 @@ interface CategoryDetailViewProps {
   categoryName: string
   testCount: number
   decodedCategory: string
+  isPremium?: boolean
 }
 
 export default function CategoryDetailView({
@@ -17,6 +18,7 @@ export default function CategoryDetailView({
   categoryName,
   testCount,
   decodedCategory,
+  isPremium = false,
 }: CategoryDetailViewProps) {
 
   const competencies = categoryData?.details?.learningOutcomes.competencies ?? []
@@ -50,6 +52,7 @@ export default function CategoryDetailView({
             seminars={categoryData.details.programContent.seminars}
             selfStudy={categoryData.details.programContent.selfStudy}
             categoryId={decodedCategory}
+            isPremium={isPremium}
           />
 
           <CategoryCTA categoryName={categoryName} />
