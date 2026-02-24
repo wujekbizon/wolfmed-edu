@@ -5,10 +5,10 @@ import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
   return (
-    <section className="flex flex-col w-full bg-slate-900 py-16 px-4 md:px-12 xl:px-24 gap-8">
+    <section className="flex flex-col w-full py-6 px-4 md:px-12 xl:px-24 gap-8">
       <div className="container relative mx-auto px-3 sm:px-4">
         <div className="mb-10 sm:mb-16 flex flex-col items-center text-center">
-          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-100 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-800">
+          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-500/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-300">
             Kariera Medyczna
           </span>
           <h1 className="mb-4 lg:mb-6 max-w-2xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white px-2 leading-14">
