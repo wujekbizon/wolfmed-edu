@@ -63,6 +63,7 @@ import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
+import { getUserEnrollmentsAction } from "@/actions/course-actions"
 
 export async function startTestAction(
   formState: FormState,
@@ -108,28 +109,13 @@ export async function startTestAction(
 
     const result = await db.transaction(async (tx) => {
       const [user] = await tx
-        .select({
-          supporter: users.supporter,
-          testLimit: users.testLimit
-        })
+        .select({ userId: users.userId })
         .from(users)
         .where(eq(users.userId, userId))
         .for("update")
 
       if (!user) {
         throw new Error("Nie znaleziono użytkownika")
-      }
-
-      if (numberOfQuestions === 40 && !user.supporter) {
-        throw new Error(
-          "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
-        )
-      }
-
-      if (user.testLimit !== null && user.testLimit <= 0) {
-        throw new Error(
-          "Wyczerpałeś limit testów. Wesprzyj nasz projekt, aby kontynuować."
-        )
       }
 
       const now = new Date()
@@ -278,30 +264,6 @@ export async function submitTestAction(
           .set({ status: "EXPIRED", finishedAt: now })
           .where(eq(testSessions.id, session.id))
         throw new Error("Sesja wygasła — czas się skończył")
-      }
-
-      const [user] = await tx
-        .select({
-          testLimit: users.testLimit
-        })
-        .from(users)
-        .where(eq(users.userId, userId))
-
-      if (!user) {
-        throw new Error("Nie znaleziono użytkownika")
-      }
-
-      if (user.testLimit !== null && user.testLimit <= 0) {
-        throw new Error(
-          "Wyczerpałeś limit 25 testów dla darmowego konta. Wesprzyj nasz projekt, aby móc korzystać bez limitów."
-        )
-      }
-
-      if (user.testLimit !== null) {
-        await tx
-          .update(users)
-          .set({ testLimit: user.testLimit - 1 })
-          .where(eq(users.userId, userId))
       }
 
       await tx
@@ -786,11 +748,9 @@ export async function createTestAction(
   const user = await getCurrentUser()
   if (!user) throw new Error("Unauthorized")
 
-  if (!user.supporter) {
-    return toFormState(
-      "ERROR",
-      "Ta funkcja jest dostępna tylko dla użytkowników premium."
-    )
+  const { enrollments } = await getUserEnrollmentsAction()
+  if (enrollments.length === 0) {
+    return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
   }
 
   // Rate limiting: 5 test creations per hour
@@ -850,11 +810,9 @@ export async function uploadTestsFromFile(
   const user = await getCurrentUser()
   if (!user) throw new Error("Unauthorized")
 
-  if (!user.supporter) {
-    return toFormState(
-      "ERROR",
-      "Ta funkcja jest dostępna tylko dla użytkowników premium."
-    )
+  const { enrollments } = await getUserEnrollmentsAction()
+  if (enrollments.length === 0) {
+    return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
   }
 
   // Rate limiting: 10 file uploads per hour
