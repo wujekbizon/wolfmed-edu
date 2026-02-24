@@ -192,7 +192,7 @@ export default function SimplePathLayout({
                     accessTier={tier.accessTier}
                     features={tier.features}
                     isPremium={isPremium}
-                    badge={tier.badge}
+                    {...(tier.badge ? { badge: tier.badge } : {})}
                   />
                 )
               })}
