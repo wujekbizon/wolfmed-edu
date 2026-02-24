@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface UseCountdownTestTimerProps {
   durationMinutes: number;
@@ -15,19 +15,17 @@ export function useCountdownTestTimer({ durationMinutes, warningThresholdSeconds
   const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
   const [isWarning, setIsWarning] = useState(false);
   const [isTimeUp, setIsTimeUp] = useState(false);
+  const endTime = useRef(Date.now() + durationMinutes * 60 * 1000);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          setIsTimeUp(true);
-          return 0;
-        }
-
-        if (prev === warningThresholdSeconds) setIsWarning(true);
-        return prev - 1;
-      });
+      const remaining = Math.max(0, Math.floor((endTime.current - Date.now()) / 1000));
+      setTimeLeft(remaining);
+      if (remaining <= warningThresholdSeconds) setIsWarning(true);
+      if (remaining === 0) {
+        clearInterval(timer);
+        setIsTimeUp(true);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
