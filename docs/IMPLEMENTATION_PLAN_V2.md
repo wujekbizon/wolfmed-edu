@@ -755,3 +755,69 @@ UPSTASH_REDIS_REST_TOKEN=xxx
 ```
 
 When not configured, the system falls back to in-memory storage with a console warning.
+
+---
+
+## 🔒 Premium Access Gate (Implemented)
+
+**Date Implemented**: 2026-02-24
+**Status**: ✅ Complete
+
+All RAG/AI features are gated behind premium course enrollment. Protection is enforced at three independent layers so no layer can be bypassed alone.
+
+### Layer 1 — Server Action (hard gate)
+
+`src/actions/rag-actions.ts` — `askRagQuestion()`
+
+```typescript
+const isPremium = await checkPremiumAccessAction()
+if (!isPremium) {
+  return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
+}
+```
+
+The action rejects before any Gemini/RAG processing runs. This is the only layer that actually enforces security; the UI layers below are UX only.
+
+### Layer 2 — Premium check helper
+
+`src/actions/course-actions.ts` — `checkPremiumAccessAction()`
+
+Queries both courses (`opiekun-medyczny`, `pielegniarstwo`) in parallel via the existing `checkCourseAccessAction`. Returns `true` if either enrollment has `accessTier >= premium` (uses `hasAccessToTier` from `src/helpers/accessTiers.ts`).
+
+```typescript
+export async function checkPremiumAccessAction(): Promise<boolean> {
+  const [opiekun, pielegniarstwo] = await Promise.all([
+    checkCourseAccessAction('opiekun-medyczny'),
+    checkCourseAccessAction('pielegniarstwo'),
+  ])
+  return (
+    (opiekun.hasAccess && hasAccessToTier(opiekun.accessTier ?? 'free', 'premium')) ||
+    (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium'))
+  )
+}
+```
+
+### Layer 3 — UI (progressive disclosure)
+
+`isPremium` is resolved at page level and threaded down as a prop — no extra DB calls in children.
+
+**`/panel/nauka` page:**
+- `checkPremiumAccessAction()` added to the existing `Promise.all`
+- `isPremium` passed to `LearningHubDashboard` → `CellList` → `CellListItem` / `AddCell`
+
+| Component | Behaviour when `!isPremium` |
+|-----------|----------------------------|
+| `AddCell` | `+ AI Asystent` button is `disabled`, greyed-out, tooltip: "Tylko dla użytkowników premium" |
+| `RagCell` | Shows lock icon + "Odblokuj dostęp" link to `/kursy` instead of the chat form |
+
+**`/panel/kursy/[categoryId]` page:**
+- `isPremium = hasAccess && hasAccessToTier(userTier, 'premium')` — reuses `userTier` already fetched from `checkCourseAccessAction`, no extra DB call
+- Threaded to `CategoryDetailView` → `ProgramContentSection` → `ProgramTopicItem`
+
+| Component | Behaviour when `!isPremium` |
+|-----------|----------------------------|
+| `ProgramTopicItem` | "Wyjaśnij z AI" replaced with greyed-out "Tylko premium" badge (lock icon, `cursor-not-allowed`) |
+
+### Notes and other Cells
+
+Notes (`NotesSection`) and draw/note cells remain fully accessible to all authenticated users — only `type === 'rag'` is gated.
