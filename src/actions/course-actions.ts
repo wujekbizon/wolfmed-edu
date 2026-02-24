@@ -4,6 +4,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { db } from "@/server/db/index";
 import { courseEnrollments } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
+import { hasAccessToTier } from "@/helpers/accessTiers";
 
 /**
  * Check if user has access to a specific course
@@ -97,6 +98,22 @@ export async function getUserEnrollmentsAction() {
     console.error("Error fetching enrollments:", error);
     return { enrollments: [] };
   }
+}
+
+/**
+ * Check if the current user has premium (or higher) access on either course.
+ * Uses the same two-layer check as checkCourseAccessAction:
+ * Clerk metadata for fast-path ownership, DB for authoritative tier.
+ */
+export async function checkPremiumAccessAction(): Promise<boolean> {
+  const [opiekun, pielegniarstwo] = await Promise.all([
+    checkCourseAccessAction('opiekun-medyczny'),
+    checkCourseAccessAction('pielegniarstwo'),
+  ])
+  return (
+    (opiekun.hasAccess && hasAccessToTier(opiekun.accessTier ?? 'free', 'premium')) ||
+    (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium'))
+  )
 }
 
 /**

@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
@@ -148,6 +149,12 @@ export async function askRagQuestion(
   try {
     const { userId } = await auth()
     if (!userId) throw new Error("Unauthorized")
+
+    const isPremium = await checkPremiumAccessAction()
+    if (!isPremium) {
+      if (jobId) await errorJob(jobId, 'Premium access required')
+      return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
+    }
 
     const rateLimit = await checkRateLimit(userId, 'rag:query')
     if (!rateLimit.success) {
