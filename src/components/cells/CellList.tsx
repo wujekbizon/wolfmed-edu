@@ -30,11 +30,11 @@ export default function CellList({ isPremium = false }: { isPremium?: boolean })
 
   return (
     <div className="w-full">
-      <AddCell prevCellId={null} forceVisible={order.length === 0} />
+      <AddCell prevCellId={null} forceVisible={order.length === 0} isPremium={isPremium} />
       {order.map((cell) => (
         <Fragment key={cell}>
           <CellListItem cell={data[cell]!} isPremium={isPremium} />
-          <AddCell prevCellId={cell} />
+          <AddCell prevCellId={cell} isPremium={isPremium} />
         </Fragment>
       ))}
     </div>
