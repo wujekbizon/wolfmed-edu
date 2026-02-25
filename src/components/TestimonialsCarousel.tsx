@@ -31,7 +31,7 @@ export default function TestimonialsCarousel({
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3 py-4"
+              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] px-3 py-4"
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >

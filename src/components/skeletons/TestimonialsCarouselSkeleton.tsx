@@ -1,4 +1,4 @@
-export default function TestimonialsCarouselSkeleton({ count = 3 }: { count?: number }) {
+export default function TestimonialsCarouselSkeleton({ count = 2 }: { count?: number }) {
     return (
       <div className="relative w-full animate-pulse">
         <div className="overflow-hidden">
@@ -6,7 +6,7 @@ export default function TestimonialsCarouselSkeleton({ count = 3 }: { count?: nu
             {Array.from({ length: count }).map((_, idx) => (
               <div
                 key={idx}
-                className="flex-shrink-0 flex-[0_0_100%] w-full px-2 sm:px-4"
+                className="flex-shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] px-3"
                 aria-roledescription="slide"
                 aria-label={`Slide ${idx + 1} z ${count}`}
               >
