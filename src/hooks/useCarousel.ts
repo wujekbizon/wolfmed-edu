@@ -28,6 +28,11 @@ export const useCarousel = ({
     setSelected(index);
   }, [emblaApi]);
 
+  const scrollPrev = useCallback(() => {
+    if (!emblaApi) return;
+    emblaApi.scrollPrev();
+  }, [emblaApi]);
+
   const scrollNext = useCallback(() => {
     if (!emblaApi) return;
     emblaApi.scrollNext();
@@ -63,6 +68,8 @@ export const useCarousel = ({
     selected,
     isPlaying,
     scrollTo,
+    scrollPrev,
+    scrollNext,
     setIsPlaying
   };
 };

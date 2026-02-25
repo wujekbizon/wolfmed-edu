@@ -3,56 +3,65 @@
 import { useCarousel } from "@/hooks/useCarousel"
 import { getInitials } from "@/helpers/getInitials"
 import { Testimonial } from "@/types/careerPathsTypes"
-import Stars  from "./Stars"
+import Stars from "./Stars"
 import { formatDaysAgo } from "@/helpers/formatDate"
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 
 export default function TestimonialsCarousel({
   testimonials,
 }: {
   testimonials: Testimonial[]
 }) {
-  const { emblaRef, selected, isPlaying, scrollTo, setIsPlaying } = useCarousel(
-    { autoplayDelay: 8000 }
-  )
+  const { emblaRef, selected, isPlaying, scrollTo, scrollPrev, scrollNext, setIsPlaying } =
+    useCarousel({
+      options: {
+        loop: true,
+        align: "start",
+        slidesToScroll: 1,
+        duration: 20,
+        containScroll: "trimSnaps",
+      },
+      autoplayDelay: 8000,
+    })
 
   return (
     <div className="relative w-full">
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex cursor-grab active:cursor-grabbing select-none">
+        <div className="flex cursor-grab active:cursor-grabbing select-none -mx-3">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="shrink-0 flex-[0_0_100%] w-full px-2 sm:px-4"
+              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3"
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="relative rounded-2xl border border-zinc-200/70 bg-white/90 p-8 sm:p-10 shadow-lg backdrop-blur-sm">
-              <div className="flex flex-col gap-4">
-                  <blockquote className="text-base sm:text-lg text-zinc-700 leading-relaxed">
-                    {t.content}
-                  </blockquote>
+              <figure className="h-64 flex flex-col bg-white/80 rounded-2xl border border-zinc-200/50 shadow-md backdrop-blur-sm p-6 transition-shadow duration-300 hover:shadow-lg">
+                {/* Stars */}
+                <div className="mb-3 flex items-center justify-between">
+                  <Stars rating={t.rating} />
+                  <span className="text-4xl font-serif text-red-200 leading-none select-none">&ldquo;</span>
+                </div>
 
-                  <figcaption className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-red-50 ring-1 ring-red-200 grid place-items-center">
-                        <span className="text-lg font-semibold text-red-600">
-                          {getInitials(t.username ?? "")}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm sm:text-base text-zinc-700 font-medium">
-                          {t.username}
-                        </span>
-                        <span className="text-xs text-zinc-500">
-                          {formatDaysAgo(t.createdAt)}
-                        </span>
-                      </div>
-                    </div>
+                {/* Quote text — clamped so all cards stay the same height */}
+                <blockquote className="flex-1 text-sm sm:text-base text-zinc-600 leading-relaxed line-clamp-4 overflow-hidden">
+                  {t.content}
+                </blockquote>
 
-                    <div>
-                      <Stars rating={t.rating} />
-                    </div>
-                  </figcaption>
+                {/* Author footer */}
+                <div className="mt-4 pt-4 border-t border-zinc-100 flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-red-50 ring-1 ring-red-100 grid place-items-center shrink-0">
+                    <span className="text-sm font-bold text-red-500">
+                      {getInitials(t.username ?? "")}
+                    </span>
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-semibold text-zinc-800 truncate">
+                      {t.username}
+                    </span>
+                    <span className="text-xs text-zinc-400">
+                      {formatDaysAgo(t.createdAt)}
+                    </span>
+                  </div>
                 </div>
               </figure>
             </div>
@@ -60,50 +69,36 @@ export default function TestimonialsCarousel({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-4">
-        <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-300 bg-white shadow-sm hover:bg-zinc-50 text-zinc-600"
-          aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
-        >
-          {isPlaying ? (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden
-            >
-              <rect x="6" y="5" width="4" height="14" />
-              <rect x="14" y="5" width="4" height="14" />
-            </svg>
-          ) : (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
-        </button>
-
+      {/* Controls: arrows left, counter + play right */}
+      <div className="mt-6 flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              className={`h-2.5 w-2.5 rounded-full border transition-colors ${
-                selected === i
-                  ? "bg-red-500 border-red-500"
-                  : "border-zinc-300 bg-transparent hover:bg-zinc-200"
-              }`}
-              aria-label={`Przejdź do opinii ${i + 1}`}
-              aria-current={selected === i}
-              onClick={() => scrollTo(i)}
-            />
-          ))}
+          <button
+            onClick={() => { scrollPrev(); setIsPlaying(false) }}
+            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 hover:border-zinc-300 transition-all"
+            aria-label="Poprzednia opinia"
+          >
+            <ChevronLeft size={16} />
+          </button>
+          <button
+            onClick={() => { scrollNext(); setIsPlaying(false) }}
+            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 hover:border-zinc-300 transition-all"
+            aria-label="Następna opinia"
+          >
+            <ChevronRight size={16} />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-zinc-400 tabular-nums">
+            {selected + 1} / {testimonials.length}
+          </span>
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 transition-all"
+            aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
+          >
+            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+          </button>
         </div>
       </div>
     </div>

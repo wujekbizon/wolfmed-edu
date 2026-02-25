@@ -27,7 +27,7 @@ export default async function Testimonials() {
           </p>
         </header>
 
-        <div className="relative mx-auto w-full max-w-3xl">
+        <div className="relative w-full">
           <Suspense fallback={<TestimonialsCarouselSkeleton/>}>
             <TestimonialsCarousel testimonials={testimonials} />
           </Suspense>
