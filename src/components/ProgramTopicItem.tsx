@@ -2,15 +2,16 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, Lock } from 'lucide-react'
 import { useRagStore } from '@/store/useRagStore'
 
 interface ProgramTopicItemProps {
   item: string
   categoryId: string
+  isPremium?: boolean
 }
 
-export default function ProgramTopicItem({ item, categoryId }: ProgramTopicItemProps) {
+export default function ProgramTopicItem({ item, categoryId, isPremium = false }: ProgramTopicItemProps) {
   const [isHovered, setIsHovered] = useState(false)
   const router = useRouter()
   const setPendingTopic = useRagStore((state) => state.setPendingTopic)
@@ -29,15 +30,26 @@ export default function ProgramTopicItem({ item, categoryId }: ProgramTopicItemP
       <span className='text-zinc-400 shrink-0'>•</span>
       <span className='flex items-center gap-2 flex-wrap'>
         <span>{item}</span>
-        <button
-          onClick={handleClick}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-slate-600 to-rose-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-slate-700 hover:to-rose-700 transition-all whitespace-nowrap ${
-            isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
-          }`}
-        >
-          <Sparkles className='w-3.5 h-3.5' />
-          <span>Wyjaśnij z AI</span>
-        </button>
+        {isPremium ? (
+          <button
+            onClick={handleClick}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-slate-600 to-rose-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-slate-700 hover:to-rose-700 transition-all whitespace-nowrap ${
+              isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
+            }`}
+          >
+            <Sparkles className='w-3.5 h-3.5' />
+            <span>Wyjaśnij z AI</span>
+          </button>
+        ) : (
+          <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-200 text-zinc-400 text-xs rounded-full whitespace-nowrap cursor-not-allowed ${
+              isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
+            }`}
+          >
+            <Lock className='w-3.5 h-3.5' />
+            <span>Tylko premium</span>
+          </span>
+        )}
       </span>
     </li>
   )

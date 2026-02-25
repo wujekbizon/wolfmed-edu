@@ -3,56 +3,65 @@
 import { useCarousel } from "@/hooks/useCarousel"
 import { getInitials } from "@/helpers/getInitials"
 import { Testimonial } from "@/types/careerPathsTypes"
-import Stars  from "./Stars"
+import Stars from "./Stars"
 import { formatDaysAgo } from "@/helpers/formatDate"
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react"
 
 export default function TestimonialsCarousel({
   testimonials,
 }: {
   testimonials: Testimonial[]
 }) {
-  const { emblaRef, selected, isPlaying, scrollTo, setIsPlaying } = useCarousel(
-    { autoplayDelay: 8000 }
-  )
+  const { emblaRef, selected, isPlaying, scrollTo, scrollPrev, scrollNext, setIsPlaying } =
+    useCarousel({
+      options: {
+        loop: true,
+        align: "start",
+        slidesToScroll: 1,
+        duration: 20,
+        containScroll: "trimSnaps",
+      },
+      autoplayDelay: 8000,
+    })
 
   return (
     <div className="relative w-full">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex cursor-grab active:cursor-grabbing select-none">
+      <div className="overflow-hidden py-6 -my-6" ref={emblaRef}>
+        <div className="flex cursor-grab active:cursor-grabbing select-none -mx-3">
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="shrink-0 flex-[0_0_100%] w-full px-2 sm:px-4"
+              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] px-3 py-4"
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="relative rounded-2xl border border-white/10 bg-zinc-900 p-8 sm:p-10 shadow-md backdrop-blur-md">
-              <div className="flex flex-col gap-4">
-                  <blockquote className="text-base sm:text-lg text-zinc-100/95 leading-relaxed">
-                    {t.content}
-                  </blockquote>
+              <figure className="h-96 flex flex-col bg-white/30 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
+                {/* Stars */}
+                <div className="mb-3 flex items-center justify-between">
+                  <Stars rating={t.rating} />
+                  <span className="text-4xl font-serif text-[#ff5b5b]/40 leading-none select-none">&ldquo;</span>
+                </div>
 
-                  <figcaption className="flex items-center justify-between mt-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-white/10 ring-1 ring-white/20 grid place-items-center">
-                        <span className="text-lg font-semibold text-white/90">
-                          {getInitials(t.username ?? "")}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm sm:text-base text-zinc-300 font-medium">
-                          {t.username}
-                        </span>
-                        <span className="text-xs text-zinc-400">
-                          {formatDaysAgo(t.createdAt)}
-                        </span>
-                      </div>
-                    </div>
+                {/* Quote text — scrollable for very long content, fixed height via parent */}
+                <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-800 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-400/50 [&::-webkit-scrollbar-thumb]:rounded-full">
+                  {t.content}
+                </blockquote>
 
-                    <div>
-                      <Stars rating={t.rating} />
-                    </div>
-                  </figcaption>
+                {/* Author footer */}
+                <div className="mt-4 pt-4 border-t border-white/30 flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-white/20 ring-1 ring-[#ff5b5b]/25 grid place-items-center shrink-0">
+                    <span className="text-sm font-bold text-[#ff5b5b]">
+                      {getInitials(t.username ?? "")}
+                    </span>
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-semibold text-zinc-900 truncate">
+                      {t.username}
+                    </span>
+                    <span className="text-xs text-zinc-400">
+                      {formatDaysAgo(t.createdAt)}
+                    </span>
+                  </div>
                 </div>
               </figure>
             </div>
@@ -60,51 +69,37 @@ export default function TestimonialsCarousel({
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-center gap-4">
+      {/* Controls: centered, glass style */}
+      <div className="mt-6 flex items-center justify-center gap-3">
         <button
-          onClick={() => setIsPlaying(!isPlaying)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-400 bg-white/10 hover:bg-white/20"
-          aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
+          onClick={() => { scrollPrev(); setIsPlaying(false) }}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label="Poprzednia opinia"
         >
-          {isPlaying ? (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden
-            >
-              <rect x="6" y="5" width="4" height="14" />
-              <rect x="14" y="5" width="4" height="14" />
-            </svg>
-          ) : (
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              aria-hidden
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
+          <ChevronLeft size={16} />
         </button>
 
-        <div className="flex items-center gap-2">
-          {testimonials.map((_, i) => (
-            <button
-              key={i}
-              className={`h-2.5 w-2.5 rounded-full border transition-colors ${
-                selected === i
-                  ? "bg-zinc-800 border-zinc-400"
-                  : "border-zinc-400 hover:border-white"
-              }`}
-              aria-label={`Przejdź do opinii ${i + 1}`}
-              aria-current={selected === i}
-              onClick={() => scrollTo(i)}
-            />
-          ))}
-        </div>
+        <span className="text-xs text-zinc-500 tabular-nums min-w-[3rem] text-center">
+          {selected + 1} / {testimonials.length}
+        </span>
+
+        <button
+          onClick={() => { scrollNext(); setIsPlaying(false) }}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label="Następna opinia"
+        >
+          <ChevronRight size={16} />
+        </button>
+
+        <div className="w-px h-5 bg-white/40 mx-1" />
+
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
+        >
+          {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+        </button>
       </div>
     </div>
   )

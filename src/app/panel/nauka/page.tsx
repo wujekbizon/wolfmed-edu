@@ -11,7 +11,7 @@ import type { NotesType } from '@/types/notesTypes'
 import type { MaterialsType } from '@/types/materialsTypes'
 import { getCurrentUser } from '@/server/user'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
-import { checkCourseAccessAction } from '@/actions/course-actions'
+import { checkCourseAccessAction, checkPremiumAccessAction } from '@/actions/course-actions'
 import { hasAccessToTier } from '@/helpers/accessTiers'
 
 export const dynamic = 'force-dynamic'
@@ -27,10 +27,11 @@ export default async function NaukaPage() {
   const user = await getCurrentUser()
   if (!user) return null
 
-  const [populatedCategories, userAllNotes, userMaterials] = await Promise.all([
+  const [populatedCategories, userAllNotes, userMaterials, isPremium] = await Promise.all([
     getPopulatedCategories(),
     getAllUserNotes(user.userId) as Promise<NotesType[]>,
     getMaterialsByUser(user.userId) as Promise<MaterialsType[]>,
+    checkPremiumAccessAction(),
   ])
   const materials = await getMergedMaterials(userMaterials)
 
@@ -58,7 +59,7 @@ export default async function NaukaPage() {
 
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubDashboard materials={materials} categories={accessibleCategories} notes={userAllNotes} isSupporter={user.supporter} />
+      <LearningHubDashboard materials={materials} categories={accessibleCategories} notes={userAllNotes} isPremium={isPremium} />
       <PdfPreviewModal />
       <VideoPreviewModal />
       <TextPreviewModal />

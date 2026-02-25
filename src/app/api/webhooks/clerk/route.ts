@@ -1,6 +1,6 @@
 import { Webhook } from 'svix'
 import { headers } from 'next/headers'
-import { WebhookEvent } from '@clerk/nextjs/server'
+import { WebhookEvent, clerkClient } from '@clerk/nextjs/server'
 import { UserData } from '@/types/dataTypes'
 import { deleteUserFromDb, insertUserToDb } from '@/server/db'
 import { generateRandomMotto } from '@/helpers/generateRandomMotto'
@@ -70,6 +70,12 @@ export async function POST(req: Request) {
 
       // Insert a new user record into the database.
       await insertUserToDb(user)
+
+      // Initialise Clerk publicMetadata with an empty ownedCourses array.
+      const clerk = await clerkClient()
+      await clerk.users.updateUser(id, {
+        publicMetadata: { ownedCourses: [] },
+      })
     } catch (error) {
       console.log(error)
       return new Response('Failed to insert user to database', {

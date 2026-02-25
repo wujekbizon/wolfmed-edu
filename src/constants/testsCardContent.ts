@@ -1,4 +1,4 @@
-const NUMBER_OF_TESTS = 931
+const NUMBER_OF_TESTS = 908
 const NUMBER_OF_PROCEDURES = 31
 
 export interface TestCardContent {
@@ -16,8 +16,8 @@ export const testCardContent: TestCardContent[] = [
   {
     category: 'Testy',
     title: 'Testy Opiekuna Medycznego.',
-    content: 'Darmowa baza testów, oparata na 2 ostatnich latach z egzaminów i kursu na Opiekuna Medycznego.',
-    date: '30 Gru 2025',
+    content: 'Baza testów oparta na skrypcie i egzaminach Opiekuna Medycznego. Losowe pytania z całej dostępnej puli.',
+    date: '1 Mar 2026',
     testsNumber: NUMBER_OF_TESTS,
     testsLabel: 'Testów',
     image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Jp1VzHmQWsLSvF0ZVh7qXdCNxbjatwczey8g',

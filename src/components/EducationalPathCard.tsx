@@ -26,17 +26,17 @@ const EducationalPathCard = ({
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } ${ className || ""} flex items-center flex-col w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-8 sm:gap-24 transition-all duration-800 ease-in-out`}
+          } ${ className || ""} flex items-center flex-col w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-8 sm:gap-16 transition-all duration-800 ease-in-out`}
         >
-          <div className="w-full h-[55vh] flex flex-col items-center justify-center gap-14 flex-1/2">
-            <div className="w-full flex flex-col items-center gap-16">
+          <div className="w-full flex flex-col items-center justify-center gap-10 flex-1/2 py-8 md:py-12">
+            <div className="w-full flex flex-col items-center gap-10">
               <div className="pt-8">
                 <Title title={title} className="max-w-full text-center" />
                 <p className="text-zinc-400 font-medium text-lg sm:text-xl leading-8 text-center">
                   {description}
                 </p>
               </div>
-              <div className="flex flex-row flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-24">
+              <div className="flex flex-row flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-20">
                 {customDescriptions?.map((item) => (
                   <FeatureCard {...item} key={item.id} />
                 ))}
@@ -46,28 +46,18 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          {/* <div className="w-full hidden md:flex items-center h-[55vh] flex-1/2 justify-center">
-            <Image
-              src={imgSrc}
-              alt={title}
-              className="w-2/3 h-[600px] object-cover rounded-xl"
-              width={1024}
-              height={1024}
-              priority
-            />
-          </div> */}
         </div>
       ) : (
         <div
           ref={ref}
           className={`${
             inView ? "opacity-100" : "opacity-0"
-          } flex items-center flex-col lg:flex-row w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-12 2xl:gap-24 transition-all duration-800 ease-in-out ${
+          } flex items-center flex-col lg:flex-row w-full h-full p-4 sm:p-8 xl:p-4 2xl:p-14 gap-10 2xl:gap-16 transition-all duration-800 ease-in-out ${
             className || ""
           }`}
         >
-          <div className="w-full h-[55vh] flex flex-col items-center justify-center gap-4 md:gap-14 flex-1/2 ">
-            <div className="h-full w-full flex flex-col items-start justify-evenly gap-6 lg:gap-0">
+          <div className="w-full flex flex-col items-center justify-center gap-6 flex-1/2 py-6 md:py-10">
+            <div className="w-full flex flex-col items-start gap-6 lg:gap-8">
               <Title title={title} />
               <p className="max-w-2xl text-zinc-400 font-medium text-base sm:text-lg lg:text-xl leading-7 xl:leading-9 text-left">
                 {description}
@@ -75,11 +65,11 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full flex items-center h-[55vh] flex-1/2 ">
+          <div className="w-full flex items-center rounded-2xl flex-1/2 max-h-[42vh] border border-[#585858]/60 shadow-xl shadow-black/50 backdrop-blur-sm transition-all duration-300 overflow-hidden">
             <Image
               src={imgSrc}
               alt={title}
-              className="w-full h-full object-cover rounded-xl"
+              className="w-full h-full object-cover "
               width={1024}
               height={1024}
               priority

@@ -7,7 +7,8 @@ import TeamSection from '@/components/TeamSection'
 
 export default function About() {
   return (
-    <section className="w-full flex flex-col items-center justify-center py-16 md:py-24 bg-zinc-950 text-white relative overflow-hidden">
+    <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-12">
+      <div className="bg-zinc-900/90 rounded-3xl border border-white/5 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
       <motion.div
         // @ts-ignore
         className="container max-w-7xl px-4 relative"
@@ -21,21 +22,21 @@ export default function About() {
             <motion.span
               // @ts-ignore
               variants={fadeInUp}
-              className="mb-3 sm:mb-4 inline-block rounded-full bg-zinc-800 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-white"
+              className="mb-3 sm:mb-4 inline-block rounded-full bg-red-500/20 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-300"
             >
               O Nas
             </motion.span>
             <motion.h2
               // @ts-ignore
               variants={fadeInUp}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl py-2 font-bold bg-clip-text text-transparent bg-linear-to-r from-white to-red-400"
+              className="text-3xl sm:text-4xl md:text-5xl py-2 font-bold text-white"
             >
-              Odkryj <span className="text-red-400">Wolfmed</span>
+              Odkryj <span className="text-[#ff5b5b]">Wolfmed</span>
             </motion.h2>
             <motion.p
               // @ts-ignore
               variants={fadeInUp}
-              className="mt-4 text-lg text-zinc-300 max-w-2xl mx-auto"
+              className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto"
             >
               Tworzymy przyszłość edukacji medycznej, łącząc doświadczenie z innowacją
             </motion.p>
@@ -46,6 +47,7 @@ export default function About() {
           </div>
         </div>
       </motion.div>
+      </div>
     </section>
   )
 }

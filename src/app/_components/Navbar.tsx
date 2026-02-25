@@ -7,7 +7,6 @@ import SideMenu from './SideMenu'
 import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
-import GradientOverlay from '@/components/GradientOverlay'
 import { usePathname } from 'next/navigation'
 import { SignedIn } from '@clerk/nextjs'
 
@@ -20,15 +19,13 @@ export default function Navbar() {
     <>
       {isMenuOpen && <SideMenu />}
       <header
-        className={`${pathname.includes("panel") ? "bg-zinc-800" : "bg-white"} h-20 w-full z-10 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
+        className={`${pathname.includes("panel") ? "bg-zinc-800" : "bg-white"} h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
             pathname && isScrolled
               ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
               : ''
           }`}
       >
-        {(pathname === '/' || pathname.includes('/kierunki/')) && <GradientOverlay />}
-
         <SignedIn>
           <MenuIcon onClick={toggleMenu} />
         </SignedIn>
