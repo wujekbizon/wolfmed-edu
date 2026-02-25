@@ -35,15 +35,15 @@ export default function TestimonialsCarousel({
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="h-64 flex flex-col bg-white/80 rounded-2xl border border-zinc-200/50 shadow-md backdrop-blur-sm p-6 transition-shadow duration-300 hover:shadow-lg">
+              <figure className="h-72 flex flex-col bg-white/80 rounded-2xl border border-zinc-200/50 shadow-md backdrop-blur-sm p-6 transition-shadow duration-300 hover:shadow-lg">
                 {/* Stars */}
                 <div className="mb-3 flex items-center justify-between">
                   <Stars rating={t.rating} />
                   <span className="text-4xl font-serif text-red-200 leading-none select-none">&ldquo;</span>
                 </div>
 
-                {/* Quote text — clamped so all cards stay the same height */}
-                <blockquote className="flex-1 text-sm sm:text-base text-zinc-600 leading-relaxed line-clamp-4 overflow-hidden">
+                {/* Quote text — scrollable for very long content, fixed height via parent */}
+                <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-600 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300 [&::-webkit-scrollbar-thumb]:rounded-full">
                   {t.content}
                 </blockquote>
 
