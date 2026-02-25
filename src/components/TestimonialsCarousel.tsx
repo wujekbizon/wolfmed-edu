@@ -31,11 +31,11 @@ export default function TestimonialsCarousel({
           {testimonials.map((t, idx) => (
             <div
               key={idx}
-              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3"
+              className="shrink-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3 py-4"
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="h-72 flex flex-col bg-white/20 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
+              <figure className="h-96 flex flex-col bg-white/20 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
                 {/* Stars */}
                 <div className="mb-3 flex items-center justify-between">
                   <Stars rating={t.rating} />
