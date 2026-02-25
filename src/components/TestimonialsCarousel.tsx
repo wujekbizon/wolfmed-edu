@@ -26,7 +26,7 @@ export default function TestimonialsCarousel({
 
   return (
     <div className="relative w-full">
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden py-6 -my-6" ref={emblaRef}>
         <div className="flex cursor-grab active:cursor-grabbing select-none -mx-3">
           {testimonials.map((t, idx) => (
             <div
@@ -69,37 +69,37 @@ export default function TestimonialsCarousel({
         </div>
       </div>
 
-      {/* Controls: arrows left, counter + play right */}
-      <div className="mt-6 flex items-center justify-between px-1">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => { scrollPrev(); setIsPlaying(false) }}
-            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 hover:border-zinc-300 transition-all"
-            aria-label="Poprzednia opinia"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button
-            onClick={() => { scrollNext(); setIsPlaying(false) }}
-            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 hover:border-zinc-300 transition-all"
-            aria-label="Następna opinia"
-          >
-            <ChevronRight size={16} />
-          </button>
-        </div>
+      {/* Controls: centered, glass style */}
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button
+          onClick={() => { scrollPrev(); setIsPlaying(false) }}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label="Poprzednia opinia"
+        >
+          <ChevronLeft size={16} />
+        </button>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-zinc-400 tabular-nums">
-            {selected + 1} / {testimonials.length}
-          </span>
-          <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            className="h-9 w-9 rounded-full border border-zinc-200 bg-white shadow-sm flex items-center justify-center text-zinc-600 hover:bg-zinc-50 transition-all"
-            aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
-          >
-            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
-          </button>
-        </div>
+        <span className="text-xs text-zinc-500 tabular-nums min-w-[3rem] text-center">
+          {selected + 1} / {testimonials.length}
+        </span>
+
+        <button
+          onClick={() => { scrollNext(); setIsPlaying(false) }}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label="Następna opinia"
+        >
+          <ChevronRight size={16} />
+        </button>
+
+        <div className="w-px h-5 bg-white/40 mx-1" />
+
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className="h-9 w-9 rounded-full bg-white/20 backdrop-blur-xl border border-white/50 shadow-sm flex items-center justify-center text-zinc-800 hover:bg-white/35 hover:border-white/65 transition-all"
+          aria-label={isPlaying ? "Wstrzymaj odtwarzanie" : "Wznów odtwarzanie"}
+        >
+          {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+        </button>
       </div>
     </div>
   )
