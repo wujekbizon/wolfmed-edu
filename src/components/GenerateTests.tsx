@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useCallback, useState } from 'react'
+import { useActionState, useCallback, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useGeneratedTest } from '@/hooks/useGeneratedTest'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -24,11 +25,18 @@ export default function GenerateTests(props: {
     submitTestAction,
     EMPTY_FORM_STATE
   )
+  const router = useRouter()
   const randomTest = useGeneratedTest(props.tests, props.questions)
   const noScriptFallback = useToastMessage(state)
   useSessionHeartbeat(props.sessionId)
   useBeaconCleanup(props.sessionId)
   const [isTimerExpired, setIsTimerExpired] = useState(false)
+
+  useEffect(() => {
+    if (state.status === 'SUCCESS') {
+      router.push('/panel/wyniki')
+    }
+  }, [state.status, router])
 
   const handleTimerExpiration = useCallback(() => {
     setIsTimerExpired(true)

@@ -119,7 +119,7 @@ export async function startTestAction(
       }
 
       const now = new Date()
-      const heartbeatThreshold = new Date(now.getTime() - 2 * 60 * 1000)
+      const heartbeatThreshold = new Date(now.getTime() - 5 * 60 * 1000)
 
       await tx
         .update(testSessions)
@@ -193,7 +193,11 @@ export async function submitTestAction(
   formData: FormData
 ) {
   const { userId } = await auth()
-  if (!userId) throw new Error("Unauthorized")
+  if (!userId) {
+    const err = new Error("Sesja wygasła. Zaloguj się ponownie.")
+    err.name = "AuthError"
+    throw err
+  }
 
   const rateLimit = await checkRateLimit(userId, "test:submit")
   if (!rateLimit.success) {
@@ -291,9 +295,8 @@ export async function submitTestAction(
     return fromErrorToFormState(error)
   }
 
-  toFormState("SUCCESS", "Test został wypełniony pomyślnie")
   revalidatePath("/panel", "page")
-  redirect("/panel/wyniki")
+  return toFormState("SUCCESS", "Test został wypełniony pomyślnie")
 }
 
 /**
@@ -899,7 +902,11 @@ export async function uploadTestsFromFile(
 
 export async function expireSessionAction(sessionId: string) {
   const { userId } = await auth()
-  if (!userId) throw new Error("Unauthorized")
+  if (!userId) {
+    const err = new Error("Sesja wygasła. Zaloguj się ponownie.")
+    err.name = "AuthError"
+    throw err
+  }
 
   try {
     await expireTestSession(sessionId, userId)

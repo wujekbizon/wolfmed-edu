@@ -16,6 +16,11 @@ interface ErrorMessage {
 }
 
 const ERROR_MESSAGES: Record<string, ErrorMessage> = {
+  AuthError: {
+    title: 'Sesja wygasła',
+    message: 'Twoja sesja wygasła. Zaloguj się ponownie, aby kontynuować.',
+    action: 'Zaloguj się'
+  },
   LexicalError: {
     title: 'Błąd edytora notatek',
     message: 'Edytor napotkał problem. Twoje notatki są bezpieczne.',
@@ -90,6 +95,10 @@ const ERROR_MESSAGES: Record<string, ErrorMessage> = {
  */
 function getErrorMessage(error: Error, context?: ErrorContext): ErrorMessage {
   // Check for specific error types first
+  if (error.name === 'AuthError') {
+    return ERROR_MESSAGES.AuthError!
+  }
+
   if (error.name === 'LexicalError' || error.message.includes('Lexical')) {
     return ERROR_MESSAGES.LexicalError!
   }
