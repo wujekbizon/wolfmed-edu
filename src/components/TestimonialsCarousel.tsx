@@ -35,7 +35,7 @@ export default function TestimonialsCarousel({
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="h-96 flex flex-col bg-white/20 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
+              <figure className="h-96 flex flex-col bg-white/30 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
                 {/* Stars */}
                 <div className="mb-3 flex items-center justify-between">
                   <Stars rating={t.rating} />
@@ -49,7 +49,7 @@ export default function TestimonialsCarousel({
 
                 {/* Author footer */}
                 <div className="mt-4 pt-4 border-t border-white/30 flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-[#ff5b5b]/10 ring-1 ring-[#ff5b5b]/25 grid place-items-center shrink-0">
+                  <div className="h-9 w-9 rounded-full bg-white/20 ring-1 ring-[#ff5b5b]/25 grid place-items-center shrink-0">
                     <span className="text-sm font-bold text-[#ff5b5b]">
                       {getInitials(t.username ?? "")}
                     </span>
