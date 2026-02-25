@@ -1,9 +1,6 @@
 import { StaticImageData } from 'next/image'
 import React from 'react'
-import LearnIcon from '@/components/icons/LearnIcon'
-import ProgressIcon from '@/components/icons/ProgressIcon'
-import BlogIcon from '@/components/icons/BlogIcon'
-import {BookAIcon} from "lucide-react"
+import { BookOpenCheck, Newspaper, TrendingUp, BrainCircuit } from 'lucide-react'
 
 export interface CardProps {
   description: string
@@ -57,28 +54,28 @@ const INFO: CardProps = {
       title: 'Sprawdzona Wiedza',
       description:
         'Z naszą platformą uczysz się skutecznie, rozwijasz kompetencje i budujesz swoją karierę. Zyskaj dostęp do bazy pytań testowych, procedur oraz materiałów edukacyjnych.',
-      icon: <LearnIcon color='white' width={56} height={56} />
+      icon: <BookOpenCheck size={44} className="text-white" strokeWidth={1.5} />
     },
     {
       id: 2,
       title: 'Artykuły i Porady',
       description:
         'Czytaj praktyczne artykuły tworzone przez doświadczonych specjalistów. Poznaj realia pracy w służbie zdrowia i rozwijaj się razem z nami.',
-      icon: <BlogIcon color='white' width={56} height={56} />
+      icon: <Newspaper size={44} className="text-white" strokeWidth={1.5} />
     },
     {
       id: 3,
       title: 'Rozwój i Analiza',
       description:
         'Śledź swoje postępy, analizuj wyniki testów i doskonal umiejętności – we własnym tempie i z pełnym wsparciem narzędzi platformy.',
-      icon: <ProgressIcon color='white' width={56} height={56} />
+      icon: <TrendingUp size={44} className="text-white" strokeWidth={1.5} />
     },
     {
       id: 4,
       title: 'Narzędzia AI',
       description:
         'Korzystaj z innowacyjnych narzędzi AI, które pomogą Ci w nauce, analizie wyników i przygotowaniu do egzaminów. Ułatw sobie naukę i osiągaj lepsze wyniki.',
-      icon: <ProgressIcon color='white' width={56} height={56} />
+      icon: <BrainCircuit size={44} className="text-white" strokeWidth={1.5} />
     }
   ],
   imgSrc:
