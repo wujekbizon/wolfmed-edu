@@ -26,7 +26,7 @@ const CAREGIVER: CardProps = {
   description:
     'Zdobądź kompleksową wiedzę i praktyczne umiejętności potrzebne do pracy jako opiekun medyczny. Korzystaj z setek testów, procedur krok po kroku oraz wsparcia aktywnej społeczności. Nasza ścieżka edukacyjna została stworzona z myślą zarówno o osobach, które dopiero rozpoczynają swoją karierę i przygotowują się do egzaminu zawodowego, jak i o tych, którzy już pracują w zawodzie i chcą pogłębić swoją wiedzę, utrwalić procedury lub odświeżyć materiał przed kolejnym etapem kariery.',
   imgSrc:
-    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN',
+    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5g1iJE1dK1JZolbvwfgWCAFPh8xz9BIKNsVjG',
   text: 'Sprawdź kierunek opiekun medyczny',
   url: '/kierunki/opiekun-medyczny',
   icon: 'caregiver'
@@ -38,7 +38,7 @@ const NURSE: CardProps = {
   description:
     'Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.',
   imgSrc:
-    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ICz8koequML1BazyDiNo5UcxtTn3s6YgW47C',
+    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MOj32FNpIgLRq2SWA1u9QmzbxiHJl47OaTGX',
   text: 'Sprawdź kierunek pielęgniarstwo',
   url: '/kierunki/pielegniarstwo',
   icon: 'nurse'
