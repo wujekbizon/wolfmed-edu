@@ -65,11 +65,11 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full flex items-center flex-1/2 max-h-[42vh] overflow-hidden">
+          <div className="w-full flex items-center rounded-2xl flex-1/2 max-h-[42vh] border border-[#585858]/60 shadow-xl shadow-black/50 backdrop-blur-sm transition-all duration-300 overflow-hidden">
             <Image
               src={imgSrc}
               alt={title}
-              className="w-full h-full object-cover rounded-xl"
+              className="w-full h-full object-cover "
               width={1024}
               height={1024}
               priority
