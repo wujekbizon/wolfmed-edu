@@ -36,7 +36,7 @@ const EducationalPathCard = ({
                   {description}
                 </p>
               </div>
-              <div className="flex flex-row flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-24">
+              <div className="flex flex-row flex-wrap justify-center items-center gap-8 sm:gap-12 md:gap-20">
                 {customDescriptions?.map((item) => (
                   <FeatureCard {...item} key={item.id} />
                 ))}
@@ -46,16 +46,6 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          {/* <div className="w-full hidden md:flex items-center h-[55vh] flex-1/2 justify-center">
-            <Image
-              src={imgSrc}
-              alt={title}
-              className="w-2/3 h-[600px] object-cover rounded-xl"
-              width={1024}
-              height={1024}
-              priority
-            />
-          </div> */}
         </div>
       ) : (
         <div
