@@ -743,6 +743,32 @@ export async function createTestimonialAction(
   return toFormState("SUCCESS", "Opinia została dodana pomyślnie!")
 }
 
+async function upsertCustomCategory(
+  userId: string,
+  categoryName: string,
+  questionIds: string[]
+) {
+  const existing = await db.query.userCustomCategories.findFirst({
+    where: and(
+      eq(userCustomCategories.userId, userId),
+      eq(userCustomCategories.categoryName, categoryName)
+    )
+  })
+
+  if (existing) {
+    const currentIds = existing.questionIds as string[]
+    const newIds = questionIds.filter((id) => !currentIds.includes(id))
+    if (newIds.length > 0) {
+      await db
+        .update(userCustomCategories)
+        .set({ questionIds: [...currentIds, ...newIds] })
+        .where(eq(userCustomCategories.id, existing.id))
+    }
+  } else {
+    await db.insert(userCustomCategories).values({ userId, categoryName, questionIds })
+  }
+}
+
 // Function to create a single test object
 export async function createTestAction(
   formState: FormState,
@@ -787,14 +813,19 @@ export async function createTestAction(
       answers
     }
 
-    await db.insert(userCustomTests).values({
-      userId: user.userId,
-      meta: {
-        category: category.toLowerCase(),
-        course: "kategoria-wlasna"
-      },
-      data,
-    })
+    const [inserted] = await db
+      .insert(userCustomTests)
+      .values({
+        userId: user.userId,
+        meta: {
+          category: category.toLowerCase(),
+          course: "kategoria-wlasna"
+        },
+        data,
+      })
+      .returning({ id: userCustomTests.id })
+
+    await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id])
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -872,16 +903,33 @@ export async function uploadTestsFromFile(
       )
     }
 
-    await db.transaction(async (tx) => {
-      const insertPromises = validatedData.map((testData) =>
-        tx.insert(userCustomTests).values({
-          userId: user.userId,
-          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
-          data: testData.data,
-        })
+    const insertedTests = await db.transaction(async (tx) => {
+      const results = await Promise.all(
+        validatedData.map((testData) =>
+          tx
+            .insert(userCustomTests)
+            .values({
+              userId: user.userId,
+              meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+              data: testData.data,
+            })
+            .returning({ id: userCustomTests.id, meta: userCustomTests.meta })
+        )
       )
-      await Promise.all(insertPromises)
+      return results.flat()
     })
+
+    const byCategory = new Map<string, string[]>()
+    for (const row of insertedTests) {
+      const cat = (row.meta as { category: string }).category
+      if (!byCategory.has(cat)) byCategory.set(cat, [])
+      byCategory.get(cat)!.push(row.id)
+    }
+    await Promise.all(
+      Array.from(byCategory.entries()).map(([cat, ids]) =>
+        upsertCustomCategory(user.userId, cat, ids)
+      )
+    )
   } catch (error) {
     if (error instanceof SyntaxError) {
       console.error("Error parsing JSON:", error.message)
@@ -937,16 +985,33 @@ export async function saveAIGeneratedTestsAction(
       return toFormState("ERROR", "Maksymalnie 50 pytań na jedno wywołanie /utworz.")
     }
 
-    await db.transaction(async (tx) => {
-      const insertPromises = validatedData.map((testData) =>
-        tx.insert(userCustomTests).values({
-          userId: user.userId,
-          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
-          data: testData.data,
-        })
+    const insertedTests = await db.transaction(async (tx) => {
+      const results = await Promise.all(
+        validatedData.map((testData) =>
+          tx
+            .insert(userCustomTests)
+            .values({
+              userId: user.userId,
+              meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+              data: testData.data,
+            })
+            .returning({ id: userCustomTests.id, meta: userCustomTests.meta })
+        )
       )
-      await Promise.all(insertPromises)
+      return results.flat()
     })
+
+    const byCategory = new Map<string, string[]>()
+    for (const row of insertedTests) {
+      const cat = (row.meta as { category: string }).category
+      if (!byCategory.has(cat)) byCategory.set(cat, [])
+      byCategory.get(cat)!.push(row.id)
+    }
+    await Promise.all(
+      Array.from(byCategory.entries()).map(([cat, ids]) =>
+        upsertCustomCategory(user.userId, cat, ids)
+      )
+    )
   } catch (error) {
     if (error instanceof SyntaxError) {
       return toFormState("ERROR", "Nieprawidłowy format JSON.")
