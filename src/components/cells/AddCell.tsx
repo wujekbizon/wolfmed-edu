@@ -21,7 +21,7 @@ export default function AddCell({ prevCellId, forceVisible, isPremium = false }:
       <SaveCellsButton />
       <SyncCellsButton />
         {cellButtons.map(({ id, type, cellName }) => {
-          const isLocked = type === 'rag' && !isPremium
+          const isLocked = (type === 'rag' || type === 'test') && !isPremium
           return (
             <button
               key={id}

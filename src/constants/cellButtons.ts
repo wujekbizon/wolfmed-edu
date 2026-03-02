@@ -23,4 +23,9 @@ export const cellButtons: CellButtons[] = [
       cellName: 'Tablica',
       type: 'draw',
     },
+    {
+      id: 4,
+      cellName: 'Tworzenie Testu',
+      type: 'test',
+    },
   ]
