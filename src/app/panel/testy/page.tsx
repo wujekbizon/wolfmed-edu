@@ -6,8 +6,10 @@ import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
-import { checkCourseAccessAction } from '@/actions/course-actions'
+import { checkCourseAccessAction, checkPremiumAccessAction } from '@/actions/course-actions'
 import { hasAccessToTier } from '@/helpers/accessTiers'
+import { getUserCustomCategories } from '@/server/queries'
+import type { PopulatedCategories } from '@/types/categoryType'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
@@ -53,7 +55,20 @@ async function TestsCategories() {
   // Only show categories user has access to
   const accessibleCategories = categoriesWithAccess.filter(cat => cat.hasAccess)
 
-  return <TestsCategoriesList categories={accessibleCategories} />
+  const isPremium = await checkPremiumAccessAction()
+  let customCards: PopulatedCategories[] = []
+
+  if (isPremium) {
+    const userCategories = await getUserCustomCategories(user.userId)
+    customCards = userCategories.map((cat) => ({
+      category: cat.categoryName,
+      value: `moje-testy__${cat.id}`,
+      count: cat.questionIds.length,
+      hasAccess: true,
+    }))
+  }
+
+  return <TestsCategoriesList categories={[...accessibleCategories, ...customCards]} />
 }
 
 export default function TestsPage() {

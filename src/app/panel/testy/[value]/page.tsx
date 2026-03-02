@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { getTestSessionDetails, getTestsByCategory } from '@/server/queries'
+import { getTestSessionDetails, getTestsByCategory, getUserCustomCategoryById, getUserCustomTestsByIds } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
@@ -29,7 +29,17 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  const categoryTests = await getTestsByCategory(decodedCategory) as Test[]
+  const CUSTOM_PREFIX = 'moje-testy__'
+  let categoryTests: Test[]
+
+  if (decodedCategory.startsWith(CUSTOM_PREFIX)) {
+    const catId = decodedCategory.slice(CUSTOM_PREFIX.length)
+    const cat = await getUserCustomCategoryById(user.userId, catId)
+    if (!cat) redirect('/panel/testy')
+    categoryTests = (await getUserCustomTestsByIds(cat.questionIds)) as Test[]
+  } else {
+    categoryTests = await getTestsByCategory(decodedCategory) as Test[]
+  }
 
   const sessionDetails = await getTestSessionDetails(sessionId);
 
