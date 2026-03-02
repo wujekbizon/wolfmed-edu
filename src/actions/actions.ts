@@ -56,7 +56,8 @@ import {
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
-  deleteUserCustomCategory
+  deleteUserCustomCategory,
+  getUserCustomTestById
 } from "@/server/queries"
 import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -1062,10 +1063,31 @@ export async function deleteUserCustomTestAction(
   }
 
   try {
-    const result = await deleteUserCustomTest(userId, testId)
+    const test = await getUserCustomTestById(userId, testId)
+    if (!test) return toFormState("ERROR", "Test nie został znaleziony")
 
+    const result = await deleteUserCustomTest(userId, testId)
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Test nie został znaleziony")
+    }
+
+    const categoryName = (test.meta as { category: string }).category
+    const cat = await db.query.userCustomCategories.findFirst({
+      where: and(
+        eq(userCustomCategories.userId, userId),
+        eq(userCustomCategories.categoryName, categoryName)
+      )
+    })
+
+    if (cat) {
+      const remaining = (cat.questionIds as string[]).filter((id) => id !== testId)
+      if (remaining.length === 0) {
+        await db.delete(userCustomCategories).where(eq(userCustomCategories.id, cat.id))
+      } else {
+        await db.update(userCustomCategories)
+          .set({ questionIds: remaining })
+          .where(eq(userCustomCategories.id, cat.id))
+      }
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -1073,6 +1095,7 @@ export async function deleteUserCustomTestAction(
 
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
+  revalidatePath("/panel/nauka")
 
   return toFormState("SUCCESS", "Test został usunięty pomyślnie")
 }
@@ -1111,6 +1134,15 @@ export async function deleteUserCustomTestsByCategoryAction(
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
     }
+
+    await db
+      .delete(userCustomCategories)
+      .where(
+        and(
+          eq(userCustomCategories.userId, userId),
+          eq(userCustomCategories.categoryName, validationResult.data.meta.category)
+        )
+      )
   } catch (error) {
     return fromErrorToFormState(error)
   }
