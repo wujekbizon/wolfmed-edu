@@ -264,12 +264,131 @@ The three-layer premium gate in `askRagQuestion()` (Layer 1: server action check
 
 ---
 
+## Protecting `/panel/dodaj-test` — Premium Gate
+
+### Why middleware alone isn't enough
+
+`src/proxy.ts` (the Clerk middleware) currently gates all of `/panel` by checking `sessionClaims.metadata.ownedCourses` — a flat array of course slugs with no tier information. To check *premium* tier in the middleware, the Clerk JWT would need to include e.g. `premiumCourses: string[]` in session claims metadata. That would require a Clerk JWT template change + webhook sync on every purchase/downgrade. That's out of scope.
+
+**What the middleware can do right now**: continue enforcing the existing `/panel` enrollment check (any owned course). This stays unchanged.
+
+### Solution: Page-level premium guard in `/panel/dodaj-test/page.tsx`
+
+Exactly the same pattern used by `/panel/nauka` (the RAG notebook page) and the course detail pages:
+
+```tsx
+// /panel/dodaj-test/page.tsx (updated)
+export default async function CreateTestPage() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
+
+  const isPremium = await checkPremiumAccessAction()
+  if (!isPremium) redirect('/panel/kursy')  // or show an upgrade prompt
+
+  return (
+    // ... existing JSX unchanged
+  )
+}
+```
+
+**One import, one check, one redirect.** No other changes to the page or its child components.
+
+This means:
+- `free` / `basic` users hitting `/panel/dodaj-test` → redirected to `/panel/kursy` (upgrade prompt)
+- `premium`+ users → page loads normally, all existing tabs (Create, Manage, Documentation) work as before
+- Server actions (`createTestAction`, `uploadTestsFromFile`) keep their enrollment check as **defense-in-depth** — they should never be reached by non-premium users but remain independently safe
+
+### Future middleware upgrade path
+
+If `premiumCourses` is ever added to Clerk session claims (via a JWT template), the middleware can be extended with a new route matcher without touching page code:
+
+```ts
+// future addition to src/proxy.ts
+const isPremiumRoute = createRouteMatcher(['/panel/dodaj-test(.*)'])
+
+if (isPremiumRoute(request)) {
+  const premiumCourses = sessionClaims?.metadata?.premiumCourses
+  if (!premiumCourses || premiumCourses.length === 0) {
+    return NextResponse.redirect(new URL('/panel/kursy', request.url))
+  }
+}
+```
+
+---
+
+## Verifying Custom Tests: Display + Exam Flow
+
+### ✅ Display — both sources appear in the same place
+
+Both manual creation (`createTestAction` via `/panel/dodaj-test`) and AI batch save (`saveAIGeneratedTestsAction` via `/utworz`) write to the same `userCustomTests` table. The Manage tab (`ManageTab.tsx → getUserCustomTests(userId) → CustomTestsList`) reads from that table unconditionally — so all custom tests from both sources appear together. **No changes needed here.**
+
+### ❌ Exam flow — critical gap discovered
+
+**The problem**: The test-taking route at `/panel/testy/[value]/page.tsx` calls `getTestsByCategory(category)`, which queries **only the `tests` table** (course content, admin-created). It never touches `userCustomTests`. Similarly, `getPopulatedCategories()` → `getCategories()` → queries only `tests` — so user-created categories like `"kategoria-wlasna"` or AI-suggested ones (e.g., `"kardiologia"` from `/utworz`) never appear in the `/panel/testy` listing.
+
+Result: users can create and view custom tests but **cannot take an exam with them**. The `GenerateTests` component is never fed their questions.
+
+### Why NOT merge into the existing `/panel/testy/[value]` route
+
+The existing `getTestsByCategory` is a `cache()`-wrapped function with no `userId` parameter — it's designed for **shared, public course content**. Adding a `userId` parameter would:
+1. Break the cache semantics (every user would get a unique cache key)
+2. Conflate public course tests with private user tests in the same route
+3. Require category-level conditional logic (`?custom=true` query params) that muddies the route contract
+
+Keeping the two systems separate is cleaner.
+
+### Solution: Dedicated custom tests exam route
+
+**New page**: `/panel/moje-testy/[category]/page.tsx`
+
+This page uses the existing `GenerateTests` component (which just needs `Test[]` — the schema is fully compatible):
+
+```
+userCustomTests schema: { id, userId, meta: {course, category}, data: {question, answers[]}, createdAt }
+Test interface:         { id, meta: {course, category}, data: {question, answers[]}, createdAt? }
+```
+
+They are structurally identical. No type adapters needed.
+
+**New query** in `src/server/queries.ts`:
+```ts
+export const getUserCustomTestsByCategory = cache(
+  async (userId: string, category: string) => {
+    return db.query.userCustomTests.findMany({
+      where: (model, { eq, and, sql }) =>
+        and(
+          eq(model.userId, userId),
+          sql`${model.meta}->>'category' = ${category}`
+        ),
+      orderBy: (model, { desc }) => desc(model.createdAt),
+    })
+  }
+)
+```
+
+**New page** `/panel/moje-testy/[category]/page.tsx` — fetches the user's custom tests for that category and passes them to `GenerateTests` (reusing the existing `createTestSessionAction` for session management).
+
+**Entry point**: In `ManageTab`, add a "Rozpocznij egzamin" button per category group that navigates to `/panel/moje-testy/[category]`. Category grouping already exists visually in `CustomTestsList` (it has the category filter dropdown).
+
+**Access control for the new route**: Enrollment-gated (any tier) — matches the pattern of `createTestAction`. Premium is not required to *take* your own tests, only to *create* them with AI.
+
+### Summary of exam flow changes
+
+| File | Change |
+|------|--------|
+| `src/server/queries.ts` | Add `getUserCustomTestsByCategory(userId, category)` |
+| `src/app/panel/moje-testy/[category]/page.tsx` | New exam page for custom tests (reuses `GenerateTests`) |
+| `src/components/ManageTab.tsx` | Add "Rozpocznij egzamin" button per category |
+
+The existing `/panel/testy` route and all its components are **untouched**.
+
+---
+
 ## What We Are NOT Changing
 
-- `/panel/dodaj-test` page stays as-is (manual creation + JSON upload)
-- `CreateTestForm` stays as-is
-- `UploadTestForm` stays as-is
-- `createTestAction` stays as-is (single question creation)
+- `getTestsByCategory` and the `/panel/testy/[value]` route — untouched
+- `CreateTestForm`, `UploadTestForm` — untouched
+- `createTestAction`, `uploadTestsFromFile` — untouched (keep their enrollment check as defense-in-depth)
 - No new database tables or schema changes
 - No changes to the `userCustomTests` table structure
 - Cell toolbar does not get a "test" button
