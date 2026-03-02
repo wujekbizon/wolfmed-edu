@@ -6,6 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useCellsStore } from '@/store/useCellsStore'
 import TestQuestionEditor, { type DraftQuestion } from './TestQuestionEditor'
 import type { Cell } from '@/types/cellTypes'
+import ResizableComponent from '@/components/Resizable'
 
 function parseQuestions(content: string): DraftQuestion[] {
   try {
@@ -139,6 +140,8 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
   }
 
   return (
+    <ResizableComponent direction="vertical">
+    <div className="flex flex-col h-full bg-white p-3 pb-6 rounded shadow-xl border border-zinc-200/60">
     <div className="space-y-3 p-4">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm font-medium text-zinc-700">
@@ -253,5 +256,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         </form>
       </div>
     </div>
+    </div>
+    </ResizableComponent>
   )
 }
