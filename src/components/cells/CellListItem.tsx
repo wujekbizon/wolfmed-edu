@@ -1,4 +1,4 @@
-import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCellPreview } from '.'
+import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCell } from '.'
 import ActionBar from './ActionBar'
 import type { Cell } from '@/types/cellTypes'
 
@@ -35,7 +35,7 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
-          <DynamicTestCellPreview cell={cell} />
+          <DynamicTestCell cell={cell} />
         </div>
       )}
     </div>

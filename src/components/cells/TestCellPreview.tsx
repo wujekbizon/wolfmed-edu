@@ -1,104 +1,14 @@
 'use client'
 
 import { useState, useActionState } from 'react'
+import { Pencil, Trash2, Check, CheckCircle2, Plus } from 'lucide-react'
 import { saveAIGeneratedTestsAction } from '@/actions/actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useCellsStore } from '@/store/useCellsStore'
 import TestQuestionEditor, { type DraftQuestion } from './TestQuestionEditor'
+import ManualTestBuilder from '@/components/ManualTestBuilder'
+import { parseQuestions, blankDraft } from '@/helpers/testCellHelpers'
 import type { Cell } from '@/types/cellTypes'
-import ResizableComponent from '@/components/Resizable'
-
-function parseQuestions(content: string): DraftQuestion[] {
-  try {
-    const parsed = JSON.parse(content)
-    const raw = Array.isArray(parsed) ? parsed : parsed?.questions ?? []
-    return raw.filter(
-      (q: any) =>
-        q?.data?.question &&
-        Array.isArray(q?.data?.answers) &&
-        q?.meta?.category
-    )
-  } catch {
-    return []
-  }
-}
-
-function blankDraft(category: string): DraftQuestion {
-  return {
-    id: crypto.randomUUID(),
-    data: {
-      question: '',
-      answers: Array(4).fill(null).map(() => ({ option: '', isCorrect: false })),
-    },
-    meta: { course: 'kategoria-wlasna', category },
-  }
-}
-
-function ManualTestBuilder({ onAdd, onDiscard }: {
-  onAdd: (q: DraftQuestion) => void
-  onDiscard: () => void
-}) {
-  const [category, setCategory] = useState('')
-  const [draft, setDraft] = useState<DraftQuestion | null>(null)
-
-  const handleStart = () => {
-    if (!category.trim()) return
-    setDraft(blankDraft(category.trim()))
-  }
-
-  const handleSave = (q: DraftQuestion) => {
-    onAdd(q)
-    setDraft(blankDraft(category.trim()))
-  }
-
-  return (
-    <div className="p-4 space-y-4">
-      {!draft ? (
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
-              Nazwa kategorii
-            </label>
-            <input
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              placeholder="np. Anatomia serca"
-              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
-            />
-          </div>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={handleStart}
-              disabled={!category.trim()}
-              className="px-4 py-1.5 bg-zinc-800 text-white text-sm rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-40"
-            >
-              Dodaj pierwsze pytanie
-            </button>
-            <button
-              type="button"
-              onClick={onDiscard}
-              className="px-4 py-1.5 border border-zinc-300 text-zinc-600 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
-            >
-              Odrzuć
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          <span className="text-xs px-2 py-1 bg-violet-100 text-violet-700 rounded-full">
-            {category}
-          </span>
-          <TestQuestionEditor
-            question={draft}
-            onSave={handleSave}
-            onCancel={onDiscard}
-          />
-        </div>
-      )}
-    </div>
-  )
-}
 
 export default function TestCellPreview({ cell }: { cell: Cell }) {
   const { deleteCell } = useCellsStore()
@@ -119,8 +29,11 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
 
   if (saved) {
     return (
-      <div className="p-6 text-center text-sm text-green-700 bg-green-50 border border-green-200 rounded-lg">
-        ✓ Zapisano {questions.length} {questions.length === 1 ? 'pytanie' : 'pytań'} do kategorii &ldquo;{questions[0]?.meta?.category}&rdquo;
+      <div className="flex flex-col items-center justify-center gap-2 h-full text-sm text-green-700">
+        <CheckCircle2 className="w-6 h-6 text-green-600" />
+        <span>
+          Zapisano {questions.length} {questions.length === 1 ? 'pytanie' : 'pytań'} do kategorii &ldquo;{questions[0]?.meta?.category}&rdquo;
+        </span>
       </div>
     )
   }
@@ -140,10 +53,8 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
   }
 
   return (
-    <ResizableComponent direction="vertical">
-    <div className="flex flex-col h-full bg-white p-3 pb-6 rounded shadow-xl border border-zinc-200/60">
-    <div className="space-y-3 p-4">
-      <div className="flex items-center justify-between mb-2">
+    <div className="flex flex-col h-full">
+      <div className="flex items-center justify-between mb-3">
         <span className="text-sm font-medium text-zinc-700">
           {questions.length} {questions.length === 1 ? 'pytanie' : 'pytań'} wygenerowanych przez AI
         </span>
@@ -152,12 +63,9 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         </span>
       </div>
 
-      <div className="space-y-3">
+      <div className="overflow-y-auto flex-1 space-y-3 pr-1">
         {questions.map((q, idx) => (
-          <div
-            key={q.id}
-            className="bg-white border border-zinc-200 rounded-xl p-4 shadow-sm"
-          >
+          <div key={q.id} className="bg-zinc-50 border border-zinc-200 rounded-xl p-4">
             {editingId === q.id ? (
               <TestQuestionEditor
                 question={q}
@@ -175,18 +83,18 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
                     <button
                       type="button"
                       onClick={() => setEditingId(q.id)}
-                      className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded transition-colors text-xs"
+                      className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded transition-colors"
                       title="Edytuj"
                     >
-                      ✏️
+                      <Pencil className="w-3.5 h-3.5" />
                     </button>
                     <button
                       type="button"
                       onClick={() => removeQuestion(q.id)}
-                      className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors text-xs"
+                      className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                       title="Usuń"
                     >
-                      🗑
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -194,18 +102,18 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
                   {q.data.answers.map((a, i) => (
                     <div
                       key={i}
-                      className={`flex items-start gap-2 px-3 py-2 rounded-lg text-sm ${
+                      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm ${
                         a.isCorrect
                           ? 'bg-green-50 border border-green-200 text-zinc-800'
-                          : 'bg-zinc-50 text-zinc-600'
+                          : 'bg-white border border-zinc-100 text-zinc-600'
                       }`}
                     >
-                      <span className={`font-semibold ${a.isCorrect ? 'text-green-700' : 'text-zinc-400'}`}>
+                      <span className={`font-semibold shrink-0 ${a.isCorrect ? 'text-green-700' : 'text-zinc-400'}`}>
                         {String.fromCharCode(65 + i)}.
                       </span>
                       <span>{a.option}</span>
                       {a.isCorrect && (
-                        <span className="ml-auto text-green-700 text-xs font-semibold">✓</span>
+                        <Check className="ml-auto w-3 h-3 text-green-600 shrink-0" />
                       )}
                     </div>
                   ))}
@@ -214,28 +122,29 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
             )}
           </div>
         ))}
+
+        {addingMore && (
+          <TestQuestionEditor
+            question={blankDraft(questions[0]?.meta?.category ?? '')}
+            onSave={q => { setQuestions(prev => [...prev, q]); setAddingMore(false) }}
+            onCancel={() => setAddingMore(false)}
+          />
+        )}
       </div>
 
-      {addingMore && (
-        <TestQuestionEditor
-          question={blankDraft(questions[0]?.meta?.category ?? '')}
-          onSave={q => { setQuestions(prev => [...prev, q]); setAddingMore(false) }}
-          onCancel={() => setAddingMore(false)}
-        />
-      )}
-
       {state.status === 'ERROR' && (
-        <p className="text-sm text-red-600">{state.message}</p>
+        <p className="text-sm text-red-600 mt-2">{state.message}</p>
       )}
 
-      <div className="flex flex-wrap gap-2 pt-2">
+      <div className="flex flex-wrap gap-2 pt-3 mt-3 border-t border-zinc-100">
         {!addingMore && (
           <button
             type="button"
             onClick={() => setAddingMore(true)}
-            className="px-4 py-2 border border-zinc-300 text-zinc-700 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
+            className="flex items-center gap-1.5 px-4 py-2 border border-zinc-300 text-zinc-700 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
           >
-            + Dodaj kolejne pytanie
+            <Plus className="w-4 h-4" />
+            Dodaj pytanie
           </button>
         )}
         <form action={handleSave} className="flex gap-2">
@@ -256,7 +165,5 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         </form>
       </div>
     </div>
-    </div>
-    </ResizableComponent>
   )
 }

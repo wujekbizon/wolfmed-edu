@@ -37,7 +37,7 @@ const DynamicRagCell = dynamic(() => import('./RagCell'), {
   ssr: false,
 })
 
-const DynamicTestCellPreview = dynamic(() => import('./TestCellPreview'), {
+const DynamicTestCell = dynamic(() => import('./TestCell'), {
   loading: () => (
     <div className="h-1/10 flex flex-col items-center justify-center">
       <ProgressBar />
@@ -46,4 +46,4 @@ const DynamicTestCellPreview = dynamic(() => import('./TestCellPreview'), {
   ssr: false,
 })
 
-export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCellPreview }
+export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell }
