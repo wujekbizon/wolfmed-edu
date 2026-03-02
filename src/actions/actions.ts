@@ -56,6 +56,7 @@ import {
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
+  getUserCustomCategoryByName,
   deleteUserCustomCategory,
   getUserCustomTestById
 } from "@/server/queries"
@@ -749,12 +750,7 @@ async function upsertCustomCategory(
   categoryName: string,
   questionIds: string[]
 ) {
-  const existing = await db.query.userCustomCategories.findFirst({
-    where: and(
-      eq(userCustomCategories.userId, userId),
-      eq(userCustomCategories.categoryName, categoryName)
-    )
-  })
+  const existing = await getUserCustomCategoryByName(userId, categoryName)
 
   if (existing) {
     const currentIds = existing.questionIds as string[]
@@ -1072,17 +1068,12 @@ export async function deleteUserCustomTestAction(
     }
 
     const categoryName = (test.meta as { category: string }).category
-    const cat = await db.query.userCustomCategories.findFirst({
-      where: and(
-        eq(userCustomCategories.userId, userId),
-        eq(userCustomCategories.categoryName, categoryName)
-      )
-    })
+    const cat = await getUserCustomCategoryByName(userId, categoryName)
 
     if (cat) {
       const remaining = (cat.questionIds as string[]).filter((id) => id !== testId)
       if (remaining.length === 0) {
-        await db.delete(userCustomCategories).where(eq(userCustomCategories.id, cat.id))
+        await deleteUserCustomCategory(userId, cat.id)
       } else {
         await db.update(userCustomCategories)
           .set({ questionIds: remaining })
@@ -1135,14 +1126,10 @@ export async function deleteUserCustomTestsByCategoryAction(
       return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
     }
 
-    await db
-      .delete(userCustomCategories)
-      .where(
-        and(
-          eq(userCustomCategories.userId, userId),
-          eq(userCustomCategories.categoryName, validationResult.data.meta.category)
-        )
-      )
+    const cat = await getUserCustomCategoryByName(userId, validationResult.data.meta.category)
+    if (cat) {
+      await deleteUserCustomCategory(userId, cat.id)
+    }
   } catch (error) {
     return fromErrorToFormState(error)
   }

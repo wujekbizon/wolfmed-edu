@@ -165,6 +165,21 @@ export const getUserCustomCategoryById = cache(
 )
 
 /**
+ * Get single category by name with ownership verification
+ */
+export const getUserCustomCategoryByName = async (
+  userId: string,
+  categoryName: string
+) => {
+  return await db.query.userCustomCategories.findFirst({
+    where: and(
+      eq(userCustomCategories.userId, userId),
+      eq(userCustomCategories.categoryName, categoryName)
+    ),
+  })
+}
+
+/**
  * Delete category with ownership verification
  */
 export const deleteUserCustomCategory = async (
