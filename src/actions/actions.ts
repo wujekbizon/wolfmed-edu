@@ -822,6 +822,7 @@ export async function createTestAction(
       })
       .returning({ id: userCustomTests.id })
 
+    if (!inserted) throw new Error('Nie udało się zapisać testu')
     await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id])
   } catch (error) {
     return fromErrorToFormState(error)
