@@ -5,10 +5,14 @@ import DeleteTestModal from '@/components/DeleteTestModal'
 import DeleteCategoryModal from '@/components/DeleteCategoryModal'
 import CategoryDeleteModalWrapper from '@/components/CategoryDeleteModalWrapper'
 import { getCurrentUser } from '@/server/user'
+import { checkPremiumAccessAction } from '@/actions/course-actions'
 
 export default async function CreateTestPage() {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
+
+  const isPremium = await checkPremiumAccessAction()
+  if (!isPremium) redirect('/panel/kursy')
 
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4">

@@ -900,6 +900,66 @@ export async function uploadTestsFromFile(
   return toFormState("SUCCESS", "Testy zostały pomyślnie dodane")
 }
 
+export async function saveAIGeneratedTestsAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const user = await getCurrentUser()
+  if (!user) throw new Error("Unauthorized")
+
+  const { enrollments } = await getUserEnrollmentsAction()
+  if (enrollments.length === 0) {
+    return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
+  }
+
+  // Rate limiting: reuse test:create limiter (5 per hour)
+  const rateLimit = await checkRateLimit(user.userId, "test:create")
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState("ERROR", `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`)
+  }
+
+  try {
+    const questionsJson = formData.get("questionsJson") as string
+    if (!questionsJson) return toFormState("ERROR", "Brak danych pytań.")
+
+    const parsed = JSON.parse(questionsJson)
+    const validationResult = await TestFileSchema.safeParseAsync(parsed)
+
+    if (!validationResult.success) {
+      console.error("saveAIGeneratedTestsAction validation errors:", validationResult.error.issues)
+      return toFormState("ERROR", "Nieprawidłowy format danych. Sprawdź wygenerowane pytania.")
+    }
+
+    const validatedData = validationResult.data
+
+    if (validatedData.length > 50) {
+      return toFormState("ERROR", "Maksymalnie 50 pytań na jedno wywołanie /utworz.")
+    }
+
+    await db.transaction(async (tx) => {
+      const insertPromises = validatedData.map((testData) =>
+        tx.insert(userCustomTests).values({
+          userId: user.userId,
+          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+          data: testData.data,
+        })
+      )
+      await Promise.all(insertPromises)
+    })
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return toFormState("ERROR", "Nieprawidłowy format JSON.")
+    }
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Pytania zostały zapisane pomyślnie")
+}
+
 export async function expireSessionAction(sessionId: string) {
   const { userId } = await auth()
   if (!userId) {

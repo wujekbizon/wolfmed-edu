@@ -156,12 +156,12 @@ Return ONLY the JSON array, no additional text.`
   }
 
   return {
+    cellType: 'test' as const,
     content: JSON.stringify({ questions }, null, 2),
     metadata: {
       count: questions.length,
       category,
       generated: new Date().toISOString(),
-      displayFormat: 'json'
     }
   };
 }
