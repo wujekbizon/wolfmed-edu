@@ -337,15 +337,15 @@ The existing `getTestsByCategory` is a `cache()`-wrapped function with no `userI
 
 Keeping the two systems separate is cleaner.
 
-### Solution: Synthetic card inside `/panel/testy` + one static route
+### Solution: Synthetic card in `/panel/testy` + one conditional in the existing `[value]` page
 
-**Approach**: Surface custom tests as a regular category card directly inside `/panel/testy`. No new app sections, no redirects to unfamiliar routes. The user stays in the tests section they already know.
+**Approach**: Surface custom tests as a regular category card inside `/panel/testy`. When clicked, the existing `/panel/testy/[value]` route handles it with one extra conditional — no new page, no new route.
 
 #### Why the existing code already supports this
 
-`TestsCategoryCard` has `isCustomCategory = !item.data`. When `data` is omitted from `PopulatedCategories`, the card **automatically renders the purple "Twoja kategoria" badge** — already wired in, zero changes needed.
+`TestsCategoryCard` has `isCustomCategory = !item.data`. When `data` is omitted, the card **automatically shows the purple "Twoja kategoria" badge** — zero changes needed.
 
-`DEFAULT_CATEGORY_METADATA` is pre-configured for this exact purpose:
+`DEFAULT_CATEGORY_METADATA` is pre-configured for this:
 ```ts
 {
   description: 'Twoja własna kategoria testów',
@@ -356,9 +356,9 @@ Keeping the two systems separate is cleaner.
 }
 ```
 
-`StartTestForm` navigates to `/panel/testy/${category.value}`. Passing `value: 'moje-testy'` routes to `/panel/testy/moje-testy`. In Next.js App Router, **static segments take priority over `[value]` dynamic segments** — so a new `moje-testy/page.tsx` handles that path automatically. Zero changes to `StartTestForm`.
+`StartTestForm` navigates to `/panel/testy/${category.value}`. Passing `value: 'moje-testy'` routes to `/panel/testy/moje-testy` — which the existing `[value]` dynamic segment already handles. Zero changes to `StartTestForm`.
 
-#### Change 1: `/panel/testy/page.tsx` — add premium + custom tests check
+#### Change 1: `/panel/testy/page.tsx` — premium check + synthetic card
 
 ```ts
 // After existing categoriesWithAccess logic:
@@ -366,13 +366,13 @@ const isPremium = await checkPremiumAccessAction()
 let customTestsCard: PopulatedCategories | null = null
 
 if (isPremium) {
-  const customTestCount = await countUserCustomTests(user.userId)
-  if (customTestCount > 0) {
+  const customTests = await getUserCustomTests(user.userId)
+  if (customTests.length > 0) {
     customTestsCard = {
       category: 'Moje Testy',
       value: 'moje-testy',
-      count: customTestCount,
-      data: undefined,   // triggers isCustomCategory = true → purple badge + gradient bg
+      count: customTests.length,
+      data: undefined,   // isCustomCategory = true → purple badge + gradient bg
       hasAccess: true,
     }
   }
@@ -383,82 +383,33 @@ const allCategories = customTestsCard
   : accessibleCategories
 ```
 
-#### Change 2: New static route `/panel/testy/moje-testy/page.tsx`
-
-Fetches all user custom tests, passes to existing `GenerateTests`. The schemas are structurally identical (`id`, `meta`, `data.question`, `data.answers`):
+#### Change 2: `/panel/testy/[value]/page.tsx` — one conditional for `'moje-testy'`
 
 ```ts
-async function CustomTestsByUser({ sessionId }: { sessionId: string }) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-
-  const customTests = await getUserCustomTests(user.userId)  // existing query
-  const sessionDetails = await getTestSessionDetails(sessionId)
-
-  if (!customTests.length) redirect('/panel/testy')
-  if (!sessionDetails) return <p>Nie znaleziono szczegółów sesji.</p>
-
-  return (
-    <GenerateTests
-      tests={customTests as Test[]}
-      sessionId={sessionId}
-      duration={sessionDetails.durationMinutes}
-      questions={sessionDetails.numberOfQuestions}
-    />
-  )
-}
+// In TestsByCategory component — replace the single getTestsByCategory call:
+const categoryTests = decodedCategory === 'moje-testy'
+  ? (await getUserCustomTests(user.userId)) as Test[]
+  : await getTestsByCategory(decodedCategory) as Test[]
 ```
 
-#### Change 3: `countUserCustomTests` with `unstable_cache`
-
-`getUserCustomTests` already uses React's `cache()` (per-request). For the `/panel/testy` listing, add a count query with cross-request caching so premium users with no custom tests don't hit the DB on every page load:
-
-```ts
-export const countUserCustomTests = (userId: string) =>
-  unstable_cache(
-    async () => {
-      const result = await db
-        .select({ count: count() })
-        .from(userCustomTests)
-        .where(eq(userCustomTests.userId, userId))
-      return result[0]?.count || 0
-    },
-    [`user-custom-tests-count-${userId}`],
-    { tags: [`user-custom-tests-${userId}`] }
-  )()
-```
-
-Cache tag `user-custom-tests-${userId}` gets invalidated via `revalidateTag` in:
-- `createTestAction` — add one line
-- `uploadTestsFromFile` — add one line
-- `saveAIGeneratedTestsAction` — include when implementing
-- Delete action — add one line
-
-First visit: DB query, cached. Subsequent visits with no tests: cache hit, no DB call. After creating a test: cache invalidated automatically.
-
-#### Access control for the new route
-
-`/panel/testy/moje-testy` is **enrollment-gated** (any tier). Premium is required to *create* custom tests, not to *take* them. A user who downgraded from premium can still take exams with previously saved questions.
+That's the entire change to this file. Everything else — session lookup, the empty check, `GenerateTests` — stays identical.
 
 ### Summary of exam flow changes
 
 | File | Change |
 |------|--------|
-| `src/app/panel/testy/page.tsx` | ~10 lines: premium check + count → synthetic card |
-| `src/app/panel/testy/moje-testy/page.tsx` | New static route (~40 lines, reuses `GenerateTests`) |
-| `src/server/queries.ts` | Add `countUserCustomTests` with `unstable_cache` |
-| `createTestAction`, `uploadTestsFromFile` | Add `revalidateTag` (one line each) |
+| `src/app/panel/testy/page.tsx` | Premium check + `getUserCustomTests` count → append synthetic card |
+| `src/app/panel/testy/[value]/page.tsx` | One conditional: `'moje-testy'` → `getUserCustomTests` instead of `getTestsByCategory` |
 
-`TestsCategoryCard`, `StartTestForm`, `GenerateTests`, `/panel/testy/[value]` — **completely untouched**.
+`TestsCategoryCard`, `StartTestForm`, `GenerateTests`, `getUserCustomTests` — **completely untouched**. No new files.
 
 ---
 
 ## What We Are NOT Changing
 
-- `getTestsByCategory` and `/panel/testy/[value]` — untouched
 - `TestsCategoryCard`, `StartTestForm`, `GenerateTests` — untouched
 - `CreateTestForm`, `UploadTestForm` — untouched
-- `createTestAction`, `uploadTestsFromFile` — only a `revalidateTag` line added
-- No new database tables or schema changes
+- `createTestAction`, `uploadTestsFromFile` — untouched
+- No new files, no new routes, no new database tables
 - No changes to the `userCustomTests` table structure
 - Cell toolbar does not get a "test" button
