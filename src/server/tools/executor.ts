@@ -115,13 +115,22 @@ async function utworzTool(args: any): Promise<ToolResult> {
     .replace('{{questionCount}}', questionCount.toString())
     .replace('{{category}}', category)
 
+  const structureStr = JSON.stringify(template.structure, null, 2)
+    .replace(/\{\{category\}\}/g, category)
+
+  const exampleStr = JSON.stringify(template.example, null, 2)
+    .replace(/\{\{category\}\}/g, category)
+
   const fullPrompt = `${prompt}
 
 CONTENT TO CREATE QUESTIONS FROM:
 ${content}
 
 EXAMPLE STRUCTURE:
-${JSON.stringify(template.structure, null, 2)}
+${structureStr}
+
+CONCRETE EXAMPLE:
+${exampleStr}
 
 Return ONLY the JSON array, no additional text.`
 
