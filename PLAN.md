@@ -337,71 +337,82 @@ The existing `getTestsByCategory` is a `cache()`-wrapped function with no `userI
 
 Keeping the two systems separate is cleaner.
 
-### Solution: Synthetic card in `/panel/testy` + one conditional in the existing `[value]` page
+### Solution: One card per `userCustomCategory` in `/panel/testy` + one conditional in the existing `[value]` page
 
-**Approach**: Surface custom tests as a regular category card inside `/panel/testy`. When clicked, the existing `/panel/testy/[value]` route handles it with one extra conditional — no new page, no new route.
+**Approach**: The `userCustomCategories` table already exists — it stores named collections of user tests with `questionIds`. We surface each custom category as a card on `/panel/testy`, route it via a prefixed URL, and handle it with one conditional in the existing `[value]` page. No new pages, no new routes.
 
-#### Why the existing code already supports this
+#### Existing infrastructure we rely on (zero changes needed)
 
-`TestsCategoryCard` has `isCustomCategory = !item.data`. When `data` is omitted, the card **automatically shows the purple "Twoja kategoria" badge** — zero changes needed.
+| Already exists | Where |
+|---|---|
+| `userCustomCategories` table (`id`, `categoryName`, `questionIds`) | `schema.ts:154` |
+| `getUserCustomCategories(userId)` | `queries.ts:136` |
+| `getUserCustomCategoryById(userId, categoryId)` | `queries.ts:146` |
+| `isCustomCategory = !item.data` → purple badge | `TestsCategoryCard.tsx:8` |
+| `DEFAULT_CATEGORY_METADATA` for custom cards | existing config |
 
-`DEFAULT_CATEGORY_METADATA` is pre-configured for this:
-```ts
-{
-  description: 'Twoja własna kategoria testów',
-  duration: [25, 40, 60],
-  numberOfQuestions: [10, 40],
-  popularity: 'Kategoria niestandardowa',
-  status: true,
-}
-```
+#### URL prefix
 
-`StartTestForm` navigates to `/panel/testy/${category.value}`. Passing `value: 'moje-testy'` routes to `/panel/testy/moje-testy` — which the existing `[value]` dynamic segment already handles. Zero changes to `StartTestForm`.
+`value: 'moje-testy__${cat.id}'` — the UUID after the prefix is the custom category's DB id. Guaranteed no collision with system slugs like `anatomia`. Easy to replace later.
 
-#### Change 1: `/panel/testy/page.tsx` — premium check + synthetic card
+#### Change 1: `/panel/testy/page.tsx` — premium check + one card per custom category
 
 ```ts
-// After existing categoriesWithAccess logic:
 const isPremium = await checkPremiumAccessAction()
-let customTestsCard: PopulatedCategories | null = null
 
 if (isPremium) {
-  const customTests = await getUserCustomTests(user.userId)
-  if (customTests.length > 0) {
-    customTestsCard = {
-      category: 'Moje Testy',
-      value: 'moje-testy',
-      count: customTests.length,
-      data: undefined,   // isCustomCategory = true → purple badge + gradient bg
-      hasAccess: true,
-    }
-  }
+  const userCategories = await getUserCustomCategories(user.userId)
+  const customCards: PopulatedCategories[] = userCategories.map((cat) => ({
+    category: cat.categoryName,
+    value: `moje-testy__${cat.id}`,
+    count: cat.questionIds.length,
+    data: undefined,       // isCustomCategory = true → purple badge
+    hasAccess: true,
+  }))
+  allCategories = [...accessibleCategories, ...customCards]
 }
-
-const allCategories = customTestsCard
-  ? [...accessibleCategories, customTestsCard]
-  : accessibleCategories
 ```
 
-#### Change 2: `/panel/testy/[value]/page.tsx` — one conditional for `'moje-testy'`
+#### Change 2: `queries.ts` — one new query to fetch tests by ID list
+
+`getUserCustomCategoryById` returns the category with `questionIds`. We then need to fetch those specific tests from `userCustomTests`:
 
 ```ts
-// In TestsByCategory component — replace the single getTestsByCategory call:
-const categoryTests = decodedCategory === 'moje-testy'
-  ? (await getUserCustomTests(user.userId)) as Test[]
-  : await getTestsByCategory(decodedCategory) as Test[]
+export const getUserCustomTestsByIds = cache(async (ids: string[]) => {
+  if (!ids.length) return []
+  return db.query.userCustomTests.findMany({
+    where: (t, { inArray }) => inArray(t.id, ids),
+  })
+})
 ```
 
-That's the entire change to this file. Everything else — session lookup, the empty check, `GenerateTests` — stays identical.
+#### Change 3: `/panel/testy/[value]/page.tsx` — detect prefix, resolve tests
 
-### Summary of exam flow changes
+```ts
+const CUSTOM_PREFIX = 'moje-testy__'
+
+let categoryTests: Test[]
+if (decodedCategory.startsWith(CUSTOM_PREFIX)) {
+  const catId = decodedCategory.slice(CUSTOM_PREFIX.length)
+  const cat = await getUserCustomCategoryById(user.userId, catId)
+  if (!cat) redirect('/panel/testy')
+  categoryTests = (await getUserCustomTestsByIds(cat.questionIds)) as Test[]
+} else {
+  categoryTests = await getTestsByCategory(decodedCategory) as Test[]
+}
+```
+
+Everything else in that component — session lookup, empty redirect, `GenerateTests` — stays identical.
+
+### Summary of changes
 
 | File | Change |
-|------|--------|
-| `src/app/panel/testy/page.tsx` | Premium check + `getUserCustomTests` count → append synthetic card |
-| `src/app/panel/testy/[value]/page.tsx` | One conditional: `'moje-testy'` → `getUserCustomTests` instead of `getTestsByCategory` |
+|---|---|
+| `src/app/panel/testy/page.tsx` | Premium check → `getUserCustomCategories` → append one card per custom category |
+| `src/server/queries.ts` | Add `getUserCustomTestsByIds` (fetch by ID array) |
+| `src/app/panel/testy/[value]/page.tsx` | `startsWith('moje-testy__')` conditional → resolve via custom category |
 
-`TestsCategoryCard`, `StartTestForm`, `GenerateTests`, `getUserCustomTests` — **completely untouched**. No new files.
+`TestsCategoryCard`, `StartTestForm`, `GenerateTests` — **untouched**. No new files.
 
 ---
 
@@ -410,6 +421,7 @@ That's the entire change to this file. Everything else — session lookup, the e
 - `TestsCategoryCard`, `StartTestForm`, `GenerateTests` — untouched
 - `CreateTestForm`, `UploadTestForm` — untouched
 - `createTestAction`, `uploadTestsFromFile` — untouched
+- `getUserCustomTests`, `getUserCustomCategories`, `getUserCustomCategoryById` — untouched
 - No new files, no new routes, no new database tables
-- No changes to the `userCustomTests` table structure
+- No changes to `userCustomTests` or `userCustomCategories` table structure
 - Cell toolbar does not get a "test" button
