@@ -1,27 +1,31 @@
 'use client'
 
-import { useState, useActionState } from 'react'
-import { Pencil, Trash2, Check, CheckCircle2, Plus } from 'lucide-react'
-import { saveAIGeneratedTestsAction } from '@/actions/actions'
-import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useRef } from 'react'
+import { Pencil, Trash2, Check, CheckCircle2 } from 'lucide-react'
 import { useCellsStore } from '@/store/useCellsStore'
-import TestQuestionEditor, { type DraftQuestion } from './TestQuestionEditor'
+import { useTestCellStore } from '@/store/useTestCellStore'
+import TestQuestionEditor from './TestQuestionEditor'
 import ManualTestBuilder from '@/components/ManualTestBuilder'
+import SaveTestForm from './SaveTestForm'
 import { parseQuestions, blankDraft } from '@/helpers/testCellHelpers'
 import type { Cell } from '@/types/cellTypes'
 
 export default function TestCellPreview({ cell }: { cell: Cell }) {
   const { deleteCell } = useCellsStore()
-  const [state, action, isPending] = useActionState(saveAIGeneratedTestsAction, EMPTY_FORM_STATE)
-  const [questions, setQuestions] = useState<DraftQuestion[]>(() => parseQuestions(cell.content))
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [saved, setSaved] = useState(false)
-  const [addingMore, setAddingMore] = useState(false)
 
-  if (questions.length === 0) {
+  const initialized = useRef(false)
+  if (!initialized.current) {
+    initialized.current = true
+    useTestCellStore.getState().initCell(cell.id, parseQuestions(cell.content))
+  }
+
+  const { cells, setEditingId, removeQuestion, updateQuestion, addQuestion, setAddingMore } = useTestCellStore()
+  const { questions = [], editingId = null, saved = false, addingMore = false } = cells[cell.id] ?? {}
+
+  if (!questions.length) {
     return (
       <ManualTestBuilder
-        onAdd={q => setQuestions([q])}
+        onAdd={(q) => addQuestion(cell.id, q)}
         onDiscard={() => deleteCell(cell.id)}
       />
     )
@@ -36,20 +40,6 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         </span>
       </div>
     )
-  }
-
-  const handleSave = async (formData: FormData) => {
-    formData.set('questionsJson', JSON.stringify(questions))
-    await action(formData)
-    setSaved(true)
-  }
-
-  const removeQuestion = (id: string) =>
-    setQuestions(prev => prev.filter(q => q.id !== id))
-
-  const updateQuestion = (updated: DraftQuestion) => {
-    setQuestions(prev => prev.map(q => q.id === updated.id ? updated : q))
-    setEditingId(null)
   }
 
   return (
@@ -69,8 +59,8 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
             {editingId === q.id ? (
               <TestQuestionEditor
                 question={q}
-                onSave={updateQuestion}
-                onCancel={() => setEditingId(null)}
+                onSave={(updated) => updateQuestion(cell.id, updated)}
+                onCancel={() => setEditingId(cell.id, null)}
               />
             ) : (
               <>
@@ -82,7 +72,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
                   <div className="flex gap-1 shrink-0">
                     <button
                       type="button"
-                      onClick={() => setEditingId(q.id)}
+                      onClick={() => setEditingId(cell.id, q.id)}
                       className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 rounded transition-colors"
                       title="Edytuj"
                     >
@@ -90,7 +80,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => removeQuestion(q.id)}
+                      onClick={() => removeQuestion(cell.id, q.id)}
                       className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
                       title="Usuń"
                     >
@@ -112,9 +102,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
                         {String.fromCharCode(65 + i)}.
                       </span>
                       <span>{a.option}</span>
-                      {a.isCorrect && (
-                        <Check className="ml-auto w-3 h-3 text-green-600 shrink-0" />
-                      )}
+                      {a.isCorrect && <Check className="ml-auto w-3 h-3 text-green-600 shrink-0" />}
                     </div>
                   ))}
                 </div>
@@ -126,44 +114,13 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         {addingMore && (
           <TestQuestionEditor
             question={blankDraft(questions[0]?.meta?.category ?? '')}
-            onSave={q => { setQuestions(prev => [...prev, q]); setAddingMore(false) }}
-            onCancel={() => setAddingMore(false)}
+            onSave={(q) => addQuestion(cell.id, q)}
+            onCancel={() => setAddingMore(cell.id, false)}
           />
         )}
       </div>
 
-      {state.status === 'ERROR' && (
-        <p className="text-sm text-red-600 mt-2">{state.message}</p>
-      )}
-
-      <div className="flex flex-wrap gap-2 pt-3 mt-3 border-t border-zinc-100">
-        {!addingMore && (
-          <button
-            type="button"
-            onClick={() => setAddingMore(true)}
-            className="flex items-center gap-1.5 px-4 py-2 border border-zinc-300 text-zinc-700 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Dodaj pytanie
-          </button>
-        )}
-        <form action={handleSave} className="flex gap-2">
-          <button
-            type="submit"
-            disabled={isPending || questions.length === 0}
-            className="px-5 py-2 bg-zinc-800 text-white text-sm rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-50"
-          >
-            {isPending ? 'Zapisywanie...' : 'Zapisz wszystkie'}
-          </button>
-          <button
-            type="button"
-            onClick={() => deleteCell(cell.id)}
-            className="px-5 py-2 border border-zinc-300 text-zinc-600 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
-          >
-            Odrzuć
-          </button>
-        </form>
-      </div>
+      <SaveTestForm cellId={cell.id} onDiscard={() => deleteCell(cell.id)} />
     </div>
   )
 }
