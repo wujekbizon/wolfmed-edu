@@ -18,7 +18,7 @@ function FlashcardGroupCard({ group, onReview }: FlashcardGroupCardProps) {
   const preview = group.cards[0]?.questionText
 
   return (
-    <div className="relative bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300 p-5 pb-10">
+    <div className="relative bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300 p-5 pb-10">
       <div className="flex justify-between items-start mb-3">
         <h3 className="text-zinc-800 font-semibold text-lg leading-tight line-clamp-1">
           {group.name}
@@ -65,10 +65,9 @@ export default function FlashcardsSection({ notes }: FlashcardsSectionProps) {
   const visible = filter === 'all' ? groups : groups.filter((g) => g.source === filter)
 
   return (
-    <section>
+    <section className='bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60'>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <LayersIcon className="w-5 h-5 text-zinc-600" />
           <h2 className="text-xl font-bold text-zinc-800">Fiszki</h2>
         </div>
         <div className="flex items-center gap-1 bg-zinc-100 rounded-lg p-1">
