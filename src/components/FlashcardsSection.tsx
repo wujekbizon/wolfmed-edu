@@ -18,26 +18,24 @@ function FlashcardGroupCard({ group, onReview }: FlashcardGroupCardProps) {
   const count = group.cards.length
 
   return (
-    <div className="flex flex-col gap-3 p-4 bg-white rounded-xl border border-zinc-200 hover:border-purple-200 hover:shadow-sm transition-all">
+    <article className="relative flex flex-col justify-between gap-3 px-3 pt-8 pb-3 bg-zinc-50 rounded-xl border border-zinc-300/50 hover:border-slate-300 hover:shadow-sm transition-all duration-200">
+      <span className="absolute top-1 right-1 bg-zinc-800/80 text-zinc-100 px-2 py-0.5 rounded-full border border-zinc-700 text-[11px] font-semibold">
+        {count} {count === 1 ? 'fiszka' : 'fiszek'}
+      </span>
       <div className="flex items-start gap-3">
-        <div className={`p-2 rounded-lg shrink-0 ${group.source === 'cell' ? 'bg-purple-100' : 'bg-zinc-100'}`}>
-          <Icon className={`w-4 h-4 ${group.source === 'cell' ? 'text-purple-600' : 'text-zinc-600'}`} />
+        <div className="p-2 rounded-lg shrink-0 bg-zinc-800/10">
+          <Icon className="w-4 h-4 text-zinc-600" />
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-zinc-900 truncate">{group.name}</p>
-          <p className="text-xs text-zinc-500 mt-0.5">
-            {count} {count === 1 ? 'fiszka' : 'fiszek'}
-          </p>
-        </div>
+        <p className="text-sm font-semibold text-zinc-900 truncate leading-tight">{group.name}</p>
       </div>
       <button
         type="button"
         onClick={() => onReview(group.cards)}
-        className="w-full px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
+        className="w-full px-3 py-1.5 text-xs font-medium bg-zinc-800 text-amber-400 hover:text-amber-100 rounded-full transition-colors"
       >
         Przeglądaj
       </button>
-    </div>
+    </article>
   )
 }
 
@@ -64,7 +62,7 @@ export default function FlashcardsSection({ notes }: FlashcardsSectionProps) {
     <section>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <LayersIcon className="w-5 h-5 text-purple-600" />
+          <LayersIcon className="w-5 h-5 text-zinc-600" />
           <h2 className="text-xl font-bold text-zinc-800">Fiszki</h2>
         </div>
         <div className="flex items-center gap-1 bg-zinc-100 rounded-lg p-1">

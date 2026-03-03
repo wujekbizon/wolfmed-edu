@@ -19,15 +19,18 @@ export function useFlashcardGroups(notes: { id: string; title: string }[]): {
     const map = new Map<string, FlashcardGroup>()
 
     for (const card of flashcards) {
-      if (!map.has(card.noteId)) {
-        const source = card.source ?? 'note'
-        const name =
-          source === 'cell'
-            ? (card.topic ?? 'AI Fiszki')
-            : (notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka')
-        map.set(card.noteId, { id: card.noteId, name, source, cards: [] })
+      const source = card.source ?? 'note'
+      const groupKey = source === 'cell'
+        ? `topic:${card.topic ?? 'AI Fiszki'}`
+        : card.noteId
+
+      if (!map.has(groupKey)) {
+        const name = source === 'cell'
+          ? (card.topic ?? 'AI Fiszki')
+          : (notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka')
+        map.set(groupKey, { id: groupKey, name, source, cards: [] })
       }
-      map.get(card.noteId)!.cards.push({
+      map.get(groupKey)!.cards.push({
         cardId: card.id,
         questionText: card.questionText,
         answerText: card.answerText,
