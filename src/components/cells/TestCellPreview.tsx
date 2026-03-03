@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect } from 'react'
 import { Pencil, Trash2, Check, CheckCircle2 } from 'lucide-react'
 import { useCellsStore } from '@/store/useCellsStore'
 import { useTestCellStore } from '@/store/useTestCellStore'
@@ -13,11 +13,9 @@ import type { Cell } from '@/types/cellTypes'
 export default function TestCellPreview({ cell }: { cell: Cell }) {
   const { deleteCell } = useCellsStore()
 
-  const initialized = useRef(false)
-  if (!initialized.current) {
-    initialized.current = true
+  useEffect(() => {
     useTestCellStore.getState().initCell(cell.id, parseQuestions(cell.content))
-  }
+  }, [cell.id])
 
   const { cells, setEditingId, removeQuestion, updateQuestion, addQuestion, setAddingMore } = useTestCellStore()
   const { questions = [], editingId = null, saved = false, addingMore = false } = cells[cell.id] ?? {}
