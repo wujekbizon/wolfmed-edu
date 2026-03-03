@@ -19,6 +19,9 @@ type TestCellStore = {
   addQuestion: (id: string, q: DraftQuestion) => void
 }
 
+const DEFAULT_CELL: CellState = { questions: [], editingId: null, saved: false, addingMore: false }
+const cell = (s: TestCellStore, id: string): CellState => s.cells[id] ?? DEFAULT_CELL
+
 export const useTestCellStore = create<TestCellStore>()((set) => ({
   cells: {},
 
@@ -26,23 +29,23 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
     set((s) =>
       s.cells[id]
         ? s
-        : { cells: { ...s.cells, [id]: { questions, editingId: null, saved: false, addingMore: false } } }
+        : { cells: { ...s.cells, [id]: { ...DEFAULT_CELL, questions } } }
     ),
 
   setEditingId: (id, editingId) =>
-    set((s) => ({ cells: { ...s.cells, [id]: { ...s.cells[id], editingId } as CellState } })),
+    set((s) => ({ cells: { ...s.cells, [id]: { ...cell(s, id), editingId } } })),
 
   setSaved: (id) =>
-    set((s) => ({ cells: { ...s.cells, [id]: { ...s.cells[id], saved: true } as CellState } })),
+    set((s) => ({ cells: { ...s.cells, [id]: { ...cell(s, id), saved: true } } })),
 
   setAddingMore: (id, addingMore) =>
-    set((s) => ({ cells: { ...s.cells, [id]: { ...s.cells[id], addingMore } as CellState } })),
+    set((s) => ({ cells: { ...s.cells, [id]: { ...cell(s, id), addingMore } } })),
 
   removeQuestion: (id, questionId) =>
     set((s) => ({
       cells: {
         ...s.cells,
-        [id]: { ...(s.cells[id] || { questions: [], editingId: null, saved: false, addingMore: false }), questions: (s.cells[id]?.questions || []).filter((q) => q.id !== questionId) } as CellState,
+        [id]: { ...cell(s, id), questions: cell(s, id).questions.filter((q) => q.id !== questionId) },
       },
     })),
 
@@ -51,10 +54,10 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
       cells: {
         ...s.cells,
         [id]: {
-          ...s.cells[id],
+          ...cell(s, id),
           editingId: null,
-          questions: (s.cells[id]?.questions || []).map((q) => (q.id === updated.id ? updated : q)),
-        } as CellState,
+          questions: cell(s, id).questions.map((q) => (q.id === updated.id ? updated : q)),
+        },
       },
     })),
 
@@ -62,11 +65,7 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
     set((s) => ({
       cells: {
         ...s.cells,
-        [id]: {
-          ...(s.cells[id] || { questions: [], editingId: null, saved: false, addingMore: false }),
-          addingMore: false,
-          questions: [...(s.cells[id]?.questions || []), q],
-        } as CellState,
+        [id]: { ...cell(s, id), addingMore: false, questions: [...cell(s, id).questions, q] },
       },
     })),
 }))
