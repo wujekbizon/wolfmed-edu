@@ -77,7 +77,7 @@ export default function ResizableComponent({
             : {
                 size: { width: "100%", height },
                 handleComponent: { bottom: <BottomResizableHandle />},
-                minHeight: constraint || 350,
+                minHeight: constraint || 480,
                 maxHeight: innerHeight * 0.7,
                 minWidth: "100%",
                 maxWidth: "100%",

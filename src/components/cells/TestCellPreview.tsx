@@ -34,7 +34,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
   if (saved) {
     return (
       <div className="flex flex-col items-center justify-center gap-2 h-full text-sm text-green-700">
-        <CheckCircle2 className="w-6 h-6 text-green-600" />
+        <CheckCircle2 className="w-6 h-6 text-red-400"  />
         <span>
           Zapisano {questions.length} {questions.length === 1 ? 'pytanie' : 'pytań'} do kategorii &ldquo;{questions[0]?.meta?.category}&rdquo;
         </span>
@@ -48,7 +48,7 @@ export default function TestCellPreview({ cell }: { cell: Cell }) {
         <span className="text-sm font-medium text-zinc-700">
           {questions.length} {questions.length === 1 ? 'pytanie' : 'pytań'} wygenerowanych przez AI
         </span>
-        <span className="text-xs px-2 py-1 bg-violet-100 text-violet-700 rounded-full">
+        <span className="text-xs px-2 py-1 bg-violet-100 text-red-400 rounded-full">
           {questions[0]?.meta?.category}
         </span>
       </div>

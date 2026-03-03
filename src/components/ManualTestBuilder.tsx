@@ -1,16 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
-import TestQuestionEditor, { type DraftQuestion } from '@/components/cells/TestQuestionEditor'
+import TestQuestionEditor, {
+  type DraftQuestion
+} from '@/components/cells/TestQuestionEditor'
 import { blankDraft } from '@/helpers/testCellHelpers'
+import Label from './ui/Label'
 
 interface ManualTestBuilderProps {
   onAdd: (q: DraftQuestion) => void
   onDiscard: () => void
 }
 
-export default function ManualTestBuilder({ onAdd, onDiscard }: ManualTestBuilderProps) {
+export default function ManualTestBuilder({
+  onAdd,
+  onDiscard
+}: ManualTestBuilderProps) {
   const [category, setCategory] = useState('')
   const [draft, setDraft] = useState<DraftQuestion | null>(null)
 
@@ -25,44 +30,43 @@ export default function ManualTestBuilder({ onAdd, onDiscard }: ManualTestBuilde
   }
 
   return (
-    <div className="p-4 space-y-4">
+    <div className='p-4 space-y-4'>
       {!draft ? (
-        <div className="space-y-3">
+        <div className='space-y-3'>
           <div>
-            <label className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
-              Nazwa kategorii
-            </label>
+            <Label
+              label='Nazwa kategorii'
+              htmlFor='category'
+              className='block text-sm font-medium text-zinc-700'
+            />
             <input
+              id='category'
               value={category}
-              onChange={e => setCategory(e.target.value)}
-              placeholder="np. Anatomia serca"
-              className="mt-1 w-full px-3 py-2 border border-zinc-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
+              onChange={(e) => setCategory(e.target.value)}
+              placeholder='np. Anatomia, Patologia, Farmakologia...'
+              className='w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm'
             />
           </div>
-          <div className="flex gap-2">
+          <div className='flex gap-2'>
             <button
-              type="button"
+              type='button'
               onClick={handleStart}
               disabled={!category.trim()}
-              className="px-4 py-1.5 bg-zinc-800 text-white text-sm rounded-lg hover:bg-zinc-700 transition-colors disabled:opacity-40"
+              className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-[#f58a8a] hover:bg-[#ff5b5b] px-4 py-2 text-lg font-medium border text-black shadow transition-colors cursor-pointer hover:border-zinc-800 border-red-200/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40 disabled:opacity-50 disabled:cursor-not-allowed'
             >
-              Dodaj pierwsze pytanie
+              Dodaj pytanie
             </button>
             <button
-              type="button"
+              type='button'
               onClick={onDiscard}
-              className="flex items-center gap-1.5 px-4 py-1.5 border border-zinc-200 text-zinc-500 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
+              className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-white hover:bg-zinc-100 px-4 py-2 text-lg font-medium border text-black shadow transition-colors cursor-pointer hover:border-zinc-800 border-red-200/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40 disabled:opacity-50 disabled:cursor-not-allowed'
             >
-              <Trash2 className="w-3.5 h-3.5" />
               Odrzuć
             </button>
           </div>
         </div>
       ) : (
-        <div className="space-y-2">
-          <span className="text-xs px-2 py-1 bg-violet-100 text-violet-700 rounded-full">
-            {category}
-          </span>
+        <div className='space-y-2'>
           <TestQuestionEditor
             question={draft}
             onSave={handleSave}
