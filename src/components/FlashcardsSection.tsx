@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Bot, LayersIcon } from 'lucide-react'
+import { LayersIcon } from 'lucide-react'
 import { useFlashcardGroups, type FlashcardGroup } from '@/hooks/useFlashcardGroups'
 import FlashcardReviewModal from './FlashcardReviewModal'
 import type { FlashcardData } from '@/hooks/useFlashcards'
@@ -14,28 +14,34 @@ interface FlashcardGroupCardProps {
 }
 
 function FlashcardGroupCard({ group, onReview }: FlashcardGroupCardProps) {
-  const Icon = group.source === 'cell' ? Bot : BookOpen
   const count = group.cards.length
+  const preview = group.cards[0]?.questionText
 
   return (
-    <article className="relative flex flex-col justify-between gap-3 px-3 pt-8 pb-3 bg-zinc-50 rounded-xl border border-zinc-300/50 hover:border-slate-300 hover:shadow-sm transition-all duration-200">
-      <span className="absolute top-1 right-1 bg-zinc-800/80 text-zinc-100 px-2 py-0.5 rounded-full border border-zinc-700 text-[11px] font-semibold">
-        {count} {count === 1 ? 'fiszka' : 'fiszek'}
-      </span>
-      <div className="flex items-start gap-3">
-        <div className="p-2 rounded-lg shrink-0 bg-zinc-800/10">
-          <Icon className="w-4 h-4 text-zinc-600" />
-        </div>
-        <p className="text-sm font-semibold text-zinc-900 truncate leading-tight">{group.name}</p>
+    <div className="relative bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300 p-5 pb-10">
+      <div className="flex justify-between items-start mb-3">
+        <h3 className="text-zinc-800 font-semibold text-lg leading-tight line-clamp-1">
+          {group.name}
+        </h3>
+        <span className="shrink-0 ml-2 text-xs font-medium px-3 py-1 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-300/60">
+          {count} {count === 1 ? 'fiszka' : 'fiszek'}
+        </span>
       </div>
-      <button
-        type="button"
-        onClick={() => onReview(group.cards)}
-        className="w-full px-3 py-1.5 text-xs font-medium bg-zinc-800 text-amber-400 hover:text-amber-100 rounded-full transition-colors"
-      >
-        Przeglądaj
-      </button>
-    </article>
+      {preview && (
+        <p className="text-zinc-600 text-sm leading-relaxed line-clamp-3">
+          {preview}
+        </p>
+      )}
+      <div className="absolute bottom-3 right-3">
+        <button
+          type="button"
+          onClick={() => onReview(group.cards)}
+          className="px-3 py-1 text-xs font-medium bg-red-500/40 hover:bg-red-500/70 rounded transition-colors"
+        >
+          Przeglądaj
+        </button>
+      </div>
+    </div>
   )
 }
 
