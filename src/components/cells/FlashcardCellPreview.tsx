@@ -101,7 +101,7 @@ export default function FlashcardCellPreview({ cell }: { cell: Cell }) {
           type='button'
           onClick={() => setIsAdding(true)}
           disabled={isAdding}
-          className='inline-flex items-center gap-1.5 text-xs text-purple-600 hover:text-purple-800 transition-colors disabled:opacity-50'
+          className='inline-flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-700 cursor-pointer transition-colors disabled:opacity-50'
         >
           <Plus className='w-3.5 h-3.5' />
           Dodaj fiszkę
