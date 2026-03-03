@@ -42,7 +42,7 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
     set((s) => ({
       cells: {
         ...s.cells,
-        [id]: { ...s.cells[id], questions: s.cells[id].questions.filter((q) => q.id !== questionId) } as CellState,
+        [id]: { ...(s.cells[id] || { questions: [], editingId: null, saved: false, addingMore: false }), questions: (s.cells[id]?.questions || []).filter((q) => q.id !== questionId) } as CellState,
       },
     })),
 
@@ -53,7 +53,7 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
         [id]: {
           ...s.cells[id],
           editingId: null,
-          questions: s.cells[id].questions.map((q) => (q.id === updated.id ? updated : q)),
+          questions: (s.cells[id]?.questions || []).map((q) => (q.id === updated.id ? updated : q)),
         } as CellState,
       },
     })),
@@ -63,9 +63,9 @@ export const useTestCellStore = create<TestCellStore>()((set) => ({
       cells: {
         ...s.cells,
         [id]: {
-          ...s.cells[id],
+          ...(s.cells[id] || { questions: [], editingId: null, saved: false, addingMore: false }),
           addingMore: false,
-          questions: [...s.cells[id].questions, q],
+          questions: [...(s.cells[id]?.questions || []), q],
         } as CellState,
       },
     })),
