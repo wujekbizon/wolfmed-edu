@@ -842,6 +842,10 @@ export async function uploadTestsFromFile(
   const user = await getCurrentUser()
   if (!user) throw new Error("Unauthorized")
 
+  const { sessionClaims } = await auth()
+  const userRole = (sessionClaims?.metadata as { role?: string })?.role
+  if (userRole !== 'admin') return toFormState("ERROR", "Brak uprawnień.")
+
   const { enrollments } = await getUserEnrollmentsAction()
   if (enrollments.length === 0) {
     return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
