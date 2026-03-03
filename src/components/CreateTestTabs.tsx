@@ -1,11 +1,8 @@
-import { getUserCustomCategories } from '@/server/queries'
 import { getPopulatedCategories } from "@/helpers/populateCategories"
 import TabNavigation from "@/components/TabNavigation"
 import CreateTab from "@/components/CreateTab"
 import ManageTab from "@/components/ManageTab"
-import CustomCategoriesTab from "@/components/CustomCategoriesTab"
 import { auth } from "@clerk/nextjs/server"
-
 
 interface Props {
   userId: string
@@ -21,12 +18,12 @@ export default async function CreateTestTabs({ userId }: Props) {
   const tabs = [
     {
       id: "create",
-      label: "Tworzenie",
+      label: "Tworzenie Testu",
       content: <CreateTab categories={categories} isAdmin={isAdmin} />
     },
     {
       id: "manage",
-      label: "Zarządzanie",
+      label: "Zarządzanie Testami",
       content: <ManageTab userId={userId} />
     },
   ]
