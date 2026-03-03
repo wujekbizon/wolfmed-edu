@@ -28,6 +28,7 @@ export default function TestQuestionEditor({
   const [answers, setAnswers] = useState(
     question.data.answers.map((a) => ({ ...a }))
   )
+  const [error, setError] = useState<string | null>(null)
 
   const setOption = (i: number, value: string) =>
     setAnswers((prev) =>
@@ -38,7 +39,10 @@ export default function TestQuestionEditor({
     setAnswers((prev) => prev.map((a, idx) => ({ ...a, isCorrect: idx === i })))
 
   const handleSave = () => {
-    if (!text.trim() || answers.some((a) => !a.option.trim())) return
+    if (!text.trim()) return setError('Treść pytania nie może być pusta.')
+    if (answers.some((a) => !a.option.trim())) return setError('Wszystkie odpowiedzi muszą mieć treść.')
+    if (!answers.some((a) => a.isCorrect)) return setError('Zaznacz co najmniej jedną poprawną odpowiedź.')
+    setError(null)
     onSave({ ...question, data: { question: text.trim(), answers } })
   }
 
@@ -75,6 +79,8 @@ export default function TestQuestionEditor({
           </div>
         ))}
       </div>
+
+      {error && <p className='text-xs text-red-500'>{error}</p>}
 
       <div className='flex gap-2 pt-1'>
         <button
