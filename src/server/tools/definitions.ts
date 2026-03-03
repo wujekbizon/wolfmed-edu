@@ -75,5 +75,27 @@ export const TOOL_DEFINITIONS = [
       },
       required: ['content']
     }
+  },
+  {
+    name: 'fiszka_tool',
+    description: 'Generate educational flashcards (fiszki) in Polish based on provided content.',
+    parameters: {
+      type: 'object',
+      properties: {
+        cardCount: {
+          type: 'number',
+          description: 'Number of flashcards to generate (default: 10)'
+        },
+        topic: {
+          type: 'string',
+          description: 'Topic label for the flashcard set'
+        },
+        content: {
+          type: 'string',
+          description: 'Source content to base flashcards on'
+        }
+      },
+      required: ['content']
+    }
   }
 ] as const

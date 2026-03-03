@@ -16,4 +16,9 @@ export const COMMANDS: Command[] = [
     description: 'Generuje pytania testowe w formacie JSON',
     example: '/utworz 10 pytań o anatomii serca',
   },
+  {
+    name: 'fiszka',
+    description: 'Generuje fiszki edukacyjne na dany temat',
+    example: '/fiszka 20 fiszek z układu kostnego',
+  },
 ]

@@ -31,6 +31,7 @@ export const TOOL_LABELS: Record<string, string> = {
   utworz_test: 'test',
   diagram_tool: 'diagram',
   podsumuj: 'podsumowanie',
+  fiszka_tool: 'fiszki',
 }
 
 export const TOOL_LABELS_ACCUSATIVE: Record<string, string> = {
@@ -38,6 +39,7 @@ export const TOOL_LABELS_ACCUSATIVE: Record<string, string> = {
   diagram: 'diagram',
   utworz: 'test',
   podsumuj: 'podsumowanie',
+  fiszka: 'fiszki',
 }
 
 export const TOOL_LABELS_GENITIVE: Record<string, string> = {
@@ -45,6 +47,7 @@ export const TOOL_LABELS_GENITIVE: Record<string, string> = {
   diagram_tool: 'diagramu',
   utworz_test: 'testu',
   podsumuj: 'podsumowania',
+  fiszka_tool: 'fiszek',
 }
 
 export const PROGRESS_DELAY = 200

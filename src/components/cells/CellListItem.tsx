@@ -1,4 +1,4 @@
-import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCell } from '.'
+import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell } from '.'
 import ActionBar from './ActionBar'
 import type { Cell } from '@/types/cellTypes'
 
@@ -36,6 +36,14 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
             <ActionBar cell={cell} />
           </div>
           <DynamicTestCell cell={cell} />
+        </div>
+      )}
+      {cell.type === 'flashcard' && (
+        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
+          <div className="relative h-10 w-full">
+            <ActionBar cell={cell} />
+          </div>
+          <DynamicFlashcardCell cell={cell} />
         </div>
       )}
     </div>

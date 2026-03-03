@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { GoogleGenAI } from '@google/genai'
 
 export interface ToolResult {
-  cellType?: 'note' | 'test' | 'draw';
+  cellType?: 'note' | 'test' | 'draw' | 'flashcard';
   content: string;
   metadata?: Record<string, any>;
 }
@@ -30,10 +30,16 @@ interface MermaidTemplate {
   };
 }
 
+interface FlashcardTemplate {
+  prompt: string;
+  example: Array<{ questionText: string; answerText: string }>;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
 let mermaidTemplate: MermaidTemplate | null = null
+let flashcardTemplate: FlashcardTemplate | null = null
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -77,6 +83,13 @@ async function getMermaidTemplate(): Promise<MermaidTemplate> {
   return mermaidTemplate
 }
 
+async function getFlashcardTemplate(): Promise<FlashcardTemplate> {
+  if (!flashcardTemplate) {
+    flashcardTemplate = await loadTemplate<FlashcardTemplate>('flashcard-template.json')
+  }
+  return flashcardTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -99,6 +112,9 @@ export async function executeToolLocally(
 
     case 'diagram_tool':
       return await diagramTool(args);
+
+    case 'fiszka_tool':
+      return await fiszkaTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -299,6 +315,62 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
       type: diagramType,
       format: 'mermaid',
       generated: new Date().toISOString()
+    }
+  };
+}
+
+async function fiszkaTool(args: any): Promise<ToolResult> {
+  const { cardCount = 10, topic = 'medycyna', content = '' } = args;
+
+  const template = await getFlashcardTemplate()
+  const ai = getGoogleAI()
+
+  const prompt = template.prompt
+    .replace('{{cardCount}}', cardCount.toString())
+    .replace('{{topic}}', topic)
+
+  const exampleStr = JSON.stringify(template.example, null, 2)
+
+  const fullPrompt = `${prompt}
+
+CONTENT TO BASE FLASHCARDS ON:
+${content}
+
+EXAMPLE FORMAT (return an array of objects like this):
+${exampleStr}
+
+Return ONLY a JSON object with a "flashcards" key containing an array of flashcard objects. Each object must have "questionText" and "answerText" string fields. No additional text.`
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: fullPrompt,
+    config: {
+      temperature: 0.7,
+      responseMimeType: 'application/json'
+    }
+  })
+
+  const generatedText = response.text || '{"flashcards":[]}'
+  let flashcards: Array<{ questionText: string; answerText: string }>
+
+  try {
+    const parsed = JSON.parse(generatedText)
+    flashcards = Array.isArray(parsed) ? parsed : (parsed.flashcards ?? [])
+    flashcards = flashcards.filter(
+      (f) => typeof f.questionText === 'string' && typeof f.answerText === 'string'
+    )
+  } catch (error) {
+    console.error('Failed to parse flashcards:', error)
+    throw new Error('Failed to generate valid flashcards')
+  }
+
+  return {
+    cellType: 'flashcard',
+    content: JSON.stringify({ topic, flashcards }),
+    metadata: {
+      count: flashcards.length,
+      topic,
+      generated: new Date().toISOString(),
     }
   };
 }
