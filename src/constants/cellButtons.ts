@@ -25,7 +25,7 @@ export const cellButtons: CellButtons[] = [
     },
     {
       id: 4,
-      cellName: 'Tworzenie Testu',
+      cellName: 'Test',
       type: 'test',
     },
   ]
