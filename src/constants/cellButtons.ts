@@ -28,4 +28,9 @@ export const cellButtons: CellButtons[] = [
       cellName: 'Test',
       type: 'test',
     },
+    {
+      id: 5,
+      cellName: 'Fiszka',
+      type: 'flashcard',
+    },
   ]
