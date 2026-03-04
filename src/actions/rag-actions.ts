@@ -458,26 +458,46 @@ export async function generateLectureAction(
     const apiKey = process.env.GOOGLE_TTS_API_KEY
     if (!apiKey) throw new Error('GOOGLE_TTS_API_KEY is not configured')
 
-    const ttsResponse = await fetch(
-      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          input: { text: script },
-          voice: { languageCode: 'pl-PL', name: 'pl-PL-Wavenet-A' },
-          audioConfig: { audioEncoding: 'MP3' },
-        }),
+    // Split script into chunks under 4800 bytes (UTF-8 safe, split on sentence boundaries)
+    const chunks: string[] = []
+    const sentences = script.split(/(?<=[.!?])\s+/)
+    let current = ''
+    for (const sentence of sentences) {
+      const candidate = current ? `${current} ${sentence}` : sentence
+      if (Buffer.byteLength(candidate, 'utf8') > 4800) {
+        if (current) chunks.push(current)
+        current = sentence
+      } else {
+        current = candidate
       }
-    )
+    }
+    if (current) chunks.push(current)
 
-    if (!ttsResponse.ok) {
-      const err = await ttsResponse.text()
-      throw new Error(`Google TTS error: ${ttsResponse.status} ${err}`)
+    const audioBuffers: Buffer[] = []
+    for (const chunk of chunks) {
+      const ttsResponse = await fetch(
+        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: { text: chunk },
+            voice: { languageCode: 'pl-PL', name: 'pl-PL-Wavenet-A' },
+            audioConfig: { audioEncoding: 'MP3' },
+          }),
+        }
+      )
+
+      if (!ttsResponse.ok) {
+        const err = await ttsResponse.text()
+        throw new Error(`Google TTS error: ${ttsResponse.status} ${err}`)
+      }
+
+      const ttsData = await ttsResponse.json() as { audioContent: string }
+      audioBuffers.push(Buffer.from(ttsData.audioContent, 'base64'))
     }
 
-    const ttsData = await ttsResponse.json() as { audioContent: string }
-    const audioBase64 = ttsData.audioContent
+    const audioBase64 = Buffer.concat(audioBuffers).toString('base64')
 
     await progressStep(
       jobId, 'finalizing', 95,
