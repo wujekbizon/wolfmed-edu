@@ -27,13 +27,13 @@ export default function SelectionTooltip({ selectionRect, onCreateFlashcard }: S
           e.preventDefault()
           onCreateFlashcard()
         }}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-600 hover:bg-purple-700 text-white text-xs font-medium rounded-lg shadow-lg transition-colors duration-150 whitespace-nowrap"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ff9898] hover:bg-[#ff8585] text-white text-xs font-medium rounded-lg shadow-lg transition-colors duration-150 whitespace-nowrap"
       >
         <BookmarkPlus className="w-3.5 h-3.5" />
         {SELECTION_TOOLTIP_TEXT.createFlashcard}
       </button>
       {/* Caret */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-purple-600" />
+      <div className="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-[#ff9898]" />
     </div>
   )
 }

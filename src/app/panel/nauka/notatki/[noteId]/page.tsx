@@ -24,19 +24,19 @@ async function NoteData({ noteId, userId }: { noteId: string; userId: string }) 
     }
 
     return (
-        <>
-            <BackToNotesLink />
-            <NoteMetadataCard
-                title={note.title}
-                category={note.category}
-                tags={note.tags}
-                pinned={note.pinned}
-                createdAt={note.createdAt}
-                updatedAt={note.updatedAt}
-            />
+        <div className="flex flex-col lg:grid lg:grid-cols-[260px_1fr] lg:gap-8 lg:items-start gap-4">
+            <aside className="lg:sticky lg:top-6">
+                <NoteMetadataCard
+                    title={note.title}
+                    category={note.category}
+                    tags={note.tags}
+                    pinned={note.pinned}
+                    createdAt={note.createdAt}
+                    updatedAt={note.updatedAt}
+                />
+            </aside>
             <NotePageContent note={note} />
-            <div className="h-8"></div>
-        </>
+        </div>
     )
 }
 
@@ -50,8 +50,11 @@ export default async function NotePage({ params }: Props) {
     const { noteId } = await params
 
     return (
-        <section className="relative min-h-screen p-3 sm:p-6 md:p-8 overflow-hidden bg-linear-to-br from-rose-50/30 via-white/60 to-fuchsia-100/40">
-            <div className="relative max-w-5xl mx-auto">
+        <section className="relative min-h-screen overflow-hidden bg-linear-to-br from-rose-50/30 via-white/60 to-fuchsia-100/40">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 md:px-8 pt-4 sm:pt-6">
+                <BackToNotesLink />
+            </div>
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 md:px-8 pb-12">
                 <Suspense fallback={<NotePageSkeleton />}>
                     <NoteData noteId={noteId} userId={userId} />
                 </Suspense>
