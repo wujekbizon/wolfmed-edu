@@ -1,4 +1,4 @@
-import { useShallow } from 'zustand/react/shallow'
+import { useMemo } from 'react'
 import { useFlashcardStore } from "@/store/useFlashcardStore"
 
 export type FlashcardData = {
@@ -8,18 +8,20 @@ export type FlashcardData = {
 }
 
 export function useFlashcards(noteId: string) {
-  const flashcards = useFlashcardStore(
-    useShallow((state) =>
-      state.flashcards
+  const allFlashcards = useFlashcardStore((state) => state.flashcards)
+  const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
+
+  const flashcards = useMemo(
+    () =>
+      allFlashcards
         .filter((card) => card.noteId === noteId)
         .map((card) => ({
           cardId: card.id,
           questionText: card.questionText,
           answerText: card.answerText,
-        }))
-    )
+        })),
+    [allFlashcards, noteId]
   )
-  const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
 
   return { flashcards, removeFlashcard }
 }
