@@ -14,7 +14,9 @@ import FlashcardPlugin from './editor/plugins/FlashcardPlugin'
 import FlashcardReviewModal from './FlashcardReviewModal'
 import CommentModal from './CommentModal'
 import FlashcardCreateModal from './FlashcardCreateModal'
+import SelectionTooltip from './SelectionTooltip'
 import { useFlashcards } from '@/hooks/useFlashcards'
+import { useTextSelection } from '@/hooks/useTextSelection'
 import { LexicalEditor, $getSelection, $isRangeSelection } from 'lexical'
 import type { SerializedEditorState } from 'lexical'
 
@@ -31,11 +33,12 @@ function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; 
     const [showFlashcardModal, setShowFlashcardModal] = useState(false)
     const [showReviewModal, setShowReviewModal] = useState(false)
     const [isStudyMode, setIsStudyMode] = useState(false)
+    const [flashcardFromTooltip, setFlashcardFromTooltip] = useState(false)
     const [selectedText, setSelectedText] = useState('')
-    const { flashcards, refreshFlashcards } = useFlashcards(noteId)
+    const { flashcards } = useFlashcards(noteId)
+    const { selectedText: tooltipText, selectionRect, clearSelection } = useTextSelection(isStudyMode)
 
     const handleFlashcardClick = () => {
-        // Get selected text from editor
         editor.read(() => {
             const selection = $getSelection()
             if ($isRangeSelection(selection)) {
@@ -45,7 +48,21 @@ function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; 
                 setSelectedText('')
             }
         })
+        setFlashcardFromTooltip(false)
         setShowFlashcardModal(true)
+    }
+
+    const handleTooltipFlashcardClick = () => {
+        setSelectedText(tooltipText)
+        setFlashcardFromTooltip(true)
+        clearSelection()
+        setShowFlashcardModal(true)
+    }
+
+    const handleFlashcardModalClose = () => {
+        setShowFlashcardModal(false)
+        setSelectedText('')
+        setFlashcardFromTooltip(false)
     }
 
     return (
@@ -78,16 +95,20 @@ function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; 
                     <FlashcardPlugin />
                 </div>
             </div>
+            {isStudyMode && selectionRect && tooltipText && !showFlashcardModal && (
+                <SelectionTooltip
+                    selectionRect={selectionRect}
+                    onCreateFlashcard={handleTooltipFlashcardClick}
+                />
+            )}
             {showCommentModal && <CommentModal onClose={() => setShowCommentModal(false)} />}
             {showFlashcardModal && (
                 <FlashcardCreateModal
                     noteId={noteId}
                     selectedText={selectedText}
-                    onClose={() => {
-                        setShowFlashcardModal(false)
-                        setSelectedText('')
-                    }}
-                    onSuccess={refreshFlashcards}
+                    selectedAsAnswer={flashcardFromTooltip}
+                    onClose={handleFlashcardModalClose}
+                    onSuccess={() => {}}
                 />
             )}
             {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}

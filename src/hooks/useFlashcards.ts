@@ -1,5 +1,4 @@
-import { Flashcard, useFlashcardStore } from "@/store/useFlashcardStore"
-
+import { useFlashcardStore } from "@/store/useFlashcardStore"
 
 export type FlashcardData = {
   cardId: string
@@ -8,18 +7,16 @@ export type FlashcardData = {
 }
 
 export function useFlashcards(noteId: string) {
-  const getFlashcardsByNoteId = useFlashcardStore((state) => state.getFlashcardsByNoteId)
+  const flashcards = useFlashcardStore((state) =>
+    state.flashcards
+      .filter((card) => card.noteId === noteId)
+      .map((card) => ({
+        cardId: card.id,
+        questionText: card.questionText,
+        answerText: card.answerText,
+      }))
+  )
   const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
 
-  const flashcards: FlashcardData[] = getFlashcardsByNoteId(noteId).map((card: Flashcard) => ({
-    cardId: card.id,
-    questionText: card.questionText,
-    answerText: card.answerText,
-  }))
-
-  const refreshFlashcards = () => {
-    // No-op since Zustand auto-updates
-  }
-
-  return { flashcards, refreshFlashcards, removeFlashcard }
+  return { flashcards, removeFlashcard }
 }
