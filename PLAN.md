@@ -1,144 +1,138 @@
-# Flashcard Improvements Plan
+# Generate Lecture from Plan — Implementation Plan
 
-## Current State Summary
+## Goal
 
-**Flow:** User enters Study Mode → selects text → clicks "Fiszka" in toolbar → modal opens with selected text pre-filling the **question** field → user types answer → submits → flashcard saved to Zustand (localStorage).
-
-**Key files:**
-- `src/store/useFlashcardStore.ts` — Zustand store with localStorage persistence
-- `src/hooks/useFlashcards.ts` — hook to retrieve flashcards for a note
-- `src/components/StudyViewer.tsx` — main note viewer with study features
-- `src/components/StudyToolbar.tsx` — toolbar with flashcard buttons
-- `src/components/FlashcardCreateModal.tsx` — creation modal
-- `src/components/FlashcardReviewModal.tsx` — review/study modal
-- `src/constants/studyViewer.ts` — Polish UI text constants
+Enable the "Generuj wykład" button in `PlanCell` to generate a structured lecture (as a `note` cell) based on the plan's topic and content, using the existing RAG/AI + SSE progress infrastructure.
 
 ---
 
-## Bug Fix: Flashcards don't appear without page refresh
+## Current State
 
-**Root cause:** `src/hooks/useFlashcards.ts` line 11
-
-```typescript
-const getFlashcardsByNoteId = useFlashcardStore((state) => state.getFlashcardsByNoteId)
-```
-
-This subscribes to the `getFlashcardsByNoteId` **function reference**, which never changes. The component never re-renders when flashcards are added/removed because Zustand only triggers re-renders when the selected slice of state changes.
-
-**Fix:** Subscribe to `state.flashcards` directly and derive the filtered list:
-
-```typescript
-// src/hooks/useFlashcards.ts
-export function useFlashcards(noteId: string) {
-  const flashcards = useFlashcardStore((state) =>
-    state.flashcards
-      .filter((card) => card.noteId === noteId)
-      .map((card) => ({
-        cardId: card.id,
-        questionText: card.questionText,
-        answerText: card.answerText,
-      }))
-  )
-  const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
-
-  return { flashcards, removeFlashcard }
-}
-```
-
-This makes the component react to any change in the `flashcards` array. The `refreshFlashcards` no-op can be removed — all consumers just use `flashcards` directly (it's already auto-reactive).
-
-**Files to change:** `src/hooks/useFlashcards.ts`, remove `refreshFlashcards` usage from `StudyViewer.tsx`
+- `PlanCell.tsx` has a disabled "Generuj wykład" button with a "Wkrótce dostępne" tooltip
+- Existing infrastructure: `useRagProgress` hook, `RagProgressIndicator` component, `askRagQuestion` action, `executeToolWithContent`, `useProgressStore`, SSE route `/api/rag/progress`
+- `CellTypes = "note" | "rag" | "draw" | "test" | "flashcard" | "plan"` — no new type needed; lecture outputs as `'note'`
+- `useCellsStore.insertCellAfterWithContent` inserts a new cell after the current one
 
 ---
 
-## Feature: Text Selection → Flashcard (Floating Tooltip)
+## UX Behavior
 
-### Problem
-Currently the user must: select text → find and click toolbar button → modal opens → edit fields → submit. The toolbar button is disconnected from where the selection happens, and the selected text goes into the **question** field, which is backwards for study (the note content is the *answer* you want to recall).
+- User clicks "Generuj wykład" → button disables, progress indicator appears inside the cell
+- **No info toast on start** — progress bar is the visual feedback
+- Generation runs on the server; if user navigates away, SSE disconnects but server completes — **normal behavior, no special handling**
+- On complete: `toast.success("Wykład gotowy!")` + new note cell inserted after the plan cell
+- On error: `toast.error(message)`
 
-### Solution: Floating Selection Tooltip
+---
 
-When the user selects text in study mode, a small floating tooltip appears near the selection with a quick "Create Flashcard" option. The selected text pre-fills the **answer** field (since it's note content the user wants to memorize), and the user only needs to type the question.
+## Files to Change / Create
 
-### Implementation Steps
+### 1. `templates/lecture-template.json` ← NEW
 
-#### Step 1: Create `useTextSelection` hook
-**File:** `src/hooks/useTextSelection.ts` (new)
+Prompt template for lecture generation. Instructs the AI to produce a rich Markdown lecture in Polish based on the plan's topic and step structure. Similar pattern to `plan-template.json` (systemPrompt + userPrompt).
 
-Custom hook that:
-- Listens to Lexical editor selection changes (using `editor.registerUpdateListener`)
-- When a range selection exists in study mode, captures:
-  - `selectedText` (string)
-  - `selectionRect` (DOMRect for positioning the tooltip)
-- Clears state when selection is collapsed or lost
-- Returns `{ selectedText, selectionRect, clearSelection }`
+### 2. `src/server/tools/executor.ts`
 
-#### Step 2: Create `SelectionTooltip` component
-**File:** `src/components/SelectionTooltip.tsx` (new)
+- Add `let lectureTemplate` cache variable
+- Add `getLectureTemplate()` loader
+- Add `wykladTool(args)` function — calls Gemini with the template, returns `{ cellType: 'note', content: markdownLecture }`
+- Add `case 'wyklad_tool':` to `executeToolLocally` switch
 
-Small floating tooltip component that:
-- Receives `selectionRect` and positions itself above/below the selection
-- Shows a `BookmarkPlus` icon + "Utwórz fiszkę" button
-- On click, calls `onCreateFlashcard(selectedText)` callback
-- Uses `position: fixed` + calculated coords from `selectionRect`
-- Smooth fade-in animation
-- Dismisses when clicking outside or when selection changes
+### 3. `src/server/tools/definitions.ts`
 
-#### Step 3: Update `FlashcardCreateModal`
-**File:** `src/components/FlashcardCreateModal.tsx`
-
-- Add a new optional prop: `selectedAsAnswer?: boolean`
-- When `selectedAsAnswer` is true AND `selectedText` is provided → pre-fill the **answer** field instead of question
-- When coming from the floating tooltip → `selectedAsAnswer=true` (text is answer, user types question)
-- When coming from the toolbar "Fiszka" button → keep current behavior (text is question) for backwards compatibility
-- The answer field becomes a `textarea` (already is) and the question `input` gets autofocus when answer is pre-filled
-
-#### Step 4: Wire it up in `StudyViewerContent`
-**File:** `src/components/StudyViewer.tsx`
-
-- Import and use `useTextSelection` hook
-- Render `SelectionTooltip` when `isStudyMode && selectedText`
-- On tooltip click → open `FlashcardCreateModal` with `selectedAsAnswer={true}`
-- Keep the existing toolbar "Fiszka" button flow as-is (backwards compatible)
-
-#### Step 5: Add new constants
-**File:** `src/constants/studyViewer.ts`
-
-Add tooltip text:
-```typescript
-export const SELECTION_TOOLTIP_TEXT = {
-  createFlashcard: 'Utwórz fiszkę',
+Add `wyklad_tool` entry to `TOOL_DEFINITIONS`:
+```ts
+{
+  name: 'wyklad_tool',
+  description: 'Generate a structured lecture in Polish based on provided plan/content. Returns markdown formatted lecture as a note cell.',
+  parameters: {
+    type: 'object',
+    properties: {
+      content: { type: 'string', description: 'Plan JSON or topic content to base the lecture on' }
+    },
+    required: ['content']
+  }
 }
 ```
 
-### Data Flow (New)
+### 4. `src/actions/rag-actions.ts`
 
-```
-User selects text in editor (study mode ON)
-         ↓
-useTextSelection hook detects range selection
-         ↓
-SelectionTooltip appears near selection
-         ↓
-User clicks "Utwórz fiszkę"
-         ↓
-FlashcardCreateModal opens with selectedText as ANSWER
-         ↓
-User types the QUESTION (autofocused)
-         ↓
-Submit → useFlashcardStore.addFlashcard()
-         ↓
-Component re-renders instantly (bug fix) — count updates in toolbar
+Add `'wyklad'` to `toolMap` inside `askRagQuestion`:
+```ts
+'wyklad': TOOL_DEFINITIONS.find(t => t.name === 'wyklad_tool'),
 ```
 
-### Data Flow (Existing — unchanged)
+Add a dedicated `generateLectureAction(planContent: string, jobId: string): Promise<FormState>` server action that:
+- Creates job, checks auth + premium
+- Runs progress steps (searching knowledge base → generating → finalizing)
+- Calls `executeToolWithContent('wyklad_tool', planContent, wykladToolDef, [])`
+- Returns `toFormState('SUCCESS', lectureMarkdown)` with `values.cellType = 'note'`
+
+### 5. `src/constants/progress.ts`
+
+Add `'wyklad_tool'` / `'wyklad'` entries to `TOOL_LABELS_ACCUSATIVE` and `TOOL_LABELS_GENITIVE`.
+
+### 6. `src/components/cells/PlanCell.tsx`
+
+Major update — enable the button with full generation flow:
+
+```tsx
+'use client'
+
+import { useState, useTransition } from 'react'
+import { toast } from 'sonner'
+import { useRagProgress } from '@/hooks/useRagProgress'
+import { useCellsStore } from '@/store/useCellsStore'
+import { generateLectureAction } from '@/actions/rag-actions'
+import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
+// ... existing imports
+```
+
+State:
+- `const [isPending, startTransition] = useTransition()`
+- `const { jobId, stage, progress, message, tool, userLogs, technicalLogs, error: progressError, startListening, reset } = useRagProgress()`
+- `const { insertCellAfterWithContent } = useCellsStore()`
+
+Handler:
+```tsx
+const handleGenerate = () => {
+  startListening()
+  startTransition(async () => {
+    const result = await generateLectureAction(cell.content, jobId)
+    reset()
+    if (result.status === 'SUCCESS' && result.message) {
+      insertCellAfterWithContent(cell.id, 'note', result.message)
+      toast.success('Wykład gotowy!')
+    } else {
+      toast.error(result.message || 'Nie udało się wygenerować wykładu.')
+    }
+  })
+}
+```
+
+Button: replace `disabled` static button with active button (`onClick={handleGenerate}`, `disabled={isPending}`).
+
+Progress indicator: render `RagProgressIndicator` below the button when `isPending`.
+
+---
+
+## Data Flow
 
 ```
-User clicks "Fiszka" button in toolbar
+User clicks "Generuj wykład" (PlanCell)
          ↓
-Any selected text captured → fills QUESTION field
+startListening() — SSE connects to /api/rag/progress?jobId=...
          ↓
-User types answer → submits
+generateLectureAction(planContent, jobId) — server action starts
+         ↓
+Progress events stream via SSE → RagProgressIndicator updates in cell
+         ↓
+AI generates lecture markdown (Gemini via wyklad_tool)
+         ↓
+Action returns SUCCESS with lecture markdown
+         ↓
+insertCellAfterWithContent(cell.id, 'note', lectureMarkdown)
+toast.success("Wykład gotowy!")
 ```
 
 ---
@@ -147,14 +141,12 @@ User types answer → submits
 
 | # | Type | File | Change |
 |---|------|------|--------|
-| 1 | Bug fix | `src/hooks/useFlashcards.ts` | Fix Zustand selector to subscribe to `state.flashcards` |
-| 2 | Cleanup | `src/components/StudyViewer.tsx` | Remove `refreshFlashcards` usage (no longer needed) |
-| 3 | New | `src/hooks/useTextSelection.ts` | Hook for Lexical text selection tracking |
-| 4 | New | `src/components/SelectionTooltip.tsx` | Floating tooltip near selected text |
-| 5 | Update | `src/components/FlashcardCreateModal.tsx` | Support `selectedAsAnswer` prop |
-| 6 | Update | `src/components/StudyViewer.tsx` | Integrate tooltip + new modal flow |
-| 7 | Update | `src/constants/studyViewer.ts` | Add tooltip text constants |
+| 1 | New | `templates/lecture-template.json` | AI prompt template for lecture generation |
+| 2 | Update | `src/server/tools/executor.ts` | Add `wykladTool()` + switch case |
+| 3 | Update | `src/server/tools/definitions.ts` | Add `wyklad_tool` definition |
+| 4 | Update | `src/actions/rag-actions.ts` | Add `generateLectureAction` + `'wyklad'` to toolMap |
+| 5 | Update | `src/constants/progress.ts` | Add `wyklad` labels |
+| 6 | Update | `src/components/cells/PlanCell.tsx` | Enable button, add progress + generation logic |
 
-**No changes to:** Zustand store, FlashcardReviewModal, StudyToolbar, FlashcardPlugin, FlashcardNode, server actions, DB schema.
-
-**Reusing existing:** `useFlashcardStore`, `FlashcardCreateModal`, `FLASHCARD_MODAL_TEXT`, Lexical editor APIs (`$getSelection`, `$isRangeSelection`).
+**No new cell type** — lecture outputs as `'note'`.
+**Reusing:** `useRagProgress`, `RagProgressIndicator`, `useCellsStore`, SSE infrastructure, `executeToolWithContent`, progress store.
