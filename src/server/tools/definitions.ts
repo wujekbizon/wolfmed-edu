@@ -97,5 +97,23 @@ export const TOOL_DEFINITIONS = [
       },
       required: ['content']
     }
+  },
+  {
+    name: 'planuj_tool',
+    description: 'Generate a structured JSON learning plan for a medical topic. Returns a step-by-step plan with goals, prerequisites, steps (what/why/concepts/time), and exam relevance.',
+    parameters: {
+      type: 'object',
+      properties: {
+        content: {
+          type: 'string',
+          description: 'Topic or content to create a learning plan for'
+        },
+        focus: {
+          type: 'string',
+          description: 'Optional: specific aspect to emphasize'
+        }
+      },
+      required: ['content']
+    }
   }
 ] as const

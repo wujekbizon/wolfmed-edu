@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { GoogleGenAI } from '@google/genai'
 
 export interface ToolResult {
-  cellType?: 'note' | 'test' | 'draw' | 'flashcard';
+  cellType?: 'note' | 'test' | 'draw' | 'flashcard' | 'plan';
   content: string;
   metadata?: Record<string, any>;
 }
@@ -35,11 +35,17 @@ interface FlashcardTemplate {
   example: Array<{ questionText: string; answerText: string }>;
 }
 
+interface PlanTemplate {
+  systemPrompt: string;
+  userPrompt: string;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
 let mermaidTemplate: MermaidTemplate | null = null
 let flashcardTemplate: FlashcardTemplate | null = null
+let planTemplate: PlanTemplate | null = null
 
 function getGoogleAI() {
   const apiKey = process.env.GOOGLE_API_KEY
@@ -90,6 +96,13 @@ async function getFlashcardTemplate(): Promise<FlashcardTemplate> {
   return flashcardTemplate
 }
 
+async function getPlanTemplate(): Promise<PlanTemplate> {
+  if (!planTemplate) {
+    planTemplate = await loadTemplate<PlanTemplate>('plan-template.json')
+  }
+  return planTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -115,6 +128,9 @@ export async function executeToolLocally(
 
     case 'fiszka_tool':
       return await fiszkaTool(args);
+
+    case 'planuj_tool':
+      return await planujTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -373,4 +389,45 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
       generated: new Date().toISOString(),
     }
   };
+}
+
+async function planujTool(args: any): Promise<ToolResult> {
+  const { content = '', focus = '' } = args
+
+  const template = await getPlanTemplate()
+  const ai = getGoogleAI()
+
+  const userMessage = template.userPrompt
+    .replace('{{topic}}', `${content}${focus ? ` — szczególny nacisk na: ${focus}` : ''}`)
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: userMessage,
+    config: {
+      systemInstruction: template.systemPrompt,
+      temperature: 0.4,
+      responseMimeType: 'application/json'
+    }
+  })
+
+  const rawJson = response.text || '{}'
+
+  let plan: Record<string, unknown>
+  try {
+    plan = JSON.parse(rawJson)
+  } catch {
+    throw new Error('Plan generation failed: invalid JSON returned')
+  }
+
+  return {
+    cellType: 'plan',
+    content: JSON.stringify(plan),
+    metadata: {
+      type: 'learning-plan',
+      topic: content,
+      stepCount: Array.isArray(plan.steps) ? plan.steps.length : 0,
+      estimatedMinutes: typeof plan.estimatedTotalMinutes === 'number' ? plan.estimatedTotalMinutes : null,
+      generated: new Date().toISOString()
+    }
+  }
 }
