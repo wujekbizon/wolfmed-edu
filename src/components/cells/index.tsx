@@ -37,5 +37,22 @@ const DynamicRagCell = dynamic(() => import('./RagCell'), {
   ssr: false,
 })
 
+const DynamicTestCell = dynamic(() => import('./TestCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
-export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell }
+const DynamicFlashcardCell = dynamic(() => import('./FlashcardCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
+
+export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell }

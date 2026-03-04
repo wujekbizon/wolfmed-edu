@@ -13,6 +13,8 @@ import { getCurrentUser } from '@/server/user'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { checkCourseAccessAction, checkPremiumAccessAction } from '@/actions/course-actions'
 import { hasAccessToTier } from '@/helpers/accessTiers'
+import { getUserCustomCategories } from '@/server/queries'
+import type { PopulatedCategories } from '@/types/categoryType'
 
 export const dynamic = 'force-dynamic'
 
@@ -57,9 +59,20 @@ export default async function NaukaPage() {
 
   const accessibleCategories = categoriesWithAccess.filter(cat => cat.hasAccess)
 
+  let customCards: PopulatedCategories[] = []
+  if (isPremium) {
+    const userCategories = await getUserCustomCategories(user.userId)
+    customCards = userCategories.map((cat) => ({
+      category: cat.categoryName,
+      value: `moje-testy__${cat.id}`,
+      count: cat.questionIds.length,
+      hasAccess: true,
+    }))
+  }
+
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubDashboard materials={materials} categories={accessibleCategories} notes={userAllNotes} isPremium={isPremium} />
+      <LearningHubDashboard materials={materials} categories={[...accessibleCategories, ...customCards]} notes={userAllNotes} isPremium={isPremium} />
       <PdfPreviewModal />
       <VideoPreviewModal />
       <TextPreviewModal />

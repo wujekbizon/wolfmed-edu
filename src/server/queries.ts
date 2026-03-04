@@ -107,6 +107,16 @@ export const getUserCustomTests = cache(async (userId: string) => {
 })
 
 /**
+ * Fetch user custom tests by a list of IDs (used by custom category test sessions)
+ */
+export const getUserCustomTestsByIds = cache(async (ids: string[]) => {
+  if (!ids.length) return []
+  return db.query.userCustomTests.findMany({
+    where: (t) => inArray(t.id, ids),
+  })
+})
+
+/**
  * Fetch single user test with ownership verification
  */
 export const getUserCustomTestById = cache(
@@ -153,6 +163,21 @@ export const getUserCustomCategoryById = cache(
     })
   }
 )
+
+/**
+ * Get single category by name with ownership verification
+ */
+export const getUserCustomCategoryByName = async (
+  userId: string,
+  categoryName: string
+) => {
+  return await db.query.userCustomCategories.findFirst({
+    where: and(
+      eq(userCustomCategories.userId, userId),
+      eq(userCustomCategories.categoryName, categoryName)
+    ),
+  })
+}
 
 /**
  * Delete category with ownership verification

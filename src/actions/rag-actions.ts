@@ -266,7 +266,8 @@ export async function askRagQuestion(
         'notatka': TOOL_DEFINITIONS.find(t => t.name === 'notatka_tool'),
         'utworz': TOOL_DEFINITIONS.find(t => t.name === 'utworz_test'),
         'podsumuj': TOOL_DEFINITIONS.find(t => t.name === 'podsumuj'),
-        'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool')
+        'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool'),
+        'fiszka': TOOL_DEFINITIONS.find(t => t.name === 'fiszka_tool'),
       }
 
       if (!toolName || !toolMap[toolName]) {

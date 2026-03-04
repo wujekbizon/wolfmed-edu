@@ -1,5 +1,5 @@
 import AllTests from '@/components/AllTests'
-import { getTestsByCategory } from '@/server/queries'
+import { getTestsByCategory, getUserCustomCategoryById, getUserCustomTestsByIds } from '@/server/queries'
 import { getCurrentUser } from '@/server/user';
 import { Test } from '@/types/dataTypes';
 import { Metadata } from 'next'
@@ -33,7 +33,17 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     const user = await getCurrentUser()
     if (!user) redirect('/sign-in')
 
-    const tests = await getTestsByCategory(decodedCategory) as Test[]
+    const CUSTOM_PREFIX = 'moje-testy__'
+    let tests: Test[]
+
+    if (decodedCategory.startsWith(CUSTOM_PREFIX)) {
+      const catId = decodedCategory.slice(CUSTOM_PREFIX.length)
+      const cat = await getUserCustomCategoryById(user.userId, catId)
+      if (!cat) redirect('/panel/nauka')
+      tests = (await getUserCustomTestsByIds(cat.questionIds)) as Test[]
+    } else {
+      tests = await getTestsByCategory(decodedCategory) as Test[]
+    }
 
     return (
         <section className='flex w-full flex-col items-center gap-8 p-4 lg:p-16'>

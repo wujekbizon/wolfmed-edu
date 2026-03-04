@@ -56,7 +56,9 @@ import {
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
-  deleteUserCustomCategory
+  getUserCustomCategoryByName,
+  deleteUserCustomCategory,
+  getUserCustomTestById
 } from "@/server/queries"
 import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -743,6 +745,27 @@ export async function createTestimonialAction(
   return toFormState("SUCCESS", "Opinia została dodana pomyślnie!")
 }
 
+async function upsertCustomCategory(
+  userId: string,
+  categoryName: string,
+  questionIds: string[]
+) {
+  const existing = await getUserCustomCategoryByName(userId, categoryName)
+
+  if (existing) {
+    const currentIds = existing.questionIds as string[]
+    const newIds = questionIds.filter((id) => !currentIds.includes(id))
+    if (newIds.length > 0) {
+      await db
+        .update(userCustomCategories)
+        .set({ questionIds: [...currentIds, ...newIds] })
+        .where(eq(userCustomCategories.id, existing.id))
+    }
+  } else {
+    await db.insert(userCustomCategories).values({ userId, categoryName, questionIds })
+  }
+}
+
 // Function to create a single test object
 export async function createTestAction(
   formState: FormState,
@@ -787,14 +810,20 @@ export async function createTestAction(
       answers
     }
 
-    await db.insert(userCustomTests).values({
-      userId: user.userId,
-      meta: {
-        category: category.toLowerCase(),
-        course: "kategoria-wlasna"
-      },
-      data,
-    })
+    const [inserted] = await db
+      .insert(userCustomTests)
+      .values({
+        userId: user.userId,
+        meta: {
+          category: category.toLowerCase(),
+          course: "kategoria-wlasna"
+        },
+        data,
+      })
+      .returning({ id: userCustomTests.id })
+
+    if (!inserted) throw new Error('Nie udało się zapisać testu')
+    await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id])
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -812,6 +841,10 @@ export async function uploadTestsFromFile(
 ) {
   const user = await getCurrentUser()
   if (!user) throw new Error("Unauthorized")
+
+  const { sessionClaims } = await auth()
+  const userRole = (sessionClaims?.metadata as { role?: string })?.role
+  if (userRole !== 'admin') return toFormState("ERROR", "Brak uprawnień.")
 
   const { enrollments } = await getUserEnrollmentsAction()
   if (enrollments.length === 0) {
@@ -872,16 +905,33 @@ export async function uploadTestsFromFile(
       )
     }
 
-    await db.transaction(async (tx) => {
-      const insertPromises = validatedData.map((testData) =>
-        tx.insert(userCustomTests).values({
-          userId: user.userId,
-          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
-          data: testData.data,
-        })
+    const insertedTests = await db.transaction(async (tx) => {
+      const results = await Promise.all(
+        validatedData.map((testData) =>
+          tx
+            .insert(userCustomTests)
+            .values({
+              userId: user.userId,
+              meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+              data: testData.data,
+            })
+            .returning({ id: userCustomTests.id, meta: userCustomTests.meta })
+        )
       )
-      await Promise.all(insertPromises)
+      return results.flat()
     })
+
+    const byCategory = new Map<string, string[]>()
+    for (const row of insertedTests) {
+      const cat = (row.meta as { category: string }).category
+      if (!byCategory.has(cat)) byCategory.set(cat, [])
+      byCategory.get(cat)!.push(row.id)
+    }
+    await Promise.all(
+      Array.from(byCategory.entries()).map(([cat, ids]) =>
+        upsertCustomCategory(user.userId, cat, ids)
+      )
+    )
   } catch (error) {
     if (error instanceof SyntaxError) {
       console.error("Error parsing JSON:", error.message)
@@ -898,6 +948,83 @@ export async function uploadTestsFromFile(
   revalidatePath("/panel/testy")
 
   return toFormState("SUCCESS", "Testy zostały pomyślnie dodane")
+}
+
+export async function saveAIGeneratedTestsAction(
+  formState: FormState,
+  formData: FormData
+) {
+  const user = await getCurrentUser()
+  if (!user) throw new Error("Unauthorized")
+
+  const { enrollments } = await getUserEnrollmentsAction()
+  if (enrollments.length === 0) {
+    return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
+  }
+
+  // Rate limiting: reuse test:create limiter (5 per hour)
+  const rateLimit = await checkRateLimit(user.userId, "test:create")
+  if (!rateLimit.success) {
+    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+    return toFormState("ERROR", `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`)
+  }
+
+  try {
+    const questionsJson = formData.get("questionsJson") as string
+    if (!questionsJson) return toFormState("ERROR", "Brak danych pytań.")
+
+    const parsed = JSON.parse(questionsJson)
+    const validationResult = await TestFileSchema.safeParseAsync(parsed)
+
+    if (!validationResult.success) {
+      console.error("saveAIGeneratedTestsAction validation errors:", validationResult.error.issues)
+      return toFormState("ERROR", "Nieprawidłowy format danych. Sprawdź wygenerowane pytania.")
+    }
+
+    const validatedData = validationResult.data
+
+    if (validatedData.length > 50) {
+      return toFormState("ERROR", "Maksymalnie 50 pytań na jedno wywołanie /utworz.")
+    }
+
+    const insertedTests = await db.transaction(async (tx) => {
+      const results = await Promise.all(
+        validatedData.map((testData) =>
+          tx
+            .insert(userCustomTests)
+            .values({
+              userId: user.userId,
+              meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+              data: testData.data,
+            })
+            .returning({ id: userCustomTests.id, meta: userCustomTests.meta })
+        )
+      )
+      return results.flat()
+    })
+
+    const byCategory = new Map<string, string[]>()
+    for (const row of insertedTests) {
+      const cat = (row.meta as { category: string }).category
+      if (!byCategory.has(cat)) byCategory.set(cat, [])
+      byCategory.get(cat)!.push(row.id)
+    }
+    await Promise.all(
+      Array.from(byCategory.entries()).map(([cat, ids]) =>
+        upsertCustomCategory(user.userId, cat, ids)
+      )
+    )
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      return toFormState("ERROR", "Nieprawidłowy format JSON.")
+    }
+    return fromErrorToFormState(error)
+  }
+
+  revalidatePath("/panel/dodaj-test")
+  revalidatePath("/panel/testy")
+
+  return toFormState("SUCCESS", "Pytania zostały zapisane pomyślnie")
 }
 
 export async function expireSessionAction(sessionId: string) {
@@ -937,10 +1064,26 @@ export async function deleteUserCustomTestAction(
   }
 
   try {
-    const result = await deleteUserCustomTest(userId, testId)
+    const test = await getUserCustomTestById(userId, testId)
+    if (!test) return toFormState("ERROR", "Test nie został znaleziony")
 
+    const result = await deleteUserCustomTest(userId, testId)
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Test nie został znaleziony")
+    }
+
+    const categoryName = (test.meta as { category: string }).category
+    const cat = await getUserCustomCategoryByName(userId, categoryName)
+
+    if (cat) {
+      const remaining = (cat.questionIds as string[]).filter((id) => id !== testId)
+      if (remaining.length === 0) {
+        await deleteUserCustomCategory(userId, cat.id)
+      } else {
+        await db.update(userCustomCategories)
+          .set({ questionIds: remaining })
+          .where(eq(userCustomCategories.id, cat.id))
+      }
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -948,6 +1091,7 @@ export async function deleteUserCustomTestAction(
 
   revalidatePath("/panel/dodaj-test")
   revalidatePath("/panel/testy")
+  revalidatePath("/panel/nauka")
 
   return toFormState("SUCCESS", "Test został usunięty pomyślnie")
 }
@@ -985,6 +1129,11 @@ export async function deleteUserCustomTestsByCategoryAction(
 
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
+    }
+
+    const cat = await getUserCustomCategoryByName(userId, validationResult.data.meta.category)
+    if (cat) {
+      await deleteUserCustomCategory(userId, cat.id)
     }
   } catch (error) {
     return fromErrorToFormState(error)

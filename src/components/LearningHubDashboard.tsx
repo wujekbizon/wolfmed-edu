@@ -2,6 +2,7 @@ import CategoryGrid from "./CategoryGrid";
 import NotesSection from "./NotesSection";
 import CellList from "./cells/CellList";
 import MaterialsSection from "./MaterialsSection";
+import FlashcardsSection from "./FlashcardsSection";
 import type { PopulatedCategories } from "@/types/categoryType";
 import type { NotesType } from "@/types/notesTypes";
 import type { MaterialsType } from "@/types/materialsTypes";
@@ -31,6 +32,7 @@ export default function LearningHubDashboard({
       </div>
       <CellList isPremium={isPremium} />
       <NotesSection notes={notes} />
+      <FlashcardsSection notes={notes.map((n) => ({ id: n.id, title: n.title }))} />
       <MaterialsSection materials={materials} isSupporter={isPremium} />
     </div>
   );
