@@ -455,8 +455,8 @@ export async function generateLectureAction(
       'TTS', `Converting script (${script.length} chars) to audio`
     )
 
-    const apiKey = process.env.GOOGLE_API_KEY
-    if (!apiKey) throw new Error('GOOGLE_API_KEY is not configured')
+    const apiKey = process.env.GOOGLE_TTS_API_KEY
+    if (!apiKey) throw new Error('GOOGLE_TTS_API_KEY is not configured')
 
     const ttsResponse = await fetch(
       `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
