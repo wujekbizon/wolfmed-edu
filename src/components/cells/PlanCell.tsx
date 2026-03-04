@@ -1,8 +1,13 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { showToast } from '@/hooks/useToastMessage'
 import { Clock, BookOpen, ChevronDown, ChevronUp, Target, CheckCircle2, Mic } from 'lucide-react'
 import type { Cell } from '@/types/cellTypes'
+import { useRagProgress } from '@/hooks/useRagProgress'
+import { useCellsStore } from '@/store/useCellsStore'
+import { generateLectureAction } from '@/actions/rag-actions'
+import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
 
 interface LearningStep {
   number: number
@@ -25,6 +30,21 @@ interface LearningPlan {
 
 export default function PlanCell({ cell }: { cell: Cell }) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]))
+  const [isPending, startTransition] = useTransition()
+
+  const { insertCellAfterWithContent } = useCellsStore()
+  const {
+    jobId,
+    stage,
+    progress,
+    message: progressMessage,
+    tool,
+    userLogs,
+    technicalLogs,
+    error: progressError,
+    startListening,
+    reset: resetProgress,
+  } = useRagProgress()
 
   let plan: LearningPlan | null = null
   try {
@@ -44,6 +64,20 @@ export default function PlanCell({ cell }: { cell: Cell }) {
         next.add(index)
       }
       return next
+    })
+  }
+
+  const handleGenerate = () => {
+    startListening()
+    startTransition(async () => {
+      const result = await generateLectureAction(cell.content, jobId)
+      resetProgress()
+      if (result.status === 'SUCCESS' && result.message) {
+        insertCellAfterWithContent(cell.id, 'note', result.message)
+        showToast('SUCCESS', 'Wykład gotowy!')
+      } else {
+        showToast('ERROR', result.message || 'Nie udało się wygenerować wykładu.')
+      }
     })
   }
 
@@ -167,21 +201,28 @@ export default function PlanCell({ cell }: { cell: Cell }) {
           </div>
         )}
 
-        <div className="pt-1">
-          <div className="relative inline-block group">
-            <button
-              type="button"
-              disabled
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-zinc-200 to-zinc-300 text-zinc-400 text-sm rounded-lg cursor-not-allowed"
-            >
-              <Mic className="w-4 h-4" />
-              Generuj wykład
-            </button>
-            <div className="absolute bottom-full left-0 mb-2 px-2.5 py-1.5 bg-zinc-800 text-white text-xs rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              Wkrótce dostępne
-              <div className="absolute top-full left-4 border-4 border-transparent border-t-zinc-800" />
-            </div>
-          </div>
+        <div className="pt-1 space-y-3">
+          <button
+            type="button"
+            onClick={handleGenerate}
+            disabled={isPending}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Mic className="w-4 h-4" />
+            {isPending ? 'Generowanie...' : 'Generuj wykład'}
+          </button>
+
+          {isPending && (
+            <RagProgressIndicator
+              stage={stage}
+              progress={progress}
+              message={progressMessage}
+              tool={tool}
+              userLogs={userLogs}
+              technicalLogs={technicalLogs}
+              error={progressError}
+            />
+          )}
         </div>
       </div>
     </div>

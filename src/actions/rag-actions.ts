@@ -7,6 +7,7 @@ import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
+import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
@@ -269,6 +270,7 @@ export async function askRagQuestion(
         'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool'),
         'fiszka': TOOL_DEFINITIONS.find(t => t.name === 'fiszka_tool'),
         'planuj': TOOL_DEFINITIONS.find(t => t.name === 'planuj_tool'),
+        'wyklad': TOOL_DEFINITIONS.find(t => t.name === 'wyklad_tool'),
       }
 
       if (!toolName || !toolMap[toolName]) {
@@ -388,6 +390,76 @@ export async function askRagQuestion(
       const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
       await errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
     }
+    return fromErrorToFormState(error)
+  }
+}
+
+export async function generateLectureAction(
+  planContent: string,
+  jobId: string
+): Promise<FormState> {
+  await createJob(jobId)
+
+  try {
+    const { userId } = await auth()
+    if (!userId) throw new Error('Unauthorized')
+
+    const isPremium = await checkPremiumAccessAction()
+    if (!isPremium) {
+      await errorJob(jobId, 'Premium access required')
+      return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
+    }
+
+    const rateLimit = await checkRateLimit(userId, 'rag:query')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      await errorJob(jobId, 'Rate limit exceeded')
+      return toFormState('ERROR', `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`)
+    }
+
+    await progressStep(
+      jobId, 'searching', 30,
+      'Przeszukuję bazę wiedzy...',
+      'RAG', 'Querying knowledge base for lecture content'
+    )
+
+    let topic = 'temat'
+    try {
+      const plan = JSON.parse(planContent)
+      topic = plan.topic || topic
+    } catch { /* use default */ }
+
+    const ragResult = await queryFileSearchOnly(topic)
+    let enrichedContent = planContent
+    if (ragResult.answer) {
+      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${ragResult.answer}`
+      await progressStep(
+        jobId, 'searching', 55,
+        `Znaleziono materiały na temat: ${topic}`,
+        'RAG', `Found ${ragResult.answer.length} chars of additional context`
+      )
+    }
+
+    await progressStep(
+      jobId, 'executing', 70,
+      'Generuję wykład z AI...',
+      'LLM', 'Sending request to Gemini (wyklad_tool)'
+    )
+
+    const toolResult = await executeToolLocally('wyklad_tool', { content: enrichedContent })
+
+    await progressStep(
+      jobId, 'finalizing', 95,
+      'Wykład gotowy!',
+      'LLM', 'Lecture generation complete'
+    )
+    await completeJob(jobId)
+
+    return toFormState('SUCCESS', toolResult.content)
+  } catch (error) {
+    console.error('Error generating lecture:', error)
+    const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
+    await errorJob(jobId, 'Nie udało się wygenerować wykładu.', technicalMsg)
     return fromErrorToFormState(error)
   }
 }

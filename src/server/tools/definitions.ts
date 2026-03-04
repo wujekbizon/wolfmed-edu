@@ -115,5 +115,19 @@ export const TOOL_DEFINITIONS = [
       },
       required: ['content']
     }
+  },
+  {
+    name: 'wyklad_tool',
+    description: 'Generate a structured medical lecture in Polish as Markdown based on a learning plan. Returns a comprehensive note cell with detailed explanations, clinical relevance, and key concepts for each step of the plan.',
+    parameters: {
+      type: 'object',
+      properties: {
+        content: {
+          type: 'string',
+          description: 'Learning plan JSON or topic content to base the lecture on'
+        }
+      },
+      required: ['content']
+    }
   }
 ] as const
