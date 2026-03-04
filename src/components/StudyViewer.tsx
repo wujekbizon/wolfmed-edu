@@ -1,23 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
-import { ContentEditable } from '@lexical/react/LexicalContentEditable'
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { viewerConfig } from './editor/viewerConfig'
-import StudyToolbar from './StudyToolbar'
-import HighlightPlugin from './editor/plugins/HighlightPlugin'
-import CommentPlugin from './editor/plugins/CommentPlugin'
-import FlashcardPlugin from './editor/plugins/FlashcardPlugin'
-import FlashcardReviewModal from './FlashcardReviewModal'
-import CommentModal from './CommentModal'
-import FlashcardCreateModal from './FlashcardCreateModal'
-import SelectionTooltip from './SelectionTooltip'
-import { useFlashcards } from '@/hooks/useFlashcards'
-import { useTextSelection } from '@/hooks/useTextSelection'
-import { LexicalEditor, $getSelection, $isRangeSelection } from 'lexical'
+import { StudyViewerContent } from './StudyViewerContent'
+import { LexicalEditor } from 'lexical'
 import type { SerializedEditorState } from 'lexical'
 
 interface StudyViewerProps {
@@ -27,98 +13,10 @@ interface StudyViewerProps {
     onEditClick: () => void
 }
 
-function StudyViewerContent({ noteId, content, onEditClick }: { noteId: string; content: unknown; onEditClick: () => void }) {
-    const [editor] = useLexicalComposerContext()
-    const [showCommentModal, setShowCommentModal] = useState(false)
-    const [showFlashcardModal, setShowFlashcardModal] = useState(false)
-    const [showReviewModal, setShowReviewModal] = useState(false)
-    const [isStudyMode, setIsStudyMode] = useState(false)
-    const [flashcardFromTooltip, setFlashcardFromTooltip] = useState(false)
-    const [selectedText, setSelectedText] = useState('')
-    const { flashcards } = useFlashcards(noteId)
-    const { selectedText: tooltipText, selectionRect, clearSelection } = useTextSelection(isStudyMode)
-
-    const handleFlashcardClick = () => {
-        editor.read(() => {
-            const selection = $getSelection()
-            if ($isRangeSelection(selection)) {
-                const text = selection.getTextContent()
-                setSelectedText(text)
-            } else {
-                setSelectedText('')
-            }
-        })
-        setFlashcardFromTooltip(false)
-        setShowFlashcardModal(true)
-    }
-
-    const handleTooltipFlashcardClick = () => {
-        setSelectedText(tooltipText)
-        setFlashcardFromTooltip(true)
-        clearSelection()
-        setShowFlashcardModal(true)
-    }
-
-    const handleFlashcardModalClose = () => {
-        setShowFlashcardModal(false)
-        setSelectedText('')
-        setFlashcardFromTooltip(false)
-    }
-
-    return (
-        <>
-            <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden animate-fadeInUp opacity-0" style={{ '--slidein-delay': '0.1s' } as React.CSSProperties}>
-                <StudyToolbar
-                    noteId={noteId}
-                    content={content}
-                    onEditClick={onEditClick}
-                    onCommentClick={() => setShowCommentModal(true)}
-                    onFlashcardClick={handleFlashcardClick}
-                    onReviewClick={() => setShowReviewModal(true)}
-                    flashcardsCount={flashcards.length}
-                    isStudyMode={isStudyMode}
-                    onToggleStudyMode={() => setIsStudyMode(!isStudyMode)}
-                />
-                <div className="p-6 sm:p-8 md:p-10 selection:bg-[#ff9898]/20 selection:text-zinc-900">
-                    <RichTextPlugin
-                        contentEditable={
-                            <ContentEditable
-                                className="outline-none text-zinc-700 min-h-[200px] focus:ring-0 leading-relaxed"
-                                aria-label="Podgląd notatki w trybie nauki"
-                            />
-                        }
-                        placeholder={null}
-                        ErrorBoundary={LexicalErrorBoundary}
-                    />
-                    <HighlightPlugin />
-                    <CommentPlugin />
-                    <FlashcardPlugin />
-                </div>
-            </div>
-            {isStudyMode && selectionRect && tooltipText && !showFlashcardModal && (
-                <SelectionTooltip
-                    selectionRect={selectionRect}
-                    onCreateFlashcard={handleTooltipFlashcardClick}
-                />
-            )}
-            {showCommentModal && <CommentModal onClose={() => setShowCommentModal(false)} />}
-            {showFlashcardModal && (
-                <FlashcardCreateModal
-                    noteId={noteId}
-                    selectedText={selectedText}
-                    selectedAsAnswer={flashcardFromTooltip}
-                    onClose={handleFlashcardModalClose}
-                    onSuccess={() => {}}
-                />
-            )}
-            {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}
-        </>
-    )
-}
-
 export default function StudyViewer({ noteId, content, plainTextFallback, onEditClick }: StudyViewerProps) {
     let parsedContent: SerializedEditorState | null = null
     let hasError = false
+
     if (typeof content === 'string') {
         try {
             parsedContent = JSON.parse(content)
@@ -126,10 +24,11 @@ export default function StudyViewer({ noteId, content, plainTextFallback, onEdit
             hasError = true
         }
     } else if (typeof content === 'object' && content !== null) {
-        parsedContent = content as SerializedEditorState;
+        parsedContent = content as SerializedEditorState
     } else {
         hasError = true
     }
+
     if (hasError && plainTextFallback) {
         return (
             <div className="bg-white rounded-xl shadow-lg border border-zinc-200 overflow-hidden">
@@ -162,13 +61,10 @@ export default function StudyViewer({ noteId, content, plainTextFallback, onEdit
         ...viewerConfig,
         editorState: (editor: LexicalEditor) => {
             if (!parsedContent) return
-
             const serialized = typeof parsedContent === 'string'
                 ? parsedContent
                 : JSON.stringify(parsedContent)
-
-            const initialState = editor.parseEditorState(serialized)
-            editor.setEditorState(initialState)
+            editor.setEditorState(editor.parseEditorState(serialized))
         },
     }
 
