@@ -1,3 +1,4 @@
+import { useShallow } from 'zustand/react/shallow'
 import { useFlashcardStore } from "@/store/useFlashcardStore"
 
 export type FlashcardData = {
@@ -7,14 +8,16 @@ export type FlashcardData = {
 }
 
 export function useFlashcards(noteId: string) {
-  const flashcards = useFlashcardStore((state) =>
-    state.flashcards
-      .filter((card) => card.noteId === noteId)
-      .map((card) => ({
-        cardId: card.id,
-        questionText: card.questionText,
-        answerText: card.answerText,
-      }))
+  const flashcards = useFlashcardStore(
+    useShallow((state) =>
+      state.flashcards
+        .filter((card) => card.noteId === noteId)
+        .map((card) => ({
+          cardId: card.id,
+          questionText: card.questionText,
+          answerText: card.answerText,
+        }))
+    )
   )
   const removeFlashcard = useFlashcardStore((state) => state.removeFlashcard)
 
