@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef } from 'react'
 import { showToast } from '@/hooks/useToastMessage'
-import { Clock, BookOpen, ChevronDown, ChevronUp, Target, CheckCircle2, Mic } from 'lucide-react'
+import { Clock, BookOpen, ChevronDown, ChevronUp, Target, CheckCircle2, Mic, Play, Pause, RotateCcw } from 'lucide-react'
 import type { Cell } from '@/types/cellTypes'
 import { useRagProgress } from '@/hooks/useRagProgress'
-import { useCellsStore } from '@/store/useCellsStore'
 import { generateLectureAction } from '@/actions/rag-actions'
 import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
 
@@ -31,8 +30,10 @@ interface LearningPlan {
 export default function PlanCell({ cell }: { cell: Cell }) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]))
   const [isPending, startTransition] = useTransition()
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  const { insertCellAfterWithContent } = useCellsStore()
   const {
     jobId,
     stage,
@@ -68,17 +69,43 @@ export default function PlanCell({ cell }: { cell: Cell }) {
   }
 
   const handleGenerate = () => {
+    setAudioUrl(null)
     startListening()
     startTransition(async () => {
       const result = await generateLectureAction(cell.content, jobId)
       resetProgress()
-      if (result.status === 'SUCCESS' && result.message) {
-        insertCellAfterWithContent(cell.id, 'note', result.message)
+      if (result.status === 'SUCCESS' && result.values?.audioBase64) {
+        const base64 = result.values.audioBase64 as string
+        const binary = atob(base64)
+        const bytes = new Uint8Array(binary.length)
+        for (let i = 0; i < binary.length; i++) {
+          bytes[i] = binary.charCodeAt(i)
+        }
+        const blob = new Blob([bytes], { type: 'audio/mp3' })
+        const url = URL.createObjectURL(blob)
+        setAudioUrl(url)
         showToast('SUCCESS', 'Wykład gotowy!')
       } else {
         showToast('ERROR', result.message || 'Nie udało się wygenerować wykładu.')
       }
     })
+  }
+
+  const togglePlay = () => {
+    if (!audioRef.current) return
+    if (isPlaying) {
+      audioRef.current.pause()
+    } else {
+      audioRef.current.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
+  const handleRestart = () => {
+    if (!audioRef.current) return
+    audioRef.current.currentTime = 0
+    audioRef.current.play()
+    setIsPlaying(true)
   }
 
   const hours = Math.floor(plan.estimatedTotalMinutes / 60)
@@ -222,6 +249,45 @@ export default function PlanCell({ cell }: { cell: Cell }) {
               technicalLogs={technicalLogs}
               error={progressError}
             />
+          )}
+
+          {audioUrl && !isPending && (
+            <div className="flex items-center gap-3 bg-white border border-zinc-200 rounded-xl px-4 py-3">
+              <div className="p-2 bg-gradient-to-br from-[#ff9898] to-fuchsia-400 rounded-lg shrink-0">
+                <Mic className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-zinc-500 mb-1">Wykład audio</p>
+                <audio
+                  ref={audioRef}
+                  src={audioUrl}
+                  onEnded={() => setIsPlaying(false)}
+                  className="hidden"
+                />
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={togglePlay}
+                    className="flex items-center gap-1.5 text-sm font-medium text-zinc-700 hover:text-zinc-900 transition-colors"
+                  >
+                    {isPlaying
+                      ? <Pause className="w-4 h-4 text-[#e07070]" />
+                      : <Play className="w-4 h-4 text-[#e07070]" />
+                    }
+                    {isPlaying ? 'Pauza' : 'Odtwórz'}
+                  </button>
+                  <span className="text-zinc-300">·</span>
+                  <button
+                    type="button"
+                    onClick={handleRestart}
+                    className="flex items-center gap-1 text-xs text-zinc-400 hover:text-zinc-600 transition-colors"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    Od początku
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

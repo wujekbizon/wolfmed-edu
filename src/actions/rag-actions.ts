@@ -442,20 +442,54 @@ export async function generateLectureAction(
 
     await progressStep(
       jobId, 'executing', 70,
-      'Generuję wykład z AI...',
-      'LLM', 'Sending request to Gemini (wyklad_tool)'
+      'Generuję skrypt wykładu...',
+      'LLM', 'Generating spoken lecture script with Gemini'
     )
 
     const toolResult = await executeToolLocally('wyklad_tool', { content: enrichedContent })
+    const script = toolResult.content
+
+    await progressStep(
+      jobId, 'finalizing', 85,
+      'Syntezuję głos...',
+      'TTS', `Converting script (${script.length} chars) to audio`
+    )
+
+    const apiKey = process.env.GOOGLE_API_KEY
+    if (!apiKey) throw new Error('GOOGLE_API_KEY is not configured')
+
+    const ttsResponse = await fetch(
+      `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: { text: script },
+          voice: { languageCode: 'pl-PL', name: 'pl-PL-Wavenet-A' },
+          audioConfig: { audioEncoding: 'MP3' },
+        }),
+      }
+    )
+
+    if (!ttsResponse.ok) {
+      const err = await ttsResponse.text()
+      throw new Error(`Google TTS error: ${ttsResponse.status} ${err}`)
+    }
+
+    const ttsData = await ttsResponse.json() as { audioContent: string }
+    const audioBase64 = ttsData.audioContent
 
     await progressStep(
       jobId, 'finalizing', 95,
       'Wykład gotowy!',
-      'LLM', 'Lecture generation complete'
+      'TTS', 'Audio synthesis complete'
     )
     await completeJob(jobId)
 
-    return toFormState('SUCCESS', toolResult.content)
+    return {
+      ...toFormState('SUCCESS', 'Wykład gotowy!'),
+      values: { audioBase64 },
+    }
   } catch (error) {
     console.error('Error generating lecture:', error)
     const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
