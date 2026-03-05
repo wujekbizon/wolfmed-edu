@@ -8,6 +8,7 @@ import { sql, eq } from 'drizzle-orm'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
+import { revalidatePath } from 'next/cache'
 import {
   insertLecture,
   deleteLectureById,
@@ -96,6 +97,7 @@ export async function deleteLectureAction(lectureId: string): Promise<FormState>
     const utapi = new UTApi()
     await utapi.deleteFiles([deleted.audioKey])
 
+    revalidatePath('/panel/nauka')
     return toFormState('SUCCESS', 'Wykład usunięty.')
   } catch (error) {
     return fromErrorToFormState(error)

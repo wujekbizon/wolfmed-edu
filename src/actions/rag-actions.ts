@@ -19,6 +19,7 @@ import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
 import { saveLectureInternal } from '@/actions/lectures'
 import { getLectureByHash } from '@/server/queries'
+import { revalidatePath } from 'next/cache'
 
 async function progressStep(
   jobId: string | null,
@@ -430,6 +431,7 @@ export async function generateLectureAction(
     const existing = await getLectureByHash(userId, contentHash)
     if (existing) {
       await completeJob(jobId)
+      revalidatePath('/panel/nauka')
       return {
         ...toFormState('SUCCESS', 'Wykład gotowy!'),
         values: {
@@ -537,6 +539,7 @@ export async function generateLectureAction(
       'UPLOAD', `Lecture saved with id: ${lecture.id}`
     )
     await completeJob(jobId)
+    revalidatePath('/panel/nauka')
 
     return {
       ...toFormState('SUCCESS', 'Wykład gotowy!'),
