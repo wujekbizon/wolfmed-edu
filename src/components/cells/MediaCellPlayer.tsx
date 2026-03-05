@@ -1,9 +1,9 @@
 "use client"
 
-import AudioPlayer from './media/AudioPlayer'
-import VideoStub from './media/VideoStub'
+import VideoStub from './VideoStub'
 import type { Cell } from '@/types/cellTypes'
-import type { MediaCellContent } from './media/types'
+import type { MediaCellContent } from './types'
+import AudioPlayer from './AudioPlayer'
 
 export default function MediaCellPlayer({ cell }: { cell: Cell }) {
   let media: MediaCellContent | null = null
