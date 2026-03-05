@@ -12,6 +12,7 @@ import {
   insertLecture,
   deleteLectureById,
   updateLectureDuration,
+  getUserStorageUsage,
 } from '@/server/queries'
 import type { Lecture } from '@/server/db/schema'
 
@@ -26,6 +27,14 @@ interface SaveLectureInput {
 export async function saveLectureInternal(input: SaveLectureInput): Promise<Lecture> {
   const { userId, title, contentHash, audioBuffer, scriptText } = input
 
+  const audioSize = audioBuffer.length
+
+  // Check limit before uploading anything
+  const { storageUsed, storageLimit } = await getUserStorageUsage(userId)
+  if (storageUsed + audioSize > storageLimit) {
+    throw new Error('Przekroczono limit miejsca. Usuń niektóre pliki aby zwolnić miejsce.')
+  }
+
   const utapi = new UTApi()
   const audioFile = new File([new Uint8Array(audioBuffer)], `lecture-${Date.now()}.mp3`, { type: 'audio/mpeg' })
   const [uploadResult] = await utapi.uploadFiles([audioFile])
@@ -34,35 +43,38 @@ export async function saveLectureInternal(input: SaveLectureInput): Promise<Lect
     throw new Error('Failed to upload lecture audio to storage')
   }
 
-  const audioSize = audioBuffer.length
+  try {
+    const lecture = await db.transaction(async (tx) => {
+      const existingLimit = await tx
+        .select()
+        .from(userLimits)
+        .where(eq(userLimits.userId, userId))
+        .limit(1)
 
-  const lecture = await db.transaction(async (tx) => {
-    const existingLimit = await tx
-      .select()
-      .from(userLimits)
-      .where(eq(userLimits.userId, userId))
-      .limit(1)
+      if (existingLimit.length === 0) {
+        await tx.insert(userLimits).values({ userId, storageUsed: 0 })
+      }
 
-    if (existingLimit.length === 0) {
-      await tx.insert(userLimits).values({ userId, storageUsed: 0 })
-    }
+      await tx
+        .update(userLimits)
+        .set({ storageUsed: sql`${userLimits.storageUsed} + ${audioSize}` })
+        .where(eq(userLimits.userId, userId))
 
-    await tx
-      .update(userLimits)
-      .set({ storageUsed: sql`${userLimits.storageUsed} + ${audioSize}` })
-      .where(eq(userLimits.userId, userId))
-
-    return insertLecture({
-      userId,
-      title,
-      contentHash,
-      audioKey: uploadResult.data!.key,
-      audioUrl: uploadResult.data!.ufsUrl,
-      scriptText,
+      return insertLecture({
+        userId,
+        title,
+        contentHash,
+        audioKey: uploadResult.data!.key,
+        audioUrl: uploadResult.data!.ufsUrl,
+        scriptText,
+      })
     })
-  })
 
-  return lecture
+    return lecture
+  } catch (error) {
+    await utapi.deleteFiles([uploadResult.data.key])
+    throw error
+  }
 }
 
 export async function deleteLectureAction(lectureId: string): Promise<FormState> {

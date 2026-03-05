@@ -106,6 +106,7 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       }
     }
 
+    try {
     await db.transaction(async (tx) => {
       // Ensure userLimits exists
       const existingLimit = await tx
@@ -156,6 +157,10 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         .where(eq(userLimits.userId, userId));
     });
 
+    } catch (error: any) {
+      await utapi.deleteFiles([key]);
+      return toFormState("ERROR", error.message);
+    }
   } catch (error: any) {
     return toFormState("ERROR", error.message);
   }

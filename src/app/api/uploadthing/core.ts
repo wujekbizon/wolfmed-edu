@@ -1,6 +1,7 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 import { auth } from "@clerk/nextjs/server";
+import { getUserStorageUsage } from "@/server/queries";
 
 const f = createUploadthing();
 
@@ -14,6 +15,12 @@ export const ourFileRouter = {
       const { userId } = await auth();
 
       if (!userId) throw new UploadThingError("Unauthorized");
+
+      const { storageUsed, storageLimit } = await getUserStorageUsage(userId);
+      if (storageUsed >= storageLimit) {
+        throw new UploadThingError("Przekroczono limit miejsca. Usuń niektóre pliki aby zwolnić miejsce.");
+      }
+
       return { userId };
     })
     .onUploadError(({ error, fileKey }) => {
