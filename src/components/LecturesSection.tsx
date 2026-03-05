@@ -1,16 +1,11 @@
 'use client'
 
-import { useTransition } from 'react'
-import Link from 'next/link'
-import { Headphones, Trash2, Clock, Calendar, BookOpen } from 'lucide-react'
+import { useState, useTransition } from 'react'
+import { Headphones, Trash2, Clock, Calendar } from 'lucide-react'
 import { showToast } from '@/hooks/useToastMessage'
 import { deleteLectureAction } from '@/actions/lectures'
 import { formatTime } from '@/helpers/formatDate'
 import type { Lecture } from '@/server/db/schema'
-
-interface LectureLibraryProps {
-  lectures: Lecture[]
-}
 
 function LectureCard({ lecture }: { lecture: Lecture }) {
   const [isDeleting, startTransition] = useTransition()
@@ -25,7 +20,7 @@ function LectureCard({ lecture }: { lecture: Lecture }) {
   }
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5 flex flex-col gap-3 hover:border-zinc-300 transition-colors">
+    <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5 flex flex-col gap-3 hover:border-zinc-300 transition-colors">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="p-2 bg-gradient-to-br from-[#ff9898]/20 to-fuchsia-100 rounded-lg shrink-0">
@@ -73,37 +68,56 @@ function LectureCard({ lecture }: { lecture: Lecture }) {
   )
 }
 
-export default function LectureLibrary({ lectures }: LectureLibraryProps) {
-  return (
-    <div className="w-full space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-zinc-800 mb-2">Wykłady</h1>
-        <p className="text-zinc-600">Twoje wygenerowane wykłady audio</p>
-      </div>
+export default function LecturesSection({ lectures }: { lectures: Lecture[] }) {
+  const [filter, setFilter] = useState<'recent' | 'all'>('recent')
 
-      {lectures.length === 0 ? (
-        <div className="bg-white border border-zinc-200 rounded-2xl p-12 text-center">
-          <div className="inline-flex p-4 bg-zinc-100 rounded-full mb-4">
-            <BookOpen className="w-8 h-8 text-zinc-400" />
-          </div>
-          <h3 className="text-lg font-semibold text-zinc-700 mb-2">Brak wykładów</h3>
-          <p className="text-sm text-zinc-500 mb-6">
-            Wygeneruj wykład ze swojego planu nauki, a znajdziesz go tutaj.
-          </p>
-          <Link
-            href="/panel/nauka/wyklady"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity"
+  const filteredLectures =
+    filter === 'recent'
+      ? [...lectures]
+          .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+          .slice(0, 6)
+      : lectures
+
+  return (
+    <section className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-zinc-800">Moje Wykłady</h2>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setFilter('recent')}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              filter === 'recent'
+                ? 'bg-slate-700 text-white'
+                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
+            }`}
           >
-            Przejdź do planów nauki
-          </Link>
+            Ostatnio dodane
+          </button>
+          <button
+            onClick={() => setFilter('all')}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              filter === 'all'
+                ? 'bg-slate-500 text-white'
+                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
+            }`}
+          >
+            Wszystkie wykłady
+          </button>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {lectures.map(lecture => (
+      </div>
+      {filteredLectures.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredLectures.map((lecture) => (
             <LectureCard key={lecture.id} lecture={lecture} />
           ))}
         </div>
+      ) : (
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4 text-zinc-300">🎧</div>
+          <h3 className="text-xl text-zinc-500 mb-2 font-medium">Brak wykładów</h3>
+          <p className="text-zinc-400">Wygeneruj swój pierwszy wykład audio!</p>
+        </div>
       )}
-    </div>
+    </section>
   )
 }
