@@ -5,7 +5,6 @@ import MediaHeader from './MediaHeader'
 import Waveform from './Waveform'
 import BumpedSeekBar from './BumpedSeekBar'
 import PlayerControls from './PlayerControls'
-import TranscriptPanel from './TranscriptPanel'
 import VolumeSlider from './VolumeSlider'
 import type { MediaCellContent } from '@/types/cellTypes'
 import type { SpeedOption } from '@/constants/mediaPlayer'
@@ -58,12 +57,7 @@ export default function AudioPlayer({
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
     if (!audio) return
-    if (isPlaying) {
-      audio.pause()
-    } else {
-      setEnded(false)
-      audio.play()
-    }
+    if (isPlaying) { audio.pause() } else { setEnded(false); audio.play() }
     setIsPlaying(p => !p)
   }, [isPlaying])
 
@@ -75,6 +69,18 @@ export default function AudioPlayer({
     audio.play()
     setIsPlaying(true)
   }, [])
+
+  const handleSkipBack = useCallback(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.currentTime = Math.max(0, audio.currentTime - 15)
+  }, [])
+
+  const handleSkipForward = useCallback(() => {
+    const audio = audioRef.current
+    if (!audio) return
+    audio.currentTime = Math.min(duration, audio.currentTime + 15)
+  }, [duration])
 
   const handleSeek = useCallback((pct: number) => {
     const audio = audioRef.current
@@ -93,7 +99,7 @@ export default function AudioPlayer({
   }, [])
 
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex flex-row">
       <div className="flex flex-col flex-1 min-w-0">
         <MediaHeader
           title={media.title}
@@ -119,9 +125,10 @@ export default function AudioPlayer({
           speed={speed}
           onTogglePlay={togglePlay}
           onRestart={handleRestart}
+          onSkipBack={handleSkipBack}
+          onSkipForward={handleSkipForward}
           onSpeedChange={handleSpeed}
         />
-        {media.transcript && <TranscriptPanel transcript={media.transcript} />}
       </div>
       <VolumeSlider volume={volume} onChange={handleVolume} />
       <audio ref={audioRef} src={media.url} preload="metadata" className="hidden" />

@@ -1,6 +1,6 @@
 "use client"
 
-import { Play, Pause, RotateCcw } from 'lucide-react'
+import { Play, Pause, SkipBack, SkipForward, RotateCcw } from 'lucide-react'
 import { SPEED_OPTIONS, type SpeedOption } from '@/constants/mediaPlayer'
 
 interface PlayerControlsProps {
@@ -9,6 +9,8 @@ interface PlayerControlsProps {
   speed: SpeedOption
   onTogglePlay: () => void
   onRestart: () => void
+  onSkipBack: () => void
+  onSkipForward: () => void
   onSpeedChange: (s: SpeedOption) => void
   disabled?: boolean
 }
@@ -19,37 +21,44 @@ export default function PlayerControls({
   speed,
   onTogglePlay,
   onRestart,
+  onSkipBack,
+  onSkipForward,
   onSpeedChange,
   disabled = false,
 }: PlayerControlsProps) {
+  const iconBtn = 'p-2 rounded-full text-zinc-500 hover:text-zinc-800 hover:bg-black/5 transition-colors'
+
   return (
-    <div className={['px-5 py-4 flex items-center gap-3 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
-      <button
-        type="button"
-        onClick={onRestart}
-        title="Od początku"
-        className="p-2 rounded-full text-white/40 hover:text-white/80 hover:bg-white/10 transition-colors"
-      >
+    <div className={['px-5 py-3 flex items-center gap-2 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
+      {/* Restart */}
+      <button type="button" onClick={onRestart} title="Od początku" className={iconBtn}>
         <RotateCcw className="w-4 h-4" />
       </button>
 
+      {/* Skip -15s */}
+      <button type="button" onClick={onSkipBack} title="-15s" className={iconBtn}>
+        <SkipBack className="w-4 h-4" />
+      </button>
+
+      {/* Play / Pause — circle */}
       <button
         type="button"
         onClick={onTogglePlay}
-        className={[
-          'flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-full transition-opacity',
-          disabled
-            ? 'bg-white/10 text-white/40'
-            : 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white hover:opacity-90',
-        ].join(' ')}
+        className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ff9898] to-fuchsia-400 flex items-center justify-center shadow-md hover:opacity-90 transition-opacity mx-1"
       >
         {isPlaying
-          ? <><Pause className="w-4 h-4" /> Pauza</>
-          : <><Play className="w-4 h-4" /> {ended ? 'Od początku' : 'Odtwórz'}</>
+          ? <Pause className="w-5 h-5 text-white" />
+          : <Play className="w-5 h-5 text-white ml-0.5" />
         }
       </button>
 
-      <div className="flex items-center gap-1">
+      {/* Skip +15s */}
+      <button type="button" onClick={onSkipForward} title="+15s" className={iconBtn}>
+        <SkipForward className="w-4 h-4" />
+      </button>
+
+      {/* Speed pills */}
+      <div className="flex items-center gap-1 ml-auto">
         {SPEED_OPTIONS.map(s => (
           <button
             key={s}
@@ -59,7 +68,7 @@ export default function PlayerControls({
               'px-2 py-0.5 rounded-full text-xs font-medium transition-colors',
               speed === s
                 ? 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white'
-                : 'bg-white/10 text-white/50 hover:bg-white/20',
+                : 'bg-black/5 text-zinc-500 hover:bg-black/10',
             ].join(' ')}
           >
             {s}x

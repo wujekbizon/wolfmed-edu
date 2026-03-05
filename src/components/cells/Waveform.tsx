@@ -9,20 +9,20 @@ interface WaveformProps {
 }
 
 export default function Waveform({ seed, playedPct, isPlaying }: WaveformProps) {
-  const bars = seededBars(seed)
+  const bars = seededBars(seed, 50)
   const playedBars = Math.round((playedPct / 100) * bars.length)
 
   return (
-    <div className="flex items-center gap-[3px] h-14 px-5 pt-4 shrink-0" aria-hidden="true">
+    <div className="flex items-center justify-between h-10 px-5 pt-3 shrink-0" aria-hidden="true">
       {bars.map((h, i) => (
         <div
           key={i}
           style={{ height: `${h}%` }}
           className={[
-            'flex-1 rounded-sm transition-opacity duration-150',
+            'w-px rounded-full transition-opacity duration-150',
             i < playedBars
-              ? ['bg-white', isPlaying ? 'opacity-90' : 'opacity-75'].join(' ')
-              : 'bg-white/20',
+              ? ['bg-[#ff9898]', isPlaying ? 'opacity-100' : 'opacity-80'].join(' ')
+              : 'bg-zinc-300',
           ].join(' ')}
         />
       ))}

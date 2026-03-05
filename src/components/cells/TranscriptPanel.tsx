@@ -11,29 +11,29 @@ export default function TranscriptPanel({ transcript }: TranscriptPanelProps) {
   const [open, setOpen] = useState(false)
 
   return (
-    <>
+    <div className="bg-white/60 backdrop-blur-sm border border-white/70 rounded-xl overflow-hidden shadow-sm">
       <button
         type="button"
         onClick={() => setOpen(p => !p)}
-        className="w-full flex items-center justify-between px-5 py-3 border-t border-white/10 hover:bg-white/5 transition-colors shrink-0"
+        className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-black/5 transition-colors"
       >
-        <span className="flex items-center gap-2 text-xs font-medium text-white/50">
+        <span className="flex items-center gap-2 text-xs font-medium text-zinc-500">
           <FileText className="w-3.5 h-3.5" />
           Transkrypcja
         </span>
         {open
-          ? <ChevronUp className="w-4 h-4 text-white/30" />
-          : <ChevronDown className="w-4 h-4 text-white/30" />
+          ? <ChevronUp className="w-4 h-4 text-zinc-400" />
+          : <ChevronDown className="w-4 h-4 text-zinc-400" />
         }
       </button>
 
       {open && (
-        <div className="border-t border-white/10 bg-black/20 px-5 py-4 max-h-48 overflow-y-auto scrollbar-thin scrollbar-webkit">
-          <p className="text-sm text-white/70 leading-relaxed whitespace-pre-line">
+        <div className="border-t border-zinc-100 bg-white/40 px-4 py-3 max-h-48 overflow-y-auto scrollbar-thin scrollbar-webkit">
+          <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-line">
             {transcript}
           </p>
         </div>
       )}
-    </>
+    </div>
   )
 }

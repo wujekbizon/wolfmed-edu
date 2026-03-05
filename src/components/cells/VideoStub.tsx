@@ -27,6 +27,8 @@ export default function VideoStub({ title }: VideoStubProps) {
         speed={1}
         onTogglePlay={() => {}}
         onRestart={() => {}}
+        onSkipBack={() => {}}
+        onSkipForward={() => {}}
         onSpeedChange={() => {}}
         disabled
       />
