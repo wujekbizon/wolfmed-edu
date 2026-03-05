@@ -23,12 +23,12 @@ export default function PlayerControls({
   disabled = false,
 }: PlayerControlsProps) {
   return (
-    <div className={['px-5 pb-4 flex items-center gap-3 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
+    <div className={['px-5 py-4 flex items-center gap-3 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
       <button
         type="button"
         onClick={onRestart}
-        title="Od poczatku"
-        className="p-2 rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-colors"
+        title="Od początku"
+        className="p-2 rounded-full text-white/40 hover:text-white/80 hover:bg-white/10 transition-colors"
       >
         <RotateCcw className="w-4 h-4" />
       </button>
@@ -39,13 +39,13 @@ export default function PlayerControls({
         className={[
           'flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-full transition-opacity',
           disabled
-            ? 'bg-zinc-200 text-zinc-500'
+            ? 'bg-white/10 text-white/40'
             : 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white hover:opacity-90',
         ].join(' ')}
       >
         {isPlaying
           ? <><Pause className="w-4 h-4" /> Pauza</>
-          : <><Play className="w-4 h-4" /> {ended ? 'Od poczatku' : 'Odtwórz'}</>
+          : <><Play className="w-4 h-4" /> {ended ? 'Od początku' : 'Odtwórz'}</>
         }
       </button>
 
@@ -59,7 +59,7 @@ export default function PlayerControls({
               'px-2 py-0.5 rounded-full text-xs font-medium transition-colors',
               speed === s
                 ? 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white'
-                : 'bg-zinc-100 text-zinc-500 hover:bg-zinc-200',
+                : 'bg-white/10 text-white/50 hover:bg-white/20',
             ].join(' ')}
           >
             {s}x

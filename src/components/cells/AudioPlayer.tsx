@@ -3,8 +3,10 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import MediaHeader from './MediaHeader'
 import Waveform from './Waveform'
+import BumpedSeekBar from './BumpedSeekBar'
 import PlayerControls from './PlayerControls'
 import TranscriptPanel from './TranscriptPanel'
+import VolumeSlider from './VolumeSlider'
 import type { MediaCellContent } from '@/types/cellTypes'
 import type { SpeedOption } from '@/constants/mediaPlayer'
 
@@ -24,13 +26,13 @@ export default function AudioPlayer({
   onDurationLoaded,
 }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const trackRef = useRef<HTMLDivElement | null>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
   const [speed, setSpeed] = useState<SpeedOption>(1)
   const [ended, setEnded] = useState(false)
+  const [volume, setVolume] = useState(1)
 
   const playedPct = duration > 0 ? (currentTime / duration) * 100 : 0
 
@@ -74,12 +76,9 @@ export default function AudioPlayer({
     setIsPlaying(true)
   }, [])
 
-  const handleSeek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSeek = useCallback((pct: number) => {
     const audio = audioRef.current
-    const track = trackRef.current
-    if (!audio || !track || duration === 0) return
-    const rect = track.getBoundingClientRect()
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+    if (!audio || duration === 0) return
     audio.currentTime = pct * duration
   }, [duration])
 
@@ -88,34 +87,44 @@ export default function AudioPlayer({
     setSpeed(s)
   }, [])
 
+  const handleVolume = useCallback((v: number) => {
+    if (audioRef.current) audioRef.current.volume = v
+    setVolume(v)
+  }, [])
+
   return (
-    <>
-      <MediaHeader
-        title={media.title}
-        sourceType="audio"
-        duration={duration}
-        onDelete={onDelete}
-        isDeleting={isDeleting}
-      />
-      <Waveform
-        seed={media.lectureId ?? cellId}
-        playedPct={playedPct}
-        currentTime={currentTime}
-        duration={duration}
-        isPlaying={isPlaying}
-        onSeek={handleSeek}
-        seekTrackRef={trackRef}
-      />
-      <PlayerControls
-        isPlaying={isPlaying}
-        ended={ended}
-        speed={speed}
-        onTogglePlay={togglePlay}
-        onRestart={handleRestart}
-        onSpeedChange={handleSpeed}
-      />
-      {media.transcript && <TranscriptPanel transcript={media.transcript} />}
+    <div className="flex flex-row h-full">
+      <div className="flex flex-col flex-1 min-w-0">
+        <MediaHeader
+          title={media.title}
+          sourceType="audio"
+          duration={duration}
+          onDelete={onDelete}
+          isDeleting={isDeleting}
+        />
+        <Waveform
+          seed={media.lectureId ?? cellId}
+          playedPct={playedPct}
+          isPlaying={isPlaying}
+        />
+        <BumpedSeekBar
+          playedPct={playedPct}
+          currentTime={currentTime}
+          duration={duration}
+          onSeek={handleSeek}
+        />
+        <PlayerControls
+          isPlaying={isPlaying}
+          ended={ended}
+          speed={speed}
+          onTogglePlay={togglePlay}
+          onRestart={handleRestart}
+          onSpeedChange={handleSpeed}
+        />
+        {media.transcript && <TranscriptPanel transcript={media.transcript} />}
+      </div>
+      <VolumeSlider volume={volume} onChange={handleVolume} />
       <audio ref={audioRef} src={media.url} preload="metadata" className="hidden" />
-    </>
+    </div>
   )
 }
