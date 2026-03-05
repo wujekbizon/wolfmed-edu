@@ -22,3 +22,22 @@ export interface MediaCellContent {
   lectureId?: string
   transcript?: string
 }
+
+export interface LearningStep {
+  number: number
+  title: string
+  what: string
+  why: string
+  keyConcepts: string[]
+  estimatedMinutes: number
+}
+
+export interface LearningPlan {
+  topic: string
+  goal: string
+  prerequisites: string[]
+  estimatedTotalMinutes: number
+  steps: LearningStep[]
+  summary: string
+  examRelevance?: string
+}
