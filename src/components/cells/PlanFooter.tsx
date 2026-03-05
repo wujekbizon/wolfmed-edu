@@ -1,4 +1,4 @@
-import { Mic, FileText } from 'lucide-react'
+import { Mic, FileText, CheckCircle } from 'lucide-react'
 import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
 import type { ProgressStage, LogEntry } from '@/types/progressTypes'
 
@@ -6,6 +6,7 @@ interface PlanFooterProps {
   summary?: string
   examRelevance?: string | undefined
   isPending: boolean
+  lectureGenerated: boolean
   onGenerate: () => void
   onSaveScript?: (() => void) | undefined
   stage: ProgressStage
@@ -21,6 +22,7 @@ export default function PlanFooter({
   summary,
   examRelevance,
   isPending,
+  lectureGenerated,
   onGenerate,
   onSaveScript,
   stage,
@@ -52,11 +54,16 @@ export default function PlanFooter({
           <button
             type="button"
             onClick={onGenerate}
-            disabled={isPending}
+            disabled={isPending || lectureGenerated}
             className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            <Mic className="w-4 h-4" />
-            {isPending ? 'Generowanie...' : 'Generuj wykład'}
+            {lectureGenerated ? (
+              <><CheckCircle className="w-4 h-4" />Wykład wygenerowany</>
+            ) : isPending ? (
+              <><Mic className="w-4 h-4" />Generowanie...</>
+            ) : (
+              <><Mic className="w-4 h-4" />Generuj wykład</>
+            )}
           </button>
 
           {onSaveScript && (

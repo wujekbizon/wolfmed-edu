@@ -102,6 +102,7 @@ export default function AudioPlayer({
         playedPct={playedPct}
         currentTime={currentTime}
         duration={duration}
+        isPlaying={isPlaying}
         onSeek={handleSeek}
         seekTrackRef={trackRef}
       />

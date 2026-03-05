@@ -9,11 +9,12 @@ interface WaveformProps {
   playedPct: number
   currentTime: number
   duration: number
+  isPlaying: boolean
   onSeek: (e: React.MouseEvent<HTMLDivElement>) => void
   seekTrackRef: React.RefObject<HTMLDivElement | null>
 }
 
-export default function Waveform({ seed, playedPct, currentTime, duration, onSeek, seekTrackRef }: WaveformProps) {
+export default function Waveform({ seed, playedPct, currentTime, duration, isPlaying, onSeek, seekTrackRef }: WaveformProps) {
   const bars = seededBars(seed)
   const playedBars = Math.round((playedPct / 100) * bars.length)
 
@@ -26,9 +27,9 @@ export default function Waveform({ seed, playedPct, currentTime, duration, onSee
             key={i}
             style={{ height: `${h}%` }}
             className={[
-              'flex-1 rounded-full transition-opacity duration-150',
+              'flex-1 rounded-sm transition-opacity duration-150',
               i < playedBars
-                ? 'bg-gradient-to-t from-[#ff9898] to-fuchsia-400'
+                ? ['bg-gradient-to-t from-[#ff9898] to-fuchsia-400', isPlaying ? 'animate-pulse' : ''].join(' ')
                 : 'bg-zinc-200',
             ].join(' ')}
           />

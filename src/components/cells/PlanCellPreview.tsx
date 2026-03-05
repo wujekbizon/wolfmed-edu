@@ -115,6 +115,7 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
         summary={plan.summary}
         examRelevance={plan.examRelevance}
         isPending={isPending}
+        lectureGenerated={generatedLecture !== null}
         onGenerate={handleGenerate}
         onSaveScript={generatedLecture ? handleSaveScript : undefined}
         stage={stage}
