@@ -1,5 +1,7 @@
 'use server'
 
+import { UTApi } from 'uploadthing/server'
+
 import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
@@ -497,18 +499,36 @@ export async function generateLectureAction(
       audioBuffers.push(Buffer.from(ttsData.audioContent, 'base64'))
     }
 
-    const audioBase64 = Buffer.concat(audioBuffers).toString('base64')
+    const audioBuffer = Buffer.concat(audioBuffers)
+
+    await progressStep(
+      jobId, 'finalizing', 90,
+      'Zapisuję plik audio...',
+      'UPLOAD', `Uploading audio (${audioBuffer.length} bytes) to storage`
+    )
+
+    const utapi = new UTApi()
+    const audioFile = new File([audioBuffer], `lecture-${Date.now()}.mp3`, { type: 'audio/mpeg' })
+    const [uploadResult] = await utapi.uploadFiles([audioFile])
+
+    if (!uploadResult?.data?.ufsUrl) {
+      throw new Error('Failed to upload lecture audio')
+    }
 
     await progressStep(
       jobId, 'finalizing', 95,
       'Wykład gotowy!',
-      'TTS', 'Audio synthesis complete'
+      'UPLOAD', `Audio available at: ${uploadResult.data.ufsUrl}`
     )
     await completeJob(jobId)
 
     return {
       ...toFormState('SUCCESS', 'Wykład gotowy!'),
-      values: { audioBase64 },
+      values: {
+        audioUrl: uploadResult.data.ufsUrl,
+        title: topic,
+        transcript: script,
+      },
     }
   } catch (error) {
     console.error('Error generating lecture:', error)

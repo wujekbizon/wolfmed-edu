@@ -2,9 +2,10 @@
 
 import { useState, useTransition } from 'react'
 import { showToast } from '@/hooks/useToastMessage'
-import type { Cell, LearningPlan } from '@/types/cellTypes'
+import type { Cell, LearningPlan, MediaCellContent } from '@/types/cellTypes'
 import { useRagProgress } from '@/hooks/useRagProgress'
 import { generateLectureAction } from '@/actions/rag-actions'
+import { useCellsStore } from '@/store/useCellsStore'
 import PlanHeader from './PlanHeader'
 import PlanPrerequisites from './PlanPrerequisites'
 import PlanStepItem from './PlanStepItem'
@@ -13,6 +14,7 @@ import PlanFooter from './PlanFooter'
 export default function PlanCellPreview({ cell }: { cell: Cell }) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]))
   const [isPending, startTransition] = useTransition()
+  const insertCellAfterWithContent = useCellsStore(s => s.insertCellAfterWithContent)
 
   const {
     jobId,
@@ -53,7 +55,23 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
     startTransition(async () => {
       const result = await generateLectureAction(cell.content, jobId)
       resetProgress()
+
       if (result.status === 'SUCCESS') {
+        const { audioUrl, title, transcript } = result.values as {
+          audioUrl: string
+          title: string
+          transcript: string
+        }
+
+        const mediaContent: MediaCellContent = {
+          sourceType: 'audio',
+          title: `Wykład: ${title}`,
+          url: audioUrl,
+          lectureId: cell.id,
+          transcript,
+        }
+
+        insertCellAfterWithContent(cell.id, 'media', JSON.stringify(mediaContent))
         showToast('SUCCESS', 'Wykład gotowy!')
       } else {
         showToast('ERROR', result.message || 'Nie udało się wygenerować wykładu.')
