@@ -1,4 +1,4 @@
-import { Mic } from 'lucide-react'
+import { Mic, FileText } from 'lucide-react'
 import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
 import type { ProgressStage, LogEntry } from '@/types/progressTypes'
 
@@ -7,6 +7,7 @@ interface PlanFooterProps {
   examRelevance?: string | undefined
   isPending: boolean
   onGenerate: () => void
+  onSaveScript?: (() => void) | undefined
   stage: ProgressStage
   progress: number
   progressMessage: string
@@ -21,6 +22,7 @@ export default function PlanFooter({
   examRelevance,
   isPending,
   onGenerate,
+  onSaveScript,
   stage,
   progress,
   progressMessage,
@@ -46,15 +48,28 @@ export default function PlanFooter({
       )}
 
       <div className="pt-1 space-y-3">
-        <button
-          type="button"
-          onClick={onGenerate}
-          disabled={isPending}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          <Mic className="w-4 h-4" />
-          {isPending ? 'Generowanie...' : 'Generuj wykład'}
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={onGenerate}
+            disabled={isPending}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <Mic className="w-4 h-4" />
+            {isPending ? 'Generowanie...' : 'Generuj wykład'}
+          </button>
+
+          {onSaveScript && (
+            <button
+              type="button"
+              onClick={onSaveScript}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-700 text-sm rounded-lg hover:bg-zinc-50 transition-colors"
+            >
+              <FileText className="w-4 h-4" />
+              Zapisz skrypt do notatki
+            </button>
+          )}
+        </div>
 
         {isPending && (
           <RagProgressIndicator

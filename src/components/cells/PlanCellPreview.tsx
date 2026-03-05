@@ -11,9 +11,17 @@ import PlanPrerequisites from './PlanPrerequisites'
 import PlanStepItem from './PlanStepItem'
 import PlanFooter from './PlanFooter'
 
+interface GeneratedLecture {
+  audioUrl: string
+  title: string
+  transcript: string
+  lectureId: string
+}
+
 export default function PlanCellPreview({ cell }: { cell: Cell }) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]))
   const [isPending, startTransition] = useTransition()
+  const [generatedLecture, setGeneratedLecture] = useState<GeneratedLecture | null>(null)
   const insertCellAfterWithContent = useCellsStore(s => s.insertCellAfterWithContent)
 
   const {
@@ -57,26 +65,29 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
       resetProgress()
 
       if (result.status === 'SUCCESS') {
-        const { audioUrl, title, transcript } = result.values as {
-          audioUrl: string
-          title: string
-          transcript: string
-        }
+        const { audioUrl, title, transcript, lectureId } = result.values as unknown as GeneratedLecture
 
         const mediaContent: MediaCellContent = {
           sourceType: 'audio',
           title: `Wykład: ${title}`,
           url: audioUrl,
-          lectureId: cell.id,
+          lectureId,
           transcript,
         }
 
         insertCellAfterWithContent(cell.id, 'media', JSON.stringify(mediaContent))
+        setGeneratedLecture({ audioUrl, title, transcript, lectureId })
         showToast('SUCCESS', 'Wykład gotowy!')
       } else {
         showToast('ERROR', result.message || 'Nie udało się wygenerować wykładu.')
       }
     })
+  }
+
+  const handleSaveScript = () => {
+    if (!generatedLecture) return
+    insertCellAfterWithContent(cell.id, 'note', generatedLecture.transcript)
+    showToast('SUCCESS', 'Skrypt zapisany jako notatka.')
   }
 
   return (
@@ -105,6 +116,7 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
         examRelevance={plan.examRelevance}
         isPending={isPending}
         onGenerate={handleGenerate}
+        onSaveScript={generatedLecture ? handleSaveScript : undefined}
         stage={stage}
         progress={progress}
         progressMessage={progressMessage}

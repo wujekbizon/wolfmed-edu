@@ -11,9 +11,18 @@ import type { SpeedOption } from '@/constants/mediaPlayer'
 interface AudioPlayerProps {
   media: MediaCellContent
   cellId: string
+  onDelete?: () => void
+  isDeleting?: boolean
+  onDurationLoaded?: (duration: number) => void
 }
 
-export default function AudioPlayer({ media, cellId }: AudioPlayerProps) {
+export default function AudioPlayer({
+  media,
+  cellId,
+  onDelete,
+  isDeleting,
+  onDurationLoaded,
+}: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const trackRef = useRef<HTMLDivElement | null>(null)
 
@@ -29,7 +38,10 @@ export default function AudioPlayer({ media, cellId }: AudioPlayerProps) {
     const audio = audioRef.current
     if (!audio) return
     const onTime = () => setCurrentTime(audio.currentTime)
-    const onLoaded = () => setDuration(audio.duration)
+    const onLoaded = () => {
+      setDuration(audio.duration)
+      onDurationLoaded?.(audio.duration)
+    }
     const onEnded = () => { setIsPlaying(false); setEnded(true) }
     audio.addEventListener('timeupdate', onTime)
     audio.addEventListener('loadedmetadata', onLoaded)
@@ -39,7 +51,7 @@ export default function AudioPlayer({ media, cellId }: AudioPlayerProps) {
       audio.removeEventListener('loadedmetadata', onLoaded)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [])
+  }, [onDurationLoaded])
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
@@ -78,7 +90,13 @@ export default function AudioPlayer({ media, cellId }: AudioPlayerProps) {
 
   return (
     <>
-      <MediaHeader title={media.title} sourceType="audio" duration={duration} />
+      <MediaHeader
+        title={media.title}
+        sourceType="audio"
+        duration={duration}
+        onDelete={onDelete}
+        isDeleting={isDeleting}
+      />
       <Waveform
         seed={media.lectureId ?? cellId}
         playedPct={playedPct}

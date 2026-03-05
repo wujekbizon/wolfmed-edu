@@ -1,13 +1,15 @@
-import { Headphones, Video } from 'lucide-react'
+import { Headphones, Video, Trash2 } from 'lucide-react'
 import { formatTime } from '@/helpers/formatDate'
 
 interface MediaHeaderProps {
   title: string
   sourceType: 'audio' | 'video'
   duration?: number
+  onDelete?: (() => void) | undefined
+  isDeleting?: boolean | undefined
 }
 
-export default function MediaHeader({ title, sourceType, duration }: MediaHeaderProps) {
+export default function MediaHeader({ title, sourceType, duration, onDelete, isDeleting }: MediaHeaderProps) {
   return (
     <div className="bg-gradient-to-r from-rose-50 to-fuchsia-50 border-b border-zinc-200 px-5 py-4 shrink-0">
       <div className="flex items-center justify-between gap-3">
@@ -24,15 +26,29 @@ export default function MediaHeader({ title, sourceType, duration }: MediaHeader
           </div>
         </div>
 
-        {sourceType === 'video' ? (
-          <span className="text-xs font-medium text-zinc-400 bg-zinc-100 border border-zinc-200 rounded-full px-3 py-1 shrink-0">
-            wkrótce
-          </span>
-        ) : duration && duration > 0 ? (
-          <span className="text-xs font-medium text-zinc-500 bg-white/70 border border-zinc-200 rounded-full px-3 py-1 shrink-0">
-            {formatTime(duration)}
-          </span>
-        ) : null}
+        <div className="flex items-center gap-2 shrink-0">
+          {sourceType === 'video' ? (
+            <span className="text-xs font-medium text-zinc-400 bg-zinc-100 border border-zinc-200 rounded-full px-3 py-1">
+              wkrótce
+            </span>
+          ) : duration && duration > 0 ? (
+            <span className="text-xs font-medium text-zinc-500 bg-white/70 border border-zinc-200 rounded-full px-3 py-1">
+              {formatTime(duration)}
+            </span>
+          ) : null}
+
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              disabled={isDeleting}
+              className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              title="Usuń wykład"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
     </div>
   )

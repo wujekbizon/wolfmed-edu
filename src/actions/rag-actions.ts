@@ -1,7 +1,6 @@
 'use server'
 
-import { UTApi } from 'uploadthing/server'
-
+import crypto from 'crypto'
 import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
@@ -18,6 +17,8 @@ import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
+import { saveLectureInternal } from '@/actions/lectures'
+import { getLectureByHash } from '@/server/queries'
 
 async function progressStep(
   jobId: string | null,
@@ -412,11 +413,32 @@ export async function generateLectureAction(
       return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
     }
 
-    const rateLimit = await checkRateLimit(userId, 'rag:query')
+    const rateLimit = await checkRateLimit(userId, 'lecture:generate')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
       await errorJob(jobId, 'Rate limit exceeded')
       return toFormState('ERROR', `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`)
+    }
+
+    let topic = 'temat'
+    try {
+      const plan = JSON.parse(planContent)
+      topic = plan.topic || topic
+    } catch { /* use default */ }
+
+    const contentHash = crypto.createHash('sha256').update(planContent).digest('hex')
+    const existing = await getLectureByHash(userId, contentHash)
+    if (existing) {
+      await completeJob(jobId)
+      return {
+        ...toFormState('SUCCESS', 'Wykład gotowy!'),
+        values: {
+          audioUrl: existing.audioUrl,
+          title: existing.title,
+          transcript: existing.scriptText,
+          lectureId: existing.id,
+        },
+      }
     }
 
     await progressStep(
@@ -424,12 +446,6 @@ export async function generateLectureAction(
       'Przeszukuję bazę wiedzy...',
       'RAG', 'Querying knowledge base for lecture content'
     )
-
-    let topic = 'temat'
-    try {
-      const plan = JSON.parse(planContent)
-      topic = plan.topic || topic
-    } catch { /* use default */ }
 
     const ragResult = await queryFileSearchOnly(topic)
     let enrichedContent = planContent
@@ -507,27 +523,28 @@ export async function generateLectureAction(
       'UPLOAD', `Uploading audio (${audioBuffer.length} bytes) to storage`
     )
 
-    const utapi = new UTApi()
-    const audioFile = new File([audioBuffer], `lecture-${Date.now()}.mp3`, { type: 'audio/mpeg' })
-    const [uploadResult] = await utapi.uploadFiles([audioFile])
-
-    if (!uploadResult?.data?.ufsUrl) {
-      throw new Error('Failed to upload lecture audio')
-    }
+    const lecture = await saveLectureInternal({
+      userId,
+      title: topic,
+      contentHash,
+      audioBuffer,
+      scriptText: script,
+    })
 
     await progressStep(
       jobId, 'finalizing', 95,
       'Wykład gotowy!',
-      'UPLOAD', `Audio available at: ${uploadResult.data.ufsUrl}`
+      'UPLOAD', `Lecture saved with id: ${lecture.id}`
     )
     await completeJob(jobId)
 
     return {
       ...toFormState('SUCCESS', 'Wykład gotowy!'),
       values: {
-        audioUrl: uploadResult.data.ufsUrl,
-        title: topic,
-        transcript: script,
+        audioUrl: lecture.audioUrl,
+        title: lecture.title,
+        transcript: lecture.scriptText,
+        lectureId: lecture.id,
       },
     }
   } catch (error) {

@@ -24,6 +24,15 @@ export const ourFileRouter = {
       console.log("#CORE: Upload complete for userId:", metadata.userId);
       console.log("#CORE: File available at:", file.ufsUrl);
     }),
+  lectureAudio: f({ "audio/mpeg": { maxFileSize: "32MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const { userId } = await auth();
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      return { url: file.ufsUrl, key: file.key };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;

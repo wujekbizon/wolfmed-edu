@@ -622,3 +622,27 @@ export type UserCustomTest = typeof userCustomTests.$inferSelect
 export type NewUserCustomTest = typeof userCustomTests.$inferInsert
 export type UserCustomCategory = typeof userCustomCategories.$inferSelect
 export type NewUserCustomCategory = typeof userCustomCategories.$inferInsert
+
+// Lectures
+export const lectures = createTable(
+  "lectures",
+  {
+    id:          uuid("id").primaryKey().defaultRandom(),
+    userId:      varchar("userId", { length: 256 }).notNull(),
+    title:       varchar("title", { length: 256 }).notNull(),
+    contentHash: varchar("contentHash", { length: 64 }).notNull(),
+    audioKey:    varchar("audioKey", { length: 256 }).notNull(),
+    audioUrl:    text("audioUrl").notNull(),
+    scriptText:  text("scriptText").notNull(),
+    duration:    integer("duration"),
+    createdAt:   timestamp("createdAt").defaultNow().notNull(),
+    updatedAt:   timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("lectures_user_id_idx").on(table.userId),
+    index("lectures_content_hash_idx").on(table.userId, table.contentHash),
+  ]
+)
+
+export type Lecture = typeof lectures.$inferSelect
+export type NewLecture = typeof lectures.$inferInsert
