@@ -91,7 +91,7 @@ export default function LectureLibrary({ lectures }: LectureLibraryProps) {
             Wygeneruj wykład ze swojego planu nauki, a znajdziesz go tutaj.
           </p>
           <Link
-            href="/panel/nauka"
+            href="/panel/nauka/wyklady"
             className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white text-sm rounded-lg hover:opacity-90 transition-opacity"
           >
             Przejdź do planów nauki

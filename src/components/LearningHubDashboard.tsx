@@ -46,7 +46,7 @@ export default function LearningHubDashboard({
               </div>
             </div>
             <Link
-              href="/panel/nauka/wykłady"
+              href="/panel/nauka/wyklady"
               className="text-sm font-medium text-[#e07070] hover:text-fuchsia-500 transition-colors"
             >
               Wszystkie wykłady →
