@@ -5,7 +5,8 @@ import MediaHeader from './MediaHeader'
 import Waveform from './Waveform'
 import PlayerControls from './PlayerControls'
 import TranscriptPanel from './TranscriptPanel'
-import type { MediaCellContent, SpeedOption } from './types'
+import type { MediaCellContent } from '@/types/cellTypes'
+import type { SpeedOption } from '@/constants/mediaPlayer'
 
 interface AudioPlayerProps {
   media: MediaCellContent

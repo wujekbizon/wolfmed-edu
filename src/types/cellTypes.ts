@@ -14,3 +14,11 @@ export interface UserCellsList {
   updatedAt?: Date
   createdAt?: Date
 }
+
+export interface MediaCellContent {
+  sourceType: 'audio' | 'video'
+  title: string
+  url: string
+  lectureId?: string
+  transcript?: string
+}

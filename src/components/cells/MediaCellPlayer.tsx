@@ -2,7 +2,7 @@
 
 import VideoStub from './VideoStub'
 import type { Cell } from '@/types/cellTypes'
-import type { MediaCellContent } from './types'
+import type { MediaCellContent } from '@/types/cellTypes'
 import AudioPlayer from './AudioPlayer'
 
 export default function MediaCellPlayer({ cell }: { cell: Cell }) {

@@ -1,7 +1,7 @@
 "use client"
 
 import { Play, Pause, RotateCcw } from 'lucide-react'
-import { SPEED_OPTIONS, type SpeedOption } from './types'
+import { SPEED_OPTIONS, type SpeedOption } from '@/constants/mediaPlayer'
 
 interface PlayerControlsProps {
   isPlaying: boolean

@@ -1,7 +1,8 @@
 "use client"
 
 import { useRef } from 'react'
-import { seededBars, formatTime } from './types'
+import { seededBars } from '@/helpers/mediaCellHelpers'
+import { formatTime } from '@/helpers/formatDate'
 
 interface WaveformProps {
   seed: string

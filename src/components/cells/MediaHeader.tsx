@@ -1,5 +1,5 @@
 import { Headphones, Video } from 'lucide-react'
-import { formatTime } from './types'
+import { formatTime } from '@/helpers/formatDate'
 
 interface MediaHeaderProps {
   title: string
