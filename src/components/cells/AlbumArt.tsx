@@ -2,11 +2,11 @@ import { Headphones } from 'lucide-react'
 
 const GRADIENTS = [
   'from-rose-500 to-fuchsia-600',
-  'from-violet-500 to-purple-700',
-  'from-sky-500 to-blue-700',
-  'from-emerald-500 to-teal-700',
-  'from-amber-500 to-orange-600',
-  'from-pink-500 to-rose-700',
+  'from-zinc-500 to-zinc-700',
+  'from-fuchsia-500 to-purple-700',
+  'from-zinc-400 to-rose-600',
+  'from-rose-400 to-zinc-600',
+  'from-zinc-600 to-fuchsia-500',
 ]
 
 function pickGradient(seed: string): string {

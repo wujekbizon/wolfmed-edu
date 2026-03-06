@@ -10,7 +10,7 @@ interface BumpedSeekBarProps {
   onSeek: (pct: number) => void
 }
 
-const BUMP_W = 12   // tight half-width — line stays flat until very close to thumb
+const BUMP_W = 22   // wider than 12 but tighter than old 32 — no winding
 const LINE_Y = 16
 const APEX_Y = 5
 const SVG_H = 28
@@ -98,9 +98,9 @@ export default function BumpedSeekBar({ playedPct, currentTime, duration, onSeek
               </clipPath>
             </defs>
             {/* Unplayed */}
-            <path d={pathD} fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth={1.5} strokeLinecap="round" />
+            <path d={pathD} fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth={2} strokeLinecap="round" />
             {/* Played */}
-            <path d={pathD} fill="none" stroke={`url(#grad-${id})`} strokeWidth={2} strokeLinecap="round" clipPath={`url(#clip-${id})`} />
+            <path d={pathD} fill="none" stroke={`url(#grad-${id})`} strokeWidth={2.5} strokeLinecap="round" clipPath={`url(#clip-${id})`} />
             {/* Thumb */}
             <circle cx={thumbX} cy={thumbCY} r={thumbR} fill="white" stroke="#c026d3" strokeWidth={2} />
           </svg>
