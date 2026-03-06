@@ -1,6 +1,6 @@
 'use client'
 
-import VideoStub from './VideoStub'
+import VideoPlayer from './VideoPlayer'
 import AudioPlayer from './AudioPlayer'
 import type { Cell, MediaCellContent } from '@/types/cellTypes'
 import { updateLectureDurationAction } from '@/actions/lectures'
@@ -26,7 +26,7 @@ export default function MediaCellPlayer({ cell }: { cell: Cell }) {
   }
 
   if (media.sourceType === 'video') {
-    return <VideoStub title={media.title} />
+    return <VideoPlayer media={media} onDurationLoaded={handleDurationLoaded} />
   }
 
   return (
