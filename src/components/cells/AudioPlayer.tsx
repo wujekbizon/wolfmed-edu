@@ -58,16 +58,24 @@ export default function AudioPlayer({
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
     if (!audio) return
-    if (isPlaying) { audio.pause() } else { setEnded(false); audio.play() }
-    setIsPlaying(p => !p)
-  }, [isPlaying])
+    if (audio.paused) {
+      setEnded(false)
+      const p = audio.play()
+      if (p) p.catch(err => { if (err?.name !== 'AbortError') console.error(err) })
+      setIsPlaying(true)
+    } else {
+      audio.pause()
+      setIsPlaying(false)
+    }
+  }, [])
 
   const handleRestart = useCallback(() => {
     const audio = audioRef.current
     if (!audio) return
     audio.currentTime = 0
     setEnded(false)
-    audio.play()
+    const p = audio.play()
+    if (p) p.catch(err => { if (err?.name !== 'AbortError') console.error(err) })
     setIsPlaying(true)
   }, [])
 
@@ -85,9 +93,9 @@ export default function AudioPlayer({
 
   const handleSeek = useCallback((pct: number) => {
     const audio = audioRef.current
-    if (!audio || duration === 0) return
-    audio.currentTime = pct * duration
-  }, [duration])
+    if (!audio || audio.readyState < 1 || !audio.duration) return
+    audio.currentTime = pct * audio.duration
+  }, [])
 
   const handleSpeed = useCallback((s: SpeedOption) => {
     if (audioRef.current) audioRef.current.playbackRate = s
@@ -109,7 +117,7 @@ export default function AudioPlayer({
           onDelete={onDelete}
           isDeleting={isDeleting}
         />
-        <AudioScreen title={media.title} isPlaying={isPlaying} />
+        <AudioScreen title={media.title} />
         <Waveform
           seed={media.lectureId ?? cellId}
           playedPct={playedPct}
