@@ -5,7 +5,7 @@ import type { Cell } from '@/types/cellTypes'
 
 export default function CellListItem ({ cell, isPremium = false }: { cell: Cell; isPremium?: boolean }) {
   return (
-    <div className="relative">
+    <div id={`cell-${cell.id}`} className="relative">
       {cell.type === 'note' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative w-full h-10">

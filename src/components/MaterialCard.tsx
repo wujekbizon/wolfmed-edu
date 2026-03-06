@@ -28,7 +28,10 @@ export default function MaterialCard({ material }: Props) {
       url: src,
     } satisfies MediaCellContent)
     const lastCellId = order[order.length - 1] ?? null
-    insertCellAfterWithContent(lastCellId, 'media', content)
+    const newId = insertCellAfterWithContent(lastCellId, 'media', content)
+    setTimeout(() => {
+      document.getElementById(`cell-${newId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
   }
 
   const isPdf = material.type === "application/pdf";

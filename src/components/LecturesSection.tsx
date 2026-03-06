@@ -31,7 +31,10 @@ function LectureCard({ lecture }: { lecture: Lecture }) {
       transcript: lecture.scriptText ?? undefined,
     } satisfies MediaCellContent)
     const lastCellId = order[order.length - 1] ?? null
-    insertCellAfterWithContent(lastCellId, 'media', content)
+    const newId = insertCellAfterWithContent(lastCellId, 'media', content)
+    setTimeout(() => {
+      document.getElementById(`cell-${newId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
   }
 
   return (
