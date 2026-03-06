@@ -13,16 +13,12 @@ import type { SpeedOption } from '@/constants/mediaPlayer'
 interface AudioPlayerProps {
   media: MediaCellContent
   cellId: string
-  onDelete?: () => void
-  isDeleting?: boolean
   onDurationLoaded?: (duration: number) => void
 }
 
 export default function AudioPlayer({
   media,
   cellId,
-  onDelete,
-  isDeleting,
   onDurationLoaded,
 }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -110,13 +106,7 @@ export default function AudioPlayer({
   return (
     <div className="flex flex-row h-full">
       <div className="flex flex-col flex-1 min-w-0 h-full">
-        <MediaHeader
-          title={media.title}
-          sourceType="audio"
-          duration={duration}
-          onDelete={onDelete}
-          isDeleting={isDeleting}
-        />
+        <MediaHeader title={media.title} sourceType="audio" />
         <AudioScreen title={media.title} />
         <Waveform
           seed={media.lectureId ?? cellId}

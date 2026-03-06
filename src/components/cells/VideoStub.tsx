@@ -4,14 +4,12 @@ import PlayerControls from './PlayerControls'
 
 interface VideoStubProps {
   title: string
-  onDelete?: () => void
-  isDeleting?: boolean
 }
 
-export default function VideoStub({ title, onDelete, isDeleting }: VideoStubProps) {
+export default function VideoStub({ title }: VideoStubProps) {
   return (
     <div className="flex flex-col h-full">
-      <MediaHeader title={title} sourceType="video" onDelete={onDelete} isDeleting={isDeleting} />
+      <MediaHeader title={title} sourceType="video" />
 
       <div className="flex-1 flex flex-col items-center justify-center gap-3 min-h-0">
         <div className="p-5 rounded-full bg-black/5">

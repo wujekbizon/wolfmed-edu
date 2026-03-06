@@ -43,15 +43,13 @@ export default function MediaCellPlayer({ cell }: { cell: Cell }) {
   }
 
   if (media.sourceType === 'video') {
-    return <VideoStub title={media.title} onDelete={handleDelete} isDeleting={isDeleting} />
+    return <VideoStub title={media.title} />
   }
 
   return (
     <AudioPlayer
       media={media}
       cellId={cell.id}
-      onDelete={handleDelete}
-      isDeleting={isDeleting}
       onDurationLoaded={handleDurationLoaded}
     />
   )
