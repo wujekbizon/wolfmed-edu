@@ -133,13 +133,13 @@ export default function AudioPlayer({
         />
 
         {media.transcript && (
-          <div className="flex justify-center pb-1.5">
+          <div className="flex justify-end pb-2.5 pr-2.5">
             <button
               type="button"
               onClick={() => setShowTranscript(true)}
-              className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-400 hover:text-zinc-600 transition-colors"
+              className="flex items-center gap-1.5 text-[12px] font-medium text-zinc-400 hover:text-zinc-600 transition-colors"
             >
-              <FileText className="w-3 h-3" />
+              <FileText className="w-4 h-4" />
               Transkrypcja
             </button>
           </div>
