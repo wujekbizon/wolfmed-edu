@@ -3,7 +3,6 @@ import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { getMergedMaterials } from '@/helpers/mergeMaterials'
 import LearningHubDashboard from '@/components/LearningHubDashboard'
 import PdfPreviewModal from '@/components/PdfPreviewModal'
-import VideoPreviewModal from '@/components/VideoPreviewModal'
 import TextPreviewModal from '@/components/TextPreviewModal'
 import UploadMaterialModal from '@/components/UploadMaterialModal'
 import { getAllUserNotes, getMaterialsByUser, getLecturesByUser } from '@/server/queries'
@@ -75,8 +74,7 @@ export default async function NaukaPage() {
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
       <LearningHubDashboard materials={materials} categories={[...accessibleCategories, ...customCards]} notes={userAllNotes} lectures={userLectures} isPremium={isPremium} />
       <PdfPreviewModal />
-      <VideoPreviewModal />
-      <TextPreviewModal />
+<TextPreviewModal />
       <UploadMaterialModal />
     </section>
   )

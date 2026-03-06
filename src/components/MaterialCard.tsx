@@ -5,6 +5,8 @@ import { formatDate } from "@/helpers/formatDate";
 import { resolveSrc } from "@/helpers/resolveSource";
 import { useDashboardStore } from '@/store/useDashboardStore'
 import { useMaterialModalStore } from '@/store/useMaterialModalStore'
+import { useCellsStore } from '@/store/useCellsStore'
+import type { MediaCellContent } from '@/types/cellTypes'
 import MaterialDeleteButton from './MaterialDeleteButton'
 import MaterialDeleteModal from './MaterialDeleteModal'
 import { formatBytes } from '@/helpers/formatBytes'
@@ -15,8 +17,19 @@ type Props = {
 
 export default function MaterialCard({ material }: Props) {
   const { isDeleteModalOpen, materialIdToDelete } = useDashboardStore()
-  const { openPdfModal, openVideoModal, openTextModal } = useMaterialModalStore()
+  const { openPdfModal, openTextModal } = useMaterialModalStore()
+  const { order, insertCellAfterWithContent } = useCellsStore()
   const src = resolveSrc(material);
+
+  const handlePlay = () => {
+    const content = JSON.stringify({
+      sourceType: 'video',
+      title: material.title,
+      url: src,
+    } satisfies MediaCellContent)
+    const lastCellId = order[order.length - 1] ?? null
+    insertCellAfterWithContent(lastCellId, 'media', content)
+  }
 
   const isPdf = material.type === "application/pdf";
   const isVideo = material.type === "video/mp4";
@@ -94,9 +107,9 @@ export default function MaterialCard({ material }: Props) {
             )}
             {isVideo && (
               <button
-                onClick={() => openVideoModal(src, material.title)}
+                onClick={handlePlay}
                 className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
-                aria-label={`Podgląd Video ${material.title ?? ""}`}
+                aria-label={`Odtwórz ${material.title ?? ""}`}
               >
                 Odtwórz
               </button>
