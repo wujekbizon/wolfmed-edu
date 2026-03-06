@@ -15,7 +15,7 @@ export default function MediaCell({ cell }: { cell: Cell }) {
       <div className="flex flex-col gap-2 h-full">
 
         {/* Glass player card — layered for visible frosted effect */}
-        <div className="relative rounded-2xl overflow-hidden shrink-0 shadow-[0_8px_32px_rgba(255,197,197,0.4)]">
+        <div className="relative rounded-2xl overflow-hidden flex-1 min-h-0 shadow-[0_8px_32px_rgba(255,197,197,0.4)]">
           {/* Layer 1: blur backdrop + white/rose tint */}
           <div className="absolute inset-0 bg-white/55 backdrop-blur-2xl" />
           {/* Layer 2: subtle pink overlay for #ffc5c5 warmth */}
@@ -28,7 +28,7 @@ export default function MediaCell({ cell }: { cell: Cell }) {
           <div className="absolute inset-0 rounded-2xl ring-1 ring-white/70 pointer-events-none" />
 
           {/* Content sits above all layers */}
-          <div className="relative">
+          <div className="relative h-full">
             <MediaCellPlayer cell={cell} />
           </div>
         </div>

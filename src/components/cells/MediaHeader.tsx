@@ -16,10 +16,10 @@ export default function MediaHeader({ title, sourceType, duration, onDelete, isD
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           {sourceType === 'video'
-            ? <div className="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
+            ? <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-zinc-100 flex items-center justify-center shrink-0">
                 <Video className="w-5 h-5 text-zinc-400" />
               </div>
-            : <AlbumArt title={title} />
+            : <AlbumArt title={title} className="w-10 h-10 sm:w-12 sm:h-12" />
           }
           <div className="min-w-0">
             <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">Media Center</p>

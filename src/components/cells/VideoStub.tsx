@@ -4,21 +4,20 @@ import PlayerControls from './PlayerControls'
 
 interface VideoStubProps {
   title: string
+  onDelete?: () => void
+  isDeleting?: boolean
 }
 
-export default function VideoStub({ title }: VideoStubProps) {
+export default function VideoStub({ title, onDelete, isDeleting }: VideoStubProps) {
   return (
-    <>
-      <MediaHeader title={title} sourceType="video" />
+    <div className="flex flex-col h-full">
+      <MediaHeader title={title} sourceType="video" onDelete={onDelete} isDeleting={isDeleting} />
 
-      <div className="flex-1 flex flex-col items-center justify-center gap-3 bg-zinc-50 px-5 py-10">
-        <div className="p-4 rounded-full bg-zinc-100">
-          <Video className="w-10 h-10 text-zinc-300" />
+      <div className="flex-1 flex flex-col items-center justify-center gap-3 min-h-0">
+        <div className="p-5 rounded-full bg-black/5">
+          <Video className="w-12 h-12 text-zinc-300" />
         </div>
-        <p className="text-sm font-medium text-zinc-400">Odtwarzacz wideo wkrótce dostepny</p>
-        <p className="text-xs text-zinc-300 text-center max-w-xs">
-          Wsparcie dla wideo zostanie dodane w kolejnej aktualizacji.
-        </p>
+        <p className="text-sm font-medium text-zinc-400">Odtwarzacz wideo wkrótce dostępny</p>
       </div>
 
       <PlayerControls
@@ -32,6 +31,6 @@ export default function VideoStub({ title }: VideoStubProps) {
         onSpeedChange={() => {}}
         disabled
       />
-    </>
+    </div>
   )
 }

@@ -43,7 +43,7 @@ export default function MediaCellPlayer({ cell }: { cell: Cell }) {
   }
 
   if (media.sourceType === 'video') {
-    return <VideoStub title={media.title} />
+    return <VideoStub title={media.title} onDelete={handleDelete} isDeleting={isDeleting} />
   }
 
   return (

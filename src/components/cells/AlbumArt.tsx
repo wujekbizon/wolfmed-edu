@@ -9,7 +9,7 @@ const GRADIENTS = [
   'from-zinc-600 to-fuchsia-500',
 ]
 
-function pickGradient(seed: string): string {
+export function pickGradient(seed: string): string {
   let hash = 0
   for (let i = 0; i < seed.length; i++) {
     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0
@@ -17,11 +17,11 @@ function pickGradient(seed: string): string {
   return GRADIENTS[hash % GRADIENTS.length] ?? 'from-rose-500 to-fuchsia-600'
 }
 
-export default function AlbumArt({ title }: { title: string }) {
+export default function AlbumArt({ title, className }: { title: string; className?: string }) {
   const gradient = pickGradient(title)
   return (
-    <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0 shadow-lg`}>
-      <Headphones className="w-7 h-7 text-white/80" />
+    <div className={`rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shrink-0 shadow-lg ${className ?? 'w-12 h-12'}`}>
+      <Headphones className="w-6 h-6 text-white/80" />
     </div>
   )
 }

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react'
 import MediaHeader from './MediaHeader'
+import AudioScreen from './AudioScreen'
 import Waveform from './Waveform'
 import BumpedSeekBar from './BumpedSeekBar'
 import PlayerControls from './PlayerControls'
@@ -99,8 +100,8 @@ export default function AudioPlayer({
   }, [])
 
   return (
-    <div className="flex flex-row">
-      <div className="flex flex-col flex-1 min-w-0">
+    <div className="flex flex-row h-full">
+      <div className="flex flex-col flex-1 min-w-0 h-full">
         <MediaHeader
           title={media.title}
           sourceType="audio"
@@ -108,6 +109,7 @@ export default function AudioPlayer({
           onDelete={onDelete}
           isDeleting={isDeleting}
         />
+        <AudioScreen title={media.title} isPlaying={isPlaying} />
         <Waveform
           seed={media.lectureId ?? cellId}
           playedPct={playedPct}

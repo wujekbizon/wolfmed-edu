@@ -29,7 +29,7 @@ export default function PlayerControls({
   const iconBtn = 'p-2 rounded-full text-zinc-500 hover:text-zinc-800 hover:bg-black/5 transition-colors'
 
   return (
-    <div className={['px-5 py-3 flex items-center gap-2 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
+    <div className={['px-3 sm:px-5 py-3 flex items-center gap-1 sm:gap-2 shrink-0', disabled ? 'opacity-40 pointer-events-none' : ''].join(' ')}>
       {/* Restart */}
       <button type="button" onClick={onRestart} title="Od początku" className={iconBtn}>
         <RotateCcw className="w-4 h-4" />
@@ -65,7 +65,8 @@ export default function PlayerControls({
             type="button"
             onClick={() => onSpeedChange(s)}
             className={[
-              'px-2 py-0.5 rounded-full text-xs font-medium transition-colors',
+              (s === 0.75 || s === 2) ? 'hidden sm:inline-flex' : 'inline-flex',
+              'px-2 py-0.5 rounded-full text-xs font-medium transition-colors items-center',
               speed === s
                 ? 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white'
                 : 'bg-black/5 text-zinc-500 hover:bg-black/10',
