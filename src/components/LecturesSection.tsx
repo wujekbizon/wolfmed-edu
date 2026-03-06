@@ -5,10 +5,13 @@ import { Headphones, Trash2, Clock, Calendar } from 'lucide-react'
 import { showToast } from '@/hooks/useToastMessage'
 import { deleteLectureAction } from '@/actions/lectures'
 import { formatTime } from '@/helpers/formatDate'
+import { useCellsStore } from '@/store/useCellsStore'
+import type { MediaCellContent } from '@/types/cellTypes'
 import type { Lecture } from '@/server/db/schema'
 
 function LectureCard({ lecture }: { lecture: Lecture }) {
   const [isDeleting, startTransition] = useTransition()
+  const { order, insertCellAfterWithContent } = useCellsStore()
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -17,6 +20,18 @@ function LectureCard({ lecture }: { lecture: Lecture }) {
         showToast('ERROR', result.message || 'Nie udało się usunąć wykładu.')
       }
     })
+  }
+
+  const handleListen = () => {
+    const content = JSON.stringify({
+      sourceType: 'audio',
+      title: lecture.title,
+      url: lecture.audioUrl,
+      lectureId: lecture.id,
+      transcript: lecture.scriptText ?? undefined,
+    } satisfies MediaCellContent)
+    const lastCellId = order[order.length - 1] ?? null
+    insertCellAfterWithContent(lastCellId, 'media', content)
   }
 
   return (
@@ -58,12 +73,13 @@ function LectureCard({ lecture }: { lecture: Lecture }) {
         </p>
       )}
 
-      <audio
-        controls
-        src={lecture.audioUrl}
-        className="w-full h-8 mt-1"
-        preload="none"
-      />
+      <button
+        onClick={handleListen}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#ff9898]/20 to-fuchsia-100 text-[#e07070] text-xs font-medium hover:from-[#ff9898]/30 transition-colors w-fit"
+      >
+        <Headphones className="w-3.5 h-3.5" />
+        Słuchaj
+      </button>
     </div>
   )
 }
