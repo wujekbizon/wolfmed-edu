@@ -36,7 +36,7 @@ export default function AudioPlayer({ media, cellId, onDurationLoaded }: AudioPl
     handleSeek,
     handleSpeed,
     handleVolume,
-  } = useAudioPlayer({ src: media.url, onDurationLoaded })
+  } = useAudioPlayer({ onDurationLoaded })
 
   return (
     <div className="flex flex-row h-full">

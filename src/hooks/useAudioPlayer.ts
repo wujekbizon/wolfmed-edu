@@ -2,11 +2,10 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import type { SpeedOption } from '@/constants/mediaPlayer'
 
 interface UseAudioPlayerOptions {
-  src: string
   onDurationLoaded?: ((duration: number) => void) | undefined
 }
 
-export function useAudioPlayer({ src, onDurationLoaded }: UseAudioPlayerOptions) {
+export function useAudioPlayer({ onDurationLoaded }: UseAudioPlayerOptions) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const [isPlaying, setIsPlaying] = useState(false)
