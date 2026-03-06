@@ -10,14 +10,15 @@ interface BumpedSeekBarProps {
   onSeek: (pct: number) => void
 }
 
-const BUMP_W = 32
+const BUMP_W = 12   // tight half-width — line stays flat until very close to thumb
 const LINE_Y = 16
-const APEX_Y = 4
+const APEX_Y = 5
 const SVG_H = 28
 
 function buildBumpPath(thumbX: number, width: number): string {
-  const leftStart = Math.max(0, thumbX - BUMP_W)
-  const rightEnd = Math.min(width, thumbX + BUMP_W)
+  // Only arch if thumb has enough room on both sides
+  const leftStart = thumbX - BUMP_W
+  const rightEnd  = thumbX + BUMP_W
   return [
     `M 0 ${LINE_Y}`,
     `L ${leftStart} ${LINE_Y}`,
@@ -63,11 +64,14 @@ export default function BumpedSeekBar({ playedPct, currentTime, duration, onSeek
     onSeek(pct)
   }, [width, onSeek])
 
-  const showBump = isHovering || isDragging
   const thumbX = (playedPct / 100) * width
-  const thumbCY = showBump ? APEX_Y : LINE_Y
-  const thumbR = showBump ? 6 : 4
+  // Only show bump if hovering/dragging AND thumb is away from edges
+  const canBump = thumbX > BUMP_W && thumbX < width - BUMP_W
+  const showBump = (isHovering || isDragging) && canBump
+
   const pathD = width > 0 ? (showBump ? buildBumpPath(thumbX, width) : buildFlatPath(width)) : ''
+  const thumbCY = showBump ? APEX_Y : LINE_Y
+  const thumbR  = showBump ? 6 : 4
   const remaining = duration - currentTime
 
   return (
@@ -85,36 +89,20 @@ export default function BumpedSeekBar({ playedPct, currentTime, duration, onSeek
         {width > 0 && (
           <svg width={width} height={SVG_H} viewBox={`0 0 ${width} ${SVG_H}`} overflow="visible">
             <defs>
-              {/* Gradient for played portion */}
               <linearGradient id={`grad-${id}`} x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#ff9898" />
                 <stop offset="100%" stopColor="#c026d3" />
               </linearGradient>
-              {/* Clip to played region */}
               <clipPath id={`clip-${id}`}>
                 <rect x={0} y={0} width={thumbX} height={SVG_H + 20} />
               </clipPath>
             </defs>
-            {/* Unplayed track */}
-            <path d={pathD} fill="none" stroke="rgba(0,0,0,0.22)" strokeWidth={1.5} strokeLinecap="round" />
-            {/* Played track */}
-            <path
-              d={pathD}
-              fill="none"
-              stroke={`url(#grad-${id})`}
-              strokeWidth={2}
-              strokeLinecap="round"
-              clipPath={`url(#clip-${id})`}
-            />
+            {/* Unplayed */}
+            <path d={pathD} fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth={1.5} strokeLinecap="round" />
+            {/* Played */}
+            <path d={pathD} fill="none" stroke={`url(#grad-${id})`} strokeWidth={2} strokeLinecap="round" clipPath={`url(#clip-${id})`} />
             {/* Thumb */}
-            <circle
-              cx={thumbX}
-              cy={thumbCY}
-              r={thumbR}
-              fill="white"
-              stroke="#c026d3"
-              strokeWidth={2}
-            />
+            <circle cx={thumbX} cy={thumbCY} r={thumbR} fill="white" stroke="#c026d3" strokeWidth={2} />
           </svg>
         )}
       </div>
