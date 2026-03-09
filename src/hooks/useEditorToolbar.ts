@@ -52,12 +52,18 @@ export function useEditorToolbar() {
         const selection = $getSelection()
         if (!$isRangeSelection(selection)) return
 
-        const headingNode = $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)
-        if (headingNode && headingNode.getTag() === tag) {
-          headingNode.replace($createParagraphNode())
-        } else {
-          selection.insertNodes([$createHeadingNode(tag)])
-        }
+        const anchorNode = selection.anchor.getNode()
+        const existingBlock =
+          $getNearestNodeOfType(anchorNode, HeadingNode) ??
+          anchorNode.getTopLevelElementOrThrow()
+        const isActive =
+          $getNearestNodeOfType(anchorNode, HeadingNode)?.getTag() === tag
+
+        const newBlock = isActive ? $createParagraphNode() : $createHeadingNode(tag)
+
+        // Migrate children before replacing so anchor/focus TextNode refs remain valid
+        existingBlock.getChildren().forEach((child) => newBlock.append(child))
+        existingBlock.replace(newBlock)
       })
     },
     [editor]
