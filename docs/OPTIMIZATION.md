@@ -182,3 +182,64 @@ navigator.sendBeacon(
 **Problem:** After inserting a resource name into the textarea via direct DOM mutation, the hook did not dispatch a synthetic `input` event. This meant the parent `handleInputChange` in `RagCellForm` was never notified, leaving any dependent state (e.g. the command autocomplete check) out of sync after insertion. The command hook had this dispatch — the resource hook was missing it.
 
 **Fix:** Added `textarea.dispatchEvent(new Event('input', { bubbles: true }))` at the end of `insertResource`, matching the command hook's behaviour.
+
+---
+
+## `useResourceAutocomplete` hook — 2026-03-09
+
+**File:** `src/hooks/useResourceAutocomplete.ts`
+
+### 1. No AbortController — fetch continued after unmount
+
+**Problem:** The `useEffect` started a `fetch` but had no cleanup function. If the component unmounted before the request completed (e.g. user navigated away), the `fetch` still resolved and called `setResources` / `setError` on an unmounted component, leaking state updates and producing a React warning.
+
+**Fix:** Created an `AbortController` inside the effect, passed its `signal` to `fetch`, and returned `controller.abort()` as the cleanup function. React calls the cleanup on unmount, which cancels the in-flight request automatically.
+
+```ts
+const controller = new AbortController();
+const res = await fetch('/api/mcp/resources', { signal: controller.signal });
+return () => controller.abort();
+```
+
+### 2. HTTP errors silently ignored
+
+**Problem:** The code called `res.json()` without checking `res.ok` first. A `500` or `401` response from the API would still reach the JSON parse step, and unless the response body happened to contain a `data.error` field, the error would be silently swallowed and `resources` left empty with no feedback.
+
+**Fix:** Added an explicit `!res.ok` guard that throws before attempting to parse the body, so any HTTP error is caught by the existing `catch` block and surfaced as an error state.
+
+```ts
+if (!res.ok) {
+  throw new Error(`Request failed: ${res.status}`);
+}
+```
+
+### 3. Variable shadowing in `catch` block
+
+**Problem:** The `catch` parameter was named `error`, which shadowed the `error` state variable declared in the outer scope. This made the two look interchangeable in a quick read and could cause confusion if the code was extended.
+
+**Fix:** Renamed the catch parameter to `err`. Added an `AbortError` guard so intentional cancellations don't log a spurious console error or update error state.
+
+```ts
+} catch (err) {
+  if (err instanceof Error && err.name === 'AbortError') return;
+  // ...
+}
+```
+
+---
+
+## `useCountdown` hook — 2026-03-09
+
+**File:** `src/hooks/useCountdown.ts`
+
+### 1. Unnecessary `useCallback` on an internal-only function
+
+**Problem:** `updateTime` was wrapped in `useCallback([])` and then passed to `useEffect([updateTime])`. Because `updateTime` has no dependencies, `useCallback` produces a permanently stable reference — which means `useEffect` effectively has `[]` deps anyway. Since `updateTime` is never returned or passed to any child, memoizing it adds indirection with zero benefit.
+
+**Fix:** Removed `useCallback` entirely. The interval callback is now defined inline inside `useEffect`, which has a clean `[]` dependency array. `useCallback` import removed.
+
+### 2. `let` used for a never-reassigned variable
+
+**Problem:** `totalSeconds` was declared with `let` inside the `setTimeLeft` updater, but the value was computed once and never mutated.
+
+**Fix:** Changed to `const`.
