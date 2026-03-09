@@ -393,3 +393,64 @@ setInterval(() => {
 ```
 
 Also extracted `toSeconds` and `fromSeconds` as module-level helpers to keep the interval callback readable.
+
+---
+
+## `SpeechToTextButton` — crash when recording starts with no cursor — 2026-03-09
+
+**File:** `src/components/editor/speech/SpeechToTextButton.tsx`
+
+### Fix: wrong point type when editor has no selection
+
+**Problem:** When the user clicked the microphone button without first clicking into the editor, `$getRoot().getLastDescendant()` returned the empty `ParagraphNode` (key `"1"`). The fallback code called `PointType.set(..., 'text')` on it, which Lexical rejects because text points require a `TextNode`:
+
+```
+PointType.set: node with key 1 is paragraph and can not be used for a text point
+```
+
+**Fix:** Replaced the manual `$createRangeSelection` / `$setSelection` fallback with `lastChild.selectEnd()`. `ElementNode.selectEnd()` walks to the last descendant text node when one exists (text point), or falls back to an element-type point on itself when the paragraph is empty — always producing a valid selection.
+
+```ts
+// Before — crashes on empty editor
+const newSelection = $createRangeSelection()
+newSelection.anchor.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
+newSelection.focus.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
+$setSelection(newSelection)
+
+// After — handles empty and non-empty correctly
+$getRoot().getLastChild()?.selectEnd()
+```
+
+Also removed the now-unused `$createRangeSelection` and `$setSelection` imports.
+
+---
+
+## Speech-to-text — punctuation (future improvement)
+
+**Files:** `src/hooks/useSpeechRecognition.ts`, `src/components/editor/speech/SpeechToTextButton.tsx`
+
+The Web Speech API returns raw words with no punctuation. Two options:
+
+**Option A — Word substitution** (simple, no dependencies):
+Post-process the transcript in `handleResult` before inserting it. Map spoken words to symbols:
+
+```ts
+const PUNCT_MAP: Record<string, string> = {
+  'kropka': '.', 'period': '.', 'punkt': '.',
+  'przecinek': ',', 'comma': ',',
+  'nowa linia': '\n', 'nowy akapit': '\n', 'new line': '\n',
+  'pytajnik': '?', 'wykrzyknik': '!',
+}
+
+function applyPunctuation(text: string): string {
+  return Object.entries(PUNCT_MAP).reduce(
+    (t, [word, sym]) => t.replace(new RegExp(`\\b${word}\\b`, 'gi'), sym),
+    text
+  )
+}
+```
+
+Call `applyPunctuation(transcript)` before passing to `selection.insertText`. For newlines, use `selection.insertParagraph()` instead of `insertText('\n')` so Lexical creates a proper paragraph node.
+
+**Option B — LLM post-processing** (accurate, adds latency and cost):
+On each `isFinal` result, send the transcript to an AI endpoint that restores punctuation, then commit the corrected text. Not worth it unless transcription quality is a priority.
