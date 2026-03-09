@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface TimeLeft {
   days: number
@@ -7,9 +7,23 @@ interface TimeLeft {
   seconds: number
 }
 
+function toSeconds(t: TimeLeft) {
+  return t.days * 24 * 60 * 60 + t.hours * 60 * 60 + t.minutes * 60 + t.seconds
+}
+
+function fromSeconds(s: number): TimeLeft {
+  return {
+    days: Math.floor(s / (24 * 60 * 60)),
+    hours: Math.floor((s % (24 * 60 * 60)) / (60 * 60)),
+    minutes: Math.floor((s % (60 * 60)) / 60),
+    seconds: s % 60,
+  }
+}
+
 /**
  * Custom hook for managing countdown timer state.
- * Decrements the given time by one second per interval tick.
+ * Anchors to a real end timestamp via useRef so the displayed time stays
+ * accurate even if the browser throttles the tab or skips ticks.
  * Stops at zero and cleans up the interval on unmount.
  *
  * @param initialTime Initial time values for the countdown
@@ -17,27 +31,16 @@ interface TimeLeft {
  */
 export function useCountdown(initialTime: TimeLeft) {
   const [timeLeft, setTimeLeft] = useState(initialTime)
+  // Store the absolute end time so each tick reads real elapsed wall-clock time
+  // rather than decrementing by 1 — prevents drift when ticks are delayed.
+  const endTimeRef = useRef(Date.now() + toSeconds(initialTime) * 1000)
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        // Convert all time units to total seconds for easier calculation
-        const totalSeconds =
-          prevTime.days * 24 * 60 * 60 + prevTime.hours * 60 * 60 + prevTime.minutes * 60 + prevTime.seconds - 1
+      const remaining = Math.max(0, Math.floor((endTimeRef.current - Date.now()) / 1000))
+      setTimeLeft(fromSeconds(remaining))
 
-        // Stop at zero
-        if (totalSeconds < 0) {
-          return { days: 0, hours: 0, minutes: 0, seconds: 0 }
-        }
-
-        // Convert total seconds back to days, hours, minutes, seconds
-        return {
-          days: Math.floor(totalSeconds / (24 * 60 * 60)),
-          hours: Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60)),
-          minutes: Math.floor((totalSeconds % (60 * 60)) / 60),
-          seconds: totalSeconds % 60,
-        }
-      })
+      if (remaining === 0) clearInterval(timer)
     }, 1000)
 
     return () => clearInterval(timer)
