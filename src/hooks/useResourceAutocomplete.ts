@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import type { Resource } from '@/types/resourceTypes';
 
+/**
+ * Fetches the current user's available resources (notes, materials, docs)
+ * from the MCP resources API on mount. Cancels the in-flight request on unmount.
+ */
 export function useResourceAutocomplete() {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(false);
