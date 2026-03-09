@@ -41,3 +41,9 @@ export function formatDaysAgo(date: Date) {
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   return diffDays === 0 ? "Today" : diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
 }
+
+export function formatTime(seconds: number): string {
+  const m = Math.floor(seconds / 60)
+  const s = Math.floor(seconds % 60)
+  return `${m}:${s.toString().padStart(2, '0')}`
+}

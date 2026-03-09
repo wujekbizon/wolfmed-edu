@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Sparkles, Lock } from 'lucide-react'
+import { Sparkles, Lock, BookOpen } from 'lucide-react'
 import { useRagStore } from '@/store/useRagStore'
 
 interface ProgramTopicItemProps {
@@ -21,6 +21,11 @@ export default function ProgramTopicItem({ item, categoryId, isPremium = false }
     router.push('/panel/nauka')
   }
 
+  const handlePlanClick = () => {
+    setPendingTopic(`/planuj ${item}`)
+    router.push('/panel/nauka')
+  }
+
   return (
     <li
       className='flex gap-2 text-gray-700 text-sm pl-7 py-1'
@@ -31,15 +36,26 @@ export default function ProgramTopicItem({ item, categoryId, isPremium = false }
       <span className='flex items-center gap-2 flex-wrap'>
         <span>{item}</span>
         {isPremium ? (
-          <button
-            onClick={handleClick}
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-slate-600 to-rose-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-slate-700 hover:to-rose-700 transition-all whitespace-nowrap ${
-              isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
-            }`}
-          >
-            <Sparkles className='w-3.5 h-3.5' />
-            <span>Wyjaśnij z AI</span>
-          </button>
+          <>
+            <button
+              onClick={handleClick}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-slate-600 to-rose-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-slate-700 hover:to-rose-700 transition-all whitespace-nowrap ${
+                isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
+              }`}
+            >
+              <Sparkles className='w-3.5 h-3.5' />
+              <span>Wyjaśnij z AI</span>
+            </button>
+            <button
+              onClick={handlePlanClick}
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-rose-500 to-fuchsia-600 text-white text-xs rounded-full shadow-lg hover:shadow-xl hover:from-rose-600 hover:to-fuchsia-700 transition-all whitespace-nowrap ${
+                isHovered ? 'opacity-100 visible' : 'opacity-0 invisible'
+              }`}
+            >
+              <BookOpen className='w-3.5 h-3.5' />
+              <span>Stwórz plan nauki</span>
+            </button>
+          </>
         ) : (
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-200 text-zinc-400 text-xs rounded-full whitespace-nowrap cursor-not-allowed ${

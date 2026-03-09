@@ -44,7 +44,10 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
 
   'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
-  'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 }
+  'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
+
+  'lecture:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 3 },
+  'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }
 }
 
 export interface RateLimitResult {

@@ -9,20 +9,24 @@ import { useFlashcardStore } from '@/store/useFlashcardStore'
 interface FlashcardCreateModalProps {
   noteId: string
   selectedText?: string
+  selectedAsAnswer?: boolean
   onClose: () => void
   onSuccess: () => void
 }
 
-export default function FlashcardCreateModal({ noteId, selectedText, onClose, onSuccess }: FlashcardCreateModalProps) {
+export default function FlashcardCreateModal({ noteId, selectedText, selectedAsAnswer, onClose, onSuccess }: FlashcardCreateModalProps) {
   const addFlashcard = useFlashcardStore((state) => state.addFlashcard)
   const [flashcardQuestion, setFlashcardQuestion] = useState('')
   const [flashcardAnswer, setFlashcardAnswer] = useState('')
 
   useEffect(() => {
-    if (selectedText) {
+    if (!selectedText) return
+    if (selectedAsAnswer) {
+      setFlashcardAnswer(selectedText)
+    } else {
       setFlashcardQuestion(selectedText)
     }
-  }, [selectedText])
+  }, [selectedText, selectedAsAnswer])
 
   const handleCreateFlashcard = () => {
     if (flashcardQuestion.trim() && flashcardAnswer.trim()) {

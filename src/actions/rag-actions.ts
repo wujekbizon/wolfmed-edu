@@ -1,5 +1,6 @@
 'use server'
 
+import crypto from 'crypto'
 import { auth } from '@clerk/nextjs/server'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
@@ -7,6 +8,7 @@ import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
+import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
@@ -15,6 +17,9 @@ import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
+import { saveLectureInternal } from '@/actions/lectures'
+import { getLectureByHash } from '@/server/queries'
+import { revalidatePath } from 'next/cache'
 
 async function progressStep(
   jobId: string | null,
@@ -268,6 +273,8 @@ export async function askRagQuestion(
         'podsumuj': TOOL_DEFINITIONS.find(t => t.name === 'podsumuj'),
         'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool'),
         'fiszka': TOOL_DEFINITIONS.find(t => t.name === 'fiszka_tool'),
+        'planuj': TOOL_DEFINITIONS.find(t => t.name === 'planuj_tool'),
+        'wyklad': TOOL_DEFINITIONS.find(t => t.name === 'wyklad_tool'),
       }
 
       if (!toolName || !toolMap[toolName]) {
@@ -387,6 +394,166 @@ export async function askRagQuestion(
       const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
       await errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
     }
+    return fromErrorToFormState(error)
+  }
+}
+
+export async function generateLectureAction(
+  planContent: string,
+  jobId: string
+): Promise<FormState> {
+  await createJob(jobId)
+
+  try {
+    const { userId } = await auth()
+    if (!userId) throw new Error('Unauthorized')
+
+    const isPremium = await checkPremiumAccessAction()
+    if (!isPremium) {
+      await errorJob(jobId, 'Premium access required')
+      return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
+    }
+
+    const rateLimit = await checkRateLimit(userId, 'lecture:generate')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      await errorJob(jobId, 'Rate limit exceeded')
+      return toFormState('ERROR', `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`)
+    }
+
+    let topic = 'temat'
+    try {
+      const plan = JSON.parse(planContent)
+      topic = plan.topic || topic
+    } catch { /* use default */ }
+
+    const contentHash = crypto.createHash('sha256').update(planContent).digest('hex')
+    const existing = await getLectureByHash(userId, contentHash)
+    if (existing) {
+      await completeJob(jobId)
+      revalidatePath('/panel/nauka')
+      return {
+        ...toFormState('SUCCESS', 'Wykład gotowy!'),
+        values: {
+          audioUrl: existing.audioUrl,
+          title: existing.title,
+          transcript: existing.scriptText,
+          lectureId: existing.id,
+        },
+      }
+    }
+
+    await progressStep(
+      jobId, 'searching', 30,
+      'Przeszukuję bazę wiedzy...',
+      'RAG', 'Querying knowledge base for lecture content'
+    )
+
+    const ragResult = await queryFileSearchOnly(topic)
+    let enrichedContent = planContent
+    if (ragResult.answer) {
+      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${ragResult.answer}`
+      await progressStep(
+        jobId, 'searching', 55,
+        `Znaleziono materiały na temat: ${topic}`,
+        'RAG', `Found ${ragResult.answer.length} chars of additional context`
+      )
+    }
+
+    await progressStep(
+      jobId, 'executing', 70,
+      'Generuję skrypt wykładu...',
+      'LLM', 'Generating spoken lecture script with Gemini'
+    )
+
+    const toolResult = await executeToolLocally('wyklad_tool', { content: enrichedContent })
+    const script = toolResult.content
+
+    await progressStep(
+      jobId, 'finalizing', 85,
+      'Syntezuję głos...',
+      'TTS', `Converting script (${script.length} chars) to audio`
+    )
+
+    const apiKey = process.env.GOOGLE_TTS_API_KEY
+    if (!apiKey) throw new Error('GOOGLE_TTS_API_KEY is not configured')
+
+    // Split script into chunks under 4800 bytes (UTF-8 safe, split on sentence boundaries)
+    const chunks: string[] = []
+    const sentences = script.split(/(?<=[.!?])\s+/)
+    let current = ''
+    for (const sentence of sentences) {
+      const candidate = current ? `${current} ${sentence}` : sentence
+      if (Buffer.byteLength(candidate, 'utf8') > 4800) {
+        if (current) chunks.push(current)
+        current = sentence
+      } else {
+        current = candidate
+      }
+    }
+    if (current) chunks.push(current)
+
+    const audioBuffers: Buffer[] = []
+    for (const chunk of chunks) {
+      const ttsResponse = await fetch(
+        `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            input: { text: chunk },
+            voice: { languageCode: 'pl-PL', name: 'pl-PL-Wavenet-A' },
+            audioConfig: { audioEncoding: 'MP3' },
+          }),
+        }
+      )
+
+      if (!ttsResponse.ok) {
+        const err = await ttsResponse.text()
+        throw new Error(`Google TTS error: ${ttsResponse.status} ${err}`)
+      }
+
+      const ttsData = await ttsResponse.json() as { audioContent: string }
+      audioBuffers.push(Buffer.from(ttsData.audioContent, 'base64'))
+    }
+
+    const audioBuffer = Buffer.concat(audioBuffers)
+
+    await progressStep(
+      jobId, 'finalizing', 90,
+      'Zapisuję plik audio...',
+      'UPLOAD', `Uploading audio (${audioBuffer.length} bytes) to storage`
+    )
+
+    const lecture = await saveLectureInternal({
+      userId,
+      title: topic,
+      contentHash,
+      audioBuffer,
+      scriptText: script,
+    })
+
+    await progressStep(
+      jobId, 'finalizing', 95,
+      'Wykład gotowy!',
+      'UPLOAD', `Lecture saved with id: ${lecture.id}`
+    )
+    await completeJob(jobId)
+    revalidatePath('/panel/nauka')
+
+    return {
+      ...toFormState('SUCCESS', 'Wykład gotowy!'),
+      values: {
+        audioUrl: lecture.audioUrl,
+        title: lecture.title,
+        transcript: lecture.scriptText,
+        lectureId: lecture.id,
+      },
+    }
+  } catch (error) {
+    console.error('Error generating lecture:', error)
+    const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
+    await errorJob(jobId, 'Nie udało się wygenerować wykładu.', technicalMsg)
     return fromErrorToFormState(error)
   }
 }

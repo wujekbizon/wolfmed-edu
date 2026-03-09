@@ -97,5 +97,37 @@ export const TOOL_DEFINITIONS = [
       },
       required: ['content']
     }
+  },
+  {
+    name: 'planuj_tool',
+    description: 'Generate a structured JSON learning plan for a medical topic. Returns a step-by-step plan with goals, prerequisites, steps (what/why/concepts/time), and exam relevance.',
+    parameters: {
+      type: 'object',
+      properties: {
+        content: {
+          type: 'string',
+          description: 'Topic or content to create a learning plan for'
+        },
+        focus: {
+          type: 'string',
+          description: 'Optional: specific aspect to emphasize'
+        }
+      },
+      required: ['content']
+    }
+  },
+  {
+    name: 'wyklad_tool',
+    description: 'Generate a structured medical lecture in Polish as Markdown based on a learning plan. Returns a comprehensive note cell with detailed explanations, clinical relevance, and key concepts for each step of the plan.',
+    parameters: {
+      type: 'object',
+      properties: {
+        content: {
+          type: 'string',
+          description: 'Learning plan JSON or topic content to base the lecture on'
+        }
+      },
+      required: ['content']
+    }
   }
 ] as const

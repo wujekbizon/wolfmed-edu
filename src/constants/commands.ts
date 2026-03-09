@@ -21,4 +21,9 @@ export const COMMANDS: Command[] = [
     description: 'Generuje fiszki edukacyjne na dany temat',
     example: '/fiszka 20 fiszek z układu kostnego',
   },
+  {
+    name: 'planuj',
+    description: 'Tworzy szczegółowy plan nauki krok po kroku',
+    example: '/planuj Anatomia kończyny górnej',
+  },
 ]
