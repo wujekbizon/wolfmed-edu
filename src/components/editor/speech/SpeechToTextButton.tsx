@@ -2,7 +2,7 @@
 
 import { useRef, useCallback } from 'react'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { $getSelection, $isRangeSelection, $getRoot, $createRangeSelection, $setSelection } from 'lexical'
+import { $getSelection, $isRangeSelection, $getRoot } from 'lexical'
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition'
 import MicrophoneIcon from '@/components/icons/MicrophoneIcon'
 
@@ -19,13 +19,10 @@ export default function SpeechToTextButton() {
         let selection = $getSelection()
 
         if (!$isRangeSelection(selection)) {
-          const lastNode = $getRoot().getLastDescendant()
-          if (lastNode) {
-            const newSelection = $createRangeSelection()
-            newSelection.anchor.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
-            newSelection.focus.set(lastNode.getKey(), lastNode.getTextContent().length, 'text')
-            $setSelection(newSelection)
-          }
+          // selectEnd() handles both empty paragraphs (element point) and
+          // text-filled paragraphs (text point) — avoids the "can not be used
+          // for a text point" crash when the editor has no cursor
+          $getRoot().getLastChild()?.selectEnd()
           selection = $getSelection()
         }
 
