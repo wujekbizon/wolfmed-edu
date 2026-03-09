@@ -4,6 +4,37 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useDebouncedValue` hook — 2026-03-09
+
+**File:** `src/hooks/useDebounceValue.tsx`
+
+### Removed redundant `prevValue` state
+
+**Problem:** The hook tracked a `prevValue` state variable solely to guard against re-running the debounce timer when the value hadn't changed. This introduced an extra `setState` call and an extra `useEffect` run after every debounce fire — `setPrevValue(value)` would trigger the effect again, which would then early-return via `if (value === prevValue) return`.
+
+**Fix:** Removed `prevValue` state and the guard entirely. The cleanup-based timer pattern already handles this correctly: `value` and `delay` are the only deps, so the effect only runs when the input actually changes. When the timer fires it calls `setDebouncedValue(value)`, which does not re-trigger the effect because `debouncedValue` is not in the dep array. React's same-reference bailout also ensures no re-render occurs if the value is unchanged.
+
+```ts
+// Before — extra state, extra re-render, extra effect run after every debounce
+const [prevValue, setPrevValue] = useState<T>(value)
+useEffect(() => {
+  if (value === prevValue) return
+  const timer = setTimeout(() => {
+    setDebouncedValue(value)
+    setPrevValue(value)
+  }, delay)
+  return () => clearTimeout(timer)
+}, [value, delay, prevValue])
+
+// After — minimal, correct
+useEffect(() => {
+  const timer = setTimeout(() => setDebouncedValue(value), delay)
+  return () => clearTimeout(timer)
+}, [value, delay])
+```
+
+---
+
 ## `useAudioPlayer` hook — 2026-03-09
 
 **File:** `src/hooks/useAudioPlayer.ts`
