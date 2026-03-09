@@ -5,16 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased] - 2026-03-09
-
-### Changed
-
-- **`useAudioPlayer` hook** (`src/hooks/useAudioPlayer.ts`)
-  - Wrapped `onDurationLoaded` callback in a `useRef` so the `useEffect` has a stable empty `[]` dependency array. Without this, if the parent passes an inline function (e.g. `onDurationLoaded={() => ...}`), the effect would re-run on every render and re-attach all audio event listeners unnecessarily.
-  - `handleSkipForward` now reads `audio.duration` directly from the DOM element instead of the `duration` state variable. This removes the stale-closure risk and the `[duration]` dependency on the `useCallback`.
-
----
-
 ## [4.1.0] - 2025-01-09
 
 ### Added
