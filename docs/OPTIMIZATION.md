@@ -146,3 +146,39 @@ navigator.sendBeacon(
 **Problem:** `import type { Command }` was imported from `@/types/commandTypes` but never referenced in the hook — the array type is inferred from `COMMANDS`.
 
 **Fix:** Import removed.
+
+---
+
+## `useResourceAutocompleteInput` hook — 2026-03-09
+
+**File:** `src/hooks/useResourceAutocompleteInput.ts`
+
+### 1. `filteredResources` not memoized
+
+**Problem:** `resources.filter(...)` ran inline on every render. Arrow-key navigation updates `selectedIndex`, which triggers a re-render and re-ran the filter even though neither `resources` nor `autocompleteQuery` had changed. Unlike the command hook where the list is a static constant, `resources` is a dynamic prop loaded from the API, so both are needed as dependencies.
+
+**Fix:** Wrapped in `useMemo` with `[resources, autocompleteQuery]` as dependencies.
+
+### 2. Missing `useCallback` on all three functions
+
+**Problem:** `handleInputChange`, `handleKeyDown`, and `insertResource` were plain functions recreated on every render. `insertResource` is passed directly as `onSelect` to `<ResourceAutocomplete>`, so the component received a new reference every render and could not bail out of re-renders.
+
+**Fix:** All three wrapped in `useCallback` with appropriate dependency arrays. `handleInputChange` has no deps (only calls stable state setters). `insertResource` depends on `textareaRef` only. `handleKeyDown` depends on `showAutocomplete`, `filteredResources`, `selectedIndex`, and `insertResource`.
+
+### 3. Tab key support added
+
+**Problem:** `handleKeyDown` had no `Tab` case. The command hook (`useCommandAutocompleteInput`) handles Tab to confirm a selection, but the resource hook did not — making the two autocompletes behave inconsistently from the user's perspective.
+
+**Fix:** Added `Tab` alongside `Enter` in a single combined condition: `(e.key === 'Enter' || e.key === 'Tab') && filteredResources.length > 0`.
+
+### 4. `|| 0` operator bug on `selectionStart` — appeared twice
+
+**Problem:** `e.target.selectionStart || 0` in `handleInputChange` and `textarea.selectionStart || 0` in `insertResource` — same recurring pattern. Both return `0` by accident when the cursor is at position `0`, but `||` is semantically wrong here.
+
+**Fix:** Both replaced with `?? 0`.
+
+### 5. Missing synthetic `input` event dispatch in `insertResource`
+
+**Problem:** After inserting a resource name into the textarea via direct DOM mutation, the hook did not dispatch a synthetic `input` event. This meant the parent `handleInputChange` in `RagCellForm` was never notified, leaving any dependent state (e.g. the command autocomplete check) out of sync after insertion. The command hook had this dispatch — the resource hook was missing it.
+
+**Fix:** Added `textarea.dispatchEvent(new Event('input', { bubbles: true }))` at the end of `insertResource`, matching the command hook's behaviour.
