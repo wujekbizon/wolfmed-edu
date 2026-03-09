@@ -23,10 +23,6 @@ onDurationLoadedRef.current?.(audio.duration)
 
 ### 2. Read `audio.duration` from DOM ref, not state
 
-**Problem:** `handleSkipForward` used the `duration` state variable, which required `[duration]` in its `useCallback` deps. This is a stale-closure risk — if state lags, the clamped value could be wrong.
+**Problem:** `handleSkipForward` clamped against the `duration` state variable, which required it as a `useCallback` dependency. State can lag behind the real value, so under rapid seeks the clamp could be slightly off.
 
-**Fix:** Read `audio.duration` directly from the DOM element. The value is always current and the dep array becomes `[]`.
-
-```ts
-audio.currentTime = Math.min(audio.duration, audio.currentTime + 15)
-```
+**Fix:** Read `audio.duration` directly from the DOM element — it's always the live value — so the dep array becomes `[]`.
