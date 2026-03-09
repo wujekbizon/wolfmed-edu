@@ -1,5 +1,4 @@
 import { useState, useMemo, useCallback, RefObject } from 'react'
-import type { Command } from '@/types/commandTypes'
 import { COMMANDS } from '@/constants/commands'
 
 /**
