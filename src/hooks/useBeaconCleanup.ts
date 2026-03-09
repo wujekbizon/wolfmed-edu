@@ -7,7 +7,7 @@ export function useBeaconCleanup(sessionId: string | null) {
     const expireSession = () => {
       navigator.sendBeacon(
         '/api/session/expire',
-        JSON.stringify({ sessionId })
+        new Blob([JSON.stringify({ sessionId })], { type: 'application/json' })
       )
     }
 
