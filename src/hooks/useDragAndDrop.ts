@@ -1,8 +1,18 @@
-import { useState } from 'react'
-import { KeyboardSensor, PointerSensor, useSensor, useSensors, TouchSensor } from '@dnd-kit/core'
+import { useCallback, useState } from 'react'
+import {
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from '@dnd-kit/core'
 import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import { useProceduresStore } from '@/store/useProceduresStore'
 import { useChallengeStore } from '@/store/useChallengeStore'
+
+const keyboardSensorOptions = { coordinateGetter: sortableKeyboardCoordinates }
 
 export function useDragAndDrop() {
   const { setSteps } = useProceduresStore()
@@ -11,29 +21,29 @@ export function useDragAndDrop() {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    useSensor(KeyboardSensor, keyboardSensorOptions),
     useSensor(TouchSensor)
   )
 
-  function handleDragStart(event: any) {
-    const { active } = event
-    setActiveId(active.id)
-  }
+  const handleDragStart = useCallback((event: DragStartEvent) => {
+    setActiveId(event.active.id as string)
+  }, [])
 
-  function handleDragEnd(event: any) {
-    const { active, over } = event
-    setActiveId(null)
+  const handleDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const { active, over } = event
+      setActiveId(null)
 
-    if (isLocked || active.id === over.id) return
+      if (isLocked || !over || active.id === over.id) return
 
-    setSteps((steps) => {
-      const oldIndex = steps.findIndex((item) => item.id === active.id)
-      const newIndex = steps.findIndex((item) => item.id === over.id)
+      setSteps((steps) => {
+        const oldIndex = steps.findIndex((item) => item.id === active.id)
+        const newIndex = steps.findIndex((item) => item.id === over.id)
+        return arrayMove(steps, oldIndex, newIndex)
+      })
+    },
+    [isLocked, setSteps]
+  )
 
-      return arrayMove(steps, oldIndex, newIndex)
-    })
-  }
   return { sensors, activeId, handleDragStart, handleDragEnd, setActiveId }
 }

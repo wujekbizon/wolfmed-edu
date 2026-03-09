@@ -4,6 +4,40 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useDragAndDrop` hook — 2026-03-09
+
+**File:** `src/hooks/useDragAndDrop.ts`
+
+### 1. Crash bug — `over` not guarded before access
+
+**Problem:** In `handleDragEnd`, `over.id` was accessed unconditionally. dnd-kit sets `over` to `null` when the drag ends outside any droppable area, causing a runtime crash (`Cannot read properties of null`).
+
+**Fix:** Added `!over` to the early-return guard before accessing `over.id`.
+
+```ts
+if (isLocked || !over || active.id === over.id) return
+```
+
+### 2. `any` types replaced with dnd-kit event types
+
+**Problem:** Both handlers typed their event parameter as `any`, bypassing TypeScript entirely.
+
+**Fix:** Imported and used `DragStartEvent` and `DragEndEvent` from `@dnd-kit/core`.
+
+### 3. Missing `useCallback` on handlers
+
+**Problem:** `handleDragStart` and `handleDragEnd` were plain functions, recreated on every render. They are passed as props to `<DndContext>`, so the context component received new function references on every render and could not bail out.
+
+**Fix:** Both wrapped in `useCallback`. `handleDragStart` has no deps (only calls a stable state setter). `handleDragEnd` depends on `isLocked` and `setSteps`.
+
+### 4. Inline sensor options object recreated each render
+
+**Problem:** `{ coordinateGetter: sortableKeyboardCoordinates }` was an object literal inside the render body, allocating a new object every render. This causes `useSensor` to see a changed `options` reference each time, potentially re-initialising the keyboard sensor.
+
+**Fix:** Extracted to a module-level constant `keyboardSensorOptions`. The same reference is reused across all renders.
+
+---
+
 ## `useDebouncedValue` hook — 2026-03-09
 
 **File:** `src/hooks/useDebounceValue.tsx`
