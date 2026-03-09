@@ -1,23 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { EmblaOptionsType } from "embla-carousel";
-
 
 interface UseCarouselProps {
   options?: EmblaOptionsType;
   autoplayDelay?: number;
 }
 
-export const useCarousel = ({ 
-  options = { 
-    loop: true, 
-    align: "center",
-    skipSnaps: false,
-    duration: 20,
-    startIndex: 0,
-    containScroll: "trimSnaps"
-  },
-  autoplayDelay = 3000 
+const DEFAULT_OPTIONS: EmblaOptionsType = {
+  loop: true,
+  align: "center",
+  skipSnaps: false,
+  duration: 20,
+  startIndex: 0,
+  containScroll: "trimSnaps",
+};
+
+export const useCarousel = ({
+  options = DEFAULT_OPTIONS,
+  autoplayDelay = 3000,
 }: UseCarouselProps = {}) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options);
   const [selected, setSelected] = useState(0);
@@ -25,7 +26,6 @@ export const useCarousel = ({
 
   const scrollTo = useCallback((index: number) => {
     emblaApi?.scrollTo(index);
-    setSelected(index);
   }, [emblaApi]);
 
   const scrollPrev = useCallback(() => {
@@ -39,29 +39,34 @@ export const useCarousel = ({
   }, [emblaApi]);
 
   const onSelect = useCallback(() => {
-    setSelected(emblaApi?.selectedScrollSnap() || 0);
+    setSelected(emblaApi?.selectedScrollSnap() ?? 0);
   }, [emblaApi]);
 
-  // Set up the autoplay functionality
   useEffect(() => {
     if (!emblaApi) return;
+
+    const handlePointerDown = () => setIsPlaying(false);
+
     emblaApi.on("select", onSelect);
-    emblaApi.on("pointerDown", () => setIsPlaying(false));
-  }, [emblaApi, onSelect]);
-
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    if (isPlaying) {
-      intervalId = setInterval(() => {
-        scrollNext();
-      }, autoplayDelay);
-    }
+    emblaApi.on("pointerDown", handlePointerDown);
 
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      emblaApi.off("select", onSelect);
+      emblaApi.off("pointerDown", handlePointerDown);
     };
-  }, [isPlaying, scrollNext, autoplayDelay]);
+  }, [emblaApi, onSelect]);
+
+  // Use a ref so the interval never needs to re-register when emblaApi stabilises
+  const emblaApiRef = useRef(emblaApi);
+  useEffect(() => {
+    emblaApiRef.current = emblaApi;
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const id = setInterval(() => emblaApiRef.current?.scrollNext(), autoplayDelay);
+    return () => clearInterval(id);
+  }, [isPlaying, autoplayDelay]);
 
   return {
     emblaRef,
@@ -70,6 +75,6 @@ export const useCarousel = ({
     scrollTo,
     scrollPrev,
     scrollNext,
-    setIsPlaying
+    setIsPlaying,
   };
 };
