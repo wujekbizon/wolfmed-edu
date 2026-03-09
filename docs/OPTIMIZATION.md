@@ -4,6 +4,39 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useEditorToolbar` hook — 2026-03-09
+
+**File:** `src/hooks/useEditorToolbar.ts`
+
+### 1. Split `lexical` imports merged
+
+**Problem:** `lexical` was imported in two separate `import` statements — one on line 3 and another on line 7. This is redundant noise with no functional difference.
+
+**Fix:** Merged into a single import block.
+
+### 2. `$getNearestNodeOfType` called 3× with identical arguments
+
+**Problem:** Inside the `registerUpdateListener` callback, `$getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)` was called three times in a row — once per heading level — with the exact same arguments. Each call walks the node tree upward, doing the same work three times.
+
+**Fix:** Called once, stored in `headingNode`, then derived `headingTag` from it. All three heading checks now just compare against `headingTag`.
+
+```ts
+const headingNode = $getNearestNodeOfType(selection.anchor.getNode(), HeadingNode)
+const headingTag = headingNode?.getTag()
+// ...
+h1: headingTag === 'h1',
+h3: headingTag === 'h3',
+h5: headingTag === 'h5',
+```
+
+### 3. Missing `useCallback` on all three returned functions
+
+**Problem:** `formatText`, `formatHeading`, and `handleCommand` were plain functions recreated on every render. They are passed as props to toolbar button components, so those components received new references every render and could not bail out.
+
+**Fix:** All three wrapped in `useCallback([editor])`. The `editor` instance is stable for the lifetime of the `LexicalComposer`, so in practice these callbacks are created only once.
+
+---
+
 ## `useDebouncedValue` hook — 2026-03-09
 
 **File:** `src/hooks/useDebounceValue.tsx`
