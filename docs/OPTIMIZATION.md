@@ -35,6 +35,75 @@ h5: headingTag === 'h5',
 
 **Fix:** All three wrapped in `useCallback([editor])`. The `editor` instance is stable for the lifetime of the `LexicalComposer`, so in practice these callbacks are created only once.
 
+### 4. Selection lost after heading toggle (runtime error)
+
+**Problem:** Both branches of `formatHeading` orphaned the selection's anchor/focus nodes:
+- `headingNode.replace($createParagraphNode())` — created a new empty paragraph and swapped it in; the selection's anchor/focus still pointed to `TextNode` instances that were children of the *old* heading, which was now removed from the tree.
+- `selection.insertNodes([$createHeadingNode(tag)])` — inserted a new heading at the selection point but did not migrate the existing text content into it, leaving the old block in place and the new one empty.
+
+Lexical detected the orphaned nodes and emitted: *"updateEditor: selection has been lost because the previously selected nodes have been removed and selection wasn't moved to another node."*
+
+**Fix:** Before calling `.replace()`, migrate every child from the old block into the new block. Because we move the *same* `TextNode` objects (not copies), the selection's anchor/focus references remain valid after the swap. Both toggle directions now share a single path:
+
+```ts
+const anchorNode = selection.anchor.getNode()
+const existingBlock =
+  $getNearestNodeOfType(anchorNode, HeadingNode) ??
+  anchorNode.getTopLevelElementOrThrow()
+const isActive = $getNearestNodeOfType(anchorNode, HeadingNode)?.getTag() === tag
+
+const newBlock = isActive ? $createParagraphNode() : $createHeadingNode(tag)
+
+existingBlock.getChildren().forEach((child) => newBlock.append(child))
+existingBlock.replace(newBlock)
+```
+
+---
+
+## `useSpeechRecognition` hook — 2026-03-09
+
+**Files:** `src/hooks/useSpeechRecognition.ts`, `src/components/editor/speech/SpeechToTextButton.tsx`
+
+### 1. Moved from component-local to `src/hooks/`
+
+The hook lived at `src/components/editor/speech/useSpeechRecognition.ts` alongside a component. Hooks belong in `src/hooks/`. The associated type definitions were moved to `src/types/speechTypes.ts`.
+
+### 2. `onResult` as a `useEffect` dependency caused the handler effect to re-run every render
+
+**Problem:** `onResult` was listed in the `useEffect` dep array that attaches `onresult`/`onerror` to the recognition instance. In `SpeechToTextButton`, `handleResult` was an inline arrow function — a new reference every render — so the effect re-ran on every render, re-attaching event handlers unnecessarily.
+
+**Fix:** Store `onResult` in a `useRef` updated synchronously on each render. The event handler reads from the ref, so it always calls the latest version without `onResult` being a dependency.
+
+```ts
+const onResultRef = useRef(onResult)
+onResultRef.current = onResult
+// effect dep array: [isListening, speechRecognition] — no onResult
+```
+
+### 3. Visible delay — only `isFinal` results were shown
+
+**Problem:** The hook called `onResult` only when `lastResult.isFinal === true`. Interim results fire continuously while the user speaks, but were discarded. The user saw nothing until the browser finalised the segment (~1–2 seconds of silence).
+
+**Fix:** The hook now emits on every result with a boolean flag: `onResult(transcript, isFinal)`. `SpeechToTextButton` tracks how many interim characters are currently in the editor (`interimLengthRef`). On each new result it extends the selection anchor backward by that amount — selecting the old interim text — then calls `insertText`, which replaces the selection with the new transcript in one operation. On a final result the trailing space is appended and `interimLengthRef` is reset to `0`.
+
+```ts
+// Extend anchor backward to cover previous interim text
+if (interimLengthRef.current > 0) {
+  const anchor = selection.anchor
+  selection.anchor.set(anchor.getNode().getKey(), anchor.offset - interimLengthRef.current, 'text')
+}
+selection.insertText(isFinal ? transcript + ' ' : transcript)
+interimLengthRef.current = isFinal ? 0 : transcript.length
+```
+
+### 4. `handleResult` in `SpeechToTextButton` wrapped in `useCallback`
+
+Was an inline function passed directly to the hook. Now wrapped in `useCallback([editor])` — stable reference, and the ref pattern in the hook means it doesn't need to be a dep there either.
+
+### 5. `stopListening` dependency removed via inlining
+
+`stopListening` was defined above the handler effect but depended on `speechRecognition`, which was already a dep. Inside `handleError` it was called instead of directly calling `speechRecognition.stop()` + `setIsListening(false)`. Removed `stopListening` from the dep array by inlining those two calls directly in `handleError`.
+
 ---
 
 ## `useDebouncedValue` hook — 2026-03-09
