@@ -7,11 +7,18 @@ export function useResourceAutocomplete() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     async function fetchResources() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch('/api/mcp/resources');
+        const res = await fetch('/api/mcp/resources', { signal: controller.signal });
+
+        if (!res.ok) {
+          throw new Error(`Request failed: ${res.status}`);
+        }
+
         const data = await res.json();
 
         if (data.error) {
@@ -20,15 +27,19 @@ export function useResourceAutocomplete() {
         } else {
           setResources(data.resources || []);
         }
-      } catch (error) {
-        console.error('Failed to fetch resources:', error);
+      } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') return;
+        console.error('Failed to fetch resources:', err);
         setError('Failed to load resources');
         setResources([]);
       } finally {
         setLoading(false);
       }
     }
+
     fetchResources();
+
+    return () => controller.abort();
   }, []);
 
   return { resources, loading, error };
