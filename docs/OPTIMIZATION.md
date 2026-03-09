@@ -104,3 +104,45 @@ navigator.sendBeacon(
 **Problem:** The default value for the `options` parameter was written as an object literal inside the function signature. JavaScript evaluates default parameter values on every call, so a brand new object was allocated on every render when no `options` prop was passed.
 
 **Fix:** Extracted the defaults to a module-level `DEFAULT_OPTIONS` constant. The same object reference is reused across all renders, which also avoids `useEmblaCarousel` seeing a "new" options object and potentially re-initialising the carousel.
+
+---
+
+## `useCommandAutocompleteInput` hook — 2026-03-09
+
+**File:** `src/hooks/useCommandAutocompleteInput.ts`
+
+### 1. `filteredCommands` not memoized
+
+**Problem:** `COMMANDS.filter(...)` ran inline on every render. Arrow-key navigation updates `commandSelectedIndex`, which triggers a re-render, which re-ran the filter — even though `commandQuery` had not changed.
+
+**Fix:** Wrapped in `useMemo` with `[commandQuery]` as the only dependency. The filter now only re-runs when the typed query actually changes.
+
+### 2. Missing `useCallback` on exported functions
+
+**Problem:** `handleCommandInputChange`, `handleCommandKeyDown`, and `insertCommand` were plain functions recreated on every render. `insertCommand` is passed directly as the `onSelect` prop to `<CommandAutocomplete>`, so the component received a new function reference every render and could not bail out of re-renders.
+
+**Fix:** All three wrapped in `useCallback` with appropriate dependency arrays. `handleCommandInputChange` has no deps (only calls stable state setters). `insertCommand` depends on `textareaRef` only. `handleCommandKeyDown` depends on `showCommandAutocomplete`, `filteredCommands`, `commandSelectedIndex`, and `insertCommand`.
+
+### 3. Duplicate Enter / Tab branches
+
+**Problem:** `handleCommandKeyDown` had two identical `else if` blocks — one checking `e.key === 'Enter'` and one checking `e.key === 'Tab'` — with the exact same body: prevent default, read the selected command, call `insertCommand`.
+
+**Fix:** Merged into a single condition: `(e.key === 'Enter' || e.key === 'Tab') && filteredCommands.length > 0`.
+
+### 4. Dead code in slash-detection condition
+
+**Problem:** In `handleCommandInputChange`, when `lastSlashIndex === 0` the ternary already assigns `charBeforeSlash = ' '`, making `charBeforeSlash === ' '` true. The extra `|| lastSlashIndex === 0` clause in the `if` was therefore unreachable — it could never be the reason the condition passed.
+
+**Fix:** Removed the redundant `|| lastSlashIndex === 0` clause, leaving only `charBeforeSlash === ' '`.
+
+### 5. `|| 0` operator bug on `selectionStart`
+
+**Problem:** `textarea.selectionStart || 0` — same pattern as `useCarousel`. `selectionStart` returns `0` when the cursor is at the very start of the text, and `|| 0` treats that as falsy. The result happens to be `0` either way, so it worked by accident, but the intent is wrong.
+
+**Fix:** Replaced with `textarea.selectionStart ?? 0`, which only falls back when the value is `null` or `undefined`.
+
+### 6. Unused type import removed
+
+**Problem:** `import type { Command }` was imported from `@/types/commandTypes` but never referenced in the hook — the array type is inferred from `COMMANDS`.
+
+**Fix:** Import removed.
