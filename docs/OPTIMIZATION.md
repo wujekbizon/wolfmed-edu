@@ -243,3 +243,20 @@ if (!res.ok) {
 **Problem:** `totalSeconds` was declared with `let` inside the `setTimeLeft` updater, but the value was computed once and never mutated.
 
 **Fix:** Changed to `const`.
+
+### 3. Interval drift — decrementing state instead of reading wall-clock time
+
+**Problem:** Each tick called `setTimeLeft` with `prevTime - 1 second`. `setInterval` is not perfectly precise — the browser can delay ticks when the tab is hidden, the CPU is busy, or the JS thread is blocked. Over time this causes the displayed countdown to fall behind real elapsed time.
+
+**Fix:** Store the absolute end timestamp in a `useRef` on mount. Each tick computes `remaining = Date.now() - endTimeRef.current` against real wall-clock time, so the displayed value is always accurate regardless of how late any individual tick fires.
+
+```ts
+const endTimeRef = useRef(Date.now() + toSeconds(initialTime) * 1000)
+
+setInterval(() => {
+  const remaining = Math.max(0, Math.floor((endTimeRef.current - Date.now()) / 1000))
+  setTimeLeft(fromSeconds(remaining))
+}, 1000)
+```
+
+Also extracted `toSeconds` and `fromSeconds` as module-level helpers to keep the interval callback readable.
