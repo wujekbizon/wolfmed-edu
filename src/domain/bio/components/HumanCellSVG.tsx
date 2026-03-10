@@ -33,7 +33,7 @@ export function HumanCellSVG({
   const cy = size.height / 2;
 
   // ↓ increase this to make the border more visible (in px)
-  const borderPadding = 2;
+  const borderPadding = 18;
 
   return (
     <div style={{ width: "100%", height: "100%", padding: borderPadding, boxSizing: "border-box" }}>
