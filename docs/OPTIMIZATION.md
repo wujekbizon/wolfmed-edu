@@ -461,25 +461,37 @@ On each `isFinal` result, send the transcript to an AI endpoint that restores pu
 
 **File:** `src/hooks/useFlashcardCell.ts`
 
-### 1. Double store subscription — full store re-render on any state change
+### 1. Double store subscription + `useShallow` infinite loop
 
-**Problem:** The hook called `useFlashcardStore(useShallow(...))` for the cards selector and then a second bare `useFlashcardStore()` for the actions. The second call has no selector, so it subscribes to the entire store and causes a re-render whenever any piece of flashcard state changes — even unrelated fields.
+**Problem:** The hook originally called `useFlashcardStore(useShallow(...))` for the cards selector and a second bare `useFlashcardStore()` for the actions. The second call subscribed to the entire store, causing a re-render on any state change. A first attempt merged both into one `useShallow` call, but this introduced a new crash:
 
-**Fix:** Merged both into a single `useShallow` call that selects cards and all three actions together. One subscription, one comparison.
+```
+The result of getSnapshot should be cached to avoid an infinite loop
+```
+
+Root cause: `useShallow((s) => ({ ...filter... }))` creates a new wrapper function on every render. React's `useSyncExternalStore` (which Zustand uses internally) detects a new snapshot object each call and loops.
+
+**Fix:** Removed `useShallow` entirely. Actions are stable Zustand references — plain individual selectors work without shallow comparison. `cards` (a filtered array — new reference every call) is derived via `useMemo` from the stable `flashcards` array that Zustand returns as a stable reference between unrelated updates.
 
 ```ts
-// Before — two subscriptions, second one is store-wide
-const cards = useFlashcardStore(useShallow((s) => s.flashcards.filter((f) => f.noteId === cellId)))
-const { addFlashcardsFromCell, updateFlashcard, removeFlashcard } = useFlashcardStore()
-
-// After — single shallow subscription
-const { cards, updateFlashcard, removeFlashcard, addFlashcardsFromCell } = useFlashcardStore(
+// Before — useShallow with inline selector causes infinite loop
+const { cards, ... } = useFlashcardStore(
   useShallow((s) => ({
     cards: s.flashcards.filter((f) => f.noteId === cellId),
     updateFlashcard: s.updateFlashcard,
-    removeFlashcard: s.removeFlashcard,
-    addFlashcardsFromCell: s.addFlashcardsFromCell,
+    ...
   })),
+)
+
+// After — stable individual selectors + useMemo for derived value
+const allFlashcards = useFlashcardStore((s) => s.flashcards)
+const updateFlashcard = useFlashcardStore((s) => s.updateFlashcard)
+const removeFlashcard = useFlashcardStore((s) => s.removeFlashcard)
+const addFlashcardsFromCell = useFlashcardStore((s) => s.addFlashcardsFromCell)
+
+const cards = useMemo(
+  () => allFlashcards.filter((f) => f.noteId === cellId),
+  [allFlashcards, cellId],
 )
 ```
 
@@ -527,3 +539,38 @@ const addCard = useCallback(
     addFlashcardsFromCell(cellId, [{ questionText, answerText }], topic),
   [addFlashcardsFromCell, cellId, topic],
 )
+
+---
+
+## `parseFlashcardContent` helper extracted — 2026-03-10
+
+**Files:** `src/helpers/flashcardCellHelpers.ts`, `src/hooks/useFlashcardCell.ts`
+
+### Moved inline `parseContent` to `/helpers`
+
+`parseContent` was a module-level function defined directly in `useFlashcardCell.ts`. Moved to `src/helpers/flashcardCellHelpers.ts` and exported as `parseFlashcardContent` to follow the project convention of keeping pure utility functions in `/helpers`, making the hook file contain only hook logic.
+
+---
+
+## `FlashcardsSection` — missing remove action — 2026-03-10
+
+**File:** `src/components/FlashcardsSection.tsx`
+
+### Added per-group delete button
+
+**Problem:** The flashcard section displayed groups with only a "Przeglądaj" (review) button. There was no way to remove a group of flashcards from the UI — the store's `removeFlashcard` and `clearFlashcardsByNoteId` actions were never wired to any UI element.
+
+**Fix:** Added a trash icon button to each `FlashcardGroupCard`. `handleRemoveGroup` in the parent uses the most efficient store method per source type:
+
+- `source === 'note'` → `clearFlashcardsByNoteId(group.id)` — single call, removes all cards for that note at once
+- `source === 'cell'` → `group.cards.forEach((card) => removeFlashcard(card.cardId))` — cell groups are keyed by topic, not noteId, so individual removal is used
+
+```ts
+function handleRemoveGroup(group: FlashcardGroup) {
+  if (group.source === 'note') {
+    clearFlashcardsByNoteId(group.id)
+  } else {
+    group.cards.forEach((card) => removeFlashcard(card.cardId))
+  }
+}
+```
