@@ -24,9 +24,9 @@
   --border: 240 5.9% 90%;
   --input: 240 10% 16%;
   --ring: 240 10% 3.9%;
-  --slidein-delay: 0;
+  --slidein-delay: 0s;
   --radius: 0.5rem;
-  --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0) forwards;
+  --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0s) forwards;
   --animate-fadeInUp: fadeInUp 0.5s ease-out var(--slidein-delay, 0s) forwards;
   --animate-scaleIn: scaleIn 0.5s ease-out forwards;
   --animate-gradient: gradient 8s ease-in-out infinite alternate;
