@@ -32,11 +32,8 @@ export function HumanCellSVG({
   const cx = size.width / 2;
   const cy = size.height / 2;
 
-  // ↓ increase this to make the border more visible (in px)
-  const borderPadding = 18;
-
   return (
-    <div style={{ width: "100%", height: "100%", padding: borderPadding, boxSizing: "border-box" }}>
+    <div style={{ width: "100%", height: "100%", boxSizing: "border-box" }}>
     <svg
       id={id}
       data-type={type}
@@ -56,7 +53,7 @@ export function HumanCellSVG({
         r={actualRadius}
         fill={color}
         stroke="#1a5f8a"
-        strokeWidth={strokeW * 2}
+        strokeWidth={strokeW * 1}
       />
 
       {/* Cytoplasm gradient */}

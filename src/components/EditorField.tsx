@@ -14,9 +14,9 @@ export const EditorField = memo(function EditorField({
     formState: any
     editorKey: number
     onChange: (editorState: any) => void
-    contentRef: React.RefObject<HTMLInputElement>
-    plainTextRef: React.RefObject<HTMLInputElement>
-    excerptRef: React.RefObject<HTMLInputElement>
+    contentRef: React.RefObject<HTMLInputElement | null>
+    plainTextRef: React.RefObject<HTMLInputElement | null>
+    excerptRef: React.RefObject<HTMLInputElement | null>
     initialContent?: unknown
 }) {
 
