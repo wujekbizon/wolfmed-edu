@@ -15,8 +15,8 @@ const SPARKLE_COLORS = [
   'rgba(254, 178, 178', // red-200
 ]
 
-function getRandomColor() {
-  return SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)]
+function getRandomColor(): string {
+  return SPARKLE_COLORS[Math.floor(Math.random() * SPARKLE_COLORS.length)]!
 }
 
 export const useSparkles = (count: number = 30) => {
