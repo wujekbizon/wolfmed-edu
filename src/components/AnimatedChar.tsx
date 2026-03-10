@@ -18,7 +18,7 @@ export default function AnimatedChar({ char, delay, isHoverable }: AnimatedCharP
   }
 
   const handleMouseLeave = () => {
-    if (!spanRef.current) return
+    if (!isHoverable || !spanRef.current) return
     spanRef.current.style.animation = ''
     spanRef.current.style.color = ''
   }
