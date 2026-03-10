@@ -574,3 +574,24 @@ function handleRemoveGroup(group: FlashcardGroup) {
   }
 }
 ```
+
+---
+
+## `useFlashcardGroups` hook — 2026-03-10
+
+**File:** `src/hooks/useFlashcardGroups.ts`
+
+### `notes.find()` inside a loop — O(n²) lookup
+
+**Problem:** For every flashcard with `source === 'note'`, the `useMemo` body called `notes.find((n) => n.id === card.noteId)` to resolve the group name. `Array.find` is O(n) — with `f` flashcards and `n` notes this is O(f × n) comparisons per memoized computation, and `find` is called once per unique note group (i.e. on the first card seen for each noteId). With 50 cards across 20 notes that's up to 1,000 comparisons per recompute.
+
+**Fix:** Build a `Map<noteId, title>` from the `notes` array once before the loop. Each lookup is then O(1).
+
+```ts
+// Before — O(n) scan per group
+notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka'
+
+// After — O(1) map lookup
+const notesById = new Map(notes.map((n) => [n.id, n.title]))
+notesById.get(card.noteId) ?? 'Notatka'
+```

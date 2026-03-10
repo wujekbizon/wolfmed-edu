@@ -16,6 +16,7 @@ export function useFlashcardGroups(notes: { id: string; title: string }[]): {
   const flashcards = useFlashcardStore((s) => s.flashcards)
 
   const groups = useMemo<FlashcardGroup[]>(() => {
+    const notesById = new Map(notes.map((n) => [n.id, n.title]))
     const map = new Map<string, FlashcardGroup>()
 
     for (const card of flashcards) {
@@ -27,7 +28,7 @@ export function useFlashcardGroups(notes: { id: string; title: string }[]): {
       if (!map.has(groupKey)) {
         const name = source === 'cell'
           ? (card.topic ?? 'AI Fiszki')
-          : (notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka')
+          : (notesById.get(card.noteId) ?? 'Notatka')
         map.set(groupKey, { id: groupKey, name, source, cards: [] })
       }
       map.get(groupKey)!.cards.push({
