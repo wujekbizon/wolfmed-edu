@@ -11,7 +11,12 @@ export default function ScrollButton({ tag, className = '' }: { tag: string; cla
         scroll={false}
         aria-label="Scroll to explore section"
         className="block"
-        onClick={() => document.getElementById(tag)?.scrollIntoView({ behavior: 'smooth' })}
+        onClick={() => {
+          const el = document.getElementById(tag)
+          if (!el) return
+          const top = el.getBoundingClientRect().top + window.scrollY - 80
+          window.scrollTo({ top, behavior: 'smooth' })
+        }}
       >
         <div className="relative w-8 h-14 border-2 border-red-400/50 hover:border-red-500/70 rounded-full backdrop-blur-sm bg-white/20 transition-colors duration-300">
           <motion.div
