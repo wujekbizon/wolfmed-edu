@@ -4,6 +4,30 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useSparkles` hook — 2026-03-10
+
+**File:** `src/hooks/useSparkles.ts`
+
+### 1. Unnecessary `useCallback` on a module-level candidate
+
+**Problem:** `getRandomColor` was wrapped in `useCallback([])` even though it has no dependencies and is only ever called inside `useEffect`. Same anti-pattern as `useFloatingShapes` — `useCallback` is only useful when a stable reference is needed for child props or as an effect dependency that would otherwise re-trigger. Here it just added indirection.
+
+**Fix:** Promoted to a plain module-level function. `getRandomColor` is now a stable reference by definition (module scope), so `[count]` is the only `useEffect` dependency — accurate and minimal.
+
+### 2. `colors` array allocated inside the function on every call
+
+**Problem:** The `colors` array was defined inside `getRandomColor`, meaning a new 3-element array was heap-allocated on every call — once per sparkle, per `count` change.
+
+**Fix:** Extracted to a module-level `SPARKLE_COLORS` constant. The same array is reused across all calls.
+
+### 3. Dead `||` fallback on color lookup
+
+**Problem:** `colors[Math.floor(Math.random() * colors.length)] || 'rgba(248, 113, 113'` — the index is always 0, 1, or 2 on a 3-element array, so the lookup is never `undefined`. The fallback is unreachable dead code.
+
+**Fix:** Removed the fallback entirely.
+
+---
+
 ## `useSortedTests` hook — 2026-03-10
 
 **File:** `src/hooks/useSortedTests.ts` (renamed from `.tsx`)
