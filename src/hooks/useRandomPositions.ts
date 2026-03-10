@@ -1,3 +1,15 @@
+/**
+ * useRandomPositions - generates random decorative positions with responsive SVG sizing
+ *
+ * Generates `count` random positions (top/left as %) once on mount and whenever
+ * `count` changes. Positions are NOT regenerated on resize — only `svgSize` adapts
+ * to the current breakpoint via a debounced resize listener.
+ *
+ * @param count - number of positions to generate (default: 6)
+ * @returns positions - array of { top, left } percentage strings
+ * @returns svgSize  - { width, height } in px based on current breakpoint
+ *                     (<768px → 20, <1024px → 28, ≥1024px → 36)
+ */
 import { useState, useEffect, useCallback } from 'react'
 import { useDebouncedValue } from './useDebounceValue'
 
