@@ -14,7 +14,7 @@ export const MedicalIllustration = () => {
       className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square overflow-hidden rounded-full"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      transition={{ duration: 0.6, delay: 0.7, ease: 'easeInOut' }}
     >
       <motion.div
         className="relative w-full h-full flex items-center justify-center overflow-hidden"
@@ -25,7 +25,7 @@ export const MedicalIllustration = () => {
           rotate: [0, 2, -2, 0],
         }}
         transition={{
-          opacity: { duration: 0.3 },
+          opacity: { duration: 0.4, delay: 0.7 },
           duration: 8,
           repeat: Infinity,
           repeatType: 'reverse',
@@ -51,7 +51,7 @@ export const MedicalIllustration = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{
             duration: 0.3,
-            delay: i * 0.05,
+            delay: 0.7 + i * 0.05,
             ease: 'easeOut',
           }}
           style={{ 
