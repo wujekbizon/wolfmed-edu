@@ -4,8 +4,8 @@ import HeroCallToActionButtons from '@/components/HeroCallToActionButtons'
 
 export default function HeroContent() {
   return (
-    <div className="container mx-auto px-4 flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
-      <div className="flex-1 text-center lg:text-left z-1 mt-4 sm:mt-0">
+    <div className="w-full max-w-7xl mx-auto px-6 sm:px-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+      <div className="flex-1 min-w-0 text-center lg:text-left z-10">
         <div className="animate-fadeInUp">
           <HeroTitle />
         </div>
@@ -23,7 +23,9 @@ export default function HeroContent() {
           </p>
         </div>
       </div>
-      <MedicalIllustration />
+      <div className="shrink-0 w-full flex justify-center lg:block lg:w-auto">
+        <MedicalIllustration />
+      </div>
     </div>
   )
 }

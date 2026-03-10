@@ -10,7 +10,7 @@ export default function HeroTitle() {
           Nowoczesna platforma medyczna
         </span>
       </div>
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
+      <h1 className="text-5xl sm:text-6xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 text-zinc-800">
         <WigglyWord text="Edukacja" startIdx={1} />
         {' '}
         <span className="text-[#ff5b5b]">
