@@ -595,3 +595,36 @@ notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka'
 const notesById = new Map(notes.map((n) => [n.id, n.title]))
 notesById.get(card.noteId) ?? 'Notatka'
 ```
+
+---
+
+## `useFlashcards` hook — 2026-03-10
+
+**File:** `src/hooks/useFlashcards.ts`
+
+### 1. `.filter().map()` — two passes, intermediate array
+
+**Problem:** The `useMemo` derived `flashcards` by chaining `.filter()` then `.map()`. This allocates a full intermediate array for the filtered results before mapping it, meaning two full iterations and two heap allocations per recompute.
+
+**Fix:** Replaced with a single `.reduce()` pass. Filters and transforms in one iteration with one output array — no intermediate allocation.
+
+```ts
+// Before — two passes, intermediate array
+allFlashcards
+  .filter((card) => card.noteId === noteId)
+  .map((card) => ({ cardId: card.id, ... }))
+
+// After — single pass
+allFlashcards.reduce<FlashcardData[]>((acc, card) => {
+  if (card.noteId === noteId) {
+    acc.push({ cardId: card.id, questionText: card.questionText, answerText: card.answerText })
+  }
+  return acc
+}, [])
+```
+
+### 2. Inconsistent selector parameter name
+
+**Problem:** Both store selectors used `state` as the parameter name (`(state) => state.flashcards`) while every other hook in the codebase uses `s` for brevity.
+
+**Fix:** Renamed to `s` for consistency.
