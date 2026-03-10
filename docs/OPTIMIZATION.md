@@ -4,6 +4,46 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useSortedForumPosts` hook — 2026-03-10
+
+**File:** `src/hooks/useSortedForumPosts.ts`
+
+### 1. Missing `useMemo`
+
+**Problem:** The sort ran on every render regardless of whether `posts` or `sortOption` changed. For a page with many posts, this means a full array copy + sort on every unrelated re-render.
+
+**Fix:** Wrapped the entire `switch` in `useMemo([posts, sortOption])`. The sort now only recomputes when the data or the sort option actually changes.
+
+### 2. `Math.max(...array.map(...))` in `recent_activity`
+
+**Problem:** The spread operator (`...`) passes all comment timestamps as individual arguments to `Math.max`. JavaScript has a call stack argument limit — on a post with thousands of comments this would throw a `RangeError: Maximum call stack size exceeded`. It also creates an intermediate mapped array.
+
+**Fix:** Replaced with `reduce`, which iterates in O(N) with no intermediate array and no stack risk:
+
+```ts
+p.comments.reduce(
+  (max, c) => Math.max(max, new Date(c.createdAt).getTime()),
+  new Date(p.createdAt).getTime(),
+)
+```
+
+### 3. `new Date()` called inside sort comparator (`newest` / `oldest`)
+
+**Problem:** The sort comparator called `new Date(x.createdAt).getTime()` for both `a` and `b` on every comparison. With N posts, a sort does O(N log N) comparisons, meaning the same post's Date object is constructed multiple times across separate comparisons.
+
+**Fix:** Applied the Schwartzian transform — pre-compute timestamps once per post in O(N), sort by the pre-computed numbers, then extract the posts:
+
+```ts
+[...posts]
+  .map((p) => ({ p, t: new Date(p.createdAt).getTime() }))
+  .sort((a, b) => b.t - a.t)
+  .map(({ p }) => p)
+```
+
+Total Date constructions drops from O(N log N) to O(N). Same pattern applied to `recent_activity`.
+
+---
+
 ## `useEditorToolbar` hook — 2026-03-09
 
 **File:** `src/hooks/useEditorToolbar.ts`
