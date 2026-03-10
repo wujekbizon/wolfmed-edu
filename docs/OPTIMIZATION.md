@@ -785,3 +785,10 @@ const contentRef = useRef<HTMLInputElement>(null)
 if (!contentRef.current || !plainTextRef.current || !excerptRef.current) return
 contentRef.current.value = jsonContent
 ```
+
+### 3. JSDoc — 2026-03-10
+
+Added JSDoc to both the hook function and `handleEditorChange`:
+
+- **Hook-level doc** explains the hidden-input bridge pattern, which three values are derived (`content`, `plainText`, `excerpt`), what each is used for (database, search, previews), and how to wire the hook into a `<LexicalComposer>` via `OnChangePlugin`.
+- **Callback-level doc** notes the no-op guard behaviour before refs attach.
