@@ -18,13 +18,13 @@ export function useWigglyText(text: string, startIdx: number = 1): UseWigglyText
 
   const chars: CharData[] = Array.from(text).map((char, i) => ({
     char,
-    delay: `${0.3 + (startIdx + i) / 10}s`,
+    delay: `${(startIdx + i) * 0.025}s`,
   }))
 
   useEffect(() => {
-    const lastDelay = 0.3 + (startIdx + chars.length - 1) / 10
-    // base entry delay (0.3s) + last char stagger + bounceIn duration (1.5s)
-    const totalMs = (lastDelay + 1.5) * 1000
+    const lastDelay = (startIdx + chars.length - 1) * 0.025
+    // last char stagger + bounceIn duration (0.6s)
+    const totalMs = (lastDelay + 0.6) * 1000
 
     const timer = setTimeout(() => setIsHoverable(true), totalMs)
     return () => clearTimeout(timer)

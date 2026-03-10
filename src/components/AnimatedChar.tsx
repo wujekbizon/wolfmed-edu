@@ -35,7 +35,7 @@ export default function AnimatedChar({ char, delay, isHoverable }: AnimatedCharP
               display: 'inline-block',
               minWidth: '0.625rem',
               opacity: 0,
-              animation: 'bounceIn 1.5s both',
+              animation: 'bounceIn 0.6s both',
               animationDelay: delay,
             }
       }
