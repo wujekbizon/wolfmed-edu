@@ -27,10 +27,10 @@ export function Shape({ width, height, left, top, duration, index, color }: Shap
       }}
      
       animate={longDriftAnimation(
-        200,   // max drift horizontally
-        200,   // max drift vertically
-        15,    // subtle rotation
-        0.03, // small breathing
+        60,    // max drift horizontally
+        60,    // max drift vertically
+        5,     // subtle rotation
+        0.03,  // small breathing
         duration // <- will be around 10–20s per shape
       ) as any}
     />

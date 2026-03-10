@@ -26,8 +26,8 @@ export default function HeroTitle() {
         <WigglyWord text="łatwiejsza." startIdx={31} />
       </h1>
 
-      <p className="text-lg text-zinc-600 mb-8 max-w-xl lg:max-w-2xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:1200ms] [animation-duration:0.9s]">
-        Rozpocznij swoją podróż w świecie medycyny z naszą innowacyjną platformą edukacyjną.
+      <p className="text-xl text-zinc-700 mb-8 max-w-xl lg:max-w-2xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:1200ms] [animation-duration:0.9s]">
+        Interaktywne testy, algorytmy kliniczne i notatki — wszystko czego potrzebujesz do zdania LEK.
       </p>
     </>
   )
