@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { useShallow } from 'zustand/react/shallow'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useFlashcardStore } from '@/store/useFlashcardStore'
 
 function parseContent(content: string): {
@@ -16,13 +15,14 @@ function parseContent(content: string): {
 }
 
 export function useFlashcardCell(cellId: string, initialContent: string) {
-  const { cards, updateFlashcard, removeFlashcard, addFlashcardsFromCell } = useFlashcardStore(
-    useShallow((s) => ({
-      cards: s.flashcards.filter((f) => f.noteId === cellId),
-      updateFlashcard: s.updateFlashcard,
-      removeFlashcard: s.removeFlashcard,
-      addFlashcardsFromCell: s.addFlashcardsFromCell,
-    })),
+  const allFlashcards = useFlashcardStore((s) => s.flashcards)
+  const updateFlashcard = useFlashcardStore((s) => s.updateFlashcard)
+  const removeFlashcard = useFlashcardStore((s) => s.removeFlashcard)
+  const addFlashcardsFromCell = useFlashcardStore((s) => s.addFlashcardsFromCell)
+
+  const cards = useMemo(
+    () => allFlashcards.filter((f) => f.noteId === cellId),
+    [allFlashcards, cellId],
   )
 
   const initializedForRef = useRef<string | null>(null)
