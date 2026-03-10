@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useDebouncedValue } from './useDebounceValue'
 
 export const useRandomPositions = (count: number = 6) => {
@@ -8,18 +8,20 @@ export const useRandomPositions = (count: number = 6) => {
 
   const debouncedWindowSize = useDebouncedValue(windowSize, 200)
 
-  const generateRandomPositions = useMemo(() => {
-    return () => {
-      const newPositions = []
-      for (let i = 0; i < count; i++) {
-        newPositions.push({
-          top: `${Math.random() * 70 + 10}%`,
-          left: `${Math.random() * 70 + 10}%`, 
-        })
-      }
-      return newPositions
+  const generateRandomPositions = useCallback(() => {
+    const newPositions = []
+    for (let i = 0; i < count; i++) {
+      newPositions.push({
+        top: `${Math.random() * 70 + 10}%`,
+        left: `${Math.random() * 70 + 10}%`,
+      })
     }
+    return newPositions
   }, [count])
+
+  useEffect(() => {
+    setPositions(generateRandomPositions())
+  }, [generateRandomPositions])
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -48,9 +50,8 @@ export const useRandomPositions = (count: number = 6) => {
         size = { width: 36, height: 36 }
       }
       setSvgSize(size)
-      setPositions(generateRandomPositions())
     }
-  }, [debouncedWindowSize, generateRandomPositions])
+  }, [debouncedWindowSize])
 
   return { positions, svgSize }
 }
