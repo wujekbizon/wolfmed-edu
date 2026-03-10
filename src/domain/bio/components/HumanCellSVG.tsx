@@ -51,8 +51,8 @@ export function HumanCellSVG({
         cy={cy}
         r={actualRadius}
         fill={color}
-        stroke="#3388aa"
-        strokeWidth={strokeW}
+        stroke="#1a5f8a"
+        strokeWidth={strokeW * 2}
       />
 
       {/* Cytoplasm gradient */}
