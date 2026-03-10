@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default async function HeroCallToActionButtons() {
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center lg:items-start gap-3 sm:gap-4">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center lg:items-start justify-center lg:justify-start gap-3 sm:gap-4">
       <HeroButton link="/panel/nauka" className="sm:w-auto">
         Rozpocznij naukę
       </HeroButton>
