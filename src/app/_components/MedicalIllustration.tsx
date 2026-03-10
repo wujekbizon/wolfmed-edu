@@ -17,9 +17,9 @@ export const MedicalIllustration = () => {
         opacity: 1,
         scale: 1,
         filter: [
-          'drop-shadow(0 0 18px rgba(26, 95, 138, 0.2))',
-          'drop-shadow(0 0 40px rgba(26, 95, 138, 0.45))',
-          'drop-shadow(0 0 18px rgba(26, 95, 138, 0.2))',
+          'drop-shadow(0 0 18px rgba(255, 130, 80, 0.2))',
+          'drop-shadow(0 0 40px rgba(255, 130, 80, 0.45))',
+          'drop-shadow(0 0 18px rgba(255, 130, 80, 0.2))',
         ],
       }}
       transition={{
@@ -60,15 +60,16 @@ export const MedicalIllustration = () => {
           key={i}
           className="absolute -translate-x-1/2 -translate-y-1/2"
           initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 0.65, scale: 1 }}
           transition={{
             duration: 0.3,
             delay: 0.7 + i * 0.05,
             ease: 'easeOut',
           }}
-          style={{ 
-            top: pos.top, 
-            left: pos.left 
+          style={{
+            top: pos.top,
+            left: pos.left,
+            filter: 'blur(1.5px)',
           }}
         >
           <motion.div
