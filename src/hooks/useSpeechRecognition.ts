@@ -1,6 +1,22 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import type { SpeechRecognition, SpeechRecognitionEvent, SpeechRecognitionErrorEvent } from '@/types/speechTypes'
 
+/**
+ * Hook that provides speech recognition functionality using the Web Speech API.
+ *
+ * Initializes a continuous, interim-result-enabled recognizer set to Polish (`pl-PL`).
+ * The `onResult` callback is kept in a ref so callers can pass a new function reference
+ * on every render without restarting the recognizer.
+ *
+ * @param onResult - Called whenever the recognizer produces a result.
+ *   Receives the trimmed transcript and a flag indicating whether the result is final.
+ *
+ * @returns An object with:
+ * - `isListening` – whether the recognizer is currently active
+ * - `startListening` – starts the recognizer
+ * - `stopListening` – stops the recognizer
+ * - `isSupported` – whether the Web Speech API is available in the current browser
+ */
 export function useSpeechRecognition(onResult: (text: string, isFinal: boolean) => void) {
   const [isListening, setIsListening] = useState(false)
   const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null)
