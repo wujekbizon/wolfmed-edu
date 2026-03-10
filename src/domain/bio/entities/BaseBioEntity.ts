@@ -23,9 +23,10 @@ export abstract class BaseBioEntity implements BioEntity {
         this.position.x += this.velocity.x * delta
         this.position.y += this.velocity.y * delta
     
-        // bounce from screen edges
-        if (this.position.x < 0 || this.position.x > window.innerWidth) this.velocity.x *= -1
-        if (this.position.y < 0 || this.position.y > window.innerHeight) this.velocity.y *= -1
+        // bounce from screen edges — must match borderPadding in HumanCellSVG.tsx
+        const BOUNDARY_PADDING = 15;
+        if (this.position.x < BOUNDARY_PADDING || this.position.x > window.innerWidth - BOUNDARY_PADDING) this.velocity.x *= -1
+        if (this.position.y < BOUNDARY_PADDING || this.position.y > window.innerHeight - BOUNDARY_PADDING) this.velocity.y *= -1
 
         this.customUpdate(delta);
     }
