@@ -792,3 +792,39 @@ Added JSDoc to both the hook function and `handleEditorChange`:
 
 - **Hook-level doc** explains the hidden-input bridge pattern, which three values are derived (`content`, `plainText`, `excerpt`), what each is used for (database, search, previews), and how to wire the hook into a `<LexicalComposer>` via `OnChangePlugin`.
 - **Callback-level doc** notes the no-op guard behaviour before refs attach.
+
+---
+
+## `useQuestionsQuery` hook — 2026-03-10
+
+**File:** `src/hooks/useQuestionsQuery.ts`
+
+### 1. `enabled: !!debouncedSearchTerm || true` — always-true dead code
+
+**Problem:** The `|| true` short-circuits the expression unconditionally. The `!!debouncedSearchTerm` check is never evaluated, making `enabled` permanently `true` — identical to omitting the option entirely.
+
+**Fix:** Removed the `enabled` option. TanStack Query defaults to `true`, which is the correct and intended behaviour.
+
+```ts
+// Before
+enabled: !!debouncedSearchTerm || true,
+
+// After
+// (option removed — defaults to true)
+```
+
+### 2. Static `queryKey: ['categoryQuestions']` — cross-category cache collision
+
+**Problem:** Both query keys (`'categoryQuestions'` and `'filteredCategoryQuestions'`) had no category discriminator. If the user navigated between categories, both caches continued serving the first category's data for up to 10 minutes (`staleTime: 10 * 60 * 1000`).
+
+**Fix:** Added `questions[0]?.meta.category` to both keys, giving each category its own isolated cache slot.
+
+```ts
+// Before
+queryKey: ['categoryQuestions']
+queryKey: ['filteredCategoryQuestions', debouncedSearchTerm]
+
+// After
+queryKey: ['categoryQuestions', questions[0]?.meta.category]
+queryKey: ['filteredCategoryQuestions', questions[0]?.meta.category, debouncedSearchTerm]
+```
