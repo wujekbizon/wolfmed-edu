@@ -723,3 +723,36 @@ if (entries[0]?.isIntersecting && displayedItems < data.length && !isLoadingRef.
 }
 }, [displayedItems, data.length, itemsPerPage, threshold, delay]) // isLoading removed
 ```
+
+---
+
+## `useIsMobile` hook — 2026-03-10
+
+**File:** `src/hooks/useIsMobile.ts`
+
+### 1. Full store subscription just to obtain a setter
+
+**Problem:** `useMobileStore()` (called without a selector) creates a subscription to the entire store state. Any change to any value in `useMobileStore` — not just `isMobile` — would trigger a re-render of every component using this hook. The only reason for that call was to get `setIsMobile`, a setter whose reference is stable and never changes.
+
+**Fix:** Replaced the `useMobileStore()` call with `useMobileStore.getState().setIsMobile(...)` accessed imperatively inside the effect. `getState()` reads the current store snapshot without creating a React subscription, so no re-renders occur from obtaining the setter.
+
+### 2. `setIsMobile` as an unnecessary `useEffect` dependency
+
+**Problem:** Because `setIsMobile` was sourced from the subscribed hook, it had to be listed in the `useEffect` dependency array. Zustand setters are stable references so this didn't cause repeated effect runs in practice, but it was semantically misleading and coupled the effect's dep list to an implementation detail of how the setter was retrieved.
+
+**Fix:** With `getState()` access inside the effect, the setter is no longer a React value and does not belong in the dep array. `breakpoint` is now the only dependency, which accurately represents when the effect should re-run.
+
+```ts
+// Before — full store subscription + setter in deps
+const { setIsMobile } = useMobileStore()
+useEffect(() => {
+  const checkMobile = () => setIsMobile(window.innerWidth < breakpoint)
+  ...
+}, [breakpoint, setIsMobile])
+
+// After — imperative getState(), breakpoint is the sole dep
+useEffect(() => {
+  const checkMobile = () => useMobileStore.getState().setIsMobile(window.innerWidth < breakpoint)
+  ...
+}, [breakpoint])
+```
