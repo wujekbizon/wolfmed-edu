@@ -9,6 +9,13 @@ export type FlashcardGroup = {
   cards: FlashcardData[]
 }
 
+/**
+ * Groups all store flashcards by their origin — either a named note or an AI-generated topic.
+ * Builds a noteId→title map once per render to keep per-card lookups O(1).
+ *
+ * @param notes List of notes used to resolve group names for note-sourced flashcards
+ * @returns Grouped flashcard data and a boolean indicating whether any cards exist
+ */
 export function useFlashcardGroups(notes: { id: string; title: string }[]): {
   groups: FlashcardGroup[]
   hasAny: boolean

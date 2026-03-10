@@ -7,6 +7,13 @@ export type FlashcardData = {
   answerText: string
 }
 
+/**
+ * Returns the flashcards belonging to a specific note and a handler to remove them.
+ * Derives the filtered list in a single reduce pass to avoid an intermediate array.
+ *
+ * @param noteId ID of the note whose flashcards should be returned
+ * @returns Flashcards for the given note and a removeFlashcard action
+ */
 export function useFlashcards(noteId: string) {
   const allFlashcards = useFlashcardStore((s) => s.flashcards)
   const removeFlashcard = useFlashcardStore((s) => s.removeFlashcard)
