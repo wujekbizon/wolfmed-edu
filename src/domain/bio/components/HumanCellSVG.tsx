@@ -51,7 +51,7 @@ export function HumanCellSVG({
         cy={cy}
         r={actualRadius}
         fill={color}
-        stroke="#7b9cbf"
+        stroke="#1a5f8a"
         strokeWidth={strokeW * 2}
       />
 
