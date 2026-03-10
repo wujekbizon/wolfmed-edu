@@ -13,8 +13,20 @@ export const MedicalIllustration = () => {
     <motion.div
       className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square overflow-hidden rounded-full"
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay: 0.7, ease: 'easeInOut' }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        filter: [
+          'drop-shadow(0 0 18px rgba(26, 95, 138, 0.2))',
+          'drop-shadow(0 0 40px rgba(26, 95, 138, 0.45))',
+          'drop-shadow(0 0 18px rgba(26, 95, 138, 0.2))',
+        ],
+      }}
+      transition={{
+        opacity: { duration: 0.6, delay: 0.7, ease: 'easeInOut' },
+        scale: { duration: 0.6, delay: 0.7, ease: 'easeInOut' },
+        filter: { duration: 8, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+      }}
     >
       <motion.div
         className="relative w-full h-full flex items-center justify-center overflow-hidden"
