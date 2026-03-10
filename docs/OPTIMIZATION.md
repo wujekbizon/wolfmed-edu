@@ -662,3 +662,33 @@ useEffect(() => {
   )
 }, [count, minSize, maxSize, minDuration, maxDuration])
 ```
+
+---
+
+## `useGeneratedTest` hook — 2026-03-10
+
+**File:** `src/hooks/useGeneratedTest.tsx`
+
+### 1. Redundant inline comments describing obvious code
+
+**Problem:** Nearly every statement had an inline comment restating what the code already clearly expresses (`// State variable to store generated tests`, `// Generate tests using provided data and number`, `// Return the generated tests array for consumption by components`). These add visual noise without communicating intent or reasoning.
+
+**Fix:** Removed all "what" comments. The JSDoc block already covers usage context.
+
+### 2. JSDoc used `{Type}` braces on `@param` and `@returns`
+
+**Problem:** The JSDoc used `@param {Test[]} tests` style with explicit type annotations in braces. In a TypeScript project the types are already present in the function signature — duplicating them in JSDoc creates a maintenance burden (two places to update on type changes) and is not the project convention.
+
+**Fix:** Removed type braces from all `@param` and `@returns` tags.
+
+### 3. Blank line between JSDoc block and function declaration
+
+**Problem:** An empty line separated the closing `*/` of the JSDoc from the `export function` line, detaching the doc from its target — some tooling may not associate them correctly.
+
+**Fix:** Removed the blank line.
+
+### 4. Intermediate variable for `generateRandomTests` result
+
+**Problem:** The result of `generateRandomTests` was assigned to `generatedTests` before immediately passing it to `setRandomTestsArray`. The variable served no purpose.
+
+**Fix:** Inlined the call directly into `setRandomTestsArray(...)`.
