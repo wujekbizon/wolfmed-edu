@@ -9,6 +9,13 @@ export type FlashcardGroup = {
   cards: FlashcardData[]
 }
 
+/**
+ * Groups all store flashcards by their origin — either a named note or an AI-generated topic.
+ * Builds a noteId→title map once per render to keep per-card lookups O(1).
+ *
+ * @param notes List of notes used to resolve group names for note-sourced flashcards
+ * @returns Grouped flashcard data and a boolean indicating whether any cards exist
+ */
 export function useFlashcardGroups(notes: { id: string; title: string }[]): {
   groups: FlashcardGroup[]
   hasAny: boolean
@@ -16,6 +23,7 @@ export function useFlashcardGroups(notes: { id: string; title: string }[]): {
   const flashcards = useFlashcardStore((s) => s.flashcards)
 
   const groups = useMemo<FlashcardGroup[]>(() => {
+    const notesById = new Map(notes.map((n) => [n.id, n.title]))
     const map = new Map<string, FlashcardGroup>()
 
     for (const card of flashcards) {
@@ -27,7 +35,7 @@ export function useFlashcardGroups(notes: { id: string; title: string }[]): {
       if (!map.has(groupKey)) {
         const name = source === 'cell'
           ? (card.topic ?? 'AI Fiszki')
-          : (notes.find((n) => n.id === card.noteId)?.title ?? 'Notatka')
+          : (notesById.get(card.noteId) ?? 'Notatka')
         map.set(groupKey, { id: groupKey, name, source, cards: [] })
       }
       map.get(groupKey)!.cards.push({

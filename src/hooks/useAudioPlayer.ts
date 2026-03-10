@@ -7,6 +7,8 @@ interface UseAudioPlayerOptions {
 
 export function useAudioPlayer({ onDurationLoaded }: UseAudioPlayerOptions) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const onDurationLoadedRef = useRef(onDurationLoaded)
+  onDurationLoadedRef.current = onDurationLoaded
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -23,7 +25,7 @@ export function useAudioPlayer({ onDurationLoaded }: UseAudioPlayerOptions) {
     const onTime = () => setCurrentTime(audio.currentTime)
     const onLoaded = () => {
       setDuration(audio.duration)
-      onDurationLoaded?.(audio.duration)
+      onDurationLoadedRef.current?.(audio.duration)
     }
     const onEnded = () => { setIsPlaying(false); setEnded(true) }
     audio.addEventListener('timeupdate', onTime)
@@ -34,7 +36,7 @@ export function useAudioPlayer({ onDurationLoaded }: UseAudioPlayerOptions) {
       audio.removeEventListener('loadedmetadata', onLoaded)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [onDurationLoaded])
+  }, [])
 
   const togglePlay = useCallback(() => {
     const audio = audioRef.current
@@ -69,8 +71,8 @@ export function useAudioPlayer({ onDurationLoaded }: UseAudioPlayerOptions) {
   const handleSkipForward = useCallback(() => {
     const audio = audioRef.current
     if (!audio) return
-    audio.currentTime = Math.min(duration, audio.currentTime + 15)
-  }, [duration])
+    audio.currentTime = Math.min(audio.duration, audio.currentTime + 15)
+  }, [])
 
   const handleSeek = useCallback((pct: number) => {
     const audio = audioRef.current

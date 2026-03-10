@@ -11,16 +11,21 @@ export function useInfiniteScroll<T>({ data, itemsPerPage, threshold = 0.1, dela
   const [displayedItems, setDisplayedItems] = useState(itemsPerPage)
   const [isLoading, setIsLoading] = useState(false)
   const loadMoreRef = useRef<HTMLDivElement>(null)
+  // Ref-based guard prevents adding isLoading to the effect deps, which would
+  // otherwise cause the observer to disconnect/reconnect on every load cycle.
+  const isLoadingRef = useRef(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting && displayedItems < data.length && !isLoading) {
+        if (entries[0]?.isIntersecting && displayedItems < data.length && !isLoadingRef.current) {
+          isLoadingRef.current = true
           setIsLoading(true)
 
           setTimeout(() => {
             setDisplayedItems((prev) => Math.min(prev + itemsPerPage, data.length))
             setIsLoading(false)
+            isLoadingRef.current = false
           }, delay)
         }
       },
@@ -32,7 +37,7 @@ export function useInfiniteScroll<T>({ data, itemsPerPage, threshold = 0.1, dela
     }
 
     return () => observer.disconnect()
-  }, [displayedItems, data.length, itemsPerPage, threshold, delay, isLoading])
+  }, [displayedItems, data.length, itemsPerPage, threshold, delay])
 
   const hasMore = displayedItems < data.length
   const visibleItems = data.slice(0, displayedItems)

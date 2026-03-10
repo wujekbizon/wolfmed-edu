@@ -3,14 +3,12 @@ import { useState, useEffect } from 'react'
 interface ScrollState {
   isScrolled: boolean
   scrollDirection: 'up' | 'down' | null
-  scrollY: number
 }
 
 export function useScroll(threshold: number = 50, container?: HTMLElement | null) {
   const [scrollState, setScrollState] = useState<ScrollState>({
     isScrolled: false,
     scrollDirection: null,
-    scrollY: 0,
   })
 
   useEffect(() => {
@@ -29,13 +27,8 @@ export function useScroll(threshold: number = 50, container?: HTMLElement | null
       const isScrolled = currentScrollY > threshold
 
       setScrollState(prev => {
-        if (
-          prev.isScrolled === isScrolled &&
-          prev.scrollDirection === direction &&
-          prev.scrollY === currentScrollY
-        ) return prev
-
-        return { isScrolled, scrollDirection: direction, scrollY: currentScrollY }
+        if (prev.isScrolled === isScrolled && prev.scrollDirection === direction) return prev
+        return { isScrolled, scrollDirection: direction }
       })
 
       lastScrollY = currentScrollY

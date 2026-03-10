@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { LayersIcon } from 'lucide-react'
+import { Trash2Icon } from 'lucide-react'
 import { useFlashcardGroups, type FlashcardGroup } from '@/hooks/useFlashcardGroups'
+import { useFlashcardStore } from '@/store/useFlashcardStore'
 import FlashcardReviewModal from './FlashcardReviewModal'
 import type { FlashcardData } from '@/hooks/useFlashcards'
 
@@ -11,9 +12,10 @@ type Filter = 'all' | 'note' | 'cell'
 interface FlashcardGroupCardProps {
   group: FlashcardGroup
   onReview: (cards: FlashcardData[]) => void
+  onRemove: (group: FlashcardGroup) => void
 }
 
-function FlashcardGroupCard({ group, onReview }: FlashcardGroupCardProps) {
+function FlashcardGroupCard({ group, onReview, onRemove }: FlashcardGroupCardProps) {
   const count = group.cards.length
   const preview = group.cards[0]?.questionText
 
@@ -32,7 +34,15 @@ function FlashcardGroupCard({ group, onReview }: FlashcardGroupCardProps) {
           {preview}
         </p>
       )}
-      <div className="absolute bottom-3 right-3">
+      <div className="absolute bottom-3 left-3 right-3 flex justify-between">
+        <button
+          type="button"
+          onClick={() => onRemove(group)}
+          className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+          aria-label="Usuń grupę fiszek"
+        >
+          <Trash2Icon size={14} />
+        </button>
         <button
           type="button"
           onClick={() => onReview(group.cards)}
@@ -57,8 +67,18 @@ interface FlashcardsSectionProps {
 
 export default function FlashcardsSection({ notes }: FlashcardsSectionProps) {
   const { groups, hasAny } = useFlashcardGroups(notes)
+  const removeFlashcard = useFlashcardStore((s) => s.removeFlashcard)
+  const clearFlashcardsByNoteId = useFlashcardStore((s) => s.clearFlashcardsByNoteId)
   const [filter, setFilter] = useState<Filter>('all')
   const [reviewCards, setReviewCards] = useState<FlashcardData[] | null>(null)
+
+  function handleRemoveGroup(group: FlashcardGroup) {
+    if (group.source === 'note') {
+      clearFlashcardsByNoteId(group.id)
+    } else {
+      group.cards.forEach((card) => removeFlashcard(card.cardId))
+    }
+  }
 
   if (!hasAny) return null
 
@@ -99,6 +119,7 @@ export default function FlashcardsSection({ notes }: FlashcardsSectionProps) {
               key={group.id}
               group={group}
               onReview={setReviewCards}
+              onRemove={handleRemoveGroup}
             />
           ))}
         </div>

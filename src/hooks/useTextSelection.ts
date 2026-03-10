@@ -10,6 +10,23 @@ export type SelectionRect = {
   width: number
 }
 
+/**
+ * Hook that tracks the user's text selection within a Lexical editor.
+ *
+ * Registers a Lexical update listener that reads the current selection on every
+ * editor tick. A ref-based guard (`prevRectRef`) prevents redundant state updates
+ * when the bounding rect hasn't changed, avoiding unnecessary re-renders of the
+ * selection tooltip while the user holds a selection.
+ *
+ * Only active when `isStudyMode` is `true` — clears all selection state otherwise.
+ *
+ * @param isStudyMode - When `false`, selection tracking is disabled and state is cleared.
+ *
+ * @returns An object with:
+ * - `selectedText` – the currently selected text, trimmed; empty string when no selection
+ * - `selectionRect` – bounding rect (`top`, `left`, `width`) of the selection, or `null`
+ * - `clearSelection` – clears the selection state imperatively (e.g. after a tooltip action)
+ */
 export function useTextSelection(isStudyMode: boolean) {
   const [editor] = useLexicalComposerContext()
   const [selectedText, setSelectedText] = useState('')

@@ -3,28 +3,24 @@ import { Test } from '@/types/dataTypes'
 import { generateRandomTests } from '@/helpers/generatedRandomTests'
 
 /**
- * Custom hook to generate and manage an array of tests based on provided data.
+ * Randomly selects a subset of tests from the provided pool and keeps the
+ * selection in sync whenever the pool or requested count changes.
+ * Resets to an empty array when `numberTests` is null or 0.
  *
- * @param {Test[]} tests - An array of available test data objects.
- * @param {number | null} numberTests - The desired number of tests to generate, or null if no tests needed.
- * @returns {Test[]} - An array of generated test objects.
+ * @param tests Full pool of available tests to draw from
+ * @param numberTests How many tests to generate, or null to produce none
+ * @returns Array of randomly selected test objects
  */
-
 export function useGeneratedTest(tests: Test[], numberTests: number | null) {
-  // State variable to store generated tests
   const [randomTestsArray, setRandomTestsArray] = useState<Test[]>([])
 
   useEffect(() => {
-    // Skip generation if numberTests is null
     if (!numberTests) {
-      setRandomTestsArray([]) // Reset the array when numberTests is null
+      setRandomTestsArray([])
       return
     }
-    // Generate tests using provided data and number
-    const generatedTests = generateRandomTests(tests, numberTests)
-    setRandomTestsArray(generatedTests) // Update state with generated tests
-  }, [numberTests, tests]) // Re-run on changes to numberTests or tests
+    setRandomTestsArray(generateRandomTests(tests, numberTests))
+  }, [numberTests, tests])
 
-  // Return the generated tests array for consumption by components
   return randomTestsArray
 }

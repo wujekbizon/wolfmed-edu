@@ -13,9 +13,10 @@ interface UseQuestionsQueryProps {
 export function useQuestionsQuery({ questions, searchQuery, currentPage, questionsPerPage }: UseQuestionsQueryProps) {
   const debouncedSearchTerm = useDebouncedValue(searchQuery, 250)
 
-  // Query to cache the unfiltered tests
+  // Query to cache the unfiltered tests, keyed by category so different
+  // categories never share the same cache slot.
   const { data: cachedQuestions } = useQuery({
-    queryKey: ['categoryQuestions'],
+    queryKey: ['categoryQuestions', questions[0]?.meta.category],
     queryFn: async () => questions,
     initialData: questions,
     staleTime: 10 * 60 * 1000,
@@ -31,9 +32,8 @@ export function useQuestionsQuery({ questions, searchQuery, currentPage, questio
   }
 
   const { data: filteredQuestions } = useQuery({
-    queryKey: ['filteredCategoryQuestions', debouncedSearchTerm],
+    queryKey: ['filteredCategoryQuestions', questions[0]?.meta.category, debouncedSearchTerm],
     queryFn: filteredQuestionsQueryFn,
-    enabled: !!debouncedSearchTerm || true,
     staleTime: 10 * 60 * 1000,
   })
 
