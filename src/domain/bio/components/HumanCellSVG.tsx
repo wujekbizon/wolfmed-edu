@@ -32,18 +32,22 @@ export function HumanCellSVG({
   const cx = size.width / 2;
   const cy = size.height / 2;
 
+  // ↓ increase this to make the border more visible (in px)
+  const borderPadding = 2;
+
   return (
+    <div style={{ width: "100%", height: "100%", padding: borderPadding, boxSizing: "border-box" }}>
     <svg
       id={id}
       data-type={type}
       width="100%"
       height="100%"
+      overflow="visible"
       style={{
         position: "relative",
         display: "block",
       }}
       viewBox={`0 0 ${size.width} ${size.height}`}
-      
     >
       {/* Cell membrane */}
       <circle
@@ -129,5 +133,6 @@ export function HumanCellSVG({
         opacity="0.2"
       />
     </svg>
+    </div>
   );
 }
