@@ -17,13 +17,13 @@ export function Shape({ width, height, left, top, duration, index, color }: Shap
   return (
     <motion.div
       // @ts-ignore
-      className={`absolute rounded-full backdrop-blur-sm border border-black/10 ${color}`}
+      className={`absolute rounded-full backdrop-blur-sm border border-black/25 ${color}`}
       style={{
         width,
         height,
         left,
         top,
-        boxShadow: '0 0 15px rgba(0,0,0,0.05)'
+        boxShadow: '0 0 15px rgba(0,0,0,0.10)'
       }}
      
       animate={longDriftAnimation(
