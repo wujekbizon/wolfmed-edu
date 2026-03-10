@@ -692,3 +692,34 @@ useEffect(() => {
 **Problem:** The result of `generateRandomTests` was assigned to `generatedTests` before immediately passing it to `setRandomTestsArray`. The variable served no purpose.
 
 **Fix:** Inlined the call directly into `setRandomTestsArray(...)`.
+
+---
+
+## `useInfiniteScroll` hook — 2026-03-10
+
+**File:** `src/hooks/useInfiniteScroll.ts`
+
+### 1. `isLoading` state in `useEffect` dependency array caused unnecessary observer churn
+
+**Problem:** `isLoading` was listed as a dependency of the `useEffect` that creates the `IntersectionObserver`. Because `isLoading` is a state value, every load cycle caused the effect to re-run twice — once when `isLoading` flipped to `true`, and again when it flipped back to `false`. Each re-run called `observer.disconnect()` and created a brand new observer, adding unnecessary overhead on every page load.
+
+**Fix:** Introduced `isLoadingRef = useRef(false)` as a parallel ref-based guard. The callback now reads and writes `isLoadingRef.current` instead of the `isLoading` state for the guard check, so `isLoading` no longer needs to be a dependency. The state itself (`isLoading`) is still set for consumers to drive loading UI, but it no longer triggers observer recreation.
+
+```ts
+// Before — isLoading in deps caused observer to disconnect/reconnect twice per load
+}, [displayedItems, data.length, itemsPerPage, threshold, delay, isLoading])
+
+// After — ref guards against concurrent triggers, state kept only for the return value
+const isLoadingRef = useRef(false)
+// ...
+if (entries[0]?.isIntersecting && displayedItems < data.length && !isLoadingRef.current) {
+  isLoadingRef.current = true
+  setIsLoading(true)
+  setTimeout(() => {
+    setDisplayedItems(...)
+    setIsLoading(false)
+    isLoadingRef.current = false
+  }, delay)
+}
+}, [displayedItems, data.length, itemsPerPage, threshold, delay]) // isLoading removed
+```
