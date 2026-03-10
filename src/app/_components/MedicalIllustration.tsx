@@ -11,7 +11,7 @@ export const MedicalIllustration = () => {
 
   return (
     <motion.div
-      className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square"
+      className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square overflow-hidden rounded-full"
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.4, ease: 'easeInOut' }}

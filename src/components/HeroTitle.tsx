@@ -16,7 +16,7 @@ export default function HeroTitle() {
         <span className="text-[#ff5b5b]">
           <WigglyWord text="medyczna" startIdx={9} />
         </span>
-        <br />
+        {' '}
         <WigglyWord text="może" startIdx={17} />
         {' '}
         <WigglyWord text="być" startIdx={21} />
@@ -26,7 +26,7 @@ export default function HeroTitle() {
         <WigglyWord text="łatwiejsza." startIdx={31} />
       </h1>
 
-      <p className="text-lg text-zinc-600 mb-8 max-w-xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:600ms]">
+      <p className="text-lg text-zinc-600 mb-8 max-w-xl lg:max-w-2xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:600ms]">
         Rozpocznij swoją podróż w świecie medycyny z naszą innowacyjną platformą edukacyjną.
       </p>
     </>
