@@ -454,3 +454,76 @@ Call `applyPunctuation(transcript)` before passing to `selection.insertText`. Fo
 
 **Option B — LLM post-processing** (accurate, adds latency and cost):
 On each `isFinal` result, send the transcript to an AI endpoint that restores punctuation, then commit the corrected text. Not worth it unless transcription quality is a priority.
+
+---
+
+## `useFlashcardCell` hook — 2026-03-10
+
+**File:** `src/hooks/useFlashcardCell.ts`
+
+### 1. Double store subscription — full store re-render on any state change
+
+**Problem:** The hook called `useFlashcardStore(useShallow(...))` for the cards selector and then a second bare `useFlashcardStore()` for the actions. The second call has no selector, so it subscribes to the entire store and causes a re-render whenever any piece of flashcard state changes — even unrelated fields.
+
+**Fix:** Merged both into a single `useShallow` call that selects cards and all three actions together. One subscription, one comparison.
+
+```ts
+// Before — two subscriptions, second one is store-wide
+const cards = useFlashcardStore(useShallow((s) => s.flashcards.filter((f) => f.noteId === cellId)))
+const { addFlashcardsFromCell, updateFlashcard, removeFlashcard } = useFlashcardStore()
+
+// After — single shallow subscription
+const { cards, updateFlashcard, removeFlashcard, addFlashcardsFromCell } = useFlashcardStore(
+  useShallow((s) => ({
+    cards: s.flashcards.filter((f) => f.noteId === cellId),
+    updateFlashcard: s.updateFlashcard,
+    removeFlashcard: s.removeFlashcard,
+    addFlashcardsFromCell: s.addFlashcardsFromCell,
+  })),
+)
+```
+
+### 2. `initialized.current` boolean doesn't reset on `cellId` change — bug
+
+**Problem:** The seeding guard was `const initialized = useRef(false)`. Once `initialized.current` was set to `true` on the first render, any subsequent `cellId` change would trigger the effect (because `cellId` is a dep) but immediately bail out via `if (initialized.current) return`. A new cell whose flashcards hadn't been loaded yet would never be seeded.
+
+**Fix:** Changed the ref to track the last initialized `cellId` (`useRef<string | null>(null)`). The guard becomes `if (initializedForRef.current === cellId) return`, which passes for new cell IDs and blocks re-runs for the same one.
+
+```ts
+// Before — boolean, doesn't distinguish between cellIds
+const initialized = useRef(false)
+if (initialized.current) return
+initialized.current = true
+
+// After — tracks which cellId was last seeded
+const initializedForRef = useRef<string | null>(null)
+if (initializedForRef.current === cellId) return
+initializedForRef.current = cellId
+```
+
+### 3. `addFlashcardsFromCell` read from closure inside effect — stale closure risk
+
+**Problem:** The effect called `addFlashcardsFromCell` from the component closure (i.e. from the render-time value), but `addFlashcardsFromCell` was not listed in the effect's dependency array. Zustand actions are stable in practice, but the lint warning is valid and the pattern is fragile.
+
+**Fix:** Read both the check query and the action directly from `useFlashcardStore.getState()` inside the effect. `getState()` always returns the current store state without creating a subscription, so no dep array entry is needed.
+
+```ts
+const existing = useFlashcardStore.getState().flashcards.filter((f) => f.noteId === cellId)
+if (existing.length === 0) {
+  // ...
+  useFlashcardStore.getState().addFlashcardsFromCell(cellId, flashcards, topic)
+}
+```
+
+### 4. `addCard` not wrapped in `useCallback`
+
+**Problem:** `addCard` was a plain arrow function recreated on every render. If passed as a prop to a child component, the child receives a new reference every render and cannot bail out.
+
+**Fix:** Wrapped in `useCallback([addFlashcardsFromCell, cellId, topic])`.
+
+```ts
+const addCard = useCallback(
+  (questionText: string, answerText: string) =>
+    addFlashcardsFromCell(cellId, [{ questionText, answerText }], topic),
+  [addFlashcardsFromCell, cellId, topic],
+)

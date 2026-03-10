@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { useFlashcardStore } from '@/store/useFlashcardStore'
 
@@ -16,27 +16,37 @@ function parseContent(content: string): {
 }
 
 export function useFlashcardCell(cellId: string, initialContent: string) {
-  const cards = useFlashcardStore(useShallow((s) => s.flashcards.filter((f) => f.noteId === cellId)))
-  const { addFlashcardsFromCell, updateFlashcard, removeFlashcard } = useFlashcardStore()
-  const initialized = useRef(false)
+  const { cards, updateFlashcard, removeFlashcard, addFlashcardsFromCell } = useFlashcardStore(
+    useShallow((s) => ({
+      cards: s.flashcards.filter((f) => f.noteId === cellId),
+      updateFlashcard: s.updateFlashcard,
+      removeFlashcard: s.removeFlashcard,
+      addFlashcardsFromCell: s.addFlashcardsFromCell,
+    })),
+  )
+
+  const initializedForRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (initialized.current) return
-    initialized.current = true
+    if (initializedForRef.current === cellId) return
+    initializedForRef.current = cellId
 
     const existing = useFlashcardStore.getState().flashcards.filter((f) => f.noteId === cellId)
     if (existing.length === 0) {
       const { flashcards, topic } = parseContent(initialContent)
       if (flashcards.length > 0) {
-        addFlashcardsFromCell(cellId, flashcards, topic)
+        useFlashcardStore.getState().addFlashcardsFromCell(cellId, flashcards, topic)
       }
     }
-  }, [cellId])
+  }, [cellId, initialContent])
 
   const topic = cards[0]?.topic ?? parseContent(initialContent).topic
 
-  const addCard = (questionText: string, answerText: string) =>
-    addFlashcardsFromCell(cellId, [{ questionText, answerText }], topic)
+  const addCard = useCallback(
+    (questionText: string, answerText: string) =>
+      addFlashcardsFromCell(cellId, [{ questionText, answerText }], topic),
+    [addFlashcardsFromCell, cellId, topic],
+  )
 
   return { cards, topic, updateFlashcard, removeFlashcard, addCard }
 }
