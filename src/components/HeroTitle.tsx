@@ -16,15 +16,15 @@ function AnimatedChar({
   const handleMouseEnter = () => {
     if (!isHoverable || !spanRef.current) return
     const el = spanRef.current
-    el.style.animation = 'none'
-    void el.offsetWidth // force reflow to re-trigger animation
+    // animation was cleared on mouseLeave so setting it here always starts fresh
     el.style.animation = 'rubberBand 1.2s'
     el.style.color = '#ff5b5b'
   }
 
-  // Clear color as soon as mouse leaves — matches original CSS :hover behavior
   const handleMouseLeave = () => {
     if (!spanRef.current) return
+    // clear both so the next mouseEnter starts the animation from scratch
+    spanRef.current.style.animation = ''
     spanRef.current.style.color = ''
   }
 
