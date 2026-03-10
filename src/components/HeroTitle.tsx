@@ -4,6 +4,12 @@ import WigglyWord from './WigglyWord'
 export default function HeroTitle() {
   return (
     <>
+      <div className="animate-fadeInUp mb-4 flex justify-center lg:justify-start">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-red-300/40 bg-white/50 px-3 py-1 text-xs font-medium text-red-500 backdrop-blur-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
+          Nowoczesna platforma medyczna
+        </span>
+      </div>
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
         <WigglyWord text="Edukacja" startIdx={1} />
         {' '}
