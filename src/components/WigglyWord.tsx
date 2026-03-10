@@ -7,7 +7,6 @@ type WigglyWordProps = {
   startIdx: number
 }
 
-// whiteSpace: nowrap prevents the browser from breaking lines between individual inline-block chars
 export default function WigglyWord({ text, startIdx }: WigglyWordProps) {
   const { chars, isHoverable } = useWigglyText(text, startIdx)
   return (

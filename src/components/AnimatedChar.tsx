@@ -13,14 +13,12 @@ export default function AnimatedChar({ char, delay, isHoverable }: AnimatedCharP
   const handleMouseEnter = () => {
     if (!isHoverable || !spanRef.current) return
     const el = spanRef.current
-    // animation was cleared on mouseLeave so setting it here always starts fresh
     el.style.animation = 'rubberBand 1.2s'
     el.style.color = '#ff5b5b'
   }
 
   const handleMouseLeave = () => {
     if (!spanRef.current) return
-    // clear both so the next mouseEnter starts the animation from scratch
     spanRef.current.style.animation = ''
     spanRef.current.style.color = ''
   }

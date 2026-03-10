@@ -2,9 +2,6 @@
 import WigglyWord from './WigglyWord'
 
 export default function HeroTitle() {
-  // Each word is a separate WigglyWord so white-space: nowrap works correctly.
-  // startIdx continues the stagger sequence: Edukacja(1-8) medyczna(9-16)
-  // może(17-20) być(21-23) jeszcze(24-30) łatwiejsza.(31-41)
   return (
     <>
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
