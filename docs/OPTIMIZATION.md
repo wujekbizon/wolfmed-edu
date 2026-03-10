@@ -756,3 +756,32 @@ useEffect(() => {
   ...
 }, [breakpoint])
 ```
+
+---
+
+## `useNoteEditor` hook — 2026-03-10
+
+**File:** `src/hooks/useNoteEditor.ts`
+
+### 1. `editorState: any` — untyped Lexical callback parameter
+
+**Problem:** The `handleEditorChange` callback typed `editorState` as `any`, losing all type safety for the Lexical editor state API. Calls like `editorState.toJSON()` and `editorState.read()` were unchecked.
+
+**Fix:** Imported `EditorState` from `"lexical"` and used it as the parameter type.
+
+### 2. `useRef<HTMLInputElement>(null!)` — non-null assertion on an inherently nullable init
+
+**Problem:** `null!` is a TypeScript assertion that strips `null` from the type, making `current` appear as `HTMLInputElement` instead of `HTMLInputElement | null`. The actual runtime value is still `null` until the ref attaches to the DOM, so the type was a lie. The downstream `contentRef.current!.value = ...` accesses then compounded this with additional `!` assertions, masking a real possibility of a null-dereference if the callback fired before the refs were attached.
+
+**Fix:** Changed all three refs to `useRef<HTMLInputElement>(null)` (correct nullable type) and added an early return guard inside `handleEditorChange`:
+
+```ts
+// Before
+const contentRef = useRef<HTMLInputElement>(null!)
+contentRef.current!.value = jsonContent
+
+// After
+const contentRef = useRef<HTMLInputElement>(null)
+if (!contentRef.current || !plainTextRef.current || !excerptRef.current) return
+contentRef.current.value = jsonContent
+```
