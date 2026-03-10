@@ -18,7 +18,7 @@ export function useWigglyText(text: string, startIdx: number = 1): UseWigglyText
 
   const chars: CharData[] = Array.from(text).map((char, i) => ({
     char,
-    delay: `${(startIdx + i) / 10}s`,
+    delay: `${1 + (startIdx + i) / 10}s`,
   }))
 
   useEffect(() => {

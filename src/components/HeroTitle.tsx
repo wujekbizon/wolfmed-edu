@@ -22,9 +22,9 @@ function AnimatedChar({
     el.style.color = '#ff5b5b'
   }
 
-  const handleAnimationEnd = () => {
-    if (!spanRef.current || !isHoverable) return
-    spanRef.current.style.animation = ''
+  // Clear color as soon as mouse leaves — matches original CSS :hover behavior
+  const handleMouseLeave = () => {
+    if (!spanRef.current) return
     spanRef.current.style.color = ''
   }
 
@@ -32,7 +32,7 @@ function AnimatedChar({
     <span
       ref={spanRef}
       onMouseEnter={handleMouseEnter}
-      onAnimationEnd={handleAnimationEnd}
+      onMouseLeave={handleMouseLeave}
       style={
         isHoverable
           ? { display: 'inline-block', minWidth: '0.625rem', cursor: 'default' }
@@ -45,15 +45,16 @@ function AnimatedChar({
             }
       }
     >
-      {char === ' ' ? '\u00A0' : char}
+      {char}
     </span>
   )
 }
 
+// whiteSpace: nowrap prevents the browser from breaking lines between individual inline-block chars
 function WigglyWord({ text, startIdx }: { text: string; startIdx: number }) {
   const { chars, isHoverable } = useWigglyText(text, startIdx)
   return (
-    <span>
+    <span style={{ whiteSpace: 'nowrap' }}>
       {chars.map((c, i) => (
         <AnimatedChar key={i} char={c.char} delay={c.delay} isHoverable={isHoverable} />
       ))}
@@ -62,10 +63,9 @@ function WigglyWord({ text, startIdx }: { text: string; startIdx: number }) {
 }
 
 export default function HeroTitle() {
-  // startIdx values continue the stagger sequence across words:
-  // line1: 'Edukacja' → 8 chars → idx 1–8
-  // line2: 'medyczna' → 8 chars → idx 9–16
-  // line3: rest       →           idx 17+
+  // Each word is a separate WigglyWord so white-space: nowrap works correctly.
+  // startIdx continues the stagger sequence: Edukacja(1-8) medyczna(9-16)
+  // może(17-20) być(21-23) jeszcze(24-30) łatwiejsza.(31-41)
   return (
     <>
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-zinc-800">
@@ -75,7 +75,13 @@ export default function HeroTitle() {
           <WigglyWord text="medyczna" startIdx={9} />
         </span>
         <br />
-        <WigglyWord text="może być jeszcze łatwiejsza." startIdx={17} />
+        <WigglyWord text="może" startIdx={17} />
+        {' '}
+        <WigglyWord text="być" startIdx={21} />
+        {' '}
+        <WigglyWord text="jeszcze" startIdx={24} />
+        {' '}
+        <WigglyWord text="łatwiejsza." startIdx={31} />
       </h1>
 
       <p className="text-lg text-zinc-600 mb-8 max-w-xl place-self-center lg:place-self-start animate-fadeInUp [--slidein-delay:600ms]">
