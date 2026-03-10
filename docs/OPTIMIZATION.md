@@ -4,6 +4,36 @@ A running log of performance and correctness improvements across the codebase.
 
 ---
 
+## `useSortedTests` hook — 2026-03-10
+
+**File:** `src/hooks/useSortedTests.ts` (renamed from `.tsx`)
+
+### 1. Wrong file extension
+
+**Problem:** The hook contained no JSX but used a `.tsx` extension. `.tsx` enables the JSX transform and slightly increases compile overhead for no reason.
+
+**Fix:** Renamed to `.ts`.
+
+### 2. Missing `useMemo`
+
+**Problem:** The sort ran on every render regardless of whether `tests` or `sortOption` changed — same issue as `useSortedForumPosts`.
+
+**Fix:** Wrapped in `useMemo([tests, sortOption])`.
+
+### 3. `switch` inside the sort comparator — wasteful Date construction for score sorts
+
+**Problem:** The `switch` was placed inside the `.sort()` comparator, and `dateA`/`dateB` were computed via `new Date()` at the top of the comparator on every comparison — including for `scoreAsc` and `scoreDesc` where those values are never used. With N tests, every comparison wasted two `Date` constructions even when sorting by score.
+
+**Fix:** Moved the `switch` outside the comparator. Score sorts now have zero Date construction. Date sorts use the Schwartzian transform (pre-compute once in O(N), sort on numbers).
+
+### 4. Duplicate fallback string literal extracted to constant
+
+**Problem:** `'1970-01-01T00:00:00Z'` appeared twice (once for `dateA`, once for `dateB`) as an inline string. Duplication is a maintenance hazard.
+
+**Fix:** Extracted to a module-level `FALLBACK_DATE` constant.
+
+---
+
 ## `useSortedForumPosts` hook — 2026-03-10
 
 **File:** `src/hooks/useSortedForumPosts.ts`
