@@ -628,3 +628,37 @@ allFlashcards.reduce<FlashcardData[]>((acc, card) => {
 **Problem:** Both store selectors used `state` as the parameter name (`(state) => state.flashcards`) while every other hook in the codebase uses `s` for brevity.
 
 **Fix:** Renamed to `s` for consistency.
+
+---
+
+## `useFloatingShapes` hook — 2026-03-10
+
+**File:** `src/hooks/useFloatingShapes.ts`
+
+### Unnecessary `useCallback` wrapping an effect-only function
+
+**Problem:** `generateShapes` was wrapped in `useCallback` even though it was only ever called inside a `useEffect` — never passed to a child component or memoized for render stability. `useCallback` is only beneficial when a stable function reference is needed to avoid re-rendering children or to satisfy exhaustive-deps in another hook. Here it just added an extra memoization layer and an indirect dependency chain (`useEffect` → `generateShapes` → config values) with no benefit.
+
+**Fix:** Removed `useCallback` and inlined the shape generation directly in the `useEffect` with the raw config values as dependencies. Also removed the now-unused `useCallback` import.
+
+```ts
+// Before — pointless useCallback indirection
+const generateShapes = useCallback(() => {
+  return Array.from({ length: count }, (_, i) =>
+    generateShape(i, { minSize, maxSize, minDuration, maxDuration, colors: SHAPE_COLORS })
+  )
+}, [count, maxDuration, maxSize, minDuration, minSize])
+
+useEffect(() => {
+  setShapes(generateShapes())
+}, [generateShapes])
+
+// After — direct, flat effect
+useEffect(() => {
+  setShapes(
+    Array.from({ length: count }, (_, i) =>
+      generateShape(i, { minSize, maxSize, minDuration, maxDuration, colors: SHAPE_COLORS }),
+    ),
+  )
+}, [count, minSize, maxSize, minDuration, maxDuration])
+```
