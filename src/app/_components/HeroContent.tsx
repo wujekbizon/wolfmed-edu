@@ -19,7 +19,7 @@ export default function HeroContent() {
             ))}
           </div>
           <p className="text-sm text-zinc-500">
-            Dołącz do <span className="font-semibold text-zinc-700">5 000+</span> studentów
+            Dołącz do <span className="font-semibold text-zinc-700">6 500+</span> studentów
           </p>
         </div>
       </div>

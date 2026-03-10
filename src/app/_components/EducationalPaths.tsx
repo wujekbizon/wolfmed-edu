@@ -22,7 +22,6 @@ export default function EducationPathsSection() {
           </p>
         </div>
       </div>
-      <div className="h-8 w-full rounded-t-3xl bg-linear-to-b from-transparent to-zinc-900/90 -mb-1" />
       <div className="flex flex-col divide-y divide-white/10 p-4 sm:p-8 bg-zinc-900/90 rounded-3xl border border-white/5">
         <EducationalPathCard {...CAREGIVER} />
         <EducationalPathCard
