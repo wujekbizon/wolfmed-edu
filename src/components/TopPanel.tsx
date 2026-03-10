@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Pin } from 'lucide-react'
 import { useTopPanelStore } from '@/store/useTopPanelStore'
@@ -17,11 +17,12 @@ interface TopPanelProps {
 export default function TopPanel({ pinnedCount, children }: TopPanelProps) {
   const { isTopPanelOpen, toggleTopPanel, activeFeature, setActiveFeature, close } = useTopPanelStore()
   const isSidePanelOpen = useStore((state) => state.isSidePanelOpen)
-  const scrollContainer =
-  typeof window !== 'undefined'
-    ? document.getElementById('scroll-container')
-    : null
-const { isScrolled } = useScroll(0, scrollContainer)
+  const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null)
+  const { isScrolled } = useScroll(0, scrollContainer)
+
+  useEffect(() => {
+    setScrollContainer(document.getElementById('scroll-container'))
+  }, [])
 
   const drawerRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)

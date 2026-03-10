@@ -863,3 +863,75 @@ useEffect(() => {
   setSvgSize(size)
 }, [debouncedWindowSize])
 ```
+
+---
+
+## `useScroll` hook — 2026-03-10
+
+**File:** `src/hooks/useScroll.ts`
+
+### `scrollY` in state caused a re-render on every scroll frame
+
+**Problem:** `scrollY` was part of the `ScrollState` object and included in the `prev` equality guard:
+
+```ts
+if (
+  prev.isScrolled === isScrolled &&
+  prev.scrollDirection === direction &&
+  prev.scrollY === currentScrollY
+) return prev
+```
+
+Because `scrollY` changes on every scroll event, the guard almost never returned `prev`. This meant `setScrollState` produced a new object every frame, triggering a re-render of every consumer — `Navbar` and `TopPanel` — on every animation frame while scrolling, even when neither `isScrolled` nor `scrollDirection` had changed. Neither consumer uses `scrollY`.
+
+**Fix:** Removed `scrollY` from `ScrollState` and the guard. The guard now only compares `isScrolled` and `scrollDirection`, so state (and therefore re-renders) only update when those values actually change.
+
+```ts
+// Before — scrollY in state, guard fails on every frame
+interface ScrollState {
+  isScrolled: boolean
+  scrollDirection: 'up' | 'down' | null
+  scrollY: number
+}
+if (prev.isScrolled === isScrolled && prev.scrollDirection === direction && prev.scrollY === currentScrollY) return prev
+return { isScrolled, scrollDirection: direction, scrollY: currentScrollY }
+
+// After — only meaningful state, guard is effective
+interface ScrollState {
+  isScrolled: boolean
+  scrollDirection: 'up' | 'down' | null
+}
+if (prev.isScrolled === isScrolled && prev.scrollDirection === direction) return prev
+return { isScrolled, scrollDirection: direction }
+```
+
+---
+
+## `TopPanel` component — 2026-03-10
+
+**File:** `src/components/TopPanel.tsx`
+
+### `document.getElementById` called in the render body on every render
+
+**Problem:** `scrollContainer` was computed inline during render:
+
+```ts
+const scrollContainer =
+  typeof window !== 'undefined'
+    ? document.getElementById('scroll-container')
+    : null
+```
+
+This has two problems: DOM access in the render body is a side effect and runs on every re-render; and on the first render the element may not be mounted yet, causing `useScroll` to fall back to `window` and never reattach to the correct container (because `null → element` transitions in `container` were unreliable with this pattern).
+
+**Fix:** Captured the element once after mount with `useState` + `useEffect`:
+
+```ts
+const [scrollContainer, setScrollContainer] = useState<HTMLElement | null>(null)
+
+useEffect(() => {
+  setScrollContainer(document.getElementById('scroll-container'))
+}, [])
+```
+
+The element is looked up exactly once, after the DOM is ready. `useScroll` receives a stable reference thereafter.
