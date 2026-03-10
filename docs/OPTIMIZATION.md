@@ -828,3 +828,38 @@ queryKey: ['filteredCategoryQuestions', debouncedSearchTerm]
 queryKey: ['categoryQuestions', questions[0]?.meta.category]
 queryKey: ['filteredCategoryQuestions', questions[0]?.meta.category, debouncedSearchTerm]
 ```
+
+---
+
+## `useRandomPositions` hook — 2026-03-10
+
+**File:** `src/hooks/useRandomPositions.ts`
+
+### 1. `useMemo` used to memoize a function — should be `useCallback`
+
+**Problem:** `generateRandomPositions` was wrapped in `useMemo` returning an inner arrow function. `useMemo` memoizes a *value* — using it to memoize a *function* is semantically wrong and misleading, even though the result is functionally equivalent.
+
+**Fix:** Replaced `useMemo` with `useCallback`, the correct primitive for memoizing functions.
+
+### 2. Positions re-randomized on every resize
+
+**Problem:** `setPositions(generateRandomPositions())` was called inside the resize/svgSize `useEffect`, meaning decorative floating elements jumped to new random positions every time the window was resized. Only `svgSize` should respond to resize — positions should stay stable.
+
+**Fix:** Moved position generation into its own `useEffect` keyed on `generateRandomPositions` (which only changes when `count` changes). The resize effect now only updates `svgSize`.
+
+```ts
+// Before — positions re-randomized on every resize
+useEffect(() => {
+  setSvgSize(size)
+  setPositions(generateRandomPositions())
+}, [debouncedWindowSize, generateRandomPositions])
+
+// After — positions generated once on mount (or when count changes)
+useEffect(() => {
+  setPositions(generateRandomPositions())
+}, [generateRandomPositions])
+
+useEffect(() => {
+  setSvgSize(size)
+}, [debouncedWindowSize])
+```
