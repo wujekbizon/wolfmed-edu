@@ -72,7 +72,7 @@ export function HumanCellSVG({
 
           {/* Mild Gaussian blur applied to all pathogens — softens vector edges for an organic look */}
           <filter id={fBlur} x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="1.1" />
+            <feGaussianBlur stdDeviation="0.5" />
           </filter>
         </defs>
 
