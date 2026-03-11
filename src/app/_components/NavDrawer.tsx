@@ -26,7 +26,7 @@ export default function SideMenu() {
           transition-transform duration-300 ease-in-out
           ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/40">
+        <div className="h-20 flex items-center justify-between px-5 border-b border-white/40 shrink-0">
           <Link href="/" onClick={toggleMenu} className="flex items-center gap-3">
             <div className="w-10 h-10 bg-zinc-200 rounded-full border border-zinc-400 shrink-0">
               <Image
