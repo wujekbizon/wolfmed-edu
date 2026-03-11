@@ -19,10 +19,10 @@ export default function Navbar() {
     <>
       {isMenuOpen && <SideMenu />}
       <header
-        className={`${pathname.includes("panel") ? "bg-zinc-800" : "bg-white"} h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
+        className={`bg-white h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
             pathname && isScrolled
-              ? 'bg-white/50 backdrop-blur-sm shadow-sm sticky top-0'
+              ? 'bg-white/60 backdrop-blur-sm shadow-sm sticky top-0'
               : ''
           }`}
       >
@@ -31,7 +31,7 @@ export default function Navbar() {
         </SignedIn>
         <Logo />
         <SignedIn>
-          <nav className="bg-white/90 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full border border-red-200/40 shadow-sm shadow-zinc-500/20 z-10">
+          <nav className="bg-zinc-200 border border-zinc-400 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => (
               <Link
                 href={link.linkUrl}
@@ -39,10 +39,10 @@ export default function Navbar() {
                 className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
                   ${
                     pathname === link.linkUrl 
-                    ? 'bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 shadow-sm'
-                    : 'hover:bg-red-100/50'
+                    ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm'
+                    : 'hover:bg-red-100/90'
                   }`}
-                // title={link.title}
+                 title={link.title}
                   >
                 <span
                   className={`transition-transform duration-200 ${
