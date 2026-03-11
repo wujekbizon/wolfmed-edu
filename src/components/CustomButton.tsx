@@ -11,14 +11,33 @@ export default function CustomButton(props: {
   const linkContent = (
     <Link
       href={props.href}
-      className={`${
-        props.active ? 'bg-white' : 'bg-[#ffc5c5]'
-      } flex cursor-pointer place-items-center gap-4 stroke-neutral-400 stroke-[0.75] px-0.5 py-1 text-zinc-900 transition-all rounded-md border border-red-200/60 hover:bg-[#f58a8a] hover:border-zinc-900 hover:stroke-neutral-100 hover:text-white`}
+      className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
+        transition-all duration-200
+        ${props.active
+          ? 'text-rose-600'
+          : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
+        }
+        ${props.showTooltip ? 'justify-center' : ''}`}
     >
-      {props.children}
-      <p className="font-poppins overflow-x-hidden whitespace-nowrap text-lg tracking-wide text-inherit">
-        {props.text}
-      </p>
+      {props.active && (
+        <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
+      )}
+      <span
+        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
+          ${props.active
+            ? 'bg-gradient-to-br from-rose-400/25 to-red-300/15 shadow-sm shadow-rose-200/40'
+            : 'bg-white/50 border border-white/60 group-hover:bg-white/70 group-hover:shadow-sm'
+          }`}
+      >
+        <span className="transition-transform duration-200 group-hover:scale-110">
+          {props.children}
+        </span>
+      </span>
+      {!props.showTooltip && (
+        <span className={`text-sm whitespace-nowrap overflow-hidden ${props.active ? 'font-semibold' : 'font-medium'}`}>
+          {props.text}
+        </span>
+      )}
     </Link>
   )
 
