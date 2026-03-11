@@ -2,7 +2,6 @@ import { Suspense } from 'react'
 import { currentUser } from '@clerk/nextjs/server'
 import { getAllUserNotes } from '@/server/queries'
 import SidePanel from '@/app/_components/SidePanel'
-import TopPanel from '@/components/TopPanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
 import ConfirmModal from '@/components/ConfirmModal'
@@ -16,14 +15,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50">
-      <SidePanel />
+      <SidePanel pinnedCount={pinnedCount}>
+        <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
+          <PinnedNotesFeature pinnedNotes={pinnedNotes} />
+        </Suspense>
+      </SidePanel>
       <div id="scroll-container" className="flex-1 overflow-y-scroll scrollbar-webkit">
-        <TopPanel pinnedCount={pinnedCount}>
-          <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
-            <PinnedNotesFeature pinnedNotes={pinnedNotes} />
-          </Suspense>
-        </TopPanel>
-        <div className="pt-14 pb-10">
+        <div className="py-10">
           {children}
         </div>
       </div>
