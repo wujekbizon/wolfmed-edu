@@ -1,7 +1,15 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { HumanCellSVG } from '@/components/HumanCellSVG'
+
+// ssr: false — Framer Motion SVG motion.* elements inject CSS transform styles
+// on the client that are absent in SSR, causing hydration mismatches.
+// The cell is purely decorative so skipping SSR is correct here.
+const HumanCellSVG = dynamic(
+  () => import('@/components/HumanCellSVG').then((m) => ({ default: m.HumanCellSVG })),
+  { ssr: false }
+)
 
 export const MedicalIllustration = () => {
   return (
