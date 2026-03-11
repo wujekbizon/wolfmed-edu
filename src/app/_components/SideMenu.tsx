@@ -1,12 +1,11 @@
 'use client'
 
-import CloseIcon from '@/components/icons/Close'
-import { navLinks } from '@/constants/navLinks'
-import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
-import { useStore } from '@/store/useStore'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useStore } from '@/store/useStore'
+import { navLinks } from '@/constants/navLinks'
+import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 
 export default function SideMenu() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -14,14 +13,11 @@ export default function SideMenu() {
 
   return (
     <>
-      {/* Backdrop overlay — click to close */}
       <div
         onClick={toggleMenu}
         className={`fixed inset-0 z-40 bg-zinc-950/40 backdrop-blur-[2px] transition-opacity duration-300
           ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       />
-
-      {/* Slide-in panel from LEFT (same side as hamburger button) */}
       <aside
         className={`fixed z-50 left-0 top-0 h-full w-[min(85vw,380px)]
           bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl
@@ -30,10 +26,9 @@ export default function SideMenu() {
           transition-transform duration-300 ease-in-out
           ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
       >
-        {/* Header — logo + close */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/40">
           <Link href="/" onClick={toggleMenu} className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-zinc-200 rounded-full border border-zinc-300 overflow-hidden shrink-0">
+            <div className="w-10 h-10 bg-zinc-200 rounded-full border border-zinc-400 shrink-0">
               <Image
                 src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
                 alt="Wolfmed logo"
@@ -42,17 +37,16 @@ export default function SideMenu() {
                 className="h-full w-full object-cover"
               />
             </div>
-            <span className="text-base font-black tracking-wide text-zinc-900">
+            <span className="text-lg font-black tracking-wide text-zinc-900">
               WOLFMED <span className="font-normal text-zinc-500">EDUKACJA</span>
             </span>
           </Link>
-          <CloseIcon onClick={toggleMenu} />
         </div>
 
         <nav className="flex flex-col flex-1 overflow-y-auto px-4 py-5 gap-6">
           {/* Main nav */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest text-rose-400 uppercase mb-2 px-1">
+            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-2 px-1">
               Menu główne
             </h3>
             <div className="flex flex-col">
@@ -63,7 +57,7 @@ export default function SideMenu() {
                     onClick={toggleMenu}
                     href={link.linkUrl}
                     key={link.id}
-                    className={`group relative flex items-center gap-3.5 px-3 py-3 rounded-xl
+                    className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
                       transition-all duration-200
                       ${isActive
                         ? 'text-rose-600'
@@ -141,7 +135,7 @@ export default function SideMenu() {
 
         {/* Footer line */}
         <div className="px-5 py-4 border-t border-white/40">
-          <p className="text-xs text-zinc-400 text-center tracking-wide">© 2026 Wolfmed-Edukacja</p>
+          <p className="text-xs text-zinc-800 text-center tracking-wide">© 2026 Wolfmed-Edukacja</p>
         </div>
       </aside>
     </>
