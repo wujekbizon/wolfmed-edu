@@ -4,6 +4,8 @@ import { motion } from 'framer-motion'
 import { VirusSVG } from './VirusSVG'
 import { ShapeType, Size2D, Vector2 } from '@/types/humanCellTypes'
 import { BacteriaSVG } from './BacteriaSVG'
+import { PathogenBacteriaSVG } from './PathogenBacteriaSVG'
+import { AggressiveVirusSVG } from './AggressiveVirusSVG'
 
 interface HumanCellSVGProps {
   id: string
@@ -102,6 +104,19 @@ export function HumanCellSVG({
           duration={13}
         />
 
+        {/* Slower duration than viruses — bacteria are larger so they diffuse more slowly */}
+        <PathogenBacteriaSVG
+          cx={cx + actualRadius * 0.3}
+          cy={cy + actualRadius * 0.35}
+          w={actualRadius * 0.17}
+          h={actualRadius * 0.12}
+          color="rgba(190, 55, 55, 0.65)"
+          driftX={[0, 2, 5, 4, 1, -2, -4, -2, 0]}
+          driftY={[0, -4, -2, 1, 4, 3, 0, -2, 0]}
+          duration={14}
+          delay={1}
+        />
+
         {/* Nucleus grouped with nucleolus so they move as one mass; phase set opposite primary virus for push illusion */}
         <motion.g
           animate={{ x: [0, -2, -4, -2, 0, 2, 3, 1, 0], y: [0, 1, 3, 4, 2, -1, -2, -1, 0] }}
@@ -132,6 +147,17 @@ export function HumanCellSVG({
           driftY={[0, 3, 1, -2, -5, -3, 0, 2, 0]}
           duration={12}
           delay={2}
+        />
+
+        <AggressiveVirusSVG
+          cx={cx - actualRadius * 0.35}
+          cy={cy - actualRadius * 0.3}
+          r={actualRadius * 0.1}
+          color="rgba(190, 60, 60, 0.72)"
+          driftX={[0, -3, -5, -3, 0, 3, 5, 3, 0]}
+          driftY={[0, 2, 0, -3, -5, -3, 0, 2, 0]}
+          duration={11}
+          delay={3}
         />
 
         <ellipse
