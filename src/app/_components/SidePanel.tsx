@@ -47,7 +47,6 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
           ${pinnedOpen ? 'text-rose-600' : 'text-zinc-700 hover:text-zinc-900'}
           ${!isSidePanelOpen ? 'justify-center' : ''}`}
       >
-        {pinnedOpen && <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />}
         <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${pinnedOpen
             ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
@@ -88,8 +87,11 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
         {/* Header */}
         <div
           className={`flex items-center h-20 shrink-0 border-b border-zinc-200
-            ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
+            ${isSidePanelOpen ? 'justify-between px-4' : 'justify-center'}`}
         >
+          {isSidePanelOpen && (
+            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Nawigacja</span>
+          )}
           <Tooltip message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'} position="right">
             <button
               onClick={toggleSidePanel}

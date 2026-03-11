@@ -19,9 +19,6 @@ export default function CustomButton(props: {
         }
         ${props.showTooltip ? 'justify-center' : ''}`}
     >
-      {props.active && (
-        <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
-      )}
       <span
         className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active

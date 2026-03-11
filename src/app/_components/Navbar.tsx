@@ -19,7 +19,8 @@ export default function Navbar() {
     <>
       <NavDrawer />
       <header
-        className={`bg-white h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
+        className={`bg-white h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2
+          ${pathname?.startsWith('/panel') ? 'border-b border-zinc-200' : ''}
           ${
             pathname && isScrolled
               ? 'bg-white/60 backdrop-blur-sm shadow-sm sticky top-0'
