@@ -23,7 +23,7 @@ export default function HeroContent() {
           </p>
         </div>
       </div>
-      <div className="shrink-0 w-full flex justify-center lg:block lg:w-auto">
+      <div className="hidden sm:flex shrink-0 w-full justify-center lg:block lg:w-auto">
         <MedicalIllustration />
       </div>
     </div>
