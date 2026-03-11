@@ -3,7 +3,7 @@ import { navLinks } from '@/constants/navLinks'
 import { useStore } from '@/store/useStore'
 import { useScroll } from '@/hooks/useScroll'
 import Link from 'next/link'
-import SideMenu from './SideMenu'
+import NavDrawer from './NavDrawer'
 import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
@@ -17,7 +17,7 @@ export default function Navbar() {
 
   return (
     <>
-      {isMenuOpen && <SideMenu />}
+      <NavDrawer />
       <header
         className={`bg-white h-20 w-full z-50 flex overflow-hidden items-center justify-between px-4 sm:px-6 pt-2 pb-2 
           ${
