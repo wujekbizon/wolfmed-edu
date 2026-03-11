@@ -29,7 +29,7 @@ export default function Navbar() {
         <SignedIn>
           <MenuIcon onClick={toggleMenu} />
         </SignedIn>
-        <Logo className="bg-white" />
+        <Logo />
         <SignedIn>
           <nav className="bg-white/90 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full border border-red-200/40 shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => (
