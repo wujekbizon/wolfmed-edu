@@ -4,19 +4,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useStore } from '@/store/useStore'
-import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 
 export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const pathname = usePathname()
-
-  useSwipeGesture({
-    isOpen: isMenuOpen,
-    onOpen: toggleMenu,
-    onClose: toggleMenu,
-  })
 
   return (
     <>
