@@ -18,8 +18,7 @@ export function BacteriaSVG({ cx, cy, w, h, color, driftX, driftY, duration, del
   const rx = h / 2
   const rightX = cx + w / 2
 
-  // Flagella length relative to body — real flagella are 2–3× body length
-  const fLen = w * 2
+  const fLen = w * 0.9
   // Amplitude derived from body height so it scales proportionally
   const amp = h * 0.95
 
