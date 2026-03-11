@@ -108,9 +108,8 @@ export function HumanCellSVG({
         <PathogenBacteriaSVG
           cx={cx + actualRadius * 0.3}
           cy={cy + actualRadius * 0.35}
-          w={actualRadius * 0.17}
-          h={actualRadius * 0.12}
-          color="rgba(190, 55, 55, 0.65)"
+          r={actualRadius * 0.14}
+          color="rgba(90, 175, 115, 0.72)"
           driftX={[0, 2, 5, 4, 1, -2, -4, -2, 0]}
           driftY={[0, -4, -2, 1, 4, 3, 0, -2, 0]}
           duration={14}
@@ -149,11 +148,12 @@ export function HumanCellSVG({
           delay={2}
         />
 
+        {/* Head positioned high so the tail and fibers (extending ~4.8r downward) stay inside the cell */}
         <AggressiveVirusSVG
-          cx={cx - actualRadius * 0.35}
-          cy={cy - actualRadius * 0.3}
-          r={actualRadius * 0.1}
-          color="rgba(190, 60, 60, 0.72)"
+          cx={cx - actualRadius * 0.3}
+          cy={cy - actualRadius * 0.38}
+          r={actualRadius * 0.08}
+          color="rgba(185, 45, 45, 0.88)"
           driftX={[0, -3, -5, -3, 0, 3, 5, 3, 0]}
           driftY={[0, 2, 0, -3, -5, -3, 0, 2, 0]}
           duration={11}
