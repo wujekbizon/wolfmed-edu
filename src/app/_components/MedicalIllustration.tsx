@@ -1,14 +1,9 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useRandomPositions } from '@/hooks/useRandomPositions'
 import { HumanCellSVG } from '@/domain/bio/components/HumanCellSVG'
-import { VirusSVG } from '@/domain/bio/components/VirusSVG'
-import { BacteriaSVG } from '@/domain/bio/components/BacteriaSVG'
 
 export const MedicalIllustration = () => {
-  const { positions, svgSize } = useRandomPositions()
-
   return (
     <motion.div
       className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square rounded-full"
@@ -29,7 +24,7 @@ export const MedicalIllustration = () => {
       }}
     >
       <motion.div
-        className="relative w-full h-full flex items-center justify-center overflow-hidden"
+        className="relative w-full h-full flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
@@ -54,67 +49,6 @@ export const MedicalIllustration = () => {
           color="rgb(198, 223, 247)"
         />
       </motion.div>
-
-      {positions.map((pos, i) => (
-        <motion.div
-          key={i}
-          className="absolute -translate-x-1/2 -translate-y-1/2"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 0.65, scale: 1 }}
-          transition={{
-            duration: 0.3,
-            delay: 0.7 + i * 0.05,
-            ease: 'easeOut',
-          }}
-          style={{
-            top: pos.top,
-            left: pos.left,
-            filter: 'blur(0.5px)',
-          }}
-        >
-          <motion.div
-            animate={{
-              y: [-15, 50],
-              rotate: [0, 360],
-            }}
-            transition={{
-              y: {
-                duration: 20 + i * 0.3,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut',
-              },
-              rotate: {
-                duration: 25,
-                repeat: Infinity,
-                ease: 'linear',
-              },
-            }}
-          >
-            {i % 2 === 0 ? (
-              <VirusSVG
-                id={`virus-${i}`}
-                type="virus"
-                position={{ x: 0, y: 0 }}
-                size={{ width: svgSize.width, height: svgSize.height }}
-                velocity={{ x: -100, y: 100 }}
-                radius={svgSize.width / 2}
-                color="#a66ca6"
-              />
-            ) : (
-              <BacteriaSVG
-                id={`bacteria-${i}`}
-                type="bacteria"
-                position={{ x: 0, y: 0 }}
-                size={{ width: svgSize.width * 1.4, height: svgSize.height * 1.4 }}
-                velocity={{ x: 0, y: 0 }}
-                radius={svgSize.width * 0.7}
-                color="#82a61e"
-              />
-            )}
-          </motion.div>
-        </motion.div>
-      ))}
     </motion.div>
   )
 }
