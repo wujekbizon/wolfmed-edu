@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { HumanCellSVG } from '@/domain/bio/components/HumanCellSVG'
+import { HumanCellSVG } from '@/components/HumanCellSVG'
 
 export const MedicalIllustration = () => {
   return (

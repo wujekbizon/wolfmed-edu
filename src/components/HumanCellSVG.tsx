@@ -1,7 +1,8 @@
 'use client'
 import { motion } from 'framer-motion'
-import { Vector2, Size2D, ShapeType } from "@/domain/bio"
+
 import { VirusSVG } from './VirusSVG'
+import { ShapeType, Size2D, Vector2 } from '@/types/humanCellTypes'
 import { BacteriaSVG } from './BacteriaSVG'
 
 interface HumanCellSVGProps {
@@ -48,7 +49,7 @@ export function HumanCellSVG({
         viewBox={`0 0 ${size.width} ${size.height}`}
       >
         {/* Cell membrane */}
-        <circle cx={cx} cy={cy} r={actualRadius} fill={color} stroke="#1a5f8a" strokeWidth={strokeW * 2} />
+        <circle cx={cx} cy={cy} r={actualRadius} fill={color} stroke="#1a5f8a" strokeWidth={strokeW * 1} />
 
         {/* Cytoplasm gradient */}
         <defs>
