@@ -12,8 +12,8 @@ export default function ClerkProviderWrapper({ children }: ClerkProviderWrapperP
       appearance={{
         variables: {
           colorBackground: 'white',
-          colorInputBackground: '#ffb1b1',
-          colorText: '#09090a',
+          colorInput: '#ffb1b1',
+          colorForeground: '#09090a',
           colorShimmer: '#e8b8b1',
         },
       }}
@@ -21,5 +21,5 @@ export default function ClerkProviderWrapper({ children }: ClerkProviderWrapperP
     >
       {children}
     </ClerkProvider>
-  )
+  );
 }

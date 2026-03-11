@@ -91,9 +91,8 @@ export default function SideMenu() {
             </div>
           </div>
 
-          {/* Panel links grid */}
           <div>
-            <h3 className="text-xs font-semibold tracking-widest text-rose-400 uppercase mb-3 px-1">
+            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-3 px-1">
               Panel użytkownika
             </h3>
             <div className="grid grid-cols-2 gap-2.5">

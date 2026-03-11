@@ -8,7 +8,7 @@ import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
 import { usePathname } from 'next/navigation'
-import { SignedIn } from '@clerk/nextjs'
+import { Show } from '@clerk/nextjs'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
@@ -26,11 +26,11 @@ export default function Navbar() {
               : ''
           }`}
       >
-        <SignedIn>
+        <Show when="signed-in">
           <MenuIcon onClick={toggleMenu} />
-        </SignedIn>
+        </Show>
         <Logo />
-        <SignedIn>
+        <Show when="signed-in">
           <nav className="bg-zinc-200 border border-zinc-400 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => (
               <Link
@@ -62,9 +62,9 @@ export default function Navbar() {
               </Link>
             ))}
           </nav>
-        </SignedIn>
+        </Show>
         <AuthSection />
       </header>
     </>
-  )
+  );
 }
