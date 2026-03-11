@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useMediaQuery } from './useMediaQuery'
 
 interface UseSwipeGestureOptions {
   isOpen: boolean
@@ -12,12 +13,10 @@ interface UseSwipeGestureOptions {
 
 /**
  * Attaches swipe gesture handling via the Pointer Events API.
- * - Swipe right from left edge → open
- * - Swipe left anywhere on the page when drawer is open → close
+ * Only active on touch screens — uses (pointer: coarse) to detect them.
  *
- * Ignores mouse pointers so desktop behaviour is unaffected.
- * Uses `touch-action: pan-y` to let the browser keep vertical
- * scrolling natural while we intercept horizontal intent.
+ * - Swipe right from left edge → open
+ * - Swipe left anywhere when drawer is open → close
  */
 export function useSwipeGesture({
   isOpen,
@@ -26,18 +25,20 @@ export function useSwipeGesture({
   edgeZone = 24,
   swipeThreshold = 56,
 }: UseSwipeGestureOptions) {
+  const isTouch = useMediaQuery('(pointer: coarse)')
   const startX = useRef<number | null>(null)
   const startY = useRef<number | null>(null)
 
   useEffect(() => {
+    if (!isTouch) return
+
     const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse') return
       startX.current = e.clientX
       startY.current = e.clientY
     }
 
     const onPointerUp = (e: PointerEvent) => {
-      if (e.pointerType === 'mouse' || startX.current === null || startY.current === null) return
+      if (startX.current === null || startY.current === null) return
 
       const originX = startX.current
       const dx = e.clientX - originX
@@ -63,5 +64,5 @@ export function useSwipeGesture({
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('pointerup', onPointerUp)
     }
-  }, [isOpen, onOpen, onClose, edgeZone, swipeThreshold])
+  }, [isTouch, isOpen, onOpen, onClose, edgeZone, swipeThreshold])
 }
