@@ -13,9 +13,10 @@ interface UseSwipeGestureOptions {
 
 /**
  * Attaches horizontal swipe gesture handling to `document` via the
- * Pointer Events API. Only registers listeners on touch screens —
- * detected with the `(pointer: coarse)` media query — so desktop
- * performance is completely unaffected.
+ * Pointer Events API. Only registers listeners below the `lg` breakpoint
+ * (`max-width: 1023px`) — matching exactly when the NavDrawer is visible —
+ * so desktop performance is completely unaffected.
+ * Mouse pointer events are filtered out inside the handlers.
  *
  * Gesture rules:
  * - **Open**: swipe right, starting within `edgeZone` px of the left edge.
@@ -39,20 +40,21 @@ export function useSwipeGesture({
   edgeZone = 24,
   swipeThreshold = 56,
 }: UseSwipeGestureOptions) {
-  const isTouch = useMediaQuery('(pointer: coarse)')
+  const isMobile = useMediaQuery('(max-width: 1023px)')
   const startX = useRef<number | null>(null)
   const startY = useRef<number | null>(null)
 
   useEffect(() => {
-    if (!isTouch) return
+    if (!isMobile) return
 
     const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType === 'mouse') return
       startX.current = e.clientX
       startY.current = e.clientY
     }
 
     const onPointerUp = (e: PointerEvent) => {
-      if (startX.current === null || startY.current === null) return
+      if (e.pointerType === 'mouse' || startX.current === null || startY.current === null) return
 
       const originX = startX.current
       const dx = e.clientX - originX
@@ -78,5 +80,5 @@ export function useSwipeGesture({
       document.removeEventListener('pointerdown', onPointerDown)
       document.removeEventListener('pointerup', onPointerUp)
     }
-  }, [isTouch, isOpen, onOpen, onClose, edgeZone, swipeThreshold])
+  }, [isMobile, isOpen, onOpen, onClose, edgeZone, swipeThreshold])
 }
