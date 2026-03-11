@@ -43,17 +43,19 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
       <button
         ref={buttonRef}
         onClick={() => setPinnedOpen((v) => !v)}
-        className={`relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full transition-all duration-200
-          ${pinnedOpen ? 'text-rose-600' : 'text-zinc-700 hover:text-zinc-900'}
+        className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200
+          ${pinnedOpen ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
           ${!isSidePanelOpen ? 'justify-center' : ''}`}
       >
         <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${pinnedOpen
-            ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
-            : 'bg-zinc-200 border border-zinc-400 hover:bg-zinc-100 hover:shadow-sm'
+            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60'
+            : 'bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
           }`}
         >
-          <Pin size={17} />
+          <span className="transition-transform duration-200 group-hover:scale-110">
+            <Pin size={17} />
+          </span>
         </span>
         {isSidePanelOpen && (
           <>
@@ -87,11 +89,8 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
         {/* Header */}
         <div
           className={`flex items-center h-20 shrink-0 border-b border-zinc-200
-            ${isSidePanelOpen ? 'justify-between px-4' : 'justify-center'}`}
+            ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
         >
-          {isSidePanelOpen && (
-            <span className="text-xs font-semibold uppercase tracking-widest text-zinc-400">Nawigacja</span>
-          )}
           <Tooltip message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'} position="right">
             <button
               onClick={toggleSidePanel}
@@ -146,25 +145,29 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
       {pinnedOpen && (
         <div
           ref={panelRef}
-          className={`fixed bottom-6 z-50 w-80 bg-white border border-zinc-200 rounded-2xl shadow-xl
-            ${isSidePanelOpen ? 'lg:left-75' : 'lg:left-20'}`}
+          className={`fixed top-20 bottom-0 z-40 w-96 bg-white flex flex-col
+            border-r border-t border-b border-zinc-200
+            shadow-[4px_0_16px_rgba(0,0,0,0.06)]
+            ${isSidePanelOpen ? 'left-75' : 'left-20'}`}
         >
-          <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
-            <div className="flex items-center gap-2">
-              <Pin size={18} className="text-rose-400" />
-              <span className="text-md font-semibold text-zinc-800">Przypięte notatki</span>
+          <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200 shrink-0">
+            <div className="flex items-center gap-2.5">
+              <Pin size={16} className="text-rose-400" />
+              <span className="text-sm font-semibold text-zinc-800">Przypięte notatki</span>
               {pinnedCount > 0 && (
-                <span className="text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5">{pinnedCount}</span>
+                <span className="text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5 font-medium">{pinnedCount}</span>
               )}
             </div>
             <button
               onClick={() => setPinnedOpen(false)}
-              className="text-zinc-400 hover:text-zinc-600 transition-colors p-1 rounded-lg hover:bg-zinc-100"
+              className="cursor-pointer text-zinc-400 hover:text-zinc-600 transition-colors p-1.5 rounded-lg hover:bg-zinc-100"
             >
               <X size={15} />
             </button>
           </div>
-          {children}
+          <div className="flex-1 overflow-y-auto scrollbar-webkit">
+            {children}
+          </div>
         </div>
       )}
     </>
