@@ -48,7 +48,7 @@ export default function SidePanel() {
       </div>
 
       {/* Nav links */}
-      <div className="flex flex-col flex-1 px-3 py-5 gap-1 overflow-y-auto">
+      <div className="flex flex-col flex-1 px-3 py-5 gap-1">
         {sideMenuNavigationLinks.map((navLink) => (
           <CustomButton
             key={navLink.label}
