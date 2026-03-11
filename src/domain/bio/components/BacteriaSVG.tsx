@@ -1,101 +1,56 @@
-"use client";
-
-import { Vector2, Size2D, ShapeType } from "@/domain/bio";
-import { useEffect, useState } from "react";
+'use client'
+import { motion } from 'framer-motion'
 
 interface BacteriaSVGProps {
-  id: string;
-  type: ShapeType;
-  position: Vector2;
-  size: Size2D;
-  velocity: Vector2;
-  radius: number;
-  color: string;
+  cx: number
+  cy: number
+  w: number
+  h: number
+  color: string
+  driftX: number[]
+  driftY: number[]
+  duration: number
+  delay?: number
 }
 
-export const BacteriaSVG: React.FC<BacteriaSVGProps> = ({
-  id,
-  position,
-  size,
-  velocity,
-  radius,
-  color,
-}) => {
-  const strokeW = 1; // stroke width
-  const padding = strokeW * 2; // extra margin for safety
-  const [wiggle, setWiggle] = useState(0);
-
-  // Use useEffect for client-side-only logic (e.g., animations)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWiggle(Math.sin(Date.now() * 0.005 + id.length) * 1.5);
-    }, 100); // Update wiggle every 100ms
-
-    return () => clearInterval(interval);
-  }, [id]);
-
-  const baseWidth = size.width + wiggle;
-  const baseHeight = size.height + wiggle * 0.3;
-
-  // Now the total size includes padding for stroke
-  const totalWidth = baseWidth + padding * 2;
-  const totalHeight = baseHeight + padding * 2;
-
-  // Rod origin (shifted by padding)
-  const x = padding;
-  const y = padding;
-
+// Renders as an SVG <g> — must be used inside an <svg> element
+export function BacteriaSVG({ cx, cy, w, h, color, driftX, driftY, duration, delay = 0 }: BacteriaSVGProps) {
   return (
-    <svg
-      width={baseWidth} // visible width stays the same
-      height={baseHeight} // visible height stays the same
-      viewBox={`0 0 ${totalWidth} ${totalHeight}`}
-      style={{
-        position: "absolute",
-        left: position.x - baseWidth / 2,
-        top: position.y - baseHeight / 2,
-        overflow: "visible",
+    <motion.g
+      animate={{ x: driftX, y: driftY }}
+      transition={{
+        duration,
+        repeat: Infinity,
+        repeatType: 'loop',
+        ease: 'easeInOut',
+        delay,
       }}
     >
-      {/* Rod-shaped bacterium body */}
+      {/* Rod body */}
       <rect
-        x={x}
-        y={y}
-        rx={baseHeight / 2}
-        ry={baseHeight / 2}
-        width={baseWidth}
-        height={baseHeight}
-        fill={color}
-        stroke="black"
-        strokeWidth={strokeW}
+        x={cx - w / 2} y={cy - h / 2}
+        width={w} height={h}
+        rx={h / 2} ry={h / 2}
+        fill={color} stroke="rgba(0,0,0,0.18)" strokeWidth="0.4"
       />
-
-      {/* Internal nucleus-like blob */}
-      <ellipse
-        cx={x + baseWidth / 2}
-        cy={y + baseHeight / 2}
-        rx={baseWidth * 0.25}
-        ry={baseHeight * 0.4}
-        fill="rgba(0,0,0,0.15)"
+      {/* Internal membrane */}
+      <rect
+        x={cx - w / 2 + h * 0.15} y={cy - h * 0.32}
+        width={w - h * 0.3} height={h * 0.64}
+        rx={h * 0.32} ry={h * 0.32}
+        fill="none" stroke="rgba(0,0,0,0.1)" strokeWidth="0.35"
       />
-
-      {/* Little flagella lines */}
-      <line
-        x1={x + baseWidth}
-        y1={y + baseHeight * 0.3}
-        x2={x + baseWidth + 5}
-        y2={y + baseHeight * 0.3 + wiggle}
-        stroke="black"
-        strokeWidth="0.5"
+      {/* Nucleoid region */}
+      <ellipse cx={cx} cy={cy} rx={w * 0.22} ry={h * 0.36} fill="rgba(0,0,0,0.12)" />
+      {/* Flagella — trailing end */}
+      <path
+        d={`M ${cx + w / 2} ${cy - h * 0.15} Q ${cx + w / 2 + 4} ${cy} ${cx + w / 2 + 3} ${cy + h * 0.2}`}
+        fill="none" stroke="rgba(0,0,0,0.28)" strokeWidth="0.4" strokeLinecap="round"
       />
-      <line
-        x1={x + baseWidth}
-        y1={y + baseHeight * 0.7}
-        x2={x + baseWidth + 5}
-        y2={y + baseHeight * 0.7 - wiggle}
-        stroke="black"
-        strokeWidth="0.5"
+      <path
+        d={`M ${cx + w / 2} ${cy + h * 0.1} Q ${cx + w / 2 + 5} ${cy + h * 0.3} ${cx + w / 2 + 2} ${cy + h * 0.45}`}
+        fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="0.35" strokeLinecap="round"
       />
-    </svg>
-  );
-};
+    </motion.g>
+  )
+}

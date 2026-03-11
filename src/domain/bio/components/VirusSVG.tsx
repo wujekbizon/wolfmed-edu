@@ -1,99 +1,56 @@
-"use client";
-
-import { Vector2, Size2D, ShapeType } from "@/domain/bio";
-import { useEffect, useState } from "react";
+'use client'
+import { motion } from 'framer-motion'
 
 interface VirusSVGProps {
-  id: string;
-  type: ShapeType;
-  position: Vector2;
-  size: Size2D;
-  velocity: Vector2;
-  radius: number;
-  color: string;
+  cx: number
+  cy: number
+  r: number
+  color: string
+  driftX: number[]
+  driftY: number[]
+  duration: number
+  delay?: number
 }
 
-export const VirusSVG: React.FC<VirusSVGProps> = ({
-  id,
-  position,
-  size,
-  velocity,
-  radius,
-  color,
-}) => {
-  const spikeCount = 12;
-  const spikeLength = radius * 0.6;
-  const [wiggle, setWiggle] = useState(0);
-
-  // Use useEffect for client-side-only logic (e.g., animations)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWiggle(Math.sin(Date.now() * 0.004 + id.length) * 1.5);
-    }, 100); // Update wiggle every 100ms
-
-    return () => clearInterval(interval);
-  }, [id]);
-
-  const adjustedRadius = radius + wiggle;
-
-  // Precompute virus bounding box
-  const virusExtent = adjustedRadius + spikeLength;
-  const svgSize = virusExtent * 2; // width & height of this svg
-
-  const spikes = Array.from({ length: spikeCount }).map((_, i) => {
-    const angle = (i / spikeCount) * Math.PI * 2;
-    const innerX = parseFloat((adjustedRadius * Math.cos(angle) + virusExtent).toFixed(6));
-    const innerY = parseFloat((adjustedRadius * Math.sin(angle) + virusExtent).toFixed(6));
-    const outerX = parseFloat(((adjustedRadius + spikeLength) * Math.cos(angle) + virusExtent).toFixed(6));
-    const outerY = parseFloat(((adjustedRadius + spikeLength) * Math.sin(angle) + virusExtent).toFixed(6));
-    return { innerX, innerY, outerX, outerY };
-  });
+// Renders as an SVG <g> — must be used inside an <svg> element
+export function VirusSVG({ cx, cy, r, color, driftX, driftY, duration, delay = 0 }: VirusSVGProps) {
+  const spikeCount = 10
+  const spikeLen = r * 0.6
+  const spikes = Array.from({ length: spikeCount }, (_, i) => {
+    const a = (i / spikeCount) * Math.PI * 2
+    return {
+      x1: cx + r * Math.cos(a),
+      y1: cy + r * Math.sin(a),
+      x2: cx + (r + spikeLen) * Math.cos(a),
+      y2: cy + (r + spikeLen) * Math.sin(a),
+    }
+  })
 
   return (
-    <svg
-      style={{
-        position: "absolute",
-        left: position.x,
-        top: position.y,
+    <motion.g
+      animate={{ x: driftX, y: driftY }}
+      transition={{
+        duration,
+        repeat: Infinity,
+        repeatType: 'loop',
+        ease: 'easeInOut',
+        delay,
       }}
-      key={id}
-      x={position.x - virusExtent}
-      y={position.y - virusExtent}
-      width={svgSize}
-      height={svgSize}
-      viewBox={`0 0 ${svgSize} ${svgSize}`}
     >
       {/* Spikes */}
-      {spikes.map((s, idx) => (
+      {spikes.map((s, i) => (
         <line
-          key={idx}
-          x1={s.innerX}
-          y1={s.innerY}
-          x2={s.outerX}
-          y2={s.outerY}
-          stroke={color}
-          strokeWidth="1"
-          className="animate-pulse"
+          key={i}
+          x1={s.x1} y1={s.y1} x2={s.x2} y2={s.y2}
+          stroke={color} strokeWidth="0.5" strokeLinecap="round" opacity="0.7"
         />
       ))}
-
-      {/* Virus core */}
-      <circle
-        cx={virusExtent}
-        cy={virusExtent}
-        r={radius * 0.9}
-        fill={color}
-        stroke="black"
-        strokeWidth="0.5"
-      />
-
-      {/* Inner genetic material */}
-      <circle
-        cx={virusExtent}
-        cy={virusExtent}
-        r={radius * 0.4}
-        fill="rgba(0,0,0,0.15)"
-      />
-    </svg>
-  );
-};
+      {/* Outer shell */}
+      <circle cx={cx} cy={cy} r={r} fill={color} opacity="0.85" stroke="rgba(0,0,0,0.18)" strokeWidth="0.3" />
+      {/* Capsid pattern */}
+      <circle cx={cx} cy={cy} r={r * 0.68} fill="none" stroke="rgba(0,0,0,0.1)" strokeWidth="0.4" />
+      {/* Genetic material core */}
+      <circle cx={cx} cy={cy} r={r * 0.38} fill="rgba(0,0,0,0.13)" />
+    </motion.g>
+  )
+}
