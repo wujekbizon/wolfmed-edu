@@ -14,22 +14,21 @@ export default function SidePanel() {
   return (
     <nav
       className={`z-50 hidden h-full flex-col text-zinc-900 shrink-0
-        bg-gradient-to-b from-white to-rose-50
-        border-r border-rose-100 shadow-[4px_0_20px_rgba(0,0,0,0.05)]
+        bg-white border-r border-zinc-200 shadow-[4px_0_16px_rgba(0,0,0,0.04)]
         lg:flex transition-all duration-300
         ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
     >
       {/* Header */}
       <div
-        className={`flex items-center h-20 shrink-0 border-b border-rose-100/60
+        className={`flex items-center h-20 shrink-0 border-b border-zinc-200
           ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
       >
         <Tooltip message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'} position="right">
           <button
             onClick={toggleSidePanel}
             className="flex items-center justify-center w-9 h-9 rounded-xl shrink-0
-              bg-white border border-rose-100
-              hover:bg-[#ffc5c5]/70 hover:border-rose-200
+              bg-white border border-zinc-200
+              hover:bg-zinc-50 hover:border-zinc-300
               transition-all duration-200 hover:scale-95 shadow-sm"
           >
             <svg
@@ -64,7 +63,7 @@ export default function SidePanel() {
 
       {/* Footer */}
       {isSidePanelOpen && (
-        <div className="px-5 py-4 border-t border-rose-100/60 shrink-0">
+        <div className="px-5 py-4 border-t border-zinc-200 shrink-0">
           <p className="text-xs text-zinc-400 text-center tracking-wide">© 2026 Wolfmed-Edukacja</p>
         </div>
       )}

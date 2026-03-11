@@ -67,12 +67,12 @@ export default function TopPanel({ pinnedCount, children }: TopPanelProps) {
           height: isTopPanelOpen ? 48 : 5
         }}
         transition={{ duration: 0.1, ease: 'easeInOut' }}
-        className={`fixed top-20 left-0 right-0 z-40 flex items-center gap-4 px-6 py-2 text-zinc-100 border-b shadow-md transition-all duration-500 ${
+        className={`fixed top-20 left-0 right-0 z-40 flex items-center gap-4 px-6 py-2 text-zinc-600 border-b transition-all duration-500 ${
           isSidePanelOpen ? 'lg:left-75' : 'lg:left-20'
         } ${
           isScrolled
-            ? 'bg-zinc-800/80 backdrop-blur-xl border-zinc-700/50 shadow-xl'
-            : 'bg-zinc-800 border-zinc-700'
+            ? 'bg-white/80 backdrop-blur-xl border-zinc-200/80 shadow-sm'
+            : 'bg-white border-zinc-200'
         }`}
       >
         <DrawerHandle onClick={handleTogglePanel} />
@@ -97,7 +97,7 @@ export default function TopPanel({ pinnedCount, children }: TopPanelProps) {
       {isTopPanelOpen && activeFeature === 'pinned' && (
         <div
           ref={drawerRef}
-          className={`fixed z-35 bg-zinc-800 border border-zinc-700 rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shadow-2xl transition-all duration-500 left-0 right-0 lg:right-auto lg:w-80 ${
+          className={`fixed z-35 bg-white border border-zinc-200 rounded-b-2xl lg:rounded-r-2xl lg:rounded-bl-none shadow-lg transition-all duration-500 left-0 right-0 lg:right-auto lg:w-80 ${
             isSidePanelOpen ? 'lg:left-75' : 'lg:left-20'
           } ${isScrolled ? 'top-32' : 'top-[128px]'}`}
         >
