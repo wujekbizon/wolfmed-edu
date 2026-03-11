@@ -92,10 +92,10 @@ export default function SideMenu() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-3 px-1">
+            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-2 px-1">
               Panel użytkownika
             </h3>
-            <div className="grid grid-cols-2 gap-2.5">
+            <div className="flex flex-col">
               {sideMenuNavigationLinks.map((link) => {
                 const isActive = pathname === link.url
                 return (
@@ -103,26 +103,28 @@ export default function SideMenu() {
                     key={link.label}
                     href={link.url}
                     onClick={toggleMenu}
-                    className={`group flex flex-col items-center justify-center gap-2.5 p-4 rounded-2xl
-                      border transition-all duration-200
+                    className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
+                      transition-all duration-200
                       ${isActive
-                        ? 'bg-gradient-to-br from-rose-400/25 to-red-200/20 border-rose-300/60 shadow-md shadow-rose-200/30'
-                        : 'bg-white/30 backdrop-blur-xl border-white/50 shadow-sm shadow-black/5 hover:bg-white/50 hover:border-rose-200/50 hover:shadow-md hover:shadow-rose-100/20'
+                        ? 'text-rose-600'
+                        : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
                       }`}
                   >
-                    {/* Icon wrapper with tint */}
+                    {isActive && (
+                      <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
+                    )}
                     <span
-                      className={`w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
                         ${isActive
-                          ? 'bg-rose-100/60'
-                          : 'bg-white/60 border border-white/70 group-hover:bg-rose-50/60 group-hover:border-rose-100/50'
+                          ? 'bg-gradient-to-br from-rose-400/25 to-red-300/15 shadow-sm shadow-rose-200/40'
+                          : 'bg-white/50 border border-white/60 group-hover:bg-white/70 group-hover:shadow-sm'
                         }`}
                     >
-                      <span className="transition-transform duration-200 group-hover:scale-110 text-zinc-700">
+                      <span className="transition-transform duration-200 group-hover:scale-110">
                         {link.icon}
                       </span>
                     </span>
-                    <span className="text-xs font-medium text-zinc-800 text-center leading-tight">
+                    <span className={`text-sm font-medium ${isActive ? 'font-semibold' : ''}`}>
                       {link.label}
                     </span>
                   </Link>
