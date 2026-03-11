@@ -29,15 +29,8 @@ export function VirusSVG({ cx, cy, r, color, driftX, driftY, duration, delay = 0
   return (
     <motion.g
       animate={{ x: driftX, y: driftY }}
-      transition={{
-        duration,
-        repeat: Infinity,
-        repeatType: 'loop',
-        ease: 'easeInOut',
-        delay,
-      }}
+      transition={{ duration, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut', delay }}
     >
-      {/* Spikes */}
       {spikes.map((s, i) => (
         <line
           key={i}
@@ -45,11 +38,9 @@ export function VirusSVG({ cx, cy, r, color, driftX, driftY, duration, delay = 0
           stroke={color} strokeWidth="0.5" strokeLinecap="round" opacity="0.7"
         />
       ))}
-      {/* Outer shell */}
       <circle cx={cx} cy={cy} r={r} fill={color} opacity="0.85" stroke="rgba(0,0,0,0.18)" strokeWidth="0.3" />
-      {/* Capsid pattern */}
+      {/* Capsid symmetry ring — icosahedral viruses show this as a visible inner boundary */}
       <circle cx={cx} cy={cy} r={r * 0.68} fill="none" stroke="rgba(0,0,0,0.1)" strokeWidth="0.4" />
-      {/* Genetic material core */}
       <circle cx={cx} cy={cy} r={r * 0.38} fill="rgba(0,0,0,0.13)" />
     </motion.g>
   )

@@ -48,10 +48,8 @@ export function HumanCellSVG({
         style={{ position: "relative", display: "block" }}
         viewBox={`0 0 ${size.width} ${size.height}`}
       >
-        {/* Cell membrane */}
         <circle cx={cx} cy={cy} r={actualRadius} fill={color} stroke="#1a5f8a" strokeWidth={strokeW * 1} />
 
-        {/* Cytoplasm gradient */}
         <defs>
           <radialGradient id={`cytoplasmGradient-${id}`} cx="50%" cy="50%" r="50%">
             <stop offset="0%" stopColor="#ffffff" stopOpacity="0.3" />
@@ -60,7 +58,7 @@ export function HumanCellSVG({
         </defs>
         <circle cx={cx} cy={cy} r={actualRadius * 0.95} fill={`url(#cytoplasmGradient-${id})`} />
 
-        {/* Organelles — slow independent cytoplasmic streaming */}
+        {/* Independent stagger delays so organelles never move in sync — simulates cytoplasmic streaming */}
         <motion.circle
           cx={cx - actualRadius * 0.3} cy={cy - actualRadius * 0.2} r={organelleRadius}
           fill="rgba(255, 158, 128, 0.5)"
@@ -92,7 +90,7 @@ export function HumanCellSVG({
           transition={{ duration: 9, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut', delay: 4 }}
         />
 
-        {/* Bacterium — slow flagella-driven drift */}
+        {/* Slower duration than viruses — bacteria are larger so they diffuse more slowly */}
         <BacteriaSVG
           cx={cx - actualRadius * 0.1}
           cy={cy + actualRadius * 0.45}
@@ -104,7 +102,7 @@ export function HumanCellSVG({
           duration={13}
         />
 
-        {/* Nucleus + Nucleolus — heavy, slow drift opposing primary virus */}
+        {/* Nucleus grouped with nucleolus so they move as one mass; phase set opposite primary virus for push illusion */}
         <motion.g
           animate={{ x: [0, -2, -4, -2, 0, 2, 3, 1, 0], y: [0, 1, 3, 4, 2, -1, -2, -1, 0] }}
           transition={{ duration: 16, repeat: Infinity, repeatType: 'loop', ease: 'easeInOut' }}
@@ -113,7 +111,7 @@ export function HumanCellSVG({
           <circle cx={nucleusCx} cy={nucleusCy} r={nucleolusRadius} fill="#3f5b82" />
         </motion.g>
 
-        {/* Virus 1 — slow Brownian float, phase opposes nucleus */}
+
         <VirusSVG
           cx={cx - actualRadius * 0.3}
           cy={cy + actualRadius * 0.3}
@@ -124,7 +122,7 @@ export function HumanCellSVG({
           duration={15}
         />
 
-        {/* Virus 2 — different wandering path */}
+
         <VirusSVG
           cx={cx + actualRadius * 0.3}
           cy={cy - actualRadius * 0.25}
@@ -136,7 +134,6 @@ export function HumanCellSVG({
           delay={2}
         />
 
-        {/* Shine */}
         <ellipse
           cx={cx} cy={cy - actualRadius * 0.2}
           rx={actualRadius * 0.4} ry={actualRadius * 0.2}
