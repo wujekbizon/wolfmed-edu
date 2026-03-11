@@ -43,9 +43,9 @@ export default function SideMenu() {
           </Link>
         </div>
 
-        <nav className="flex flex-col flex-1 overflow-y-auto px-4 py-5 gap-6">
+        <nav className="flex flex-col flex-1 min-h-0 px-4 py-5 gap-6">
           {/* Main nav */}
-          <div>
+          <div className="shrink-0">
             <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-2 px-1">
               Menu główne
             </h3>
@@ -91,11 +91,11 @@ export default function SideMenu() {
             </div>
           </div>
 
-          <div>
-            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-2 px-1">
+          <div className="flex flex-col flex-1 min-h-0">
+            <h3 className="text-xs font-semibold tracking-widest text-zinc-800 uppercase mb-2 px-1 shrink-0">
               Panel użytkownika
             </h3>
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
               {sideMenuNavigationLinks.map((link) => {
                 const isActive = pathname === link.url
                 return (
