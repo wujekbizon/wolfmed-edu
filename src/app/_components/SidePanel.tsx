@@ -47,17 +47,17 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
           ${pinnedOpen ? 'text-rose-600' : 'text-zinc-700 hover:text-zinc-900'}
           ${!isSidePanelOpen ? 'justify-center' : ''}`}
       >
-        <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
+        <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${pinnedOpen
             ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
-            : 'bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 hover:shadow-sm'
+            : 'bg-zinc-200 border border-zinc-400 hover:bg-zinc-100 hover:shadow-sm'
           }`}
         >
           <Pin size={17} />
         </span>
         {isSidePanelOpen && (
           <>
-            <span className={`text-sm whitespace-nowrap overflow-hidden ${pinnedOpen ? 'font-semibold' : 'font-medium'}`}>
+            <span className={`text-md whitespace-nowrap overflow-hidden ${pinnedOpen ? 'font-semibold' : 'font-medium'}`}>
               Przypięte notatki
             </span>
             {pinnedCount > 0 && (
@@ -95,9 +95,9 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
           <Tooltip message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'} position="right">
             <button
               onClick={toggleSidePanel}
-              className="flex items-center justify-center w-9 h-9 rounded-xl shrink-0
-                bg-zinc-50 border border-zinc-200
-                hover:bg-zinc-100 hover:border-zinc-300
+              className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0
+                bg-zinc-200 border border-zinc-400
+                hover:bg-zinc-100
                 transition-all duration-200 hover:scale-95 shadow-sm"
             >
               <svg
@@ -140,13 +140,6 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
             </Tooltip>
           )}
         </div>
-
-        {/* Footer */}
-        {isSidePanelOpen && (
-          <div className="px-5 py-3 border-t border-zinc-200 shrink-0">
-            <p className="text-xs text-zinc-400 text-center tracking-wide">© 2026 Wolfmed-Edukacja</p>
-          </div>
-        )}
       </nav>
 
       {/* Pinned notes popout */}
@@ -158,8 +151,8 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-zinc-100">
             <div className="flex items-center gap-2">
-              <Pin size={14} className="text-rose-400" />
-              <span className="text-sm font-semibold text-zinc-800">Przypięte notatki</span>
+              <Pin size={18} className="text-rose-400" />
+              <span className="text-md font-semibold text-zinc-800">Przypięte notatki</span>
               {pinnedCount > 0 && (
                 <span className="text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5">{pinnedCount}</span>
               )}

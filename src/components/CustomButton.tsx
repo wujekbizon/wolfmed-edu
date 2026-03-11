@@ -14,16 +14,16 @@ export default function CustomButton(props: {
       className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
         transition-all duration-200
         ${props.active
-          ? 'text-rose-600'
-          : 'text-zinc-700 hover:text-zinc-900 hover:bg-rose-50/80'
+          ? 'text-zinc-950'
+          : 'text-zinc-700 hover:text-zinc-900'
         }
         ${props.showTooltip ? 'justify-center' : ''}`}
     >
       <span
-        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
+        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active
-            ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
-            : 'bg-zinc-50 border border-zinc-200 group-hover:bg-zinc-100 group-hover:shadow-sm'
+            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60'
+            : 'bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
           }`}
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
@@ -31,7 +31,7 @@ export default function CustomButton(props: {
         </span>
       </span>
       {!props.showTooltip && (
-        <span className={`text-sm whitespace-nowrap overflow-hidden ${props.active ? 'font-semibold' : 'font-medium'}`}>
+        <span className={`text-md whitespace-nowrap overflow-hidden ${props.active ? 'font-semibold' : 'font-medium'}`}>
           {props.text}
         </span>
       )}
