@@ -20,9 +20,9 @@ export const MedicalIllustration = () => {
         opacity: 1,
         scale: 1,
         filter: [
-          'drop-shadow(0 0 18px rgba(255, 130, 80, 0.2))',
-          'drop-shadow(0 0 40px rgba(255, 130, 80, 0.45))',
-          'drop-shadow(0 0 18px rgba(255, 130, 80, 0.2))',
+          'drop-shadow(0 0 8px rgba(80, 223, 255, 0.2))',
+          'drop-shadow(0 0 20px rgba(218, 186, 238, 0.45))',
+          'drop-shadow(0 0 8px rgba(255, 130, 80, 0.2))',
         ],
       }}
       transition={{

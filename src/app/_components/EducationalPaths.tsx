@@ -5,7 +5,7 @@ import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
   return (
-    <section id="explore" className="flex flex-col w-full py-8 md:py-12 px-4 md:px-12 xl:px-24 gap-8">
+    <section id="explore" className="flex flex-col w-full py-8 md:py-12 px-4 md:px-12 xl:px-24 gap-8 ">
       <div className="container relative mx-auto px-3 sm:px-4">
         <div className="mb-8 sm:mb-12 flex flex-col items-center text-center">
           <span className="mb-3 sm:mb-4 inline-flex items-center gap-1.5 rounded-full border border-red-300/50 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-500 backdrop-blur-sm">
@@ -22,7 +22,7 @@ export default function EducationPathsSection() {
           </p>
         </div>
       </div>
-      <div className="flex flex-col divide-y divide-white/10 p-4 sm:p-8 bg-zinc-900/90 rounded-3xl border border-white/5">
+      <div className="flex flex-col divide-y divide-white/10 p-4 sm:p-8 bg-zinc-900/90 rounded-3xl border-3 border-white">
         <EducationalPathCard {...CAREGIVER} />
         <EducationalPathCard
           {...NURSE}

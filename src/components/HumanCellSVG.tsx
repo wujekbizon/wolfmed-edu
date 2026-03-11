@@ -21,12 +21,8 @@ interface HumanCellSVGProps {
 export function HumanCellSVG({
   id,
   type,
-  position,
   size,
-  velocity,
-  radius,
   color,
-  reproductionCooldown = 10,
 }: HumanCellSVGProps) {
   const strokeW = 1
   const actualRadius = Math.min(size.width, size.height) / 2 - strokeW
@@ -72,7 +68,7 @@ export function HumanCellSVG({
 
           {/* Mild Gaussian blur applied to all pathogens — softens vector edges for an organic look */}
           <filter id={fBlur} x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="0.5" />
+            <feGaussianBlur stdDeviation="0.4" />
           </filter>
         </defs>
 
@@ -88,7 +84,7 @@ export function HumanCellSVG({
 
         {/* Cell membrane — slightly softer stroke opacity than before */}
         <circle cx={cx} cy={cy} r={actualRadius}
-          fill={color} stroke="#2568a0" strokeWidth={strokeW * 1.4} strokeOpacity="0.72" />
+          fill={color} stroke="#2568a0" strokeWidth={strokeW * 0.5} strokeOpacity="0.42" />
 
         {/* Cytoplasm illumination overlay */}
         <circle cx={cx} cy={cy} r={actualRadius * 0.97} fill={`url(#${cytoGrad})`} />
