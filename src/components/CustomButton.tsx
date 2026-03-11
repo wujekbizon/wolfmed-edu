@@ -15,7 +15,7 @@ export default function CustomButton(props: {
         transition-all duration-200
         ${props.active
           ? 'text-rose-600'
-          : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
+          : 'text-zinc-700 hover:text-zinc-900 hover:bg-rose-50/80'
         }
         ${props.showTooltip ? 'justify-center' : ''}`}
     >
@@ -25,8 +25,8 @@ export default function CustomButton(props: {
       <span
         className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active
-            ? 'bg-gradient-to-br from-rose-400/25 to-red-300/15 shadow-sm shadow-rose-200/40'
-            : 'bg-white/50 border border-white/60 group-hover:bg-white/70 group-hover:shadow-sm'
+            ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
+            : 'bg-white border border-rose-100 group-hover:bg-rose-50 group-hover:shadow-sm'
           }`}
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
