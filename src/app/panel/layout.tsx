@@ -15,7 +15,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const pinnedCount = notes.filter((n) => n.pinned).length
 
   return (
-    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-white">
+    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50">
       <SidePanel />
       <div id="scroll-container" className="flex-1 overflow-y-scroll scrollbar-webkit">
         <TopPanel pinnedCount={pinnedCount}>
@@ -23,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             <PinnedNotesFeature pinnedNotes={pinnedNotes} />
           </Suspense>
         </TopPanel>
-        <div className="py-10">
+        <div className="pt-14 pb-10">
           {children}
         </div>
       </div>

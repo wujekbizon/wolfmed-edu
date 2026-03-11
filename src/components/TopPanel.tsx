@@ -64,7 +64,7 @@ export default function TopPanel({ pinnedCount, children }: TopPanelProps) {
     <>
       <motion.nav
         animate={{
-          height: isTopPanelOpen ? 48 : 5
+          height: isTopPanelOpen ? 48 : 36
         }}
         transition={{ duration: 0.1, ease: 'easeInOut' }}
         className={`fixed top-20 left-0 right-0 z-40 flex items-center gap-4 px-6 py-2 text-zinc-600 border-b transition-all duration-500 ${

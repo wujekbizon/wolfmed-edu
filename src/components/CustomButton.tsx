@@ -26,7 +26,7 @@ export default function CustomButton(props: {
         className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active
             ? 'bg-gradient-to-br from-rose-100 to-red-50 shadow-sm shadow-rose-200/60'
-            : 'bg-white border border-zinc-200 group-hover:bg-zinc-50 group-hover:shadow-sm'
+            : 'bg-zinc-50 border border-zinc-200 group-hover:bg-zinc-100 group-hover:shadow-sm'
           }`}
       >
         <span className="transition-transform duration-200 group-hover:scale-110">

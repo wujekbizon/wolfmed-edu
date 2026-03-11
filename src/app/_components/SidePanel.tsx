@@ -27,8 +27,8 @@ export default function SidePanel() {
           <button
             onClick={toggleSidePanel}
             className="flex items-center justify-center w-9 h-9 rounded-xl shrink-0
-              bg-white border border-zinc-200
-              hover:bg-zinc-50 hover:border-zinc-300
+              bg-zinc-50 border border-zinc-200
+              hover:bg-zinc-100 hover:border-zinc-300
               transition-all duration-200 hover:scale-95 shadow-sm"
           >
             <svg
