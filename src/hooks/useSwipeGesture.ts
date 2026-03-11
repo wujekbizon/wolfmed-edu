@@ -12,11 +12,25 @@ interface UseSwipeGestureOptions {
 }
 
 /**
- * Attaches swipe gesture handling via the Pointer Events API.
- * Only active on touch screens — uses (pointer: coarse) to detect them.
+ * Attaches horizontal swipe gesture handling to `document` via the
+ * Pointer Events API. Only registers listeners on touch screens —
+ * detected with the `(pointer: coarse)` media query — so desktop
+ * performance is completely unaffected.
  *
- * - Swipe right from left edge → open
- * - Swipe left anywhere when drawer is open → close
+ * Gesture rules:
+ * - **Open**: swipe right, starting within `edgeZone` px of the left edge.
+ * - **Close**: swipe left by at least `swipeThreshold` px while the drawer is open.
+ * - Gestures that are more vertical than horizontal are ignored, preserving
+ *   natural page scrolling.
+ *
+ * @param isOpen         - Current open state of the drawer.
+ * @param onOpen         - Callback fired when an open swipe is detected.
+ * @param onClose        - Callback fired when a close swipe is detected.
+ * @param edgeZone       - Width of the left-edge trigger zone in px (default `24`).
+ * @param swipeThreshold - Minimum horizontal distance in px to count as a swipe (default `56`).
+ *
+ * @example
+ * useSwipeGesture({ isOpen, onOpen: toggleMenu, onClose: toggleMenu })
  */
 export function useSwipeGesture({
   isOpen,
