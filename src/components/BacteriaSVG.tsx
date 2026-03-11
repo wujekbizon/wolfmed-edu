@@ -18,7 +18,8 @@ export function BacteriaSVG({ cx, cy, w, h, color, driftX, driftY, duration, del
   const rx = h / 2
   const rightX = cx + w / 2
 
-  const fLen = w * 0.9
+  // Flagella ~1.5× body length — realistic and proportional after body was shortened
+  const fLen = w * 1.5
   // Amplitude derived from body height so it scales proportionally
   const amp = h * 0.95
 

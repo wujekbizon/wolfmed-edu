@@ -94,7 +94,7 @@ export function HumanCellSVG({
         <BacteriaSVG
           cx={cx - actualRadius * 0.1}
           cy={cy + actualRadius * 0.45}
-          w={actualRadius * 0.28}
+          w={actualRadius * 0.17}
           h={actualRadius * 0.12}
           color="rgba(130, 166, 30, 0.6)"
           driftX={[0, -3, -6, -4, -1, 2, 4, 2, 0]}
