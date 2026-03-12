@@ -114,18 +114,26 @@ export default function SidePanel({
           {isSidePanelOpen ? (
             <button
               onClick={openSettingsModal}
-              className='flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 transition-all duration-200'
+              className='group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
             >
-              <Settings className='w-4 h-4 shrink-0' />
-              <span>Ustawienia</span>
+              <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                <span className='transition-transform duration-200 group-hover:scale-110'>
+                  <Settings size={17} />
+                </span>
+              </span>
+              <span className='text-md font-medium whitespace-nowrap overflow-hidden'>Ustawienia</span>
             </button>
           ) : (
             <Tooltip message='Ustawienia' position='right'>
               <button
                 onClick={openSettingsModal}
-                className='flex items-center justify-center w-full py-2 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-all duration-200'
+                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
               >
-                <Settings className='w-4 h-4' />
+                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                  <span className='transition-transform duration-200 group-hover:scale-110'>
+                    <Settings size={17} />
+                  </span>
+                </span>
               </button>
             </Tooltip>
           )}

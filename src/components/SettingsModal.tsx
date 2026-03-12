@@ -24,7 +24,7 @@ export default function SettingsModal() {
         </p>
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-zinc-200">Asystent AI na mobile</p>
+            <p className="text-sm font-medium text-zinc-200">Asystent AI na telefon</p>
             <p className="text-xs text-zinc-500 mt-0.5">Pokaż skrót do asystenta na dole ekranu</p>
           </div>
           <button
