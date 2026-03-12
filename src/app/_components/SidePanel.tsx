@@ -58,38 +58,33 @@ export default function SidePanel({
           lg:flex transition-all duration-300
           ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
+        {/* Header — Option B: minimal ghost, barely visible */}
         <div
-          className={`flex items-center h-16 shrink-0 border-b border-zinc-200
+          className={`flex items-center h-16 shrink-0 border-b border-zinc-100
             ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
         >
-          <Tooltip
-            message={isSidePanelOpen ? 'Zamknij' : 'Otwórz'}
-            position='right'
+          <button
+            onClick={toggleSidePanel}
+            className='flex items-center justify-center w-8 h-8 rounded-lg
+              text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100
+              transition-all duration-200 cursor-pointer'
           >
-            <button
-              onClick={toggleSidePanel}
-              className='flex items-center justify-center w-10 h-10 rounded-xl shrink-0
-                bg-zinc-200 border border-zinc-400
-                hover:bg-zinc-100
-                transition-all duration-200 hover:scale-95 shadow-sm'
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className={`h-5 w-5 stroke-current transition-transform duration-300
+                ${isSidePanelOpen ? 'rotate-180' : 'rotate-0'}`}
             >
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className={`h-5 w-5 stroke-zinc-600 transition-transform duration-300
-                  ${isSidePanelOpen ? 'rotate-180' : 'rotate-0'}`}
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
-                />
-              </svg>
-            </button>
-          </Tooltip>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3'
+              />
+            </svg>
+          </button>
         </div>
 
         <div className='flex flex-col flex-1 px-3 py-5 gap-1'>
