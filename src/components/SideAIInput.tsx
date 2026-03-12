@@ -38,12 +38,12 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
   }
 
   return (
-    <div className={`flex flex-col gap-2 ${isFloating
+    <div className={isFloating
       ? 'p-3 bg-white/80 backdrop-blur-md border-t border-zinc-200 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]'
-      : 'p-3'
-    }`}>
-      {/* Header row */}
-      <div className="flex items-center justify-between">
+      : 'px-2 py-2'
+    }>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-2 px-1">
         <div className="flex items-center gap-1.5 text-xs text-zinc-700 font-medium">
           <Sparkles className="w-3 h-3" />
           <span>Asystent AI</span>
@@ -59,37 +59,37 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
         )}
       </div>
 
-      {/* Input row */}
-      <div className="flex items-end gap-2">
+      {/* Textarea with inset submit button */}
+      <div className="relative">
         <textarea
           ref={textareaRef}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Zapytaj asystenta..."
-          rows={isFloating ? 1 : 2}
-          className={`flex-1 resize-none text-sm bg-zinc-50 border border-zinc-200 rounded-xl px-3 py-2
+          rows={isFloating ? 1 : 3}
+          className="w-full resize-none text-sm bg-zinc-50 border border-zinc-200 rounded-xl
+            px-3 pt-2.5 pb-9
             text-zinc-800 placeholder:text-zinc-400
             focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-transparent
-            transition-all duration-200
-            ${isFloating ? 'max-h-20' : 'max-h-32'}`}
+            transition-all duration-200"
         />
         <button
           onClick={handleSubmit}
           disabled={!value.trim()}
-          className="flex items-center justify-center w-8 h-8 rounded-xl shrink-0
+          className="absolute bottom-2 right-2 flex items-center justify-center w-7 h-7 rounded-lg
             bg-zinc-800 text-white
             hover:bg-zinc-700 transition-all duration-200
             disabled:opacity-30 disabled:cursor-not-allowed"
           aria-label="Wyślij"
         >
-          <ArrowUp className="w-4 h-4" />
+          <ArrowUp className="w-3.5 h-3.5" />
         </button>
       </div>
 
       {!isFloating && (
-        <p className="text-[10px] text-zinc-400 leading-relaxed">
-          Enter ↵ aby wysłać · Shift+Enter nowa linia
+        <p className="text-[10px] text-zinc-400 mt-1.5 px-1">
+          Enter ↵ wyślij · Shift+Enter nowa linia
         </p>
       )}
     </div>
