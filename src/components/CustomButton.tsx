@@ -14,13 +14,12 @@ export default function CustomButton(props: {
   const linkContent = (
     <Link
       href={props.href}
-      className={`group relative flex border border-zinc-400 py-1 bg-zinc-200 items-center gap-3.5 rounded-xl
-        transition-all duration-200
-        ${props.active
-          ? 'text-zinc-950'
-          : 'text-zinc-700 hover:text-zinc-900'
-        }
-        ${props.showTooltip ? 'justify-center' : ''}`}
+      className={`group relative flex items-center gap-3.5 rounded-xl transition-all duration-200
+        ${props.active ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
+        ${props.showTooltip
+          ? 'justify-center'
+          : 'p-1 bg-zinc-200 border border-zinc-400'
+        }`}
         onClick={closeSidePanel}
     >
       <span
