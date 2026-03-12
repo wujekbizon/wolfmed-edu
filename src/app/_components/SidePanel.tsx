@@ -8,6 +8,7 @@ import { Pin, X } from 'lucide-react'
 
 import CustomButton from '@/components/CustomButton'
 import { Tooltip } from '@/components/Tooltip'
+import PinButton from './PinButton'
 
 interface SidePanelProps {
   children?: React.ReactNode
@@ -39,43 +40,13 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
   }, [pinnedOpen])
 
   const pinButton = (
-    <div className="relative">
-      <button
-        ref={buttonRef}
-        onClick={() => setPinnedOpen((v) => !v)}
-        className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200
-          ${pinnedOpen ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
-          ${!isSidePanelOpen ? 'justify-center' : ''}`}
-      >
-        <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
-          ${pinnedOpen
-            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60'
-            : 'bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
-          }`}
-        >
-          <span className="transition-transform duration-200 group-hover:scale-110">
-            <Pin size={17} />
-          </span>
-        </span>
-        {isSidePanelOpen && (
-          <>
-            <span className={`text-md whitespace-nowrap overflow-hidden ${pinnedOpen ? 'font-semibold' : 'font-medium'}`}>
-              Przypięte notatki
-            </span>
-            {pinnedCount > 0 && (
-              <span className="ml-auto text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5 font-medium">
-                {pinnedCount}
-              </span>
-            )}
-          </>
-        )}
-      </button>
-      {!isSidePanelOpen && pinnedCount > 0 && (
-        <span className="absolute top-0.5 right-0.5 w-4 h-4 flex items-center justify-center rounded-full bg-rose-400 text-white text-[10px] font-bold pointer-events-none">
-          {pinnedCount}
-        </span>
-      )}
-    </div>
+    <PinButton
+      ref={buttonRef}
+      isOpen={pinnedOpen}
+      isSidebarOpen={isSidePanelOpen}
+      pinnedCount={pinnedCount}
+      onClick={() => setPinnedOpen((v) => !v)}
+    />
   )
 
   return (
@@ -131,9 +102,7 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
 
         {/* Pinned notes button */}
         <div className="px-3 pt-3 pb-2 border-t border-zinc-200">
-          {isSidePanelOpen ? (
-            pinButton
-          ) : (
+          {isSidePanelOpen ? pinButton : (
             <Tooltip message="Przypięte notatki" position="right">
               {pinButton}
             </Tooltip>
@@ -155,7 +124,9 @@ export default function SidePanel({ children, pinnedCount = 0 }: SidePanelProps)
               <Pin size={16} className="text-rose-400" />
               <span className="text-sm font-semibold text-zinc-800">Przypięte notatki</span>
               {pinnedCount > 0 && (
-                <span className="text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5 font-medium">{pinnedCount}</span>
+                <span className="text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5 font-medium">
+                  {pinnedCount}
+                </span>
               )}
             </div>
             <button
