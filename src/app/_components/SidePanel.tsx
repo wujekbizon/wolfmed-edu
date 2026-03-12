@@ -58,7 +58,6 @@ export default function SidePanel({
           lg:flex transition-all duration-300
           ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
-        {/* Header — Option B: minimal ghost, barely visible */}
         <div
           className={`flex items-center h-16 shrink-0 border-b border-zinc-100
             ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
@@ -75,7 +74,7 @@ export default function SidePanel({
               viewBox='0 0 24 24'
               strokeWidth={1.5}
               stroke='currentColor'
-              className={`h-5 w-5 stroke-current transition-transform duration-300
+              className={`h-5 w-5 stroke-current animate-pulse transition-transform duration-300
                 ${isSidePanelOpen ? 'rotate-180' : 'rotate-0'}`}
             >
               <path
