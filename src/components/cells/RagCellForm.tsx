@@ -97,11 +97,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   // Inject topic from SideAIInput and auto-submit
   useEffect(() => {
-    if (!pendingTopic || !textareaRef.current || !formRef.current) return
-    textareaRef.current.value = pendingTopic
+    if (!pendingTopic || !textareaRef.current) return
+    const topic = pendingTopic
+    textareaRef.current.value = topic
     setPendingTopic(null)
-    formRef.current.requestSubmit()
-  }, [pendingTopic, setPendingTopic])
+    const fd = new FormData()
+    fd.set('question', topic)
+    fd.set('cellId', cell.id)
+    handleSubmitRef.current(fd)
+  }, [pendingTopic, setPendingTopic, cell.id])
 
   useEffect(() => {
    
@@ -135,6 +139,8 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     }
   }, [state.status, state.values?.toolResults, cell.id, insertCellAfterWithContent])
 
+  const handleSubmitRef = useRef<(fd: FormData) => void>(null!)
+
   const handleSubmit = (formData: FormData) => {
     const question = formData.get('question') as string
     submittedQuestion.current = question
@@ -142,6 +148,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     startListening()
     action(formData)
   }
+  handleSubmitRef.current = handleSubmit
 
   const showConversation = state.status === 'SUCCESS' || isPending
   const userQuestion = submittedQuestion.current || cell.content

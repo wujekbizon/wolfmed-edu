@@ -3,15 +3,21 @@
 import { useState, useRef } from 'react'
 import { Sparkles, ArrowUp, X } from 'lucide-react'
 import { useRagStore } from '@/store/useRagStore'
+import { useRouter, usePathname } from 'next/navigation'
 
 interface SideAIInputProps {
   onDismiss?: () => void
 }
 
+const RAG_PAGE = '/panel/nauka'
+
 export default function SideAIInput({ onDismiss }: SideAIInputProps) {
   const [value, setValue] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const { setPendingTopic } = useRagStore()
+  const router = useRouter()
+  const pathname = usePathname()
+  const isFloating = !!onDismiss
 
   const handleSubmit = () => {
     const trimmed = value.trim()
@@ -19,6 +25,9 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
     setPendingTopic(trimmed)
     setValue('')
     textareaRef.current?.blur()
+    if (pathname !== RAG_PAGE) {
+      router.push(RAG_PAGE)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -28,8 +37,6 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
     }
   }
 
-  const isFloating = !!onDismiss
-
   return (
     <div className={`flex flex-col gap-2 ${isFloating
       ? 'p-3 bg-white/80 backdrop-blur-md border-t border-zinc-200 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]'
@@ -37,7 +44,7 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
     }`}>
       {/* Header row */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-xs text-zinc-400 font-medium">
+        <div className="flex items-center gap-1.5 text-xs text-zinc-700 font-medium">
           <Sparkles className="w-3 h-3" />
           <span>Asystent AI</span>
         </div>

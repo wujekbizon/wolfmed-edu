@@ -7,7 +7,7 @@ import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import CustomButton from '@/components/CustomButton'
 import { Tooltip } from '@/components/Tooltip'
 import PinButton from '../../components/PinButton'
-import { Settings } from 'lucide-react'
+import { Settings, Sparkles } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import SideAIInput from '@/components/SideAIInput'
 
@@ -103,9 +103,24 @@ export default function SidePanel({
             </CustomButton>
           ))}
 
-          {isSidePanelOpen && (
+          {isSidePanelOpen ? (
             <div className='mt-auto pt-3 border-t border-zinc-100'>
               <SideAIInput />
+            </div>
+          ) : (
+            <div className='mt-auto pt-3 border-t border-zinc-100'>
+              <Tooltip message='Asystent AI' position='right'>
+                <button
+                  onClick={toggleSidePanel}
+                  className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+                >
+                  <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                    <span className='transition-transform duration-200 group-hover:scale-110'>
+                      <Sparkles size={17} />
+                    </span>
+                  </span>
+                </button>
+              </Tooltip>
             </div>
           )}
         </div>
