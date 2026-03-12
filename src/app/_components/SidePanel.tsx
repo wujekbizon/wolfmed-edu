@@ -58,16 +58,15 @@ export default function SidePanel({
           lg:flex transition-all duration-300
           ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
-        {/* Header — Option C: rose tinted header, branded */}
+        {/* Header — Option B: minimal ghost, barely visible */}
         <div
-          className={`flex items-center h-16 shrink-0 bg-rose-50 border-b border-rose-100
+          className={`flex items-center h-16 shrink-0 border-b border-zinc-100
             ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
         >
           <button
             onClick={toggleSidePanel}
-            className='flex items-center justify-center w-9 h-9 rounded-xl
-              bg-white border border-rose-200 text-rose-400
-              hover:text-rose-600 hover:border-rose-300 hover:shadow-sm
+            className='flex items-center justify-center w-8 h-8 rounded-lg
+              text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100
               transition-all duration-200 cursor-pointer'
           >
             <svg
