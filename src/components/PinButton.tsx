@@ -11,7 +11,7 @@ interface PinButtonProps {
 }
 
 const iconClass = (isOpen: boolean) =>
-  `w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 ${
+  `w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 ${
     isOpen
       ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60 border border-zinc-700/80'
       : 'bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
