@@ -15,6 +15,7 @@ import RagProgressIndicator from './RagProgressIndicator'
 import { ResourceAutocomplete } from './ResourceAutocomplete'
 import { CommandAutocomplete } from './CommandAutocomplete'
 import { useCellsStore } from '@/store/useCellsStore'
+import { useRagStore } from '@/store/useRagStore'
 import type { CellTypes } from '@/types/cellTypes'
 
 export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
@@ -27,6 +28,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const noScriptFallback = useToastMessage(state)
 
   const { insertCellAfterWithContent } = useCellsStore()
+  const { pendingTopic, setPendingTopic } = useRagStore()
   const { resources, loading } = useResourceAutocomplete()
   const {
     textareaRef,
@@ -92,6 +94,14 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
       resetProgress()
     }
   }, [isPending, state.status, resetProgress])
+
+  // Inject topic from SideAIInput and auto-submit
+  useEffect(() => {
+    if (!pendingTopic || !textareaRef.current || !formRef.current) return
+    textareaRef.current.value = pendingTopic
+    setPendingTopic(null)
+    formRef.current.requestSubmit()
+  }, [pendingTopic, setPendingTopic])
 
   useEffect(() => {
    

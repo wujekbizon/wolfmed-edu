@@ -1,7 +1,9 @@
 'use client'
 
 import { Settings } from 'lucide-react'
-import BaseModal, { ModalHeader, ModalBody } from './BaseModal'
+import BaseModal from './modal/BaseModal'
+import ModalHeader from './modal/ModalHeader'
+import ModalBody from './modal/ModalBody'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import { useSettingsStore } from '@/store/useSettingsStore'
 

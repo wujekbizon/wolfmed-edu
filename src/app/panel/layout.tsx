@@ -6,6 +6,7 @@ import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
 import ConfirmModal from '@/components/ConfirmModal'
 import SettingsModal from '@/components/SettingsModal'
+import MobileAIFloat from '@/components/MobileAIFloat'
 import type { NotesType } from '@/types/notesTypes'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -28,6 +29,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       </div>
       <ConfirmModal />
       <SettingsModal />
+      <MobileAIFloat />
     </main>
   )
 }

@@ -9,6 +9,7 @@ import { Tooltip } from '@/components/Tooltip'
 import PinButton from '../../components/PinButton'
 import { Settings } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
+import SideAIInput from '@/components/SideAIInput'
 
 interface SidePanelProps {
   children?: React.ReactNode
@@ -89,7 +90,7 @@ export default function SidePanel({
           </button>
         </div>
 
-        <div className='flex flex-col flex-1 px-4 py-3 gap-3'>
+        <div className='flex flex-col flex-1 px-4 py-3 gap-3 min-h-0'>
           {sideMenuNavigationLinks.map((navLink) => (
             <CustomButton
               key={navLink.label}
@@ -101,6 +102,12 @@ export default function SidePanel({
               {navLink.icon}
             </CustomButton>
           ))}
+
+          {isSidePanelOpen && (
+            <div className='mt-auto pt-3 border-t border-zinc-100'>
+              <SideAIInput />
+            </div>
+          )}
         </div>
 
         <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
