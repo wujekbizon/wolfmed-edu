@@ -19,7 +19,7 @@ export const useStore = create<StateType>((set) => ({
   testIdToDelete: null,
   toggleMenu: () => set((state: StateType) => ({ isMenuOpen: !state.isMenuOpen })),
   toggleSidePanel: () => set((state: StateType) => ({ isSidePanelOpen: !state.isSidePanelOpen })),
-  closeSidePanel: () => set((state: StateType) => ({isSidePanelOpen: false})),
+  closeSidePanel: () => set({ isSidePanelOpen: false }),
   openDeleteModal: (testId: string | null) => set(() => ({ isDeleteModalOpen: true, testIdToDelete: testId })),
   closeDeleteModal: () => set(() => ({ isDeleteModalOpen: false, testIdToDelete: null })),
 }))

@@ -9,7 +9,7 @@ export default function CustomButton(props: {
   active?: boolean
   showTooltip?: boolean
 }) {
- const { toggleSidePanel,closeSidePanel } = useStore((state) => state)
+  const closeSidePanel = useStore((state) => state.closeSidePanel)
 
   const linkContent = (
     <Link
