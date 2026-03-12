@@ -58,15 +58,15 @@ export default function SidePanel({
           lg:flex transition-all duration-300
           ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
-        {/* Header — Option A: dark strip */}
+        {/* Header — Option B: minimal ghost, barely visible */}
         <div
-          className={`flex items-center h-16 shrink-0 bg-zinc-900
+          className={`flex items-center h-16 shrink-0 border-b border-zinc-100
             ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
         >
           <button
             onClick={toggleSidePanel}
             className='flex items-center justify-center w-8 h-8 rounded-lg
-              text-zinc-500 hover:text-white hover:bg-zinc-700/60
+              text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100
               transition-all duration-200 cursor-pointer'
           >
             <svg
