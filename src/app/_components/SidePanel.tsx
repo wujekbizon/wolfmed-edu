@@ -7,6 +7,8 @@ import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import CustomButton from '@/components/CustomButton'
 import { Tooltip } from '@/components/Tooltip'
 import PinButton from '../../components/PinButton'
+import { Settings } from 'lucide-react'
+import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 
 interface SidePanelProps {
   children?: React.ReactNode
@@ -18,6 +20,7 @@ export default function SidePanel({
   pinnedCount = 0
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
+  const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
   const [pinnedOpen, setPinnedOpen] = useState(false)
   const panelRef = useRef<HTMLDivElement>(null)
@@ -100,12 +103,30 @@ export default function SidePanel({
           ))}
         </div>
 
-        <div className='px-3 pt-3 pb-2 border-t border-zinc-200'>
+        <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
           {isSidePanelOpen ? (
             pinButton
           ) : (
             <Tooltip message='Przypięte notatki' position='right'>
               {pinButton}
+            </Tooltip>
+          )}
+          {isSidePanelOpen ? (
+            <button
+              onClick={openSettingsModal}
+              className='flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-zinc-500 hover:text-zinc-800 hover:bg-zinc-100 transition-all duration-200'
+            >
+              <Settings className='w-4 h-4 shrink-0' />
+              <span>Ustawienia</span>
+            </button>
+          ) : (
+            <Tooltip message='Ustawienia' position='right'>
+              <button
+                onClick={openSettingsModal}
+                className='flex items-center justify-center w-full py-2 rounded-lg text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100 transition-all duration-200'
+              >
+                <Settings className='w-4 h-4' />
+              </button>
             </Tooltip>
           )}
         </div>

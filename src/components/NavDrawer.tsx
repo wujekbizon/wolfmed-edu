@@ -6,9 +6,12 @@ import { usePathname } from 'next/navigation'
 import { useStore } from '@/store/useStore'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
+import { Settings } from 'lucide-react'
+import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 
 export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
+  const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
 
   return (
@@ -134,9 +137,16 @@ export default function NavDrawer() {
           </div>
         </nav>
 
-        {/* Footer line */}
-        <div className="px-5 py-4 border-t border-white/40">
-          <p className="text-xs text-zinc-800 text-center tracking-wide">© 2026 Wolfmed-Edukacja</p>
+        {/* Footer */}
+        <div className="px-5 py-4 border-t border-white/40 flex items-center justify-between">
+          <p className="text-xs text-zinc-500 tracking-wide">© 2026 Wolfmed-Edukacja</p>
+          <button
+            onClick={() => { toggleMenu(); openSettingsModal() }}
+            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 transition-colors"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>Ustawienia</span>
+          </button>
         </div>
       </aside>
     </>
