@@ -15,7 +15,7 @@ export default function SettingsModal() {
     <BaseModal onClose={closeSettingsModal} size="sm">
       <ModalHeader
         title="Ustawienia"
-        icon={<Settings className="w-4 h-4 text-zinc-600" />}
+        icon={<Settings className="w-4 h-4 text-zinc-400" />}
         onClose={closeSettingsModal}
       />
       <ModalBody>
@@ -24,7 +24,7 @@ export default function SettingsModal() {
         </p>
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-zinc-800">Asystent AI na mobile</p>
+            <p className="text-sm font-medium text-zinc-200">Asystent AI na mobile</p>
             <p className="text-xs text-zinc-500 mt-0.5">Pokaż skrót do asystenta na dole ekranu</p>
           </div>
           <button
@@ -34,7 +34,7 @@ export default function SettingsModal() {
             className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 transition-colors duration-200
               ${showMobileAI
                 ? 'bg-rose-400 border-rose-400'
-                : 'bg-zinc-200 border-zinc-200'
+                : 'bg-zinc-700 border-zinc-700'
               }`}
           >
             <span
