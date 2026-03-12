@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Tooltip } from './Tooltip'
+import { useStore } from '@/store/useStore'
 
 export default function CustomButton(props: {
   children?: React.ReactNode
@@ -8,6 +9,8 @@ export default function CustomButton(props: {
   active?: boolean
   showTooltip?: boolean
 }) {
+ const { toggleSidePanel,closeSidePanel } = useStore((state) => state)
+
   const linkContent = (
     <Link
       href={props.href}
@@ -18,11 +21,12 @@ export default function CustomButton(props: {
           : 'text-zinc-700 hover:text-zinc-900'
         }
         ${props.showTooltip ? 'justify-center' : ''}`}
+        onClick={closeSidePanel}
     >
       <span
         className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active
-            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60'
+            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60 border border-zinc-700/80'
             : 'bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
           }`}
       >
