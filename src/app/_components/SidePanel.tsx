@@ -86,7 +86,7 @@ export default function SidePanel({
           </button>
         </div>
 
-        <div className='flex flex-col flex-1 px-3 py-5 gap-1'>
+        <div className='flex flex-col flex-1 px-4 py-3 gap-3'>
           {sideMenuNavigationLinks.map((navLink) => (
             <CustomButton
               key={navLink.label}
