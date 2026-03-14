@@ -4,16 +4,20 @@ interface CommandAutocompleteProps {
   commands: Command[]
   selectedIndex: number
   onSelect: (name: string) => void
+  direction?: 'up' | 'down'
 }
 
 export function CommandAutocomplete({
   commands,
   selectedIndex,
   onSelect,
+  direction = 'down',
 }: CommandAutocompleteProps) {
+  const positionClass = direction === 'up' ? 'bottom-full mb-2' : 'mt-2'
+
   if (commands.length === 0) {
     return (
-      <div className="absolute z-50 w-full mt-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
+      <div className={`absolute z-50 w-full ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
         <div className="px-4 py-3 text-sm text-zinc-500">
           Nie znaleziono poleceń
         </div>
@@ -22,7 +26,7 @@ export function CommandAutocomplete({
   }
 
   return (
-    <div className="absolute z-50 w-full mt-2 bg-white border border-zinc-200 rounded-lg shadow-lg max-h-80 overflow-y-auto">
+    <div className={`absolute z-50 w-full ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg max-h-80 overflow-y-auto`}>
       {commands.map((command, index) => (
         <button
           key={command.name}

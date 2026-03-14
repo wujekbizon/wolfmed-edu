@@ -10,8 +10,7 @@ import { useRagCellInput } from '@/hooks/useRagCellInput'
 import { useRagProgress } from '@/hooks/useRagProgress'
 import RagResponse from './RagResponse'
 import RagProgressIndicator from './RagProgressIndicator'
-import { ResourceAutocomplete } from './ResourceAutocomplete'
-import { CommandAutocomplete } from './CommandAutocomplete'
+import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
 import { useCellsStore } from '@/store/useCellsStore'
 import { useRagStore } from '@/store/useRagStore'
 import type { CellTypes } from '@/types/cellTypes'
@@ -190,22 +189,17 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
               className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-transparent resize-none text-sm"
             />
 
-            {showResourceAutocomplete && !showCommandAutocomplete && (
-              <ResourceAutocomplete
-                resources={filteredResources}
-                selectedIndex={resourceSelectedIndex}
-                onSelect={insertResource}
-                loading={resourcesLoading}
-              />
-            )}
-
-            {showCommandAutocomplete && (
-              <CommandAutocomplete
-                commands={filteredCommands}
-                selectedIndex={commandSelectedIndex}
-                onSelect={insertCommand}
-              />
-            )}
+            <AIAutocompleteDropdowns
+              showResourceAutocomplete={showResourceAutocomplete}
+              showCommandAutocomplete={showCommandAutocomplete}
+              filteredResources={filteredResources}
+              filteredCommands={filteredCommands}
+              resourceSelectedIndex={resourceSelectedIndex}
+              commandSelectedIndex={commandSelectedIndex}
+              resourcesLoading={resourcesLoading}
+              insertResource={insertResource}
+              insertCommand={insertCommand}
+            />
 
             <FieldError formState={state} name="question" />
           </div>

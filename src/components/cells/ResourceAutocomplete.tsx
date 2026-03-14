@@ -5,6 +5,7 @@ interface ResourceAutocompleteProps {
   selectedIndex: number;
   onSelect: (displayName: string) => void;
   loading?: boolean;
+  direction?: 'up' | 'down';
 }
 
 export function ResourceAutocomplete({
@@ -12,10 +13,13 @@ export function ResourceAutocomplete({
   selectedIndex,
   onSelect,
   loading = false,
+  direction = 'down',
 }: ResourceAutocompleteProps) {
+  const positionClass = direction === 'up' ? 'bottom-full mb-2' : 'mt-2'
+
   if (loading) {
     return (
-      <div className="absolute z-50 max-w-xl mt-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
+      <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
         <div className="px-4 py-3 text-sm text-zinc-500">
           Ładowanie zasobów...
         </div>
@@ -25,7 +29,7 @@ export function ResourceAutocomplete({
 
   if (resources.length === 0) {
     return (
-      <div className="absolute z-50 max-w-xl mt-2 bg-white border border-zinc-200 rounded-lg shadow-lg">
+      <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
         <div className="px-4 py-3 text-sm text-zinc-500">
           Nie znaleziono plików
         </div>
@@ -34,7 +38,7 @@ export function ResourceAutocomplete({
   }
 
   return (
-    <div className="absolute z-50 max-w-xl mt-2 bg-white border border-zinc-200 rounded-lg shadow-lg max-h-72 overflow-y-auto">
+    <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg max-h-72 overflow-y-auto`}>
       {resources.map((resource, index) => (
         <button
           key={resource.name}
