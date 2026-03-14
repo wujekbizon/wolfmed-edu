@@ -57,8 +57,8 @@ export function ResourceAutocomplete({
             }
           `}
         >
-          <span className={`font-medium text-zinc-900 truncate flex-1 min-w-0 mr-2 ${compact ? 'text-[11px]' : 'text-sm'}`}>{resource.displayName}</span>
-          <span className={`shrink-0 text-zinc-500 ${compact ? 'text-[11px] ml-2' : 'text-sm'}`}>
+          <span className={`font-medium text-zinc-900 truncate min-w-0 flex-1 ${compact ? 'text-[11px]' : 'text-sm'}`}>{resource.displayName}</span>
+          <span className={`shrink-0 text-zinc-500 text-right ${compact ? 'text-[11px] w-14' : 'text-sm'}`}>
             {resource.type === 'doc'
               ? 'Dok.'
               : resource.type === 'note'
