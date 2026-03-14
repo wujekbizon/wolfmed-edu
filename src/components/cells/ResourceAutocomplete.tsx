@@ -16,11 +16,13 @@ export function ResourceAutocomplete({
   direction = 'down',
 }: ResourceAutocompleteProps) {
   const positionClass = direction === 'up' ? 'bottom-full mb-2' : 'mt-2'
+  const compact = direction === 'up'
+  const sizeClass = compact ? 'w-full' : 'max-w-xl'
 
   if (loading) {
     return (
-      <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
-        <div className="px-4 py-3 text-sm text-zinc-500">
+      <div className={`absolute z-50 ${sizeClass} ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
+        <div className={`${compact ? 'px-3 py-2 text-xs' : 'px-4 py-3 text-sm'} text-zinc-500`}>
           Ładowanie zasobów...
         </div>
       </div>
@@ -29,8 +31,8 @@ export function ResourceAutocomplete({
 
   if (resources.length === 0) {
     return (
-      <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
-        <div className="px-4 py-3 text-sm text-zinc-500">
+      <div className={`absolute z-50 ${sizeClass} ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg`}>
+        <div className={`${compact ? 'px-3 py-2 text-xs' : 'px-4 py-3 text-sm'} text-zinc-500`}>
           Nie znaleziono plików
         </div>
       </div>
@@ -38,14 +40,14 @@ export function ResourceAutocomplete({
   }
 
   return (
-    <div className={`absolute z-50 max-w-xl ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg max-h-72 overflow-y-auto`}>
+    <div className={`absolute z-50 ${sizeClass} ${positionClass} bg-white border border-zinc-200 rounded-lg shadow-lg overflow-y-auto ${compact ? 'max-h-48' : 'max-h-72'}`}>
       {resources.map((resource, index) => (
         <button
           key={resource.name}
           type="button"
           onClick={() => onSelect(resource.displayName)}
           className={`
-            w-full px-4 py-3 flex items-center justify-between
+            w-full ${compact ? 'px-3 py-2' : 'px-4 py-3'} flex items-center justify-between
             transition-colors border-b last:border-b-0
             text-left
             ${
@@ -55,10 +57,10 @@ export function ResourceAutocomplete({
             }
           `}
         >
-          <span className="font-medium text-zinc-900">{resource.displayName}</span>
-          <span className="text-sm text-zinc-500">
+          <span className={`font-medium text-zinc-900 truncate ${compact ? 'text-xs' : 'text-sm'}`}>{resource.displayName}</span>
+          <span className={`shrink-0 text-zinc-500 ${compact ? 'text-xs ml-2' : 'text-sm'}`}>
             {resource.type === 'doc'
-              ? 'Dokument'
+              ? 'Dok.'
               : resource.type === 'note'
                 ? 'Notatka'
                 : 'Materiał'}
