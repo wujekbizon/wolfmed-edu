@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useRef, useEffect } from 'react'
+import { useActionState, useRef, useEffect, startTransition } from 'react'
 import { askRagQuestion } from '@/actions/rag-actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
@@ -115,7 +115,9 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     const fd = new FormData()
     fd.set('question', topic)
     fd.set('cellId', cell.id)
-    handleSubmitRef.current(fd)
+    startTransition(() => {
+      handleSubmitRef.current(fd)
+    })
   }, [pendingAutoSubmitCellId, cell.id, cell.content, setPendingAutoSubmitCellId])
 
   useEffect(() => {
