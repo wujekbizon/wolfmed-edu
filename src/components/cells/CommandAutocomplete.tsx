@@ -44,9 +44,9 @@ export function CommandAutocomplete({
           `}
         >
           {compact ? (
-            <div className="flex items-baseline gap-2 min-w-0">
-              <span className="font-mono font-semibold text-xs text-zinc-900 shrink-0">/{command.name}</span>
-              <span className="text-xs text-zinc-500 truncate">— {command.description}</span>
+            <div className="flex items-baseline gap-1.5 min-w-0">
+              <span className="font-mono font-semibold text-[11px] text-zinc-900 shrink-0">/{command.name}</span>
+              <span className="text-[11px] text-zinc-500 truncate">— {command.description}</span>
             </div>
           ) : (
             <>
