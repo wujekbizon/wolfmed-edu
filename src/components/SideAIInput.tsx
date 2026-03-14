@@ -59,8 +59,10 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
         )}
       </div>
 
-      {/* Textarea with inset submit button */}
-      <div className="relative">
+      {/* Chat-style input container */}
+      <div className="flex flex-col bg-zinc-50 border border-zinc-200 rounded-xl
+        focus-within:ring-2 focus-within:ring-zinc-300 focus-within:border-transparent
+        transition-all duration-200">
         <textarea
           ref={textareaRef}
           value={value}
@@ -68,23 +70,23 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
           onKeyDown={handleKeyDown}
           placeholder="Zapytaj asystenta..."
           rows={isFloating ? 1 : 3}
-          className="w-full resize-none text-sm bg-zinc-50 border border-zinc-200 rounded-xl
-            px-3 pt-2.5 pb-9
-            text-zinc-800 placeholder:text-zinc-400
-            focus:outline-none focus:ring-2 focus:ring-zinc-300 focus:border-transparent
-            transition-all duration-200"
+          className="w-full resize-none text-sm bg-transparent border-none outline-none
+            px-3 pt-2.5 pb-1
+            text-zinc-800 placeholder:text-zinc-400"
         />
-        <button
-          onClick={handleSubmit}
-          disabled={!value.trim()}
-          className="absolute bottom-2 right-2 flex items-center justify-center w-7 h-7 rounded-lg
-            bg-zinc-800 text-white
-            hover:bg-zinc-700 transition-all duration-200
-            disabled:opacity-30 disabled:cursor-not-allowed"
-          aria-label="Wyślij"
-        >
-          <ArrowUp className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex justify-end px-2 pb-2">
+          <button
+            onClick={handleSubmit}
+            disabled={!value.trim()}
+            className="flex items-center justify-center w-7 h-7 rounded-lg
+              bg-zinc-800 text-white
+              hover:bg-zinc-700 transition-all duration-200
+              disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Wyślij"
+          >
+            <ArrowUp className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       {!isFloating && (
