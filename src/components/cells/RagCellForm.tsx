@@ -28,7 +28,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const noScriptFallback = useToastMessage(state)
 
   const { insertCellAfterWithContent } = useCellsStore()
-  const { pendingTopic, setPendingTopic } = useRagStore()
+  const { pendingAutoSubmitCellId, setPendingAutoSubmitCellId } = useRagStore()
   const { resources, loading } = useResourceAutocomplete()
   const {
     textareaRef,
@@ -95,17 +95,28 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     }
   }, [isPending, state.status, resetProgress])
 
-  // Inject topic from SideAIInput and auto-submit
+  // Auto-submit and scroll when triggered from SideAIInput
   useEffect(() => {
-    if (!pendingTopic || !textareaRef.current) return
-    const topic = pendingTopic
-    textareaRef.current.value = topic
-    setPendingTopic(null)
+    if (pendingAutoSubmitCellId !== cell.id) return
+
+    setPendingAutoSubmitCellId(null)
+
+    // Scroll cell into view
+    document.getElementById(`cell-${cell.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+    // Submit with the content already set on the cell
+    const topic = cell.content
+    if (!topic) return
+
+    if (textareaRef.current) {
+      textareaRef.current.value = topic
+    }
+
     const fd = new FormData()
     fd.set('question', topic)
     fd.set('cellId', cell.id)
     handleSubmitRef.current(fd)
-  }, [pendingTopic, setPendingTopic, cell.id])
+  }, [pendingAutoSubmitCellId, cell.id, cell.content, setPendingAutoSubmitCellId])
 
   useEffect(() => {
    
