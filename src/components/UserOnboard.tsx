@@ -50,7 +50,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-3 sm:p-8 bg-white/70 backdrop-blur-xl border border-zinc-200/70 rounded-2xl flex flex-col justify-around">
+    <div className="h-full p-3 sm:p-6 bg-white/70 backdrop-blur-xl border-zinc-200/70 border rounded-2xl flex flex-col justify-around">
       {/* Heading */}
       <div className="text-center">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
@@ -64,10 +64,10 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
 
       {/* Feature Discovery Grid */}
       <div>
-        <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+        <h3 className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-4">
           Co oferuje platforma
         </h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-4">
           {FEATURES.map((feature) => {
             const locked = feature.premium && !hasPremium
             return (
@@ -77,7 +77,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 className={`relative flex flex-col gap-2 p-4 border rounded-2xl transition-all duration-200 group ${
                   locked
                     ? 'bg-zinc-100/60 border-zinc-200/40 opacity-50 cursor-not-allowed pointer-events-none'
-                    : 'bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20'
+                    : 'bg-white backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20'
                 }`}
               >
                 {feature.premium && (
@@ -93,10 +93,10 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 >
                   {feature.icon}
                 </span>
-                <span className={`text-sm font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
+                <span className={`text-md font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
                   {feature.label}
                 </span>
-                <span className={`text-xs ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                <span className={`text-sm ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
                   {feature.desc}
                 </span>
               </Link>
@@ -107,7 +107,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
 
       {/* Course Marketplace Cards */}
       <div>
-        <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
+        <h3 className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-4">
           Dostępne kierunki
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -116,10 +116,10 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
             return (
               <div
                 key={slug}
-                className="flex flex-col justify-between p-5 bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl shadow-zinc-950/20"
+                className="flex flex-col justify-between px-5 py-7 bg-white backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl shadow-zinc-950/20"
               >
                 <div className="mb-4">
-                  <h4 className="text-base font-semibold text-zinc-800 mb-1.5">
+                  <h4 className="text-base font-semibold text-zinc-800 mb-4">
                     {path.title}
                   </h4>
                   <p className="text-sm text-zinc-500 leading-relaxed">
@@ -138,7 +138,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                   </span>
                   {hasAccess ? (
                     <span className="ml-auto text-sm font-semibold text-zinc-400 cursor-default">
-                      Masz dostęp ✓
+                      Masz dostęp →
                     </span>
                   ) : (
                     <Link
