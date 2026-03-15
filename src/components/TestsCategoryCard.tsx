@@ -9,7 +9,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
   const isLocked = item.hasAccess === false;
 
   return (
-    <div className={`relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 transition-all duration-300 overflow-hidden ${
+    <div className={`relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 border border-white/[0.06] transition-all duration-300 overflow-hidden ${
       isLocked ? 'opacity-50 cursor-not-allowed' : 'opacity-95 hover:opacity-100'
     }`}>
       <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">

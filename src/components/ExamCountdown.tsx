@@ -7,7 +7,7 @@ export default function ExamCountdown() {
 
   if (!currentPeriod) {
     return (
-      <div className="w-full p-4 sm:p-6 bg-zinc-900 backdrop-blur-md rounded-xl shadow-lg border border-zinc-800 hover:shadow-xl hover:border-zinc-700 transition-all duration-300">
+      <div className="w-full p-4 sm:p-6 bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/40 border border-white/[0.08] hover:shadow-black/60 transition-all duration-300">
         <h3 className="text-lg sm:text-xl font-bold text-white text-center">
           Brak zaplanowanych sesji egzaminacyjnych
         </h3>
@@ -34,7 +34,7 @@ export default function ExamCountdown() {
   }
 
   return (
-    <div className="w-full p-4 sm:p-6 bg-zinc-900 backdrop-blur-md rounded-xl shadow-lg border border-zinc-800 hover:shadow-xl hover:border-zinc-700 transition-all duration-300">
+    <div className="w-full p-4 sm:p-6 bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl rounded-2xl shadow-2xl shadow-black/40 border border-white/[0.08] hover:shadow-black/60 transition-all duration-300">
       <h3 className="text-lg sm:text-xl font-bold text-white text-center mb-2 sm:mb-4">{currentPeriod.label}</h3>
       {currentPeriod.type !== 'in_progress' && (
         <CountdownTimer
