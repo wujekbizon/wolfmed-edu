@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const pinnedCount = notes.filter((n) => n.pinned).length
 
   return (
-    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-gradient-to-br from-rose-50 via-zinc-50 to-blue-50/40">
+    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50">
       <SidePanel pinnedCount={pinnedCount}>
         <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
           <PinnedNotesFeature pinnedNotes={pinnedNotes} />
