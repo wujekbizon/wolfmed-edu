@@ -50,13 +50,13 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-3 sm:p-6 bg-white/70 backdrop-blur-xl border-zinc-200/70 border rounded-2xl flex flex-col justify-around">
+    <div className="h-full p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
       {/* Heading */}
-      <div className="text-center">
+      <div className="text-center pt-2">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
           Twoja nauka, Twoje tempo.
         </h2>
-        <p className="text-base sm:text-lg text-zinc-500 font-light max-w-xl mx-auto">
+        <p className="text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
           Wybierz kierunek, kup dostęp i ucz się w swoim tempie.
           Bez subskrypcji — płacisz tylko za to, czego potrzebujesz.
         </p>
@@ -64,20 +64,20 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
 
       {/* Feature Discovery Grid */}
       <div>
-        <h3 className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-4">
+        <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
           Co oferuje platforma
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {FEATURES.map((feature) => {
             const locked = feature.premium && !hasPremium
             return (
               <Link
                 key={feature.href}
                 href={locked ? '#' : feature.href}
-                className={`relative flex flex-col gap-2 p-4 border rounded-2xl transition-all duration-200 group ${
+                className={`relative flex flex-col gap-2 p-4 border rounded-xl transition-all duration-200 group ${
                   locked
-                    ? 'bg-zinc-100/60 border-zinc-200/40 opacity-50 cursor-not-allowed pointer-events-none'
-                    : 'bg-white backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20'
+                    ? 'bg-zinc-50 border-zinc-100 opacity-50 cursor-not-allowed pointer-events-none'
+                    : 'bg-zinc-50 border-zinc-100 hover:bg-white hover:border-zinc-200 hover:shadow-sm'
                 }`}
               >
                 {feature.premium && (
@@ -88,15 +88,13 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                     Premium
                   </span>
                 )}
-                <span
-                  className={`transition-colors ${locked ? 'text-zinc-400' : 'text-zinc-500 group-hover:text-[#f65555]'}`}
-                >
+                <span className={`transition-colors ${locked ? 'text-zinc-400' : 'text-zinc-400 group-hover:text-[#f65555]'}`}>
                   {feature.icon}
                 </span>
-                <span className={`text-md font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
+                <span className={`text-sm font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
                   {feature.label}
                 </span>
-                <span className={`text-sm ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                <span className={`text-xs ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
                   {feature.desc}
                 </span>
               </Link>
@@ -107,43 +105,43 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
 
       {/* Course Marketplace Cards */}
       <div>
-        <h3 className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-4">
+        <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
           Dostępne kierunki
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {Object.entries(careerPathsData).map(([slug, path]) => {
             const hasAccess = premiumSlugs.has(slug)
             return (
               <div
                 key={slug}
-                className="flex flex-col justify-between px-5 py-7 bg-white backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl shadow-zinc-950/20"
+                className="flex flex-col justify-between px-5 py-6 bg-white border border-zinc-100 rounded-xl hover:border-zinc-200 hover:shadow-sm transition-all duration-200"
               >
                 <div className="mb-4">
-                  <h4 className="text-base font-semibold text-zinc-800 mb-4">
+                  <h4 className="text-sm font-semibold text-zinc-800 mb-2">
                     {path.title}
                   </h4>
-                  <p className="text-sm text-zinc-500 leading-relaxed">
+                  <p className="text-xs text-zinc-400 leading-relaxed">
                     {path.description}
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[11px] font-medium text-zinc-500 border border-zinc-200 rounded-full px-2 py-0.5">
+                  <span className="text-[10px] font-medium text-zinc-400 border border-zinc-200 rounded-full px-2 py-0.5">
                     Basic
                   </span>
                   <span
-                    className="text-[11px] font-medium border rounded-full px-2 py-0.5"
+                    className="text-[10px] font-medium border rounded-full px-2 py-0.5"
                     style={{ color: '#f65555', borderColor: '#f6555533' }}
                   >
                     Premium
                   </span>
                   {hasAccess ? (
-                    <span className="ml-auto text-sm font-semibold text-zinc-400 cursor-default">
-                      Masz dostęp →
+                    <span className="ml-auto text-xs font-semibold text-zinc-400 cursor-default">
+                      Masz dostęp ✓
                     </span>
                   ) : (
                     <Link
                       href={`/kierunki/${slug}`}
-                      className="ml-auto text-sm font-semibold transition-colors"
+                      className="ml-auto text-xs font-semibold transition-colors"
                       style={{ color: '#f65555' }}
                     >
                       Kup dostęp →
