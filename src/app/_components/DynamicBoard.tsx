@@ -24,7 +24,7 @@ export default async function DynamicBoard() {
         enrolledCount={enrollments.length}
       />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8">
+        <div className="lg:col-span-8 h-full">
           <UserOnboard enrollments={enrollments} />
         </div>
         <aside className="lg:col-span-4 rounded-2xl">
