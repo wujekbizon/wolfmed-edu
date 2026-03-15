@@ -45,23 +45,23 @@ export default function StatsRow({
       {cards.map((card, i) => (
         <div
           key={i}
-          className={`rounded-2xl p-4 flex flex-col gap-1.5 ${
+          className={`rounded-xl p-4 flex flex-col gap-1.5 ${
             card.accent
-              ? 'bg-rose-50/60 border border-rose-200/50'
-              : 'bg-white border border-zinc-200/50 shadow-sm'
+              ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 border border-zinc-700/80 shadow-sm shadow-rose-200/60'
+              : 'bg-zinc-200 border border-zinc-400'
           }`}
         >
-          <span className={card.accent ? 'text-rose-500' : 'text-zinc-400'}>
+          <span className={card.accent ? 'text-zinc-900' : 'text-zinc-500'}>
             {card.icon}
           </span>
           <span
             className={`text-2xl font-bold tabular-nums ${
-              card.accent ? 'text-rose-600' : 'text-zinc-900'
+              card.accent ? 'text-zinc-950' : 'text-zinc-900'
             }`}
           >
             {card.value}
           </span>
-          <span className={`text-xs ${card.accent ? 'text-rose-400' : 'text-zinc-500'}`}>
+          <span className={`text-xs ${card.accent ? 'text-zinc-800' : 'text-zinc-600'}`}>
             {card.label}
           </span>
         </div>
