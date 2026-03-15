@@ -8,9 +8,9 @@ export default function UserAnalyticsSkeleton() {
 
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-100" />
-          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-100" />
-          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-100" />
+          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-200" />
+          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-200" />
+          <div className="h-24 bg-zinc-100 rounded-xl border border-zinc-200" />
         </div>
 
         <div className="bg-zinc-900 backdrop-blur p-6 rounded-xl border border-zinc-800">

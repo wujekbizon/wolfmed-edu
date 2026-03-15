@@ -5,7 +5,7 @@ export default async function UserMotto() {
   if (!user) return null
 
   return (
-    <div className="w-full bg-white border border-zinc-100 rounded-xl p-5 sm:p-6 shadow-sm group">
+    <div className="w-full bg-zinc-50 border border-zinc-100 rounded-xl p-5 sm:p-6 group">
       <div className="flex flex-col">
         <div className="flex items-center gap-2 mb-4">
           <svg

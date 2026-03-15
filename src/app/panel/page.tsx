@@ -46,13 +46,13 @@ export default async function TestsPage() {
                 <Suspense fallback={null}>
                   <AdminBlogWidget />
                 </Suspense>
-                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <UsernameForm />
                 </div>
-                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <MottoForm />
                 </div>
-                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <TestimonialForm />
                 </div>
                 <Suspense fallback={<StorageQuotaWidgetSkeleton />}>
