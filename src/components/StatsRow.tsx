@@ -47,8 +47,8 @@ export default function StatsRow({
           key={i}
           className={`rounded-xl p-4 flex flex-col gap-1.5 ${
             card.accent
-              ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 border border-zinc-700/60 shadow-sm shadow-rose-200/60'
-              : 'bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border border-white/50 shadow-2xl shadow-zinc-950/20'
+              ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 border border-[#f65555]/30 shadow-lg shadow-[#f65555]/30'
+              : 'bg-white border border-zinc-200/60 shadow-sm'
           }`}
         >
           <span className={card.accent ? 'text-zinc-900' : 'text-zinc-500'}>
