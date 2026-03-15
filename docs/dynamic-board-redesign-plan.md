@@ -3,21 +3,34 @@
 **Date**: 2026-03-15 (updated)
 **Branch**: `claude/create-local-branch-AUNJb`
 **Scope**: Full `/panel` page — DynamicBoard, profile section, tests page cards
-**Status**: ✅ All decisions resolved — awaiting green light for implementation
+**Status**: 🟡 Three design versions implemented — awaiting selection before content/logic phase
+
+---
+
+## ⚠️ Components to Be Removed (Post-Design Selection)
+
+The following are **inline JSX blocks inside `DynamicBoard.tsx`** — not separate files, so no files will be deleted. They will be removed in the content cleanup phase after a design version is chosen.
+
+| Block | Location | Reason |
+|-------|----------|--------|
+| `Najnowsze Aktualizacje` | `DynamicBoard.tsx` lines 17–42 | Hardcoded Dec 2025 dates — stale content |
+| `Zapraszamy na forum` | `DynamicBoard.tsx` lines 43–57 | Replaced by `ForumActivityCard` (personal, dynamic) |
+
+**During the 3 design versions these blocks are restyled but NOT removed** — so you can see how each version handles them visually before we delete and replace.
 
 ---
 
 ## 🎯 Design Philosophy — Hybrid Approach
 
-**Three design layers, each used intentionally:**
+Three design layers, each used intentionally:
 
 | Layer | Pattern | Used On |
 |-------|---------|---------|
-| **Apple Glass** | `backdrop-blur-xl bg-white/60 border border-white/50` | Structural outer containers, NavDrawer, modals |
-| **Sedela Clean Cards** | `bg-white border border-zinc-200/50 shadow-sm` | Stat row, quick-access links, feature grid cards |
-| **BaseModal Dark Glass** | `bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl border border-white/[0.08]` | ExamCountdown — dramatic contrast on zinc-50 bg |
+| **Apple Glass** | `backdrop-blur-xl bg-white/60 border border-white/50` | Structural outer containers |
+| **Sedela Clean** | `bg-white border border-zinc-200/50 shadow-sm` | Stat row, quick-access links, feature cards |
+| **BaseModal Dark Glass** | `bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl border border-white/[0.08]` | ExamCountdown — dramatic contrast on zinc-50 |
 
-> **Rule**: Glass everywhere = nothing special. Glass on containers + dark glass on ExamCountdown = intentional, premium contrast.
+> **Rule**: Glass everywhere = nothing special. Use each layer intentionally.
 
 ---
 
@@ -25,230 +38,152 @@
 
 ### `/panel` page — `src/app/panel/page.tsx`
 
-| Component | Current State | Planned Change |
+| Component | Current State | Post-Design Change |
 |-----------|--------------|----------------|
-| `DynamicBoard` | Glass container + stale sidebar widgets | Restructure: add StatsRow above grid, remove stale widgets |
-| `UserOnboard` | Newsletter-style welcome, old business model copy | Full rewrite — marketplace copy, feature grid, checklist |
-| `DashboardInfo` | Pink gradient quick-access buttons | Sedela clean card style (white + rose accent on hover) |
-| `ExamCountdown` | Dark zinc-900 card — good logic, dated style | Restyle to BaseModal dark glass — premium, dramatic, intentional contrast |
-| `Username` | Plain heading "Panel użytkownika, [name]" | Minor: add glass section header treatment |
-| `UserMotto` | Unknown — needs glass wrapper | Apply consistent glass card wrap |
-| `UserAnalytics` | Already good glass (`from-white/25 backdrop-blur-xl`) | Minor polish — align tab style to system |
-| `BadgeWidget` | Already good glass | Minor polish only |
-| `AdminBlogWidget` | Unknown | Review and apply consistent card style |
-| `UsernameForm` | `bg-white/60 backdrop-blur-sm` — already fine | Keep, minor alignment |
-| `MottoForm` | `bg-white/60 backdrop-blur-sm` — already fine | Keep, minor alignment |
-| `TestimonialForm` | `bg-white/60 backdrop-blur-sm` — already fine | Keep, minor alignment |
-| `StorageQuotaWidget` | `bg-white/60 backdrop-blur-sm` — already fine | Keep, minor alignment |
+| `DynamicBoard` | Glass container + stale sidebar widgets | Restructure: StatsRow, remove stale widgets |
+| `UserOnboard` | Newsletter-style, old business model copy | Full rewrite — marketplace copy, feature grid, checklist |
+| `DashboardInfo` | Pink gradient quick-access buttons | Sedela clean link rows |
+| `ExamCountdown` | Dark zinc-900 card — good logic, dated style | BaseModal dark glass — all 3 versions |
+| `Username` | Plain heading | Keep |
+| `UserMotto` | Rose-tinted glass card — already decent | Minor polish |
+| `UserAnalytics` | Good glass (`from-white/25 backdrop-blur-xl`) | Minor polish |
+| `BadgeWidget` | Good glass | Keep |
+| `AdminBlogWidget` | Unknown | Review after design pick |
+| `UsernameForm` | `bg-white/60 backdrop-blur-sm` | Keep |
+| `MottoForm` | `bg-white/60 backdrop-blur-sm` | Keep |
+| `TestimonialForm` | `bg-white/60 backdrop-blur-sm` | Keep |
+| `StorageQuotaWidget` | `bg-white/60 backdrop-blur-sm` | Keep |
 
-### `/panel/testy` page — `src/app/panel/testy/page.tsx`
+### `/panel/testy` page
 
-| Component | Current State | Planned Change |
+| Component | Current State | Post-Design Change |
 |-----------|--------------|----------------|
-| `TestsCategoryCard` | Dark `bg-slate-900` with image — already Sedela-like | Enhance: add `border border-white/[0.06]` subtle glass border, smooth hover state |
-| `TestsCategoriesList` | Plain flex container | Possibly add subtle entrance stagger animation |
+| `TestsCategoryCard` | Dark `bg-slate-900` — already Sedela-like | Subtle `border border-white/[0.06]` glass shimmer |
+| `TestsCategoriesList` | Plain flex container | Stagger animation after design pick |
 
 ---
 
-## 📐 Revised Layout Architecture
+## 🎨 Three Design Versions
 
-### Section 1 — DynamicBoard
+### Version A — Sedela Dark
+
+**Philosophy**: Dark dashboard. Data-forward. High contrast. Warm zinc tones. Familiar to SaaS admin dashboards. Bold statement on the zinc-50 page background.
+
+| Element | Style |
+|---------|-------|
+| DynamicBoard container | `bg-zinc-900 border border-white/[0.06]` |
+| UserOnboard card | `bg-zinc-800 border border-white/[0.06]` |
+| Course path cards | `bg-zinc-700/80 border border-white/[0.08]` |
+| Najnowsze Aktualizacje | `bg-zinc-800 border border-white/[0.06]` |
+| Zapraszamy na forum | `bg-zinc-800 border border-rose-500/20` (no red gradient) |
+| DashboardInfo links | `bg-zinc-700/80 border border-white/[0.06] text-zinc-100` |
+| ExamCountdown | BaseModal dark glass (same across all versions) |
+| Panel section 2 | `bg-zinc-900 border border-white/[0.06]` |
+
+**Best for**: Users who want the boldest, most distinctive look. Matches TestsCategoryCard dark cards perfectly.
+
+---
+
+### Version B — Clean White + Selective Glass
+
+**Philosophy**: Mostly white/clean. Glass used sparingly — NavDrawer light glass on the forum card, BaseModal dark glass only on ExamCountdown. Closest to current but refined.
+
+| Element | Style |
+|---------|-------|
+| DynamicBoard container | `bg-white border border-zinc-200/50 shadow-lg` |
+| UserOnboard card | `bg-white border border-zinc-200/50 shadow-sm` |
+| Course path cards | `bg-white border border-zinc-200/50` (clean, no blur) |
+| Najnowsze Aktualizacje | `bg-white border border-zinc-200/60 shadow-sm` |
+| Zapraszamy na forum | `bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl border border-white/50` (NavDrawer glass) |
+| DashboardInfo links | `bg-white border border-zinc-200/50 hover:bg-rose-50/50 hover:border-rose-200/60` |
+| ExamCountdown | BaseModal dark glass — the ONLY dark element |
+| Panel section 2 | `bg-white border border-zinc-200/50 shadow-sm` |
+
+**Best for**: Clean, minimal, closest to what exists. Dark ExamCountdown card is the premium accent.
+
+---
+
+### Version C — Hybrid Apple Glass (Original Plan)
+
+**Philosophy**: Apple glass on containers, Sedela clean on interactive elements, BaseModal dark on ExamCountdown. Three layers used deliberately.
+
+| Element | Style |
+|---------|-------|
+| DynamicBoard container | `bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-zinc-900/5 rounded-3xl` |
+| UserOnboard card | `bg-white/40 backdrop-blur-lg border border-white/60` |
+| Course path cards | `bg-white/60 backdrop-blur-md border border-white/50` |
+| Najnowsze Aktualizacje | `bg-white/70 backdrop-blur-sm border border-white/60 shadow-sm` |
+| Zapraszamy na forum | `bg-gradient-to-br from-rose-500/80 to-rose-600/70 backdrop-blur-sm border border-rose-400/30` (glass rose) |
+| DashboardInfo links | `bg-white/50 border border-white/60 hover:bg-white/70` |
+| ExamCountdown | BaseModal dark glass |
+| Panel section 2 | `bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-zinc-900/5` |
+
+**Best for**: Premium layered glass feel. Most cohesive with NavDrawer and BaseModal language.
+
+---
+
+## 📐 Post-Design Layout Architecture
+
+*(Implemented after version is selected)*
 
 ```
-DynamicBoard (Apple glass outer container)
+DynamicBoard
 │
-├── StatsRow — 4 Sedela-style compact metric cards (NEW)
-│   ├── [1] Rozwiązane pytania   — user.totalQuestions  (neutral white card)
-│   ├── [2] Próby testów         — user.testsAttempted  (neutral white card)
-│   ├── [3] Średni wynik         — user.totalScore %    (rose-tinted card)
-│   └── [4] Twoje kursy          — enrolled count       (neutral white card)
+├── StatsRow — 4 Sedela compact metric cards (NEW)
+│   ├── Rozwiązane pytania  — user.totalQuestions  (no extra DB query)
+│   ├── Próby testów        — user.testsAttempted
+│   ├── Średni wynik        — user.totalScore %    (rose accent card)
+│   └── Twoje kursy         — enrolled count
 │
-└── Grid (lg:col-8 / lg:col-4)
-    │
-    ├── LEFT — OnboardingHero (rewrite of UserOnboard)
-    │   ├── Heading: "Twoja nauka, Twoje tempo."
-    │   ├── Subtitle: marketplace value prop (no old model copy)
-    │   ├── CourseMarketplaceCards (glass cards, "Kup dostęp →" → /kierunki/[slug])
-    │   ├── FeatureDiscoveryGrid — 2×2 Sedela-style cards
-    │   │   ├── Baza Testów     → /panel/testy
-    │   │   ├── AI Notatnik     → /panel/nauka  (soft "Premium" pill if not premium)
-    │   │   ├── Procedury       → /panel/procedury
-    │   │   └── Wykłady AI      → /panel/nauka/wykladania
-    │   └── OnboardingChecklist (client, localStorage, collapsible, video-ready)
+└── Grid (lg:8 / lg:4)
+    ├── LEFT — OnboardingHero (UserOnboard rewrite)
+    │   ├── "Twoja nauka, Twoje tempo." heading
+    │   ├── Marketplace subtitle (remove old model copy)
+    │   ├── CourseMarketplaceCards → /kierunki/[slug]
+    │   ├── FeatureDiscoveryGrid (Testy, AI Notatnik, Procedury, Wykłady)
+    │   └── OnboardingChecklist (localStorage, video-slot-ready)
     │
     └── RIGHT — SmartSidebar
-        ├── CourseAccessWidget   — owned courses + available to buy
-        ├── ForumActivityCard    — last user post or Polish empty state
-        ├── DashboardInfo        — Sedela clean quick-access links (rose on hover)
-        └── ExamCountdown        — BaseModal dark glass restyle (KEEP in sidebar)
-```
-
-### Section 2 — Profile Section (`panel/page.tsx` below DynamicBoard)
-
-```
-Profile Container (Apple glass outer container, matches DynamicBoard)
-│
-├── Header row: Username + (edit trigger)
-├── UserMotto (glass card wrap)
-├── UserAnalytics (tabbed: Przegląd / Szczegóły) — already good, minor polish
-├── BadgeWidget — already good, minor polish
-└── 2-col grid:
-    ├── AdminBlogWidget
-    ├── UsernameForm    (bg-white/60 — already correct)
-    ├── MottoForm       (bg-white/60 — already correct)
-    ├── TestimonialForm (bg-white/60 — already correct)
-    └── StorageQuotaWidget (bg-white/60 — already correct)
+        ├── CourseAccessWidget  — owned courses + buy access
+        ├── ForumActivityCard   — last post or Polish empty state
+        ├── DashboardInfo       — Sedela clean quick-access
+        └── ExamCountdown       — BaseModal dark glass (keep in sidebar)
 ```
 
 ---
 
-## 📋 Detailed Component Changes
+## 🗂️ Files Changed in Design Versions
 
-### 1. StatsRow (new component)
-
-Sedela-inspired. 4 cards in a responsive row (2×2 on mobile, 4×1 on lg+).
-Data comes from `user` object already fetched in panel page — **no extra DB query**.
-
-```
-Card anatomy:
-  [Icon]  [Big number]
-          [Label]
-          [Sub-label]
-
-Example:
-  📝  1,247
-      Pytań rozwiązanych
-      Całkowity wynik: 78%
-```
-
-Card styles:
-- Cards 1, 2, 4: `bg-white border border-zinc-200/50 shadow-sm rounded-2xl`
-- Card 3 (Średni wynik): `bg-rose-50/60 border border-rose-200/50` — single warm accent
-
-### 2. ExamCountdown — BaseModal dark glass restyle
-
-Keep all existing logic (4 states: countdown / in_progress / waiting_results / no session).
-Change only the container styling to match BaseModal:
-
-```
-FROM: bg-zinc-900 border border-zinc-800
-  TO: bg-gradient-to-br from-zinc-900/95 to-black/90
-      backdrop-blur-xl
-      border border-white/[0.08]
-      shadow-2xl shadow-black/40
-      rounded-2xl
-```
-
-The dark card creates intentional contrast against the light sidebar — same principle Apple uses with dark Dock on light desktop. This makes the countdown feel important and urgent without needing large size.
-
-### 3. UserOnboard.tsx — Full Rewrite
-
-- **Remove**: newsletter heading, old model subtitle, "Darmowy Plan!" badge, padlock overlay, "Zespół Wolfmed-Edukacja" footer
-- **Add**: marketplace heading + subtitle, clean course cards (glass style, CTA → `/kierunki/[slug]`), FeatureDiscoveryGrid, OnboardingChecklist
-- Course cards show tier tags (Basic pill / Premium pill) instead of lock states
-
-### 4. CourseAccessWidget (new server component)
-
-Two states based on `getUserEnrollmentsAction()` (query already exists):
-- **Enrolled**: lists courses with tier badge + "Kontynuuj →" link to `/panel/kursy`
-- **No enrollments**: "Zacznij swoją naukę" headline + 2 course rows (Opiekun / Pielęgniarstwo) each with "Kup dostęp →" to `/kierunki/[slug]`
-
-Sedela list-row style: icon + name + badge + arrow, not heavy grid cards.
-
-### 5. ForumActivityCard (new server component)
-
-Needs a new lightweight query: fetch last 1 post/comment by `userId` from forum tables.
-Two states:
-- **Has activity**: post title + relative date + "Zobacz →" link
-- **No activity**: `"Nie masz jeszcze żadnych postów na forum."` + subtle `"Dołącz do dyskusji →"` to `/forum`
-
-Glass card style matching the sidebar system.
-
-### 6. OnboardingChecklist (new client component)
-
-localStorage key: `wolfmed_onboarding_v1`. Steps:
-1. Uzupełnij nazwę użytkownika i motto
-2. Przeglądaj dostępne kierunki
-3. Rozwiąż swój pierwszy test
-4. Sprawdź procedury medyczne
-5. Odkryj AI Notatnik
-
-- Collapsible when all done (Framer Motion height animation)
-- Each step: checkbox + label + optional future `video` prop slot (for step videos later)
-- Progress bar at top: `X/5 ukończono`
-
-### 7. DashboardInfo — Sedela style
-
-Replace pink gradient buttons with Sedela-style list rows:
-```
-FROM: bg-linear-to-r from-[#f58a8a]/90 to-[#ffc5c5]/90 (heavy gradient)
-  TO: bg-white border border-zinc-200/50 hover:border-rose-200 hover:bg-rose-50/40
-      (clean white, rose on hover — Sedela link row pattern)
-```
-
-### 8. TestsCategoryCard — subtle glass border enhancement
-
-Card is already dark Sedela-style (`bg-slate-900`). Small addition:
-```
-Add: border border-white/[0.06]  (barely visible glass shimmer)
-     hover:border-white/[0.12]   (reveals on hover)
-```
-Keeps the dark dramatic aesthetic, adds the glass language consistency.
+| File | Change |
+|------|--------|
+| `src/app/_components/DynamicBoard.tsx` | Container + sidebar card styles |
+| `src/components/UserOnboard.tsx` | Card bg, text colors, course card styles |
+| `src/components/DashboardInfo.tsx` | Link button styles |
+| `src/components/ExamCountdown.tsx` | Container → BaseModal dark glass (same all versions) |
+| `src/components/CountdownTimer.tsx` | Segment cards → glass shimmer (same all versions) |
+| `src/components/TestsCategoryCard.tsx` | Add subtle `border border-white/[0.06]` |
+| `src/app/panel/page.tsx` | Profile section container bg |
 
 ---
 
-## 🎨 Design Tokens Summary
+## 🗂️ Files Added Post-Design Selection
 
-```
-// Outer containers (Apple Glass)
-container-glass:  bg-white/60 backdrop-blur-xl border border-white/50 shadow-xl shadow-zinc-900/5 rounded-3xl
-
-// Internal cards (Sedela clean)
-card-clean:       bg-white border border-zinc-200/50 shadow-sm rounded-2xl
-
-// Accent stat card
-card-accent:      bg-rose-50/60 border border-rose-200/50 rounded-2xl
-
-// Dark glass (BaseModal / ExamCountdown)
-card-dark-glass:  bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl border border-white/[0.08] shadow-2xl shadow-black/40 rounded-2xl
-
-// Quick-access links hover
-link-hover:       hover:bg-rose-50/40 hover:border-rose-200 transition-all duration-200
-
-// CTA buttons
-cta-primary:      bg-rose-500 hover:bg-rose-600 text-white rounded-full px-4 py-2 text-sm font-medium
-cta-ghost:        border border-zinc-200 hover:border-rose-300 text-zinc-700 hover:text-rose-600 rounded-full
-```
+| File | Purpose |
+|------|---------|
+| `src/components/StatsRow.tsx` | 4 Sedela metric cards (data from user object) |
+| `src/components/CourseAccessWidget.tsx` | Mini marketplace sidebar card |
+| `src/components/ForumActivityCard.tsx` | Last forum post or Polish empty state |
+| `src/components/OnboardingChecklist.tsx` | Collapsible checklist, localStorage, video-slot-ready |
 
 ---
 
-## 🗂️ Files Affected
+## 🏁 Implementation Order (Post-Design Selection)
 
-| File | Change Type | Notes |
-|------|------------|-------|
-| `src/app/panel/page.tsx` | Minor | Wrap profile section in glass container, add StatsRow |
-| `src/app/_components/DynamicBoard.tsx` | Restructure | Add StatsRow slot, remove stale widgets, wire new sidebar components |
-| `src/components/UserOnboard.tsx` | Full rewrite | Marketplace copy, feature grid, checklist |
-| `src/components/DashboardInfo.tsx` | Restyle | Sedela clean link rows |
-| `src/components/ExamCountdown.tsx` | Restyle only | BaseModal dark glass tokens — logic untouched |
-| `src/components/TestsCategoryCard.tsx` | Minor | Add subtle glass border |
-| *(new)* `src/components/StatsRow.tsx` | New | 4 Sedela metric cards — data from user object |
-| *(new)* `src/components/CourseAccessWidget.tsx` | New | Mini marketplace sidebar card |
-| *(new)* `src/components/ForumActivityCard.tsx` | New | Last post or Polish empty state |
-| *(new)* `src/components/OnboardingChecklist.tsx` | New | Client, localStorage, video-slot-ready |
-
----
-
-## 🏁 Implementation Order
-
-1. **ExamCountdown** — restyle to BaseModal dark glass (isolated, no logic change, quick win)
-2. **DashboardInfo** — Sedela link row restyle
-3. **DynamicBoard** — restructure layout, remove stale widgets
-4. **StatsRow** — new Sedela stat cards (data from existing user object)
-5. **UserOnboard** — full rewrite (marketplace copy, course cards, feature grid)
-6. **OnboardingChecklist** — new client component
-7. **CourseAccessWidget** — new server component
-8. **ForumActivityCard** — new server component (needs forum query check)
-9. **TestsCategoryCard** — subtle glass border
-10. **Panel page** — profile section glass container + StatsRow integration
-11. **Framer Motion** — stagger animations on StatsRow + FeatureDiscoveryGrid
+1. Remove stale JSX blocks from DynamicBoard (Najnowsze Aktualizacje + Zapraszamy na forum)
+2. UserOnboard full content rewrite (marketplace copy, course cards, feature grid)
+3. StatsRow new component
+4. CourseAccessWidget new component
+5. ForumActivityCard new component (needs forum query check)
+6. OnboardingChecklist new client component
+7. DashboardInfo Sedela link rows
+8. Framer Motion stagger animations on StatsRow + FeatureDiscoveryGrid
