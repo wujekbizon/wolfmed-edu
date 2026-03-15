@@ -28,7 +28,7 @@ export default async function DynamicBoard() {
           <UserOnboard enrollments={enrollments} />
         </div>
         <aside className="lg:col-span-4 rounded-2xl">
-          <div className="space-y-4 p-4 rounded-2xl bg-zinc-600/20 backdrop-blur-[2px] border border-zinc-400/70">
+          <div className="space-y-4 p-4 rounded-2xl bg-white/70 backdrop-blur-xl border border-zinc-200/70">
             <CourseAccessWidget enrollments={enrollments} />
             <Suspense fallback={null}>
               <ForumActivityCard />
