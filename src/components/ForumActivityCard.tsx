@@ -1,7 +1,5 @@
-import { auth } from '@clerk/nextjs/server'
-import { db } from '@/server/db'
-import { forumPosts, forumComments } from '@/server/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { getCurrentUser } from '@/server/user'
+import { getLastUserForumPost, getLastUserForumComment } from '@/server/queries'
 import Link from 'next/link'
 import { MessageSquare } from 'lucide-react'
 
@@ -15,27 +13,13 @@ function formatRelativeDate(date: Date): string {
 }
 
 export default async function ForumActivityCard() {
-  const { userId } = await auth()
-  if (!userId) return null
+  const user = await getCurrentUser()
+  if (!user) return null
 
-  const [lastPost] = await db
-    .select({ id: forumPosts.id, title: forumPosts.title, createdAt: forumPosts.createdAt })
-    .from(forumPosts)
-    .where(eq(forumPosts.authorId, userId))
-    .orderBy(desc(forumPosts.createdAt))
-    .limit(1)
-
-  const [lastComment] = await db
-    .select({
-      id: forumComments.id,
-      content: forumComments.content,
-      createdAt: forumComments.createdAt,
-      postId: forumComments.postId,
-    })
-    .from(forumComments)
-    .where(eq(forumComments.authorId, userId))
-    .orderBy(desc(forumComments.createdAt))
-    .limit(1)
+  const [lastPost, lastComment] = await Promise.all([
+    getLastUserForumPost(user.userId),
+    getLastUserForumComment(user.userId),
+  ])
 
   const hasActivity = lastPost || lastComment
 
@@ -81,15 +65,15 @@ export default async function ForumActivityCard() {
         </p>
         <p className="text-sm text-zinc-200 line-clamp-2">
           {mostRecent.type === 'post'
-            ? (mostRecent.data as typeof lastPost).title
-            : (mostRecent.data as typeof lastComment).content}
+            ? (mostRecent.data as NonNullable<typeof lastPost>).title
+            : (mostRecent.data as NonNullable<typeof lastComment>).content}
         </p>
       </div>
       <Link
         href={
           mostRecent.type === 'post'
-            ? `/forum/${(mostRecent.data as typeof lastPost).id}`
-            : `/forum/${(mostRecent.data as typeof lastComment).postId}`
+            ? `/forum/${(mostRecent.data as NonNullable<typeof lastPost>).id}`
+            : `/forum/${(mostRecent.data as NonNullable<typeof lastComment>).postId}`
         }
         className="inline-block mt-3 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors"
       >
