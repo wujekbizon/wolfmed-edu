@@ -47,11 +47,11 @@ export default function StatsRow({
           key={i}
           className={`rounded-2xl p-4 flex flex-col gap-1.5 ${
             card.accent
-              ? 'bg-rose-50/60 border border-rose-200/50'
-              : 'bg-white border border-zinc-200/50 shadow-sm'
+              ? 'bg-rose-50/40 backdrop-blur-md border border-rose-200/40'
+              : 'bg-white/60 backdrop-blur-md border border-white/50'
           }`}
         >
-          <span className={card.accent ? 'text-rose-500' : 'text-zinc-400'}>
+          <span className={card.accent ? 'text-rose-500' : 'text-zinc-500'}>
             {card.icon}
           </span>
           <span

@@ -43,7 +43,7 @@ export default function OnboardingChecklist() {
   if (!mounted) return null
 
   return (
-    <div className="rounded-2xl p-4 border border-zinc-200/60 bg-zinc-50/80">
+    <div className="rounded-2xl p-4 border border-white/50 bg-white/40 backdrop-blur-sm">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-semibold text-zinc-800">
           Pierwsze kroki{' '}
@@ -63,9 +63,9 @@ export default function OnboardingChecklist() {
         </button>
       </div>
 
-      <div className="h-1 w-full rounded-full bg-zinc-200 mb-4 overflow-hidden">
+      <div className="h-1 w-full rounded-full bg-zinc-200/60 mb-4 overflow-hidden">
         <div
-          className="h-1 rounded-full bg-rose-500 transition-all duration-500"
+          className="h-1 rounded-full bg-rose-500/80 transition-all duration-500"
           style={{ width: `${(progress / STEPS.length) * 100}%` }}
         />
       </div>
