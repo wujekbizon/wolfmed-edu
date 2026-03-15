@@ -24,7 +24,7 @@ export default async function TestsPage() {
       <div className="w-full h-full flex flex-col items-center gap-8">
         <DynamicBoard />
         <section className="container mx-auto">
-          <div className="backdrop-blur-xl w-full gap-8 flex flex-col p-3 xs:p-4 sm:p-10 rounded-3xl shadow-xl shadow-zinc-900/5 border border-white/50 transition-all duration-300 bg-white/60">
+          <div className="w-full gap-8 flex flex-col p-3 xs:p-4 sm:p-10 rounded-2xl border border-zinc-200/60 shadow-xl shadow-zinc-900/[0.07] bg-white">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <Suspense fallback={<UsernameSkeleton />}>
                 <Username />
@@ -46,13 +46,13 @@ export default async function TestsPage() {
                 <Suspense fallback={null}>
                   <AdminBlogWidget />
                 </Suspense>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
                   <UsernameForm />
                 </div>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
                   <MottoForm />
                 </div>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-white border border-zinc-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow">
                   <TestimonialForm />
                 </div>
                 <Suspense fallback={<StorageQuotaWidgetSkeleton />}>

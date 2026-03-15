@@ -5,10 +5,7 @@ export default async function UserMotto() {
   if (!user) return null
 
   return (
-    <div
-      className="w-full bg-linear-to-br from-[#ff9898]/5 via-zinc-100/10 to-[#ffc5c5]/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl 
-      border border-[#ff9898]/20 transition-all duration-300 group hover:bg-linear-to-br hover:from-[#ff9898]/10 hover:to-[#ffc5c5]/10"
-    >
+    <div className="w-full bg-white border border-zinc-100 rounded-xl p-5 sm:p-6 shadow-sm group">
       <div className="flex flex-col">
         <div className="flex items-center gap-2 mb-4">
           <svg

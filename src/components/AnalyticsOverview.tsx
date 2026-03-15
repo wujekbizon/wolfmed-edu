@@ -19,13 +19,13 @@ export default function AnalyticsOverview({ stats }: AnalyticsOverviewProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white border border-zinc-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
           <p className="text-sm font-medium text-zinc-600 mb-1">Pytania ogółem</p>
           <p className="text-3xl font-bold text-slate-900">{totalQuestions}</p>
           <p className="text-xs text-zinc-500 mt-2">Z {testsAttempted} testów</p>
         </div>
 
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white border border-zinc-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
           <p className="text-sm font-medium text-zinc-600 mb-1">Poprawne odpowiedzi</p>
           <div className="flex items-baseline gap-2">
             <p className="text-3xl font-bold text-green-600">{correctAnswers}</p>
@@ -39,7 +39,7 @@ export default function AnalyticsOverview({ stats }: AnalyticsOverviewProps) {
           </div>
         </div>
 
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-white border border-zinc-100 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
           <p className="text-sm font-medium text-zinc-600 mb-1">Błędne odpowiedzi</p>
           <div className="flex items-baseline gap-2">
             <p className="text-3xl font-bold text-red-600">{incorrectAnswers}</p>
