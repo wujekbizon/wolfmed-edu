@@ -2,12 +2,12 @@ import { Suspense } from 'react'
 import { getCurrentUser } from '@/server/user'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
 import UserOnboard from '@/components/UserOnboard'
-import DashboardInfo from '@/components/DashboardInfo'
 import ExamCountdown from '@/components/ExamCountdown'
 import ExamCountdownSkeleton from '@/components/skeletons/ExamCountdownSkeleton'
 import StatsRow from '@/components/StatsRow'
 import CourseAccessWidget from '@/components/CourseAccessWidget'
 import ForumActivityCard from '@/components/ForumActivityCard'
+import OnboardingChecklist from '@/components/OnboardingChecklist'
 
 export default async function DynamicBoard() {
   const [user, { enrollments }] = await Promise.all([
@@ -27,15 +27,17 @@ export default async function DynamicBoard() {
         <div className="lg:col-span-8">
           <UserOnboard enrollments={enrollments} />
         </div>
-        <aside className="lg:col-span-4 space-y-4">
-          <CourseAccessWidget enrollments={enrollments} />
-          <Suspense fallback={null}>
-            <ForumActivityCard />
-          </Suspense>
-          <DashboardInfo />
-          <Suspense fallback={<ExamCountdownSkeleton />}>
-            <ExamCountdown />
-          </Suspense>
+        <aside className="lg:col-span-4">
+          <div className="space-y-4 p-4 rounded-2xl bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl border border-white/50 shadow-lg shadow-zinc-900/5">
+            <CourseAccessWidget enrollments={enrollments} />
+            <Suspense fallback={null}>
+              <ForumActivityCard />
+            </Suspense>
+            <OnboardingChecklist />
+            <Suspense fallback={<ExamCountdownSkeleton />}>
+              <ExamCountdown />
+            </Suspense>
+          </div>
         </aside>
       </div>
     </section>

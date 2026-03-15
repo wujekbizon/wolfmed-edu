@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { careerPathsData } from '@/constants/careerPathsData'
-import OnboardingChecklist from '@/components/OnboardingChecklist'
 import { BookOpen, Sparkles, ClipboardList, Headphones } from 'lucide-react'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
+
 
 const FEATURES = [
   {
@@ -156,8 +156,6 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
         </div>
       </div>
 
-      {/* Onboarding Checklist */}
-      <OnboardingChecklist />
     </div>
   )
 }
