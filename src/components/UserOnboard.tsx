@@ -50,7 +50,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-3 sm:p-8 bg-white/40 backdrop-blur-lg rounded-2xl shadow-md border border-zinc-200 flex flex-col justify-between gap-8">
+    <div className="h-full p-3 sm:p-8 bg-white/70 backdrop-blur-xl border border-zinc-200/70 rounded-2xl flex flex-col justify-around gap-8">
       {/* Heading */}
       <div className="text-center">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
@@ -76,8 +76,8 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 href={locked ? '#' : feature.href}
                 className={`relative flex flex-col gap-2 p-4 border rounded-2xl transition-all duration-200 group ${
                   locked
-                    ? 'bg-zinc-100 border-zinc-200/50 opacity-50 cursor-not-allowed pointer-events-none'
-                    : 'bg-white border-zinc-200/50 shadow-sm hover:shadow-md hover:border-zinc-300/60'
+                    ? 'bg-zinc-100/60 border-zinc-200/40 opacity-50 cursor-not-allowed pointer-events-none'
+                    : 'bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20'
                 }`}
               >
                 {feature.premium && (
@@ -116,7 +116,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
             return (
               <div
                 key={slug}
-                className="flex flex-col justify-between p-5 bg-white border border-zinc-200/50 rounded-2xl shadow-sm"
+                className="flex flex-col justify-between p-5 bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border border-white/50 rounded-2xl shadow-2xl shadow-zinc-950/20"
               >
                 <div className="mb-4">
                   <h4 className="text-base font-semibold text-zinc-800 mb-1.5">
