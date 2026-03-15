@@ -36,7 +36,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
                   <p className="text-sm font-medium text-zinc-800 truncate">
                     {course?.title ?? enrollment.courseSlug}
                   </p>
-                  <span className="text-xs text-rose-500 font-medium">
+                  <span className="text-xs font-medium" style={{ color: '#f65555' }}>
                     {TIER_LABELS[enrollment.accessTier] ?? enrollment.accessTier}
                   </span>
                 </div>
@@ -73,7 +73,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
             </p>
             <Link
               href={`/kierunki/${slug}`}
-              className="shrink-0 text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors"
+              className="shrink-0 text-xs font-semibold transition-colors" style={{ color: '#f65555' }}
             >
               Kup dostęp →
             </Link>
