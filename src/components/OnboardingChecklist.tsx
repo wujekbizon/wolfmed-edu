@@ -43,7 +43,7 @@ export default function OnboardingChecklist() {
   if (!mounted) return null
 
   return (
-    <div className="rounded-2xl p-4 border border-white/50 bg-white/40 backdrop-blur-sm">
+    <div className="rounded-2xl p-4 border bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20">
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-sm font-semibold text-zinc-800">
           Pierwsze kroki{' '}

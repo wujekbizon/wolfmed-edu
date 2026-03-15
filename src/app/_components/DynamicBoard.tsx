@@ -16,7 +16,7 @@ export default async function DynamicBoard() {
   ])
 
   return (
-    <section className="container mx-auto backdrop-blur-xl p-3 xs:p-4 sm:p-8 rounded-3xl shadow-xl shadow-zinc-900/5 border border-white/50 transition-all duration-300 bg-white/60">
+    <section className="container mx-auto backdrop-blur-xl p-3 xs:p-4 sm:p-8 rounded-2xl shadow-xl shadow-zinc-900/5 border border-zinc-200 transition-all duration-300 bg-white">
       <StatsRow
         totalQuestions={user?.totalQuestions ?? 0}
         testsAttempted={user?.testsAttempted ?? 0}
@@ -27,8 +27,8 @@ export default async function DynamicBoard() {
         <div className="lg:col-span-8">
           <UserOnboard enrollments={enrollments} />
         </div>
-        <aside className="lg:col-span-4">
-          <div className="space-y-4 p-4 rounded-2xl bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl border border-white/50 shadow-lg shadow-zinc-900/5">
+        <aside className="lg:col-span-4 rounded-2xl">
+          <div className="space-y-4 p-4 rounded-2xl bg-zinc-600/20 backdrop-blur-[2px] border border-zinc-400/70">
             <CourseAccessWidget enrollments={enrollments} />
             <Suspense fallback={null}>
               <ForumActivityCard />

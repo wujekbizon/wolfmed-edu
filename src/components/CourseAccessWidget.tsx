@@ -20,7 +20,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
 
   if (activeEnrollments.length > 0) {
     return (
-      <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
+      <div className="rounded-2xl p-5 border bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20">
         <h3 className="text-base font-semibold text-zinc-800 mb-3">
           Twoje kursy
         </h3>

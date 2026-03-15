@@ -25,7 +25,7 @@ export default async function ForumActivityCard() {
 
   if (!hasActivity) {
     return (
-      <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
+      <div className="rounded-2xl p-5 border bg-gradient-to-br from-white/90 to-rose-50/50 backdrop-blur-xl border-r border-white/50 shadow-2xl shadow-zinc-950/20">
         <div className="flex items-center gap-2 mb-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
           <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
@@ -35,7 +35,7 @@ export default async function ForumActivityCard() {
         </p>
         <Link
           href="/forum"
-          className="text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors"
+          className="text-xs font-semibold text-[#f65555] hover:text-[#f65555]/80 transition-colors"
         >
           Dołącz do dyskusji →
         </Link>
