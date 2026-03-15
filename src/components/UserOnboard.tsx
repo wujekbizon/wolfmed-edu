@@ -50,9 +50,9 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-3 sm:p-8 bg-white/40 backdrop-blur-lg rounded-2xl shadow-md border border-zinc-200">
+    <div className="h-full p-3 sm:p-8 bg-white/40 backdrop-blur-lg rounded-2xl shadow-md border border-zinc-200 flex flex-col justify-between gap-8">
       {/* Heading */}
-      <div className="text-center mb-8">
+      <div className="text-center">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
           Twoja nauka, Twoje tempo.
         </h2>
@@ -63,7 +63,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
       </div>
 
       {/* Feature Discovery Grid */}
-      <div className="mb-8">
+      <div>
         <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Co oferuje platforma
         </h3>
@@ -76,8 +76,8 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 href={locked ? '#' : feature.href}
                 className={`relative flex flex-col gap-2 p-4 border rounded-2xl transition-all duration-200 group ${
                   locked
-                    ? 'bg-zinc-100/60 border-zinc-200/40 opacity-60 cursor-not-allowed pointer-events-none'
-                    : 'bg-white/60 backdrop-blur-md border-white/50 hover:bg-white/80 hover:shadow-sm'
+                    ? 'bg-zinc-100 border-zinc-200/50 opacity-50 cursor-not-allowed pointer-events-none'
+                    : 'bg-white border-zinc-200/50 shadow-sm hover:shadow-md hover:border-zinc-300/60'
                 }`}
               >
                 {feature.premium && (
@@ -106,7 +106,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
       </div>
 
       {/* Course Marketplace Cards */}
-      <div className="mb-8">
+      <div>
         <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-4">
           Dostępne kierunki
         </h3>
@@ -116,7 +116,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
             return (
               <div
                 key={slug}
-                className="flex flex-col justify-between p-5 bg-white/60 backdrop-blur-md border border-white/50 rounded-2xl"
+                className="flex flex-col justify-between p-5 bg-white border border-zinc-200/50 rounded-2xl shadow-sm"
               >
                 <div className="mb-4">
                   <h4 className="text-base font-semibold text-zinc-800 mb-1.5">
@@ -127,7 +127,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-[11px] font-medium text-zinc-500 border border-zinc-300/50 rounded-full px-2 py-0.5">
+                  <span className="text-[11px] font-medium text-zinc-500 border border-zinc-200 rounded-full px-2 py-0.5">
                     Basic
                   </span>
                   <span
