@@ -3,6 +3,7 @@
 **Date**: 2026-03-15
 **Branch**: `claude/create-local-branch-AUNJb`
 **Scope**: `/panel` top section — `DynamicBoard`, `UserOnboard`, `DashboardInfo`, sidebar widgets
+**Status**: ✅ Decisions resolved — awaiting green light for implementation
 
 ---
 
@@ -36,17 +37,31 @@
 ```
 DynamicBoard
 ├── [LEFT col — lg:8] OnboardingHero  (rewrite of UserOnboard)
-│   ├── PersonalizedGreeting (static for now, Clerk name later)
+│   ├── Heading + Subtitle (marketplace copy, no greeting)
 │   ├── FeatureDiscoveryGrid (4 cards: Testy, AI Notatnik, Procedury, Wykłady)
 │   ├── CourseMarketplaceCards (marketplace model — enroll / continue)
-│   └── OnboardingChecklist (collapsible progress for new users)
+│   └── OnboardingChecklist (collapsible, localStorage, video steps later)
 │
 └── [RIGHT col — lg:4] SmartSidebar
+    ├── CourseAccessWidget (NEW — mini marketplace: owned + available to buy)
     ├── QuickAccessCard (DashboardInfo — glass redesign)
-    ├── CourseStatusCard (NEW — enrolled courses + tier summary)
-    ├── ExamCountdown (keep, glass skin)
-    └── [REMOVE] Najnowsze Aktualizacje + Zapraszamy na forum
+    ├── ForumActivityCard (NEW — last user post/comment or empty state in Polish)
+    └── ExamCountdown (keep, glass skin)
 ```
+
+---
+
+## 📋 Resolved Decisions
+
+| # | Decision | Resolution |
+|---|----------|------------|
+| 1 | Onboarding checklist | ✅ Include — best way to guide users through features, video steps can be added later per item |
+| 2 | Personalized greeting | ❌ Skip — avoid unnecessary DB/Clerk round-trips on dashboard load |
+| 3 | CourseStatusCard | ✅ Mini marketplace widget — shows owned courses + courses available to buy; links to `/kierunki/[slug]` for purchase |
+| 4 | Feature Discovery cards | ✅ 4 cards: Baza Testów, AI Notatnik, Procedury, Wykłady AI |
+| 5 | Updates widget replacement | ✅ Nothing — clean sidebar, no stale hardcoded content |
+| 6 | Forum widget | ✅ Replace red promo block with `ForumActivityCard` — shows user's last post/comment; if none: Polish empty state message |
+| 7 | Course cards CTA | ✅ "Kup dostęp" links to `/kierunki/[slug]` |
 
 ---
 
@@ -55,7 +70,7 @@ DynamicBoard
 ### 1. `UserOnboard.tsx` → Rewrite as `OnboardingHero`
 
 **Heading change:**
-- ❌ `"Witamy w naszej społeczności!"` → ✅ `"Twoja nauka, Twoje tempo."` or `"Zacznij od wybrania kierunku"`
+- ❌ `"Witamy w naszej społeczności!"` → ✅ `"Twoja nauka, Twoje tempo."`
 - Short, action-oriented, modern — like Coursera/Notion dashboards
 
 **Subtitle change:**
@@ -66,31 +81,31 @@ DynamicBoard
 **Career path cards — marketplace redesign:**
 - ❌ Remove dark overlay with padlock + "Dostępne w Płatnym Planie"
 - ❌ Remove "Darmowy Plan!" bounce badge
-- ✅ Clean course cards: title, description, price tiers (Basic/Premium tags)
-- ✅ CTA: `"Kup dostęp"` (unenrolled) or `"Kontynuuj naukę →"` (enrolled)
+- ✅ Clean course cards: title, description, tier tags (Basic / Premium pills)
+- ✅ CTA: `"Kup dostęp →"` links to `/kierunki/[slug]`
 - ✅ Glass card style: `bg-white/60 backdrop-blur-md border border-white/50 rounded-2xl`
 
 **Remove footer:**
 - ❌ "Pamiętaj, że możesz zaktualizować..." paragraph
 - ❌ "Zespół Wolfmed-Edukacja" red sign-off
-- ✅ Replace with Feature Discovery Grid (see below)
+- ✅ Replaced by Feature Discovery Grid below the course cards
 
 **Feature Discovery Grid (new):**
 
-4 compact glass cards highlighting platform capabilities:
+4 compact glass cards in a 2×2 grid highlighting platform capabilities:
 
 | Card | Icon | Destination | Note |
 |------|------|-------------|------|
 | Baza Testów | quiz icon | `/panel/testy` | Core feature |
-| AI Notatnik | sparkle/brain | `/panel/nauka` | RAG — premium teaser |
+| AI Notatnik | sparkle/brain | `/panel/nauka` | RAG — soft "Premium" pill for non-premium users |
 | Procedury | clipboard | `/panel/procedury` | Core feature |
-| Wykłady AI | headphones | `/panel/nauka/wykladania` | From lecture docs |
+| Wykłady AI | headphones | `/panel/nauka/wykladania` | From lecture-feature-plan docs |
 
-For non-premium users, AI Notatnik card shows a soft "Premium" badge — not a locked overlay, just a pill label that makes them curious rather than blocked.
+For non-premium users, AI Notatnik shows a subtle `"Premium"` badge pill — not a blocking overlay. Curiosity over friction.
 
 **Onboarding Checklist (new, collapsible):**
 
-Inspired by Notion/Linear setup flows. Compact, dismissible once complete. State stored in `localStorage` — no DB needed. Disappears when all checked.
+Inspired by Notion/Linear setup flows. State stored in `localStorage` — no DB needed. Collapses smoothly once all steps complete. Video steps can be added per item in a future iteration.
 
 - ☐ Uzupełnij nazwę użytkownika i motto
 - ☐ Przeglądaj dostępne kierunki
@@ -103,38 +118,44 @@ Inspired by Notion/Linear setup flows. Compact, dismissible once complete. State
 ### 2. `DynamicBoard.tsx` — Sidebar changes
 
 **Remove:**
-- `Najnowsze Aktualizacje` block (hardcoded, stale — content is from December 2025)
-- `Zapraszamy na forum` red gradient block
+- `Najnowsze Aktualizacje` block (hardcoded Dec 2025 — stale)
+- `Zapraszamy na forum` red gradient block (replaced by ForumActivityCard)
 
 **Keep + redesign:**
-- `DashboardInfo` → glass skin, replace pink gradient buttons with `bg-white/50 backdrop-blur-sm border border-white/60 hover:bg-white/70` — clean and premium
-- `ExamCountdown` → wrap in glass card container matching the language
+- `DashboardInfo` → glass skin, replace pink gradient buttons with `bg-white/50 backdrop-blur-sm border border-white/60 hover:bg-white/70`
+- `ExamCountdown` → wrap in glass card container
 
-**Add — `CourseStatusCard` (new, small):**
+**Add — `CourseAccessWidget` (new):**
 
-A compact card above Quick Access showing enrollment status:
-- No enrollments: `"Rozpocznij naukę — wybierz swój pierwszy kierunek"` + link to `/panel/kursy`
-- Enrolled: course name + tier badge (Basic/Premium) + `"Kontynuuj →"` link
+Mini marketplace card at the top of the sidebar. Two states:
 
-This replaces the forum widget's role as "something actionable in the sidebar".
+- **Has courses**: lists enrolled courses with tier badge (Basic / Premium), each with a `"Kontynuuj →"` link to `/panel/kursy`
+- **No courses**: headline `"Zacznij swoją naukę"` + 2 course tiles (Opiekun Medyczny, Pielęgniarstwo) each with `"Kup dostęp →"` linking to `/kierunki/[slug]`
 
-**Forum integration — subtle:**
+This gives users without courses immediate purchase access without navigating away, and gives enrolled users a glanceable status. Complements `/panel/kursy` (full list) without duplicating it.
 
-Instead of a full promotional block, add a small `"Dołącz do dyskusji →"` text link inside the Quick Access card or below the countdown.
+**Add — `ForumActivityCard` (new):**
+
+Replaces the red forum promo block. Two states:
+
+- **Has posts/comments**: shows the user's most recent forum post title + timestamp + `"Zobacz →"` link
+- **No activity**: Polish empty state — e.g. `"Nie masz jeszcze żadnych postów na forum."` with a subtle `"Dołącz do dyskusji →"` link to `/forum`
+
+This is contextual and personal — much more valuable than a generic promotional block.
 
 ---
 
 ### 3. Glass Design System — Tokens to Use
 
-Consistent across all cards (following NavDrawer patterns):
+Consistent across all cards (extending NavDrawer patterns):
 
 ```
-Container:   bg-white/60  backdrop-blur-xl  border border-white/50  shadow-xl shadow-zinc-900/5  rounded-3xl
-Cards:       bg-white/40  backdrop-blur-lg  border border-white/60  rounded-2xl
-Accent card: bg-gradient-to-br from-rose-500/80 to-rose-600/70  backdrop-blur-sm  border border-rose-400/30
-Hover state: hover:bg-white/60  hover:shadow-md  transition-all duration-200
-Text primary:   text-zinc-900
-Text secondary: text-zinc-500
+Container:    bg-white/60  backdrop-blur-xl  border border-white/50  shadow-xl shadow-zinc-900/5  rounded-3xl
+Cards:        bg-white/40  backdrop-blur-lg  border border-white/60  rounded-2xl
+Accent card:  bg-gradient-to-br from-rose-500/80 to-rose-600/70  backdrop-blur-sm  border border-rose-400/30
+Hover state:  hover:bg-white/60  hover:shadow-md  transition-all duration-200
+Text primary:    text-zinc-900
+Text secondary:  text-zinc-500
 ```
 
 The overall DynamicBoard wrapper gets the glass treatment to match `SidePanel`.
@@ -143,15 +164,15 @@ The overall DynamicBoard wrapper gets the glass treatment to match `SidePanel`.
 
 ### 4. Animation — Framer Motion
 
-Staggered entrance for the grid cards (Framer Motion is already used in the project):
+Staggered entrance for grid cards (Framer Motion already used in the project):
 
 ```
-initial: { opacity: 0, y: 16 }
-animate: { opacity: 1, y: 0 }
+initial:    { opacity: 0, y: 16 }
+animate:    { opacity: 1, y: 0 }
 transition: { delay: i * 0.08, duration: 0.4, ease: "easeOut" }
 ```
 
-Onboarding checklist items: smooth height animation when collapsing.
+Onboarding checklist: smooth height collapse animation when dismissed.
 
 ---
 
@@ -159,34 +180,24 @@ Onboarding checklist items: smooth height animation when collapsing.
 
 | File | Change |
 |------|--------|
-| `src/components/UserOnboard.tsx` | Full rewrite → OnboardingHero content |
-| `src/app/_components/DynamicBoard.tsx` | Remove 2 stale widgets, add CourseStatusCard, apply glass |
-| `src/components/DashboardInfo.tsx` | Glass skin on buttons |
-| `src/constants/careerPathsData.ts` | Verify description copy matches marketplace model |
-| *(new)* `src/components/CourseStatusCard.tsx` | Small enrollment status widget |
-| *(new)* `src/components/OnboardingChecklist.tsx` | Client-side checklist with localStorage |
+| `src/components/UserOnboard.tsx` | Full rewrite — marketplace copy, feature grid, checklist |
+| `src/app/_components/DynamicBoard.tsx` | Remove 2 stale widgets, add new sidebar cards, apply glass |
+| `src/components/DashboardInfo.tsx` | Glass skin on quick access buttons |
+| `src/constants/careerPathsData.ts` | Verify/update descriptions to match marketplace model |
+| *(new)* `src/components/CourseAccessWidget.tsx` | Mini marketplace sidebar card (server component) |
+| *(new)* `src/components/ForumActivityCard.tsx` | Last forum post or empty state (server component) |
+| *(new)* `src/components/OnboardingChecklist.tsx` | Collapsible checklist (client component, localStorage) |
 
 ---
 
-## ❓ Open Decisions — Review Before Implementation
+## 🏁 Implementation Order
 
-1. **Onboarding checklist** — include it (great SaaS pattern) or keep it simpler without it?
-2. **Personalized greeting** — pull Clerk user's first name for "Cześć, [Name]!"? Pattern already exists in `Username` component.
-3. **CourseStatusCard** — server-fetched with real enrollment data (`course-actions.ts` has the queries), or a simple static CTA for now?
-4. **Feature Discovery cards** — confirm the 4 cards listed above, or different feature set?
-5. **Updates widget replacement** — nothing (clean/minimal), or a future CMS-driven "Co nowego" feed?
-6. **Forum** — tiny text link in sidebar, or remove from this section entirely?
-7. **Course cards CTA** — "Kup dostęp" → link to `/panel/kursy` or `/kierunki/[slug]`?
-
----
-
-## 🏁 Implementation Order (once plan approved)
-
-1. `DynamicBoard.tsx` — remove stale widgets, apply glass container
+1. `DynamicBoard.tsx` — remove stale widgets, apply glass container, wire new layout
 2. `UserOnboard.tsx` — rewrite heading, subtitle, course cards (marketplace model)
 3. `DashboardInfo.tsx` — glass skin on quick access buttons
 4. `ExamCountdown` wrapper — glass card skin
-5. `CourseStatusCard.tsx` — new component (server)
-6. `OnboardingChecklist.tsx` — new component (client, localStorage)
-7. Feature Discovery Grid — inside OnboardingHero
-8. Framer Motion entrance animations
+5. `CourseAccessWidget.tsx` — new server component
+6. `ForumActivityCard.tsx` — new server component (needs forum query)
+7. `OnboardingChecklist.tsx` — new client component (localStorage)
+8. Feature Discovery Grid — inside UserOnboard
+9. Framer Motion entrance animations
