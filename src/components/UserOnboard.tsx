@@ -4,15 +4,15 @@ import { careerPathsData } from "@/constants/careerPathsData"
 export default function UserOnboard() {
   return (
     <div className="w-full h-full flex justify-between">
-      <div className="h-full p-3 sm:p-8 bg-zinc-800 rounded-2xl shadow-xl border border-white/[0.06]">
+      <div className="h-full p-3 sm:p-8 bg-white rounded-2xl shadow-sm border border-zinc-200/50">
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4 leading-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-4 leading-tight">
             Witamy w naszej społeczności!
           </h2>
-          <p className="text-base sm:text-lg text-zinc-300 font-light max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-zinc-600 font-light max-w-2xl mx-auto">
             Twoja podróż do profesjonalnej edukacji medycznej zaczyna się tutaj.
             Z darmowym dostępem do ścieżki
-            <span className="font-semibold text-zinc-100">
+            <span className="font-semibold text-slate-600">
               {" "}
               Opiekuna Medycznego
             </span>
@@ -21,7 +21,7 @@ export default function UserOnboard() {
           </p>
         </div>
         <div className="mb-10">
-          <h3 className="text-lg sm:text-xl font-semibold text-zinc-100 text-center mb-6">
+          <h3 className="text-lg sm:text-xl font-semibold text-zinc-800 text-center mb-6">
             Dostępne ścieżki rozwoju
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -32,21 +32,21 @@ export default function UserOnboard() {
                 className="block relative min-h-[250px]"
               >
                 <div
-                  className={`p-6 rounded-2xl shadow-md transition-all duration-300 h-full flex flex-col justify-between relative ${slug === "opiekun-medyczny"
-                    ? "bg-zinc-700/80 border border-white/[0.08] hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"
-                    : "bg-zinc-700/80 border border-white/[0.06]"
+                  className={`p-6 rounded-2xl shadow-sm transition-all duration-300 h-full flex flex-col justify-between relative ${slug === "opiekun-medyczny"
+                    ? "bg-white border border-zinc-200/60 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md"
+                    : "bg-white border border-zinc-200/50"
                     }`}
                 >
                   {slug === "opiekun-medyczny" && (
-                    <span className="absolute top-1 right-1 bg-white text-zinc-900 text-xs font-bold px-3 py-1 rounded-full animate-bounce-custom">
+                    <span className="absolute top-1 right-1 bg-slate-950 text-white text-xs font-bold px-3 py-1 rounded-full animate-bounce-custom">
                       Darmowy Plan!
                     </span>
                   )}
                   <div className="relative z-10">
-                    <h4 className="text-lg font-semibold text-white mb-2">
+                    <h4 className="text-lg font-semibold text-zinc-800 mb-2">
                       {path.title}
                     </h4>
-                    <p className="text-sm text-zinc-300 mb-4">
+                    <p className="text-sm text-zinc-600 mb-4">
                       {path.description}
                     </p>
                   </div>
@@ -55,7 +55,7 @@ export default function UserOnboard() {
                   </span>
 
                   {slug !== "opiekun-medyczny" && (
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl bg-zinc-900/80 pointer-events-none">
+                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl bg-slate-900/70 pointer-events-none">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-8 w-8 text-white mb-2"
@@ -70,7 +70,7 @@ export default function UserOnboard() {
                           d="M12 15v2m0-6v.01M7 10V7a5 5 0 0110 0v3m-5 5h.01"
                         />
                       </svg>
-                      <span className="text-white text-sm font-bold text-center px-3 py-1 bg-zinc-800/80 rounded-lg">
+                      <span className="text-white text-sm font-bold text-center px-3 py-1 bg-gray-800/70 rounded-lg">
                         Dostępne w Płatnym Planie
                       </span>
                     </div>
@@ -81,20 +81,20 @@ export default function UserOnboard() {
           </div>
         </div>
 
-        <div className="mt-12 text-center border-t border-zinc-700 pt-8">
-          <p className="text-base text-zinc-300 mb-4 max-w-2xl mx-auto">
+        <div className="mt-12 text-center border-t border-zinc-200 pt-8">
+          <p className="text-base text-zinc-700 mb-4 max-w-2xl mx-auto">
             Pamiętaj, że możesz zaktualizować swoją nazwę użytkownika i motto
             nauki w dowolnym momencie w
             <Link
               href="/panel"
-              className="text-zinc-100 hover:underline font-medium ml-1"
+              className="text-slate-800 hover:underline font-medium ml-1"
             >
               Panelu Użytkownika
             </Link>
             . Tutaj również znajdziesz najnowsze aktualizacje, wiadomości i
             odliczanie do najbliższej sesji egzaminacyjnej!
           </p>
-          <p className="text-base text-rose-400 font-semibold mb-6">
+          <p className="text-base text-red-600 font-semibold mb-6">
             Zespół Wolfmed-Edukacja
           </p>
         </div>

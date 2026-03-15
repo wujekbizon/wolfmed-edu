@@ -8,42 +8,42 @@ import { Suspense } from "react"
 
 export default async function DynamicBoard() {
   return (
-    <section className="container mx-auto p-3 xs:p-4 sm:p-8 rounded-2xl shadow-xl border border-white/[0.06] transition-all duration-300 bg-zinc-900">
+    <section className="container mx-auto p-3 xs:p-4 sm:p-8 rounded-2xl shadow-lg border border-zinc-200/50 transition-all duration-300 bg-white">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <UserOnboard />
         </div>
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-zinc-800 rounded-2xl shadow-xl p-6 border border-white/[0.06]">
-            <h3 className="text-xl font-bold text-zinc-100 mb-4">
+          <div className="bg-white rounded-2xl shadow-sm p-6 border border-zinc-200/60">
+            <h3 className="text-xl font-bold text-zinc-800 mb-4">
               Najnowsze Aktualizacje
             </h3>
-            <div className="border-l-4 border-zinc-600 pl-4">
+            <div className="border-l-4 border-zinc-300 pl-4">
               <p className="text-sm text-zinc-500">30 Grudzień 2025</p>
-              <h4 className="font-medium text-zinc-200">
+              <h4 className="font-medium text-zinc-800">
                 Dodano nowe pytania egzaminacyjne
               </h4>
-              <p className="text-sm text-zinc-400">
+              <p className="text-sm text-zinc-600">
                 Nasza baza testów zawiera już 931 pytań.
               </p>
             </div>
             <div className="space-y-4 mt-4">
-              <div className="border-l-4 border-rose-500 pl-4">
+              <div className="border-l-4 border-red-500 pl-4">
                 <p className="text-sm text-zinc-500">5 Grudzień 2025</p>
-                <h4 className="font-medium text-zinc-200">
+                <h4 className="font-medium text-zinc-800">
                   Nowa wersja aplikacji
                 </h4>
-                <p className="text-sm text-rose-400 hover:text-rose-300 transition-colors">
+                <p className="text-sm text-red-400 hover:text-red-500 transition-colors">
                   Wprowadziliśmy nową wersję aplikacji, z nowymi funkcjami i ulepszeniami.
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-zinc-800 rounded-2xl shadow-xl p-6 border border-rose-500/20">
-            <h3 className="text-xl font-bold text-zinc-100 mb-3">
+          <div className="bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/50">
+            <h3 className="text-xl font-bold text-zinc-800 mb-3">
               Zapraszamy na forum
             </h3>
-            <p className="text-sm text-zinc-300 mb-4">
+            <p className="text-sm text-zinc-600 mb-4">
               Właśnie uruchomiliśmy forum, gdzie możesz dzielić się swoją wiedzą
               i doświadczeniem z innymi uczestnikami
             </p>
