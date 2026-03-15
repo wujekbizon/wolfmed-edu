@@ -8,13 +8,13 @@ import { Suspense } from "react"
 
 export default async function DynamicBoard() {
   return (
-    <section className="container mx-auto p-3 xs:p-4 sm:p-8 rounded-2xl shadow-lg border border-zinc-200/50 transition-all duration-300 bg-white">
+    <section className="container mx-auto backdrop-blur-xl p-3 xs:p-4 sm:p-8 rounded-3xl shadow-xl shadow-zinc-900/5 border border-white/50 transition-all duration-300 bg-white/60">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <div className="lg:col-span-8">
           <UserOnboard />
         </div>
         <aside className="lg:col-span-4 space-y-6">
-          <div className="bg-white rounded-2xl shadow-sm p-6 border border-zinc-200/60">
+          <div className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-sm p-6 border border-white/60">
             <h3 className="text-xl font-bold text-zinc-800 mb-4">
               Najnowsze Aktualizacje
             </h3>
@@ -39,17 +39,17 @@ export default async function DynamicBoard() {
               </div>
             </div>
           </div>
-          <div className="bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/50">
-            <h3 className="text-xl font-bold text-zinc-800 mb-3">
+          <div className="bg-gradient-to-br from-rose-500/80 to-rose-600/70 backdrop-blur-sm rounded-2xl shadow-lg p-6 text-white border border-rose-400/30">
+            <h3 className="text-xl font-bold mb-3">
               Zapraszamy na forum
             </h3>
-            <p className="text-sm text-zinc-600 mb-4">
+            <p className="text-sm opacity-90 mb-4">
               Właśnie uruchomiliśmy forum, gdzie możesz dzielić się swoją wiedzą
               i doświadczeniem z innymi uczestnikami
             </p>
             <Link
               href="/forum"
-              className="inline-block bg-rose-500 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-rose-600 transition-colors"
+              className="inline-block bg-white text-rose-600 px-4 py-2 rounded-full text-sm font-medium hover:bg-rose-50 transition-colors"
             >
               Forum dyskusyjne
             </Link>

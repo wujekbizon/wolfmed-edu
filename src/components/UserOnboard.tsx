@@ -4,7 +4,7 @@ import { careerPathsData } from "@/constants/careerPathsData"
 export default function UserOnboard() {
   return (
     <div className="w-full h-full flex justify-between">
-      <div className="h-full p-3 sm:p-8 bg-white rounded-2xl shadow-sm border border-zinc-200/50">
+      <div className="h-full p-3 sm:p-8 bg-white/40 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60">
         <div className="text-center mb-10">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-4 leading-tight">
             Witamy w naszej społeczności!
@@ -32,9 +32,9 @@ export default function UserOnboard() {
                 className="block relative min-h-[250px]"
               >
                 <div
-                  className={`p-6 rounded-2xl shadow-sm transition-all duration-300 h-full flex flex-col justify-between relative ${slug === "opiekun-medyczny"
-                    ? "bg-white border border-zinc-200/60 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-md"
-                    : "bg-white border border-zinc-200/50"
+                  className={`p-6 rounded-2xl shadow-md transition-all duration-300 h-full flex flex-col justify-between relative ${slug === "opiekun-medyczny"
+                    ? "bg-white/60 backdrop-blur-md border border-white/50 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"
+                    : "bg-white/60 backdrop-blur-md border border-white/50"
                     }`}
                 >
                   {slug === "opiekun-medyczny" && (
@@ -81,7 +81,7 @@ export default function UserOnboard() {
           </div>
         </div>
 
-        <div className="mt-12 text-center border-t border-zinc-200 pt-8">
+        <div className="mt-12 text-center border-t border-white/40 pt-8">
           <p className="text-base text-zinc-700 mb-4 max-w-2xl mx-auto">
             Pamiętaj, że możesz zaktualizować swoją nazwę użytkownika i motto
             nauki w dowolnym momencie w
