@@ -20,7 +20,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
 
   if (activeEnrollments.length > 0) {
     return (
-      <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
+      <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
         <h3 className="text-base font-semibold text-zinc-800 mb-3">
           Twoje kursy
         </h3>
@@ -30,7 +30,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
             return (
               <div
                 key={enrollment.courseSlug}
-                className="flex items-center justify-between gap-3 bg-zinc-50/80 border border-zinc-200/50 rounded-xl px-4 py-2.5"
+                className="flex items-center justify-between gap-3 bg-white/50 border border-white/50 rounded-xl px-4 py-2.5"
               >
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-zinc-800 truncate">
@@ -55,7 +55,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
   }
 
   return (
-    <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
+    <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
       <h3 className="text-base font-semibold text-zinc-800 mb-1">
         Zacznij swoją naukę
       </h3>
@@ -66,7 +66,7 @@ export default function CourseAccessWidget({ enrollments }: CourseAccessWidgetPr
         {Object.entries(careerPathsData).map(([slug, path]) => (
           <div
             key={slug}
-            className="flex items-center justify-between gap-3 bg-zinc-50/80 border border-zinc-200/50 rounded-xl px-4 py-2.5"
+            className="flex items-center justify-between gap-3 bg-white/50 border border-white/50 rounded-xl px-4 py-2.5"
           >
             <p className="text-sm font-medium text-zinc-700 truncate">
               {path.title}

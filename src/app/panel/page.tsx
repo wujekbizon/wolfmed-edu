@@ -24,7 +24,7 @@ export default async function TestsPage() {
       <div className="w-full h-full flex flex-col items-center gap-8">
         <DynamicBoard />
         <section className="container mx-auto">
-          <div className="w-full gap-8 flex flex-col p-3 xs:p-4 sm:p-10 rounded-2xl shadow-sm border border-zinc-200/50 transition-all duration-300 bg-white">
+          <div className="backdrop-blur-xl w-full gap-8 flex flex-col p-3 xs:p-4 sm:p-10 rounded-3xl shadow-xl shadow-zinc-900/5 border border-white/50 transition-all duration-300 bg-white/60">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <Suspense fallback={<UsernameSkeleton />}>
                 <Username />

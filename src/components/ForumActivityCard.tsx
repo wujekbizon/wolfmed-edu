@@ -25,7 +25,7 @@ export default async function ForumActivityCard() {
 
   if (!hasActivity) {
     return (
-      <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
+      <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
         <div className="flex items-center gap-2 mb-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
           <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
@@ -53,12 +53,12 @@ export default async function ForumActivityCard() {
         : { type: 'comment' as const, data: lastComment! }
 
   return (
-    <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
+    <div className="rounded-2xl p-5 border border-white/60 bg-white/70 backdrop-blur-sm">
       <div className="flex items-center gap-2 mb-3">
         <MessageSquare className="w-4 h-4 text-zinc-400" />
         <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
       </div>
-      <div className="bg-zinc-50/80 border border-zinc-200/50 rounded-xl px-4 py-3">
+      <div className="bg-white/50 border border-white/50 rounded-xl px-4 py-3">
         <p className="text-xs text-zinc-500 mb-1">
           {mostRecent.type === 'post' ? 'Twój post' : 'Twój komentarz'} ·{' '}
           {formatRelativeDate(mostRecent.data.createdAt)}

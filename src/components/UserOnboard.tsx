@@ -36,7 +36,7 @@ const FEATURES = [
 
 export default function UserOnboard() {
   return (
-    <div className="h-full p-3 sm:p-8 bg-white rounded-2xl shadow-sm border border-zinc-200/50">
+    <div className="h-full p-3 sm:p-8 bg-white/40 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60">
       {/* Heading */}
       <div className="text-center mb-8">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
@@ -58,14 +58,14 @@ export default function UserOnboard() {
             <Link
               key={feature.href}
               href={feature.href}
-              className="relative flex flex-col gap-2 p-4 bg-white border border-zinc-200/50 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300/60 transition-all duration-200 group"
+              className="relative flex flex-col gap-2 p-4 bg-white/60 backdrop-blur-md border border-white/50 rounded-2xl hover:bg-white/80 hover:shadow-sm transition-all duration-200 group"
             >
               {feature.premium && (
-                <span className="absolute top-2 right-2 text-[10px] font-bold text-rose-500 bg-rose-50 border border-rose-200/60 px-2 py-0.5 rounded-full">
+                <span className="absolute top-2 right-2 text-[10px] font-bold text-rose-500 bg-rose-50/80 border border-rose-200/50 px-2 py-0.5 rounded-full">
                   Premium
                 </span>
               )}
-              <span className="text-zinc-400 group-hover:text-rose-500 transition-colors">
+              <span className="text-zinc-500 group-hover:text-rose-500 transition-colors">
                 {feature.icon}
               </span>
               <span className="text-sm font-semibold text-zinc-800">
@@ -86,7 +86,7 @@ export default function UserOnboard() {
           {Object.entries(careerPathsData).map(([slug, path]) => (
             <div
               key={slug}
-              className="flex flex-col justify-between p-5 bg-white border border-zinc-200/50 rounded-2xl shadow-sm"
+              className="flex flex-col justify-between p-5 bg-white/60 backdrop-blur-md border border-white/50 rounded-2xl"
             >
               <div className="mb-4">
                 <h4 className="text-base font-semibold text-zinc-800 mb-1.5">
@@ -97,10 +97,10 @@ export default function UserOnboard() {
                 </p>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-[11px] font-medium text-zinc-500 border border-zinc-200 rounded-full px-2 py-0.5">
+                <span className="text-[11px] font-medium text-zinc-500 border border-zinc-300/50 rounded-full px-2 py-0.5">
                   Basic
                 </span>
-                <span className="text-[11px] font-medium text-rose-500 border border-rose-200/60 rounded-full px-2 py-0.5">
+                <span className="text-[11px] font-medium text-rose-500 border border-rose-300/50 rounded-full px-2 py-0.5">
                   Premium
                 </span>
                 <Link
