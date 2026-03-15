@@ -16,7 +16,7 @@ export default async function DynamicBoard() {
   ])
 
   return (
-    <section className="container mx-auto p-3 xs:p-4 sm:p-8 rounded-2xl border border-zinc-100 shadow-sm bg-white">
+    <section className="container mx-auto p-3 xs:p-4 sm:p-8 rounded-2xl border border-zinc-200/60 shadow-xl shadow-zinc-900/[0.07] bg-white">
       <StatsRow
         totalQuestions={user?.totalQuestions ?? 0}
         testsAttempted={user?.testsAttempted ?? 0}

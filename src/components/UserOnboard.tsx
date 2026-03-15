@@ -76,8 +76,8 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 href={locked ? '#' : feature.href}
                 className={`relative flex flex-col gap-2 p-4 border rounded-xl transition-all duration-200 group ${
                   locked
-                    ? 'bg-zinc-50 border-zinc-100 opacity-50 cursor-not-allowed pointer-events-none'
-                    : 'bg-zinc-50 border-zinc-100 hover:bg-white hover:border-zinc-200 hover:shadow-sm'
+                    ? 'bg-zinc-50 border-zinc-100 shadow-sm opacity-50 cursor-not-allowed pointer-events-none'
+                    : 'bg-zinc-50 border-zinc-100 shadow-sm hover:bg-white hover:border-zinc-200 hover:shadow-md'
                 }`}
               >
                 {feature.premium && (
@@ -114,7 +114,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
             return (
               <div
                 key={slug}
-                className="flex flex-col justify-between px-5 py-6 bg-white border border-zinc-100 rounded-xl hover:border-zinc-200 hover:shadow-sm transition-all duration-200"
+                className="flex flex-col justify-between px-5 py-6 bg-white border border-zinc-100 rounded-xl shadow-sm hover:border-zinc-200 hover:shadow-md transition-all duration-200"
               >
                 <div className="mb-4">
                   <h4 className="text-sm font-semibold text-zinc-800 mb-2">
