@@ -41,17 +41,17 @@ export default async function ForumActivityCard() {
 
   if (!hasActivity) {
     return (
-      <div className="rounded-2xl p-5 border border-white/[0.06] bg-zinc-800">
+      <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <MessageSquare className="w-4 h-4 text-zinc-400" />
-          <h3 className="text-base font-semibold text-zinc-100">Forum</h3>
+          <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
         </div>
-        <p className="text-sm text-zinc-400 mb-3">
+        <p className="text-sm text-zinc-500 mb-3">
           Nie masz jeszcze żadnych postów na forum.
         </p>
         <Link
           href="/forum"
-          className="text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors"
+          className="text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors"
         >
           Dołącz do dyskusji →
         </Link>
@@ -69,17 +69,17 @@ export default async function ForumActivityCard() {
         : { type: 'comment' as const, data: lastComment! }
 
   return (
-    <div className="rounded-2xl p-5 border border-white/[0.06] bg-zinc-800">
+    <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <MessageSquare className="w-4 h-4 text-zinc-400" />
-        <h3 className="text-base font-semibold text-zinc-100">Forum</h3>
+        <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
       </div>
-      <div className="bg-zinc-700/60 border border-white/[0.06] rounded-xl px-4 py-3">
+      <div className="bg-zinc-50/80 border border-zinc-200/50 rounded-xl px-4 py-3">
         <p className="text-xs text-zinc-500 mb-1">
           {mostRecent.type === 'post' ? 'Twój post' : 'Twój komentarz'} ·{' '}
           {formatRelativeDate(mostRecent.data.createdAt)}
         </p>
-        <p className="text-sm text-zinc-200 line-clamp-2">
+        <p className="text-sm text-zinc-700 line-clamp-2">
           {mostRecent.type === 'post'
             ? (mostRecent.data as typeof lastPost).title
             : (mostRecent.data as typeof lastComment).content}
@@ -91,7 +91,7 @@ export default async function ForumActivityCard() {
             ? `/forum/${(mostRecent.data as typeof lastPost).id}`
             : `/forum/${(mostRecent.data as typeof lastComment).postId}`
         }
-        className="inline-block mt-3 text-xs font-semibold text-rose-400 hover:text-rose-300 transition-colors"
+        className="inline-block mt-3 text-xs font-semibold text-rose-500 hover:text-rose-600 transition-colors"
       >
         Zobacz →
       </Link>

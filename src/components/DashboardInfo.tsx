@@ -3,8 +3,8 @@ import Link from "next/link"
 
 export default function DashboardInfo() {
   return (
-    <div className="rounded-2xl p-5 border border-white/[0.06] bg-zinc-800/90">
-      <h3 className="text-sm font-semibold text-zinc-400 uppercase tracking-widest mb-3">
+    <div className="rounded-2xl p-5 border border-zinc-200/50 bg-white shadow-sm">
+      <h3 className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-3">
         Szybki dostęp
       </h3>
       <div className="flex flex-col gap-2">
@@ -13,11 +13,11 @@ export default function DashboardInfo() {
             key={text}
             href={link}
             className="flex items-center justify-between gap-3 px-4 py-2.5
-              bg-zinc-700/80 border border-white/[0.06] rounded-xl
-              transition-all hover:bg-zinc-600/80 hover:border-white/[0.10]"
+              bg-white border border-zinc-200/50 rounded-xl
+              transition-all hover:bg-rose-50/50 hover:border-rose-200/60 hover:shadow-sm"
           >
-            <span className="text-sm font-semibold text-zinc-100">{text}</span>
-            <span className="text-zinc-400">{icon}</span>
+            <span className="text-sm font-semibold text-zinc-800">{text}</span>
+            <span className="text-zinc-500">{icon}</span>
           </Link>
         ))}
       </div>

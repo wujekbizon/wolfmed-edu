@@ -43,17 +43,17 @@ export default function OnboardingChecklist() {
   if (!mounted) return null
 
   return (
-    <div className="rounded-2xl p-4 border border-white/[0.06] bg-zinc-700/60">
+    <div className="rounded-2xl p-4 border border-zinc-200/60 bg-zinc-50/80">
       <div className="flex items-center justify-between mb-3">
-        <h4 className="text-sm font-semibold text-zinc-100">
+        <h4 className="text-sm font-semibold text-zinc-800">
           Pierwsze kroki{' '}
-          <span className="font-normal text-zinc-400">
+          <span className="font-normal text-zinc-500">
             {progress}/{STEPS.length}
           </span>
         </h4>
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="text-zinc-400 hover:text-zinc-200 transition-colors"
+          className="text-zinc-400 hover:text-zinc-600 transition-colors"
         >
           {collapsed ? (
             <ChevronDown className="w-4 h-4" />
@@ -63,7 +63,7 @@ export default function OnboardingChecklist() {
         </button>
       </div>
 
-      <div className="h-1 w-full rounded-full bg-zinc-600 mb-4 overflow-hidden">
+      <div className="h-1 w-full rounded-full bg-zinc-200 mb-4 overflow-hidden">
         <div
           className="h-1 rounded-full bg-rose-500 transition-all duration-500"
           style={{ width: `${(progress / STEPS.length) * 100}%` }}
@@ -83,15 +83,15 @@ export default function OnboardingChecklist() {
                   {done ? (
                     <CheckCircle2 className="w-4 h-4 text-rose-500" />
                   ) : (
-                    <Circle className="w-4 h-4 text-zinc-500" />
+                    <Circle className="w-4 h-4 text-zinc-400" />
                   )}
                 </button>
                 <Link
                   href={step.href}
                   className={`text-sm transition-colors ${
                     done
-                      ? 'text-zinc-500 line-through'
-                      : 'text-zinc-200 hover:text-white hover:underline'
+                      ? 'text-zinc-400 line-through'
+                      : 'text-zinc-700 hover:text-zinc-900 hover:underline'
                   }`}
                 >
                   {step.label}
@@ -103,7 +103,7 @@ export default function OnboardingChecklist() {
       )}
 
       {allDone && (
-        <p className="text-xs text-rose-400 font-medium mt-3">
+        <p className="text-xs text-rose-500 font-medium mt-3">
           Świetnie! Opanowałeś podstawy platformy.
         </p>
       )}

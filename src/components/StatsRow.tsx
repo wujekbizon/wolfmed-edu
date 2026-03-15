@@ -47,21 +47,23 @@ export default function StatsRow({
           key={i}
           className={`rounded-2xl p-4 flex flex-col gap-1.5 ${
             card.accent
-              ? 'bg-zinc-700 border border-rose-500/30'
-              : 'bg-zinc-800 border border-white/[0.06]'
+              ? 'bg-rose-50/60 border border-rose-200/50'
+              : 'bg-white border border-zinc-200/50 shadow-sm'
           }`}
         >
-          <span className={card.accent ? 'text-rose-400' : 'text-zinc-400'}>
+          <span className={card.accent ? 'text-rose-500' : 'text-zinc-400'}>
             {card.icon}
           </span>
           <span
             className={`text-2xl font-bold tabular-nums ${
-              card.accent ? 'text-rose-300' : 'text-white'
+              card.accent ? 'text-rose-600' : 'text-zinc-900'
             }`}
           >
             {card.value}
           </span>
-          <span className="text-xs text-zinc-400">{card.label}</span>
+          <span className={`text-xs ${card.accent ? 'text-rose-400' : 'text-zinc-500'}`}>
+            {card.label}
+          </span>
         </div>
       ))}
     </div>
