@@ -57,19 +57,19 @@ export default function SidePanel({
   return (
     <>
       <nav
-        className={`z-50 hidden h-full flex-col text-zinc-900 shrink-0
-     bg-white border-r border-zinc-200 shadow-[4px_0_16px_rgba(0,0,0,0.04)]
+        className={`z-50 hidden h-full flex-col text-zinc-100 shrink-0
+     bg-zinc-900 border-r border-zinc-800 shadow-[4px_0_16px_rgba(0,0,0,0.3)]
           lg:flex transition-all duration-300
           ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
         <div
-          className={`flex items-center h-16 shrink-0 border-b border-zinc-100
+          className={`flex items-center h-16 shrink-0 border-b border-zinc-800
             ${isSidePanelOpen ? 'justify-end px-4' : 'justify-center'}`}
         >
           <button
             onClick={toggleSidePanel}
             className='flex items-center justify-center w-8 h-8 rounded-lg
-              text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100
+              text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800
               transition-all duration-200 cursor-pointer'
           >
             <svg
@@ -104,20 +104,20 @@ export default function SidePanel({
           ))}
 
           {isSidePanelOpen && (
-            <div className='mt-auto pt-3 border-t border-zinc-100'>
+            <div className='mt-auto pt-3 border-t border-zinc-800'>
               <SideAIInput />
             </div>
           )}
         </div>
 
-        <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
+        <div className='px-3 pt-3 pb-2 border-t border-zinc-800 flex flex-col gap-2'>
           {!isSidePanelOpen && (
             <Tooltip message='Asystent AI' position='right'>
               <button
                 onClick={toggleSidePanel}
-                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-100'
               >
-                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-800 border border-zinc-700 group-hover:bg-zinc-700 group-hover:shadow-sm'>
                   <span className='transition-transform duration-200 group-hover:scale-110'>
                     <Sparkles size={17} />
                   </span>
@@ -135,9 +135,9 @@ export default function SidePanel({
           {isSidePanelOpen ? (
             <button
               onClick={openSettingsModal}
-              className='group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+              className='group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-100'
             >
-              <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+              <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-800 border border-zinc-700 group-hover:bg-zinc-700 group-hover:shadow-sm'>
                 <span className='transition-transform duration-200 group-hover:scale-110'>
                   <Settings size={17} />
                 </span>
@@ -148,9 +148,9 @@ export default function SidePanel({
             <Tooltip message='Ustawienia' position='right'>
               <button
                 onClick={openSettingsModal}
-                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-400 hover:text-zinc-100'
               >
-                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-800 border border-zinc-700 group-hover:bg-zinc-700 group-hover:shadow-sm'>
                   <span className='transition-transform duration-200 group-hover:scale-110'>
                     <Settings size={17} />
                   </span>
@@ -164,8 +164,8 @@ export default function SidePanel({
       {pinnedOpen && (
         <div
           ref={panelRef}
-          className={`fixed top-20 bottom-0 z-40 w-96 bg-white flex flex-col
-            border-r border-zinc-200
+          className={`fixed top-20 bottom-0 z-40 w-96 bg-zinc-900 flex flex-col
+            border-r border-zinc-800
             ${isSidePanelOpen ? 'left-75' : 'left-20'}`}
         >
           <div className='flex-1 overflow-y-auto scrollbar-webkit'>

@@ -15,18 +15,18 @@ export default function CustomButton(props: {
     <Link
       href={props.href}
       className={`group relative flex items-center gap-3.5 rounded-xl transition-all duration-200
-        ${props.active ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
+        ${props.active ? 'text-zinc-100' : 'text-zinc-400 hover:text-zinc-100'}
         ${props.showTooltip
           ? 'justify-center'
-          : 'p-1 bg-zinc-200 border border-zinc-400'
+          : 'p-1 bg-zinc-800 border border-zinc-700'
         }`}
         onClick={closeSidePanel}
     >
       <span
-        className={`w-9 h-9 rounded-lg hover:bg-red-100/90 flex items-center justify-center shrink-0 transition-all duration-200
+        className={`w-9 h-9 rounded-lg hover:bg-rose-900/40 flex items-center justify-center shrink-0 transition-all duration-200
           ${props.active
-            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-200/60 border border-zinc-700/80'
-            : 'bg-white border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'
+            ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm shadow-rose-900/40 border border-rose-800/60'
+            : 'bg-zinc-800 border border-zinc-700 group-hover:bg-zinc-700 group-hover:shadow-sm'
           }`}
       >
         <span className="transition-transform duration-200 group-hover:scale-110">
