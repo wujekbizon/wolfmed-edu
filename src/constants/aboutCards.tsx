@@ -5,23 +5,23 @@ import InnovationIcon from '@/components/icons/InnovationIcon'
 
 export const cards = [
   {
-    title: 'Innowacyjne Podejście',
+    title: 'Innowacyjnosć AI',
     description: 'Wykorzystujemy zaawansowane technologie i nowoczesne metody nauczania.',
-    icon: <InnovationIcon width={64} height={64} color="#e3e3e3f" />,
+    icon: <InnovationIcon width={48} height={48} color="#ff6467" />,
   },
   {
     title: 'Wiedza Bez Barier',
-    description: 'Oferujemy kompleksowy dostęp do wysokiej jakości materiałów edukacyjnych.',
-    icon: <BookIcon width={64} height={64} color="#e3e3e3f" />,
+    description: 'Oferujemy kompleksowy dostęp do wysokiej jakości materiałów edukacyjnych, testów i zasobów.',
+    icon: <BookIcon width={48} height={48} color="#ff6467" />,
   },
   {
     title: 'Społeczność Medyczna',
-    description: 'Dołącz do dynamicznie rozwijającej się społeczności przyszłych opiekunów medycznych.',
-    icon: <CommunityIcon width={64} height={64} color="#e3e3e3f" />,
+    description: 'Dołącz do dynamicznie rozwijającej się społeczności medycznej.',
+    icon: <CommunityIcon width={48} height={48} color="#ff6467" />,
   },
   {
     title: 'Dostępność Globalna',
     description: 'Nasze usługi są dostępne dla wszystkich, bez względu na położenie geograficzne.',
-    icon: <AccessibilityIcon width={64} height={64} color="#e3e3e3f" />,
+    icon: <AccessibilityIcon width={48} height={48} color="#ff6467" />,
   },
 ]

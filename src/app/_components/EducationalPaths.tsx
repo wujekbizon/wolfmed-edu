@@ -5,23 +5,24 @@ import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
   return (
-    <section className="flex flex-col w-full bg-slate-900 py-16 px-4 md:px-12 xl:px-24 gap-8">
+    <section id="explore" className="flex flex-col w-full py-8 md:py-12 px-4 md:px-12 xl:px-24 gap-8 ">
       <div className="container relative mx-auto px-3 sm:px-4">
-        <div className="mb-10 sm:mb-16 flex flex-col items-center text-center">
-          <span className="mb-3 sm:mb-4 inline-block rounded-full bg-red-100 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-800">
+        <div className="mb-8 sm:mb-12 flex flex-col items-center text-center">
+          <span className="mb-3 sm:mb-4 inline-flex items-center gap-1.5 rounded-full border border-red-300/50 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-500 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-red-400" />
             Kariera Medyczna
           </span>
-          <h1 className="mb-4 lg:mb-6 max-w-2xl text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white px-2 leading-14">
-            Twoja <span className="animate-pulse text-rose-400">ścieżka</span> w
+          <h1 className="mb-4 lg:mb-6 max-w-2xl text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-800 px-2 leading-tight">
+            Twoja <span className="animate-pulse text-[#ff5b5b]">ścieżka</span> w
             świecie medycyny
           </h1>
-          <p className="mb-6 sm:mb-8 max-w-3xl text-[#9ba2b2] text-base sm:text-xl font-normal leading-8 tracking-[-0.14px] text-center">
+          <p className="mb-6 sm:mb-8 max-w-2xl text-zinc-500 text-base sm:text-lg font-normal leading-7 text-center">
             Znajdź program edukacyjny idealnie dopasowany do Twoich potrzeb,
             tempa nauki i planów zawodowych.
           </p>
         </div>
       </div>
-      <div className="flex flex-col gap-10 md:gap-20 p-0 sm:p-4 md:p-8 xl:p-16 bg-zinc-950 rounded-3xl">
+      <div className="flex flex-col divide-y divide-white/10 p-4 sm:p-8 bg-zinc-900/90 rounded-2xl border-2 border-zinc-200 shadow shadow-zinc-500">
         <EducationalPathCard {...CAREGIVER} />
         <EducationalPathCard
           {...NURSE}
