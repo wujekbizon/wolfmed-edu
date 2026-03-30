@@ -23,7 +23,7 @@ export const users = createTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull().unique(),
-    testLimit: integer("testLimit").default(25),
+    testLimit: integer("testLimit").default(0),
     createdAt: timestamp("createdAt").defaultNow(),
     motto: varchar("motto").default("").notNull(),
     supporter: boolean("supporter").default(false).notNull(),

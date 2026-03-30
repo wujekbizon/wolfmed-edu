@@ -240,20 +240,14 @@ export const careerPathsData: Record<string, PathData> = {
     ],
     pricing: {
       standard: {
-        price: "Plan standard: 0zł",
+        price: "Plan standard: 49,99 zł",
         features: [
           "Bazy testów z 2 ostatnich lat z egzaminów i kursu na Opiekuna Medycznego",
           "Procedury Opiekuna Medycznego",
           "Przegląd postępów i wyników testów",
           "Testy Praktycznye i Egzamin Próbny",
-          "Forum i Blog Medyczny"
-        ]
-      },
-      premium: {
-        price: "Plan premium: 49,99 zł",
-        features: [
-          "Wszystko z planu darmowego",
-          "Materiały i zasoby - 20MB miejsce na dysku",
+          "Forum i Blog Medyczny",
+           "Materiały i zasoby - 20MB miejsce na dysku",
           "Moje Notatki - twórz notatki z nauki",
           "Dostęp do modułu praktycznego i tablicy",
           "Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki"

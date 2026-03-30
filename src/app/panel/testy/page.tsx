@@ -32,7 +32,7 @@ async function TestsCategories() {
     user.supporter ? user.userId : undefined
   )
 
-  return <TestsCategoriesList categories={populatedCategories} />
+  return <TestsCategoriesList categories={populatedCategories} isSupporter={user.supporter} />
 }
 
 export default function TestsPage() {

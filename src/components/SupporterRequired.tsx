@@ -22,9 +22,9 @@ export default function SupporterRequired() {
             </svg>
 
             <div>
-              <h2 className="text-2xl font-bold text-zinc-900 mb-2">Funkcja dla wspierających</h2>
+              <h2 className="text-2xl font-bold text-zinc-900 mb-2">Funkcja dla użytkowników Wolfmed Standard</h2>
               <p className="text-zinc-700">
-                Aby uzyskać dostęp do tej funkcji, musisz zostać wspierającym projektu.
+                Aby uzyskać dostęp do tej funkcji, musisz wykupić Wolfmed Standard.
               </p>
             </div>
 
@@ -35,12 +35,10 @@ export default function SupporterRequired() {
               hover:from-[#ff9898] hover:to-[#ffd5d5]
               transition-all duration-200 hover:scale-105 hover:shadow-lg"
             >
-              Wesprzyj projekt
+              Wykup dostęp
             </Link>
 
-            <p className="text-sm text-zinc-600">
-              Twoje wsparcie pomaga nam rozwijać platformę i dodawać nowe funkcje.
-            </p>
+           
           </div>
         </div>
       </div>

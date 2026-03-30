@@ -7,7 +7,7 @@ export default function PremiumLock() {
         href="/wsparcie-projektu"
         className="px-4 py-2 bg-[#f58a8a]/90 text-white text-sm font-medium rounded-lg hover:bg-[#f58a8a] transition-all shadow-md"
       >
-        Funkcja premium - Odblokuj
+        Wykup dostęp - Odblokuj
       </Link>
     </div>
   )

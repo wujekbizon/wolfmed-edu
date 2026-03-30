@@ -4,24 +4,15 @@ import SubmitButton from './SubmitButton'
 import { createCheckoutSession } from '@/actions/stripe'
 
 export default function ProductCard({ product }: { product: Product }) {
-  const isPremium = product.id === 'premium'
 
   return (
     <div
-      className={`relative rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col transition-all duration-300 hover:shadow-2xl ${
-        isPremium ? 'bg-gradient-to-br from-white/80 to-rose-50/30 backdrop-blur-sm border border-[#ff9898]/30' : 'bg-white border border-zinc-200/60'
-      }`}
+      className="relative rounded-2xl shadow-xl p-6 sm:p-8 flex flex-col transition-all duration-300 hover:shadow-2xl bg-white border border-zinc-200/60"
+      
     >
-      {isPremium && (
-        <div className="absolute -top-3 right-6 bg-gradient-to-r from-[#ff9898] to-[#ffc5c5] text-white text-xs font-semibold px-4 py-1 rounded-full">
-          PREMIUM
-        </div>
-      )}
-
       <div className="flex items-center justify-center mb-6">
         <div
-          className={`w-16 h-16 sm:w-20 sm:h-20 border shadow-lg rounded-full overflow-hidden ${
-            isPremium ? 'bg-gradient-to-br from-[#ff9898]/20 to-[#ffc5c5]/20 border-[#ff9898]/40' : 'bg-zinc-200 border-zinc-800/25 shadow-zinc-400'
+          className={`w-16 h-16 sm:w-20 sm:h-20 border shadow-lg rounded-full overflow-hidden ${'bg-zinc-200 border-zinc-800/25 shadow-zinc-400'
           }`}
         >
           <Image
@@ -36,8 +27,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       <h2
-        className={`text-xl sm:text-2xl font-bold text-center mb-3 ${
-          isPremium ? 'text-zinc-900' : 'text-zinc-900'
+        className={`text-xl sm:text-2xl font-bold text-center mb-3 text-zinc-900'
         }`}
       >
         {product.name}
@@ -54,14 +44,6 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
         <p className="text-sm text-zinc-500">Jednorazowa wpłata · Oferta limitowana</p>
       </div>
-
-      <p
-        className={`text-sm sm:text-base text-center mb-6 leading-relaxed ${
-          isPremium ? 'text-zinc-700' : 'text-zinc-600'
-        }`}
-      >
-        {product.description}
-      </p>
 
       <div className="space-y-3 mb-8">
         <div className="flex items-start gap-3">
@@ -108,7 +90,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <form action={createCheckoutSession} className="mt-auto">
         <input type="hidden" name="productId" value={product.id} />
-        <SubmitButton label="Wspieram - 49,99 zł" loading="Przetwarzanie..." />
+        <SubmitButton label="Wykup - 49,99 zł" loading="Przetwarzanie..." />
       </form>
     </div>
   )

@@ -120,15 +120,15 @@ export async function startTestAction(
         throw new Error("Nie znaleziono użytkownika")
       }
 
-      if (numberOfQuestions === 40 && !user.supporter) {
-        throw new Error(
-          "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
-        )
-      }
+      // if (numberOfQuestions === 40 && !user.supporter) {
+      //   throw new Error(
+      //     "Tylko użytkownicy konta premium mogą podejść do Egzaminu Opiekuna Medycznego."
+      //   )
+      // }
 
-      if (user.testLimit !== null && user.testLimit <= 0) {
+      if (user.testLimit !== null && user.testLimit <= 0 && !user.supporter) {
         throw new Error(
-          "Wyczerpałeś limit testów. Wesprzyj nasz projekt, aby kontynuować."
+          "Wykup dostęp, aby oblokować możliwość wykonywania testów i dostęp do Egzaminu Opiekuna Medycznego"
         )
       }
 
