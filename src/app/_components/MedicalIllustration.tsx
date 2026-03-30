@@ -1,23 +1,38 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
-import { useRandomPositions } from '@/hooks/useRandomPositions'
-import { HumanCellSVG } from '@/domain/bio/components/HumanCellSVG'
-import { VirusSVG } from '@/domain/bio/components/VirusSVG'
-import { BacteriaSVG } from '@/domain/bio/components/BacteriaSVG'
+
+// ssr: false — Framer Motion SVG motion.* elements inject CSS transform styles
+// on the client that are absent in SSR, causing hydration mismatches.
+// The cell is purely decorative so skipping SSR is correct here.
+const HumanCellSVG = dynamic(
+  () => import('@/components/HumanCellSVG').then((m) => ({ default: m.HumanCellSVG })),
+  { ssr: false }
+)
 
 export const MedicalIllustration = () => {
-  const { positions, svgSize } = useRandomPositions()
-
   return (
     <motion.div
-      className="relative w-full max-w-[350px] sm:max-w-[450px] md:max-w-[500px] lg:max-w-[600px] xl:max-w-[700px] aspect-square mx-auto px-4"
+      className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square rounded-full"
       initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.4, ease: 'easeInOut' }}
+      animate={{
+        opacity: 1,
+        scale: 1,
+        filter: [
+          'drop-shadow(0 0 8px rgba(80, 223, 255, 0.2))',
+          'drop-shadow(0 0 20px rgba(218, 186, 238, 0.45))',
+          'drop-shadow(0 0 8px rgba(255, 130, 80, 0.2))',
+        ],
+      }}
+      transition={{
+        opacity: { duration: 0.6, delay: 0.7, ease: 'easeInOut' },
+        scale: { duration: 0.6, delay: 0.7, ease: 'easeInOut' },
+        filter: { duration: 8, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+      }}
     >
       <motion.div
-        className="relative w-full h-full flex items-center justify-center overflow-hidden"
+        className="relative w-full h-full flex items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{
           opacity: 1,
@@ -25,7 +40,7 @@ export const MedicalIllustration = () => {
           rotate: [0, 2, -2, 0],
         }}
         transition={{
-          opacity: { duration: 0.3 },
+          opacity: { duration: 0.4, delay: 0.7 },
           duration: 8,
           repeat: Infinity,
           repeatType: 'reverse',
@@ -42,66 +57,6 @@ export const MedicalIllustration = () => {
           color="rgb(198, 223, 247)"
         />
       </motion.div>
-
-      {positions.map((pos, i) => (
-        <motion.div
-          key={i}
-          className="absolute -translate-x-1/2 -translate-y-1/2"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 0.3,
-            delay: i * 0.05,
-            ease: 'easeOut',
-          }}
-          style={{ 
-            top: pos.top, 
-            left: pos.left 
-          }}
-        >
-          <motion.div
-            animate={{
-              y: [-15, 50],
-              rotate: [0, 360],
-            }}
-            transition={{
-              y: {
-                duration: 20 + i * 0.3,
-                repeat: Infinity,
-                repeatType: 'reverse',
-                ease: 'easeInOut',
-              },
-              rotate: {
-                duration: 25,
-                repeat: Infinity,
-                ease: 'linear',
-              },
-            }}
-          >
-            {i % 2 === 0 ? (
-              <VirusSVG
-                id={`virus-${i}`}
-                type="virus"
-                position={{ x: 0, y: 0 }}
-                size={{ width: svgSize.width, height: svgSize.height }}
-                velocity={{ x: -100, y: 100 }}
-                radius={svgSize.width / 2}
-                color="#a66ca6"
-              />
-            ) : (
-              <BacteriaSVG
-                id={`bacteria-${i}`}
-                type="bacteria"
-                position={{ x: 0, y: 0 }}
-                size={{ width: svgSize.width * 1.4, height: svgSize.height * 1.4 }}
-                velocity={{ x: 0, y: 0 }}
-                radius={svgSize.width * 0.7}
-                color="#82a61e"
-              />
-            )}
-          </motion.div>
-        </motion.div>
-      ))}
     </motion.div>
   )
 }

@@ -1,6 +1,6 @@
 'use client'
 
-import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/nextjs'
+import { Show, SignInButton, useUser } from '@clerk/nextjs';
 import SubmitButton from '@/components/SubmitButton'
 import { useActionState } from 'react'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
@@ -38,8 +38,8 @@ export default function ContactForm() {
 
   return (
     <>
-      <SignedIn>
-        <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-4 xs:p-8">
+      <Show when="signed-in">
+        <div className="bg-white bg-opacity-90 rounded-2xl shadow-xl p-4 xs:p-8">
           <form className="flex flex-col gap-4" action={action}>
             <div>
               <Label htmlFor="email" label="Email" className="text-zinc-600" />
@@ -69,9 +69,9 @@ export default function ContactForm() {
             {noScriptFallback}
           </form>
         </div>
-      </SignedIn>
-      <SignedOut>
-        <div className="h-[400px] backdrop-blur-md border border-zinc-700 bg-zinc-900 rounded-lg p-4 xs:p-8 mt-6">
+      </Show>
+      <Show when="signed-out">
+        <div className="h-[400px] backdrop-blur-sm border border-zinc-700 bg-zinc-900 rounded-2xl p-4 xs:p-8 mt-6">
           <div className="flex flex-col items-center justify-center gap-6 text-center h-full">
             <p className="text-zinc-400">Aby skontaktować się z nami, musisz być zalogowany do swojego konta</p>
             <SignInButton mode="modal">
@@ -87,7 +87,7 @@ export default function ContactForm() {
             </Link>
           </p>
         </div>
-      </SignedOut>
+      </Show>
     </>
-  )
+  );
 }
