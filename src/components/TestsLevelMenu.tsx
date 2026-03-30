@@ -39,7 +39,7 @@ export default function TestsLevelMenu({ isLoading, allQuestions, onSelectQuesti
 
   return (
     <div className="w-full max-w-7xl mx-auto">
-      <div className="flex flex-col gap-6 rounded-2xl border bg-zinc-800/30 backdrop-blur-md border-zinc-600/20 shadow-md p-2 xs:p-4 sm:p-8">
+      <div className="flex flex-col gap-6 rounded-2xl border bg-white border-zinc-200/60 shadow-sm p-2 xs:p-4 sm:p-8">
         <div className="flex justify-center">
           <div className="inline-flex p-1 gap-1 bg-zinc-100 rounded-lg">
             <button

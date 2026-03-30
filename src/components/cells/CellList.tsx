@@ -8,25 +8,22 @@ import { useRagStore } from '@/store/useRagStore'
 
 export default function CellList({ isPremium = false }: { isPremium?: boolean }) {
   const { data, order, insertCellAfter, updateCell } = useCellsStore()
-  const { pendingTopic, setPendingTopic } = useRagStore()
+  const { pendingTopic, setPendingTopic, setPendingAutoSubmitCellId } = useRagStore()
 
   useEffect(() => {
     if (pendingTopic) {
-      // Insert new RAG cell at the top
       insertCellAfter(null, 'rag')
 
-      // Get the newly created cell id (it will be first in order)
       const newCellId = useCellsStore.getState().order[0]
 
       if (newCellId) {
-        // Update the cell content with the pending topic
         updateCell(newCellId, pendingTopic)
+        setPendingAutoSubmitCellId(newCellId)
       }
 
-      // Clear the pending topic
       setPendingTopic(null)
     }
-  }, [pendingTopic, insertCellAfter, updateCell, setPendingTopic])
+  }, [pendingTopic, insertCellAfter, updateCell, setPendingTopic, setPendingAutoSubmitCellId])
 
   return (
     <div className="w-full">

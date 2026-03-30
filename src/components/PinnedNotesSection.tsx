@@ -24,7 +24,7 @@ export default function PinnedNotesSection({ pinnedNotes }: PinnedNotesSectionPr
   }
 
   return (
-    <div className="pr-3 pl-6 py-6 max-h-[70vh] overflow-y-auto scrollbar-webkit">
+    <div className="p-4 max-h-[70vh] overflow-y-auto scrollbar-webkit">
       <div className="space-y-3">
         {pinnedNotes.map((note, index) => (
           <PinnedNoteCard

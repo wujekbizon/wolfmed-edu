@@ -1155,6 +1155,39 @@ export const getLastUserCommentTime = cache(
   }
 )
 
+// Get user's last forum post (full record)
+export const getLastUserForumPost = cache(
+  async (userId: string): Promise<{ id: string; title: string; createdAt: Date } | null> => {
+    const [lastPost] = await db
+      .select({ id: forumPosts.id, title: forumPosts.title, createdAt: forumPosts.createdAt })
+      .from(forumPosts)
+      .where(eq(forumPosts.authorId, userId))
+      .orderBy(desc(forumPosts.createdAt))
+      .limit(1)
+
+    return lastPost ?? null
+  }
+)
+
+// Get user's last forum comment (full record)
+export const getLastUserForumComment = cache(
+  async (userId: string): Promise<{ id: string; content: string; createdAt: Date; postId: string } | null> => {
+    const [lastComment] = await db
+      .select({
+        id: forumComments.id,
+        content: forumComments.content,
+        createdAt: forumComments.createdAt,
+        postId: forumComments.postId,
+      })
+      .from(forumComments)
+      .where(eq(forumComments.authorId, userId))
+      .orderBy(desc(forumComments.createdAt))
+      .limit(1)
+
+    return lastComment ?? null
+  }
+)
+
 // Get stripe support payments
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()

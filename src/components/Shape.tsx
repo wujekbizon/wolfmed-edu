@@ -17,20 +17,20 @@ export function Shape({ width, height, left, top, duration, index, color }: Shap
   return (
     <motion.div
       // @ts-ignore
-      className={`absolute rounded-full backdrop-blur-sm border border-black/10 ${color}`}
+      className={`absolute rounded-full backdrop-blur-sm border border-black/25 ${color}`}
       style={{
         width,
         height,
         left,
         top,
-        boxShadow: '0 0 15px rgba(0,0,0,0.05)'
+        boxShadow: '0 0 15px rgba(0,0,0,0.10)'
       }}
      
       animate={longDriftAnimation(
-        200,   // max drift horizontally
-        200,   // max drift vertically
-        15,    // subtle rotation
-        0.03, // small breathing
+        60,    // max drift horizontally
+        60,    // max drift vertically
+        5,     // subtle rotation
+        0.03,  // small breathing
         duration // <- will be around 10–20s per shape
       ) as any}
     />

@@ -7,6 +7,7 @@ interface StateType {
   testIdToDelete: string | null
   toggleMenu: () => void
   toggleSidePanel: () => void
+  closeSidePanel: () => void
   openDeleteModal: (testId: string | null) => void
   closeDeleteModal: () => void
 }
@@ -18,6 +19,7 @@ export const useStore = create<StateType>((set) => ({
   testIdToDelete: null,
   toggleMenu: () => set((state: StateType) => ({ isMenuOpen: !state.isMenuOpen })),
   toggleSidePanel: () => set((state: StateType) => ({ isSidePanelOpen: !state.isSidePanelOpen })),
+  closeSidePanel: () => set({ isSidePanelOpen: false }),
   openDeleteModal: (testId: string | null) => set(() => ({ isDeleteModalOpen: true, testIdToDelete: testId })),
   closeDeleteModal: () => set(() => ({ isDeleteModalOpen: false, testIdToDelete: null })),
 }))

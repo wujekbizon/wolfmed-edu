@@ -13,7 +13,7 @@ export default async function BadgeWidget() {
 
   return (
     <section className="relative w-full">
-      <div className="bg-gradient-to-br from-white/25 via-white/35 to-white/25 backdrop-blur-xl border border-white/50 rounded-2xl p-6 shadow-lg hover:shadow-xl hover:border-white/70 hover:from-white/30 hover:via-white/40 hover:to-white/30 transition-all duration-300">
+      <div className="bg-white border border-zinc-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
 
         <header className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-slate-900">Zdobyte odznaki</h2>
@@ -61,7 +61,7 @@ export default async function BadgeWidget() {
                     } as React.CSSProperties
                   }
                 >
-                  <div className="relative w-full aspect-square rounded-xl bg-gradient-to-br from-white/40 via-white/60 to-white/40 backdrop-blur-md border-2 border-white/60 p-2.5 shadow-md overflow-hidden transition-all duration-300 ease-out group-hover/badge:shadow-xl group-hover/badge:border-[#ff9898]/60 group-hover/badge:from-white/50 group-hover/badge:via-white/70 group-hover/badge:to-white/50 group-hover/badge:scale-[1.02] group-active/badge:scale-[0.98] group-active/badge:shadow-sm">
+                  <div className="relative w-full aspect-square rounded-xl bg-white border-2 border-zinc-200 p-2.5 shadow-sm overflow-hidden transition-all duration-300 ease-out group-hover/badge:shadow-md group-hover/badge:border-[#ff9898]/60 group-hover/badge:scale-[1.02] group-active/badge:scale-[0.98] group-active/badge:shadow-sm">
                     <div className="absolute inset-0 bg-gradient-to-br from-[#f58a8a]/0 to-[#ffc5c5]/0 group-hover/badge:from-[#f58a8a]/10 group-hover/badge:to-[#ffc5c5]/10 transition-all duration-300 rounded-lg" />
                     <Image
                       src={badge.badgeImageUrl}

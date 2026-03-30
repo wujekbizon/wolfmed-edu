@@ -1,6 +1,5 @@
 import '@/styles/globals.css'
-import "@excalidraw/excalidraw/index.css";
-
+import '@excalidraw/excalidraw/index.css'
 
 import type { Metadata } from 'next'
 import { Poppins } from 'next/font/google'
@@ -15,13 +14,14 @@ import GoogleAnalytics from './_components/GoogleAnalytics'
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['200','400', '600', '800'],
+  weight: ['200', '400', '600', '800']
 })
 
 export const metadata: Metadata = {
   title: 'Wolfmed Edukacja - Innowacyjna platforma edukacyjna',
   description: 'Edukacja medyczna, testy opiekuna medycznego i kursy',
-  keywords: 'edukacja, opiekun, testy, kursy, egzamin, szkolenie-zawodowe, medyczna',
+  keywords:
+    'edukacja, opiekun, testy, kursy, egzamin, szkolenie-zawodowe, medyczna',
   authors: { name: 'WESA', url: 'https://wesa.vercel.app/' },
   creator: 'WESA',
   category: 'education',
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
       noimageindex: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+      'max-snippet': -1
+    }
   },
   openGraph: {
     title: 'Wolfmed Edukacja',
@@ -44,23 +44,23 @@ export const metadata: Metadata = {
     url: 'https://wolfmed-edukacja.pl/',
     siteName: 'Wolfmed Edukacja',
     locale: 'pl_PL',
-    type: 'website',
-  },
+    type: 'website'
+  }
 }
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProviderWrapper>
-      <html lang="pl">
-        <head>
-          <link rel="canonical" href="https://wolfmed-edukacja.pl/" />
-          <GoogleAnalyticsHead />
-        </head>
-        <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
+    <html lang='pl'>
+      <head>
+        <link rel='canonical' href='https://wolfmed-edukacja.pl/' />
+        <GoogleAnalyticsHead />
+      </head>
+      <body className={`${poppins.className} bg-[#fcf2f1] scrollbar-webkit`}>
+        <ClerkProviderWrapper>
           <GoogleAnalyticsNoscript />
           <GoogleAnalytics />
           <main>
@@ -70,8 +70,8 @@ export default function RootLayout({
             </Providers>
           </main>
           <CookieConsentBanner />
-        </body>
-      </html>
-    </ClerkProviderWrapper>
+        </ClerkProviderWrapper>
+      </body>
+    </html>
   )
 }

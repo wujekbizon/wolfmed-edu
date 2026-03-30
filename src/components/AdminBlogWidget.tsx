@@ -5,7 +5,7 @@ export default async function AdminBlogWidget() {
   const stats = await getBlogStatistics()
 
   return (
-    <div className="bg-gradient-to-br from-red-50/80 via-white/60 to-red-50/80 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-red-200/60 hover:shadow-lg transition-all duration-300">
+    <div className="bg-zinc-50 border border-zinc-100 p-4 sm:p-6 rounded-xl hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
       <div className="flex items-start justify-between mb-4">
         <div>
           <h3 className="text-lg font-semibold text-zinc-900 mb-1">
@@ -31,21 +31,21 @@ export default async function AdminBlogWidget() {
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-white/80 p-3 rounded-lg">
+        <div className="bg-zinc-50 border border-zinc-100 p-3 rounded-lg">
           <p className="text-xs text-zinc-600 mb-1">Posty</p>
           <p className="text-2xl font-bold text-zinc-900">{stats.totalPosts}</p>
         </div>
-        <div className="bg-white/80 p-3 rounded-lg">
+        <div className="bg-zinc-50 border border-zinc-100 p-3 rounded-lg">
           <p className="text-xs text-zinc-600 mb-1">Wyświetlenia</p>
           <p className="text-2xl font-bold text-zinc-900">
             {stats.totalViews.toLocaleString('pl-PL')}
           </p>
         </div>
-        <div className="bg-white/80 p-3 rounded-lg">
+        <div className="bg-zinc-50 border border-zinc-100 p-3 rounded-lg">
           <p className="text-xs text-zinc-600 mb-1">Opublikowane</p>
           <p className="text-2xl font-bold text-green-600">{stats.publishedPosts}</p>
         </div>
-        <div className="bg-white/80 p-3 rounded-lg">
+        <div className="bg-zinc-50 border border-zinc-100 p-3 rounded-lg">
           <p className="text-xs text-zinc-600 mb-1">Szkice</p>
           <p className="text-2xl font-bold text-yellow-600">{stats.draftPosts}</p>
         </div>

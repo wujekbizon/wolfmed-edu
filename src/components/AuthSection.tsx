@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs'
+import { Show, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
 import { AuthButton } from './AuthButton'
 
 import LoginIcon from './icons/LoginIcon'
@@ -17,7 +17,7 @@ export default function AuthSection() {
   }
   return (
     <>
-      <SignedOut>
+      <Show when="signed-out">
         <div className="flex gap-2">
           <SignInButton mode="modal">
             <AuthButton>
@@ -25,8 +25,8 @@ export default function AuthSection() {
             </AuthButton>
           </SignInButton>
         </div>
-      </SignedOut>
-      <SignedIn>
+      </Show>
+      <Show when="signed-in">
         <div className="w-[130px] flex justify-end">
           <UserButton
             afterSwitchSessionUrl="/"
@@ -40,7 +40,7 @@ export default function AuthSection() {
             }}
           />
         </div>
-      </SignedIn>
+      </Show>
     </>
-  )
+  );
 }

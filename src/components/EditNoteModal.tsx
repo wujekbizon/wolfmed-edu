@@ -28,7 +28,7 @@ export default function EditNoteModal({ noteId, initialContent, onClose }: EditN
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
 
   useEffect(() => {
-    if (initialContent && contentRef.current) {
+    if (initialContent && contentRef.current && plainTextRef.current && excerptRef.current) {
       const jsonContent = typeof initialContent === 'string'
         ? initialContent
         : JSON.stringify(initialContent)

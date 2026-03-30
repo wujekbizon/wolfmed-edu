@@ -1,7 +1,0 @@
-export * from './entities/BaseBioEntity'
-export * from './entities/Bacteria'
-export * from './entities/Virus'
-export * from './entities/HumanCell'
-export * from './types'
-export * from './constants'
-export * from './BioSimualtion'

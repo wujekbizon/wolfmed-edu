@@ -1,104 +1,159 @@
-import Link from "next/link"
-import { careerPathsData } from "@/constants/careerPathsData"
+import Link from 'next/link'
+import { careerPathsData } from '@/constants/careerPathsData'
+import { BookOpen, Sparkles, ClipboardList, Headphones } from 'lucide-react'
+import { getUserEnrollmentsAction } from '@/actions/course-actions'
 
-export default function UserOnboard() {
+
+const FEATURES = [
+  {
+    icon: <BookOpen className="w-5 h-5" />,
+    label: 'Baza Testów',
+    desc: 'Tysiące pytań egzaminacyjnych',
+    href: '/panel/testy',
+    premium: false,
+  },
+  {
+    icon: <Sparkles className="w-5 h-5" />,
+    label: 'AI Notatnik',
+    desc: 'Ucz się z AI asystentem',
+    href: '/panel/nauka',
+    premium: true,
+  },
+  {
+    icon: <ClipboardList className="w-5 h-5" />,
+    label: 'Procedury',
+    desc: 'Algorytmy i schematy działania',
+    href: '/panel/procedury',
+    premium: false,
+  },
+  {
+    icon: <Headphones className="w-5 h-5" />,
+    label: 'Wykłady AI',
+    desc: 'Słuchaj i ucz się',
+    href: '/panel/nauka/wykladania',
+    premium: true,
+  },
+]
+
+type Enrollments = Awaited<ReturnType<typeof getUserEnrollmentsAction>>['enrollments']
+
+interface UserOnboardProps {
+  enrollments: Enrollments
+}
+
+export default function UserOnboard({ enrollments }: UserOnboardProps) {
+  const premiumSlugs = new Set(
+    enrollments
+      .filter((e) => e.isActive && e.accessTier === 'premium')
+      .map((e) => e.courseSlug)
+  )
+  const hasPremium = premiumSlugs.size > 0
+
   return (
-    <div className="w-full h-full flex justify-between">
-      <div className="h-full p-3 sm:p-8 bg-white rounded-2xl shadow-xl border border-zinc-200/50">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-4 leading-tight">
-            Witamy w naszej społeczności!
-          </h2>
-          <p className="text-base sm:text-lg text-zinc-600 font-light max-w-2xl mx-auto">
-            Twoja podróż do profesjonalnej edukacji medycznej zaczyna się tutaj.
-            Z darmowym dostępem do ścieżki
-            <span className="font-semibold text-slate-600">
-              {" "}
-              Opiekuna Medycznego
-            </span>
-            , przygotuj się do egzaminów, poszerz wiedzę i rozwijaj swoje
-            umiejętności z naszą aplikacją.
-          </p>
-        </div>
-        <div className="mb-10">
-          <h3 className="text-lg sm:text-xl font-semibold text-zinc-800 text-center mb-6">
-            Dostępne ścieżki rozwoju
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {Object.entries(careerPathsData).map(([slug, path]) => (
+    <div className="h-full p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
+      {/* Heading */}
+      <div className="text-center pt-2">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
+          Twoja nauka, Twoje tempo.
+        </h2>
+        <p className="text-base text-zinc-400 max-w-xl mx-auto leading-relaxed">
+          Wybierz kierunek, kup dostęp i ucz się w swoim tempie.
+          Bez subskrypcji — płacisz tylko za to, czego potrzebujesz.
+        </p>
+      </div>
+
+      {/* Feature Discovery Grid */}
+      <div>
+        <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
+          Co oferuje platforma
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          {FEATURES.map((feature) => {
+            const locked = feature.premium && !hasPremium
+            return (
               <Link
-                href={`/kierunki/${slug}`}
-                key={slug}
-                className="block relative min-h-[250px]"
+                key={feature.href}
+                href={locked ? '#' : feature.href}
+                className={`relative flex flex-col gap-2 p-4 border rounded-xl transition-all duration-200 group ${
+                  locked
+                    ? 'bg-zinc-50 border-zinc-100 shadow-sm opacity-50 cursor-not-allowed pointer-events-none'
+                    : 'bg-zinc-50 border-zinc-100 shadow-sm hover:bg-white hover:border-zinc-200 hover:shadow-md'
+                }`}
               >
-                <div
-                  className={`p-6 rounded-2xl shadow-md transition-all duration-300 h-full flex flex-col justify-between relative ${slug === "opiekun-medyczny"
-                    ? "bg-white border border-zinc-900/15 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-lg"
-                    : "bg-white border border-gray-200"
-                    }`}
-                >
-                  {slug === "opiekun-medyczny" && (
-                    <span className="absolute top-1 right-1 bg-slate-950 text-white text-xs font-bold px-3 py-1 rounded-full animate-bounce-custom">
-                      Darmowy Plan!
-                    </span>
-                  )}
-                  <div className="relative z-10">
-                    <h4 className={`text-lg font-semibold ${slug === "opiekun-medyczny"} mb-2`}>
-                      {path.title}
-                    </h4>
-                    <p className="text-sm text-zinc-600 mb-4">
-                      {path.description}
-                    </p>
-                  </div>
-                  <span className="text-zinc-400 font-medium text-sm group-hover:underline mt-4 block relative z-10">
-                    Zobacz więcej &rarr;
+                {feature.premium && (
+                  <span
+                    className="absolute top-2 right-2 text-[10px] font-bold px-2 py-0.5 rounded-full border"
+                    style={{ color: '#f65555', backgroundColor: '#fff0f0', borderColor: '#f6555533' }}
+                  >
+                    Premium
                   </span>
-
-                  {slug !== "opiekun-medyczny" && (
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center rounded-2xl bg-slate-900/70 pointer-events-none">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8 text-white mb-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 15v2m0-6v.01M7 10V7a5 5 0 0110 0v3m-5 5h.01"
-                        />
-                      </svg>
-                      <span className="text-white text-sm font-bold text-center px-3 py-1 bg-gray-800/70 rounded-lg">
-                        Dostępne w Płatnym Planie
-                      </span>
-                    </div>
-                  )}
-                </div>
+                )}
+                <span className={`transition-colors ${locked ? 'text-zinc-400' : 'text-zinc-400 group-hover:text-[#f65555]'}`}>
+                  {feature.icon}
+                </span>
+                <span className={`text-sm font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
+                  {feature.label}
+                </span>
+                <span className={`text-xs ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                  {feature.desc}
+                </span>
               </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 text-center border-t border-zinc-200 pt-8">
-          <p className="text-base text-zinc-700 mb-4 max-w-2xl mx-auto">
-            Pamiętaj, że możesz zaktualizować swoją nazwę użytkownika i motto
-            nauki w dowolnym momencie w
-            <Link
-              href="/panel"
-              className="text-slate-800 hover:underline font-medium ml-1"
-            >
-              Panelu Użytkownika
-            </Link>
-            . Tutaj również znajdziesz najnowsze aktualizacje, wiadomości i
-            odliczanie do najbliższej sesji egzaminacyjnej!
-          </p>
-          <p className="text-base text-red-600 font-semibold mb-6">
-            Zespół Wolfmed-Edukacja
-          </p>
+            )
+          })}
         </div>
       </div>
+
+      {/* Course Marketplace Cards */}
+      <div>
+        <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
+          Dostępne kierunki
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {Object.entries(careerPathsData).map(([slug, path]) => {
+            const hasAccess = premiumSlugs.has(slug)
+            return (
+              <div
+                key={slug}
+                className="flex flex-col justify-between px-5 py-6 bg-white border border-zinc-100 rounded-xl shadow-sm hover:border-zinc-200 hover:shadow-md transition-all duration-200"
+              >
+                <div className="mb-4">
+                  <h4 className="text-sm font-semibold text-zinc-800 mb-2">
+                    {path.title}
+                  </h4>
+                  <p className="text-xs text-zinc-400 leading-relaxed">
+                    {path.description}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-medium text-zinc-400 border border-zinc-200 rounded-full px-2 py-0.5">
+                    Basic
+                  </span>
+                  <span
+                    className="text-[10px] font-medium border rounded-full px-2 py-0.5"
+                    style={{ color: '#f65555', borderColor: '#f6555533' }}
+                  >
+                    Premium
+                  </span>
+                  {hasAccess ? (
+                    <span className="ml-auto text-xs font-semibold text-zinc-400 cursor-default">
+                      Masz dostęp ✓
+                    </span>
+                  ) : (
+                    <Link
+                      href={`/kierunki/${slug}`}
+                      className="ml-auto text-xs font-semibold transition-colors"
+                      style={{ color: '#f65555' }}
+                    >
+                      Kup dostęp →
+                    </Link>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
     </div>
   )
 }

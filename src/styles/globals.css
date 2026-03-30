@@ -24,10 +24,10 @@
   --border: 240 5.9% 90%;
   --input: 240 10% 16%;
   --ring: 240 10% 3.9%;
-  --slidein-delay: 0;
+  --slidein-delay: 0s;
   --radius: 0.5rem;
-  --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0) forwards;
-  --animate-fadeInUp: fadeInUp 0.5s ease-out forwards;
+  --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0s) forwards;
+  --animate-fadeInUp: fadeInUp 0.5s ease-out var(--slidein-delay, 0s) forwards;
   --animate-scaleIn: scaleIn 0.5s ease-out forwards;
   --animate-gradient: gradient 8s ease-in-out infinite alternate;
   --animate-gradientPosition: gradientPosition 30s ease-in-out infinite;
@@ -38,6 +38,8 @@
   --animate-slideInUp: slideInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
   --animate-slideInRight: slideInRight 0.5s ease-out forwards;
   --animate-shake: shake 0.5s ease-in-out;
+  --animate-bounceIn: bounceIn 1.5s both;
+  --animate-rubberBand: rubberBand 1.2s;
 
   @keyframes shake {
     0%, 100% { transform: translateX(0); }
@@ -143,6 +145,30 @@
   
 }
 
+/* bounceIn and rubberBand must live in the global scope so they are
+   always emitted by Tailwind — inline animation: strings bypass
+   Tailwind's class-scan and would be tree-shaken if kept inside @theme */
+@keyframes bounceIn {
+  from, 20%, 40%, 60%, 80%, to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0%  { opacity: 0; transform: scale3d(0.3, 0.3, 0.3); }
+  20% { transform: scale3d(1.1, 1.1, 1.1); }
+  40% { transform: scale3d(0.9, 0.9, 0.9); }
+  60% { opacity: 1; transform: scale3d(1.03, 1.03, 1.03); }
+  80% { transform: scale3d(0.97, 0.97, 0.97); }
+  to  { opacity: 1; transform: scale3d(1, 1, 1); }
+}
+
+@keyframes rubberBand {
+  from { transform: scale3d(1, 1, 1); }
+  30%  { transform: scale3d(1.25, 0.75, 1); }
+  40%  { transform: scale3d(0.75, 1.25, 1); }
+  50%  { transform: scale3d(1.15, 0.85, 1); }
+  65%  { transform: scale3d(0.95, 1.05, 1); }
+  75%  { transform: scale3d(1.05, 0.95, 1); }
+  to   { transform: scale3d(1, 1, 1); }
+}
 
 @layer utilities {
   .scrollbar-thin {
