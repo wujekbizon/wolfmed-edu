@@ -2,11 +2,12 @@ import { Suspense } from 'react'
 import { currentUser } from '@clerk/nextjs/server'
 import { getAllUserNotes } from '@/server/queries'
 import SidePanel from '@/app/_components/SidePanel'
-import TopPanel from '@/components/TopPanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
 import ConfirmModal from '@/components/ConfirmModal'
+
 import type { NotesType } from '@/types/notesTypes'
+import SettingsModal from '@/components/SettingsModal'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser()
@@ -15,20 +16,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
   const pinnedCount = notes.filter((n) => n.pinned).length
 
   return (
-    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-white">
-      <SidePanel />
+    <main className="flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50">
+      <SidePanel pinnedCount={pinnedCount}>
+        <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
+          <PinnedNotesFeature pinnedNotes={pinnedNotes} />
+        </Suspense>
+      </SidePanel>
       <div id="scroll-container" className="flex-1 overflow-y-scroll scrollbar-webkit">
-        <TopPanel pinnedCount={pinnedCount}>
-          <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
-            <PinnedNotesFeature pinnedNotes={pinnedNotes} />
-          </Suspense>
-        </TopPanel>
         <div className="py-10">
           {children}
         </div>
       </div>
       <ConfirmModal />
+      <SettingsModal />
     </main>
   )
 }
-
