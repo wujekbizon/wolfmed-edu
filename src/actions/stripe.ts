@@ -15,7 +15,7 @@ export async function createCheckoutSession(formData: FormData): Promise<void> {
   }
 
   let priceId: string | undefined
-  if (productId === 'premium') {
+  if (productId === 'standard') {
     priceId = process.env.STRIPE_PRICE_ID
   } else if (productId === 'basic') {
     priceId = process.env.STRIPE_BASIC_PRICE_ID
