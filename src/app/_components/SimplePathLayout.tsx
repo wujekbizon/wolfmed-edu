@@ -1,13 +1,14 @@
 'use client'
 
-import { PathData } from '@/types/careerPathsTypes'
-import TestsSelection from '@/app/_components/TestsSelection'
-import SimplePathCard from '@/components/SimplePathCard'
-import GradientOverlay from '@/components/GradientOverlay'
-import TriangleDivider from '@/components/TriangleDivider'
-import Image from 'next/image'
-import Link from 'next/link'
-import { useInView } from 'react-intersection-observer'
+import { PathData } from "@/types/careerPathsTypes";
+import TestsSelection from "@/app/_components/TestsSelection";
+import SimplePathCard from "@/components/SimplePathCard";
+import GradientOverlay from "@/components/GradientOverlay";
+import TriangleDivider from "@/components/TriangleDivider";
+import Image from "next/image";
+import Link from "next/link";
+import { useInView } from "react-intersection-observer";
+import CoursePricingCard from "@/components/CoursePricingCard";
 
 export default function SimplePathLayout({
   features,
@@ -184,64 +185,30 @@ export default function SimplePathLayout({
             >
               Plany cenowe
             </h2>
-            <p className='mt-3 text-zinc-600 text-base md:text-lg'>
-              Wybierz plan dopasowany do Twoich potrzeb.
+            <p className="mt-3 text-zinc-600 text-base md:text-lg">
+              Jednorazowa płatność. Dostęp na zawsze.
             </p>
           </header>
-          <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch'>
-            {Object.entries(pricing || {}).map(
-              ([plan, { price, features }]) => {
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
+            {Object.entries(pricing || {})
+              .filter(([key]) => key !== 'courseSlug')
+              .map(([tierName, tierData]) => {
+                const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
+                const isPremium = tierName.toLowerCase().includes('premium')
                 return (
-                  <article key={plan} className='h-full'>
-                    <div className='h-full min-h-[480px] md:min-h-[560px] flex flex-col rounded-3xl p-6 sm:p-8 md:p-10 transition-all duration-300 bg-white ring-1 ring-zinc-200 shadow-sm hover:shadow-md hover:-translate-y-0.5'>
-                      <span className='self-end mb-2 text-[11px] md:text-xs font-semibold uppercase tracking-wide px-3 py-1.5 rounded-full bg-slate-900/5 text-slate-700'>
-                        Dostęp podstawowy
-                      </span>
-                      <h3 className='text-xl md:text-2xl font-extrabold mb-2 text-slate-900'>
-                        {plan}
-                      </h3>
-                      <p className='text-3xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight text-slate-700'>
-                        {price}
-                      </p>
-                      <ul className='grow space-y-3 md:space-y-4 text-left w-full max-w-sm text-zinc-700'>
-                        {features.map((feature, i) => (
-                          <li
-                            key={i}
-                            className='flex items-start gap-3 text-sm md:text-base leading-relaxed'
-                          >
-                            <svg
-                              className='mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500'
-                              fill='none'
-                              stroke='currentColor'
-                              strokeWidth='2'
-                              viewBox='0 0 24 24'
-                              aria-hidden='true'
-                              xmlns='http://www.w3.org/2000/svg'
-                            >
-                              <path
-                                strokeLinecap='round'
-                                strokeLinejoin='round'
-                                d='M5 13l4 4L19 7'
-                              />
-                            </svg>
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <div className='mt-auto w-full pt-6 md:pt-8'>
-                        <Link
-                          href='/wsparcie-projektu'
-                          className='inline-flex w-full items-center justify-center rounded-xl px-5 py-3.5
-                          font-semibold transition-colors duration-200 bg-slate-700 text-white hover:bg-slate-800'
-                        >
-                          Rozpocznij naukę
-                        </Link>
-                      </div>
-                    </div>
-                  </article>
+                  <CoursePricingCard
+                    key={tierName}
+                    tierName={tierName}
+                    price={tier.price}
+                    priceId={tier.priceId}
+                    courseSlug={pricing?.courseSlug || ''}
+                    accessTier={tier.accessTier}
+                    features={tier.features}
+                    isPremium={isPremium}
+                    {...(tier.badge ? { badge: tier.badge } : {})}
+                  />
                 )
-              }
-            )}
+              })}
           </div>
         </div>
       </section>
