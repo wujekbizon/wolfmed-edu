@@ -49,7 +49,7 @@ async function getClerkUser(userId: string) {
   return res.json()
 }
 
-async function updateClerkMetadata(userId: string, ownedCourses: string[]) {
+async function updateClerkMetadata(userId: string, existingMeta: Record<string, unknown>, ownedCourses: string[]) {
   const res = await fetch(`https://api.clerk.com/v1/users/${userId}`, {
     method: 'PATCH',
     headers: {
@@ -57,7 +57,7 @@ async function updateClerkMetadata(userId: string, ownedCourses: string[]) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      public_metadata: { ownedCourses },
+      public_metadata: { ...existingMeta, ownedCourses },
     }),
   })
   if (!res.ok) throw new Error(`Clerk updateUser failed: ${res.status}`)
@@ -84,7 +84,8 @@ async function syncClerkMetadata() {
         continue
       }
 
-      const currentCourses: string[] = clerkUser.public_metadata?.ownedCourses ?? []
+      const existingMeta: Record<string, unknown> = clerkUser.public_metadata ?? {}
+      const currentCourses: string[] = (existingMeta.ownedCourses as string[]) ?? []
       const alreadyCorrect =
         JSON.stringify([...currentCourses].sort()) === JSON.stringify([...ownedCourses].sort())
 
@@ -94,7 +95,7 @@ async function syncClerkMetadata() {
         continue
       }
 
-      await updateClerkMetadata(userId, ownedCourses)
+      await updateClerkMetadata(userId, existingMeta, ownedCourses)
       console.log(`✓  ${userId} — ownedCourses: [${ownedCourses.join(', ') || 'none'}]`)
       updated++
     } catch (err) {
