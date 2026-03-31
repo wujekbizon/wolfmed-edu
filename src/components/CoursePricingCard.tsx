@@ -104,7 +104,7 @@ export default function CoursePricingCard({
             <input type="hidden" name="courseSlug" value={courseSlug} />
             <input type="hidden" name="accessTier" value={accessTier} />
             <SubmitButton
-              label="Kup teraz"
+              label={courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium) ? 'Wkrótce Dostępne' : 'Kup teraz'}
               loading="Przekierowywanie..."
               disabled={courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium)}
               className={`
