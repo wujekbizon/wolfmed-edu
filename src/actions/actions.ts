@@ -831,7 +831,10 @@ export async function createTestAction(
 
     await db.insert(userCustomTests).values({
       userId: user.userId,
-      category: category.toLowerCase(),
+      meta: {
+        category: category.toLowerCase(),
+        course: "kategoria-wlasna"
+      },
       data
     })
   } catch (error) {
@@ -917,8 +920,8 @@ export async function uploadTestsFromFile(
       const insertPromises = validatedData.map((testData) =>
         tx.insert(userCustomTests).values({
           userId: user.userId,
-          category: testData.category.toLowerCase(),
-          data: testData.data
+          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+          data: testData.data,
         })
       )
       await Promise.all(insertPromises)

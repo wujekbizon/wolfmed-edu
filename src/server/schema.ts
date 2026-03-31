@@ -183,7 +183,10 @@ export const TestFileSchema = z.array(
         .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
         .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
     }),
-    category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
+    meta: z.object({
+      course: z.string().min(1, { message: "Pole kursu jest wymagane" }),
+      category: z.string().min(1, { message: "Pole kategorii jest wymagane" }),
+    }),
   })
 );
 
