@@ -31,6 +31,12 @@ interface TestRecord {
 
 const BATCH_SIZE = 100
 
+function isValidDate(val: string | null | undefined): boolean {
+  if (!val) return false
+  const d = new Date(val)
+  return !isNaN(d.getTime()) && d.getMonth() >= 0 && d.getMonth() <= 11
+}
+
 async function main() {
   const dbUrl = process.env.NEON_DATABASE_URL
   if (!dbUrl) throw new Error('NEON_DATABASE_URL is not set')
@@ -70,14 +76,17 @@ async function main() {
     const batch = pielTests.slice(i, i + BATCH_SIZE)
 
     for (const t of batch) {
+      const createdAt = isValidDate(t.createdAt) ? t.createdAt : new Date().toISOString()
+      const updatedAt = isValidDate(t.updatedAt) ? t.updatedAt : null
+
       const result = await sql`
         INSERT INTO wolfmed_tests (id, meta, data, "createdAt", "updatedAt")
         VALUES (
           ${t.id}::uuid,
           ${JSON.stringify(t.meta)}::jsonb,
           ${JSON.stringify(t.data)}::jsonb,
-          ${t.createdAt ?? new Date().toISOString()},
-          ${t.updatedAt ?? null}
+          ${createdAt},
+          ${updatedAt}
         )
         ON CONFLICT (id) DO NOTHING
         RETURNING id
