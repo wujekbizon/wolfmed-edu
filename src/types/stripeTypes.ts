@@ -4,6 +4,7 @@ interface BasePayment {
   currency: 'pln' | 'usd' | 'eur' | null
   customerEmail: string
   paymentStatus: string
+  courseSlug?: string | null
   createdAt: Date
 }
 
