@@ -33,8 +33,10 @@ const BATCH_SIZE = 100
 
 function isValidDate(val: string | null | undefined): boolean {
   if (!val) return false
+  // Reject dates with month 0 in string form (e.g. "2026-0-11") — invalid in SQL
+  if (/\d{4}-0-\d/.test(val)) return false
   const d = new Date(val)
-  return !isNaN(d.getTime()) && d.getMonth() >= 0 && d.getMonth() <= 11
+  return !isNaN(d.getTime())
 }
 
 async function main() {
