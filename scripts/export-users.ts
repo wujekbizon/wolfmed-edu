@@ -8,7 +8,7 @@
  *   npx tsx scripts/export-users.ts
  *
  * Requires in .env.local:
- *   DATABASE_URL=
+ *   NEON_DATABASE_URL=
  */
 
 import 'dotenv/config'
@@ -16,10 +16,10 @@ import postgres from 'postgres'
 import fs from 'fs'
 import path from 'path'
 
-const DATABASE_URL = process.env.DATABASE_URL
+const DATABASE_URL = process.env.NEON_DATABASE_URL
 
 if (!DATABASE_URL) {
-  console.error('Error: DATABASE_URL is not set.')
+  console.error('Error: NEON_DATABASE_URL is not set.')
   process.exit(1)
 }
 
