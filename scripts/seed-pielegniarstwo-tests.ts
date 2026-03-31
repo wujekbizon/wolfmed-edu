@@ -84,9 +84,10 @@ async function main() {
       const updatedAt = normalizeDate(t.updatedAt)
 
       const result = await sql`
-        INSERT INTO wolfmed_tests (id, meta, data, "createdAt", "updatedAt")
+        INSERT INTO wolfmed_tests (id, category, meta, data, "createdAt", "updatedAt")
         VALUES (
           ${t.id}::uuid,
+          ${t.meta.category},
           ${JSON.stringify(t.meta)}::jsonb,
           ${JSON.stringify(t.data)}::jsonb,
           ${createdAt},
