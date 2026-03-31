@@ -31,12 +31,14 @@ interface TestRecord {
 
 const BATCH_SIZE = 100
 
-function isValidDate(val: string | null | undefined): boolean {
-  if (!val) return false
-  // Reject dates with month 0 in string form (e.g. "2026-0-11") — invalid in SQL
-  if (/\d{4}-0-\d/.test(val)) return false
-  const d = new Date(val)
-  return !isNaN(d.getTime())
+function normalizeDate(val: string | null | undefined): string | null {
+  if (!val) return null
+  // Reject month=0 dates (e.g. "2026-0-11 ...") — invalid in SQL
+  if (/^\d{4}-0-/.test(val)) return null
+  // Normalize "YYYY-MM-DD HH:mm:ss.ffffff" → "YYYY-MM-DDTHH:mm:ss.sssZ"
+  const normalized = val.replace(' ', 'T').replace(/(\.\d{3})\d*$/, '$1')
+  const d = new Date(normalized)
+  return isNaN(d.getTime()) ? null : d.toISOString()
 }
 
 async function main() {
@@ -78,8 +80,8 @@ async function main() {
     const batch = pielTests.slice(i, i + BATCH_SIZE)
 
     for (const t of batch) {
-      const createdAt = isValidDate(t.createdAt) ? t.createdAt : new Date().toISOString()
-      const updatedAt = isValidDate(t.updatedAt) ? t.updatedAt : null
+      const createdAt = normalizeDate(t.createdAt) ?? new Date().toISOString()
+      const updatedAt = normalizeDate(t.updatedAt)
 
       const result = await sql`
         INSERT INTO wolfmed_tests (id, meta, data, "createdAt", "updatedAt")
