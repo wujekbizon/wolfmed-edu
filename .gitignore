@@ -51,4 +51,4 @@ detail_layers.txt
 
 *.sql
 *.toml
-*.local.json
+*.local.jsonscripts/users-export.json
