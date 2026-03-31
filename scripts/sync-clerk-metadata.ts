@@ -63,10 +63,16 @@ async function updateClerkMetadata(userId: string, existingMeta: Record<string, 
   if (!res.ok) throw new Error(`Clerk updateUser failed: ${res.status}`)
 }
 
-async function syncClerkMetadata() {
-  const users: UserExport[] = JSON.parse(fs.readFileSync(exportPath, 'utf-8'))
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-  console.log(`Loaded ${users.length} users from users-export.json`)
+async function syncClerkMetadata() {
+  const allUsers: UserExport[] = JSON.parse(fs.readFileSync(exportPath, 'utf-8'))
+
+  // Skip users who already have courses — they were successfully updated in the previous run
+  const users = allUsers.filter((u) => u.ownedCourses.length === 0)
+
+  console.log(`Loaded ${allUsers.length} users from users-export.json`)
+  console.log(`Processing ${users.length} users without courses (skipping ${allUsers.length - users.length} already enrolled)`)
   console.log('---')
 
   let updated = 0
@@ -104,6 +110,9 @@ async function syncClerkMetadata() {
       console.error(`✗  ${userId} — ${err}`)
       failed++
     }
+
+    // 150ms delay between requests to stay well under Clerk rate limits
+    await delay(150)
   }
 
   console.log('---')
