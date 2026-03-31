@@ -6,6 +6,17 @@ import stripe from '@/lib/stripeClient'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 
+const PRICE_ID_MAP: Record<string, Record<string, string>> = {
+  'opiekun-medyczny': {
+    basic: process.env.STRIPE_OPIEKUN_STANDARD_PRICE_ID || '',
+    premium: process.env.STRIPE_OPIEKUN_PREMIUM_PRICE_ID || '',
+  },
+  pielegniarstwo: {
+    basic: process.env.STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID || '',
+    premium: process.env.STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID || '',
+  },
+}
+
 export async function createCheckoutSession(
   _prevState: FormState,
   formData: FormData
@@ -16,9 +27,10 @@ export async function createCheckoutSession(
       redirect('/sign-in')
     }
 
-    const priceId = formData.get('priceId') as string
     const courseSlug = formData.get('courseSlug') as string
     const accessTier = formData.get('accessTier') as string
+
+    const priceId = PRICE_ID_MAP[courseSlug]?.[accessTier]
 
     if (!priceId) {
       return toFormState('ERROR', 'Brak ID ceny produktu')

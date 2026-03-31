@@ -8,7 +8,6 @@ import SubmitButton from './SubmitButton'
 interface CoursePricingCardProps {
   tierName: string
   price: string
-  priceId: string
   courseSlug: string
   accessTier: string
   features: string[]
@@ -19,7 +18,6 @@ interface CoursePricingCardProps {
 export default function CoursePricingCard({
   tierName,
   price,
-  priceId,
   courseSlug,
   accessTier,
   features,
@@ -100,7 +98,6 @@ export default function CoursePricingCard({
 
         <div className="mt-auto w-full pt-6 md:pt-8">
           <form action={action}>
-            <input type="hidden" name="priceId" value={priceId} />
             <input type="hidden" name="courseSlug" value={courseSlug} />
             <input type="hidden" name="accessTier" value={accessTier} />
             <SubmitButton

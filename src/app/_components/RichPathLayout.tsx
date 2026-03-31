@@ -93,14 +93,13 @@ export default function RichPathLayout({
               {Object.entries(pricing)
                 .filter(([key]) => key !== 'courseSlug')
                 .map(([tierName, tierData]) => {
-                  const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
+                  const tier = tierData as { price: string; accessTier: string; features: string[]; badge?: string }
                   const isPremium = tierName.toLowerCase().includes('premium')
                   return (
                     <CoursePricingCard
                       key={tierName}
                       tierName={tierName}
                       price={tier.price}
-                      priceId={tier.priceId}
                       courseSlug={pricing.courseSlug}
                       accessTier={tier.accessTier}
                       features={tier.features}
