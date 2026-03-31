@@ -86,7 +86,9 @@ async function syncClerkMetadata() {
 
       const existingMeta: Record<string, unknown> = clerkUser.public_metadata ?? {}
       const currentCourses: string[] = (existingMeta.ownedCourses as string[]) ?? []
+      const fieldExists = 'ownedCourses' in existingMeta
       const alreadyCorrect =
+        fieldExists &&
         JSON.stringify([...currentCourses].sort()) === JSON.stringify([...ownedCourses].sort())
 
       if (alreadyCorrect) {
