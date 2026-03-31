@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { isRedirectError } from 'next/dist/client/components/redirect'
 import stripe from '@/lib/stripeClient'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
@@ -60,6 +61,7 @@ export async function createCheckoutSession(
 
     redirect(session.url)
   } catch (error) {
+    if (isRedirectError(error)) throw error
     console.error('Error creating Stripe checkout session:', error)
     return fromErrorToFormState(error)
   }
