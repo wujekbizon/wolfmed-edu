@@ -1,5 +1,3 @@
-import { getUserCustomCategories } from '@/server/queries'
-import { fileData } from '@/server/fetchData'
 import { getPopulatedCategories } from "@/helpers/populateCategories"
 import TabNavigation from "@/components/TabNavigation"
 import CreateTab from "@/components/CreateTab"
@@ -14,10 +12,7 @@ interface Props {
 
 export default async function CreateTestTabs({ userId }: Props) {
 
-  const categories = await getPopulatedCategories(fileData, userId)
-
-  // const userCustomCategories = await getUserCustomCategories(userId)
-  // const allTests = await fileData.mergedGetAllTests(userId)
+  const categories = await getPopulatedCategories()
 
   const tabs = [
     {

@@ -11,12 +11,12 @@ export default function LearningHubDashboard({
   categories,
   notes,
   materials,
-  isSupporter = false,
+  isPremium = false,
 }: {
   categories: PopulatedCategories[];
   notes: NotesType[];
   materials: MaterialsType[];
-  isSupporter?: boolean;
+  isPremium?: boolean;
 }) {
   return (
     <div className="w-full space-y-8">
@@ -31,19 +31,19 @@ export default function LearningHubDashboard({
         <CategoryGrid categories={categories} />
       </div>
       <div className="relative">
-        {!isSupporter && <PremiumLock />}
-        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
+        {!isPremium && <PremiumLock />}
+        <div className={!isPremium ? "opacity-30 pointer-events-none" : ""}>
           <CellList />
         </div>
       </div>
       <div className="relative">
-        {!isSupporter && <PremiumLock />}
-        <div className={!isSupporter ? "opacity-30 pointer-events-none" : ""}>
+        {!isPremium && <PremiumLock />}
+        <div className={!isPremium ? "opacity-30 pointer-events-none" : ""}>
           <NotesSection notes={notes} />
         </div>
       </div>
-      
-      <MaterialsSection materials={materials} isSupporter={isSupporter} />
+
+      <MaterialsSection materials={materials} isSupporter={isPremium} />
     </div>
   );
 }

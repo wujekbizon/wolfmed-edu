@@ -29,8 +29,6 @@ async function EnrolledCourses() {
 
   const enrolledCourses = await getUserEnrolledCourses(user.userId)
 
-  console.log(enrolledCourses)
-
   return <EnrolledCoursesList courses={enrolledCourses} />
 }
 
