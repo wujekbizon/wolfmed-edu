@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
-import { fileData } from '@/server/fetchData'
+import { getProcedureBySlug } from '@/server/queries'
 import ChallengesList from '@/components/ChallengesList'
-import SupporterRequired from '@/components/SupporterRequired'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
+import { Procedure } from '@/types/dataTypes'
 
 export const metadata: Metadata = {
   title: 'Wyzwania Procedury',
@@ -19,13 +19,9 @@ export default async function ChallengePage({ params }: Props) {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  if (!user.supporter) {
-    return <SupporterRequired />
-  }
-
   const { slug } = await params
 
-  const procedure = await fileData.getProcedureBySlug(slug)
+  const procedure = await getProcedureBySlug(slug) as Procedure
 
   if (!procedure) {
     redirect('/panel/procedury')
