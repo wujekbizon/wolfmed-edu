@@ -11,7 +11,7 @@ export default function About() {
       <div className="bg-zinc-900/90 rounded-3xl border border-white/5 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
       <motion.div
         // @ts-ignore
-        className="container max-w-7xl px-4 relative"
+        className="container max-w-7xl px-4 relative "
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
@@ -41,7 +41,7 @@ export default function About() {
               Tworzymy przyszłość edukacji medycznej, łącząc doświadczenie z innowacją
             </motion.p>
           </div>
-          <div className="grid lg:grid-cols-12 gap-8">
+          <div className="h-full grid xl:grid-cols-12 gap-10">
             <AboutCards />
             <TeamSection />
           </div>

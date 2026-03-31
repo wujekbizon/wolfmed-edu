@@ -8,6 +8,7 @@ import ConfirmModal from '@/components/ConfirmModal'
 import SettingsModal from '@/components/SettingsModal'
 import MobileAIFloat from '@/components/MobileAIFloat'
 import type { NotesType } from '@/types/notesTypes'
+import SettingsModal from '@/components/SettingsModal'
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await currentUser()
@@ -33,4 +34,3 @@ export default async function DashboardLayout({ children }: { children: React.Re
     </main>
   )
 }
-

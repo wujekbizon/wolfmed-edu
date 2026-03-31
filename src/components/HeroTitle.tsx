@@ -1,6 +1,8 @@
 'use client'
 import WigglyWord from './WigglyWord'
 
+import WigglyWord from "./WigglyWord"
+
 export default function HeroTitle() {
   return (
     <>

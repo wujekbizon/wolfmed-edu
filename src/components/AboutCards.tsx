@@ -3,14 +3,13 @@
 import { motion } from 'framer-motion'
 import { fadeInUp } from '@/animations/motion'
 import { cards } from '@/constants/aboutCards'
-import Link from 'next/link'
 
 export default function AboutCards() {
   return (
     <motion.div
     // @ts-ignore
       variants={fadeInUp}
-      className="lg:col-span-7 grid sm:grid-cols-2 gap-6"
+      className="xl:col-span-7 h-full grid sm:grid-cols-2 sm:grid-rows-2 gap-6"
     >
       {cards.map((card) => (
         <motion.div
@@ -22,9 +21,9 @@ export default function AboutCards() {
           <div className="flex w-16 h-16 justify-center items-center bg-zinc-900/30 border border-red-400/20 rounded-xl p-3 shadow-md shadow-black/30">
             {card.icon}
           </div>
-          <div>
+          <div className='flex flex-col items-center justify-center'>
             <h3 className="text-lg font-bold text-white mb-2">{card.title}</h3>
-            <p className="text-sm text-zinc-300 leading-relaxed">{card.description}</p>
+            <p className="text-sm text-zinc-300 leading-relaxed text-center">{card.description}</p>
           </div>
         </motion.div>
       ))}
