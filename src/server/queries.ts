@@ -1,6 +1,9 @@
 import "server-only"
 import { db } from "@/server/db/index"
 import {
+  tests,
+  courses,
+  courseEnrollments,
   completedTestes,
   payments,
   subscriptions,
@@ -33,6 +36,7 @@ import {
   BlogTag,
   BlogPostFilters,
   BlogStatistics,
+  Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
 import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
@@ -40,8 +44,7 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
-import { parseLexicalContent } from "@/lib/safeJsonParse"
-import { fileData } from "./fetchData"
+
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -51,9 +54,46 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
   return tests
 })
 
-// ============================================================================
-// USER CUSTOM TESTS QUERIES
-// ============================================================================
+// Get tests filtered by category
+export const getTestsByCategory = cache(async (category: string): Promise<ExtendedTest[]> => {
+  const tests = await db.query.tests.findMany({
+    where: (model) => sql`${model.meta}->>'category' = ${category}`,
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+  return tests
+})
+
+// Get unique categories from tests
+export const getCategories = cache(async (): Promise<{ meta: { category: string; course: string } }[]> => {
+  const tests = await db.query.tests.findMany({
+    columns: {
+      meta: true,
+    },
+  })
+
+  // Extract unique categories
+  const seen = new Set<string>()
+  const uniqueCategories = tests
+    .filter((test) => {
+      const category = (test.meta as any).category
+      if (seen.has(category)) return false
+      seen.add(category)
+      return true
+    })
+    .map((test) => ({ meta: test.meta as { category: string; course: string } }))
+
+  return uniqueCategories
+})
+
+// Count tests in a specific category
+export const countTestsByCategory = cache(async (category: string): Promise<number> => {
+  const result = await db
+    .select({ count: count() })
+    .from(tests)
+    .where(sql`${tests.meta}->>'category' = ${category}`)
+
+  return result[0]?.count || 0
+})
 
 /**
  * Fetch all tests created by specific user
@@ -64,6 +104,16 @@ export const getUserCustomTests = cache(async (userId: string) => {
     orderBy: (model, { desc }) => desc(model.createdAt),
   })
   return tests
+})
+
+/**
+ * Fetch user custom tests by a list of IDs (used by custom category test sessions)
+ */
+export const getUserCustomTestsByIds = cache(async (ids: string[]) => {
+  if (!ids.length) return []
+  return db.query.userCustomTests.findMany({
+    where: (t) => inArray(t.id, ids),
+  })
 })
 
 /**
@@ -115,6 +165,21 @@ export const getUserCustomCategoryById = cache(
 )
 
 /**
+ * Get single category by name with ownership verification
+ */
+export const getUserCustomCategoryByName = async (
+  userId: string,
+  categoryName: string
+) => {
+  return await db.query.userCustomCategories.findFirst({
+    where: and(
+      eq(userCustomCategories.userId, userId),
+      eq(userCustomCategories.categoryName, categoryName)
+    ),
+  })
+}
+
+/**
  * Delete category with ownership verification
  */
 export const deleteUserCustomCategory = async (
@@ -140,6 +205,73 @@ export const getAllProcedures = cache(
     return procedures
   }
 )
+
+// Get procedure by ID
+export const getProcedureById = cache(
+  async (id: string): Promise<ExtendedProcedures | null> => {
+    const procedure = await db.query.procedures.findFirst({
+      where: (model, { eq }) => eq(model.id, id),
+    })
+    return procedure || null
+  }
+)
+
+// Get procedure by slug
+export const getProcedureBySlug = cache(
+  async (slug: string): Promise<ExtendedProcedures | null> => {
+    const { getProcedureIdFromSlug } = await import("@/constants/procedureSlugs")
+    const procedureId = getProcedureIdFromSlug(slug)
+
+    if (!procedureId) {
+      return null
+    }
+
+    return getProcedureById(procedureId)
+  }
+)
+
+// Get all active courses
+export const getAllCourses = cache(async () => {
+  const allCourses = await db.query.courses.findMany({
+    where: (model, { eq }) => eq(model.isActive, true),
+    orderBy: (model, { asc }) => asc(model.createdAt),
+  })
+  return allCourses
+})
+
+// Get course by slug
+export const getCourseBySlug = cache(async (slug: string) => {
+  const course = await db.query.courses.findFirst({
+    where: (model, { eq, and }) => and(eq(model.slug, slug), eq(model.isActive, true)),
+  })
+  return course || null
+})
+
+// Get user's enrolled courses with details
+export const getUserEnrolledCourses = cache(async (userId: string) => {
+  const enrollments = await db
+    .select({
+      enrollment: courseEnrollments,
+      course: courses,
+    })
+    .from(courseEnrollments)
+    .innerJoin(courses, eq(courseEnrollments.courseSlug, courses.slug))
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.isActive, true),
+        eq(courses.isActive, true)
+      )
+    )
+    .orderBy(asc(courseEnrollments.enrolledAt))
+
+  return enrollments.map((row) => ({
+    ...row.course,
+    enrolledAt: row.enrollment.enrolledAt,
+    accessTier: row.enrollment.accessTier,
+    expiresAt: row.enrollment.expiresAt,
+  }))
+})
 
 // ============================================================================
 // BLOG QUERIES
@@ -1023,6 +1155,39 @@ export const getLastUserCommentTime = cache(
   }
 )
 
+// Get user's last forum post (full record)
+export const getLastUserForumPost = cache(
+  async (userId: string): Promise<{ id: string; title: string; createdAt: Date } | null> => {
+    const [lastPost] = await db
+      .select({ id: forumPosts.id, title: forumPosts.title, createdAt: forumPosts.createdAt })
+      .from(forumPosts)
+      .where(eq(forumPosts.authorId, userId))
+      .orderBy(desc(forumPosts.createdAt))
+      .limit(1)
+
+    return lastPost ?? null
+  }
+)
+
+// Get user's last forum comment (full record)
+export const getLastUserForumComment = cache(
+  async (userId: string): Promise<{ id: string; content: string; createdAt: Date; postId: string } | null> => {
+    const [lastComment] = await db
+      .select({
+        id: forumComments.id,
+        content: forumComments.content,
+        createdAt: forumComments.createdAt,
+        postId: forumComments.postId,
+      })
+      .from(forumComments)
+      .where(eq(forumComments.authorId, userId))
+      .orderBy(desc(forumComments.createdAt))
+      .limit(1)
+
+    return lastComment ?? null
+  }
+)
+
 // Get stripe support payments
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()
@@ -1331,6 +1496,20 @@ export const getMaterialsByUser = cache(async (userId: string) => {
   }))
 })
 
+export const getMaterialById = cache(async (userId: string, materialId: string) => {
+  const material = await db.query.materials.findFirst({
+    where: (m, { eq, and }) => and(eq(m.id, materialId), eq(m.userId, userId)),
+  })
+
+  if (!material) return null
+
+  return {
+    ...material,
+    createdAt: material.createdAt?.toISOString?.() ?? null,
+    updatedAt: material.updatedAt?.toISOString?.() ?? null,
+  }
+})
+
 export const getUserStorageUsage = async (userId: string) => {
   const userStorage = await db
     .select()
@@ -1504,7 +1683,7 @@ export const awardBadge = async (
     .limit(1)
 
   if (existing.length === 0) {
-    const procedure = await fileData.getProcedureById(data.procedureId)
+    const procedure = await getProcedureById(data.procedureId) as Procedure
 
     await tx.insert(procedureBadges).values({
       userId: data.userId,
@@ -1782,3 +1961,46 @@ export const getProgressTimeline = cache(
     }))
   }
 )
+
+// ─── Lectures ────────────────────────────────────────────────────────────────
+
+import { lectures } from "./db/schema"
+import type { Lecture, NewLecture } from "./db/schema"
+import { parseLexicalContent } from "@/helpers/safeJsonParse"
+
+export async function getLectureByHash(userId: string, contentHash: string): Promise<Lecture | null> {
+  const rows = await db
+    .select()
+    .from(lectures)
+    .where(and(eq(lectures.userId, userId), eq(lectures.contentHash, contentHash)))
+    .limit(1)
+  return rows[0] ?? null
+}
+
+export async function insertLecture(data: NewLecture): Promise<Lecture> {
+  const rows = await db.insert(lectures).values(data).returning()
+  return rows[0]!
+}
+
+export async function deleteLectureById(userId: string, lectureId: string): Promise<Lecture | null> {
+  const rows = await db
+    .delete(lectures)
+    .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
+    .returning()
+  return rows[0] ?? null
+}
+
+export async function updateLectureDuration(userId: string, lectureId: string, duration: number): Promise<void> {
+  await db
+    .update(lectures)
+    .set({ duration, updatedAt: new Date() })
+    .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
+}
+
+export async function getLecturesByUser(userId: string): Promise<Lecture[]> {
+  return db
+    .select()
+    .from(lectures)
+    .where(eq(lectures.userId, userId))
+    .orderBy(desc(lectures.createdAt))
+}

@@ -129,8 +129,7 @@ export const testSessions = createTable(
 
 export const tests = createTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
-  category: varchar("category", { length: 256 }).notNull(),
-  meta: jsonb("meta").$type<TestMeta>(),
+  meta: jsonb("meta").$type<TestMeta>().notNull(),
   data: jsonb("data").notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt"),
@@ -141,15 +140,14 @@ export const userCustomTests = createTable(
   {
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull(),
-    category: varchar("category", { length: 256 }).notNull(),
-    meta: jsonb("meta").$type<TestMeta>(),
+    meta: jsonb("meta").$type<TestMeta>().notNull(),
     data: jsonb("data").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt"),
   },
   (userCustomTests) => ({
     userIdIdx: index("user_custom_tests_userId_idx").on(userCustomTests.userId),
-    categoryIdx: index("user_custom_tests_category_idx").on(userCustomTests.category),
+    metaIdx: index("user_custom_tests_meta_idx").on(userCustomTests.meta),
   })
 )
 
@@ -508,6 +506,53 @@ export const userLimitsRelations = relations(userLimits, ({ one }) => ({
   }),
 }));
 
+// Multi-Course System
+export const courses = createTable(
+  "courses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    slug: varchar("slug", { length: 100 }).notNull().unique(),
+    name: varchar("name", { length: 255 }).notNull(),
+    description: text("description"),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("courses_slug_idx").on(table.slug),
+    index("courses_is_active_idx").on(table.isActive),
+  ]
+);
+
+export const courseEnrollments = createTable(
+  "course_enrollments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    courseSlug: varchar("course_slug", { length: 100 }).notNull(),
+    accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    expiresAt: timestamp("expires_at"),
+  },
+  (table) => [
+    index("enrollments_user_id_idx").on(table.userId),
+    index("enrollments_course_slug_idx").on(table.courseSlug),
+    index("enrollments_is_active_idx").on(table.isActive),
+    index("enrollments_user_course_idx").on(table.userId, table.courseSlug),
+  ]
+);
+
+export const courseEnrollmentsRelations = relations(courseEnrollments, ({ one }) => ({
+  user: one(users, {
+    fields: [courseEnrollments.userId],
+    references: [users.userId],
+  }),
+  course: one(courses, {
+    fields: [courseEnrollments.courseSlug],
+    references: [courses.slug],
+  }),
+}));
+
 export const challengeCompletions = createTable(
   "challenge_completions",
   {
@@ -563,53 +608,7 @@ export const procedureBadgesRelations = relations(procedureBadges, ({ one }) => 
   }),
 }));
 
-// Multi-Course System
-export const courses = createTable(
-  "courses",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    slug: varchar("slug", { length: 100 }).notNull().unique(),
-    name: varchar("name", { length: 255 }).notNull(),
-    description: text("description"),
-    isActive: boolean("is_active").default(true).notNull(),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-  },
-  (table) => [
-    index("courses_slug_idx").on(table.slug),
-    index("courses_is_active_idx").on(table.isActive),
-  ]
-);
-
-export const courseEnrollments = createTable(
-  "course_enrollments",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
-    courseSlug: varchar("course_slug", { length: 100 }).notNull(),
-    accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
-    isActive: boolean("is_active").default(true).notNull(),
-    enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
-    expiresAt: timestamp("expires_at"),
-  },
-  (table) => [
-    index("enrollments_user_id_idx").on(table.userId),
-    index("enrollments_course_slug_idx").on(table.courseSlug),
-    index("enrollments_is_active_idx").on(table.isActive),
-    index("enrollments_user_course_idx").on(table.userId, table.courseSlug),
-  ]
-);
-
-export const courseEnrollmentsRelations = relations(courseEnrollments, ({ one }) => ({
-  user: one(users, {
-    fields: [courseEnrollments.userId],
-    references: [users.userId],
-  }),
-  course: one(courses, {
-    fields: [courseEnrollments.courseSlug],
-    references: [courses.slug],
-  }),
-}));
-
+// RAG Configuration
 export const ragConfig = createTable("rag_config", {
   id: uuid("id").primaryKey().defaultRandom(),
   storeName: text("store_name").notNull().unique(),
@@ -618,6 +617,13 @@ export const ragConfig = createTable("rag_config", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Type exports
+export type UserCustomTest = typeof userCustomTests.$inferSelect
+export type NewUserCustomTest = typeof userCustomTests.$inferInsert
+export type UserCustomCategory = typeof userCustomCategories.$inferSelect
+export type NewUserCustomCategory = typeof userCustomCategories.$inferInsert
+
+// Lectures
 export const lectures = createTable(
   "lectures",
   {
@@ -638,10 +644,5 @@ export const lectures = createTable(
   ]
 )
 
-// Type exports
-export type UserCustomTest = typeof userCustomTests.$inferSelect
-export type NewUserCustomTest = typeof userCustomTests.$inferInsert
-export type UserCustomCategory = typeof userCustomCategories.$inferSelect
-export type NewUserCustomCategory = typeof userCustomCategories.$inferInsert
 export type Lecture = typeof lectures.$inferSelect
 export type NewLecture = typeof lectures.$inferInsert
