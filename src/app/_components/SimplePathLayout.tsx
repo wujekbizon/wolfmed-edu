@@ -1,6 +1,6 @@
 'use client'
 
-import { PathData } from "@/types/careerPathsTypes";
+import { PathLayoutProps } from "@/types/careerPathsTypes";
 import TestsSelection from "@/app/_components/TestsSelection";
 import SimplePathCard from "@/components/SimplePathCard";
 import GradientOverlay from "@/components/GradientOverlay";
@@ -207,6 +207,7 @@ export default function SimplePathLayout({
                     features={tier.features}
                     isPremium={isPremium}
                     {...(tier.badge ? { badge: tier.badge } : {})}
+                     alreadyOwned={ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`)}
                   />
                 )
               })}

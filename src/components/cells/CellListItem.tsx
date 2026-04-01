@@ -21,7 +21,7 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           </div>
           <DynamicRagCell cell={cell} isPremium={isPremium} />
         </div>
-      )} */}
+      )}
       {cell.type === 'draw' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">

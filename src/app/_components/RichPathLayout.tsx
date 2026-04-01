@@ -11,7 +11,8 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
-}: PathData) {
+  ownedCourses
+}: PathLayoutProps) {
   return (
     <section className="relative @container flex flex-col w-full gap-12 overflow-hidden">
       <TriangleDivider
@@ -106,6 +107,7 @@ export default function RichPathLayout({
                       features={tier.features}
                       isPremium={isPremium}
                       {...(tier.badge ? { badge: tier.badge } : {})}
+                       alreadyOwned={ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`)}
                     />
                   )
                 })}

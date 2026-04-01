@@ -3,7 +3,6 @@
 import MaterialCard from "./MaterialCard"
 import type { MaterialsType } from "@/types/materialsTypes"
 import { useMaterialModalStore } from "@/store/useMaterialModalStore"
-import { Tooltip } from "./Tooltip"
 
 type Props = {
   materials: MaterialsType[]

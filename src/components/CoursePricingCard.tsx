@@ -14,6 +14,7 @@ interface CoursePricingCardProps {
   features: string[]
   isPremium?: boolean
   badge?: string
+  alreadyOwned?: boolean
 }
 
 export default function CoursePricingCard({
@@ -25,8 +26,22 @@ export default function CoursePricingCard({
   features,
   isPremium = false,
   badge,
+  alreadyOwned
 }: CoursePricingCardProps) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
+
+  const isOwned = alreadyOwned
+  const isSoon =
+    (courseSlug === 'pielegniarstwo' && isPremium) ||
+    (courseSlug === 'opiekun-medyczny' && isPremium)
+
+  const isDisabled = isOwned || isSoon
+
+  const label = isOwned
+    ? 'W posiadaniu'
+    : isSoon
+      ? 'Wkrótce dostępne'
+      : 'Kup teraz'
 
   return (
     <article className="h-full">
@@ -98,14 +113,14 @@ export default function CoursePricingCard({
           </div>
         )}
 
-        <div className="mt-auto w-full pt-6 md:pt-8">
+      <div className='mt-auto w-full pt-6 md:pt-8'>
           <form action={action}>
-            <input type="hidden" name="priceId" value={priceId} />
-            <input type="hidden" name="courseSlug" value={courseSlug} />
-            <input type="hidden" name="accessTier" value={accessTier} />
+            <input type='hidden' name='courseSlug' value={courseSlug} />
+            <input type='hidden' name='accessTier' value={accessTier} />
             <SubmitButton
-              label="Kup teraz"
-              loading="Przekierowywanie..."
+              label={label}
+              loading='Przekierowywanie...'
+              disabled={isDisabled}
               className={`
                 ${
                   isPremium

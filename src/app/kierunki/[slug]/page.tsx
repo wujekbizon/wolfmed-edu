@@ -4,7 +4,7 @@ import RichPathLayout from '@/app/_components/RichPathLayout'
 import { careerPathsData } from '@/constants/careerPathsData'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
   return Object.keys(careerPathsData).map((slug) => ({ slug }))
@@ -27,23 +27,35 @@ export async function generateMetadata({
 
 const layoutComponents = {
   simple: SimplePathLayout,
-  rich: RichPathLayout,
-} as const;
+  rich: RichPathLayout
+} as const
 
-function PathPageComponent({ slug }: { slug: string }) {
-  const data = careerPathsData[slug];
-  
-  if (!data) notFound();
+function PathPageComponent({
+  slug,
+  ownedCourses
+}: {
+  slug: string
+  ownedCourses: string[]
+}) {
+  const data = careerPathsData[slug]
 
-  const LayoutComponent = layoutComponents[data.templateType];
-  
-  if (!LayoutComponent) notFound();
+  if (!data) notFound()
 
-  return <LayoutComponent {...data} />;
+  const LayoutComponent = layoutComponents[data.templateType]
+
+  if (!LayoutComponent) notFound()
+
+  return <LayoutComponent {...data} ownedCourses={ownedCourses} />
 }
 
-export default async function PathPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  
-  return <PathPageComponent slug={slug} />;
+export default async function PathPage({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const { enrollments } = await getUserEnrollmentsAction()
+  const ownedCourses = enrollments.map(e => `${e.courseSlug}-${e.accessTier}`)
+
+  return <PathPageComponent slug={slug} ownedCourses={ownedCourses} />
 }
