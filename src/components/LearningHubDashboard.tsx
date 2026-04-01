@@ -38,7 +38,7 @@ export default function LearningHubDashboard({
       {isPremium && <LecturesSection lectures={lectures} />}
       <NotesSection notes={notes} />
       <FlashcardsSection notes={notes.map((n) => ({ id: n.id, title: n.title }))} />
-      <MaterialsSection materials={materials} isSupporter={isPremium} />
+      <MaterialsSection materials={materials} />
     </div>
   );
 }
