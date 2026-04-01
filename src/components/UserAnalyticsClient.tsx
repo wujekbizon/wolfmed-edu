@@ -43,14 +43,14 @@ export default function UserAnalyticsClient({
   const [activeTab, setActiveTab] = useState<'overview' | 'analytics'>('overview')
 
   return (
-    <div className="bg-linear-to-br from-white/25 via-white/35 to-white/25 backdrop-blur-xl border border-white/50 rounded-2xl p-2 sm:p-6 shadow-lg hover:shadow-xl hover:border-white/70 transition-all duration-300">
-      <div className="flex gap-2 mb-6 border-b border-white/40 pb-4">
+    <div className="bg-white border border-zinc-100 rounded-2xl p-2 sm:p-6 shadow-sm">
+      <div className="flex gap-2 mb-6 border-b border-zinc-100 pb-4">
         <button
           onClick={() => setActiveTab('overview')}
           className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
             activeTab === 'overview'
-              ? 'bg-white/80 text-slate-900 shadow-md'
-              : 'bg-white/40 text-zinc-700 hover:bg-white/60'
+              ? 'bg-zinc-900 text-white shadow-sm'
+              : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-50'
           }`}
         >
           Przegląd
@@ -59,8 +59,8 @@ export default function UserAnalyticsClient({
           onClick={() => setActiveTab('analytics')}
           className={`px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
             activeTab === 'analytics'
-              ? 'bg-white/80 text-slate-900 shadow-md'
-              : 'bg-white/40 text-zinc-700 hover:bg-white/60'
+              ? 'bg-zinc-900 text-white shadow-sm'
+              : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-50'
           }`}
         >
           Szczegóły
