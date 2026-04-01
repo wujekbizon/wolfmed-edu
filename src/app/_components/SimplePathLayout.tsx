@@ -14,8 +14,9 @@ export default function SimplePathLayout({
   features,
   description,
   title,
-  pricing
-}: PathData) {
+  pricing,
+  ownedCourses
+}: PathLayoutProps) {
   const { ref: heroRef, inView: heroInView } = useInView({
     triggerOnce: false,
     threshold: 0.1

@@ -1108,7 +1108,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   const category = formData.get("category") as string
 
-  const validationResult = DeleteCategorySchema.safeParse({ category })
+  const validationResult = DeleteCategorySchema.safeParse({ meta: { category } })
 
   if (!validationResult.success) {
     return {

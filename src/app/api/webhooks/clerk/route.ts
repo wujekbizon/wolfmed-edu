@@ -10,7 +10,9 @@ export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
-    throw new Error('Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local')
+    throw new Error(
+      'Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local'
+    )
   }
 
   // Get the headers
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response('Error occured -- no svix headers', {
-      status: 400,
+      status: 400
     })
   }
 
@@ -40,12 +42,12 @@ export async function POST(req: Request) {
     evt = wh.verify(body, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
-      'svix-signature': svix_signature,
+      'svix-signature': svix_signature
     }) as WebhookEvent
   } catch (err) {
     console.error('Error verifying webhook:', err)
     return new Response('Error occured', {
-      status: 400,
+      status: 400
     })
   }
 
@@ -56,7 +58,7 @@ export async function POST(req: Request) {
 
     if (!id) {
       return new Response('Error occured -- missing data', {
-        status: 400,
+        status: 400
       })
     }
 
@@ -65,7 +67,7 @@ export async function POST(req: Request) {
         userId: id,
         username: `User-${crypto.randomUUID().slice(0, 8)}`,
         createdAt: new Date(),
-        motto: generateRandomMotto(),
+        motto: generateRandomMotto()
       }
 
       // Insert a new user record into the database.
@@ -79,7 +81,7 @@ export async function POST(req: Request) {
     } catch (error) {
       console.log(error)
       return new Response('Failed to insert user to database', {
-        status: 500,
+        status: 500
       })
     }
   }
@@ -89,7 +91,7 @@ export async function POST(req: Request) {
 
     if (!id) {
       return new Response("User doesn't exist", {
-        status: 400,
+        status: 400
       })
     }
 
@@ -98,7 +100,7 @@ export async function POST(req: Request) {
     } catch (error) {
       console.log(error)
       return new Response('Failed to delete user from database', {
-        status: 500,
+        status: 500
       })
     }
   }

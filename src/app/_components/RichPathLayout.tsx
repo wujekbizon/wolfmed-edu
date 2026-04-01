@@ -1,4 +1,4 @@
-import { PathData } from "@/types/careerPathsTypes";
+import { PathLayoutProps } from "@/types/careerPathsTypes";
 import TriangleDivider from "@/components/TriangleDivider";
 import GradientOverlay from "@/components/GradientOverlay";
 import CurriculumMap from "../../components/CurriculumMap";

@@ -44,4 +44,3 @@ export const sideMenuNavigationLinks = [
     icon: <ProgressIcon width={26} height={26} />,
   }
 ]
-

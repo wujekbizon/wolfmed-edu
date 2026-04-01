@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
     const { category } = await params;
-    // decodeURIComponent is used to decode the category name because it is encoded in the URL, 
+    // decodeURIComponent is used to decode the category name because it is encoded in the URL,
     // we are using polish letters in the category name
     const decodedCategory = decodeURIComponent(category) 
 

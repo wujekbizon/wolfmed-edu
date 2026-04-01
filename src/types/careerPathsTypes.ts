@@ -54,3 +54,4 @@ export type PathData = {
   testimonials?: Testimonial[];
   features?: CardProps[];
 };
+export type PathLayoutProps = PathData & { ownedCourses: string[] }

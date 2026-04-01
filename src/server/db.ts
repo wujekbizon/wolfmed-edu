@@ -125,6 +125,7 @@ export async function insertSubscription({
   paymentStatus,
   subscriptionId,
   customerId,
+  courseSlug,
   createdAt,
 }: Subscription) {
   try {
@@ -138,6 +139,7 @@ export async function insertSubscription({
       invoiceId,
       paymentStatus,
       subscriptionId,
+      courseSlug: courseSlug || null,
       createdAt: createdAt,
     })
     console.log(`Subscription for user ${userId} inserted successfully.`)
@@ -153,6 +155,7 @@ export async function insertPayment({
   currency,
   customerEmail,
   paymentStatus,
+  courseSlug,
   createdAt,
 }: Payment) {
   try {
@@ -162,6 +165,7 @@ export async function insertPayment({
       currency,
       customerEmail,
       paymentStatus,
+      courseSlug: courseSlug || null,
       createdAt: createdAt,
     })
   } catch (error) {
