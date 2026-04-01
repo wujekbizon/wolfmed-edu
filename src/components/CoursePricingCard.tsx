@@ -31,18 +31,18 @@ export default function CoursePricingCard({
     EMPTY_FORM_STATE
   )
 
-const isOwned = alreadyOwned
-const isSoon =
-  courseSlug === 'pielegniarstwo' ||
-  (courseSlug === 'opiekun-medyczny' && isPremium)
+  const isOwned = alreadyOwned
+  const isSoon =
+    (courseSlug === 'pielegniarstwo' && isPremium) ||
+    (courseSlug === 'opiekun-medyczny' && isPremium)
 
-const isDisabled = isOwned || isSoon
+  const isDisabled = isOwned || isSoon
 
-const label = isOwned
-  ? 'W posiadaniu'
-  : isSoon
-    ? 'Wkrótce dostępne'
-    : 'Kup teraz'
+  const label = isOwned
+    ? 'W posiadaniu'
+    : isSoon
+      ? 'Wkrótce dostępne'
+      : 'Kup teraz'
 
   return (
     <article className='h-full'>
