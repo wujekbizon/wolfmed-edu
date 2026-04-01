@@ -13,6 +13,7 @@ interface CoursePricingCardProps {
   features: string[]
   isPremium?: boolean
   badge?: string
+  alreadyOwned?: boolean
 }
 
 export default function CoursePricingCard({
@@ -23,6 +24,7 @@ export default function CoursePricingCard({
   features,
   isPremium = false,
   badge,
+  alreadyOwned = false,
 }: CoursePricingCardProps) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
 
@@ -101,9 +103,9 @@ export default function CoursePricingCard({
             <input type="hidden" name="courseSlug" value={courseSlug} />
             <input type="hidden" name="accessTier" value={accessTier} />
             <SubmitButton
-              label={courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium) ? 'Wkrótce Dostępne' : 'Kup teraz'}
+              label={alreadyOwned ? 'Masz już dostęp' : (courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium) ? 'Wkrótce Dostępne' : 'Kup teraz')}
               loading="Przekierowywanie..."
-              disabled={courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium)}
+              disabled={alreadyOwned || courseSlug === 'pielegniarstwo' || (courseSlug === 'opiekun-medyczny' && isPremium)}
               className={`
                 ${
                   isPremium

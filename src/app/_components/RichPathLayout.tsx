@@ -11,6 +11,7 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
+  ownedCourses,
 }: PathData) {
   return (
     <section className="relative @container flex flex-col w-full gap-12 overflow-hidden">
@@ -104,6 +105,7 @@ export default function RichPathLayout({
                       accessTier={tier.accessTier}
                       features={tier.features}
                       isPremium={isPremium}
+                      alreadyOwned={ownedCourses?.includes(pricing.courseSlug)}
                       {...(tier.badge ? { badge: tier.badge } : {})}
                     />
                   )

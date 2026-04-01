@@ -14,7 +14,8 @@ export default function SimplePathLayout({
   features,
   description,
   title,
-  pricing
+  pricing,
+  ownedCourses,
 }: PathData) {
   const { ref: heroRef, inView: heroInView } = useInView({
     triggerOnce: false,
@@ -204,6 +205,7 @@ export default function SimplePathLayout({
                     accessTier={tier.accessTier}
                     features={tier.features}
                     isPremium={isPremium}
+                    alreadyOwned={ownedCourses?.includes(pricing?.courseSlug || '')}
                     {...(tier.badge ? { badge: tier.badge } : {})}
                   />
                 )

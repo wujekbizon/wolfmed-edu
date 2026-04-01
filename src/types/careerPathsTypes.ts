@@ -53,4 +53,5 @@ export type PathData = {
   pricing?: PricingTable;
   testimonials?: Testimonial[];
   features?: CardProps[];
+  ownedCourses?: string[];
 };
