@@ -1,4 +1,4 @@
-import { PathData } from "@/types/careerPathsTypes";
+import { PathLayoutProps } from "@/types/careerPathsTypes";
 import TriangleDivider from "@/components/TriangleDivider";
 import GradientOverlay from "@/components/GradientOverlay";
 import CurriculumMap from "../../components/CurriculumMap";
@@ -11,7 +11,8 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
-}: PathData) {
+  ownedCourses
+}: PathLayoutProps) {
   return (
     <section className="relative @container flex flex-col w-full gap-12 overflow-hidden">
       <TriangleDivider
@@ -105,6 +106,7 @@ export default function RichPathLayout({
                       features={tier.features}
                       isPremium={isPremium}
                       {...(tier.badge ? { badge: tier.badge } : {})}
+                      alreadyOwned={ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`)}
                     />
                   )
                 })}

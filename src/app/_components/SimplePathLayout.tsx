@@ -1,12 +1,11 @@
 'use client'
 
-import { PathData } from "@/types/careerPathsTypes";
+import { PathLayoutProps } from "@/types/careerPathsTypes";
 import TestsSelection from "@/app/_components/TestsSelection";
 import SimplePathCard from "@/components/SimplePathCard";
 import GradientOverlay from "@/components/GradientOverlay";
 import TriangleDivider from "@/components/TriangleDivider";
 import Image from "next/image";
-import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import CoursePricingCard from "@/components/CoursePricingCard";
 
@@ -14,8 +13,9 @@ export default function SimplePathLayout({
   features,
   description,
   title,
-  pricing
-}: PathData) {
+  pricing,
+  ownedCourses
+}: PathLayoutProps) {
   const { ref: heroRef, inView: heroInView } = useInView({
     triggerOnce: false,
     threshold: 0.1
@@ -205,6 +205,7 @@ export default function SimplePathLayout({
                     features={tier.features}
                     isPremium={isPremium}
                     {...(tier.badge ? { badge: tier.badge } : {})}
+                    alreadyOwned={ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`)}
                   />
                 )
               })}

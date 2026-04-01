@@ -1,36 +1,61 @@
-import { notFound } from 'next/navigation';
-import SimplePathLayout from '@/app/_components/SimplePathLayout';
-import RichPathLayout from '@/app/_components/RichPathLayout';
-import { careerPathsData } from '@/constants/careerPathsData';
+import { notFound } from 'next/navigation'
+import SimplePathLayout from '@/app/_components/SimplePathLayout'
+import RichPathLayout from '@/app/_components/RichPathLayout'
+import { careerPathsData } from '@/constants/careerPathsData'
+import { getUserEnrollmentsAction } from '@/actions/course-actions'
 
+export const dynamic = 'force-dynamic'
 
-export const dynamic = 'force-static'
 export async function generateStaticParams() {
-  return Object.keys(careerPathsData).map((slug) => ({ slug }));
+  return Object.keys(careerPathsData).map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const {slug} = await params
-  const data = careerPathsData[slug];
-  if (!data) return { title: 'Program nie znaleziony' };
+export async function generateMetadata({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const data = careerPathsData[slug]
+  if (!data) return { title: 'Program nie znaleziony' }
 
   return {
     title: `${data.title} | Edukacja Medyczna`,
-    description: data.description,
-  };
+    description: data.description
+  }
 }
 
-export default async function PathPage({ params }: { params: Promise<{ slug: string }> }) {
-  const {slug} = await params
-  const data = careerPathsData[slug];
-  if (!data) notFound();
+const layoutComponents = {
+  simple: SimplePathLayout,
+  rich: RichPathLayout
+} as const
 
-  switch (data.templateType) {
-    case 'simple':
-      return <SimplePathLayout {...data} />;
-    case 'rich':
-      return <RichPathLayout {...data} />;
-    default:
-      return notFound();
-  }
+function PathPageComponent({
+  slug,
+  ownedCourses
+}: {
+  slug: string
+  ownedCourses: string[]
+}) {
+  const data = careerPathsData[slug]
+
+  if (!data) notFound()
+
+  const LayoutComponent = layoutComponents[data.templateType]
+
+  if (!LayoutComponent) notFound()
+
+  return <LayoutComponent {...data} ownedCourses={ownedCourses} />
+}
+
+export default async function PathPage({
+  params
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const { enrollments } = await getUserEnrollmentsAction()
+  const ownedCourses = enrollments.map(e => `${e.courseSlug}-${e.accessTier}`)
+
+  return <PathPageComponent slug={slug} ownedCourses={ownedCourses} />
 }
