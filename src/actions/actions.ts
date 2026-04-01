@@ -56,7 +56,8 @@ import {
   getUserStorageUsage,
   deleteUserCustomTest,
   getUserCustomCategoryById,
-  deleteUserCustomCategory
+  deleteUserCustomCategory,
+  getUserCustomCategoryByName
 } from "@/server/queries"
 import { revalidatePath } from "next/cache"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
@@ -830,7 +831,10 @@ export async function createTestAction(
 
     await db.insert(userCustomTests).values({
       userId: user.userId,
-      category: category.toLowerCase(),
+      meta: {
+        category: category.toLowerCase(),
+        course: "kategoria-wlasna"
+      },
       data
     })
   } catch (error) {
@@ -916,8 +920,8 @@ export async function uploadTestsFromFile(
       const insertPromises = validatedData.map((testData) =>
         tx.insert(userCustomTests).values({
           userId: user.userId,
-          category: testData.category.toLowerCase(),
-          data: testData.data
+          meta: { category: testData.meta.category.toLowerCase(), course: testData.meta.course },
+          data: testData.data,
         })
       )
       await Promise.all(insertPromises)
@@ -1004,7 +1008,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   const category = formData.get("category") as string
 
-  const validationResult = DeleteCategorySchema.safeParse({ category })
+  const validationResult = DeleteCategorySchema.safeParse({ meta: { category } })
 
   if (!validationResult.success) {
     return {
@@ -1019,12 +1023,17 @@ export async function deleteUserCustomTestsByCategoryAction(
       .where(
         and(
           eq(userCustomTests.userId, userId),
-          eq(userCustomTests.category, validationResult.data.category)
+          sql`${userCustomTests.meta}->>'category' = ${validationResult.data.meta.category}`
         )
       )
 
     if (!result || result.rowCount === 0) {
       return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
+    }
+
+    const cat = await getUserCustomCategoryByName(userId, validationResult.data.meta.category)
+    if (cat) {
+      await deleteUserCustomCategory(userId, cat.id)
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -1036,7 +1045,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   return toFormState(
     "SUCCESS",
-    `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`
+    `Usunięto wszystkie testy z kategorii: ${validationResult.data.meta.category}`
   )
 }
 

@@ -72,9 +72,11 @@ export async function POST(req: Request) {
 
       // Insert a new user record into the database.
       await insertUserToDb(user)
+
+      // Initialise Clerk publicMetadata with an empty ownedCourses array.
       const clerk = await clerkClient()
       await clerk.users.updateUser(id, {
-        publicMetadata: { ownedCourses: [] }
+        publicMetadata: { ownedCourses: [] },
       })
     } catch (error) {
       console.log(error)

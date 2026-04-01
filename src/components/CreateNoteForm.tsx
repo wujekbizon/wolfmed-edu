@@ -12,7 +12,11 @@ import { EditorField } from "./EditorField"
 import { useNoteEditor } from "@/hooks/useNoteEditor"
 import ResizableComponent from "./Resizable"
 
-export default function CreateNoteForm() {
+interface CreateNoteFormProps {
+  initialContent?: string | undefined
+}
+
+export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) {
   const [state, action] = useActionState(createNoteAction, EMPTY_FORM_STATE)
   const { contentRef, plainTextRef, excerptRef, handleEditorChange } = useNoteEditor()
   const [pinned, setPinned] = useState(false)
@@ -41,6 +45,7 @@ export default function CreateNoteForm() {
           plainTextRef={plainTextRef}
           excerptRef={excerptRef}
           onChange={handleEditorChange}
+          initialContent={initialContent}
         />
       </ResizableComponent>
       <div className="flex flex-col justify-between grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
