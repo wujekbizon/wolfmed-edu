@@ -2,7 +2,7 @@
 
 import { useActionState, useOptimistic, startTransition } from 'react'
 import { markMessageAsReadAction } from '@/actions/messages'
-import { formatDate } from '@/lib/blogUtils'
+import { formatDate } from '@/helpers/blogUtils'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from './SubmitButton'

@@ -1,4 +1,4 @@
-import { DynamicExcalidraw, DynamicNoteCell, DynamicFlashcardCell } from '.'
+import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell } from '.'
 import ActionBar from './ActionBar'
 import type { Cell } from '@/types/cellTypes'
 
@@ -14,14 +14,14 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           <DynamicNoteCell cell={cell} />
         </div>
       )}
-      {/* {cell.type === 'rag' && (
+      {cell.type === 'rag' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
           <DynamicRagCell cell={cell} isPremium={isPremium} />
         </div>
-      )} */}
+      )}
       {cell.type === 'draw' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
@@ -30,14 +30,14 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           <DynamicExcalidraw cell={cell} />
         </div>
       )}
-      {/* {cell.type === 'test' && (
+      {cell.type === 'test' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
           </div>
           <DynamicTestCell cell={cell} />
         </div>
-      )} */}
+      )}
       {cell.type === 'flashcard' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
@@ -46,7 +46,7 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           <DynamicFlashcardCell cell={cell} />
         </div>
       )}
-      {/* {cell.type === 'plan' && (
+      {cell.type === 'plan' && (
         <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
           <div className="relative h-10 w-full">
             <ActionBar cell={cell} />
@@ -61,7 +61,7 @@ export default function CellListItem ({ cell, isPremium = false }: { cell: Cell;
           </div>
           <DynamicMediaCell cell={cell} />
         </div>
-      )} */}
+      )}
     </div>
   )
 }

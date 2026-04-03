@@ -11,7 +11,7 @@ export default function TeamSection() {
     <motion.div
       variants={fadeInUp as any}
       // @ts-ignore
-      className="xl:col-span-5"
+      className="lg:col-span-5 bg-zinc-800/30 border border-zinc-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-lg shadow-black/40"
     >
       {/* <h3 className="text-2xl font-bold mb-6 text-center">Nasz Zespół</h3> */}
       <div className="space-y-6">
@@ -20,7 +20,7 @@ export default function TeamSection() {
             key={member.name}
             variants={fadeInUp as any}
             // @ts-ignore
-            className="flex items-center flex-col xs:flex-row gap-6 p-4 rounded-xl bg-zinc-900/30 border border-zinc-700/50 shadow-md shadow-black/30 transition-all duration-300 hover:border-zinc-600/60"
+            className="flex items-center flex-col xs:flex-row gap-4 p-4 rounded-xl bg-zinc-900/30 border border-zinc-700/50 shadow-md shadow-black/30 transition-all duration-300 hover:border-zinc-600/60"
           >
             <Image
               src={member.image}

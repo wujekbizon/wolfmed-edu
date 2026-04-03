@@ -58,8 +58,6 @@ procedures.forEach(procedure => {
   const slug = generateProcedureSlug(procedure.data.name);
   slugToId[slug] = procedure.id;
   idToSlug[procedure.id] = slug;
-
-  console.log(`${procedure.data.name} -> ${slug}`);
 });
 
 // Generate TypeScript constants file
@@ -91,6 +89,3 @@ export function getProcedureSlugFromId(id: string): string | undefined {
 // Write to constants file
 const outputPath = path.join(__dirname, '../src/constants/procedureSlugs.ts');
 fs.writeFileSync(outputPath, tsContent, 'utf8');
-
-console.log('\n✅ Generated:', outputPath);
-console.log(`📊 Total procedures: ${procedures.length}`);

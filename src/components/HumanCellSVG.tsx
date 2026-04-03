@@ -2,11 +2,10 @@
 import { motion } from 'framer-motion'
 
 import { VirusSVG } from './VirusSVG'
-
+import { ShapeType, Size2D, Vector2 } from '@/types/humanCellTypes'
 import { BacteriaSVG } from './BacteriaSVG'
 import { PathogenBacteriaSVG } from './PathogenBacteriaSVG'
 import { AggressiveVirusSVG } from './AggressiveVirusSVG'
-import { ShapeType, Size2D, Vector2 } from '@/types/humanCellTypes'
 
 interface HumanCellSVGProps {
   id: string

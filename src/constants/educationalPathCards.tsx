@@ -1,4 +1,5 @@
 import { StaticImageData } from 'next/image'
+import React from 'react'
 import { BookOpenCheck, Newspaper, TrendingUp, BrainCircuit } from 'lucide-react'
 
 export interface CardProps {

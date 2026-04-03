@@ -1,0 +1,13 @@
+{
+  "prompt": "You are an expert medical educator. Generate {{cardCount}} educational flashcards in Polish on the topic: {{topic}}. Each flashcard tests ONE specific concept. Question: concise and clear. Answer: short and precise (1-3 sentences max). Focus on high-yield exam facts.",
+  "example": [
+    {
+      "questionText": "Co to jest kość ciemieniowa?",
+      "answerText": "Kość ciemieniowa to parzysta kość płaska tworząca boczną i górną część czaszki mózgowej."
+    },
+    {
+      "questionText": "Jakie mięśnie tworzą stożek rotatorów?",
+      "answerText": "Stożek rotatorów tworzą cztery mięśnie: nadgrzebieniowy, podgrzebieniowy, obły mniejszy i podłopatkowy."
+    }
+  ]
+}

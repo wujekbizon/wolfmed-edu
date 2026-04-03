@@ -1,5 +1,5 @@
-import ScrollButton from '@/components/ScrollButton'
 import HeroContent from './HeroContent'
+import ScrollButton from '@/components/ScrollButton'
 
 export default function Hero() {
   return (

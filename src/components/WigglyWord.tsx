@@ -1,5 +1,4 @@
 'use client'
-
 import { useWigglyText } from '@/hooks/useWigglyText'
 import AnimatedChar from './AnimatedChar'
 

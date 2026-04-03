@@ -3,12 +3,12 @@ import { navLinks } from '@/constants/navLinks'
 import { useStore } from '@/store/useStore'
 import { useScroll } from '@/hooks/useScroll'
 import Link from 'next/link'
+import NavDrawer from '../../components/NavDrawer'
 import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
 import { usePathname } from 'next/navigation'
 import { Show } from '@clerk/nextjs'
-import NavDrawer from '@/components/NavDrawer'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)

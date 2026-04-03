@@ -6,8 +6,7 @@ import { blogPosts, blogPostTags, blogLikes } from '@/server/db/schema'
 import { eq, and, sql } from 'drizzle-orm'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
-import { calculateReadingTime } from '@/lib/blogUtils'
-import { requireAdminAction, requireAuth } from '@/lib/adminHelpers'
+import { calculateReadingTime } from '@/helpers/blogUtils'
 import { checkRateLimit } from '@/lib/rateLimit'
 import {
   CreateBlogPostSchema,
@@ -17,16 +16,21 @@ import {
   LikeBlogPostSchema,
   UnlikeBlogPostSchema,
 } from '@/server/schema'
+import { auth, currentUser } from '@clerk/nextjs/server'
 
-/**
- * Create a new blog post (Admin only)
- */
 export async function createBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    const admin = await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const user = await currentUser();
+    if(!user) {
+      throw new Error("NotFound")
+    }
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
 
     const title = formData.get('title') as string
     const slug = formData.get('slug') as string
@@ -76,8 +80,8 @@ export async function createBlogPostAction(
         content: validatedData.content,
         coverImage: validatedData.coverImage || null,
         categoryId: validatedData.categoryId || null,
-        authorId: admin.userId,
-        authorName: admin.name,
+        authorId: user.id,
+        authorName: user.fullName || "Unknown",
         status: validatedData.status,
         publishedAt: validatedData.status === 'published' ? new Date() : null,
         metaTitle: validatedData.metaTitle || null,
@@ -107,15 +111,15 @@ export async function createBlogPostAction(
   }
 }
 
-/**
- * Update an existing blog post (Admin only)
- */
 export async function updateBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
     const title = formData.get('title') as string | null
@@ -218,15 +222,15 @@ export async function updateBlogPostAction(
   }
 }
 
-/**
- * Delete a blog post (Admin only)
- */
 export async function deleteBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
 
@@ -252,15 +256,15 @@ export async function deleteBlogPostAction(
   }
 }
 
-/**
- * Publish a blog post (Admin only)
- */
 export async function publishBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
     const publishedAtStr = formData.get('publishedAt') as string | null
@@ -296,15 +300,15 @@ export async function publishBlogPostAction(
   }
 }
 
-/**
- * Archive a blog post (Admin only)
- */
 export async function archiveBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
 
@@ -329,10 +333,6 @@ export async function archiveBlogPostAction(
   }
 }
 
-/**
- * Increment view count for a blog post
- * Public action (no auth required)
- */
 export async function incrementViewCountAction(postId: string): Promise<void> {
   try {
     await db
@@ -355,7 +355,10 @@ export async function likeBlogPostAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    const userId = await requireAuth()
+    const { userId } = await auth()
+    if (!userId) {
+      throw new Error('Unauthorized: User not authenticated')
+    }
 
     const rateLimit = await checkRateLimit(userId, 'blog:like')
     if (!rateLimit.success) {
@@ -406,15 +409,15 @@ export async function likeBlogPostAction(
   }
 }
 
-/**
- * Unlike a blog post (Authenticated users)
- */
 export async function unlikeBlogPostAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
-    const userId = await requireAuth()
+    const { userId } = await auth()
+    if (!userId) {
+      throw new Error('Unauthorized: User not authenticated')
+    }
 
     const postId = formData.get('postId') as string
 
@@ -445,23 +448,18 @@ export async function unlikeBlogPostAction(
   }
 }
 
-// ============================================================================
-// PROGRAMMATIC HELPERS (for direct calls from components, not forms)
-// ============================================================================
-
 type ActionResult<T = unknown> = {
   success: boolean
   data?: T
   error?: string
 }
 
-/**
- * Delete a blog post programmatically (Admin only)
- * Used by components that call actions directly (not through forms)
- */
 export async function deleteBlogPost(input: { id: string }): Promise<ActionResult> {
   try {
-    await requireAdminAction()
+    const { userId , sessionClaims} = await auth()
+    const userRole = (sessionClaims?.metadata as { role?: string })?.role
+
+    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
     const validationResult = DeleteBlogPostSchema.safeParse(input)
 
     if (!validationResult.success) {
@@ -480,143 +478,6 @@ export async function deleteBlogPost(input: { id: string }): Promise<ActionResul
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Nie udało się usunąć posta'
-    }
-  }
-}
-
-/**
- * Create a blog post programmatically (Admin only)
- */
-export async function createBlogPost(input: any): Promise<ActionResult<{ id: string; slug: string }>> {
-  try {
-    const admin = await requireAdminAction()
-    const validationResult = CreateBlogPostSchema.safeParse(input)
-
-    if (!validationResult.success) {
-      return {
-        success: false,
-        error: validationResult.error.issues[0]?.message || 'Nieprawidłowe dane'
-      }
-    }
-
-    const validatedData = validationResult.data
-    const readingTime = calculateReadingTime(validatedData.content)
-
-    const [newPost] = await db
-      .insert(blogPosts)
-      .values({
-        title: validatedData.title,
-        slug: validatedData.slug,
-        excerpt: validatedData.excerpt,
-        content: validatedData.content,
-        coverImage: validatedData.coverImage || null,
-        categoryId: validatedData.categoryId || null,
-        authorId: admin.userId,
-        authorName: admin.name,
-        status: validatedData.status,
-        publishedAt: validatedData.status === 'published' ? new Date() : null,
-        metaTitle: validatedData.metaTitle || null,
-        metaDescription: validatedData.metaDescription || null,
-        metaKeywords: validatedData.metaKeywords || null,
-        readingTime,
-        viewCount: 0,
-      })
-      .returning({ id: blogPosts.id, slug: blogPosts.slug })
-
-    if (validatedData.tags && validatedData.tags.length > 0 && newPost) {
-      await db.insert(blogPostTags).values(
-        validatedData.tags.map((tagId) => ({
-          postId: newPost.id,
-          tagId,
-        }))
-      )
-    }
-
-    revalidatePath('/blog')
-    revalidatePath('/admin')
-
-    return { success: true, data: newPost || { id: '', slug: '' } }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Nie udało się utworzyć posta'
-    }
-  }
-}
-
-/**
- * Update a blog post programmatically (Admin only)
- */
-export async function updateBlogPost(input: any): Promise<ActionResult<{ id: string; slug: string }>> {
-  try {
-    await requireAdminAction()
-    const validationResult = UpdateBlogPostSchema.safeParse(input)
-
-    if (!validationResult.success) {
-      return {
-        success: false,
-        error: validationResult.error.issues[0]?.message || 'Nieprawidłowe dane'
-      }
-    }
-
-    const validatedData = validationResult.data
-    const updateData: Record<string, unknown> = { updatedAt: new Date() }
-
-    if (validatedData.title) updateData.title = validatedData.title
-    if (validatedData.slug) updateData.slug = validatedData.slug
-    if (validatedData.excerpt) updateData.excerpt = validatedData.excerpt
-    if (validatedData.content) {
-      updateData.content = validatedData.content
-      updateData.readingTime = calculateReadingTime(validatedData.content)
-    }
-    if (validatedData.coverImage !== undefined)
-      updateData.coverImage = validatedData.coverImage
-    if (validatedData.categoryId !== undefined)
-      updateData.categoryId = validatedData.categoryId
-    if (validatedData.status) {
-      updateData.status = validatedData.status
-      if (validatedData.status === 'published' && !validatedData.publishedAt) {
-        updateData.publishedAt = new Date()
-      }
-    }
-    if (validatedData.publishedAt !== undefined)
-      updateData.publishedAt = validatedData.publishedAt
-    if (validatedData.metaTitle !== undefined)
-      updateData.metaTitle = validatedData.metaTitle
-    if (validatedData.metaDescription !== undefined)
-      updateData.metaDescription = validatedData.metaDescription
-    if (validatedData.metaKeywords !== undefined)
-      updateData.metaKeywords = validatedData.metaKeywords
-
-    const [updatedPost] = await db
-      .update(blogPosts)
-      .set(updateData)
-      .where(eq(blogPosts.id, validatedData.id))
-      .returning({ id: blogPosts.id, slug: blogPosts.slug })
-
-    if (validatedData.tags) {
-      await db.delete(blogPostTags).where(eq(blogPostTags.postId, validatedData.id))
-      if (validatedData.tags.length > 0) {
-        await db.insert(blogPostTags).values(
-          validatedData.tags.map((tagId) => ({
-            postId: validatedData.id,
-            tagId,
-          }))
-        )
-      }
-    }
-
-    revalidatePath('/blog')
-    revalidatePath('/admin')
-    if (updatedPost) {
-      revalidatePath(`/blog/${updatedPost.slug}`)
-    }
-
-    return { success: true, data: updatedPost || { id: validatedData.id, slug: '' } }
-  } catch (error) {
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : 'Nie udało się zaktualizować posta'
     }
   }
 }

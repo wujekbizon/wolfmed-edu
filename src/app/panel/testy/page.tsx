@@ -52,6 +52,7 @@ async function TestsCategories() {
     })
   )
 
+  // Only show categories user has access to
   const accessibleCategories = categoriesWithAccess.filter(cat => cat.hasAccess)
 
   const isPremium = await checkPremiumAccessAction()

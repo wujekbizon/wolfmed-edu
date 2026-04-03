@@ -47,6 +47,11 @@ export const FLASHCARD_MODAL_TEXT = {
   submit: 'Utwórz fiszkę',
 }
 
+// Selection tooltip text
+export const SELECTION_TOOLTIP_TEXT = {
+  createFlashcard: 'Utwórz fiszkę',
+}
+
 // Flashcard review modal text
 export const FLASHCARD_REVIEW_TEXT = {
   title: 'Przeglądaj fiszki',

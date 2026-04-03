@@ -16,9 +16,9 @@ export default function AboutCards() {
           key={card.title}
           // @ts-ignore
           variants={fadeInUp}
-          className="flex flex-col items-center justify-center gap-6 p-4 rounded-2xl bg-zinc-900/30 border border-zinc-700/50 backdrop-blur-sm shadow-md shadow-black/30 transition-all duration-300 hover:border-zinc-600/60"
+          className="flex flex-col gap-6 p-6 rounded-2xl bg-zinc-800/30 border border-zinc-700/50 backdrop-blur-sm shadow-lg shadow-black/40 transition-all duration-300 hover:border-red-500/30 hover:shadow-xl hover:shadow-black/60"
         >
-          <div className="flex w-12 h-12 justify-center items-center bg-zinc-900/30 border rounded-xl p-3 shadow-md shadow-black/30">
+          <div className="flex w-16 h-16 justify-center items-center bg-zinc-900/30 border border-red-400/20 rounded-xl p-3 shadow-md shadow-black/30">
             {card.icon}
           </div>
           <div className='flex flex-col items-center justify-center'>

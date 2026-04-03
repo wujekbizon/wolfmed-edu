@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORY_METADATA, CATEGORY_METADATA } from "@/constants/catego
 import { getCategories, countTestsByCategory } from "@/server/queries";
 
 export async function getPopulatedCategories(): Promise<PopulatedCategories[]> {
+  // Get categories directly from database
   const categories = await getCategories();
 
   const seen = new Set<string>();

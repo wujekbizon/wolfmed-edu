@@ -30,9 +30,7 @@ export async function GET(request: Request) {
         )
       )
       .returning({ id: testSessions.id })
-
-    console.log(`[Cron] Cleaned up ${result.length} expired/inactive sessions`)
-
+      
     return NextResponse.json({
       success: true,
       expiredCount: result.length,

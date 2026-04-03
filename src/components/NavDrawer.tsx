@@ -9,7 +9,6 @@ import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { Settings } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 
-
 export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -23,7 +22,7 @@ export default function NavDrawer() {
           ${isMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       />
       <aside
-        className={`fixed z-100 left-0 top-0 h-full w-[min(85vw,380px)]
+        className={`fixed z-50 left-0 top-0 h-full w-[min(85vw,380px)]
           bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl
           border-r border-white/50 shadow-2xl shadow-zinc-950/20
           flex lg:hidden flex-col

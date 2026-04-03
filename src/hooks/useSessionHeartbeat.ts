@@ -44,7 +44,12 @@ export function useSessionHeartbeat(sessionId: string | null) {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange)
 
-      navigator.sendBeacon('/api/session/expire', JSON.stringify({ sessionId }))
+      // NOTE: Session expiry only works correctly in production builds.
+      // In development, sessions expire immediately — always test with `pnpm build && pnpm start`.
+      navigator.sendBeacon(
+        '/api/session/expire',
+        new Blob([JSON.stringify({ sessionId })], { type: 'application/json' })
+      )
     }
   }, [sessionId, router])
 }

@@ -39,7 +39,7 @@ export default function ContactForm() {
   return (
     <>
       <Show when="signed-in">
-        <div className="bg-white bg-opacity-90 rounded-2xl shadow-xl p-4 xs:p-8">
+        <div className="bg-white bg-opacity-90 rounded-lg shadow-xl p-4 xs:p-8">
           <form className="flex flex-col gap-4" action={action}>
             <div>
               <Label htmlFor="email" label="Email" className="text-zinc-600" />
@@ -71,7 +71,7 @@ export default function ContactForm() {
         </div>
       </Show>
       <Show when="signed-out">
-        <div className="h-[400px] backdrop-blur-sm border border-zinc-700 bg-zinc-900 rounded-2xl p-4 xs:p-8 mt-6">
+        <div className="h-[400px] backdrop-blur-md border border-zinc-700 bg-zinc-900 rounded-lg p-4 xs:p-8 mt-6">
           <div className="flex flex-col items-center justify-center gap-6 text-center h-full">
             <p className="text-zinc-400">Aby skontaktować się z nami, musisz być zalogowany do swojego konta</p>
             <SignInButton mode="modal">

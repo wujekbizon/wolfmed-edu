@@ -58,4 +58,6 @@ const PinButton = forwardRef<HTMLButtonElement, PinButtonProps>(
   )
 )
 
+PinButton.displayName = 'PinButton'
+
 export default PinButton

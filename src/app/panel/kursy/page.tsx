@@ -4,8 +4,8 @@ import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
 import { getUserEnrolledCourses } from '@/server/queries'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
-import EnrolledCoursesList from '@/components/EnrolledCoursesList'
 import EnrolledCoursesListSkeleton from '@/components/skeletons/EnrolledCoursesListSkeleton'
+import EnrolledCoursesList from '@/components/EnrolledCoursesList'
 
 export const dynamic = 'force-dynamic'
 

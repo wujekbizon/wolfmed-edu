@@ -19,27 +19,27 @@ export default function AnalyticsOverview({ stats }: AnalyticsOverviewProps) {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-5 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
           <p className="text-sm font-medium text-zinc-600 mb-1">Pytania ogółem</p>
           <p className="text-3xl font-bold text-slate-900">{totalQuestions}</p>
           <p className="text-xs text-zinc-500 mt-2">Z {testsAttempted} testów</p>
         </div>
 
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-5 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
           <p className="text-sm font-medium text-zinc-600 mb-1">Poprawne odpowiedzi</p>
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-green-600">{correctAnswers}</p>
-            <span className="text-sm font-semibold text-green-600">({accuracyPercentage}%)</span>
+            <p className="text-3xl font-bold text-[#f58a8a]">{correctAnswers}</p>
+            <span className="text-sm font-semibold text-[#f58a8a]">({accuracyPercentage}%)</span>
           </div>
           <div className="mt-3 relative w-full h-2 bg-zinc-200 rounded-full overflow-hidden">
             <div
-              className="absolute inset-y-0 left-0 bg-gradient-to-r from-green-500 to-green-400 rounded-full transition-all duration-500"
+              className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ff9898] to-[#ffc5c5] rounded-full transition-all duration-500"
               style={{ width: `${accuracyPercentage}%` }}
             />
           </div>
         </div>
 
-        <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-5 shadow-md hover:shadow-lg transition-all duration-300">
+        <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-5 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
           <p className="text-sm font-medium text-zinc-600 mb-1">Błędne odpowiedzi</p>
           <div className="flex items-baseline gap-2">
             <p className="text-3xl font-bold text-red-600">{incorrectAnswers}</p>

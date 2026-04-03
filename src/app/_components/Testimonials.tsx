@@ -9,7 +9,7 @@ export default async function Testimonials() {
   return (
     <section
       aria-labelledby='testimonials-title'
-      className='relative w-full px-4 sm:px-6 md:px-8 py-8 md:py-12'
+      className='relative w-full px-4 sm:px-6 md:px-8 py-32'
     >
       <div className='bg-transparent rounded-3xl px-4 lg:px-8 xl:px-16 py-12 sm:py-16 lg:py-20'>
         <header className='relative mb-8 sm:mb-12 text-center'>

@@ -11,7 +11,7 @@ export default async function StorageQuotaWidget() {
   const percentage = (storageUsed / storageLimit) * 100;
 
   return (
-    <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+    <div className="bg-zinc-50 border border-zinc-100 p-4 sm:p-6 rounded-xl hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
       <h3 className="text-lg font-semibold text-zinc-800 mb-3">
         Miejsce na dysku
       </h3>

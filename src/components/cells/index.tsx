@@ -28,23 +28,23 @@ const DynamicNoteCell = dynamic(() => import('./NoteCell'), {
   ssr: false,
 })
 
-// const DynamicRagCell = dynamic(() => import('./RagCell'), {
-//   loading: () => (
-//     <div className="h-1/10 flex flex-col items-center justify-center">
-//       <ProgressBar />
-//     </div>
-//   ),
-//   ssr: false,
-// })
+const DynamicRagCell = dynamic(() => import('./RagCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
-// const DynamicTestCell = dynamic(() => import('./TestCell'), {
-//   loading: () => (
-//     <div className="h-1/10 flex flex-col items-center justify-center">
-//       <ProgressBar />
-//     </div>
-//   ),
-//   ssr: false,
-// })
+const DynamicTestCell = dynamic(() => import('./TestCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
 const DynamicFlashcardCell = dynamic(() => import('./FlashcardCell'), {
   loading: () => (
@@ -55,22 +55,22 @@ const DynamicFlashcardCell = dynamic(() => import('./FlashcardCell'), {
   ssr: false,
 })
 
-// const DynamicPlanCell = dynamic(() => import('./PlanCell'), {
-//   loading: () => (
-//     <div className="h-1/10 flex flex-col items-center justify-center">
-//       <ProgressBar />
-//     </div>
-//   ),
-//   ssr: false,
-// })
+const DynamicPlanCell = dynamic(() => import('./PlanCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
-// const DynamicMediaCell = dynamic(() => import('./MediaCell'), {
-//   loading: () => (
-//     <div className="h-1/10 flex flex-col items-center justify-center">
-//       <ProgressBar />
-//     </div>
-//   ),
-//   ssr: false,
-// })
+const DynamicMediaCell = dynamic(() => import('./MediaCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
 
-export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicFlashcardCell }
+export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell }

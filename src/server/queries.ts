@@ -44,7 +44,7 @@ import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
-
+import { parseLexicalContent } from "@/helpers/safeJsonParse"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -271,6 +271,19 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
     accessTier: row.enrollment.accessTier,
     expiresAt: row.enrollment.expiresAt,
   }))
+})
+
+// Check if user has any active enrollments (used for /panel layout guard)
+export const getUserEnrollments = cache(async (userId: string) => {
+  return await db
+    .select()
+    .from(courseEnrollments)
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.isActive, true)
+      )
+    )
 })
 
 // ============================================================================
@@ -1966,7 +1979,6 @@ export const getProgressTimeline = cache(
 
 import { lectures } from "./db/schema"
 import type { Lecture, NewLecture } from "./db/schema"
-import { parseLexicalContent } from "@/helpers/safeJsonParse"
 
 export async function getLectureByHash(userId: string, contentHash: string): Promise<Lecture | null> {
   const rows = await db

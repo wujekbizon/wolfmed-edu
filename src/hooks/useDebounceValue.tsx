@@ -1,40 +1,21 @@
 import { useState, useEffect } from 'react'
 
 /**
- * Custom hook to implement debounced value behavior in React components.
+ * Returns a debounced copy of `value` that only updates after `delay` ms of
+ * inactivity. Each time `value` changes the timer resets, so rapid updates
+ * (e.g. keystrokes) produce only one downstream state change.
  *
- * Debounced value refers to a value that is only updated in the component's state
- * after a certain amount of time has passed since the last update. This is useful
- * for scenarios where you want to avoid frequent state updates based on rapidly
- * changing values (e.g., user input).
- *
- * @param {T} value - The value to be debounced.
- * @param {number} delay - The delay (in milliseconds) before updating the debounced value.
- * @returns {T} - The current debounced value.
+ * @param value - The value to debounce.
+ * @param delay - Debounce delay in milliseconds.
+ * @returns The debounced value.
  */
-
 export function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value) // State variable for debounced value
-  const [prevValue, setPrevValue] = useState<T>(value) // State variable to track previous value
+  const [debouncedValue, setDebouncedValue] = useState<T>(value)
 
   useEffect(() => {
-    // Skip update if value hasn't changed
-    if (value === prevValue) {
-      return
-    }
+    const timer = setTimeout(() => setDebouncedValue(value), delay)
+    return () => clearTimeout(timer)
+  }, [value, delay])
 
-    const timer = setTimeout(() => {
-      // Update debounced value and previous value after delay
-      setDebouncedValue(value)
-      setPrevValue(value)
-    }, delay)
-
-    return () => {
-      // Cleanup function to clear timer on unmount or value/delay change
-      clearTimeout(timer)
-    }
-  }, [value, delay, prevValue]) // Re-run on changes to value or delay
-
-  // Return the current debounced value
   return debouncedValue
 }

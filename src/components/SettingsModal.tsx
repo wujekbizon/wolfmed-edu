@@ -7,7 +7,6 @@ import ModalBody from './modal/ModalBody'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import { useSettingsStore } from '@/store/useSettingsStore'
 
-
 export default function SettingsModal() {
   const { isOpen, closeSettingsModal } = useSettingsModalStore()
   const { showMobileAI, setShowMobileAI } = useSettingsStore()

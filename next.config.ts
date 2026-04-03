@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
   serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],
-  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app'],
+  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app','*.local-origin.dev'],
   experimental: {
   },
   images: {

@@ -14,9 +14,9 @@ export const EditorField = memo(function EditorField({
     formState: any
     editorKey: number
     onChange: (editorState: any) => void
-    contentRef: React.RefObject<HTMLInputElement>
-    plainTextRef: React.RefObject<HTMLInputElement>
-    excerptRef: React.RefObject<HTMLInputElement>
+    contentRef: React.RefObject<HTMLInputElement | null>
+    plainTextRef: React.RefObject<HTMLInputElement | null>
+    excerptRef: React.RefObject<HTMLInputElement | null>
     initialContent?: unknown
 }) {
 
@@ -30,7 +30,7 @@ export const EditorField = memo(function EditorField({
                 onChange={onChange}
                 placeholder="Napisz swoją notatkę..."
                 className="min-h-64 overflow-y-auto scrollbar-webkit"
-                initialContent={initialContent ? JSON.stringify(initialContent) : ''}
+                initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
             <FieldError name="content" formState={formState} />
         </div>

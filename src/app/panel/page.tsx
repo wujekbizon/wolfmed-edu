@@ -3,13 +3,11 @@ import { Suspense } from "react"
 import UsernameForm from "@/components/UsernameForm"
 import MottoForm from "@/components/MottoForm"
 import UserAnalytics from "@/components/UserAnalytics"
-import SupporterStatus from "@/components/SupporterStatus"
 import UserMotto from "@/components/UserMotto"
 import UserMottoSkeleton from "@/components/skeletons/UserMottoSkeleton"
 import UserAnalyticsSkeleton from "@/components/skeletons/UserAnalyticsSkeleton"
 import UsernameSkeleton from "@/components/skeletons/UsernameSkeleton"
 import Username from "@/components/Username"
-import SupporterStatusSkeleton from "@/components/skeletons/SupporterStatusSkeleton"
 import TestimonialForm from "@/components/TestimonialForm"
 import DynamicBoard from "../_components/DynamicBoard"
 import StorageQuotaWidget from "@/components/StorageQuotaWidget"
@@ -31,9 +29,6 @@ export default async function TestsPage() {
               <Suspense fallback={<UsernameSkeleton />}>
                 <Username />
               </Suspense>
-              <Suspense fallback={<SupporterStatusSkeleton />}>
-                <SupporterStatus />
-              </Suspense>
             </div>
             <div className="flex flex-col xs:flex-row gap-6">
               <Suspense fallback={<UserMottoSkeleton />}>
@@ -51,13 +46,13 @@ export default async function TestsPage() {
                 <Suspense fallback={null}>
                   <AdminBlogWidget />
                 </Suspense>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <UsernameForm />
                 </div>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <MottoForm />
                 </div>
-                <div className="bg-white/60 backdrop-blur-sm p-4 sm:p-6 rounded-xl shadow-md border border-zinc-200/60 hover:shadow-lg transition-all duration-300">
+                <div className="bg-zinc-50 border border-zinc-100 rounded-xl p-4 sm:p-6 hover:bg-white hover:border-zinc-200 hover:shadow-sm transition-all duration-200">
                   <TestimonialForm />
                 </div>
                 <Suspense fallback={<StorageQuotaWidgetSkeleton />}>

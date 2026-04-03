@@ -2,7 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/server/db/index"
-import { userLimits, materials, users } from "@/server/db/schema"
+import { userLimits, materials } from "@/server/db/schema"
 import { DeleteMaterialIdSchema, MaterialsSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
@@ -106,6 +106,7 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       }
     }
 
+    try {
     await db.transaction(async (tx) => {
       // Ensure userLimits exists
       const existingLimit = await tx
@@ -118,24 +119,13 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       let currentLimit = 20_000_000;
 
       if (existingLimit.length === 0) {
-        // Create record only for supporters
-        const user = await tx
-          .select({ supporter: users.supporter })
-          .from(users)
-          .where(eq(users.userId, userId))
-          .limit(1);
-
-        if (user[0]?.supporter) {
-          await tx.insert(userLimits).values({
-            userId,
-            storageLimit: 20_000_000,
-            storageUsed: 0,
-          });
-          currentUsage = 0;
-          currentLimit = 20_000_000;
-        } else {
-          throw new Error("Tylko wspierający mogą dodawać materiały");
-        }
+        await tx.insert(userLimits).values({
+          userId,
+          storageLimit: 20_000_000,
+          storageUsed: 0,
+        });
+        currentUsage = 0;
+        currentLimit = 20_000_000;
       } else {
         currentUsage = existingLimit[0]?.storageUsed ?? 0;
         currentLimit = existingLimit[0]?.storageLimit ?? 20_000_000;
@@ -167,6 +157,10 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         .where(eq(userLimits.userId, userId));
     });
 
+    } catch (error: any) {
+      await utapi.deleteFiles([key]);
+      return toFormState("ERROR", error.message);
+    }
   } catch (error: any) {
     return toFormState("ERROR", error.message);
   }

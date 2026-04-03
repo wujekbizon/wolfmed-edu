@@ -12,10 +12,11 @@ export const Success = () => {
   const tier = searchParams.get('tier') || 'basic'
 
   const courseData = courseSlug ? careerPathsData[courseSlug] : null
+  const tierData = courseData?.pricing?.[tier as 'basic' | 'premium' | 'pro']
 
   const isPremium = tier === 'premium'
 
-  if (!courseData) {
+  if (!courseData || !tierData) {
     return (
       <section className="relative min-h-[calc(100vh-80px)] p-6 flex flex-col justify-center items-center sm:p-12">
         <GradientOverlay />
@@ -106,6 +107,24 @@ export const Success = () => {
           <p className="text-lg text-zinc-600">
             Właśnie odblokowałeś dostęp do:
           </p>
+
+          <ul className="w-full max-w-md space-y-3 text-left mt-4">
+            {tierData.features.slice(0, 4).map((feature, i) => (
+              <li key={i} className="flex items-start gap-3 text-sm md:text-base text-zinc-700">
+                <svg
+                  className="mt-0.5 w-5 h-5 md:w-6 md:h-6 shrink-0 text-slate-500"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
 
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md mt-8">
             <Link

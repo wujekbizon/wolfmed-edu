@@ -18,7 +18,7 @@ export default function NotesSection({ notes }: { notes: NotesType[] }) {
       : notes
 
   return (
-    <div className='bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60'>
+    <section className='bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60'>
       <div className='flex justify-between items-center mb-6'>
         <h2 className='text-xl font-bold text-zinc-800'>Moje Notatki</h2>
         <div className='flex gap-2'>
@@ -59,6 +59,6 @@ export default function NotesSection({ notes }: { notes: NotesType[] }) {
           <p className='text-zinc-400'>Stwórz swoją pierwszą notatkę!</p>
         </div>
       )}
-    </div>
+    </section>
   )
 }

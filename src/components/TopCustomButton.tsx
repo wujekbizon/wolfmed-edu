@@ -18,13 +18,13 @@ const TopCustomButton = forwardRef<HTMLButtonElement, TopCustomButtonProps>(
             ref={ref}
             onClick={onClick}
             className={`${
-              active ? 'bg-white' : 'bg-[#ffc5c5]'
-            } flex cursor-pointer place-items-center gap-4 stroke-neutral-400 stroke-[0.75] px-[5px] py-1 text-zinc-900 transition-all rounded-md border border-red-200/60 hover:bg-[#f58a8a] hover:border-zinc-900 hover:stroke-neutral-100 hover:text-white`}
+              active ? 'bg-zinc-100 border-zinc-400' : 'bg-white border-zinc-200'
+            } flex cursor-pointer place-items-center gap-4 stroke-zinc-500 stroke-[0.75] px-[5px] py-1 text-zinc-700 transition-all rounded-md border hover:bg-zinc-100 hover:border-zinc-400 hover:text-zinc-900`}
           >
             {icon}
           </button>
           {badgeCount > 0 && (
-            <span className="absolute -bottom-3 -right-1 w-5 h-5 flex items-center justify-center rounded-full bg-zinc-500 text-white text-xs font-bold border border-zinc-800 shadow-md">
+            <span className="absolute -bottom-3 -right-1 w-5 h-5 flex items-center justify-center rounded-full bg-zinc-700 text-white text-xs font-bold border border-white shadow-md">
               {badgeCount}
             </span>
           )}

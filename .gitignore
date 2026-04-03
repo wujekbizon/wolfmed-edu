@@ -47,8 +47,8 @@ detail_layers.txt
 /outputs
 /inputs
 
-*.md
+/.claude
 
 *.sql
 *.toml
-*.local.jsonscripts/users-export.json
+*.local.json

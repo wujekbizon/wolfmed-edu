@@ -8,8 +8,7 @@ export async function getUserIdWithRetry(
     const userId = await lookupFn(param)
     if (userId) return userId
 
-    console.log(`Retrying to find userId for ${param}... (${i + 1}/${retries})`)
-    await new Promise((resolve) => setTimeout(resolve, delayMs)) // Wait before retrying
+    await new Promise((resolve) => setTimeout(resolve, delayMs))
   }
   return null
 }
