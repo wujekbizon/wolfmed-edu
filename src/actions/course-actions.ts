@@ -5,6 +5,7 @@ import { db } from "@/server/db/index";
 import { courseEnrollments } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { hasAccessToTier } from "@/helpers/accessTiers";
+import { getUserEnrollments } from "@/server/queries";
 
 /**
  * Check if user has access to a specific course
@@ -76,27 +77,15 @@ export async function checkCourseAccessAction(courseSlug: string) {
  * Get all courses the user is enrolled in
  */
 export async function getUserEnrollmentsAction() {
-  const { userId } = await auth();
-
-  if (!userId) {
-    return { enrollments: [] };
-  }
+  const { userId } = await auth()
+  if (!userId) return { enrollments: [] }
 
   try {
-    const enrollments = await db
-      .select()
-      .from(courseEnrollments)
-      .where(
-        and(
-          eq(courseEnrollments.userId, userId),
-          eq(courseEnrollments.isActive, true)
-        )
-      );
-
-    return { enrollments };
+    const enrollments = await getUserEnrollments(userId)
+    return { enrollments }
   } catch (error) {
-    console.error("Error fetching enrollments:", error);
-    return { enrollments: [] };
+    console.error('Error fetching enrollments:', error)
+    return { enrollments: [] }
   }
 }
 

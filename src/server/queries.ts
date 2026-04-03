@@ -273,6 +273,19 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
   }))
 })
 
+// Check if user has any active enrollments (used for /panel layout guard)
+export const getUserEnrollments = cache(async (userId: string) => {
+  return await db
+    .select()
+    .from(courseEnrollments)
+    .where(
+      and(
+        eq(courseEnrollments.userId, userId),
+        eq(courseEnrollments.isActive, true)
+      )
+    )
+})
+
 // ============================================================================
 // BLOG QUERIES
 // ============================================================================

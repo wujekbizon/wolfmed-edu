@@ -116,7 +116,7 @@ export default function SidePanel({
 
         <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
           {!isSidePanelOpen && (
-            <div className={!isPremium ? 'cursor-not-allowed ml-[-2.5px]' : ''}>
+            <div className={!isPremium ? 'cursor-not-allowed ml-[-2.5px]' : 'ml-[-2.5px]'}>
               <Tooltip message='Asystent AI' position='right'>
                 <button
                   onClick={isPremium ? toggleSidePanel : undefined}
