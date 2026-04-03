@@ -11,7 +11,7 @@ export default function RagCell({ cell, isPremium = false }: { cell: { id: strin
           <Lock className="w-6 h-6 text-zinc-400" />
           <p className="text-sm font-medium">Funkcja dostępna tylko dla użytkowników premium</p>
           <Link
-            href="/kursy"
+            href="/panel/kursy"
             className="px-4 py-1.5 bg-gradient-to-r from-slate-600 to-rose-600 text-white text-xs rounded-full hover:from-slate-700 hover:to-rose-700 transition-all"
           >
             Odblokuj dostęp

@@ -10,15 +10,18 @@ import PinButton from '../../components/PinButton'
 import { Settings, Sparkles } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import SideAIInput from '@/components/SideAIInput'
+import { is } from 'drizzle-orm'
 
 interface SidePanelProps {
   children?: React.ReactNode
   pinnedCount?: number
+  isPremium?: boolean
 }
 
 export default function SidePanel({
   children,
-  pinnedCount = 0
+  pinnedCount = 0,
+  isPremium
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -98,6 +101,7 @@ export default function SidePanel({
               href={navLink.url}
               active={navLink.url === pathname}
               showTooltip={!isSidePanelOpen}
+              isPremium={!!navLink.requiresSupporter && !isPremium}
             >
               {navLink.icon}
             </CustomButton>
@@ -112,18 +116,22 @@ export default function SidePanel({
 
         <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
           {!isSidePanelOpen && (
-            <Tooltip message='Asystent AI' position='right'>
-              <button
-                onClick={toggleSidePanel}
-                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
-              >
-                <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
-                  <span className='transition-transform duration-200 group-hover:scale-110'>
-                    <Sparkles size={17} />
+            <div className={!isPremium ? 'cursor-not-allowed ml-[-2.5px]' : ''}>
+              <Tooltip message='Asystent AI' position='right'>
+                <button
+                  onClick={isPremium ? toggleSidePanel : undefined}
+                  disabled={!isPremium}
+                  className={`group relative flex items-center justify-center px-3 py-2 rounded-xl w-full transition-all duration-200 text-zinc-700 hover:text-zinc-900
+          ${!isPremium ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`}
+                >
+                  <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                    <span className='transition-transform duration-200 group-hover:scale-110'>
+                      <Sparkles size={17} />
+                    </span>
                   </span>
-                </span>
-              </button>
-            </Tooltip>
+                </button>
+              </Tooltip>
+            </div>
           )}
           {isSidePanelOpen ? (
             pinButton
@@ -142,7 +150,9 @@ export default function SidePanel({
                   <Settings size={17} />
                 </span>
               </span>
-              <span className='text-md font-medium whitespace-nowrap overflow-hidden'>Ustawienia</span>
+              <span className='text-md font-medium whitespace-nowrap overflow-hidden'>
+                Ustawienia
+              </span>
             </button>
           ) : (
             <Tooltip message='Ustawienia' position='right'>

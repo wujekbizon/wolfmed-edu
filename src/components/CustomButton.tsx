@@ -8,19 +8,21 @@ export default function CustomButton(props: {
   text: string
   active?: boolean
   showTooltip?: boolean
+  isPremium?: boolean
 }) {
   const closeSidePanel = useStore((state) => state.closeSidePanel)
 
   const linkContent = (
     <Link
-      href={props.href}
+      href={props.isPremium ? '#' : props.href}
       className={`group relative flex items-center gap-3.5 rounded-xl transition-all duration-200
+        ${props.isPremium ? 'opacity-40 cursor-not-allowed pointer-events-none' : ''}
         ${props.active ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
         ${props.showTooltip
           ? 'justify-center'
           : 'p-1 bg-zinc-200 border border-zinc-400'
         }`}
-        onClick={closeSidePanel}
+      onClick={props.isPremium ? (e) => e.preventDefault() : closeSidePanel}
     >
       <span
         className={`w-9 h-9 rounded-lg hover:bg-red-100/90 flex items-center justify-center shrink-0 transition-all duration-200
@@ -43,9 +45,11 @@ export default function CustomButton(props: {
 
   if (props.showTooltip) {
     return (
-      <Tooltip message={props.text} position="right">
-        {linkContent}
-      </Tooltip>
+      <div className={props.isPremium ? 'cursor-not-allowed' : ''}>
+        <Tooltip message={props.text} position="right">
+          {linkContent}
+        </Tooltip>
+      </div>
     )
   }
 
