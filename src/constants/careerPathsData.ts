@@ -508,7 +508,7 @@ export const careerPathsData: Record<string, PathData> = {
         text: 'Zobacz program nauczania',
         imgSrc:
           'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5vbKwqk8g1osWNRSp0OXdUmcQAhVqCtZH5D7Y',
-        url: '/sciezki/pielegniarstwo',
+        url: '/kierunki/pielegniarstwo/#mapa',
         icon: 'curriculum'
       },
       {
@@ -519,7 +519,7 @@ export const careerPathsData: Record<string, PathData> = {
         text: 'AI Asystent',
         imgSrc:
           'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5H6zCTyRXZAfUgQh6yMWki0EFjo5rbcJDS2mP',
-        url: '/panel/ai',
+        url: '/panel/nauka',
         icon: 'ai'
       }
     ],

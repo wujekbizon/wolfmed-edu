@@ -31,7 +31,7 @@ const SimplePathCard = ({
           {description}
         </p>
 
-        {text && url && (
+        {/* {text && url && (
           <Link
             href={url}
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#ff9898] hover:text-[#ff5b5b] transition-colors group/link mt-auto"
@@ -51,7 +51,7 @@ const SimplePathCard = ({
               />
             </svg>
           </Link>
-        )}
+        )} */}
       </div>
     </div>
   );
