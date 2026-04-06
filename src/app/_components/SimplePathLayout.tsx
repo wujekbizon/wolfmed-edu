@@ -6,7 +6,6 @@ import SimplePathCard from "@/components/SimplePathCard";
 import GradientOverlay from "@/components/GradientOverlay";
 import TriangleDivider from "@/components/TriangleDivider";
 import Image from "next/image";
-import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import CoursePricingCard from "@/components/CoursePricingCard";
 
@@ -195,6 +194,7 @@ export default function SimplePathLayout({
               .filter(([key]) => key !== 'courseSlug')
               .map(([tierName, tierData]) => {
                 const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
+                console.log(tier)
                 const isPremium = tierName.toLowerCase().includes('premium')
                 return (
                   <CoursePricingCard

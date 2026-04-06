@@ -117,6 +117,7 @@ export default function CoursePricingCard({
           <form action={action}>
             <input type='hidden' name='courseSlug' value={courseSlug} />
             <input type='hidden' name='accessTier' value={accessTier} />
+            <input type='hidden' name='priceId' value={priceId} />
             <SubmitButton
               label={label}
               loading='Przekierowywanie...'

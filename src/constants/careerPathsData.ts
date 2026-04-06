@@ -425,7 +425,7 @@ export const careerPathsData: Record<string, PathData> = {
       basic: {
         price: '159,99 zł',
         priceId:
-          process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_STANDARD_PRICE_ID ||
+          process.env.STRIPE_OPIEKUN_STANDARD_PRICE_ID ||
           'price_standard_placeholder',
         accessTier: 'basic',
         badge: 'Oferta na start',
@@ -444,7 +444,7 @@ export const careerPathsData: Record<string, PathData> = {
       premium: {
         price: '449,99 zł',
         priceId:
-          process.env.NEXT_PUBLIC_STRIPE_OPIEKUN_PREMIUM_PRICE_ID ||
+          process.env.STRIPE_OPIEKUN_PREMIUM_PRICE_ID ||
           'price_opiekun_premium_placeholder',
         accessTier: 'premium',
         badge: 'Oferta na start',
@@ -528,7 +528,7 @@ export const careerPathsData: Record<string, PathData> = {
       basic: {
         price: '279,99 zł',
         priceId:
-          process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID ||
+          process.env.STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID ||
           'price_basic_placeholder',
         accessTier: 'basic',
         badge: 'Oferta na start',
@@ -546,7 +546,7 @@ export const careerPathsData: Record<string, PathData> = {
       premium: {
         price: '599,99 zł',
         priceId:
-          process.env.NEXT_PUBLIC_STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID ||
+          process.env.STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID ||
           'price_premium_placeholder',
         accessTier: 'premium',
         badge: 'Oferta na start',
