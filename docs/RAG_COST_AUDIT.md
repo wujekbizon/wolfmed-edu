@@ -124,16 +124,60 @@ Rate limits are the primary cost protection mechanism. Confirm the limits are ti
 
 Based on the projections above, AI features alone cost roughly **$0.08–0.20 per lecture** and **~$0.0013 per tool request**.
 
-Suggested minimum premium price to cover AI costs with margin:
+Actual course pricing (one-time payment):
 
-| Scenario | Suggested price |
-|----------|----------------|
-| Conservative (low usage) | **29 PLN/month** |
-| Moderate usage | **49 PLN/month** |
-| Heavy usage (lecture-heavy users) | **69–99 PLN/month** |
+| Course | Price | Model |
+|--------|-------|-------|
+| Opiekun-Medyczny | 499.99 PLN (~$125) | AI queries + tools, no TTS |
+| Pielęgniarstwo | 599.99 PLN (~$150) | AI queries + tools + TTS lectures |
 
 > Upstash Redis costs are negligible at this scale (free tier covers up to 10K commands/day).
 > UploadThing costs depend on storage — separate from AI costs.
+
+---
+
+## Lifetime Credit Allocations (Planned)
+
+Target: keep lifetime AI cost per user under ~10% of course revenue.  
+See full implementation plan in `RAG_CREDITS_PLAN.md`.
+
+### Opiekun-Medyczny (499.99 PLN / ~$125)
+
+| Credit type | Allocation | Lifetime cost |
+|-------------|-----------|---------------|
+| AI queries (RAG + tools) | 1,000 | ~$0.88 |
+| Lectures (TTS) | 0 | — |
+| **Total AI cost** | | **<1% of revenue** |
+
+### Pielęgniarstwo (599.99 PLN / ~$150)
+
+| Credit type | Allocation | Lifetime cost |
+|-------------|-----------|---------------|
+| AI queries (RAG + tools) | 1,000 | ~$0.88 |
+| Lectures (TTS) | 25 | ~$10.00 |
+| **Total AI cost** | | **~$10.88 (~7% of revenue)** |
+
+> 1,000 queries ≈ 1 year of active daily studying (5 sessions/week × ~4 queries).
+
+---
+
+## Topup Pack Pricing
+
+### Lecture packs (Pielęgniarstwo users only)
+
+| Pack | Price | Cost to us | Margin |
+|------|-------|------------|--------|
+| 5 lectures | 19.99 PLN | ~$2 (~8 PLN) | ~12 PLN |
+| 10 lectures | 34.99 PLN | ~$4 (~16 PLN) | ~19 PLN |
+| 20 lectures | 59.99 PLN | ~$8 (~32 PLN) | ~28 PLN |
+
+### AI query packs (both courses)
+
+| Pack | Price | Cost to us | Margin |
+|------|-------|------------|--------|
+| 500 queries | 14.99 PLN | ~$0.37 (~1.5 PLN) | ~13.5 PLN |
+
+> Query packs will rarely sell — 1,000 lifetime is generous. Lecture packs are the main topup product.
 
 ---
 
@@ -141,7 +185,7 @@ Suggested minimum premium price to cover AI costs with margin:
 
 - [ ] Confirm actual Gemini 2.5 Flash pricing in GCP console (may differ from estimates)
 - [x] Confirmed: File Search storage and queries are free — only embedding at upload time is charged (~$0.15/1M tokens, one-time per document)
-- [ ] Check current rate limit values in `src/lib/rateLimit.ts`
+- [x] Rate limits confirmed: `rag:query` 10/hour, `lecture:generate` 3/day (to be replaced by lifetime credits)
 - [ ] Fix double RAG call on tool path (see `RAG_TECH_IMPROVEMENTS.md`)
-- [ ] Decide if lecture generation needs a separate usage quota (e.g. 2 lectures/month on base plan)
+- [ ] Implement lifetime credit system (see `RAG_CREDITS_PLAN.md`)
 - [ ] Monitor actual token usage via GCP after first week of premium users
