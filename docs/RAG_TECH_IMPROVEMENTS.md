@@ -123,3 +123,17 @@ if (shouldSearchRag) {
 - Consider streaming tool results via SSE instead of waiting for full completion
 - `diagram_tool` uses Mermaid internally but description says "Excalidraw format" — align description with reality
 - Add structured logging (currently `console.error` scattered throughout)
+
+---
+
+## Rate Limit — Lecture Generation (cost risk)
+
+**File**: `src/lib/rateLimit.ts:49`  
+**Current**: `lecture:generate` → 3/day = **90/month max**  
+**Problem**: At $0.40/lecture avg TTS cost, a max-usage Pielęgniarstwo user costs **$36/month** on a 599.99 PLN one-time payment. Revenue is consumed within 4–5 months.  
+**Fix**: Change to a monthly hard cap instead of daily:
+```typescript
+'lecture:generate': { interval: 30 * 24 * 60 * 60 * 1000, maxRequests: 10 },
+```
+**Recommended cap**: 10/month → worst-case $4/user/month → one-time revenue covers 37+ months.  
+See full analysis in `RAG_COST_SIMULATION.md`.
