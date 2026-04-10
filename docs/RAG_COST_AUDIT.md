@@ -10,6 +10,7 @@
 |---------|--------------|--------------|
 | Google Gemini | `gemini-2.5-flash` | per 1M tokens |
 | Google TTS | `pl-PL-Wavenet-A` | per 1M characters |
+| Gemini File Search Store | storage + queries | **free** (pay once for embedding at upload: ~$0.15/1M tokens) |
 
 > Verify current pricing at: https://ai.google.dev/pricing and https://cloud.google.com/text-to-speech/pricing
 
@@ -139,7 +140,7 @@ Suggested minimum premium price to cover AI costs with margin:
 ## Action Items
 
 - [ ] Confirm actual Gemini 2.5 Flash pricing in GCP console (may differ from estimates)
-- [ ] Confirm Gemini File Search grounding fee (if any)
+- [x] Confirmed: File Search storage and queries are free — only embedding at upload time is charged (~$0.15/1M tokens, one-time per document)
 - [ ] Check current rate limit values in `src/lib/rateLimit.ts`
 - [ ] Fix double RAG call on tool path (see `RAG_TECH_IMPROVEMENTS.md`)
 - [ ] Decide if lecture generation needs a separate usage quota (e.g. 2 lectures/month on base plan)
