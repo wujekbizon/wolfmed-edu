@@ -38,7 +38,9 @@ export async function createFileSearchStore(
     })
 
     if (!store.name) {
-      throw new Error('Failed to create file search store: No store name returned')
+      throw new Error(
+        'Failed to create file search store: No store name returned'
+      )
     }
 
     return store.name
@@ -48,9 +50,7 @@ export async function createFileSearchStore(
   }
 }
 
-export async function deleteFileSearchStore(
-  storeName: string
-): Promise<void> {
+export async function deleteFileSearchStore(storeName: string): Promise<void> {
   try {
     const ai = getGoogleAI()
 
@@ -101,7 +101,7 @@ export async function uploadFiles(
         const maxAttempts = 60
 
         while (!operation.done && attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 5000))
+          await new Promise((resolve) => setTimeout(resolve, 5000))
           operation = await ai.operations.get({ operation })
           attempts++
         }
@@ -111,7 +111,9 @@ export async function uploadFiles(
         }
 
         if (operation.error) {
-          throw new Error(`Upload failed: ${operation.error.message || 'Unknown error'}`)
+          throw new Error(
+            `Upload failed: ${operation.error.message || 'Unknown error'}`
+          )
         }
 
         results.uploaded.push(file.name)
@@ -155,15 +157,17 @@ export async function queryWithFileSearch(
 
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
-    const configTools: any[] = [{
-      fileSearch: {
-        fileSearchStoreNames: [fileSearchStoreName]
+    const configTools: any[] = [
+      {
+        fileSearch: {
+          fileSearchStoreNames: [fileSearchStoreName]
+        }
       }
-    }]
+    ]
 
     if (tools && tools.length > 0) {
       configTools.push({
-        functionDeclarations: tools.map(tool => ({
+        functionDeclarations: tools.map((tool) => ({
           name: tool.name,
           description: tool.description,
           parameters: tool.parameters
@@ -180,7 +184,11 @@ export async function queryWithFileSearch(
       }
     })
 
-    if (response.functionCalls && Array.isArray(response.functionCalls) && response.functionCalls.length > 0) {
+    if (
+      response.functionCalls &&
+      Array.isArray(response.functionCalls) &&
+      response.functionCalls.length > 0
+    ) {
       const executedTools: Array<{ name: string; result: ToolResult }> = []
 
       for (const call of response.functionCalls) {
@@ -208,9 +216,11 @@ export async function queryWithFileSearch(
         }
       }))
 
-      const toolResultsText = executedTools.map(({ name, result }) => {
-        return `Tool: ${name}\nResult: ${JSON.stringify(result, null, 2)}`
-      }).join('\n\n')
+      const toolResultsText = executedTools
+        .map(({ name, result }) => {
+          return `Tool: ${name}\nResult: ${JSON.stringify(result, null, 2)}`
+        })
+        .join('\n\n')
 
       const finalPrompt = `${enhancedQuery}
 
@@ -349,11 +359,13 @@ export async function queryFileSearchOnly(
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        tools: [{
-          fileSearch: {
-            fileSearchStoreNames: [fileSearchStoreName]
+        tools: [
+          {
+            fileSearch: {
+              fileSearchStoreNames: [fileSearchStoreName]
+            }
           }
-        }]
+        ]
       }
     })
 
@@ -385,7 +397,9 @@ export async function executeToolWithContent(
     const ai = getGoogleAI()
 
     // Build content parts - text + any PDF files as inline data
-    const parts: Array<{ text: string } | { inlineData: { data: string; mimeType: string } }> = []
+    const parts: Array<
+      { text: string } | { inlineData: { data: string; mimeType: string } }
+    > = []
 
     // Add PDF files as inline data (they become PRIMARY sources)
     if (pdfFiles && pdfFiles.length > 0) {
@@ -423,15 +437,19 @@ ${content}
     // Wrap in role/parts structure for multimodal content
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: [{
-        role: 'user',
-        parts: parts
-      }],
+      contents: [
+        {
+          role: 'user',
+          parts: parts
+        }
+      ],
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        tools: [{
-          functionDeclarations: [toolDefinition]
-        }]
+        tools: [
+          {
+            functionDeclarations: [toolDefinition]
+          }
+        ]
       }
     })
 
