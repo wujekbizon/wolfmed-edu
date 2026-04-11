@@ -107,7 +107,10 @@ export default function RichPathLayout({
                       features={tier.features}
                       isPremium={isPremium}
                       {...(tier.badge ? { badge: tier.badge } : {})}
-                       alreadyOwned={ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`)}
+                       alreadyOwned={
+                        ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`) ||
+                        (!isPremium && ownedCourses?.includes(`${pricing?.courseSlug}-premium`))
+                      }
                     />
                   )
                 })}
