@@ -63,8 +63,12 @@ function getGoogleAI() {
 
 async function loadTemplate<T>(filename: string): Promise<T> {
   const templatePath = join(process.cwd(), 'templates', filename)
-  const content = await readFile(templatePath, 'utf-8')
-  return JSON.parse(content)
+  try {
+    const content = await readFile(templatePath, 'utf-8')
+    return JSON.parse(content)
+  } catch (error) {
+    throw new Error(`Failed to load template "${filename}": ${error instanceof Error ? error.message : 'unknown error'}`)
+  }
 }
 
 async function getTestTemplate(): Promise<TestQuestionTemplate> {
