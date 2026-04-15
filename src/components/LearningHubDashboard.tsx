@@ -30,7 +30,7 @@ export default function LearningHubDashboard({
           Twoje osobiste środowisko do nauki i rozwoju
         </p>
       </div>
-      <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
+      <div className="bg-transparent xs:bg-white p-0 xs:p-4 sm:p-6 rounded-2xl shadow-none xs:shadow-xl border border-transparent xs:border-zinc-200/60">
         <h2 className="text-xl font-bold text-zinc-800 mb-6">Dostępne Testy</h2>
         <CategoryGrid categories={categories} />
       </div>

@@ -9,7 +9,7 @@ export default function LearningCategoryCard({ item }: { item: PopulatedCategori
 
     return (
         <Link href={`/panel/nauka/${item.value}`} className="flex items-center justify-center">
-            <div className="relative flex flex-col w-full overflow-hidden rounded-2xl h-[450px] bg-linear-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-lg transform transition-all duration-300 cursor-pointer backdrop-blur-sm backdrop-filter">
+            <div className="relative flex flex-col w-full overflow-hidden rounded-2xl min-h-[450px] xl:h-[450px] bg-linear-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-lg transform transition-all duration-300 cursor-pointer backdrop-blur-sm backdrop-filter">
                 <div className="relative w-full h-72 p-4 flex flex-col justify-end items-start">
                     {categoryData.image ? (
                         <Image
@@ -34,18 +34,18 @@ export default function LearningCategoryCard({ item }: { item: PopulatedCategori
                         {isCustomCategory ? 'Twoja kategoria' : 'Kompleksowe testy i pytania'}
                     </p>
                 </div>
-                <div className="relative z-10 flex flex-col justify-between p-4 h-1/2">
-                    <p className="text-zinc-300 text-sm md:text-base xl:text:lg leading-relaxed mb-4">
+                <div className="relative z-10 flex flex-col justify-between p-4 flex-1">
+                    <p className="text-zinc-300 text-sm md:text-base xl:text-lg leading-relaxed mb-4">
                         {categoryData.description}
                     </p>
                     <div className="flex items-center justify-between mt-auto">
-                        <p className="text-zinc-200 text-sm md:text-base xl:text:lg">
+                        <p className="text-zinc-200 text-sm md:text-base xl:text-lg">
                             <span className="font-bold text-red-400 mx-1">
                                 {item.count}
                             </span>
                             pytań
                         </p>
-                        <p className="text-red-400 text-sm md:text-base xl:text:lg font-semibold hover:text-red-500">Rozpocznij naukę &rarr;</p>
+                        <p className="text-red-400 text-sm md:text-base xl:text-lg font-semibold hover:text-red-500">Rozpocznij naukę &rarr;</p>
                     </div>
                 </div>
             </div>
