@@ -13,7 +13,7 @@ export default function MaterialsSection({ materials }: Props) {
   const { openUploadModal } = useMaterialModalStore()
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60">
+    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-xl border border-zinc-200/60">
       <div className="flex flex-wrap justify-between items-center gap-y-3 mb-6">
         <h2 className="text-base sm:text-xl font-bold text-zinc-800">Materiały i Zasoby</h2>
           <button

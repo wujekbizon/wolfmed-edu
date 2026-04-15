@@ -10,6 +10,7 @@ import type { MediaCellContent } from '@/types/cellTypes'
 import MaterialDeleteButton from './MaterialDeleteButton'
 import MaterialDeleteModal from './MaterialDeleteModal'
 import { formatBytes } from '@/helpers/formatBytes'
+import { Eye, Play } from 'lucide-react'
 
 type Props = {
   material: MaterialsType;
@@ -70,7 +71,7 @@ export default function MaterialCard({ material }: Props) {
               {material.title || filename || "Brak tytułu"}
             </h4>
             {material.category && (
-              <span className="absolute top-1 right-1 hidden md:inline-block font-semibold bg-zinc-800/80 text-zinc-100 px-2 py-0.5 rounded-full border border-zinc-700 text-[11px]">
+              <span className="absolute top-1 right-1 hidden md:inline-block font-semibold  text-zinc-600 px-2 py-0.5 text-[12px]">
                 {material.category}
               </span>
             )}
@@ -83,7 +84,7 @@ export default function MaterialCard({ material }: Props) {
           </div>
         </div>
       </header>
-      <div className="mt-4 border-t border-zinc-300/50 pt-1">
+      <div className="mt-4 border-t border-zinc-300/50 pt-4">
         <div className="h-full flex items-center justify-between">
           <div className="text-zinc-800/70 text-[11px]">
             {material.updatedAt && (
@@ -102,18 +103,20 @@ export default function MaterialCard({ material }: Props) {
             {isPdf && (
               <button
                 onClick={() => openPdfModal(src, material.title)}
-                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-600 cursor-pointer text-white hover:bg-slate-700 px-3 py-1.5 rounded text-xs transition-colors flex items-center gap-1.5"
                 aria-label={`Podgląd PDF ${material.title ?? ""}`}
               >
+                <Eye className="w-4 h-4" />
                 Podgląd PDF
               </button>
             )}
             {isVideo && (
               <button
                 onClick={handlePlay}
-                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1.5 rounded text-xs transition-colors flex items-center gap-1.5"
                 aria-label={`Odtwórz ${material.title ?? ""}`}
               >
+                <Play className="w-3 h-3 fill-white" />
                 Odtwórz
               </button>
             )}
@@ -121,9 +124,10 @@ export default function MaterialCard({ material }: Props) {
             {isText && (
               <button
                 onClick={async () => await openTextModal(src, material.title)}
-                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1.5 rounded text-xs transition-colors flex items-center gap-1.5"
                 aria-label={`Podgląd Tekst ${material.title ?? ""}`}
               >
+                <Eye className="w-4 h-4" />
                 Otwórz
               </button>
             )}

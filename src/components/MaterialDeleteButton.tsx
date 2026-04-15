@@ -1,7 +1,7 @@
 'use client'
 
 import { useDashboardStore } from '@/store/useDashboardStore'
-import DeleteIcon from './icons/DeleteIcon'
+import { Trash2 } from 'lucide-react'
 
 export default function MaterialDeleteButton({ materialId }: { materialId: string }) {
   const { openDeleteMaterialModal } = useDashboardStore()
@@ -9,7 +9,7 @@ export default function MaterialDeleteButton({ materialId }: { materialId: strin
   return (
     <button
       type="button"
-      className="flex items-center justify-center bg-red-500/40 hover:bg-red-500/70 cursor-pointer px-2 py-1 rounded transition-colors"
+      className="flex items-center justify-center text-zinc-600 hover:text-red-500 hover:bg-red-50 rounded-md cursor-pointer px-2 py-1 transition-colors"
       onClick={(e) => {
         e.preventDefault()
         e.stopPropagation()
@@ -17,7 +17,7 @@ export default function MaterialDeleteButton({ materialId }: { materialId: strin
       }}
       aria-label="Usuń materiał"
     >
-      <DeleteIcon />
+      <Trash2 className="w-4 h-4" />
     </button>
   )
 }

@@ -15,19 +15,19 @@ export default function NotePreviewCard({ note }: NotePreviewCardProps) {
     const { isDeleteModalOpen, noteIdToDelete } = useDashboardStore()
 
     return (
-        <div className="relative group bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300"
+        <div className="relative group p-4 bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300"
         >
             {isDeleteModalOpen && noteIdToDelete === note.id && <NoteDeleteModal noteId={note.id} />}
             <Link
                 href={`/panel/nauka/notatki/${note.id}`}
-                className="block p-5 rounded-2xl"
+                className="block rounded-2xl"
             >
                 <div className="flex justify-between items-start mb-3">
                     <h3 className="text-zinc-800 font-semibold text-lg leading-tight line-clamp-1">
                         {note.title || 'Bez tytułu'}
                     </h3>
                     {note.category && (
-                        <span className="text-xs font-medium px-3 py-1 rounded-full bg-zinc-100 text-zinc-700 border border-zinc-300/60">
+                        <span className="text-[12px] font-semibold text-zinc-700">
                             {note.category}
                         </span>
                     )}
