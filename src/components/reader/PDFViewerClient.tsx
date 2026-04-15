@@ -15,8 +15,10 @@ export default function PDFViewerClient({ file }: { file: string }) {
     useEffect(() => {
         const el = containerRef.current;
         if (!el) return;
-        const observer = new ResizeObserver(([entry]) => {
-            setContainerWidth(entry.contentRect.width);
+        const observer = new ResizeObserver((entries) => {
+            if (entries[0]) {
+               setContainerWidth(entries[0].contentRect.width);
+            }
         });
         observer.observe(el);
         return () => observer.disconnect();
