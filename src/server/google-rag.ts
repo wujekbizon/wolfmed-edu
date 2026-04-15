@@ -1,5 +1,5 @@
 import 'server-only'
-import { GoogleGenAI } from '@google/genai'
+import { GoogleGenAI, FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, enhanceUserQuery } from '../helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from './tools/executor'
@@ -449,7 +449,13 @@ ${content}
           {
             functionDeclarations: [toolDefinition]
           }
-        ]
+        ],
+        toolConfig: {
+          functionCallingConfig: {
+            mode: FunctionCallingConfigMode.ANY,
+            allowedFunctionNames: [toolName]
+          }
+        }
       }
     })
 

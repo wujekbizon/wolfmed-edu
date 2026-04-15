@@ -73,7 +73,7 @@ export default async function NaukaPage() {
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
       <LearningHubDashboard materials={materials} categories={[...accessibleCategories, ...customCards]} notes={userAllNotes} lectures={userLectures} isPremium={isPremium} />
       <PdfPreviewModal />
-<TextPreviewModal />
+      <TextPreviewModal />
       <UploadMaterialModal />
     </section>
   )
