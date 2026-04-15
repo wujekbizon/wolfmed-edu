@@ -19,12 +19,12 @@ export default function NotesSection({ notes }: { notes: NotesType[] }) {
 
   return (
     <section className='bg-white p-6 rounded-2xl shadow-xl border border-zinc-200/60'>
-      <div className='flex justify-between items-center mb-6'>
-        <h2 className='text-xl font-bold text-zinc-800'>Moje Notatki</h2>
-        <div className='flex gap-2'>
+      <div className='flex flex-wrap justify-between items-center gap-y-3 mb-6'>
+        <h2 className='text-base sm:text-xl font-bold text-zinc-800'>Moje Notatki</h2>
+        <div className='flex gap-1.5 sm:gap-2'>
           <button
             onClick={() => setFilter('recent')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
               filter === 'recent'
                 ? 'bg-slate-700 text-white'
                 : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
@@ -34,7 +34,7 @@ export default function NotesSection({ notes }: { notes: NotesType[] }) {
           </button>
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-2.5 py-1 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-slate-500 text-white'
                 : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-800'
