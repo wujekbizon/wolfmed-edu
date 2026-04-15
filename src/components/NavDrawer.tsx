@@ -140,13 +140,15 @@ export default function NavDrawer() {
         {/* Footer */}
         <div className="px-5 py-4 border-t border-white/40 flex items-center justify-between">
           <p className="text-xs text-zinc-500 tracking-wide">© 2026 Wolfmed-Edukacja</p>
-          <button
-            onClick={() => { toggleMenu(); openSettingsModal() }}
-            className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 transition-colors"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            <span>Ustawienia</span>
-          </button>
+          {pathname.startsWith('/panel') && (
+            <button
+              onClick={() => { toggleMenu(); openSettingsModal() }}
+              className="flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-800 transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Ustawienia</span>
+            </button>
+          )}
         </div>
       </aside>
     </>
