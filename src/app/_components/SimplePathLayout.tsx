@@ -4,7 +4,6 @@ import { PathLayoutProps } from "@/types/careerPathsTypes";
 import TestsSelection from "@/app/_components/TestsSelection";
 import SimplePathCard from "@/components/SimplePathCard";
 import GradientOverlay from "@/components/GradientOverlay";
-import TriangleDivider from "@/components/TriangleDivider";
 import Image from "next/image";
 import { useInView } from "react-intersection-observer";
 import CoursePricingCard from "@/components/CoursePricingCard";
@@ -30,11 +29,6 @@ export default function SimplePathLayout({
   })
   return (
     <section className='relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden'>
-      <TriangleDivider
-        direction='right'
-        className='border-b-[5vh] lg:border-b-[10vh] border-r-transparent border-b-transparent'
-      />
-
       <GradientOverlay />
       <div
         ref={heroRef}
@@ -64,14 +58,14 @@ export default function SimplePathLayout({
                 </div>
                 <Image
                   className='relative rounded-2xl ring-2 ring-slate-900/10 shadow-lg h-36 w-36 xl:h-40 xl:w-40 object-cover object-top'
-                  src='https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5lJJEon5QZL8RnOt9ME3WgkVAFJaXBNK7HC5q'
+                  src='https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57X4uczMpcn5R2Y4TWoEbjyPSwZtlvLxBXziD'
                   alt='CEO Wolfmed Edukacja'
                   width={160}
                   height={160}
                 />
                 <div className='flex flex-col items-center gap-1'>
                   <p className='text-slate-900 text-xl xl:text-2xl font-light tracking-tight'>
-                    Kinga Wolfinger
+                    Grzegorz Wolfinger
                   </p>
                   <div className='h-px w-12 bg-[#ff9898]/40' />
                   <p className='text-[#ff9898] text-xs xl:text-sm font-medium uppercase tracking-wider'>
@@ -86,14 +80,14 @@ export default function SimplePathLayout({
               <div className='lg:hidden flex flex-col items-center gap-4 relative z-10'>
                 <Image
                   className='relative rounded-2xl ring-2 ring-slate-900/10 shadow-lg h-32 w-32 object-cover object-top'
-                  src='https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5lJJEon5QZL8RnOt9ME3WgkVAFJaXBNK7HC5q'
+                  src='https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k57X4uczMpcn5R2Y4TWoEbjyPSwZtlvLxBXziD'
                   alt='CEO Wolfmed Edukacja'
                   width={128}
                   height={128}
                 />
                 <div className='flex flex-col items-center gap-1'>
                   <p className='text-slate-900 text-xl font-light tracking-tight'>
-                    Kinga Wolfinger
+                    Grzegorz Wolfinger
                   </p>
                   <div className='h-px w-12 bg-[#ff9898]/40' />
                   <p className='text-[#ff9898] text-xs font-medium uppercase tracking-wider'>

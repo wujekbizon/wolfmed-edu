@@ -1,5 +1,4 @@
 import { PathLayoutProps } from "@/types/careerPathsTypes";
-import TriangleDivider from "@/components/TriangleDivider";
 import GradientOverlay from "@/components/GradientOverlay";
 import CurriculumMap from "../../components/CurriculumMap";
 import CoursePricingCard from "@/components/CoursePricingCard";
@@ -14,12 +13,7 @@ export default function RichPathLayout({
   ownedCourses
 }: PathLayoutProps) {
   return (
-    <section className="relative @container flex flex-col w-full gap-12 overflow-hidden">
-      <TriangleDivider
-        direction="right"
-        className="border-b-[5vh] lg:border-b-[10vh] border-r-transparent border-b-transparent"
-      />
-
+    <section className="relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden">
       <GradientOverlay />
 
       <div className="relative w-full">
@@ -80,7 +74,7 @@ export default function RichPathLayout({
 
       {pricing && (
         <section aria-labelledby="pricing-title" className="w-full min-h-[65vh] flex items-center relative">
-          <div className="mx-auto w-full max-w-none lg:max-w-6xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+          <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16">
             <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
               <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
                 Cennik
