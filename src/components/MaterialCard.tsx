@@ -102,7 +102,7 @@ export default function MaterialCard({ material }: Props) {
             {isPdf && (
               <button
                 onClick={() => openPdfModal(src, material.title)}
-                className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Podgląd PDF ${material.title ?? ""}`}
               >
                 Podgląd PDF
@@ -111,7 +111,7 @@ export default function MaterialCard({ material }: Props) {
             {isVideo && (
               <button
                 onClick={handlePlay}
-                className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Odtwórz ${material.title ?? ""}`}
               >
                 Odtwórz
@@ -121,7 +121,7 @@ export default function MaterialCard({ material }: Props) {
             {isText && (
               <button
                 onClick={async () => await openTextModal(src, material.title)}
-                className="bg-zinc-800 cursor-pointer text-amber-400 hover:text-amber-100 px-3 py-1 rounded-full text-xs transition-colors"
+                className="bg-slate-700 cursor-pointer text-white hover:bg-slate-800 px-3 py-1 rounded-full text-xs transition-colors"
                 aria-label={`Podgląd Tekst ${material.title ?? ""}`}
               >
                 Otwórz
