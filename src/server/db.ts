@@ -1,10 +1,9 @@
 import 'server-only'
 import { UserData } from '@/types/dataTypes'
 import { db } from '@/server/db/index'
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
-import { revalidateTag } from 'next/dist/server/web/spec-extension/revalidate'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
@@ -85,30 +84,17 @@ export async function updateUserSupporterStatus(id: string, eventId: string) {
       return
     }
 
-    // Use a transaction to update the user and record the event
     await db.transaction(async (tx) => {
-      // Update the user's supporter status
-      await tx.update(users).set({ supporter: true }).where(eq(users.userId, id))
+      await tx.update(users).set({ testLimit: sql`${users.testLimit} + 1000` }).where(eq(users.userId, id))
 
-      // Update the user's test limit
-      await tx.update(users).set({ testLimit: 1000 }).where(eq(users.userId, id))
+      await tx.insert(userLimits)
+        .values({ userId: id, storageLimit: 20_000_000, storageUsed: 0 })
+        .onConflictDoNothing()
 
-      // CREATE userLimits for the new supporter
-      await tx.insert(userLimits).values({
-        userId: id,
-        storageLimit: 20_000_000,
-        storageUsed: 0,
-      })
-
-      // Log the processed event for idempotency
-      await tx.insert(processedEvents).values({
-        eventId,
-        userId: id,
-      })
-      revalidateTag('supporter', 'max')
+      await tx.insert(processedEvents).values({ eventId, userId: id })
     })
 
-    console.log(`User with ID: ${id} is now a supporter.`)
+    console.log(`User with ID: ${id} test limit updated.`)
   } catch (error) {
     console.error(`Failed to update supporter status for user with ID: ${id}`, error)
     throw new Error('Błąd aktualizacji statusu wspierającego')
