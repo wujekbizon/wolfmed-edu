@@ -1479,5 +1479,143 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
         ]
       }
     }
+  },
+  'badania-fizykalne': {
+    category: 'badania-fizykalne',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5TrNkKU6spcKHld4CGX8o0kyJTPUwfnQEMegN',
+    description:
+      'Testy z badania fizykalnego dla studentów pielęgniarstwa. Opanuj techniki badania podmiotowego i przedmiotowego, symptomatologię narządową, ocenę stanu zdrowia pacjenta oraz dokumentowanie wyników badania. Przygotuj się do egzaminu z badania fizykalnego.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Badanie Fizykalne',
+    keywords: [
+      'badanie fizykalne',
+      'badanie podmiotowe',
+      'badanie przedmiotowe',
+      'symptomatologia',
+      'pielęgniarstwo',
+      'ocena stanu zdrowia',
+      'układy narządowe',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 3,
+      semester: 'Rok I, Semestr II',
+      objectives:
+        'Przygotowanie studenta do: kompleksowego prowadzenia badania podmiotowego pacjenta, samodzielnego wykonania badania przedmiotowego w zakresie symptomatologii dolegliwości i objawów ze strony poszczególnych narządów oraz układów zgodnie z obowiązującymi zasadami u osób dorosłych, niemowląt i dzieci oraz osób w wieku podeszłym, dokumentowania wyników badania oraz dokonywania ich analizy i interpretacji dla potrzeb opieki pielęgniarskiej oraz współpracy w zespole terapeutycznym.',
+      prerequisites:
+        'Wiedza, umiejętności i kompetencje z zakresu: anatomii, fizjologii, biochemii, biofizyki, patologii, podstaw pielęgniarstwa, psychologii i etyki zawodu.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'CW32',
+            desc: 'Pojęcie i zasady prowadzenia badania podmiotowego i jego dokumentowania.'
+          },
+          {
+            code: 'CW33',
+            desc: 'Metody i techniki kompleksowego badania przedmiotowego.'
+          },
+          {
+            code: 'CW34',
+            desc: 'Znaczenie wyników badania podmiotowego i przedmiotowego w formułowaniu oceny stanu zdrowia pacjenta dla potrzeb opieki pielęgniarskiej.'
+          },
+          {
+            code: 'CW35',
+            desc: 'Przeprowadzanie badania fizykalnego z wykorzystaniem systemów teleinformatycznych lub systemów łączności.'
+          }
+        ],
+        skills: [
+          {
+            code: 'CU43',
+            desc: 'Przeprowadzać badanie podmiotowe pacjenta, analizować i interpretować jego wyniki.'
+          },
+          {
+            code: 'CU44',
+            desc: 'Rozpoznawać i interpretować podstawowe odrębności w badaniu dziecka i osoby dorosłej, w tym osoby w podeszłym wieku.'
+          },
+          {
+            code: 'CU45',
+            desc: 'Wykorzystywać techniki badania fizykalnego do oceny fizjologicznych i patologicznych funkcji skóry, zmysłów, głowy, klatki piersiowej, gruczołów piersiowych, jamy brzusznej, narządów płciowych, układu sercowo-naczyniowego, układu oddechowego, obwodowego układu krążenia, układu mięśniowo-szkieletowego i układu nerwowego oraz dokumentować wyniki badania fizykalnego i wykorzystywać je do oceny stanu zdrowia pacjenta.'
+          },
+          {
+            code: 'CU46',
+            desc: 'Przeprowadzać kompleksowe badanie podmiotowe i przedmiotowe pacjenta, dokumentować wyniki badania oraz dokonywać ich analizy dla potrzeb opieki pielęgniarskiej.'
+          },
+          {
+            code: 'CU47',
+            desc: 'Przeprowadzać badanie fizykalne z wykorzystaniem systemów teleinformatycznych lub systemów łączności.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'KS1',
+            desc: 'Kierowania się dobrem pacjenta, poszanowania godności i autonomii osób powierzonych opiece, okazywania zrozumienia dla różnic światopoglądowych i kulturowych oraz empatii w relacji z pacjentem i jego rodziną.'
+          },
+          {
+            code: 'KS2',
+            desc: 'Przestrzegania praw pacjenta i zachowywania w tajemnicy informacji związanych z pacjentem.'
+          },
+          {
+            code: 'KS3',
+            desc: 'Samodzielnego i rzetelnego wykonywania zawodu zgodnie z zasadami etyki, w tym przestrzegania wartości i powinności moralnych w opiece nad pacjentem.'
+          },
+          {
+            code: 'KS4',
+            desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'KS5',
+            desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          },
+          {
+            code: 'KS6',
+            desc: 'Przewidywania i uwzględniania czynników wpływających na reakcje własne i pacjenta.'
+          },
+          {
+            code: 'KS7',
+            desc: 'Dostrzegania i rozpoznawania własnych ograniczeń w zakresie wiedzy, umiejętności i kompetencji społecznych oraz dokonywania samooceny deficytów i potrzeb edukacyjnych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Badanie fizykalne – części składowe, znaczenie dla procesu diagnostycznego, sposób prowadzenia badania i udział pielęgniarki. Symptomatologia narządowa, zasady zbierania wywiadów dotyczących poszczególnych narządów i układów. Metodyka zbierania informacji w systemie OLD CARD.',
+          'Badanie przedmiotowe ogólne (ocena stanu świadomości, zachowania i komunikacji, chodu, stan odżywienia, waga ciała, wzrost, budowa ciała, mięśnie, skóra i tkanka podskórna, obrzęki, owłosienie, paznokcie, węzły chłonne, temperatura ciała).',
+          'Badanie głowy i szyi.',
+          'Badanie klatki piersiowej: układ oddechowy, układ krążenia oraz gruczoły sutkowe.',
+          'Badanie jamy brzusznej oraz układu moczowo-płciowego.',
+          'Badanie narządu ruchu.',
+          'Badanie tętnic obwodowych i układu żylnego.',
+          'Badanie układu nerwowego.',
+          'Odrębności w badaniu dziecka i osoby dorosłej oraz osoby w podeszłym wieku.',
+          'Wykorzystanie systemów teleinformatycznych lub systemów łączności w badaniach pacjenta.'
+        ],
+        seminars: [
+          'Zasady, sprzęt medyczny oraz kolejność i warunki przeprowadzania kompleksowego badania fizykalnego.',
+          'Badanie głowy i szyi: wielkość, kształt czaszki, twarz, gałki oczne, uszy, nos, jama ustna, typowe objawy oczne, szyja, naczynia tętnicze, żylne, tarczyca.',
+          'Badanie układu oddechowego: typy klatki piersiowej, oddychanie fizjologiczne i patologiczne, miejsce i linie orientacyjne, granice płuc, opukiwanie porównawcze i topograficzne, rodzaje szmerów oddechowych, duszność.',
+          'Badanie układu krążenia: oglądanie i obmacywanie okolicy serca, uderzenie koniuszkowe, granice stłumienia względnego i bezwzględnego serca, przerost i rozszerzenie komór, przedsionków, tony serca – mechanizm powstawania, przyczyny osłabienia i wzmożenia tonów serca, szmery serca.',
+          'Badanie gruczołów piersiowych i dołów pachowych.',
+          'Badanie jamy brzusznej: oglądanie, obmacywanie, topografia narządów, objawy brzuszne, badanie żołądka, dwunastnicy, pęcherzyka żółciowego, wątroby, trzustki, śledziony.',
+          'Badanie układu moczowo-płciowego.',
+          'Badanie tętnic obwodowych i żył, układu ruchu.',
+          'Badanie centralnego i obwodowego układu nerwowego.',
+          'Dokumentowanie wyników badania podmiotowego i przedmiotowego oraz ich analiza dla potrzeb opieki pielęgniarskiej.'
+        ],
+        selfStudy: [
+          'Zbieranie wywiadu od pacjenta w wieku rozwojowym oraz badanie przedmiotowe ogólne.',
+          'Zbieranie wywiadu od pacjenta w wieku geriatrycznym oraz badanie przedmiotowe ogólne.',
+          'Odrębności w badaniu skóry i jej wytworów u dzieci i osób w wieku starczym.',
+          'Badanie jamy brzusznej, układu ruchu i układu nerwowego u dzieci i osób w wieku geriatrycznym.'
+        ]
+      }
+    }
   }
 }
