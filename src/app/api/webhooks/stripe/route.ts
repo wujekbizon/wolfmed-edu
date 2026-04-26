@@ -2,11 +2,12 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
-import { insertPayment, insertSubscription, updateUserSupporterStatus } from '@/server/db'
-import { getUserIdWithRetry } from '@/helpers/getUserIdWithRetry'
-import { getUserIdByCustomer, getUserIdByCustomerEmail } from '@/server/queries'
+import { insertPayment, processPurchaseRewards } from '@/server/db'
 import { enrollUserAction } from '@/actions/course-actions'
 import { clerkClient } from '@clerk/nextjs/server'
+import { db } from '@/server/db/index'
+import { eq } from 'drizzle-orm'
+import { processedEvents } from '@/server/db/schema'
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
@@ -24,11 +25,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
   }
 
-  let subscription: Stripe.Subscription
-  let charge: Stripe.Charge
-  let status: string
-
-  // Handle the event
   switch (event.type) {
     case 'checkout.session.completed':
       const {
@@ -36,67 +32,76 @@ export async function POST(req: Request) {
         id,
         amount_total,
         currency,
-        customer,
         customer_details,
-        invoice,
         payment_status,
-        subscription: subscription_id,
         created,
         mode,
         metadata,
       } = event.data.object as Stripe.Checkout.Session
 
-      // Extract course information from metadata
+      // Idempotency check
+      const existingEvent = await db
+        .select()
+        .from(processedEvents)
+        .where(eq(processedEvents.eventId, event.id))
+        .limit(1)
+
+      if (existingEvent.length > 0) {
+        console.log(`Event ${event.id} already processed`)
+        break
+      }
+
       const courseSlug = metadata?.courseSlug
       const accessTier = metadata?.accessTier || 'basic'
 
-      if (mode === 'subscription') {
-        const newSubscription = {
-          userId: client_reference_id!,
-          sessionId: id,
-          amountTotal: amount_total!,
-          currency: currency! as 'pln' | 'usd' | 'eur'| null,
-          customerId: customer?.toString()!,
-          customerEmail: customer_details?.email!,
-          invoiceId: invoice?.toString()!,
-          paymentStatus: payment_status,
-          subscriptionId: subscription_id?.toString()!,
-          courseSlug: courseSlug || null,
-          createdAt: new Date(created * 1000),
+      // Resolve userId — fallback to Clerk email lookup when client_reference_id is absent
+      let resolvedUserId: string | null = client_reference_id
+      if (!resolvedUserId && customer_details?.email) {
+        try {
+          const clerkRes = await fetch(
+            `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(customer_details.email)}`,
+            { headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` } }
+          )
+          if (clerkRes.ok) {
+            const clerkUsers = await clerkRes.json()
+            resolvedUserId = clerkUsers?.[0]?.id ?? null
+          }
+        } catch (err) {
+          console.error('Clerk email lookup failed:', err)
         }
-        // Insert subscription into database
-        await insertSubscription({ ...newSubscription })
+      }
+
+      if (!resolvedUserId) {
+        console.error('checkout.session.completed: cannot resolve userId for', customer_details?.email)
+        break
       }
 
       if (mode === 'payment') {
-        const newPayment = {
-          userId: client_reference_id!,
-          amountTotal: amount_total!,
-          currency: currency! as 'pln' | 'usd' | 'eur' | null,
-          customerEmail: customer_details?.email!,
-          courseSlug: courseSlug || null,
-          createdAt:  new Date(created * 1000),
-          paymentStatus: payment_status,
+        try {
+          await insertPayment({
+            userId: resolvedUserId,
+            amountTotal: amount_total!,
+            currency: currency! as 'pln' | 'usd' | 'eur' | null,
+            customerEmail: customer_details?.email!,
+            courseSlug: courseSlug || null,
+            createdAt: new Date(created * 1000),
+            paymentStatus: payment_status,
+          })
+        } catch (err) {
+          console.error('insertPayment failed:', err)
         }
-
-        // Insert payment into database
-        await insertPayment(newPayment)
       }
 
-      // Handle course enrollment if courseSlug is provided
-      if (client_reference_id && courseSlug && payment_status === 'paid') {
+      if (courseSlug && payment_status === 'paid') {
         try {
-          // Create enrollment in database
-          await enrollUserAction(client_reference_id, courseSlug, accessTier)
+          await enrollUserAction(resolvedUserId, courseSlug, accessTier)
 
-          // Update Clerk metadata
           const clerk = await clerkClient()
-          const user = await clerk.users.getUser(client_reference_id)
+          const user = await clerk.users.getUser(resolvedUserId)
           const currentCourses = (user.publicMetadata?.ownedCourses as string[]) || []
 
-          // Add course if not already in the list
           if (!currentCourses.includes(courseSlug)) {
-            await clerk.users.updateUser(client_reference_id, {
+            await clerk.users.updateUser(resolvedUserId, {
               publicMetadata: {
                 ...user.publicMetadata,
                 ownedCourses: [...currentCourses, courseSlug],
@@ -104,81 +109,20 @@ export async function POST(req: Request) {
             })
           }
 
-          console.log(`User ${client_reference_id} enrolled in ${courseSlug}`)
+          console.log(`User ${resolvedUserId} enrolled in ${courseSlug}`)
         } catch (error) {
           console.error('Error enrolling user in course:', error)
-          // Don't fail the webhook if enrollment fails
         }
       }
+
+      await processPurchaseRewards(resolvedUserId, event.id)
+
       break
+
     case 'charge.succeeded':
-      charge = event.data.object as Stripe.Charge
-
-      // email is requred when user making payment in Stripe
-      const chargedCustomerEmail = event.data.object.billing_details.email!
-      const chargedEventId = event.data.object.payment_intent as string
-      status = charge.status
-      console.log(`One time payment. Status: ${status}`)
-
-      try {
-        const userId = await getUserIdWithRetry(getUserIdByCustomerEmail, chargedCustomerEmail)
-        if (!userId) {
-          console.error('User ID not found for customer:', chargedCustomerEmail)
-          return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
-        }
-
-        await updateUserSupporterStatus(userId, chargedEventId)
-      } catch (error) {
-        console.error('Error processing subscription:', error)
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-      }
-
+      // Reserved for future refund/chargeback handling
       break
-    case 'customer.subscription.created':
-      subscription = event.data.object as Stripe.Subscription
-      const createdEventId = event.request?.idempotency_key!
-      const createdCustomerId = subscription.customer.toString()
-      status = subscription.status
-      console.log(`Subscription created. Status: ${status}`)
 
-      try {
-        const userId = await getUserIdWithRetry(getUserIdByCustomer, createdCustomerId)
-        if (!userId) {
-          console.error('User ID not found for customer:', createdCustomerId)
-          return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
-        }
-        // await updateTestLimit(userId, 1000, createdEventId)
-      } catch (error) {
-        console.error('Error processing subscription:', error)
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-      }
-
-      break
-    case 'customer.subscription.updated':
-      subscription = event.data.object as Stripe.Subscription
-      status = subscription.status
-      console.log(`Subscription updated. Status: ${status}`)
-      // TODO: Implement handleSubscriptionUpdated(subscription)
-      break
-    case 'customer.subscription.deleted':
-      subscription = event.data.object as Stripe.Subscription
-      const deletedEventId = event.request?.idempotency_key!
-      const deletedCustomerId = subscription.customer.toString()
-      status = subscription.status
-      console.log(`Subscription deleted. Status: ${status}`)
-      try {
-        const userId = await getUserIdWithRetry(getUserIdByCustomer, deletedCustomerId)
-        if (!userId) {
-          console.error('User ID not found for customer:', deletedCustomerId)
-          return NextResponse.json({ error: 'User ID not found' }, { status: 404 })
-        }
-
-        // await updateTestLimit(userId, 10, deletedEventId)
-      } catch (error) {
-        console.error('Error processing subscription:', error)
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-      }
-      break
     default:
       console.log(`Unhandled event type ${event.type}`)
   }

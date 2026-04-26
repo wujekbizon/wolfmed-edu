@@ -72,32 +72,22 @@ export async function updateTestLimit(id: string, testLimit: number, eventId: st
   }
 }
 
-export async function updateUserSupporterStatus(id: string, eventId: string) {
+export async function processPurchaseRewards(userId: string, eventId: string) {
   try {
-    // Check if the event has already been processed (idempotency)
-    const existingEvent = await db.query.processedEvents.findFirst({
-      where: (model, { eq }) => eq(model.eventId, eventId),
-    })
-
-    if (existingEvent) {
-      console.log(`Event ${eventId} already processed`)
-      return
-    }
-
     await db.transaction(async (tx) => {
-      await tx.update(users).set({ testLimit: sql`${users.testLimit} + 1000` }).where(eq(users.userId, id))
+      await tx.update(users).set({ testLimit: sql`${users.testLimit} + 1000` }).where(eq(users.userId, userId))
 
       await tx.insert(userLimits)
-        .values({ userId: id, storageLimit: 20_000_000, storageUsed: 0 })
+        .values({ userId, storageLimit: 20_000_000, storageUsed: 0 })
         .onConflictDoNothing()
 
-      await tx.insert(processedEvents).values({ eventId, userId: id })
+      await tx.insert(processedEvents).values({ eventId, userId })
     })
 
-    console.log(`User with ID: ${id} test limit updated.`)
+    console.log(`Purchase rewards processed for user ${userId}`)
   } catch (error) {
-    console.error(`Failed to update supporter status for user with ID: ${id}`, error)
-    throw new Error('Błąd aktualizacji statusu wspierającego')
+    console.error(`Failed to process purchase rewards for user ${userId}:`, error)
+    throw new Error('Błąd przetwarzania nagrody zakupu')
   }
 }
 
