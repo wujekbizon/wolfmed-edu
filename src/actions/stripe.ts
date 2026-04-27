@@ -16,14 +16,12 @@ export async function createCheckoutSession(
   try {
     const { userId } = await auth()
     if (!userId) {
-      redirectUrl = '/sign-in'
+      redirect('/sign-in')
     }
 
     const priceId = formData.get('priceId') as string
     const courseSlug = formData.get('courseSlug') as string
     const accessTier = formData.get('accessTier') as string
-
-    console.log(priceId)
 
     if (!priceId) {
       return toFormState('ERROR', 'Brak ID ceny produktu')

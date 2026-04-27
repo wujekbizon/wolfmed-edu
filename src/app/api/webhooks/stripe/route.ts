@@ -73,7 +73,7 @@ export async function POST(req: Request) {
 
       if (!resolvedUserId) {
         console.error('checkout.session.completed: cannot resolve userId for', customer_details?.email)
-        break
+        return NextResponse.json({ error: 'User not found' }, { status: 500 })
       }
 
       if (mode === 'payment') {
