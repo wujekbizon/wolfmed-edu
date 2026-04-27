@@ -7,7 +7,7 @@ export default function Page() {
     <section className="relative flex h-[calc(100vh-80px)] w-full items-center justify-center">
       <GradientOverlay />
       <FloatingShapes count={10} />
-      <SignIn path="/sign-in" forceRedirectUrl="/" />
+      <SignIn path="/sign-in" fallbackRedirectUrl="/" />
     </section>
   )
 }

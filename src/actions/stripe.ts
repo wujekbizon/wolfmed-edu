@@ -10,18 +10,19 @@ export async function createCheckoutSession(
   _prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const { userId } = await auth()
+  const priceId = formData.get('priceId') as string
+  const courseSlug = formData.get('courseSlug') as string
+  const accessTier = formData.get('accessTier') as string
+
+  if (!userId) {
+    const returnPath = courseSlug ? `/kierunki/${courseSlug}` : '/kierunki'
+    redirect(`/sign-in?redirect_url=${encodeURIComponent(returnPath)}`)
+  }
+
   let redirectUrl: string | null = null
 
-
   try {
-    const { userId } = await auth()
-    if (!userId) {
-      redirect('/sign-in')
-    }
-
-    const priceId = formData.get('priceId') as string
-    const courseSlug = formData.get('courseSlug') as string
-    const accessTier = formData.get('accessTier') as string
 
     if (!priceId) {
       return toFormState('ERROR', 'Brak ID ceny produktu')
@@ -38,7 +39,7 @@ export async function createCheckoutSession(
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/canceled`,
-       ...(userId ? { client_reference_id: userId } : {}),
+      client_reference_id: userId,
       metadata: {
         courseSlug: courseSlug || '',
         accessTier: accessTier || 'basic',

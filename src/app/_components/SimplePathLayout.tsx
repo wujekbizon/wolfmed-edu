@@ -188,7 +188,6 @@ export default function SimplePathLayout({
               .filter(([key]) => key !== 'courseSlug')
               .map(([tierName, tierData]) => {
                 const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
-                console.log(tier)
                 const isPremium = tierName.toLowerCase().includes('premium')
                 return (
                   <CoursePricingCard
