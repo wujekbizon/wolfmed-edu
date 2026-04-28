@@ -32,7 +32,7 @@ export default function PathCarousel({ paths }: CarouselProps) {
                 className="relative shrink-0 w-full flex items-center justify-center"
                 style={{ display: Math.abs(selected - idx) <= 1 || (selected === 0 && idx === paths.length - 1) || (selected === paths.length - 1 && idx === 0) ? 'block' : 'none' }}
               >
-                <div className="relative w-full lg:max-w-[80%] flex flex-col md:flex-row px-4 lg:px-8 mx-auto">
+                <div className="relative w-full lg:max-w-[100%] flex flex-col md:flex-row mx-auto">
                   <motion.div
                     className="relative bg-white/95 backdrop-blur-sm p-4 sm:p-8 md:p-16 px-4 sm:px-8 md:px-16 lg:px-20 shadow-2xl w-full lg:w-[655px] lg:absolute lg:left-0 lg:top-1/2 lg:-translate-y-1/2 z-10"
                     key={`info-${p.slug}`}
@@ -45,26 +45,20 @@ export default function PathCarousel({ paths }: CarouselProps) {
                       <p className="text-slate-600 font-medium text-sm sm:text-base md:text-lg leading-relaxed mb-6 md:mb-8 line-clamp-3 md:line-clamp-none">{p.teaser}</p>
                       <Link 
                         href={`/kierunki/${p.slug}`}
-                        className="w-fit px-4 md:px-8 py-2 md:py-4 text-sm md:text-base bg-slate-900 text-white font-medium hover:bg-slate-800 transition-colors border border-slate-800"
+                        className="w-fit px-4 md:px-8 py-2 md:py-4 text-sm md:text-base font-semibold rounded-full bg-linear-to-r from-red-400 to-red-500 text-white border border-zinc-900/70 shadow-lg shadow-red-400/30 transition-all duration-300 hover:shadow-xl hover:shadow-red-400/40 hover:scale-105 active:scale-95"
                       >
                         {p.cta}
                       </Link>
                     </div>
 
                   </motion.div>
-                  <motion.div
-                    className="relative w-full"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: selected === idx ? 1 : 0 }}
-                    transition={{ duration: 0.5, ease: "easeOut" }}
-                  >
+                  <div className={`relative w-full transition-opacity duration-500 ${selected === idx ? 'opacity-100' : 'opacity-50'}`}>
                     <div className="relative w-full h-[500px] md:h-[600px] lg:h-[700px]">
                       <Image
                         src={p.image}
                         alt={p.title}
-                        width={1200}
-                        height={800}
-                        className="object-cover object-center w-full h-full"
+                        fill
+                        className="object-cover object-top"
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 90vw, 80vw"
                         priority
                       />
@@ -104,7 +98,7 @@ export default function PathCarousel({ paths }: CarouselProps) {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 </div>
               </motion.div>
             ))}

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useStore } from '@/store/useStore'
+import { useUser } from '@clerk/nextjs'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { Settings } from 'lucide-react'
@@ -13,6 +14,8 @@ export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
+  const { user } = useUser()
+  const hasCourses = ((user?.publicMetadata?.ownedCourses as string[]) ?? []).length > 0
 
   return (
     <>
@@ -55,6 +58,23 @@ export default function NavDrawer() {
             <div className="flex flex-col">
               {navLinks.map((link) => {
                 const isActive = pathname === link.linkUrl
+                const isPanelDisabled = link.linkUrl === '/panel' && !hasCourses
+
+                if (isPanelDisabled) {
+                  return (
+                    <span
+                      key={link.id}
+                      title="Kup kurs, aby uzyskać dostęp do panelu"
+                      className="relative flex items-center gap-3.5 px-3 py-2 rounded-xl opacity-40 cursor-not-allowed select-none"
+                    >
+                      <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-white/50 border border-white/60">
+                        {link.icon}
+                      </span>
+                      <span className="text-sm font-medium text-zinc-700">{link.label}</span>
+                    </span>
+                  )
+                }
+
                 return (
                   <Link
                     onClick={toggleMenu}
@@ -67,12 +87,9 @@ export default function NavDrawer() {
                         : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
                       }`}
                   >
-                    {/* Active left accent bar */}
                     {isActive && (
                       <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
                     )}
-
-                    {/* Icon container */}
                     <span
                       className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
                         ${isActive
@@ -84,7 +101,6 @@ export default function NavDrawer() {
                         {link.icon}
                       </span>
                     </span>
-
                     <span className={`text-sm font-medium ${isActive ? 'font-semibold' : ''}`}>
                       {link.label}
                     </span>

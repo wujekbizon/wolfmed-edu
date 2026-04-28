@@ -17,6 +17,7 @@ export default clerkMiddleware(async (auth, request) => {
 
       if (!ownedCourses || ownedCourses.length === 0) {
         const url = new URL('/kierunki', request.url)
+        url.searchParams.set('from', 'panel')
         return NextResponse.redirect(url)
       }
     }

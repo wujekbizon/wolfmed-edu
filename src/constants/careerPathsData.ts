@@ -5,7 +5,7 @@ export const careerPaths = [
     slug: 'opiekun-medyczny',
     title: 'Opiekun Medyczny',
     teaser:
-      'Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – bezpłatnie!',
+      'Zdobądź kompleksową wiedzę i przygotuj się do egzaminu na Opiekuna Medycznego – sprawdź naszą ofertę.',
     image:
       'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5RgLCs7moJ4bO3G5lMSTzfQXhE0VIeNdPaZLn',
     cta: 'Sprawdź szczegóły'
@@ -14,10 +14,10 @@ export const careerPaths = [
     slug: 'pielegniarstwo',
     title: 'Pielęgniarstwo',
     teaser:
-      'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
+      'Kompletna ścieżka edukacyjna dla kierunku Pielęgniarstwo – ponad 2000 pytań egzaminacyjnych z 1. semestru.',
     image:
       'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
-    cta: 'Zarejestruj się już dziś'
+    cta: 'Sprawdź szczegóły'
   }
 ]
 

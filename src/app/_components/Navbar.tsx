@@ -8,12 +8,14 @@ import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
 import { usePathname } from 'next/navigation'
-import { Show } from '@clerk/nextjs'
+import { Show, useUser } from '@clerk/nextjs'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { isScrolled } = useScroll(0)
   const pathname = usePathname()
+  const { user } = useUser()
+  const hasCourses = ((user?.publicMetadata?.ownedCourses as string[]) ?? []).length > 0
 
   return (
     <>
@@ -33,35 +35,50 @@ export default function Navbar() {
         <Logo />
         <Show when="signed-in">
           <nav className="bg-zinc-200 border border-zinc-400 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full shadow-sm shadow-zinc-500/20 z-10">
-            {navLinks.map((link) => (
-              <Link
-                href={link.linkUrl}
-                key={link.id}
-                className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
-                  ${
-                    pathname === link.linkUrl 
-                    ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm'
-                    : 'hover:bg-red-100/90'
-                  }`}
-                 title={link.title}
+            {navLinks.map((link) => {
+              const isPanelDisabled = link.linkUrl === '/panel' && !hasCourses
+              if (isPanelDisabled) {
+                return (
+                  <span
+                    key={link.id}
+                    title="Kup kurs, aby uzyskać dostęp do panelu"
+                    className="relative flex items-center gap-1 px-4 py-2 rounded-full opacity-40 cursor-not-allowed select-none"
                   >
-                <span
-                  className={`transition-transform duration-200 ${
-                    pathname === link.linkUrl ? 'scale-105' : 'group-hover:scale-105'
-                  }`}
+                    {link.icon}
+                    <span className="text-sm font-medium text-zinc-900">{link.label}</span>
+                  </span>
+                )
+              }
+              return (
+                <Link
+                  href={link.linkUrl}
+                  key={link.id}
+                  className={`relative flex items-center gap-1 px-4 py-2 rounded-full transition-all duration-300 group
+                    ${
+                      pathname === link.linkUrl
+                      ? 'bg-linear-to-r from-[#f65555]/90 to-[#ffc5c5]/90 shadow-sm'
+                      : 'hover:bg-red-100/90'
+                    }`}
+                  title={link.title}
+                >
+                  <span
+                    className={`transition-transform duration-200 ${
+                      pathname === link.linkUrl ? 'scale-105' : 'group-hover:scale-105'
+                    }`}
                   >
-                  {link.icon}
-                </span>
-                <span
-                  className={`text-sm font-medium text-zinc-900 ${pathname === link.linkUrl ? 'font-semibold' : ''}`}
+                    {link.icon}
+                  </span>
+                  <span
+                    className={`text-sm font-medium text-zinc-900 ${pathname === link.linkUrl ? 'font-semibold' : ''}`}
                   >
-                  {link.label}
-                </span>
-                {pathname === link.linkUrl && (
-                  <span className="absolute inset-0 rounded-full bg-linear-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
-                )}
-              </Link>
-            ))}
+                    {link.label}
+                  </span>
+                  {pathname === link.linkUrl && (
+                    <span className="absolute inset-0 rounded-full bg-linear-to-r from-[#f58a8a]/10 to-[#ffc5c5]/10 animate-pulse" />
+                  )}
+                </Link>
+              )
+            })}
           </nav>
         </Show>
         <AuthSection />
