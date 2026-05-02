@@ -205,7 +205,7 @@ export default function PielegniastwoProcedureReader({
         </div>
 
         {/* ── BOTTOM NAV BAR — always visible ────────────────── */}
-        <div className="shrink-0 border-t border-zinc-200 bg-white px-4 md:px-10 py-4 flex flex-col gap-3">
+        <div className="shrink-0 border-t border-zinc-200 bg-white px-4 md:px-10 py-3 md:py-4 flex flex-col gap-2 md:gap-3">
           <div className="flex items-center gap-3">
             <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
               <motion.div
@@ -220,29 +220,29 @@ export default function PielegniastwoProcedureReader({
             </span>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex gap-2 md:gap-3">
             <button
               onClick={handlePrevious}
               disabled={isFirstSection}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-sm font-medium rounded-xl border border-zinc-200 transition-colors w-full lg:w-auto"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors w-full lg:w-auto"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Cofnij
             </button>
 
             <button
               onClick={isLastSection ? handleReset : handleNext}
-              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-2 px-5 py-2.5 text-white text-sm font-medium rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
+              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
             >
               {isLastSection ? (
                 <>
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                   Zacznij od nowa
                 </>
               ) : (
                 <>
                   Następna sekcja
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 </>
               )}
             </button>
