@@ -53,12 +53,10 @@ export default function PielegniastwoProcedureReader({
   }
 
   const active = allSections[currentSection]
-  const isNotesSection = !!active._notes
+  const isNotesSection = !!active?._notes
 
   return (
     <div className="flex w-full h-[calc(100vh-80px)] -my-10 overflow-hidden">
-
-      {/* ── SIDEBAR ─────────────────────────────────────────── */}
       <aside className="hidden lg:flex flex-col w-72 xl:w-80 shrink-0 h-full border-r border-zinc-200 bg-white">
         <div className="flex flex-col h-full overflow-y-auto scrollbar-webkit p-6 gap-6">
 
@@ -124,8 +122,6 @@ export default function PielegniastwoProcedureReader({
           </div>
         </div>
       </aside>
-
-      {/* ── MAIN ────────────────────────────────────────────── */}
       <main className="flex flex-col flex-1 h-full overflow-hidden">
 
         {/* Mobile header */}
@@ -154,8 +150,6 @@ export default function PielegniastwoProcedureReader({
             </span>
           </div>
         </div>
-
-        {/* Scrollable content — fills all space above the nav bar */}
         <div className="flex-1 overflow-y-auto scrollbar-webkit">
           <div className="px-4 md:px-10 py-6 md:py-10 max-w-4xl w-full mx-auto">
 
@@ -164,7 +158,7 @@ export default function PielegniastwoProcedureReader({
                 {currentSection + 1} / {totalSections}
               </span>
               <h2 className="text-lg md:text-2xl font-bold text-zinc-800 leading-snug">
-                {active.title}
+                {active?.title}
               </h2>
             </div>
 
@@ -180,11 +174,11 @@ export default function PielegniastwoProcedureReader({
               >
                 {isNotesSection ? (
                   <p className="text-zinc-600 text-sm md:text-base leading-relaxed">
-                    {active._notes}
+                    {active?._notes}
                   </p>
                 ) : (
                   <div className="divide-y divide-zinc-100 border border-zinc-200 rounded-xl overflow-hidden bg-white">
-                    {active.steps.map((step) => (
+                    {active?.steps.map((step) => (
                       <div key={step.number} className="flex items-start gap-4 px-4 md:px-6 py-4">
                         <span className="shrink-0 w-7 h-7 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-xs font-bold flex items-center justify-center mt-0.5">
                           {step.number}
@@ -203,8 +197,6 @@ export default function PielegniastwoProcedureReader({
             </AnimatePresence>
           </div>
         </div>
-
-        {/* ── BOTTOM NAV BAR — always visible ────────────────── */}
         <div className="shrink-0 border-t border-zinc-200 bg-white px-4 md:px-10 py-3 md:py-4 flex flex-col gap-2 md:gap-3">
           <div className="flex items-center gap-3">
             <div className="flex-1 h-1.5 bg-zinc-100 rounded-full overflow-hidden">
