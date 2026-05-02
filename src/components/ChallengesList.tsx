@@ -126,7 +126,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
         {/* Navigation */}
         <nav className="flex items-center justify-between pt-6 border-t border-zinc-200">
           <Link
-            href="/panel/procedury"
+            href="/panel/procedury/opiekun-medyczny"
             className="group inline-flex items-center gap-2 px-5 py-3 bg-slate-600 hover:bg-slate-700 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
           >
             <svg

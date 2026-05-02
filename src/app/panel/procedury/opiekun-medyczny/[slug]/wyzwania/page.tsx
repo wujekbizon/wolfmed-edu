@@ -24,7 +24,7 @@ export default async function ChallengePage({ params }: Props) {
   const procedure = await getProcedureBySlug(slug) as Procedure
 
   if (!procedure) {
-    redirect('/panel/procedury')
+    redirect('/panel/procedury/opiekun-medyczny')
   }
 
   const progressResult = await getChallengeProgressAction(procedure.id, procedure.data.name)

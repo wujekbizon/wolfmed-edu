@@ -46,7 +46,7 @@ export default function ProcedureContent({
 
         <Link
           className="flex min-w-[250px] items-center justify-center gap-2 sm:gap-5 bg-red-400 hover:bg-red-500/80 px-2 sm:px-4 py-1 shadow shadow-zinc-500 text-base sm:text-lg rounded-md text-center transition-colors"
-          href={`/panel/procedury/${procedureSlug}/wyzwania`}
+          href={`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania`}
         >
          Wyzwanie procedury
         </Link>

@@ -150,7 +150,7 @@ export default function ChallengeCard({
 
       {/* Action button - PINK ONLY FOR INCOMPLETE */}
       <Link
-        href={`/panel/procedury/${procedureSlug}/wyzwania/${challengeType}`}
+        href={`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania/${challengeType}`}
         className={`
           block w-full text-center px-6 py-3 rounded-full font-semibold
           shadow-md hover:shadow-lg transition-all duration-200
