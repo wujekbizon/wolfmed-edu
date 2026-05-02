@@ -17,9 +17,9 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
   })
 
   return (
-    <section className="flex flex-col items-center gap-8 px-1 sm:px-4 py-4 w-full h-full">
-      <div className="w-full max-w-5xl">
-        <div className="mb-8 px-2">
+    <section className="flex flex-col justify-center items-center w-full h-full px-1 sm:px-4 py-8">
+      <div className="w-full max-w-5xl flex flex-col gap-8">
+        <div className="px-2">
           <h1 className="text-2xl font-bold text-zinc-800">Procedury medyczne</h1>
           <p className="text-zinc-500 text-sm mt-1">
             Wybierz kurs, aby przeglądać procedury i ćwiczenia
@@ -46,7 +46,7 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
               className="group flex flex-col bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
             >
               {/* Hero image */}
-              <div className="relative h-52 w-full overflow-hidden">
+              <div className="relative h-72 w-full overflow-hidden">
                 <Image
                   src={card.image}
                   alt={card.title}
@@ -54,7 +54,7 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-5">
+                <div className="absolute bottom-0 left-0 p-6">
                   <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">
                     {card.subtitle}
                   </p>
@@ -65,7 +65,7 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
               </div>
 
               {/* Body */}
-              <div className="flex flex-col grow p-5 gap-4">
+              <div className="flex flex-col grow p-6 gap-5">
                 <p className="text-zinc-600 text-sm leading-relaxed">{card.description}</p>
 
                 {/* Stats */}
@@ -93,8 +93,8 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
                 </div>
 
                 {/* CTA */}
-                <div className="mt-auto pt-2">
-                  <span className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 group-hover:bg-zinc-900 text-white text-sm font-medium rounded-xl transition-all duration-200">
+                <div className="mt-auto pt-1">
+                  <span className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-zinc-800 group-hover:bg-zinc-900 text-white text-sm font-medium rounded-xl transition-all duration-200">
                     Przejdź do procedur
                     <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                   </span>
