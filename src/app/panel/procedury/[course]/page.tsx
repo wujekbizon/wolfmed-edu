@@ -33,7 +33,7 @@ export default async function CourseProceduresPage({ params }: Props) {
   if (!user) redirect('/sign-in')
 
   const { course } = await params
-  const courses = await getUserEnrolledCourses(user.id)
+  const courses = await getUserEnrolledCourses(user.userId)
   const isEnrolled = courses.some((c) => c.slug === course)
   if (!isEnrolled) redirect('/panel/procedury')
 
