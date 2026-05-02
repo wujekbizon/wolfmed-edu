@@ -22,20 +22,20 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: Promise<{ slug: string; type: string }>
+  params: Promise<{ course: string; slug: string; type: string }>
 }
 
 export default async function ChallengeTypePage({ params }: Props) {
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  const { slug, type: challengeType } = await params
+  const { course, slug, type: challengeType } = await params
 
   const procedure = await getProcedureBySlug(slug) as Procedure
   const procedures = await getAllProcedures() as Procedure[]
 
   if (!procedure) {
-    redirect('/panel/procedury/opiekun-medyczny')
+    redirect(`/panel/procedury/${course}`)
   }
 
   try {
@@ -60,10 +60,10 @@ export default async function ChallengeTypePage({ params }: Props) {
         return <ScenarioChallengeForm procedure={procedure} challenge={scenarioChallenge} />
 
       default:
-        redirect(`/panel/procedury/opiekun-medyczny/${slug}/wyzwania`)
+        redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
     }
   } catch (error) {
     console.error('Challenge generation failed:', error)
-    redirect(`/panel/procedury/opiekun-medyczny/${slug}/wyzwania`)
+    redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
   }
 }
