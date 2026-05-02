@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
-import { getUserEnrolledCourses } from '@/server/queries'
 import { getPielegniastwoProcedureBySlug } from '@/lib/pielegniastwoUtils'
 import PielegniastwoProcedureReader from '@/components/PielegniastwoProcedureReader'
 import { Metadata } from 'next'
@@ -28,9 +27,6 @@ export default async function CourseProcedureDetailPage({ params }: Props) {
   if (!user) redirect('/sign-in')
 
   const { course, slug } = await params
-  const courses = await getUserEnrolledCourses(user.id)
-  const isEnrolled = courses.some((c) => c.slug === course)
-  if (!isEnrolled) redirect('/panel/procedury')
 
   if (course === 'pielegniarstwo') {
     const procedure = getPielegniastwoProcedureBySlug(slug)
