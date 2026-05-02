@@ -56,7 +56,7 @@ export default function PielegniastwoProcedureReader({
   const isNotesSection = !!active._notes
 
   return (
-    <div className="flex w-full h-full overflow-hidden">
+    <div className="flex w-full h-[calc(100vh-80px)] -my-10 overflow-hidden">
 
       {/* ── SIDEBAR ─────────────────────────────────────────── */}
       <aside className="hidden lg:flex flex-col w-72 xl:w-80 shrink-0 h-full border-r border-zinc-200 bg-white">
