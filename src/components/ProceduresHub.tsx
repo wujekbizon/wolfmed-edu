@@ -1,46 +1,15 @@
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-
-interface CourseCard {
-  slug: string
-  title: string
-  subtitle: string
-  description: string
-  procedureCount: number
-  href: string
-  accentColor: string
-}
-
-const COURSE_CARDS: CourseCard[] = [
-  {
-    slug: 'opiekun-medyczny',
-    title: 'Opiekun Medyczny',
-    subtitle: 'Procedury i algorytmy',
-    description:
-      'Pełna lista procedur medycznych z algorytmami krok po kroku. Ucz się, ćwicz wyzwania i zdobywaj odznaki za opanowanie każdej procedury.',
-    procedureCount: 103,
-    href: '/panel/procedury/opiekun-medyczny',
-    accentColor: 'border-zinc-400/60',
-  },
-  {
-    slug: 'pielegniarstwo',
-    title: 'Pielęgniarstwo',
-    subtitle: 'Podstawy pielęgniarstwa',
-    description:
-      'Arkusze egzaminacyjne z podstaw pielęgniarstwa. Każda procedura zawiera sekcje, kroki i punktację zgodną z wymogami egzaminacyjnymi.',
-    procedureCount: 103,
-    href: '/panel/procedury/pielegniarstwo',
-    accentColor: 'border-zinc-400/60',
-  },
-]
+import { COURSE_PROCEDURE_CARDS } from '@/constants/courseProcedureCards'
 
 interface Props {
   hasOpiekun: boolean
   hasPielegniarstwo: boolean
+  procedureCounts: Record<string, number>
 }
 
-export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo }: Props) {
-  const availableCards = COURSE_CARDS.filter((card) => {
+export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedureCounts }: Props) {
+  const availableCards = COURSE_PROCEDURE_CARDS.filter((card) => {
     if (card.slug === 'opiekun-medyczny') return hasOpiekun
     if (card.slug === 'pielegniarstwo') return hasPielegniarstwo
     return false
@@ -89,7 +58,7 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo }: Props) 
 
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-xs text-zinc-400 font-medium">
-                    {card.procedureCount} procedur
+                    {procedureCounts[card.slug] ?? 0} procedur
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 group-hover:text-zinc-900 bg-zinc-100 group-hover:bg-zinc-200 rounded-full transition-all group-hover:gap-2">
                     Przejdź do procedur
