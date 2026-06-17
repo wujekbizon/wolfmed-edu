@@ -19,7 +19,7 @@ export default function PielegniastwoGridCard({
   return (
     <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
       <div className="w-full h-[320px] relative overflow-hidden rounded-xl bg-zinc-50">
-        {imgError ? (
+        {!procedure.image || imgError ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
             <ImageOff className="w-8 h-8 text-zinc-300" />
             <span className="text-xs text-zinc-400">Brak zdjęcia</span>
