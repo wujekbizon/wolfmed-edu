@@ -18,7 +18,7 @@ export default function PielegniastwoGridCard({
 
   return (
     <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
-      <div className="aspect-square w-full h-[300px] relative overflow-hidden">
+      <div className="w-full h-[240px] relative overflow-hidden rounded-xl bg-zinc-50">
         {imgError ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
             <ImageOff className="w-8 h-8 text-zinc-300" />
@@ -28,9 +28,8 @@ export default function PielegniastwoGridCard({
           <Image
             src={procedure.image}
             alt={procedure.name}
-            width={800}
-            height={600}
-            className="w-full h-full object-contain"
+            fill
+            className="object-cover"
             onError={() => setImgError(true)}
           />
         )}
