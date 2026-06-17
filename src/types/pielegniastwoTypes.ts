@@ -21,5 +21,6 @@ export interface PielegniastwoProcedure {
   passingPoints: number
   sections: PielegniastwoSection[]
   notes?: string
+  image: string
   createdAt: string
 }

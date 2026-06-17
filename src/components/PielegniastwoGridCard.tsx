@@ -6,9 +6,6 @@ import { ArrowRight, Clock, Award } from 'lucide-react'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 
-const PLACEHOLDER_IMAGE =
-  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5oNgZgSvSLyQhzP6mdErKItkOUcXlTqiNMavY'
-
 export default function PielegniastwoGridCard({
   procedure,
 }: {
@@ -21,7 +18,7 @@ export default function PielegniastwoGridCard({
     <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
       <div className="aspect-square w-full h-[300px] relative overflow-hidden">
         <Image
-          src={PLACEHOLDER_IMAGE}
+          src={procedure.image}
           alt={procedure.name}
           width={800}
           height={600}
