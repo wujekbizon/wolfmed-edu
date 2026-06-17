@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Clock, Award } from 'lucide-react'
+import { ArrowRight, Clock, Award, ImageOff } from 'lucide-react'
+import { useState } from 'react'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 
@@ -13,17 +14,26 @@ export default function PielegniastwoGridCard({
 }) {
   const slug = getPielegniastwoSlug(procedure)
   const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
+  const [imgError, setImgError] = useState(false)
 
   return (
     <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
       <div className="aspect-square w-full h-[300px] relative overflow-hidden">
-        <Image
-          src={procedure.image}
-          alt={procedure.name}
-          width={800}
-          height={600}
-          className="w-full h-full object-contain"
-        />
+        {imgError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
+            <ImageOff className="w-8 h-8 text-zinc-300" />
+            <span className="text-xs text-zinc-400">Brak zdjęcia</span>
+          </div>
+        ) : (
+          <Image
+            src={procedure.image}
+            alt={procedure.name}
+            width={800}
+            height={600}
+            className="w-full h-full object-contain"
+            onError={() => setImgError(true)}
+          />
+        )}
       </div>
 
       <div className="flex flex-col grow">
