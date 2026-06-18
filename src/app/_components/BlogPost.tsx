@@ -168,8 +168,8 @@ export default function BlogPost({ post }: BlogPostProps) {
             <div className="absolute inset-0 bg-linear-to-t from-[#1F1F2D]/80 via-transparent to-transparent" />
           </div>
 
-          <div className="p-6 sm:p-10 md:p-14 lg:p-20">
-            <header className="max-w-3xl mx-auto mb-12">
+          <div className="p-5 sm:p-8 md:p-10 lg:p-14">
+            <header className="max-w-4xl mx-auto mb-12">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E6E6F5] mb-6 leading-tight">
                 {post.title}
               </h1>
@@ -223,13 +223,13 @@ export default function BlogPost({ post }: BlogPostProps) {
               </div>
             </header>
 
-            <div className="max-w-3xl mx-auto">
+            <div className="max-w-4xl mx-auto">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                 {post.content}
               </ReactMarkdown>
             </div>
 
-            <div className="max-w-3xl mx-auto mt-16 pt-8 border-t border-[#3A3A5A]">
+            <div className="max-w-4xl mx-auto mt-16 pt-8 border-t border-[#3A3A5A]">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 rounded-xl bg-linear-to-br from-[#BB86FC]/5 to-[#8686D7]/5 border border-[#BB86FC]/20">
                 <div>
                   <h3 className="text-lg font-semibold text-[#E6E6F5] mb-2">Podobał Ci się artykuł?</h3>
