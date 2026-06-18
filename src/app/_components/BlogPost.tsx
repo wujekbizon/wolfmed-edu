@@ -9,33 +9,11 @@ import remarkGfm from 'remark-gfm'
 import type { Components, ExtraProps } from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { AlertTriangle, CheckCircle2, XCircle, Wrench, Tag, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
+import { nodeText, resolveH3 } from '@/helpers/blogMarkdown'
 
 type BlogPostProps = {
   post: BlogPost
-}
-
-function nodeText(node: React.ReactNode): string {
-  if (typeof node === 'string' || typeof node === 'number') return String(node)
-  if (Array.isArray(node)) return node.map(nodeText).join('')
-  if (React.isValidElement(node)) return nodeText((node.props as { children?: React.ReactNode }).children)
-  return ''
-}
-
-const EMOJI_MAP = [
-  { emoji: '⚠', icon: AlertTriangle, colors: 'border-l-amber-500 bg-amber-500/[0.07] text-amber-400' },
-  { emoji: '✔', icon: CheckCircle2, colors: 'border-l-emerald-500 bg-emerald-500/[0.07] text-emerald-400' },
-  { emoji: '✖', icon: XCircle, colors: 'border-l-red-500 bg-red-500/[0.07] text-red-400' },
-  { emoji: '🛠', icon: Wrench, colors: 'border-l-sky-500 bg-sky-500/[0.07] text-sky-400' },
-] as const
-
-function resolveH3(text: string) {
-  for (const { emoji, icon: Icon, colors } of EMOJI_MAP) {
-    if (text.includes(emoji)) {
-      return { Icon, colors, label: text.replace(emoji, '').trim() }
-    }
-  }
-  return { Icon: Tag, colors: 'border-l-[#BB86FC] bg-[#BB86FC]/[0.07] text-[#BB86FC]', label: text }
 }
 
 export default function BlogPost({ post }: BlogPostProps) {
