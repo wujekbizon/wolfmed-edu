@@ -75,9 +75,9 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
   }, [filteredBlogPosts, cachedBlogPosts, sortBy])
 
   return (
-    <>
-      <section className="relative w-full overflow-hidden bg-[#09060c]/95">
-        <BlogBackground />
+    <section className="relative w-full overflow-hidden bg-[#09060c]/95">
+      <BlogBackground />
+      <BlogPromoBanner />
       <div className="relative z-10 max-w-6xl mx-auto px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
         <BlogHero />
         <div className="h-32 relative w-full mb-8 flex items-center justify-center">
@@ -111,7 +111,5 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
         </div>
       </div>
     </section>
-      <BlogPromoBanner />
-    </>
   )
 }

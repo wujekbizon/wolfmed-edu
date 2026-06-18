@@ -1,7 +1,8 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, HeartPulse, Cross, Sparkles } from 'lucide-react'
+import { ArrowRight, HeartPulse, Cross, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
 
 const COURSES = [
   {
@@ -17,21 +18,39 @@ const COURSES = [
 ]
 
 export default function BlogPromoBanner() {
+  // Mobile/small-tablet only: the banner starts at the top of the page and the
+  // toggle re-docks it to the bottom (it is never fully removed). On md+ it is a
+  // fixed floating card pinned to the bottom-right regardless of this state.
+  const [dockedBottom, setDockedBottom] = useState(false)
+
+  const mobilePosition = dockedBottom
+    ? 'fixed bottom-0 inset-x-0 rounded-t-2xl'
+    : 'absolute top-0 inset-x-0 rounded-b-2xl'
+
   return (
     <aside
       aria-label="Poznaj platformę WolfMed"
-      className="fixed inset-x-0 bottom-0 z-[70] w-full
-        md:inset-x-auto md:bottom-6 md:right-6 md:top-auto md:w-80 lg:w-96
-        animate-[scaleIn_0.25s_ease-out_forwards]"
+      className={`${mobilePosition} z-[70] w-full
+        md:fixed md:inset-x-auto md:top-auto md:bottom-6 md:right-6 md:w-80 md:rounded-2xl lg:w-96
+        animate-[scaleIn_0.25s_ease-out_forwards]`}
     >
       <div
         className="relative overflow-hidden border border-[#3A3A5A]/60
           bg-linear-to-br from-[#2A2A3F] via-[#1F1F2D] to-[#15151f]
-          rounded-t-2xl md:rounded-2xl
-          shadow-2xl shadow-black/50 backdrop-blur-xl"
+          rounded-[inherit] shadow-2xl shadow-black/50 backdrop-blur-xl"
       >
         <div className="absolute -left-12 -top-16 h-48 w-48 rounded-full bg-[#BB86FC]/15 blur-3xl" aria-hidden="true" />
         <div className="absolute -right-12 -bottom-20 h-56 w-56 rounded-full bg-[#8686D7]/15 blur-3xl" aria-hidden="true" />
+
+        <button
+          type="button"
+          onClick={() => setDockedBottom((v) => !v)}
+          aria-label={dockedBottom ? 'Przenieś baner na górę' : 'Przenieś baner na dół'}
+          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg
+            text-[#A5A5C3] transition-colors hover:bg-white/10 hover:text-zinc-100 md:hidden"
+        >
+          {dockedBottom ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+        </button>
 
         <div className="relative p-5 sm:p-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#BB86FC]/20 bg-[#3A3A5E]/30 px-3 py-1 backdrop-blur-sm">
@@ -39,7 +58,7 @@ export default function BlogPromoBanner() {
             <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna WolfMed</span>
           </div>
 
-          <h2 className="mt-3 text-lg font-bold leading-snug sm:text-xl">
+          <h2 className="mt-3 pr-8 text-lg font-bold leading-snug sm:text-xl md:pr-0">
             <span className="bg-linear-to-r from-[#E6E6F5] via-[#BB86FC]/70 to-[#E6E6F5] bg-clip-text text-transparent">
               Twoja droga do zawodu medycznego zaczyna się tutaj
             </span>
