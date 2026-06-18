@@ -1,16 +1,16 @@
+'use client'
+
 import Link from 'next/link'
 import { ArrowRight, HeartPulse, Cross, Sparkles } from 'lucide-react'
 
 const COURSES = [
   {
     title: 'Opiekun Medyczny',
-    description: 'Zdobądź uprawnienia i wejdź na rynek pracy w opiece zdrowotnej.',
     href: '/kierunki/opiekun-medyczny',
     icon: HeartPulse,
   },
   {
     title: 'Pielęgniarstwo',
-    description: 'Przygotuj się do jednego z najbardziej szanowanych zawodów medycznych.',
     href: '/kierunki/pielegniarstwo',
     icon: Cross,
   },
@@ -18,64 +18,65 @@ const COURSES = [
 
 export default function BlogPromoBanner() {
   return (
-    <section
+    <aside
       aria-label="Poznaj platformę WolfMed"
-      className="relative w-full overflow-hidden rounded-2xl border border-[#3A3A5A]/60
-        bg-linear-to-br from-[#2A2A3F] via-[#1F1F2D] to-[#15151f] shadow-xl shadow-black/30"
+      className="fixed inset-x-0 bottom-0 z-[70] w-full
+        md:inset-x-auto md:bottom-6 md:right-6 md:top-auto md:w-80 lg:w-96
+        animate-[scaleIn_0.25s_ease-out_forwards]"
     >
-      <div className="absolute -left-16 -top-20 h-64 w-64 rounded-full bg-[#BB86FC]/15 blur-3xl" aria-hidden="true" />
-      <div className="absolute -right-16 -bottom-24 h-72 w-72 rounded-full bg-[#8686D7]/15 blur-3xl" aria-hidden="true" />
+      <div
+        className="relative overflow-hidden border border-[#3A3A5A]/60
+          bg-linear-to-br from-[#2A2A3F] via-[#1F1F2D] to-[#15151f]
+          rounded-t-2xl md:rounded-2xl
+          shadow-2xl shadow-black/50 backdrop-blur-xl"
+      >
+        <div className="absolute -left-12 -top-16 h-48 w-48 rounded-full bg-[#BB86FC]/15 blur-3xl" aria-hidden="true" />
+        <div className="absolute -right-12 -bottom-20 h-56 w-56 rounded-full bg-[#8686D7]/15 blur-3xl" aria-hidden="true" />
 
-      <div className="relative flex flex-col gap-8 p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-10 lg:p-10">
-        <div className="flex-1">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#BB86FC]/20 bg-[#3A3A5E]/30 px-3.5 py-1.5 backdrop-blur-sm">
+        <div className="relative p-5 sm:p-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#BB86FC]/20 bg-[#3A3A5E]/30 px-3 py-1 backdrop-blur-sm">
             <Sparkles className="h-3.5 w-3.5 text-[#BB86FC]/80" />
-            <span className="text-xs font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna</span>
+            <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna WolfMed</span>
           </div>
 
-          <h2 className="mt-5 text-2xl font-bold leading-tight sm:text-3xl md:text-4xl">
+          <h2 className="mt-3 text-lg font-bold leading-snug sm:text-xl">
             <span className="bg-linear-to-r from-[#E6E6F5] via-[#BB86FC]/70 to-[#E6E6F5] bg-clip-text text-transparent">
               Twoja droga do zawodu medycznego zaczyna się tutaj
             </span>
           </h2>
 
-          <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#A5A5C3]/80 sm:text-base">
-            Profesjonalne kursy online dla przyszłych pracowników służby zdrowia. Dołącz do tysięcy studentów,
-            którzy już rozwijają swoją karierę z WolfMed.
+          <p className="mt-2 text-xs leading-relaxed text-[#A5A5C3]/80">
+            Profesjonalne kursy online dla przyszłych pracowników służby zdrowia.
           </p>
+
+          <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-1">
+            {COURSES.map(({ title, href, icon: Icon }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group flex items-center gap-2.5 rounded-xl border border-[#3A3A5A]/60 bg-[#16161f]/60 p-2.5
+                  transition-all hover:border-[#BB86FC]/40 hover:bg-[#1F1F2D]"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#BB86FC]/20 bg-[#3A3A5E]/30 text-[#BB86FC]">
+                  <Icon className="h-4 w-4" strokeWidth={1.75} />
+                </span>
+                <span className="text-xs font-semibold text-[#E6E6F5]">{title}</span>
+                <ArrowRight className="ml-auto h-3.5 w-3.5 text-[#BB86FC]/70 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            ))}
+          </div>
 
           <Link
             href="/sign-up"
-            className="group mt-7 inline-flex items-center gap-2 rounded-xl bg-linear-to-r from-[#BB86FC] to-[#8686D7]
-              px-6 py-3 text-sm font-semibold text-[#15151f] shadow-lg shadow-[#BB86FC]/20
+            className="group mt-4 flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#BB86FC] to-[#8686D7]
+              px-5 py-2.5 text-sm font-semibold text-[#15151f] shadow-lg shadow-[#BB86FC]/20
               transition-all hover:shadow-[#BB86FC]/30 hover:brightness-110"
           >
             Zapisz się już dziś
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
-
-        <div className="grid w-full gap-3 sm:grid-cols-2 lg:w-[26rem] lg:shrink-0">
-          {COURSES.map(({ title, description, href, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="group flex flex-col gap-3 rounded-xl border border-[#3A3A5A]/60 bg-[#16161f]/60 p-5
-                transition-all hover:border-[#BB86FC]/40 hover:bg-[#1F1F2D]"
-            >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-[#BB86FC]/20 bg-[#3A3A5E]/30 text-[#BB86FC]">
-                <Icon className="h-5 w-5" strokeWidth={1.75} />
-              </span>
-              <span className="text-sm font-semibold text-[#E6E6F5]">{title}</span>
-              <span className="text-xs leading-relaxed text-[#A5A5C3]/70">{description}</span>
-              <span className="mt-auto inline-flex items-center gap-1 text-xs font-medium text-[#BB86FC]/80">
-                Sprawdź kurs
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-              </span>
-            </Link>
-          ))}
-        </div>
       </div>
-    </section>
+    </aside>
   )
 }
