@@ -29,6 +29,7 @@ export default function PielegniastwoGridCard({
             src={procedure.image}
             alt={procedure.name}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"
             onError={() => setImgError(true)}
           />
