@@ -64,15 +64,11 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
                   <span className="text-sm text-[#A5A5C3]/70">{post.viewCount} wyświetleń</span>
                 </>
               )}
-              {(post._count?.likes ?? 0) > 0 && (
-                <>
-                  <span className="text-[#3A3A5A]/50">•</span>
-                  <span className="inline-flex items-center gap-1.5 text-sm text-[#A5A5C3]/70">
-                    <Heart className="w-4 h-4 fill-[#BB86FC]/70 text-[#BB86FC]/70" />
-                    {post._count?.likes}
-                  </span>
-                </>
-              )}
+              <span className="text-[#3A3A5A]/50">•</span>
+              <span className="inline-flex items-center gap-1.5 text-sm text-[#A5A5C3]/70">
+                <Heart className="w-4 h-4 fill-[#BB86FC]/70 text-[#BB86FC]/70" />
+                {post._count?.likes ?? 0} polubień
+              </span>
             </div>
 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#BB86FC]/10 hover:bg-[#BB86FC]/20 border border-[#BB86FC]/20 text-[#BB86FC]/80 font-medium text-sm transition-all duration-300">
