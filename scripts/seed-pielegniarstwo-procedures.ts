@@ -49,17 +49,14 @@ async function main() {
   let skipped = 0
 
   for (const p of records) {
-    const { id, createdAt, updatedAt, ...rest } = p
-    const data = { id, ...rest }
-
-    const createdAtNorm = normalizeDate(createdAt) ?? new Date().toISOString()
-    const updatedAtNorm = normalizeDate(updatedAt)
+    const createdAtNorm = normalizeDate(p.createdAt) ?? new Date().toISOString()
+    const updatedAtNorm = normalizeDate(p.updatedAt)
 
     const result = await sql`
       INSERT INTO wolfmed_pielegniarstwo_procedures (id, data, "createdAt", "updatedAt")
       VALUES (
-        ${id}::uuid,
-        ${JSON.stringify(data)}::jsonb,
+        ${p.id}::uuid,
+        ${JSON.stringify(p.data)}::jsonb,
         ${createdAtNorm},
         ${updatedAtNorm}
       )

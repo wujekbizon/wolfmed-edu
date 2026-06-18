@@ -18,7 +18,7 @@ export function slugifyProcedureName(name: string): string {
     .trim()
 }
 
-const procedures = proceduresData as PielegniastwoProcedure[]
+const procedures = (proceduresData as { data: PielegniastwoProcedure }[]).map((r) => r.data)
 
 export function getAllPielegniastwoProcedures(): PielegniastwoProcedure[] {
   return procedures
