@@ -12,6 +12,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { ChevronRight } from 'lucide-react'
 import { nodeText, resolveH3, toSentenceCase } from '@/helpers/blogMarkdown'
 import BlogBackground from '@/components/blog/BlogBackground'
+import BlogLikeButton from '@/app/_components/BlogLikeButton'
 
 type BlogPostProps = {
   post: BlogPost
@@ -192,14 +193,17 @@ export default function BlogPost({ post }: BlogPostProps) {
                   )}
                 </div>
 
-                {post.readingTime && (
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#BB86FC]/10 border border-[#BB86FC]/20">
-                    <svg className="w-5 h-5 text-[#BB86FC]" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                      <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-sm font-medium text-[#BB86FC]">{post.readingTime} min czytania</span>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  {post.readingTime && (
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#BB86FC]/10 border border-[#BB86FC]/20">
+                      <svg className="w-5 h-5 text-[#BB86FC]" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span className="text-sm font-medium text-[#BB86FC]">{post.readingTime} min czytania</span>
+                    </div>
+                  )}
+                  <BlogLikeButton postId={post.id} initialCount={post._count?.likes ?? 0} />
+                </div>
               </div>
             </header>
 

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Heart } from 'lucide-react'
 import type { BlogPost } from '@/types/dataTypes'
 import { formatDate } from '@/helpers/formatDate'
 import { DEFAULT_BLOG_IMAGE } from '@/constants/blog'
@@ -61,6 +62,15 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
                 <>
                   <span className="text-[#3A3A5A]/50">•</span>
                   <span className="text-sm text-[#A5A5C3]/70">{post.viewCount} wyświetleń</span>
+                </>
+              )}
+              {(post._count?.likes ?? 0) > 0 && (
+                <>
+                  <span className="text-[#3A3A5A]/50">•</span>
+                  <span className="inline-flex items-center gap-1.5 text-sm text-[#A5A5C3]/70">
+                    <Heart className="w-4 h-4 fill-[#BB86FC]/70 text-[#BB86FC]/70" />
+                    {post._count?.likes}
+                  </span>
                 </>
               )}
             </div>

@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import { db } from '@/server/db/index'
 import { blogPosts, blogPostTags, blogLikes } from '@/server/db/schema'
-import { eq, and, sql } from 'drizzle-orm'
+import { eq, and, sql, count } from 'drizzle-orm'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 import { calculateReadingTime } from '@/helpers/blogUtils'
@@ -445,6 +445,120 @@ export async function unlikeBlogPostAction(
     return toFormState('SUCCESS', 'Polubienie zostało usunięte')
   } catch (error) {
     return fromErrorToFormState(error)
+  }
+}
+
+/**
+ * Toggle a like on a blog post (authenticated users).
+ * Inserts the like if absent, removes it if present. Determining the current
+ * state server-side keeps the action idempotent against stale client state and
+ * rapid double-clicks. Returns the resulting `liked` flag and fresh count.
+ */
+export async function toggleBlogLikeAction(
+  formState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  try {
+    const { userId } = await auth()
+    if (!userId) {
+      throw new Error('Unauthorized: User not authenticated')
+    }
+
+    const rateLimit = await checkRateLimit(userId, 'blog:like')
+    if (!rateLimit.success) {
+      const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
+      return toFormState(
+        'ERROR',
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
+    }
+
+    const postId = formData.get('postId') as string
+    if (!postId) {
+      return toFormState('ERROR', 'Nieprawidłowe ID posta')
+    }
+
+    const validationResult = LikeBlogPostSchema.safeParse({ postId })
+    if (!validationResult.success) {
+      return fromErrorToFormState(validationResult.error)
+    }
+
+    const existing = await db
+      .select()
+      .from(blogLikes)
+      .where(
+        and(
+          eq(blogLikes.postId, validationResult.data.postId),
+          eq(blogLikes.userId, userId)
+        )
+      )
+      .limit(1)
+
+    let liked: boolean
+    if (existing.length > 0) {
+      await db
+        .delete(blogLikes)
+        .where(
+          and(
+            eq(blogLikes.postId, validationResult.data.postId),
+            eq(blogLikes.userId, userId)
+          )
+        )
+      liked = false
+    } else {
+      await db.insert(blogLikes).values({
+        postId: validationResult.data.postId,
+        userId,
+      })
+      liked = true
+    }
+
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(blogLikes)
+      .where(eq(blogLikes.postId, validationResult.data.postId))
+
+    revalidatePath('/blog')
+
+    return {
+      ...toFormState('SUCCESS', liked ? 'Dodano polubienie' : 'Usunięto polubienie'),
+      values: { liked, count: countResult?.count ?? 0 },
+    }
+  } catch (error) {
+    return fromErrorToFormState(error)
+  }
+}
+
+/**
+ * Read the like state for a post for the current user. Used by the client like
+ * button to hydrate its initial state, since the blog detail page is statically
+ * rendered and cannot embed per-user data.
+ */
+export async function getBlogLikeState(
+  postId: string
+): Promise<{ liked: boolean; count: number }> {
+  try {
+    const { userId } = await auth()
+
+    const [countResult] = await db
+      .select({ count: count() })
+      .from(blogLikes)
+      .where(eq(blogLikes.postId, postId))
+
+    let liked = false
+    if (userId) {
+      const existing = await db
+        .select()
+        .from(blogLikes)
+        .where(and(eq(blogLikes.postId, postId), eq(blogLikes.userId, userId)))
+        .limit(1)
+      liked = existing.length > 0
+    }
+
+    return { liked, count: countResult?.count ?? 0 }
+  } catch (error) {
+    console.error('Error fetching blog like state:', error)
+    return { liked: false, count: 0 }
   }
 }
 

@@ -361,7 +361,20 @@ export const getAllBlogPosts = cache(
 
       const posts = await query
 
-      return posts as BlogPost[]
+      if (posts.length === 0) return []
+
+      const likeCounts = await db
+        .select({ postId: blogLikes.postId, count: count() })
+        .from(blogLikes)
+        .where(inArray(blogLikes.postId, posts.map((p) => p.id)))
+        .groupBy(blogLikes.postId)
+
+      const likeCountMap = new Map(likeCounts.map((row) => [row.postId, row.count]))
+
+      return posts.map((post) => ({
+        ...post,
+        _count: { likes: likeCountMap.get(post.id) ?? 0 },
+      })) as BlogPost[]
     } catch (error) {
       console.error("Error fetching blog posts:", error)
       return []
