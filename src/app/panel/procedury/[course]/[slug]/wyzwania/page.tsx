@@ -12,19 +12,19 @@ export const metadata: Metadata = {
 }
 
 interface Props {
-  params: Promise<{ slug: string }>
+  params: Promise<{ course: string; slug: string }>
 }
 
 export default async function ChallengePage({ params }: Props) {
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
-  const { slug } = await params
+  const { course, slug } = await params
 
   const procedure = await getProcedureBySlug(slug) as Procedure
 
   if (!procedure) {
-    redirect('/panel/procedury')
+    redirect(`/panel/procedury/${course}`)
   }
 
   const progressResult = await getChallengeProgressAction(procedure.id, procedure.data.name)

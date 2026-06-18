@@ -180,7 +180,7 @@ export async function submitQuizAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")
 
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
@@ -287,7 +287,7 @@ export async function submitOrderStepsAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
@@ -383,7 +383,7 @@ export async function submitVisualRecognitionAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
@@ -478,7 +478,7 @@ export async function submitScenarioAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {
@@ -584,7 +584,7 @@ export async function submitSpotErrorAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/${procedureId}/wyzwania`)
+    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")
     return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
   } catch (error) {

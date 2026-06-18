@@ -49,7 +49,7 @@ export default function OrderStepsChallenge({ procedure }: Props) {
     if (state.status === 'SUCCESS') {
 
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
+        router.push(`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania`)
       }, 1500)
     }
   }, [state.status, procedure.id])
@@ -161,7 +161,7 @@ export default function OrderStepsChallenge({ procedure }: Props) {
           />
 
           <Link
-            href={`/panel/procedury/${procedure.id}/wyzwania`}
+            href={`/panel/procedury/opiekun-medyczny/${procedure.id}/wyzwania`}
             className="h-11 sm:h-12 w-full sm:w-auto px-8 inline-flex items-center justify-center gap-2 bg-white hover:bg-zinc-50 active:bg-zinc-100 text-zinc-700 font-semibold text-base tracking-wide rounded-lg border-2 border-zinc-300 shadow-sm hover:shadow-md transition-all duration-150 hover:-translate-y-0.5"
           >
             Anuluj

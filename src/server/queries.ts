@@ -4,6 +4,7 @@ import {
   tests,
   courses,
   courseEnrollments,
+  procedures,
   completedTestes,
   payments,
   subscriptions,
@@ -205,6 +206,12 @@ export const getAllProcedures = cache(
     return procedures
   }
 )
+
+// Count all procedures
+export const getProceduresCount = cache(async (): Promise<number> => {
+  const result = await db.select({ count: count() }).from(procedures)
+  return result[0]?.count ?? 0
+})
 
 // Get procedure by ID
 export const getProcedureById = cache(

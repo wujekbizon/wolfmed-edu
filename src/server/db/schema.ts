@@ -173,6 +173,13 @@ export const procedures = createTable("procedures", {
   updatedAt: timestamp("updatedAt"),
 })
 
+export const pielegniastwoProcedures = createTable("pielegniarstwo_procedures", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  data: jsonb("data").notNull(),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt"),
+})
+
 export const customersMessages = createTable("messages", {
   id: serial("id").primaryKey(),
   email: text("email").notNull(),

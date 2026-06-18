@@ -1,0 +1,68 @@
+'use client'
+
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowRight, Clock, Award, ImageOff } from 'lucide-react'
+import { useState } from 'react'
+import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
+import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
+
+export default function PielegniastwoGridCard({
+  procedure,
+}: {
+  procedure: PielegniastwoProcedure
+}) {
+  const slug = getPielegniastwoSlug(procedure)
+  const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
+  const [imgError, setImgError] = useState(false)
+
+  return (
+    <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <div className="w-full h-[320px] relative overflow-hidden rounded-xl bg-zinc-50">
+        {!procedure.image || imgError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
+            <ImageOff className="w-8 h-8 text-zinc-300" />
+            <span className="text-xs text-zinc-400">Brak zdjęcia</span>
+          </div>
+        ) : (
+          <Image
+            src={procedure.image}
+            alt={procedure.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            onError={() => setImgError(true)}
+          />
+        )}
+      </div>
+
+      <div className="flex flex-col grow">
+        <h3 className="text-base font-bold text-zinc-800 mb-2 line-clamp-2 leading-tight">
+          {procedure.name}
+        </h3>
+
+        <div className="flex items-center gap-3 mb-4 flex-wrap">
+          <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+            <Clock className="w-3.5 h-3.5" />
+            {procedure.executionTime}
+          </span>
+          <span className="inline-flex items-center gap-1 text-xs text-zinc-500">
+            <Award className="w-3.5 h-3.5" />
+            {procedure.passingPoints}/{procedure.totalPoints} pkt
+          </span>
+          <span className="text-xs text-zinc-400">{totalSteps} kroków</span>
+        </div>
+
+        <div className="mt-auto flex justify-end">
+          <Link
+            href={`/panel/procedury/pielegniarstwo/${slug}`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-all hover:gap-2"
+          >
+            Otwórz procedurę
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}

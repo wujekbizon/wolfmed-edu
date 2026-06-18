@@ -30,7 +30,7 @@ export default function QuizChallengeForm({ procedure, challenge }: Props) {
    useEffect(() => {
     if (state.status === 'SUCCESS') {
       const timer = setTimeout(() => {
-        router.push(`/panel/procedury/${procedureSlug}/wyzwania`)
+        router.push(`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania`)
       }, 1500)
       return () => clearTimeout(timer)
     }
@@ -211,7 +211,7 @@ export default function QuizChallengeForm({ procedure, challenge }: Props) {
               }`}
             />
             <Link
-              href={`/panel/procedury/${procedureSlug}/wyzwania`}
+              href={`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania`}
               className="h-11 sm:h-12 px-6 bg-white text-zinc-700 border-2 border-zinc-300 font-medium text-base rounded-lg hover:bg-zinc-50 hover:border-zinc-400 transition-all duration-200 flex items-center justify-center"
             >
               Anuluj
