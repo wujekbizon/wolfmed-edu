@@ -11,6 +11,7 @@ import Input from '@/components/ui/Input'
 import Label from '@/components/ui/Label'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
+import PptxImportPanel from '@/components/admin/PptxImportPanel'
 
 interface BlogPostFormProps {
   post?: BlogPost
@@ -32,15 +33,40 @@ export default function BlogPostForm({
   )
   const noScriptFallback = useToastMessage(state)
 
-  // Client-side slug generation only
-  const [title, setTitle] = useState('')
-  const [autoSlug, setAutoSlug] = useState('')
+  // Controlled fields so the PowerPoint import can pre-fill them.
+  const [title, setTitle] = useState(
+    state.values?.title?.toString() || post?.title || ''
+  )
+  const [slug, setSlug] = useState(
+    state.values?.slug?.toString() || post?.slug || ''
+  )
+  const [excerpt, setExcerpt] = useState(
+    state.values?.excerpt?.toString() || post?.excerpt || ''
+  )
+  const [content, setContent] = useState(
+    state.values?.content?.toString() || post?.content || ''
+  )
+  const [slugEdited, setSlugEdited] = useState(false)
 
+  // In create mode keep the slug in sync with the title until the user edits it.
   useEffect(() => {
-    if (mode === 'create' && title) {
-      setAutoSlug(generateSlug(title))
+    if (mode === 'create' && !slugEdited) {
+      setSlug(generateSlug(title))
     }
-  }, [title, mode])
+  }, [title, mode, slugEdited])
+
+  function handleImported(data: {
+    title: string
+    slug: string
+    excerpt: string
+    content: string
+  }) {
+    setTitle(data.title)
+    setSlug(data.slug)
+    setSlugEdited(true)
+    setExcerpt(data.excerpt)
+    setContent(data.content)
+  }
 
   // Redirect on success
   useEffect(() => {
@@ -56,6 +82,9 @@ export default function BlogPostForm({
       {mode === 'edit' && post && (
         <input type="hidden" name="id" value={post.id} />
       )}
+
+      {/* PowerPoint Import (create mode only) */}
+      {mode === 'create' && <PptxImportPanel onImported={handleImported} />}
 
       {/* Basic Information */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
@@ -76,7 +105,7 @@ export default function BlogPostForm({
               name="title"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
               placeholder="Wprowadź tytuł posta..."
-              defaultValue={state.values?.title?.toString() || post?.title || ''}
+              value={title}
               onChangeHandler={(e) => setTitle(e.target.value)}
             />
             <FieldError name="title" formState={state} />
@@ -95,14 +124,14 @@ export default function BlogPostForm({
               name="slug"
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none font-mono text-sm"
               placeholder="tytul-posta"
-              defaultValue={
-                state.values?.slug?.toString() ||
-                post?.slug ||
-                autoSlug
-              }
+              value={slug}
+              onChangeHandler={(e) => {
+                setSlugEdited(true)
+                setSlug(e.target.value)
+              }}
             />
             <p className="mt-1 text-xs text-zinc-500">
-              URL: /blog/{autoSlug || post?.slug || 'tytul-posta'}
+              URL: /blog/{slug || 'tytul-posta'}
             </p>
             <FieldError name="slug" formState={state} />
           </div>
@@ -121,7 +150,8 @@ export default function BlogPostForm({
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-none"
               placeholder="Krótki opis posta (50-500 znaków)..."
               maxLength={500}
-              defaultValue={state.values?.excerpt?.toString() || post?.excerpt || ''}
+              value={excerpt}
+              onChange={(e) => setExcerpt(e.target.value)}
             />
             <FieldError name="excerpt" formState={state} />
           </div>
@@ -139,7 +169,8 @@ export default function BlogPostForm({
               rows={20}
               className="w-full px-3 py-2 border border-zinc-300 rounded-md focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none resize-y font-mono text-sm"
               placeholder="Treść posta (obsługuje Markdown)..."
-              defaultValue={state.values?.content?.toString() || post?.content || ''}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
             />
             <FieldError name="content" formState={state} />
           </div>

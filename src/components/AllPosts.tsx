@@ -8,6 +8,7 @@ import BlogPostList from '@/app/_components/BlogPostList'
 import BlogHero from '@/components/BlogHero'
 import BlogSearch from '@/components/BlogSearch'
 import BlogSort from '@/components/BlogSort'
+import BlogBackground from '@/components/blog/BlogBackground'
 import type { BlogPost } from '@/types/dataTypes'
 
 export default function AllPosts(props: { posts: BlogPost[] }) {
@@ -73,8 +74,9 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
   }, [filteredBlogPosts, cachedBlogPosts, sortBy])
 
   return (
-    <section className="w-full bg-[#09060c]/95">
-      <div className="px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
+    <section className="relative w-full overflow-hidden bg-[#09060c]/95">
+      <BlogBackground />
+      <div className="relative z-10 max-w-6xl mx-auto px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
         <BlogHero />
         <div className="h-32 relative w-full mb-8 flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">

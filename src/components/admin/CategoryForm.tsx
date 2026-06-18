@@ -41,7 +41,7 @@ export default function CategoryForm({ category, mode }: CategoryFormProps) {
   // Redirect on success
   useEffect(() => {
     if (state.status === 'SUCCESS') {
-      router.push('/blog/admin/categories')
+      router.push('/admin/categories')
       router.refresh()
     }
   }, [state.status, router])

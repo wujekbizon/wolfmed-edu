@@ -95,6 +95,27 @@ export default function Page() {
 
 ---
 
+## ❤️ Blog Likes
+
+Authenticated users can like/unlike blog posts. The whole `/blog(.*)` route is
+auth-gated in `src/proxy.ts`, so every viewer is signed in — there is no
+signed-out UI path.
+
+**Data flow**
+- **Table**: `blogLikes` (`blog_likes`) — composite `(userId, postId)`, cascade delete on post (`server/db/schema.ts`).
+- **Action**: `toggleBlogLikeAction` (`actions/blog.ts`) — auth + rate-limit (`blog:like`) + Zod (`LikeBlogPostSchema`); inserts if absent / deletes if present (server-side toggle is idempotent against stale clicks); returns the new `{ liked, count }` in `FormState.values`.
+- **Read helper**: `getBlogLikeState(postId) → { liked, count }` — used by the client button to hydrate per-user state.
+- **Counts**: `getBlogPostBySlug` returns `_count.likes`; `getAllBlogPosts` adds counts via a grouped `blogLikes` query for the list cards.
+
+**Why a client island** — the detail page (`/blog/[slug]`) is statically
+generated (`revalidate` + `generateStaticParams`). Calling Clerk `auth()` in the
+page would force dynamic rendering, so per-user like state lives in the
+`BlogLikeButton` client component (`useActionState` + `<form>` + `useToastMessage`,
+the standard form pattern), which hydrates on mount via `getBlogLikeState`. The
+list card (`BlogPostCard`) shows a read-only heart + count only.
+
+---
+
 ## 🚀 Development Commands
 
 ```bash
