@@ -9,35 +9,76 @@ import remarkGfm from 'remark-gfm'
 import type { Components, ExtraProps } from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import { AlertTriangle, CheckCircle2, XCircle, Wrench, Tag } from 'lucide-react'
 
 type BlogPostProps = {
   post: BlogPost
 }
 
+function nodeText(node: React.ReactNode): string {
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(nodeText).join('')
+  if (React.isValidElement(node)) return nodeText((node.props as { children?: React.ReactNode }).children)
+  return ''
+}
+
+const EMOJI_MAP = [
+  { emoji: '⚠', icon: AlertTriangle, colors: 'border-amber-500 bg-amber-500/10 text-amber-400' },
+  { emoji: '✔', icon: CheckCircle2, colors: 'border-emerald-500 bg-emerald-500/10 text-emerald-400' },
+  { emoji: '✖', icon: XCircle, colors: 'border-red-500 bg-red-500/10 text-red-400' },
+  { emoji: '🛠', icon: Wrench, colors: 'border-sky-500 bg-sky-500/10 text-sky-400' },
+] as const
+
+function resolveH3(text: string) {
+  for (const { emoji, icon: Icon, colors } of EMOJI_MAP) {
+    if (text.includes(emoji)) {
+      return { Icon, colors, label: text.replace(emoji, '').trim() }
+    }
+  }
+  return { Icon: Tag, colors: 'border-[#BB86FC] bg-[#BB86FC]/10 text-[#BB86FC]', label: text }
+}
+
 export default function BlogPost({ post }: BlogPostProps) {
   const markdownComponents: Components = {
     h1: ({ children }) => (
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-100 mt-12 mb-8">{children}</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6F5] mt-12 mb-8">{children}</h1>
     ),
     h2: ({ children }) => (
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-100 mt-12 mb-6">{children}</h2>
+      <div className="mt-14 mb-6">
+        <div className="flex items-center gap-4 mb-3">
+          <span className="shrink-0 w-8 h-[3px] bg-[#BB86FC] rounded-full" />
+          <h2 className="text-lg sm:text-xl font-bold text-[#E6E6F5] uppercase tracking-widest">{children}</h2>
+        </div>
+        <div className="h-px bg-[#3A3A5A]" />
+      </div>
     ),
-    h3: ({ children }) => (
-      <h3 className="text-xl sm:text-2xl font-bold text-gray-100 mt-8 mb-4">{children}</h3>
-    ),
+    h3: ({ children }) => {
+      const { Icon, colors, label } = resolveH3(nodeText(children))
+      return (
+        <h3 className={`inline-flex items-center gap-2 px-4 py-2 rounded-r-lg border-l-4 text-sm font-bold mt-6 mb-3 ${colors}`}>
+          <Icon className="w-4 h-4 shrink-0" />
+          {label}
+        </h3>
+      )
+    },
     h4: ({ children }) => (
-      <h4 className="text-lg sm:text-xl font-semibold text-gray-100 mt-6 mb-3">{children}</h4>
+      <h4 className="text-lg sm:text-xl font-semibold text-[#E6E6F5] mt-6 mb-3">{children}</h4>
     ),
     p: ({ children }) => (
-      <p className="mb-6 text-base sm:text-lg leading-relaxed text-gray-400">{children}</p>
+      <p className="mb-5 text-base sm:text-lg leading-relaxed text-[#A5A5C3]">{children}</p>
     ),
     ul: ({ children }) => (
-      <ul className="list-disc list-inside space-y-2 mb-6 text-gray-400 leading-relaxed">{children}</ul>
+      <ul className="space-y-2 mb-6 pl-1">{children}</ul>
     ),
     ol: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 mb-6 text-gray-400 leading-relaxed">{children}</ol>
+      <ol className="list-decimal list-inside space-y-2 mb-6 text-[#A5A5C3] leading-relaxed">{children}</ol>
     ),
-    li: ({ children }) => <li className="text-base sm:text-lg ml-4">{children}</li>,
+    li: ({ children }) => (
+      <li className="flex items-start gap-3 text-[#A5A5C3] text-base sm:text-lg">
+        <span className="mt-[0.55em] w-1.5 h-1.5 rounded-full bg-[#BB86FC] shrink-0" />
+        <span className="leading-relaxed">{children}</span>
+      </li>
+    ),
     a: ({ href, children }) => (
       <a
         href={href}
