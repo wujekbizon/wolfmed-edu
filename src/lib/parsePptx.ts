@@ -84,30 +84,16 @@ function toParagraph(paragraphNode: unknown): Paragraph {
     return typeof t === 'string' ? t.trim().length > 0 : t != null
   })
 
+  // A line counts as bold only when every text run is explicitly b="1".
+  // Body text omits the attribute entirely, so absent means not bold.
   let bold = textRuns.length > 0
   let size = 0
   for (const run of textRuns) {
     const rPr = run['a:rPr'] as Record<string, unknown> | undefined
     const b = rPr?.['@_b']
-    // Only mark non-bold when b is explicitly set to a falsy value; absent = inherited
-    if (b !== undefined && b !== '1' && b !== 1) bold = false
+    if (b !== '1' && b !== 1) bold = false
     const sz = Number(rPr?.['@_sz'])
     if (!Number.isNaN(sz) && sz > 0) size = Math.max(size, sz)
-  }
-
-  // Paragraph-level default run properties — fallback when runs carry no explicit attrs
-  if (size === 0 || bold === false) {
-    const defRPr = pNode['a:defRPr'] as Record<string, unknown> | undefined
-    if (defRPr) {
-      if (size === 0) {
-        const defSz = Number(defRPr['@_sz'])
-        if (!Number.isNaN(defSz) && defSz > 0) size = defSz
-      }
-      if (bold === false) {
-        const defB = defRPr['@_b']
-        if (defB === '1' || defB === 1) bold = true
-      }
-    }
   }
 
   return { text, bold, size }
@@ -190,22 +176,20 @@ function parseSlide(zip: AdmZip, slidePath: string): SlideResult {
   return { paragraphs }
 }
 
-/** The largest bold lines on a slide form its heading. */
+/**
+ * The slide heading is formed by the large bold lines (size >= TITLE_MIN_SIZE).
+ * A title can span multiple lines at different sizes (e.g. "CHOROBY" at 44pt and
+ * "NEURODEGENERACYJNE" at 36pt), so we group by the size threshold rather than an
+ * exact max. Sub-headers (11–13pt) and body text stay below the threshold.
+ */
 function splitHeading(paragraphs: Paragraph[]): {
   heading: string
   rest: Paragraph[]
 } {
-  const maxSize = paragraphs.reduce((m, p) => Math.max(m, p.size), 0)
-  if (maxSize < TITLE_MIN_SIZE) {
-    return { heading: '', rest: paragraphs }
-  }
   const headingLines: string[] = []
   const rest: Paragraph[] = []
   for (const p of paragraphs) {
-    // size === 0 means no explicit size — the run inherits from the slide master.
-    // When the slide has a large heading (maxSize >= TITLE_MIN_SIZE) treat bold
-    // paragraphs with no explicit size as part of that heading.
-    if (p.bold && (p.size === maxSize || p.size === 0)) {
+    if (p.bold && p.size >= TITLE_MIN_SIZE && !isBareNumber(p.text)) {
       headingLines.push(p.text)
     } else {
       rest.push(p)
