@@ -28,6 +28,9 @@ export interface ParsedPptx {
 
 const TITLE_MIN_SIZE = 1600
 
+// Emojis kept because they drive callout-card colours in the renderer.
+const MARKER_EMOJIS = new Set(['⚠', '✔', '✖', '🛠'])
+
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: '@_',
@@ -60,14 +63,25 @@ function collectByKey(node: unknown, key: string, out: unknown[]): void {
   }
 }
 
+function stripEmojis(text: string): string {
+  return text
+    .replace(/\p{Extended_Pictographic}️?/gu, (match) => {
+      const base = [...match][0]!
+      return MARKER_EMOJIS.has(base) ? base : ''
+    })
+    .replace(/[️‍]/g, '') // orphaned variation selectors / ZWJ
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
 function paragraphText(paragraph: unknown): string {
   const texts: string[] = []
   collectByKey(paragraph, 'a:t', texts as unknown[])
-  return texts
-    .map((t) => (typeof t === 'string' ? t : typeof t === 'number' ? String(t) : ''))
-    .join('')
-    .replace(/\s+/g, ' ')
-    .trim()
+  return stripEmojis(
+    texts
+      .map((t) => (typeof t === 'string' ? t : typeof t === 'number' ? String(t) : ''))
+      .join('')
+  )
 }
 
 function isBareNumber(text: string): boolean {
