@@ -37,19 +37,17 @@ export default function BlogPromoBanner() {
         animate-[scaleIn_0.25s_ease-out_forwards]`}
     >
       <div
-        className="relative overflow-hidden border border-[#3A3A5A]/60
-          bg-linear-to-br from-[#2A2A3F] via-[#1F1F2D] to-[#15151f]
-          rounded-[inherit] shadow-2xl shadow-black/50 backdrop-blur-xl"
+        className="relative overflow-hidden
+          bg-gradient-to-br from-zinc-900/95 to-black/90
+          backdrop-blur-xl border border-white/[0.08]
+          rounded-[inherit] shadow-2xl shadow-black/50"
       >
-        <div className="absolute -left-12 -top-16 h-48 w-48 rounded-full bg-[#BB86FC]/15 blur-3xl" aria-hidden="true" />
-        <div className="absolute -right-12 -bottom-20 h-56 w-56 rounded-full bg-[#8686D7]/15 blur-3xl" aria-hidden="true" />
-
         <button
           type="button"
           onClick={() => setDockedBottom((v) => !v)}
           aria-label={dockedBottom ? 'Przenieś baner na górę' : 'Przenieś baner na dół'}
-          className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg
-            text-[#A5A5C3] transition-colors hover:bg-white/10 hover:text-zinc-100 md:hidden"
+          className="absolute right-3 top-3 z-10 p-1 rounded-lg text-zinc-500 transition-colors
+            hover:bg-white/10 hover:text-zinc-200 md:hidden"
         >
           <X className="h-4 w-4" />
         </button>
@@ -58,25 +56,23 @@ export default function BlogPromoBanner() {
           type="button"
           onClick={() => setDismissed(true)}
           aria-label="Zamknij baner"
-          className="absolute right-3 top-3 z-10 hidden h-7 w-7 items-center justify-center rounded-lg
-            text-[#A5A5C3] transition-colors hover:bg-white/10 hover:text-zinc-100 md:flex"
+          className="absolute right-3 top-3 z-10 hidden p-1 rounded-lg text-zinc-500 transition-colors
+            hover:bg-white/10 hover:text-zinc-200 md:block"
         >
           <X className="h-4 w-4" />
         </button>
 
         <div className="relative p-5 sm:p-6">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#BB86FC]/20 bg-[#3A3A5E]/30 px-3 py-1 backdrop-blur-sm">
-            <Sparkles className="h-3.5 w-3.5 text-[#BB86FC]/80" />
-            <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna Wolfmed</span>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1">
+            <Sparkles className="h-3.5 w-3.5 text-zinc-300" />
+            <span className="text-[11px] font-medium tracking-wide text-zinc-300">Platforma edukacyjna Wolfmed</span>
           </div>
 
-          <h2 className="mt-3 pr-8 text-lg font-bold leading-snug sm:text-xl">
-            <span className="bg-linear-to-r from-[#E6E6F5] via-[#BB86FC]/70 to-[#E6E6F5] bg-clip-text text-transparent">
-              Twoja droga do zawodu medycznego zaczyna się tutaj
-            </span>
+          <h2 className="mt-3 pr-8 text-lg font-semibold leading-snug text-zinc-100 sm:text-xl">
+            Twoja droga do zawodu medycznego zaczyna się tutaj
           </h2>
 
-          <p className="mt-2 text-xs leading-relaxed text-[#A5A5C3]/80">
+          <p className="mt-2 text-xs leading-relaxed text-zinc-400">
             Profesjonalne kursy online dla przyszłych pracowników służby zdrowia.
           </p>
 
@@ -85,14 +81,14 @@ export default function BlogPromoBanner() {
               <Link
                 key={href}
                 href={href}
-                className="group flex items-center gap-2.5 rounded-xl border border-[#3A3A5A]/60 bg-[#16161f]/60 p-2.5
-                  transition-all hover:border-[#BB86FC]/40 hover:bg-[#1F1F2D]"
+                className="group flex items-center gap-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5
+                  transition-all hover:border-white/20 hover:bg-white/[0.06]"
               >
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#BB86FC]/20 bg-[#3A3A5E]/30 text-[#BB86FC]">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-zinc-200 shadow-sm">
                   <Icon className="h-4 w-4" strokeWidth={1.75} />
                 </span>
-                <span className="text-xs font-semibold text-[#E6E6F5]">{title}</span>
-                <ArrowRight className="ml-auto h-3.5 w-3.5 text-[#BB86FC]/70 transition-transform group-hover:translate-x-0.5" />
+                <span className="text-xs font-semibold text-zinc-100">{title}</span>
+                <ArrowRight className="ml-auto h-3.5 w-3.5 text-zinc-500 transition-transform group-hover:translate-x-0.5" />
               </Link>
             ))}
           </div>
