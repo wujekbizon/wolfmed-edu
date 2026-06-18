@@ -2,6 +2,11 @@ import React from 'react'
 import { Tag } from 'lucide-react'
 import { EMOJI_MAP } from '@/constants/blogMarkdown'
 
+export function toSentenceCase(text: string): string {
+  if (!text) return text
+  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
+}
+
 export function nodeText(node: React.ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') return String(node)
   if (Array.isArray(node)) return node.map(nodeText).join('')

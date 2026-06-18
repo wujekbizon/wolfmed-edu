@@ -3,6 +3,7 @@ import Image from 'next/image'
 import type { BlogPost } from '@/types/dataTypes'
 import { formatDate } from '@/helpers/formatDate'
 import { DEFAULT_BLOG_IMAGE } from '@/constants/blog'
+import { toSentenceCase } from '@/helpers/blogMarkdown'
 
 interface BlogPostCardProps {
   post: BlogPost
@@ -30,7 +31,7 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
         <div className="flex-1 p-6 sm:p-8 flex flex-col justify-between min-h-[350px]">
           <div className="space-y-3 flex-1">
             <h2 className="text-xl sm:text-2xl font-bold text-[#E6E6F5]/90 group-hover:text-[#BB86FC]/80 transition-colors leading-tight">
-              {post.title}
+              {toSentenceCase(post.title)}
             </h2>
             <p className="text-sm sm:text-base text-[#A5A5C3]/70 leading-relaxed line-clamp-3">{post.excerpt}</p>
           </div>

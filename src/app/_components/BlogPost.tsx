@@ -10,7 +10,7 @@ import type { Components, ExtraProps } from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { ChevronRight } from 'lucide-react'
-import { nodeText, resolveH3 } from '@/helpers/blogMarkdown'
+import { nodeText, resolveH3, toSentenceCase } from '@/helpers/blogMarkdown'
 import BlogBackground from '@/components/blog/BlogBackground'
 
 type BlogPostProps = {
@@ -151,7 +151,7 @@ export default function BlogPost({ post }: BlogPostProps) {
           <div className="p-5 sm:p-8 md:p-10 lg:p-14">
             <header className="max-w-4xl mx-auto mb-12">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E6E6F5] mb-6 leading-tight">
-                {post.title}
+                {toSentenceCase(post.title)}
               </h1>
 
               <div className="w-full flex flex-wrap justify-start items-end gap-4 pb-6 border-b border-[#3A3A5A]">
