@@ -10,17 +10,15 @@ export interface PielegniastwoSection {
 }
 
 export interface PielegniastwoProcedure {
-  id: string
   meta: {
     course: string
     category: string
   }
   name: string
+  image: string
   executionTime: string
   totalPoints: number
   passingPoints: number
   sections: PielegniastwoSection[]
   notes?: string
-  image: string
-  createdAt: string
 }
