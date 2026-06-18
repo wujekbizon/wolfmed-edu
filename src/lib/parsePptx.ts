@@ -212,6 +212,19 @@ function splitHeading(paragraphs: Paragraph[]): {
   return { heading: headingLines.join(' '), rest }
 }
 
+/**
+ * Some decks embed the bullet glyph as literal text (●/•) before each item and
+ * cram several items into one paragraph. Split such a line back into items;
+ * a line without bullet glyphs is returned unchanged as a single item.
+ */
+function splitInlineBullets(text: string): string[] {
+  if (!/[●•]/.test(text)) return [text]
+  return text
+    .split(/[●•]/)
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
 function renderBody(paragraphs: Paragraph[]): string {
   interface Group {
     header?: string
@@ -230,7 +243,7 @@ function renderBody(paragraphs: Paragraph[]): string {
         current = { items: [] }
         groups.push(current)
       }
-      current.items.push(p.text)
+      current.items.push(...splitInlineBullets(p.text))
     }
   }
 
