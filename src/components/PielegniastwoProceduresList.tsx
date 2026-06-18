@@ -6,6 +6,10 @@ import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 import PielegniastwoGridCard from './PielegniastwoGridCard'
 import PielegniastwoProceduresListSkeleton from './skeletons/PielegniastwoProceduresListSkeleton'
 
+interface Props {
+  procedures: PielegniastwoProcedure[]
+}
+
 export default function PielegniastwoProceduresList({ procedures }: Props) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['pielegniastwoProcedures'],
