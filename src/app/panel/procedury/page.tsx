@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function ProceduresHubPage() {
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
   const courses = await getUserEnrolledCourses(user.userId)
   const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')

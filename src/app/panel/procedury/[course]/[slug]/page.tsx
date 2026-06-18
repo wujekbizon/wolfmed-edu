@@ -1,5 +1,4 @@
 import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/server/user'
 import { getPielegniastwoProcedureBySlug } from '@/lib/pielegniastwoUtils'
 import PielegniastwoProcedureReader from '@/components/PielegniastwoProcedureReader'
 import { Metadata } from 'next'
@@ -23,9 +22,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CourseProcedureDetailPage({ params }: Props) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-
   const { course, slug } = await params
 
   if (course === 'pielegniarstwo') {
