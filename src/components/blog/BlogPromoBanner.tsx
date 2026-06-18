@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, HeartPulse, Cross, Sparkles, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowRight, HeartPulse, Cross, Sparkles, X } from 'lucide-react'
 
 const COURSES = [
   {
@@ -18,14 +18,16 @@ const COURSES = [
 ]
 
 export default function BlogPromoBanner() {
-  // Mobile/small-tablet only: the banner starts at the top of the page and the
-  // toggle re-docks it to the bottom (it is never fully removed). On md+ it is a
-  // fixed floating card pinned to the bottom-right regardless of this state.
+  // Mobile/small tablet: the banner starts as a full-width overlay at the top
+  // (scrolls away with the page). The X re-docks it into the normal flow at the
+  // bottom of the page so it takes real space instead of covering the posts.
   const [dockedBottom, setDockedBottom] = useState(false)
+  // Desktop/mid: the X fully closes the floating card.
+  const [dismissed, setDismissed] = useState(false)
 
-  const mobilePosition = dockedBottom
-    ? 'fixed bottom-0 inset-x-0 rounded-t-2xl'
-    : 'absolute top-0 inset-x-0 rounded-b-2xl'
+  if (dismissed) return null
+
+  const mobilePosition = dockedBottom ? 'relative rounded-2xl' : 'absolute top-0 inset-x-0 rounded-b-2xl'
 
   return (
     <aside
@@ -49,7 +51,17 @@ export default function BlogPromoBanner() {
           className="absolute right-3 top-3 z-10 flex h-7 w-7 items-center justify-center rounded-lg
             text-[#A5A5C3] transition-colors hover:bg-white/10 hover:text-zinc-100 md:hidden"
         >
-          {dockedBottom ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          <X className="h-4 w-4" />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setDismissed(true)}
+          aria-label="Zamknij baner"
+          className="absolute right-3 top-3 z-10 hidden h-7 w-7 items-center justify-center rounded-lg
+            text-[#A5A5C3] transition-colors hover:bg-white/10 hover:text-zinc-100 md:flex"
+        >
+          <X className="h-4 w-4" />
         </button>
 
         <div className="relative p-5 sm:p-6">
@@ -58,7 +70,7 @@ export default function BlogPromoBanner() {
             <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna WolfMed</span>
           </div>
 
-          <h2 className="mt-3 pr-8 text-lg font-bold leading-snug sm:text-xl md:pr-0">
+          <h2 className="mt-3 pr-8 text-lg font-bold leading-snug sm:text-xl">
             <span className="bg-linear-to-r from-[#E6E6F5] via-[#BB86FC]/70 to-[#E6E6F5] bg-clip-text text-transparent">
               Twoja droga do zawodu medycznego zaczyna się tutaj
             </span>
@@ -84,16 +96,6 @@ export default function BlogPromoBanner() {
               </Link>
             ))}
           </div>
-
-          <Link
-            href="/sign-up"
-            className="group mt-4 flex items-center justify-center gap-2 rounded-xl bg-linear-to-r from-[#BB86FC] to-[#8686D7]
-              px-5 py-2.5 text-sm font-semibold text-[#15151f] shadow-lg shadow-[#BB86FC]/20
-              transition-all hover:shadow-[#BB86FC]/30 hover:brightness-110"
-          >
-            Zapisz się już dziś
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
         </div>
       </div>
     </aside>
