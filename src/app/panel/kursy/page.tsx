@@ -25,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 async function EnrolledCourses() {
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
   const enrolledCourses = await getUserEnrolledCourses(user.userId)
 

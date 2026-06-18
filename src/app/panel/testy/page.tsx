@@ -28,7 +28,7 @@ export const dynamic = 'force-dynamic'
 
 async function TestsCategories() {
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
   const populatedCategories = await getPopulatedCategories()
 

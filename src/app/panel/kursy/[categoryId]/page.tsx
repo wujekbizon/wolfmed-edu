@@ -47,7 +47,7 @@ async function CategoryContent({ categoryId }: { categoryId: string }) {
   const decodedCategory = decodeURIComponent(categoryId)
 
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
   const categoryData = CATEGORY_METADATA[decodedCategory] || {
     ...DEFAULT_CATEGORY_METADATA,

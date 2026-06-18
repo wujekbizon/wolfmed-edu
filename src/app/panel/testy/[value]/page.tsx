@@ -27,7 +27,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   const decodedCategory = decodeURIComponent(category)
 
   const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
+  if (!user) redirect('/')
 
   const CUSTOM_PREFIX = 'moje-testy__'
   let categoryTests: Test[]
