@@ -44,7 +44,7 @@ export default async function NotePage({ params }: Props) {
     const { userId } = await auth()
 
     if (!userId) {
-        redirect('/')
+        redirect('/sign-in')
     }
 
     const { noteId } = await params

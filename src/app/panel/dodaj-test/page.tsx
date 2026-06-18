@@ -9,7 +9,7 @@ import { checkPremiumAccessAction } from '@/actions/course-actions'
 
 export default async function CreateTestPage() {
   const user = await getCurrentUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/sign-in')
 
   const isPremium = await checkPremiumAccessAction()
   if (!isPremium) redirect('/panel/kursy')

@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CourseProceduresPage({ params }: Props) {
   const user = await getCurrentUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/sign-in')
 
   const { course } = await params
   const courses = await getUserEnrolledCourses(user.userId)

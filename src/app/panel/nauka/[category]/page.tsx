@@ -31,7 +31,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     const decodedCategory = decodeURIComponent(category) 
 
     const user = await getCurrentUser()
-    if (!user) redirect('/')
+    if (!user) redirect('/sign-in')
 
     const CUSTOM_PREFIX = 'moje-testy__'
     let tests: Test[]

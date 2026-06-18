@@ -27,7 +27,7 @@ interface Props {
 
 export default async function ChallengeTypePage({ params }: Props) {
   const user = await getCurrentUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/sign-in')
 
   const { course, slug, type: challengeType } = await params
 
