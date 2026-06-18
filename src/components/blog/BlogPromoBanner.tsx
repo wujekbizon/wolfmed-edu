@@ -31,7 +31,7 @@ export default function BlogPromoBanner() {
 
   return (
     <aside
-      aria-label="Poznaj platformę WolfMed"
+      aria-label="Poznaj platformę Wolfmed"
       className={`${mobilePosition} z-[70] w-full
         md:fixed md:inset-x-auto md:top-auto md:bottom-6 md:right-6 md:w-80 md:rounded-2xl lg:w-96
         animate-[scaleIn_0.25s_ease-out_forwards]`}
@@ -67,7 +67,7 @@ export default function BlogPromoBanner() {
         <div className="relative p-5 sm:p-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#BB86FC]/20 bg-[#3A3A5E]/30 px-3 py-1 backdrop-blur-sm">
             <Sparkles className="h-3.5 w-3.5 text-[#BB86FC]/80" />
-            <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna WolfMed</span>
+            <span className="text-[11px] font-medium tracking-wide text-[#BB86FC]/80">Platforma edukacyjna Wolfmed</span>
           </div>
 
           <h2 className="mt-3 pr-8 text-lg font-bold leading-snug sm:text-xl">
