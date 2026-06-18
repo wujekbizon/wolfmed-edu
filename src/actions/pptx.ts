@@ -1,7 +1,6 @@
 'use server'
 
 import { auth } from '@clerk/nextjs/server'
-import { UTApi } from 'uploadthing/server'
 import { parsePptx } from '@/lib/parsePptx'
 import { generateSlug } from '@/helpers/blogUtils'
 
@@ -48,35 +47,7 @@ export async function importPptxAction(
     const buffer = Buffer.from(await file.arrayBuffer())
     const parsed = parsePptx(buffer)
 
-    let content = parsed.content
-
-    if (parsed.images.length > 0) {
-      try {
-        const utapi = new UTApi()
-        const filesToUpload = parsed.images.map(
-          (img) =>
-            new File([new Uint8Array(img.buffer)], img.mediaName, {
-              type: img.contentType,
-            })
-        )
-        const uploadResults = await utapi.uploadFiles(filesToUpload)
-
-        parsed.images.forEach((img, index) => {
-          const url = uploadResults[index]?.data?.ufsUrl
-          const replacement = url ? `![Slajd](${url})` : ''
-          content = content.replaceAll(img.token, replacement)
-        })
-      } catch (uploadError) {
-        console.error('Failed to upload PPTX images:', uploadError)
-        // Drop image tokens so the Markdown stays valid even without images.
-        for (const img of parsed.images) {
-          content = content.replaceAll(img.token, '')
-        }
-      }
-    }
-
-    // Collapse blank lines left behind by stripped/replaced image tokens.
-    content = content.replace(/\n{3,}/g, '\n\n').trim()
+    const content = parsed.content.replace(/\n{3,}/g, '\n\n').trim()
 
     return {
       success: true,

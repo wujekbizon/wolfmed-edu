@@ -5,28 +5,18 @@ import { XMLParser } from 'fast-xml-parser'
 /**
  * Parses a PowerPoint (.pptx) file into Markdown suitable for a blog post.
  *
- * A .pptx is a ZIP archive of XML parts. We read the slide list from
- * presentation.xml, extract text per slide (titles become headings, body
- * paragraphs become bullet lists) and collect embedded images. Images are
- * returned as buffers alongside placeholder tokens embedded in the Markdown,
- * so the caller can upload them and swap the tokens for real URLs.
+ * A .pptx is a ZIP archive of XML parts. We read slide order from
+ * presentation.xml, extract text per slide (titles → ## headings, body
+ * paragraphs → bullet lists). Embedded images are intentionally skipped —
+ * PPTX slide images are typically small decorative icons; meaningful images
+ * should be uploaded separately via the cover image field.
  */
-
-export interface ParsedPptxImage {
-  token: string
-  mediaName: string
-  buffer: Buffer
-  contentType: string
-}
 
 export interface ParsedPptx {
   title: string
   excerpt: string
   content: string
-  images: ParsedPptxImage[]
 }
-
-const IMG_TOKEN_PREFIX = '__PPTX_IMG__'
 
 const parser = new XMLParser({
   ignoreAttributes: false,
@@ -38,7 +28,6 @@ function asArray<T>(value: T | T[] | undefined | null): T[] {
   return Array.isArray(value) ? value : [value]
 }
 
-/** Recursively collects every value stored under the given key in a parsed tree. */
 function collectByKey(node: unknown, key: string, out: unknown[]): void {
   if (node === null || typeof node !== 'object') return
   if (Array.isArray(node)) {
@@ -51,7 +40,6 @@ function collectByKey(node: unknown, key: string, out: unknown[]): void {
   }
 }
 
-/** Joins the runs of a single paragraph (<a:p>) into a plain string. */
 function paragraphToText(paragraph: unknown): string {
   const texts: string[] = []
   collectByKey(paragraph, 'a:t', texts as unknown[])
@@ -114,7 +102,6 @@ function getSlidePathsInOrder(zip: AdmZip): string[] {
     if (ordered.length > 0) return ordered
   }
 
-  // Fallback: sort slide files numerically.
   return zip
     .getEntries()
     .map((e) => e.entryName)
@@ -126,34 +113,14 @@ function getSlidePathsInOrder(zip: AdmZip): string[] {
     })
 }
 
-function contentTypeFromName(name: string): string {
-  const ext = name.split('.').pop()?.toLowerCase()
-  switch (ext) {
-    case 'png':
-      return 'image/png'
-    case 'jpg':
-    case 'jpeg':
-      return 'image/jpeg'
-    case 'gif':
-      return 'image/gif'
-    case 'webp':
-      return 'image/webp'
-    case 'svg':
-      return 'image/svg+xml'
-    default:
-      return 'application/octet-stream'
-  }
-}
-
 interface SlideResult {
   titleText: string
   bodyParagraphs: string[]
-  images: ParsedPptxImage[]
 }
 
 function parseSlide(zip: AdmZip, slidePath: string): SlideResult {
   const entry = zip.getEntry(slidePath)
-  if (!entry) return { titleText: '', bodyParagraphs: [], images: [] }
+  if (!entry) return { titleText: '', bodyParagraphs: [] }
 
   const parsed = parser.parse(entry.getData().toString('utf-8'))
   const spTree = (
@@ -181,38 +148,7 @@ function parseSlide(zip: AdmZip, slidePath: string): SlideResult {
     }
   }
 
-  // Resolve embedded images via the slide's relationships.
-  const slideNum = slidePath.match(/slide(\d+)\.xml$/)?.[1] ?? '0'
-  const relsMap = relsToMap(zip, `ppt/slides/_rels/slide${slideNum}.xml.rels`)
-  const embedIds: unknown[] = []
-  collectByKey(parsed, 'a:blip', embedIds)
-
-  const images: ParsedPptxImage[] = []
-  const seen = new Set<string>()
-  for (const blip of embedIds) {
-    const embedId = (blip as Record<string, unknown>)?.['@_r:embed'] as
-      | string
-      | undefined
-    if (!embedId) continue
-    const target = relsMap[embedId]
-    if (!target) continue
-    const mediaName = target.split('/').pop() as string
-    if (seen.has(mediaName)) continue
-    seen.add(mediaName)
-
-    const mediaPath = `ppt/${target.replace(/^\.\.\//, '').replace(/^\//, '')}`
-    const mediaEntry = zip.getEntry(mediaPath)
-    if (!mediaEntry) continue
-
-    images.push({
-      token: `${IMG_TOKEN_PREFIX}${mediaName}__`,
-      mediaName,
-      buffer: mediaEntry.getData(),
-      contentType: contentTypeFromName(mediaName),
-    })
-  }
-
-  return { titleText, bodyParagraphs, images }
+  return { titleText, bodyParagraphs }
 }
 
 export function parsePptx(buffer: Buffer): ParsedPptx {
@@ -225,8 +161,7 @@ export function parsePptx(buffer: Buffer): ParsedPptx {
 
   const slides = slidePaths.map((path) => parseSlide(zip, path))
 
-  // Title slide drives the post title and excerpt; it is not repeated in the body.
-  const titleSlide = slides[0] ?? { titleText: '', bodyParagraphs: [], images: [] }
+  const titleSlide = slides[0] ?? { titleText: '', bodyParagraphs: [] }
   const bodySlides = slides.slice(1)
 
   const title = (
@@ -241,7 +176,6 @@ export function parsePptx(buffer: Buffer): ParsedPptx {
     .slice(0, 500)
     .trim()
 
-  const images: ParsedPptxImage[] = []
   const sections: string[] = []
 
   for (const slide of bodySlides) {
@@ -252,10 +186,6 @@ export function parsePptx(buffer: Buffer): ParsedPptx {
     if (slide.bodyParagraphs.length > 0) {
       parts.push(slide.bodyParagraphs.map((p) => `- ${p}`).join('\n'))
     }
-    for (const img of slide.images) {
-      parts.push(img.token)
-      images.push(img)
-    }
     if (parts.length > 0) {
       sections.push(parts.join('\n\n'))
     }
@@ -265,6 +195,5 @@ export function parsePptx(buffer: Buffer): ParsedPptx {
     title,
     excerpt,
     content: sections.join('\n\n'),
-    images,
   }
 }
