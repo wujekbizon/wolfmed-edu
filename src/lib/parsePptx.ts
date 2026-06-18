@@ -76,9 +76,8 @@ function isBareNumber(text: string): boolean {
 
 function toParagraph(paragraphNode: unknown): Paragraph {
   const text = paragraphText(paragraphNode)
-  const runs = asArray(
-    (paragraphNode as Record<string, unknown>)?.['a:r']
-  ) as Record<string, unknown>[]
+  const pNode = paragraphNode as Record<string, unknown>
+  const runs = asArray(pNode['a:r']) as Record<string, unknown>[]
 
   const textRuns = runs.filter((r) => {
     const t = r['a:t']
@@ -90,9 +89,25 @@ function toParagraph(paragraphNode: unknown): Paragraph {
   for (const run of textRuns) {
     const rPr = run['a:rPr'] as Record<string, unknown> | undefined
     const b = rPr?.['@_b']
-    if (b !== '1' && b !== 1) bold = false
+    // Only mark non-bold when b is explicitly set to a falsy value; absent = inherited
+    if (b !== undefined && b !== '1' && b !== 1) bold = false
     const sz = Number(rPr?.['@_sz'])
-    if (!Number.isNaN(sz)) size = Math.max(size, sz)
+    if (!Number.isNaN(sz) && sz > 0) size = Math.max(size, sz)
+  }
+
+  // Paragraph-level default run properties — fallback when runs carry no explicit attrs
+  if (size === 0 || bold === false) {
+    const defRPr = pNode['a:defRPr'] as Record<string, unknown> | undefined
+    if (defRPr) {
+      if (size === 0) {
+        const defSz = Number(defRPr['@_sz'])
+        if (!Number.isNaN(defSz) && defSz > 0) size = defSz
+      }
+      if (bold === false) {
+        const defB = defRPr['@_b']
+        if (defB === '1' || defB === 1) bold = true
+      }
+    }
   }
 
   return { text, bold, size }
@@ -187,7 +202,10 @@ function splitHeading(paragraphs: Paragraph[]): {
   const headingLines: string[] = []
   const rest: Paragraph[] = []
   for (const p of paragraphs) {
-    if (p.bold && p.size === maxSize) {
+    // size === 0 means no explicit size — the run inherits from the slide master.
+    // When the slide has a large heading (maxSize >= TITLE_MIN_SIZE) treat bold
+    // paragraphs with no explicit size as part of that heading.
+    if (p.bold && (p.size === maxSize || p.size === 0)) {
       headingLines.push(p.text)
     } else {
       rest.push(p)
