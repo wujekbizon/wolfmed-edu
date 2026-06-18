@@ -27,7 +27,7 @@ export default function BlogPromoBanner() {
 
   if (dismissed) return null
 
-  const mobilePosition = dockedBottom ? 'relative rounded-2xl' : 'absolute top-0 inset-x-0 rounded-b-2xl'
+  const mobilePosition = dockedBottom ? 'relative rounded-t-2xl' : 'absolute top-0 inset-x-0 rounded-b-2xl'
 
   return (
     <aside
