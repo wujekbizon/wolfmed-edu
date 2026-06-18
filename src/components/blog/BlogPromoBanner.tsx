@@ -32,7 +32,7 @@ export default function BlogPromoBanner() {
   return (
     <aside
       aria-label="Poznaj platformę Wolfmed"
-      className={`${mobilePosition} z-[70] w-full
+      className={`${mobilePosition} z-30 w-full
         md:fixed md:inset-x-auto md:top-auto md:bottom-6 md:right-6 md:w-80 md:rounded-2xl lg:w-96
         animate-[scaleIn_0.25s_ease-out_forwards]`}
     >
