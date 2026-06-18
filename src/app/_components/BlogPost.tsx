@@ -9,7 +9,7 @@ import remarkGfm from 'remark-gfm'
 import type { Components, ExtraProps } from 'react-markdown'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { AlertTriangle, CheckCircle2, XCircle, Wrench, Tag } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, XCircle, Wrench, Tag, ChevronRight } from 'lucide-react'
 
 type BlogPostProps = {
   post: BlogPost
@@ -23,10 +23,10 @@ function nodeText(node: React.ReactNode): string {
 }
 
 const EMOJI_MAP = [
-  { emoji: '⚠', icon: AlertTriangle, colors: 'border-amber-500 bg-amber-500/10 text-amber-400' },
-  { emoji: '✔', icon: CheckCircle2, colors: 'border-emerald-500 bg-emerald-500/10 text-emerald-400' },
-  { emoji: '✖', icon: XCircle, colors: 'border-red-500 bg-red-500/10 text-red-400' },
-  { emoji: '🛠', icon: Wrench, colors: 'border-sky-500 bg-sky-500/10 text-sky-400' },
+  { emoji: '⚠', icon: AlertTriangle, colors: 'border-l-amber-500 bg-amber-500/[0.07] text-amber-400' },
+  { emoji: '✔', icon: CheckCircle2, colors: 'border-l-emerald-500 bg-emerald-500/[0.07] text-emerald-400' },
+  { emoji: '✖', icon: XCircle, colors: 'border-l-red-500 bg-red-500/[0.07] text-red-400' },
+  { emoji: '🛠', icon: Wrench, colors: 'border-l-sky-500 bg-sky-500/[0.07] text-sky-400' },
 ] as const
 
 function resolveH3(text: string) {
@@ -35,66 +35,66 @@ function resolveH3(text: string) {
       return { Icon, colors, label: text.replace(emoji, '').trim() }
     }
   }
-  return { Icon: Tag, colors: 'border-[#BB86FC] bg-[#BB86FC]/10 text-[#BB86FC]', label: text }
+  return { Icon: Tag, colors: 'border-l-[#BB86FC] bg-[#BB86FC]/[0.07] text-[#BB86FC]', label: text }
 }
 
 export default function BlogPost({ post }: BlogPostProps) {
   const markdownComponents: Components = {
     h1: ({ children }) => (
-      <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6F5] mt-12 mb-8">{children}</h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-[#E6E6F5] mt-12 mb-8 leading-tight">{children}</h1>
     ),
     h2: ({ children }) => (
-      <div className="mt-14 mb-6">
-        <div className="flex items-center gap-4 mb-3">
-          <span className="shrink-0 w-8 h-[3px] bg-[#BB86FC] rounded-full" />
-          <h2 className="text-lg sm:text-xl font-bold text-[#E6E6F5] uppercase tracking-widest">{children}</h2>
+      <div className="mt-16 mb-8">
+        <div className="flex items-center gap-4 mb-5">
+          <span className="shrink-0 w-1 h-8 rounded-full bg-[#BB86FC]" />
+          <h2 className="text-xl sm:text-2xl font-bold text-[#E6E6F5] uppercase tracking-[0.12em]">{children}</h2>
         </div>
-        <div className="h-px bg-[#3A3A5A]" />
+        <div className="h-px bg-gradient-to-r from-[#BB86FC]/40 via-[#3A3A5A] to-transparent" />
       </div>
     ),
     h3: ({ children }) => {
       const { Icon, colors, label } = resolveH3(nodeText(children))
       return (
-        <h3 className={`inline-flex items-center gap-2 px-4 py-2 rounded-r-lg border-l-4 text-sm font-bold mt-6 mb-3 ${colors}`}>
+        <div className={`flex items-center gap-3 px-5 py-3.5 rounded-r-xl border-l-4 font-semibold text-sm mt-10 mb-5 ${colors}`}>
           <Icon className="w-4 h-4 shrink-0" />
-          {label}
-        </h3>
+          <span className="uppercase tracking-wide">{label}</span>
+        </div>
       )
     },
     h4: ({ children }) => (
-      <h4 className="text-lg sm:text-xl font-semibold text-[#E6E6F5] mt-6 mb-3">{children}</h4>
+      <h4 className="text-base font-semibold text-[#E6E6F5] mt-6 mb-2 uppercase tracking-wide">{children}</h4>
     ),
     p: ({ children }) => (
-      <p className="mb-5 text-base sm:text-lg leading-relaxed text-[#A5A5C3]">{children}</p>
+      <p className="mb-6 text-base sm:text-lg leading-[1.8] text-[#A5A5C3]">{children}</p>
     ),
     ul: ({ children }) => (
-      <ul className="space-y-2 mb-6 pl-1">{children}</ul>
+      <ul className="space-y-3 mb-8 pl-1">{children}</ul>
     ),
     ol: ({ children }) => (
-      <ol className="list-decimal list-inside space-y-2 mb-6 text-[#A5A5C3] leading-relaxed">{children}</ol>
+      <ol className="list-decimal list-inside space-y-3 mb-8 text-[#A5A5C3] leading-[1.75] text-base sm:text-lg">{children}</ol>
     ),
     li: ({ children }) => (
-      <li className="flex items-start gap-3 text-[#A5A5C3] text-base sm:text-lg">
-        <span className="mt-[0.55em] w-1.5 h-1.5 rounded-full bg-[#BB86FC] shrink-0" />
-        <span className="leading-relaxed">{children}</span>
+      <li className="flex items-start gap-2.5 text-[#A5A5C3] text-base sm:text-lg">
+        <ChevronRight className="w-4 h-4 mt-[0.3em] text-[#BB86FC] shrink-0" />
+        <span className="leading-[1.75]">{children}</span>
       </li>
     ),
     a: ({ href, children }) => (
       <a
         href={href}
-        className="text-purple-400 hover:text-purple-500 underline decoration-purple-400/30 hover:decoration-purple-400 transition-colors"
+        className="text-[#BB86FC] hover:text-[#8686D7] underline underline-offset-4 decoration-[#BB86FC]/30 hover:decoration-[#BB86FC] transition-colors"
         target="_blank"
         rel="noopener noreferrer"
       >
         {children}
       </a>
     ),
-    strong: ({ children }) => <strong className="font-bold text-gray-100">{children}</strong>,
-    em: ({ children }) => <em className="italic text-gray-100">{children}</em>,
+    strong: ({ children }) => <strong className="font-bold text-[#E6E6F5]">{children}</strong>,
+    em: ({ children }) => <em className="italic text-[#E6E6F5]">{children}</em>,
     code: ({ inline, className, children, ...props }: React.ComponentProps<'code'> & { inline?: boolean } & ExtraProps) => {
       const match = /language-(\w+)/.exec(className || '')
       return !inline && match ? (
-        <div className="my-6 rounded-xl overflow-hidden border border-slate-700">
+        <div className="my-8 rounded-xl overflow-hidden border border-[#3A3A5A] shadow-xl">
           <SyntaxHighlighter
             style={vscDarkPlus}
             language={match[1]}
@@ -110,39 +110,45 @@ export default function BlogPost({ post }: BlogPostProps) {
           </SyntaxHighlighter>
         </div>
       ) : (
-        <code className="px-2 py-1 rounded-md bg-slate-900 text-purple-400 font-mono text-sm border border-slate-700" {...props}>
+        <code className="px-2 py-0.5 rounded-md bg-[#1e1e2e] text-[#BB86FC] font-mono text-sm border border-[#3A3A5A]" {...props}>
           {children}
         </code>
       )
     },
     blockquote: ({ children }) => (
-      <blockquote className="pl-4 my-6 border-l-4 border-purple-400 text-gray-400 italic">
+      <blockquote className="my-8 px-6 py-5 border-l-4 border-[#BB86FC] bg-[#BB86FC]/5 rounded-r-xl text-[#A5A5C3] italic">
         {children}
       </blockquote>
     ),
     img: ({ src, alt }) => (
-      <div className="my-8 rounded-xl overflow-hidden border border-slate-700">
+      <div className="my-10 rounded-xl overflow-hidden border border-[#3A3A5A] shadow-xl">
         <img src={src} alt={alt || ''} className="w-full h-auto" loading="lazy" />
-        {alt && <p className="text-sm text-gray-400 text-center py-2 bg-slate-900">{alt}</p>}
+        {alt && <p className="text-sm text-[#A5A5C3] text-center py-3 bg-[#1F1F2D]">{alt}</p>}
       </div>
     ),
     table: ({ children }) => (
-      <div className="my-8 overflow-x-auto rounded-xl border border-slate-700">
-        <table className="min-w-full divide-y divide-slate-700">{children}</table>
+      <div className="my-10 overflow-x-auto rounded-xl border border-[#3A3A5A] shadow-lg">
+        <table className="min-w-full divide-y divide-[#3A3A5A]">{children}</table>
       </div>
     ),
-    thead: ({ children }) => <thead className="bg-slate-900">{children}</thead>,
-    tbody: ({ children }) => <tbody className="divide-y divide-slate-700 bg-slate-800">{children}</tbody>,
+    thead: ({ children }) => <thead className="bg-[#1F1F2D]">{children}</thead>,
+    tbody: ({ children }) => <tbody className="divide-y divide-[#3A3A5A] bg-[#252538]">{children}</tbody>,
     th: ({ children }) => (
-      <th className="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider">
+      <th className="px-6 py-4 text-left text-xs font-semibold text-[#BB86FC] uppercase tracking-widest">
         {children}
       </th>
     ),
     td: ({ children }) => (
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">{children}</td>
+      <td className="px-6 py-4 text-sm text-[#A5A5C3]">{children}</td>
     ),
-    hr: () => <hr className="my-8 border-t border-slate-700" />,
-    del: ({ children }) => <del className="text-gray-400 opacity-70">{children}</del>,
+    hr: () => (
+      <div className="my-14 flex items-center gap-4">
+        <div className="flex-1 h-px bg-[#3A3A5A]" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#BB86FC]" />
+        <div className="flex-1 h-px bg-[#3A3A5A]" />
+      </div>
+    ),
+    del: ({ children }) => <del className="text-[#A5A5C3] opacity-60">{children}</del>,
   }
 
   return (
@@ -162,8 +168,8 @@ export default function BlogPost({ post }: BlogPostProps) {
             <div className="absolute inset-0 bg-linear-to-t from-[#1F1F2D]/80 via-transparent to-transparent" />
           </div>
 
-          <div className="p-6 sm:p-8 md:p-12 lg:p-16">
-            <header className="mb-10">
+          <div className="p-6 sm:p-10 md:p-14 lg:p-20">
+            <header className="max-w-3xl mx-auto mb-12">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E6E6F5] mb-6 leading-tight">
                 {post.title}
               </h1>
@@ -217,13 +223,13 @@ export default function BlogPost({ post }: BlogPostProps) {
               </div>
             </header>
 
-            <div className="prose prose-zinc prose-lg max-w-none">
+            <div className="max-w-3xl mx-auto">
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
                 {post.content}
               </ReactMarkdown>
             </div>
 
-            <div className="mt-16 pt-8 border-t border-[#3A3A5A]">
+            <div className="max-w-3xl mx-auto mt-16 pt-8 border-t border-[#3A3A5A]">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6 p-8 rounded-xl bg-linear-to-br from-[#BB86FC]/5 to-[#8686D7]/5 border border-[#BB86FC]/20">
                 <div>
                   <h3 className="text-lg font-semibold text-[#E6E6F5] mb-2">Podobał Ci się artykuł?</h3>
