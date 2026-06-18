@@ -11,6 +11,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
 import { ChevronRight } from 'lucide-react'
 import { nodeText, resolveH3 } from '@/helpers/blogMarkdown'
+import BlogBackground from '@/components/blog/BlogBackground'
 
 type BlogPostProps = {
   post: BlogPost
@@ -130,8 +131,9 @@ export default function BlogPost({ post }: BlogPostProps) {
   }
 
   return (
-    <section className="min-h-screen w-full p-2 sm:p-4 md:p-6 lg:p-8 bg-[#09060c]/95">
-      <div className="w-full max-w-6xl mx-auto">
+    <section className="relative min-h-screen w-full overflow-hidden p-2 sm:p-4 md:p-6 lg:p-8 bg-[#09060c]/95">
+      <BlogBackground />
+      <div className="relative z-10 w-full max-w-6xl mx-auto">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 mb-6 px-5 py-2.5 rounded-full bg-[#2A2A3F] border border-[#3A3A5A] text-[#E6E6F5] hover:text-[#BB86FC] hover:border-[#BB86FC]/50 font-medium text-sm transition-all duration-300"
