@@ -74,7 +74,7 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
 
   return (
     <section className="w-full bg-[#09060c]/95">
-      <div className="max-w-4xl mx-auto px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
+      <div className="max-w-6xl mx-auto px-3 xs:px-6 lg:px-8 py-4 sm:py-8 md:py-12" ref={listRef}>
         <BlogHero />
         <div className="h-32 relative w-full mb-8 flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
