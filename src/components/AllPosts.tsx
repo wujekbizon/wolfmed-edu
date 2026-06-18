@@ -9,6 +9,7 @@ import BlogHero from '@/components/BlogHero'
 import BlogSearch from '@/components/BlogSearch'
 import BlogSort from '@/components/BlogSort'
 import BlogBackground from '@/components/blog/BlogBackground'
+import BlogPromoBanner from '@/components/blog/BlogPromoBanner'
 import type { BlogPost } from '@/types/dataTypes'
 
 export default function AllPosts(props: { posts: BlogPost[] }) {
@@ -108,6 +109,7 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
           <BlogPostList posts={sortedPosts} isLoading={searchLoading} error={error} />
         </div>
       </div>
+      <BlogPromoBanner />
     </section>
   )
 }

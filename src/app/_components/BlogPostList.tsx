@@ -35,7 +35,7 @@ export default function BlogPostList({ posts }: BlogPostListProps) {
       {paginatedPosts.map((post: BlogPost) => (
         <BlogPostCard key={post.id} post={post} />
       ))}
-      {posts.length >= 10 && totalPages > 1 && (
+      {totalPages > 1 && (
         <PaginationControls totalPages={totalPages} setCurrentPage={setCurrentPage} currentPage={currentPage} />
       )}
     </div>
