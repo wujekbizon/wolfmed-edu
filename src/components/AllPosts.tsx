@@ -9,6 +9,7 @@ import BlogHero from '@/components/BlogHero'
 import BlogSearch from '@/components/BlogSearch'
 import BlogSort from '@/components/BlogSort'
 import BlogBackground from '@/components/blog/BlogBackground'
+import BlogPromoBanner from '@/components/blog/BlogPromoBanner'
 import type { BlogPost } from '@/types/dataTypes'
 
 export default function AllPosts(props: { posts: BlogPost[] }) {
@@ -106,6 +107,9 @@ export default function AllPosts(props: { posts: BlogPost[] }) {
         </div>
         <div className="w-full flex flex-col gap-6 p-4 sm:p-8 lg:p-10 rounded-xl border border-[#3A3A5A]/50 bg-[#1F1F2D]">
           <BlogPostList posts={sortedPosts} isLoading={searchLoading} error={error} />
+        </div>
+        <div className="mt-8">
+          <BlogPromoBanner />
         </div>
       </div>
     </section>
