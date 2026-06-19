@@ -2,10 +2,9 @@
 
 import Link from 'next/link'
 import { Check, X, RotateCcw, ArrowLeft } from 'lucide-react'
-import type { ExamResult, PublicExam } from '@/types/praktycznyTypes'
+import type { ExamResult } from '@/types/praktycznyTypes'
 
 interface Props {
-  exam: PublicExam
   result: ExamResult
   answers: Record<string, string | string[]>
   onRestart: () => void
@@ -17,7 +16,7 @@ function userAnswerText(answer: string | string[] | undefined): string[] {
   return []
 }
 
-export default function ExamResults({ exam, result, answers, onRestart }: Props) {
+export default function ExamResults({ result, answers, onRestart }: Props) {
   return (
     <section className="flex flex-col items-center w-full h-full overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-6 md:py-10">
       <div className="w-full max-w-3xl flex flex-col gap-6">
@@ -52,6 +51,42 @@ export default function ExamResults({ exam, result, answers, onRestart }: Props)
             </Link>
           </div>
         </div>
+
+        {result.procedures.map((proc) => (
+          <div key={proc.taskIndex} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
+              <h2 className="text-base font-bold text-zinc-800">Czynności: {proc.title}</h2>
+              <span className="text-sm font-semibold text-zinc-500 shrink-0">
+                {proc.earned} / {proc.max} pkt
+              </span>
+            </div>
+            <ol className="divide-y divide-zinc-100">
+              {proc.correctSteps.map((step, i) => {
+                const ok = proc.userSteps[i] === step
+                return (
+                  <li key={i} className="px-5 md:px-6 py-3 flex items-start gap-3">
+                    <span
+                      className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
+                        ok ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
+                      }`}
+                    >
+                      {ok ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
+                    </span>
+                    <div className="flex-1">
+                      <p className="text-sm text-zinc-700 leading-snug">
+                        <span className="font-semibold text-zinc-400 mr-1">{i + 1}.</span>
+                        {step}
+                      </p>
+                      {!ok && proc.userSteps[i] && (
+                        <p className="text-xs text-red-500 mt-0.5">Na tej pozycji ustawiono: {proc.userSteps[i]}</p>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+          </div>
+        ))}
 
         {result.forms.map((form) => (
           <div key={form.formId} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
@@ -118,23 +153,6 @@ export default function ExamResults({ exam, result, answers, onRestart }: Props)
           </div>
         ))}
 
-        <details className="bg-white border border-zinc-200 rounded-2xl overflow-hidden group">
-          <summary className="px-5 md:px-6 py-4 cursor-pointer text-sm font-bold text-zinc-800 select-none">
-            Przebieg czynności — materiał pomocniczy
-          </summary>
-          <div className="px-5 md:px-6 pb-5 flex flex-col gap-4">
-            {exam.assessedTasks.map((task, index) => (
-              <div key={index}>
-                <p className="text-sm font-semibold text-zinc-700 mb-1.5">{task.title}</p>
-                <ol className="list-decimal list-inside text-sm text-zinc-500 space-y-1">
-                  {task.items.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ol>
-              </div>
-            ))}
-          </div>
-        </details>
       </div>
     </section>
   )

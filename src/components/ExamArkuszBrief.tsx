@@ -53,26 +53,32 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
             </div>
 
             <div className="flex flex-col gap-4">
-              <h2 className="text-sm font-bold text-zinc-800">Czynności oceniane na stanowisku</h2>
+              <h2 className="text-sm font-bold text-zinc-800">Zakres egzaminu</h2>
               <p className="text-xs text-zinc-500 -mt-2">
-                Poniższe czynności na egzaminie wykonujesz na fantomie i ocenia je egzaminator. W tej części
-                ćwiczysz wypełnienie dokumentacji — przebieg czynności znajdziesz poniżej jako materiał pomocniczy.
+                W tym arkuszu przygotujesz zestaw, ułożysz w prawidłowej kolejności czynności praktyczne
+                (oceniane na egzaminie przez egzaminatora) oraz wypełnisz dokumentację. Wszystko liczy się do wyniku.
               </p>
               {exam.assessedTasks.map((task, index) => (
                 <div key={index} className="rounded-xl border border-zinc-200 overflow-hidden">
                   <p className="text-sm font-semibold text-zinc-700 bg-zinc-50 px-4 py-2.5 border-b border-zinc-100">
                     {task.title}
                   </p>
-                  <ol className="divide-y divide-zinc-100">
-                    {task.items.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 px-4 py-2.5">
-                        <span className="shrink-0 w-5 h-5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-[11px] font-bold flex items-center justify-center mt-0.5">
-                          {i + 1}
-                        </span>
-                        <span className="text-sm text-zinc-600 leading-relaxed">{item}</span>
-                      </li>
-                    ))}
-                  </ol>
+                  {task.type === 'equipment' ? (
+                    <ol className="divide-y divide-zinc-100">
+                      {task.items.map((item, i) => (
+                        <li key={i} className="flex items-start gap-3 px-4 py-2.5">
+                          <span className="shrink-0 w-5 h-5 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-[11px] font-bold flex items-center justify-center mt-0.5">
+                            {i + 1}
+                          </span>
+                          <span className="text-sm text-zinc-600 leading-relaxed">{item}</span>
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <p className="px-4 py-2.5 text-sm text-zinc-500">
+                      {task.items.length} czynności do uporządkowania w prawidłowej kolejności
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

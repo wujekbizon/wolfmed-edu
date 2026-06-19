@@ -10,6 +10,7 @@ import SubmitButton from '@/components/SubmitButton'
 import ExamArkuszBrief from '@/components/ExamArkuszBrief'
 import ExamCaseSidebar from '@/components/ExamCaseSidebar'
 import ExamFormCard from '@/components/ExamFormCard'
+import OrderableSteps from '@/components/OrderableSteps'
 import ExamResults from '@/components/ExamResults'
 import { EMPTY_PRACTICAL_EXAM_STATE } from '@/types/praktycznyTypes'
 import type { ExamAnswers, PublicExam } from '@/types/praktycznyTypes'
@@ -24,6 +25,9 @@ function buildInitialAnswers(exam: PublicExam): ExamAnswers {
       answers[key] = field.kind === 'list' ? Array<string>(field.lines).fill('') : ''
     }
   }
+  exam.assessedTasks.forEach((task, index) => {
+    if (task.type === 'procedure') answers[`procedure:${index}`] = []
+  })
   return answers
 }
 
@@ -82,6 +86,10 @@ export default function PracticalExamRunner({ exam }: Props) {
     })
   }
 
+  const handleOrderChange = (taskIndex: number, order: string[]) => {
+    setAnswers((prev) => ({ ...prev, [`procedure:${taskIndex}`]: order }))
+  }
+
   const handleStart = () => {
     setStartTime(Date.now())
     setStage('exam')
@@ -98,7 +106,7 @@ export default function PracticalExamRunner({ exam }: Props) {
   }
 
   if (stage === 'results' && state.result) {
-    return <ExamResults exam={exam} result={state.result} answers={answers} onRestart={handleRestart} />
+    return <ExamResults result={state.result} answers={answers} onRestart={handleRestart} />
   }
 
   return (
@@ -131,6 +139,45 @@ export default function PracticalExamRunner({ exam }: Props) {
             <input type="hidden" name="examId" value={exam.id} />
             <input type="hidden" name="answers" value={JSON.stringify(answers)} />
             <input type="hidden" name="timeSpent" value={timeSpent} />
+
+            {exam.assessedTasks.map((task, taskIndex) => {
+              if (task.type === 'equipment') {
+                return (
+                  <div key={taskIndex} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+                    <div className="px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
+                      <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+                        Zestaw do przygotowania
+                      </p>
+                      <h2 className="text-base md:text-lg font-bold text-zinc-800 leading-snug">{task.title}</h2>
+                    </div>
+                    <ul className="p-5 md:p-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {task.items.map((item, i) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-zinc-600">
+                          <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-zinc-300 mt-2" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
+              return (
+                <div key={taskIndex} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
+                  <div className="px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
+                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+                      Czynności praktyczne — ułóż w prawidłowej kolejności
+                    </p>
+                    <h2 className="text-base md:text-lg font-bold text-zinc-800 leading-snug">{task.title}</h2>
+                  </div>
+                  <div className="p-5 md:p-6">
+                    <OrderableSteps
+                      steps={task.items}
+                      onOrderChange={(order) => handleOrderChange(taskIndex, order)}
+                    />
+                  </div>
+                </div>
+              )
+            })}
 
             {exam.forms.map((form, index) => (
               <ExamFormCard

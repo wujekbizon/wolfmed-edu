@@ -4,6 +4,7 @@ import type {
   ExamResult,
   FormResult,
   FieldResult,
+  ProcedureResult,
   ValueField,
   ListField,
 } from '@/types/praktycznyTypes'
@@ -135,12 +136,35 @@ export function gradePracticalExam(exam: PracticalExam, answers: ExamAnswers): E
     }
   })
 
-  const earned = forms.reduce((sum, f) => sum + f.earned, 0)
-  const max = forms.reduce((sum, f) => sum + f.max, 0)
+  const procedures: ProcedureResult[] = []
+  exam.assessedTasks.forEach((task, taskIndex) => {
+    if (task.type !== 'procedure') return
+    const correctSteps = task.items
+    const submitted = answers[`procedure:${taskIndex}`]
+    const userSteps = Array.isArray(submitted) ? submitted : []
+    let earnedSteps = 0
+    for (let i = 0; i < correctSteps.length; i++) {
+      if (userSteps[i] === correctSteps[i]) earnedSteps++
+    }
+    procedures.push({
+      taskIndex,
+      title: task.title,
+      earned: earnedSteps,
+      max: correctSteps.length,
+      correctSteps,
+      userSteps,
+    })
+  })
+
+  const earned =
+    forms.reduce((sum, f) => sum + f.earned, 0) + procedures.reduce((sum, p) => sum + p.earned, 0)
+  const max =
+    forms.reduce((sum, f) => sum + f.max, 0) + procedures.reduce((sum, p) => sum + p.max, 0)
   const percent = max > 0 ? Math.round((earned / max) * 100) : 0
 
   return {
     forms,
+    procedures,
     earned,
     max,
     percent,

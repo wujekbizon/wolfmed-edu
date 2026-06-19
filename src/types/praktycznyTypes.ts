@@ -8,6 +8,7 @@ export interface PracticalPatient {
 }
 
 export interface AssessedTask {
+  type: 'equipment' | 'procedure'
   title: string
   items: string[]
 }
@@ -97,8 +98,18 @@ export interface FormResult {
   fields: FieldResult[]
 }
 
+export interface ProcedureResult {
+  taskIndex: number
+  title: string
+  earned: number
+  max: number
+  correctSteps: string[]
+  userSteps: string[]
+}
+
 export interface ExamResult {
   forms: FormResult[]
+  procedures: ProcedureResult[]
   earned: number
   max: number
   percent: number

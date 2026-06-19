@@ -16,6 +16,7 @@
     },
     "assessedTasks": [
       {
+        "type": "equipment",
         "title": "Zestaw do mycia pleców i pośladków oraz zmiany pieluchomajtek (oceniany na stanowisku)",
         "items": [
           "rękawiczki jednorazowe, fartuch jednorazowy",
@@ -25,6 +26,7 @@
         ]
       },
       {
+        "type": "procedure",
         "title": "Zmiana prześcieradła i podkładu płóciennego (przebieg oceniany przez egzaminatora)",
         "items": [
           "Poinformował pacjentkę o zmianie prześcieradła i podkładu, zapytał o zgodę na wykonanie czynności.",
@@ -40,6 +42,7 @@
         ]
       },
       {
+        "type": "procedure",
         "title": "Karmienie przez zgłębnik żołądkowy metodą porcji dietą przemysłową (przebieg oceniany przez egzaminatora)",
         "items": [
           "Poinformował pacjentkę o planowanym karmieniu przez zgłębnik, zapytał o zgodę na wykonanie czynności.",
@@ -159,6 +162,7 @@
     },
     "assessedTasks": [
       {
+        "type": "equipment",
         "title": "Zestaw do pomiaru poziomu glukozy glukometrem (oceniany na stanowisku)",
         "items": [
           "glukometr",
@@ -171,6 +175,7 @@
         ]
       },
       {
+        "type": "procedure",
         "title": "Zmiana opatrunku na ranie pooperacyjnej z użyciem 0,9% NaCl (przebieg oceniany przez egzaminatora)",
         "items": [
           "Zapytał pacjenta o imię i nazwisko / sprawdził opaskę identyfikacyjną, poinformował o zmianie opatrunku, zapytał o zgodę.",
@@ -185,6 +190,7 @@
         ]
       },
       {
+        "type": "procedure",
         "title": "Wymiana jednoczęściowego worka stomijnego (przebieg oceniany przez egzaminatora)",
         "items": [
           "Poinformował pacjenta o planowanej wymianie worka stomijnego, zapytał o zgodę.",

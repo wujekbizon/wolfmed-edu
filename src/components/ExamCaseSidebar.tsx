@@ -25,26 +25,6 @@ export default function ExamCaseSidebar({ exam }: Props) {
         <h2 className="text-sm font-bold text-zinc-800 mb-2">Zadanie egzaminacyjne</h2>
         <p className="text-sm text-zinc-600 leading-relaxed">{exam.taskSummary}</p>
       </div>
-
-      {exam.assessedTasks.length > 0 && (
-        <details className="rounded-xl border border-zinc-200 overflow-hidden group">
-          <summary className="px-4 py-3 cursor-pointer text-sm font-semibold text-zinc-700 bg-zinc-50 select-none">
-            Czynności oceniane na stanowisku
-          </summary>
-          <div className="flex flex-col gap-4 p-4">
-            {exam.assessedTasks.map((task, index) => (
-              <div key={index}>
-                <p className="text-xs font-semibold text-zinc-600 mb-1.5">{task.title}</p>
-                <ol className="list-decimal list-inside text-xs text-zinc-500 space-y-1">
-                  {task.items.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ol>
-              </div>
-            ))}
-          </div>
-        </details>
-      )}
     </div>
   )
 }
