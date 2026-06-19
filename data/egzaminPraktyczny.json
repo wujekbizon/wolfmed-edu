@@ -2206,5 +2206,805 @@
         ]
       }
     ]
+  },
+  {
+    "id": "styczen-2023",
+    "title": "Egzamin praktyczny — Styczeń 2023",
+    "year": 2023,
+    "session": "Styczeń 2023",
+    "arkusz": "MED.14-01-23.01-SG",
+    "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5HvfwYbqRXZAfUgQh6yMWki0EFjo5rbcJDS2m",
+    "durationMinutes": 120,
+    "taskSummary": "Na fantomie leżącym w łóżku wykonaj kolejno: toaletę jamy ustnej z użyciem środka leczniczego (Aphtin) oraz karmienie przez zgłębnik żołądkowy metodą porcji. Wypełnij kartę żywienia dojelitowego, indywidualną kartę pielęgnacji i zabiegów medycznych oraz kartę profilaktyki zapalenia płuc. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Jan Kozłowski",
+      "ward": "zakład opiekuńczo-leczniczy",
+      "description": "72-letni Jan Kozłowski z naczyniopochodnym otępieniem starczym i zaburzoną funkcją przełykania przebywa w zakładzie opiekuńczo-leczniczym. W jamie ustnej na zachyłkach policzków, podniebieniu i języku występują u niego liczne pleśniawki. Pacjent posiłki i płyny ma podawane przez zgłębnik żołądkowy. Według zlecenia lekarskiego jest karmiony dietą przemysłową — opiekun medyczny podaje mu posiłki metodą porcji jednorazowo po 100 ml. Pacjent jest osobą leżącą, z niemożliwym do nawiązania kontaktem słowno-logicznym. Jest zabezpieczony w pieluchomajtki i ma założony cewnik moczowy. Rano oddał 1 raz stolec, nie wymiotował. Lekarz zlecił wykonywanie toalety jamy ustnej z zastosowaniem Aphtinu."
+    },
+    "assessedTasks": [
+      {
+        "type": "procedure",
+        "title": "Toaleta jamy ustnej z użyciem środka leczniczego (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze wykonania toalety jamy ustnej.",
+          "Umył higienicznie i/lub zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Podłożył pod brodę i wokół szyi pacjenta ręcznik/podkład chłonny.",
+          "Włożył szpatułkę owiniętą gazikiem/pean z gazikiem do jamy ustnej i usunął wydzielinę; zużytą szpatułkę/gazik wyrzucił do miski nerkowatej / pojemnika „Odpady medyczne zakaźne”.",
+          "Kolejną szpatułkę owiniętą gazikiem zmoczył Aphtinem i umył kolejno: zachyłki policzków, podniebienie, język.",
+          "Wykonał co najmniej po dwa ruchy myjąc jedną powierzchnię w jamie ustnej.",
+          "Do mycia każdej powierzchni zmieniał szpatułkę/gazik zmoczony Aphtinem.",
+          "Osuszył wargi pacjenta.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Karmienie przez zgłębnik żołądkowy (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze wykonania karmienia przez zgłębnik żołądkowy.",
+          "Zdezynfekował ręce, założył czyste rękawiczki jednorazowe, ułożył pacjenta w pozycji półwysokiej.",
+          "Wprowadził strzykawką typu Janette 5-20 ml powietrza do zgłębnika osłuchując żołądek stetoskopem lub cofnął tłok sprawdzając zaleganie treści żołądkowej i wylał ją do miski nerkowatej.",
+          "Użytą strzykawkę wyrzucił do miski nerkowatej / pojemnika „Odpady medyczne zakaźne”.",
+          "Drugą strzykawką typu Janette przepłukał zgłębnik przegotowaną wodą.",
+          "Napełniał strzykawkę pokarmem i podawał go pacjentowi, powtarzał do podania 100 ml pokarmu (nie krócej niż 5 minut).",
+          "Przepłukał zgłębnik przegotowaną wodą w objętości od 20 do 100 ml.",
+          "Pozostawił pacjenta w pozycji półwysokiej i powiadomił go o pozostaniu w niej na czas 30-60 minut.",
+          "Usunął ręcznik/podkład chłonny spod brody pacjenta i wrzucił go do pojemnika „Brudna bielizna”.",
+          "Użyte rękawiczki wyrzucił do pojemnika „Odpady medyczne zakaźne”, zdezynfekował ręce."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "karta-zywienia",
+        "title": "Karta żywienia dojelitowego",
+        "intro": "Na podstawie informacji o pacjencie i obserwacji pacjenta.",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjenta",
+            "match": "text",
+            "accepted": [
+              "Jan Kozłowski"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "wiek",
+            "label": "Wiek",
+            "match": "text",
+            "accepted": [
+              "72",
+              "72 lata"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział",
+            "match": "text",
+            "accepted": [
+              "zakład opiekuńczo-leczniczy",
+              "zol",
+              "opiekuńczo-leczniczy"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "droznosc",
+            "label": "Drożność zgłębnika (TAK/NIE)",
+            "match": "text",
+            "accepted": [
+              "tak"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pokarm",
+            "label": "Ilość podanego pokarmu przez zgłębnik",
+            "match": "number",
+            "accepted": [
+              "100"
+            ],
+            "unit": "ml"
+          },
+          {
+            "kind": "value",
+            "id": "plyny",
+            "label": "Ilość podanych płynów przez zgłębnik",
+            "match": "number",
+            "range": {
+              "max": 100
+            },
+            "unit": "ml"
+          },
+          {
+            "kind": "value",
+            "id": "mocz",
+            "label": "Ilość wydalonego moczu",
+            "match": "number",
+            "accepted": [
+              "500"
+            ],
+            "unit": "ml"
+          },
+          {
+            "kind": "value",
+            "id": "stolec",
+            "label": "Oddany stolec (TAK/NIE)",
+            "match": "text",
+            "accepted": [
+              "tak"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "wymioty",
+            "label": "Wymioty (TAK/NIE)",
+            "match": "text",
+            "accepted": [
+              "nie"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis osoby wypełniającej",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-pielegnacji",
+        "title": "Indywidualna karta pielęgnacji i zabiegów medycznych",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjenta",
+            "match": "text",
+            "accepted": [
+              "Jan Kozłowski"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "wiek",
+            "label": "Wiek",
+            "match": "text",
+            "accepted": [
+              "72",
+              "72 lata"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "zakład opiekuńczo-leczniczy",
+              "zol",
+              "opiekuńczo-leczniczy"
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Wykonane zabiegi i czynności (co najmniej 2)",
+            "minRequired": 2,
+            "lines": 4,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "toaleta jamy ustnej z użyciem środka leczniczego (Aphtinu)",
+                "synonyms": [
+                  "toaleta jamy ustnej",
+                  "jamy ustnej",
+                  "aphtin"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "karmienie przez zgłębnik żołądkowy",
+                "synonyms": [
+                  "karmienie",
+                  "zglebnik",
+                  "sonda"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-profilaktyki-pluc",
+        "title": "Karta profilaktyki zapalenia płuc",
+        "fields": [
+          {
+            "kind": "list",
+            "id": "objawy",
+            "label": "Objawy do obserwacji pod kątem zapalenia płuc (co najmniej 4)",
+            "minRequired": 3,
+            "lines": 6,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "kaszel / kaszel z odksztuszaną wydzieliną",
+                "synonyms": [
+                  "kaszel"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "gorączka",
+                "synonyms": [
+                  "goraczka",
+                  "podwyzszona temperatura"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "dreszcze",
+                "synonyms": [
+                  "dreszcze"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "ból w klatce piersiowej",
+                "synonyms": [
+                  "bol w klatce",
+                  "klatce piersiowej"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "osłabienie",
+                "synonyms": [
+                  "oslabienie"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "duszność",
+                "synonyms": [
+                  "dusznosc"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "czynnosci",
+            "label": "Czynności poprawiające wentylację płuc pacjenta (co najmniej 4)",
+            "minRequired": 4,
+            "lines": 6,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "nacieranie",
+                "synonyms": [
+                  "nacieranie"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "oklepywanie",
+                "synonyms": [
+                  "oklepywanie"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "asystowanie/wspomaganie podczas ćwiczeń czynnych",
+                "synonyms": [
+                  "cwiczen czynnych",
+                  "asystowanie",
+                  "wspomaganie"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "wykonywanie ćwiczeń biernych",
+                "synonyms": [
+                  "cwiczen biernych",
+                  "biernych"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "prowadzenie ćwiczeń oddechowych (wdech nosem, wydłużony wydech ustami)",
+                "synonyms": [
+                  "cwiczen oddechowych",
+                  "oddechow",
+                  "wdech przez nos"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "zachęcanie do odksztuszania wydzieliny przez wymuszony kaszel",
+                "synonyms": [
+                  "odksztuszania",
+                  "wymuszony kaszel",
+                  "pokaszliwanie"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "zachęcanie do odksztuszania przez wypowiadanie spółgłoski „r”",
+                "synonyms": [
+                  "spolgloski",
+                  "wypowiadanie r"
+                ]
+              },
+              {
+                "id": "a8",
+                "canonical": "zmiana pozycji pacjenta",
+                "synonyms": [
+                  "zmiana pozycji"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pozycja",
+            "label": "Zalecana pozycja ułożeniowa pacjenta w łóżku",
+            "match": "text",
+            "accepted": [
+              "półwysoka",
+              "półsiedząca",
+              "siedząca",
+              "siedząca z pochyleniem"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "wilgotnosc",
+            "label": "Zalecana wilgotność powietrza na sali",
+            "match": "number",
+            "range": {
+              "min": 50,
+              "max": 70
+            },
+            "unit": "%"
+          },
+          {
+            "kind": "value",
+            "id": "temperatura",
+            "label": "Zalecana temperatura powietrza na sali",
+            "match": "number",
+            "range": {
+              "min": 18,
+              "max": 20
+            },
+            "unit": "°C"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "czerwiec-2024",
+    "title": "Egzamin praktyczny — Czerwiec 2024",
+    "year": 2024,
+    "session": "Czerwiec 2024",
+    "arkusz": "MED.14-01-24.06-SG",
+    "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MOj32FNpIgLRq2SWA1u9QmzbxiHJl47OaTGX",
+    "durationMinutes": 120,
+    "taskSummary": "Przygotuj zestaw do pobrania wymazu z rany powierzchownej/owrzodzenia podudzia lewego (nie wykonuj tego zabiegu). Następnie na fantomie wykonaj kolejno: iniekcję heparyny drobnocząsteczkowej Clexane 40 mg (0,4 ml) w okolicę powłok brzusznych, mycie klatki piersiowej i pleców oraz zmianę koszuli nocnej szpitalnej. Uzupełnij algorytm oklepywania pleców i klatki piersiowej oraz wypełnij indywidualną kartę pielęgnacji i zabiegów medycznych. Czynności na fantomie wykonaj w czasie nie dłuższym niż 35 minut.",
+    "patient": {
+      "name": "Alicja Misiak",
+      "pesel": "47031611161",
+      "ward": "oddział chirurgiczny",
+      "description": "Na oddziale chirurgicznym przebywa Alicja Misiak. Od 10 lat pacjentka choruje na chorobę Parkinsona. Obecnie ma objawy utrzymującej się sztywności mięśni szkieletowych i spowolnienia ruchowego. Z powodu niewydolności żylnej u pacjentki występuje owrzodzenie podudzia lewego, rana jest zabezpieczona opatrunkiem. Dwa dni temu pacjentka została przyjęta na oddział z gorączką 38,8°C, otwartą raną na lewym podudziu i objawami zakażenia tej rany. Na zlecenie lekarskie otrzymuje heparynę drobnocząsteczkową Clexane 40 mg (0,4 ml). W chwili obecnej pacjentka jest bardzo osłabiona i cały czas spędza w łóżku."
+    },
+    "assessedTasks": [
+      {
+        "type": "equipment",
+        "title": "Zestaw do pobrania wymazu z rany powierzchownej/owrzodzenia podudzia lewego (oceniany na stanowisku)",
+        "items": [
+          "rękawiczki jednorazowe, jednorazowa maseczka ochronna",
+          "środek do dezynfekcji skóry i błon śluzowych w butelce z atomizerem",
+          "jednorazowa wymazówka z podłożem transportowym",
+          "naklejka na probówkę z 2 kodami kreskowymi",
+          "jałowe gaziki (co najmniej 2), jałowa pęseta jednorazowa",
+          "serweta jałowa",
+          "miska nerkowata jednorazowa / pojemnik „Odpady medyczne zakaźne”"
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Iniekcja heparyny drobnocząsteczkowej w okolicę powłok brzusznych (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Zapytał pacjentkę o imię i nazwisko i/lub sprawdził opaskę identyfikacyjną, poinformował o zamiarze wykonania iniekcji heparyny i zapytał o zgodę.",
+          "Umył higienicznie i/lub zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Odsłonił wyłącznie okolice brzucha, dotknął palcami okolicy pępka, spryskał skórę wokół pępka środkiem do dezynfekcji skóry i błon śluzowych.",
+          "Wziął strzykawkę Clexane 40 mg (0,4 ml), rozdzielił opakowanie od strony tłoka i wyjął strzykawkę nie dotykając jej końcem niczego.",
+          "Założył igłę, zdjął osłonkę, ujął fałd skóry palcem wskazującym i kciukiem, wkłuł igłę pod kątem 45/90 stopni i podał lek nie puszczając fałdu skóry.",
+          "Poinformował pacjentkę o nieuciskaniu i niepocieraniu miejsca wkłucia po wstrzyknięciu.",
+          "Wyjął igłę, uwolnił fałd skóry, nie pocierał miejsca wstrzyknięcia.",
+          "Igłę umieścił w pojemniku twardościennym, strzykawkę w pojemniku z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Mycie klatki piersiowej i pleców oraz zmiana koszuli nocnej szpitalnej (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o planowanej czynności i zapytał o zgodę.",
+          "Zdezynfekował ręce, założył foliowy fartuch jednorazowy i rękawiczki jednorazowe.",
+          "Zdjął pacjentce koszulę nocną i wrzucił ją do pojemnika „Brudna bielizna”, ułożył ręcznik na klatce piersiowej.",
+          "Sprawdził temperaturę wody termometrem lub przez polanie wodą własnego przedramienia.",
+          "Umył klatkę piersiową namydloną myjką, spłukał, osuszył ręcznikiem, ułożył pacjentkę na boku plecami do siebie.",
+          "Odsłonił plecy, ułożył ręcznik wzdłuż pleców, umył plecy namydloną myjką, spłukał, osuszył ręcznikiem, ułożył pacjentkę na plecach.",
+          "Używany ręcznik wrzucił do pojemnika „Brudna bielizna”.",
+          "Założył pacjentce czystą koszulę nocną, zapiął guziki, wyrównał koszulę pod plecami i pośladkami (pacjentka okryta kocem).",
+          "Użytą myjkę i rękawiczki wyrzucił do pojemnika „Odpady medyczne zakaźne”."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "algorytm-oklepywania",
+        "title": "Algorytm oklepywania pleców i klatki piersiowej",
+        "intro": "Czynności opiekuna medycznego z uwzględnieniem kierunku oklepywania, techniki, zasad oraz miejsc, które należy omijać.",
+        "fields": [
+          {
+            "kind": "list",
+            "id": "przed",
+            "label": "Czynności przed przystąpieniem do oklepywania (co najmniej 5)",
+            "minRequired": 4,
+            "lines": 6,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "higieniczne umycie i/lub dezynfekcja rąk",
+                "synonyms": [
+                  "umycie rak",
+                  "dezynfekcja rak"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "ustalenie tożsamości / identyfikacja pacjenta",
+                "synonyms": [
+                  "tozsamosci",
+                  "identyfikacja"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "uzyskanie zgody pacjenta",
+                "synonyms": [
+                  "zgody",
+                  "zgoda"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "przygotowanie zestawu (rękawiczki, środek do dezynfekcji, miska nerkowata, lignina/ręczniki)",
+                "synonyms": [
+                  "przygotowanie zestawu",
+                  "zestaw"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "założenie fartucha",
+                "synonyms": [
+                  "fartuch",
+                  "fartucha"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "założenie rękawiczek ochronnych",
+                "synonyms": [
+                  "rekawiczek",
+                  "rekawiczki"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "przygotowanie",
+            "label": "Przygotowanie pacjenta do oklepywania (co najmniej 3)",
+            "minRequired": 2,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "poinformowanie o zamiarze wykonania oklepywania",
+                "synonyms": [
+                  "poinformowanie",
+                  "informuje"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "ułożenie pacjenta stosownie do stanu zdrowia",
+                "synonyms": [
+                  "ulozenie pacjenta",
+                  "ulozenie"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "odsłonięcie pleców i klatki piersiowej / zdjęcie wierzchniej bielizny",
+                "synonyms": [
+                  "odsloniecie",
+                  "zdjecie bielizny",
+                  "plecow i klatki"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "nasmarowanie pleców i klatki piersiowej środkiem do pielęgnacji skóry",
+                "synonyms": [
+                  "nasmarowanie",
+                  "srodkiem do pielegnacji"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "informacja o wdychaniu powietrza przez nos i wydychaniu przez usta",
+                "synonyms": [
+                  "wdychaniu",
+                  "przez nos",
+                  "przez usta"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "plecy",
+            "label": "Wykonanie oklepania pleców (co najmniej 4)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "oklepywanie pleców od podstawy ku szczytowi",
+                "synonyms": [
+                  "od podstawy",
+                  "ku szczytowi"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "pominięcie okolicy łopatek, kręgosłupa i nerek",
+                "synonyms": [
+                  "lopatek",
+                  "kregoslupa",
+                  "nerek"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "intensyfikowanie oklepywania",
+                "synonyms": [
+                  "intensyfikowanie"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "obserwacja pacjenta",
+                "synonyms": [
+                  "obserwacja"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "klatka",
+            "label": "Wykonanie oklepania klatki piersiowej (co najmniej 4)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "oklepywanie klatki piersiowej od łuku żebrowego ku obojczykom",
+                "synonyms": [
+                  "luku zebrowego",
+                  "ku obojczykom"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "pominięcie okolicy serca",
+                "synonyms": [
+                  "serca"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "pominięcie piersi u kobiety",
+                "synonyms": [
+                  "piersi"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "intensyfikowanie oklepywania",
+                "synonyms": [
+                  "intensyfikowanie"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "obserwacja pacjenta",
+                "synonyms": [
+                  "obserwacja"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "po",
+            "label": "Czynności po wykonaniu oklepywania (co najmniej 4)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "zachęcanie pacjenta do efektywnego kaszlu",
+                "synonyms": [
+                  "efektywnego kaszlu",
+                  "kaszlu"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "wyrzucenie rękawiczek do pojemnika na odpady medyczne zakaźne",
+                "synonyms": [
+                  "rekawiczek",
+                  "odpady"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "wyrzucenie fartucha jednorazowego do pojemnika na odpady medyczne zakaźne",
+                "synonyms": [
+                  "fartucha"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "dezynfekcja rąk",
+                "synonyms": [
+                  "dezynfekcja"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "udokumentowanie wykonanej czynności",
+                "synonyms": [
+                  "udokumentowanie",
+                  "dokumentacja"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-pielegnacji",
+        "title": "Indywidualna karta pielęgnacji i zabiegów medycznych",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko",
+            "match": "text",
+            "accepted": [
+              "Alicja Misiak"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "47031611161"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "chirurgii ogólnej",
+              "chirurgiczny",
+              "chirurgia",
+              "oddział chirurgiczny"
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Wykonane zabiegi i czynności (co najmniej 3)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "mycie klatki piersiowej i pleców",
+                "synonyms": [
+                  "mycie klatki",
+                  "mycie plecow",
+                  "klatki piersiowej"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "zmiana koszuli nocnej",
+                "synonyms": [
+                  "koszuli nocnej",
+                  "koszula",
+                  "zmiana koszuli"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "iniekcja heparyny drobnocząsteczkowej Clexane 40 mg (0,4 ml) podskórnie",
+                "synonyms": [
+                  "clexane",
+                  "heparyny",
+                  "iniekcja heparyny",
+                  "0,4 ml"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]

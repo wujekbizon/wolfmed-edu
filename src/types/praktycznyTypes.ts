@@ -2,7 +2,7 @@ export const PRACTICAL_PASSING_PERCENT = 75
 
 export interface PracticalPatient {
   name: string
-  pesel: string
+  pesel?: string
   ward: string
   description: string
 }

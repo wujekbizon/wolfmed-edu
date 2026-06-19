@@ -47,7 +47,9 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
             <div className="rounded-xl border border-zinc-200 bg-zinc-50/60 p-5">
               <h2 className="text-sm font-bold text-zinc-800 mb-1">Informacje o pacjencie</h2>
               <p className="text-xs text-zinc-500 mb-3">
-                {exam.patient.name}, PESEL {exam.patient.pesel}, {exam.patient.ward}
+                {[exam.patient.name, exam.patient.pesel && `PESEL ${exam.patient.pesel}`, exam.patient.ward]
+                  .filter(Boolean)
+                  .join(', ')}
               </p>
               <p className="text-sm text-zinc-600 leading-relaxed">{exam.patient.description}</p>
             </div>

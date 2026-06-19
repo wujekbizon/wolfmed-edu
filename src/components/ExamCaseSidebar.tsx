@@ -14,7 +14,9 @@ export default function ExamCaseSidebar({ exam }: Props) {
           Informacje o pacjencie
         </h2>
         <p className="text-xs text-zinc-500 mb-2">
-          {exam.patient.name}, PESEL {exam.patient.pesel}, {exam.patient.ward}
+          {[exam.patient.name, exam.patient.pesel && `PESEL ${exam.patient.pesel}`, exam.patient.ward]
+            .filter(Boolean)
+            .join(', ')}
         </p>
         <p className="text-sm text-zinc-600 leading-relaxed">{exam.patient.description}</p>
       </div>
