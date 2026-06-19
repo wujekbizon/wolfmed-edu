@@ -3006,5 +3006,518 @@
         ]
       }
     ]
+  },
+  {
+    "id": "czerwiec-2023",
+    "title": "Egzamin praktyczny — Czerwiec 2023",
+    "year": 2023,
+    "session": "Czerwiec 2023",
+    "arkusz": "MED.14-01-23.06-SG",
+    "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Jp1VzHmQWsLSvF0ZVh7qXdCNxbjatwczey8g",
+    "durationMinutes": 120,
+    "taskSummary": "Na fantomie leżącym w łóżku wykonaj kolejno: mycie klatki piersiowej i pleców, zmianę prześcieradła oraz pobranie wymazu z gardła. Wypełnij kartę gorączkową i indywidualną kartę pielęgnacji i zabiegów medycznych oraz zapisz algorytm płukania oka pacjenta. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Lech Zieliński",
+      "pesel": "47030211111",
+      "ward": "oddział wewnętrzny",
+      "description": "Lech Zieliński przebywa drugą dobę na oddziale wewnętrznym. Pacjent został przyjęty z gorączką 40,2°C. Zgłasza złe samopoczucie, osłabienie i ból gardła. W prawym oku zalega ropna wydzielina, która utrudnia otwieranie powiek. Pacjent nie jest w stanie samodzielnie wykonywać czynności higienicznych. Temperatura ciała o godzinie 7:00 wynosiła 37,7°C, ciśnienie krwi 120/75 mmHg. Kontrolna temperatura o 8:00 wynosiła 38,8°C. Obecnie, po podaniu leków według zlecenia lekarza, kontrolna temperatura ciała wynosi 36,7°C. Zlecono pobranie wymazu z gardła w celu diagnostyki mikrobiologicznej."
+    },
+    "assessedTasks": [
+      {
+        "type": "procedure",
+        "title": "Mycie klatki piersiowej i pleców (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze wykonania mycia klatki piersiowej i pleców oraz zapytał o zgodę.",
+          "Umył higienicznie i/lub zdezynfekował ręce, założył fartuch ochronny foliowy i rękawiczki jednorazowe.",
+          "Poluzował wierzchnie przykrycie pacjenta, zdjął górną część piżamy i odłożył ją.",
+          "Ułożył ręcznik na klatce piersiowej, obniżył koc w poszwie na okolicę brzucha pozostawiając klatkę przykrytą ręcznikiem.",
+          "Umył dwukrotnie klatkę piersiową, osuszył ręcznikiem; klatka piersiowa była cały czas osłonięta ręcznikiem.",
+          "Ułożył pacjenta na boku plecami do siebie, założył koc w poszwie tak, by odsłonięte były tylko plecy.",
+          "Ułożył ręcznik wzdłuż pleców, umył plecy namydloną myjką, osuszył skórę.",
+          "Ułożył pacjenta na plecach, założył górną część piżamy i zapiął ją.",
+          "Używany ręcznik wrzucił do pojemnika z napisem „Brudna bielizna”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Zmiana prześcieradła pacjentowi leżącemu w łóżku (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze zmiany prześcieradła i zapytał o zgodę.",
+          "Obniżył wezgłowie łóżka, wyjął poduszkę spod głowy, ułożył pacjenta na boku plecami do siebie nie odsłaniając pleców i pośladków.",
+          "Wysunął brzegi brudnego prześcieradła spod materaca z jednej strony i zrolował je w kierunku pleców pacjenta.",
+          "Rozłożył czyste prześcieradło złożone na pół, górną połowę zrolował do pleców pacjenta, wykonał narożnik kopertowy u wezgłowia, zwisające boki podłożył pod materac.",
+          "Przeszedł na drugą stronę łóżka, ułożył pacjenta na boku plecami do siebie nie odsłaniając pleców i pośladków.",
+          "Wyciągnął spod pacjenta zrolowane brudne prześcieradło i umieścił je w pojemniku „Brudna bielizna”.",
+          "Wyciągnął spod pacjenta czyste prześcieradło, wykonał narożnik kopertowy u wezgłowia, zwisające boki podłożył pod materac.",
+          "Ułożył pacjenta na plecach, poprawił wierzchnie przykrycie / koc w poszwie.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Pobranie wymazu z gardła (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze pobrania wymazu z gardła i zapytał o zgodę.",
+          "Zdezynfekował ręce, założył maseczkę ochronną i rękawiczki jednorazowe.",
+          "Oddzielił dwie warstwy opakowania z wymazówką, chwycił za korek patyczka, nie dotykał niczego końcem wymazówki.",
+          "Wprowadził przez usta pacjenta do gardła koniec wymazówki i pocierał nim ruchem obrotowym.",
+          "Wycofał wymazówkę przez jamę ustną nie dotykając niczego jej końcem i umieścił ją w probówce z podłożem transportowym.",
+          "Zamknął wymazówkę w probówce / wcisnął korek wymazówki w probówkę.",
+          "Opisał wymazówkę: imieniem i nazwiskiem pacjenta, datą i godziną pobrania.",
+          "Użyte rękawiczki wyrzucił do pojemnika „Odpady medyczne zakaźne”, zdezynfekował ręce."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "karta-goraczkowa",
+        "title": "Karta gorączkowa",
+        "intro": "W wersji cyfrowej zamiast nanoszenia punktów na siatkę wpisz dane pacjenta oraz odczyty pomiarów.",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjenta",
+            "match": "text",
+            "accepted": [
+              "Lech Zieliński"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "47030211111"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "plec",
+            "label": "Płeć (K/M)",
+            "match": "text",
+            "accepted": [
+              "M",
+              "mężczyzna"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "wewnętrzny",
+              "oddział wewnętrzny",
+              "interna"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data",
+            "label": "Data",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "temp-0700",
+            "label": "Temperatura o godz. 07:00",
+            "match": "number",
+            "accepted": [
+              "37,7"
+            ],
+            "unit": "°C"
+          },
+          {
+            "kind": "value",
+            "id": "cisnienie-0700",
+            "label": "Ciśnienie tętnicze krwi o godz. 07:00",
+            "match": "text",
+            "accepted": [
+              "120/75",
+              "120/75 mmHg"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "temp-0800",
+            "label": "Temperatura o godz. 08:00",
+            "match": "number",
+            "accepted": [
+              "38,8"
+            ],
+            "unit": "°C"
+          },
+          {
+            "kind": "value",
+            "id": "godzina-3",
+            "label": "Godzina trzeciego pomiaru (zgodna z czasem egzaminu)",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "temp-3",
+            "label": "Temperatura przy trzecim pomiarze",
+            "match": "number",
+            "accepted": [
+              "36,7"
+            ],
+            "unit": "°C"
+          }
+        ]
+      },
+      {
+        "id": "karta-pielegnacji",
+        "title": "Indywidualna karta pielęgnacji i zabiegów medycznych",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjenta",
+            "match": "text",
+            "accepted": [
+              "Lech Zieliński"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "47030211111"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "wewnętrzny",
+              "oddział wewnętrzny",
+              "interna"
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Wykonane zabiegi i czynności (co najmniej 3)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "mycie klatki piersiowej i pleców",
+                "synonyms": [
+                  "mycie klatki",
+                  "mycie plecow",
+                  "klatki piersiowej"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "zmiana prześcieradła",
+                "synonyms": [
+                  "przescieradla",
+                  "zmiana przescieradla"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "pobranie wymazu z gardła",
+                "synonyms": [
+                  "wymaz z gardla",
+                  "wymazu z gardla",
+                  "wymaz"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "algorytm-plukania-oka",
+        "title": "Algorytm płukania oka pacjenta",
+        "intro": "Obowiązujące zasady oraz czynności opiekuna medycznego dotyczące pacjenta, sprzętu, materiałów i sposobu wykonania zabiegu.",
+        "fields": [
+          {
+            "kind": "list",
+            "id": "przed",
+            "label": "A. Przed przystąpieniem do płukania oka (co najmniej 7 elementów)",
+            "minRequired": 5,
+            "lines": 8,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "zapoznanie się ze zleceniem",
+                "synonyms": [
+                  "zleceniem",
+                  "zlecenie"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "sprawdzenie tożsamości pacjenta",
+                "synonyms": [
+                  "tozsamosci"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "poinformowanie pacjenta o przebiegu czynności",
+                "synonyms": [
+                  "poinformowanie",
+                  "przebiegu"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "uzyskanie zgody na zabieg",
+                "synonyms": [
+                  "zgody",
+                  "zgoda"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "poinformowanie o konieczności zgłaszania niepokojących objawów",
+                "synonyms": [
+                  "niepokojacych objawow",
+                  "zglaszania"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "przygotowanie sprzętu i płynu/roztworu do płukania oka",
+                "synonyms": [
+                  "przygotowanie sprzetu",
+                  "plynu",
+                  "roztworu"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "umycie rąk",
+                "synonyms": [
+                  "umycie rak"
+                ]
+              },
+              {
+                "id": "a8",
+                "canonical": "dezynfekcja rąk",
+                "synonyms": [
+                  "dezynfekcja rak"
+                ]
+              },
+              {
+                "id": "a9",
+                "canonical": "założenie rękawiczek jednorazowych",
+                "synonyms": [
+                  "rekawiczek",
+                  "rekawiczki"
+                ]
+              },
+              {
+                "id": "a10",
+                "canonical": "ułożenie pacjenta w pozycji leżącej lub siedzącej",
+                "synonyms": [
+                  "pozycji lezacej",
+                  "siedzacej",
+                  "ulozenie pacjenta"
+                ]
+              },
+              {
+                "id": "a11",
+                "canonical": "zabezpieczenie bielizny",
+                "synonyms": [
+                  "zabezpieczenie bielizny",
+                  "bielizny"
+                ]
+              },
+              {
+                "id": "a12",
+                "canonical": "ułożenie miski nerkowatej przy policzku po stronie oka płukanego",
+                "synonyms": [
+                  "miski nerkowatej",
+                  "miska nerkowata"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "przebieg",
+            "label": "B. Przebieg wykonania płukania oka (co najmniej 6 elementów)",
+            "minRequired": 4,
+            "lines": 8,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "oczyszczenie powiek gazikiem nasączonym jałowym roztworem soli fizjologicznej",
+                "synonyms": [
+                  "oczyszczenie powiek",
+                  "gazikiem",
+                  "soli fizjologicznej"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "rozchylenie powiek palcami lub z użyciem gazików",
+                "synonyms": [
+                  "rozchylenie powiek",
+                  "powiek"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "poproszenie pacjenta, aby patrzył w górę / w jeden punkt",
+                "synonyms": [
+                  "patrzyl w gore",
+                  "jeden punkt"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "poproszenie pacjenta, aby nie poruszał gałką oczną",
+                "synonyms": [
+                  "nie poruszal galka",
+                  "galka oczna"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "przechylenie głowy pacjenta w kierunku zewnętrznego kąta oka",
+                "synonyms": [
+                  "przechylenie glowy",
+                  "zewnetrznego kata"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "skierowanie strumienia płynu z odległości od 2 do około 10 cm od oka",
+                "synonyms": [
+                  "strumienia",
+                  "odleglosci",
+                  "2 cm"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "płukanie od wewnętrznego do zewnętrznego kąta oka",
+                "synonyms": [
+                  "od wewnetrznego do zewnetrznego",
+                  "kata oka"
+                ]
+              },
+              {
+                "id": "a8",
+                "canonical": "osuszenie gazikiem okolicy oka / policzka",
+                "synonyms": [
+                  "osuszenie",
+                  "okolicy oka"
+                ]
+              },
+              {
+                "id": "a9",
+                "canonical": "założenie opatrunku na oko",
+                "synonyms": [
+                  "opatrunku na oko",
+                  "opatrunek"
+                ]
+              },
+              {
+                "id": "a10",
+                "canonical": "przytwierdzenie opatrunku przylepcem",
+                "synonyms": [
+                  "przylepcem",
+                  "przytwierdzenie opatrunku"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "po",
+            "label": "C. Po wykonaniu płukania oka (co najmniej 5 elementów)",
+            "minRequired": 4,
+            "lines": 7,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "uporządkowanie zestawu/sprzętu",
+                "synonyms": [
+                  "uporzadkowanie",
+                  "zestawu",
+                  "sprzetu"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "segregacja odpadów",
+                "synonyms": [
+                  "segregacja odpadow",
+                  "odpadow"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "zdjęcie rękawic",
+                "synonyms": [
+                  "zdjecie rekawic",
+                  "rekawic"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "umycie rąk",
+                "synonyms": [
+                  "umycie rak"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "dezynfekcja rąk",
+                "synonyms": [
+                  "dezynfekcja rak"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "obserwacja reakcji pacjenta",
+                "synonyms": [
+                  "obserwacja",
+                  "reakcji pacjenta"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "udokumentowanie wykonanego zabiegu",
+                "synonyms": [
+                  "udokumentowanie",
+                  "dokumentacja"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
