@@ -361,6 +361,25 @@ export const SubmitSpotErrorSchema = z.object({
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
+export const GradePracticalExamSchema = z.object({
+  examId: z.string().min(1, "Brak identyfikatora egzaminu"),
+  answers: z
+    .string()
+    .min(1, "Brak odpowiedzi")
+    .refine(
+      (val) => {
+        try {
+          const parsed = JSON.parse(val);
+          return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+        } catch {
+          return false;
+        }
+      },
+      { message: "Nieprawidłowy format odpowiedzi" }
+    ),
+  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
+});
+
 /**
  * Blog validation schemas
  */

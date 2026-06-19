@@ -1,0 +1,26 @@
+import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { getCurrentUser } from '@/server/user'
+import { getUserEnrolledCourses } from '@/server/queries'
+import { getAllPublicPracticalExams } from '@/lib/praktycznyUtils'
+import PracticalExamList from '@/components/PracticalExamList'
+
+export const metadata: Metadata = {
+  title: 'Egzamin praktyczny — Opiekun medyczny',
+  description: 'Wierne arkusze egzaminacyjne MED.14 części praktycznej. Wypełnij dokumentację i sprawdź się przed egzaminem.',
+}
+
+export const dynamic = 'force-dynamic'
+
+export default async function PracticalExamsPage() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
+
+  const courses = await getUserEnrolledCourses(user.userId)
+  const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')
+  if (!hasOpiekun) redirect('/panel/testy-egzaminy')
+
+  const exams = getAllPublicPracticalExams()
+
+  return <PracticalExamList exams={exams} />
+}

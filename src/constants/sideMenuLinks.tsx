@@ -18,7 +18,7 @@ export const sideMenuNavigationLinks = [
     icon: <CourseLibraryIcon width={26} height={26} />,
   },
   {
-    url: '/panel/testy',
+    url: '/panel/testy-egzaminy',
     label: 'Testy i Egzaminy',
     icon: <DashboardIcon width={26} height={26} />,
   },

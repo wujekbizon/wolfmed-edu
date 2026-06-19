@@ -1,0 +1,303 @@
+[
+  {
+    "id": "styczen-2026",
+    "title": "Egzamin praktyczny — Styczeń 2026",
+    "year": 2026,
+    "session": "Styczeń 2026",
+    "arkusz": "MED.14-01-26.01-SG",
+    "durationMinutes": 120,
+    "taskSummary": "Przygotuj zestaw do wykonania mycia pleców i pośladków oraz zmiany pieluchomajtek pacjentce leżącej w łóżku (nie wykonuj tego zabiegu). Następnie wykonaj zmianę prześcieradła i podkładu płóciennego oraz karmienie przez zgłębnik żołądkowy metodą porcji dietą przemysłową. Uzupełnij kartę profilaktyki przeciwodleżynowej oraz kartę żywienia dojelitowego. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Joanna Nadolna",
+      "pesel": "70060617206",
+      "ward": "oddział neurologiczny",
+      "description": "Pani Joanna Nadolna jest pacjentką oddziału neurologicznego z powodu kolejnego rzutu stwardnienia rozsianego. W wyniku osłabienia i drżenia kończyn górnych oraz niedowładów kończyn dolnych jest osobą leżącą i wymaga pomocy przy wykonywaniu czynności higienicznych i samoobsługowych. Zgłasza potrzebę wydalania stolca, mocz oddaje w pieluchomajtki. W ocenie ryzyka rozwoju odleżyn według skali Norton otrzymała 11 punktów. Kontakt słowny z pacjentką jest zachowany. Podczas spożywania posiłków krztusi się. Na zlecenie lekarza ma założony zgłębnik żołądkowy, przez który otrzymuje kilka razy dziennie po 50 ml pokarmu z diety bogatobiałkowej, przemysłowej."
+    },
+    "assessedTasks": [
+      {
+        "title": "Zestaw do mycia pleców i pośladków oraz zmiany pieluchomajtek (oceniany na stanowisku)",
+        "items": [
+          "rękawiczki jednorazowe, fartuch jednorazowy",
+          "miska do mycia, mydło w płynie",
+          "podkład chłonny jednorazowy, ręcznik",
+          "myjka, pieluchomajtki"
+        ]
+      },
+      {
+        "title": "Zmiana prześcieradła i podkładu płóciennego (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o zmianie prześcieradła i podkładu, zapytał o zgodę na wykonanie czynności.",
+          "Higienicznie umył i/lub zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Wyjął poduszki spod głowy, ułożył pacjentkę plecami do siebie nie odsłaniając pleców i pośladków, wysunął brzegi brudnego podkładu i prześcieradła spod materaca, zwinął je i podsunął pod pacjentkę.",
+          "Rozłożył czyste prześcieradło złożone na pół, górną połowę zwinął do pleców pacjentki, wykonał narożnik kopertowy, zwisające boki podłożył pod materac.",
+          "Rozłożył podkład płócienny na wysokości pośladków, górną połowę zwinął pod pacjentkę, zwisający brzeg podłożył pod materac.",
+          "Przeszedł na drugą stronę łóżka, ułożył pacjentkę na boku plecami do siebie, wyciągnął zrolowane brudne prześcieradło i podkład oraz umieścił je w pojemniku z napisem „Brudna bielizna”.",
+          "Wyciągnął czyste prześcieradło, wykonał narożnik kopertowy, naciągnął i podłożył zwisające brzegi pod materac.",
+          "Wysunął czysty podkład płócienny, wyrównał, naciągnął i podłożył zwisający brzeg pod materac.",
+          "Ułożył pacjentkę na plecach, podłożył poduszki pod głowę, wyrównał koszulę pod plecami i pośladkami.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "title": "Karmienie przez zgłębnik żołądkowy metodą porcji dietą przemysłową (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o planowanym karmieniu przez zgłębnik, zapytał o zgodę na wykonanie czynności.",
+          "Zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Ułożył pacjentkę w pozycji półwysokiej/wysokiej.",
+          "Przyłożył membranę stetoskopu między linią sutków a pępkiem i wprowadził strzykawką 5-20 ml powietrza do zgłębnika lub cofnął tłok sprawdzając zaleganie treści żołądkowej.",
+          "Nabrał wodę przegotowaną do strzykawki, ustawił ją pionowo, usunął pęcherzyki powietrza, połączył ze zgłębnikiem i podał wodę.",
+          "Nabrał pokarm do strzykawki, ustawił ją pionowo, usunął pęcherzyki powietrza, połączył ze zgłębnikiem i podał pokarm.",
+          "Nabrał wodę przegotowaną do strzykawki, ustawił ją pionowo, usunął pęcherzyki powietrza, połączył ze zgłębnikiem i przepłukał zgłębnik wodą.",
+          "Zamykał zgłębnik po każdym odłączeniu strzykawki.",
+          "Pozostawił pacjentkę w pozycji półwysokiej/wysokiej na czas 30-60 minut i poinformował ją o tym.",
+          "Użytą strzykawkę i rękawiczki jednorazowe wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "karta-profilaktyki",
+        "title": "Karta profilaktyki przeciwodleżynowej",
+        "fields": [
+          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko pacjentki", "match": "text", "accepted": ["Joanna Nadolna"] },
+          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["70060617206"] },
+          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["neurologiczny", "neurologia", "neurologii", "oddział neurologiczny"] },
+          { "kind": "value", "id": "data", "label": "Data wypełnienia", "match": "date" },
+          { "kind": "value", "id": "norton", "label": "Uzyskana liczba punktów według skali Norton", "match": "number", "accepted": ["11"], "unit": "pkt" },
+          {
+            "kind": "list",
+            "id": "dzialania",
+            "label": "Działania opiekuna dotyczące pielęgnacji skóry, z uwzględnieniem częstotliwości (co najmniej 5 działań)",
+            "minRequired": 4,
+            "lines": 7,
+            "acceptedAnswers": [
+              { "id": "d1", "canonical": "obserwacja/ocena skóry w miejscach narażonych na odleżyny, przynajmniej 1 raz dziennie", "synonyms": ["obserwacja skóry", "ocena skóry", "obserwacja miejsc narażonych"] },
+              { "id": "d2", "canonical": "mycie całego ciała, przynajmniej 1 raz dziennie", "synonyms": ["mycie ciała", "toaleta całego ciała"] },
+              { "id": "d3", "canonical": "toaleta pośladków/krocza przy każdej zmianie pieluchomajtek", "synonyms": ["toaleta krocza", "toaleta pośladków", "mycie pośladków"] },
+              { "id": "d4", "canonical": "natłuszczanie/nawilżanie skóry, przynajmniej 1 raz dziennie", "synonyms": ["natłuszczanie", "nawilżanie skóry", "natłuszczanie skóry"] },
+              { "id": "d5", "canonical": "masowanie/oklepywanie skóry narażonej na odleżyny", "synonyms": ["masowanie", "oklepywanie", "masaż skóry"] },
+              { "id": "d6", "canonical": "delikatne, dokładne osuszanie skóry po każdym myciu", "synonyms": ["osuszanie", "delikatne osuszanie", "dokładne osuszanie"] }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "srodki",
+            "label": "Środki ochronne na skórę miejsc narażonych na odleżyny (co najmniej 5 środków)",
+            "minRequired": 4,
+            "lines": 5,
+            "acceptedAnswers": [
+              { "id": "s1", "canonical": "środek natłuszczający/nawilżający (np. Linomag, Alantan, Penaten)", "synonyms": ["natłuszczający", "nawilżający", "linomag", "alantan", "penaten"] },
+              { "id": "s2", "canonical": "oliwka/lotion/emolient", "synonyms": ["oliwka", "lotion", "emolient"] },
+              { "id": "s3", "canonical": "krem propolisowy", "synonyms": ["propolisowy"] },
+              { "id": "s4", "canonical": "krem na odleżyny", "synonyms": ["krem na odleżyny"] },
+              { "id": "s5", "canonical": "krem ochronny (np. z argininą)", "synonyms": ["krem ochronny", "argininą"] },
+              { "id": "s6", "canonical": "maść witaminowa", "synonyms": ["witaminowa"] },
+              { "id": "s7", "canonical": "balsam na odleżyny", "synonyms": ["balsam"] },
+              { "id": "s8", "canonical": "maść/krem z tlenkiem cynku (np. Sudocrem)", "synonyms": ["cynk", "tlenkiem cynku", "sudocrem"] },
+              { "id": "s9", "canonical": "opatrunki profilaktyczne/barierowe/błonowe/półprzepuszczalne (np. elastoDERM)", "synonyms": ["opatrunki profilaktyczne", "barierowe", "błonowe", "półprzepuszczalne", "elastoderm"] },
+              { "id": "s10", "canonical": "płyn zapobiegający powstawaniu odleżyn (np. PC 30V)", "synonyms": ["pc 30v", "płyn zapobiegający"] }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zasady",
+            "label": "Zasady zapobiegające powstawaniu odleżyn, z uwzględnieniem sprzętu, materiałów i częstotliwości (co najmniej 6 zasad)",
+            "minRequired": 5,
+            "lines": 8,
+            "acceptedAnswers": [
+              { "id": "z1", "canonical": "zmiana pozycji pacjentki w łóżku co 2 godziny w dzień", "synonyms": ["co 2 godziny", "zmiana pozycji co 2"] },
+              { "id": "z2", "canonical": "zmiana pozycji pacjentki w łóżku co 4 godziny w nocy", "synonyms": ["co 4 godziny", "w nocy co 4"] },
+              { "id": "z3", "canonical": "odciążenie miejsc narażonych na ucisk / materac przeciwodleżynowy zmiennociśnieniowy", "synonyms": ["materac", "odciążenie", "zmiennociśnieniowy", "dynamiczny"] },
+              { "id": "z4", "canonical": "zmiana pieluchomajtek w zależności od potrzeb", "synonyms": ["zmiana pieluchomajtek"] },
+              { "id": "z5", "canonical": "zmiana bielizny osobistej przynajmniej raz dziennie", "synonyms": ["bielizny osobistej"] },
+              { "id": "z6", "canonical": "zmiana bielizny pościelowej przynajmniej raz dziennie", "synonyms": ["bielizny pościelowej", "pościeli"] },
+              { "id": "z7", "canonical": "prześcielanie łóżka / naciąganie dolnych warstw pościeli", "synonyms": ["prześcielanie", "naciąganie pościeli"] },
+              { "id": "z8", "canonical": "wymiatanie okruchów z łóżka", "synonyms": ["okruchy", "wymiatanie"] },
+              { "id": "z9", "canonical": "stosowanie bielizny z włókien naturalnych/bawełnianych", "synonyms": ["bawełnian", "włókien naturalnych", "naturalnych"] },
+              { "id": "z10", "canonical": "eliminacja tarcia / materiały ślizgowe", "synonyms": ["tarcia", "ślizgowych"] },
+              { "id": "z11", "canonical": "stosowanie udogodnień / klinów / ochraniaczy", "synonyms": ["udogodnień", "kliny", "ochraniacze"] },
+              { "id": "z12", "canonical": "stosowanie podnośników", "synonyms": ["podnośnik"] },
+              { "id": "z13", "canonical": "stosowanie diety bogatobiałkowej/wysokobiałkowej", "synonyms": ["bogatobiałkow", "wysokobiałkow", "białko"] },
+              { "id": "z14", "canonical": "nawadnianie pacjentki / 1,5-2 l płynów na dobę", "synonyms": ["nawadnianie", "płynów", "1,5", "2 l"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-zywienia",
+        "title": "Karta żywienia dojelitowego",
+        "fields": [
+          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko pacjentki", "match": "text", "accepted": ["Joanna Nadolna"] },
+          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["70060617206"] },
+          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["neurologiczny", "neurologia", "neurologii", "oddział neurologiczny"] },
+          { "kind": "value", "id": "data-godzina", "label": "Data i godzina", "match": "date" },
+          { "kind": "value", "id": "podaz-diety", "label": "Podaż diety przez zgłębnik", "match": "number", "accepted": ["50"], "unit": "ml" },
+          { "kind": "value", "id": "podaz-plynow", "label": "Podaż płynów przez zgłębnik", "match": "number", "range": { "max": 50 }, "unit": "ml" },
+          { "kind": "value", "id": "czas-podawania", "label": "Czas podawania diety przez zgłębnik", "match": "number", "range": { "min": 5 }, "unit": "min" },
+          { "kind": "value", "id": "pozycja", "label": "Pozostawienie pacjentki — pozycja", "match": "text", "accepted": ["półsiedząca", "półwysoka", "siedząca", "wysoka"] },
+          { "kind": "value", "id": "czas-pozostawienia", "label": "Pozostawienie pacjentki — czas", "match": "number", "range": { "min": 30, "max": 60 }, "unit": "min" },
+          { "kind": "value", "id": "podpis", "label": "Podpis", "match": "text", "accepted": ["XX YY"] }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "czerwiec-2025",
+    "title": "Egzamin praktyczny — Czerwiec 2025",
+    "year": 2025,
+    "session": "Czerwiec 2025",
+    "arkusz": "MED.14-01-25.06-SG",
+    "durationMinutes": 120,
+    "taskSummary": "Przygotuj zestaw do wykonania pomiaru poziomu glukozy we krwi włośniczkowej przy użyciu glukometru (nie wykonuj tego zabiegu). Następnie wykonaj zmianę opatrunku na ranie pooperacyjnej po usunięciu pęcherzyka żółciowego z użyciem 0,9% NaCl oraz wymianę jednoczęściowego worka stomijnego. Sporządź dokumentację: pomiar poziomu glukozy oraz indywidualną kartę czynności higienicznych, pielęgnacyjnych i zabiegów medycznych. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Włodzimierz Nowomiejski",
+      "pesel": "57121137708",
+      "ward": "oddział chirurgiczny",
+      "description": "Na oddziale chirurgicznym przebywa pan Włodzimierz Nowomiejski, który od 5 lat ma wyłonioną kolostomię. Trzy dni temu przebył operację usunięcia pęcherzyka żółciowego metodą klasyczną. Rana pooperacyjna goi się prawidłowo. Większość czasu pacjent spędza w łóżku. Z powodu dużego osłabienia i znacznej wady wzroku wymaga pomocy przy wykonywaniu czynności samoobsługowych. Lekarz zlecił jednorazowy pomiar glukozy we krwi włośniczkowej."
+    },
+    "assessedTasks": [
+      {
+        "title": "Zestaw do pomiaru poziomu glukozy glukometrem (oceniany na stanowisku)",
+        "items": [
+          "glukometr",
+          "pudełko na paski / paski testowe do glukometru",
+          "nakłuwacz jednorazowy",
+          "pojemnik twardościenny na odpady ostre",
+          "jałowe gaziki (co najmniej 2 szt.)",
+          "miska nerkowata jednorazowa",
+          "rękawiczki jednorazowe"
+        ]
+      },
+      {
+        "title": "Zmiana opatrunku na ranie pooperacyjnej z użyciem 0,9% NaCl (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Zapytał pacjenta o imię i nazwisko / sprawdził opaskę identyfikacyjną, poinformował o zmianie opatrunku, zapytał o zgodę.",
+          "Higienicznie umył i/lub zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Zabezpieczył bieliznę osobistą/pościelową w okolicy rany.",
+          "Usunął opatrunek z rany i wyrzucił do pojemnika „Odpady medyczne zakaźne”, zdjął rękawiczki i wyrzucił, zdezynfekował ręce, założył nowe rękawiczki.",
+          "Otworzył pakiet jałowych gazików i nawilżył je 0,9% NaCl nie dotykając gazików.",
+          "Jałową pęsetą oczyścił ranę i skórę wokół nasączonymi gazikami, jeden gazik na jedno przetarcie, od środka na zewnątrz rany.",
+          "Drugą jałową pęsetą nałożył suchy jałowy gazik pokrywając całą ranę, następnie kolejny gazik na poprzedni.",
+          "Umocował opatrunek przylepcem mocując do skóry wszystkie brzegi opatrunku.",
+          "Użyte rękawiczki i gaziki wyrzucił do pojemnika „Odpady medyczne zakaźne”, zdezynfekował ręce."
+        ]
+      },
+      {
+        "title": "Wymiana jednoczęściowego worka stomijnego (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o planowanej wymianie worka stomijnego, zapytał o zgodę.",
+          "Założył rękawiczki jednorazowe i fartuch jednorazowy.",
+          "Nalał wodę do miski, sprawdził temperaturę termometrem lub na wewnętrznej stronie przedramienia.",
+          "Zabezpieczył pościel i bieliznę osobistą przed zabrudzeniem/zamoczeniem.",
+          "Odkleił worek stomijny w kierunku od góry ku dołowi i wyrzucił do pojemnika „Odpady medyczne zakaźne”.",
+          "Umył wodą z mydłem okolicę stomii, a następnie osuszył skórę wokół stomii.",
+          "Zbliżył papierową miarkę do stomii, wybrał otwór równy lub większy o 1-2 mm od stomii, wyciął otwór w płytce.",
+          "Przykleił płytkę w kierunku od dołu ku górze, pozostawiając stomię wewnątrz otworu płytki.",
+          "Pociągnął worek sprawdzając, czy jest dobrze przyklejony, okrył pacjenta, wyrównał koc.",
+          "Użyte rękawiczki, fartuch i podkład wyrzucił do pojemnika „Odpady medyczne zakaźne”, zdezynfekował ręce."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "pomiar-glukozy",
+        "title": "Pomiar poziomu glukozy we krwi włośniczkowej przy użyciu glukometru",
+        "intro": "Czynności opiekuna medycznego dotyczące pacjenta, sprzętu oraz przebiegu wykonania zabiegu.",
+        "fields": [
+          {
+            "kind": "list",
+            "id": "czynnosci-a",
+            "label": "A. Czynności przygotowania opiekuna medycznego przed wykonaniem nakłucia palca (co najmniej 6 czynności)",
+            "minRequired": 5,
+            "lines": 8,
+            "acceptedAnswers": [
+              { "id": "a1", "canonical": "sprawdzenie zlecenia lekarskiego", "synonyms": ["zlecenia lekarskiego", "zlecenie"] },
+              { "id": "a2", "canonical": "przedstawienie się pacjentowi", "synonyms": ["przedstawienie"] },
+              { "id": "a3", "canonical": "sprawdzenie tożsamości pacjenta", "synonyms": ["tożsamości"] },
+              { "id": "a4", "canonical": "uzyskanie zgody na wykonanie pomiaru glikemii", "synonyms": ["zgody", "zgoda"] },
+              { "id": "a5", "canonical": "przygotowanie zestawu do wykonania zabiegu", "synonyms": ["przygotowanie zestawu"] },
+              { "id": "a6", "canonical": "sprawdzenie terminu ważności pasków", "synonyms": ["ważności pasków", "termin ważności"] },
+              { "id": "a7", "canonical": "kalibracja glukometru", "synonyms": ["kalibracja"] },
+              { "id": "a8", "canonical": "higieniczne umycie i/lub dezynfekcja rąk", "synonyms": ["umycie rąk", "dezynfekcja rąk"] },
+              { "id": "a9", "canonical": "założenie rękawiczek jednorazowych", "synonyms": ["rękawiczek", "rękawiczki"] }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "czynnosci-b",
+            "label": "B. Czynności dotyczące przygotowania pacjenta do pobrania krwi (co najmniej 5 czynności)",
+            "minRequired": 4,
+            "lines": 6,
+            "acceptedAnswers": [
+              { "id": "b1", "canonical": "poinformowanie o zamiarze wykonania pomiaru glikemii", "synonyms": ["zamiarze pomiaru", "poinformowanie o pomiarze"] },
+              { "id": "b2", "canonical": "poinformowanie o przebiegu/celu wykonania zabiegu", "synonyms": ["przebiegu", "celu"] },
+              { "id": "b3", "canonical": "umycie rąk pacjenta ciepłą wodą", "synonyms": ["umycie rąk ciepłą", "ciepłą wodą"] },
+              { "id": "b4", "canonical": "dokładne osuszenie rąk pacjenta", "synonyms": ["osuszenie rąk", "osuszenie"] },
+              { "id": "b5", "canonical": "przetarcie opuszki palca środkiem niealkoholowym", "synonyms": ["przetarcie opuszki", "niealkoholowym"] },
+              { "id": "b6", "canonical": "wybranie miejsca nakłucia / bocznej części opuszki palca", "synonyms": ["miejsca nakłucia", "bocznej części opuszki"] },
+              { "id": "b7", "canonical": "masowanie palca od nasady w kierunku opuszki", "synonyms": ["masowanie palca", "od nasady"] }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "czynnosci-c",
+            "label": "C. Czynności podczas wykonywania badania, z uwzględnieniem sprzętu (co najmniej 5 czynności)",
+            "minRequired": 4,
+            "lines": 8,
+            "acceptedAnswers": [
+              { "id": "c1", "canonical": "przygotowanie/ustawienie głębokości nakłuwacza/lancetu", "synonyms": ["głębokości nakłuwacza", "ustawienie nakłuwacza", "lancetu"] },
+              { "id": "c2", "canonical": "wyjęcie paska testowego z opakowania", "synonyms": ["wyjęcie paska"] },
+              { "id": "c3", "canonical": "zamknięcie opakowania z paskami", "synonyms": ["zamknięcie opakowania"] },
+              { "id": "c4", "canonical": "włożenie paska testowego do glukometru", "synonyms": ["włożenie paska"] },
+              { "id": "c5", "canonical": "odczekanie na pojawienie się ikonki kropli krwi", "synonyms": ["ikonki kropli", "ikona kropli"] },
+              { "id": "c6", "canonical": "uprzedzenie pacjenta o nakłuciu", "synonyms": ["uprzedzenie o nakłuciu"] },
+              { "id": "c7", "canonical": "nakłucie bocznej części opuszki palca", "synonyms": ["nakłucie opuszki", "nakłucie palca"] },
+              { "id": "c8", "canonical": "wyrzucenie nakłuwacza do pojemnika twardościennego", "synonyms": ["wyrzucenie nakłuwacza", "pojemnika twardościennego"] },
+              { "id": "c9", "canonical": "poczekanie na kroplę krwi / niewyciskanie krwi z palca", "synonyms": ["niewyciskanie", "poczekanie na kroplę"] },
+              { "id": "c10", "canonical": "przyłożenie paska testowego do kropli krwi", "synonyms": ["przyłożenie paska do kropli"] },
+              { "id": "c11", "canonical": "uciśnięcie jałowym gazikiem miejsca nakłucia", "synonyms": ["gazikiem miejsca nakłucia", "przyłożenie gazika"] },
+              { "id": "c12", "canonical": "odczytanie wyniku badania na glukometrze", "synonyms": ["odczytanie wyniku"] }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "czynnosci-d",
+            "label": "D. Czynności opiekuna medycznego po wykonaniu badania (co najmniej 5 czynności)",
+            "minRequired": 4,
+            "lines": 6,
+            "acceptedAnswers": [
+              { "id": "d1", "canonical": "usunięcie paska z glukometru", "synonyms": ["usunięcie paska"] },
+              { "id": "d2", "canonical": "wyrzucenie paska testowego do pojemnika twardościennego", "synonyms": ["wyrzucenie paska", "twardościennego"] },
+              { "id": "d3", "canonical": "zdjęcie rękawiczek jednorazowych", "synonyms": ["zdjęcie rękawiczek"] },
+              { "id": "d4", "canonical": "zdezynfekowanie rąk", "synonyms": ["dezynfekcja rąk", "zdezynfekowanie"] },
+              { "id": "d5", "canonical": "uporządkowanie zestawu", "synonyms": ["uporządkowanie"] },
+              { "id": "d6", "canonical": "udokumentowanie wykonania pomiaru poziomu glukozy", "synonyms": ["udokumentowanie", "dokumentacja"] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-czynnosci",
+        "title": "Indywidualna karta czynności higienicznych, pielęgnacyjnych i zabiegów medycznych",
+        "fields": [
+          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko", "match": "text", "accepted": ["Włodzimierz Nowomiejski"] },
+          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["57121137708"] },
+          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["chirurgiczny", "oddział chirurgiczny", "oddział chirurgii", "chirurgia", "chirurgii"] },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Rodzaj zabiegu, czynności — wpisz wykonane zabiegi (co najmniej 2)",
+            "minRequired": 2,
+            "lines": 4,
+            "acceptedAnswers": [
+              { "id": "zb1", "canonical": "wymiana jednoczęściowego worka stomijnego", "synonyms": ["worka stomijnego", "wymiana worka", "worek stomijny"] },
+              { "id": "zb2", "canonical": "zmiana opatrunku na ranie pooperacyjnej", "synonyms": ["zmiana opatrunku", "opatrunku na ranie", "rana pooperacyjna"] }
+            ]
+          },
+          { "kind": "value", "id": "data-godzina", "label": "Data i godzina wykonania", "match": "date" },
+          { "kind": "value", "id": "podpis", "label": "Podpis", "match": "text", "accepted": ["XX YY"] }
+        ]
+      }
+    ]
+  }
+]
