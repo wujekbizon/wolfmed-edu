@@ -7,6 +7,7 @@ import type {
   ProcedureResult,
   ValueField,
   ListField,
+  ChoiceField,
 } from '@/types/praktycznyTypes'
 import { PRACTICAL_PASSING_PERCENT } from '@/types/praktycznyTypes'
 
@@ -117,12 +118,47 @@ function gradeListField(field: ListField, raw: string[]): FieldResult {
   }
 }
 
+function gradeChoiceField(field: ChoiceField, raw: string[]): FieldResult {
+  const selected = new Set(Array.isArray(raw) ? raw : [])
+  let groupsMet = 0
+  const modelAnswers: string[] = []
+  const userSelections: string[] = []
+
+  for (const group of field.groups) {
+    let correctSelected = 0
+    let wrongSelected = 0
+    for (const option of group.options) {
+      if (option.correct) modelAnswers.push(option.label)
+      if (selected.has(option.id)) {
+        userSelections.push(option.label)
+        if (option.correct) correctSelected++
+        else wrongSelected++
+      }
+    }
+    if (wrongSelected === 0 && correctSelected >= group.minRequired) groupsMet++
+  }
+
+  return {
+    fieldId: field.id,
+    label: field.label,
+    kind: 'choice',
+    earned: groupsMet,
+    max: field.groups.length,
+    modelAnswers,
+    matchedAnswerIds: [],
+    userSelections,
+  }
+}
+
 export function gradePracticalExam(exam: PracticalExam, answers: ExamAnswers): ExamResult {
   const forms: FormResult[] = exam.forms.map((form) => {
     const fields = form.fields.map((field): FieldResult => {
       const answer = answers[`${form.id}:${field.id}`]
       if (field.kind === 'list') {
         return gradeListField(field, Array.isArray(answer) ? answer : [])
+      }
+      if (field.kind === 'choice') {
+        return gradeChoiceField(field, Array.isArray(answer) ? answer : [])
       }
       return gradeValueField(field, typeof answer === 'string' ? answer : '')
     })

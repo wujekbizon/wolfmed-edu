@@ -40,7 +40,28 @@ export interface ListField {
   hint?: string
 }
 
-export type FormField = ValueField | ListField
+export interface ChoiceOption {
+  id: string
+  label: string
+  correct: boolean
+}
+
+export interface ChoiceGroup {
+  id: string
+  label: string
+  minRequired: number
+  options: ChoiceOption[]
+}
+
+export interface ChoiceField {
+  kind: 'choice'
+  id: string
+  label: string
+  intro?: string
+  groups: ChoiceGroup[]
+}
+
+export type FormField = ValueField | ListField | ChoiceField
 
 export interface ExamForm {
   id: string
@@ -65,7 +86,10 @@ export interface PracticalExam {
 
 export type PublicValueField = Omit<ValueField, 'accepted' | 'range'>
 export type PublicListField = Omit<ListField, 'acceptedAnswers'>
-export type PublicFormField = PublicValueField | PublicListField
+export type PublicChoiceOption = Omit<ChoiceOption, 'correct'>
+export type PublicChoiceGroup = Omit<ChoiceGroup, 'options'> & { options: PublicChoiceOption[] }
+export type PublicChoiceField = Omit<ChoiceField, 'groups'> & { groups: PublicChoiceGroup[] }
+export type PublicFormField = PublicValueField | PublicListField | PublicChoiceField
 
 export interface PublicExamForm {
   id: string
@@ -88,6 +112,7 @@ export interface FieldResult {
   max: number
   modelAnswers: string[]
   matchedAnswerIds: string[]
+  userSelections?: string[]
 }
 
 export interface FormResult {

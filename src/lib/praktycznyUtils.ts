@@ -26,6 +26,15 @@ export function toPublicExam(exam: PracticalExam): PublicExam {
         const { acceptedAnswers, ...rest } = field
         return rest
       }
+      if (field.kind === 'choice') {
+        return {
+          ...field,
+          groups: field.groups.map((group) => ({
+            ...group,
+            options: group.options.map(({ correct, ...opt }) => opt),
+          })),
+        }
+      }
       const { accepted, range, ...rest } = field
       return rest
     }),

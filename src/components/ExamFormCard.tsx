@@ -9,6 +9,7 @@ interface Props {
   answers: Record<string, string | string[]>
   onValueChange: (fieldId: string, value: string) => void
   onListLineChange: (fieldId: string, line: number, value: string) => void
+  onChoiceToggle: (fieldId: string, optionId: string) => void
 }
 
 export default function ExamFormCard({
@@ -18,6 +19,7 @@ export default function ExamFormCard({
   answers,
   onValueChange,
   onListLineChange,
+  onChoiceToggle,
 }: Props) {
   return (
     <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
@@ -50,6 +52,41 @@ export default function ExamFormCard({
                   />
                   {field.unit && <span className="text-sm text-zinc-400 shrink-0">{field.unit}</span>}
                 </div>
+              </div>
+            )
+          }
+
+          if (field.kind === 'choice') {
+            const selected = Array.isArray(answers[key]) ? (answers[key] as string[]) : []
+            return (
+              <div key={field.id} className="flex flex-col gap-4">
+                <label className="text-sm font-medium text-zinc-700">{field.label}</label>
+                {field.groups.map((group) => (
+                  <div key={group.id} className="rounded-xl border border-zinc-200 overflow-hidden">
+                    <p className="px-4 py-2 bg-zinc-50 border-b border-zinc-100 text-xs font-semibold text-zinc-600">
+                      {group.label}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
+                      {group.options.map((option) => {
+                        const checked = selected.includes(option.id)
+                        return (
+                          <label
+                            key={option.id}
+                            className="flex items-start gap-2.5 px-4 py-2 cursor-pointer hover:bg-zinc-50 transition-colors"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => onChoiceToggle(key, option.id)}
+                              className="mt-0.5 h-4 w-4 shrink-0 accent-slate-700"
+                            />
+                            <span className="text-sm text-zinc-700 leading-snug">{option.label}</span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
             )
           }

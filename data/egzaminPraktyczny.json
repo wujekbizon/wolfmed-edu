@@ -63,11 +63,52 @@
         "id": "karta-profilaktyki",
         "title": "Karta profilaktyki przeciwodleżynowej",
         "fields": [
-          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko pacjentki", "match": "text", "accepted": ["Joanna Nadolna"] },
-          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["70060617206"] },
-          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["neurologiczny", "neurologia", "neurologii", "oddział neurologiczny"] },
-          { "kind": "value", "id": "data", "label": "Data wypełnienia", "match": "date" },
-          { "kind": "value", "id": "norton", "label": "Uzyskana liczba punktów według skali Norton", "match": "number", "accepted": ["11"], "unit": "pkt" },
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjentki",
+            "match": "text",
+            "accepted": [
+              "Joanna Nadolna"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "70060617206"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "neurologiczny",
+              "neurologia",
+              "neurologii",
+              "oddział neurologiczny"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data",
+            "label": "Data wypełnienia",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "norton",
+            "label": "Uzyskana liczba punktów według skali Norton",
+            "match": "number",
+            "accepted": [
+              "11"
+            ],
+            "unit": "pkt"
+          },
           {
             "kind": "list",
             "id": "dzialania",
@@ -75,12 +116,59 @@
             "minRequired": 4,
             "lines": 7,
             "acceptedAnswers": [
-              { "id": "d1", "canonical": "obserwacja/ocena skóry w miejscach narażonych na odleżyny, przynajmniej 1 raz dziennie", "synonyms": ["obserwacja skóry", "ocena skóry", "obserwacja miejsc narażonych"] },
-              { "id": "d2", "canonical": "mycie całego ciała, przynajmniej 1 raz dziennie", "synonyms": ["mycie ciała", "toaleta całego ciała"] },
-              { "id": "d3", "canonical": "toaleta pośladków/krocza przy każdej zmianie pieluchomajtek", "synonyms": ["toaleta krocza", "toaleta pośladków", "mycie pośladków"] },
-              { "id": "d4", "canonical": "natłuszczanie/nawilżanie skóry, przynajmniej 1 raz dziennie", "synonyms": ["natłuszczanie", "nawilżanie skóry", "natłuszczanie skóry"] },
-              { "id": "d5", "canonical": "masowanie/oklepywanie skóry narażonej na odleżyny", "synonyms": ["masowanie", "oklepywanie", "masaż skóry"] },
-              { "id": "d6", "canonical": "delikatne, dokładne osuszanie skóry po każdym myciu", "synonyms": ["osuszanie", "delikatne osuszanie", "dokładne osuszanie"] }
+              {
+                "id": "d1",
+                "canonical": "obserwacja/ocena skóry w miejscach narażonych na odleżyny, przynajmniej 1 raz dziennie",
+                "synonyms": [
+                  "obserwacja skóry",
+                  "ocena skóry",
+                  "obserwacja miejsc narażonych"
+                ]
+              },
+              {
+                "id": "d2",
+                "canonical": "mycie całego ciała, przynajmniej 1 raz dziennie",
+                "synonyms": [
+                  "mycie ciała",
+                  "toaleta całego ciała"
+                ]
+              },
+              {
+                "id": "d3",
+                "canonical": "toaleta pośladków/krocza przy każdej zmianie pieluchomajtek",
+                "synonyms": [
+                  "toaleta krocza",
+                  "toaleta pośladków",
+                  "mycie pośladków"
+                ]
+              },
+              {
+                "id": "d4",
+                "canonical": "natłuszczanie/nawilżanie skóry, przynajmniej 1 raz dziennie",
+                "synonyms": [
+                  "natłuszczanie",
+                  "nawilżanie skóry",
+                  "natłuszczanie skóry"
+                ]
+              },
+              {
+                "id": "d5",
+                "canonical": "masowanie/oklepywanie skóry narażonej na odleżyny",
+                "synonyms": [
+                  "masowanie",
+                  "oklepywanie",
+                  "masaż skóry"
+                ]
+              },
+              {
+                "id": "d6",
+                "canonical": "delikatne, dokładne osuszanie skóry po każdym myciu",
+                "synonyms": [
+                  "osuszanie",
+                  "delikatne osuszanie",
+                  "dokładne osuszanie"
+                ]
+              }
             ]
           },
           {
@@ -90,16 +178,90 @@
             "minRequired": 4,
             "lines": 5,
             "acceptedAnswers": [
-              { "id": "s1", "canonical": "środek natłuszczający/nawilżający (np. Linomag, Alantan, Penaten)", "synonyms": ["natłuszczający", "nawilżający", "linomag", "alantan", "penaten"] },
-              { "id": "s2", "canonical": "oliwka/lotion/emolient", "synonyms": ["oliwka", "lotion", "emolient"] },
-              { "id": "s3", "canonical": "krem propolisowy", "synonyms": ["propolisowy"] },
-              { "id": "s4", "canonical": "krem na odleżyny", "synonyms": ["krem na odleżyny"] },
-              { "id": "s5", "canonical": "krem ochronny (np. z argininą)", "synonyms": ["krem ochronny", "argininą"] },
-              { "id": "s6", "canonical": "maść witaminowa", "synonyms": ["witaminowa"] },
-              { "id": "s7", "canonical": "balsam na odleżyny", "synonyms": ["balsam"] },
-              { "id": "s8", "canonical": "maść/krem z tlenkiem cynku (np. Sudocrem)", "synonyms": ["cynk", "tlenkiem cynku", "sudocrem"] },
-              { "id": "s9", "canonical": "opatrunki profilaktyczne/barierowe/błonowe/półprzepuszczalne (np. elastoDERM)", "synonyms": ["opatrunki profilaktyczne", "barierowe", "błonowe", "półprzepuszczalne", "elastoderm"] },
-              { "id": "s10", "canonical": "płyn zapobiegający powstawaniu odleżyn (np. PC 30V)", "synonyms": ["pc 30v", "płyn zapobiegający"] }
+              {
+                "id": "s1",
+                "canonical": "środek natłuszczający/nawilżający (np. Linomag, Alantan, Penaten)",
+                "synonyms": [
+                  "natłuszczający",
+                  "nawilżający",
+                  "linomag",
+                  "alantan",
+                  "penaten"
+                ]
+              },
+              {
+                "id": "s2",
+                "canonical": "oliwka/lotion/emolient",
+                "synonyms": [
+                  "oliwka",
+                  "lotion",
+                  "emolient"
+                ]
+              },
+              {
+                "id": "s3",
+                "canonical": "krem propolisowy",
+                "synonyms": [
+                  "propolisowy"
+                ]
+              },
+              {
+                "id": "s4",
+                "canonical": "krem na odleżyny",
+                "synonyms": [
+                  "krem na odleżyny"
+                ]
+              },
+              {
+                "id": "s5",
+                "canonical": "krem ochronny (np. z argininą)",
+                "synonyms": [
+                  "krem ochronny",
+                  "argininą"
+                ]
+              },
+              {
+                "id": "s6",
+                "canonical": "maść witaminowa",
+                "synonyms": [
+                  "witaminowa"
+                ]
+              },
+              {
+                "id": "s7",
+                "canonical": "balsam na odleżyny",
+                "synonyms": [
+                  "balsam"
+                ]
+              },
+              {
+                "id": "s8",
+                "canonical": "maść/krem z tlenkiem cynku (np. Sudocrem)",
+                "synonyms": [
+                  "cynk",
+                  "tlenkiem cynku",
+                  "sudocrem"
+                ]
+              },
+              {
+                "id": "s9",
+                "canonical": "opatrunki profilaktyczne/barierowe/błonowe/półprzepuszczalne (np. elastoDERM)",
+                "synonyms": [
+                  "opatrunki profilaktyczne",
+                  "barierowe",
+                  "błonowe",
+                  "półprzepuszczalne",
+                  "elastoderm"
+                ]
+              },
+              {
+                "id": "s10",
+                "canonical": "płyn zapobiegający powstawaniu odleżyn (np. PC 30V)",
+                "synonyms": [
+                  "pc 30v",
+                  "płyn zapobiegający"
+                ]
+              }
             ]
           },
           {
@@ -109,20 +271,122 @@
             "minRequired": 5,
             "lines": 8,
             "acceptedAnswers": [
-              { "id": "z1", "canonical": "zmiana pozycji pacjentki w łóżku co 2 godziny w dzień", "synonyms": ["co 2 godziny", "zmiana pozycji co 2"] },
-              { "id": "z2", "canonical": "zmiana pozycji pacjentki w łóżku co 4 godziny w nocy", "synonyms": ["co 4 godziny", "w nocy co 4"] },
-              { "id": "z3", "canonical": "odciążenie miejsc narażonych na ucisk / materac przeciwodleżynowy zmiennociśnieniowy", "synonyms": ["materac", "odciążenie", "zmiennociśnieniowy", "dynamiczny"] },
-              { "id": "z4", "canonical": "zmiana pieluchomajtek w zależności od potrzeb", "synonyms": ["zmiana pieluchomajtek"] },
-              { "id": "z5", "canonical": "zmiana bielizny osobistej przynajmniej raz dziennie", "synonyms": ["bielizny osobistej"] },
-              { "id": "z6", "canonical": "zmiana bielizny pościelowej przynajmniej raz dziennie", "synonyms": ["bielizny pościelowej", "pościeli"] },
-              { "id": "z7", "canonical": "prześcielanie łóżka / naciąganie dolnych warstw pościeli", "synonyms": ["prześcielanie", "naciąganie pościeli"] },
-              { "id": "z8", "canonical": "wymiatanie okruchów z łóżka", "synonyms": ["okruchy", "wymiatanie"] },
-              { "id": "z9", "canonical": "stosowanie bielizny z włókien naturalnych/bawełnianych", "synonyms": ["bawełnian", "włókien naturalnych", "naturalnych"] },
-              { "id": "z10", "canonical": "eliminacja tarcia / materiały ślizgowe", "synonyms": ["tarcia", "ślizgowych"] },
-              { "id": "z11", "canonical": "stosowanie udogodnień / klinów / ochraniaczy", "synonyms": ["udogodnień", "kliny", "ochraniacze"] },
-              { "id": "z12", "canonical": "stosowanie podnośników", "synonyms": ["podnośnik"] },
-              { "id": "z13", "canonical": "stosowanie diety bogatobiałkowej/wysokobiałkowej", "synonyms": ["bogatobiałkow", "wysokobiałkow", "białko"] },
-              { "id": "z14", "canonical": "nawadnianie pacjentki / 1,5-2 l płynów na dobę", "synonyms": ["nawadnianie", "płynów", "1,5", "2 l"] }
+              {
+                "id": "z1",
+                "canonical": "zmiana pozycji pacjentki w łóżku co 2 godziny w dzień",
+                "synonyms": [
+                  "co 2 godziny",
+                  "zmiana pozycji co 2"
+                ]
+              },
+              {
+                "id": "z2",
+                "canonical": "zmiana pozycji pacjentki w łóżku co 4 godziny w nocy",
+                "synonyms": [
+                  "co 4 godziny",
+                  "w nocy co 4"
+                ]
+              },
+              {
+                "id": "z3",
+                "canonical": "odciążenie miejsc narażonych na ucisk / materac przeciwodleżynowy zmiennociśnieniowy",
+                "synonyms": [
+                  "materac",
+                  "odciążenie",
+                  "zmiennociśnieniowy",
+                  "dynamiczny"
+                ]
+              },
+              {
+                "id": "z4",
+                "canonical": "zmiana pieluchomajtek w zależności od potrzeb",
+                "synonyms": [
+                  "zmiana pieluchomajtek"
+                ]
+              },
+              {
+                "id": "z5",
+                "canonical": "zmiana bielizny osobistej przynajmniej raz dziennie",
+                "synonyms": [
+                  "bielizny osobistej"
+                ]
+              },
+              {
+                "id": "z6",
+                "canonical": "zmiana bielizny pościelowej przynajmniej raz dziennie",
+                "synonyms": [
+                  "bielizny pościelowej",
+                  "pościeli"
+                ]
+              },
+              {
+                "id": "z7",
+                "canonical": "prześcielanie łóżka / naciąganie dolnych warstw pościeli",
+                "synonyms": [
+                  "prześcielanie",
+                  "naciąganie pościeli"
+                ]
+              },
+              {
+                "id": "z8",
+                "canonical": "wymiatanie okruchów z łóżka",
+                "synonyms": [
+                  "okruchy",
+                  "wymiatanie"
+                ]
+              },
+              {
+                "id": "z9",
+                "canonical": "stosowanie bielizny z włókien naturalnych/bawełnianych",
+                "synonyms": [
+                  "bawełnian",
+                  "włókien naturalnych",
+                  "naturalnych"
+                ]
+              },
+              {
+                "id": "z10",
+                "canonical": "eliminacja tarcia / materiały ślizgowe",
+                "synonyms": [
+                  "tarcia",
+                  "ślizgowych"
+                ]
+              },
+              {
+                "id": "z11",
+                "canonical": "stosowanie udogodnień / klinów / ochraniaczy",
+                "synonyms": [
+                  "udogodnień",
+                  "kliny",
+                  "ochraniacze"
+                ]
+              },
+              {
+                "id": "z12",
+                "canonical": "stosowanie podnośników",
+                "synonyms": [
+                  "podnośnik"
+                ]
+              },
+              {
+                "id": "z13",
+                "canonical": "stosowanie diety bogatobiałkowej/wysokobiałkowej",
+                "synonyms": [
+                  "bogatobiałkow",
+                  "wysokobiałkow",
+                  "białko"
+                ]
+              },
+              {
+                "id": "z14",
+                "canonical": "nawadnianie pacjentki / 1,5-2 l płynów na dobę",
+                "synonyms": [
+                  "nawadnianie",
+                  "płynów",
+                  "1,5",
+                  "2 l"
+                ]
+              }
             ]
           }
         ]
@@ -131,16 +395,104 @@
         "id": "karta-zywienia",
         "title": "Karta żywienia dojelitowego",
         "fields": [
-          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko pacjentki", "match": "text", "accepted": ["Joanna Nadolna"] },
-          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["70060617206"] },
-          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["neurologiczny", "neurologia", "neurologii", "oddział neurologiczny"] },
-          { "kind": "value", "id": "data-godzina", "label": "Data i godzina", "match": "date" },
-          { "kind": "value", "id": "podaz-diety", "label": "Podaż diety przez zgłębnik", "match": "number", "accepted": ["50"], "unit": "ml" },
-          { "kind": "value", "id": "podaz-plynow", "label": "Podaż płynów przez zgłębnik", "match": "number", "range": { "max": 50 }, "unit": "ml" },
-          { "kind": "value", "id": "czas-podawania", "label": "Czas podawania diety przez zgłębnik", "match": "number", "range": { "min": 5 }, "unit": "min" },
-          { "kind": "value", "id": "pozycja", "label": "Pozostawienie pacjentki — pozycja", "match": "text", "accepted": ["półsiedząca", "półwysoka", "siedząca", "wysoka"] },
-          { "kind": "value", "id": "czas-pozostawienia", "label": "Pozostawienie pacjentki — czas", "match": "number", "range": { "min": 30, "max": 60 }, "unit": "min" },
-          { "kind": "value", "id": "podpis", "label": "Podpis", "match": "text", "accepted": ["XX YY"] }
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko pacjentki",
+            "match": "text",
+            "accepted": [
+              "Joanna Nadolna"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "70060617206"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "neurologiczny",
+              "neurologia",
+              "neurologii",
+              "oddział neurologiczny"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podaz-diety",
+            "label": "Podaż diety przez zgłębnik",
+            "match": "number",
+            "accepted": [
+              "50"
+            ],
+            "unit": "ml"
+          },
+          {
+            "kind": "value",
+            "id": "podaz-plynow",
+            "label": "Podaż płynów przez zgłębnik",
+            "match": "number",
+            "range": {
+              "max": 50
+            },
+            "unit": "ml"
+          },
+          {
+            "kind": "value",
+            "id": "czas-podawania",
+            "label": "Czas podawania diety przez zgłębnik",
+            "match": "number",
+            "range": {
+              "min": 5
+            },
+            "unit": "min"
+          },
+          {
+            "kind": "value",
+            "id": "pozycja",
+            "label": "Pozostawienie pacjentki — pozycja",
+            "match": "text",
+            "accepted": [
+              "półsiedząca",
+              "półwysoka",
+              "siedząca",
+              "wysoka"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "czas-pozostawienia",
+            "label": "Pozostawienie pacjentki — czas",
+            "match": "number",
+            "range": {
+              "min": 30,
+              "max": 60
+            },
+            "unit": "min"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
         ]
       }
     ]
@@ -219,15 +571,74 @@
             "minRequired": 5,
             "lines": 8,
             "acceptedAnswers": [
-              { "id": "a1", "canonical": "sprawdzenie zlecenia lekarskiego", "synonyms": ["zlecenia lekarskiego", "zlecenie"] },
-              { "id": "a2", "canonical": "przedstawienie się pacjentowi", "synonyms": ["przedstawienie"] },
-              { "id": "a3", "canonical": "sprawdzenie tożsamości pacjenta", "synonyms": ["tożsamości"] },
-              { "id": "a4", "canonical": "uzyskanie zgody na wykonanie pomiaru glikemii", "synonyms": ["zgody", "zgoda"] },
-              { "id": "a5", "canonical": "przygotowanie zestawu do wykonania zabiegu", "synonyms": ["przygotowanie zestawu"] },
-              { "id": "a6", "canonical": "sprawdzenie terminu ważności pasków", "synonyms": ["ważności pasków", "termin ważności"] },
-              { "id": "a7", "canonical": "kalibracja glukometru", "synonyms": ["kalibracja"] },
-              { "id": "a8", "canonical": "higieniczne umycie i/lub dezynfekcja rąk", "synonyms": ["umycie rąk", "dezynfekcja rąk"] },
-              { "id": "a9", "canonical": "założenie rękawiczek jednorazowych", "synonyms": ["rękawiczek", "rękawiczki"] }
+              {
+                "id": "a1",
+                "canonical": "sprawdzenie zlecenia lekarskiego",
+                "synonyms": [
+                  "zlecenia lekarskiego",
+                  "zlecenie"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "przedstawienie się pacjentowi",
+                "synonyms": [
+                  "przedstawienie"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "sprawdzenie tożsamości pacjenta",
+                "synonyms": [
+                  "tożsamości"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "uzyskanie zgody na wykonanie pomiaru glikemii",
+                "synonyms": [
+                  "zgody",
+                  "zgoda"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "przygotowanie zestawu do wykonania zabiegu",
+                "synonyms": [
+                  "przygotowanie zestawu"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "sprawdzenie terminu ważności pasków",
+                "synonyms": [
+                  "ważności pasków",
+                  "termin ważności"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "kalibracja glukometru",
+                "synonyms": [
+                  "kalibracja"
+                ]
+              },
+              {
+                "id": "a8",
+                "canonical": "higieniczne umycie i/lub dezynfekcja rąk",
+                "synonyms": [
+                  "umycie rąk",
+                  "dezynfekcja rąk"
+                ]
+              },
+              {
+                "id": "a9",
+                "canonical": "założenie rękawiczek jednorazowych",
+                "synonyms": [
+                  "rękawiczek",
+                  "rękawiczki"
+                ]
+              }
             ]
           },
           {
@@ -237,13 +648,62 @@
             "minRequired": 4,
             "lines": 6,
             "acceptedAnswers": [
-              { "id": "b1", "canonical": "poinformowanie o zamiarze wykonania pomiaru glikemii", "synonyms": ["zamiarze pomiaru", "poinformowanie o pomiarze"] },
-              { "id": "b2", "canonical": "poinformowanie o przebiegu/celu wykonania zabiegu", "synonyms": ["przebiegu", "celu"] },
-              { "id": "b3", "canonical": "umycie rąk pacjenta ciepłą wodą", "synonyms": ["umycie rąk ciepłą", "ciepłą wodą"] },
-              { "id": "b4", "canonical": "dokładne osuszenie rąk pacjenta", "synonyms": ["osuszenie rąk", "osuszenie"] },
-              { "id": "b5", "canonical": "przetarcie opuszki palca środkiem niealkoholowym", "synonyms": ["przetarcie opuszki", "niealkoholowym"] },
-              { "id": "b6", "canonical": "wybranie miejsca nakłucia / bocznej części opuszki palca", "synonyms": ["miejsca nakłucia", "bocznej części opuszki"] },
-              { "id": "b7", "canonical": "masowanie palca od nasady w kierunku opuszki", "synonyms": ["masowanie palca", "od nasady"] }
+              {
+                "id": "b1",
+                "canonical": "poinformowanie o zamiarze wykonania pomiaru glikemii",
+                "synonyms": [
+                  "zamiarze pomiaru",
+                  "poinformowanie o pomiarze"
+                ]
+              },
+              {
+                "id": "b2",
+                "canonical": "poinformowanie o przebiegu/celu wykonania zabiegu",
+                "synonyms": [
+                  "przebiegu",
+                  "celu"
+                ]
+              },
+              {
+                "id": "b3",
+                "canonical": "umycie rąk pacjenta ciepłą wodą",
+                "synonyms": [
+                  "umycie rąk ciepłą",
+                  "ciepłą wodą"
+                ]
+              },
+              {
+                "id": "b4",
+                "canonical": "dokładne osuszenie rąk pacjenta",
+                "synonyms": [
+                  "osuszenie rąk",
+                  "osuszenie"
+                ]
+              },
+              {
+                "id": "b5",
+                "canonical": "przetarcie opuszki palca środkiem niealkoholowym",
+                "synonyms": [
+                  "przetarcie opuszki",
+                  "niealkoholowym"
+                ]
+              },
+              {
+                "id": "b6",
+                "canonical": "wybranie miejsca nakłucia / bocznej części opuszki palca",
+                "synonyms": [
+                  "miejsca nakłucia",
+                  "bocznej części opuszki"
+                ]
+              },
+              {
+                "id": "b7",
+                "canonical": "masowanie palca od nasady w kierunku opuszki",
+                "synonyms": [
+                  "masowanie palca",
+                  "od nasady"
+                ]
+              }
             ]
           },
           {
@@ -253,18 +713,97 @@
             "minRequired": 4,
             "lines": 8,
             "acceptedAnswers": [
-              { "id": "c1", "canonical": "przygotowanie/ustawienie głębokości nakłuwacza/lancetu", "synonyms": ["głębokości nakłuwacza", "ustawienie nakłuwacza", "lancetu"] },
-              { "id": "c2", "canonical": "wyjęcie paska testowego z opakowania", "synonyms": ["wyjęcie paska"] },
-              { "id": "c3", "canonical": "zamknięcie opakowania z paskami", "synonyms": ["zamknięcie opakowania"] },
-              { "id": "c4", "canonical": "włożenie paska testowego do glukometru", "synonyms": ["włożenie paska"] },
-              { "id": "c5", "canonical": "odczekanie na pojawienie się ikonki kropli krwi", "synonyms": ["ikonki kropli", "ikona kropli"] },
-              { "id": "c6", "canonical": "uprzedzenie pacjenta o nakłuciu", "synonyms": ["uprzedzenie o nakłuciu"] },
-              { "id": "c7", "canonical": "nakłucie bocznej części opuszki palca", "synonyms": ["nakłucie opuszki", "nakłucie palca"] },
-              { "id": "c8", "canonical": "wyrzucenie nakłuwacza do pojemnika twardościennego", "synonyms": ["wyrzucenie nakłuwacza", "pojemnika twardościennego"] },
-              { "id": "c9", "canonical": "poczekanie na kroplę krwi / niewyciskanie krwi z palca", "synonyms": ["niewyciskanie", "poczekanie na kroplę"] },
-              { "id": "c10", "canonical": "przyłożenie paska testowego do kropli krwi", "synonyms": ["przyłożenie paska do kropli"] },
-              { "id": "c11", "canonical": "uciśnięcie jałowym gazikiem miejsca nakłucia", "synonyms": ["gazikiem miejsca nakłucia", "przyłożenie gazika"] },
-              { "id": "c12", "canonical": "odczytanie wyniku badania na glukometrze", "synonyms": ["odczytanie wyniku"] }
+              {
+                "id": "c1",
+                "canonical": "przygotowanie/ustawienie głębokości nakłuwacza/lancetu",
+                "synonyms": [
+                  "głębokości nakłuwacza",
+                  "ustawienie nakłuwacza",
+                  "lancetu"
+                ]
+              },
+              {
+                "id": "c2",
+                "canonical": "wyjęcie paska testowego z opakowania",
+                "synonyms": [
+                  "wyjęcie paska"
+                ]
+              },
+              {
+                "id": "c3",
+                "canonical": "zamknięcie opakowania z paskami",
+                "synonyms": [
+                  "zamknięcie opakowania"
+                ]
+              },
+              {
+                "id": "c4",
+                "canonical": "włożenie paska testowego do glukometru",
+                "synonyms": [
+                  "włożenie paska"
+                ]
+              },
+              {
+                "id": "c5",
+                "canonical": "odczekanie na pojawienie się ikonki kropli krwi",
+                "synonyms": [
+                  "ikonki kropli",
+                  "ikona kropli"
+                ]
+              },
+              {
+                "id": "c6",
+                "canonical": "uprzedzenie pacjenta o nakłuciu",
+                "synonyms": [
+                  "uprzedzenie o nakłuciu"
+                ]
+              },
+              {
+                "id": "c7",
+                "canonical": "nakłucie bocznej części opuszki palca",
+                "synonyms": [
+                  "nakłucie opuszki",
+                  "nakłucie palca"
+                ]
+              },
+              {
+                "id": "c8",
+                "canonical": "wyrzucenie nakłuwacza do pojemnika twardościennego",
+                "synonyms": [
+                  "wyrzucenie nakłuwacza",
+                  "pojemnika twardościennego"
+                ]
+              },
+              {
+                "id": "c9",
+                "canonical": "poczekanie na kroplę krwi / niewyciskanie krwi z palca",
+                "synonyms": [
+                  "niewyciskanie",
+                  "poczekanie na kroplę"
+                ]
+              },
+              {
+                "id": "c10",
+                "canonical": "przyłożenie paska testowego do kropli krwi",
+                "synonyms": [
+                  "przyłożenie paska do kropli"
+                ]
+              },
+              {
+                "id": "c11",
+                "canonical": "uciśnięcie jałowym gazikiem miejsca nakłucia",
+                "synonyms": [
+                  "gazikiem miejsca nakłucia",
+                  "przyłożenie gazika"
+                ]
+              },
+              {
+                "id": "c12",
+                "canonical": "odczytanie wyniku badania na glukometrze",
+                "synonyms": [
+                  "odczytanie wyniku"
+                ]
+              }
             ]
           },
           {
@@ -274,12 +813,51 @@
             "minRequired": 4,
             "lines": 6,
             "acceptedAnswers": [
-              { "id": "d1", "canonical": "usunięcie paska z glukometru", "synonyms": ["usunięcie paska"] },
-              { "id": "d2", "canonical": "wyrzucenie paska testowego do pojemnika twardościennego", "synonyms": ["wyrzucenie paska", "twardościennego"] },
-              { "id": "d3", "canonical": "zdjęcie rękawiczek jednorazowych", "synonyms": ["zdjęcie rękawiczek"] },
-              { "id": "d4", "canonical": "zdezynfekowanie rąk", "synonyms": ["dezynfekcja rąk", "zdezynfekowanie"] },
-              { "id": "d5", "canonical": "uporządkowanie zestawu", "synonyms": ["uporządkowanie"] },
-              { "id": "d6", "canonical": "udokumentowanie wykonania pomiaru poziomu glukozy", "synonyms": ["udokumentowanie", "dokumentacja"] }
+              {
+                "id": "d1",
+                "canonical": "usunięcie paska z glukometru",
+                "synonyms": [
+                  "usunięcie paska"
+                ]
+              },
+              {
+                "id": "d2",
+                "canonical": "wyrzucenie paska testowego do pojemnika twardościennego",
+                "synonyms": [
+                  "wyrzucenie paska",
+                  "twardościennego"
+                ]
+              },
+              {
+                "id": "d3",
+                "canonical": "zdjęcie rękawiczek jednorazowych",
+                "synonyms": [
+                  "zdjęcie rękawiczek"
+                ]
+              },
+              {
+                "id": "d4",
+                "canonical": "zdezynfekowanie rąk",
+                "synonyms": [
+                  "dezynfekcja rąk",
+                  "zdezynfekowanie"
+                ]
+              },
+              {
+                "id": "d5",
+                "canonical": "uporządkowanie zestawu",
+                "synonyms": [
+                  "uporządkowanie"
+                ]
+              },
+              {
+                "id": "d6",
+                "canonical": "udokumentowanie wykonania pomiaru poziomu glukozy",
+                "synonyms": [
+                  "udokumentowanie",
+                  "dokumentacja"
+                ]
+              }
             ]
           }
         ]
@@ -288,9 +866,37 @@
         "id": "karta-czynnosci",
         "title": "Indywidualna karta czynności higienicznych, pielęgnacyjnych i zabiegów medycznych",
         "fields": [
-          { "kind": "value", "id": "imie-nazwisko", "label": "Imię i nazwisko", "match": "text", "accepted": ["Włodzimierz Nowomiejski"] },
-          { "kind": "value", "id": "pesel", "label": "PESEL", "match": "text", "accepted": ["57121137708"] },
-          { "kind": "value", "id": "oddzial", "label": "Oddział/placówka", "match": "text", "accepted": ["chirurgiczny", "oddział chirurgiczny", "oddział chirurgii", "chirurgia", "chirurgii"] },
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko",
+            "match": "text",
+            "accepted": [
+              "Włodzimierz Nowomiejski"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "57121137708"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "chirurgiczny",
+              "oddział chirurgiczny",
+              "oddział chirurgii",
+              "chirurgia",
+              "chirurgii"
+            ]
+          },
           {
             "kind": "list",
             "id": "zabiegi",
@@ -298,12 +904,1305 @@
             "minRequired": 2,
             "lines": 4,
             "acceptedAnswers": [
-              { "id": "zb1", "canonical": "wymiana jednoczęściowego worka stomijnego", "synonyms": ["worka stomijnego", "wymiana worka", "worek stomijny"] },
-              { "id": "zb2", "canonical": "zmiana opatrunku na ranie pooperacyjnej", "synonyms": ["zmiana opatrunku", "opatrunku na ranie", "rana pooperacyjna"] }
+              {
+                "id": "zb1",
+                "canonical": "wymiana jednoczęściowego worka stomijnego",
+                "synonyms": [
+                  "worka stomijnego",
+                  "wymiana worka",
+                  "worek stomijny"
+                ]
+              },
+              {
+                "id": "zb2",
+                "canonical": "zmiana opatrunku na ranie pooperacyjnej",
+                "synonyms": [
+                  "zmiana opatrunku",
+                  "opatrunku na ranie",
+                  "rana pooperacyjna"
+                ]
+              }
             ]
           },
-          { "kind": "value", "id": "data-godzina", "label": "Data i godzina wykonania", "match": "date" },
-          { "kind": "value", "id": "podpis", "label": "Podpis", "match": "text", "accepted": ["XX YY"] }
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "styczen-2024",
+    "title": "Egzamin praktyczny — Styczeń 2024",
+    "year": 2024,
+    "session": "Styczeń 2024",
+    "arkusz": "MED.14-01-24.01-SG",
+    "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5g1iJE1dK1JZolbvwfgWCAFPh8xz9BIKNsVjG",
+    "durationMinutes": 120,
+    "taskSummary": "Na fantomie leżącym w łóżku wykonaj kolejno: mycie oczu, twarzy, uszu, szyi; podanie leku w postaci maści na skórę prawego podudzia; zmianę poszwy na kocu. Uzupełnij algorytm wykonania odłączenia kroplowego wlewu dożylnego z soli fizjologicznej, zaznacz zalecenia dotyczące diety lekkostrawnej oraz wypełnij indywidualną kartę pielęgnacji i zabiegów medycznych. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Alicja Domańska",
+      "pesel": "37031611141",
+      "ward": "oddział internistyczny",
+      "description": "Alicja Domańska przebywa drugą dobę na oddziale internistycznym. Pacjentka została przyjęta z powodu utraty przytomności, niskich wartości ciśnienia tętniczego i odwodnienia organizmu, jej BMI wynosi 18,4. Zgłasza złe samopoczucie, ogólne osłabienie i brak apetytu. Ma obniżoną wydolność w zakresie higieny własnego ciała. Na powierzchni całego podudzia kończyny dolnej prawej występuje zmiana chorobowa sucha w postaci licznych czerwonych grudek. Pacjentka ma podłączane płyny kroplowe dwa razy dziennie po 500 ml według indywidualnej karty zlecenia. Lekarz po badaniu zalecił podanie leku w postaci maści na skórę prawego podudzia pacjentki."
+    },
+    "assessedTasks": [
+      {
+        "type": "procedure",
+        "title": "Mycie oczu, twarzy, uszu, szyi (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o zamiarze mycia oczu, twarzy, uszu i szyi oraz zapytał o zgodę na wykonanie czynności.",
+          "Umył higienicznie i/lub zdezynfekował ręce, założył fartuch ochronny foliowy i rękawiczki jednorazowe.",
+          "Podłożył podkład chłonny/ręcznik pod głowę pacjentki, zabezpieczył poszewkę i koszulę przed zamoczeniem.",
+          "Nalał wodę do miski, sprawdził temperaturę wody przez polanie własnego przedramienia lub zmierzył termometrem.",
+          "Umył oczy pacjentce, każde oko w kierunku od kącika zewnętrznego do nosa, czystą wodą bez mydła.",
+          "Umył twarz w kolejności: czoło, policzek, nos, drugi policzek, broda, okolica pod nosem, usta; osuszył twarz.",
+          "Umył uszy pacjentki i osuszył je ręcznikiem.",
+          "Umył szyję namydloną myjką, spłukał wodą i osuszył ręcznikiem.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Podanie leku w postaci maści na skórę prawego podudzia (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o zamiarze zastosowania maści i zapytał o zgodę, zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Odsłonił prawą kończynę dolną pacjentki, zabezpieczył prześcieradło pod kończyną ręcznikiem/podkładem.",
+          "Umył myjką jednorazową wodą z mydłem boczną (zewnętrzną) stronę podudzia i osuszył ją.",
+          "Pobrał maść z pojemnika za pomocą szpatułki laryngologicznej/gazika lub w nowej rękawiczce.",
+          "Rozsmarował maść w dłoniach i rozprowadził na skórze bocznej strony podudzia zgodnie z kierunkiem wzrastania włosów.",
+          "Zabezpieczył całą powierzchnię posmarowanego podudzia gazą opatrunkową i przymocował ją bandażem.",
+          "Wyrzucił użyte rękawiczki do pojemnika z napisem „Odpady medyczne zakaźne”.",
+          "Podczas wykonywania czynności nie zabrudził i nie zamoczył pościeli.",
+          "Przynajmniej raz zapytał pacjentkę o samopoczucie."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Zmiana poszwy na kocu (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjentkę o zamiarze wykonania czynności i zapytał o zgodę.",
+          "Zdezynfekował ręce i założył nowe rękawiczki jednorazowe.",
+          "Usunął koc z poszwy tak, aby pacjentka była cały czas przykryta poszwą.",
+          "Założył na koc czystą poszwę okrywając pacjentkę.",
+          "Zmienił poszwę tak, że brudna poszwa nie stykała się z czystą, a czysta nie dotykała podłogi.",
+          "Wyrównał koc na całej powierzchni, zasunął zamek błyskawiczny/zapiął guziki.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "algorytm-wlewu",
+        "title": "Algorytm odłączenia kroplowego wlewu dożylnego z soli fizjologicznej",
+        "intro": "Obowiązujące zasady oraz czynności opiekuna medycznego dotyczące pacjenta, sprzętu, materiałów i sposobu wykonania zabiegu.",
+        "fields": [
+          {
+            "kind": "list",
+            "id": "czynnosci-przed",
+            "label": "A. Czynności przed przystąpieniem do odłączenia wlewu (co najmniej 3 czynności)",
+            "minRequired": 2,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "poinformowanie pacjentki o przebiegu czynności",
+                "synonyms": [
+                  "poinformowanie",
+                  "przebiegu czynnosci",
+                  "informuje"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "uzyskanie zgody na przeprowadzenie zabiegu",
+                "synonyms": [
+                  "zgody",
+                  "zgoda",
+                  "zapytanie o zgode"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "higieniczne umycie i/lub dezynfekcja rąk",
+                "synonyms": [
+                  "umycie rak",
+                  "dezynfekcja rak"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "przygotowanie zestawu",
+                "synonyms": [
+                  "przygotowanie zestawu",
+                  "zestaw"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "sklad-zestawu",
+            "label": "B. Skład zestawu do odłączenia wlewu (co najmniej 3 elementy)",
+            "minRequired": 3,
+            "lines": 4,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "jałowy gazik",
+                "synonyms": [
+                  "gazik"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "jałowy koreczek",
+                "synonyms": [
+                  "koreczek"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "rękawiczki jednorazowe",
+                "synonyms": [
+                  "rekawiczki"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "pojemnik na odpady medyczne zakaźne / miska nerkowata",
+                "synonyms": [
+                  "miska nerkowata",
+                  "odpady",
+                  "pojemnik"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "przebieg-wlewu",
+            "label": "C. Przebieg odłączenia wlewu (co najmniej 6 czynności)",
+            "minRequired": 5,
+            "lines": 8,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "założenie rękawiczek jednorazowych",
+                "synonyms": [
+                  "zalozenie rekawiczek",
+                  "rekawiczki"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "zaciśnięcie aparatu do przetoczeń / zacisku rolkowego",
+                "synonyms": [
+                  "zacisniecie aparatu",
+                  "zacisk rolkowy",
+                  "zacisniecie"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "podłożenie gazika pod kaniulę dożylną/wenflon",
+                "synonyms": [
+                  "podlozenie gazika",
+                  "gazik pod kaniule",
+                  "pod wenflon"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "uciśnięcie żyły powyżej zakończenia kaniuli",
+                "synonyms": [
+                  "ucisniecie zyly",
+                  "ucisniecie"
+                ]
+              },
+              {
+                "id": "a5",
+                "canonical": "odłączenie aparatu do przetoczenia od kaniuli/wenflonu",
+                "synonyms": [
+                  "odlaczenie aparatu",
+                  "odkrecenie aparatu",
+                  "odlaczenie"
+                ]
+              },
+              {
+                "id": "a6",
+                "canonical": "zamknięcie światła kaniuli/wenflonu koreczkiem",
+                "synonyms": [
+                  "zamkniecie koreczkiem",
+                  "zakrecenie koreczkiem",
+                  "koreczek"
+                ]
+              },
+              {
+                "id": "a7",
+                "canonical": "zabranie gazika spod wenflonu/kaniuli",
+                "synonyms": [
+                  "zabranie gazika",
+                  "usuniecie gazika"
+                ]
+              },
+              {
+                "id": "a8",
+                "canonical": "zdjęcie zestawu/butelki ze stojaka",
+                "synonyms": [
+                  "zdjecie ze stojaka",
+                  "statyw",
+                  "butelki"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "czynnosci-po",
+            "label": "D. Czynności po odłączeniu wlewu (co najmniej 3 czynności/zasady)",
+            "minRequired": 2,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "uporządkowanie zestawu / wyrzucenie zużytego sprzętu do odpadów zakaźnych",
+                "synonyms": [
+                  "uporzadkowanie",
+                  "wyrzucenie",
+                  "odpady"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "odstawienie statywu/stojaka",
+                "synonyms": [
+                  "odstawienie statywu",
+                  "stojak"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "zdjęcie rękawiczek jednorazowych",
+                "synonyms": [
+                  "zdjecie rekawiczek"
+                ]
+              },
+              {
+                "id": "a4",
+                "canonical": "dezynfekcja rąk",
+                "synonyms": [
+                  "dezynfekcja"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dieta-lekkostrawna",
+        "title": "Zalecenia dla pacjentki dotyczące diety lekkostrawnej",
+        "intro": "Zaznacz wszystkie produkty i potrawy zalecane pacjentce. W każdej grupie zaznacz wyłącznie pozycje właściwe.",
+        "fields": [
+          {
+            "kind": "choice",
+            "id": "dieta",
+            "label": "Produkty i potrawy zalecane w diecie lekkostrawnej",
+            "groups": [
+              {
+                "id": "zbozowe",
+                "label": "Produkty zbożowe (co najmniej 5)",
+                "minRequired": 5,
+                "options": [
+                  {
+                    "id": "zbozowe-o1",
+                    "label": "makaron pełnoziarnisty",
+                    "correct": false
+                  },
+                  {
+                    "id": "zbozowe-o2",
+                    "label": "makaron ryżowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "zbozowe-o3",
+                    "label": "pieczywo pszenne",
+                    "correct": true
+                  },
+                  {
+                    "id": "zbozowe-o4",
+                    "label": "pieczywo razowe",
+                    "correct": false
+                  },
+                  {
+                    "id": "zbozowe-o5",
+                    "label": "mąka kukurydziana",
+                    "correct": true
+                  },
+                  {
+                    "id": "zbozowe-o6",
+                    "label": "kasza gryczana",
+                    "correct": false
+                  },
+                  {
+                    "id": "zbozowe-o7",
+                    "label": "kasza pęczak",
+                    "correct": false
+                  },
+                  {
+                    "id": "zbozowe-o8",
+                    "label": "kasza manna",
+                    "correct": true
+                  },
+                  {
+                    "id": "zbozowe-o9",
+                    "label": "ryż biały",
+                    "correct": true
+                  },
+                  {
+                    "id": "zbozowe-o10",
+                    "label": "kasza kuskus",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "mleczne",
+                "label": "Mleko i produkty mleczne (co najmniej 5)",
+                "minRequired": 5,
+                "options": [
+                  {
+                    "id": "mleczne-o1",
+                    "label": "mleko 1,5%",
+                    "correct": true
+                  },
+                  {
+                    "id": "mleczne-o2",
+                    "label": "mleko skondensowane",
+                    "correct": false
+                  },
+                  {
+                    "id": "mleczne-o3",
+                    "label": "jogurt naturalny",
+                    "correct": true
+                  },
+                  {
+                    "id": "mleczne-o4",
+                    "label": "śmietana 30%",
+                    "correct": false
+                  },
+                  {
+                    "id": "mleczne-o5",
+                    "label": "maślanka",
+                    "correct": true
+                  },
+                  {
+                    "id": "mleczne-o6",
+                    "label": "ser pleśniowy",
+                    "correct": false
+                  },
+                  {
+                    "id": "mleczne-o7",
+                    "label": "ser twarogowy chudy",
+                    "correct": true
+                  },
+                  {
+                    "id": "mleczne-o8",
+                    "label": "ser żółty",
+                    "correct": false
+                  },
+                  {
+                    "id": "mleczne-o9",
+                    "label": "kefir",
+                    "correct": true
+                  },
+                  {
+                    "id": "mleczne-o10",
+                    "label": "zsiadłe mleko",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "mieso",
+                "label": "Mięso i ryby (co najmniej 4)",
+                "minRequired": 4,
+                "options": [
+                  {
+                    "id": "mieso-o1",
+                    "label": "kurczak",
+                    "correct": true
+                  },
+                  {
+                    "id": "mieso-o2",
+                    "label": "chuda cielęcina",
+                    "correct": true
+                  },
+                  {
+                    "id": "mieso-o3",
+                    "label": "baranina",
+                    "correct": false
+                  },
+                  {
+                    "id": "mieso-o4",
+                    "label": "kaczka",
+                    "correct": false
+                  },
+                  {
+                    "id": "mieso-o5",
+                    "label": "chuda wołowina",
+                    "correct": true
+                  },
+                  {
+                    "id": "mieso-o6",
+                    "label": "tłusta wieprzowina",
+                    "correct": false
+                  },
+                  {
+                    "id": "mieso-o7",
+                    "label": "indyk bez skóry",
+                    "correct": true
+                  },
+                  {
+                    "id": "mieso-o8",
+                    "label": "dorsz pieczony w folii",
+                    "correct": true
+                  },
+                  {
+                    "id": "mieso-o9",
+                    "label": "wędzona makrela",
+                    "correct": false
+                  }
+                ]
+              },
+              {
+                "id": "tluszcze",
+                "label": "Tłuszcze (co najmniej 2)",
+                "minRequired": 2,
+                "options": [
+                  {
+                    "id": "tluszcze-o1",
+                    "label": "olej rzepakowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "tluszcze-o2",
+                    "label": "słonina",
+                    "correct": false
+                  },
+                  {
+                    "id": "tluszcze-o3",
+                    "label": "smalec",
+                    "correct": false
+                  },
+                  {
+                    "id": "tluszcze-o4",
+                    "label": "olej słonecznikowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "tluszcze-o5",
+                    "label": "margaryna twarda",
+                    "correct": false
+                  },
+                  {
+                    "id": "tluszcze-o6",
+                    "label": "margaryna miękka",
+                    "correct": true
+                  },
+                  {
+                    "id": "tluszcze-o7",
+                    "label": "oliwa z oliwek",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "zupy",
+                "label": "Zupy (co najmniej 3)",
+                "minRequired": 3,
+                "options": [
+                  {
+                    "id": "zupy-o1",
+                    "label": "zupa krem z warzyw",
+                    "correct": true
+                  },
+                  {
+                    "id": "zupy-o2",
+                    "label": "bulion drobiowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "zupy-o3",
+                    "label": "grochówka",
+                    "correct": false
+                  },
+                  {
+                    "id": "zupy-o4",
+                    "label": "barszcz czerwony",
+                    "correct": true
+                  },
+                  {
+                    "id": "zupy-o5",
+                    "label": "zasmażane",
+                    "correct": false
+                  },
+                  {
+                    "id": "zupy-o6",
+                    "label": "zaprawiane śmietaną",
+                    "correct": false
+                  },
+                  {
+                    "id": "zupy-o7",
+                    "label": "zaprawiane mlekiem",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "techniki",
+                "label": "Techniki obróbki pokarmów (co najmniej 3)",
+                "minRequired": 3,
+                "options": [
+                  {
+                    "id": "techniki-o1",
+                    "label": "gotowanie",
+                    "correct": true
+                  },
+                  {
+                    "id": "techniki-o2",
+                    "label": "duszenie",
+                    "correct": true
+                  },
+                  {
+                    "id": "techniki-o3",
+                    "label": "wędzenie",
+                    "correct": false
+                  },
+                  {
+                    "id": "techniki-o4",
+                    "label": "marynowanie",
+                    "correct": false
+                  },
+                  {
+                    "id": "techniki-o5",
+                    "label": "przyrządzanie na parze",
+                    "correct": true
+                  },
+                  {
+                    "id": "techniki-o6",
+                    "label": "smażenie",
+                    "correct": false
+                  },
+                  {
+                    "id": "techniki-o7",
+                    "label": "pieczenie w rękawie, naczyniu żaroodpornym",
+                    "correct": true
+                  },
+                  {
+                    "id": "techniki-o8",
+                    "label": "peklowanie",
+                    "correct": false
+                  },
+                  {
+                    "id": "techniki-o9",
+                    "label": "przecieranie",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "bezmiesne",
+                "label": "Potrawy bezmięsne (co najmniej 3)",
+                "minRequired": 3,
+                "options": [
+                  {
+                    "id": "bezmiesne-o1",
+                    "label": "kapusta z grochem i grzybami",
+                    "correct": false
+                  },
+                  {
+                    "id": "bezmiesne-o2",
+                    "label": "kasza jaglana z bananem i cynamonem",
+                    "correct": true
+                  },
+                  {
+                    "id": "bezmiesne-o3",
+                    "label": "placki ziemniaczane",
+                    "correct": false
+                  },
+                  {
+                    "id": "bezmiesne-o4",
+                    "label": "gotowane kluski ziemniaczane",
+                    "correct": true
+                  },
+                  {
+                    "id": "bezmiesne-o5",
+                    "label": "marchwiowe kotleciki z kaszą kuskus",
+                    "correct": true
+                  },
+                  {
+                    "id": "bezmiesne-o6",
+                    "label": "makaron pełnoziarnisty z fetą i warzywami",
+                    "correct": false
+                  },
+                  {
+                    "id": "bezmiesne-o7",
+                    "label": "zapiekanka z makaronem drobnoziarnistym i szpinakiem",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "desery",
+                "label": "Desery i wyroby cukiernicze (co najmniej 3)",
+                "minRequired": 3,
+                "options": [
+                  {
+                    "id": "desery-o1",
+                    "label": "torty",
+                    "correct": false
+                  },
+                  {
+                    "id": "desery-o2",
+                    "label": "kisiele",
+                    "correct": true
+                  },
+                  {
+                    "id": "desery-o3",
+                    "label": "kremy",
+                    "correct": false
+                  },
+                  {
+                    "id": "desery-o4",
+                    "label": "ciasto drożdżowe",
+                    "correct": true
+                  },
+                  {
+                    "id": "desery-o5",
+                    "label": "batony",
+                    "correct": false
+                  },
+                  {
+                    "id": "desery-o6",
+                    "label": "galaretka",
+                    "correct": true
+                  },
+                  {
+                    "id": "desery-o7",
+                    "label": "mus owocowy",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "napoje",
+                "label": "Napoje (co najmniej 4)",
+                "minRequired": 4,
+                "options": [
+                  {
+                    "id": "napoje-o1",
+                    "label": "sok brzoskwiniowo-pomarańczowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "napoje-o2",
+                    "label": "kakao",
+                    "correct": false
+                  },
+                  {
+                    "id": "napoje-o3",
+                    "label": "napoje czekoladowe",
+                    "correct": false
+                  },
+                  {
+                    "id": "napoje-o4",
+                    "label": "niegazowana woda mineralna",
+                    "correct": true
+                  },
+                  {
+                    "id": "napoje-o5",
+                    "label": "kompot z jabłek",
+                    "correct": true
+                  },
+                  {
+                    "id": "napoje-o6",
+                    "label": "herbata ziołowa",
+                    "correct": true
+                  },
+                  {
+                    "id": "napoje-o7",
+                    "label": "kefir",
+                    "correct": false
+                  },
+                  {
+                    "id": "napoje-o8",
+                    "label": "mocna herbata",
+                    "correct": false
+                  },
+                  {
+                    "id": "napoje-o9",
+                    "label": "kawa zbożowa",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "owoce",
+                "label": "Owoce i warzywa (co najmniej 6)",
+                "minRequired": 6,
+                "options": [
+                  {
+                    "id": "owoce-o1",
+                    "label": "jabłka, morele, brzoskwinie, pomarańcze, banany",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o2",
+                    "label": "śliwki suszone, figi, daktyle",
+                    "correct": false
+                  },
+                  {
+                    "id": "owoce-o3",
+                    "label": "gotowane buraki",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o4",
+                    "label": "groch, ciecierzyca, soja",
+                    "correct": false
+                  },
+                  {
+                    "id": "owoce-o5",
+                    "label": "fasola, soczewica, bób",
+                    "correct": false
+                  },
+                  {
+                    "id": "owoce-o6",
+                    "label": "marchew zasmażana",
+                    "correct": false
+                  },
+                  {
+                    "id": "owoce-o7",
+                    "label": "gotowana młoda fasolka szparagowa",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o8",
+                    "label": "przetarte lub zmiksowane ziemniaki",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o9",
+                    "label": "szpinak, dynia, patisony, seler",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o10",
+                    "label": "surowa zielona sałata",
+                    "correct": false
+                  },
+                  {
+                    "id": "owoce-o11",
+                    "label": "pomidor bez skórki",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o12",
+                    "label": "tarta marchewka",
+                    "correct": true
+                  },
+                  {
+                    "id": "owoce-o13",
+                    "label": "owoce marynowane z puszki",
+                    "correct": false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-pielegnacji",
+        "title": "Indywidualna karta pielęgnacji i zabiegów medycznych",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko",
+            "match": "text",
+            "accepted": [
+              "Alicja Domańska"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "37031611141"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "internistyczny",
+              "interna",
+              "wewnętrzny",
+              "oddział internistyczny"
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Wykonane zabiegi i czynności (co najmniej 3)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "mycie oczu, twarzy, uszu, szyi",
+                "synonyms": [
+                  "mycie oczu",
+                  "toaleta twarzy",
+                  "mycie twarzy"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "zmiana poszwy na kocu",
+                "synonyms": [
+                  "poszwy na kocu",
+                  "zmiana poszwy",
+                  "poszwa"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "podanie leku w postaci maści na skórę prawego podudzia",
+                "synonyms": [
+                  "masci na skore",
+                  "podanie masci",
+                  "masc na podudzie"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "styczen-2025",
+    "title": "Egzamin praktyczny — Styczeń 2025",
+    "year": 2025,
+    "session": "Styczeń 2025",
+    "arkusz": "MED.14-01-25.01-SG",
+    "image": "https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5MOj32FNpIgLRq2SWA1u9QmzbxiHJl47OaTGX",
+    "durationMinutes": 120,
+    "taskSummary": "Uzupełnij charakterystykę okładu ciepłego (rozgrzewającego) i przygotuj zestaw do jego wykonania. Następnie na fantomie wykonaj kolejno: płukanie oka prawego roztworem soli fizjologicznej 0,9 % NaCl, golenie na mokro zarostu na twarzy oraz zmianę poszwy na kocu. Wypełnij indywidualną kartę pielęgnacji i zabiegów medycznych. Czynności na fantomie wykonaj w czasie nie dłuższym niż 40 minut.",
+    "patient": {
+      "name": "Zbigniew Eska",
+      "pesel": "47042322111",
+      "ward": "oddział internistyczny",
+      "description": "Zbigniew Eska od 2 dni przebywa na oddziale internistycznym. Pacjent choruje na reumatoidalne zapalenie stawów oraz cukrzycę insulinozależną. Został przyjęty z powodu zapalenia gałki ocznej prawej z dużą ilością wydzieliny, która skleja rzęsy. Obecnie większość czasu przebywa w łóżku; z powodu ograniczonej ruchomości w stawach nie jest w stanie samodzielnie zaspokajać potrzeb higieniczno-pielęgnacyjnych. Zgłasza ból po wstrzyknięciach podskórnych na przedramieniu lewym. Na zlecenie lekarza należy wykonać płukanie oka prawego roztworem soli fizjologicznej 0,9 % NaCl."
+    },
+    "assessedTasks": [
+      {
+        "type": "equipment",
+        "title": "Zestaw do wykonania okładu ciepłego (rozgrzewającego) (oceniany na stanowisku)",
+        "items": [
+          "miska nerkowata jednorazowa, rękawiczki jednorazowe",
+          "alkohol etylowy 70 %, bandaż dziany",
+          "gazik/gaziki 5 cm x 5 cm, gazik/gaziki 10 cm x 10 cm",
+          "wazelina, ceratka",
+          "podkład chłonny jednorazowy / ręcznik / lignina",
+          "miseczka plastikowa, dzbanek na wodę"
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Płukanie oka prawego roztworem soli fizjologicznej 0,9 % NaCl (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Zapytał pacjenta o imię i nazwisko / spojrzał na opaskę identyfikacyjną, poinformował o płukaniu oka prawego i zapytał o zgodę.",
+          "Umył higienicznie i/lub zdezynfekował ręce i założył rękawiczki jednorazowe.",
+          "Ułożył podkład chłonny/ręcznik/ligninę w okolicy twarzy i szyi, umieścił miskę nerkowatą przy policzku po stronie oka płukanego.",
+          "Położył kciuk na dolnej powiece i palec wskazujący na górnej powiece blisko ich brzegów (ewentualnie z gazikami).",
+          "Poinformował pacjenta o konieczności patrzenia do góry i zgłaszania niepokojących objawów.",
+          "Płukał oko ampułką soli fizjologicznej z odległości 2-3 cm, od wewnętrznego do zewnętrznego kącika oka, nie dotykając spojówki ani rzęs.",
+          "Osuszył okolicę oka i twarz pacjenta.",
+          "Przynajmniej raz zapytał pacjenta o samopoczucie.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Golenie na mokro zarostu na twarzy (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o zamiarze wykonania golenia zarostu i zapytał o zgodę.",
+          "Zdezynfekował ręce, założył fartuch jednorazowy foliowy i rękawiczki jednorazowe.",
+          "Osłonił tors pelerynką/ręcznikiem, sprawdził temperaturę wody termometrem lub przez polanie własnego przedramienia.",
+          "Zmoczył/umył twarz wodą z mydłem, nałożył i rozprowadził krem do golenia na policzki, brodę, okolicę pod nosem.",
+          "Przesuwał ostrze maszynki jednorazowej po policzkach, brodzie i okolicy pod nosem.",
+          "Podczas golenia układał palce drugiej ręki nad goloną powierzchnią / napinał skórę twarzy.",
+          "Umył twarz pacjenta i osuszył ręcznikiem, przytrzymał lusterko przed twarzą.",
+          "Wrzucił pelerynkę/ręcznik do pojemnika z napisem „Brudna bielizna”.",
+          "Nie zamoczył bielizny osobistej i pościelowej, umył pędzel i odłożył do szafki przyłóżkowej.",
+          "Maszynkę jednorazową wyrzucił do pojemnika twardościennego, a rękawiczki do pojemnika „Odpady medyczne zakaźne”."
+        ]
+      },
+      {
+        "type": "procedure",
+        "title": "Zmiana poszwy na kocu (przebieg oceniany przez egzaminatora)",
+        "items": [
+          "Poinformował pacjenta o planowanej czynności i zapytał o zgodę.",
+          "Zdezynfekował ręce, założył rękawiczki jednorazowe.",
+          "Wysunął/usunął koc z poszwy tak, aby pacjent był cały czas przykryty.",
+          "Założył na koc czystą poszwę okrywając pacjenta.",
+          "Założył koc w poszwie tak, aby brudna pościel nie stykała się z czystą, a czysta poszwa nie dotykała podłogi.",
+          "Ułożył koc tak, by zapięcie nie było od strony głowy pacjenta, wyrównał koc, zasunął zamek/zapiął guziki.",
+          "Brudną poszwę umieścił w pojemniku z napisem „Brudna bielizna”.",
+          "Użyte rękawiczki wyrzucił do pojemnika z napisem „Odpady medyczne zakaźne”.",
+          "Zdezynfekował ręce."
+        ]
+      }
+    ],
+    "forms": [
+      {
+        "id": "charakterystyka-okladu",
+        "title": "Charakterystyka okładu ciepłego (rozgrzewającego)",
+        "intro": "Zaznacz wszystkie właściwe pozycje w każdej grupie.",
+        "fields": [
+          {
+            "kind": "choice",
+            "id": "oklad",
+            "label": "Charakterystyka okładu ciepłego (rozgrzewającego)",
+            "groups": [
+              {
+                "id": "wskazania",
+                "label": "Wskazania do wykonania okładu (co najmniej 5)",
+                "minRequired": 5,
+                "options": [
+                  {
+                    "id": "wskazania-o1",
+                    "label": "ból mięśniowo-stawowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o2",
+                    "label": "oparzenie",
+                    "correct": false
+                  },
+                  {
+                    "id": "wskazania-o3",
+                    "label": "przykurcz mięśniowy",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o4",
+                    "label": "oziębienie ciała",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o5",
+                    "label": "zaburzenie czucia",
+                    "correct": false
+                  },
+                  {
+                    "id": "wskazania-o6",
+                    "label": "stan zapalny żył / zakrzepowe zapalenie żył",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o7",
+                    "label": "zrost po wstrzyknięciach",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o8",
+                    "label": "krwotok z nosa",
+                    "correct": false
+                  },
+                  {
+                    "id": "wskazania-o9",
+                    "label": "czyrak",
+                    "correct": true
+                  },
+                  {
+                    "id": "wskazania-o10",
+                    "label": "początkowa faza urazu",
+                    "correct": false
+                  },
+                  {
+                    "id": "wskazania-o11",
+                    "label": "stan zapalny ucha środkowego",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "przeciwwskazania",
+                "label": "Przeciwwskazania do wykonania okładu (co najmniej 4)",
+                "minRequired": 4,
+                "options": [
+                  {
+                    "id": "przeciwwskazania-o1",
+                    "label": "krwotok",
+                    "correct": true
+                  },
+                  {
+                    "id": "przeciwwskazania-o2",
+                    "label": "ropowica",
+                    "correct": false
+                  },
+                  {
+                    "id": "przeciwwskazania-o3",
+                    "label": "ostry stan zapalny w obrębie jamy brzusznej",
+                    "correct": true
+                  },
+                  {
+                    "id": "przeciwwskazania-o4",
+                    "label": "wzdęcie",
+                    "correct": false
+                  },
+                  {
+                    "id": "przeciwwskazania-o5",
+                    "label": "choroba nowotworowa",
+                    "correct": true
+                  },
+                  {
+                    "id": "przeciwwskazania-o6",
+                    "label": "kolka",
+                    "correct": false
+                  },
+                  {
+                    "id": "przeciwwskazania-o7",
+                    "label": "ból menstruacyjny",
+                    "correct": false
+                  },
+                  {
+                    "id": "przeciwwskazania-o8",
+                    "label": "tętnicze zaburzenie krążenia",
+                    "correct": true
+                  },
+                  {
+                    "id": "przeciwwskazania-o9",
+                    "label": "nadwrażliwość na ciepło",
+                    "correct": true
+                  },
+                  {
+                    "id": "przeciwwskazania-o10",
+                    "label": "guz podskórny po iniekcji",
+                    "correct": false
+                  },
+                  {
+                    "id": "przeciwwskazania-o11",
+                    "label": "pobudzenie/niepokój",
+                    "correct": true
+                  }
+                ]
+              },
+              {
+                "id": "kolejnosc",
+                "label": "Kolejność zakładanych warstw okładu (zaznacz właściwą)",
+                "minRequired": 1,
+                "options": [
+                  {
+                    "id": "kolejnosc-o1",
+                    "label": "pierwsza – bawełniana/gaza wilgotna bezpośrednio na skórę, druga – ceratka o 2 cm większa z każdej strony od pierwszej, trzecia – sucha bawełniana/gaza o 2 cm większa od ceratki",
+                    "correct": true
+                  },
+                  {
+                    "id": "kolejnosc-o2",
+                    "label": "pierwsza – bawełniana/gaza sucha bezpośrednio na skórę, druga – bawełniana/gaza wilgotna o 2 cm większa od pierwszej, trzecia – ceratka o 2 cm większa z każdej strony od poprzedniej",
+                    "correct": false
+                  },
+                  {
+                    "id": "kolejnosc-o3",
+                    "label": "pierwsza – ceratka, druga – bawełniana/gaza wilgotna o 2 cm mniejsza z każdej strony od ceratki, trzecia – bawełniana/gaza sucha o 2 cm większa z każdej strony od drugiej",
+                    "correct": false
+                  },
+                  {
+                    "id": "kolejnosc-o4",
+                    "label": "pierwsza – bawełniana/gaza sucha bezpośrednio na skórę, druga – ceratka o 2 cm mniejsza z każdej strony od poprzedniej, trzecia – bawełniana/gaza wilgotna o 2 cm większa od poprzedniej",
+                    "correct": false
+                  }
+                ]
+              },
+              {
+                "id": "zasady",
+                "label": "Zasady obowiązujące podczas wykonania okładu (co najmniej 4)",
+                "minRequired": 4,
+                "options": [
+                  {
+                    "id": "zasady-o1",
+                    "label": "ocena stanu pacjenta",
+                    "correct": true
+                  },
+                  {
+                    "id": "zasady-o2",
+                    "label": "ocena miejsca zastosowania okładu",
+                    "correct": true
+                  },
+                  {
+                    "id": "zasady-o3",
+                    "label": "zastosowanie Altacetu lub 50 % alkoholu etylowego do skropienia warstwy okładu",
+                    "correct": false
+                  },
+                  {
+                    "id": "zasady-o4",
+                    "label": "zastosowanie Altacetu lub 70 % alkoholu etylowego do skropienia warstwy okładu",
+                    "correct": true
+                  },
+                  {
+                    "id": "zasady-o5",
+                    "label": "szczelne umocowanie/zabandażowanie wszystkich warstw okładu",
+                    "correct": true
+                  },
+                  {
+                    "id": "zasady-o6",
+                    "label": "czas stosowania okładu 2-3 godziny",
+                    "correct": false
+                  },
+                  {
+                    "id": "zasady-o7",
+                    "label": "czas stosowania okładu 6-8 godzin",
+                    "correct": true
+                  },
+                  {
+                    "id": "zasady-o8",
+                    "label": "pozostawienie warstwy suchej po zdjęciu okładu na około 10 minut",
+                    "correct": false
+                  },
+                  {
+                    "id": "zasady-o9",
+                    "label": "pozostawienie warstwy suchej po zdjęciu okładu na około 30 minut",
+                    "correct": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "karta-pielegnacji",
+        "title": "Indywidualna karta pielęgnacji i zabiegów medycznych",
+        "fields": [
+          {
+            "kind": "value",
+            "id": "imie-nazwisko",
+            "label": "Imię i nazwisko",
+            "match": "text",
+            "accepted": [
+              "Zbigniew Eska"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "pesel",
+            "label": "PESEL",
+            "match": "text",
+            "accepted": [
+              "47042322111"
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "oddzial",
+            "label": "Oddział/placówka",
+            "match": "text",
+            "accepted": [
+              "internistyczny",
+              "interna",
+              "wewnętrzny",
+              "oddział internistyczny"
+            ]
+          },
+          {
+            "kind": "list",
+            "id": "zabiegi",
+            "label": "Wykonane zabiegi i czynności (co najmniej 3)",
+            "minRequired": 3,
+            "lines": 5,
+            "acceptedAnswers": [
+              {
+                "id": "a1",
+                "canonical": "golenie na mokro zarostu na twarzy",
+                "synonyms": [
+                  "golenie zarostu",
+                  "golenie na mokro",
+                  "golenie"
+                ]
+              },
+              {
+                "id": "a2",
+                "canonical": "zmiana poszwy na kocu",
+                "synonyms": [
+                  "poszwy na kocu",
+                  "zmiana poszwy",
+                  "poszwa"
+                ]
+              },
+              {
+                "id": "a3",
+                "canonical": "płukanie oka prawego roztworem 0,9 % NaCl",
+                "synonyms": [
+                  "plukanie oka",
+                  "oka prawego",
+                  "nacl",
+                  "fizjologiczn"
+                ]
+              }
+            ]
+          },
+          {
+            "kind": "value",
+            "id": "data-godzina",
+            "label": "Data i godzina wykonania",
+            "match": "date"
+          },
+          {
+            "kind": "value",
+            "id": "podpis",
+            "label": "Podpis",
+            "match": "text",
+            "accepted": [
+              "XX YY"
+            ]
+          }
         ]
       }
     ]

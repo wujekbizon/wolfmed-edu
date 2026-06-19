@@ -100,7 +100,18 @@ export default function ExamResults({ result, answers, onRestart }: Props) {
             <div className="divide-y divide-zinc-100">
               {form.fields.map((field) => {
                 const passed = field.earned >= field.max
-                const given = userAnswerText(answers[`${form.formId}:${field.fieldId}`])
+                const given =
+                  field.kind === 'choice'
+                    ? field.userSelections ?? []
+                    : userAnswerText(answers[`${form.formId}:${field.fieldId}`])
+                const subtitle =
+                  field.kind === 'list'
+                    ? `${field.earned} z ${field.max} wymaganych`
+                    : field.kind === 'choice'
+                    ? `${field.earned} z ${field.max} grup poprawnych`
+                    : passed
+                    ? 'Zaliczone'
+                    : 'Niezaliczone'
                 return (
                   <div key={field.fieldId} className="px-5 md:px-6 py-4 flex flex-col gap-2">
                     <div className="flex items-start gap-3">
@@ -113,13 +124,7 @@ export default function ExamResults({ result, answers, onRestart }: Props) {
                       </span>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-zinc-700">{field.label}</p>
-                        <p className="text-xs text-zinc-400 mt-0.5">
-                          {field.kind === 'list'
-                            ? `${field.earned} z ${field.max} wymaganych`
-                            : passed
-                            ? 'Zaliczone'
-                            : 'Niezaliczone'}
-                        </p>
+                        <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>
                       </div>
                     </div>
 
@@ -137,7 +142,11 @@ export default function ExamResults({ result, answers, onRestart }: Props) {
                     {field.modelAnswers.length > 0 && (
                       <div className="pl-8">
                         <p className="text-xs font-semibold text-zinc-400 mb-1">
-                          {field.kind === 'list' ? 'Przykładowe poprawne odpowiedzi' : 'Klucz odpowiedzi'}
+                          {field.kind === 'list'
+                            ? 'Przykładowe poprawne odpowiedzi'
+                            : field.kind === 'choice'
+                            ? 'Poprawne pozycje'
+                            : 'Klucz odpowiedzi'}
                         </p>
                         <ul className="text-sm text-zinc-500 list-disc list-inside space-y-0.5">
                           {field.modelAnswers.map((m, i) => (

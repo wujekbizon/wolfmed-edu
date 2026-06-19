@@ -22,7 +22,9 @@ function buildInitialAnswers(exam: PublicExam): ExamAnswers {
   for (const form of exam.forms) {
     for (const field of form.fields) {
       const key = `${form.id}:${field.id}`
-      answers[key] = field.kind === 'list' ? Array<string>(field.lines).fill('') : ''
+      if (field.kind === 'list') answers[key] = Array<string>(field.lines).fill('')
+      else if (field.kind === 'choice') answers[key] = []
+      else answers[key] = ''
     }
   }
   exam.assessedTasks.forEach((task, index) => {
@@ -88,6 +90,16 @@ export default function PracticalExamRunner({ exam }: Props) {
 
   const handleOrderChange = (taskIndex: number, order: string[]) => {
     setAnswers((prev) => ({ ...prev, [`procedure:${taskIndex}`]: order }))
+  }
+
+  const handleChoiceToggle = (key: string, optionId: string) => {
+    setAnswers((prev) => {
+      const current = Array.isArray(prev[key]) ? (prev[key] as string[]) : []
+      const next = current.includes(optionId)
+        ? current.filter((id) => id !== optionId)
+        : [...current, optionId]
+      return { ...prev, [key]: next }
+    })
   }
 
   const handleStart = () => {
@@ -188,6 +200,7 @@ export default function PracticalExamRunner({ exam }: Props) {
                 answers={answers}
                 onValueChange={handleValueChange}
                 onListLineChange={handleListLineChange}
+                onChoiceToggle={handleChoiceToggle}
               />
             ))}
 
