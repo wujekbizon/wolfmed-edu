@@ -1,4 +1,5 @@
 import PracticalExamCard from '@/components/PracticalExamCard'
+import PracticalExamAICard from '@/components/PracticalExamAICard'
 import type { PublicExam } from '@/types/praktycznyTypes'
 
 interface Props {
@@ -7,26 +8,32 @@ interface Props {
 
 export default function PracticalExamList({ exams }: Props) {
   return (
-    <section className="flex flex-col items-center w-full h-full overflow-y-auto scrollbar-webkit px-1 sm:px-4 py-8">
-      <div className="w-full max-w-5xl flex flex-col gap-8">
-        <div className="px-2">
+    <section className="flex flex-col items-center w-full h-full overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-8">
+      <div className="w-full 2xl:w-3/4 flex flex-col mx-auto gap-6 md:gap-8">
+        <div className="px-1">
           <h1 className="text-2xl font-bold text-zinc-800">Egzamin praktyczny</h1>
           <p className="text-zinc-500 text-sm mt-1">
             Wybierz arkusz z prawdziwej sesji egzaminacyjnej i wypełnij dokumentację jak na egzaminie
           </p>
         </div>
 
-        {exams.length === 0 ? (
-          <div className="flex items-center justify-center py-24">
-            <p className="text-zinc-400 text-base">Brak dostępnych arkuszy.</p>
-          </div>
-        ) : (
-          <div className="grid gap-6 px-2 grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+        {exams.length > 0 && (
+          <div className="flex flex-col gap-4 md:gap-8">
+            <p className="px-1 text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+              Arkusze z prawdziwych sesji
+            </p>
             {exams.map((exam) => (
               <PracticalExamCard key={exam.id} exam={exam} />
             ))}
           </div>
         )}
+
+        <div className="flex flex-col gap-4 md:gap-8">
+          <p className="px-1 text-xs font-semibold text-zinc-400 uppercase tracking-widest">
+            Nowe arkusze
+          </p>
+          <PracticalExamAICard />
+        </div>
       </div>
     </section>
   )

@@ -54,6 +54,7 @@ export interface PracticalExam {
   year: number
   session: string
   arkusz: string
+  image?: string
   durationMinutes: number
   taskSummary: string
   assessedTasks: AssessedTask[]
