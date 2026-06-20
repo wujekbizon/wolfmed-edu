@@ -878,7 +878,7 @@ Return ONLY the markdown note content, no additional commentary.
   // Call Gemini
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY! });
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash',
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     config: {
       temperature: 0.7

@@ -151,7 +151,7 @@ What happens:
 ```typescript
 export async function queryWithFileSearch(...) {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash',
     contents: enhancedQuery,
     config: {
       tools: [...toolDefinitions]
@@ -182,7 +182,7 @@ export async function queryWithFileSearch(
 
   // Initial request
   let response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash',
     contents: [{ role: 'user', parts: [{ text: enhancedQuery }] }],
     config: {
       systemInstruction: SYSTEM_PROMPT,
@@ -208,7 +208,7 @@ export async function queryWithFileSearch(
 
     // Send results back to Gemini for final answer
     const finalResponse = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash',
       contents: [
         { role: 'user', parts: [{ text: enhancedQuery }] },
         {
@@ -349,7 +349,7 @@ ${JSON.stringify(template, null, 2)}
   const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY! });
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash',
     contents: [{ role: 'user', parts: [{ text: prompt }] }],
     config: {
       temperature: 0.7,
@@ -502,7 +502,7 @@ async function fetchResourceContent(uri: string, userId: string): Promise<string
 
     // Extract text
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash',
       contents: [{
         role: 'user',
         parts: [
