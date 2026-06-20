@@ -54,11 +54,11 @@ let planTemplate: PlanTemplate | null = null
 let lectureTemplate: LectureTemplate | null = null
 
 function getGoogleAI() {
-  const apiKey = process.env.GOOGLE_API_KEY
+  const apiKey = process.env.VERTEX_AI_API_KEY
   if (!apiKey) {
-    throw new Error('GOOGLE_API_KEY is not configured')
+    throw new Error('VERTEX_AI_API_KEY is not configured')
   }
-  return new GoogleGenAI({ apiKey })
+  return new GoogleGenAI({ vertexai: true, apiKey })
 }
 
 async function loadTemplate<T>(filename: string): Promise<T> {
