@@ -157,7 +157,11 @@ export default function PracticalExamRunner({ exam }: Props) {
   }
 
   return (
-    <section className="flex flex-col w-full h-full overflow-hidden">
+    // The panel wraps page content in a scrolling container with py-10 padding,
+    // so h-full collapses to content height. Pin the shell to the visible area
+    // (viewport minus the 80px top nav) and cancel the py-10 with -my-10 so the
+    // header/timer/progress stay fixed and the body scrolls internally.
+    <section className="flex flex-col w-full h-[calc(100vh-80px)] -my-10 overflow-hidden">
       <div className="shrink-0 flex items-center justify-between gap-3 border-b border-zinc-200 bg-white px-4 md:px-6 py-3">
         <Link
           href="/panel/egzaminy"
@@ -196,7 +200,7 @@ export default function PracticalExamRunner({ exam }: Props) {
         </span>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden">
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-6">
           <form ref={formRef} id="exam-form" action={action} className="w-full max-w-3xl mx-auto flex flex-col gap-6 pb-28 lg:pb-0">
             <input type="hidden" name="examId" value={exam.id} />
