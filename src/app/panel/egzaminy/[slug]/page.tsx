@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
-import { getUserEnrolledCourses } from '@/server/queries'
-import { getPublicPracticalExamById } from '@/lib/praktycznyUtils'
+import { getUserEnrolledCourses, getGeneratedPracticalExamById } from '@/server/queries'
+import { getPublicPracticalExamById, toPublicExam } from '@/lib/praktycznyUtils'
 import PracticalExamRunner from '@/components/PracticalExamRunner'
 
 interface Props {
@@ -29,7 +29,11 @@ export default async function PracticalExamPage({ params }: Props) {
   if (!hasOpiekun) redirect('/panel/testy-egzaminy')
 
   const { slug } = await params
-  const exam = getPublicPracticalExamById(slug)
+  let exam = getPublicPracticalExamById(slug)
+  if (!exam) {
+    const generated = await getGeneratedPracticalExamById(slug, user.userId)
+    if (generated) exam = toPublicExam(generated)
+  }
   if (!exam) redirect('/panel/egzaminy')
 
   return <PracticalExamRunner exam={exam} />
