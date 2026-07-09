@@ -1,16 +1,15 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Clock, FileText, Lock, User } from 'lucide-react'
+import { ArrowRight, Clock, FileText, Lock, User, Wand2 } from 'lucide-react'
 import type { PublicExam } from '@/types/praktycznyTypes'
 import {
   DEFAULT_PRACTICAL_EXAM_METADATA,
   PRACTICAL_EXAM_AI_CARD,
 } from '@/constants/practicalExamCards'
-import GenerateAIExamButton from '@/components/GenerateAIExamButton'
 
 type Props =
   | { variant: 'exam'; exam: PublicExam }
-  | { variant: 'ai'; isPremium?: boolean }
+  | { variant: 'ai'; isPremium?: boolean; action?: (formData: FormData) => void }
 
 export default function PracticalExamCard(props: Props) {
   const isAI = props.variant === 'ai'
@@ -57,8 +56,16 @@ export default function PracticalExamCard(props: Props) {
           </div>
 
           <div className="mt-auto pt-1">
-            {isPremium ? (
-              <GenerateAIExamButton />
+            {isPremium && props.action ? (
+              <form action={props.action}>
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-violet-500/90 hover:bg-violet-500 text-white text-sm font-semibold rounded-lg border border-violet-400/40 transition-colors w-full sm:w-auto"
+                >
+                  <Wand2 className="w-4 h-4" />
+                  {PRACTICAL_EXAM_AI_CARD.ctaLabel}
+                </button>
+              </form>
             ) : (
               <span className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-zinc-200 text-zinc-400 text-sm font-semibold rounded-lg border border-zinc-300 cursor-not-allowed w-full sm:w-auto">
                 <Lock className="w-4 h-4" />
