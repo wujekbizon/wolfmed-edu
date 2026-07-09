@@ -183,7 +183,7 @@ export default function PielegniastwoProcedureReader({
                         key={step.number}
                         className="group/step flex items-start gap-4 px-4 md:px-6 py-4 border-l-[3px] border-l-transparent hover:border-l-fuchsia-400 hover:bg-fuchsia-50/40 transition-colors duration-200"
                       >
-                        <span className="shrink-0 w-7 h-7 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-xs font-bold flex items-center justify-center mt-0.5 transition-all duration-200 group-hover/step:bg-gradient-to-br group-hover/step:from-[#ff9898] group-hover/step:to-fuchsia-400 group-hover/step:text-white group-hover/step:border-transparent group-hover/step:scale-105">
+                        <span className="shrink-0 w-7 h-7 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-xs font-bold flex items-center justify-center mt-0.5 transition-colors duration-200 group-hover/step:bg-gradient-to-br group-hover/step:from-[#ff9898] group-hover/step:to-fuchsia-400 group-hover/step:text-white group-hover/step:border-transparent">
                           {step.number}
                         </span>
                         <p className="flex-1 text-zinc-700 group-hover/step:text-zinc-900 text-sm md:text-base leading-relaxed transition-colors duration-200">
