@@ -19,7 +19,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     course: 'opiekun-medyczny',
     requiredTier: 'basic',
     image:
-      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5hAALGCKaPSlWXcFVLft4M8kAgI2ECx19u7JN',
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5g1iJE1dK1JZolbvwfgWCAFPh8xz9BIKNsVjG',
     description:
       'Przygotuj się do egzaminu Opiekuna Medycznego z naszymi kompleksowymi testami i pytaniami. Bogata baza pytań, która pomoże Ci w 100% przygotować sie do egzaminu państwowego i zdać za pierwszym razem!',
     duration: [25, 40, 60],

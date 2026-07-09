@@ -27,7 +27,7 @@ export default function PracticalExamCard(props: Props) {
         alt={title}
         fill
         sizes="(max-width: 1024px) 100vw, 40vw"
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover transition-transform duration-500"
       />
       <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/10 to-transparent lg:bg-linear-to-r" />
     </div>
