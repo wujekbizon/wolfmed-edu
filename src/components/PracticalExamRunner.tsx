@@ -2,13 +2,14 @@
 
 import { useActionState, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Info, ListOrdered, Package, X } from 'lucide-react'
+import { ArrowLeft, Check, Info, ListOrdered, Package, X } from 'lucide-react'
 import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer'
 import { gradePracticalExamAction } from '@/actions/praktyczny'
 import { showToast } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
 import ExamArkuszBrief from '@/components/ExamArkuszBrief'
 import ExamCaseSidebar from '@/components/ExamCaseSidebar'
+import ExamSectionHeader from '@/components/ExamSectionHeader'
 import ExamFormCard from '@/components/ExamFormCard'
 import OrderableSteps from '@/components/OrderableSteps'
 import ExamResults from '@/components/ExamResults'
@@ -210,22 +211,23 @@ export default function PracticalExamRunner({ exam }: Props) {
                     ref={(el) => {
                       sectionEls.current[taskIndex] = el
                     }}
-                    className="bg-white border border-zinc-200 rounded-2xl overflow-hidden scroll-mt-4"
+                    className="bg-white border border-zinc-200 rounded-2xl overflow-hidden scroll-mt-4 shadow-sm"
                   >
-                    <div className="px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
-                      <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-                        Zestaw do przygotowania
-                      </p>
-                      <h2 className="flex items-start gap-2 text-base md:text-lg font-bold text-zinc-800 leading-snug">
-                        <Package className="w-4 h-4 text-zinc-400 shrink-0 mt-1" />
-                        {task.title}
-                      </h2>
-                    </div>
-                    <ul className="p-5 md:p-6 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <ExamSectionHeader
+                      icon={Package}
+                      badge="Zestaw do przygotowania"
+                      title={task.title}
+                    />
+                    <ul className="p-5 md:p-6 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       {task.items.map((item, i) => (
-                        <li key={i} className="flex items-start gap-2 text-sm text-zinc-600">
-                          <span className="shrink-0 w-1.5 h-1.5 rounded-full bg-zinc-300 mt-2" />
-                          {item}
+                        <li
+                          key={i}
+                          className="flex items-start gap-2.5 rounded-lg border border-zinc-100 bg-zinc-50/70 px-3 py-2.5 text-sm text-zinc-700"
+                        >
+                          <span className="shrink-0 mt-0.5 flex items-center justify-center w-5 h-5 rounded-md bg-white border border-zinc-200 text-slate-500">
+                            <Check className="w-3 h-3" />
+                          </span>
+                          <span className="leading-snug">{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -238,17 +240,13 @@ export default function PracticalExamRunner({ exam }: Props) {
                   ref={(el) => {
                     sectionEls.current[taskIndex] = el
                   }}
-                  className="bg-white border border-zinc-200 rounded-2xl overflow-hidden scroll-mt-4"
+                  className="bg-white border border-zinc-200 rounded-2xl overflow-hidden scroll-mt-4 shadow-sm"
                 >
-                  <div className="px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
-                      Czynności praktyczne — ułóż w prawidłowej kolejności
-                    </p>
-                    <h2 className="flex items-start gap-2 text-base md:text-lg font-bold text-zinc-800 leading-snug">
-                      <ListOrdered className="w-4 h-4 text-zinc-400 shrink-0 mt-1" />
-                      {task.title}
-                    </h2>
-                  </div>
+                  <ExamSectionHeader
+                    icon={ListOrdered}
+                    badge="Czynności — ułóż w kolejności"
+                    title={task.title}
+                  />
                   <div className="p-5 md:p-6">
                     <OrderableSteps
                       steps={task.items}
