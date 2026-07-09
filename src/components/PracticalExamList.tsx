@@ -1,12 +1,12 @@
 import PracticalExamCard from '@/components/PracticalExamCard'
-import PracticalExamAICard from '@/components/PracticalExamAICard'
 import type { PublicExam } from '@/types/praktycznyTypes'
 
 interface Props {
   exams: PublicExam[]
+  isPremium?: boolean
 }
 
-export default function PracticalExamList({ exams }: Props) {
+export default function PracticalExamList({ exams, isPremium = false }: Props) {
   return (
     <section className="flex flex-col items-center w-full h-full overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-8">
       <div className="w-full 2xl:w-3/4 flex flex-col mx-auto gap-6 md:gap-8">
@@ -23,7 +23,7 @@ export default function PracticalExamList({ exams }: Props) {
               Arkusze z prawdziwych sesji
             </p>
             {exams.map((exam) => (
-              <PracticalExamCard key={exam.id} exam={exam} />
+              <PracticalExamCard key={exam.id} variant="exam" exam={exam} />
             ))}
           </div>
         )}
@@ -32,7 +32,7 @@ export default function PracticalExamList({ exams }: Props) {
           <p className="px-1 text-xs font-semibold text-zinc-400 uppercase tracking-widest">
             Nowe arkusze
           </p>
-          <PracticalExamAICard />
+          <PracticalExamCard variant="ai" isPremium={isPremium} />
         </div>
       </div>
     </section>
