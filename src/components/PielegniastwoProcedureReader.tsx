@@ -109,12 +109,12 @@ export default function PielegniastwoProcedureReader({
                 return (
                   <li
                     key={index}
-                    className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                       isActive ? 'bg-slate-700 text-white' : 'text-zinc-400'
                     }`}
                   >
                     <span
-                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold mt-0.5 ${
+                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold ${
                         isActive
                           ? 'border-white/30 bg-white/10 text-white'
                           : isCompleted
@@ -174,7 +174,7 @@ export default function PielegniastwoProcedureReader({
                 <span
                   className={`ml-auto shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${
                     markedInSection === stepsInSection.length
-                      ? 'text-emerald-600 bg-emerald-50 border-emerald-200'
+                      ? 'text-slate-700 bg-slate-100 border-slate-200'
                       : 'text-zinc-400 bg-zinc-50 border-zinc-200'
                   }`}
                 >
@@ -210,14 +210,14 @@ export default function PielegniastwoProcedureReader({
                           aria-pressed={isStepMarked}
                           className={`group/step w-full text-left flex items-start gap-4 px-4 md:px-6 py-4 border-l-[3px] transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-fuchsia-400/50 ${
                             isStepMarked
-                              ? 'border-l-emerald-400 bg-emerald-50/50'
+                              ? 'border-l-slate-700 bg-slate-50'
                               : 'border-l-transparent hover:border-l-fuchsia-400 hover:bg-fuchsia-50/40'
                           }`}
                         >
                           <span
                             className={`shrink-0 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 transition-colors duration-200 ${
                               isStepMarked
-                                ? 'bg-emerald-500 text-white'
+                                ? 'bg-slate-700 text-white'
                                 : 'bg-zinc-100 border border-zinc-200 text-zinc-500 group-hover/step:bg-gradient-to-br group-hover/step:from-[#ff9898] group-hover/step:to-fuchsia-400 group-hover/step:text-white group-hover/step:border-transparent'
                             }`}
                           >
@@ -233,7 +233,7 @@ export default function PielegniastwoProcedureReader({
                           <span
                             className={`shrink-0 text-xs font-semibold px-2 py-1 rounded-full mt-0.5 whitespace-nowrap border transition-colors duration-200 ${
                               isStepMarked
-                                ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+                                ? 'bg-slate-100 text-slate-700 border-slate-200'
                                 : 'bg-zinc-50 text-zinc-400 border-zinc-200 group-hover/step:bg-fuchsia-50 group-hover/step:text-fuchsia-600 group-hover/step:border-fuchsia-200'
                             }`}
                           >
