@@ -1,5 +1,6 @@
 'use client'
 
+import { ClipboardList } from 'lucide-react'
 import type { PublicExam, PublicExamForm } from '@/types/praktycznyTypes'
 
 interface Props {
@@ -27,7 +28,10 @@ export default function ExamFormCard({
         <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
           Karta {index + 1} z {exam.forms.length}
         </p>
-        <h2 className="text-base md:text-lg font-bold text-zinc-800 leading-snug">{form.title}</h2>
+        <h2 className="flex items-start gap-2 text-base md:text-lg font-bold text-zinc-800 leading-snug">
+          <ClipboardList className="w-4 h-4 text-zinc-400 shrink-0 mt-1" />
+          {form.title}
+        </h2>
         {form.intro && <p className="text-xs text-zinc-500 mt-1">{form.intro}</p>}
       </div>
 
@@ -48,7 +52,7 @@ export default function ExamFormCard({
                     value={value}
                     onChange={(e) => onValueChange(key, e.target.value)}
                     inputMode={field.match === 'number' ? 'numeric' : 'text'}
-                    className="flex-1 border-b border-dashed border-zinc-300 bg-transparent px-1 py-1.5 text-sm text-zinc-800 focus:outline-none focus:border-slate-500 transition-colors"
+                    className="flex-1 border-b border-dashed border-zinc-300 bg-transparent px-1 py-2 text-sm text-zinc-800 focus:outline-none focus:border-slate-500 transition-colors"
                   />
                   {field.unit && <span className="text-sm text-zinc-400 shrink-0">{field.unit}</span>}
                 </div>
@@ -72,13 +76,13 @@ export default function ExamFormCard({
                         return (
                           <label
                             key={option.id}
-                            className="flex items-start gap-2.5 px-4 py-2 cursor-pointer hover:bg-zinc-50 transition-colors"
+                            className="flex items-start gap-2.5 px-4 py-2.5 cursor-pointer hover:bg-zinc-50 transition-colors"
                           >
                             <input
                               type="checkbox"
                               checked={checked}
                               onChange={() => onChoiceToggle(key, option.id)}
-                              className="mt-0.5 h-4 w-4 shrink-0 accent-slate-700"
+                              className="mt-0.5 h-5 w-5 shrink-0 accent-slate-700"
                             />
                             <span className="text-sm text-zinc-700 leading-snug">{option.label}</span>
                           </label>
@@ -105,7 +109,7 @@ export default function ExamFormCard({
                       type="text"
                       value={lineValues[line] ?? ''}
                       onChange={(e) => onListLineChange(key, line, e.target.value)}
-                      className="flex-1 border-b border-dashed border-zinc-300 bg-transparent px-1 py-1.5 text-sm text-zinc-800 focus:outline-none focus:border-slate-500 transition-colors"
+                      className="flex-1 border-b border-dashed border-zinc-300 bg-transparent px-1 py-2 text-sm text-zinc-800 focus:outline-none focus:border-slate-500 transition-colors"
                     />
                   </div>
                 ))}
