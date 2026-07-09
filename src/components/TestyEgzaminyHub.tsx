@@ -153,8 +153,11 @@ export default function TestyEgzaminyHub({
             <Link
               key={card.title}
               href={card.href}
-              className="group flex flex-col bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+              className="group relative flex flex-col bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
             >
+              {/* Accent hairline (borrowed from the media player) */}
+              <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-transparent via-fuchsia-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
               {/* Hero image */}
               <div className="relative h-56 w-full overflow-hidden">
                 <Image
@@ -186,19 +189,21 @@ export default function TestyEgzaminyHub({
 
                 {/* Stat band */}
                 {card.stats.length > 0 && (
-                  <div className="flex rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden">
+                  <div className="flex rounded-xl border border-zinc-200 group-hover:border-fuchsia-200 bg-gradient-to-b from-white to-zinc-50 overflow-hidden transition-colors duration-300">
                     {card.stats.map((stat) => (
                       <div
                         key={stat.label}
-                        className="flex-1 flex flex-col gap-1 px-4 py-3 border-l border-zinc-200 first:border-l-0"
+                        className="flex-1 flex flex-col gap-2 px-4 py-3.5 border-l border-zinc-200 first:border-l-0"
                       >
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-zinc-400">{stat.icon}</span>
-                          <span className="text-xl font-bold text-zinc-800 tabular-nums leading-none">
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff9898] to-fuchsia-400 text-white shadow-sm shrink-0 group-hover:scale-105 transition-transform duration-300">
+                            {stat.icon}
+                          </span>
+                          <span className="text-2xl font-bold text-zinc-800 tabular-nums leading-none">
                             {stat.value}
                           </span>
                         </div>
-                        <span className="text-[11px] uppercase tracking-wide text-zinc-500">
+                        <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
                           {stat.label}
                         </span>
                       </div>
@@ -210,7 +215,7 @@ export default function TestyEgzaminyHub({
                 {card.preview && card.preview.items.length > 0 && (
                   <div className="flex flex-col gap-2.5">
                     <span className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
-                      {card.preview.icon}
+                      <span className="text-fuchsia-400">{card.preview.icon}</span>
                       {card.preview.label}
                     </span>
                     <div className="flex flex-wrap gap-2">
@@ -223,7 +228,7 @@ export default function TestyEgzaminyHub({
                         </span>
                       ))}
                       {card.preview.items.length > card.preview.limit && (
-                        <span className="text-xs px-2.5 py-1 text-zinc-500 rounded-full border border-dashed border-zinc-300 font-medium">
+                        <span className="text-xs px-2.5 py-1 rounded-full bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white font-medium">
                           +{card.preview.items.length - card.preview.limit} więcej
                         </span>
                       )}
