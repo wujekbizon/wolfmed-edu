@@ -56,6 +56,13 @@ export interface MindMap {
   updatedAt: Date
 }
 
+// Shape stored (JSON-serialized) in a "mindmap" cell's content.
+export interface MindMapCellContent {
+  title: string
+  topicType: TopicType
+  root: MindMapNode
+}
+
 export const CATEGORIES: readonly Category[] = [
   "anatomy",
   "physiology",

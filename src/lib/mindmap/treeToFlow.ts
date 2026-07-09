@@ -15,6 +15,8 @@ export interface MindMapNodeData {
   collapsed: boolean
   isLeaf: boolean
   hiddenCount: number
+  // Index signature so this satisfies @xyflow/react's Node<T> data constraint.
+  [key: string]: unknown
 }
 
 export interface FlowNode {
