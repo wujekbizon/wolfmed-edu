@@ -198,7 +198,7 @@ export default function PracticalExamRunner({ exam }: Props) {
 
       <div className="flex flex-1 overflow-hidden">
         <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-6">
-          <form ref={formRef} id="exam-form" action={action} className="w-full max-w-3xl mx-auto flex flex-col gap-6">
+          <form ref={formRef} id="exam-form" action={action} className="w-full max-w-3xl mx-auto flex flex-col gap-6 pb-28 lg:pb-0">
             <input type="hidden" name="examId" value={exam.id} />
             <input type="hidden" name="answers" value={JSON.stringify(answers)} />
             <input type="hidden" name="timeSpent" value={timeSpent} />
@@ -293,8 +293,8 @@ export default function PracticalExamRunner({ exam }: Props) {
         </aside>
       </div>
 
-      {/* Sticky mobile submit bar */}
-      <div className="lg:hidden shrink-0 border-t border-zinc-200 bg-white px-4 py-3">
+      {/* Fixed mobile submit bar — pinned to the bottom of the viewport */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
         <button
           type="submit"
           form="exam-form"
