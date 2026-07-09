@@ -60,11 +60,13 @@ let lectureTemplate: LectureTemplate | null = null
 let practicalExamTemplate: PracticalExamTemplate | null = null
 
 function getGoogleAI() {
-  const apiKey = process.env.VERTEX_AI_API_KEY
-  if (!apiKey) {
-    throw new Error('VERTEX_AI_API_KEY is not configured')
-  }
-  return new GoogleGenAI({ vertexai: true, apiKey })
+  // Uses Application Default Credentials (ADC) via Vertex AI, matching
+  // google-rag.ts — no API key needed.
+  return new GoogleGenAI({
+    project: 'project-9d10f80c-d5df-459f-8d8',
+    location: 'europe-west3',
+    vertexai: true,
+  })
 }
 
 async function loadTemplate<T>(filename: string): Promise<T> {
