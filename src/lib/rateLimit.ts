@@ -52,9 +52,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'lecture:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 3 },
   'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
 
-  'mindmap:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 10 },
-  'mindmap:update': { interval: 60 * 60 * 1000, maxRequests: 120 },
-  'mindmap:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }
+  'mindmap:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 10 }
 }
 
 export interface RateLimitResult {

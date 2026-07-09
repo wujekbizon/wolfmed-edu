@@ -13,7 +13,6 @@ import {
   real
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
-import type { MindMapNode } from "@/lib/mindmap/types"
 
 interface TestMeta {
   course: string;
@@ -671,36 +670,3 @@ export const generatedPracticalExams = createTable(
 
 export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
 export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
-
-// AI-generated mind maps
-export const mindMaps = createTable(
-  "mind_maps",
-  {
-    id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 })
-      .notNull()
-      .references(() => users.userId, { onDelete: "cascade" }),
-    subjectId: varchar("subjectId", { length: 256 }),
-    title: varchar("title", { length: 256 }).notNull(),
-    topicType: varchar("topicType", { length: 32 }).notNull().default("generic"),
-    root: jsonb("root").$type<MindMapNode>().notNull(),
-    language: varchar("language", { length: 8 }).notNull().default("pl"),
-    createdAt: timestamp("createdAt").defaultNow().notNull(),
-    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
-  },
-  (table) => [
-    index("mind_maps_user_id_idx").on(table.userId),
-    index("mind_maps_subject_id_idx").on(table.subjectId),
-    index("mind_maps_updated_at_idx").on(table.updatedAt),
-  ]
-)
-
-export const mindMapsRelations = relations(mindMaps, ({ one }) => ({
-  user: one(users, {
-    fields: [mindMaps.userId],
-    references: [users.userId],
-  }),
-}))
-
-export type MindMapRow = typeof mindMaps.$inferSelect
-export type NewMindMapRow = typeof mindMaps.$inferInsert

@@ -28,8 +28,6 @@ import {
   userCustomCategories,
   customersMessages,
   generatedPracticalExams,
-  mindMaps,
-  type MindMapRow,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -50,7 +48,6 @@ import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
-import type { MindMapNode } from "@/lib/mindmap/types"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -2066,71 +2063,4 @@ export async function getGeneratedPracticalExamById(
     )
     .limit(1)
   return row ? (row.examJson as PracticalExam) : null
-}
-
-// Mind maps
-export async function saveMindMap(data: {
-  userId: string
-  title: string
-  topicType: string
-  root: MindMapNode
-  language?: string
-  subjectId?: string
-}): Promise<string> {
-  const [row] = await db
-    .insert(mindMaps)
-    .values({
-      userId: data.userId,
-      title: data.title,
-      topicType: data.topicType,
-      root: data.root,
-      language: data.language ?? "pl",
-      subjectId: data.subjectId ?? null,
-    })
-    .returning({ id: mindMaps.id })
-  if (!row) throw new Error("Nie udało się zapisać mapy.")
-  return row.id
-}
-
-export async function getMindMapById(id: string, userId: string): Promise<MindMapRow | null> {
-  const [row] = await db
-    .select()
-    .from(mindMaps)
-    .where(and(eq(mindMaps.id, id), eq(mindMaps.userId, userId)))
-    .limit(1)
-  return row ?? null
-}
-
-export async function getMindMapsByUser(userId: string): Promise<MindMapRow[]> {
-  return db
-    .select()
-    .from(mindMaps)
-    .where(eq(mindMaps.userId, userId))
-    .orderBy(desc(mindMaps.updatedAt))
-}
-
-export async function updateMindMapRoot(
-  id: string,
-  userId: string,
-  root: MindMapNode
-): Promise<void> {
-  await db
-    .update(mindMaps)
-    .set({ root, updatedAt: new Date() })
-    .where(and(eq(mindMaps.id, id), eq(mindMaps.userId, userId)))
-}
-
-export async function renameMindMap(id: string, userId: string, title: string): Promise<void> {
-  await db
-    .update(mindMaps)
-    .set({ title, updatedAt: new Date() })
-    .where(and(eq(mindMaps.id, id), eq(mindMaps.userId, userId)))
-}
-
-export async function deleteMindMap(id: string, userId: string): Promise<MindMapRow | null> {
-  const [row] = await db
-    .delete(mindMaps)
-    .where(and(eq(mindMaps.id, id), eq(mindMaps.userId, userId)))
-    .returning()
-  return row ?? null
 }

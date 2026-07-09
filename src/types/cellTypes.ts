@@ -1,4 +1,4 @@
-export type CellTypes = "note" | "rag" | "draw" | "test" | "flashcard" | "plan" | "media"
+export type CellTypes = "note" | "rag" | "draw" | "test" | "flashcard" | "plan" | "media" | "mindmap"
 
 export interface Cell {
   id: string

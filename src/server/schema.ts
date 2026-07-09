@@ -747,19 +747,4 @@ export const GenerateMindMapSchema = z.object({
   subjectId: z.string().trim().optional(),
 });
 
-export const RenameMindMapSchema = z.object({
-  mapId: z.string().min(1, "Musisz podać poprawny identyfikator mapy.").trim(),
-  title: z
-    .string()
-    .trim()
-    .min(2, "Tytuł musi mieć co najmniej 2 znaki.")
-    .max(120, "Tytuł nie może być dłuższy niż 120 znaków."),
-});
-
-export const DeleteMindMapSchema = z.object({
-  mapId: z.string().min(1, "Musisz podać poprawny identyfikator mapy.").trim(),
-});
-
 export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;
-export type RenameMindMapInput = z.infer<typeof RenameMindMapSchema>;
-export type DeleteMindMapInput = z.infer<typeof DeleteMindMapSchema>;
