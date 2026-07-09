@@ -2,28 +2,42 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 
-const CARDS = [
-  {
-    href: '/panel/testy',
-    title: 'Egzamin teoretyczny',
-    subtitle: 'Część pisemna',
-    description:
-      'Testy jednokrotnego wyboru z kluczem odpowiedzi. Ćwicz pytania z poszczególnych kategorii i sprawdzaj swoją wiedzę przed egzaminem zawodowym.',
-    image: 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5T8A3NV6spcKHld4CGX8o0kyJTPUwfnQEMegN',
-    features: ['Pytania jednokrotnego wyboru', 'Kategorie tematyczne', 'Pomiar czasu', 'Wynik końcowy'],
-  },
-  {
-    href: '/panel/egzaminy',
-    title: 'Egzamin praktyczny',
-    subtitle: 'Część praktyczna',
-    description:
-      'Wierne arkusze egzaminacyjne MED.14 z prawdziwych sesji. Wypełnij dokumentację jak na egzaminie i otrzymaj ocenę zgodną z zasadami oceniania.',
-    image: 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k55tagqNnBKUAhkYmyprxV4JznuWGliEwXqgb2',
-    features: ['Arkusze z prawdziwych sesji', 'Wypełnianie kart', 'Ocena wg klucza', 'Próg zaliczenia 75%'],
-  },
-]
+interface Props {
+  categoryCount: number
+  hasPracticalAccess: boolean
+}
 
-export default function TestyEgzaminyHub() {
+export default function TestyEgzaminyHub({ categoryCount, hasPracticalAccess }: Props) {
+  const CARDS = [
+    {
+      href: '/panel/testy',
+      title: 'Egzamin teoretyczny',
+      subtitle: 'Część pisemna',
+      description: `Testy jednokrotnego wyboru z kluczem odpowiedzi. Ćwicz pytania z ${categoryCount} kategorii tematycznych i sprawdzaj swoją wiedzę przed egzaminem zawodowym.`,
+      image: 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5T8A3NV6spcKHld4CGX8o0kyJTPUwfnQEMegN',
+      features: ['Pytania jednokrotnego wyboru', `${categoryCount} kategorii tematycznych`, 'Pomiar czasu', 'Wynik końcowy'],
+    },
+    hasPracticalAccess
+      ? {
+          href: '/panel/egzaminy',
+          title: 'Egzamin praktyczny',
+          subtitle: 'Część praktyczna',
+          description:
+            'Wierne arkusze egzaminacyjne MED.14 z prawdziwych sesji. Wypełnij dokumentację jak na egzaminie i otrzymaj ocenę zgodną z zasadami oceniania.',
+          image: 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k55tagqNnBKUAhkYmyprxV4JznuWGliEwXqgb2',
+          features: ['Arkusze z prawdziwych sesji', 'Wypełnianie kart', 'Ocena wg klucza', 'Próg zaliczenia 75%'],
+        }
+      : {
+          href: '/panel/egzaminy',
+          title: 'Egzamin praktyczny',
+          subtitle: 'Część praktyczna',
+          description:
+            'Wierne arkusze egzaminacyjne z prawdziwych sesji egzaminacyjnych. Wypełnij dokumentację jak na egzaminie i otrzymaj ocenę zgodną z zasadami oceniania.',
+          image: 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k55tagqNnBKUAhkYmyprxV4JznuWGliEwXqgb2',
+          features: ['Arkusze z prawdziwych sesji', 'Wypełnianie kart', 'Ocena wg klucza', 'Wynik końcowy'],
+        },
+  ]
+
   return (
     <section className="flex flex-col justify-center items-center w-full h-full px-1 sm:px-4 py-8">
       <div className="w-full max-w-5xl flex flex-col gap-8">
