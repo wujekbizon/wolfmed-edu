@@ -1,10 +1,20 @@
-import { Sparkles, Wand2 } from 'lucide-react'
+import Image from 'next/image'
+import { Wand2 } from 'lucide-react'
+
+const AI_CARD_IMAGE = 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5H6zCTyRXZAfUgQh6yMWki0EFjo5rbcJDS2mP'
 
 export default function PracticalExamAICard() {
   return (
     <div className="relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 border border-violet-500/20 overflow-hidden">
-      <div className="relative h-56 sm:h-64 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0 flex items-center justify-center bg-linear-to-br from-violet-600 via-indigo-700 to-slate-900">
-        <Sparkles className="w-16 h-16 text-white/80" />
+      <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
+        <Image
+          src={AI_CARD_IMAGE}
+          alt="Egzamin generowany przez AI"
+          fill
+          sizes="(max-width: 1024px) 100vw, 40vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/10 to-transparent lg:bg-linear-to-r" />
       </div>
 
       <div className="flex flex-col gap-4 lg:gap-5 p-5 sm:p-6 lg:p-8 w-full">

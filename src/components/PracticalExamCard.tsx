@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowRight, Clock, FileText, Stethoscope, User } from 'lucide-react'
+import { ArrowRight, Clock, FileText, User } from 'lucide-react'
 import type { PublicExam } from '@/types/praktycznyTypes'
+
+const EXAM_IMAGE = 'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5edFR4UhPYN5fnAqMm3rc0CKDb7LHTkptIj9o'
 
 interface Props {
   exam: PublicExam
@@ -13,20 +15,14 @@ export default function PracticalExamCard({ exam }: Props) {
       href={`/panel/egzaminy/${exam.id}`}
       className="group relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 border border-white/[0.06] opacity-95 hover:opacity-100 transition-all duration-300 overflow-hidden"
     >
-      <div className="relative h-56 sm:h-64 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
-        {exam.image ? (
-          <Image
-            src={exam.image}
-            alt={exam.title}
-            fill
-            sizes="(max-width: 1024px) 100vw, 40vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full w-full bg-linear-to-br from-slate-700 to-slate-900">
-            <Stethoscope className="w-16 h-16 text-white/70" />
-          </div>
-        )}
+      <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
+        <Image
+          src={EXAM_IMAGE}
+          alt={exam.title}
+          fill
+          sizes="(max-width: 1024px) 100vw, 40vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
         <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/10 to-transparent lg:bg-linear-to-r" />
       </div>
 
