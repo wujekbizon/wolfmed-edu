@@ -114,7 +114,7 @@ export default function PielegniastwoProcedureReader({
                     }`}
                   >
                     <span
-                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold ${
+                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold leading-none ${
                         isActive
                           ? 'border-white/30 bg-white/10 text-white'
                           : isCompleted
@@ -215,7 +215,7 @@ export default function PielegniastwoProcedureReader({
                           }`}
                         >
                           <span
-                            className={`shrink-0 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 transition-colors duration-200 ${
+                            className={`shrink-0 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 leading-none transition-colors duration-200 ${
                               isStepMarked
                                 ? 'bg-slate-700 text-white'
                                 : 'bg-zinc-100 border border-zinc-200 text-zinc-500 group-hover/step:bg-gradient-to-br group-hover/step:from-[#ff9898] group-hover/step:to-fuchsia-400 group-hover/step:text-white group-hover/step:border-transparent'
