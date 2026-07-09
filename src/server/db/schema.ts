@@ -653,3 +653,20 @@ export const lectures = createTable(
 
 export type Lecture = typeof lectures.$inferSelect
 export type NewLecture = typeof lectures.$inferInsert
+
+// AI-generated practical exams
+export const generatedPracticalExams = createTable(
+  "generated_practical_exams",
+  {
+    id:        uuid("id").primaryKey().defaultRandom(),
+    userId:    varchar("userId", { length: 256 }).notNull(),
+    examJson:  jsonb("examJson").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("generated_practical_exams_user_id_idx").on(table.userId),
+  ]
+)
+
+export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
+export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert

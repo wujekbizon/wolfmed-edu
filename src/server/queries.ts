@@ -27,6 +27,7 @@ import {
   userCustomTests,
   userCustomCategories,
   customersMessages,
+  generatedPracticalExams,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -46,6 +47,7 @@ import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
+import type { PracticalExam } from "@/types/praktycznyTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -2035,4 +2037,30 @@ export async function getLecturesByUser(userId: string): Promise<Lecture[]> {
     .from(lectures)
     .where(eq(lectures.userId, userId))
     .orderBy(desc(lectures.createdAt))
+}
+
+export async function saveGeneratedPracticalExam(
+  userId: string,
+  exam: PracticalExam
+): Promise<string> {
+  const [row] = await db
+    .insert(generatedPracticalExams)
+    .values({ id: exam.id, userId, examJson: exam })
+    .returning({ id: generatedPracticalExams.id })
+  if (!row) throw new Error("Nie udało się zapisać wygenerowanego arkusza.")
+  return row.id
+}
+
+export async function getGeneratedPracticalExamById(
+  id: string,
+  userId: string
+): Promise<PracticalExam | null> {
+  const [row] = await db
+    .select()
+    .from(generatedPracticalExams)
+    .where(
+      and(eq(generatedPracticalExams.id, id), eq(generatedPracticalExams.userId, userId))
+    )
+    .limit(1)
+  return row ? (row.examJson as PracticalExam) : null
 }

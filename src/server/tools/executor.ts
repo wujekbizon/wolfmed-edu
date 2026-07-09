@@ -45,6 +45,11 @@ interface LectureTemplate {
   userPrompt: string;
 }
 
+interface PracticalExamTemplate {
+  systemPrompt: string;
+  userPrompt: string;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
@@ -52,6 +57,7 @@ let mermaidTemplate: MermaidTemplate | null = null
 let flashcardTemplate: FlashcardTemplate | null = null
 let planTemplate: PlanTemplate | null = null
 let lectureTemplate: LectureTemplate | null = null
+let practicalExamTemplate: PracticalExamTemplate | null = null
 
 function getGoogleAI() {
   const apiKey = process.env.VERTEX_AI_API_KEY
@@ -120,6 +126,13 @@ async function getLectureTemplate(): Promise<LectureTemplate> {
   return lectureTemplate
 }
 
+async function getPracticalExamTemplate(): Promise<PracticalExamTemplate> {
+  if (!practicalExamTemplate) {
+    practicalExamTemplate = await loadTemplate<PracticalExamTemplate>('egzamin-praktyczny-template.json')
+  }
+  return practicalExamTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -151,6 +164,9 @@ export async function executeToolLocally(
 
     case 'wyklad_tool':
       return await wykladTool(args);
+
+    case 'egzamin_praktyczny_tool':
+      return await egzaminPraktycznyTool();
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -480,6 +496,35 @@ async function wykladTool(args: any): Promise<ToolResult> {
     content: lectureContent,
     metadata: {
       type: 'lecture',
+      generated: new Date().toISOString()
+    }
+  }
+}
+
+async function egzaminPraktycznyTool(): Promise<ToolResult> {
+  const template = await getPracticalExamTemplate()
+  const ai = getGoogleAI()
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: template.userPrompt,
+    config: {
+      systemInstruction: template.systemPrompt,
+      temperature: 0.8,
+      responseMimeType: 'application/json'
+    }
+  })
+
+  const generatedText = (response.text || '').trim()
+
+  if (!generatedText) {
+    throw new Error('Practical exam generation failed: empty response')
+  }
+
+  return {
+    content: generatedText,
+    metadata: {
+      type: 'practical-exam',
       generated: new Date().toISOString()
     }
   }

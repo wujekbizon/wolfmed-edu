@@ -381,6 +381,104 @@ export const GradePracticalExamSchema = z.object({
 });
 
 /**
+ * Validates an AI-generated practical exam before it is persisted, so a malformed
+ * generation can never reach the exam runner or the grader. Mirrors the
+ * PracticalExam shape in `@/types/praktycznyTypes` (id/image/year are assigned by
+ * the action, so they are omitted here).
+ */
+const GeneratedPatientSchema = z.object({
+  name: z.string().min(1),
+  pesel: z.string().optional(),
+  ward: z.string().min(1),
+  description: z.string().min(1),
+});
+
+const GeneratedAssessedTaskSchema = z.object({
+  type: z.enum(["equipment", "procedure"]),
+  title: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+});
+
+const GeneratedValueFieldSchema = z.object({
+  kind: z.literal("value"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  match: z.enum(["text", "number", "date"]).optional(),
+  accepted: z.array(z.string()).optional(),
+  range: z.object({ min: z.number().optional(), max: z.number().optional() }).optional(),
+  unit: z.string().optional(),
+  hint: z.string().optional(),
+});
+
+const GeneratedListFieldSchema = z.object({
+  kind: z.literal("list"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  minRequired: z.number().int().nonnegative(),
+  lines: z.number().int().positive(),
+  acceptedAnswers: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        canonical: z.string().min(1),
+        synonyms: z.array(z.string()).optional(),
+      })
+    )
+    .min(1),
+  hint: z.string().optional(),
+});
+
+const GeneratedChoiceFieldSchema = z.object({
+  kind: z.literal("choice"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  intro: z.string().optional(),
+  groups: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        minRequired: z.number().int().nonnegative(),
+        options: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              label: z.string().min(1),
+              correct: z.boolean(),
+            })
+          )
+          .min(1),
+      })
+    )
+    .min(1),
+});
+
+const GeneratedFormFieldSchema = z.discriminatedUnion("kind", [
+  GeneratedValueFieldSchema,
+  GeneratedListFieldSchema,
+  GeneratedChoiceFieldSchema,
+]);
+
+const GeneratedExamFormSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  intro: z.string().optional(),
+  fields: z.array(GeneratedFormFieldSchema).min(1),
+});
+
+export const GeneratedPracticalExamSchema = z.object({
+  title: z.string().min(1),
+  year: z.number().int().optional(),
+  session: z.string().min(1),
+  arkusz: z.string().min(1),
+  durationMinutes: z.number().int().positive(),
+  taskSummary: z.string().min(1),
+  assessedTasks: z.array(GeneratedAssessedTaskSchema).min(1),
+  patient: GeneratedPatientSchema,
+  forms: z.array(GeneratedExamFormSchema).min(1),
+});
+
+/**
  * Blog validation schemas
  */
 
