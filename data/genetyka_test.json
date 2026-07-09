@@ -1,0 +1,2322 @@
+[
+  {
+    "id": "a618e973-7f1f-43f8-976b-bf9db6458778",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Wskaż prawidłową definicję kariotypowania:",
+      "answers": [
+        {
+          "option": "analiza liczby i struktury chromosomów",
+          "isCorrect": true
+        },
+        {
+          "option": "analiza liczby i struktury chromosomów oraz dna mitochondrialnego",
+          "isCorrect": false
+        },
+        {
+          "option": "analiza dna mitochondrialnego",
+          "isCorrect": false
+        },
+        {
+          "option": "żadne z powyższych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "f633010d-854d-4472-bef0-bec787571656",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Mutacje których z poniższych genów wiążą się z podwyższonym ryzykiem zachorowania na raka trzustki:",
+      "answers": [
+        {
+          "option": "BRCA4 i BRCA8",
+          "isCorrect": false
+        },
+        {
+          "option": "COL1A1 i FBN1",
+          "isCorrect": false
+        },
+        {
+          "option": "TP53 i BRCA1",
+          "isCorrect": true
+        },
+        {
+          "option": "BRCA1 i BRCA3",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "82d13d5f-5c43-4176-b825-722ad8c21d26",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Gen którego mutacja może sprawić transformację nowotworową to:",
+      "answers": [
+        {
+          "option": "RNAgen",
+          "isCorrect": false
+        },
+        {
+          "option": "onkogen",
+          "isCorrect": false
+        },
+        {
+          "option": "protoonkogen",
+          "isCorrect": false
+        },
+        {
+          "option": "diagen",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "7551a6ac-ef61-4ba7-8999-c73dba2ad285",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Nieprawidłowości liczby lub struktury chromosomów nazywamy:",
+      "answers": [
+        {
+          "option": "mutacje punktowe",
+          "isCorrect": false
+        },
+        {
+          "option": "polimorfizmy genów",
+          "isCorrect": false
+        },
+        {
+          "option": "aberracje chromosomowe",
+          "isCorrect": false
+        },
+        {
+          "option": "polidypsja",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "1b8b5ce4-fcc2-473a-977b-45005eea19f5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Znalezienie w organizmie jednego loci genowego może świadczyć o :",
+      "answers": [
+        {
+          "option": "homozygotyczność",
+          "isCorrect": false
+        },
+        {
+          "option": "monosomii",
+          "isCorrect": true
+        },
+        {
+          "option": "hetereozygotyczność",
+          "isCorrect": false
+        },
+        {
+          "option": "trisomii",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "5b169d5c-fdb5-4389-9ab7-73a19dd7d09c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Który z podziałów dotyczy typowej ludzkiej komórki somatycznej:",
+      "answers": [
+        {
+          "option": "mejoza",
+          "isCorrect": false
+        },
+        {
+          "option": "mitoza",
+          "isCorrect": true
+        },
+        {
+          "option": "oogeneza",
+          "isCorrect": false
+        },
+        {
+          "option": "spermiogeneza",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "6a42934e-0be5-413f-bf2b-714561e5f8bd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Ile komórek potomnych powstaje z komórki macierzystej w wyniku podziału mejotycznego:",
+      "answers": [
+        {
+          "option": "1",
+          "isCorrect": false
+        },
+        {
+          "option": "2",
+          "isCorrect": false
+        },
+        {
+          "option": "3",
+          "isCorrect": false
+        },
+        {
+          "option": "4",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "8d5ba7f5-eea6-412c-8808-717729a60a7c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Podział mitotyczny dotyczy powstawania:",
+      "answers": [
+        {
+          "option": "mitochondrium",
+          "isCorrect": false
+        },
+        {
+          "option": "komórki jajowej",
+          "isCorrect": true
+        },
+        {
+          "option": "plemnika",
+          "isCorrect": false
+        },
+        {
+          "option": "b i c prawidłowe",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "e66d3acf-a47e-426b-878e-bfa346422a79",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "W skład deoksyrybonukleozydu wchodzą:",
+      "answers": [
+        {
+          "option": "ryboza, zasada azotowa, reszty kwasu lizerginowego",
+          "isCorrect": false
+        },
+        {
+          "option": "deoksyryboza, zasada azotowa",
+          "isCorrect": false
+        },
+        {
+          "option": "deoksyryboza, zasada azotowa, reszty kwasu fosforowego",
+          "isCorrect": true
+        },
+        {
+          "option": "ryboza, kwas azotowy, reszta kwasu fosforowego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "ba4c2148-7974-490e-950e-d107bb7f261f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zespół Marfana typowo dziedziczy się w sposób:",
+      "answers": [
+        {
+          "option": "autosomalnie dominująco",
+          "isCorrect": true
+        },
+        {
+          "option": "w sprzężeniu z chromosomem X",
+          "isCorrect": false
+        },
+        {
+          "option": "w sprzężeniu z chromosomem Y",
+          "isCorrect": false
+        },
+        {
+          "option": "autosomalnie recesywnie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "51704d36-b026-46a1-bb45-ab2eecbf7ed4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Jakie jest prawdopodobieństwo urodzenia dziecka Rh (minus) przez rodziców Rh (+):",
+      "answers": [
+        {
+          "option": "0%",
+          "isCorrect": false
+        },
+        {
+          "option": "25%",
+          "isCorrect": true
+        },
+        {
+          "option": "50%",
+          "isCorrect": false
+        },
+        {
+          "option": "100 %",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "95c009be-e6c6-4ae3-aea1-3a13fdc9dbeb",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Replikacja DNA zachodzi w komórkach eukaryotycznych w:",
+      "answers": [
+        {
+          "option": "lizosomach",
+          "isCorrect": false
+        },
+        {
+          "option": "mitochondriach",
+          "isCorrect": false
+        },
+        {
+          "option": "jądrze komórkowym",
+          "isCorrect": false
+        },
+        {
+          "option": "Bi C prawidłowe",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "e5ab0c9a-739f-4129-8acf-ed52ddfc9d91",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Fuzja centryczna dotyczy zazwyczaj:",
+      "answers": [
+        {
+          "option": "delecji fragmentu chromosomu",
+          "isCorrect": false
+        },
+        {
+          "option": "inwercji paracentrycznej",
+          "isCorrect": false
+        },
+        {
+          "option": "translokacji Robertsonowskiej",
+          "isCorrect": true
+        },
+        {
+          "option": "chromosomu X",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "e3798cac-43ba-49dd-996f-95a21c6588a3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Do chorób dziedziczonych autosomalnie recesywnie należą:",
+      "answers": [
+        {
+          "option": "mukowiscydoza fenyloketonuria",
+          "isCorrect": true
+        },
+        {
+          "option": "zespół łamliwego chromosowu X, zespół trisomii 21 chromosomu",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół Marfana, pląsawica Huntingtona",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół nerczycowy, zespół Patau",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "76384e9c-7d32-4888-a0e3-e33448dc0baa",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "W wyniku mitozy z komórki zawierającej 46 chromosomów powstaną:",
+      "answers": [
+        {
+          "option": "dwie komórki zawierające 23 chromosomy",
+          "isCorrect": false
+        },
+        {
+          "option": "dwie komórki zawierające 46 chromosomów",
+          "isCorrect": true
+        },
+        {
+          "option": "cztery komórki zawierające 23 chromosomy",
+          "isCorrect": false
+        },
+        {
+          "option": "cztery komórki zawierające 46 chromosomów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "9a62ee2e-8ae8-401f-9789-3903cf4e1b89",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Najczęstsze aneuploidie obserwowane u żywo urodzonych noworodków to:",
+      "answers": [
+        {
+          "option": "nullisomie",
+          "isCorrect": false
+        },
+        {
+          "option": "monosomie",
+          "isCorrect": false
+        },
+        {
+          "option": "trisomie",
+          "isCorrect": true
+        },
+        {
+          "option": "tetra somie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "66d7d72f-a429-4901-a839-cb0dea2eedb5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Choroby sprzężone z chromosomem X to:",
+      "answers": [
+        {
+          "option": "zespół Alporta, hemofilia A",
+          "isCorrect": true
+        },
+        {
+          "option": "zespół Lebera, zespół Downa",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół Marfana, zespół Aperta",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół niespokojnych nóg, pląsawica Huntingtona",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "8ead8abe-8711-4860-a772-6138f057c772",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Kodon w trakcie translacji to:",
+      "answers": [
+        {
+          "option": "część informacji o wymianie sygnałów między komórkami",
+          "isCorrect": false
+        },
+        {
+          "option": "2 sąsiadujące nukletydy",
+          "isCorrect": false
+        },
+        {
+          "option": "odcinek mRNA kodujący m.in. jeden aminokwas",
+          "isCorrect": true
+        },
+        {
+          "option": "odcinek DNA podlegający transkrypcji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "1a04d107-603a-447a-9398-1340ba4391ba",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Nukleotydy w DNA wiążą między sobą:",
+      "answers": [
+        {
+          "option": "jedno wiązanie wodorowe",
+          "isCorrect": false
+        },
+        {
+          "option": "dwa wiązanie wodorowe",
+          "isCorrect": false
+        },
+        {
+          "option": "trzy wiązania wodorowe",
+          "isCorrect": false
+        },
+        {
+          "option": "wiązania kowalencyjne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "33864d9e-e8ee-4886-872d-0d8ee8671fc2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Ile chromosomów zawiera gameta człowieka powstała w wyniku nondysjunkcji chromosomów jednej pary:",
+      "answers": [
+        {
+          "option": "20",
+          "isCorrect": false
+        },
+        {
+          "option": "23",
+          "isCorrect": false
+        },
+        {
+          "option": "24",
+          "isCorrect": true
+        },
+        {
+          "option": "46",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "997538e3-481c-4848-a6a2-134a2761227f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Trisomia to:",
+      "answers": [
+        {
+          "option": "mutacja genu Tris",
+          "isCorrect": false
+        },
+        {
+          "option": "ubytek jednego z chromosomów",
+          "isCorrect": false
+        },
+        {
+          "option": "aberracja chromosomowa polegająca na występowaniu jednego chromosomu nadliczbowego",
+          "isCorrect": true
+        },
+        {
+          "option": "zwielokrotnienie sekwencji kilku genów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "106cd217-4a0f-4744-b175-dad5a0464524",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Hemofilia A związana jest z:",
+      "answers": [
+        {
+          "option": "niedobór czynnika VIII",
+          "isCorrect": true
+        },
+        {
+          "option": "niedobór czynnika IX",
+          "isCorrect": false
+        },
+        {
+          "option": "niedobór czynnika XI",
+          "isCorrect": false
+        },
+        {
+          "option": "niedobór czynnika XX",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "169a87a5-bb56-49e2-b5b3-0af913f342cf",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Hemofilia A oraz B dziedziczy się w sposób sprzężony z chromosomem X",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": true
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "0acb0b6f-b52b-49e5-b914-5c90a51b0e71",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Hemofilia C dziedziczy się w sposób sprzężony z chromosomem X",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": false
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "857a81de-19ef-46f9-bd85-b6f3370e43da",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Mutacja genu skutkująca zmianą kilku cech to:",
+      "answers": [
+        {
+          "option": "bialleliczność",
+          "isCorrect": false
+        },
+        {
+          "option": "heterozygota",
+          "isCorrect": false
+        },
+        {
+          "option": "homozygota",
+          "isCorrect": false
+        },
+        {
+          "option": "plejotropia",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "e9c829d5-b283-4e16-a525-8406a4d96a76",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Każda nowa cząsteczka mRNA powstająca w wyniku transkrypcji DNA składa się z jednej nici macierzystej i jednej potomnej",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": false
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "0f996655-0841-4854-a156-0b959228cfad",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Prawda w odniesieniu do choroby sprzężonej z X:",
+      "answers": [
+        {
+          "option": "matki nosicielki rodzą tylko chorych synów",
+          "isCorrect": false
+        },
+        {
+          "option": "zdrowy ojciec posiada zwykle chore córki",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie córki chorego ojca są nosicielkami i mogą prezentować łagodne objawy",
+          "isCorrect": true
+        },
+        {
+          "option": "wszystkie odpowiedzi prawidłowe",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "d7212aab-9fc6-4b64-860a-d66aecd3e548",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Choroba sprzężona z chromosomem X – chorzy ojcowie posiadają zwykle chorych synów",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": false
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "794a22f3-0b38-4033-a00a-406690adba71",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Choroby spowodowane trisomią stosownego chromosomu to:",
+      "answers": [
+        {
+          "option": "zespół trisomii 21 chromosomu, hemofilia A, choroba Refsuma",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół trisomii 13 chromosomu, zespół trisomii 18 oraz zespół trisomii 21",
+          "isCorrect": true
+        },
+        {
+          "option": "mukowiscydoza, zespół Aperta, zespół trisomii 18",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół Retta, fruktozuria, anemia sierpowata",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "50953bdc-4063-4550-b8b3-35728f0878cd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Konflikt serologiczny prawdopodobnie zajdzie kiedy:",
+      "answers": [
+        {
+          "option": "matka Rh- i płód też",
+          "isCorrect": false
+        },
+        {
+          "option": "matka Rh- płód Rh+",
+          "isCorrect": true
+        },
+        {
+          "option": "matka Rh+ płód Rh-",
+          "isCorrect": false
+        },
+        {
+          "option": "matka Rh+ i płód też",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "f3b40613-54e6-4ca8-91d4-a807ec496bdc",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Osoba posiadająca allel dominujący czynnika Rh (D) ma zwykle grupę krwi Rh+",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": true
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "046b01de-188a-45e1-8d5d-31c35727f759",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Uniwersalny dawca to osoba z grupą krwi:",
+      "answers": [
+        {
+          "option": "0-",
+          "isCorrect": true
+        },
+        {
+          "option": "0+",
+          "isCorrect": false
+        },
+        {
+          "option": "AB-",
+          "isCorrect": false
+        },
+        {
+          "option": "AB+",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "3b184197-ec37-4bd2-82e6-d416ca5c7212",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Uniwersalny biorca to osoba z grupą krwi w układzie ABO:",
+      "answers": [
+        {
+          "option": "A",
+          "isCorrect": false
+        },
+        {
+          "option": "B",
+          "isCorrect": false
+        },
+        {
+          "option": "AB",
+          "isCorrect": true
+        },
+        {
+          "option": "0",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "0e681236-51e4-4f92-91f9-c591a0c15fd7",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Uniwersalny biorca to osoba z odpowiednią grupą krwi w układzie ABO pod warunkiem zgodności również w układzie Rh:",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": true
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "6e35680b-ae49-43fc-bbd5-5517fed07faa",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Osoby z grupą krwi AB Rh+ to takie, które:",
+      "answers": [
+        {
+          "option": "prezentują na krwinkach stosowne antygeny",
+          "isCorrect": false
+        },
+        {
+          "option": "nie produkują przeciwciał przeciwko antygenom układów ABO i Rh",
+          "isCorrect": false
+        },
+        {
+          "option": "mogą otrzymać koncentrat krwinek czerwonych A Rh+ lub B Rh+",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "5f92ee9e-2be0-4b7a-aac0-d2f3c7604ee0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Przepływ informacji genetycznej w komórce odbywa się wg schematu:",
+      "answers": [
+        {
+          "option": "DNA –> Białko –> RNA",
+          "isCorrect": false
+        },
+        {
+          "option": "RNA – >białko –> DNA",
+          "isCorrect": false
+        },
+        {
+          "option": "DNA→RNA→białko",
+          "isCorrect": true
+        },
+        {
+          "option": "białko→DNA→RNA",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "5d47ebe5-0e56-4bb2-91b0-5d995b276abb",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Tłumaczenie kodu genetycznego na sekwencję aminokwasów odbywa się w procesie:",
+      "answers": [
+        {
+          "option": "replikacji DNA",
+          "isCorrect": false
+        },
+        {
+          "option": "transkrypcji RNA",
+          "isCorrect": false
+        },
+        {
+          "option": "translacji białka",
+          "isCorrect": true
+        },
+        {
+          "option": "translacji kodu maszynowego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "61ed00a8-8a99-42ed-b172-bdd89668b105",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Najczęstszy polimorfizm genetyczny obserwowany u człowieka to:",
+      "answers": [
+        {
+          "option": "SNP – pojedynczego nukleotydu",
+          "isCorrect": true
+        },
+        {
+          "option": "CNV – zmienność liczby kopii sekwencji DNA",
+          "isCorrect": false
+        },
+        {
+          "option": "insercyjnodelecyjny",
+          "isCorrect": false
+        },
+        {
+          "option": "mutacja",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "c46a1bb5-f937-4d42-bbde-40761878b083",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zatrzymanie pierwszego podziału mejotycznego w trakcie oogenezy kończy się w trakcie:",
+      "answers": [
+        {
+          "option": "wykształcenia trzeciorzędowych cech płciowych",
+          "isCorrect": false
+        },
+        {
+          "option": "owulacji",
+          "isCorrect": true
+        },
+        {
+          "option": "zapłodnienia",
+          "isCorrect": false
+        },
+        {
+          "option": "zaplemnienia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "7f5f8ff1-e769-410f-9e4d-1f947673499d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Odnalezienie chromosomu Philadelphia  u pacjenta z przewlekłą białaczką szpikową wiąże się z:",
+      "answers": [
+        {
+          "option": "gorszym rokowaniem",
+          "isCorrect": false
+        },
+        {
+          "option": "lepszym rokowaniem",
+          "isCorrect": true
+        },
+        {
+          "option": "bez wpływu na rokowanie",
+          "isCorrect": false
+        },
+        {
+          "option": "żadne z powyższych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "d5411250-dfe9-467f-808f-74dbf380ad5c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Mutacje dynamiczne polegają na:",
+      "answers": [
+        {
+          "option": "zwielokrotnieniu ilości chromosomów",
+          "isCorrect": false
+        },
+        {
+          "option": "zwielokrotnieniu ilości genów",
+          "isCorrect": false
+        },
+        {
+          "option": "zwielokrotnieniu unikatowego fragmentu genu",
+          "isCorrect": false
+        },
+        {
+          "option": "zwielokrotnieniu powtarzalnego fragmentu genu",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "8f5fe458-4bce-43e9-b11e-ec3bc6b01336",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Mutacje dynamiczne wynikają z:",
+      "answers": [
+        {
+          "option": "nondysjunkcji",
+          "isCorrect": false
+        },
+        {
+          "option": "poślizgu polimerazy DNA podczas replikacji DNA",
+          "isCorrect": true
+        },
+        {
+          "option": "poślizgu polimerazy DNA podczas transkrypcji RNA",
+          "isCorrect": false
+        },
+        {
+          "option": "poślizgu polimerazy RNA podczas transkrypcji RNA",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "ea7b46f9-863b-422d-b370-e11df1ffcb99",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Przykład choroby związanej z mutacją dynamiczną to:",
+      "answers": [
+        {
+          "option": "choroba Refsuma",
+          "isCorrect": false
+        },
+        {
+          "option": "trisomia 21 chromosomu",
+          "isCorrect": false
+        },
+        {
+          "option": "trisomia 18 chromosomu",
+          "isCorrect": false
+        },
+        {
+          "option": "choroba Huntingtona",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "18049d03-1214-4f18-8566-cbfd1a81c7cf",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zjawisko antycypacji związane z mutacjami dynamicznymi sprawia, że objawy choroby w kolejnych pokoleniach zwykle:",
+      "answers": [
+        {
+          "option": "występują później i w mniejszym nasileniu",
+          "isCorrect": false
+        },
+        {
+          "option": "występują później i w większym nasileniu",
+          "isCorrect": false
+        },
+        {
+          "option": "występują wcześniej i w mniejszym nasileniu",
+          "isCorrect": false
+        },
+        {
+          "option": "występują wcześniej i w większym nasileniu",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "501466e0-6638-4df0-bea9-daa654e6079a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zwyczajowe objawy chorób mitochondrialnych to:",
+      "answers": [
+        {
+          "option": "uporczywy kaszel",
+          "isCorrect": false
+        },
+        {
+          "option": "choroby autoimmunologiczne",
+          "isCorrect": false
+        },
+        {
+          "option": "encefalopatie (uszkodzenia mózgowia)",
+          "isCorrect": true
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "41308f5a-8861-4076-89b4-870b8100cc1d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Choroby mitochondrialne dziedziczą się w sposób charakterystyczny w ten sposób, że zwyczajowo każde dziecko chorej matki dziedziczy chorobę",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": true
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "abe5d521-de5e-4d62-9ac4-3c7730a00c31",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "W komórkach ssaków mutacje pojedynczej nici DNA są naprawiane przez:",
+      "answers": [
+        {
+          "option": "wycinanie zasad",
+          "isCorrect": false
+        },
+        {
+          "option": "wycinanie nukleotydów",
+          "isCorrect": false
+        },
+        {
+          "option": "naprawę niesparowanych zasad",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "9442ea23-94e3-4678-a37f-b04d6067e81d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Prawo czystości gamet mówi, że:",
+      "answers": [
+        {
+          "option": "każda gameta posiada dwa allele pary",
+          "isCorrect": false
+        },
+        {
+          "option": "każda gameta posiada jeden allel z pary",
+          "isCorrect": true
+        },
+        {
+          "option": "każda gameta posiada ten sam czysty zestaw genów",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie z powyższych stwierdzeń są nieprawdziwe",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "92589181-e1af-4d95-bc65-e9ac424fd4c4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Róznicowanie pomiędzy polimorfizmem genetycznym, a mutacją genetyczną polega m.in. na określeniu częstości występowania:",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": true
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "fdbb3944-31da-41bf-b8ff-3f1ed9d23b76",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Za powszechnie rozumianą zmienność osobniczą odpowiadają przede wszystkim mutacje",
+      "answers": [
+        {
+          "option": "prawda",
+          "isCorrect": false
+        },
+        {
+          "option": "fałsz",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:21:15.383384",
+    "updatedAt": null
+  },
+  {
+    "id": "51ebde95-b670-4b26-84d6-5c988c7f7e7a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Wskaż prawidłową definicję kariotypu:",
+      "answers": [
+        {
+          "option": "Obraz sekwencji nukleotydów w genomie danego gatunku",
+          "isCorrect": false
+        },
+        {
+          "option": "Zestaw genów odpowiedzialnych za cechy fenotypowe danego osobnika",
+          "isCorrect": false
+        },
+        {
+          "option": "Zbiór wszystkich białek kodowanych przez genom komórki",
+          "isCorrect": false
+        },
+        {
+          "option": "Zestaw chromosomów typowych dla danego osobnika, grupy osobników lub gatunków",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "adf32fc6-c6c5-4a00-88c8-2f020bcbfdcd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Charakterystyczne cechy danego gatunku warunkuje",
+      "answers": [
+        {
+          "option": "Genom mitochondrialny",
+          "isCorrect": false
+        },
+        {
+          "option": "Kariotyp",
+          "isCorrect": false
+        },
+        {
+          "option": "Genotyp",
+          "isCorrect": true
+        },
+        {
+          "option": "Fenotyp",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "e41ac5a3-0298-42b6-bec5-af60aa0a04cc",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Występowanie identycznych alleli w tych samych miejscach homologicznych chromosomów nazywamy",
+      "answers": [
+        {
+          "option": "Heterozygotyczność",
+          "isCorrect": false
+        },
+        {
+          "option": "Autozygotyczność",
+          "isCorrect": false
+        },
+        {
+          "option": "Hemizygotyczność",
+          "isCorrect": false
+        },
+        {
+          "option": "Homozygotyczność",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "581e89ed-3e2b-44fc-866d-d14b5abbebb3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Pierwsze prawo Mendla nosi nazwę:",
+      "answers": [
+        {
+          "option": "Niezależnej segregacji cech",
+          "isCorrect": false
+        },
+        {
+          "option": "Czystości gamet",
+          "isCorrect": true
+        },
+        {
+          "option": "Determinacji płci",
+          "isCorrect": false
+        },
+        {
+          "option": "Dominacji cech",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "2cae6870-9a25-468e-a0d0-e9ece8a53d2a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Nukleotydy zbudowane są z:",
+      "answers": [
+        {
+          "option": "Rybozy, zasad azotowych, reszty kwasu fosforowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Deoksyrybozy, zasad azotowych, reszty kwasu siarkowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Rybozy, aminokwasów, reszty kwasu fosforowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Deoksyrybozy, zasad azotowych, reszty kwasu fosforowego",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "6d864a6b-f9e1-48c1-9a45-2497a181ef01",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Mukowiscydoza to choroba dziedziczona",
+      "answers": [
+        {
+          "option": "Choroba dziedziczona autosomalnie dominująco",
+          "isCorrect": false
+        },
+        {
+          "option": "Choroba dziedziczona mitochondrialnie",
+          "isCorrect": false
+        },
+        {
+          "option": "Choroba dziedziczona w sprzężeniu z chromosomem X",
+          "isCorrect": false
+        },
+        {
+          "option": "Choroba dziedziczona autosomalnie recesywnie",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "71a02f90-b399-4700-b18c-fb02c116ff7c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Geny znajdują się w:",
+      "answers": [
+        {
+          "option": "mitochondriach",
+          "isCorrect": false
+        },
+        {
+          "option": "rybosomach",
+          "isCorrect": false
+        },
+        {
+          "option": "chromosomach",
+          "isCorrect": true
+        },
+        {
+          "option": "lizosomach",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "6b9ab7f9-6bf9-482f-adde-d580a73f7449",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Komórkę zawierającą odmienne allele w danym locus homologicznych chromosomów nazywamy:",
+      "answers": [
+        {
+          "option": "homozygotą",
+          "isCorrect": false
+        },
+        {
+          "option": "autozygotą",
+          "isCorrect": false
+        },
+        {
+          "option": "heterozygotą",
+          "isCorrect": true
+        },
+        {
+          "option": "hemizygotą",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "ba79698b-a5b5-4d5f-90d9-d2d2a86769d3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Dziedziczne choroby związane z chromosomem płciowym to:",
+      "answers": [
+        {
+          "option": "Hemofilia",
+          "isCorrect": true
+        },
+        {
+          "option": "Zespół Downa",
+          "isCorrect": false
+        },
+        {
+          "option": "Mukowiscydoza",
+          "isCorrect": false
+        },
+        {
+          "option": "Fenyloketonuria",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "7e63f233-1500-4cca-a500-c1c18dc7bc2e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "W DNA mamy tyminę, a w RNA występuje uracyl",
+      "answers": [
+        {
+          "option": "Fałsz",
+          "isCorrect": false
+        },
+        {
+          "option": "Prawda",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "cebac0bf-14ff-4fc0-b356-f826d694180b",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Replikacja to proces:",
+      "answers": [
+        {
+          "option": "Synteza białka na podstawie mRNA",
+          "isCorrect": false
+        },
+        {
+          "option": "Podwojenie łańcucha DNA",
+          "isCorrect": true
+        },
+        {
+          "option": "Naprawa uszkodzonego DNA",
+          "isCorrect": false
+        },
+        {
+          "option": "Przepisanie DNA na RNA",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "477f6432-528d-405f-8755-f67fdde00d01",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Nukleotydy zbudowane są z:",
+      "answers": [
+        {
+          "option": "Deoksyrybozy, aminokwasów, reszty kwasu fosforowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Rybozy, zasad azotowych, reszty kwasu siarkowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Rybozy, zasad azotowych, reszty kwasu fosforowego",
+          "isCorrect": false
+        },
+        {
+          "option": "Deoksyrybozy, zasad azotowych, reszty kwasu fosforowego",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "0a3b9965-9e2e-4720-b842-5cad1a34c71b",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zasady pirymidowe to:",
+      "answers": [
+        {
+          "option": "Tymina, cytozyna",
+          "isCorrect": true
+        },
+        {
+          "option": "Cytozyna, guanina",
+          "isCorrect": false
+        },
+        {
+          "option": "Adenina, guanina",
+          "isCorrect": false
+        },
+        {
+          "option": "Tymina, adenina",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "2a0eddd6-32ce-4535-bb89-883cd9f2b79f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Kodon to:",
+      "answers": [
+        {
+          "option": "Odcinek RNA niekodujący białka",
+          "isCorrect": false
+        },
+        {
+          "option": "Odcinek DNA kodujący cały gen",
+          "isCorrect": false
+        },
+        {
+          "option": "Sekwencja trzech aminokwasów w białku",
+          "isCorrect": false
+        },
+        {
+          "option": "Odcinek DNA lub RNA kodujący jeden aminokwas",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "9d2bb73c-4fad-4007-91a9-6c2437154d14",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Po skrzyżowaniu homozygoty dominującej z homozygotą recesywną cecha recesywna ujawnia się:",
+      "answers": [
+        {
+          "option": "ujawnia się u wszystkich potomków",
+          "isCorrect": false
+        },
+        {
+          "option": "ujawnia się w stosunku 1:1",
+          "isCorrect": false
+        },
+        {
+          "option": "nie ujawnia się wcale",
+          "isCorrect": true
+        },
+        {
+          "option": "ujawnia się w stosunku 3:1",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "48b83790-1bf0-4209-9c4c-48815bd445e5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Liczba chromosomów w organizmie człowieka to:",
+      "answers": [
+        {
+          "option": "23",
+          "isCorrect": false
+        },
+        {
+          "option": "46",
+          "isCorrect": true
+        },
+        {
+          "option": "24",
+          "isCorrect": false
+        },
+        {
+          "option": "22",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "12bf801c-8c23-4448-96b7-9216d5cb7c8a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "W przypadku choroby recesywnej sprzężonej z chromosomem X:",
+      "answers": [
+        {
+          "option": "żadne z dzieci chorego ojca nie jest nosicielem",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie córki chorego ojca są nosicielkami",
+          "isCorrect": true
+        },
+        {
+          "option": "wszystkie córki chorego ojca są chore",
+          "isCorrect": false
+        },
+        {
+          "option": "wszyscy synowie chorego ojca są chorzy",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "36f76016-3cdc-43ea-8c31-0b670e2353dd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Ojciec ma krew grupy 0 a matka krew grupy A, to dziecko może mieć krew grupy:",
+      "answers": [
+        {
+          "option": "A, B i 0",
+          "isCorrect": false
+        },
+        {
+          "option": "B i 0",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko A",
+          "isCorrect": false
+        },
+        {
+          "option": "A i 0",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "3a8b33c1-4463-4fc1-b6e7-c68af3fb2aaa",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Konflikt serologiczny zachodzi gdy",
+      "answers": [
+        {
+          "option": "matka jest Rh+ a płód Rh-",
+          "isCorrect": false
+        },
+        {
+          "option": "matka i płód są Rh+",
+          "isCorrect": false
+        },
+        {
+          "option": "matka jest Rh- a płód Rh+",
+          "isCorrect": true
+        },
+        {
+          "option": "oboje rodzice są Rh-",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "03ba1db4-6b35-4915-8cae-3365664747fe",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Zmutowany gen w chorobie Huntingtona występuje na:",
+      "answers": [
+        {
+          "option": "Ramieniu długim chromosomu 11",
+          "isCorrect": false
+        },
+        {
+          "option": "Ramieniu krótkim chromosomu 21",
+          "isCorrect": false
+        },
+        {
+          "option": "Ramieniu długim chromosomu 4",
+          "isCorrect": false
+        },
+        {
+          "option": "Ramieniu krótkim chromosomu 4",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "450e1d79-7cad-4049-b6ee-459b2026f105",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Wskaż prawidłowy cykl powstawania raka jelita grubego:",
+      "answers": [
+        {
+          "option": "hiperplazja nabłonka-gruczolak-rak",
+          "isCorrect": true
+        },
+        {
+          "option": "gruczolak-hiperplazja nabłonka-rak",
+          "isCorrect": false
+        },
+        {
+          "option": "metaplazja-dysplazja-gruczolak",
+          "isCorrect": false
+        },
+        {
+          "option": "hiperplazja nabłonka-rak-gruczolak",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "918dcfc0-57b4-4009-a5f5-4f46254b9714",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Po skrzyżowaniu homozygoty dominującej z heterozygotą w pokoleniu F1 pojawią się fenotypy:",
+      "answers": [
+        {
+          "option": "75% dominujących i 25% recesywnych",
+          "isCorrect": false
+        },
+        {
+          "option": "50% dominujących i 50% recesywnych",
+          "isCorrect": false
+        },
+        {
+          "option": "25% dominujących i 75% recesywnych",
+          "isCorrect": false
+        },
+        {
+          "option": "100% dominujących",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "7b13d4f0-3cc5-4645-aa3d-91f912ce0994",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Największe ryzyko zachorowania na raka piersi stanowią mutacje genów:",
+      "answers": [
+        {
+          "option": "BRCA1 i BRCA2",
+          "isCorrect": true
+        },
+        {
+          "option": "RAS i MYC",
+          "isCorrect": false
+        },
+        {
+          "option": "APC i MLH1",
+          "isCorrect": false
+        },
+        {
+          "option": "TP53 i RB1",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "d8b1440a-cfec-4570-a37f-4f9839ff8332",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Translacja to:",
+      "answers": [
+        {
+          "option": "przepisanie DNA na RNA",
+          "isCorrect": false
+        },
+        {
+          "option": "łączenie eksonów w dojrzałe mRNA",
+          "isCorrect": false
+        },
+        {
+          "option": "powielenie cząsteczki DNA",
+          "isCorrect": false
+        },
+        {
+          "option": "biosynteza białka",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "f5c60505-92af-4fcc-8165-4b608112bb9c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Przepływ informacji genetycznej odbywa się według schematu DNA→mRNA→białko. Nazwij procesy oznaczone cyframi 1, 2, 3.",
+      "answers": [
+        {
+          "option": "1 – replikacja 2 – translacja 3 – transkrypcja",
+          "isCorrect": false
+        },
+        {
+          "option": "1 – translacja 2 – transkrypcja 3 – replikacja",
+          "isCorrect": false
+        },
+        {
+          "option": "1 – replikacja 2 – transkrypcja 3 – translacja",
+          "isCorrect": true
+        },
+        {
+          "option": "1 – transkrypcja 2 – replikacja 3 – translacja",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "879c82ab-cc6a-4770-b27b-66dbc1d02b22",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "U osób z grupą krwi 0",
+      "answers": [
+        {
+          "option": "Są tylko przeciwciała anty-A",
+          "isCorrect": false
+        },
+        {
+          "option": "Są przeciwciała anty-A i przeciwciała anty-B",
+          "isCorrect": true
+        },
+        {
+          "option": "Nie ma żadnych przeciwciał anty-A ani anty-B",
+          "isCorrect": false
+        },
+        {
+          "option": "Są tylko przeciwciała anty-B",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "3e5a15dc-3928-477e-b3b8-431b502b2345",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Fenotyp to:",
+      "answers": [
+        {
+          "option": "zestaw wszystkich genów danego osobnika przekazywany potomstwu",
+          "isCorrect": false
+        },
+        {
+          "option": "sekwencja nukleotydów warunkująca cechy dziedziczne organizmu",
+          "isCorrect": false
+        },
+        {
+          "option": "ogół uzewnętrzniających się cech morfologicznych, fizjologicznych i biochemicznych danego osobnika",
+          "isCorrect": true
+        },
+        {
+          "option": "zbiór chromosomów charakterystyczny dla danego gatunku",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "1a01eaf1-d5c8-42d1-805c-afb291b1aff2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Choroby wywołane aberracjami chromosomowymi to:",
+      "answers": [
+        {
+          "option": "zespół Retta, achondroplazja, anemia sierpowata",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół Marfana, pląsawica Huntingtona, dystrofia mięśniowa",
+          "isCorrect": false
+        },
+        {
+          "option": "mukowiscydoza, fenyloketonuria, hemofilia",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół Edwardsa, zespół Downa, zespół Patau",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "0e9a0886-1132-48d9-9a08-3f79037665f9",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Badania cytogenetyczne przeprowadzane są w chromosomach",
+      "answers": [
+        {
+          "option": "Profazowych lub telofazowych",
+          "isCorrect": false
+        },
+        {
+          "option": "Interfazowych lub telofazowych",
+          "isCorrect": false
+        },
+        {
+          "option": "Metafazowych lub prometafazowych",
+          "isCorrect": true
+        },
+        {
+          "option": "Anafazowych lub interfazowych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  },
+  {
+    "id": "1d288c5d-65cb-4d0c-867b-d553939cd1b9",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "genetyka"
+    },
+    "data": {
+      "question": "Wymień cechy kodu genetycznego",
+      "answers": [
+        {
+          "option": "Czwórkowy, jednoznaczny, zdegenerowany, niezachodzący, przecinkowy, kolinearny",
+          "isCorrect": false
+        },
+        {
+          "option": "Dwójkowy, jednoznaczny, niezdegenerowany, zachodzący, przecinkowy, niekolinearny",
+          "isCorrect": false
+        },
+        {
+          "option": "Trójkowy, jednoznaczny, zdegenerowany, niezachodzący, bezprzecinkowy, kolinearny",
+          "isCorrect": true
+        },
+        {
+          "option": "Trójkowy, wieloznaczny, zdegenerowany, zachodzący, bezprzecinkowy, nielinearny",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-09 10:38:05.034782",
+    "updatedAt": null
+  }
+]
