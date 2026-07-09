@@ -3,13 +3,115 @@ import { GoogleGenAI, FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, enhanceUserQuery } from '../helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from './tools/executor'
+import { GoogleAuth } from 'google-auth-library'
+
+const PROJECT_ID = 'project-9d10f80c-d5df-459f-8d8'
+const LOCATION = 'europe-west3'
+
+let auth: GoogleAuth | null = null
+
+function getAuthClient() {
+  if (!auth) {
+    auth = new GoogleAuth({
+      scopes: ['https://www.googleapis.com/auth/cloud-platform']
+    })
+  }
+  return auth
+}
 
 function getGoogleAI() {
-  const apiKey = process.env.GOOGLE_API_KEY
-  if (!apiKey) {
-    throw new Error('GOOGLE_API_KEY is not configured')
+  // const apiKey = process.env.GOOGLE_API_KEY
+  // if (!apiKey) {
+  //   throw new Error('GOOGLE_API_KEY is not configured')
+  // }
+  return new GoogleGenAI({
+    project: 'project-9d10f80c-d5df-459f-8d8',
+    location: 'europe-west3', // You can change this to your preferred region
+    vertexai: true 
   }
-  return new GoogleGenAI({ apiKey })
+
+  )
+}
+
+async function getAccessToken(): Promise<string> {
+  const client = await getAuthClient().getClient()
+  const tokenResponse = await client.getAccessToken()
+  if (!tokenResponse.token) {
+    throw new Error('Failed to obtain access token from ADC')
+  }
+  return tokenResponse.token
+}
+
+// Small helper so every REST call to Vertex AI doesn't repeat auth boilerplate
+async function vertexFetch(path: string, options: RequestInit = {}) {
+  const token = await getAccessToken()
+  const url = `https://${LOCATION}-aiplatform.googleapis.com/v1/${path}`
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    }
+  })
+  if (!res.ok) {
+    const errBody = await res.text()
+    throw new Error(`Vertex AI API error (${res.status}): ${errBody}`)
+  }
+  return res.json()
+}
+
+
+// Vertex AI RAG Engine file upload uses a *different* base path (upload/v1, not v1)
+// and requires a multipart/related body (metadata JSON part + raw file bytes part).
+// This is the RAG-Engine equivalent of ai.fileSearchStores.uploadToFileSearchStore(),
+// which only exists on the Gemini Developer API.
+async function vertexUploadFetch(
+  path: string,
+  metadata: Record<string, unknown>,
+  fileBuffer: Buffer,
+  mimeType: string,
+  fileName: string   // ← new param
+) {
+  const token = await getAccessToken()
+  const boundary = `rag_upload_${Date.now()}_${Math.random().toString(36).slice(2)}`
+  const url = `https://${LOCATION}-aiplatform.googleapis.com/upload/v1/${path}`
+
+  const metadataPart =
+    `--${boundary}\r\n` +
+    `Content-Disposition: form-data; name="metadata"\r\n` +
+    `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
+    `${JSON.stringify(metadata)}\r\n`
+
+  const filePartHeader =
+    `--${boundary}\r\n` +
+    `Content-Disposition: form-data; name="file"; filename="${fileName}"\r\n` +
+    `Content-Type: ${mimeType}\r\n\r\n`
+
+  const closing = `\r\n--${boundary}--`
+
+  const body = Buffer.concat([
+    Buffer.from(metadataPart, 'utf-8'),
+    Buffer.from(filePartHeader, 'utf-8'),
+    fileBuffer,
+    Buffer.from(closing, 'utf-8')
+  ])
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': `multipart/form-data; boundary=${boundary}`,   // ← was multipart/related
+      'X-Goog-Upload-Protocol': 'multipart'
+    },
+    body
+  })
+
+  if (!res.ok) {
+    const errBody = await res.text()
+    throw new Error(`Vertex AI upload error (${res.status}): ${errBody}`)
+  }
+  return res.json()
 }
 
 function parseGoogleApiError(error: unknown): Error {
@@ -27,34 +129,65 @@ function parseGoogleApiError(error: unknown): Error {
   return new Error('Wystąpił nieznany błąd')
 }
 
-export async function createFileSearchStore(
-  displayName: string
-): Promise<string> {
+export async function createFileSearchStore(displayName: string): Promise<string> {
   try {
-    const ai = getGoogleAI()
+    const result = await vertexFetch(
+      `projects/${PROJECT_ID}/locations/${LOCATION}/ragCorpora`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          display_name: displayName,
+          description: 'My Knowledge Base for RAG'
+        })
+      }
+    )
 
-    const store = await ai.fileSearchStores.create({
-      config: { displayName }
-    })
+    // TEMP: log the raw shape so we know what we're actually dealing with
+    console.log('RAW createRagCorpus response:', JSON.stringify(result, null, 2))
 
-    if (!store.name) {
-      throw new Error(
-        'Failed to create file search store: No store name returned'
-      )
+    // Case 1: it's already the corpus (synchronous)
+    if (result.name && result.name.includes('/ragCorpora/')) {
+      return result.name
     }
 
-    return store.name
+    // Case 2: it's a long-running operation, poll it
+    const opName = result.name as string | undefined
+    if (!opName) {
+      throw new Error('Unexpected response shape from corpus creation: ' + JSON.stringify(result))
+    }
+
+    let attempts = 0
+    const maxAttempts = 30
+
+    while (attempts < maxAttempts) {
+      const status = await vertexFetch(opName)
+
+      if (status.done) {
+        if (status.error) {
+          throw new Error(`Corpus creation failed: ${status.error.message}`)
+        }
+        if (!status.response?.name) {
+          throw new Error('Corpus created but no name returned: ' + JSON.stringify(status))
+        }
+        return status.response.name
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, 3000))
+      attempts++
+    }
+
+    throw new Error('Timed out waiting for RAG corpus creation')
   } catch (error) {
-    console.error('Error creating file search store:', error)
-    throw new Error('Nie można utworzyć File Search Store')
+    console.error('Error creating RAG corpus:', error)
+    throw error // temporarily rethrow the real error instead of a generic message, so we can see what's actually happening
   }
 }
 
 export async function deleteFileSearchStore(storeName: string): Promise<void> {
   try {
-    const ai = getGoogleAI()
-
-    await ai.fileSearchStores.delete({ name: storeName })
+    // storeName is the full RAG corpus resource name, e.g.
+    // projects/{project}/locations/{location}/ragCorpora/{id}
+    await vertexFetch(storeName, { method: 'DELETE' })
   } catch (error) {
     console.error('Error deleting file search store:', error)
     throw new Error('Nie można usunąć File Search Store')
@@ -72,8 +205,6 @@ export async function uploadFiles(
   }
 
   try {
-    const ai = getGoogleAI()
-
     if (files.length === 0) {
       throw new Error('No files provided for upload')
     }
@@ -88,33 +219,25 @@ export async function uploadFiles(
           else mimeType = 'application/octet-stream'
         }
 
-        let operation = await ai.fileSearchStores.uploadToFileSearchStore({
-          file: file,
-          fileSearchStoreName: storeName,
-          config: {
-            displayName: file.name,
-            mimeType
-          }
-        })
+        const arrayBuffer = await file.arrayBuffer()
+        const buffer = Buffer.from(arrayBuffer)
 
-        let attempts = 0
-        const maxAttempts = 60
+        // storeName is the full ragCorpus resource name, e.g.
+        // projects/{project}/locations/{location}/ragCorpora/{id}
+        // Vertex RAG Engine's direct upload is synchronous (no LRO to poll),
+        // unlike the Gemini fileSearchStores upload.
+        const uploadResult = await vertexUploadFetch(
+          `${storeName}/ragFiles:upload`,
+          { rag_file: { display_name: file.name } },
+          buffer,
+          mimeType,
+          file.name   // ← new arg
+        )
 
-        while (!operation.done && attempts < maxAttempts) {
-          await new Promise((resolve) => setTimeout(resolve, 5000))
-          operation = await ai.operations.get({ operation })
-          attempts++
+        if (uploadResult.error) {
+          throw new Error(uploadResult.error.message || 'Upload failed')
         }
-
-        if (!operation.done) {
-          throw new Error(`Upload timed out after ${maxAttempts * 5} seconds`)
-        }
-
-        if (operation.error) {
-          throw new Error(
-            `Upload failed: ${operation.error.message || 'Unknown error'}`
-          )
-        }
+        console.log('RAW upload response:', JSON.stringify(uploadResult, null, 2))
 
         results.uploaded.push(file.name)
       } catch (error) {
@@ -157,10 +280,15 @@ export async function queryWithFileSearch(
 
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
+    // Note: `fileSearch` is a Gemini Developer API tool. Vertex AI's RAG Engine
+    // exposes retrieval through `retrieval.vertexRagStore` instead, pointed at
+    // the ragCorpus resource name.
     const configTools: any[] = [
       {
-        fileSearch: {
-          fileSearchStoreNames: [fileSearchStoreName]
+        retrieval: {
+          vertexRagStore: {
+            ragCorpora: [fileSearchStoreName]
+          }
         }
       }
     ]
@@ -176,7 +304,7 @@ export async function queryWithFileSearch(
     }
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-2.5-flash',
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
@@ -230,7 +358,7 @@ ${toolResultsText}
 Based on the tool execution results above, please provide a comprehensive final answer incorporating the generated content.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-2.5-flash',
         contents: finalPrompt,
         config: {
           systemInstruction: SYSTEM_PROMPT
@@ -287,13 +415,12 @@ export async function getStoreInfo(storeName: string): Promise<{
   displayName?: string | undefined
 }> {
   try {
-    const ai = getGoogleAI()
-
-    const store = await ai.fileSearchStores.get({ name: storeName })
+    // storeName is the full ragCorpus resource name.
+    const store = await vertexFetch(storeName)
 
     return {
       name: store.name || storeName,
-      displayName: store.displayName ?? undefined
+      displayName: store.displayName ?? store.display_name ?? undefined
     }
   } catch (error) {
     console.error('Error getting store info:', error)
@@ -308,20 +435,14 @@ export async function listStoreDocuments(storeName: string): Promise<
   }>
 > {
   try {
-    const ai = getGoogleAI()
-
-    const response = await ai.fileSearchStores.documents.list({
-      parent: storeName
-    })
-
-    const documents: any[] = []
-    for await (const doc of response) {
-      documents.push(doc)
-    }
+    // storeName is the full ragCorpus resource name.
+    const response = await vertexFetch(`${storeName}/ragFiles`)
+    console.log('RAW listRagFiles response:', JSON.stringify(response, null, 2))
+    const documents: any[] = response.ragFiles || []
 
     return documents.map((doc: any) => ({
       name: doc.name || '',
-      displayName: doc.displayName || doc.name || 'Unknown'
+      displayName: doc.displayName || doc.display_name || doc.name || 'Unknown'
     }))
   } catch (error) {
     console.error('Error listing store documents:', error)
@@ -355,14 +476,16 @@ export async function queryFileSearchOnly(
     const enhancedQuery = enhanceUserQuery(finalQuestion)
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-2.5-flash',
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
         tools: [
           {
-            fileSearch: {
-              fileSearchStoreNames: [fileSearchStoreName]
+            retrieval: {
+              vertexRagStore: {
+                ragCorpora: [fileSearchStoreName]
+              }
             }
           }
         ]
@@ -436,7 +559,7 @@ ${content}
 
     // Wrap in role/parts structure for multimodal content
     const response = await ai.models.generateContent({
-      model: 'gemini-3.5-flash',
+      model: 'gemini-2.5-flash',
       contents: [
         {
           role: 'user',
@@ -478,7 +601,7 @@ Result: ${JSON.stringify(result, null, 2)}
 Please provide a brief confirmation message to the user about what was created.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
+        model: 'gemini-2.5-flash',
         contents: finalPrompt,
         config: {
           systemInstruction: SYSTEM_PROMPT

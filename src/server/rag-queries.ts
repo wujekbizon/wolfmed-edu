@@ -31,20 +31,12 @@ export async function setRagConfig(
   storeName: string,
   storeDisplayName?: string
 ): Promise<void> {
-  await db
-    .insert(ragConfig)
-    .values({
-      storeName,
-      storeDisplayName: storeDisplayName || null,
-      updatedAt: new Date(),
-    })
-    .onConflictDoUpdate({
-      target: ragConfig.storeName,
-      set: {
-        storeDisplayName: storeDisplayName || null,
-        updatedAt: new Date(),
-      },
-    })
+  await db.delete(ragConfig)
+  await db.insert(ragConfig).values({
+    storeName,
+    storeDisplayName: storeDisplayName || null,
+    updatedAt: new Date(),
+  })
 }
 
 /**
@@ -54,3 +46,4 @@ export async function setRagConfig(
 export async function deleteRagConfig(storeName: string): Promise<void> {
   await db.delete(ragConfig).where(eq(ragConfig.storeName, storeName))
 }
+

@@ -187,7 +187,7 @@ ${exampleStr}
 Return ONLY the JSON array, no additional text.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-.5-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7,
@@ -246,7 +246,7 @@ ${template.example}
 Return ONLY the markdown note content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7
@@ -283,7 +283,7 @@ ${template.example}
 Return ONLY the markdown summary content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7
@@ -329,7 +329,7 @@ ${example}
 Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7
@@ -378,7 +378,7 @@ ${exampleStr}
 Return ONLY a JSON object with a "flashcards" key containing an array of flashcard objects. Each object must have "questionText" and "answerText" string fields. No additional text.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
       temperature: 0.7,
@@ -421,7 +421,7 @@ async function planujTool(args: any): Promise<ToolResult> {
     .replace('{{topic}}', `${content}${focus ? ` — szczególny nacisk na: ${focus}` : ''}`)
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: userMessage,
     config: {
       systemInstruction: template.systemPrompt,
@@ -461,7 +461,7 @@ async function wykladTool(args: any): Promise<ToolResult> {
   const userMessage = template.userPrompt.replace('{{planContent}}', content)
 
   const response = await ai.models.generateContent({
-    model: 'gemini-3.5-flash',
+    model: 'gemini-2.5-flash',
     contents: userMessage,
     config: {
       systemInstruction: template.systemPrompt,
