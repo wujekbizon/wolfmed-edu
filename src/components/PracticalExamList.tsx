@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import PracticalExamCard from '@/components/PracticalExamCard'
 import PracticalExamRunnerSkeleton from '@/components/skeletons/PracticalExamRunnerSkeleton'
+import GeneratePracticalExamModal from '@/components/GeneratePracticalExamModal'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { generatePracticalExamAction } from '@/actions/praktyczny'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -29,8 +30,14 @@ export default function PracticalExamList({ exams, isPremium = false }: Props) {
 
   // Keep the skeleton up through generation and the subsequent navigation,
   // so the user lands on the freshly generated arkusz without a flash back.
+  // The modal sits on top with an explicit "AI is working" indicator.
   if (isPending || navigating) {
-    return <PracticalExamRunnerSkeleton />
+    return (
+      <>
+        <PracticalExamRunnerSkeleton />
+        <GeneratePracticalExamModal />
+      </>
+    )
   }
 
   return (
