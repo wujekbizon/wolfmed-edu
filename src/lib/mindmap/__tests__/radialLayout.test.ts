@@ -1,6 +1,7 @@
 import test from "node:test"
 import assert from "node:assert/strict"
 import { radialLayout, MIN_NODE_SEPARATION } from "../radialLayout"
+import { treeLayout } from "../treeLayout"
 import { treeToFlow } from "../treeToFlow"
 import { collapseBelowDepth } from "../treeOps"
 import type { MindMapNode } from "../types"
@@ -74,6 +75,24 @@ test("treeToFlow prunes collapsed subtree and carries hidden count", () => {
   assert.equal(collapsed.data.hiddenCount, 9)
   // No edge should point into the hidden subtree.
   assert.ok(!edges.some((e) => e.source === "b1"))
+})
+
+test("treeLayout positions every node and lays depths out in columns", () => {
+  const positions = treeLayout(buildTree())
+  assert.equal(positions.size, 61)
+  // depth increases left-to-right: root.x < branch.x < child.x
+  const rootX = positions.get("root")!.x
+  const branchX = positions.get("b0")!.x
+  const childX = positions.get("b0c0")!.x
+  assert.ok(rootX < branchX && branchX < childX)
+})
+
+test("treeLayout excludes collapsed subtrees", () => {
+  const tree = buildTree()
+  tree.children[0]!.collapsed = true
+  const positions = treeLayout(tree)
+  assert.equal(positions.size, 61 - 9)
+  assert.ok(!positions.has("b0c0"))
 })
 
 test("collapseBelowDepth collapses branches so only the first ring renders", () => {

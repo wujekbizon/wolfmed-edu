@@ -1,7 +1,8 @@
 "use client"
 
 import "@xyflow/react/dist/style.css"
-import { useCallback, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { toPng } from "html-to-image"
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -12,16 +13,23 @@ import {
   Panel,
   NodeToolbar,
   Position,
+  useReactFlow,
+  getNodesBounds,
+  getViewportForBounds,
   type Node,
   type Edge,
 } from "@xyflow/react"
 import type { MindMapNode as TreeNode, MasteryLevel } from "@/lib/mindmap/types"
 import { radialLayout } from "@/lib/mindmap/radialLayout"
+import { treeLayout } from "@/lib/mindmap/treeLayout"
 import { treeToFlow, type MindMapNodeData } from "@/lib/mindmap/treeToFlow"
 import { toggleNodeCollapse, setNodeMastery, findNode } from "@/lib/mindmap/treeOps"
 import { ROOT_COLOR, CATEGORY_COLORS } from "@/lib/mindmap/design"
 import MindMapNode from "./MindMapNode"
 import MasteryToolbar from "./MasteryToolbar"
+
+type LayoutMode = "radial" | "tree"
+const CANVAS_BG = "#18181b"
 
 const nodeTypes = { mindmap: MindMapNode }
 
@@ -48,15 +56,50 @@ interface MindMapViewProps {
 
 function Canvas({ root, onRootChange }: MindMapViewProps) {
   const [selectedLeafId, setSelectedLeafId] = useState<string | null>(null)
+  const [layout, setLayout] = useState<LayoutMode>("radial")
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const { fitView } = useReactFlow()
 
   const { nodes, edges } = useMemo(() => {
-    const positions = radialLayout(root)
+    const positions = layout === "tree" ? treeLayout(root) : radialLayout(root)
     const graph = treeToFlow(root, positions)
     const nodes = graph.nodes.map((n) =>
       n.id === selectedLeafId ? { ...n, selected: true } : n
     ) as unknown as Node<MindMapNodeData>[]
     return { nodes, edges: graph.edges as unknown as Edge[] }
-  }, [root, selectedLeafId])
+  }, [root, selectedLeafId, layout])
+
+  // Reframe when the layout mode changes (an explicit action where reframing is
+  // expected) — but not on collapse/expand.
+  useEffect(() => {
+    fitView({ duration: 300, ...FIT_VIEW_OPTIONS })
+  }, [layout, fitView])
+
+  const handleExport = useCallback(() => {
+    const viewportEl = wrapperRef.current?.querySelector<HTMLElement>(".react-flow__viewport")
+    if (!viewportEl || nodes.length === 0) return
+    const width = 1200
+    const height = 800
+    const bounds = getNodesBounds(nodes)
+    const vp = getViewportForBounds(bounds, width, height, 0.5, 2, 0.12)
+    toPng(viewportEl, {
+      backgroundColor: CANVAS_BG,
+      width,
+      height,
+      style: {
+        width: `${width}px`,
+        height: `${height}px`,
+        transform: `translate(${vp.x}px, ${vp.y}px) scale(${vp.zoom})`,
+      },
+    })
+      .then((dataUrl) => {
+        const link = document.createElement("a")
+        link.download = "mapa-mysli.png"
+        link.href = dataUrl
+        link.click()
+      })
+      .catch(() => {})
+  }, [nodes])
 
   // Fit only on initial mount (the `fitView` prop). Collapsing/expanding must NOT
   // reset the viewport — the user keeps their current zoom/pan; the Controls
@@ -90,6 +133,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
     : undefined
 
   return (
+    <div ref={wrapperRef} className="h-full w-full">
     <ReactFlow
       colorMode="dark"
       nodes={nodes}
@@ -142,7 +186,44 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
           ))}
         </div>
       </Panel>
+      <Panel position="top-right">
+        <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-zinc-900/80 p-1 backdrop-blur-sm">
+          <button
+            type="button"
+            onClick={() => setLayout("radial")}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              layout === "radial" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-100"
+            }`}
+          >
+            Promienisty
+          </button>
+          <button
+            type="button"
+            onClick={() => setLayout("tree")}
+            className={`rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
+              layout === "tree" ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-100"
+            }`}
+          >
+            Drzewo
+          </button>
+          <span className="mx-0.5 h-4 w-px bg-white/10" />
+          <button
+            type="button"
+            onClick={handleExport}
+            title="Pobierz PNG"
+            className="flex items-center gap-1 rounded-md px-2 py-1 text-[11px] font-medium text-zinc-400 transition-colors hover:text-zinc-100"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3v12" />
+              <path d="M7 10l5 5 5-5" />
+              <path d="M5 21h14" />
+            </svg>
+            PNG
+          </button>
+        </div>
+      </Panel>
     </ReactFlow>
+    </div>
   )
 }
 
