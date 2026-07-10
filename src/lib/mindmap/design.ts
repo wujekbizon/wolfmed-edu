@@ -19,8 +19,9 @@ export const CATEGORY_COLORS: Record<Category, string> = {
 // Root (depth 0) has its own identity color, matching the mockup's purple root.
 export const ROOT_COLOR = "#7c6df2"
 
-// Circle diameters by depth: root → leaf.
-export const DEPTH_SIZES = [80, 64, 48, 36] as const
+// Circle diameters by depth: root → leaf. Sized so a wrapped 2-3 word Polish
+// label fits inside the circle (labels render in-node, per the mockup).
+export const DEPTH_SIZES = [104, 88, 72, 60] as const
 
 // Leaf mastery overrides the category color.
 export const MASTERY_COLORS: Record<MasteryLevel, string> = {

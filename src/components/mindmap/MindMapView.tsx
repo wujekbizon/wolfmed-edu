@@ -33,10 +33,7 @@ const CANVAS_BG = "#18181b"
 
 const nodeTypes = { mindmap: MindMapNode }
 
-const defaultEdgeOptions = {
-  type: "straight",
-  style: { stroke: "rgba(255,255,255,0.16)", strokeWidth: 1.5 },
-}
+const EDGE_STYLE = { stroke: "rgba(255,255,255,0.16)", strokeWidth: 1.5 }
 
 // Initial framing. Lower padding = tree fills more of the viewport on first
 // render; maxZoom lets small trees zoom in instead of floating tiny in the middle.
@@ -63,10 +60,22 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
   const { nodes, edges } = useMemo(() => {
     const positions = layout === "tree" ? treeLayout(root) : radialLayout(root)
     const graph = treeToFlow(root, positions)
-    const nodes = graph.nodes.map((n) =>
-      n.id === selectedLeafId ? { ...n, selected: true } : n
-    ) as unknown as Node<MindMapNodeData>[]
-    return { nodes, edges: graph.edges as unknown as Edge[] }
+    // Tree flows left-to-right, so edges leave the parent's right side and enter
+    // the child's left; radial keeps top/bottom. Smoothstep reads better for the
+    // columnar tree, straight for spokes.
+    const isTree = layout === "tree"
+    const nodes = graph.nodes.map((n) => ({
+      ...n,
+      sourcePosition: isTree ? Position.Right : Position.Bottom,
+      targetPosition: isTree ? Position.Left : Position.Top,
+      ...(n.id === selectedLeafId ? { selected: true } : {}),
+    })) as unknown as Node<MindMapNodeData>[]
+    const edges = graph.edges.map((e) => ({
+      ...e,
+      type: isTree ? "smoothstep" : "straight",
+      style: EDGE_STYLE,
+    })) as unknown as Edge[]
+    return { nodes, edges }
   }, [root, selectedLeafId, layout])
 
   // Reframe when the layout mode changes (an explicit action where reframing is
@@ -139,7 +148,6 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
-      defaultEdgeOptions={defaultEdgeOptions}
       fitView
       fitViewOptions={FIT_VIEW_OPTIONS}
       minZoom={0.2}
@@ -167,7 +175,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
         zoomable
         nodeColor={(n) => (n.data as MindMapNodeData).color}
         maskColor="rgba(0,0,0,0.6)"
-        className="!bg-zinc-800"
+        className="!hidden !bg-zinc-800 md:!block"
       />
       <Panel position="top-left">
         <div className="flex flex-col gap-1 rounded-lg border border-white/10 bg-zinc-900/80 px-3 py-2 backdrop-blur-sm">

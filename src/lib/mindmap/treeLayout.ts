@@ -17,8 +17,9 @@ export function treeLayout(
   root: MindMapNode,
   options: TreeLayoutOptions = {}
 ): Map<string, LayoutPosition> {
-  const rowGap = options.rowGap ?? 72
-  const columnGap = options.columnGap ?? 260
+  // Rows must clear the largest node diameter (in-node labels, no pill below).
+  const rowGap = options.rowGap ?? 132
+  const columnGap = options.columnGap ?? 240
 
   const h = hierarchy<MindMapNode>(root, (n) => (n.collapsed ? null : n.children))
   tree<MindMapNode>().nodeSize([rowGap, columnGap])(h)

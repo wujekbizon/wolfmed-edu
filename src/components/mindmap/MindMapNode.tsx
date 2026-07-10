@@ -5,14 +5,25 @@ import type { MindMapNodeData } from "@/lib/mindmap/treeToFlow"
 
 type MindMapFlowNode = Node<MindMapNodeData>
 
-export default function MindMapNode({ data, selected }: NodeProps<MindMapFlowNode>) {
+function labelFontSize(depth: number): number {
+  if (depth === 0) return 13
+  if (depth === 1) return 12
+  return 10.5
+}
+
+export default function MindMapNode({
+  data,
+  selected,
+  sourcePosition,
+  targetPosition,
+}: NodeProps<MindMapFlowNode>) {
   const size = getDepthSize(data.depth)
   const showIcon = data.depth <= 1
   const Icon = getCategoryIcon(data.category)
   const mastery = data.masteryLevel
   const isTrueLeaf = data.isLeaf && !data.collapsed
   const base = isTrueLeaf && mastery ? MASTERY_COLORS[mastery] : data.color
-  const iconSize = Math.round(size * 0.34)
+  const iconSize = Math.round(size * 0.24)
 
   const gradient = `radial-gradient(circle at 34% 28%, ${lightenColor(base, 0.28)}, ${base})`
   const glow = selected
@@ -21,7 +32,7 @@ export default function MindMapNode({ data, selected }: NodeProps<MindMapFlowNod
 
   return (
     <div
-      className="relative flex items-center justify-center rounded-full text-white transition-transform duration-150 hover:scale-105"
+      className="relative flex items-center justify-center overflow-visible rounded-full text-white transition-transform duration-150 hover:scale-105"
       style={{
         width: size,
         height: size,
@@ -31,10 +42,26 @@ export default function MindMapNode({ data, selected }: NodeProps<MindMapFlowNod
         outlineOffset: data.collapsed ? 3 : undefined,
       }}
     >
-      <Handle type="target" position={Position.Top} className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0" />
-      <Handle type="source" position={Position.Bottom} className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0" />
+      <Handle
+        type="target"
+        position={targetPosition ?? Position.Top}
+        className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0"
+      />
+      <Handle
+        type="source"
+        position={sourcePosition ?? Position.Bottom}
+        className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0"
+      />
 
-      {showIcon && <Icon size={iconSize} />}
+      <div className="flex max-h-full flex-col items-center justify-center gap-0.5 px-1.5">
+        {showIcon && <Icon size={iconSize} />}
+        <span
+          className="line-clamp-3 max-w-full break-words text-center font-semibold leading-tight [text-shadow:0_1px_2px_rgba(0,0,0,0.4)]"
+          style={{ fontSize: labelFontSize(data.depth) }}
+        >
+          {data.label}
+        </span>
+      </div>
 
       {data.collapsed && data.hiddenCount > 0 && (
         <span className="absolute -bottom-1 -right-1 min-w-5 rounded-full bg-zinc-950 px-1 text-center text-[10px] font-semibold leading-5 text-white shadow ring-1 ring-white/20">
@@ -44,14 +71,10 @@ export default function MindMapNode({ data, selected }: NodeProps<MindMapFlowNod
 
       {isTrueLeaf && mastery && (
         <span
-          className="absolute right-0 top-0 h-3 w-3 rounded-full border-2 border-zinc-900"
+          className="absolute right-0.5 top-0.5 h-3 w-3 rounded-full border-2 border-zinc-900"
           style={{ background: MASTERY_COLORS[mastery] }}
         />
       )}
-
-      <span className="pointer-events-none absolute left-1/2 top-full mt-1.5 w-max max-w-[104px] -translate-x-1/2 rounded-md bg-zinc-900/80 px-1.5 py-0.5 text-center text-[11px] font-medium leading-tight text-zinc-100 line-clamp-2 ring-1 ring-white/5 backdrop-blur-sm">
-        {data.label}
-      </span>
     </div>
   )
 }
