@@ -28,13 +28,15 @@ export default function MindMapCell({ cell }: { cell: Cell }) {
 
   return (
     <ResizableComponent direction="vertical">
-      <div className="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white">
-        {content ? (
+      {content ? (
+        <div className="h-full overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
           <MindMapView root={content.root} onRootChange={handleRootChange} />
-        ) : (
+        </div>
+      ) : (
+        <div className="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white">
           <MindMapGenerateForm cell={cell} />
-        )}
-      </div>
+        </div>
+      )}
     </ResizableComponent>
   )
 }

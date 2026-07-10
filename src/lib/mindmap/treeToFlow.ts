@@ -1,6 +1,6 @@
 import type { Category, MasteryLevel, MindMapNode, TopicType } from "./types"
 import type { LayoutPosition } from "./radialLayout"
-import { ROOT_COLOR, getCategoryColor, lightenColor } from "./design"
+import { ROOT_COLOR, getCategoryColor, getDepthSize, lightenColor } from "./design"
 
 // Structurally compatible with @xyflow/react's Node<data> / Edge, but declared
 // here so the pure engine carries no dependency on the rendering library. The
@@ -66,10 +66,15 @@ export function treeToFlow(
     const color = computeColor(node, parentColor)
     const kids = node.collapsed ? [] : node.children
 
+    // radialLayout returns circle centers; React Flow anchors nodes by their
+    // top-left corner, so offset by half the node size to center the circle.
+    const center = positions.get(node.id) ?? { x: 0, y: 0 }
+    const half = getDepthSize(node.depth) / 2
+
     nodes.push({
       id: node.id,
       type: "mindmap",
-      position: positions.get(node.id) ?? { x: 0, y: 0 },
+      position: { x: center.x - half, y: center.y - half },
       data: {
         label: node.label,
         depth: node.depth,
