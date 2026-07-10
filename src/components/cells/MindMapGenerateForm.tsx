@@ -30,15 +30,16 @@ export default function MindMapGenerateForm({ cell }: { cell: Cell }) {
   return (
     <form
       action={action}
-      className="flex h-full flex-col items-center justify-center gap-4 p-6 text-center"
+      className="relative flex h-full flex-col items-center justify-center gap-4 p-6 text-center"
+      style={{ backgroundImage: "radial-gradient(#3f3f46 1px, transparent 1px)", backgroundSize: "22px 22px" }}
     >
-      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ff9898]/15 text-[#f58a8a]">
+      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#ff9898]/15 text-[#f58a8a] shadow-[0_0_24px_rgba(245,138,138,0.35)]">
         <PulseIcon size={28} />
       </div>
 
       <div className="space-y-1">
-        <h3 className="text-lg font-semibold text-zinc-800">Mapa Myśli</h3>
-        <p className="max-w-sm text-sm text-zinc-500">
+        <h3 className="text-lg font-semibold text-zinc-100">Mapa Myśli</h3>
+        <p className="max-w-sm text-sm text-zinc-400">
           Wpisz temat, a AI zbuduje interaktywną mapę myśli — np. „Niewydolność serca”,
           „Podstawy pielęgniarstwa” czy „Odleżyny”.
         </p>
@@ -51,7 +52,7 @@ export default function MindMapGenerateForm({ cell }: { cell: Cell }) {
           placeholder="Temat mapy"
           autoComplete="off"
           defaultValue={state.values?.topic?.toString() || ""}
-          className="w-full rounded-lg border border-zinc-200 bg-white/80 px-4 py-2.5 text-sm text-zinc-700 outline-none transition-all placeholder:text-zinc-400 focus:ring-2 focus:ring-[#ff9898]/50"
+          className="w-full rounded-lg border border-white/10 bg-zinc-800/80 px-4 py-2.5 text-sm text-zinc-100 outline-none transition-all placeholder:text-zinc-500 focus:ring-2 focus:ring-[#ff9898]/50"
         />
         <FieldError name="topic" formState={state} />
       </div>

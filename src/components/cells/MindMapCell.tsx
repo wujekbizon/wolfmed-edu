@@ -62,7 +62,7 @@ export default function MindMapCell({ cell }: { cell: Cell }) {
           <MindMapView root={content.root} onRootChange={handleRootChange} onExplain={handleExplain} />
         </div>
       ) : (
-        <div className="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white">
+        <div className="flex h-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
           <MindMapGenerateForm cell={cell} />
         </div>
       )}
