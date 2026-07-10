@@ -160,7 +160,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       onNodeClick={onNodeClick}
       onPaneClick={onPaneClick}
       proOptions={{ hideAttribution: false }}
-      className="!bg-zinc-900"
+      className="bg-zinc-900!"
     >
       {selectedLeafId && (
         <NodeToolbar nodeId={selectedLeafId} isVisible position={Position.Top} offset={14}>
@@ -175,7 +175,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
         zoomable
         nodeColor={(n) => (n.data as MindMapNodeData).color}
         maskColor="rgba(0,0,0,0.6)"
-        className="!hidden !bg-zinc-800 md:!block"
+        className="hidden! bg-zinc-800! md:block!"
       />
       <Panel position="top-left">
         <div className="flex flex-col gap-1 rounded-lg border border-white/10 bg-zinc-900/80 px-3 py-2 backdrop-blur-sm">

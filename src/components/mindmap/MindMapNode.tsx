@@ -45,12 +45,12 @@ export default function MindMapNode({
       <Handle
         type="target"
         position={targetPosition ?? Position.Top}
-        className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0"
+        className="h-1! w-1! border-0! bg-transparent! opacity-0!"
       />
       <Handle
         type="source"
         position={sourcePosition ?? Position.Bottom}
-        className="!h-1 !w-1 !border-0 !bg-transparent !opacity-0"
+        className="h-1! w-1! border-0! bg-transparent! opacity-0!"
       />
 
       <div className="flex max-h-full flex-col items-center justify-center gap-0.5 px-1.5">
