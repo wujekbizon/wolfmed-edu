@@ -28,6 +28,10 @@ const defaultEdgeOptions = {
   style: { stroke: "rgba(255,255,255,0.16)", strokeWidth: 1.5 },
 }
 
+// Initial framing. Lower padding = tree fills more of the viewport on first
+// render; maxZoom lets small trees zoom in instead of floating tiny in the middle.
+const FIT_VIEW_OPTIONS = { padding: 0.12, minZoom: 0.2, maxZoom: 1.5 }
+
 const LEGEND: { label: string; color: string; dashed?: boolean }[] = [
   { label: "Główny", color: ROOT_COLOR },
   { label: "Gałąź", color: CATEGORY_COLORS.anatomy },
@@ -52,7 +56,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
 
   const { fitView } = useReactFlow()
   useEffect(() => {
-    fitView({ duration: 300, padding: 0.25 })
+    fitView({ duration: 300, ...FIT_VIEW_OPTIONS })
   }, [nodes.length, fitView])
 
   const onNodeClick = useCallback(
@@ -72,9 +76,9 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       nodeTypes={nodeTypes}
       defaultEdgeOptions={defaultEdgeOptions}
       fitView
-      fitViewOptions={{ padding: 0.25 }}
+      fitViewOptions={FIT_VIEW_OPTIONS}
       minZoom={0.2}
-      maxZoom={2}
+      maxZoom={2.5}
       nodesDraggable={false}
       nodesConnectable={false}
       elementsSelectable
