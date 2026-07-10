@@ -47,7 +47,7 @@ export function buildSystemPrompt(): string {
   return `Jesteś generatorem map myśli dla platformy edukacji medycznej. Zwracasz WYŁĄCZNIE poprawny JSON zgodny ze schematem MindMapNode. Bez ogrodzeń kodu, bez wstępu, bez komentarzy.
 
 Schemat węzła:
-{ "label": string, "children": MindMapNode[], "metadata": { "category": string, "tags": string[] } }
+{ "label": string, "children": MindMapNode[], "metadata": { "category": string, "tags": string[], "notes": string } }
 
 Zasady:
 1. Najpierw sklasyfikuj temat jako jeden z topicType: ${TOPIC_TYPES.join(", ")}. Jeśli nic nie pasuje, użyj "generic". Zapisz go w metadata.topicType węzła głównego.
@@ -57,7 +57,11 @@ ${templatesBlock}
 4. Etykiety to frazy rzeczownikowe, maks. 4 słowa. Nigdy zdania ani pytania.
 5. Poziom 1: 4–7 gałęzi. Poziom 2: 2–5 dzieci. Poziom 3 tylko dla wyliczalnych list. Maks. 6 dzieci na węzeł, maks. głębokość 3.
 6. Nadaj metadata.category każdej gałęzi z listy: ${CATEGORIES.join(", ")}. Dla tematów niemedycznych używaj "other".
-7. metadata.tags: 1–3 małe litery, slug.`
+7. metadata.tags: 1–3 małe litery, slug.
+8. metadata.notes — zwięzły opis w języku tematu, prostym i przystępnym językiem, NIE powtarzający etykiety:
+   - węzły-liście (najgłębszy poziom gałęzi): 2–3 zdania z najważniejszymi informacjami o pojęciu (to jest sedno nauki).
+   - gałęzie pośrednie i węzeł główny: 1 zdanie orientacyjne, co obejmuje ta część.
+   Każdy węzeł MUSI mieć notes. Maks. ok. 400 znaków.`
 }
 
 export function buildUserPrompt(topic: string): string {

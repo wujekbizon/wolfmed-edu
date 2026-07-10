@@ -23,10 +23,11 @@ import type { MindMapNode as TreeNode, MasteryLevel } from "@/lib/mindmap/types"
 import { radialLayout } from "@/lib/mindmap/radialLayout"
 import { treeLayout } from "@/lib/mindmap/treeLayout"
 import { treeToFlow, type MindMapNodeData } from "@/lib/mindmap/treeToFlow"
-import { toggleNodeCollapse, setNodeMastery, findNode } from "@/lib/mindmap/treeOps"
+import { toggleNodeCollapse, setNodeMastery, findNode, getNodePath } from "@/lib/mindmap/treeOps"
 import { ROOT_COLOR, CATEGORY_COLORS } from "@/lib/mindmap/design"
 import MindMapNode from "./MindMapNode"
 import MasteryToolbar from "./MasteryToolbar"
+import NodeDetailCard from "./NodeDetailCard"
 
 type LayoutMode = "radial" | "tree"
 const CANVAS_BG = "#18181b"
@@ -143,10 +144,10 @@ function Canvas({ root, onRootChange, onExplain }: MindMapViewProps) {
 
   const selectedNode = selectedId ? findNode(root, selectedId) : null
   const selectedIsLeaf = Boolean(selectedNode && selectedNode.children.length === 0)
-  const selectedMastery = selectedNode?.metadata?.masteryLevel
+  const selectedPath = selectedId ? getNodePath(root, selectedId) ?? [] : []
 
   return (
-    <div ref={wrapperRef} className="h-full w-full">
+    <div ref={wrapperRef} className="relative h-full w-full">
     <ReactFlow
       colorMode="dark"
       nodes={nodes}
@@ -166,11 +167,11 @@ function Canvas({ root, onRootChange, onExplain }: MindMapViewProps) {
       proOptions={{ hideAttribution: false }}
       className="bg-zinc-900!"
     >
-      {selectedId && (
+      {selectedId && !selectedIsLeaf && (
         <NodeToolbar nodeId={selectedId} isVisible position={Position.Top} offset={14}>
           <MasteryToolbar
-            current={selectedMastery}
-            showMastery={selectedIsLeaf}
+            current={undefined}
+            showMastery={false}
             onSelect={handleMastery}
             onExplain={handleExplain}
           />
@@ -240,6 +241,16 @@ function Canvas({ root, onRootChange, onExplain }: MindMapViewProps) {
         </div>
       </Panel>
     </ReactFlow>
+
+    {selectedNode && selectedIsLeaf && (
+      <NodeDetailCard
+        node={selectedNode}
+        path={selectedPath}
+        onClose={() => setSelectedId(null)}
+        onSetMastery={handleMastery}
+        onExplain={handleExplain}
+      />
+    )}
     </div>
   )
 }
