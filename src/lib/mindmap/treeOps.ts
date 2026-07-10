@@ -44,6 +44,16 @@ export function collapseBelowDepth(root: MindMapNode, depth: number): MindMapNod
   return walk(root)
 }
 
+/** Labels from the root down to the target node (inclusive), or null if absent. */
+export function getNodePath(root: MindMapNode, nodeId: string): string[] | null {
+  if (root.id === nodeId) return [root.label]
+  for (const child of root.children) {
+    const sub = getNodePath(child, nodeId)
+    if (sub) return [root.label, ...sub]
+  }
+  return null
+}
+
 /** Depth-first search for a node by id. */
 export function findNode(root: MindMapNode, nodeId: string): MindMapNode | null {
   if (root.id === nodeId) return root

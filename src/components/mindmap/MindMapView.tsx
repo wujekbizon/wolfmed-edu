@@ -49,10 +49,11 @@ const LEGEND: { label: string; color: string; dashed?: boolean }[] = [
 interface MindMapViewProps {
   root: TreeNode
   onRootChange: (next: TreeNode) => void
+  onExplain: (nodeId: string) => void
 }
 
-function Canvas({ root, onRootChange }: MindMapViewProps) {
-  const [selectedLeafId, setSelectedLeafId] = useState<string | null>(null)
+function Canvas({ root, onRootChange, onExplain }: MindMapViewProps) {
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const [layout, setLayout] = useState<LayoutMode>("radial")
   const wrapperRef = useRef<HTMLDivElement>(null)
   const { fitView } = useReactFlow()
@@ -68,7 +69,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       ...n,
       sourcePosition: isTree ? Position.Right : Position.Bottom,
       targetPosition: isTree ? Position.Left : Position.Top,
-      ...(n.id === selectedLeafId ? { selected: true } : {}),
+      ...(n.id === selectedId ? { selected: true } : {}),
     })) as unknown as Node<MindMapNodeData>[]
     const edges = graph.edges.map((e) => ({
       ...e,
@@ -76,7 +77,7 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       style: EDGE_STYLE,
     })) as unknown as Edge[]
     return { nodes, edges }
-  }, [root, selectedLeafId, layout])
+  }, [root, selectedId, layout])
 
   // Reframe when the layout mode changes (an explicit action where reframing is
   // expected) — but not on collapse/expand.
@@ -115,31 +116,34 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
   // "fit" button re-frames on demand.
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node<MindMapNodeData>) => {
-      // Branches (or collapsed nodes) toggle; a genuine leaf selects for mastery.
+      // Every node selects (opens the toolbar); branches and collapsed nodes
+      // additionally toggle their subtree.
+      setSelectedId(node.id)
       const isBranch = !node.data.isLeaf || node.data.collapsed
-      if (isBranch) {
-        setSelectedLeafId(null)
-        onRootChange(toggleNodeCollapse(root, node.id))
-      } else {
-        setSelectedLeafId(node.id)
-      }
+      if (isBranch) onRootChange(toggleNodeCollapse(root, node.id))
     },
     [root, onRootChange]
   )
 
-  const onPaneClick = useCallback(() => setSelectedLeafId(null), [])
+  const onPaneClick = useCallback(() => setSelectedId(null), [])
 
   const handleMastery = useCallback(
     (level: MasteryLevel) => {
-      if (!selectedLeafId) return
-      onRootChange(setNodeMastery(root, selectedLeafId, level))
+      if (!selectedId) return
+      onRootChange(setNodeMastery(root, selectedId, level))
     },
-    [root, selectedLeafId, onRootChange]
+    [root, selectedId, onRootChange]
   )
 
-  const selectedMastery = selectedLeafId
-    ? findNode(root, selectedLeafId)?.metadata?.masteryLevel
-    : undefined
+  const handleExplain = useCallback(() => {
+    if (!selectedId) return
+    onExplain(selectedId)
+    setSelectedId(null)
+  }, [selectedId, onExplain])
+
+  const selectedNode = selectedId ? findNode(root, selectedId) : null
+  const selectedIsLeaf = Boolean(selectedNode && selectedNode.children.length === 0)
+  const selectedMastery = selectedNode?.metadata?.masteryLevel
 
   return (
     <div ref={wrapperRef} className="h-full w-full">
@@ -162,9 +166,14 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       proOptions={{ hideAttribution: false }}
       className="bg-zinc-900!"
     >
-      {selectedLeafId && (
-        <NodeToolbar nodeId={selectedLeafId} isVisible position={Position.Top} offset={14}>
-          <MasteryToolbar current={selectedMastery} onSelect={handleMastery} />
+      {selectedId && (
+        <NodeToolbar nodeId={selectedId} isVisible position={Position.Top} offset={14}>
+          <MasteryToolbar
+            current={selectedMastery}
+            showMastery={selectedIsLeaf}
+            onSelect={handleMastery}
+            onExplain={handleExplain}
+          />
         </NodeToolbar>
       )}
 

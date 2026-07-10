@@ -3,7 +3,7 @@ import assert from "node:assert/strict"
 import { radialLayout, MIN_NODE_SEPARATION } from "../radialLayout"
 import { treeLayout } from "../treeLayout"
 import { treeToFlow } from "../treeToFlow"
-import { collapseBelowDepth } from "../treeOps"
+import { collapseBelowDepth, getNodePath } from "../treeOps"
 import type { MindMapNode } from "../types"
 
 function node(id: string, depth: number, children: MindMapNode[] = []): MindMapNode {
@@ -108,6 +108,13 @@ test("collapseBelowDepth collapses branches so only the first ring renders", () 
   const branch = nodes.find((n) => n.id === "b0")!
   assert.equal(branch.data.collapsed, true)
   assert.equal(branch.data.hiddenCount, 9)
+})
+
+test("getNodePath returns root-to-node labels", () => {
+  const tree = buildTree()
+  assert.deepEqual(getNodePath(tree, "b2c1l0"), ["root", "b2", "b2c1", "b2c1l0"])
+  assert.deepEqual(getNodePath(tree, "root"), ["root"])
+  assert.equal(getNodePath(tree, "missing"), null)
 })
 
 test("treeToFlow assigns root, branch and inherited colors by depth", () => {
