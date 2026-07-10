@@ -1,7 +1,7 @@
 "use client"
 
 import "@xyflow/react/dist/style.css"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -10,7 +10,6 @@ import {
   Controls,
   MiniMap,
   Panel,
-  useReactFlow,
   type Node,
   type Edge,
 } from "@xyflow/react"
@@ -54,11 +53,9 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
     }
   }, [root])
 
-  const { fitView } = useReactFlow()
-  useEffect(() => {
-    fitView({ duration: 300, ...FIT_VIEW_OPTIONS })
-  }, [nodes.length, fitView])
-
+  // Fit only on initial mount (the `fitView` prop). Collapsing/expanding must NOT
+  // reset the viewport — the user keeps their current zoom/pan; the Controls
+  // "fit" button re-frames on demand.
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node<MindMapNodeData>) => {
       // A genuine leaf (not collapsed, no children) has nothing to toggle.

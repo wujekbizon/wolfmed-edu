@@ -6,7 +6,13 @@ import { checkPremiumAccessAction } from "@/actions/course-actions"
 import { toFormState, fromErrorToFormState } from "@/helpers/toFormState"
 import { GenerateMindMapSchema, MindMapNodeSchema } from "@/server/schema"
 import { generateTree } from "@/lib/mindmap/generateTree"
+import { collapseBelowDepth } from "@/lib/mindmap/treeOps"
 import type { FormState } from "@/types/actionTypes"
+import type { MindMapNode } from "@/lib/mindmap/types"
+
+// A fresh map opens showing only the root and its first ring; deeper levels
+// start collapsed so the user expands progressively.
+const INITIAL_EXPANDED_DEPTH = 1
 
 /**
  * Generates a mind-map tree from a free-text topic and returns it in
@@ -53,7 +59,7 @@ export async function generateMindMapAction(formState: FormState, formData: Form
     const content = JSON.stringify({
       title: parsed.data.topic,
       topicType,
-      root: validated.data,
+      root: collapseBelowDepth(validated.data as MindMapNode, INITIAL_EXPANDED_DEPTH),
     })
 
     return {

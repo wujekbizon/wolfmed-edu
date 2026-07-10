@@ -2,6 +2,7 @@ import test from "node:test"
 import assert from "node:assert/strict"
 import { radialLayout, MIN_NODE_SEPARATION } from "../radialLayout"
 import { treeToFlow } from "../treeToFlow"
+import { collapseBelowDepth } from "../treeOps"
 import type { MindMapNode } from "../types"
 
 function node(id: string, depth: number, children: MindMapNode[] = []): MindMapNode {
@@ -73,6 +74,21 @@ test("treeToFlow prunes collapsed subtree and carries hidden count", () => {
   assert.equal(collapsed.data.hiddenCount, 9)
   // No edge should point into the hidden subtree.
   assert.ok(!edges.some((e) => e.source === "b1"))
+})
+
+test("collapseBelowDepth collapses branches so only the first ring renders", () => {
+  const collapsed = collapseBelowDepth(buildTree(), 1)
+  const positions = radialLayout(collapsed)
+  // root + 6 depth-1 branches visible; everything deeper hidden.
+  assert.equal(positions.size, 7)
+  assert.ok(positions.has("root"))
+  assert.ok(positions.has("b0"))
+  assert.ok(!positions.has("b0c0"))
+  // each visible branch is marked collapsed with a hidden count.
+  const { nodes } = treeToFlow(collapsed, positions)
+  const branch = nodes.find((n) => n.id === "b0")!
+  assert.equal(branch.data.collapsed, true)
+  assert.equal(branch.data.hiddenCount, 9)
 })
 
 test("treeToFlow assigns root, branch and inherited colors by depth", () => {

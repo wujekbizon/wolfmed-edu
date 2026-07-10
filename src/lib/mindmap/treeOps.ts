@@ -28,6 +28,22 @@ export function toggleNodeCollapse(root: MindMapNode, nodeId: string): MindMapNo
   return walk(root)
 }
 
+/**
+ * Returns a new tree with every node at or below `depth` (that has children)
+ * collapsed — a progressive-disclosure default so a fresh map opens showing only
+ * the first ring, and each expand reveals one more level. Pure.
+ */
+export function collapseBelowDepth(root: MindMapNode, depth: number): MindMapNode {
+  function walk(node: MindMapNode): MindMapNode {
+    const children = node.children.map(walk)
+    if (node.depth >= depth && node.children.length > 0) {
+      return { ...node, collapsed: true, children }
+    }
+    return { ...node, children }
+  }
+  return walk(root)
+}
+
 /** Depth-first search for a node by id. */
 export function findNode(root: MindMapNode, nodeId: string): MindMapNode | null {
   if (root.id === nodeId) return root
