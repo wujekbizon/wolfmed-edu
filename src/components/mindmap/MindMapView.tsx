@@ -1,7 +1,7 @@
 "use client"
 
 import "@xyflow/react/dist/style.css"
-import { useCallback, useMemo } from "react"
+import { useCallback, useMemo, useState } from "react"
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -10,15 +10,18 @@ import {
   Controls,
   MiniMap,
   Panel,
+  NodeToolbar,
+  Position,
   type Node,
   type Edge,
 } from "@xyflow/react"
-import type { MindMapNode as TreeNode } from "@/lib/mindmap/types"
+import type { MindMapNode as TreeNode, MasteryLevel } from "@/lib/mindmap/types"
 import { radialLayout } from "@/lib/mindmap/radialLayout"
 import { treeToFlow, type MindMapNodeData } from "@/lib/mindmap/treeToFlow"
-import { toggleNodeCollapse } from "@/lib/mindmap/treeOps"
+import { toggleNodeCollapse, setNodeMastery, findNode } from "@/lib/mindmap/treeOps"
 import { ROOT_COLOR, CATEGORY_COLORS } from "@/lib/mindmap/design"
 import MindMapNode from "./MindMapNode"
+import MasteryToolbar from "./MasteryToolbar"
 
 const nodeTypes = { mindmap: MindMapNode }
 
@@ -44,26 +47,47 @@ interface MindMapViewProps {
 }
 
 function Canvas({ root, onRootChange }: MindMapViewProps) {
+  const [selectedLeafId, setSelectedLeafId] = useState<string | null>(null)
+
   const { nodes, edges } = useMemo(() => {
     const positions = radialLayout(root)
     const graph = treeToFlow(root, positions)
-    return {
-      nodes: graph.nodes as unknown as Node<MindMapNodeData>[],
-      edges: graph.edges as unknown as Edge[],
-    }
-  }, [root])
+    const nodes = graph.nodes.map((n) =>
+      n.id === selectedLeafId ? { ...n, selected: true } : n
+    ) as unknown as Node<MindMapNodeData>[]
+    return { nodes, edges: graph.edges as unknown as Edge[] }
+  }, [root, selectedLeafId])
 
   // Fit only on initial mount (the `fitView` prop). Collapsing/expanding must NOT
   // reset the viewport — the user keeps their current zoom/pan; the Controls
   // "fit" button re-frames on demand.
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node<MindMapNodeData>) => {
-      // A genuine leaf (not collapsed, no children) has nothing to toggle.
-      if (node.data.isLeaf && !node.data.collapsed) return
-      onRootChange(toggleNodeCollapse(root, node.id))
+      // Branches (or collapsed nodes) toggle; a genuine leaf selects for mastery.
+      const isBranch = !node.data.isLeaf || node.data.collapsed
+      if (isBranch) {
+        setSelectedLeafId(null)
+        onRootChange(toggleNodeCollapse(root, node.id))
+      } else {
+        setSelectedLeafId(node.id)
+      }
     },
     [root, onRootChange]
   )
+
+  const onPaneClick = useCallback(() => setSelectedLeafId(null), [])
+
+  const handleMastery = useCallback(
+    (level: MasteryLevel) => {
+      if (!selectedLeafId) return
+      onRootChange(setNodeMastery(root, selectedLeafId, level))
+    },
+    [root, selectedLeafId, onRootChange]
+  )
+
+  const selectedMastery = selectedLeafId
+    ? findNode(root, selectedLeafId)?.metadata?.masteryLevel
+    : undefined
 
   return (
     <ReactFlow
@@ -82,9 +106,16 @@ function Canvas({ root, onRootChange }: MindMapViewProps) {
       panOnScroll
       zoomOnPinch
       onNodeClick={onNodeClick}
+      onPaneClick={onPaneClick}
       proOptions={{ hideAttribution: false }}
       className="!bg-zinc-900"
     >
+      {selectedLeafId && (
+        <NodeToolbar nodeId={selectedLeafId} isVisible position={Position.Top} offset={14}>
+          <MasteryToolbar current={selectedMastery} onSelect={handleMastery} />
+        </NodeToolbar>
+      )}
+
       <Background variant={BackgroundVariant.Dots} gap={22} size={1} color="#3f3f46" />
       <Controls showInteractive={false} />
       <MiniMap
