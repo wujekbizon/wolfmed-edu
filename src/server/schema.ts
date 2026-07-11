@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
+import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/lib/mindmap/types";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -707,3 +708,43 @@ export const TestRagQuerySchema = z.object({
 export type RagQueryInput = z.infer<typeof RagQuerySchema>;
 export type CreateStoreInput = z.infer<typeof CreateStoreSchema>;
 export type TestRagQueryInput = z.infer<typeof TestRagQuerySchema>;
+
+// Mind maps
+const CategorySchema = z.enum(CATEGORIES as unknown as [string, ...string[]]);
+const TopicTypeSchema = z.enum(TOPIC_TYPES as unknown as [string, ...string[]]);
+const MasteryLevelSchema = z.enum(["unseen", "learning", "mastered"]);
+
+const MindMapNodeMetadataSchema = z
+  .object({
+    notes: z.string().max(2000),
+    tags: z.array(z.string().min(1).max(40)).max(3),
+    quizCount: z.number().int().min(0),
+    masteryLevel: MasteryLevelSchema,
+    examTopicId: z.string(),
+    category: CategorySchema,
+    topicType: TopicTypeSchema,
+  })
+  .partial();
+
+export const MindMapNodeSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1).max(80),
+  parentId: z.string().nullable(),
+  depth: z.number().int().min(0).max(MAX_DEPTH),
+  collapsed: z.boolean().optional(),
+  get children() {
+    return z.array(MindMapNodeSchema).max(MAX_CHILDREN);
+  },
+  metadata: MindMapNodeMetadataSchema.optional(),
+});
+
+export const GenerateMindMapSchema = z.object({
+  topic: z
+    .string()
+    .trim()
+    .min(2, "Temat musi mieć co najmniej 2 znaki.")
+    .max(120, "Temat nie może być dłuższy niż 120 znaków."),
+  subjectId: z.string().trim().optional(),
+});
+
+export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;

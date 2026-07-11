@@ -50,7 +50,9 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'lecture:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 3 },
-  'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }
+  'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
+
+  'mindmap:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 10 }
 }
 
 export interface RateLimitResult {

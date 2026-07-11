@@ -9,7 +9,8 @@
     "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test:mindmap": "tsx --test src/lib/mindmap/__tests__/*.test.ts"
   },
   "dependencies": {
     "@clerk/localizations": "^4.5.8",
@@ -40,13 +41,16 @@
     "@uploadthing/react": "^7.3.3",
     "@upstash/redis": "^1.37.0",
     "@vercel/postgres": "^0.10.0",
+    "@xyflow/react": "^12.11.2",
     "adm-zip": "^0.5.17",
     "babel-plugin-react-compiler": "1.0.0",
+    "d3-hierarchy": "^3.1.2",
     "drizzle-orm": "^0.45.2",
     "embla-carousel-react": "^8.6.0",
     "fast-xml-parser": "^5.9.2",
     "framer-motion": "^12.38.0",
     "google-auth-library": "^10.9.0",
+    "html-to-image": "^1.11.13",
     "import-in-the-middle": "3.0.0",
     "lexical": "^0.42.0",
     "lucide-react": "^1.7.0",
@@ -76,6 +80,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@types/adm-zip": "^0.5.8",
+    "@types/d3-hierarchy": "^3.1.7",
     "@types/node": "^25.5.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
