@@ -5,6 +5,73 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.0.6] - 2026-07-11
+
+> Consolidates the practical-exam and learning-planner lines of work. Earlier
+> 4.x/5.0.x releases were tagged without changelog entries; this entry documents
+> the notable changes shipped on those two branches.
+
+### Added
+
+**Learning Planner ("Plan Nauki")**
+- Goal-based learning planner at `/panel/plan`: a three-step wizard (goal + due
+  date, minutes-per-day + study days, concept scope from the course curriculum)
+  that produces a single active, tracked plan per user.
+- Schema: `learning_plans` (with `focusCategoryKey`), `learning_plan_concepts`,
+  and `study_logs` tables, plus Zod schemas, rate limits, and server actions
+  (create/update/archive/complete plan; add/remove/toggle concept; log study).
+- Progress engine deriving pace (`ahead` / `on_track` / `behind`), study streak,
+  and a daily "Dziś w planie" suggestion from real activity — completed tests,
+  procedure challenges, notes, and manual study logs — attributed to concepts by
+  category. Progress is derived at read-time, never stored.
+- Course-aware panel countdown (`PlanCountdown`): counts down to the user's own
+  plan due date, falling back to the state-exam countdown for opiekun-medyczny or
+  a create-plan CTA for other courses.
+- "Zaplanuj naukę" deep link from course category pages into the pre-focused wizard.
+- Progress integration: a "Plan" tab in `UserAnalytics`, a study-minutes effort
+  line on the progress chart, and "Dodaj do planu" on weak categories.
+
+**Mind Maps**
+- AI-powered Mind Map learning cell: an interactive concept map (React Flow) with
+  radial/tree layouts, per-node mastery tracking, "Wyjaśnij (AI)" explanations,
+  and PNG export.
+
+**Practical Exams (MED.14)**
+- Practical exam module under `/panel/egzaminy`: seven real MED.14 arkusze
+  (Styczeń/Czerwiec 2023–2025), graded documentation cards, drag-and-drop
+  procedure ordering, and multi-select answer fields.
+- AI practical-exam generation (Premium-gated) with a generation-progress modal
+  and an exam-runner skeleton.
+- Course-aware "Testy i egzaminy" hub with hero imagery, per-course stats, and
+  content previews.
+
+**Tooling**
+- `pnpm test` runner using Node's built-in test runner via `tsx`; layout-algorithm
+  tests live in a dedicated root `tests/` folder.
+
+### Changed
+- Migrated cell/AI generation to Google Vertex AI using Application Default
+  Credentials; added the `@google-cloud/vertexai` dependency.
+- Procedure steps are now clickable to mark as learned, with a clearer step-row
+  hover hierarchy.
+- Mobile-first redesign of the in-exam runner (pinned header/timer/progress,
+  viewport-bottom submit bar) and the practical-exam brief page.
+- Refactored the planner and mindmap features into small, single-purpose
+  components (≤90 lines) behind hooks (`usePlanWizard`, `useMindMapCanvas`);
+  extracted shared logic into `helpers/`, `constants/`, and `types/` per project
+  convention (including moving mindmap types out of `lib/`).
+- Planner forms now follow the app form convention (`useActionState` +
+  `Input`/`Label`/`FieldError`/`SubmitButton`) and rely solely on server-side Zod
+  validation with inline field errors — redundant native HTML5 validation removed.
+
+### Fixed
+- Plan "Rozwiąż test" action linked to the session-only test runner (showing "no
+  session found") — now deep-links to the test list scrolled to the relevant
+  category, keeping session creation in `StartTestForm`.
+- Study-log concept `<select>` overflowing its card on long concept labels.
+- Wizard plan name not following the selected subject until manually edited.
+- Crooked badge digits and various in-exam runner layout/scroll issues.
+
 ## [4.1.0] - 2025-01-09
 
 ### Added
