@@ -2,7 +2,7 @@ import { Suspense } from 'react'
 import { getCurrentUser } from '@/server/user'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
 import UserOnboard from '@/components/UserOnboard'
-import ExamCountdown from '@/components/ExamCountdown'
+import PlanCountdown from '@/components/PlanCountdown'
 import ExamCountdownSkeleton from '@/components/skeletons/ExamCountdownSkeleton'
 import StatsRow from '@/components/StatsRow'
 import CourseAccessWidget from '@/components/CourseAccessWidget'
@@ -35,7 +35,7 @@ export default async function DynamicBoard() {
             </Suspense>
             <OnboardingChecklist />
             <Suspense fallback={<ExamCountdownSkeleton />}>
-              <ExamCountdown />
+              <PlanCountdown />
             </Suspense>
           </div>
         </aside>

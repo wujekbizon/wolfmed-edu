@@ -748,3 +748,108 @@ export const GenerateMindMapSchema = z.object({
 });
 
 export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;
+
+const PlanConceptInputSchema = z.object({
+  categoryKey: z.string().max(100).trim().optional().nullable(),
+  label: z
+    .string()
+    .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
+    .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
+    .trim(),
+  source: z.enum(["category", "custom", "ai"]).default("category"),
+  targetMinutes: z.coerce
+    .number()
+    .int()
+    .min(5, "Minimalny czas na zagadnienie to 5 minut.")
+    .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
+});
+
+export const CreatePlanSchema = z.object({
+  courseSlug: z.string().min(1, "Wybierz kurs.").max(100).trim(),
+  name: z
+    .string()
+    .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
+    .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
+    .trim(),
+  goalType: z.enum(["exam", "custom"], {
+    message: "Wybierz cel planu.",
+  }),
+  dueDate: z.coerce
+    .date({ message: "Podaj poprawną datę." })
+    .refine((date) => date.getTime() > Date.now(), {
+      message: "Termin musi być w przyszłości.",
+    }),
+  minutesPerDay: z.coerce
+    .number()
+    .int()
+    .min(15, "Zaplanuj co najmniej 15 minut dziennie.")
+    .max(480, "Maksymalnie 480 minut (8 godzin) dziennie."),
+  studyDays: z
+    .array(z.number().int().min(1).max(7))
+    .min(1, "Wybierz co najmniej jeden dzień nauki w tygodniu.")
+    .max(7),
+  concepts: z
+    .array(PlanConceptInputSchema)
+    .min(1, "Dodaj co najmniej jedno zagadnienie do planu.")
+    .max(30, "Plan może mieć maksymalnie 30 zagadnień."),
+});
+
+export const UpdatePlanSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+  name: z
+    .string()
+    .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
+    .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
+    .trim(),
+  dueDate: z.coerce
+    .date({ message: "Podaj poprawną datę." })
+    .refine((date) => date.getTime() > Date.now(), {
+      message: "Termin musi być w przyszłości.",
+    }),
+  minutesPerDay: z.coerce
+    .number()
+    .int()
+    .min(15, "Zaplanuj co najmniej 15 minut dziennie.")
+    .max(480, "Maksymalnie 480 minut (8 godzin) dziennie."),
+  studyDays: z
+    .array(z.number().int().min(1).max(7))
+    .min(1, "Wybierz co najmniej jeden dzień nauki w tygodniu.")
+    .max(7),
+});
+
+export const PlanIdSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+});
+
+export const ConceptIdSchema = z.object({
+  conceptId: z.string().min(1, "Brak identyfikatora zagadnienia.").trim(),
+});
+
+export const AddConceptSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+  label: z
+    .string()
+    .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
+    .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
+    .trim(),
+  categoryKey: z.string().max(100).trim().optional().nullable(),
+  targetMinutes: z.coerce
+    .number()
+    .int()
+    .min(5, "Minimalny czas na zagadnienie to 5 minut.")
+    .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
+});
+
+export const LogStudySchema = z.object({
+  minutes: z.coerce
+    .number()
+    .int()
+    .min(1, "Zapisz co najmniej 1 minutę nauki.")
+    .max(600, "Maksymalnie 600 minut na jeden wpis."),
+  note: z
+    .string()
+    .max(500, "Notatka może mieć maksymalnie 500 znaków.")
+    .trim()
+    .optional(),
+  conceptId: z.string().trim().optional().nullable(),
+});

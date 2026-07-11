@@ -28,6 +28,9 @@ import {
   userCustomCategories,
   customersMessages,
   generatedPracticalExams,
+  learningPlans,
+  learningPlanConcepts,
+  studyLogs,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -2064,3 +2067,100 @@ export async function getGeneratedPracticalExamById(
     .limit(1)
   return row ? (row.examJson as PracticalExam) : null
 }
+
+// ===== Learning planner =====
+
+export const getActivePlan = cache(async (userId: string) => {
+  const plan = await db.query.learningPlans.findFirst({
+    where: (model, { eq, and }) =>
+      and(eq(model.userId, userId), eq(model.status, "active")),
+  })
+  return plan ?? null
+})
+
+export const getActivePlanWithConcepts = cache(async (userId: string) => {
+  const plan = await getActivePlan(userId)
+  if (!plan) return null
+
+  const concepts = await db.query.learningPlanConcepts.findMany({
+    where: (model, { eq }) => eq(model.planId, plan.id),
+    orderBy: (model, { asc }) => asc(model.sortOrder),
+  })
+
+  return { ...plan, concepts }
+})
+
+export const getPlanById = cache(async (planId: string) => {
+  const plan = await db.query.learningPlans.findFirst({
+    where: (model, { eq }) => eq(model.id, planId),
+  })
+  return plan ?? null
+})
+
+export const getConceptById = cache(async (conceptId: string) => {
+  const concept = await db.query.learningPlanConcepts.findFirst({
+    where: (model, { eq }) => eq(model.id, conceptId),
+  })
+  return concept ?? null
+})
+
+export const getStudyLogsSince = cache(async (userId: string, since: Date) => {
+  return db
+    .select({
+      studyDate: studyLogs.studyDate,
+      minutes: studyLogs.minutes,
+      conceptId: studyLogs.conceptId,
+    })
+    .from(studyLogs)
+    .where(
+      and(eq(studyLogs.userId, userId), sql`${studyLogs.studyDate} >= ${since}`)
+    )
+})
+
+export const getTestActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        completedAt: completedTestes.completedAt,
+        durationMinutes: testSessions.durationMinutes,
+        category: testSessions.category,
+      })
+      .from(completedTestes)
+      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+      .where(
+        and(
+          eq(completedTestes.userId, userId),
+          sql`${completedTestes.completedAt} >= ${since}`
+        )
+      )
+  }
+)
+
+export const getChallengeActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        completedAt: challengeCompletions.completedAt,
+        timeSpent: challengeCompletions.timeSpent,
+      })
+      .from(challengeCompletions)
+      .where(
+        and(
+          eq(challengeCompletions.userId, userId),
+          sql`${challengeCompletions.completedAt} >= ${since}`
+        )
+      )
+  }
+)
+
+export const getNoteActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        createdAt: notes.createdAt,
+        category: notes.category,
+      })
+      .from(notes)
+      .where(and(eq(notes.userId, userId), sql`${notes.createdAt} >= ${since}`))
+  }
+)
