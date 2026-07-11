@@ -10,7 +10,7 @@
     "db:studio": "drizzle-kit studio",
     "start": "next start",
     "lint": "eslint .",
-    "test:mindmap": "tsx --test src/lib/mindmap/__tests__/*.test.ts"
+    "test": "tsx --test \"tests/**/*.test.ts\""
   },
   "dependencies": {
     "@clerk/localizations": "^4.5.8",
