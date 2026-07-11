@@ -1,5 +1,5 @@
 import type { ComponentType } from "react"
-import type { Category } from "@/lib/mindmap/types"
+import type { Category } from "@/types/mindmapTypes"
 import {
   Heart,
   Activity,
@@ -36,3 +36,4 @@ export function getCategoryIcon(category?: Category): ComponentType<MindMapIconP
 
 export type { MindMapIconProps }
 export { default as IconBase } from "./IconBase"
+export { ExplainIcon, CloseIcon, DownloadIcon } from "./uiIcons"

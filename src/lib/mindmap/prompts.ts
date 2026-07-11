@@ -1,4 +1,4 @@
-import { CATEGORIES, TOPIC_TYPES, type TopicType } from "./types"
+import { CATEGORIES, TOPIC_TYPES, type TopicType } from "@/types/mindmapTypes"
 
 /**
  * Canonical branch structures per topic type. Guidance, not constraints: the

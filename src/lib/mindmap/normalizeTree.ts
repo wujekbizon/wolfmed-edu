@@ -1,4 +1,4 @@
-import { MAX_CHILDREN, MAX_DEPTH, type MindMapNode } from "./types"
+import { MAX_CHILDREN, MAX_DEPTH, type MindMapNode } from "@/types/mindmapTypes"
 
 // Combining diacritical marks (U+0300–U+036F), stripped after NFD so Polish
 // letters like ł/ó/ż collapse to their ASCII base for slug ids.

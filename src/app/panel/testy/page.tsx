@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { Metadata } from 'next'
 import TestsCategoriesList from '@/components/TestsCategoriesList'
 import TestsCategoriesListSkeleton from '@/components/skeletons/TestsCategoriesListSkeleton'
+import CategoryDeepLinkScroller from '@/components/CategoryDeepLinkScroller'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { getAccessibleCategories } from '@/helpers/populateCategories'
 import { redirect } from 'next/navigation'
@@ -50,6 +51,9 @@ async function TestsCategories() {
 export default function TestsPage() {
   return (
     <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
+      <Suspense fallback={null}>
+        <CategoryDeepLinkScroller />
+      </Suspense>
       <Suspense fallback={<TestsCategoriesListSkeleton />}>
         <TestsCategories />
       </Suspense>

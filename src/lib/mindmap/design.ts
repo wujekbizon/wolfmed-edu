@@ -1,4 +1,4 @@
-import type { Category, MasteryLevel } from "./types"
+import type { Category, MasteryLevel } from "@/types/mindmapTypes"
 
 // One color per main topic area. The five anchors (anatomy/pathology/treatment/
 // physiology/diagnostics) are taken directly from the mockup; the remaining five
@@ -29,6 +29,14 @@ export const MASTERY_COLORS: Record<MasteryLevel, string> = {
   learning: "#f59e0b", // amber
   mastered: "#22c55e", // green
 }
+
+// Selectable mastery levels with their Polish labels — shared by the leaf detail
+// card and the node toolbar so the wording stays in one place.
+export const MASTERY_OPTIONS: { level: MasteryLevel; label: string }[] = [
+  { level: "unseen", label: "Nie znam" },
+  { level: "learning", label: "Uczę się" },
+  { level: "mastered", label: "Umiem" },
+]
 
 export function getCategoryColor(category?: Category): string {
   return category ? CATEGORY_COLORS[category] : CATEGORY_COLORS.other

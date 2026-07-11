@@ -1,4 +1,4 @@
-import type { Category, MasteryLevel, MindMapNode, TopicType } from "./types"
+import type { Category, MasteryLevel, MindMapNode, TopicType } from "@/types/mindmapTypes"
 import type { LayoutPosition } from "./radialLayout"
 import { ROOT_COLOR, getCategoryColor, getDepthSize, lightenColor } from "./design"
 

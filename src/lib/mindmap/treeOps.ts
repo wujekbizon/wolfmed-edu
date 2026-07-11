@@ -1,4 +1,4 @@
-import type { MasteryLevel, MindMapNode } from "./types"
+import type { MasteryLevel, MindMapNode } from "@/types/mindmapTypes"
 
 /** Returns a new tree with the target node's mastery level set. Pure. */
 export function setNodeMastery(

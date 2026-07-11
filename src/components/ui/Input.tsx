@@ -8,10 +8,14 @@ interface Input {
   id?: string | undefined
   name?: string | undefined
   required?: boolean | undefined
+  disabled?: boolean | undefined
   autoComplete?: string | undefined
   min?: number | undefined
   max?: number | undefined
   step?: number | string | undefined
+  minLength?: number | undefined
+  maxLength?: number | undefined
+  ariaLabel?: string | undefined
 }
 
 export default function Input({
@@ -23,11 +27,15 @@ export default function Input({
   type,
   name,
   required,
+  disabled,
   id,
   autoComplete,
   min,
   max,
-  step
+  step,
+  minLength,
+  maxLength,
+  ariaLabel
 }: Input) {
   return (
     <input
@@ -40,10 +48,14 @@ export default function Input({
       onChange={onChangeHandler}
       name={name}
       required={required}
+      disabled={disabled}
       autoComplete={autoComplete}
       min={min}
       max={max}
       step={step}
+      minLength={minLength}
+      maxLength={maxLength}
+      aria-label={ariaLabel}
     />
   )
 }

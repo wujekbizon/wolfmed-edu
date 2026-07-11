@@ -2,6 +2,7 @@ import CourseLibraryIcon from '@/components/icons/CoursesLibraryIcon'
 import DashboardIcon from '@/components/icons/DashboardIcon'
 import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
+import PlannerIcon from '@/components/icons/PlannerIcon'
 import ProceduresIcon from '@/components/icons/ProceduresIcon'
 import ProgressIcon from '@/components/icons/ProgressIcon'
 import UserProfileIcon from '@/components/icons/UserProfileIcon'
@@ -32,6 +33,11 @@ export const sideMenuNavigationLinks = [
     url: '/panel/nauka',
     label: 'Centrum Nauki',
     icon: <LearnIcon width={26} height={26} />,
+  },
+  {
+    url: '/panel/plan',
+    label: 'Plan Nauki',
+    icon: <PlannerIcon width={26} height={26} />,
   },
   {
     url: '/panel/procedury',

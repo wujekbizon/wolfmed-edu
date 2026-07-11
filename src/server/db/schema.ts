@@ -670,3 +670,104 @@ export const generatedPracticalExams = createTable(
 
 export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
 export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
+
+// Learning planner
+export const learningPlans = createTable(
+  "learning_plans",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    courseSlug: varchar("courseSlug", { length: 100 }).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    goalType: varchar("goalType", { length: 30 }).notNull().default("custom"),
+    focusCategoryKey: varchar("focusCategoryKey", { length: 100 }),
+    dueDate: timestamp("dueDate").notNull(),
+    minutesPerDay: integer("minutesPerDay").notNull(),
+    studyDays: jsonb("studyDays").$type<number[]>().notNull(),
+    status: varchar("status", { length: 20 }).notNull().default("active"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("learning_plans_user_id_idx").on(table.userId),
+    index("learning_plans_user_status_idx").on(table.userId, table.status),
+  ]
+)
+
+export const learningPlanConcepts = createTable(
+  "learning_plan_concepts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    planId: uuid("planId")
+      .notNull()
+      .references(() => learningPlans.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: 256 }).notNull(),
+    categoryKey: varchar("categoryKey", { length: 100 }),
+    label: varchar("label", { length: 255 }).notNull(),
+    source: varchar("source", { length: 20 }).notNull().default("category"),
+    targetMinutes: integer("targetMinutes").notNull().default(60),
+    sortOrder: integer("sortOrder").notNull().default(0),
+    completedAt: timestamp("completedAt"),
+  },
+  (table) => [
+    index("learning_plan_concepts_plan_id_idx").on(table.planId),
+    index("learning_plan_concepts_user_id_idx").on(table.userId),
+  ]
+)
+
+export const studyLogs = createTable(
+  "study_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    planId: uuid("planId").references(() => learningPlans.id, {
+      onDelete: "cascade",
+    }),
+    conceptId: uuid("conceptId").references(() => learningPlanConcepts.id, {
+      onDelete: "set null",
+    }),
+    studyDate: timestamp("studyDate").defaultNow().notNull(),
+    minutes: integer("minutes").notNull(),
+    note: varchar("note", { length: 500 }),
+    source: varchar("source", { length: 20 }).notNull().default("manual"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("study_logs_user_id_idx").on(table.userId),
+    index("study_logs_user_date_idx").on(table.userId, table.studyDate),
+    index("study_logs_plan_id_idx").on(table.planId),
+  ]
+)
+
+export const learningPlansRelations = relations(learningPlans, ({ many }) => ({
+  concepts: many(learningPlanConcepts),
+  studyLogs: many(studyLogs),
+}))
+
+export const learningPlanConceptsRelations = relations(
+  learningPlanConcepts,
+  ({ one }) => ({
+    plan: one(learningPlans, {
+      fields: [learningPlanConcepts.planId],
+      references: [learningPlans.id],
+    }),
+  })
+)
+
+export const studyLogsRelations = relations(studyLogs, ({ one }) => ({
+  plan: one(learningPlans, {
+    fields: [studyLogs.planId],
+    references: [learningPlans.id],
+  }),
+}))
+
+export type LearningPlanRow = typeof learningPlans.$inferSelect
+export type NewLearningPlanRow = typeof learningPlans.$inferInsert
+export type LearningPlanConceptRow = typeof learningPlanConcepts.$inferSelect
+export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
+export type StudyLogRow = typeof studyLogs.$inferSelect
+export type NewStudyLogRow = typeof studyLogs.$inferInsert

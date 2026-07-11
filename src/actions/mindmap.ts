@@ -8,7 +8,7 @@ import { GenerateMindMapSchema, MindMapNodeSchema } from "@/server/schema"
 import { generateTree } from "@/lib/mindmap/generateTree"
 import { collapseBelowDepth } from "@/lib/mindmap/treeOps"
 import type { FormState } from "@/types/actionTypes"
-import type { MindMapNode } from "@/lib/mindmap/types"
+import type { MindMapNode } from "@/types/mindmapTypes"
 
 // A fresh map opens showing only the root and its first ring; deeper levels
 // start collapsed so the user expands progressively.

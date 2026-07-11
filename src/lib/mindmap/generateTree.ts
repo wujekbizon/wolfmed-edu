@@ -3,8 +3,8 @@ import { GoogleGenAI } from "@google/genai"
 import { buildSystemPrompt, buildUserPrompt } from "./prompts"
 import { normalizeTree } from "./normalizeTree"
 import { validateTree } from "./validateTree"
-import type { MindMapNode, TopicType } from "./types"
-import { TOPIC_TYPES } from "./types"
+import type { MindMapNode, TopicType } from "@/types/mindmapTypes"
+import { TOPIC_TYPES } from "@/types/mindmapTypes"
 
 const MODEL = process.env.MINDMAP_MODEL || "gemini-2.5-flash"
 const MAX_ATTEMPTS = 3
