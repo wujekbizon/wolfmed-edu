@@ -13,7 +13,11 @@ export const metadata = {
     'Zaplanuj swoją naukę: ustal cel, czas i zakres, a Wolfmed pomoże Ci go zrealizować.',
 }
 
-export default async function PlanPage() {
+export default async function PlanPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ zakres?: string }>
+}) {
   const user = await currentUser()
   if (!user) redirect('/')
 
@@ -36,6 +40,8 @@ export default async function PlanPage() {
     catalogByCourse[course.slug] = catalogs[index] ?? []
   })
 
+  const { zakres } = await searchParams
+
   return (
     <div className="container mx-auto px-3 xs:px-4 sm:px-8">
       <PlanWizard
@@ -45,6 +51,7 @@ export default async function PlanPage() {
         }))}
         catalogByCourse={catalogByCourse}
         examPresets={getExamDatePresets()}
+        initialFocus={zakres ?? null}
       />
     </div>
   )

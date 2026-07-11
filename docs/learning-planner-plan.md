@@ -218,6 +218,18 @@ step state local):
    Honest capacity check: if Σ targets > capacity to due date, show a warning and offer
    to trim scope or extend the date — **this is the anti-timetable safeguard**.
 
+**Goal-aware Zakres (added after first review):** step 1 additionally captures *which
+subject* the plan is about („Czego dotyczy plan?" chips → `learning_plans.focusCategoryKey`,
+nullable = whole course). With a focus subject chosen, step 3 opens that subject's **full
+curriculum** expanded at the top, grouped exactly like `/panel/kursy/[categoryId]`
+(Podstawy teoretyczne / Praktyczne zastosowanie / Wiedza rozszerzona, incl. `selfStudy`,
+no topic cap) with per-group „Dodaj wszystkie" bulk add; remaining subjects collapse under
+„Inne przedmioty". A „Rozłóż czas równomiernie" action distributes capacity across selected
+concepts. The kursy category page gets a „Zaplanuj naukę tego przedmiotu" banner deep-linking
+to `/panel/plan?zakres=<categoryKey>` (all tiers — unlike the premium per-topic AI buttons),
+and the plan dashboard shows the focus subject as a badge linking back to the curriculum page.
+Concept cap raised 30 → 60 to fit full subject programs.
+
 **Active plan dashboard** (server page + client islands):
 - Header: plan name, countdown to `dueDate`, pace badge (`ahead/on_track/behind`),
   overall progress bar, streak flame.

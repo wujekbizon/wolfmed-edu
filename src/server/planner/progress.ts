@@ -1,5 +1,6 @@
 import 'server-only'
 import { cache } from 'react'
+import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import {
   getActivePlanWithConcepts,
   getCategoryPerformance,
@@ -157,6 +158,14 @@ export const getPlanProgress = cache(
         courseSlug: plan.courseSlug,
         name: plan.name,
         goalType: plan.goalType as PlanGoalType,
+        focusCategoryKey: plan.focusCategoryKey,
+        focusLabel: plan.focusCategoryKey
+          ? CATEGORY_METADATA[plan.focusCategoryKey]?.title ??
+            plan.focusCategoryKey
+              .split('-')
+              .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+              .join(' ')
+          : null,
         dueDate: plan.dueDate.toISOString(),
         minutesPerDay: plan.minutesPerDay,
         studyDays: plan.studyDays,

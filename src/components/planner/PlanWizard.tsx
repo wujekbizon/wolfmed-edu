@@ -18,6 +18,7 @@ interface PlanWizardProps {
   courses: { slug: string; name: string }[]
   catalogByCourse: Record<string, ConceptCatalogEntry[]>
   examPresets: ExamDatePreset[]
+  initialFocus?: string | null
 }
 
 const WEEKDAYS = [
@@ -31,20 +32,43 @@ const WEEKDAYS = [
 ]
 
 const STEP_TITLES = ['Cel', 'Czas', 'Zakres']
+const MAX_CONCEPTS = 60
+const TOPIC_DEFAULT_MINUTES = 30
 
 function toDateInputValue(dateISO: string): string {
   return dateISO.split('T')[0] || ''
+}
+
+function findFocusCourse(
+  catalogByCourse: Record<string, ConceptCatalogEntry[]>,
+  focusKey: string | null | undefined
+): string | null {
+  if (!focusKey) return null
+  for (const [slug, entries] of Object.entries(catalogByCourse)) {
+    if (entries.some((entry) => entry.categoryKey === focusKey)) return slug
+  }
+  return null
 }
 
 export default function PlanWizard({
   courses,
   catalogByCourse,
   examPresets,
+  initialFocus = null,
 }: PlanWizardProps) {
+  const initialFocusCourse = findFocusCourse(catalogByCourse, initialFocus)
+
   const [step, setStep] = useState(0)
-  const [courseSlug, setCourseSlug] = useState(courses[0]?.slug ?? '')
+  const [courseSlug, setCourseSlug] = useState(
+    initialFocusCourse ?? courses[0]?.slug ?? ''
+  )
   const [goalType, setGoalType] = useState<'exam' | 'custom'>(
-    courses[0]?.slug === 'opiekun-medyczny' ? 'exam' : 'custom'
+    (initialFocusCourse ?? courses[0]?.slug) === 'opiekun-medyczny'
+      ? 'exam'
+      : 'custom'
+  )
+  const [focusKey, setFocusKey] = useState<string | null>(
+    initialFocusCourse ? initialFocus : null
   )
   const [name, setName] = useState('')
   const [dueDate, setDueDate] = useState('')
@@ -53,6 +77,7 @@ export default function PlanWizard({
   const [concepts, setConcepts] = useState<SelectedConcept[]>([])
   const [customLabel, setCustomLabel] = useState('')
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null)
+  const [showOtherSubjects, setShowOtherSubjects] = useState(false)
 
   const [formState, action, isPending] = useActionState(
     createPlanAction,
@@ -61,6 +86,12 @@ export default function PlanWizard({
   const noScriptFallback = useToastMessage(formState)
 
   const catalog = catalogByCourse[courseSlug] ?? []
+  const focusEntry = focusKey
+    ? catalog.find((entry) => entry.categoryKey === focusKey) ?? null
+    : null
+  const otherEntries = focusEntry
+    ? catalog.filter((entry) => entry.categoryKey !== focusKey)
+    : catalog
 
   const capacityMinutes = useMemo(() => {
     if (!dueDate || studyDays.length === 0) return 0
@@ -87,8 +118,33 @@ export default function PlanWizard({
     concepts.some((concept) => concept.label === label)
 
   const addConcept = (concept: SelectedConcept) => {
-    if (hasConcept(concept.label) || concepts.length >= 30) return
-    setConcepts((current) => [...current, concept])
+    setConcepts((current) => {
+      if (
+        current.some((c) => c.label === concept.label) ||
+        current.length >= MAX_CONCEPTS
+      ) {
+        return current
+      }
+      return [...current, concept]
+    })
+  }
+
+  const addTopics = (categoryKey: string, topics: string[]) => {
+    setConcepts((current) => {
+      const next = [...current]
+      for (const topic of topics) {
+        if (next.length >= MAX_CONCEPTS) break
+        const label = topic.slice(0, 255)
+        if (next.some((c) => c.label === label)) continue
+        next.push({
+          categoryKey,
+          label,
+          source: 'category',
+          targetMinutes: TOPIC_DEFAULT_MINUTES,
+        })
+      }
+      return next
+    })
   }
 
   const removeConcept = (label: string) => {
@@ -107,11 +163,129 @@ export default function PlanWizard({
     )
   }
 
+  const distributeCapacity = () => {
+    if (capacityMinutes <= 0 || concepts.length === 0) return
+    const share = Math.max(
+      15,
+      Math.floor(capacityMinutes / concepts.length / 5) * 5
+    )
+    setConcepts((current) =>
+      current.map((concept) => ({ ...concept, targetMinutes: share }))
+    )
+  }
+
+  const selectFocus = (key: string | null) => {
+    setFocusKey(key)
+    setShowOtherSubjects(false)
+    if (key) {
+      const entry = catalog.find((e) => e.categoryKey === key)
+      if (entry && name.trim().length === 0) {
+        setName(`${entry.label} — przygotowanie`)
+      }
+    }
+  }
+
   const stepOneValid = name.trim().length >= 3 && dueDate.length > 0
   const stepTwoValid = studyDays.length > 0 && minutesPerDay >= 15
   const stepThreeValid = concepts.length > 0
 
   const hoursTotal = Math.round((capacityMinutes / 60) * 10) / 10
+
+  const renderTopicRow = (categoryKey: string, topic: string) => (
+    <li key={topic} className="flex items-center justify-between gap-2 py-0.5">
+      <span className="text-xs text-zinc-600">{topic}</span>
+      {hasConcept(topic.slice(0, 255)) ? (
+        <button
+          type="button"
+          onClick={() => removeConcept(topic.slice(0, 255))}
+          className="text-xs text-red-500 font-semibold shrink-0"
+        >
+          Usuń
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() =>
+            addConcept({
+              categoryKey,
+              label: topic.slice(0, 255),
+              source: 'category',
+              targetMinutes: TOPIC_DEFAULT_MINUTES,
+            })
+          }
+          className="text-xs text-zinc-700 font-semibold shrink-0 hover:text-red-500"
+        >
+          + Dodaj
+        </button>
+      )}
+    </li>
+  )
+
+  const renderCategoryEntry = (entry: ConceptCatalogEntry) => (
+    <div key={entry.categoryKey} className="border border-zinc-100 rounded-lg">
+      <div className="flex items-center justify-between px-3 py-2.5">
+        <button
+          type="button"
+          onClick={() =>
+            setExpandedCategory(
+              expandedCategory === entry.categoryKey ? null : entry.categoryKey
+            )
+          }
+          className="text-left flex-1"
+        >
+          <span className="text-sm font-medium text-zinc-800">
+            {entry.label}
+          </span>
+          {entry.questionCount > 0 && (
+            <span className="block text-xs text-zinc-400">
+              {entry.questionCount} pytań w bazie testów
+            </span>
+          )}
+        </button>
+        {hasConcept(entry.label) ? (
+          <button
+            type="button"
+            onClick={() => removeConcept(entry.label)}
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100"
+          >
+            Usuń
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() =>
+              addConcept({
+                categoryKey: entry.categoryKey,
+                label: entry.label,
+                source: 'category',
+                targetMinutes: 60,
+              })
+            }
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 text-white hover:bg-zinc-700"
+          >
+            Dodaj
+          </button>
+        )}
+      </div>
+      {expandedCategory === entry.categoryKey &&
+        entry.topicGroups.length > 0 && (
+          <div className="border-t border-zinc-100 px-3 py-2 space-y-3">
+            {entry.topicGroups.map((group) => (
+              <div key={group.key}>
+                <span className="block text-xs font-semibold text-zinc-500 mb-1">
+                  {group.label}
+                </span>
+                <ul className="space-y-1">
+                  {group.topics.map((topic) =>
+                    renderTopicRow(entry.categoryKey, topic)
+                  )}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+    </div>
+  )
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -157,6 +331,7 @@ export default function PlanWizard({
                       onClick={() => {
                         setCourseSlug(course.slug)
                         setConcepts([])
+                        setFocusKey(null)
                         setGoalType(
                           course.slug === 'opiekun-medyczny' ? 'exam' : 'custom'
                         )
@@ -203,6 +378,45 @@ export default function PlanWizard({
                 </button>
               </div>
             </div>
+
+            {catalog.length > 0 && (
+              <div>
+                <label className="block text-sm font-semibold text-zinc-700 mb-1">
+                  Czego dotyczy plan?
+                </label>
+                <p className="text-xs text-zinc-400 mb-2">
+                  Wybierz przedmiot, a w kroku 3 podpowiemy Ci jego program —
+                  albo zostań przy całym kursie.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => selectFocus(null)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                      focusKey === null
+                        ? 'bg-red-500 text-white border-red-500'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                    }`}
+                  >
+                    Cały kurs
+                  </button>
+                  {catalog.map((entry) => (
+                    <button
+                      key={entry.categoryKey}
+                      type="button"
+                      onClick={() => selectFocus(entry.categoryKey)}
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                        focusKey === entry.categoryKey
+                          ? 'bg-red-500 text-white border-red-500'
+                          : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                      }`}
+                    >
+                      {entry.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {goalType === 'exam' && examPresets.length > 0 && (
               <div>
@@ -337,105 +551,96 @@ export default function PlanWizard({
 
         {step === 2 && (
           <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-semibold text-zinc-700 mb-2">
-                Wybierz zagadnienia z programu kursu
-              </h3>
-              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
-                {catalog.map((entry) => (
-                  <div
-                    key={entry.categoryKey}
-                    className="border border-zinc-100 rounded-lg"
-                  >
-                    <div className="flex items-center justify-between px-3 py-2.5">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setExpandedCategory(
-                            expandedCategory === entry.categoryKey
-                              ? null
-                              : entry.categoryKey
-                          )
-                        }
-                        className="text-left flex-1"
-                      >
-                        <span className="text-sm font-medium text-zinc-800">
-                          {entry.label}
-                        </span>
-                        {entry.questionCount > 0 && (
-                          <span className="block text-xs text-zinc-400">
-                            {entry.questionCount} pytań w bazie testów
-                          </span>
-                        )}
-                      </button>
-                      {hasConcept(entry.label) ? (
-                        <button
-                          type="button"
-                          onClick={() => removeConcept(entry.label)}
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100"
-                        >
-                          Usuń
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() =>
-                            addConcept({
-                              categoryKey: entry.categoryKey,
-                              label: entry.label,
-                              source: 'category',
-                              targetMinutes: 60,
-                            })
-                          }
-                          className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 text-white hover:bg-zinc-700"
-                        >
-                          Dodaj
-                        </button>
-                      )}
-                    </div>
-                    {expandedCategory === entry.categoryKey &&
-                      entry.topics.length > 0 && (
-                        <ul className="border-t border-zinc-100 px-3 py-2 space-y-1">
-                          {entry.topics.map((topic) => (
-                            <li
-                              key={topic}
-                              className="flex items-center justify-between gap-2"
-                            >
-                              <span className="text-xs text-zinc-500">
-                                {topic}
-                              </span>
-                              {hasConcept(topic) ? (
-                                <button
-                                  type="button"
-                                  onClick={() => removeConcept(topic)}
-                                  className="text-xs text-red-500 font-semibold shrink-0"
-                                >
-                                  Usuń
-                                </button>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    addConcept({
-                                      categoryKey: entry.categoryKey,
-                                      label: topic.slice(0, 255),
-                                      source: 'category',
-                                      targetMinutes: 30,
-                                    })
-                                  }
-                                  className="text-xs text-zinc-700 font-semibold shrink-0 hover:text-red-500"
-                                >
-                                  + Dodaj
-                                </button>
-                              )}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
+            {focusEntry ? (
+              <>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-semibold text-zinc-700">
+                      Program: {focusEntry.label}
+                    </h3>
+                    {focusEntry.questionCount > 0 && (
+                      <span className="text-xs text-zinc-400">
+                        {focusEntry.questionCount} pytań w bazie testów
+                      </span>
+                    )}
                   </div>
-                ))}
+                  <p className="text-xs text-zinc-400 mb-3">
+                    Zagadnienia pochodzą prosto z programu przedmiotu — dodaj
+                    całe sekcje albo wybierz pojedyncze tematy.
+                  </p>
+                  <div className="space-y-4 max-h-96 overflow-y-auto pr-1 border border-zinc-100 rounded-lg p-3">
+                    {focusEntry.topicGroups.length === 0 && (
+                      <p className="text-sm text-zinc-400">
+                        Ten przedmiot nie ma jeszcze szczegółowego programu.
+                        Dodaj go jako jedno zagadnienie lub dopisz własne tematy
+                        poniżej.
+                      </p>
+                    )}
+                    {focusEntry.topicGroups.map((group) => {
+                      const remaining = group.topics.filter(
+                        (topic) => !hasConcept(topic.slice(0, 255))
+                      )
+                      return (
+                        <div key={group.key}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-semibold text-zinc-500">
+                              {group.label}
+                            </span>
+                            {remaining.length > 0 ? (
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  addTopics(focusEntry.categoryKey, group.topics)
+                                }
+                                className="text-xs font-semibold text-red-500 hover:text-red-600"
+                              >
+                                Dodaj wszystkie ({remaining.length})
+                              </button>
+                            ) : (
+                              <span className="text-xs text-zinc-300">
+                                dodano ✓
+                              </span>
+                            )}
+                          </div>
+                          <ul className="space-y-1">
+                            {group.topics.map((topic) =>
+                              renderTopicRow(focusEntry.categoryKey, topic)
+                            )}
+                          </ul>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {otherEntries.length > 0 && (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShowOtherSubjects((show) => !show)}
+                      className="text-sm font-semibold text-zinc-500 hover:text-zinc-800"
+                    >
+                      {showOtherSubjects ? '▾' : '▸'} Inne przedmioty (
+                      {otherEntries.length})
+                    </button>
+                    {showOtherSubjects && (
+                      <div className="space-y-2 max-h-72 overflow-y-auto pr-1 mt-2">
+                        {otherEntries.map(renderCategoryEntry)}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div>
+                <h3 className="text-sm font-semibold text-zinc-700 mb-2">
+                  Wybierz zagadnienia z programu kursu
+                </h3>
+                <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+                  {catalog.map(renderCategoryEntry)}
+                </div>
               </div>
-            </div>
+            )}
 
             <div>
               <h3 className="text-sm font-semibold text-zinc-700 mb-2">
@@ -472,10 +677,21 @@ export default function PlanWizard({
 
             {concepts.length > 0 && (
               <div>
-                <h3 className="text-sm font-semibold text-zinc-700 mb-2">
-                  Twój plan ({concepts.length})
-                </h3>
-                <ul className="space-y-2">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-zinc-700">
+                    Twój plan ({concepts.length})
+                  </h3>
+                  {capacityMinutes > 0 && (
+                    <button
+                      type="button"
+                      onClick={distributeCapacity}
+                      className="text-xs font-semibold text-zinc-500 hover:text-red-500"
+                    >
+                      Rozłóż czas równomiernie
+                    </button>
+                  )}
+                </div>
+                <ul className="space-y-2 max-h-72 overflow-y-auto pr-1">
                   {concepts.map((concept) => (
                     <li
                       key={concept.label}
@@ -563,6 +779,11 @@ export default function PlanWizard({
               <input type="hidden" name="courseSlug" value={courseSlug} />
               <input type="hidden" name="name" value={name} />
               <input type="hidden" name="goalType" value={goalType} />
+              <input
+                type="hidden"
+                name="focusCategoryKey"
+                value={focusKey ?? ''}
+              />
               <input type="hidden" name="dueDate" value={dueDate} />
               <input type="hidden" name="minutesPerDay" value={minutesPerDay} />
               <input

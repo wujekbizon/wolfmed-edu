@@ -46,6 +46,14 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-zinc-900">{plan.name}</h1>
+            {plan.focusLabel && (
+              <Link
+                href={`/panel/kursy/${encodeURIComponent(plan.focusCategoryKey ?? '')}`}
+                className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"
+              >
+                {plan.focusLabel}
+              </Link>
+            )}
             <p className="text-sm text-zinc-500 mt-1">
               Termin: <span className="font-semibold text-zinc-700">{formatDate(plan.dueDate)}</span>
               {' · '}pozostało{' '}

@@ -774,6 +774,7 @@ export const CreatePlanSchema = z.object({
   goalType: z.enum(["exam", "custom"], {
     message: "Wybierz cel planu.",
   }),
+  focusCategoryKey: z.string().max(100).trim().optional().nullable(),
   dueDate: z.coerce
     .date({ message: "Podaj poprawną datę." })
     .refine((date) => date.getTime() > Date.now(), {
@@ -791,7 +792,7 @@ export const CreatePlanSchema = z.object({
   concepts: z
     .array(PlanConceptInputSchema)
     .min(1, "Dodaj co najmniej jedno zagadnienie do planu.")
-    .max(30, "Plan może mieć maksymalnie 30 zagadnień."),
+    .max(60, "Plan może mieć maksymalnie 60 zagadnień."),
 });
 
 export const UpdatePlanSchema = z.object({

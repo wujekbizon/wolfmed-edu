@@ -682,6 +682,7 @@ export const learningPlans = createTable(
     courseSlug: varchar("courseSlug", { length: 100 }).notNull(),
     name: varchar("name", { length: 255 }).notNull(),
     goalType: varchar("goalType", { length: 30 }).notNull().default("custom"),
+    focusCategoryKey: varchar("focusCategoryKey", { length: 100 }),
     dueDate: timestamp("dueDate").notNull(),
     minutesPerDay: integer("minutesPerDay").notNull(),
     studyDays: jsonb("studyDays").$type<number[]>().notNull(),

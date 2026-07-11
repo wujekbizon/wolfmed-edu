@@ -3,7 +3,11 @@ import { cache } from 'react'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { EXAM_PERIODS } from '@/constants/examDates'
 import { countTestsByCategory } from '@/server/queries'
-import type { ConceptCatalogEntry, ExamDatePreset } from '@/types/plannerTypes'
+import type {
+  ConceptCatalogEntry,
+  ConceptTopicGroup,
+  ExamDatePreset,
+} from '@/types/plannerTypes'
 
 function categoryLabel(key: string): string {
   const meta = CATEGORY_METADATA[key]
@@ -30,18 +34,24 @@ export const getConceptCatalog = cache(
 
     return categoryKeys.map((key, i) => {
       const meta = CATEGORY_METADATA[key]!
-      const topics = meta.details?.programContent
-        ? [
-            ...meta.details.programContent.lectures,
-            ...meta.details.programContent.seminars,
-          ].slice(0, 20)
+      const program = meta.details?.programContent
+
+      // Section labels mirror ProgramContentSection on /panel/kursy/[categoryId]
+      const topicGroups: ConceptTopicGroup[] = program
+        ? (
+            [
+              { key: 'lectures', label: 'Podstawy teoretyczne', topics: program.lectures },
+              { key: 'seminars', label: 'Praktyczne zastosowanie', topics: program.seminars },
+              { key: 'selfStudy', label: 'Wiedza rozszerzona', topics: program.selfStudy },
+            ] as ConceptTopicGroup[]
+          ).filter((group) => group.topics.length > 0)
         : []
 
       return {
         categoryKey: key,
         label: categoryLabel(key),
         questionCount: counts[i] ?? 0,
-        topics,
+        topicGroups,
       }
     })
   }

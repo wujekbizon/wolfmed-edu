@@ -37,6 +37,8 @@ export interface PlanProgress {
     courseSlug: string
     name: string
     goalType: PlanGoalType
+    focusCategoryKey: string | null
+    focusLabel: string | null
     dueDate: string
     minutesPerDay: number
     studyDays: number[]
@@ -62,11 +64,17 @@ export interface ActivityEntry {
   conceptId: string | null
 }
 
+export interface ConceptTopicGroup {
+  key: 'lectures' | 'seminars' | 'selfStudy'
+  label: string
+  topics: string[]
+}
+
 export interface ConceptCatalogEntry {
   categoryKey: string
   label: string
   questionCount: number
-  topics: string[]
+  topicGroups: ConceptTopicGroup[]
 }
 
 export interface ExamDatePreset {
