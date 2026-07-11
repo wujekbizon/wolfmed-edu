@@ -1,37 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { CalendarClock, Flame, TrendingUp, ArrowRight, type LucideIcon } from 'lucide-react'
+import { CalendarClock, Flame, TrendingUp, ArrowRight } from 'lucide-react'
 import type { PlanProgress } from '@/types/plannerTypes'
 import { pluralizePl } from '@/helpers/pluralizePl'
-
-const PACE_CONFIG = {
-  ahead: { label: 'Przed planem', className: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-  on_track: { label: 'Zgodnie z planem', className: 'bg-sky-50 text-sky-700 border-sky-200' },
-  behind: { label: 'Za planem', className: 'bg-amber-50 text-amber-700 border-amber-200' },
-} as const
-
-function formatHours(minutes: number): string {
-  const hours = Math.floor(minutes / 60)
-  const rest = minutes % 60
-  if (hours === 0) return `${rest} min`
-  if (rest === 0) return `${hours} h`
-  return `${hours} h ${rest} min`
-}
-
-function StatTile({ icon: Icon, value, label }: { icon: LucideIcon; value: string; label: string }) {
-  return (
-    <div className="flex-1 flex flex-col gap-2 px-4 py-3.5 border-l border-zinc-200 first:border-l-0">
-      <div className="flex items-center gap-2.5">
-        <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-[#ff9898] to-fuchsia-400 text-white shadow-sm shrink-0">
-          <Icon className="w-4 h-4" />
-        </span>
-        <span className="text-2xl font-bold text-zinc-800 tabular-nums leading-none">{value}</span>
-      </div>
-      <span className="text-[11px] font-semibold uppercase tracking-wide text-zinc-500">{label}</span>
-    </div>
-  )
-}
+import { formatMinutes } from '@/helpers/formatMinutes'
+import { PACE_CONFIG } from '@/constants/planner'
+import StatTile from './planner/StatTile'
 
 export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
   const pace = PACE_CONFIG[plan.paceStatus]
@@ -69,7 +44,7 @@ export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
         <StatTile
           icon={TrendingUp}
           value={`${completionPercent}%`}
-          label={`${formatHours(plan.actualMinutes)} z ${formatHours(plan.plannedTotalMinutes)}`}
+          label={`${formatMinutes(plan.actualMinutes)} z ${formatMinutes(plan.plannedTotalMinutes)}`}
         />
         <StatTile
           icon={Flame}

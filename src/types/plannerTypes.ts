@@ -81,3 +81,17 @@ export interface ExamDatePreset {
   label: string
   dateISO: string
 }
+
+export interface SelectedConcept {
+  categoryKey: string | null
+  label: string
+  source: 'category' | 'custom'
+  targetMinutes: number
+}
+
+export interface PlanWizardProps {
+  courses: { slug: string; name: string }[]
+  catalogByCourse: Record<string, ConceptCatalogEntry[]>
+  examPresets: ExamDatePreset[]
+  initialFocus?: string | null
+}

@@ -5,6 +5,7 @@ import { CalendarPlus, Check } from 'lucide-react'
 import { addConceptAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import { titleizeCategory } from '@/helpers/titleizeCategory'
 
 interface CategoryPerformanceRow {
   category: string
@@ -22,13 +23,6 @@ interface CategoryPerformanceTableProps {
 
 const WEAK_THRESHOLD = 60
 
-function titleize(key: string): string {
-  return key
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ')
-}
-
 function AddToPlanButton({ planId, category }: { planId: string; category: string }) {
   const [formState, action, isPending] = useActionState(addConceptAction, EMPTY_FORM_STATE)
   const fallback = useToastMessage(formState)
@@ -37,7 +31,7 @@ function AddToPlanButton({ planId, category }: { planId: string; category: strin
     <form action={action}>
       {fallback}
       <input type="hidden" name="planId" value={planId} />
-      <input type="hidden" name="label" value={titleize(category)} />
+      <input type="hidden" name="label" value={titleizeCategory(category)} />
       <input type="hidden" name="categoryKey" value={category} />
       <input type="hidden" name="targetMinutes" value={60} />
       <button
