@@ -28,8 +28,12 @@ These were the open questions; the recommended option was chosen for each:
 3. **Notifications: bell + inbox, lazily generated** — new `notifications` table + bell
    icon with unread badge. Notifications are generated idempotently when the user visits
    the panel (no cron in v1; the `cleanup-sessions` cron pattern exists if we add one later).
-4. **Access: all enrolled users** — any active `courseEnrollments` row, both courses,
-   any tier. Maximizes adoption; premium upsell can come later (e.g., AI plan generation).
+4. **Access: all enrolled users, AI features premium-only** (confirmed by owner) — the
+   planner itself is available to any active `courseEnrollments` row, both courses, any
+   tier. All AI-powered parts (e.g., „Wygeneruj plan z AI" via `planujTool`, AI lecture
+   generation from a plan) are gated behind premium using the existing
+   `checkPremiumAccessAction` / `hasAccessToTier` pattern, shown as locked upsell states
+   for non-premium users rather than hidden.
 
 ## What already exists and gets reused
 
@@ -276,7 +280,9 @@ New `RATE_LIMITS` keys in `src/lib/rateLimit.ts`: `planner:create` (3/h),
 **Phase 4 — Guidance & community**
 10. `plannerTips.ts` feature-mapping panel + `motivationTips.ts` rotation
 11. Forum „study buddy" prefilled-post CTA
-12. (Optional) „Wygeneruj plan z AI" — feed `planujTool` output into the concept picker
+12. (Optional) „Wygeneruj plan z AI" — feed `planujTool` output into the concept picker;
+    **premium-only** (`checkPremiumAccessAction`), rendered as a locked upsell card for
+    basic-tier users
 
 ## Verification
 
