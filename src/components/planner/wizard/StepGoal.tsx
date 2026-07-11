@@ -38,7 +38,6 @@ export default function StepGoal({
           value={wizard.name}
           onChange={(event) => wizard.editName(event.target.value)}
           placeholder="np. Przygotowanie do egzaminu — zima 2027"
-          maxLength={255}
           className={PLAN_INPUT_CLASS}
         />
       </div>

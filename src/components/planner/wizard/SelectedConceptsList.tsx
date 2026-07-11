@@ -36,9 +36,6 @@ export default function SelectedConceptsList({ wizard }: { wizard: PlanWizardCon
             <span className="flex-1 text-sm text-zinc-800">{concept.label}</span>
             <input
               type="number"
-              min={5}
-              max={6000}
-              step={5}
               value={concept.targetMinutes}
               onChange={(event) => wizard.updateConceptMinutes(concept.label, Number(event.target.value))}
               className="w-20 px-2 py-1 rounded border border-zinc-200 text-sm text-right"

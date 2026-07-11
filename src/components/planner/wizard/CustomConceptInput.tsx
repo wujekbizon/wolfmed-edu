@@ -16,7 +16,6 @@ export default function CustomConceptInput({ wizard }: { wizard: PlanWizardContr
           value={wizard.customLabel}
           onChange={(event) => wizard.setCustomLabel(event.target.value)}
           placeholder="np. Farmakologia z wykładów"
-          maxLength={255}
           className="flex-1 min-w-0 px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff9898]/50 focus:border-transparent transition-shadow"
         />
         <button

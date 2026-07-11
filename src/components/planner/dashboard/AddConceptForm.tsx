@@ -23,9 +23,6 @@ export default function AddConceptForm({ planId }: { planId: string }) {
         <Input
           type="text"
           name="label"
-          required
-          minLength={2}
-          maxLength={255}
           placeholder="Nowe zagadnienie…"
           className={`flex-1 min-w-40 ${FIELD_CLASS}`}
         />
@@ -33,9 +30,6 @@ export default function AddConceptForm({ planId }: { planId: string }) {
           type="number"
           name="targetMinutes"
           defaultValue={CONCEPT_DEFAULT_MINUTES}
-          min={5}
-          max={6000}
-          step={5}
           ariaLabel="Czas w minutach"
           className={`w-24 text-right ${FIELD_CLASS}`}
         />
@@ -44,6 +38,7 @@ export default function AddConceptForm({ planId }: { planId: string }) {
         </div>
       </div>
       <FieldError name="label" formState={formState} />
+      <FieldError name="targetMinutes" formState={formState} />
       {noScriptFallback}
     </form>
   )

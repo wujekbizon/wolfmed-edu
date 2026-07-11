@@ -24,9 +24,6 @@ export default function QuickStudyLogForm({ concepts }: { concepts: ConceptProgr
         <Input
           type="number"
           name="minutes"
-          required
-          min={1}
-          max={600}
           placeholder="Minuty"
           ariaLabel="Liczba minut nauki"
           className={`w-full sm:w-28 ${FIELD_CLASS}`}
@@ -49,7 +46,6 @@ export default function QuickStudyLogForm({ concepts }: { concepts: ConceptProgr
         <Input
           type="text"
           name="note"
-          maxLength={500}
           placeholder="Notatka (opcjonalnie)"
           className={`w-full sm:flex-1 sm:min-w-40 ${FIELD_CLASS}`}
         />

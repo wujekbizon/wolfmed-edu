@@ -9,7 +9,6 @@ import Label from '@/components/ui/Label'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import WeekdayPicker from '../wizard/WeekdayPicker'
-import { MIN_MINUTES_PER_DAY } from '@/constants/planner'
 import type { PlanProgress } from '@/types/plannerTypes'
 
 const LABEL_CLASS = 'block text-xs font-semibold text-zinc-500 mb-1.5'
@@ -35,17 +34,17 @@ export default function PlanSettingsForm({ plan }: { plan: PlanProgress['plan'] 
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="settings-name" label="Nazwa planu" className={LABEL_CLASS} />
-          <Input id="settings-name" type="text" name="name" defaultValue={plan.name} required minLength={3} maxLength={255} className={FIELD_CLASS} />
+          <Input id="settings-name" type="text" name="name" defaultValue={plan.name} className={FIELD_CLASS} />
           <FieldError name="name" formState={formState} />
         </div>
         <div>
           <Label htmlFor="settings-due-date" label="Termin" className={LABEL_CLASS} />
-          <Input id="settings-due-date" type="date" name="dueDate" defaultValue={plan.dueDate.split('T')[0]} required className={FIELD_CLASS} />
+          <Input id="settings-due-date" type="date" name="dueDate" defaultValue={plan.dueDate.split('T')[0]} className={FIELD_CLASS} />
           <FieldError name="dueDate" formState={formState} />
         </div>
         <div>
           <Label htmlFor="settings-minutes" label="Minuty dziennie" className={LABEL_CLASS} />
-          <Input id="settings-minutes" type="number" name="minutesPerDay" defaultValue={plan.minutesPerDay} required min={MIN_MINUTES_PER_DAY} max={480} step={5} className={FIELD_CLASS} />
+          <Input id="settings-minutes" type="number" name="minutesPerDay" defaultValue={plan.minutesPerDay} className={FIELD_CLASS} />
           <FieldError name="minutesPerDay" formState={formState} />
         </div>
         <div>
