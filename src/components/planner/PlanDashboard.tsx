@@ -79,7 +79,7 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
   const completedConcepts = progress.concepts.filter((c) => c.completedAt).length
 
   const suggestionHref = suggestion?.categoryKey
-    ? `/panel/testy/${suggestion.categoryKey}`
+    ? `/panel/testy?kategoria=${encodeURIComponent(suggestion.categoryKey)}`
     : '/panel/nauka'
 
   return (
