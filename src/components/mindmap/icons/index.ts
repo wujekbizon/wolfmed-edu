@@ -1,34 +1,36 @@
-import type { FC } from "react"
+import type { ComponentType } from "react"
 import type { Category } from "@/lib/mindmap/types"
-import type { MindMapIconProps } from "./IconBase"
 import {
-  PulseIcon,
-  DisorderIcon,
-  TreatmentIcon,
-  CapsuleIcon,
-  BoltIcon,
-  ChecklistIcon,
-  SpreadIcon,
-  HelixIcon,
-  ShieldIcon,
-  DotIcon,
-} from "./categoryIcons"
+  Heart,
+  Activity,
+  Microscope,
+  Pill,
+  Stethoscope,
+  Syringe,
+  Share2,
+  Dna,
+  ShieldCheck,
+  Circle,
+} from "lucide-react"
+import type { MindMapIconProps } from "./IconBase"
 
-export const CATEGORY_ICONS: Record<Category, FC<MindMapIconProps>> = {
-  anatomy: PulseIcon,
-  pathology: DisorderIcon,
-  treatment: TreatmentIcon,
-  pharmacology: CapsuleIcon,
-  physiology: BoltIcon,
-  diagnostics: ChecklistIcon,
-  epidemiology: SpreadIcon,
-  genetics: HelixIcon,
-  immunology: ShieldIcon,
-  other: DotIcon,
+// lucide-react icons, mapped to our fixed Category set (not medical specialties).
+// Accessed everywhere via getCategoryIcon, so this is the only place to change.
+export const CATEGORY_ICONS: Record<Category, ComponentType<MindMapIconProps>> = {
+  anatomy: Heart,
+  physiology: Activity,
+  pathology: Microscope,
+  pharmacology: Pill,
+  diagnostics: Stethoscope,
+  treatment: Syringe,
+  epidemiology: Share2,
+  genetics: Dna,
+  immunology: ShieldCheck,
+  other: Circle,
 }
 
-/** Icon component for a category, falling back to the neutral dot. */
-export function getCategoryIcon(category?: Category): FC<MindMapIconProps> {
+/** Icon component for a category, falling back to the neutral circle. */
+export function getCategoryIcon(category?: Category): ComponentType<MindMapIconProps> {
   return category ? CATEGORY_ICONS[category] : CATEGORY_ICONS.other
 }
 
