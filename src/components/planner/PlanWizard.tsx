@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useActionState } from 'react'
+import { useMemo, useState, useActionState, type ReactNode } from 'react'
 import {
   Check,
   ChevronRight,
@@ -12,6 +12,13 @@ import {
   BookOpen,
   Plus,
   Scale,
+  GraduationCap,
+  Flag,
+  Compass,
+  CalendarDays,
+  Tag,
+  CalendarClock,
+  type LucideIcon,
 } from 'lucide-react'
 import { createPlanAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
@@ -69,6 +76,31 @@ function findFocusCourse(
 function autoPlanName(subjectLabel: string): string {
   return `${subjectLabel} — przygotowanie`
 }
+
+function FieldLabel({
+  icon: Icon,
+  children,
+  htmlFor,
+  className = 'mb-2',
+}: {
+  icon: LucideIcon
+  children: ReactNode
+  htmlFor?: string
+  className?: string
+}) {
+  return (
+    <label
+      htmlFor={htmlFor}
+      className={`flex items-center gap-1.5 text-sm font-semibold text-zinc-700 ${className}`}
+    >
+      <Icon className="w-4 h-4 text-[#ff9898]" />
+      {children}
+    </label>
+  )
+}
+
+const INPUT_CLASS =
+  'w-full px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff9898]/50 focus:border-transparent transition-shadow'
 
 export default function PlanWizard({
   courses,
@@ -350,9 +382,7 @@ export default function PlanWizard({
           <div className="space-y-5">
             {courses.length > 1 && (
               <div>
-                <label className="block text-sm font-semibold text-zinc-700 mb-2">
-                  Kurs
-                </label>
+                <FieldLabel icon={GraduationCap}>Kurs</FieldLabel>
                 <div className="flex flex-wrap gap-2">
                   {courses.map((course) => (
                     <button
@@ -381,9 +411,7 @@ export default function PlanWizard({
             )}
 
             <div>
-              <label className="block text-sm font-semibold text-zinc-700 mb-2">
-                Cel planu
-              </label>
+              <FieldLabel icon={Flag}>Cel planu</FieldLabel>
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -412,9 +440,9 @@ export default function PlanWizard({
 
             {catalog.length > 0 && (
               <div>
-                <label className="block text-sm font-semibold text-zinc-700 mb-1">
+                <FieldLabel icon={Compass} className="mb-1">
                   Czego dotyczy plan?
-                </label>
+                </FieldLabel>
                 <p className="text-xs text-zinc-400 mb-2">
                   Wybierz przedmiot, a w kroku 3 podpowiemy Ci jego program —
                   albo zostań przy całym kursie.
@@ -423,10 +451,10 @@ export default function PlanWizard({
                   <button
                     type="button"
                     onClick={() => selectFocus(null)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                       focusKey === null
-                        ? 'bg-red-500 text-white border-red-500'
-                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                        ? 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white border-transparent shadow-sm'
+                        : 'bg-white text-zinc-600 border-zinc-200 hover:border-[#ff9898]'
                     }`}
                   >
                     Cały kurs
@@ -436,10 +464,10 @@ export default function PlanWizard({
                       key={entry.categoryKey}
                       type="button"
                       onClick={() => selectFocus(entry.categoryKey)}
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
                         focusKey === entry.categoryKey
-                          ? 'bg-red-500 text-white border-red-500'
-                          : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                          ? 'bg-gradient-to-r from-[#ff9898] to-fuchsia-400 text-white border-transparent shadow-sm'
+                          : 'bg-white text-zinc-600 border-zinc-200 hover:border-[#ff9898]'
                       }`}
                     >
                       {entry.label}
@@ -451,41 +479,53 @@ export default function PlanWizard({
 
             {goalType === 'exam' && examPresets.length > 0 && (
               <div>
-                <label className="block text-sm font-semibold text-zinc-700 mb-2">
+                <FieldLabel icon={CalendarDays}>
                   Najbliższe sesje egzaminacyjne
-                </label>
+                </FieldLabel>
                 <div className="space-y-2">
-                  {examPresets.map((preset) => (
-                    <button
-                      key={preset.dateISO}
-                      type="button"
-                      onClick={() => {
-                        setDueDate(toDateInputValue(preset.dateISO))
-                        if (!nameEdited && !focusKey) setName(preset.label)
-                      }}
-                      className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-colors ${
-                        dueDate === toDateInputValue(preset.dateISO)
-                          ? 'border-red-400 bg-red-50 text-zinc-900'
-                          : 'border-zinc-200 text-zinc-600 hover:border-zinc-400'
-                      }`}
-                    >
-                      <span className="font-medium">{preset.label}</span>
-                      <span className="block text-xs text-zinc-400 mt-0.5">
-                        {new Date(preset.dateISO).toLocaleDateString('pl-PL')}
-                      </span>
-                    </button>
-                  ))}
+                  {examPresets.map((preset) => {
+                    const selected =
+                      dueDate === toDateInputValue(preset.dateISO)
+                    return (
+                      <button
+                        key={preset.dateISO}
+                        type="button"
+                        onClick={() => {
+                          setDueDate(toDateInputValue(preset.dateISO))
+                          if (!nameEdited && !focusKey) setName(preset.label)
+                        }}
+                        className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg border text-sm transition-all ${
+                          selected
+                            ? 'border-[#ff9898] bg-[#ff9898]/10 text-zinc-900 shadow-sm'
+                            : 'border-zinc-200 text-zinc-600 hover:border-[#ff9898]'
+                        }`}
+                      >
+                        <span
+                          className={`flex items-center justify-center w-9 h-9 rounded-lg shrink-0 transition-colors ${
+                            selected
+                              ? 'bg-gradient-to-br from-[#ff9898] to-fuchsia-400 text-white'
+                              : 'bg-zinc-100 text-zinc-400'
+                          }`}
+                        >
+                          <CalendarDays className="w-4 h-4" />
+                        </span>
+                        <span>
+                          <span className="font-medium block">{preset.label}</span>
+                          <span className="block text-xs text-zinc-400 mt-0.5">
+                            {new Date(preset.dateISO).toLocaleDateString('pl-PL')}
+                          </span>
+                        </span>
+                      </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
 
             <div>
-              <label
-                htmlFor="plan-name"
-                className="block text-sm font-semibold text-zinc-700 mb-2"
-              >
+              <FieldLabel icon={Tag} htmlFor="plan-name">
                 Nazwa planu
-              </label>
+              </FieldLabel>
               <input
                 id="plan-name"
                 type="text"
@@ -496,17 +536,14 @@ export default function PlanWizard({
                 }}
                 placeholder="np. Przygotowanie do egzaminu — zima 2027"
                 maxLength={255}
-                className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:border-zinc-400"
+                className={INPUT_CLASS}
               />
             </div>
 
             <div>
-              <label
-                htmlFor="plan-due-date"
-                className="block text-sm font-semibold text-zinc-700 mb-2"
-              >
+              <FieldLabel icon={CalendarClock} htmlFor="plan-due-date">
                 Termin (do kiedy?)
-              </label>
+              </FieldLabel>
               <input
                 id="plan-due-date"
                 type="date"
@@ -515,7 +552,7 @@ export default function PlanWizard({
                   .toISOString()
                   .split('T')[0]}
                 onChange={(event) => setDueDate(event.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:border-zinc-400"
+                className={INPUT_CLASS}
               />
             </div>
           </div>
@@ -524,13 +561,10 @@ export default function PlanWizard({
         {step === 1 && (
           <div className="space-y-6">
             <div>
-              <label
-                htmlFor="minutes-per-day"
-                className="block text-sm font-semibold text-zinc-700 mb-2"
-              >
+              <FieldLabel icon={Clock} htmlFor="minutes-per-day">
                 Ile minut dziennie możesz się uczyć?{' '}
-                <span className="text-red-500 font-bold">{minutesPerDay} min</span>
-              </label>
+                <span className="text-[#ff9898] font-bold">{minutesPerDay} min</span>
+              </FieldLabel>
               <input
                 id="minutes-per-day"
                 type="range"
@@ -539,7 +573,7 @@ export default function PlanWizard({
                 step={15}
                 value={minutesPerDay}
                 onChange={(event) => setMinutesPerDay(Number(event.target.value))}
-                className="w-full accent-red-500"
+                className="w-full accent-[#ff9898]"
               />
               <div className="flex justify-between text-xs text-zinc-400 mt-1">
                 <span>15 min</span>
@@ -548,9 +582,9 @@ export default function PlanWizard({
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-zinc-700 mb-2">
+              <FieldLabel icon={CalendarDays}>
                 W które dni się uczysz?
-              </label>
+              </FieldLabel>
               <div className="flex gap-2">
                 {WEEKDAYS.map((day) => (
                   <button
@@ -570,14 +604,19 @@ export default function PlanWizard({
             </div>
 
             {capacityMinutes > 0 && (
-              <div className="p-4 rounded-lg bg-zinc-50 border border-zinc-100 text-sm text-zinc-600">
-                Do{' '}
-                <span className="font-semibold text-zinc-900">
-                  {new Date(`${dueDate}T12:00:00`).toLocaleDateString('pl-PL')}
-                </span>{' '}
-                zaplanujesz około{' '}
-                <span className="font-semibold text-red-500">{hoursTotal} h</span>{' '}
-                nauki.
+              <div className="flex items-center gap-3 p-4 rounded-lg bg-[#ff9898]/10 border border-[#ff9898]/30 text-sm text-zinc-600">
+                <span className="flex items-center justify-center w-9 h-9 rounded-lg shrink-0 bg-gradient-to-br from-[#ff9898] to-fuchsia-400 text-white">
+                  <Clock className="w-4 h-4" />
+                </span>
+                <span>
+                  Do{' '}
+                  <span className="font-semibold text-zinc-900">
+                    {new Date(`${dueDate}T12:00:00`).toLocaleDateString('pl-PL')}
+                  </span>{' '}
+                  zaplanujesz około{' '}
+                  <span className="font-semibold text-[#ff9898]">{hoursTotal} h</span>{' '}
+                  nauki.
+                </span>
               </div>
             )}
           </div>
@@ -695,7 +734,7 @@ export default function PlanWizard({
                   onChange={(event) => setCustomLabel(event.target.value)}
                   placeholder="np. Farmakologia z wykładów"
                   maxLength={255}
-                  className="flex-1 px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:border-zinc-400"
+                  className="flex-1 min-w-0 px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#ff9898]/50 focus:border-transparent transition-shadow"
                 />
                 <button
                   type="button"
@@ -710,8 +749,9 @@ export default function PlanWizard({
                     })
                     setCustomLabel('')
                   }}
-                  className="px-4 py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700"
+                  className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors shrink-0"
                 >
+                  <Plus className="w-4 h-4" />
                   Dodaj
                 </button>
               </div>
