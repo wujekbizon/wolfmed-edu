@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { Save } from 'lucide-react'
 import { logStudySessionAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -57,8 +58,9 @@ export default function QuickStudyLogForm({
       <button
         type="submit"
         disabled={isPending}
-        className="px-5 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 disabled:opacity-40"
+        className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 disabled:opacity-40 transition-colors"
       >
+        <Save className="w-4 h-4" />
         {isPending ? 'Zapisywanie…' : 'Zapisz'}
       </button>
     </form>

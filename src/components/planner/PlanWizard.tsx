@@ -1,6 +1,18 @@
 'use client'
 
 import { useMemo, useState, useActionState } from 'react'
+import {
+  Check,
+  ChevronRight,
+  ChevronDown,
+  X,
+  Target,
+  Clock,
+  ListChecks,
+  BookOpen,
+  Plus,
+  Scale,
+} from 'lucide-react'
 import { createPlanAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -31,7 +43,11 @@ const WEEKDAYS = [
   { value: 7, label: 'Nd' },
 ]
 
-const STEP_TITLES = ['Cel', 'Czas', 'Zakres']
+const STEPS = [
+  { title: 'Cel', icon: Target },
+  { title: 'Czas', icon: Clock },
+  { title: 'Zakres', icon: ListChecks },
+] as const
 const MAX_CONCEPTS = 60
 const TOPIC_DEFAULT_MINUTES = 30
 
@@ -311,7 +327,7 @@ export default function PlanWizard({
         </p>
 
         <div className="flex gap-2 mb-8">
-          {STEP_TITLES.map((title, index) => (
+          {STEPS.map(({ title, icon: StepIcon }, index) => (
             <div key={title} className="flex-1">
               <div
                 className={`h-1.5 rounded-full mb-2 transition-colors ${
@@ -319,10 +335,11 @@ export default function PlanWizard({
                 }`}
               />
               <span
-                className={`text-xs font-semibold ${
+                className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
                   index <= step ? 'text-zinc-900' : 'text-zinc-400'
                 }`}
               >
+                <StepIcon className="w-3.5 h-3.5" />
                 {index + 1}. {title}
               </span>
             </div>
@@ -572,7 +589,8 @@ export default function PlanWizard({
               <>
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-sm font-semibold text-zinc-700">
+                    <h3 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
+                      <BookOpen className="w-4 h-4 text-[#ff9898]" />
                       Program: {focusEntry.label}
                     </h3>
                     {focusEntry.questionCount > 0 && (
@@ -614,8 +632,9 @@ export default function PlanWizard({
                                 Dodaj wszystkie ({remaining.length})
                               </button>
                             ) : (
-                              <span className="text-xs text-zinc-300">
-                                dodano ✓
+                              <span className="inline-flex items-center gap-1 text-xs text-emerald-500">
+                                <Check className="w-3.5 h-3.5" strokeWidth={3} />
+                                dodano
                               </span>
                             )}
                           </div>
@@ -635,10 +654,14 @@ export default function PlanWizard({
                     <button
                       type="button"
                       onClick={() => setShowOtherSubjects((show) => !show)}
-                      className="text-sm font-semibold text-zinc-500 hover:text-zinc-800"
+                      className="inline-flex items-center gap-1 text-sm font-semibold text-zinc-500 hover:text-zinc-800"
                     >
-                      {showOtherSubjects ? '▾' : '▸'} Inne przedmioty (
-                      {otherEntries.length})
+                      {showOtherSubjects ? (
+                        <ChevronDown className="w-4 h-4" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4" />
+                      )}
+                      Inne przedmioty ({otherEntries.length})
                     </button>
                     {showOtherSubjects && (
                       <div className="space-y-2 max-h-72 overflow-y-auto pr-1 mt-2">
@@ -650,7 +673,8 @@ export default function PlanWizard({
               </>
             ) : (
               <div>
-                <h3 className="text-sm font-semibold text-zinc-700 mb-2">
+                <h3 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 mb-2">
+                  <BookOpen className="w-4 h-4 text-[#ff9898]" />
                   Wybierz zagadnienia z programu kursu
                 </h3>
                 <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
@@ -660,7 +684,8 @@ export default function PlanWizard({
             )}
 
             <div>
-              <h3 className="text-sm font-semibold text-zinc-700 mb-2">
+              <h3 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 mb-2">
+                <Plus className="w-4 h-4 text-[#ff9898]" />
                 Własne zagadnienie
               </h3>
               <div className="flex gap-2">
@@ -695,15 +720,17 @@ export default function PlanWizard({
             {concepts.length > 0 && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-sm font-semibold text-zinc-700">
+                  <h3 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
+                    <ListChecks className="w-4 h-4 text-[#ff9898]" />
                     Twój plan ({concepts.length})
                   </h3>
                   {capacityMinutes > 0 && (
                     <button
                       type="button"
                       onClick={distributeCapacity}
-                      className="text-xs font-semibold text-zinc-500 hover:text-red-500"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-red-500"
                     >
+                      <Scale className="w-3.5 h-3.5" />
                       Rozłóż czas równomiernie
                     </button>
                   )}
@@ -736,10 +763,10 @@ export default function PlanWizard({
                       <button
                         type="button"
                         onClick={() => removeConcept(concept.label)}
-                        className="text-zinc-400 hover:text-red-500 text-sm font-bold"
+                        className="flex items-center justify-center w-6 h-6 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition-colors"
                         aria-label={`Usuń: ${concept.label}`}
                       >
-                        ✕
+                        <X className="w-4 h-4" />
                       </button>
                     </li>
                   ))}

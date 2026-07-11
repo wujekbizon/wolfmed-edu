@@ -1,6 +1,7 @@
 'use client'
 
 import { useRef, useState, useActionState } from 'react'
+import { Save, CircleCheckBig, Archive } from 'lucide-react'
 import {
   archivePlanAction,
   completePlanAction,
@@ -53,7 +54,7 @@ export default function PlanSettings({ plan }: { plan: PlanProgress['plan'] }) {
   }
 
   return (
-    <div className="mt-6 pt-6 border-t border-zinc-100 space-y-6">
+    <div className="mt-6 pt-6 border-t border-zinc-200 space-y-6">
       <form action={updateFormAction} className="space-y-4">
         {updateFallback}
         <input type="hidden" name="planId" value={plan.id} />
@@ -139,13 +140,14 @@ export default function PlanSettings({ plan }: { plan: PlanProgress['plan'] }) {
         <button
           type="submit"
           disabled={updatePending || studyDays.length === 0}
-          className="px-5 py-2 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 disabled:opacity-40"
+          className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 disabled:opacity-40 transition-colors"
         >
+          <Save className="w-4 h-4" />
           {updatePending ? 'Zapisywanie…' : 'Zapisz zmiany'}
         </button>
       </form>
 
-      <div className="flex flex-wrap gap-3 pt-4 border-t border-zinc-100">
+      <div className="flex flex-wrap gap-3 pt-4 border-t border-zinc-200">
         <form action={completeFormAction} ref={completeFormRef}>
           {completeFallback}
           <input type="hidden" name="planId" value={plan.id} />
@@ -160,8 +162,9 @@ export default function PlanSettings({ plan }: { plan: PlanProgress['plan'] }) {
                 onConfirm: () => completeFormRef.current?.requestSubmit(),
               })
             }
-            className="px-4 py-2 rounded-lg border border-emerald-200 text-emerald-700 text-sm font-semibold hover:bg-emerald-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-emerald-200 text-emerald-700 text-sm font-semibold hover:bg-emerald-50 transition-colors"
           >
+            <CircleCheckBig className="w-4 h-4" />
             Oznacz jako ukończony
           </button>
         </form>
@@ -180,8 +183,9 @@ export default function PlanSettings({ plan }: { plan: PlanProgress['plan'] }) {
                 onConfirm: () => archiveFormRef.current?.requestSubmit(),
               })
             }
-            className="px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 text-sm font-semibold hover:bg-zinc-50"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-zinc-200 text-zinc-600 text-sm font-semibold hover:bg-zinc-50 transition-colors"
           >
+            <Archive className="w-4 h-4" />
             Archiwizuj plan
           </button>
         </form>

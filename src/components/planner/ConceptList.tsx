@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
+import { Check, X, Plus } from 'lucide-react'
 import {
   addConceptAction,
   removeConceptAction,
@@ -32,23 +33,23 @@ function ConceptRow({ concept }: { concept: ConceptProgress }) {
   return (
     <li
       className={`flex items-center gap-3 px-3 py-3 rounded-xl border transition-colors ${
-        done ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-zinc-100'
+        done ? 'bg-emerald-50/50 border-emerald-100' : 'bg-white border-zinc-200'
       }`}
     >
-      <form action={toggleAction}>
+      <form action={toggleAction} className="shrink-0">
         {toggleFallback}
         <input type="hidden" name="conceptId" value={concept.id} />
         <button
           type="submit"
           disabled={togglePending}
           aria-label={done ? 'Oznacz jako nieukończone' : 'Oznacz jako ukończone'}
-          className={`w-6 h-6 rounded-md border-2 flex items-center justify-center text-xs font-bold transition-colors ${
+          className={`w-6 h-6 rounded-md border-2 flex items-center justify-center transition-colors ${
             done
               ? 'bg-emerald-500 border-emerald-500 text-white'
               : 'border-zinc-300 text-transparent hover:border-emerald-400'
           }`}
         >
-          ✓
+          <Check className="w-3.5 h-3.5" strokeWidth={3} />
         </button>
       </form>
 
@@ -78,16 +79,16 @@ function ConceptRow({ concept }: { concept: ConceptProgress }) {
         )}
       </div>
 
-      <form action={removeAction}>
+      <form action={removeAction} className="shrink-0">
         {removeFallback}
         <input type="hidden" name="conceptId" value={concept.id} />
         <button
           type="submit"
           disabled={removePending}
           aria-label={`Usuń: ${concept.label}`}
-          className="text-zinc-300 hover:text-red-500 text-sm font-bold px-1"
+          className="flex items-center justify-center w-7 h-7 rounded-md text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-colors"
         >
-          ✕
+          <X className="w-4 h-4" />
         </button>
       </form>
     </li>
@@ -130,8 +131,9 @@ function AddConceptForm({ planId }: { planId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="px-4 py-2 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 disabled:opacity-40"
+        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 disabled:opacity-40 transition-colors"
       >
+        <Plus className="w-4 h-4" />
         {isPending ? 'Dodawanie…' : 'Dodaj'}
       </button>
     </form>
