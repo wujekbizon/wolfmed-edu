@@ -9,6 +9,7 @@ interface AnalyticsDetailedProps {
     date: string
     avgScore: string
     testsCount: number
+    studyMinutes: number
   }>
   categories: Array<{
     category: string
@@ -16,6 +17,7 @@ interface AnalyticsDetailedProps {
     avgScore: string
     totalQuestions: number
     correctAnswers: number
+    inPlan: boolean
   }>
   problemQuestions: Array<{
     questionId: string
@@ -27,13 +29,14 @@ interface AnalyticsDetailedProps {
     accuracy: number
     errorRate: number
   }>
+  planId: string | null
 }
 
-export default function AnalyticsDetailed({ timeline, categories, problemQuestions }: AnalyticsDetailedProps) {
+export default function AnalyticsDetailed({ timeline, categories, problemQuestions, planId }: AnalyticsDetailedProps) {
   return (
     <div className="space-y-8">
       <ProgressLineChart data={timeline} />
-      <CategoryPerformanceTable categories={categories} />
+      <CategoryPerformanceTable categories={categories} planId={planId} />
       <QuestionAccuracyList questions={problemQuestions} />
     </div>
   )

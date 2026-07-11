@@ -89,6 +89,32 @@ async function collectActivity(
   return entries
 }
 
+/**
+ * Per-day study minutes across all activity sources (tests, challenges, notes,
+ * manual logs) for the last `days`. Powers the effort series on the analytics
+ * timeline — independent of whether the user has an active plan.
+ */
+export const getStudyMinutesTimeline = cache(
+  async (
+    userId: string,
+    days = 30
+  ): Promise<Array<{ date: string; minutes: number }>> => {
+    const since = new Date(Date.now() - days * DAY_MS)
+    const activity = await collectActivity(userId, since)
+
+    const byDay = new Map<string, number>()
+    activity.forEach((entry) => {
+      const key = entry.date.toISOString().split('T')[0]
+      if (!key) return
+      byDay.set(key, (byDay.get(key) ?? 0) + entry.minutes)
+    })
+
+    return Array.from(byDay.entries())
+      .map(([date, minutes]) => ({ date, minutes }))
+      .sort((a, b) => a.date.localeCompare(b.date))
+  }
+)
+
 export const getPlanProgress = cache(
   async (userId: string): Promise<PlanProgress | null> => {
     const plan = await getActivePlanWithConcepts(userId)

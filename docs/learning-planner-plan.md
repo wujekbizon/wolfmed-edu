@@ -198,6 +198,21 @@ Actions: `markNotificationReadAction`, `markAllNotificationsReadAction`
 (rate-limit key `notifications:update`). Queries: `getNotifications(userId, limit)`,
 `getUnreadNotificationCount(userId)`.
 
+## Status
+
+- **Phase 1 — DONE.** Schema (`learning_plans` + `focusCategoryKey`,
+  `learning_plan_concepts`, `study_logs`), engine (`src/server/planner/engine.ts`),
+  progress (`src/server/planner/progress.ts`), catalog (`src/server/planner/catalog.ts`),
+  actions (`src/actions/planner.ts`), the goal-aware wizard + dashboard, nav entry, and
+  the course-aware `PlanCountdown`. UI aligned to the app design system (stat tiles,
+  lucide icons, `#ff9898` accents).
+- **Phase 2 — DONE (progress integration).** `getStudyMinutesTimeline` +
+  `getPlanProgress` feed `UserAnalytics`; new „Plan" tab (`AnalyticsPlanTab`), a
+  study-minutes effort line on `ProgressLineChart`, and „w planie" / „Dodaj do planu"
+  on weak categories in `CategoryPerformanceTable`.
+- **Phase 3 — NEXT.** Notifications (`notifications` table, bell, lazy generation).
+- **Phase 4 — later.** Guidance/tips, forum study-buddy CTA, premium AI plan generation.
+
 ## UI
 
 ### New route: `/panel/plan` — „Plan Nauki"
