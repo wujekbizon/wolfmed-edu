@@ -1,22 +1,15 @@
 import "server-only"
-import { GoogleGenAI } from "@google/genai"
 import { buildSystemPrompt, buildUserPrompt } from "./prompts"
 import { normalizeTree } from "./normalizeTree"
 import { validateTree } from "./validateTree"
 import type { MindMapNode, TopicType } from "@/types/mindmapTypes"
 import { TOPIC_TYPES } from "@/types/mindmapTypes"
+// Shares the RAG feature's Vertex AI client (single-sourced project/location +
+// ADC-or-service-account auth that also works on Vercel).
+import { getGoogleAI } from "@/server/vertex-rag/client"
 
 const MODEL = process.env.MINDMAP_MODEL || "gemini-2.5-flash"
 const MAX_ATTEMPTS = 3
-
-// Same Vertex AI project/location the RAG feature uses.
-function getGoogleAI() {
-  return new GoogleGenAI({
-    project: "project-9d10f80c-d5df-459f-8d8",
-    location: "europe-west3",
-    vertexai: true,
-  })
-}
 
 function stripFences(text: string): string {
   return text

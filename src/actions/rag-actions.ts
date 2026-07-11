@@ -312,20 +312,30 @@ export async function askRagQuestion(
         toolInputContent += `=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${additionalContext}\n\n`
       }
 
-      // SECONDARY: File Search results (supplementary info from knowledge base)
-      await progressStep(
-        jobId, 'searching', 60,
-        'Przeszukuję bazę wiedzy...',
-        'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
-      )
-      const ragResult = await queryFileSearchOnly(effectiveQuestion)
-      if (ragResult.answer) {
-        toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
-        const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+      // SECONDARY: File Search results (supplementary info from knowledge base).
+      // Skip entirely when the user attached their own @resource/PDF — that is
+      // the primary source, so the extra grounded RAG round-trip is pure waste.
+      if (!hasUserResource) {
         await progressStep(
-          jobId, 'searching', 65,
-          `Znaleziono informacje na temat: ${topic}`,
-          'RAG', `Found ${ragResult.answer.length} chars of context`
+          jobId, 'searching', 60,
+          'Przeszukuję bazę wiedzy...',
+          'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
+        )
+        const ragResult = await queryFileSearchOnly(effectiveQuestion)
+        if (ragResult.answer) {
+          toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
+          const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+          await progressStep(
+            jobId, 'searching', 65,
+            `Znaleziono informacje na temat: ${topic}`,
+            'RAG', `Found ${ragResult.answer.length} chars of context`
+          )
+        }
+      } else {
+        await progressStep(
+          jobId, 'searching', 60,
+          'Używam wybranego źródła...',
+          'RAG', 'Skipping knowledge base — user provided a primary source'
         )
       }
 

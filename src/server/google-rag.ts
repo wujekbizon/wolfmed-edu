@@ -1,118 +1,20 @@
 import 'server-only'
-import { GoogleGenAI, FunctionCallingConfigMode } from '@google/genai'
+import { FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, enhanceUserQuery } from '../helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from './tools/executor'
-import { GoogleAuth } from 'google-auth-library'
+import {
+  PROJECT_ID,
+  LOCATION,
+  getGoogleAI,
+  vertexFetch,
+  vertexUploadFetch,
+  logUsage,
+} from './vertex-rag/client'
 
-const PROJECT_ID = 'project-9d10f80c-d5df-459f-8d8'
-const LOCATION = 'europe-west3'
-
-let auth: GoogleAuth | null = null
-
-function getAuthClient() {
-  if (!auth) {
-    auth = new GoogleAuth({
-      scopes: ['https://www.googleapis.com/auth/cloud-platform']
-    })
-  }
-  return auth
-}
-
-function getGoogleAI() {
-  // const apiKey = process.env.GOOGLE_API_KEY
-  // if (!apiKey) {
-  //   throw new Error('GOOGLE_API_KEY is not configured')
-  // }
-  return new GoogleGenAI({
-    project: 'project-9d10f80c-d5df-459f-8d8',
-    location: 'europe-west3', // You can change this to your preferred region
-    vertexai: true 
-  }
-
-  )
-}
-
-async function getAccessToken(): Promise<string> {
-  const client = await getAuthClient().getClient()
-  const tokenResponse = await client.getAccessToken()
-  if (!tokenResponse.token) {
-    throw new Error('Failed to obtain access token from ADC')
-  }
-  return tokenResponse.token
-}
-
-// Small helper so every REST call to Vertex AI doesn't repeat auth boilerplate
-async function vertexFetch(path: string, options: RequestInit = {}) {
-  const token = await getAccessToken()
-  const url = `https://${LOCATION}-aiplatform.googleapis.com/v1/${path}`
-  const res = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      ...(options.headers || {})
-    }
-  })
-  if (!res.ok) {
-    const errBody = await res.text()
-    throw new Error(`Vertex AI API error (${res.status}): ${errBody}`)
-  }
-  return res.json()
-}
-
-
-// Vertex AI RAG Engine file upload uses a *different* base path (upload/v1, not v1)
-// and requires a multipart/related body (metadata JSON part + raw file bytes part).
-// This is the RAG-Engine equivalent of ai.fileSearchStores.uploadToFileSearchStore(),
-// which only exists on the Gemini Developer API.
-async function vertexUploadFetch(
-  path: string,
-  metadata: Record<string, unknown>,
-  fileBuffer: Buffer,
-  mimeType: string,
-  fileName: string   // ← new param
-) {
-  const token = await getAccessToken()
-  const boundary = `rag_upload_${Date.now()}_${Math.random().toString(36).slice(2)}`
-  const url = `https://${LOCATION}-aiplatform.googleapis.com/upload/v1/${path}`
-
-  const metadataPart =
-    `--${boundary}\r\n` +
-    `Content-Disposition: form-data; name="metadata"\r\n` +
-    `Content-Type: application/json; charset=UTF-8\r\n\r\n` +
-    `${JSON.stringify(metadata)}\r\n`
-
-  const filePartHeader =
-    `--${boundary}\r\n` +
-    `Content-Disposition: form-data; name="file"; filename="${fileName}"\r\n` +
-    `Content-Type: ${mimeType}\r\n\r\n`
-
-  const closing = `\r\n--${boundary}--`
-
-  const body = Buffer.concat([
-    Buffer.from(metadataPart, 'utf-8'),
-    Buffer.from(filePartHeader, 'utf-8'),
-    fileBuffer,
-    Buffer.from(closing, 'utf-8')
-  ])
-
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': `multipart/form-data; boundary=${boundary}`,   // ← was multipart/related
-      'X-Goog-Upload-Protocol': 'multipart'
-    },
-    body
-  })
-
-  if (!res.ok) {
-    const errBody = await res.text()
-    throw new Error(`Vertex AI upload error (${res.status}): ${errBody}`)
-  }
-  return res.json()
-}
+// Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
+// the (8×) output rate. None of the RAG paths need it, so disable everywhere.
+const NO_THINKING = { thinkingBudget: 0 } as const
 
 function parseGoogleApiError(error: unknown): Error {
   if (error instanceof Error) {
@@ -308,9 +210,11 @@ export async function queryWithFileSearch(
       contents: enhancedQuery,
       config: {
         systemInstruction: SYSTEM_PROMPT,
-        tools: configTools
+        tools: configTools,
+        thinkingConfig: NO_THINKING
       }
     })
+    logUsage('queryWithFileSearch:grounding', response)
 
     if (
       response.functionCalls &&
@@ -358,12 +262,14 @@ ${toolResultsText}
 Based on the tool execution results above, please provide a comprehensive final answer incorporating the generated content.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.5-flash-lite',
         contents: finalPrompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT
+          systemInstruction: SYSTEM_PROMPT,
+          thinkingConfig: NO_THINKING
         }
       })
+      logUsage('queryWithFileSearch:wrap', finalResponse)
 
       const finalAnswer = finalResponse.text || ''
 
@@ -488,9 +394,11 @@ export async function queryFileSearchOnly(
               }
             }
           }
-        ]
+        ],
+        thinkingConfig: NO_THINKING
       }
     })
+    logUsage('queryFileSearchOnly', response)
 
     const answer = response.text || ''
 
@@ -559,7 +467,7 @@ ${content}
 
     // Wrap in role/parts structure for multimodal content
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-flash-lite',
       contents: [
         {
           role: 'user',
@@ -578,9 +486,11 @@ ${content}
             mode: FunctionCallingConfigMode.ANY,
             allowedFunctionNames: [toolName]
           }
-        }
+        },
+        thinkingConfig: NO_THINKING
       }
     })
+    logUsage('executeToolWithContent:dispatch', response)
 
     if (response.functionCalls && response.functionCalls.length > 0) {
       const call = response.functionCalls[0]
@@ -601,12 +511,14 @@ Result: ${JSON.stringify(result, null, 2)}
 Please provide a brief confirmation message to the user about what was created.`
 
       const finalResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-2.5-flash-lite',
         contents: finalPrompt,
         config: {
-          systemInstruction: SYSTEM_PROMPT
+          systemInstruction: SYSTEM_PROMPT,
+          thinkingConfig: NO_THINKING
         }
       })
+      logUsage('executeToolWithContent:confirm', finalResponse)
 
       const finalAnswer = finalResponse.text || 'Content created successfully.'
 
