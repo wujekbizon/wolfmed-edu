@@ -36,3 +36,4 @@ export function getCategoryIcon(category?: Category): ComponentType<MindMapIconP
 
 export type { MindMapIconProps }
 export { default as IconBase } from "./IconBase"
+export { ExplainIcon, CloseIcon, DownloadIcon } from "./uiIcons"
