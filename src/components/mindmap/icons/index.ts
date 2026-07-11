@@ -1,5 +1,5 @@
 import type { ComponentType } from "react"
-import type { Category } from "@/lib/mindmap/types"
+import type { Category } from "@/types/mindmapTypes"
 import {
   Heart,
   Activity,

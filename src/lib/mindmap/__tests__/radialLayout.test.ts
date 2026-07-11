@@ -4,7 +4,7 @@ import { radialLayout, MIN_NODE_SEPARATION } from "../radialLayout"
 import { treeLayout } from "../treeLayout"
 import { treeToFlow } from "../treeToFlow"
 import { collapseBelowDepth, getNodePath } from "../treeOps"
-import type { MindMapNode } from "../types"
+import type { MindMapNode } from "@/types/mindmapTypes"
 
 function node(id: string, depth: number, children: MindMapNode[] = []): MindMapNode {
   return { id, label: id, parentId: null, depth, children }

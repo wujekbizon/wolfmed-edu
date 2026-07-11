@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
-import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/lib/mindmap/types";
+import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 
 export const DeleteTestIdSchema = z.object({
   testId: z

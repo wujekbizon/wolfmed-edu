@@ -1,5 +1,5 @@
 import { hierarchy, tree } from "d3-hierarchy"
-import type { MindMapNode } from "./types"
+import type { MindMapNode } from "@/types/mindmapTypes"
 import type { LayoutPosition } from "./radialLayout"
 
 export interface TreeLayoutOptions {

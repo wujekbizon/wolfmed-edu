@@ -1,5 +1,5 @@
 import { Position, type Node, type Edge } from "@xyflow/react"
-import type { MindMapNode as TreeNode } from "./types"
+import type { MindMapNode as TreeNode } from "@/types/mindmapTypes"
 import { radialLayout } from "./radialLayout"
 import { treeLayout } from "./treeLayout"
 import { treeToFlow, type MindMapNodeData } from "./treeToFlow"

@@ -12,7 +12,7 @@ import {
   NodeToolbar,
   Position,
 } from "@xyflow/react"
-import type { MindMapNode as TreeNode } from "@/lib/mindmap/types"
+import type { MindMapNode as TreeNode } from "@/types/mindmapTypes"
 import type { MindMapNodeData } from "@/lib/mindmap/treeToFlow"
 import { useMindMapCanvas, FIT_VIEW_OPTIONS } from "@/hooks/useMindMapCanvas"
 import MindMapNode from "./MindMapNode"

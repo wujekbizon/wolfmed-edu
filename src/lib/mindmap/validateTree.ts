@@ -1,4 +1,4 @@
-import { MAX_CHILDREN, MAX_DEPTH, type MindMapNode } from "./types"
+import { MAX_CHILDREN, MAX_DEPTH, type MindMapNode } from "@/types/mindmapTypes"
 
 export interface TreeValidationResult {
   valid: boolean

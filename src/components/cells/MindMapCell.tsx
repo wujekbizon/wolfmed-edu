@@ -8,7 +8,7 @@ import { useCellsStore } from "@/store/useCellsStore"
 import { useRagStore } from "@/store/useRagStore"
 import { getNodePath } from "@/lib/mindmap/treeOps"
 import type { Cell } from "@/types/cellTypes"
-import type { MindMapCellContent, MindMapNode } from "@/lib/mindmap/types"
+import type { MindMapCellContent, MindMapNode } from "@/types/mindmapTypes"
 
 function parseContent(raw: string): MindMapCellContent | null {
   if (!raw) return null

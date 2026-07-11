@@ -1,6 +1,6 @@
 import { MASTERY_COLORS, MASTERY_OPTIONS } from "@/lib/mindmap/design"
 import { ExplainIcon } from "@/components/mindmap/icons"
-import type { MasteryLevel } from "@/lib/mindmap/types"
+import type { MasteryLevel } from "@/types/mindmapTypes"
 
 interface MasteryToolbarProps {
   current: MasteryLevel | undefined

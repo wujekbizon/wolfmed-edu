@@ -1,5 +1,5 @@
 import { MASTERY_COLORS, MASTERY_OPTIONS } from "@/lib/mindmap/design"
-import type { MasteryLevel } from "@/lib/mindmap/types"
+import type { MasteryLevel } from "@/types/mindmapTypes"
 
 export default function NodeMasteryPicker({
   current,

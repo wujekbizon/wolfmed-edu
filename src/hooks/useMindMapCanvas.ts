@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useReactFlow, type Node } from '@xyflow/react'
-import type { MindMapNode as TreeNode, MasteryLevel } from '@/lib/mindmap/types'
+import type { MindMapNode as TreeNode, MasteryLevel } from '@/types/mindmapTypes'
 import { buildFlowGraph, type LayoutMode } from '@/lib/mindmap/buildFlowGraph'
 import { exportMindMapPng } from '@/lib/mindmap/exportPng'
 import type { MindMapNodeData } from '@/lib/mindmap/treeToFlow'

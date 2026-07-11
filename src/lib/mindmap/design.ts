@@ -1,4 +1,4 @@
-import type { Category, MasteryLevel } from "./types"
+import type { Category, MasteryLevel } from "@/types/mindmapTypes"
 
 // One color per main topic area. The five anchors (anatomy/pathology/treatment/
 // physiology/diagnostics) are taken directly from the mockup; the remaining five

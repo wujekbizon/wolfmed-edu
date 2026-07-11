@@ -1,7 +1,7 @@
 import { getCategoryColor } from "@/lib/mindmap/design"
 import { getCategoryIcon, CloseIcon, ExplainIcon } from "@/components/mindmap/icons"
 import NodeMasteryPicker from "./NodeMasteryPicker"
-import type { MasteryLevel, MindMapNode } from "@/lib/mindmap/types"
+import type { MasteryLevel, MindMapNode } from "@/types/mindmapTypes"
 
 interface NodeDetailCardProps {
   node: MindMapNode

@@ -1,4 +1,4 @@
-import type { MindMapNode } from "./types"
+import type { MindMapNode } from "@/types/mindmapTypes"
 
 export interface LayoutPosition {
   x: number
