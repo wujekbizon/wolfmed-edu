@@ -251,7 +251,7 @@ export default function PlanWizard({
   )
 
   const renderCategoryEntry = (entry: ConceptCatalogEntry) => (
-    <div key={entry.categoryKey} className="border border-zinc-100 rounded-lg">
+    <div key={entry.categoryKey} className="border border-zinc-200 rounded-lg">
       <div className="flex items-center justify-between px-3 py-2.5">
         <button
           type="button"
@@ -298,7 +298,7 @@ export default function PlanWizard({
       </div>
       {expandedCategory === entry.categoryKey &&
         entry.topicGroups.length > 0 && (
-          <div className="border-t border-zinc-100 px-3 py-2 space-y-3">
+          <div className="border-t border-zinc-200 px-3 py-2 space-y-3">
             {entry.topicGroups.map((group) => (
               <div key={group.key}>
                 <span className="block text-xs font-semibold text-zinc-500 mb-1">
@@ -318,7 +318,7 @@ export default function PlanWizard({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="bg-white border border-zinc-100 rounded-2xl p-4 sm:p-8 shadow-sm">
+      <div className="bg-white border border-zinc-200 rounded-2xl p-4 sm:p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-zinc-900 mb-1">
           Stwórz swój plan nauki
         </h1>
@@ -603,7 +603,7 @@ export default function PlanWizard({
                     Zagadnienia pochodzą prosto z programu przedmiotu — dodaj
                     całe sekcje albo wybierz pojedyncze tematy.
                   </p>
-                  <div className="space-y-4 max-h-96 overflow-y-auto pr-1 border border-zinc-100 rounded-lg p-3">
+                  <div className="space-y-4 max-h-96 overflow-y-auto pr-1 border border-zinc-200 rounded-lg p-3">
                     {focusEntry.topicGroups.length === 0 && (
                       <p className="text-sm text-zinc-400">
                         Ten przedmiot nie ma jeszcze szczegółowego programu.
@@ -798,7 +798,7 @@ export default function PlanWizard({
           </div>
         )}
 
-        <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-100">
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-zinc-200">
           <button
             type="button"
             onClick={() => setStep((s) => Math.max(0, s - 1))}

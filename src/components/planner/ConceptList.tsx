@@ -105,7 +105,7 @@ function AddConceptForm({ planId }: { planId: string }) {
   return (
     <form
       action={action}
-      className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-zinc-100"
+      className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-zinc-200"
     >
       {noScriptFallback}
       <input type="hidden" name="planId" value={planId} />
