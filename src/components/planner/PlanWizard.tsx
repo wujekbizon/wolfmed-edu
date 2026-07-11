@@ -50,6 +50,10 @@ function findFocusCourse(
   return null
 }
 
+function autoPlanName(subjectLabel: string): string {
+  return `${subjectLabel} — przygotowanie`
+}
+
 export default function PlanWizard({
   courses,
   catalogByCourse,
@@ -67,10 +71,18 @@ export default function PlanWizard({
       ? 'exam'
       : 'custom'
   )
-  const [focusKey, setFocusKey] = useState<string | null>(
-    initialFocusCourse ? initialFocus : null
+  const initialFocusKey = initialFocusCourse ? initialFocus ?? null : null
+  const initialFocusLabel = initialFocusKey
+    ? catalogByCourse[initialFocusCourse!]?.find(
+        (entry) => entry.categoryKey === initialFocusKey
+      )?.label ?? null
+    : null
+
+  const [focusKey, setFocusKey] = useState<string | null>(initialFocusKey)
+  const [name, setName] = useState(
+    initialFocusLabel ? autoPlanName(initialFocusLabel) : ''
   )
-  const [name, setName] = useState('')
+  const [nameEdited, setNameEdited] = useState(false)
   const [dueDate, setDueDate] = useState('')
   const [minutesPerDay, setMinutesPerDay] = useState(60)
   const [studyDays, setStudyDays] = useState<number[]>([1, 2, 3, 4, 5])
@@ -177,11 +189,12 @@ export default function PlanWizard({
   const selectFocus = (key: string | null) => {
     setFocusKey(key)
     setShowOtherSubjects(false)
+    if (nameEdited) return
     if (key) {
       const entry = catalog.find((e) => e.categoryKey === key)
-      if (entry && name.trim().length === 0) {
-        setName(`${entry.label} — przygotowanie`)
-      }
+      if (entry) setName(autoPlanName(entry.label))
+    } else {
+      setName('')
     }
   }
 
@@ -332,6 +345,7 @@ export default function PlanWizard({
                         setCourseSlug(course.slug)
                         setConcepts([])
                         setFocusKey(null)
+                        if (!nameEdited) setName('')
                         setGoalType(
                           course.slug === 'opiekun-medyczny' ? 'exam' : 'custom'
                         )
@@ -430,7 +444,7 @@ export default function PlanWizard({
                       type="button"
                       onClick={() => {
                         setDueDate(toDateInputValue(preset.dateISO))
-                        if (!name) setName(preset.label)
+                        if (!nameEdited && !focusKey) setName(preset.label)
                       }}
                       className={`w-full text-left px-4 py-3 rounded-lg border text-sm transition-colors ${
                         dueDate === toDateInputValue(preset.dateISO)
@@ -459,7 +473,10 @@ export default function PlanWizard({
                 id="plan-name"
                 type="text"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {
+                  setName(event.target.value)
+                  setNameEdited(true)
+                }}
                 placeholder="np. Przygotowanie do egzaminu — zima 2027"
                 maxLength={255}
                 className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 text-sm focus:outline-none focus:border-zinc-400"
