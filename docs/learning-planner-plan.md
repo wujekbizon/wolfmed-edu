@@ -38,6 +38,7 @@ These were the open questions; the recommended option was chosen for each:
 | Concept taxonomy | `CATEGORY_METADATA` (`src/constants/categoryMetadata.ts`) — per-category `course`, `learningOutcomes`, `programContent` topic strings |
 | Course/entitlement | `courseEnrollments` table, `getUserEnrolledCourses` (`src/server/queries.ts`), gating pattern from `/panel/procedury/[course]/page.tsx` |
 | Test activity | `completed_tests` + `test_sessions` (category, durationMinutes, completedAt), analytics queries `getCategoryPerformance`, `getProgressTimeline`, `getQuestionAccuracyAnalytics` |
+| Analytics UI | `UserAnalytics` / `UserAnalyticsClient` (`src/components/`) with `AnalyticsOverview`, `AnalyticsDetailed`, `ProgressLineChart` — extended, not replaced (see "Symbiosis with UserAnalytics") |
 | Procedure activity | `challenge_completions` (timeSpent, passed, completedAt), `procedure_badges` |
 | Notes activity | `notes` table (`category`, `tags`, timestamps) |
 | Forum bridge | `createForumPostAction` (`src/actions/actions.ts`) / forum post form |
@@ -125,6 +126,46 @@ weighted toward the user's weakest category using the existing
 `getCategoryPerformance` / `getQuestionAccuracyAnalytics` data, with a deep link to the
 matching feature (see Tips below).
 
+## Progress system — symbiosis with UserAnalytics
+
+`UserAnalytics` (`src/components/UserAnalytics.tsx` → `UserAnalyticsClient` with
+Przegląd/Szczegóły tabs on `/panel`) is today a purely descriptive, test-only report.
+The planner and analytics stay **separate components with a shared data layer and
+cross-links** — merging them into one component would couple two different lifecycles
+(analytics works with no plan; a plan needs analytics as its feedback loop).
+
+### Shared data layer: `getUserProgressSnapshot(userId)`
+
+New `cache()`-wrapped server function in `src/server/planner/` returning one object
+consumed by **three** surfaces — `UserAnalytics`, the `/panel/plan` page, and the
+notification generator:
+
+- `stats` — the `users` rollups (totalScore, totalQuestions, testsAttempted)
+- `timeline` — existing `getProgressTimeline` **extended with a `studyMinutes` series**
+  per day aggregated from all activity sources (tests, challenges, notes, `study_logs`)
+- `categories` — `getCategoryPerformance`, each row annotated with `inPlan: boolean`
+  and auto-attributed plan minutes when an active plan exists
+- `problemQuestions` — `getQuestionAccuracyAnalytics` output
+- `plan?` — active plan + concepts + pace/streak from the engine (null when no plan)
+
+Because everything is `cache()`-wrapped, `/panel` rendering both `UserAnalytics` and
+`PlanCountdown` costs no duplicate queries. `UserAnalytics.tsx` switches its four
+parallel fetches to this single snapshot call (no visual regression in existing tabs).
+
+### UserAnalytics enhancements (plan-aware)
+
+- **New third tab „Plan"** in `UserAnalyticsClient` — rendered only when an active plan
+  exists: pace badge, streak, planned-vs-actual minutes chart, per-concept progress
+  bars, link to `/panel/plan`.
+- **Effort vs results**: `ProgressLineChart` gains the daily `studyMinutes` series next
+  to avg score — makes invisible work visible even on days without tests.
+- **Actionable categories**: in `AnalyticsDetailed`, categories in the plan get a
+  „w planie" badge; weak categories (avg < 60%) not in the plan get a „Dodaj do planu"
+  button (calls `addConceptAction`) when a plan is active.
+- **Problem questions feed the plan**: the daily suggestion engine prioritizes concepts
+  whose category contains problem questions; the problem-question list links to the
+  matching test category.
+
 ## Notifications (lazy generation)
 
 `generatePlanNotifications(userId)` — called from the panel layout/page (server-side,
@@ -134,6 +175,15 @@ fire-and-forget), inserts with `onConflictDoNothing` on `dedupeKey`:
 - `plan_milestone:<25|50|75|100>` — progress milestones
 - `streak:<7|14|30>` — streak milestones
 - `motivation:<isoWeek>` — one rotating study-technique tip per week
+
+Analytics-driven types (same generator, fed by `getUserProgressSnapshot`, work even
+without an active plan):
+- `insight_improve:<category>:<isoWeek>` — category accuracy crossed a threshold upward
+  ("Twoja skuteczność w anatomii wzrosła do 82% 🎉")
+- `insight_weak:<category>:<isoWeek>` — persistent weak category, with a CTA to add it
+  to the plan / take a targeted test
+- `problem_questions:<isoWeek>` — "Masz <N> pytań z niską skutecznością — powtórz je",
+  linking to the problem-questions view
 
 UI: `NotificationBell` client component in the global `Navbar`
 (`src/app/_components/Navbar.tsx`, signed-in state) — badge with unread count,
@@ -207,19 +257,26 @@ New `RATE_LIMITS` keys in `src/lib/rateLimit.ts`: `planner:create` (3/h),
 **Phase 1 — Core planner (the feature must stand on this alone)**
 1. Schema: `learning_plans`, `learning_plan_concepts`, `study_logs` (+ `db:push`)
 2. Zod schemas, rate-limit keys, queries (`getActivePlan`, `getPlanWithConcepts`,
-   `getPlanProgress`, `getStudyStreak`), `src/server/planner/engine.ts`
+   `getPlanProgress`, `getStudyStreak`), `src/server/planner/engine.ts` +
+   `getUserProgressSnapshot` (shared data layer, built here so later phases consume it)
 3. Actions in `src/actions/planner.ts`
 4. `/panel/plan` page: wizard + plan dashboard + quick-log + concept check-offs
 5. Nav entry + icon; `PlanCountdown` on `/panel` (fixes the pielegniarstwo dead countdown)
 
-**Phase 2 — Notifications**
-6. `notifications` table, lazy `generatePlanNotifications`, `NotificationBell` in Navbar,
-   read actions
+**Phase 2 — Progress integration (UserAnalytics symbiosis)**
+6. Refactor `UserAnalytics.tsx` to consume `getUserProgressSnapshot` (no visual change)
+7. „Plan" tab in `UserAnalyticsClient`; `studyMinutes` series in `ProgressLineChart`
+8. „w planie" badges + „Dodaj do planu" on weak categories in `AnalyticsDetailed`;
+   problem questions wired into the daily-suggestion weighting
 
-**Phase 3 — Guidance & community**
-7. `plannerTips.ts` feature-mapping panel + `motivationTips.ts` rotation
-8. Forum „study buddy" prefilled-post CTA
-9. (Optional) „Wygeneruj plan z AI" — feed `planujTool` output into the concept picker
+**Phase 3 — Notifications**
+9. `notifications` table, lazy `generatePlanNotifications` (plan + analytics-driven
+   types), `NotificationBell` in Navbar, read actions
+
+**Phase 4 — Guidance & community**
+10. `plannerTips.ts` feature-mapping panel + `motivationTips.ts` rotation
+11. Forum „study buddy" prefilled-post CTA
+12. (Optional) „Wygeneruj plan z AI" — feed `planujTool` output into the concept picker
 
 ## Verification
 
@@ -229,5 +286,8 @@ New `RATE_LIMITS` keys in `src/lib/rateLimit.ts`: `planner:create` (3/h),
   a planned category → auto minutes appear → check off a concept → log manual session →
   streak/pace update → due-date countdown on `/panel` → notifications appear once (revisit
   panel: no duplicates, dedupe holds) → mark read → archive plan → empty state returns
+- Analytics integration: `/panel` UserAnalytics renders identically pre/post snapshot
+  refactor with no plan; with an active plan the „Plan" tab appears, timeline shows
+  `studyMinutes`, weak-category „Dodaj do planu" adds a concept visible on `/panel/plan`
 - Edge cases: user with both courses, due date in the past (block in Zod), capacity
   warning path, second plan creation blocked while one is active
