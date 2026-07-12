@@ -10,6 +10,12 @@ import { parseGoogleApiError } from './errors'
 // the (8×) output rate. None of the RAG paths need it, so disable everywhere.
 const NO_THINKING = { thinkingBudget: 0 } as const
 
+// Persona first (fully static, prompt-cache friendly), then the per-student
+// memory block (Path A: active policies + preferences) when provided.
+function composeSystemInstruction(memoryPrefix?: string): string {
+  return [SYSTEM_PROMPT, memoryPrefix?.trim()].filter(Boolean).join('\n\n')
+}
+
 export async function queryWithFileSearch(
   question: string,
   storeName?: string,
@@ -166,7 +172,8 @@ Based on the tool execution results above, please provide a comprehensive final 
 export async function queryFileSearchOnly(
   question: string,
   storeName?: string,
-  additionalContext?: string
+  additionalContext?: string,
+  memoryPrefix?: string
 ): Promise<{ answer: string; sources?: string[] }> {
   try {
     const ai = getGoogleAI()
@@ -192,7 +199,7 @@ export async function queryFileSearchOnly(
       model: 'gemini-2.5-flash',
       contents: enhancedQuery,
       config: {
-        systemInstruction: SYSTEM_PROMPT,
+        systemInstruction: composeSystemInstruction(memoryPrefix),
         tools: [
           {
             retrieval: {

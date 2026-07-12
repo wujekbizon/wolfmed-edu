@@ -8,6 +8,7 @@ import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
 import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/vertex-rag'
+import { buildStaticPrefix } from '@/server/memory/assemble'
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
@@ -373,10 +374,15 @@ export async function askRagQuestion(
       'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`
     )
 
+    // Path A memory: inject active policies + this student's preferences into
+    // the tutor's static prefix. Fail-safe — returns '' if memory is unavailable.
+    const memoryPrefix = await buildStaticPrefix(userId)
+
     const result = await queryFileSearchOnly(
       cleanQuestion,
       undefined,
-      additionalContext || undefined
+      additionalContext || undefined,
+      memoryPrefix || undefined
     )
 
     const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
