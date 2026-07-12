@@ -620,6 +620,11 @@ export const ragConfig = createTable("rag_config", {
   id: uuid("id").primaryKey().defaultRandom(),
   storeName: text("store_name").notNull().unique(),
   storeDisplayName: text("store_display_name"),
+  // What the corpus is actually running on, so the app never has to guess.
+  // deploymentMode: 'SPANNER' | 'SERVERLESS'; embeddingModel e.g. gemini-embedding-001.
+  deploymentMode: text("deployment_mode"),
+  embeddingModel: text("embedding_model"),
+  corpusId: text("corpus_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
