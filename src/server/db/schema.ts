@@ -776,3 +776,9 @@ export type LearningPlanConceptRow = typeof learningPlanConcepts.$inferSelect
 export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
 export type StudyLogRow = typeof studyLogs.$inferSelect
 export type NewStudyLogRow = typeof studyLogs.$inferInsert
+
+// ── Memory layer (see src/server/memory/) ──────────────────────────────────
+// Re-exported so drizzle-kit (schema entry point) and the ORM client pick up
+// the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —
+// run scripts/setup-memory-extensions.ts before the first db:push.
+export * from "./memory-schema"
