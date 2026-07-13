@@ -37,10 +37,11 @@ export const users = createTable(
     testsAttempted: integer("tests_attempted").default(0).notNull(),
     totalScore: integer("total_score").default(0).notNull(),
     totalQuestions: integer("total_questions").default(0).notNull(),
+    stripeCustomerId: varchar("stripeCustomerId", { length: 256 }).unique(),
   },
   (table) => [
     index("usersUsername").on(table.username),
-    index("usersUserId").on(table.userId), 
+    index("usersUserId").on(table.userId),
   ]
 )
 
@@ -52,11 +53,15 @@ export const payments = createTable("stripe_payments", {
   customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   courseSlug: varchar("courseSlug", { length: 100 }),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
+  sessionId: varchar("sessionId", { length: 256 }),
+  paymentIntentId: varchar("paymentIntentId", { length: 256 }),
   createdAt: timestamp("createdAt").defaultNow(),
 }, (table) => [
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
+  index("stripe_payments_customer_id_idx").on(table.stripeCustomerId),
 ])
 
 export const subscriptions = createTable("stripe_subscriptions", {

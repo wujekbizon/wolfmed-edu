@@ -3,6 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import stripe from '@/lib/stripeClient'
+import { getOrCreateStripeCustomer } from '@/server/stripe'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
 
@@ -28,8 +29,14 @@ export async function createCheckoutSession(
       return toFormState('ERROR', 'Brak ID ceny produktu')
     }
 
+    const customerId = await getOrCreateStripeCustomer(userId)
+
     const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      customer_update: { address: 'auto', name: 'auto' },
       billing_address_collection: 'auto',
+      tax_id_collection: { enabled: true },
+      locale: 'pl',
       line_items: [
         {
           price: priceId,

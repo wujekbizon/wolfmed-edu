@@ -133,6 +133,9 @@ export async function insertPayment({
   paymentStatus,
   courseSlug,
   createdAt,
+  stripeCustomerId,
+  sessionId,
+  paymentIntentId,
 }: Payment) {
   try {
     await db.insert(payments).values({
@@ -143,6 +146,9 @@ export async function insertPayment({
       paymentStatus,
       courseSlug: courseSlug || null,
       createdAt: createdAt,
+      stripeCustomerId: stripeCustomerId || null,
+      sessionId: sessionId || null,
+      paymentIntentId: paymentIntentId || null,
     })
   } catch (error) {
     console.error(`Failed to insert payment for user ${userId}:`, error)

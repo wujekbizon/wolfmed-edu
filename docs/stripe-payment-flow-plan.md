@@ -1,6 +1,17 @@
 # Stripe Payment Flow — Hardening Plan
 
-**Status**: Proposal (not yet implemented)
+**Status**: Phases 1 & 3 implemented. Phase 2 (`invoice_creation`) intentionally
+skipped — see decision note below. NIP capture is enabled so a KSeF-compliant
+faktura can be issued out-of-band for B2B buyers.
+
+**Decisions taken**
+- Customer objects are created **lazily at first purchase** (not at signup).
+- Billing address is **optional** (`billing_address_collection: 'auto'`).
+- NIP is **optional** (`tax_id_collection: { enabled: true }`).
+- `invoice_creation` is **off**: a Stripe invoice is not KSeF-compliant for B2B,
+  and B2C sales don't legally require a faktura — so it buys nothing and adds a
+  0.4% fee. Free Stripe email receipts cover B2C; real B2B faktury go through a
+  KSeF tool as a future task.
 **Problem**: Payments succeed, but buyers don't appear as Customers in the Stripe Dashboard — only "Guest" entries. Root cause: Checkout Sessions are created without `customer` / `customer_creation`, and since Stripe API 2022-08-01 the default in `mode: 'payment'` is `customer_creation: 'if_required'`, which creates **no** Customer object for plain one-time card payments.
 
 ---
