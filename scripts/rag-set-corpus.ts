@@ -13,7 +13,7 @@ import postgres from 'postgres'
 
 const corpusName = process.argv[2]
 const embeddingModel = process.argv[3] ?? 'text-multilingual-embedding-002'
-const displayName = 'wolfmed-kb'
+const DISPLAY_NAME = 'wolfmed-kb'
 
 if (!corpusName || !/\/ragCorpora\/\d+$/.test(corpusName)) {
   console.error('Usage: pnpm run rag:set-corpus "projects/.../locations/<region>/ragCorpora/<id>" [embeddingModel]')
@@ -27,16 +27,17 @@ if (!connectionString) {
   process.exit(1)
 }
 
-const corpusId = corpusName.split('/ragCorpora/')[1]!
 const sql = postgres(connectionString, { ssl: 'require' })
 
-async function setCorpus() {
+async function setCorpus(corpus: string, model: string) {
+  const corpusId = corpus.split('/ragCorpora/')[1]!
+
   await sql`DELETE FROM wolfmed_rag_config`
   await sql`
     INSERT INTO wolfmed_rag_config
       (store_name, store_display_name, deployment_mode, embedding_model, corpus_id, updated_at)
     VALUES
-      (${corpusName}, ${displayName}, 'SERVERLESS', ${embeddingModel}, ${corpusId}, now())
+      (${corpus}, ${DISPLAY_NAME}, 'SERVERLESS', ${model}, ${corpusId}, now())
   `
 
   const [row] = await sql`SELECT store_name, deployment_mode, embedding_model FROM wolfmed_rag_config`
@@ -49,7 +50,7 @@ async function setCorpus() {
   await sql.end()
 }
 
-setCorpus().catch((err) => {
+setCorpus(corpusName, embeddingModel).catch((err) => {
   console.error('rag:set-corpus failed:', err)
   process.exit(1)
 })
