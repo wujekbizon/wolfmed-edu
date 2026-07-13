@@ -43,6 +43,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 
   'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'profile:update:preferences': { interval: 60 * 60 * 1000, maxRequests: 20 },
 
   'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
 

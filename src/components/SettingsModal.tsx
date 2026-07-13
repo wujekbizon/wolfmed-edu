@@ -1,6 +1,7 @@
 'use client'
 
-import { Settings } from 'lucide-react'
+import { Settings, ChevronRight, SlidersHorizontal } from 'lucide-react'
+import Link from 'next/link'
 import BaseModal from './modal/BaseModal'
 import ModalHeader from './modal/ModalHeader'
 import ModalBody from './modal/ModalBody'
@@ -45,6 +46,24 @@ export default function SettingsModal() {
             />
           </button>
         </div>
+
+        <p className="text-xs font-semibold tracking-widest text-zinc-500 uppercase mt-6 mb-4">
+          Nauka
+        </p>
+        <Link
+          href="/panel/ustawienia"
+          onClick={closeSettingsModal}
+          className="flex items-center justify-between gap-4 rounded-lg -mx-2 px-2 py-2 transition-colors hover:bg-zinc-800/60"
+        >
+          <div className="flex items-center gap-3">
+            <SlidersHorizontal className="w-4 h-4 text-zinc-400 shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-zinc-200">Preferencje nauki</p>
+              <p className="text-xs text-zinc-500 mt-0.5">Cel egzaminacyjny i styl odpowiedzi tutora</p>
+            </div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-zinc-500 shrink-0" />
+        </Link>
       </ModalBody>
     </BaseModal>
   )

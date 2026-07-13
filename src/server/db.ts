@@ -4,6 +4,7 @@ import { db } from '@/server/db/index'
 import { eq, sql } from 'drizzle-orm'
 import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
 import { Payment, Subscription } from '@/types/stripeTypes'
+import { eraseUserMemory } from './memory/erase'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
   try {
@@ -27,6 +28,10 @@ export async function insertUserToDb(userData: UserData): Promise<void> {
 
 export async function deleteUserFromDb(id: string): Promise<void> {
   try {
+    // GDPR: erase the student's memory (facts/episodes/preferences/traces) as part
+    // of account deletion — memory tables aren't FK'd to users, so they won't
+    // cascade on their own.
+    await eraseUserMemory(id)
     await db.delete(users).where(eq(users.userId, id))
   } catch (error) {
     console.error('Error deleting user:', error)
@@ -133,6 +138,9 @@ export async function insertPayment({
   paymentStatus,
   courseSlug,
   createdAt,
+  stripeCustomerId,
+  sessionId,
+  paymentIntentId,
 }: Payment) {
   try {
     await db.insert(payments).values({
@@ -143,6 +151,9 @@ export async function insertPayment({
       paymentStatus,
       courseSlug: courseSlug || null,
       createdAt: createdAt,
+      stripeCustomerId: stripeCustomerId || null,
+      sessionId: sessionId || null,
+      paymentIntentId: paymentIntentId || null,
     })
   } catch (error) {
     console.error(`Failed to insert payment for user ${userId}:`, error)

@@ -8,13 +8,14 @@ import {
   TestRagQuerySchema,
 } from '@/server/schema'
 import {
-  createFileSearchStore,
+  createCorpus,
   uploadFiles,
-  getStoreInfo,
-  listStoreDocuments,
+  getCorpus,
+  listCorpusFiles,
   queryWithFileSearch,
-  deleteFileSearchStore,
-} from '@/server/google-rag'
+  deleteCorpus,
+  DEFAULT_EMBEDDING_MODEL,
+} from '@/server/vertex-rag'
 import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
 
 export async function createFileSearchStoreAction(
@@ -30,9 +31,11 @@ export async function createFileSearchStoreAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const storeName = await createFileSearchStore(validationResult.data.displayName)
+    const storeName = await createCorpus(validationResult.data.displayName)
 
-    await setRagConfig(storeName, validationResult.data.displayName)
+    await setRagConfig(storeName, validationResult.data.displayName, {
+      embeddingModel: DEFAULT_EMBEDDING_MODEL,
+    })
 
     revalidatePath('/admin/rag')
 
@@ -119,7 +122,7 @@ export async function getStoreStatusAction(): Promise<{
       }
     }
 
-    await getStoreInfo(config.storeName)
+    await getCorpus(config.storeName)
 
     return {
       success: true,
@@ -153,7 +156,7 @@ export async function listStoreDocumentsAction(): Promise<{
       }
     }
 
-    const documents = await listStoreDocuments(config.storeName)
+    const documents = await listCorpusFiles(config.storeName)
 
     return {
       success: true,
@@ -211,7 +214,7 @@ export async function deleteFileSearchStoreAction(
       return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
-    await deleteFileSearchStore(config.storeName)
+    await deleteCorpus(config.storeName)
 
     await deleteRagConfig(config.storeName)
 

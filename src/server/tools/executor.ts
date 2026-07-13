@@ -2,7 +2,12 @@ import 'server-only'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { GoogleGenAI } from '@google/genai'
+import { getGoogleAI, logUsage } from '../vertex-rag/client'
+
+// Content generation stays on gemini-2.5-flash, but thinking is disabled — the
+// tools produce structured/creative output, not reasoning chains, and thinking
+// tokens bill at the output rate.
+const NO_THINKING = { thinkingBudget: 0 } as const
 
 export interface ToolResult {
   cellType?: 'note' | 'test' | 'draw' | 'flashcard' | 'plan';
@@ -58,16 +63,6 @@ let flashcardTemplate: FlashcardTemplate | null = null
 let planTemplate: PlanTemplate | null = null
 let lectureTemplate: LectureTemplate | null = null
 let practicalExamTemplate: PracticalExamTemplate | null = null
-
-function getGoogleAI() {
-  // Uses Application Default Credentials (ADC) via Vertex AI, matching
-  // google-rag.ts — no API key needed.
-  return new GoogleGenAI({
-    project: 'project-9d10f80c-d5df-459f-8d8',
-    location: 'europe-west3',
-    vertexai: true,
-  })
-}
 
 async function loadTemplate<T>(filename: string): Promise<T> {
   const templatePath = join(process.cwd(), 'templates', filename)
@@ -209,9 +204,11 @@ Return ONLY the JSON array, no additional text.`
     contents: fullPrompt,
     config: {
       temperature: 0.7,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('utworz_test', response)
 
   const generatedText = response.text || '[]'
   let questions: any[]
@@ -267,9 +264,11 @@ Return ONLY the markdown note content.`
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7
+      temperature: 0.7,
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('notatka_tool', response)
 
   const noteContent = response.text || template.example
 
@@ -304,9 +303,11 @@ Return ONLY the markdown summary content.`
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7
+      temperature: 0.7,
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('podsumuj', response)
 
   const summaryContent = response.text || template.example
 
@@ -350,9 +351,11 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7
+      temperature: 0.7,
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('diagram_tool', response)
 
   let mermaidContent = response.text || example
 
@@ -400,9 +403,11 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
     contents: fullPrompt,
     config: {
       temperature: 0.7,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('fiszka_tool', response)
 
   const generatedText = response.text || '{"flashcards":[]}'
   let flashcards: Array<{ questionText: string; answerText: string }>
@@ -444,9 +449,11 @@ async function planujTool(args: any): Promise<ToolResult> {
     config: {
       systemInstruction: template.systemPrompt,
       temperature: 0.4,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('planuj_tool', response)
 
   const rawJson = response.text || '{}'
 
@@ -484,8 +491,10 @@ async function wykladTool(args: any): Promise<ToolResult> {
     config: {
       systemInstruction: template.systemPrompt,
       temperature: 0.6,
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('wyklad_tool', response)
 
   const lectureContent = (response.text || '').trim()
 
@@ -513,9 +522,11 @@ async function egzaminPraktycznyTool(): Promise<ToolResult> {
     config: {
       systemInstruction: template.systemPrompt,
       temperature: 0.8,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
+  logUsage('egzamin_praktyczny_tool', response)
 
   const generatedText = (response.text || '').trim()
 

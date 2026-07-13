@@ -37,10 +37,11 @@ export const users = createTable(
     testsAttempted: integer("tests_attempted").default(0).notNull(),
     totalScore: integer("total_score").default(0).notNull(),
     totalQuestions: integer("total_questions").default(0).notNull(),
+    stripeCustomerId: varchar("stripeCustomerId", { length: 256 }).unique(),
   },
   (table) => [
     index("usersUsername").on(table.username),
-    index("usersUserId").on(table.userId), 
+    index("usersUserId").on(table.userId),
   ]
 )
 
@@ -52,11 +53,15 @@ export const payments = createTable("stripe_payments", {
   customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   courseSlug: varchar("courseSlug", { length: 100 }),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
+  sessionId: varchar("sessionId", { length: 256 }),
+  paymentIntentId: varchar("paymentIntentId", { length: 256 }),
   createdAt: timestamp("createdAt").defaultNow(),
 }, (table) => [
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
+  index("stripe_payments_customer_id_idx").on(table.stripeCustomerId),
 ])
 
 export const subscriptions = createTable("stripe_subscriptions", {
@@ -620,6 +625,11 @@ export const ragConfig = createTable("rag_config", {
   id: uuid("id").primaryKey().defaultRandom(),
   storeName: text("store_name").notNull().unique(),
   storeDisplayName: text("store_display_name"),
+  // What the corpus is actually running on, so the app never has to guess.
+  // deploymentMode: 'SPANNER' | 'SERVERLESS'; embeddingModel e.g. gemini-embedding-001.
+  deploymentMode: text("deployment_mode"),
+  embeddingModel: text("embedding_model"),
+  corpusId: text("corpus_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -771,3 +781,9 @@ export type LearningPlanConceptRow = typeof learningPlanConcepts.$inferSelect
 export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
 export type StudyLogRow = typeof studyLogs.$inferSelect
 export type NewStudyLogRow = typeof studyLogs.$inferInsert
+
+// ── Memory layer (see src/server/memory/) ──────────────────────────────────
+// Re-exported so drizzle-kit (schema entry point) and the ORM client pick up
+// the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —
+// run scripts/setup-memory-extensions.ts before the first db:push.
+export * from "./memory-schema"

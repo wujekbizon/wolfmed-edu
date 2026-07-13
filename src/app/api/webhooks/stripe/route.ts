@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import stripe from '@/lib/stripeClient'
 import Stripe from 'stripe'
 import { insertPayment, processPurchaseRewards } from '@/server/db'
+import { backfillStripeCustomerId } from '@/server/stripe'
 import { enrollUserAction } from '@/actions/course-actions'
 import { clerkClient } from '@clerk/nextjs/server'
 import { db } from '@/server/db/index'
@@ -32,12 +33,17 @@ export async function POST(req: Request) {
         id,
         amount_total,
         currency,
+        customer,
         customer_details,
+        payment_intent,
         payment_status,
         created,
         mode,
         metadata,
       } = event.data.object as Stripe.Checkout.Session
+
+      const stripeCustomerId = typeof customer === 'string' ? customer : customer?.id ?? null
+      const paymentIntentId = typeof payment_intent === 'string' ? payment_intent : payment_intent?.id ?? null
 
       // Idempotency check
       const existingEvent = await db
@@ -76,6 +82,10 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'User not found' }, { status: 500 })
       }
 
+      if (stripeCustomerId) {
+        await backfillStripeCustomerId(resolvedUserId, stripeCustomerId)
+      }
+
       if (mode === 'payment') {
         try {
           await insertPayment({
@@ -86,9 +96,13 @@ export async function POST(req: Request) {
             courseSlug: courseSlug || null,
             createdAt: new Date(created * 1000),
             paymentStatus: payment_status,
+            stripeCustomerId,
+            sessionId: id,
+            paymentIntentId,
           })
         } catch (err) {
           console.error('insertPayment failed:', err)
+          return NextResponse.json({ error: 'Failed to record payment' }, { status: 500 })
         }
       }
 

@@ -125,21 +125,26 @@ hasAccessToTier(userTier, requiredTier) {
 
 ### Checkout Session Creation
 
-**Endpoint**: `/api/stripe/create-checkout-session`
+**Server Action**: `createCheckoutSession` (`src/actions/stripe.ts`)
 
-**Current Implementation**:
-1. Accepts `userId` and `priceId` from client
-2. Creates Stripe checkout session with `client_reference_id: userId`
-3. Returns `sessionUrl` for redirect
+Auth is enforced server-side via Clerk `auth()` — the `userId` is never trusted
+from the client. (The old unauthenticated `/api/stripe/create-checkout-session`
+route was removed; see `stripe-payment-flow-plan.md`.)
 
-**For Course Purchases** (needs implementation):
-- Must pass `courseSlug` and `accessTier` in session metadata:
-  ```typescript
-  metadata: {
-    courseSlug: 'pielegniarstwo',
-    accessTier: 'basic' // or 'premium', 'pro'
-  }
-  ```
+**Implementation**:
+1. Resolves the signed-in `userId` from Clerk.
+2. Calls `getOrCreateStripeCustomer(userId)` — creates a Stripe Customer on
+   first purchase and stores `users.stripeCustomerId`, reuses it afterwards.
+3. Creates the checkout session with `customer`, `customer_update`,
+   `tax_id_collection` (optional NIP), optional billing address, and
+   `client_reference_id: userId`.
+4. Passes `courseSlug` and `accessTier` in session metadata:
+   ```typescript
+   metadata: {
+     courseSlug: 'pielegniarstwo',
+     accessTier: 'basic' // or 'premium', 'pro'
+   }
+   ```
 
 ### Webhook Handler
 

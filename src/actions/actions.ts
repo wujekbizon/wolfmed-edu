@@ -61,6 +61,8 @@ import {
   getUserCustomTestById
 } from "@/server/queries"
 import { revalidatePath } from "next/cache"
+import { after } from "next/server"
+import { onQuizCompleted } from "@/server/memory/extract"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
 import { checkRateLimit } from "@/lib/rateLimit"
@@ -247,6 +249,9 @@ export async function submitTestAction(
     validationResult?.data as QuestionAnswer[]
   )
 
+  let quizCategory: string | null = null
+  let quizSessionId: string | null = null
+
   try {
     await db.transaction(async (tx) => {
       const now = new Date()
@@ -263,6 +268,9 @@ export async function submitTestAction(
       if (!session) {
         throw new Error("Nie znaleziono aktywnej sesji testu")
       }
+
+      quizCategory = session.category
+      quizSessionId = session.id
 
       if (now > session.expiresAt) {
         await tx
@@ -295,6 +303,14 @@ export async function submitTestAction(
     })
   } catch (error) {
     return fromErrorToFormState(error)
+  }
+
+  // Deterministic memory extraction, off the hot path — recompute the student's
+  // per-category performance fact + log a quiz episode. Fail-safe internally.
+  if (quizCategory && quizSessionId) {
+    const category = quizCategory
+    const completedSessionId = quizSessionId
+    after(() => onQuizCompleted({ userId, sessionId: completedSessionId, category }))
   }
 
   revalidatePath("/panel", "page")

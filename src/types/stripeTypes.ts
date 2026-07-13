@@ -15,7 +15,11 @@ export interface Subscription extends BasePayment {
   subscriptionId: string
 }
 
-export interface Payment extends BasePayment {}
+export interface Payment extends BasePayment {
+  stripeCustomerId?: string | null
+  sessionId?: string | null
+  paymentIntentId?: string | null
+}
 
 export type Supporter = {
   id: string

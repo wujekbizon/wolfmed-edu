@@ -64,6 +64,15 @@ ${templatesBlock}
    Każdy węzeł MUSI mieć notes. Maks. ok. 400 znaków.`
 }
 
-export function buildUserPrompt(topic: string): string {
+export function buildUserPrompt(topic: string, context?: string): string {
+  if (context && context.trim()) {
+    return `Temat: ${topic}
+
+ŹRÓDŁO (fragmenty z bazy wiedzy) — buduj mapę WYŁĄCZNIE na podstawie poniższego źródła. Nie dodawaj pojęć ani gałęzi, których źródło nie pokrywa; pomiń kanoniczne gałęzie bez pokrycia w źródle. metadata.notes muszą wynikać ze źródła.
+
+${context}
+
+Wygeneruj mapę myśli jako JSON węzła głównego (root) zgodnego ze schematem, opartą na powyższym źródle.`
+  }
   return `Temat: ${topic}\n\nWygeneruj mapę myśli jako JSON węzła głównego (root) zgodnego ze schematem.`
 }
