@@ -48,25 +48,43 @@ export async function patchRagEngineConfig(
 }
 
 export type RagManagedDbTier = 'BASIC' | 'SCALED' | 'UNPROVISIONED'
+export type DeploymentMode = 'SPANNER' | 'SERVERLESS'
 
-// Sets the RagManagedDb (Spanner) tier. UNPROVISIONED deletes the Spanner
-// instance AND every corpus in it, irreversibly — it is the "stop billing"
-// switch and the last step of decommissioning. It is guarded behind an explicit
-// confirmation argument and is never wired to any UI, per the plan.
-export async function setRagManagedDbTier(
-  tier: RagManagedDbTier,
+// Verified against a live GET (2026-07): the config shape is
+//   ragManagedDbConfig: { spanner: { basic|scaled|unprovisioned: {} } }
+// for Spanner mode, and the sibling `serverless: {}` for Serverless mode. The
+// tier only applies to Spanner. All writes read back — a silently-failed switch
+// otherwise lands the next corpus in the wrong backend.
+function tierKey(tier: RagManagedDbTier): 'basic' | 'scaled' | 'unprovisioned' {
+  return tier === 'SCALED' ? 'scaled' : tier === 'UNPROVISIONED' ? 'unprovisioned' : 'basic'
+}
+
+// Switches the project-level deployment mode. SPANNER carries a tier; SERVERLESS
+// takes none. Data does NOT migrate between modes — after switching, corpora
+// created in the other mode are hidden (but retained). Reversible by switching
+// back, EXCEPT the UNPROVISIONED tier (see below).
+export async function setDeploymentMode(
+  mode: DeploymentMode,
+  tier: RagManagedDbTier = 'BASIC',
   confirmIrreversible = false
 ): Promise<Record<string, unknown>> {
-  if (tier === 'UNPROVISIONED' && !confirmIrreversible) {
+  if (mode === 'SPANNER' && tier === 'UNPROVISIONED' && !confirmIrreversible) {
     throw new Error(
       'UNPROVISIONED is irreversible (deletes the Spanner instance and all corpora). ' +
         'Pass confirmIrreversible=true to proceed — operator action only.'
     )
   }
 
-  const tierKey = tier === 'SCALED' ? 'scaled' : tier === 'UNPROVISIONED' ? 'unprovisioned' : 'basic'
-  return patchRagEngineConfig(
-    { ragManagedDbConfig: { [tierKey]: {} } },
-    'ragManagedDbConfig'
-  )
+  const ragManagedDbConfig =
+    mode === 'SERVERLESS' ? { serverless: {} } : { spanner: { [tierKey(tier)]: {} } }
+
+  return patchRagEngineConfig({ ragManagedDbConfig }, 'ragManagedDbConfig')
+}
+
+// Convenience: change the Spanner tier without leaving Spanner mode.
+export async function setRagManagedDbTier(
+  tier: RagManagedDbTier,
+  confirmIrreversible = false
+): Promise<Record<string, unknown>> {
+  return setDeploymentMode('SPANNER', tier, confirmIrreversible)
 }

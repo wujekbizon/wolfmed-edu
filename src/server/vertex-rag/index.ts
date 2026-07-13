@@ -34,6 +34,8 @@ export {
 export {
   getRagEngineConfig,
   patchRagEngineConfig,
+  setDeploymentMode,
   setRagManagedDbTier,
   type RagManagedDbTier,
+  type DeploymentMode,
 } from './config'

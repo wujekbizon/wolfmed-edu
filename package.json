@@ -9,6 +9,7 @@
     "db:memory:extensions": "tsx --env-file=.env scripts/setup-memory-extensions.ts",
     "db:memory:seed": "tsx --env-file=.env scripts/seed-memory-policies.ts",
     "rag:preflight": "tsx --env-file=.env scripts/rag-preflight.ts",
+    "rag:migrate": "tsx --env-file=.env scripts/rag-migrate.ts",
     "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
