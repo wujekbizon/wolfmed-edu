@@ -9,6 +9,12 @@
  * Every switch reads back and verifies. Switching modes does NOT migrate data:
  * after switching you create a fresh corpus and re-upload. Reversible by
  * switching back. This tool never touches the irreversible UNPROVISIONED tier.
+ *
+ * IDENTITY: deployment-mode changes need aiplatform.ragEngineConfigs.update
+ * (roles/aiplatform.admin), which the app's least-privilege runtime service
+ * account should NOT have. Pass `adc` as the 2nd arg to authenticate as your
+ * own gcloud user (a project Owner / Vertex AI Admin) instead of the SA key:
+ *   pnpm run rag:migrate serverless adc
  */
 
 import 'dotenv/config'
@@ -19,7 +25,11 @@ const LOCATION = process.env.GOOGLE_CLOUD_LOCATION ?? 'europe-west3'
 const SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 const BASE = `https://${LOCATION}-aiplatform.googleapis.com/v1beta1/projects/${PROJECT_ID}/locations/${LOCATION}/ragEngineConfig`
 
+// Pass `adc` as the 2nd CLI arg to ignore the SA key and use your gcloud user.
+const USE_ADC = process.argv[3] === 'adc'
+
 function getCredentials(): { client_email: string; private_key: string } | undefined {
+  if (USE_ADC) return undefined
   const raw = process.env.GOOGLE_SERVICE_ACCOUNT_KEY?.trim()
   if (!raw) return undefined
   const json = raw.startsWith('{') ? raw : Buffer.from(raw, 'base64').toString('utf-8')
@@ -29,6 +39,11 @@ function getCredentials(): { client_email: string; private_key: string } | undef
 
 async function getToken(): Promise<string> {
   const credentials = getCredentials()
+  console.log(
+    credentials
+      ? `Identity: service account ${credentials.client_email}`
+      : 'Identity: ADC (your gcloud user)'
+  )
   const auth = new GoogleAuth(
     credentials
       ? { scopes: SCOPES, projectId: PROJECT_ID, credentials }
