@@ -48,7 +48,8 @@ async function getConfig(token: string): Promise<Record<string, unknown>> {
 }
 
 async function patchMode(token: string, ragManagedDbConfig: Record<string, unknown>): Promise<void> {
-  const res = await fetch(`${BASE}?updateMask=ragManagedDbConfig`, {
+  // UpdateRagEngineConfig has no update_mask — it's a full-resource PATCH.
+  const res = await fetch(BASE, {
     method: 'PATCH',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: `projects/${PROJECT_ID}/locations/${LOCATION}/ragEngineConfig`, ragManagedDbConfig }),

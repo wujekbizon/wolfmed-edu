@@ -35,11 +35,13 @@ export async function getRagEngineConfig(): Promise<Record<string, unknown>> {
 // Generic PATCH with an explicit update mask, then a mandatory read-back. The
 // guide's warning is real: a silently-failed mode switch lands the next corpus
 // in the wrong backend. Every mutation here verifies by re-reading.
+// UpdateRagEngineConfig has no update_mask (verified: a masked PATCH 400s with
+// "Field 'updateMask' could not be found in request message") — it's a
+// full-resource PATCH.
 export async function patchRagEngineConfig(
-  patch: Record<string, unknown>,
-  updateMask: string
+  patch: Record<string, unknown>
 ): Promise<Record<string, unknown>> {
-  await ragEngineConfigFetch(`?updateMask=${encodeURIComponent(updateMask)}`, {
+  await ragEngineConfigFetch('', {
     method: 'PATCH',
     body: JSON.stringify({ name: CONFIG_RESOURCE, ...patch }),
   })
@@ -78,7 +80,7 @@ export async function setDeploymentMode(
   const ragManagedDbConfig =
     mode === 'SERVERLESS' ? { serverless: {} } : { spanner: { [tierKey(tier)]: {} } }
 
-  return patchRagEngineConfig({ ragManagedDbConfig }, 'ragManagedDbConfig')
+  return patchRagEngineConfig({ ragManagedDbConfig })
 }
 
 // Convenience: change the Spanner tier without leaving Spanner mode.
