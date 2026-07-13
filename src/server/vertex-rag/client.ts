@@ -2,10 +2,11 @@ import 'server-only'
 import { GoogleGenAI } from '@google/genai'
 import { GoogleAuth } from 'google-auth-library'
 
-// Single source of truth for the Vertex AI project + region. Falls back to the
-// historical hardcoded values so nothing breaks if the env vars are unset.
-export const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT ?? 'project-9d10f80c-d5df-459f-8d8'
-export const LOCATION = process.env.GOOGLE_CLOUD_LOCATION ?? 'europe-west3'
+// Single source of truth for the Vertex AI project + region. `||` (not `??`) so
+// an EMPTY env var — e.g. a `GOOGLE_CLOUD_PROJECT=` line copied from .env.example
+// — falls back to the default instead of yielding "" and breaking auth.
+export const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT || 'project-9d10f80c-d5df-459f-8d8'
+export const LOCATION = process.env.GOOGLE_CLOUD_LOCATION || 'europe-west3'
 
 const SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
@@ -71,14 +72,16 @@ export async function getAccessToken(): Promise<string> {
   return tokenResponse.token
 }
 
-// Shared @google/genai client in Vertex mode. Same credential resolution as the
-// REST helpers so both surfaces authenticate identically in every environment.
+// Shared @google/genai client in Vertex mode. Only attach googleAuthOptions when
+// a service-account key is actually present; otherwise pass nothing and let the
+// SDK use ADC (matches the original working setup exactly).
 export function getGoogleAI(): GoogleGenAI {
+  const credentials = getCredentials()
   return new GoogleGenAI({
     vertexai: true,
     project: PROJECT_ID,
     location: LOCATION,
-    googleAuthOptions: buildAuthOptions(),
+    ...(credentials ? { googleAuthOptions: { scopes: SCOPES, projectId: PROJECT_ID, credentials } } : {}),
   })
 }
 
