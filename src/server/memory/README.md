@@ -14,9 +14,15 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 - **M1 (done)** — Path A: policy + preference stores, default policies seeded,
   preferences settings UI, and the static-prefix injection into the tutor
   (fail-safe). No ranked memory yet.
-- M2–M5 — see `RAG plan` + `Memory System Extension` docs. Sequencing rule:
-  **do not land M2/M3 during the RAG Phase 2 Serverless bake-in** (ranked memory
-  context in prompts would confound the before/after retrieval-quality comparison).
+- **M2 (done, minus mind-map hook)** — facts/episodes stores, promotion gate
+  (dedup + contradiction → supersession), Path B hybrid retrieval (pgvector +
+  trgm + ILIKE cascade), and the deterministic **quiz** hook: on quiz completion
+  (`submitTestAction` → `after()` → `onQuizCompleted`) a per-category performance
+  fact is recomputed/superseded and a quiz episode logged. The mind-map hook is
+  deferred — mastery is currently client-only state with no DB persistence to
+  hook; wiring it needs mastery persisted first.
+- M3–M5 — next. Path B retrieval is built but **not yet injected** into the tutor
+  (that's M3 assembly).
 
 ## Layout
 
