@@ -21,8 +21,12 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
   fact is recomputed/superseded and a quiz episode logged. The mind-map hook is
   deferred — mastery is currently client-only state with no DB persistence to
   hook; wiring it needs mastery persisted first.
-- M3–M5 — next. Path B retrieval is built but **not yet injected** into the tutor
-  (that's M3 assembly).
+- **M3 (done, minus rolling summary)** — Path B injected into the tutor: retrieved
+  facts + recent episodes in the volatile prompt tail (token-budgeted, fail-safe),
+  plus the memory-answered guard (self-state questions → `answerFromMemory` via
+  Flash-Lite, skipping corpus retrieval entirely). Rolling summary deferred (needs
+  conversation-turn persistence the app doesn't have yet).
+- M4–M5 — next (LLM extraction; GDPR erasure + retention).
 
 ## Layout
 

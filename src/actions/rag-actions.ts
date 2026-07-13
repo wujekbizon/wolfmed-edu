@@ -7,8 +7,13 @@ import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
-import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/vertex-rag'
-import { buildStaticPrefix } from '@/server/memory/assemble'
+import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent, answerFromMemory } from '@/server/vertex-rag'
+import {
+  buildStaticPrefix,
+  buildMemoryTail,
+  isSelfStateQuestion,
+  buildSelfStateContext,
+} from '@/server/memory/assemble'
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
@@ -368,20 +373,40 @@ export async function askRagQuestion(
       }
     }
 
+    // Memory-answered guard: questions about the student's OWN state (progress,
+    // exam, what to revise) are answered from memory alone — no corpus retrieval,
+    // no Flash grounding. Only when the student didn't attach their own resource.
+    if (!additionalContext && pdfFiles.length === 0 && isSelfStateQuestion(cleanQuestion)) {
+      const selfState = await buildSelfStateContext(userId)
+      if (selfState) {
+        await progressStep(
+          jobId, 'searching', 60,
+          'Sprawdzam Twój postęp...',
+          'MEMORY', 'Self-state question — answering from memory, skipping corpus'
+        )
+        const memAnswer = await answerFromMemory(cleanQuestion, selfState)
+        if (jobId) await completeJob(jobId)
+        return { ...toFormState('SUCCESS', memAnswer.answer), values: { sources: [] } }
+      }
+    }
+
     await progressStep(
       jobId, 'searching', 50,
       'Przeszukuję bazę wiedzy...',
       'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`
     )
 
-    // Path A memory: inject active policies + this student's preferences into
-    // the tutor's static prefix. Fail-safe — returns '' if memory is unavailable.
+    // Path A memory: active policies + preferences in the static (cache-friendly)
+    // prefix. Path B: retrieved facts + recent episodes in the volatile tail.
+    // Both fail-safe — return '' if memory is unavailable.
     const memoryPrefix = await buildStaticPrefix(userId)
+    const memoryTail = await buildMemoryTail(userId, cleanQuestion)
+    const combinedContext = [additionalContext, memoryTail].filter(Boolean).join('\n\n')
 
     const result = await queryFileSearchOnly(
       cleanQuestion,
       undefined,
-      additionalContext || undefined,
+      combinedContext || undefined,
       memoryPrefix || undefined
     )
 

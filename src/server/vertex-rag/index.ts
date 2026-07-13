@@ -29,6 +29,7 @@ export {
   queryWithFileSearch,
   queryFileSearchOnly,
   executeToolWithContent,
+  answerFromMemory,
 } from './generate'
 
 export {
