@@ -81,6 +81,15 @@ export async function buildStaticPrefix(userId: string): Promise<string> {
 // (never truncate a record mid-way). Fail-safe → '' so the tutor never breaks.
 export async function buildMemoryTail(userId: string, query: string): Promise<string> {
   try {
+    // Skip the query embedding entirely when the student has no facts yet — no
+    // point paying an embedding call (and quota) to search an empty set.
+    const anyFact = await getActiveFacts(userId, 1)
+    if (anyFact.length === 0) {
+      const episodesOnly = await getRecentEpisodes(userId, { limit: 3 })
+      if (episodesOnly.length === 0) return ''
+      return `OSTATNIE AKTYWNOŚCI UCZNIA:\n${episodesOnly.map((e) => `- ${e.summary}`).join('\n')}`
+    }
+
     const budgetChars = ASSEMBLY_TOKEN_BUDGET * CHARS_PER_TOKEN
     const [factResult, episodes] = await Promise.all([
       retrieveFacts(userId, query, 8),
