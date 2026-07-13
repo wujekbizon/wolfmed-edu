@@ -10,6 +10,7 @@
     "db:memory:seed": "tsx --env-file=.env scripts/seed-memory-policies.ts",
     "rag:preflight": "tsx --env-file=.env scripts/rag-preflight.ts",
     "rag:migrate": "tsx --env-file=.env scripts/rag-migrate.ts",
+    "rag:set-corpus": "tsx --env-file=.env scripts/rag-set-corpus.ts",
     "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
     "db:studio": "drizzle-kit studio",
     "start": "next start",
