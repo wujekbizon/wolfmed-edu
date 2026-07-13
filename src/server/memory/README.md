@@ -26,7 +26,14 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
   plus the memory-answered guard (self-state questions → `answerFromMemory` via
   Flash-Lite, skipping corpus retrieval entirely). Rolling summary deferred (needs
   conversation-turn persistence the app doesn't have yet).
-- M4–M5 — next (LLM extraction; GDPR erasure + retention).
+- **M5 (done)** — GDPR/RODO: `erase.ts` (`eraseUserMemory`) wired into
+  `deleteUserFromDb` (the Clerk `user.deleted` path) — tombstones facts/episodes,
+  hard-deletes preferences/traces, logs a deletion event, one transaction. Nightly
+  retention cron (`/api/cron/memory-retention`, vercel.json) purges traces >90d,
+  expired facts, and revoked facts/episodes >30d (FK-safe fact deletes).
+- **M4 — remaining (optional, ships last)**: combined-call LLM extraction +
+  background episode distillation. Per the plan, build last and kill if the gate
+  rejection logs show noise.
 
 ## Layout
 
