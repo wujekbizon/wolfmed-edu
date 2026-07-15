@@ -10,7 +10,7 @@ import {
 
 export default function FooterInstagram() {
   return (
-    <div id={FOOTER_INSTAGRAM_ID} className='mb-10 max-w-full md:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div id={FOOTER_INSTAGRAM_ID}>
       <div className='relative overflow-hidden rounded-3xl border border-zinc-200 bg-white'>
         <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-fuchsia-500 via-red-500 to-amber-400' />
 
