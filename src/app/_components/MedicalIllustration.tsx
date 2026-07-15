@@ -11,10 +11,14 @@ const HumanCellSVG = dynamic(
   { ssr: false }
 )
 
-export const MedicalIllustration = () => {
+export const MedicalIllustration = ({ backdrop = false }: { backdrop?: boolean }) => {
+  const sizeClass = backdrop
+    ? 'w-[360px] sm:w-[560px] lg:w-[720px] xl:w-[820px] opacity-60 blur-[1px]'
+    : 'w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px]'
+
   return (
     <motion.div
-      className="relative w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px] aspect-square rounded-full"
+      className={`relative ${sizeClass} aspect-square rounded-full`}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{
         opacity: 1,
