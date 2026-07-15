@@ -32,8 +32,6 @@ export default function Footer() {
         </div>
 
         <FooterInstagram />
-
-        {/* Navigation and legal links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
           <div className="text-center sm:text-left">
             <h4 className="font-semibold mb-4">Nawigacja</h4>
