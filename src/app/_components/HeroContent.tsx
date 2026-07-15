@@ -5,16 +5,13 @@ import HeroSpotlightCard from '@/components/HeroSpotlightCard'
 
 export default function HeroContent() {
   return (
-    <div className="relative mx-auto flex w-full max-w-7xl items-center justify-center px-4 sm:px-6 lg:justify-start lg:px-10">
-      {/* Living depth layer: an oversized cell drifts and glows, bleeding off the
-          right edge behind the content card. */}
-      <div className="pointer-events-none absolute inset-0 flex items-center justify-center lg:justify-end">
-        <div className="lg:translate-x-[22%]">
-          <MedicalIllustration backdrop />
-        </div>
+    <div className="relative flex w-full items-center justify-center px-4 sm:px-6">
+      {/* Living depth layer: the cell drifts and glows behind the content card. */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <MedicalIllustration backdrop />
       </div>
 
-      <div className="relative z-10 w-full max-w-xl">
+      <div className="relative z-10 w-full max-w-3xl">
         <HeroSpotlightCard>
           <div className="animate-fadeInUp">
             <HeroTitle />
