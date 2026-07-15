@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
   serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],
-  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app','*.local-origin.dev'],
+  allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app','*.local-origin.dev','192.168.1.13'],
   experimental: {
     serverActions: {
       bodySizeLimit: '3mb'

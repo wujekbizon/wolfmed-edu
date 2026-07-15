@@ -5,6 +5,7 @@ import { navLinks } from '@/constants/navLinks'
 import Image from 'next/image'
 import Link from 'next/link'
 import CookieSettingsButton from './cookies/CookieSettingsButton'
+import FooterInstagram from '@/components/FooterInstagram'
 
 export default function Footer() {
   return (
@@ -29,6 +30,8 @@ export default function Footer() {
             <p className="text-sm text-zinc-500">Innowacyjne rozwiązania w edukacji medycznej</p>
           </div>
         </div>
+
+        <FooterInstagram />
 
         {/* Navigation and legal links */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
