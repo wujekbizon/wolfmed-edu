@@ -26,8 +26,8 @@ export default function Footer() {
 
         <div className="mt-12 grid gap-10 lg:grid-cols-12">
           {/* Brand */}
-          <div className="text-center sm:text-left lg:col-span-4">
-            <div className="flex items-center justify-center gap-3 sm:justify-start">
+          <div className="lg:col-span-4">
+            <div className="flex items-center gap-3">
               <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full border border-zinc-400 bg-zinc-200">
                 <Image
                   src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
@@ -46,7 +46,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="mt-6 flex justify-center gap-3 sm:justify-start">
+            <div className="mt-6 flex gap-3">
               {socialLinks.map(({ href, label, Icon }) => (
                 <Link
                   key={label}
@@ -62,7 +62,7 @@ export default function Footer() {
           </div>
 
           {/* Link groups */}
-          <div className="grid grid-cols-1 gap-8 text-center sm:grid-cols-3 sm:text-left lg:col-span-8">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-8">
             <div>
               <h4 className="mb-4 font-semibold">Nawigacja</h4>
               <ul className="space-y-2 text-sm text-zinc-600">
