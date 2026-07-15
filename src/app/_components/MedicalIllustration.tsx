@@ -13,7 +13,7 @@ const HumanCellSVG = dynamic(
 
 export const MedicalIllustration = ({ backdrop = false }: { backdrop?: boolean }) => {
   const sizeClass = backdrop
-    ? 'w-[360px] sm:w-[560px] lg:w-[720px] xl:w-[820px] opacity-60 blur-[1px]'
+    ? 'w-[460px] sm:w-[680px] lg:w-[860px] xl:w-[980px] opacity-75'
     : 'w-[260px] sm:w-[340px] lg:w-[440px] xl:w-[500px]'
 
   return (
