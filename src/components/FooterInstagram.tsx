@@ -1,27 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  Target,
-  ClipboardList,
-  Stethoscope,
-  HeartHandshake
-} from 'lucide-react'
 import instaQR from '@/images/instaQR.png'
 import InstagramIcon from '@/components/icons/InstagramIcon'
-
-const INSTAGRAM_URL =
-  'https://www.instagram.com/wolfmededukacja.pl?utm_source=qr&igsh=aXdhajRjdzhxdDQy'
-
-const highlights = [
-  { Icon: Target, label: 'Quiz dnia — sprawdźcie swoją wiedzę' },
-  { Icon: ClipboardList, label: 'Procedury tłumaczone krok po kroku' },
-  { Icon: Stethoscope, label: 'Ciekawostki medyczne' },
-  { Icon: HeartHandshake, label: 'Wsparcie od innych, którzy też się uczą' }
-]
+import {
+  INSTAGRAM_URL,
+  FOOTER_INSTAGRAM_ID,
+  instagramHighlights as highlights
+} from '@/constants/instagram'
 
 export default function FooterInstagram() {
   return (
-    <div className='mb-10 max-w-full md:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <div id={FOOTER_INSTAGRAM_ID} className='mb-10 max-w-full md:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
       <div className='relative overflow-hidden rounded-3xl border border-zinc-200 bg-white'>
         <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-fuchsia-500 via-red-500 to-amber-400' />
 
