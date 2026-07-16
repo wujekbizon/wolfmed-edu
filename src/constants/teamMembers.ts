@@ -10,7 +10,7 @@ export const teamMembers = [
     name: 'Grzegorz Wolfinger',
     role: 'Lider techniczny i Programista',
     image: 'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k572GgIEfMpcn5R2Y4TWoEbjyPSwZtlvLxBXzi',
-    bio: 'Innowacyjny lider i programista, odpowiedzialny za rozwój platformy.',
+    bio: 'Innowacyjny lider i programista, odpowiedzialny za rozwój platformy. Projektuje i buduje całe środowisko Wolfmed — od systemu testów po narzędzia do nauki — łącząc nowoczesne technologie z realnymi potrzebami osób uczących się medycyny.',
     linkedin: 'https://www.linkedin.com/in/grzegorz-wolfinger-b88856229/',
   },
 ]

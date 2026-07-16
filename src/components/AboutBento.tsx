@@ -63,7 +63,7 @@ export default function AboutBento() {
           key={member.name}
           member={member}
           domain={founderDomains[i] ?? ''}
-          className={`sm:col-span-2 ${i === 0 ? 'lg:col-span-7' : 'lg:col-span-5'}`}
+          className="sm:col-span-2 lg:col-span-6"
         />
       ))}
 
