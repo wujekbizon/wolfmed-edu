@@ -40,7 +40,7 @@ export default function FloatingInstagram() {
       }`}
     >
       <div className='mx-auto max-w-6xl px-3 pb-3 sm:px-6 sm:pb-4'>
-        <div className='relative overflow-hidden rounded-2xl border border-zinc-200 bg-white/95 shadow-lg shadow-zinc-900/10 backdrop-blur'>
+        <div className='relative overflow-hidden rounded-2xl border border-zinc-200 bg-white/60 shadow-lg shadow-zinc-900/10 backdrop-blur-sm'>
           <div className='absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-fuchsia-500 via-red-500 to-amber-400' />
 
           <div className='flex items-center gap-3 p-3 sm:gap-4 sm:p-4'>
