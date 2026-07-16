@@ -22,13 +22,24 @@ export default function EducationPathsSection() {
           </p>
         </div>
       </div>
-      <div className="relative flex flex-col divide-y divide-white/10 p-4 sm:p-8 bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border-3 border-white shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10">
-        <EducationalPathCard {...CAREGIVER} />
-        <EducationalPathCard
-          {...NURSE}
-          className="flex flex:col lg:flex-row-reverse gap-20"
+      <div className="relative overflow-hidden p-4 sm:p-8 bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border-3 border-white shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10">
+        {/* Interior depth: a warm radial bloom from the top and a faint dot grid */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,91,91,0.14),transparent_55%)]"
         />
-        <EducationalPathCard {...INFO} vertical />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(rgba(255,255,255,0.7)_1px,transparent_1px)] [background-size:22px_22px]"
+        />
+        <div className="relative z-10 flex flex-col divide-y divide-white/10">
+          <EducationalPathCard {...CAREGIVER} />
+          <EducationalPathCard
+            {...NURSE}
+            className="flex flex:col lg:flex-row-reverse gap-20"
+          />
+          <EducationalPathCard {...INFO} vertical />
+        </div>
       </div>
     </section>
   );
