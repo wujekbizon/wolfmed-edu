@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { HumanCellSVG } from './HumanCellSVG'
 import { VirusSVG } from './VirusSVG'
@@ -71,6 +72,16 @@ function EntityGlyph({ kind, index }: { kind: EntityKind; index: number }) {
 
 export default function HeroEntityField() {
   const reduceMotion = useReducedMotion()
+  // Render client-only: these SVGs compute coordinates with Math.cos/sin whose
+  // float serialization differs between server and client, and framer-motion
+  // injects transforms absent in SSR — both cause hydration mismatches. The
+  // field is purely decorative, so skipping SSR is correct.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted) {
+    return <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden />
+  }
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
