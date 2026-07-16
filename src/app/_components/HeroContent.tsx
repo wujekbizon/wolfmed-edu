@@ -4,12 +4,12 @@ import HeroSpotlightCard from '@/components/HeroSpotlightCard'
 
 export default function HeroContent() {
   return (
-    <div className="relative z-10 mx-auto w-full max-w-3xl px-4 sm:px-6">
+    <div className="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6">
       <HeroSpotlightCard>
         <div className="animate-fadeInUp">
           <HeroTitle />
         </div>
-        <div className="animate-fadeInUp [--slidein-delay:200ms]">
+        <div className="animate-fadeInUp [--slidein-delay:200ms] mt-4">
           <HeroCallToActionButtons />
         </div>
         <div className="animate-fadeInUp [--slidein-delay:400ms] mt-6 flex items-center justify-center gap-3">

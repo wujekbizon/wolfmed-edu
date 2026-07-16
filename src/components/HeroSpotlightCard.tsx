@@ -20,7 +20,7 @@ export default function HeroSpotlightCard({ children }: { children: ReactNode })
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="group relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/55 px-6 py-10 shadow-2xl shadow-rose-400/20 backdrop-blur-xl sm:px-12 sm:py-14"
+      className="group relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/55 px-6 py-10 shadow-2xl shadow-rose-400/20 backdrop-blur-xl sm:px-16 sm:py-14"
     >
       {/* cursor-follow spotlight (adapted from Aceternity Card Spotlight for a light surface) */}
       <div

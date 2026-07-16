@@ -5,7 +5,10 @@ export default async function HeroCallToActionButtons() {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
       <HeroButton link="/panel/nauka" className="sm:w-auto">
-        Rozpocznij naukę
+        <span className="inline-flex items-center justify-center gap-2">
+          Rozpocznij naukę
+          <span aria-hidden>→</span>
+        </span>
       </HeroButton>
       <Link
         href="/kierunki"
