@@ -1,6 +1,6 @@
 "use server";
 
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { db } from "@/server/db/index";
 import { courseEnrollments } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -8,8 +8,14 @@ import { hasAccessToTier } from "@/helpers/accessTiers";
 import { getUserEnrollments } from "@/server/queries";
 
 /**
- * Check if user has access to a specific course
- * Checks both Clerk metadata (fast) and database (fallback)
+ * Check if user has access to a specific course.
+ *
+ * Uses only `auth()` (cookie-based, no Clerk API call) for the user id and the
+ * DB enrollment row as the authoritative source. The previous `currentUser()`
+ * fast-path made a Clerk API request on every call; because this runs once per
+ * category on the learning hub (fanned out via Promise.all), it tripped Clerk's
+ * dev-instance rate limit (429). The DB query is already authoritative, so the
+ * metadata pre-check added load without changing the result.
  */
 export async function checkCourseAccessAction(courseSlug: string) {
   const { userId } = await auth();
@@ -19,34 +25,6 @@ export async function checkCourseAccessAction(courseSlug: string) {
   }
 
   try {
-    // Check Clerk metadata first for performance
-    const user = await currentUser();
-    const ownedCourses = (user?.publicMetadata?.ownedCourses as string[]) || [];
-
-    if (ownedCourses.includes(courseSlug)) {
-      const [enrollment] = await db
-        .select()
-        .from(courseEnrollments)
-        .where(
-          and(
-            eq(courseEnrollments.userId, userId),
-            eq(courseEnrollments.courseSlug, courseSlug),
-            eq(courseEnrollments.isActive, true)
-          )
-        )
-        .limit(1);
-
-      // Only return hasAccess: true if active enrollment exists in DB
-      if (enrollment) {
-        return {
-          hasAccess: true,
-          accessTier: enrollment.accessTier,
-        };
-      }
-      // If enrollment doesn't exist or is inactive, fall through to fallback check
-    }
-
-    // Fallback: check database directly
     const [enrollment] = await db
       .select()
       .from(courseEnrollments)
