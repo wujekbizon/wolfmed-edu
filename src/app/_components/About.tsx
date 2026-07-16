@@ -2,8 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/animations/motion'
-import AboutCards from '@/components/AboutCards'
-import TeamSection from '@/components/TeamSection'
+import AboutBento from '@/components/AboutBento'
 
 export default function About() {
   return (
@@ -38,13 +37,11 @@ export default function About() {
               variants={fadeInUp}
               className="mt-4 text-lg text-zinc-400 max-w-2xl mx-auto"
             >
-              Tworzymy przyszłość edukacji medycznej, łącząc doświadczenie z innowacją
+              Za Wolfmed stoją Kinga i Grzegorz Wolfinger — połączenie medycznego
+              doświadczenia z pasją do technologii.
             </motion.p>
           </div>
-          <div className="h-full grid xl:grid-cols-12 gap-10">
-            <AboutCards />
-            <TeamSection />
-          </div>
+          <AboutBento />
         </div>
       </motion.div>
       </div>
