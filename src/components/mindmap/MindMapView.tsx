@@ -69,7 +69,10 @@ function Canvas(props: MindMapViewProps) {
           maskColor="rgba(0,0,0,0.6)"
           className="hidden! bg-zinc-800! md:block!"
         />
-        <Panel position="top-left">
+        <Panel
+          position="top-left"
+          className="top-auto! bottom-3! left-1/2! right-auto! -translate-x-1/2! md:top-0! md:bottom-auto! md:left-0! md:translate-x-0!"
+        >
           <MindMapLegend />
         </Panel>
         <Panel position="top-right">
