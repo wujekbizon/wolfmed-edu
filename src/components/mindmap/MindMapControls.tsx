@@ -18,7 +18,7 @@ export default function MindMapControls({
   onResetView,
 }: MindMapControlsProps) {
   return (
-    <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-zinc-900/80 p-1 backdrop-blur-sm">
+    <div className="flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-end gap-1 rounded-lg border border-white/10 bg-zinc-900/80 p-1 backdrop-blur-sm">
       <button type="button" onClick={() => onLayoutChange("radial")} className={layoutButton(layout === "radial")}>
         Promienisty
       </button>
