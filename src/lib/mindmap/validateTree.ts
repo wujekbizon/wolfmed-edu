@@ -9,12 +9,25 @@ export interface TreeValidationResult {
 const SENTENCE_VERBS =
   /\b(jest|są|był|była|były|ma|mają|powoduje|obejmuje|polega|występuje|prowadzi|is|are|was|were|has|have|causes|includes|consists|leads)\b/i
 
+// Short function words (prepositions/conjunctions) don't count toward the word
+// cap — "Rola układu krążenia w homeostazie" is a valid 4-content-word phrase.
+const FUNCTION_WORDS = new Set([
+  "w", "we", "z", "ze", "i", "o", "u", "na", "do", "od", "po", "za", "przy", "oraz", "lub", "a",
+  "and", "or", "of", "in", "on", "to", "the", "a", "an",
+])
+
+function contentWordCount(label: string): number {
+  return label
+    .split(/\s+/)
+    .filter((word) => !FUNCTION_WORDS.has(word.toLowerCase())).length
+}
+
 function isNounPhrase(label: string): boolean {
   const trimmed = label.trim()
   if (!trimmed) return false
   if (trimmed.endsWith("?") || trimmed.endsWith(".")) return false
   if (SENTENCE_VERBS.test(trimmed)) return false
-  if (trimmed.split(/\s+/).length > 4) return false
+  if (contentWordCount(trimmed) > 4) return false
   return true
 }
 

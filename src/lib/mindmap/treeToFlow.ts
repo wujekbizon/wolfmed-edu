@@ -15,6 +15,9 @@ export interface MindMapNodeData {
   collapsed: boolean
   isLeaf: boolean
   hiddenCount: number
+  // Set by buildFlowGraph when a selection exists and this node is off the
+  // root→selected path; the node renderer fades it.
+  dimmed?: boolean
   // Index signature so this satisfies @xyflow/react's Node<T> data constraint.
   [key: string]: unknown
 }

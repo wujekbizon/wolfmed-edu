@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"
 import { getCategoryColor } from "@/lib/mindmap/design"
 import { getCategoryIcon, CloseIcon, ExplainIcon } from "@/components/mindmap/icons"
 import NodeMasteryPicker from "./NodeMasteryPicker"
@@ -20,7 +21,11 @@ export default function NodeDetailCard({ node, path, onClose, onSetMastery, onEx
   const breadcrumb = path.slice(0, -1)
 
   return (
-    <div className="absolute inset-x-0 bottom-3 z-10 flex max-h-[70%] flex-col rounded-t-2xl border border-white/10 bg-zinc-900/95 p-4 shadow-2xl backdrop-blur md:inset-x-auto md:inset-y-3 md:right-3 md:max-h-none md:w-80 md:rounded-2xl">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="absolute inset-x-0 bottom-3 z-10 flex max-h-[70%] flex-col rounded-t-2xl border border-white/10 bg-zinc-900/95 p-4 shadow-2xl backdrop-blur md:inset-x-auto md:inset-y-3 md:right-3 md:max-h-none md:w-80 md:rounded-2xl">
       <div className="mb-3 flex items-start gap-3">
         <span
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white"
@@ -60,6 +65,6 @@ export default function NodeDetailCard({ node, path, onClose, onSetMastery, onEx
         <ExplainIcon />
         Wyjaśnij szerzej (AI)
       </button>
-    </div>
+    </motion.div>
   )
 }

@@ -51,6 +51,17 @@ src/
 
 ---
 
+## 📏 Code Organization Rules
+
+**These rules apply to all new and modified code:**
+
+1. **One component per file** — never define multiple React components in a single file.
+2. **Max ~90–100 lines per file** — when a file approaches this limit, extract subcomponents, hooks, or logic into new files instead of growing it.
+3. **Helper functions** — before writing any helper, check `/src/helpers` for an existing one. If none exists, create it there following the helpers convention: **one file per function**.
+4. **Types** — always place types in a dedicated file in `/src/types` for the given domain (e.g. `mindmapTypes.ts`), never inline in large component files.
+
+---
+
 ## 🎯 Component Architecture Patterns
 
 ### Modal Components

@@ -7,11 +7,12 @@ import { useToastMessage } from "@/hooks/useToastMessage"
 import { useCellsStore } from "@/store/useCellsStore"
 import FieldError from "@/components/FieldError"
 import SubmitButton from "@/components/SubmitButton"
+import MindMapGenerationModal from "./MindMapGenerationModal"
 import { PulseIcon } from "@/components/mindmap/icons/categoryIcons"
 import type { Cell } from "@/types/cellTypes"
 
 export default function MindMapGenerateForm({ cell }: { cell: Cell }) {
-  const [state, action] = useActionState(generateMindMapAction, EMPTY_FORM_STATE)
+  const [state, action, isPending] = useActionState(generateMindMapAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
   const updateCell = useCellsStore((s) => s.updateCell)
   const lastApplied = useRef(0)
@@ -62,6 +63,7 @@ export default function MindMapGenerateForm({ cell }: { cell: Cell }) {
         loading="Generowanie..."
         className="max-w-sm"
       />
+      {isPending && <MindMapGenerationModal />}
       {noScriptFallback}
     </form>
   )

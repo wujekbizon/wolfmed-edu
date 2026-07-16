@@ -92,7 +92,7 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder="Zapytaj asystenta... (@ pliki, / polecenia)"
-            rows={isFloating ? 1 : 3}
+            rows={isFloating ? 1 : 2}
             className="w-full resize-none text-sm bg-transparent border-none outline-none
               px-3 pt-2.5 pb-1
               text-zinc-800 placeholder:text-zinc-400"

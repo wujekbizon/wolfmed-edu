@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Resizable } from "re-resizable";
 import BottomResizableHandle from "./BottomResizableHandle";
 import RightResizableHandle from "./RightResizableHandle";
+import { useCellFullscreen } from "@/context/CellFullscreenContext";
 
 interface ResizableProps {
     direction: "horizontal" | "vertical";
@@ -16,6 +17,7 @@ export default function ResizableComponent({
     children,
     constraint,
 }: ResizableProps) {
+    const isFullscreen = useCellFullscreen();
     const [innerHeight, setInnerHeight] = useState(0);
     const [innerWidth, setInnerWidth] = useState(0);
     const [width, setWidth] = useState(0);
@@ -47,6 +49,12 @@ export default function ResizableComponent({
 
     if (innerWidth === 0 && innerHeight === 0) {
         return null;
+    }
+
+    // When the enclosing cell is expanded to fullscreen, fill the container
+    // instead of constraining to the resizable width/height.
+    if (isFullscreen) {
+        return <div className="h-full w-full">{children}</div>;
     }
 
     const resizableProps =

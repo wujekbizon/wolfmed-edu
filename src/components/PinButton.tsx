@@ -8,6 +8,7 @@ interface PinButtonProps {
   isSidebarOpen: boolean
   pinnedCount: number
   onClick: () => void
+  compact?: boolean
 }
 
 const iconClass = (isOpen: boolean) =>
@@ -18,12 +19,13 @@ const iconClass = (isOpen: boolean) =>
   }`
 
 const PinButton = forwardRef<HTMLButtonElement, PinButtonProps>(
-  ({ isOpen, isSidebarOpen, pinnedCount, onClick }, ref) => (
-    <div className='relative'>
+  ({ isOpen, isSidebarOpen, pinnedCount, onClick, compact }, ref) => (
+    <div className={`relative ${compact ? 'flex-1 min-w-0' : ''}`}>
       <button
         ref={ref}
         onClick={onClick}
-        className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200
+        className={`group relative flex items-center rounded-xl w-full cursor-pointer transition-all duration-200
+          ${compact ? 'gap-2 px-2 py-2' : 'gap-3.5 px-3 py-2'}
           ${isOpen ? 'text-zinc-950' : 'text-zinc-700 hover:text-zinc-900'}
           ${!isSidebarOpen ? 'justify-center' : ''}`}
       >
@@ -36,9 +38,9 @@ const PinButton = forwardRef<HTMLButtonElement, PinButtonProps>(
         {isSidebarOpen && (
           <>
             <span
-              className={`text-md whitespace-nowrap overflow-hidden ${isOpen ? 'font-semibold' : 'font-medium'}`}
+              className={`whitespace-nowrap overflow-hidden ${compact ? 'text-sm' : 'text-md'} ${isOpen ? 'font-semibold' : 'font-medium'}`}
             >
-              Przypięte notatki
+              {compact ? 'Notatki' : 'Przypięte notatki'}
             </span>
             {pinnedCount > 0 && (
               <span className='ml-auto text-xs bg-zinc-100 text-zinc-500 rounded-full px-2 py-0.5 font-medium'>

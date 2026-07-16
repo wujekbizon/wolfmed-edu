@@ -44,6 +44,21 @@ export function collapseBelowDepth(root: MindMapNode, depth: number): MindMapNod
   return walk(root)
 }
 
+/** Returns a new tree with every node expanded. Pure. */
+export function expandAll(root: MindMapNode): MindMapNode {
+  return { ...root, collapsed: false, children: root.children.map(expandAll) }
+}
+
+/** Node ids from the root down to the target node (inclusive), or null if absent. */
+export function getNodePathIds(root: MindMapNode, nodeId: string): string[] | null {
+  if (root.id === nodeId) return [root.id]
+  for (const child of root.children) {
+    const sub = getNodePathIds(child, nodeId)
+    if (sub) return [root.id, ...sub]
+  }
+  return null
+}
+
 /** Labels from the root down to the target node (inclusive), or null if absent. */
 export function getNodePath(root: MindMapNode, nodeId: string): string[] | null {
   if (root.id === nodeId) return [root.label]
