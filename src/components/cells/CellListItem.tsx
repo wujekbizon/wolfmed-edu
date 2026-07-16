@@ -23,7 +23,7 @@ export default function CellListItem({ cell, isPremium = false }: { cell: Cell; 
   }, [isFullscreen])
 
   const containerClass = isFullscreen
-    ? 'fixed inset-0 z-50 flex flex-col p-1.5 bg-zinc-100'
+    ? 'fixed inset-0 z-50 flex flex-col p-1.5 bg-red-100'
     : 'border border-zinc-400/20 p-1.5 rounded bg-red-300/30'
 
   return (
