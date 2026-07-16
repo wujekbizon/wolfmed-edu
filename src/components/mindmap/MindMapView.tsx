@@ -71,7 +71,7 @@ function Canvas(props: MindMapViewProps) {
         />
         <Panel
           position="top-left"
-          className="top-auto! bottom-3! left-1/2! right-auto! -translate-x-1/2! md:top-0! md:bottom-auto! md:left-0! md:translate-x-0!"
+          className="top-auto! bottom-8! left-auto! right-2! md:top-0! md:bottom-auto! md:left-0! md:right-auto!"
         >
           <MindMapLegend />
         </Panel>
