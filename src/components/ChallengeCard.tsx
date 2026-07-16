@@ -17,7 +17,6 @@ function getChallengeIcon(type: ChallengeType) {
   const iconMap = {
     [ChallengeType.ORDER_STEPS]: '📋',
     [ChallengeType.KNOWLEDGE_QUIZ]: '🧠',
-    [ChallengeType.VISUAL_RECOGNITION]: '👁️',
     [ChallengeType.SPOT_ERROR]: '🔍',
     [ChallengeType.SCENARIO_BASED]: '🏥',
   }

@@ -681,6 +681,33 @@ export const generatedPracticalExams = createTable(
 export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
 export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
 
+// AI-generated procedure quizzes (knowledge-quiz, spot-error, scenario-based).
+// Correct answers stay server-side in quizJson — grading loads the stored row.
+export const generatedQuizzes = createTable(
+  "generated_quizzes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    procedureId: varchar("procedureId", { length: 256 }).notNull(),
+    challengeType: varchar("challengeType", { length: 32 }).notNull(),
+    quizJson: jsonb("quizJson").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("generated_quizzes_user_id_idx").on(table.userId),
+    index("generated_quizzes_user_proc_type_idx").on(
+      table.userId,
+      table.procedureId,
+      table.challengeType
+    ),
+  ]
+)
+
+export type GeneratedQuizRow = typeof generatedQuizzes.$inferSelect
+export type NewGeneratedQuizRow = typeof generatedQuizzes.$inferInsert
+
 // Learning planner
 export const learningPlans = createTable(
   "learning_plans",

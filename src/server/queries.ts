@@ -28,6 +28,7 @@ import {
   userCustomCategories,
   customersMessages,
   generatedPracticalExams,
+  generatedQuizzes,
   learningPlans,
   learningPlanConcepts,
   studyLogs,
@@ -45,6 +46,7 @@ import {
 } from "@/types/dataTypes"
 import { cache } from "react"
 import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
+import { ChallengeType } from "@/types/challengeTypes"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
@@ -1688,11 +1690,15 @@ export const checkAllChallengesComplete = async (
       )
     )
 
-  // Need 5 unique challenge types PASSED (score >= 70%)
-  const uniqueChallengeTypes = new Set(
-    completions.map((c: any) => c.challengeType)
+  // Badge requires every current challenge type PASSED (score >= 70%).
+  // Filtering by the enum ignores legacy rows from removed types.
+  const requiredTypes = Object.values(ChallengeType) as string[]
+  const passedTypes = new Set(
+    completions
+      .map((c: any) => c.challengeType)
+      .filter((type: string) => requiredTypes.includes(type))
   )
-  return uniqueChallengeTypes.size >= 5
+  return passedTypes.size >= requiredTypes.length
 }
 
 /**
@@ -2067,6 +2073,53 @@ export async function getGeneratedPracticalExamById(
     .limit(1)
   return row ? (row.examJson as PracticalExam) : null
 }
+
+// ===== AI-generated procedure quizzes (Quiz 2.0) =====
+
+export async function saveGeneratedQuiz(data: {
+  userId: string
+  procedureId: string
+  challengeType: string
+  quizJson: unknown
+}): Promise<string> {
+  const [row] = await db
+    .insert(generatedQuizzes)
+    .values(data)
+    .returning({ id: generatedQuizzes.id })
+  if (!row) throw new Error("Nie udało się zapisać wygenerowanego quizu.")
+  return row.id
+}
+
+export const getGeneratedQuizById = cache(
+  async (quizId: string, userId: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(eq(generatedQuizzes.id, quizId), eq(generatedQuizzes.userId, userId))
+      )
+      .limit(1)
+    return row ?? null
+  }
+)
+
+export const getLatestGeneratedQuiz = cache(
+  async (userId: string, procedureId: string, challengeType: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(
+          eq(generatedQuizzes.userId, userId),
+          eq(generatedQuizzes.procedureId, procedureId),
+          eq(generatedQuizzes.challengeType, challengeType)
+        )
+      )
+      .orderBy(desc(generatedQuizzes.createdAt))
+      .limit(1)
+    return row ?? null
+  }
+)
 
 // ===== Learning planner =====
 

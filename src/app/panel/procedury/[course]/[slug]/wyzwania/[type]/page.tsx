@@ -1,15 +1,13 @@
 import { redirect } from 'next/navigation'
-import { getProcedureBySlug, getAllProcedures } from '@/server/queries'
+import { getProcedureBySlug } from '@/server/queries'
 import { ChallengeType } from '@/types/challengeTypes'
 import OrderStepsChallenge from '@/components/OrderStepsChallenge'
 import QuizChallengeForm from '@/components/QuizChallengeForm'
-import VisualRecognitionChallengeForm from '@/components/VisualRecognitionChallengeForm'
 import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
 import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
 import {
   generateSpotErrorChallenge,
   generateQuizChallenge,
-  generateVisualRecognitionChallenge,
   generateScenarioChallenge
 } from '@/helpers/challengeGenerator'
 import { Metadata } from 'next'
@@ -32,7 +30,6 @@ export default async function ChallengeTypePage({ params }: Props) {
   const { course, slug, type: challengeType } = await params
 
   const procedure = await getProcedureBySlug(slug) as Procedure
-  const procedures = await getAllProcedures() as Procedure[]
 
   if (!procedure) {
     redirect(`/panel/procedury/${course}`)
@@ -46,10 +43,6 @@ export default async function ChallengeTypePage({ params }: Props) {
       case ChallengeType.KNOWLEDGE_QUIZ:
         const quizChallenge = await generateQuizChallenge(procedure)
         return <QuizChallengeForm procedure={procedure} challenge={quizChallenge} />
-
-      case ChallengeType.VISUAL_RECOGNITION:
-        const visualChallenge = await generateVisualRecognitionChallenge(procedure, procedures)
-        return <VisualRecognitionChallengeForm procedure={procedure} allProcedures={procedures} challenge={visualChallenge} />
 
       case ChallengeType.SPOT_ERROR:
         const spotErrorChallenge = await generateSpotErrorChallenge(procedure)

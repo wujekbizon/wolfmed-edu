@@ -3,7 +3,6 @@
 import type { Procedure } from '@/types/dataTypes'
 import type {
   QuizChallenge,
-  VisualRecognitionChallenge,
   SpotErrorChallenge,
   ScenarioChallenge,
   QuizQuestion,
@@ -143,33 +142,6 @@ export async function generateQuizChallenge(procedure: Procedure): Promise<QuizC
     procedureId: procedure.id,
     procedureName: procedure.data.name,
     questions,
-  }
-}
-
-/**
- * Generate visual recognition challenge
- */
-export async function generateVisualRecognitionChallenge(procedure: Procedure, allProcedures: Procedure[]): Promise<VisualRecognitionChallenge> {
-  // Filter out the current procedure to get distractors
-  const otherProcedures = allProcedures.filter(p => p.id !== procedure.id)
-
-  // Randomly select 3 other procedures as distractors
-  const distractorIndices = getRandomIndices(otherProcedures.length, Math.min(3, otherProcedures.length))
-  const distractors = distractorIndices
-    .map(i => otherProcedures[i]?.data.name)
-    .filter((name): name is string => !!name)
-
-  // Randomize the position of the correct answer
-  const correctAnswerIndex = Math.floor(Math.random() * 4)
-  const options = [...distractors.slice(0, correctAnswerIndex), procedure.data.name, ...distractors.slice(correctAnswerIndex)]
-
-  return {
-    procedureId: procedure.id,
-    procedureName: procedure.data.name,
-    image: procedure.data.image,
-    question: `Którą procedurę przedstawia poniższy obraz?`,
-    options: options.slice(0, 4),
-    correctAnswer: correctAnswerIndex,
   }
 }
 

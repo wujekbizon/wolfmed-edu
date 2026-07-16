@@ -14,16 +14,9 @@ interface Props {
 export default function ChallengesList({ procedure, progress }: Props) {
   const procedureName = procedure.data.name
   const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
-  const progressPercentage = (progress.totalCompleted / 5) * 100
-
-  // Define all 5 challenges
-  const allChallenges: ChallengeType[] = [
-    ChallengeType.ORDER_STEPS,
-    ChallengeType.KNOWLEDGE_QUIZ,
-    ChallengeType.VISUAL_RECOGNITION,
-    ChallengeType.SPOT_ERROR,
-    ChallengeType.SCENARIO_BASED,
-  ]
+  const allChallenges = Object.values(ChallengeType)
+  const totalChallenges = allChallenges.length
+  const progressPercentage = (progress.totalCompleted / totalChallenges) * 100
 
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16 bg-zinc-50">
@@ -37,7 +30,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
             Wyzwania: {procedureName}
           </h1>
           <p className="text-sm text-zinc-600 mb-4">
-            Ukończ wszystkie 5 wyzwań aby zdobyć odznakę procedury
+            Ukończ wszystkie {totalChallenges} wyzwania aby zdobyć odznakę procedury
           </p>
 
           {/* Progress Section */}
@@ -47,7 +40,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
                 Postęp
               </span>
               <span className="text-base font-bold text-zinc-800">
-                {progress.totalCompleted}<span className="text-zinc-500">/5</span>
+                {progress.totalCompleted}<span className="text-zinc-500">/{totalChallenges}</span>
               </span>
             </div>
 
@@ -61,7 +54,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
 
             {/* Progress Milestones */}
             <div className="flex justify-between">
-              {[1, 2, 3, 4, 5].map((milestone) => (
+              {Array.from({ length: totalChallenges }, (_, i) => i + 1).map((milestone) => (
                 <div
                   key={milestone}
                   className={`
@@ -149,7 +142,7 @@ export default function ChallengesList({ procedure, progress }: Props) {
               </div>
               <div className="w-1 h-1 bg-zinc-400 rounded-full" />
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-zinc-800">{5 - progress.totalCompleted}</span>
+                <span className="font-semibold text-zinc-800">{totalChallenges - progress.totalCompleted}</span>
                 <span>pozostało</span>
               </div>
             </div>

@@ -6,7 +6,6 @@ export const MIN_PASSING_SCORE = 70
 export enum ChallengeType {
   ORDER_STEPS = 'order-steps',
   KNOWLEDGE_QUIZ = 'knowledge-quiz',
-  VISUAL_RECOGNITION = 'visual-recognition',
   SPOT_ERROR = 'spot-error',
   SCENARIO_BASED = 'scenario-based',
 }
@@ -14,7 +13,6 @@ export enum ChallengeType {
 export const CHALLENGE_TYPE_LABELS: Record<ChallengeType, string> = {
   [ChallengeType.ORDER_STEPS]: 'Uporządkuj kroki',
   [ChallengeType.KNOWLEDGE_QUIZ]: 'Quiz wiedzy',
-  [ChallengeType.VISUAL_RECOGNITION]: 'Rozpoznawanie wizualne',
   [ChallengeType.SPOT_ERROR]: 'Znajdź błąd',
   [ChallengeType.SCENARIO_BASED]: 'Scenariusz kliniczny',
 }
@@ -59,16 +57,6 @@ export interface QuizChallenge {
   procedureId: string
   procedureName: string
   questions: QuizQuestion[]
-}
-
-// Visual recognition types
-export interface VisualRecognitionChallenge {
-  procedureId: string
-  procedureName: string
-  image: string
-  question: string
-  options: string[]
-  correctAnswer: number
 }
 
 // Error categories for spot-the-error challenge
@@ -123,7 +111,6 @@ export interface ScenarioChallenge {
 // Generic challenge data union type
 export type ChallengeData =
   | QuizChallenge
-  | VisualRecognitionChallenge
   | SpotErrorChallenge
   | ScenarioChallenge
 

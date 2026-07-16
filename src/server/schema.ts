@@ -318,14 +318,6 @@ export const SubmitQuizSchema = z.object({
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
-export const SubmitVisualRecognitionSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
-  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
-});
-
 export const SubmitScenarioSchema = z.object({
   procedureId: z.string().min(1, "Brak ID procedury"),
   procedureName: z.string().min(1, "Brak nazwy procedury"),
@@ -358,6 +350,91 @@ export const SubmitSpotErrorSchema = z.object({
       }
     },
     { message: "Nieprawidłowy format błędów rzeczywistych" }
+  ),
+  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
+});
+
+// --- AI-generated procedure quizzes (Quiz 2.0) ---
+
+const GeneratedQuizOptionListSchema = z
+  .array(z.string().min(1))
+  .length(4, "Pytanie musi mieć dokładnie 4 odpowiedzi");
+
+const GeneratedQuizAnswerIndexSchema = z
+  .number()
+  .int()
+  .min(0)
+  .max(3);
+
+export const GeneratedKnowledgeQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  questions: z
+    .array(
+      z.object({
+        question: z.string().min(10),
+        options: GeneratedQuizOptionListSchema,
+        correctAnswer: GeneratedQuizAnswerIndexSchema,
+        explanation: z.string().optional().nullable(),
+      })
+    )
+    .min(5, "Quiz musi mieć co najmniej 5 pytań")
+    .max(10, "Quiz może mieć maksymalnie 10 pytań"),
+});
+
+export const GeneratedSpotErrorQuizSchema = z
+  .object({
+    procedureName: z.string().min(1),
+    steps: z
+      .array(
+        z.object({
+          step: z.string().min(3),
+          isCorrect: z.boolean(),
+          errorCategory: z
+            .enum(["safety", "sequence", "technique", "omission", "measurement"])
+            .optional()
+            .nullable(),
+          explanation: z.string().optional().nullable(),
+        })
+      )
+      .min(5)
+      .max(40),
+  })
+  .refine(
+    (quiz) => {
+      const errors = quiz.steps.filter((step) => !step.isCorrect).length;
+      return errors >= 2 && errors <= 5;
+    },
+    { message: "Wyzwanie musi zawierać od 2 do 5 błędnych kroków" }
+  );
+
+export const GeneratedScenarioQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  scenario: z.string().min(30),
+  question: z.string().min(10),
+  options: GeneratedQuizOptionListSchema,
+  correctAnswer: GeneratedQuizAnswerIndexSchema,
+  explanation: z.string().optional().nullable(),
+});
+
+export const GenerateProcedureQuizSchema = z.object({
+  procedureId: z.string().min(1, "Brak ID procedury"),
+  challengeType: z.enum(["knowledge-quiz", "spot-error", "scenario-based"], {
+    message: "Nieznany typ wyzwania",
+  }),
+});
+
+export const SubmitGeneratedQuizSchema = z.object({
+  quizId: z.string().uuid("Nieprawidłowy identyfikator quizu"),
+  answers: z.string().min(1, "Brak odpowiedzi").refine(
+    (val) => {
+      try {
+        JSON.parse(val);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { message: "Nieprawidłowy format odpowiedzi" }
   ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });

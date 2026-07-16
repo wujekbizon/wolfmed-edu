@@ -16,7 +16,6 @@ import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import {
   SubmitOrderStepsSchema,
   SubmitQuizSchema,
-  SubmitVisualRecognitionSchema,
   SubmitScenarioSchema,
   SubmitSpotErrorSchema,
 } from "@/server/schema"
@@ -278,102 +277,6 @@ export async function submitOrderStepsAction(
       )
 
       // Award badge if all challenges complete
-      if (allComplete) {
-        await awardBadge(tx, {
-          userId,
-          procedureId,
-          procedureName,
-        })
-      }
-    })
-
-    revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
-    revalidatePath("/panel")
-    return toFormState("SUCCESS", `Ukończono! Wynik: ${score}%`)
-  } catch (error) {
-    return fromErrorToFormState(error)
-  }
-}
-
-/**
- * Submit visual recognition challenge with server-side score calculation
- */
-export async function submitVisualRecognitionAction(
-  formState: FormState,
-  formData: FormData
-) {
-  const { userId } = await auth()
-  if (!userId) throw new Error("Unauthorized")
-
-  const rateLimit = await checkRateLimit(userId, "challenge:submit")
-  if (!rateLimit.success) {
-    const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-    )
-  }
-
-  const procedureId = formData.get("procedureId") as string
-  const procedureName = formData.get("procedureName") as string
-  const selectedOption = formData.get("selectedOption") as string
-  const correctAnswer = formData.get("correctAnswer") as string
-  const timeSpent = formData.get("timeSpent") as string
-
-  const validationResult = SubmitVisualRecognitionSchema.safeParse({
-    procedureId,
-    procedureName,
-    selectedOption,
-    correctAnswer,
-    timeSpent,
-  })
-
-  if (!validationResult.success) {
-    return {
-      ...fromErrorToFormState(validationResult.error),
-      values: {
-        procedureId,
-        procedureName,
-        selectedOption,
-        correctAnswer,
-        timeSpent,
-      },
-    }
-  }
-
-  try {
-    const {
-      procedureId,
-      procedureName,
-      selectedOption,
-      correctAnswer,
-      timeSpent,
-    } = validationResult.data
-
-    const procedure = await getProcedureById(procedureId)
-    if (!procedure) {
-      return toFormState("ERROR", "Procedura nie została znaleziona")
-    }
-
-    // Compare selectedOption against the correctAnswer sent from client
-    const isCorrect = selectedOption === correctAnswer
-    const score = isCorrect ? 100 : 0
-
-    await db.transaction(async (tx) => {
-      await saveChallengeCompletion(tx, {
-        userId,
-        procedureId,
-        challengeType: "visual-recognition",
-        score,
-        timeSpent,
-      })
-
-      const allComplete = await checkAllChallengesComplete(
-        tx,
-        userId,
-        procedureId
-      )
-
       if (allComplete) {
         await awardBadge(tx, {
           userId,

@@ -37,6 +37,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'challenge:submit': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'quiz:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 20 },
 
   'egzamin:grade': { interval: 60 * 60 * 1000, maxRequests: 30 },
   'egzamin:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 5 },
