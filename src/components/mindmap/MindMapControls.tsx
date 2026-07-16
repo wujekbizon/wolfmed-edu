@@ -6,11 +6,11 @@ const ICON_SIZE = 15
 
 const layoutButton = (active: boolean) =>
   `flex items-center justify-center rounded-md p-1.5 transition-colors ${
-    active ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-100"
+    active ? "bg-white/10 text-white" : "text-zinc-400 hover:bg-white/10 hover:text-zinc-100"
   }`
 
 const actionButton =
-  "flex items-center justify-center rounded-md p-1.5 text-zinc-400 transition-colors hover:text-zinc-100"
+  "flex items-center justify-center rounded-md p-1.5 text-zinc-400 transition-colors hover:bg-white/10 hover:text-zinc-100"
 
 export default function MindMapControls({
   layout,
