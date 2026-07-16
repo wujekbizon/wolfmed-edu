@@ -1,13 +1,16 @@
+import { Network, ListTree, UnfoldVertical, FoldVertical, LocateFixed } from "lucide-react"
 import { DownloadIcon } from "@/components/mindmap/icons"
 import type { MindMapControlsProps } from "@/types/mindmapControlsTypes"
 
+const ICON_SIZE = 15
+
 const layoutButton = (active: boolean) =>
-  `rounded-md px-2.5 py-1 text-[11px] font-medium transition-colors ${
+  `flex items-center justify-center rounded-md p-1.5 transition-colors ${
     active ? "bg-white/10 text-white" : "text-zinc-400 hover:text-zinc-100"
   }`
 
 const actionButton =
-  "rounded-md px-2 py-1 text-[11px] font-medium text-zinc-400 transition-colors hover:text-zinc-100"
+  "flex items-center justify-center rounded-md p-1.5 text-zinc-400 transition-colors hover:text-zinc-100"
 
 export default function MindMapControls({
   layout,
@@ -19,28 +22,28 @@ export default function MindMapControls({
 }: MindMapControlsProps) {
   return (
     <div className="flex max-w-[calc(100vw-1rem)] flex-wrap items-center justify-center gap-1 rounded-lg border border-white/10 bg-zinc-900/80 p-1 backdrop-blur-sm md:justify-end">
-      <button type="button" onClick={() => onLayoutChange("radial")} className={layoutButton(layout === "radial")}>
-        Promienisty
+      <button type="button" onClick={() => onLayoutChange("radial")} title="Układ promienisty" className={layoutButton(layout === "radial")}>
+        <Network size={ICON_SIZE} />
       </button>
-      <button type="button" onClick={() => onLayoutChange("tree")} className={layoutButton(layout === "tree")}>
-        Drzewo
+      <button type="button" onClick={() => onLayoutChange("tree")} title="Układ drzewo" className={layoutButton(layout === "tree")}>
+        <ListTree size={ICON_SIZE} />
       </button>
       <span className="mx-0.5 h-4 w-px bg-white/10" />
       <button type="button" onClick={onExpandAll} title="Rozwiń wszystkie gałęzie" className={actionButton}>
-        Rozwiń
+        <UnfoldVertical size={ICON_SIZE} />
       </button>
       <button type="button" onClick={onCollapseAll} title="Zwiń wszystkie gałęzie" className={actionButton}>
-        Zwiń
+        <FoldVertical size={ICON_SIZE} />
       </button>
       <button type="button" onClick={onResetView} title="Wyśrodkuj widok" className={actionButton}>
-        Wyśrodkuj
+        <LocateFixed size={ICON_SIZE} />
       </button>
       <span className="mx-0.5 h-4 w-px bg-white/10" />
       <button
         type="button"
         onClick={onExport}
         title="Pobierz PNG"
-        className={`flex items-center gap-1 ${actionButton}`}
+        className={`gap-1 text-[11px] font-medium ${actionButton}`}
       >
         <DownloadIcon />
         PNG
