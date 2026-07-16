@@ -65,15 +65,37 @@ const EducationalPathCard = ({
               <ExploreLink text={text} url={url} />
             </div>
           </div>
-          <div className="w-full flex items-center rounded-2xl flex-1/2 max-h-[42vh] border border-[#585858]/60 shadow-xl shadow-black/50 backdrop-blur-sm transition-all duration-300 overflow-hidden">
-            <Image
-              src={imgSrc}
-              alt={title}
-              className="w-full h-full object-cover "
-              width={1024}
-              height={1024}
-              priority
+          <div className="relative flex-1/2 w-full">
+            {/* Colored glow halo — the image floats off the dark surface */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-2 rounded-[1.75rem] bg-gradient-to-tr from-red-500/12 via-fuchsia-500/5 to-transparent blur-2xl"
             />
+            {/* Offset panel behind — stacked-card depth */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 translate-x-2.5 translate-y-2.5 rounded-2xl border border-white/5 bg-zinc-800/50"
+            />
+            {/* Image frame */}
+            <div className="relative w-full flex items-center rounded-2xl max-h-[42vh] border border-[#585858]/60 shadow-xl shadow-black/50 backdrop-blur-sm overflow-hidden">
+              <Image
+                src={imgSrc}
+                alt={title}
+                className="w-full h-full object-cover"
+                width={1024}
+                height={1024}
+                priority
+              />
+              {/* Scrim + inner ring for on-image depth */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/5"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10"
+              />
+            </div>
           </div>
 
         </div>

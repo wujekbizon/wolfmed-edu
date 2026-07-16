@@ -6,6 +6,7 @@ import { FloatingShapes } from "@/components/FloatingShapes"
 import About from "./_components/About"
 import EducationPathsSection from "./_components/EducationalPaths"
 import Testimonials from "./_components/Testimonials"
+import FloatingInstagram from "@/components/FloatingInstagram"
 
 export const dynamic = 'force-static'
 export default function HomePage() {
@@ -23,6 +24,7 @@ export default function HomePage() {
         <Contact />
         <Footer />
       </div>
+      <FloatingInstagram />
     </div>
   )
 }

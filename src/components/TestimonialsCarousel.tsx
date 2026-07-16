@@ -35,35 +35,45 @@ export default function TestimonialsCarousel({
               aria-roledescription="slide"
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
-              <figure className="h-96 flex flex-col bg-white/30 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-black/10 p-6 transition-all duration-300 hover:bg-white/30 hover:border-white/60 hover:shadow-xl hover:shadow-black/15">
-                {/* Stars */}
-                <div className="mb-3 flex items-center justify-between">
-                  <Stars rating={t.rating} />
-                  <span className="text-4xl font-serif text-[#ff5b5b]/40 leading-none select-none">&ldquo;</span>
-                </div>
+              <div className="relative h-full">
+                <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-zinc-950/10 p-6 transition-all duration-300 hover:border-white/70 hover:shadow-xl hover:shadow-zinc-950/15">
+                  {/* Accent hairline */}
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 top-0 h-0.5 bg-zinc-900/80"
+                  />
 
-                {/* Quote text — scrollable for very long content, fixed height via parent */}
-                <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-800 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-400/50 [&::-webkit-scrollbar-thumb]:rounded-full">
-                  {t.content}
-                </blockquote>
+                  {/* Stars */}
+                  <div className="mb-3 flex items-center justify-between">
+                    <Stars rating={t.rating} />
+                    <span className="text-4xl font-serif text-[#ff5b5b]/40 leading-none select-none">&ldquo;</span>
+                  </div>
 
-                {/* Author footer */}
-                <div className="mt-4 pt-4 border-t border-white/30 flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-white/20 ring-1 ring-[#ff5b5b]/25 grid place-items-center shrink-0">
-                    <span className="text-sm font-bold text-[#ff5b5b]">
-                      {getInitials(t.username ?? "")}
-                    </span>
+                  {/* Quote text — scrollable for very long content, fixed height via parent */}
+                  <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-800 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-400/50 [&::-webkit-scrollbar-thumb]:rounded-full">
+                    {t.content}
+                  </blockquote>
+
+                  {/* Author footer */}
+                  <div className="mt-4 pt-4 border-t border-white/40 flex items-center gap-3">
+                    <div className="h-11 w-11 rounded-full bg-zinc-900/80 p-[2px] shrink-0">
+                      <div className="h-full w-full rounded-full bg-white/80 grid place-items-center">
+                        <span className="text-sm font-bold text-zinc-900">
+                          {getInitials(t.username ?? "")}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-semibold text-zinc-900 truncate">
+                        {t.username}
+                      </span>
+                      <span className="text-xs text-zinc-500">
+                        {formatDaysAgo(t.createdAt)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-semibold text-zinc-900 truncate">
-                      {t.username}
-                    </span>
-                    <span className="text-xs text-zinc-400">
-                      {formatDaysAgo(t.createdAt)}
-                    </span>
-                  </div>
-                </div>
-              </figure>
+                </figure>
+              </div>
             </div>
           ))}
         </div>
