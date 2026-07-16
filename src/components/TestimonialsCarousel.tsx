@@ -37,10 +37,10 @@ export default function TestimonialsCarousel({
             >
               <div className="relative h-full">
                 <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-zinc-950/10 p-6 transition-all duration-300 hover:border-white/70 hover:shadow-xl hover:shadow-zinc-950/15">
-                  {/* Brand accent hairline */}
+                  {/* Accent hairline */}
                   <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-fuchsia-500/50 via-red-500/50 to-amber-400/50"
+                    className="absolute inset-x-0 top-0 h-0.5 bg-zinc-900/80"
                   />
 
                   {/* Stars */}
@@ -56,9 +56,9 @@ export default function TestimonialsCarousel({
 
                   {/* Author footer */}
                   <div className="mt-4 pt-4 border-t border-white/40 flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-full bg-gradient-to-br from-fuchsia-500/50 via-red-500/50 to-amber-400/50 p-[2px] shrink-0">
+                    <div className="h-11 w-11 rounded-full bg-zinc-900/80 p-[2px] shrink-0">
                       <div className="h-full w-full rounded-full bg-white/80 grid place-items-center">
-                        <span className="text-sm font-bold text-[#ff5b5b]">
+                        <span className="text-sm font-bold text-zinc-900">
                           {getInitials(t.username ?? "")}
                         </span>
                       </div>
