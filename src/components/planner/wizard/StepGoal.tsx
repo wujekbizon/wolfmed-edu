@@ -7,6 +7,7 @@ import GoalTypeSelector from './GoalTypeSelector'
 import FocusSubjectPicker from './FocusSubjectPicker'
 import ExamPresetList from './ExamPresetList'
 import { PLAN_INPUT_CLASS } from '@/constants/planner'
+import { toLocalDateInputValue } from '@/helpers/toLocalDateInputValue'
 import type { ExamDatePreset } from '@/types/plannerTypes'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
 
@@ -19,7 +20,7 @@ export default function StepGoal({
   examPresets: ExamDatePreset[]
   wizard: PlanWizardController
 }) {
-  const minDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+  const minDate = toLocalDateInputValue(new Date(Date.now() + 24 * 60 * 60 * 1000))
 
   return (
     <div className="space-y-5">

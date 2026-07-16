@@ -764,6 +764,16 @@ const PlanConceptInputSchema = z.object({
     .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
 });
 
+// The form sends a bare YYYY-MM-DD, which coerces to midnight UTC. The plan is
+// due at the END of that day, so a plan is editable on its due date — only
+// dates whose end-of-day has already passed are rejected.
+const DUE_DATE_GRACE_MS = 24 * 60 * 60 * 1000 - 1;
+const PlanDueDateSchema = z.coerce
+  .date({ message: "Podaj poprawną datę." })
+  .refine((date) => date.getTime() + DUE_DATE_GRACE_MS > Date.now(), {
+    message: "Termin nie może być w przeszłości.",
+  });
+
 export const CreatePlanSchema = z.object({
   courseSlug: z.string().min(1, "Wybierz kurs.").max(100).trim(),
   name: z
@@ -775,11 +785,7 @@ export const CreatePlanSchema = z.object({
     message: "Wybierz cel planu.",
   }),
   focusCategoryKey: z.string().max(100).trim().optional().nullable(),
-  dueDate: z.coerce
-    .date({ message: "Podaj poprawną datę." })
-    .refine((date) => date.getTime() > Date.now(), {
-      message: "Termin musi być w przyszłości.",
-    }),
+  dueDate: PlanDueDateSchema,
   minutesPerDay: z.coerce
     .number()
     .int()
@@ -802,11 +808,7 @@ export const UpdatePlanSchema = z.object({
     .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
     .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
     .trim(),
-  dueDate: z.coerce
-    .date({ message: "Podaj poprawną datę." })
-    .refine((date) => date.getTime() > Date.now(), {
-      message: "Termin musi być w przyszłości.",
-    }),
+  dueDate: PlanDueDateSchema,
   minutesPerDay: z.coerce
     .number()
     .int()

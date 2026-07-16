@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { NotebookPen, ListChecks } from 'lucide-react'
+import { planCompletionPercent } from '@/helpers/planCompletionPercent'
 import type { PlanProgress } from '@/types/plannerTypes'
 import PlanDashboardHeader from './dashboard/PlanDashboardHeader'
 import PlanStatTiles from './dashboard/PlanStatTiles'
@@ -15,10 +16,10 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
   const [showSettings, setShowSettings] = useState(false)
   const { plan, concepts } = progress
 
-  const completionPercent =
-    progress.plannedTotalMinutes > 0
-      ? Math.round(Math.min(1, progress.actualMinutes / progress.plannedTotalMinutes) * 100)
-      : 0
+  const completionPercent = planCompletionPercent(
+    progress.attributedMinutes,
+    progress.plannedTotalMinutes
+  )
   const completedConcepts = concepts.filter((c) => c.completedAt).length
 
   return (
@@ -35,6 +36,7 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
           completionPercent={completionPercent}
           completedConcepts={completedConcepts}
           totalConcepts={concepts.length}
+          unattributedMinutes={progress.unattributedMinutes}
         />
         {showSettings && <PlanSettings plan={plan} />}
       </div>

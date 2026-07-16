@@ -2122,6 +2122,7 @@ export const getTestActivitySince = cache(
     return db
       .select({
         completedAt: completedTestes.completedAt,
+        startedAt: testSessions.startedAt,
         durationMinutes: testSessions.durationMinutes,
         category: testSessions.category,
       })

@@ -24,7 +24,7 @@ export default function PlanStatTiles({
       <StatTile
         icon={TrendingUp}
         value={`${completionPercent}%`}
-        label={`${formatMinutes(progress.actualMinutes)} z ${formatMinutes(progress.plannedTotalMinutes)}`}
+        label={`${formatMinutes(progress.attributedMinutes)} z ${formatMinutes(progress.plannedTotalMinutes)}`}
       />
       <StatTile
         icon={Flame}

@@ -49,6 +49,8 @@ export interface PlanProgress {
   plannedTotalMinutes: number
   expectedMinutesToDate: number
   actualMinutes: number
+  attributedMinutes: number
+  unattributedMinutes: number
   todayMinutes: number
   paceStatus: PaceStatus
   streak: number

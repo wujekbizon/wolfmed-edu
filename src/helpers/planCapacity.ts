@@ -11,7 +11,9 @@ export function computePlanCapacity(
   minutesPerDay: number
 ): number {
   if (!dueDate || studyDays.length === 0) return 0
-  const due = new Date(`${dueDate}T23:59:59Z`)
+  // Noon UTC maps to the same calendar date in the planner's timezone,
+  // avoiding off-by-one-day drift around midnight.
+  const due = new Date(`${dueDate}T12:00:00Z`)
   if (Number.isNaN(due.getTime())) return 0
   return countPlannedDays(new Date(), due, studyDays) * minutesPerDay
 }
