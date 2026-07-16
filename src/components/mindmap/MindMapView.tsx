@@ -14,7 +14,8 @@ import {
 } from "@xyflow/react"
 import type { MindMapNode as TreeNode } from "@/types/mindmapTypes"
 import type { MindMapNodeData } from "@/lib/mindmap/treeToFlow"
-import { useMindMapCanvas, FIT_VIEW_OPTIONS } from "@/hooks/useMindMapCanvas"
+import { useMindMapCanvas } from "@/hooks/useMindMapCanvas"
+import { FIT_VIEW_OPTIONS } from "@/constants/mindmapCanvas"
 import MindMapNode from "./MindMapNode"
 import MasteryToolbar from "./MasteryToolbar"
 import NodeDetailCard from "./NodeDetailCard"
@@ -72,7 +73,14 @@ function Canvas(props: MindMapViewProps) {
           <MindMapLegend />
         </Panel>
         <Panel position="top-right">
-          <MindMapControls layout={map.layout} onLayoutChange={map.setLayout} onExport={map.handleExport} />
+          <MindMapControls
+            layout={map.layout}
+            onLayoutChange={map.setLayout}
+            onExport={map.handleExport}
+            onExpandAll={map.handleExpandAll}
+            onCollapseAll={map.handleCollapseAll}
+            onResetView={map.handleResetView}
+          />
         </Panel>
       </ReactFlow>
 

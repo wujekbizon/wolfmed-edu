@@ -6,11 +6,9 @@ import type { MindMapNode as TreeNode, MasteryLevel } from '@/types/mindmapTypes
 import { buildFlowGraph, type LayoutMode } from '@/lib/mindmap/buildFlowGraph'
 import { exportMindMapPng } from '@/lib/mindmap/exportPng'
 import type { MindMapNodeData } from '@/lib/mindmap/treeToFlow'
-import { toggleNodeCollapse, setNodeMastery, findNode, getNodePath } from '@/lib/mindmap/treeOps'
-
-// Initial framing. Lower padding = tree fills more of the viewport on first
-// render; maxZoom lets small trees zoom in instead of floating tiny in the middle.
-export const FIT_VIEW_OPTIONS = { padding: 0.12, minZoom: 0.2, maxZoom: 1.5 }
+import { toggleNodeCollapse, setNodeMastery, findNode, getNodePath, expandAll, collapseBelowDepth } from '@/lib/mindmap/treeOps'
+import { useMindMapFocus } from '@/hooks/useMindMapFocus'
+import { FIT_VIEW_OPTIONS } from '@/constants/mindmapCanvas'
 
 export function useMindMapCanvas({
   root,
@@ -31,8 +29,10 @@ export function useMindMapCanvas({
     [root, selectedId, layout]
   )
 
+  const requestFocus = useMindMapFocus(nodes)
+
   // Reframe when the layout mode changes (an explicit action) — but not on
-  // collapse/expand, which keeps the user's current zoom/pan.
+  // collapse/expand, which gets its own focused camera move.
   useEffect(() => {
     fitView({ duration: 300, ...FIT_VIEW_OPTIONS })
   }, [layout, fitView])
@@ -43,17 +43,36 @@ export function useMindMapCanvas({
   }, [nodes])
 
   // Every node selects (opens the toolbar); branches and collapsed nodes
-  // additionally toggle their subtree.
+  // additionally toggle their subtree. Each click queues a matching camera move.
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node<MindMapNodeData>) => {
       setSelectedId(node.id)
       const isBranch = !node.data.isLeaf || node.data.collapsed
-      if (isBranch) onRootChange(toggleNodeCollapse(root, node.id))
+      if (isBranch) {
+        onRootChange(toggleNodeCollapse(root, node.id))
+        requestFocus({ nodeId: node.id, kind: node.data.collapsed ? 'expand' : 'collapse' })
+      } else {
+        requestFocus({ nodeId: node.id, kind: 'leaf' })
+      }
     },
-    [root, onRootChange]
+    [root, onRootChange, requestFocus]
   )
 
   const clearSelection = useCallback(() => setSelectedId(null), [])
+
+  const handleExpandAll = useCallback(() => {
+    onRootChange(expandAll(root))
+    requestFocus({ nodeId: root.id, kind: 'reset' })
+  }, [root, onRootChange, requestFocus])
+
+  const handleCollapseAll = useCallback(() => {
+    onRootChange(collapseBelowDepth(root, 1))
+    requestFocus({ nodeId: root.id, kind: 'reset' })
+  }, [root, onRootChange, requestFocus])
+
+  const handleResetView = useCallback(() => {
+    fitView({ duration: 500, ...FIT_VIEW_OPTIONS })
+  }, [fitView])
 
   const handleMastery = useCallback(
     (level: MasteryLevel) => {
@@ -77,5 +96,6 @@ export function useMindMapCanvas({
     wrapperRef, nodes, edges, layout, setLayout,
     selectedId, selectedNode, selectedIsLeaf, selectedPath,
     onNodeClick, clearSelection, handleMastery, handleExplain, handleExport,
+    handleExpandAll, handleCollapseAll, handleResetView,
   }
 }

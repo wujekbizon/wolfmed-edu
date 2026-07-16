@@ -1,4 +1,5 @@
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react"
+import { motion } from "framer-motion"
 import { getDepthSize, MASTERY_COLORS, lightenColor } from "@/lib/mindmap/design"
 import { getCategoryIcon } from "@/components/mindmap/icons"
 import type { MindMapNodeData } from "@/lib/mindmap/treeToFlow"
@@ -31,8 +32,12 @@ export default function MindMapNode({
     : `inset 0 1px 1px rgba(255,255,255,0.35), 0 4px 12px ${base}66, 0 0 16px ${base}40`
 
   return (
-    <div
-      className="relative flex items-center justify-center overflow-visible rounded-full text-white transition-transform duration-150 hover:scale-105"
+    <motion.div
+      initial={{ opacity: 0, scale: 0.6 }}
+      animate={{ opacity: data.dimmed ? 0.4 : 1, scale: 1 }}
+      whileHover={{ scale: 1.05, opacity: 1 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="relative flex items-center justify-center overflow-visible rounded-full text-white"
       style={{
         width: size,
         height: size,
@@ -75,6 +80,6 @@ export default function MindMapNode({
           style={{ background: MASTERY_COLORS[mastery] }}
         />
       )}
-    </div>
+    </motion.div>
   )
 }
