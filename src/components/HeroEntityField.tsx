@@ -27,8 +27,8 @@ interface Entity {
 // Scattered toward the margins — the centre stays clear so the hero card and
 // its copy are never crowded. Depth reads through size + opacity + blur tiers.
 const entities: Entity[] = [
-  { kind: 'cell', left: '80%', top: '24%', size: 300, opacity: 0.5, blur: 1.5, driftX: [0, 22, -14, 8, 0], driftY: [0, -16, 12, -8, 0], duration: 28 },
-  { kind: 'cell', left: '13%', top: '76%', size: 210, opacity: 0.32, blur: 3, driftX: [0, -18, 12, -6, 0], driftY: [0, 14, -10, 6, 0], duration: 34, delay: 4, className: 'hidden sm:block' },
+  { kind: 'cell', left: '80%', top: '24%', size: 300, opacity: 0.55, blur: 1, driftX: [0, 22, -14, 8, 0], driftY: [0, -16, 12, -8, 0], duration: 28 },
+  { kind: 'cell', left: '13%', top: '76%', size: 210, opacity: 0.45, blur: 1.2, driftX: [0, -18, 12, -6, 0], driftY: [0, 14, -10, 6, 0], duration: 34, delay: 4, className: 'hidden sm:block' },
   { kind: 'virus', left: '15%', top: '20%', size: 96, opacity: 0.55, blur: 0.4, driftX: [0, 16, -10, 0], driftY: [0, -12, 8, 0], duration: 18, delay: 1 },
   { kind: 'aggressive', left: '89%', top: '64%', size: 92, opacity: 0.5, blur: 0.4, driftX: [0, -14, 9, 0], driftY: [0, 11, -8, 0], duration: 20, delay: 2, className: 'hidden sm:block' },
   { kind: 'bacteria', left: '68%', top: '88%', size: 104, opacity: 0.5, blur: 0.8, driftX: [0, 18, -12, 0], driftY: [0, -10, 7, 0], duration: 22, delay: 1.5 },
