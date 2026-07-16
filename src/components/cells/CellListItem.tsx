@@ -1,75 +1,47 @@
-import { DynamicExcalidraw, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell, DynamicMindMapCell } from '.'
+'use client'
+
+import { useEffect, useState } from 'react'
 import ActionBar from './ActionBar'
+import CellContent from './CellContent'
+import { CellFullscreenProvider } from '@/context/CellFullscreenContext'
 import type { Cell } from '@/types/cellTypes'
 
+export default function CellListItem({ cell, isPremium = false }: { cell: Cell; isPremium?: boolean }) {
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
-export default function CellListItem ({ cell, isPremium = false }: { cell: Cell; isPremium?: boolean }) {
+  useEffect(() => {
+    if (!isFullscreen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsFullscreen(false)
+    }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [isFullscreen])
+
+  const containerClass = isFullscreen
+    ? 'fixed inset-0 z-50 flex flex-col p-1.5 bg-zinc-100'
+    : 'border border-zinc-400/20 p-1.5 rounded bg-red-300/30'
+
   return (
     <div id={`cell-${cell.id}`} className="relative">
-      {cell.type === 'note' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative w-full h-10">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicNoteCell cell={cell} />
+      <div className={containerClass}>
+        <div className="relative h-10 w-full shrink-0">
+          <ActionBar
+            cell={cell}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={() => setIsFullscreen((v) => !v)}
+          />
         </div>
-      )}
-      {cell.type === 'rag' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicRagCell cell={cell} isPremium={isPremium} />
+        <div className={isFullscreen ? 'min-h-0 flex-1' : ''}>
+          <CellFullscreenProvider value={{ isFullscreen }}>
+            <CellContent cell={cell} isPremium={isPremium} />
+          </CellFullscreenProvider>
         </div>
-      )}
-      {cell.type === 'draw' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicExcalidraw cell={cell} />
-        </div>
-      )}
-      {cell.type === 'test' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicTestCell cell={cell} />
-        </div>
-      )}
-      {cell.type === 'flashcard' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicFlashcardCell cell={cell} />
-        </div>
-      )}
-      {cell.type === 'plan' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicPlanCell cell={cell} />
-        </div>
-      )}
-      {cell.type === 'media' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicMediaCell cell={cell} />
-        </div>
-      )}
-      {cell.type === 'mindmap' && (
-        <div className="border border-zinc-400/20 p-1.5 rounded bg-red-300/30">
-          <div className="relative h-10 w-full">
-            <ActionBar cell={cell} />
-          </div>
-          <DynamicMindMapCell cell={cell} />
-        </div>
-      )}
+      </div>
     </div>
   )
 }
