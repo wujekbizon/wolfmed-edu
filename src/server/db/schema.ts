@@ -754,6 +754,9 @@ export const learningPlanConcepts = createTable(
   ]
 )
 
+// Activity ledger: every learning feature can emit an entry here. `source`
+// values: manual | practical-exam (more as features migrate). Optional
+// categoryKey/procedureId let the planner attribute minutes to concepts.
 export const studyLogs = createTable(
   "study_logs",
   {
@@ -767,6 +770,8 @@ export const studyLogs = createTable(
     conceptId: uuid("conceptId").references(() => learningPlanConcepts.id, {
       onDelete: "set null",
     }),
+    categoryKey: varchar("categoryKey", { length: 128 }),
+    procedureId: varchar("procedureId", { length: 256 }),
     studyDate: timestamp("studyDate").defaultNow().notNull(),
     minutes: integer("minutes").notNull(),
     note: varchar("note", { length: 500 }),

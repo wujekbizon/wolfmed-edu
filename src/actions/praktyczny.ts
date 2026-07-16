@@ -8,7 +8,11 @@ import { GradePracticalExamSchema, GeneratedPracticalExamSchema } from "@/server
 import { getPracticalExamById } from "@/lib/praktycznyUtils"
 import { gradePracticalExam } from "@/helpers/praktycznyGrading"
 import { executeToolLocally } from "@/server/tools/executor"
-import { saveGeneratedPracticalExam, getGeneratedPracticalExamById } from "@/server/queries"
+import {
+  saveGeneratedPracticalExam,
+  getGeneratedPracticalExamById,
+  insertStudyLog,
+} from "@/server/queries"
 import { toFormState, fromErrorToFormState } from "@/helpers/toFormState"
 import type { FormState } from "@/types/actionTypes"
 import type { ExamAnswers, PracticalExam, PracticalExamState } from "@/types/praktycznyTypes"
@@ -55,6 +59,24 @@ export async function gradePracticalExamAction(
 
     const parsedAnswers: ExamAnswers = JSON.parse(validationResult.data.answers)
     const result = gradePracticalExam(exam, parsedAnswers)
+
+    // Ledger entry: practical exam time counts as learning activity. The
+    // official MED.14 practical part allows 120 min — clamp against runaway
+    // timers from abandoned tabs.
+    const studiedMinutes = Math.min(
+      Math.max(1, Math.round(validationResult.data.timeSpent / 60)),
+      120
+    )
+    try {
+      await insertStudyLog({
+        userId,
+        minutes: studiedMinutes,
+        source: "practical-exam",
+        note: exam.title ? `Egzamin praktyczny: ${exam.title}`.slice(0, 500) : null,
+      })
+    } catch (error) {
+      console.error("Failed to log practical exam study time:", error)
+    }
 
     return {
       status: "SUCCESS",

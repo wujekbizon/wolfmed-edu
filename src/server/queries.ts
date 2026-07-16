@@ -2123,6 +2123,28 @@ export const getLatestGeneratedQuiz = cache(
 
 // ===== Learning planner =====
 
+// Ledger write: features call this on completion so their time counts toward
+// planner progress, streaks and daily goals.
+export async function insertStudyLog(data: {
+  userId: string
+  minutes: number
+  source: string
+  categoryKey?: string | null
+  procedureId?: string | null
+  conceptId?: string | null
+  note?: string | null
+}): Promise<void> {
+  await db.insert(studyLogs).values({
+    userId: data.userId,
+    minutes: data.minutes,
+    source: data.source,
+    categoryKey: data.categoryKey ?? null,
+    procedureId: data.procedureId ?? null,
+    conceptId: data.conceptId ?? null,
+    note: data.note ?? null,
+  })
+}
+
 export const getActivePlan = cache(async (userId: string) => {
   const plan = await db.query.learningPlans.findFirst({
     where: (model, { eq, and }) =>
@@ -2163,6 +2185,7 @@ export const getStudyLogsSince = cache(async (userId: string, since: Date) => {
       studyDate: studyLogs.studyDate,
       minutes: studyLogs.minutes,
       conceptId: studyLogs.conceptId,
+      categoryKey: studyLogs.categoryKey,
     })
     .from(studyLogs)
     .where(

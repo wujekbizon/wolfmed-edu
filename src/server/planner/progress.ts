@@ -100,7 +100,7 @@ async function collectActivity(
     entries.push({
       date: log.studyDate,
       minutes: log.minutes,
-      categoryKey: null,
+      categoryKey: log.categoryKey,
       conceptId: log.conceptId,
     })
   })
