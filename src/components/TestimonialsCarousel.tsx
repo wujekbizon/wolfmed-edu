@@ -36,16 +36,11 @@ export default function TestimonialsCarousel({
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
               <div className="relative h-full">
-                {/* Glow halo — the card floats off the canvas */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -inset-1.5 rounded-[1.25rem] bg-gradient-to-tr from-red-400/15 via-fuchsia-400/8 to-transparent blur-xl"
-                />
-                <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-2xl shadow-black/50 p-6 transition-all duration-300 hover:border-white/[0.16]">
+                <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-lg shadow-black/20 p-6 transition-all duration-300 hover:border-white/[0.16]">
                   {/* Brand accent hairline */}
                   <div
                     aria-hidden
-                    className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-fuchsia-500 via-red-500 to-amber-400"
+                    className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-fuchsia-500/50 via-red-500/50 to-amber-400/50"
                   />
 
                   {/* Stars */}
@@ -61,7 +56,7 @@ export default function TestimonialsCarousel({
 
                   {/* Author footer */}
                   <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-3">
-                    <div className="h-11 w-11 rounded-full bg-gradient-to-br from-fuchsia-500 via-red-500 to-amber-400 p-[2px] shrink-0">
+                    <div className="h-11 w-11 rounded-full bg-gradient-to-br from-fuchsia-500/50 via-red-500/50 to-amber-400/50 p-[2px] shrink-0">
                       <div className="h-full w-full rounded-full bg-zinc-900 grid place-items-center">
                         <span className="text-sm font-bold text-red-400">
                           {getInitials(t.username ?? "")}
