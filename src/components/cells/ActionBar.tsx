@@ -20,12 +20,12 @@ export default function ActionBar({ cell, isFullscreen, onToggleFullscreen }: Ac
     const { moveCell, deleteCell } = useCellsStore()
 
     return (
-        <div className='flex items-center justify-between'>
-            <div className="flex items-center px-1 gap-1">
+        <div className='flex flex-wrap items-center justify-between gap-2'>
+            <div className="flex flex-wrap items-center px-1 gap-1">
                 <SaveCellsButton />
                 <SyncCellsButton />
             </div>
-            <div className="flex items-center px-1 gap-1">
+            <div className="flex flex-wrap items-center px-1 gap-1">
                 <ActionButton
                     icon={<ArrowUpIcon color="white"/>}
                     onClick={() =>

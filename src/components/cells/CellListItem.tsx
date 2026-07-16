@@ -29,7 +29,7 @@ export default function CellListItem({ cell, isPremium = false }: { cell: Cell; 
   return (
     <div id={`cell-${cell.id}`} className="relative">
       <div className={containerClass}>
-        <div className="relative h-10 w-full shrink-0">
+        <div className="relative min-h-10 w-full shrink-0">
           <ActionBar
             cell={cell}
             isFullscreen={isFullscreen}
