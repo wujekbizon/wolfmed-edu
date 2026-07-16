@@ -3,11 +3,13 @@
 import { motion } from 'framer-motion'
 import { fadeInUp, staggerContainer } from '@/animations/motion'
 import AboutBento from '@/components/AboutBento'
+import MicrobeSwarm from '@/components/MicrobeSwarm'
 
 export default function About() {
   return (
     <section className="w-full px-4 sm:px-6 md:px-8 py-16 md:py-24">
-      <div className="bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border border-white/5 shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
+      <div className="group/about bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border border-white/5 shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
+      <MicrobeSwarm />
       <motion.div
         // @ts-ignore
         className="container max-w-7xl px-4 relative "
