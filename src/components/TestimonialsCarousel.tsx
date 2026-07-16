@@ -36,7 +36,7 @@ export default function TestimonialsCarousel({
               aria-label={`Slide ${idx + 1} z ${testimonials.length}`}
             >
               <div className="relative h-full">
-                <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl rounded-2xl border border-white/[0.08] shadow-lg shadow-black/20 p-6 transition-all duration-300 hover:border-white/[0.16]">
+                <figure className="relative h-72 flex flex-col overflow-hidden bg-gradient-to-br from-white/60 to-rose-50/50 backdrop-blur-xl rounded-2xl border border-white/50 shadow-lg shadow-zinc-950/10 p-6 transition-all duration-300 hover:border-white/70 hover:shadow-xl hover:shadow-zinc-950/15">
                   {/* Brand accent hairline */}
                   <div
                     aria-hidden
@@ -50,21 +50,21 @@ export default function TestimonialsCarousel({
                   </div>
 
                   {/* Quote text — scrollable for very long content, fixed height via parent */}
-                  <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-200 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-600/60 [&::-webkit-scrollbar-thumb]:rounded-full">
+                  <blockquote className="flex-1 min-h-0 overflow-y-auto text-sm sm:text-base text-zinc-800 leading-relaxed pr-1 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-400/50 [&::-webkit-scrollbar-thumb]:rounded-full">
                     {t.content}
                   </blockquote>
 
                   {/* Author footer */}
-                  <div className="mt-4 pt-4 border-t border-white/10 flex items-center gap-3">
+                  <div className="mt-4 pt-4 border-t border-white/40 flex items-center gap-3">
                     <div className="h-11 w-11 rounded-full bg-gradient-to-br from-fuchsia-500/50 via-red-500/50 to-amber-400/50 p-[2px] shrink-0">
-                      <div className="h-full w-full rounded-full bg-zinc-900 grid place-items-center">
-                        <span className="text-sm font-bold text-red-400">
+                      <div className="h-full w-full rounded-full bg-white/80 grid place-items-center">
+                        <span className="text-sm font-bold text-[#ff5b5b]">
                           {getInitials(t.username ?? "")}
                         </span>
                       </div>
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-sm font-semibold text-white truncate">
+                      <span className="text-sm font-semibold text-zinc-900 truncate">
                         {t.username}
                       </span>
                       <span className="text-xs text-zinc-500">
