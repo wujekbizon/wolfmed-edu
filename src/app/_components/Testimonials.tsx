@@ -1,5 +1,6 @@
 import TestimonialsCarouselSkeleton from '@/components/skeletons/TestimonialsCarouselSkeleton'
 import TestimonialsCarousel from '@/components/TestimonialsCarousel'
+import SectionHalo from '@/components/SectionHalo'
 import { getTestimonialsWithUsernames } from '@/server/queries'
 import { Suspense } from 'react'
 
@@ -9,8 +10,9 @@ export default async function Testimonials() {
   return (
     <section
       aria-labelledby='testimonials-title'
-      className='relative w-full px-4 sm:px-6 md:px-8 py-32'
+      className='relative w-full px-4 sm:px-6 md:px-8 py-16 md:py-24'
     >
+      <SectionHalo />
       <div className='bg-transparent rounded-3xl px-4 lg:px-8 xl:px-16 py-12 sm:py-16 lg:py-20'>
         <header className='relative mb-8 sm:mb-12 text-center'>
           <span className='mb-3 sm:mb-4 inline-flex items-center gap-1.5 rounded-full border border-red-300/50 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-500 backdrop-blur-sm'>

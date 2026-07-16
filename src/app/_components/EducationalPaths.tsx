@@ -1,11 +1,13 @@
 "use client";
 
 import EducationalPathCard from "@/components/EducationalPathCard";
+import SectionHalo from "@/components/SectionHalo";
 import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
   return (
-    <section id="explore" className="flex flex-col w-full py-8 md:py-12 px-4 md:px-12 xl:px-24 gap-8 ">
+    <section id="explore" className="relative flex flex-col w-full py-16 md:py-24 px-4 md:px-12 xl:px-24 gap-8">
+      <SectionHalo />
       <div className="container relative mx-auto px-3 sm:px-4">
         <div className="mb-8 sm:mb-12 flex flex-col items-center text-center">
           <span className="mb-3 sm:mb-4 inline-flex items-center gap-1.5 rounded-full border border-red-300/50 bg-white/60 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-medium text-red-500 backdrop-blur-sm">

@@ -6,8 +6,8 @@ import AboutBento from '@/components/AboutBento'
 
 export default function About() {
   return (
-    <section className="w-full px-4 sm:px-6 md:px-8 py-8 md:py-12">
-      <div className="bg-zinc-900/90 rounded-3xl border border-white/5 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
+    <section className="w-full px-4 sm:px-6 md:px-8 py-16 md:py-24">
+      <div className="bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border border-white/5 shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10 flex flex-col items-center justify-center py-16 md:py-24 text-white relative overflow-hidden">
       <motion.div
         // @ts-ignore
         className="container max-w-7xl px-4 relative "
