@@ -6,6 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { autoPlanName } from '@/helpers/autoPlanName'
 import { computePlanCapacity, distributeMinutes } from '@/helpers/planCapacity'
+import { scaledConceptMinutes } from '@/helpers/scaledConceptMinutes'
 import {
   MAX_CONCEPTS,
   TOPIC_DEFAULT_MINUTES,
@@ -166,6 +167,22 @@ export function usePlanWizard({
     setCustomLabel('')
   }
 
+  const fillExamTemplate = () =>
+    setConcepts((current) => {
+      const next = [...current]
+      for (const entry of catalog) {
+        if (next.length >= MAX_CONCEPTS) break
+        if (next.some((c) => c.label === entry.label)) continue
+        next.push({
+          categoryKey: entry.categoryKey,
+          label: entry.label,
+          source: 'category',
+          targetMinutes: scaledConceptMinutes(entry),
+        })
+      }
+      return next
+    })
+
   return {
     // step
     step, setStep,
@@ -185,7 +202,7 @@ export function usePlanWizard({
     // handlers
     hasConcept, addConcept, addTopics, removeConcept, updateConceptMinutes,
     distributeCapacity, toggleStudyDay, selectCourse, selectFocus, editName,
-    editNameFromPreset, addCustomConcept,
+    editNameFromPreset, addCustomConcept, fillExamTemplate,
   }
 }
 
