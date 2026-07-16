@@ -91,6 +91,7 @@ export default function HeroEntityField() {
           className={`absolute -translate-x-1/2 -translate-y-1/2 ${entity.className ?? ''}`}
           style={{ left: entity.left, top: entity.top, width: entity.size, height: entity.size }}
         >
+          {/* @ts-ignore */}
           <motion.div
             className="h-full w-full"
             style={{ opacity: entity.opacity, filter: `blur(${entity.blur}px)` }}
