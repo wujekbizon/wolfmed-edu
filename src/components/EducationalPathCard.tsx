@@ -69,7 +69,7 @@ const EducationalPathCard = ({
             {/* Colored glow halo — the image floats off the dark surface */}
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-3 rounded-[1.75rem] bg-gradient-to-tr from-red-500/25 via-fuchsia-500/10 to-transparent blur-2xl"
+              className="pointer-events-none absolute -inset-2 rounded-[1.75rem] bg-gradient-to-tr from-red-500/12 via-fuchsia-500/5 to-transparent blur-2xl"
             />
             {/* Offset panel behind — stacked-card depth */}
             <div

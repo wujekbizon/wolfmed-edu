@@ -26,7 +26,7 @@ export default function EducationPathsSection() {
         {/* Interior depth: a warm radial bloom from the top and a faint dot grid */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,91,91,0.14),transparent_55%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,91,91,0.07),transparent_55%)]"
         />
         <div
           aria-hidden
