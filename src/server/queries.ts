@@ -45,7 +45,7 @@ import {
   Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
-import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
+import { eq, asc, desc, sql, and, or, like, count, inArray, notInArray } from "drizzle-orm"
 import { ChallengeType } from "@/types/challengeTypes"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
@@ -2090,6 +2090,10 @@ export async function getGeneratedPracticalExamById(
 
 // ===== AI-generated procedure quizzes (Quiz 2.0) =====
 
+// Keep only the few newest quizzes per (user, procedure, type); older rows are
+// never read again (the UI loads the latest) so pruning caps unbounded growth.
+const GENERATED_QUIZ_KEEP = 3
+
 export async function saveGeneratedQuiz(data: {
   userId: string
   procedureId: string
@@ -2101,6 +2105,34 @@ export async function saveGeneratedQuiz(data: {
     .values(data)
     .returning({ id: generatedQuizzes.id })
   if (!row) throw new Error("Nie udało się zapisać wygenerowanego quizu.")
+
+  const keep = await db
+    .select({ id: generatedQuizzes.id })
+    .from(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType)
+      )
+    )
+    .orderBy(desc(generatedQuizzes.createdAt))
+    .limit(GENERATED_QUIZ_KEEP)
+
+  await db
+    .delete(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType),
+        notInArray(
+          generatedQuizzes.id,
+          keep.map((r) => r.id)
+        )
+      )
+    )
+
   return row.id
 }
 

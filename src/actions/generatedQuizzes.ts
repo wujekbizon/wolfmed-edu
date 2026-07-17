@@ -24,7 +24,6 @@ import {
   saveGeneratedQuiz,
 } from '@/server/queries'
 import { executeToolLocally } from '@/server/tools/executor'
-import { retrieveContexts } from '@/server/vertex-rag'
 import { toProcedureQuizInput } from '@/helpers/toProcedureQuizInput'
 import { withQuizItemIds } from '@/helpers/withQuizItemIds'
 import { gradeGeneratedQuiz } from '@/helpers/gradeGeneratedQuiz'
@@ -44,22 +43,6 @@ const QUIZ_SCHEMAS = {
 function rateLimitMessage(reset: number): string {
   const resetMinutes = Math.ceil((reset - Date.now()) / 60000)
   return `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
-}
-
-async function bestEffortRagContext(procedureName: string): Promise<string> {
-  try {
-    const contexts = await retrieveContexts(
-      `Procedura: ${procedureName}. Wskazania, przeciwwskazania, zasady bezpieczeństwa, higiena, typowe błędy i powikłania.`,
-      { topK: 6 }
-    )
-    return contexts
-      .map((context) => context.text)
-      .join('\n---\n')
-      .slice(0, 8000)
-  } catch {
-    // The RAG corpus is optional grounding — generation proceeds without it.
-    return ''
-  }
 }
 
 export async function generateProcedureQuizAction(
@@ -100,14 +83,15 @@ export async function generateProcedureQuizAction(
       return toFormState('ERROR', 'Procedura nie została znaleziona.')
     }
 
+    // The procedure's own algorithm steps are the grounding — inlined straight
+    // into the prompt. No RAG retrieval: procedures aren't in the corpus and
+    // the steps already carry the same content.
     const input = toProcedureQuizInput(procedure as Procedure)
-    const context = await bestEffortRagContext(input.procedureName)
 
     const generated = await executeToolLocally('quiz_proceduralny_tool', {
       procedureName: input.procedureName,
       steps: input.steps,
       challengeType: parsed.challengeType,
-      context,
     })
 
     let raw: unknown
