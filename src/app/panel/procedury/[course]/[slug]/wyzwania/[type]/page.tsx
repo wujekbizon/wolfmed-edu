@@ -1,15 +1,12 @@
 import { redirect } from 'next/navigation'
-import { getProcedureBySlug } from '@/server/queries'
+import { getProcedureBySlug, getLatestGeneratedQuiz } from '@/server/queries'
+import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { ChallengeType } from '@/types/challengeTypes'
+import { AI_CHALLENGE_TYPES } from '@/types/generatedQuizTypes'
+import type { AiChallengeType } from '@/types/generatedQuizTypes'
+import { stripQuizAnswers } from '@/helpers/stripQuizAnswers'
 import OrderStepsChallenge from '@/components/OrderStepsChallenge'
-import QuizChallengeForm from '@/components/QuizChallengeForm'
-import SpotErrorChallengeForm from '@/components/SpotErrorChallengeForm'
-import ScenarioChallengeForm from '@/components/ScenarioChallengeForm'
-import {
-  generateSpotErrorChallenge,
-  generateQuizChallenge,
-  generateScenarioChallenge
-} from '@/helpers/challengeGenerator'
+import GeneratedQuizExperience from '@/components/quizzes/GeneratedQuizExperience'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
 import { Procedure } from '@/types/dataTypes'
@@ -40,28 +37,27 @@ export default async function ChallengeTypePage({ params }: Props) {
     redirect(`/panel/procedury/${course}`)
   }
 
-  try {
-    switch (challengeType) {
-      case ChallengeType.ORDER_STEPS:
-        return <OrderStepsChallenge procedure={procedure} />
-
-      case ChallengeType.KNOWLEDGE_QUIZ:
-        const quizChallenge = await generateQuizChallenge(procedure)
-        return <QuizChallengeForm procedure={procedure} challenge={quizChallenge} />
-
-      case ChallengeType.SPOT_ERROR:
-        const spotErrorChallenge = await generateSpotErrorChallenge(procedure)
-        return <SpotErrorChallengeForm procedure={procedure} challenge={spotErrorChallenge} />
-
-      case ChallengeType.SCENARIO_BASED:
-        const scenarioChallenge = await generateScenarioChallenge(procedure)
-        return <ScenarioChallengeForm procedure={procedure} challenge={scenarioChallenge} />
-
-      default:
-        redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
-    }
-  } catch (error) {
-    console.error('Challenge generation failed:', error)
-    redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
+  if (challengeType === ChallengeType.ORDER_STEPS) {
+    return <OrderStepsChallenge procedure={procedure} />
   }
+
+  if (AI_CHALLENGE_TYPES.includes(challengeType as AiChallengeType)) {
+    const [isPremium, latestQuiz] = await Promise.all([
+      checkPremiumAccessAction(),
+      getLatestGeneratedQuiz(user.userId, procedure.id, challengeType),
+    ])
+
+    return (
+      <GeneratedQuizExperience
+        challengeType={challengeType as AiChallengeType}
+        procedureId={procedure.id}
+        procedureName={procedure.data.name}
+        procedureSlug={slug}
+        isPremium={isPremium}
+        initialQuiz={latestQuiz ? stripQuizAnswers(latestQuiz) : null}
+      />
+    )
+  }
+
+  redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
 }

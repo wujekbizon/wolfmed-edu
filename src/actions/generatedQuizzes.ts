@@ -28,6 +28,8 @@ import { retrieveContexts } from '@/server/vertex-rag'
 import { toProcedureQuizInput } from '@/helpers/toProcedureQuizInput'
 import { withQuizItemIds } from '@/helpers/withQuizItemIds'
 import { gradeGeneratedQuiz } from '@/helpers/gradeGeneratedQuiz'
+import { toQuizReview } from '@/helpers/toQuizReview'
+import { stripQuizAnswers } from '@/helpers/stripQuizAnswers'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { FormState } from '@/types/actionTypes'
 import type { GeneratedQuizData } from '@/types/generatedQuizTypes'
@@ -132,9 +134,20 @@ export async function generateProcedureQuizAction(
       quizJson,
     })
 
+    const playView = stripQuizAnswers({
+      id: quizId,
+      procedureId: parsed.procedureId,
+      challengeType: parsed.challengeType,
+      quizJson,
+    })
+
     return {
       ...toFormState('SUCCESS', 'Nowy quiz został wygenerowany!'),
-      values: { quizId, challengeType: parsed.challengeType },
+      values: {
+        quizId,
+        challengeType: parsed.challengeType,
+        playView: JSON.stringify(playView),
+      },
     }
   } catch (error) {
     return fromErrorToFormState(error)
@@ -206,9 +219,15 @@ export async function submitGeneratedQuizAction(
     revalidatePath(`/panel/procedury/opiekun-medyczny/${quiz.procedureId}/wyzwania`)
     revalidatePath('/panel')
 
+    const review = toQuizReview(quiz.challengeType, quiz.quizJson, parsed.answers)
+
     return {
       ...toFormState('SUCCESS', `Ukończono! Wynik: ${score}%`),
-      values: { score, passed: score >= 70 },
+      values: {
+        score,
+        passed: score >= 70,
+        review: JSON.stringify(review),
+      },
     }
   } catch (error) {
     return fromErrorToFormState(error)
