@@ -2,14 +2,19 @@
  * Quiz 2.0 hard reset: wipes all challenge completions and procedure badges
  * so every user re-earns them under the new 4-challenge regime.
  *
+ * Requires NEON_DATABASE_URL in .env.local (same as db:push / seed scripts).
  * Run locally: npx tsx scripts/reset-challenge-progress.ts
  */
-import "dotenv/config"
+import * as dotenv from "dotenv"
 import postgres from "postgres"
 
-const connectionString = process.env.DATABASE_URL
+dotenv.config({ path: ".env.local" })
+dotenv.config()
+
+const connectionString =
+  process.env.NEON_DATABASE_URL ?? process.env.DATABASE_URL
 if (!connectionString) {
-  console.error("DATABASE_URL is not set")
+  console.error("NEON_DATABASE_URL is not set (checked .env.local and .env)")
   process.exit(1)
 }
 
