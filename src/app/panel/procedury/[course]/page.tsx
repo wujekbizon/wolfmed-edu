@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { getUserEnrolledCourses, getAllProcedures } from '@/server/queries'
-import { getAllPielegniastwoProcedures } from '@/lib/pielegniastwoUtils'
 import AllProcedures from '@/components/AllProcedures'
 import PielegniastwoProceduresList from '@/components/PielegniastwoProceduresList'
 import { Metadata } from 'next'
+import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 
 export const dynamic = 'force-dynamic'
 
@@ -38,12 +38,13 @@ export default async function CourseProceduresPage({ params }: Props) {
   if (!isEnrolled) redirect('/panel/procedury')
 
   if (course === 'opiekun-medyczny') {
-    const procedures = await getAllProcedures()
+    const procedures = await getAllProcedures(course)
     return <AllProcedures procedures={procedures as any} />
   }
 
   if (course === 'pielegniarstwo') {
-    const procedures = getAllPielegniastwoProcedures()
+    const rows = await getAllProcedures(course)
+    const procedures = rows.map((row) => row.data as PielegniastwoProcedure)
     return <PielegniastwoProceduresList procedures={procedures} />
   }
 

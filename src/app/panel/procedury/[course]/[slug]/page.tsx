@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
-import { getPielegniastwoProcedureBySlug } from '@/lib/pielegniastwoUtils'
+import { getProcedureBySlug } from '@/server/queries'
 import PielegniastwoProcedureReader from '@/components/PielegniastwoProcedureReader'
 import { Metadata } from 'next'
+import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 
 interface Props {
   params: Promise<{ course: string; slug: string }>
@@ -10,7 +11,8 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { course, slug } = await params
   if (course === 'pielegniarstwo') {
-    const procedure = getPielegniastwoProcedureBySlug(slug)
+    const row = await getProcedureBySlug(course, slug)
+    const procedure = row?.data as PielegniastwoProcedure | undefined
     return {
       title: procedure ? procedure.name : 'Procedura pielęgniarstwa',
       description: procedure
@@ -25,9 +27,9 @@ export default async function CourseProcedureDetailPage({ params }: Props) {
   const { course, slug } = await params
 
   if (course === 'pielegniarstwo') {
-    const procedure = getPielegniastwoProcedureBySlug(slug)
-    if (!procedure) redirect('/panel/procedury/pielegniarstwo')
-    return <PielegniastwoProcedureReader procedure={procedure!} />
+    const row = await getProcedureBySlug(course, slug)
+    if (!row) redirect('/panel/procedury/pielegniarstwo')
+    return <PielegniastwoProcedureReader procedure={row!.data as PielegniastwoProcedure} />
   }
 
   redirect(`/panel/procedury/${course}`)

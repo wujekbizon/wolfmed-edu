@@ -29,7 +29,12 @@ export default async function ChallengeTypePage({ params }: Props) {
 
   const { course, slug, type: challengeType } = await params
 
-  const procedure = await getProcedureBySlug(slug) as Procedure
+  // Challenges run on the flat-algorithm format — opiekun-medyczny only for now.
+  if (course !== 'opiekun-medyczny') {
+    redirect(`/panel/procedury/${course}`)
+  }
+
+  const procedure = await getProcedureBySlug(course, slug) as Procedure
 
   if (!procedure) {
     redirect(`/panel/procedury/${course}`)

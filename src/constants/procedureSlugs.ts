@@ -1,9 +1,9 @@
 /**
- * Auto-generated procedure slug mappings
- * Generated from: data/procedures.json
- * Last updated: 2025-11-05T11:55:21.643Z
+ * Auto-generated procedure slug mappings (opiekun-medyczny)
+ * Generated from: data/procedures.json (slug field)
+ * Last updated: 2026-07-17T08:45:46.523Z
  *
- * To regenerate: tsx scripts/generateProcedureSlugs.ts
+ * To regenerate: npx tsx scripts/generateProcedureSlugs.ts
  */
 
 // Slug to ID mapping (for routing)

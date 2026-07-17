@@ -171,19 +171,26 @@ export const userCustomCategories = createTable(
   })
 )
 
-export const procedures = createTable("procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
-
-export const pielegniastwoProcedures = createTable("pielegniarstwo_procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
+// Single procedures table for all courses. `data.meta` mirrors course/category;
+// the columns are the query-side source of truth. Seeded from data/procedures.json
+// (scripts/seed-procedures.ts) with stable ids and slugs.
+export const procedures = createTable(
+  "procedures",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    course: varchar("course", { length: 100 })
+      .notNull()
+      .default("opiekun-medyczny"),
+    slug: varchar("slug", { length: 256 }).notNull().default(""),
+    data: jsonb("data").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    index("procedures_course_idx").on(table.course),
+    index("procedures_course_slug_idx").on(table.course, table.slug),
+  ]
+)
 
 export const customersMessages = createTable("messages", {
   id: serial("id").primaryKey(),

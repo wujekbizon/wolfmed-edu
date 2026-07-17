@@ -206,19 +206,24 @@ export const deleteUserCustomCategory = async (
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(
-  async (): Promise<ExtendedProcedures[]> => {
-    const procedures = await db.query.procedures.findMany({
+  async (course = "opiekun-medyczny"): Promise<ExtendedProcedures[]> => {
+    return db.query.procedures.findMany({
+      where: (model, { eq }) => eq(model.course, course),
       orderBy: (model, { desc }) => desc(model.id),
     })
-    return procedures
   }
 )
 
-// Count all procedures
-export const getProceduresCount = cache(async (): Promise<number> => {
-  const result = await db.select({ count: count() }).from(procedures)
-  return result[0]?.count ?? 0
-})
+// Count procedures for a course
+export const getProceduresCount = cache(
+  async (course = "opiekun-medyczny"): Promise<number> => {
+    const result = await db
+      .select({ count: count() })
+      .from(procedures)
+      .where(eq(procedures.course, course))
+    return result[0]?.count ?? 0
+  }
+)
 
 // Get procedure by ID
 export const getProcedureById = cache(
@@ -230,17 +235,14 @@ export const getProcedureById = cache(
   }
 )
 
-// Get procedure by slug
+// Get procedure by course + slug (slugs are unique within a course)
 export const getProcedureBySlug = cache(
-  async (slug: string): Promise<ExtendedProcedures | null> => {
-    const { getProcedureIdFromSlug } = await import("@/constants/procedureSlugs")
-    const procedureId = getProcedureIdFromSlug(slug)
-
-    if (!procedureId) {
-      return null
-    }
-
-    return getProcedureById(procedureId)
+  async (course: string, slug: string): Promise<ExtendedProcedures | null> => {
+    const procedure = await db.query.procedures.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.course, course), eq(model.slug, slug)),
+    })
+    return procedure || null
   }
 )
 
