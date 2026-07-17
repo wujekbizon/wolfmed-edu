@@ -6,7 +6,7 @@ import type {
 export type PlanGoalType = 'exam' | 'custom'
 export type PlanStatus = 'active' | 'completed' | 'archived'
 export type PaceStatus = 'ahead' | 'on_track' | 'behind'
-export type ConceptSource = 'category' | 'custom' | 'ai'
+export type ConceptSource = 'category' | 'custom' | 'ai' | 'procedure'
 
 export interface PlanWithConcepts extends LearningPlanRow {
   concepts: LearningPlanConceptRow[]
@@ -15,6 +15,7 @@ export interface PlanWithConcepts extends LearningPlanRow {
 export interface ConceptProgress {
   id: string
   categoryKey: string | null
+  procedureId: string | null
   label: string
   source: ConceptSource
   targetMinutes: number
@@ -28,6 +29,7 @@ export interface DailySuggestion {
   conceptId: string
   label: string
   categoryKey: string | null
+  procedureId: string | null
   remainingMinutesToday: number
 }
 
@@ -63,6 +65,7 @@ export interface ActivityEntry {
   date: Date
   minutes: number
   categoryKey: string | null
+  procedureId: string | null
   conceptId: string | null
 }
 
@@ -86,14 +89,21 @@ export interface ExamDatePreset {
 
 export interface SelectedConcept {
   categoryKey: string | null
+  procedureId?: string | null
   label: string
-  source: 'category' | 'custom'
+  source: 'category' | 'custom' | 'procedure'
   targetMinutes: number
+}
+
+export interface ProcedureOption {
+  id: string
+  name: string
 }
 
 export interface PlanWizardProps {
   courses: { slug: string; name: string }[]
   catalogByCourse: Record<string, ConceptCatalogEntry[]>
   examPresetsByCourse: Record<string, ExamDatePreset[]>
+  proceduresByCourse: Record<string, ProcedureOption[]>
   initialFocus?: string | null
 }

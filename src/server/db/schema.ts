@@ -749,6 +749,7 @@ export const learningPlanConcepts = createTable(
       .references(() => learningPlans.id, { onDelete: "cascade" }),
     userId: varchar("userId", { length: 256 }).notNull(),
     categoryKey: varchar("categoryKey", { length: 100 }),
+    procedureId: varchar("procedureId", { length: 256 }),
     label: varchar("label", { length: 255 }).notNull(),
     source: varchar("source", { length: 20 }).notNull().default("category"),
     targetMinutes: integer("targetMinutes").notNull().default(60),

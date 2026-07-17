@@ -4,6 +4,7 @@ import { BookOpen } from 'lucide-react'
 import FocusProgram from './FocusProgram'
 import CatalogEntry from './CatalogEntry'
 import CustomConceptInput from './CustomConceptInput'
+import ProcedurePicker from './ProcedurePicker'
 import SelectedConceptsList from './SelectedConceptsList'
 import ExamTemplateFill from './ExamTemplateFill'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
@@ -30,6 +31,7 @@ export default function StepScope({ wizard }: { wizard: PlanWizardController }) 
         </div>
       )}
 
+      <ProcedurePicker wizard={wizard} />
       <CustomConceptInput wizard={wizard} />
       <SelectedConceptsList wizard={wizard} />
     </div>

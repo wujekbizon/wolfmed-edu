@@ -828,12 +828,13 @@ export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;
 
 const PlanConceptInputSchema = z.object({
   categoryKey: z.string().max(100).trim().optional().nullable(),
+  procedureId: z.string().uuid().optional().nullable(),
   label: z
     .string()
     .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
     .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
     .trim(),
-  source: z.enum(["category", "custom", "ai"]).default("category"),
+  source: z.enum(["category", "custom", "ai", "procedure"]).default("category"),
   targetMinutes: z.coerce
     .number()
     .int()

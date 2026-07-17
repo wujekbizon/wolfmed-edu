@@ -89,7 +89,16 @@ Kolejność na produkcji:
 4. Deploy kodu czytającego `course`/`slug` z bazy (switch).
 5. Po weryfikacji: `DROP TABLE wolfmed_pielegniarstwo_procedures` (contract).
 
-### M5+ — (dopisuj kolejne zmiany tutaj)
+### M5 — Planer: procedury jako zagadnienia
+*Status: wdrożone na dev.*
+
+- `wolfmed_learning_plan_concepts` + kolumna `procedureId varchar(256) NULL`.
+- Produkcja: czysto addytywne (nullable, bez backfillu) — `drizzle-kit generate`
+  + wykonanie SQL. Stare zagadnienia mają NULL i działają jak dotychczas.
+- Brak skryptów. Atrybucja czasu wyzwań do zagadnień zaczyna działać od
+  pierwszego deploya kodu (wpisy wyzwań niosą procedureId od zawsze).
+
+### M6+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

@@ -156,79 +156,110 @@ export function sumMinutesForDay(entries: ActivityEntry[], day: Date): number {
 export interface AttributableConcept {
   id: string
   categoryKey: string | null
+  procedureId: string | null
   targetMinutes: number
   sortOrder: number
   completedAt: Date | null
 }
 
+type MinuteBuckets = Map<string, { auto: number; manual: number }>
+
+function groupConcepts(
+  concepts: AttributableConcept[],
+  key: 'categoryKey' | 'procedureId'
+): Map<string, AttributableConcept[]> {
+  const groups = new Map<string, AttributableConcept[]>()
+  concepts.forEach((concept) => {
+    const value = concept[key]
+    if (!value) return
+    const group = groups.get(value) ?? []
+    group.push(concept)
+    groups.set(value, group)
+  })
+  return groups
+}
+
 /**
- * Attributes activity minutes to concepts. Explicit conceptId wins (manual).
- * Category-matched minutes waterfall across that category's concepts — open
- * concepts first, each filled up to its target — instead of piling onto the
- * first one. Overflow beyond all targets lands on the category's last concept
- * so no category-linked minutes are lost.
+ * Pours minutes into a group's concepts: open concepts first (by sortOrder),
+ * each filled up to its target; overflow lands on the group's last concept so
+ * no matched minutes are ever lost.
+ */
+function pourIntoGroup(
+  minutes: number,
+  group: AttributableConcept[],
+  attributed: MinuteBuckets
+): void {
+  const bySortOrder = (a: AttributableConcept, b: AttributableConcept) =>
+    a.sortOrder - b.sortOrder
+  const ordered = [
+    ...group.filter((concept) => !concept.completedAt).sort(bySortOrder),
+    ...group.filter((concept) => concept.completedAt).sort(bySortOrder),
+  ]
+
+  let remaining = minutes
+  for (const concept of ordered) {
+    if (remaining <= 0) break
+    const bucket = attributed.get(concept.id)!
+    const room = Math.max(0, concept.targetMinutes - bucket.auto - bucket.manual)
+    const poured = Math.min(room, remaining)
+    bucket.auto += poured
+    remaining -= poured
+  }
+
+  if (remaining > 0) {
+    const last = ordered[ordered.length - 1]!
+    attributed.get(last.id)!.auto += remaining
+  }
+}
+
+/**
+ * Attributes activity minutes to concepts. Matching priority per entry:
+ * explicit conceptId (manual) → procedureId (auto) → categoryKey (auto).
+ * Matched minutes waterfall across the group's concepts instead of piling
+ * onto the first one.
  */
 export function attributeMinutes(
   concepts: AttributableConcept[],
   entries: ActivityEntry[]
-): Map<string, { auto: number; manual: number }> {
-  const attributed = new Map<string, { auto: number; manual: number }>()
+): MinuteBuckets {
+  const attributed: MinuteBuckets = new Map()
   concepts.forEach((concept) =>
     attributed.set(concept.id, { auto: 0, manual: 0 })
   )
 
-  entries.forEach((entry) => {
-    if (!entry.conceptId) return
-    const bucket = attributed.get(entry.conceptId)
-    if (bucket) bucket.manual += entry.minutes
-  })
+  const byProcedure = groupConcepts(concepts, 'procedureId')
+  const byCategory = groupConcepts(concepts, 'categoryKey')
 
+  const autoByProcedure = new Map<string, number>()
   const autoByCategory = new Map<string, number>()
+
   entries.forEach((entry) => {
-    if (entry.conceptId || !entry.categoryKey) return
-    autoByCategory.set(
-      entry.categoryKey,
-      (autoByCategory.get(entry.categoryKey) ?? 0) + entry.minutes
-    )
-  })
-
-  const conceptsByCategory = new Map<string, AttributableConcept[]>()
-  concepts.forEach((concept) => {
-    if (!concept.categoryKey) return
-    const group = conceptsByCategory.get(concept.categoryKey) ?? []
-    group.push(concept)
-    conceptsByCategory.set(concept.categoryKey, group)
-  })
-
-  autoByCategory.forEach((minutes, categoryKey) => {
-    const group = conceptsByCategory.get(categoryKey)
-    if (!group || group.length === 0) return
-
-    const bySortOrder = (a: AttributableConcept, b: AttributableConcept) =>
-      a.sortOrder - b.sortOrder
-    const ordered = [
-      ...group.filter((concept) => !concept.completedAt).sort(bySortOrder),
-      ...group.filter((concept) => concept.completedAt).sort(bySortOrder),
-    ]
-
-    let remaining = minutes
-    for (const concept of ordered) {
-      if (remaining <= 0) break
-      const bucket = attributed.get(concept.id)!
-      const room = Math.max(
-        0,
-        concept.targetMinutes - bucket.auto - bucket.manual
+    if (entry.conceptId) {
+      const bucket = attributed.get(entry.conceptId)
+      if (bucket) bucket.manual += entry.minutes
+      return
+    }
+    if (entry.procedureId && byProcedure.has(entry.procedureId)) {
+      autoByProcedure.set(
+        entry.procedureId,
+        (autoByProcedure.get(entry.procedureId) ?? 0) + entry.minutes
       )
-      const poured = Math.min(room, remaining)
-      bucket.auto += poured
-      remaining -= poured
+      return
     }
-
-    if (remaining > 0) {
-      const last = ordered[ordered.length - 1]!
-      attributed.get(last.id)!.auto += remaining
+    if (entry.categoryKey && byCategory.has(entry.categoryKey)) {
+      autoByCategory.set(
+        entry.categoryKey,
+        (autoByCategory.get(entry.categoryKey) ?? 0) + entry.minutes
+      )
     }
   })
+
+  autoByProcedure.forEach((minutes, procedureId) =>
+    pourIntoGroup(minutes, byProcedure.get(procedureId)!, attributed)
+  )
+  autoByCategory.forEach((minutes, categoryKey) =>
+    pourIntoGroup(minutes, byCategory.get(categoryKey)!, attributed)
+  )
 
   return attributed
 }
@@ -266,6 +297,7 @@ export function pickDailySuggestion(
     conceptId: picked.id,
     label: picked.label,
     categoryKey: picked.categoryKey,
+    procedureId: picked.procedureId,
     remainingMinutesToday: Math.max(0, minutesPerDay - todayMinutes),
   }
 }

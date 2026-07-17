@@ -73,6 +73,7 @@ async function collectActivity(
       date: test.completedAt,
       minutes: realTestMinutes(test),
       categoryKey: test.category,
+      procedureId: null,
       conceptId: null,
     })
   })
@@ -82,6 +83,7 @@ async function collectActivity(
       date: challenge.completedAt,
       minutes: Math.max(1, Math.round(challenge.timeSpent / 60)),
       categoryKey: null,
+      procedureId: challenge.procedureId,
       conceptId: null,
     })
   })
@@ -92,6 +94,7 @@ async function collectActivity(
       date: note.createdAt,
       minutes: NOTE_MINUTES,
       categoryKey: note.category,
+      procedureId: null,
       conceptId: null,
     })
   })
@@ -101,6 +104,7 @@ async function collectActivity(
       date: log.studyDate,
       minutes: log.minutes,
       categoryKey: log.categoryKey,
+      procedureId: log.procedureId,
       conceptId: log.conceptId,
     })
   })
@@ -158,6 +162,7 @@ export const getPlanProgress = cache(
       plan.concepts.map((concept) => ({
         id: concept.id,
         categoryKey: concept.categoryKey,
+        procedureId: concept.procedureId,
         targetMinutes: concept.targetMinutes,
         sortOrder: concept.sortOrder,
         completedAt: concept.completedAt,
@@ -170,6 +175,7 @@ export const getPlanProgress = cache(
       return {
         id: concept.id,
         categoryKey: concept.categoryKey,
+        procedureId: concept.procedureId,
         label: concept.label,
         source: concept.source as ConceptSource,
         targetMinutes: concept.targetMinutes,

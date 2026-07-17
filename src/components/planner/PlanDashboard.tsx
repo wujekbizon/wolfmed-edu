@@ -41,7 +41,11 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
         {showSettings && <PlanSettings plan={plan} />}
       </div>
 
-      <TodayFocusCard todayIsStudyDay={progress.todayIsStudyDay} suggestion={progress.suggestion} />
+      <TodayFocusCard
+        todayIsStudyDay={progress.todayIsStudyDay}
+        suggestion={progress.suggestion}
+        courseSlug={plan.courseSlug}
+      />
 
       <div className="bg-white border border-zinc-200 rounded-2xl p-4 sm:p-8 shadow-sm">
         <h2 className="flex items-center gap-2 text-lg font-bold text-zinc-900 mb-4">

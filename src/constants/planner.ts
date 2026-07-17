@@ -22,5 +22,6 @@ export const PLAN_INPUT_CLASS =
 export const MAX_CONCEPTS = 60
 export const TOPIC_DEFAULT_MINUTES = 30
 export const CONCEPT_DEFAULT_MINUTES = 60
+export const PROCEDURE_DEFAULT_MINUTES = 30
 export const MIN_MINUTES_PER_DAY = 15
 export const MAX_MINUTES_PER_DAY = 240

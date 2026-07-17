@@ -235,6 +235,18 @@ export const getProcedureById = cache(
   }
 )
 
+// Lightweight id+name list for pickers (planner wizard)
+export const getProcedureOptions = cache(async (course: string) => {
+  return db
+    .select({
+      id: procedures.id,
+      name: sql<string>`${procedures.data}->>'name'`,
+    })
+    .from(procedures)
+    .where(eq(procedures.course, course))
+    .orderBy(asc(sql`${procedures.data}->>'name'`))
+})
+
 // Get procedure by course + slug (slugs are unique within a course)
 export const getProcedureBySlug = cache(
   async (course: string, slug: string): Promise<ExtendedProcedures | null> => {
@@ -2188,6 +2200,7 @@ export const getStudyLogsSince = cache(async (userId: string, since: Date) => {
       minutes: studyLogs.minutes,
       conceptId: studyLogs.conceptId,
       categoryKey: studyLogs.categoryKey,
+      procedureId: studyLogs.procedureId,
     })
     .from(studyLogs)
     .where(
@@ -2221,6 +2234,7 @@ export const getChallengeActivitySince = cache(
       .select({
         completedAt: challengeCompletions.completedAt,
         timeSpent: challengeCompletions.timeSpent,
+        procedureId: challengeCompletions.procedureId,
       })
       .from(challengeCompletions)
       .where(

@@ -12,9 +12,10 @@ export default function PlanWizard({
   courses,
   catalogByCourse,
   examPresetsByCourse,
+  proceduresByCourse,
   initialFocus = null,
 }: PlanWizardProps) {
-  const wizard = usePlanWizard({ courses, catalogByCourse, initialFocus })
+  const wizard = usePlanWizard({ courses, catalogByCourse, proceduresByCourse, initialFocus })
 
   return (
     <div className="max-w-3xl mx-auto">

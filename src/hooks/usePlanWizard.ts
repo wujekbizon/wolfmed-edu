@@ -11,10 +11,12 @@ import {
   MAX_CONCEPTS,
   TOPIC_DEFAULT_MINUTES,
   CONCEPT_DEFAULT_MINUTES,
+  PROCEDURE_DEFAULT_MINUTES,
 } from '@/constants/planner'
 import type {
   ConceptCatalogEntry,
   PlanWizardProps,
+  ProcedureOption,
   SelectedConcept,
 } from '@/types/plannerTypes'
 
@@ -32,6 +34,7 @@ function findFocusCourse(
 export function usePlanWizard({
   courses,
   catalogByCourse,
+  proceduresByCourse,
   initialFocus = null,
 }: Omit<PlanWizardProps, 'examPresetsByCourse'>) {
   const initialFocusCourse = findFocusCourse(catalogByCourse, initialFocus)
@@ -72,6 +75,7 @@ export function usePlanWizard({
   const noScriptFallback = useToastMessage(formState)
 
   const catalog = catalogByCourse[courseSlug] ?? []
+  const procedureOptions = proceduresByCourse[courseSlug] ?? []
   const focusEntry = focusKey
     ? catalog.find((entry) => entry.categoryKey === focusKey) ?? null
     : null
@@ -172,6 +176,15 @@ export function usePlanWizard({
     setCustomLabel('')
   }
 
+  const addProcedureConcept = (procedure: ProcedureOption) =>
+    addConcept({
+      categoryKey: null,
+      procedureId: procedure.id,
+      label: procedure.name.slice(0, 255),
+      source: 'procedure',
+      targetMinutes: PROCEDURE_DEFAULT_MINUTES,
+    })
+
   const fillExamTemplate = () =>
     setConcepts((current) => {
       const next = [...current]
@@ -200,14 +213,14 @@ export function usePlanWizard({
     showOtherSubjects, setShowOtherSubjects,
     setDueDate, setMinutesPerDay,
     // derived
-    catalog, focusEntry, otherEntries,
+    catalog, procedureOptions, focusEntry, otherEntries,
     capacityMinutes, plannedMinutes, overCapacity, hoursTotal,
     // form
     formState, action, isPending, noScriptFallback,
     // handlers
     hasConcept, addConcept, addTopics, removeConcept, updateConceptMinutes,
     distributeCapacity, toggleStudyDay, selectCourse, selectFocus, editName,
-    editNameFromPreset, addCustomConcept, fillExamTemplate,
+    editNameFromPreset, addCustomConcept, addProcedureConcept, fillExamTemplate,
   }
 }
 
