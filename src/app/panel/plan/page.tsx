@@ -5,7 +5,7 @@ import { getPlanProgress } from '@/server/planner/progress'
 import { getConceptCatalog, getExamDatePresets } from '@/server/planner/catalog'
 import PlanWizard from '@/components/planner/PlanWizard'
 import PlanDashboard from '@/components/planner/PlanDashboard'
-import type { ConceptCatalogEntry } from '@/types/plannerTypes'
+import type { ConceptCatalogEntry, ExamDatePreset } from '@/types/plannerTypes'
 
 export const metadata = {
   title: 'Plan Nauki | Wolfmed',
@@ -36,8 +36,10 @@ export default async function PlanPage({
     enrolledCourses.map((course) => getConceptCatalog(course.slug))
   )
   const catalogByCourse: Record<string, ConceptCatalogEntry[]> = {}
+  const examPresetsByCourse: Record<string, ExamDatePreset[]> = {}
   enrolledCourses.forEach((course, index) => {
     catalogByCourse[course.slug] = catalogs[index] ?? []
+    examPresetsByCourse[course.slug] = getExamDatePresets(course.slug)
   })
 
   const { zakres } = await searchParams
@@ -50,7 +52,7 @@ export default async function PlanPage({
           name: course.name,
         }))}
         catalogByCourse={catalogByCourse}
-        examPresets={getExamDatePresets()}
+        examPresetsByCourse={examPresetsByCourse}
         initialFocus={zakres ?? null}
       />
     </div>

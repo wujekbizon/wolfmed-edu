@@ -94,6 +94,6 @@ export interface SelectedConcept {
 export interface PlanWizardProps {
   courses: { slug: string; name: string }[]
   catalogByCourse: Record<string, ConceptCatalogEntry[]>
-  examPresets: ExamDatePreset[]
+  examPresetsByCourse: Record<string, ExamDatePreset[]>
   initialFocus?: string | null
 }

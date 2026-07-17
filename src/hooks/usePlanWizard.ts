@@ -33,7 +33,7 @@ export function usePlanWizard({
   courses,
   catalogByCourse,
   initialFocus = null,
-}: Omit<PlanWizardProps, 'examPresets'>) {
+}: Omit<PlanWizardProps, 'examPresetsByCourse'>) {
   const initialFocusCourse = findFocusCourse(catalogByCourse, initialFocus)
   const initialFocusKey = initialFocusCourse ? initialFocus ?? null : null
   const initialFocusLabel = initialFocusKey
@@ -135,6 +135,7 @@ export function usePlanWizard({
     setCourseSlug(slug)
     setConcepts([])
     setFocusKey(null)
+    setPresetLabel('')
     if (!nameEdited) setName('')
     setGoalType(slug === 'opiekun-medyczny' ? 'exam' : 'custom')
   }
