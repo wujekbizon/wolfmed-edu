@@ -28,7 +28,7 @@ export default function ExamPresetList({
               type="button"
               onClick={() => {
                 wizard.setDueDate(toDateInputValue(preset.dateISO))
-                if (!wizard.focusKey) wizard.editNameFromPreset(preset.label)
+                wizard.editNameFromPreset(preset.label)
               }}
               className={`w-full flex items-center gap-3 text-left px-4 py-3 rounded-lg border text-sm transition-all ${
                 selected

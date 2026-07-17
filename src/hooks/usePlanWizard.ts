@@ -56,6 +56,7 @@ export function usePlanWizard({
     initialFocusLabel ? autoPlanName(initialFocusLabel) : ''
   )
   const [nameEdited, setNameEdited] = useState(false)
+  const [presetLabel, setPresetLabel] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [minutesPerDay, setMinutesPerDay] = useState(60)
   const [studyDays, setStudyDays] = useState<number[]>([1, 2, 3, 4, 5])
@@ -146,7 +147,9 @@ export function usePlanWizard({
       const entry = catalog.find((e) => e.categoryKey === key)
       if (entry) setName(autoPlanName(entry.label))
     } else {
-      setName('')
+      // Back to "Cały kurs": fall back to the selected exam session's name
+      // instead of wiping the field.
+      setName(presetLabel)
     }
   }
 
@@ -156,7 +159,8 @@ export function usePlanWizard({
   }
 
   const editNameFromPreset = (label: string) => {
-    if (nameEdited) return
+    setPresetLabel(label)
+    if (nameEdited || focusKey) return
     setName(label)
   }
 
