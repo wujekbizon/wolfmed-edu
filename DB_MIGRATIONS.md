@@ -4,9 +4,9 @@ Ten dokument prowadzi rejestr zmian w schemacie bazy oraz zasady bezpiecznego
 wdrażania ich na produkcję. **Aktualizuj go przy każdej zmianie schematu** —
 sekcja „Rejestr migracji" na dole rośnie wraz z projektem.
 
-> Stan obecny: wszystkie zmiany robimy na branchu deweloperskim z bazą dev
-> (`db:push` + skrypty seed). Ten dokument przygotowuje nas na moment, w którym
-> te same zmiany trzeba będzie wykonać na produkcji.
+> Stan obecny: na branchu deweloperskim iterujemy `db:push`-em na bazie dev.
+> Na produkcji używamy wersjonowanych migracji SQL (`db:generate` → `db:migrate`).
+> Ten dokument opisuje jak jedno przełożyć na drugie.
 
 ---
 
@@ -34,6 +34,39 @@ sekcja „Rejestr migracji" na dole rośnie wraz z projektem.
 
 ---
 
+## Skrypty (package.json)
+
+Wszystkie czytają `NEON_DATABASE_URL` (skrypty `tsx` ładują `.env.local`, potem
+`.env`; komendy `drizzle-kit` biorą je z `drizzle.config.ts`).
+
+| Komenda | Co robi | Kiedy |
+|---|---|---|
+| `pnpm db:push` | wypycha schemat z `schema.ts` prosto do bazy (bez pliku SQL) | **tylko dev** |
+| `pnpm db:generate` | generuje wersjonowaną migrację SQL do `./drizzle` na podstawie różnicy schematu | przed wdrożeniem na prod |
+| `pnpm db:migrate` | wykonuje oczekujące migracje SQL z `./drizzle` na bazie z konfiguracji | prod (po `db:generate` i review) |
+| `pnpm db:studio` | podgląd/edycja danych (Drizzle Studio) | dev / debug prod |
+| `pnpm db:seed:procedures` | TRUNCATE + reseed `wolfmed_procedures` z `data/procedures.json` (zachowuje ID i slugi) | backfill przy M4 |
+| `pnpm db:reset:challenges` | TRUNCATE `challenge_completions` + `procedure_badges` (twardy reset Quiz 2.0) | jednorazowo przy M2 |
+
+## Jak wykonać migrację na produkcji (workflow)
+
+1. **Backup / branch bazy** (Neon).
+2. Na branchu z gotowym `schema.ts`: `pnpm db:generate` — powstaje nowy plik
+   `./drizzle/NNNN_*.sql`. **Przejrzyj go** — sprawdź, czy nie ma niezamierzonych
+   `DROP`/`ALTER ... DROP COLUMN`. Zacommituj plik SQL razem z kodem.
+3. Wdróż migrację na prod: `pnpm db:migrate` (drizzle prowadzi tabelę
+   `__drizzle_migrations`, więc każdą migrację wykona **dokładnie raz**).
+4. Uruchom potrzebne skrypty backfill/seed (patrz wpis Mx poniżej) — one nie są
+   częścią migracji SQL, odpala się je ręcznie i są idempotentne.
+5. Deploy kodu (switch). Krok destrukcyjny (`contract`) — dopiero po weryfikacji,
+   jako osobna migracja.
+
+> Uwaga: `db:push` i `db:generate` nie mieszają się. Jeśli baza dev była
+> aktualizowana push-em, `db:generate` i tak policzy różnicę względem
+> `schema.ts` — to `schema.ts` jest źródłem prawdy, nie historia push-y.
+
+---
+
 ## Rejestr migracji
 
 ### M1 — Planer: tabele learning_plans / learning_plan_concepts / study_logs
@@ -47,13 +80,19 @@ sekcja „Rejestr migracji" na dole rośnie wraz z projektem.
 ### M2 — Quiz 2.0: generated_quizzes + reset wyzwań
 *Status: wdrożone na dev.*
 
-- Nowa tabela: `wolfmed_generated_quizzes` (addytywna, bez backfillu).
+- Nowa tabela: `wolfmed_generated_quizzes` (addytywna, bez backfillu), indeksy
+  `generated_quizzes_user_id_idx` i `generated_quizzes_user_proc_type_idx`.
 - **Decyzja produktowa:** twardy reset postępów wyzwań przy wdrożeniu Quiz 2.0:
-  `npx tsx scripts/reset-challenge-progress.ts` — TRUNCATE
-  `wolfmed_challenge_completions` + `wolfmed_procedure_badges`.
-  Na produkcji wykonać **raz**, w oknie wdrożenia, po backupie.
+  `pnpm db:reset:challenges` — TRUNCATE `wolfmed_challenge_completions` +
+  `wolfmed_procedure_badges`. Na produkcji wykonać **raz**, w oknie wdrożenia,
+  po backupie.
 - Usunięty typ wyzwania `visual-recognition` — stare wiersze tego typu i tak
   znikają przy resecie; kod ignoruje nieznane typy przy liczeniu odznak.
+- **Samoczyszczenie (bez crona):** `saveGeneratedQuiz` przycina tabelę do 3
+  najnowszych wierszy na `(userId, procedureId, challengeType)` przy każdym
+  zapisie. Tabela nie rośnie w nieskończoność — nie potrzeba zadania
+  czyszczącego. Generowanie nie woła już RAG (grounding = kroki procedury
+  w promptcie), więc migracja nie dotyka konfiguracji korpusu.
 
 ### M3 — Ledger: kolumny w study_logs
 *Status: wdrożone na dev.*
@@ -78,16 +117,18 @@ Zmiany schematu:
 Dane:
 - `data/procedures.json` = jedyne źródło: 134 rekordy (31 opiekun + 103
   pielęgniarstwo), każdy z `slug` i `data.meta {course, category}`.
-- Backfill: `npx tsx scripts/seed-procedures.ts` — TRUNCATE + insert z
-  zachowaniem **oryginalnych ID** (wymóg: completions/URL-e) i **oryginalnych
-  slugów opiekuna** (z dawnej mapy `procedureSlugs.ts`).
+- Backfill: `pnpm db:seed:procedures` — TRUNCATE + insert z zachowaniem
+  **oryginalnych ID** (wymóg: completions/URL-e) i **oryginalnych slugów
+  opiekuna** (z dawnej mapy `procedureSlugs.ts`).
 
 Kolejność na produkcji:
 1. Backup / branch bazy.
-2. Wykonaj SQL: dodanie kolumn + indeksów (expand).
-3. `npx tsx scripts/seed-procedures.ts` (backfill — truncate+insert).
+2. `pnpm db:generate` → review SQL → `pnpm db:migrate` (dodanie kolumn +
+   indeksów; expand). DROP starej tabeli wyślij osobno w kroku 5.
+3. `pnpm db:seed:procedures` (backfill — truncate+insert).
 4. Deploy kodu czytającego `course`/`slug` z bazy (switch).
-5. Po weryfikacji: `DROP TABLE wolfmed_pielegniarstwo_procedures` (contract).
+5. Po weryfikacji: osobna migracja z `DROP TABLE wolfmed_pielegniarstwo_procedures`
+   (contract).
 
 ### M5 — Planer: procedury jako zagadnienia
 *Status: wdrożone na dev.*
