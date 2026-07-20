@@ -2,12 +2,18 @@
 
 import { motion } from 'framer-motion'
 import { Award, Trophy } from 'lucide-react'
-import { ChallengeType } from '@/types/challengeTypes'
-import type { ProcedureProgress } from '@/types/challengeTypes'
 
-export default function HubProgressHeader({ progress }: { progress: ProcedureProgress }) {
-  const total = Object.values(ChallengeType).length
-  const percent = Math.round((progress.totalCompleted / total) * 100)
+export default function HubProgressHeader({
+  completedCount,
+  totalTypes,
+  badgeEarned,
+}: {
+  completedCount: number
+  totalTypes: number
+  badgeEarned: boolean
+}) {
+  const total = totalTypes
+  const percent = Math.round((completedCount / total) * 100)
 
   return (
     <div className="bg-white border border-zinc-200 rounded-2xl p-5 sm:p-6 shadow-sm">
@@ -17,7 +23,7 @@ export default function HubProgressHeader({ progress }: { progress: ProcedurePro
           Postęp do odznaki
         </p>
         <span className="text-sm font-bold text-zinc-800 tabular-nums">
-          {progress.totalCompleted}
+          {completedCount}
           <span className="text-zinc-400"> / {total}</span>
         </span>
       </div>
@@ -31,7 +37,7 @@ export default function HubProgressHeader({ progress }: { progress: ProcedurePro
         />
       </div>
 
-      {progress.badgeEarned ? (
+      {badgeEarned ? (
         <div className="mt-4 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3">
           <Trophy className="w-5 h-5 text-emerald-600 shrink-0" />
           <p className="text-sm text-emerald-800">

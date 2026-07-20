@@ -66,6 +66,7 @@ export interface QuizResultProps {
 }
 
 export interface ChallengesHubProps {
+  course: string
   procedureName: string
   procedureSlug: string
   progress: ProcedureProgress

@@ -19,10 +19,12 @@ const AI_TYPES: ChallengeType[] = [
 ]
 
 export default function ChallengeTypeCard({
+  course,
   challengeType,
   procedureSlug,
   completion,
 }: {
+  course: string
   challengeType: ChallengeType
   procedureSlug: string
   completion?: ChallengeCompletion | undefined
@@ -33,7 +35,7 @@ export default function ChallengeTypeCard({
 
   return (
     <Link
-      href={`/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania/${challengeType}`}
+      href={`/panel/procedury/${course}/${procedureSlug}/wyzwania/${challengeType}`}
       className="group flex flex-col bg-white border border-zinc-200 rounded-2xl p-5 shadow-sm hover:shadow-lg hover:border-[#ff9898]/60 transition-all duration-300"
     >
       <div className="flex items-start justify-between mb-4">

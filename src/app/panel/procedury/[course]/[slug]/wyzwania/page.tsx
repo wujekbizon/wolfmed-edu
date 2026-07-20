@@ -21,11 +21,6 @@ export default async function ChallengePage({ params }: Props) {
 
   const { course, slug } = await params
 
-  // Challenges run on the flat-algorithm format — opiekun-medyczny only for now.
-  if (course !== 'opiekun-medyczny') {
-    redirect(`/panel/procedury/${course}`)
-  }
-
   const procedure = await getProcedureBySlug(course, slug) as Procedure
 
   if (!procedure) {
@@ -40,6 +35,7 @@ export default async function ChallengePage({ params }: Props) {
 
   return (
     <ChallengesHub
+      course={course}
       procedureName={procedure.data.name}
       procedureSlug={slug}
       progress={progressResult.data!}

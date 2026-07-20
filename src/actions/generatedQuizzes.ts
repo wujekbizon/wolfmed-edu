@@ -52,11 +52,6 @@ export async function generateProcedureQuizAction(
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
-  const access = await checkCourseAccessAction('opiekun-medyczny')
-  if (!access.hasAccess) {
-    return toFormState('ERROR', 'Brak dostępu do kursu opiekun medyczny.')
-  }
-
   const isPremium = await checkPremiumAccessAction()
   if (!isPremium) {
     return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
@@ -81,6 +76,11 @@ export async function generateProcedureQuizAction(
     const procedure = await getProcedureById(parsed.procedureId)
     if (!procedure) {
       return toFormState('ERROR', 'Procedura nie została znaleziona.')
+    }
+
+    const access = await checkCourseAccessAction(procedure.course)
+    if (!access.hasAccess) {
+      return toFormState('ERROR', 'Brak dostępu do tego kursu.')
     }
 
     // The procedure's own algorithm steps are the grounding — inlined straight
@@ -200,7 +200,6 @@ export async function submitGeneratedQuizAction(
       }
     })
 
-    revalidatePath(`/panel/procedury/opiekun-medyczny/${quiz.procedureId}/wyzwania`)
     revalidatePath('/panel')
 
     const review = toQuizReview(quiz.challengeType, quiz.quizJson, parsed.answers)

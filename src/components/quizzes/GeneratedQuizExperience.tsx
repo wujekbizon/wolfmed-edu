@@ -10,6 +10,7 @@ import ScenarioPlayer from './ScenarioPlayer'
 import QuizResultView from './QuizResultView'
 
 export default function GeneratedQuizExperience({
+  course,
   challengeType,
   procedureId,
   procedureName,
@@ -17,6 +18,7 @@ export default function GeneratedQuizExperience({
   isPremium,
   initialQuiz,
 }: {
+  course: string
   challengeType: AiChallengeType
   procedureId: string
   procedureName: string
@@ -27,7 +29,7 @@ export default function GeneratedQuizExperience({
   const q = useGeneratedQuiz(initialQuiz)
   const generateFormRef = useRef<HTMLFormElement>(null)
   const submitFormRef = useRef<HTMLFormElement>(null)
-  const backHref = `/panel/procedury/opiekun-medyczny/${procedureSlug}/wyzwania`
+  const backHref = `/panel/procedury/${course}/${procedureSlug}/wyzwania`
 
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit bg-zinc-50 p-4 lg:p-10">

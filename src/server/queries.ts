@@ -46,7 +46,7 @@ import {
 } from "@/types/dataTypes"
 import { cache } from "react"
 import { eq, asc, desc, sql, and, or, like, count, inArray, notInArray } from "drizzle-orm"
-import { ChallengeType } from "@/types/challengeTypes"
+import { challengeTypesForCourse } from "@/helpers/challengeTypesForCourse"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
@@ -227,7 +227,9 @@ export const getProceduresCount = cache(
 
 // Get procedure by ID
 export const getProcedureById = cache(
-  async (id: string): Promise<ExtendedProcedures | null> => {
+  async (
+    id: string
+  ): Promise<(ExtendedProcedures & { course: string; slug: string }) | null> => {
     const procedure = await db.query.procedures.findFirst({
       where: (model, { eq }) => eq(model.id, id),
     })
@@ -1693,6 +1695,12 @@ export const checkAllChallengesComplete = async (
   userId: string,
   procedureId: string
 ): Promise<boolean> => {
+  const [proc] = await tx
+    .select({ course: procedures.course })
+    .from(procedures)
+    .where(eq(procedures.id, procedureId))
+    .limit(1)
+
   const completions = await tx
     .select()
     .from(challengeCompletions)
@@ -1704,9 +1712,11 @@ export const checkAllChallengesComplete = async (
       )
     )
 
-  // Badge requires every current challenge type PASSED (score >= 70%).
-  // Filtering by the enum ignores legacy rows from removed types.
-  const requiredTypes = Object.values(ChallengeType) as string[]
+  // Badge requires every challenge type of the procedure's course PASSED
+  // (score >= 70%). Filtering ignores legacy rows from removed types.
+  const requiredTypes = challengeTypesForCourse(
+    proc?.course ?? "opiekun-medyczny"
+  ) as string[]
   const passedTypes = new Set(
     completions
       .map((c: any) => c.challengeType)

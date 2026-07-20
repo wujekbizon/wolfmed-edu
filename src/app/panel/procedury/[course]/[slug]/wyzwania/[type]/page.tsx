@@ -26,18 +26,17 @@ export default async function ChallengeTypePage({ params }: Props) {
 
   const { course, slug, type: challengeType } = await params
 
-  // Challenges run on the flat-algorithm format — opiekun-medyczny only for now.
-  if (course !== 'opiekun-medyczny') {
-    redirect(`/panel/procedury/${course}`)
-  }
-
   const procedure = await getProcedureBySlug(course, slug) as Procedure
 
   if (!procedure) {
     redirect(`/panel/procedury/${course}`)
   }
 
+  // Order-steps needs the flat algorithm shape — opiekun-medyczny only.
   if (challengeType === ChallengeType.ORDER_STEPS) {
+    if (course !== 'opiekun-medyczny') {
+      redirect(`/panel/procedury/${course}/${slug}/wyzwania`)
+    }
     return <OrderStepsChallenge procedure={procedure} />
   }
 
@@ -49,6 +48,7 @@ export default async function ChallengeTypePage({ params }: Props) {
 
     return (
       <GeneratedQuizExperience
+        course={course}
         challengeType={challengeType as AiChallengeType}
         procedureId={procedure.id}
         procedureName={procedure.data.name}
