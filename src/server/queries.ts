@@ -28,6 +28,7 @@ import {
   userCustomCategories,
   customersMessages,
   generatedPracticalExams,
+  generatedQuizzes,
   learningPlans,
   learningPlanConcepts,
   studyLogs,
@@ -44,7 +45,8 @@ import {
   Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
-import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
+import { eq, asc, desc, sql, and, or, like, count, inArray, notInArray } from "drizzle-orm"
+import { challengeTypesForCourse } from "@/helpers/challengeTypesForCourse"
 import { Post as ForumPost } from "@/types/forumPostsTypes"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
@@ -204,23 +206,30 @@ export const deleteUserCustomCategory = async (
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(
-  async (): Promise<ExtendedProcedures[]> => {
-    const procedures = await db.query.procedures.findMany({
+  async (course = "opiekun-medyczny"): Promise<ExtendedProcedures[]> => {
+    return db.query.procedures.findMany({
+      where: (model, { eq }) => eq(model.course, course),
       orderBy: (model, { desc }) => desc(model.id),
     })
-    return procedures
   }
 )
 
-// Count all procedures
-export const getProceduresCount = cache(async (): Promise<number> => {
-  const result = await db.select({ count: count() }).from(procedures)
-  return result[0]?.count ?? 0
-})
+// Count procedures for a course
+export const getProceduresCount = cache(
+  async (course = "opiekun-medyczny"): Promise<number> => {
+    const result = await db
+      .select({ count: count() })
+      .from(procedures)
+      .where(eq(procedures.course, course))
+    return result[0]?.count ?? 0
+  }
+)
 
 // Get procedure by ID
 export const getProcedureById = cache(
-  async (id: string): Promise<ExtendedProcedures | null> => {
+  async (
+    id: string
+  ): Promise<(ExtendedProcedures & { course: string; slug: string }) | null> => {
     const procedure = await db.query.procedures.findFirst({
       where: (model, { eq }) => eq(model.id, id),
     })
@@ -228,17 +237,26 @@ export const getProcedureById = cache(
   }
 )
 
-// Get procedure by slug
+// Lightweight id+name list for pickers (planner wizard)
+export const getProcedureOptions = cache(async (course: string) => {
+  return db
+    .select({
+      id: procedures.id,
+      name: sql<string>`${procedures.data}->>'name'`,
+    })
+    .from(procedures)
+    .where(eq(procedures.course, course))
+    .orderBy(asc(sql`${procedures.data}->>'name'`))
+})
+
+// Get procedure by course + slug (slugs are unique within a course)
 export const getProcedureBySlug = cache(
-  async (slug: string): Promise<ExtendedProcedures | null> => {
-    const { getProcedureIdFromSlug } = await import("@/constants/procedureSlugs")
-    const procedureId = getProcedureIdFromSlug(slug)
-
-    if (!procedureId) {
-      return null
-    }
-
-    return getProcedureById(procedureId)
+  async (course: string, slug: string): Promise<ExtendedProcedures | null> => {
+    const procedure = await db.query.procedures.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.course, course), eq(model.slug, slug)),
+    })
+    return procedure || null
   }
 )
 
@@ -1677,6 +1695,12 @@ export const checkAllChallengesComplete = async (
   userId: string,
   procedureId: string
 ): Promise<boolean> => {
+  const [proc] = await tx
+    .select({ course: procedures.course })
+    .from(procedures)
+    .where(eq(procedures.id, procedureId))
+    .limit(1)
+
   const completions = await tx
     .select()
     .from(challengeCompletions)
@@ -1688,11 +1712,17 @@ export const checkAllChallengesComplete = async (
       )
     )
 
-  // Need 5 unique challenge types PASSED (score >= 70%)
-  const uniqueChallengeTypes = new Set(
-    completions.map((c: any) => c.challengeType)
+  // Badge requires every challenge type of the procedure's course PASSED
+  // (score >= 70%). Filtering ignores legacy rows from removed types.
+  const requiredTypes = challengeTypesForCourse(
+    proc?.course ?? "opiekun-medyczny"
+  ) as string[]
+  const passedTypes = new Set(
+    completions
+      .map((c: any) => c.challengeType)
+      .filter((type: string) => requiredTypes.includes(type))
   )
-  return uniqueChallengeTypes.size >= 5
+  return passedTypes.size >= requiredTypes.length
 }
 
 /**
@@ -2068,7 +2098,108 @@ export async function getGeneratedPracticalExamById(
   return row ? (row.examJson as PracticalExam) : null
 }
 
+// ===== AI-generated procedure quizzes (Quiz 2.0) =====
+
+// Keep only the few newest quizzes per (user, procedure, type); older rows are
+// never read again (the UI loads the latest) so pruning caps unbounded growth.
+const GENERATED_QUIZ_KEEP = 3
+
+export async function saveGeneratedQuiz(data: {
+  userId: string
+  procedureId: string
+  challengeType: string
+  quizJson: unknown
+}): Promise<string> {
+  const [row] = await db
+    .insert(generatedQuizzes)
+    .values(data)
+    .returning({ id: generatedQuizzes.id })
+  if (!row) throw new Error("Nie udało się zapisać wygenerowanego quizu.")
+
+  const keep = await db
+    .select({ id: generatedQuizzes.id })
+    .from(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType)
+      )
+    )
+    .orderBy(desc(generatedQuizzes.createdAt))
+    .limit(GENERATED_QUIZ_KEEP)
+
+  await db
+    .delete(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType),
+        notInArray(
+          generatedQuizzes.id,
+          keep.map((r) => r.id)
+        )
+      )
+    )
+
+  return row.id
+}
+
+export const getGeneratedQuizById = cache(
+  async (quizId: string, userId: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(eq(generatedQuizzes.id, quizId), eq(generatedQuizzes.userId, userId))
+      )
+      .limit(1)
+    return row ?? null
+  }
+)
+
+export const getLatestGeneratedQuiz = cache(
+  async (userId: string, procedureId: string, challengeType: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(
+          eq(generatedQuizzes.userId, userId),
+          eq(generatedQuizzes.procedureId, procedureId),
+          eq(generatedQuizzes.challengeType, challengeType)
+        )
+      )
+      .orderBy(desc(generatedQuizzes.createdAt))
+      .limit(1)
+    return row ?? null
+  }
+)
+
 // ===== Learning planner =====
+
+// Ledger write: features call this on completion so their time counts toward
+// planner progress, streaks and daily goals.
+export async function insertStudyLog(data: {
+  userId: string
+  minutes: number
+  source: string
+  categoryKey?: string | null
+  procedureId?: string | null
+  conceptId?: string | null
+  note?: string | null
+}): Promise<void> {
+  await db.insert(studyLogs).values({
+    userId: data.userId,
+    minutes: data.minutes,
+    source: data.source,
+    categoryKey: data.categoryKey ?? null,
+    procedureId: data.procedureId ?? null,
+    conceptId: data.conceptId ?? null,
+    note: data.note ?? null,
+  })
+}
 
 export const getActivePlan = cache(async (userId: string) => {
   const plan = await db.query.learningPlans.findFirst({
@@ -2110,6 +2241,8 @@ export const getStudyLogsSince = cache(async (userId: string, since: Date) => {
       studyDate: studyLogs.studyDate,
       minutes: studyLogs.minutes,
       conceptId: studyLogs.conceptId,
+      categoryKey: studyLogs.categoryKey,
+      procedureId: studyLogs.procedureId,
     })
     .from(studyLogs)
     .where(
@@ -2122,6 +2255,7 @@ export const getTestActivitySince = cache(
     return db
       .select({
         completedAt: completedTestes.completedAt,
+        startedAt: testSessions.startedAt,
         durationMinutes: testSessions.durationMinutes,
         category: testSessions.category,
       })
@@ -2142,6 +2276,7 @@ export const getChallengeActivitySince = cache(
       .select({
         completedAt: challengeCompletions.completedAt,
         timeSpent: challengeCompletions.timeSpent,
+        procedureId: challengeCompletions.procedureId,
       })
       .from(challengeCompletions)
       .where(

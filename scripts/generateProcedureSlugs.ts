@@ -1,6 +1,11 @@
 /**
- * Script to generate procedure slug mappings from procedures.json
- * Run with: tsx scripts/generateProcedureSlugs.ts
+ * Regenerates src/constants/procedureSlugs.ts from data/procedures.json.
+ * Slugs are read from each record's baked-in `slug` field (the same value
+ * seeded into the DB), so the client-side map can never drift from the DB.
+ * Only opiekun-medyczny is included — pielęgniarstwo components slugify
+ * at runtime via getPielegniastwoSlug.
+ *
+ * Run with: npx tsx scripts/generateProcedureSlugs.ts
  */
 
 import fs from 'fs';
@@ -10,63 +15,32 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-interface ProcedureData {
-  name: string;
-  image: string;
-  algorithm: Array<{ step: string }>;
-  equipment?: string[];
-}
-
-interface Procedure {
+interface ProcedureRecord {
   id: string;
-  data: ProcedureData;
+  slug: string;
+  data: { meta?: { course?: string }; name: string };
 }
 
-// Slugify function (same as TypeScript helper)
-function generateProcedureSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    // Replace Polish characters
-    .replace(/ą/g, 'a')
-    .replace(/ć/g, 'c')
-    .replace(/ę/g, 'e')
-    .replace(/ł/g, 'l')
-    .replace(/ń/g, 'n')
-    .replace(/ó/g, 'o')
-    .replace(/ś/g, 's')
-    .replace(/ź/g, 'z')
-    .replace(/ż/g, 'z')
-    // Replace spaces and special chars with hyphens
-    .replace(/\s+/g, '-')
-    .replace(/[^a-z0-9-]/g, '')
-    // Remove multiple consecutive hyphens
-    .replace(/-+/g, '-')
-    // Remove leading/trailing hyphens
-    .replace(/^-+|-+$/g, '');
-}
-
-// Read procedures.json
 const proceduresPath = path.join(__dirname, '../data/procedures.json');
-const procedures: Procedure[] = JSON.parse(fs.readFileSync(proceduresPath, 'utf8'));
+const procedures: ProcedureRecord[] = JSON.parse(fs.readFileSync(proceduresPath, 'utf8'));
 
-// Generate slug-to-ID mapping
 const slugToId: Record<string, string> = {};
 const idToSlug: Record<string, string> = {};
 
-procedures.forEach(procedure => {
-  const slug = generateProcedureSlug(procedure.data.name);
-  slugToId[slug] = procedure.id;
-  idToSlug[procedure.id] = slug;
-});
+procedures
+  .filter((procedure) => procedure.data.meta?.course === 'opiekun-medyczny')
+  .forEach((procedure) => {
+    if (!procedure.slug) throw new Error(`Missing slug for procedure ${procedure.id}`);
+    slugToId[procedure.slug] = procedure.id;
+    idToSlug[procedure.id] = procedure.slug;
+  });
 
-// Generate TypeScript constants file
 const tsContent = `/**
- * Auto-generated procedure slug mappings
- * Generated from: data/procedures.json
+ * Auto-generated procedure slug mappings (opiekun-medyczny)
+ * Generated from: data/procedures.json (slug field)
  * Last updated: ${new Date().toISOString()}
  *
- * To regenerate: tsx scripts/generateProcedureSlugs.ts
+ * To regenerate: npx tsx scripts/generateProcedureSlugs.ts
  */
 
 // Slug to ID mapping (for routing)
@@ -86,6 +60,6 @@ export function getProcedureSlugFromId(id: string): string | undefined {
 }
 `;
 
-// Write to constants file
 const outputPath = path.join(__dirname, '../src/constants/procedureSlugs.ts');
 fs.writeFileSync(outputPath, tsContent, 'utf8');
+console.log(`Wrote ${Object.keys(slugToId).length} opiekun-medyczny slug mappings`);

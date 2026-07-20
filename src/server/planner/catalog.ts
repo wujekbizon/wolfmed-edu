@@ -2,6 +2,7 @@ import 'server-only'
 import { cache } from 'react'
 import { CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import { EXAM_PERIODS } from '@/constants/examDates'
+import { createPolandDate } from '@/utils/dateUtils'
 import { countTestsByCategory } from '@/server/queries'
 import type {
   ConceptCatalogEntry,
@@ -57,11 +58,7 @@ export const getConceptCatalog = cache(
   }
 )
 
-/**
- * Upcoming state-exam sessions usable as due-date presets
- * (relevant for the opiekun-medyczny course).
- */
-export function getExamDatePresets(limit = 3): ExamDatePreset[] {
+function opiekunMedycznyPresets(limit: number): ExamDatePreset[] {
   const now = Date.now()
   return EXAM_PERIODS.filter(
     (period) => period.type === 'in_progress' && period.startDate.getTime() > now
@@ -71,4 +68,42 @@ export function getExamDatePresets(limit = 3): ExamDatePreset[] {
       label: period.label.replace('Trwa ', '').trim(),
       dateISO: period.startDate.toISOString(),
     }))
+}
+
+/**
+ * University session windows differ per uczelnia, so pielęgniarstwo gets
+ * approximate presets ("orientacyjnie") — the due date stays editable.
+ */
+function pielegniarstwoPresets(limit: number): ExamDatePreset[] {
+  const now = Date.now()
+  const currentYear = new Date().getFullYear()
+  const presets: ExamDatePreset[] = []
+
+  for (let year = currentYear; year <= currentYear + 2; year++) {
+    presets.push(
+      {
+        label: `Sesja zimowa ${year} (orientacyjnie)`,
+        dateISO: createPolandDate(year, 2, 5, 8).toISOString(),
+      },
+      {
+        label: `Sesja letnia ${year} (orientacyjnie)`,
+        dateISO: createPolandDate(year, 6, 15, 8).toISOString(),
+      }
+    )
+  }
+
+  return presets
+    .filter((preset) => new Date(preset.dateISO).getTime() > now)
+    .slice(0, limit)
+}
+
+/**
+ * Upcoming exam sessions usable as due-date presets, per course:
+ * opiekun-medyczny has centrally set state-exam dates, pielęgniarstwo gets
+ * approximate university session windows.
+ */
+export function getExamDatePresets(courseSlug: string, limit = 3): ExamDatePreset[] {
+  if (courseSlug === 'opiekun-medyczny') return opiekunMedycznyPresets(limit)
+  if (courseSlug === 'pielegniarstwo') return pielegniarstwoPresets(limit)
+  return []
 }

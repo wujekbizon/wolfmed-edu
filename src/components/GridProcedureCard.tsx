@@ -2,20 +2,21 @@ import { useState } from 'react'
 import { MoreVertical, Check, AlertCircle, ArrowRight, Circle } from 'lucide-react'
 import { Procedure, ProcedureStatus } from "@/types/dataTypes"
 import Image from 'next/image'
+import Link from 'next/link'
+import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
 
 export default function GridProcedureCard({
     procedure,
     status,
-    onStatusChange,
-    onOpenModal
+    onStatusChange
 }: {
     procedure: Procedure
     status: ProcedureStatus
     onStatusChange: (status: ProcedureStatus) => void
-    onOpenModal: () => void
 }) {
     const [showMenu, setShowMenu] = useState(false)
     const { name, procedure: procedureText, image } = procedure.data
+    const procedureSlug = getProcedureSlugFromId(procedure.id) || procedure.id
 
     const truncatedDescription = procedureText.slice(0, 120) + (procedureText.length > 120 ? '...' : '')
 
@@ -123,13 +124,13 @@ export default function GridProcedureCard({
                 <h3 className="text-lg font-bold text-zinc-800 mb-2 line-clamp-2 leading-tight">{name}</h3>
                 <p className="text-zinc-600 text-sm leading-relaxed mb-4 line-clamp-3 grow">{truncatedDescription}</p>
                 <div className="mt-auto flex justify-end">
-                    <button
-                        onClick={onOpenModal}
+                    <Link
+                        href={`/panel/procedury/opiekun-medyczny/${procedureSlug}`}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-all hover:gap-2"
                     >
                         Rozpocznij procedurę
                         <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

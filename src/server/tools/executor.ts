@@ -55,6 +55,11 @@ interface PracticalExamTemplate {
   userPrompt: string;
 }
 
+interface ProcedureQuizTemplate {
+  systemPrompt: string;
+  prompts: Record<string, string>;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
@@ -63,6 +68,7 @@ let flashcardTemplate: FlashcardTemplate | null = null
 let planTemplate: PlanTemplate | null = null
 let lectureTemplate: LectureTemplate | null = null
 let practicalExamTemplate: PracticalExamTemplate | null = null
+let procedureQuizTemplate: ProcedureQuizTemplate | null = null
 
 async function loadTemplate<T>(filename: string): Promise<T> {
   const templatePath = join(process.cwd(), 'templates', filename)
@@ -130,6 +136,13 @@ async function getPracticalExamTemplate(): Promise<PracticalExamTemplate> {
   return practicalExamTemplate
 }
 
+async function getProcedureQuizTemplate(): Promise<ProcedureQuizTemplate> {
+  if (!procedureQuizTemplate) {
+    procedureQuizTemplate = await loadTemplate<ProcedureQuizTemplate>('quiz-proceduralny-template.json')
+  }
+  return procedureQuizTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -164,6 +177,9 @@ export async function executeToolLocally(
 
     case 'egzamin_praktyczny_tool':
       return await egzaminPraktycznyTool();
+
+    case 'quiz_proceduralny_tool':
+      return await quizProceduralnyTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -507,6 +523,58 @@ async function wykladTool(args: any): Promise<ToolResult> {
     content: lectureContent,
     metadata: {
       type: 'lecture',
+      generated: new Date().toISOString()
+    }
+  }
+}
+
+async function quizProceduralnyTool(args: any): Promise<ToolResult> {
+  const {
+    procedureName = '',
+    steps = [],
+    challengeType = 'knowledge-quiz',
+    context = '',
+  } = args
+
+  const template = await getProcedureQuizTemplate()
+  const prompt = template.prompts[challengeType]
+  if (!prompt) {
+    throw new Error(`Unknown procedure quiz type: ${challengeType}`)
+  }
+
+  const stepsText = (steps as string[])
+    .map((step, index) => `${index + 1}. ${step}`)
+    .join('\n')
+
+  const userMessage = prompt
+    .replace(/\{\{procedureName\}\}/g, procedureName)
+    .replace(/\{\{steps\}\}/g, stepsText)
+    .replace(/\{\{context\}\}/g, context || 'Brak dodatkowego kontekstu.')
+
+  const ai = getGoogleAI()
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: userMessage,
+    config: {
+      systemInstruction: template.systemPrompt,
+      temperature: 0.7,
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
+    }
+  })
+  logUsage('quiz_proceduralny_tool', response)
+
+  const generatedText = (response.text || '').trim()
+
+  if (!generatedText) {
+    throw new Error('Procedure quiz generation failed: empty response')
+  }
+
+  return {
+    content: generatedText,
+    metadata: {
+      type: 'procedure-quiz',
+      challengeType,
       generated: new Date().toISOString()
     }
   }

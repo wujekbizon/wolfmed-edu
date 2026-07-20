@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { NotebookPen, ListChecks } from 'lucide-react'
+import { planCompletionPercent } from '@/helpers/planCompletionPercent'
 import type { PlanProgress } from '@/types/plannerTypes'
 import PlanDashboardHeader from './dashboard/PlanDashboardHeader'
 import PlanStatTiles from './dashboard/PlanStatTiles'
@@ -15,10 +16,10 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
   const [showSettings, setShowSettings] = useState(false)
   const { plan, concepts } = progress
 
-  const completionPercent =
-    progress.plannedTotalMinutes > 0
-      ? Math.round(Math.min(1, progress.actualMinutes / progress.plannedTotalMinutes) * 100)
-      : 0
+  const completionPercent = planCompletionPercent(
+    progress.attributedMinutes,
+    progress.plannedTotalMinutes
+  )
   const completedConcepts = concepts.filter((c) => c.completedAt).length
 
   return (
@@ -35,11 +36,16 @@ export default function PlanDashboard({ progress }: { progress: PlanProgress }) 
           completionPercent={completionPercent}
           completedConcepts={completedConcepts}
           totalConcepts={concepts.length}
+          unattributedMinutes={progress.unattributedMinutes}
         />
         {showSettings && <PlanSettings plan={plan} />}
       </div>
 
-      <TodayFocusCard todayIsStudyDay={progress.todayIsStudyDay} suggestion={progress.suggestion} />
+      <TodayFocusCard
+        todayIsStudyDay={progress.todayIsStudyDay}
+        suggestion={progress.suggestion}
+        courseSlug={plan.courseSlug}
+      />
 
       <div className="bg-white border border-zinc-200 rounded-2xl p-4 sm:p-8 shadow-sm">
         <h2 className="flex items-center gap-2 text-lg font-bold text-zinc-900 mb-4">

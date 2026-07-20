@@ -1,6 +1,6 @@
 'use client'
 
-import { CONCEPT_DEFAULT_MINUTES } from '@/constants/planner'
+import { scaledConceptMinutes } from '@/helpers/scaledConceptMinutes'
 import ConceptTopicRow from './ConceptTopicRow'
 import type { ConceptCatalogEntry } from '@/types/plannerTypes'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
@@ -44,7 +44,7 @@ export default function CatalogEntry({
                 categoryKey: entry.categoryKey,
                 label: entry.label,
                 source: 'category',
-                targetMinutes: CONCEPT_DEFAULT_MINUTES,
+                targetMinutes: scaledConceptMinutes(entry),
               })
             }
             className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-900 text-white hover:bg-zinc-700"

@@ -1,4 +1,3 @@
-import proceduresData from '../../data/proceduresPodstawy.json'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 
 const POLISH_MAP: Record<string, string> = {
@@ -16,16 +15,6 @@ export function slugifyProcedureName(name: string): string {
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
     .trim()
-}
-
-const procedures = (proceduresData as { data: PielegniastwoProcedure }[]).map((r) => r.data)
-
-export function getAllPielegniastwoProcedures(): PielegniastwoProcedure[] {
-  return procedures
-}
-
-export function getPielegniastwoProcedureBySlug(slug: string): PielegniastwoProcedure | null {
-  return procedures.find((p) => slugifyProcedureName(p.name) === slug) ?? null
 }
 
 export function getPielegniastwoSlug(procedure: PielegniastwoProcedure): string {

@@ -7,23 +7,38 @@ import type {
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
+// All day math runs in the learners' timezone: an activity at 00:30 in Warsaw
+// belongs to that Warsaw date, not the previous UTC one.
+const PLANNER_TIMEZONE = 'Europe/Warsaw'
+
+const dateKeyFormatter = new Intl.DateTimeFormat('en-CA', {
+  timeZone: PLANNER_TIMEZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+})
+
 export function toDateKey(date: Date): string {
-  return date.toISOString().split('T')[0] || ''
+  return dateKeyFormatter.format(date)
+}
+
+/**
+ * Anchors a moment to 12:00 UTC of its Warsaw calendar date. Noon stays on the
+ * same calendar date when stepping by whole days across DST changes, so these
+ * anchors are safe to iterate with DAY_MS.
+ */
+function dayAnchor(date: Date): Date {
+  const [year, month, day] = toDateKey(date).split('-').map(Number)
+  return new Date(Date.UTC(year!, month! - 1, day!, 12))
 }
 
 function isoWeekday(date: Date): number {
-  const day = date.getUTCDay()
+  const day = dayAnchor(date).getUTCDay()
   return day === 0 ? 7 : day
 }
 
 export function isStudyDay(date: Date, studyDays: number[]): boolean {
   return studyDays.includes(isoWeekday(date))
-}
-
-function startOfUtcDay(date: Date): Date {
-  return new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-  )
 }
 
 /**
@@ -35,8 +50,8 @@ export function countPlannedDays(
   to: Date,
   studyDays: number[]
 ): number {
-  let cursor = startOfUtcDay(from)
-  const end = startOfUtcDay(to)
+  let cursor = dayAnchor(from)
+  const end = dayAnchor(to)
   let counted = 0
   let guard = 0
 
@@ -58,8 +73,8 @@ export function computeExpectedMinutes(
   studyDays: number[],
   minutesPerDay: number
 ): number {
-  const yesterday = new Date(startOfUtcDay(now).getTime() - DAY_MS)
-  if (yesterday.getTime() < startOfUtcDay(planStart).getTime()) return 0
+  const yesterday = new Date(dayAnchor(now).getTime() - DAY_MS)
+  if (yesterday.getTime() < dayAnchor(planStart).getTime()) return 0
   return countPlannedDays(planStart, yesterday, studyDays) * minutesPerDay
 }
 
@@ -69,8 +84,8 @@ export function countMissedStudyDays(
   studyDays: number[],
   activityDayKeys: Set<string>
 ): number {
-  const yesterday = new Date(startOfUtcDay(now).getTime() - DAY_MS)
-  let cursor = startOfUtcDay(planStart)
+  const yesterday = new Date(dayAnchor(now).getTime() - DAY_MS)
+  let cursor = dayAnchor(planStart)
   let missed = 0
   let guard = 0
 
@@ -105,7 +120,7 @@ export function computeStreak(
   studyDays: number[],
   now: Date
 ): number {
-  let cursor = startOfUtcDay(now)
+  let cursor = dayAnchor(now)
   let streak = 0
   let guard = 0
 
@@ -138,36 +153,113 @@ export function sumMinutesForDay(entries: ActivityEntry[], day: Date): number {
   return sumMinutes(entries.filter((entry) => toDateKey(entry.date) === key))
 }
 
+export interface AttributableConcept {
+  id: string
+  categoryKey: string | null
+  procedureId: string | null
+  targetMinutes: number
+  sortOrder: number
+  completedAt: Date | null
+}
+
+type MinuteBuckets = Map<string, { auto: number; manual: number }>
+
+function groupConcepts(
+  concepts: AttributableConcept[],
+  key: 'categoryKey' | 'procedureId'
+): Map<string, AttributableConcept[]> {
+  const groups = new Map<string, AttributableConcept[]>()
+  concepts.forEach((concept) => {
+    const value = concept[key]
+    if (!value) return
+    const group = groups.get(value) ?? []
+    group.push(concept)
+    groups.set(value, group)
+  })
+  return groups
+}
+
 /**
- * Attributes activity minutes to concepts: explicit conceptId wins, otherwise
- * the first concept matching the activity's categoryKey.
+ * Pours minutes into a group's concepts: open concepts first (by sortOrder),
+ * each filled up to its target; overflow lands on the group's last concept so
+ * no matched minutes are ever lost.
+ */
+function pourIntoGroup(
+  minutes: number,
+  group: AttributableConcept[],
+  attributed: MinuteBuckets
+): void {
+  const bySortOrder = (a: AttributableConcept, b: AttributableConcept) =>
+    a.sortOrder - b.sortOrder
+  const ordered = [
+    ...group.filter((concept) => !concept.completedAt).sort(bySortOrder),
+    ...group.filter((concept) => concept.completedAt).sort(bySortOrder),
+  ]
+
+  let remaining = minutes
+  for (const concept of ordered) {
+    if (remaining <= 0) break
+    const bucket = attributed.get(concept.id)!
+    const room = Math.max(0, concept.targetMinutes - bucket.auto - bucket.manual)
+    const poured = Math.min(room, remaining)
+    bucket.auto += poured
+    remaining -= poured
+  }
+
+  if (remaining > 0) {
+    const last = ordered[ordered.length - 1]!
+    attributed.get(last.id)!.auto += remaining
+  }
+}
+
+/**
+ * Attributes activity minutes to concepts. Matching priority per entry:
+ * explicit conceptId (manual) → procedureId (auto) → categoryKey (auto).
+ * Matched minutes waterfall across the group's concepts instead of piling
+ * onto the first one.
  */
 export function attributeMinutes(
-  concepts: Array<{ id: string; categoryKey: string | null }>,
+  concepts: AttributableConcept[],
   entries: ActivityEntry[]
-): Map<string, { auto: number; manual: number }> {
-  const byCategory = new Map<string, string>()
-  concepts.forEach((concept) => {
-    if (concept.categoryKey && !byCategory.has(concept.categoryKey)) {
-      byCategory.set(concept.categoryKey, concept.id)
-    }
-  })
-
-  const attributed = new Map<string, { auto: number; manual: number }>()
+): MinuteBuckets {
+  const attributed: MinuteBuckets = new Map()
   concepts.forEach((concept) =>
     attributed.set(concept.id, { auto: 0, manual: 0 })
   )
 
+  const byProcedure = groupConcepts(concepts, 'procedureId')
+  const byCategory = groupConcepts(concepts, 'categoryKey')
+
+  const autoByProcedure = new Map<string, number>()
+  const autoByCategory = new Map<string, number>()
+
   entries.forEach((entry) => {
-    const conceptId =
-      entry.conceptId ??
-      (entry.categoryKey ? byCategory.get(entry.categoryKey) : undefined)
-    if (!conceptId) return
-    const bucket = attributed.get(conceptId)
-    if (!bucket) return
-    if (entry.conceptId) bucket.manual += entry.minutes
-    else bucket.auto += entry.minutes
+    if (entry.conceptId) {
+      const bucket = attributed.get(entry.conceptId)
+      if (bucket) bucket.manual += entry.minutes
+      return
+    }
+    if (entry.procedureId && byProcedure.has(entry.procedureId)) {
+      autoByProcedure.set(
+        entry.procedureId,
+        (autoByProcedure.get(entry.procedureId) ?? 0) + entry.minutes
+      )
+      return
+    }
+    if (entry.categoryKey && byCategory.has(entry.categoryKey)) {
+      autoByCategory.set(
+        entry.categoryKey,
+        (autoByCategory.get(entry.categoryKey) ?? 0) + entry.minutes
+      )
+    }
   })
+
+  autoByProcedure.forEach((minutes, procedureId) =>
+    pourIntoGroup(minutes, byProcedure.get(procedureId)!, attributed)
+  )
+  autoByCategory.forEach((minutes, categoryKey) =>
+    pourIntoGroup(minutes, byCategory.get(categoryKey)!, attributed)
+  )
 
   return attributed
 }
@@ -205,6 +297,7 @@ export function pickDailySuggestion(
     conceptId: picked.id,
     label: picked.label,
     categoryKey: picked.categoryKey,
+    procedureId: picked.procedureId,
     remainingMinutesToday: Math.max(0, minutesPerDay - todayMinutes),
   }
 }

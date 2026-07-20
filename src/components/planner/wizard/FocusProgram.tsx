@@ -39,6 +39,19 @@ export default function FocusProgram({
             <FocusTopicGroup key={group.key} categoryKey={focusEntry.categoryKey} group={group} wizard={wizard} />
           ))}
         </div>
+        {wizard.goalType === 'exam' && (
+          <p className="text-xs text-zinc-400 mt-2">
+            Chcesz plan z całego kursu?{' '}
+            <button
+              type="button"
+              onClick={() => wizard.selectFocus(null)}
+              className="font-semibold text-zinc-500 underline underline-offset-2 hover:text-zinc-800 transition-colors"
+            >
+              Przełącz na cały kurs
+            </button>{' '}
+            — wtedy jednym kliknięciem wypełnisz plan wszystkimi przedmiotami.
+          </p>
+        )}
       </div>
 
       {wizard.otherEntries.length > 0 && (

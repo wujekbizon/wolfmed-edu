@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { getChallengeProgressAction } from '@/actions/challenges'
 import { getProcedureBySlug } from '@/server/queries'
-import ChallengesList from '@/components/ChallengesList'
+import ChallengesHub from '@/components/quizzes/ChallengesHub'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
 import { Procedure } from '@/types/dataTypes'
@@ -21,7 +21,7 @@ export default async function ChallengePage({ params }: Props) {
 
   const { course, slug } = await params
 
-  const procedure = await getProcedureBySlug(slug) as Procedure
+  const procedure = await getProcedureBySlug(course, slug) as Procedure
 
   if (!procedure) {
     redirect(`/panel/procedury/${course}`)
@@ -33,5 +33,12 @@ export default async function ChallengePage({ params }: Props) {
     return <div className="p-4 text-red-500">Failed to load progress</div>
   }
 
-  return <ChallengesList procedure={procedure} progress={progressResult.data!} />
+  return (
+    <ChallengesHub
+      course={course}
+      procedureName={procedure.data.name}
+      procedureSlug={slug}
+      progress={progressResult.data!}
+    />
+  )
 }

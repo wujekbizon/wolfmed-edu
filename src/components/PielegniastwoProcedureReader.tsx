@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, RotateCcw, ArrowLeft, Clock, Award, Check } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RotateCcw, ArrowLeft, Clock, Award, Check, Swords } from 'lucide-react'
 import Link from 'next/link'
 import { useProcedureStepsStore } from '@/store/useProcedureStepsStore'
+import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 import type { PielegniastwoProcedure, PielegniastwoSection } from '@/types/pielegniastwoTypes'
 
 type Direction = 1 | -1
@@ -20,6 +21,7 @@ export default function PielegniastwoProcedureReader({
 }) {
   const [currentSection, setCurrentSection] = useState(0)
   const [direction, setDirection] = useState<Direction>(1)
+  const procedureSlug = getPielegniastwoSlug(procedure)
 
   const markedSteps = useProcedureStepsStore((s) => s.marked[procedure.name] ?? EMPTY)
   const toggleStep = useProcedureStepsStore((s) => s.toggleStep)
@@ -130,6 +132,16 @@ export default function PielegniastwoProcedureReader({
               })}
             </ol>
           </div>
+
+          <div className="mt-auto">
+            <Link
+              href={`/panel/procedury/pielegniarstwo/${procedureSlug}/wyzwania`}
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors"
+            >
+              <Swords className="w-4 h-4" />
+              Wyzwania procedury
+            </Link>
+          </div>
         </div>
       </aside>
       <main className="flex flex-col flex-1 h-full overflow-hidden">
@@ -158,6 +170,13 @@ export default function PielegniastwoProcedureReader({
             <span className="text-xs text-zinc-400">
               Sekcja {currentSection + 1} z {totalSections}
             </span>
+            <Link
+              href={`/panel/procedury/pielegniarstwo/${procedureSlug}/wyzwania`}
+              className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition-colors"
+            >
+              <Swords className="w-3.5 h-3.5" />
+              Wyzwania
+            </Link>
           </div>
         </div>
         <div className="flex-1 overflow-y-auto scrollbar-webkit">

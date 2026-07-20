@@ -290,74 +290,87 @@ export const SubmitOrderStepsSchema = z.object({
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
-export const SubmitQuizSchema = z.object({
+// --- AI-generated procedure quizzes (Quiz 2.0) ---
+
+const GeneratedQuizOptionListSchema = z
+  .array(z.string().min(1))
+  .length(4, "Pytanie musi mieć dokładnie 4 odpowiedzi");
+
+const GeneratedQuizAnswerIndexSchema = z
+  .number()
+  .int()
+  .min(0)
+  .max(3);
+
+export const GeneratedKnowledgeQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  questions: z
+    .array(
+      z.object({
+        question: z.string().min(10),
+        options: GeneratedQuizOptionListSchema,
+        correctAnswer: GeneratedQuizAnswerIndexSchema,
+        explanation: z.string().optional().nullable(),
+      })
+    )
+    .min(5, "Quiz musi mieć co najmniej 5 pytań")
+    .max(10, "Quiz może mieć maksymalnie 10 pytań"),
+});
+
+export const GeneratedSpotErrorQuizSchema = z
+  .object({
+    procedureName: z.string().min(1),
+    steps: z
+      .array(
+        z.object({
+          step: z.string().min(3),
+          isCorrect: z.boolean(),
+          errorCategory: z
+            .enum(["safety", "sequence", "technique", "omission", "measurement"])
+            .optional()
+            .nullable(),
+          explanation: z.string().optional().nullable(),
+        })
+      )
+      .min(5)
+      .max(40),
+  })
+  .refine(
+    (quiz) => {
+      const errors = quiz.steps.filter((step) => !step.isCorrect).length;
+      return errors >= 2 && errors <= 5;
+    },
+    { message: "Wyzwanie musi zawierać od 2 do 5 błędnych kroków" }
+  );
+
+export const GeneratedScenarioQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  scenario: z.string().min(30),
+  question: z.string().min(10),
+  options: GeneratedQuizOptionListSchema,
+  correctAnswer: GeneratedQuizAnswerIndexSchema,
+  explanation: z.string().optional().nullable(),
+});
+
+export const GenerateProcedureQuizSchema = z.object({
   procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
+  challengeType: z.enum(["knowledge-quiz", "spot-error", "scenario-based"], {
+    message: "Nieznany typ wyzwania",
+  }),
+});
+
+export const SubmitGeneratedQuizSchema = z.object({
+  quizId: z.string().uuid("Nieprawidłowy identyfikator quizu"),
   answers: z.string().min(1, "Brak odpowiedzi").refine(
     (val) => {
       try {
-        const parsed = JSON.parse(val);
-        return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+        JSON.parse(val);
+        return true;
       } catch {
         return false;
       }
     },
     { message: "Nieprawidłowy format odpowiedzi" }
-  ),
-  correctAnswers: z.string().min(1, "Brak poprawnych odpowiedzi").refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format poprawnych odpowiedzi" }
-  ),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
-});
-
-export const SubmitVisualRecognitionSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
-  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
-});
-
-export const SubmitScenarioSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
-  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
-});
-
-export const SubmitSpotErrorSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedErrors: z.string().min(1, "Zaznacz przynajmniej jeden błąd").refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format błędów" }
-  ),
-  actualErrors: z.string().refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format błędów rzeczywistych" }
   ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
@@ -751,18 +764,29 @@ export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;
 
 const PlanConceptInputSchema = z.object({
   categoryKey: z.string().max(100).trim().optional().nullable(),
+  procedureId: z.string().uuid().optional().nullable(),
   label: z
     .string()
     .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
     .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
     .trim(),
-  source: z.enum(["category", "custom", "ai"]).default("category"),
+  source: z.enum(["category", "custom", "ai", "procedure"]).default("category"),
   targetMinutes: z.coerce
     .number()
     .int()
     .min(5, "Minimalny czas na zagadnienie to 5 minut.")
     .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
 });
+
+// The form sends a bare YYYY-MM-DD, which coerces to midnight UTC. The plan is
+// due at the END of that day, so a plan is editable on its due date — only
+// dates whose end-of-day has already passed are rejected.
+const DUE_DATE_GRACE_MS = 24 * 60 * 60 * 1000 - 1;
+const PlanDueDateSchema = z.coerce
+  .date({ message: "Podaj poprawną datę." })
+  .refine((date) => date.getTime() + DUE_DATE_GRACE_MS > Date.now(), {
+    message: "Termin nie może być w przeszłości.",
+  });
 
 export const CreatePlanSchema = z.object({
   courseSlug: z.string().min(1, "Wybierz kurs.").max(100).trim(),
@@ -775,11 +799,7 @@ export const CreatePlanSchema = z.object({
     message: "Wybierz cel planu.",
   }),
   focusCategoryKey: z.string().max(100).trim().optional().nullable(),
-  dueDate: z.coerce
-    .date({ message: "Podaj poprawną datę." })
-    .refine((date) => date.getTime() > Date.now(), {
-      message: "Termin musi być w przyszłości.",
-    }),
+  dueDate: PlanDueDateSchema,
   minutesPerDay: z.coerce
     .number()
     .int()
@@ -802,11 +822,7 @@ export const UpdatePlanSchema = z.object({
     .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
     .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
     .trim(),
-  dueDate: z.coerce
-    .date({ message: "Podaj poprawną datę." })
-    .refine((date) => date.getTime() > Date.now(), {
-      message: "Termin musi być w przyszłości.",
-    }),
+  dueDate: PlanDueDateSchema,
   minutesPerDay: z.coerce
     .number()
     .int()

@@ -6,13 +6,22 @@ import type { PlanProgress } from '@/types/plannerTypes'
 export default function TodayFocusCard({
   todayIsStudyDay,
   suggestion,
+  courseSlug,
 }: {
   todayIsStudyDay: boolean
   suggestion: PlanProgress['suggestion']
+  courseSlug: string
 }) {
   const suggestionHref = suggestion?.categoryKey
     ? `/panel/testy?kategoria=${encodeURIComponent(suggestion.categoryKey)}`
+    : suggestion?.procedureId
+    ? `/panel/procedury/${encodeURIComponent(courseSlug)}`
     : '/panel/nauka'
+  const suggestionCta = suggestion?.categoryKey
+    ? 'Rozwiąż test'
+    : suggestion?.procedureId
+    ? 'Otwórz procedurę'
+    : 'Otwórz Centrum Nauki'
 
   return (
     <div className="bg-gradient-to-br from-zinc-900/95 to-black/90 rounded-2xl p-4 sm:p-6 shadow-xl border border-white/[0.08]">
@@ -42,7 +51,7 @@ export default function TodayFocusCard({
             href={suggestionHref}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors"
           >
-            {suggestion.categoryKey ? 'Rozwiąż test' : 'Otwórz Centrum Nauki'}
+            {suggestionCta}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

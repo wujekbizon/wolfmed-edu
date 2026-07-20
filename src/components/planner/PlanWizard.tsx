@@ -11,10 +11,11 @@ import type { PlanWizardProps } from '@/types/plannerTypes'
 export default function PlanWizard({
   courses,
   catalogByCourse,
-  examPresets,
+  examPresetsByCourse,
+  proceduresByCourse,
   initialFocus = null,
 }: PlanWizardProps) {
-  const wizard = usePlanWizard({ courses, catalogByCourse, initialFocus })
+  const wizard = usePlanWizard({ courses, catalogByCourse, proceduresByCourse, initialFocus })
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -27,7 +28,11 @@ export default function PlanWizard({
         <WizardStepIndicator step={wizard.step} />
 
         {wizard.step === 0 && (
-          <StepGoal courses={courses} examPresets={examPresets} wizard={wizard} />
+          <StepGoal
+            courses={courses}
+            examPresets={examPresetsByCourse[wizard.courseSlug] ?? []}
+            wizard={wizard}
+          />
         )}
         {wizard.step === 1 && <StepTime wizard={wizard} />}
         {wizard.step === 2 && <StepScope wizard={wizard} />}

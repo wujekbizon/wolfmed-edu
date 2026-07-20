@@ -1,11 +1,15 @@
+import { formatMinutes } from '@/helpers/formatMinutes'
+
 export default function PlanProgressBar({
   completionPercent,
   completedConcepts,
   totalConcepts,
+  unattributedMinutes = 0,
 }: {
   completionPercent: number
   completedConcepts: number
   totalConcepts: number
+  unattributedMinutes?: number
 }) {
   return (
     <div className="mt-4">
@@ -21,6 +25,12 @@ export default function PlanProgressBar({
           style={{ width: `${completionPercent}%` }}
         />
       </div>
+      {unattributedMinutes > 0 && (
+        <p className="mt-1.5 text-[11px] text-zinc-400">
+          + {formatMinutes(unattributedMinutes)} nauki poza zagadnieniami planu
+          (liczy się do serii i dziennego celu)
+        </p>
+      )}
     </div>
   )
 }

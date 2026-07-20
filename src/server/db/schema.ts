@@ -171,19 +171,26 @@ export const userCustomCategories = createTable(
   })
 )
 
-export const procedures = createTable("procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
-
-export const pielegniastwoProcedures = createTable("pielegniarstwo_procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
+// Single procedures table for all courses. `data.meta` mirrors course/category;
+// the columns are the query-side source of truth. Seeded from data/procedures.json
+// (scripts/seed-procedures.ts) with stable ids and slugs.
+export const procedures = createTable(
+  "procedures",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    course: varchar("course", { length: 100 })
+      .notNull()
+      .default("opiekun-medyczny"),
+    slug: varchar("slug", { length: 256 }).notNull().default(""),
+    data: jsonb("data").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    index("procedures_course_idx").on(table.course),
+    index("procedures_course_slug_idx").on(table.course, table.slug),
+  ]
+)
 
 export const customersMessages = createTable("messages", {
   id: serial("id").primaryKey(),
@@ -681,6 +688,33 @@ export const generatedPracticalExams = createTable(
 export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
 export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
 
+// AI-generated procedure quizzes (knowledge-quiz, spot-error, scenario-based).
+// Correct answers stay server-side in quizJson — grading loads the stored row.
+export const generatedQuizzes = createTable(
+  "generated_quizzes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    procedureId: varchar("procedureId", { length: 256 }).notNull(),
+    challengeType: varchar("challengeType", { length: 32 }).notNull(),
+    quizJson: jsonb("quizJson").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("generated_quizzes_user_id_idx").on(table.userId),
+    index("generated_quizzes_user_proc_type_idx").on(
+      table.userId,
+      table.procedureId,
+      table.challengeType
+    ),
+  ]
+)
+
+export type GeneratedQuizRow = typeof generatedQuizzes.$inferSelect
+export type NewGeneratedQuizRow = typeof generatedQuizzes.$inferInsert
+
 // Learning planner
 export const learningPlans = createTable(
   "learning_plans",
@@ -715,6 +749,7 @@ export const learningPlanConcepts = createTable(
       .references(() => learningPlans.id, { onDelete: "cascade" }),
     userId: varchar("userId", { length: 256 }).notNull(),
     categoryKey: varchar("categoryKey", { length: 100 }),
+    procedureId: varchar("procedureId", { length: 256 }),
     label: varchar("label", { length: 255 }).notNull(),
     source: varchar("source", { length: 20 }).notNull().default("category"),
     targetMinutes: integer("targetMinutes").notNull().default(60),
@@ -727,6 +762,9 @@ export const learningPlanConcepts = createTable(
   ]
 )
 
+// Activity ledger: every learning feature can emit an entry here. `source`
+// values: manual | practical-exam (more as features migrate). Optional
+// categoryKey/procedureId let the planner attribute minutes to concepts.
 export const studyLogs = createTable(
   "study_logs",
   {
@@ -740,6 +778,8 @@ export const studyLogs = createTable(
     conceptId: uuid("conceptId").references(() => learningPlanConcepts.id, {
       onDelete: "set null",
     }),
+    categoryKey: varchar("categoryKey", { length: 128 }),
+    procedureId: varchar("procedureId", { length: 256 }),
     studyDate: timestamp("studyDate").defaultNow().notNull(),
     minutes: integer("minutes").notNull(),
     note: varchar("note", { length: 500 }),

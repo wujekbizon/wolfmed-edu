@@ -5,15 +5,16 @@ import { CalendarClock, Flame, TrendingUp, ArrowRight } from 'lucide-react'
 import type { PlanProgress } from '@/types/plannerTypes'
 import { pluralizePl } from '@/helpers/pluralizePl'
 import { formatMinutes } from '@/helpers/formatMinutes'
+import { planCompletionPercent } from '@/helpers/planCompletionPercent'
 import { PACE_CONFIG } from '@/constants/planner'
 import StatTile from './planner/StatTile'
 
 export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
   const pace = PACE_CONFIG[plan.paceStatus]
-  const completionPercent =
-    plan.plannedTotalMinutes > 0
-      ? Math.round(Math.min(1, plan.actualMinutes / plan.plannedTotalMinutes) * 100)
-      : 0
+  const completionPercent = planCompletionPercent(
+    plan.attributedMinutes,
+    plan.plannedTotalMinutes
+  )
 
   return (
     <div className="space-y-6">
@@ -44,7 +45,7 @@ export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
         <StatTile
           icon={TrendingUp}
           value={`${completionPercent}%`}
-          label={`${formatMinutes(plan.actualMinutes)} z ${formatMinutes(plan.plannedTotalMinutes)}`}
+          label={`${formatMinutes(plan.attributedMinutes)} z ${formatMinutes(plan.plannedTotalMinutes)}`}
         />
         <StatTile
           icon={Flame}

@@ -105,6 +105,7 @@ export async function createPlanAction(
           planId: plan.id,
           userId,
           categoryKey: concept.categoryKey || null,
+          procedureId: concept.procedureId || null,
           label: concept.label,
           source: concept.source,
           targetMinutes: concept.targetMinutes,

@@ -20,6 +20,7 @@ import {
   pickDailySuggestion,
   sumMinutes,
   sumMinutesForDay,
+  toDateKey,
 } from './engine'
 import type {
   ActivityEntry,
@@ -34,6 +35,24 @@ const DAY_MS = 24 * 60 * 60 * 1000
 const STREAK_WINDOW_DAYS = 60
 const DEFAULT_TEST_MINUTES = 15
 const NOTE_MINUTES = 10
+
+/**
+ * Real time spent on a test, clamped to the session's allotted duration so an
+ * abandoned tab never counts as hours. Falls back to the nominal duration
+ * (then 15 min) for legacy rows without a start timestamp.
+ */
+function realTestMinutes(test: {
+  startedAt: Date | null
+  completedAt: Date
+  durationMinutes: number | null
+}): number {
+  const nominal = test.durationMinutes || DEFAULT_TEST_MINUTES
+  if (!test.startedAt) return nominal
+  const elapsed = Math.round(
+    (test.completedAt.getTime() - test.startedAt.getTime()) / 60000
+  )
+  return Math.min(Math.max(1, elapsed), nominal)
+}
 
 async function collectActivity(
   userId: string,
@@ -52,8 +71,9 @@ async function collectActivity(
   testActivity.forEach((test) => {
     entries.push({
       date: test.completedAt,
-      minutes: test.durationMinutes || DEFAULT_TEST_MINUTES,
+      minutes: realTestMinutes(test),
       categoryKey: test.category,
+      procedureId: null,
       conceptId: null,
     })
   })
@@ -63,6 +83,7 @@ async function collectActivity(
       date: challenge.completedAt,
       minutes: Math.max(1, Math.round(challenge.timeSpent / 60)),
       categoryKey: null,
+      procedureId: challenge.procedureId,
       conceptId: null,
     })
   })
@@ -73,6 +94,7 @@ async function collectActivity(
       date: note.createdAt,
       minutes: NOTE_MINUTES,
       categoryKey: note.category,
+      procedureId: null,
       conceptId: null,
     })
   })
@@ -81,7 +103,8 @@ async function collectActivity(
     entries.push({
       date: log.studyDate,
       minutes: log.minutes,
-      categoryKey: null,
+      categoryKey: log.categoryKey,
+      procedureId: log.procedureId,
       conceptId: log.conceptId,
     })
   })
@@ -104,7 +127,7 @@ export const getStudyMinutesTimeline = cache(
 
     const byDay = new Map<string, number>()
     activity.forEach((entry) => {
-      const key = entry.date.toISOString().split('T')[0]
+      const key = toDateKey(entry.date)
       if (!key) return
       byDay.set(key, (byDay.get(key) ?? 0) + entry.minutes)
     })
@@ -135,13 +158,24 @@ export const getPlanProgress = cache(
       (entry) => entry.date.getTime() >= plan.createdAt.getTime()
     )
 
-    const attributed = attributeMinutes(plan.concepts, planActivity)
+    const attributed = attributeMinutes(
+      plan.concepts.map((concept) => ({
+        id: concept.id,
+        categoryKey: concept.categoryKey,
+        procedureId: concept.procedureId,
+        targetMinutes: concept.targetMinutes,
+        sortOrder: concept.sortOrder,
+        completedAt: concept.completedAt,
+      })),
+      planActivity
+    )
 
     const concepts: ConceptProgress[] = plan.concepts.map((concept) => {
       const minutes = attributed.get(concept.id) ?? { auto: 0, manual: 0 }
       return {
         id: concept.id,
         categoryKey: concept.categoryKey,
+        procedureId: concept.procedureId,
         label: concept.label,
         source: concept.source as ConceptSource,
         targetMinutes: concept.targetMinutes,
@@ -154,6 +188,10 @@ export const getPlanProgress = cache(
 
     const dayKeys = activityDayKeys(allActivity)
     const actualMinutes = sumMinutes(planActivity)
+    const attributedMinutes = concepts.reduce(
+      (total, concept) => total + concept.autoMinutes + concept.manualMinutes,
+      0
+    )
     const todayMinutes = sumMinutesForDay(planActivity, now)
     const expectedMinutesToDate = computeExpectedMinutes(
       plan.createdAt,
@@ -205,6 +243,8 @@ export const getPlanProgress = cache(
       ),
       expectedMinutesToDate,
       actualMinutes,
+      attributedMinutes,
+      unattributedMinutes: Math.max(0, actualMinutes - attributedMinutes),
       todayMinutes,
       paceStatus: computePaceStatus(
         expectedMinutesToDate,

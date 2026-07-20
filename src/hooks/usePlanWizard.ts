@@ -6,14 +6,17 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { autoPlanName } from '@/helpers/autoPlanName'
 import { computePlanCapacity, distributeMinutes } from '@/helpers/planCapacity'
+import { scaledConceptMinutes } from '@/helpers/scaledConceptMinutes'
 import {
   MAX_CONCEPTS,
   TOPIC_DEFAULT_MINUTES,
   CONCEPT_DEFAULT_MINUTES,
+  PROCEDURE_DEFAULT_MINUTES,
 } from '@/constants/planner'
 import type {
   ConceptCatalogEntry,
   PlanWizardProps,
+  ProcedureOption,
   SelectedConcept,
 } from '@/types/plannerTypes'
 
@@ -31,8 +34,9 @@ function findFocusCourse(
 export function usePlanWizard({
   courses,
   catalogByCourse,
+  proceduresByCourse,
   initialFocus = null,
-}: Omit<PlanWizardProps, 'examPresets'>) {
+}: Omit<PlanWizardProps, 'examPresetsByCourse'>) {
   const initialFocusCourse = findFocusCourse(catalogByCourse, initialFocus)
   const initialFocusKey = initialFocusCourse ? initialFocus ?? null : null
   const initialFocusLabel = initialFocusKey
@@ -55,6 +59,7 @@ export function usePlanWizard({
     initialFocusLabel ? autoPlanName(initialFocusLabel) : ''
   )
   const [nameEdited, setNameEdited] = useState(false)
+  const [presetLabel, setPresetLabel] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [minutesPerDay, setMinutesPerDay] = useState(60)
   const [studyDays, setStudyDays] = useState<number[]>([1, 2, 3, 4, 5])
@@ -70,6 +75,7 @@ export function usePlanWizard({
   const noScriptFallback = useToastMessage(formState)
 
   const catalog = catalogByCourse[courseSlug] ?? []
+  const procedureOptions = proceduresByCourse[courseSlug] ?? []
   const focusEntry = focusKey
     ? catalog.find((entry) => entry.categoryKey === focusKey) ?? null
     : null
@@ -133,6 +139,7 @@ export function usePlanWizard({
     setCourseSlug(slug)
     setConcepts([])
     setFocusKey(null)
+    setPresetLabel('')
     if (!nameEdited) setName('')
     setGoalType(slug === 'opiekun-medyczny' ? 'exam' : 'custom')
   }
@@ -145,7 +152,9 @@ export function usePlanWizard({
       const entry = catalog.find((e) => e.categoryKey === key)
       if (entry) setName(autoPlanName(entry.label))
     } else {
-      setName('')
+      // Back to "Cały kurs": fall back to the selected exam session's name
+      // instead of wiping the field.
+      setName(presetLabel)
     }
   }
 
@@ -155,7 +164,8 @@ export function usePlanWizard({
   }
 
   const editNameFromPreset = (label: string) => {
-    if (nameEdited) return
+    setPresetLabel(label)
+    if (nameEdited || focusKey) return
     setName(label)
   }
 
@@ -165,6 +175,31 @@ export function usePlanWizard({
     addConcept({ categoryKey: null, label, source: 'custom', targetMinutes: CONCEPT_DEFAULT_MINUTES })
     setCustomLabel('')
   }
+
+  const addProcedureConcept = (procedure: ProcedureOption) =>
+    addConcept({
+      categoryKey: null,
+      procedureId: procedure.id,
+      label: procedure.name.slice(0, 255),
+      source: 'procedure',
+      targetMinutes: PROCEDURE_DEFAULT_MINUTES,
+    })
+
+  const fillExamTemplate = () =>
+    setConcepts((current) => {
+      const next = [...current]
+      for (const entry of catalog) {
+        if (next.length >= MAX_CONCEPTS) break
+        if (next.some((c) => c.label === entry.label)) continue
+        next.push({
+          categoryKey: entry.categoryKey,
+          label: entry.label,
+          source: 'category',
+          targetMinutes: scaledConceptMinutes(entry),
+        })
+      }
+      return next
+    })
 
   return {
     // step
@@ -178,14 +213,14 @@ export function usePlanWizard({
     showOtherSubjects, setShowOtherSubjects,
     setDueDate, setMinutesPerDay,
     // derived
-    catalog, focusEntry, otherEntries,
+    catalog, procedureOptions, focusEntry, otherEntries,
     capacityMinutes, plannedMinutes, overCapacity, hoursTotal,
     // form
     formState, action, isPending, noScriptFallback,
     // handlers
     hasConcept, addConcept, addTopics, removeConcept, updateConceptMinutes,
     distributeCapacity, toggleStudyDay, selectCourse, selectFocus, editName,
-    editNameFromPreset, addCustomConcept,
+    editNameFromPreset, addCustomConcept, addProcedureConcept, fillExamTemplate,
   }
 }
 
