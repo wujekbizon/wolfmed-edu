@@ -37,14 +37,7 @@ export async function generateAITestsAction(
     questionCount: formData.get("questionCount"),
   })
   if (!parsed.success) {
-    return {
-      ...toFormState("ERROR", "Popraw błędy w formularzu."),
-      fieldErrors: parsed.error.flatten().fieldErrors,
-      values: {
-        topic: (formData.get("topic") as string) ?? "",
-        categoryName: (formData.get("categoryName") as string) ?? "",
-      },
-    }
+    return fromErrorToFormState(parsed.error)
   }
 
   const accessibleValues = new Set(
@@ -52,8 +45,8 @@ export async function generateAITestsAction(
   )
   if (!accessibleValues.has(parsed.data.linkedCategory.toLowerCase())) {
     return {
-      ...toFormState("ERROR", "Wybierz przedmiot z listy dostępnych kategorii."),
-      fieldErrors: { linkedCategory: ["Nieprawidłowy przedmiot."] },
+      ...toFormState("ERROR", ""),
+      fieldErrors: { linkedCategory: ["Wybierz przedmiot z listy dostępnych kategorii."] },
     }
   }
 
