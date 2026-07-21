@@ -114,9 +114,16 @@ export default function Page() {
 1. `const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)`
 2. `<form action={action}>` — wire the action directly; never wrap it in a client validator.
 3. Inputs use the custom UI components: `Input`, `Textarea`, `Label`, `Select` (`/src/components/ui`).
-4. `<FieldError name="..." formState={state} />` after each field renders per-field errors from `state.fieldErrors`.
+4. `<FieldError name="..." formState={state} />` after **every** field — it is the per-field Zod-message container; keep one for each input.
 5. `const noScriptFallback = useToastMessage(state)` surfaces `state.message` as a toast; render `{noScriptFallback}` inside the form.
-6. The Server Action validates with a Zod schema from `/src/server/schema.ts` and returns errors via `toFormState` / `fromErrorToFormState` (`{ status, message, fieldErrors, timestamp, values }`).
+6. The Server Action validates with a Zod schema from `/src/server/schema.ts` and returns errors via `toFormState` / `fromErrorToFormState`.
+
+**Returning validation errors (do this exactly):**
+- On a Zod failure, return `fromErrorToFormState(error)` — it produces `{ status: 'ERROR', message: '', fieldErrors, timestamp }`. The **empty `message` is intentional**: `FieldError` renders `state.message` on *every* field, so a non-empty top-level message would repeat under each input.
+- **Never** pair a generic top-level message with `fieldErrors` (e.g. ``toFormState('ERROR', 'Popraw błędy w formularzu.')`` + `fieldErrors`). That is the exact anti-pattern that repeats the same text on every field.
+- For a single server-side business error tied to one field (e.g. "subject not accessible"), return `{ ...toFormState('ERROR', ''), fieldErrors: { fieldName: ['message'] } }`.
+- Reserve a non-empty top-level `message` for form-wide, non-field errors (rate limit, auth, unexpected failure) — surfaced via the toast.
+- Give a Zod field a custom message for the empty/`null` case with `z.string({ error: '…' })` (an unpicked `<select>` submits `null`, which fails the type check before `.min()` runs).
 
 **Why** — a single server-side Zod schema keeps validation authoritative and avoids drift between two rule sets. Errors already round-trip cleanly through `FormState` → `FieldError` + `useToastMessage`, so the server round-trip *is* the UX.
 
