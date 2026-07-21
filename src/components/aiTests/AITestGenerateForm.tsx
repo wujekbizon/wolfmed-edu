@@ -45,7 +45,7 @@ export default function AITestGenerateForm(props: {
 
       <div className="flex flex-col">
         <Label htmlFor="linkedCategory" label="Przypisz do przedmiotu:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
-        <select id="linkedCategory" name="linkedCategory" required defaultValue="" className={`${inputClass} cursor-pointer`}>
+        <select id="linkedCategory" name="linkedCategory" defaultValue="" className={`${inputClass} cursor-pointer`}>
           <option value="" disabled>Wybierz przedmiot…</option>
           {props.categories.map((c, i) => (
             <option key={`${c.value}/${i}`} value={c.value}>{c.category}</option>
