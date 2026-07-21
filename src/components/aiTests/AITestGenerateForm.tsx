@@ -1,4 +1,3 @@
-import { Sparkles } from 'lucide-react'
 import type { PopulatedCategories } from '@/types/categoryType'
 import type { FormState } from '@/types/actionTypes'
 import { Textarea } from '@/components/ui/Textarea'
@@ -57,10 +56,7 @@ export default function AITestGenerateForm(props: {
       </div>
 
       <div className="flex w-full sm:w-auto self-start">
-        <SubmitButton
-          label={<span className="inline-flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> Generuj pytania</span>}
-          loading="Generuję..."
-        />
+        <SubmitButton label="Generuj pytania" loading="Generuję..." />
       </div>
     </form>
   )

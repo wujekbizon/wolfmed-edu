@@ -3,7 +3,7 @@
 import { useFormStatus } from 'react-dom'
 
 type SubmitButtonProps = {
-  label: React.ReactNode
+  label: string
   loading: React.ReactNode
   disabled?: boolean
   className?: string
