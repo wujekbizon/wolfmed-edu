@@ -170,8 +170,11 @@ export const GenerateAITestsSchema = z.object({
     .min(3, { message: "Podaj temat lub problem (min. 3 znaki)" })
     .max(500, { message: "Temat nie może przekraczać 500 znaków" })
     .trim(),
+  // The select submits `null` when nothing is picked, which fails z.string()'s
+  // type check before .min() runs — set `error` so the null case shows the same
+  // Polish message instead of Zod's default "expected string, received null".
   linkedCategory: z
-    .string()
+    .string({ error: "Wybierz przedmiot, do którego przypiszesz pytania" })
     .min(1, { message: "Wybierz przedmiot, do którego przypiszesz pytania" }),
   categoryName: z
     .string()
