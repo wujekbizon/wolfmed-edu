@@ -3,13 +3,11 @@
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { generateAITestsAction } from '@/actions/aiTests'
 import { saveAIGeneratedTestsAction } from '@/actions/actions'
-import { GenerateAITestsSchema } from '@/server/schema'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
 import AITestGenerateForm from './AITestGenerateForm'
 import AIQuestionPreviewCard from './AIQuestionPreviewCard'
-import type { FormState } from '@/types/actionTypes'
 import type { PopulatedCategories } from '@/types/categoryType'
 import type { GeneratedQuestion } from '@/types/aiTestTypes'
 
@@ -27,31 +25,8 @@ export default function AITestGenerator({ categories }: { categories: PopulatedC
   const saveFallback = useToastMessage(saveState)
 
   const [preview, setPreview] = useState<Preview | null>(null)
-  const [clientErrors, setClientErrors] = useState<FormState['fieldErrors'] | null>(null)
   const genTs = useRef(genState.timestamp)
   const saveTs = useRef(saveState.timestamp)
-
-  // Client-side validation with the same Zod schema the server uses, so users
-  // get immediate Polish feedback instead of the native browser bubble or a
-  // server round-trip. The server action remains the source of truth.
-  const handleGenerate = (formData: FormData) => {
-    const result = GenerateAITestsSchema.safeParse({
-      topic: formData.get('topic'),
-      linkedCategory: formData.get('linkedCategory'),
-      categoryName: formData.get('categoryName'),
-      questionCount: formData.get('questionCount'),
-    })
-    if (!result.success) {
-      setClientErrors(result.error.flatten().fieldErrors)
-      return
-    }
-    setClientErrors(null)
-    genAction(formData)
-  }
-
-  const formState: FormState = clientErrors
-    ? { ...genState, status: 'ERROR', message: '', fieldErrors: clientErrors }
-    : genState
 
   useEffect(() => {
     if (genState.status === 'SUCCESS' && genState.timestamp !== genTs.current) {
@@ -83,7 +58,7 @@ export default function AITestGenerator({ categories }: { categories: PopulatedC
         <p className="text-sm text-zinc-600">
           Opisz temat lub problem medyczny — AI wygeneruje pytania w oparciu o materiały kursu.
         </p>
-        <AITestGenerateForm categories={categories} action={handleGenerate} state={formState} />
+        <AITestGenerateForm categories={categories} action={genAction} state={genState} />
         {genFallback}
       </div>
     )

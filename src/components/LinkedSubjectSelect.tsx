@@ -19,7 +19,6 @@ export default function LinkedSubjectSelect(props: {
       <select
         name="linkedCategory"
         id="linkedCategory"
-        required
         defaultValue=""
         className="h-10 w-full cursor-pointer rounded-lg border border-zinc-200 bg-white/90 px-3 text-sm text-zinc-700 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300"
       >

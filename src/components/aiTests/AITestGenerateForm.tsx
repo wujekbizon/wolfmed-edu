@@ -15,7 +15,7 @@ export default function AITestGenerateForm(props: {
   state: FormState
 }) {
   return (
-    <form action={props.action} noValidate className="flex flex-col gap-4">
+    <form action={props.action} className="flex flex-col gap-4">
       <div className="flex flex-col">
         <Label htmlFor="topic" label="Temat lub problem medyczny:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
         <Textarea

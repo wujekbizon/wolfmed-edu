@@ -106,6 +106,22 @@ export default function Page() {
 
 ---
 
+## 📝 Forms & Validation
+
+**Critical Rule**: Validation is **server-only, with Zod, inside the Server Action**. Do NOT add client-side validation — no client Zod `safeParse`, no manual field checks in the component, no `noValidate`, and do not reach for native HTML constraint attributes (`required`, `minLength`, `pattern`, …) as a validation layer. The Server Action's Zod schema is the single source of truth.
+
+**The canonical form pattern** (see `MottoForm.tsx` for the reference implementation):
+1. `const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)`
+2. `<form action={action}>` — wire the action directly; never wrap it in a client validator.
+3. Inputs use the custom UI components: `Input`, `Textarea`, `Label`, `Select` (`/src/components/ui`).
+4. `<FieldError name="..." formState={state} />` after each field renders per-field errors from `state.fieldErrors`.
+5. `const noScriptFallback = useToastMessage(state)` surfaces `state.message` as a toast; render `{noScriptFallback}` inside the form.
+6. The Server Action validates with a Zod schema from `/src/server/schema.ts` and returns errors via `toFormState` / `fromErrorToFormState` (`{ status, message, fieldErrors, timestamp, values }`).
+
+**Why** — a single server-side Zod schema keeps validation authoritative and avoids drift between two rule sets. Errors already round-trip cleanly through `FormState` → `FieldError` + `useToastMessage`, so the server round-trip *is* the UX.
+
+---
+
 ## ❤️ Blog Likes
 
 Authenticated users can like/unlike blog posts. The whole `/blog(.*)` route is
