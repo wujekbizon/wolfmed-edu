@@ -30,7 +30,7 @@ export default function TabNavigation({ tabs }: TabNavigationProps) {
           >
             {tab.label}
             {activeTab === tab.id && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#f58a8a]" />
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#ff9898] to-red-500" />
             )}
           </button>
         ))}

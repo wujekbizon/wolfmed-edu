@@ -1,7 +1,8 @@
-import { getPopulatedCategories } from "@/helpers/populateCategories"
+import { getAccessibleCategories } from "@/helpers/populateCategories"
 import TabNavigation from "@/components/TabNavigation"
 import CreateTab from "@/components/CreateTab"
 import ManageTab from "@/components/ManageTab"
+import AITestGenerator from "@/components/aiTests/AITestGenerator"
 import { auth } from "@clerk/nextjs/server"
 
 interface Props {
@@ -10,7 +11,7 @@ interface Props {
 
 export default async function CreateTestTabs({ userId }: Props) {
 
-  const categories = await getPopulatedCategories()
+  const categories = await getAccessibleCategories()
 
   const { sessionClaims } = await auth()
   const isAdmin = (sessionClaims?.metadata as { role?: string })?.role === 'admin'
@@ -20,6 +21,11 @@ export default async function CreateTestTabs({ userId }: Props) {
       id: "create",
       label: "Tworzenie Testu",
       content: <CreateTab categories={categories} isAdmin={isAdmin} />
+    },
+    {
+      id: "ai",
+      label: "Generuj AI",
+      content: <AITestGenerator categories={categories} />
     },
     {
       id: "manage",

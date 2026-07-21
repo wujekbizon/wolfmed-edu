@@ -8,6 +8,7 @@ import {
   getNoteActivitySince,
   getStudyLogsSince,
   getTestActivitySince,
+  getUserCustomCategories,
 } from '@/server/queries'
 import {
   activityDayKeys,
@@ -54,17 +55,41 @@ function realTestMinutes(test: {
   return Math.min(Math.max(1, elapsed), nominal)
 }
 
+// Custom-category test sessions store their category as `moje-testy__<catId>`
+// (see app/panel/testy/[value]/page.tsx). Those minutes only count toward the
+// learning curve when the user linked the custom category to a real subject.
+const CUSTOM_CATEGORY_PREFIX = 'moje-testy__'
+
+/**
+ * Resolves a test session's raw category to the subject key the planner tracks:
+ * a real curriculum category passes through; a custom category resolves to its
+ * linkedCategory (or null when unlinked, so its minutes are not attributed).
+ */
+function resolveTestCategoryKey(
+  rawCategory: string,
+  linkedByCustomId: Map<string, string | null>
+): string | null {
+  if (!rawCategory.startsWith(CUSTOM_CATEGORY_PREFIX)) return rawCategory
+  const customId = rawCategory.slice(CUSTOM_CATEGORY_PREFIX.length)
+  return linkedByCustomId.get(customId) ?? null
+}
+
 async function collectActivity(
   userId: string,
   since: Date
 ): Promise<ActivityEntry[]> {
-  const [testActivity, challengeActivity, noteActivity, logActivity] =
+  const [testActivity, challengeActivity, noteActivity, logActivity, customCategories] =
     await Promise.all([
       getTestActivitySince(userId, since),
       getChallengeActivitySince(userId, since),
       getNoteActivitySince(userId, since),
       getStudyLogsSince(userId, since),
+      getUserCustomCategories(userId),
     ])
+
+  const linkedByCustomId = new Map<string, string | null>(
+    customCategories.map((cat) => [cat.id, cat.linkedCategory])
+  )
 
   const entries: ActivityEntry[] = []
 
@@ -72,7 +97,7 @@ async function collectActivity(
     entries.push({
       date: test.completedAt,
       minutes: realTestMinutes(test),
-      categoryKey: test.category,
+      categoryKey: resolveTestCategoryKey(test.category, linkedByCustomId),
       procedureId: null,
       conceptId: null,
     })

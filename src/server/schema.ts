@@ -140,6 +140,10 @@ export const StartTestSchema = z.object({
  */
 export const CreateTestSchema = z.object({
   category: z.string().min(1, { message: "Proszę wybrać kategorię" }),
+  // Real curriculum subject the custom category maps to (planner attribution).
+  linkedCategory: z
+    .string()
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz kategorię" }),
   question: z
     .string()
     .min(1, { message: "Pole pytania nie może być puste" })
@@ -156,6 +160,30 @@ export const CreateTestSchema = z.object({
     })
   ),
 });
+
+/**
+ * Schema for the AI test generation form (topic → grounded questions).
+ */
+export const GenerateAITestsSchema = z.object({
+  topic: z
+    .string()
+    .min(3, { message: "Podaj temat lub problem (min. 3 znaki)" })
+    .max(500, { message: "Temat nie może przekraczać 500 znaków" })
+    .trim(),
+  linkedCategory: z
+    .string()
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz pytania" }),
+  categoryName: z
+    .string()
+    .min(1, { message: "Podaj nazwę kategorii" })
+    .max(100, { message: "Nazwa kategorii nie może przekraczać 100 znaków" })
+    .trim(),
+  questionCount: z.coerce
+    .number()
+    .int()
+    .min(1, { message: "Minimum 1 pytanie" })
+    .max(15, { message: "Maksymalnie 15 pytań" }),
+})
 
 /**
  * Schema for validating test data imported from a file.

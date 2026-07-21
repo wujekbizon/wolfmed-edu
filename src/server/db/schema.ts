@@ -162,6 +162,9 @@ export const userCustomCategories = createTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull(),
     categoryName: varchar("categoryName", { length: 255 }).notNull(),
+    // Real curriculum subject this custom category maps to (e.g. "farmakologia").
+    // Drives planner learning-curve attribution; null = not linked / not counted.
+    linkedCategory: varchar("linkedCategory", { length: 255 }),
     questionIds: jsonb("questionIds").$type<string[]>().notNull().default([]),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),

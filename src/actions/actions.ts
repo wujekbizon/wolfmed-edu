@@ -65,6 +65,7 @@ import { after } from "next/server"
 import { onQuizCompleted } from "@/server/memory/extract"
 import { extractAnswerData } from "@/helpers/extractAnswerData"
 import { determineTestCategory } from "@/helpers/determineTestCategory"
+import { getAccessibleCategories } from "@/helpers/populateCategories"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
 import { getUserEnrollmentsAction } from "@/actions/course-actions"
@@ -764,21 +765,29 @@ export async function createTestimonialAction(
 async function upsertCustomCategory(
   userId: string,
   categoryName: string,
-  questionIds: string[]
+  questionIds: string[],
+  linkedCategory?: string | null
 ) {
   const existing = await getUserCustomCategoryByName(userId, categoryName)
 
   if (existing) {
     const currentIds = existing.questionIds as string[]
     const newIds = questionIds.filter((id) => !currentIds.includes(id))
-    if (newIds.length > 0) {
+    const shouldSetLink =
+      linkedCategory != null && existing.linkedCategory !== linkedCategory
+    if (newIds.length > 0 || shouldSetLink) {
       await db
         .update(userCustomCategories)
-        .set({ questionIds: [...currentIds, ...newIds] })
+        .set({
+          questionIds: [...currentIds, ...newIds],
+          ...(shouldSetLink ? { linkedCategory } : {}),
+        })
         .where(eq(userCustomCategories.id, existing.id))
     }
   } else {
-    await db.insert(userCustomCategories).values({ userId, categoryName, questionIds })
+    await db
+      .insert(userCustomCategories)
+      .values({ userId, categoryName, questionIds, linkedCategory: linkedCategory ?? null })
   }
 }
 
@@ -810,11 +819,31 @@ export async function createTestAction(
 
     const testCategory = determineTestCategory(formData)
 
-    const { answers, category, question } = CreateTestSchema.parse({
+    // A freshly named category links to a subject picked from the select; when
+    // an existing (real) category is chosen, it is its own linked subject.
+    const isNewCategory = !!formData.get("newCategory")
+    const linkedCategoryRaw = isNewCategory
+      ? ((formData.get("linkedCategory") as string) ?? "").trim()
+      : String(testCategory).trim()
+
+    const { answers, category, question, linkedCategory } = CreateTestSchema.parse({
       category: testCategory,
+      linkedCategory: linkedCategoryRaw,
       question: formData.get("question"),
       answers: answersData
     })
+
+    // The linked subject must be one the user can actually access.
+    const accessibleValues = new Set(
+      (await getAccessibleCategories()).map((c) => c.value.toLowerCase())
+    )
+    const normalizedLink = linkedCategory.toLowerCase()
+    if (!accessibleValues.has(normalizedLink)) {
+      return {
+        ...toFormState("ERROR", "Wybierz przedmiot z listy dostępnych kategorii."),
+        fieldErrors: { linkedCategory: ["Nieprawidłowy przedmiot."] },
+      }
+    }
 
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
     if (correctAnswers.length !== 1) {
@@ -839,7 +868,7 @@ export async function createTestAction(
       .returning({ id: userCustomTests.id })
 
     if (!inserted) throw new Error('Nie udało się zapisać testu')
-    await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id])
+    await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id], normalizedLink)
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -989,6 +1018,20 @@ export async function saveAIGeneratedTestsAction(
     const questionsJson = formData.get("questionsJson") as string
     if (!questionsJson) return toFormState("ERROR", "Brak danych pytań.")
 
+    // Optional: the real subject the generated category links to (AI tab flow).
+    // Absent for the in-chat cell flow, which stays unlinked.
+    const linkedCategoryRaw = (formData.get("linkedCategory") as string | null)?.trim().toLowerCase() || null
+    let linkedCategory: string | null = null
+    if (linkedCategoryRaw) {
+      const accessibleValues = new Set(
+        (await getAccessibleCategories()).map((c) => c.value.toLowerCase())
+      )
+      if (!accessibleValues.has(linkedCategoryRaw)) {
+        return toFormState("ERROR", "Wybierz przedmiot z listy dostępnych kategorii.")
+      }
+      linkedCategory = linkedCategoryRaw
+    }
+
     const parsed = JSON.parse(questionsJson)
     const validationResult = await TestFileSchema.safeParseAsync(parsed)
 
@@ -1027,7 +1070,7 @@ export async function saveAIGeneratedTestsAction(
     }
     await Promise.all(
       Array.from(byCategory.entries()).map(([cat, ids]) =>
-        upsertCustomCategory(user.userId, cat, ids)
+        upsertCustomCategory(user.userId, cat, ids, linkedCategory)
       )
     )
   } catch (error) {
