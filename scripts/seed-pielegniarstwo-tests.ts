@@ -5,7 +5,8 @@
  * from data/tests.json (sourced from new-courses branch).
  *
  * Usage:
- *   npx tsx scripts/seed-pielegniarstwo-tests.ts
+ *   npx tsx scripts/seed-pielegniarstwo-tests.ts                  # all pielegniarstwo categories
+ *   npx tsx scripts/seed-pielegniarstwo-tests.ts genetyka farmakologia  # only these categories
  *
  * Safe to re-run — uses ON CONFLICT DO NOTHING on id.
  */
@@ -54,8 +55,11 @@ async function main() {
 
   const allTests: TestRecord[] = JSON.parse(fs.readFileSync(testsPath, 'utf-8'))
 
+  // Optional category allow-list from CLI args (e.g. `genetyka farmakologia`)
+  const categoryFilter = process.argv.slice(2)
+
   // Filter pielegniarstwo only, normalize typo 'pielegniarstvo' → 'pielegniarstwo'
-  const pielTests = allTests
+  let pielTests = allTests
     .filter(t => ['pielegniarstwo', 'pielegniarstvo'].includes(t.meta?.course))
     .map(t => ({
       ...t,
@@ -64,6 +68,11 @@ async function main() {
         course: 'pielegniarstwo',
       },
     }))
+
+  if (categoryFilter.length > 0) {
+    pielTests = pielTests.filter(t => categoryFilter.includes(t.meta.category))
+    console.log(`Category filter active: ${categoryFilter.join(', ')}`)
+  }
 
   console.log(`Found ${pielTests.length} pielegniarstwo tests to seed`)
 
@@ -84,10 +93,9 @@ async function main() {
       const updatedAt = normalizeDate(t.updatedAt)
 
       const result = await sql`
-        INSERT INTO wolfmed_tests (id, category, meta, data, "createdAt", "updatedAt")
+        INSERT INTO wolfmed_tests (id, meta, data, "createdAt", "updatedAt")
         VALUES (
           ${t.id}::uuid,
-          ${t.meta.category},
           ${JSON.stringify(t.meta)}::jsonb,
           ${JSON.stringify(t.data)}::jsonb,
           ${createdAt},
