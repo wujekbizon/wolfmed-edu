@@ -1828,5 +1828,197 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
         ]
       }
     }
+  },
+  patologia: {
+    category: 'patologia',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kfYUFUA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R',
+    description:
+      'Testy z patologii, patofizjologii i patomorfologii dla studentów pielęgniarstwa. Poznaj mechanizmy chorób, etiopatogenezę schorzeń poszczególnych układów, procesy zapalne, nowotworowe oraz zaburzenia homeostazy. Przygotuj się kompleksowo do egzaminu.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Patologia',
+    keywords: [
+      'patologia',
+      'patofizjologia',
+      'patomorfologia',
+      'pielęgniarstwo',
+      'etiopatogeneza',
+      'choroby',
+      'nowotwory',
+      'stan zapalny',
+      'homeostaza',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 2,
+      semester: 'Rok I, Semestr II',
+      objectives:
+        'Zapoznanie studentów ze zmianami występującymi pod wpływem bodźców patologicznych w prawidłowo funkcjonującym organizmie człowieka i z reakcjami obronnymi ustroju na różne patogeny. Charakterystyka etiopatogenezy chorób układu krążenia, układu oddechowego, układu krwionośnego, układu wydzielania wewnętrznego oraz chorób nowotworowych. Zapoznanie studentów z patofizjologią układu nerwowego, pokarmowego, moczowego, procesami starzenia, cukrzycy, podstawami stanu zapalnego i rolą odporności ustroju.',
+      prerequisites:
+        'Posiada wiadomości z zakresu anatomii, fizjologii i biochemii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'A.W6',
+            desc: 'Zna podstawowe pojęcia z zakresu patologii ogólnej i patologii poszczególnych układów organizmu.'
+          },
+          {
+            code: 'A.W7',
+            desc: 'Zna wybrane zagadnienia z zakresu patologii narządowej układu krążenia, układu oddechowego, układu trawiennego, układu hormonalnego, układu metabolicznego, układu moczowo-płciowego i układu nerwowego.'
+          },
+          {
+            code: 'A.W8',
+            desc: 'Zna czynniki chorobotwórcze zewnętrzne i wewnętrzne, modyfikowalne i niemodyfikowalne.'
+          }
+        ],
+        skills: [
+          {
+            code: 'A.U2',
+            desc: 'Potrafi łączyć obrazy uszkodzeń tkankowych i narządowych z objawami klinicznymi choroby, wywiadem i wynikami badań diagnostycznych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Patologia, patofizjologia — pojęcia, zakres, procesy patologiczne.',
+          'Patofizjologia układu krążenia.',
+          'Patofizjologia układu oddechowego.',
+          'Patofizjologia układu wydzielania wewnętrznego.',
+          'Struktura i regulacja hormonalna.',
+          'Patofizjologia układu nerwowego. Zaburzenia procesów w układzie nerwowym.',
+          'Zaburzenia ośrodków regulacji układu autonomicznego.',
+          'Patofizjologia chorób krwi i układu krwiotwórczego.',
+          'Patofizjologia nowotworów.',
+          'Układ immunologiczny.',
+          'Patofizjologia układu pokarmowego.',
+          'Homeostaza i adaptacja.',
+          'Homeostaza a problem zdrowia i choroby.',
+          'Molekularne podstawy dziedziczenia.',
+          'Molekularne podstawy stanu zapalnego.',
+          'Zaburzenia termoregulacji.',
+          'Miażdżyca.',
+          'Rola odporności w patologii.',
+          'Cukrzyca, etiopatogeneza, zaburzenia biochemiczne w cukrzycy.',
+          'Otyłość, patomorfologia i patofizjologia tkanki tłuszczowej.',
+          'Procesy starzenia.'
+        ],
+        seminars: [
+          'Choroba organiczna i czynnościowa — kryteria zjawisk chorobowych, przebieg i zejście choroby.',
+          'Patofizjologia nerki i układu moczowego. Zaburzenia ilościowe i jakościowe filtracji kłębkowej.',
+          'Homeostaza a problem zdrowia i choroby.',
+          'Cukrzyca, etiopatogeneza, zaburzenia biochemiczne w cukrzycy.'
+        ],
+        selfStudy: [
+          'Zaburzenia przemiany materii. Gospodarka wodno-elektrolitowa. Zaburzenia równowagi kwasowo-zasadowej.',
+          'Okres przekwitania. Klimakterium. Andropauza.',
+          'Działanie czynników środowiskowych. Hałas. Wibracja. Zmienione ciśnienie atmosferyczne.'
+        ]
+      }
+    }
+  },
+  dietetyka: {
+    category: 'dietetyka',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JrZfRllmQWsLSvF0ZVh7qXdCNxbjatwczey8',
+    description:
+      'Testy z dietetyki dla studentów pielęgniarstwa. Opanuj zasady prawidłowego żywienia, rolę składników pokarmowych, diety terapeutyczne, ocenę stanu odżywienia oraz żywienie dojelitowe i pozajelitowe. Przygotuj się do egzaminu i praktyki zawodowej.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Dietetyka',
+    keywords: [
+      'dietetyka',
+      'żywienie',
+      'pielęgniarstwo',
+      'diety terapeutyczne',
+      'składniki pokarmowe',
+      'stan odżywienia',
+      'żywienie kliniczne',
+      'poradnictwo żywieniowe',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 2,
+      semester: 'Rok I, Semestr I',
+      objectives:
+        'Opanowanie podstawowej wiedzy z zakresu prawidłowego żywienia z uwzględnieniem roli składników pokarmowych. Poznanie wpływu sposobu żywienia na zdrowie człowieka.',
+      prerequisites:
+        'Podstawowa wiedza z zakresu zasad żywienia człowieka i fizjologii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'C.W22',
+            desc: 'Zna zapotrzebowanie organizmu na składniki pokarmowe.'
+          },
+          {
+            code: 'C.W23',
+            desc: 'Zna zasady żywienia osób zdrowych i chorych w różnym wieku oraz żywienia dojelitowego i pozajelitowego.'
+          },
+          {
+            code: 'C.W24',
+            desc: 'Zna zasady leczenia dietetycznego i powikłania dietoterapii.'
+          },
+          {
+            code: 'C.W25',
+            desc: 'Zna rodzaje i zastosowanie środków spożywczych specjalnego przeznaczenia żywieniowego.'
+          }
+        ],
+        skills: [
+          {
+            code: 'C.U35',
+            desc: 'Oceniać stan odżywienia organizmu z wykorzystaniem metod antropometrycznych, biochemicznych i badania podmiotowego oraz prowadzić poradnictwo w zakresie żywienia.'
+          },
+          {
+            code: 'C.U36',
+            desc: 'Stosować diety terapeutyczne w wybranych schorzeniach.'
+          },
+          {
+            code: 'C.U37',
+            desc: 'Dobierać środki spożywcze specjalnego przeznaczenia żywieniowego i wystawiać na nie recepty w ramach realizacji zleceń lekarskich oraz udzielać informacji na temat ich stosowania.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S.4',
+            desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'K.S.5',
+            desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Ocena stanu odżywienia i sposobu żywienia różnych grup ludności. Charakterystyka niedożywienia i jego następstw.',
+          'Znaczenie żywienia dojelitowego i pozajelitowego — standardy postępowania. Żywienie chorych — uwarunkowania dietetyczne. Zespoły leczenia żywieniowego. Wprowadzenie do problematyki żywieniowej (Evidence Based Nutrition). Podstawowe składniki odżywcze, zapotrzebowanie energetyczne.',
+          'Podstawy prawne pracy pielęgniarki w udzielaniu porad żywieniowych i edukacji pacjenta.',
+          'Warunki prawidłowego żywienia — piramidy żywieniowe.',
+          'Metody oceny stanu odżywienia i sposobu żywienia.',
+          'Klasyfikacja diet. Omówienie wybranych diet.',
+          'Zaburzenia odżywiania. Żywienie dojelitowe i pozajelitowe — standardy postępowania.'
+        ],
+        seminars: [
+          'Podstawy prawne w zakresie refundacji i ordynowania środków spożywczych specjalnego przeznaczenia, w tym preparatów zawierających hydrolizaty białek mleka.',
+          'Charakterystyka i zastosowanie środków spożywczych, które może ordynować pielęgniarka, w tym wystawiać na nie zlecenia lub recepty.',
+          'Rodzaje preparatów mleka modyfikowanego i mlekozastępczych oraz wskazania i przeciwwskazania do ich stosowania.'
+        ],
+        selfStudy: [
+          'Opracowanie wybranych tematycznie testów wiedzy na temat żywienia: racjonalnego oraz w wybranych stanach chorobowych.'
+        ]
+      }
+    }
   }
 }
