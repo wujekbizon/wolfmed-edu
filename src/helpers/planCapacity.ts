@@ -19,10 +19,10 @@ export function computePlanCapacity(
 }
 
 /**
- * Per-concept minute share when spreading total capacity evenly, rounded down
- * to the nearest 5 and never below the minimum daily block.
+ * Per-concept minute share when spreading a total evenly, rounded down to the
+ * nearest 5 and never below the minimum daily block.
  */
-export function distributeMinutes(capacityMinutes: number, conceptCount: number): number {
-  if (capacityMinutes <= 0 || conceptCount === 0) return MIN_MINUTES_PER_DAY
-  return Math.max(MIN_MINUTES_PER_DAY, Math.floor(capacityMinutes / conceptCount / 5) * 5)
+export function distributeMinutes(totalMinutes: number, conceptCount: number): number {
+  if (totalMinutes <= 0 || conceptCount === 0) return MIN_MINUTES_PER_DAY
+  return Math.max(MIN_MINUTES_PER_DAY, Math.floor(totalMinutes / conceptCount / 5) * 5)
 }

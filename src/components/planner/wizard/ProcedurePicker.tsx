@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown, ChevronRight, Stethoscope } from 'lucide-react'
+import { ChevronDown, ChevronRight, Stethoscope, ListPlus } from 'lucide-react'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
 
 export default function ProcedurePicker({ wizard }: { wizard: PlanWizardController }) {
@@ -9,17 +9,33 @@ export default function ProcedurePicker({ wizard }: { wizard: PlanWizardControll
 
   if (wizard.procedureOptions.length === 0) return null
 
+  const allAdded = wizard.procedureOptions.every((procedure) =>
+    wizard.hasConcept(procedure.name.slice(0, 255))
+  )
+
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setExpanded((value) => !value)}
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 hover:text-zinc-900"
-      >
-        {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-        <Stethoscope className="w-4 h-4 text-[#ff9898]" />
-        Procedury ({wizard.procedureOptions.length})
-      </button>
+      <div className="flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setExpanded((value) => !value)}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-700 hover:text-zinc-900"
+        >
+          {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          <Stethoscope className="w-4 h-4 text-[#ff9898]" />
+          Procedury ({wizard.procedureOptions.length})
+        </button>
+        {!allAdded && (
+          <button
+            type="button"
+            onClick={wizard.addAllProcedures}
+            className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-red-500"
+          >
+            <ListPlus className="w-3.5 h-3.5" />
+            Dodaj wszystkie
+          </button>
+        )}
+      </div>
       <p className="text-xs text-zinc-400 mt-1 ml-5">
         Dodaj procedury do planu — czas z wyzwań proceduralnych zaliczy się dokładnie do nich.
       </p>

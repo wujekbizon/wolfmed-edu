@@ -53,7 +53,8 @@ export default function StepGoal({
           value={wizard.dueDate}
           min={minDate}
           onChange={(event) => wizard.setDueDate(event.target.value)}
-          className={PLAN_INPUT_CLASS}
+          onClick={(event) => event.currentTarget.showPicker?.()}
+          className={`${PLAN_INPUT_CLASS} cursor-pointer`}
         />
       </div>
     </div>

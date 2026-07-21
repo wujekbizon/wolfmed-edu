@@ -197,6 +197,13 @@ export const getPlanProgress = cache(
 
     const concepts: ConceptProgress[] = plan.concepts.map((concept) => {
       const minutes = attributed.get(concept.id) ?? { auto: 0, manual: 0 }
+      const spent = minutes.auto + minutes.manual
+      // A concept whose time bar is full counts as done even if the user never
+      // ticked it manually — the logged minutes already met its target.
+      const autoCompleted =
+        !concept.completedAt &&
+        concept.targetMinutes > 0 &&
+        spent >= concept.targetMinutes
       return {
         id: concept.id,
         categoryKey: concept.categoryKey,
@@ -205,7 +212,9 @@ export const getPlanProgress = cache(
         source: concept.source as ConceptSource,
         targetMinutes: concept.targetMinutes,
         sortOrder: concept.sortOrder,
-        completedAt: concept.completedAt?.toISOString() ?? null,
+        completedAt:
+          concept.completedAt?.toISOString() ??
+          (autoCompleted ? now.toISOString() : null),
         autoMinutes: minutes.auto,
         manualMinutes: minutes.manual,
       }

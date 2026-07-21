@@ -36,7 +36,7 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   )
 
   return (
-    <form action={action} className="h-full flex flex-row gap-3">
+    <form action={action} className="h-full flex flex-col md:flex-row gap-3">
       <ResizableComponent direction="horizontal">
         <EditorField
           formState={state}

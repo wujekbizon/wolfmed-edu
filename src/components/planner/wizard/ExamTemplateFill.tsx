@@ -1,11 +1,12 @@
 'use client'
 
 import { GraduationCap } from 'lucide-react'
+import { buildExamTemplateConcepts } from '@/helpers/examTemplateConcepts'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
 
 export default function ExamTemplateFill({ wizard }: { wizard: PlanWizardController }) {
-  const remaining = wizard.catalog.filter(
-    (entry) => !wizard.hasConcept(entry.label)
+  const remaining = buildExamTemplateConcepts(wizard.catalog).filter(
+    (concept) => !wizard.hasConcept(concept.label)
   ).length
 
   if (remaining === 0) return null

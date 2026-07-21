@@ -4,10 +4,8 @@ import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
 import { db } from '@/server/db/index'
 import { checkRateLimit } from '@/lib/rateLimit'
-import {
-  checkCourseAccessAction,
-  checkPremiumAccessAction,
-} from '@/actions/course-actions'
+import { checkCourseAccessAction } from '@/actions/course-actions'
+import { hasAccessToTier } from '@/helpers/accessTiers'
 import {
   GeneratedKnowledgeQuizSchema,
   GeneratedScenarioQuizSchema,
@@ -52,16 +50,6 @@ export async function generateProcedureQuizAction(
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
-  const isPremium = await checkPremiumAccessAction()
-  if (!isPremium) {
-    return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
-  }
-
-  const rateLimit = await checkRateLimit(userId, 'quiz:generate')
-  if (!rateLimit.success) {
-    return toFormState('ERROR', rateLimitMessage(rateLimit.reset))
-  }
-
   let parsed
   try {
     parsed = GenerateProcedureQuizSchema.parse({
@@ -78,9 +66,20 @@ export async function generateProcedureQuizAction(
       return toFormState('ERROR', 'Procedura nie została znaleziona.')
     }
 
+    // Premium is per-course: holding premium on one course must not unlock AI
+    // quizzes for a procedure that belongs to a course the user only has at a
+    // lower tier. Check the tier on this procedure's own course.
     const access = await checkCourseAccessAction(procedure.course)
     if (!access.hasAccess) {
       return toFormState('ERROR', 'Brak dostępu do tego kursu.')
+    }
+    if (!hasAccessToTier(access.accessTier ?? 'free', 'premium')) {
+      return toFormState('ERROR', 'Quizy AI są dostępne w planie premium tego kursu.')
+    }
+
+    const rateLimit = await checkRateLimit(userId, 'quiz:generate')
+    if (!rateLimit.success) {
+      return toFormState('ERROR', rateLimitMessage(rateLimit.reset))
     }
 
     // The procedure's own algorithm steps are the grounding — inlined straight

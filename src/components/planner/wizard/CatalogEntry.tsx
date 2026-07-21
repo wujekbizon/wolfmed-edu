@@ -1,5 +1,6 @@
 'use client'
 
+import { ChevronDown, ChevronRight } from 'lucide-react'
 import { scaledConceptMinutes } from '@/helpers/scaledConceptMinutes'
 import ConceptTopicRow from './ConceptTopicRow'
 import type { ConceptCatalogEntry } from '@/types/plannerTypes'
@@ -13,20 +14,34 @@ export default function CatalogEntry({
   wizard: PlanWizardController
 }) {
   const expanded = wizard.expandedCategory === entry.categoryKey
+  const expandable = entry.topicGroups.length > 0
   return (
     <div className="border border-zinc-200 rounded-lg">
       <div className="flex items-center justify-between px-3 py-2.5">
         <button
           type="button"
           onClick={() => wizard.setExpandedCategory(expanded ? null : entry.categoryKey)}
-          className="text-left flex-1"
+          disabled={!expandable}
+          className="text-left flex-1 flex items-center gap-2 disabled:cursor-default"
         >
-          <span className="text-sm font-medium text-zinc-800">{entry.label}</span>
-          {entry.questionCount > 0 && (
-            <span className="block text-xs text-zinc-400">
-              {entry.questionCount} pytań w bazie testów
+          {expandable && (
+            <span className="shrink-0 text-zinc-400">
+              {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </span>
           )}
+          <span className="min-w-0">
+            <span className="block text-sm font-medium text-zinc-800">{entry.label}</span>
+            {entry.questionCount > 0 && (
+              <span className="block text-xs text-zinc-400">
+                {entry.questionCount} pytań w bazie testów
+              </span>
+            )}
+            {expandable && (
+              <span className="block text-xs text-[#ff9898]">
+                {expanded ? 'Zwiń tematy' : 'Rozwiń tematy programu'}
+              </span>
+            )}
+          </span>
         </button>
         {wizard.hasConcept(entry.label) ? (
           <button
