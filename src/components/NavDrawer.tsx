@@ -15,7 +15,11 @@ export default function NavDrawer() {
   const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
   const { user } = useUser()
-  const hasCourses = ((user?.publicMetadata?.ownedCourses as string[]) ?? []).length > 0
+  const ownedCourses = (user?.publicMetadata?.ownedCourses as string[]) ?? []
+  const hasCourses = ownedCourses.length > 0
+  const visibleSideMenuLinks = sideMenuNavigationLinks.filter(
+    (link) => !link.requiresCourse || ownedCourses.includes(link.requiresCourse)
+  )
 
   return (
     <>
@@ -115,7 +119,7 @@ export default function NavDrawer() {
               Panel użytkownika
             </h3>
             <div className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
-              {sideMenuNavigationLinks.map((link) => {
+              {visibleSideMenuLinks.map((link) => {
                 const isActive = pathname === link.url
                 return (
                   <Link

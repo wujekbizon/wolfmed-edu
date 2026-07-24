@@ -57,6 +57,12 @@ export default function ResizableComponent({
         return <div className="h-full w-full">{children}</div>;
     }
 
+    // On mobile a side-by-side (horizontal) split doesn't fit: drop the fixed
+    // pixel width and let the content go full width so it can stack vertically.
+    if (direction === "horizontal" && innerWidth < 768) {
+        return <div className="w-full">{children}</div>;
+    }
+
     const resizableProps =
         direction === "horizontal"
             ? {

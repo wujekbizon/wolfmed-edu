@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react'
 import type { PlanWizardController } from '@/hooks/usePlanWizard'
 
 export default function CustomConceptInput({ wizard }: { wizard: PlanWizardController }) {
+  const disabled = wizard.customLabel.trim().length < 2
   return (
     <div>
       <h3 className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700 mb-2">
@@ -21,7 +22,9 @@ export default function CustomConceptInput({ wizard }: { wizard: PlanWizardContr
         <button
           type="button"
           onClick={wizard.addCustomConcept}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors shrink-0"
+          disabled={disabled}
+          title={disabled ? 'Wpisz co najmniej 2 znaki' : undefined}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-zinc-900 text-white text-sm font-semibold hover:bg-zinc-700 transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-zinc-900"
         >
           <Plus className="w-4 h-4" />
           Dodaj

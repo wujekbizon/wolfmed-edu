@@ -19,6 +19,7 @@ export default function SelectedConceptsList({ wizard }: { wizard: PlanWizardCon
           <button
             type="button"
             onClick={wizard.distributeCapacity}
+            title="Ustawia każdemu zagadnieniu tę samą liczbę minut, dzieląc obecny plan po równo"
             className="inline-flex items-center gap-1 text-xs font-semibold text-zinc-500 hover:text-red-500"
           >
             <Scale className="w-3.5 h-3.5" />

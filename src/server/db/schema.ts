@@ -10,9 +10,11 @@ import {
   text,
   pgEnum,
   boolean,
-  real
+  real,
+  uniqueIndex
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
+import type { Diagnoza } from "@/types/diagnozyTypes"
 
 interface TestMeta {
   course: string;
@@ -162,6 +164,9 @@ export const userCustomCategories = createTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: varchar("userId", { length: 256 }).notNull(),
     categoryName: varchar("categoryName", { length: 255 }).notNull(),
+    // Real curriculum subject this custom category maps to (e.g. "farmakologia").
+    // Drives planner learning-curve attribution; null = not linked / not counted.
+    linkedCategory: varchar("linkedCategory", { length: 255 }),
     questionIds: jsonb("questionIds").$type<string[]>().notNull().default([]),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -821,6 +826,90 @@ export type LearningPlanConceptRow = typeof learningPlanConcepts.$inferSelect
 export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
 export type StudyLogRow = typeof studyLogs.$inferSelect
 export type NewStudyLogRow = typeof studyLogs.$inferInsert
+
+// ── Diagnozy i Interwencje (pielegniarstwo) ────────────────────────────────
+// Content source of truth: seeded from data/diagnozy.json via
+// scripts/seed-diagnozy.ts (records are Zod-validated before insert).
+export const diagnozy = createTable(
+  "diagnozy",
+  {
+    id: uuid("id").primaryKey(),
+    course: varchar("course", { length: 100 })
+      .notNull()
+      .default("pielegniarstwo"),
+    slug: varchar("slug", { length: 256 }).notNull(),
+    section: varchar("section", { length: 16 }).notNull(),
+    chapterNumber: varchar("chapterNumber", { length: 8 }).notNull(),
+    chapterTitle: varchar("chapterTitle", { length: 256 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
+    status: varchar("status", { length: 16 }).notNull().default("published"),
+    data: jsonb("data").$type<Diagnoza>().notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    index("diagnozy_course_idx").on(table.course),
+    index("diagnozy_slug_idx").on(table.slug),
+  ]
+)
+
+// Fill-out completions — a flag per (user, diagnosis), no score.
+export const diagnozyProgress = createTable(
+  "diagnozy_progress",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    diagnozaSlug: varchar("diagnozaSlug", { length: 256 }).notNull(),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("diagnozy_progress_user_idx").on(table.userId),
+    uniqueIndex("diagnozy_progress_user_slug_uq").on(
+      table.userId,
+      table.diagnozaSlug
+    ),
+  ]
+)
+
+export const diagnozyProgressRelations = relations(diagnozyProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [diagnozyProgress.userId],
+    references: [users.userId],
+  }),
+}))
+
+// Graded exam attempts (Egzamin mode) — separate from score-free fill-out flags.
+export const diagnozyExamAttempts = createTable(
+  "diagnozy_exam_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    diagnozaSlug: varchar("diagnozaSlug", { length: 256 }).notNull(),
+    score: integer("score").notNull(),
+    stepScores: jsonb("stepScores").notNull(),
+    timeSpent: integer("timeSpent").notNull(),
+    passed: boolean("passed").notNull().default(false),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("diagnozy_exam_attempts_user_idx").on(table.userId),
+    index("diagnozy_exam_attempts_user_slug_idx").on(
+      table.userId,
+      table.diagnozaSlug
+    ),
+  ]
+)
+
+export const diagnozyExamAttemptsRelations = relations(diagnozyExamAttempts, ({ one }) => ({
+  user: one(users, {
+    fields: [diagnozyExamAttempts.userId],
+    references: [users.userId],
+  }),
+}))
 
 // ── Memory layer (see src/server/memory/) ──────────────────────────────────
 // Re-exported so drizzle-kit (schema entry point) and the ORM client pick up

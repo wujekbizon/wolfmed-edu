@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { getProcedureBySlug, getLatestGeneratedQuiz } from '@/server/queries'
-import { checkPremiumAccessAction } from '@/actions/course-actions'
+import { checkCourseAccessAction } from '@/actions/course-actions'
+import { hasAccessToTier } from '@/helpers/accessTiers'
 import { ChallengeType } from '@/types/challengeTypes'
 import { AI_CHALLENGE_TYPES } from '@/types/generatedQuizTypes'
 import type { AiChallengeType } from '@/types/generatedQuizTypes'
@@ -41,10 +42,14 @@ export default async function ChallengeTypePage({ params }: Props) {
   }
 
   if (AI_CHALLENGE_TYPES.includes(challengeType as AiChallengeType)) {
-    const [isPremium, latestQuiz] = await Promise.all([
-      checkPremiumAccessAction(),
+    const [access, latestQuiz] = await Promise.all([
+      checkCourseAccessAction(course),
       getLatestGeneratedQuiz(user.userId, procedure.id, challengeType),
     ])
+    // Premium is per-course — the AI-quiz gate must reflect the tier on THIS
+    // procedure's course, not premium held on any other course.
+    const isPremium =
+      access.hasAccess && hasAccessToTier(access.accessTier ?? 'free', 'premium')
 
     return (
       <GeneratedQuizExperience

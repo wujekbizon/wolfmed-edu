@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NotebookPen, ListChecks } from 'lucide-react'
 import { planCompletionPercent } from '@/helpers/planCompletionPercent'
 import type { PlanProgress } from '@/types/plannerTypes'
@@ -15,6 +15,13 @@ import PlanSettings from './PlanSettings'
 export default function PlanDashboard({ progress }: { progress: PlanProgress }) {
   const [showSettings, setShowSettings] = useState(false)
   const { plan, concepts } = progress
+
+  // Landing on the dashboard (e.g. right after creating a plan, with the wizard
+  // scrolled down) should show the header with name/progress/streak, not a
+  // mid-page scroll position carried over from the previous view.
+  useEffect(() => {
+    window.scrollTo({ top: 0 })
+  }, [])
 
   const completionPercent = planCompletionPercent(
     progress.attributedMinutes,

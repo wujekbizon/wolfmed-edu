@@ -6,7 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { autoPlanName } from '@/helpers/autoPlanName'
 import { computePlanCapacity, distributeMinutes } from '@/helpers/planCapacity'
-import { scaledConceptMinutes } from '@/helpers/scaledConceptMinutes'
+import { buildExamTemplateConcepts } from '@/helpers/examTemplateConcepts'
 import {
   MAX_CONCEPTS,
   TOPIC_DEFAULT_MINUTES,
@@ -123,8 +123,13 @@ export function usePlanWizard({
     )
 
   const distributeCapacity = () => {
-    const share = distributeMinutes(capacityMinutes, concepts.length)
     if (concepts.length === 0) return
+    // Balance the current plan evenly across concepts instead of inflating every
+    // concept to the full time-to-deadline capacity (which produced surprising
+    // jumps like 510 → 7440 min). Never spread more than realistically fits.
+    const base =
+      capacityMinutes > 0 ? Math.min(plannedMinutes, capacityMinutes) : plannedMinutes
+    const share = distributeMinutes(base, concepts.length)
     setConcepts((current) => current.map((c) => ({ ...c, targetMinutes: share })))
   }
 
@@ -185,18 +190,31 @@ export function usePlanWizard({
       targetMinutes: PROCEDURE_DEFAULT_MINUTES,
     })
 
+  const addAllProcedures = () =>
+    setConcepts((current) => {
+      const next = [...current]
+      for (const procedure of procedureOptions) {
+        if (next.length >= MAX_CONCEPTS) break
+        const label = procedure.name.slice(0, 255)
+        if (next.some((c) => c.label === label)) continue
+        next.push({
+          categoryKey: null,
+          procedureId: procedure.id,
+          label,
+          source: 'procedure',
+          targetMinutes: PROCEDURE_DEFAULT_MINUTES,
+        })
+      }
+      return next
+    })
+
   const fillExamTemplate = () =>
     setConcepts((current) => {
       const next = [...current]
-      for (const entry of catalog) {
+      for (const concept of buildExamTemplateConcepts(catalog)) {
         if (next.length >= MAX_CONCEPTS) break
-        if (next.some((c) => c.label === entry.label)) continue
-        next.push({
-          categoryKey: entry.categoryKey,
-          label: entry.label,
-          source: 'category',
-          targetMinutes: scaledConceptMinutes(entry),
-        })
+        if (next.some((c) => c.label === concept.label)) continue
+        next.push(concept)
       }
       return next
     })
@@ -220,7 +238,8 @@ export function usePlanWizard({
     // handlers
     hasConcept, addConcept, addTopics, removeConcept, updateConceptMinutes,
     distributeCapacity, toggleStudyDay, selectCourse, selectFocus, editName,
-    editNameFromPreset, addCustomConcept, addProcedureConcept, fillExamTemplate,
+    editNameFromPreset, addCustomConcept, addProcedureConcept, addAllProcedures,
+    fillExamTemplate,
   }
 }
 

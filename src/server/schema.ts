@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
+import { BODY_ZONES } from "@/types/diagnozyTypes";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -140,6 +141,10 @@ export const StartTestSchema = z.object({
  */
 export const CreateTestSchema = z.object({
   category: z.string().min(1, { message: "Proszę wybrać kategorię" }),
+  // Real curriculum subject the custom category maps to (planner attribution).
+  linkedCategory: z
+    .string()
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz kategorię" }),
   question: z
     .string()
     .min(1, { message: "Pole pytania nie może być puste" })
@@ -156,6 +161,33 @@ export const CreateTestSchema = z.object({
     })
   ),
 });
+
+/**
+ * Schema for the AI test generation form (topic → grounded questions).
+ */
+export const GenerateAITestsSchema = z.object({
+  topic: z
+    .string()
+    .min(3, { message: "Podaj temat lub problem (min. 3 znaki)" })
+    .max(500, { message: "Temat nie może przekraczać 500 znaków" })
+    .trim(),
+  // The select submits `null` when nothing is picked, which fails z.string()'s
+  // type check before .min() runs — set `error` so the null case shows the same
+  // Polish message instead of Zod's default "expected string, received null".
+  linkedCategory: z
+    .string({ error: "Wybierz przedmiot, do którego przypiszesz pytania" })
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz pytania" }),
+  categoryName: z
+    .string()
+    .min(1, { message: "Podaj nazwę kategorii" })
+    .max(100, { message: "Nazwa kategorii nie może przekraczać 100 znaków" })
+    .trim(),
+  questionCount: z.coerce
+    .number()
+    .int()
+    .min(1, { message: "Minimum 1 pytanie" })
+    .max(15, { message: "Maksymalnie 15 pytań" }),
+})
 
 /**
  * Schema for validating test data imported from a file.
@@ -869,4 +901,128 @@ export const LogStudySchema = z.object({
     .trim()
     .optional(),
   conceptId: z.string().trim().optional().nullable(),
+});
+
+// --- Diagnozy i Interwencje (pielegniarstwo) ---
+
+const DiagnozaStringGroupSchema = z.object({
+  label: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+});
+
+/** Book sections render either as a flat list or as labelled sub-groups. */
+export const StringListOrGroupedSchema = z.union([
+  z.array(z.string().min(1)),
+  z.object({
+    type: z.literal("grouped"),
+    groups: z.array(DiagnozaStringGroupSchema).min(1),
+  }),
+]);
+
+/** Reserved for the future Egzamin mode; unused by the fill-out flow. */
+const DiagnozaPracticeStepSchema = z.object({
+  field: z.string().min(1),
+  prompt: z.string().min(1),
+  type: z.enum(["single-choice", "multi-choice"]),
+  correct: z.union([z.string(), z.array(z.string())]).optional(),
+  correctRef: z.string().optional(),
+  distractors: z.array(z.string()).optional(),
+});
+
+export const DiagnozaSchema = z.object({
+  id: z.uuid(),
+  chapter: z.object({
+    number: z.string().min(1),
+    // Some chapters in the source lack a title; UI falls back to the number.
+    title: z.string().default(""),
+  }),
+  section: z.string().min(1),
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/, "Slug może zawierać tylko małe litery, cyfry i myślniki."),
+  title: z.string().min(1),
+  author: z.string().optional(),
+  status: z.enum(["draft", "in-review", "published"]).default("published"),
+  definicja: z.string().min(1),
+  cechyCharakteryzujace: StringListOrGroupedSchema,
+  czynnikiEtiologiczne: z.object({
+    patofizjologiczne: z.array(z.string().min(1)),
+    zwiazaneZLeczeniem: z.array(z.string().min(1)),
+    sytuacyjne: z.array(z.string().min(1)),
+    rozwojowe: z.array(z.string().min(1)),
+  }),
+  kryteriaRozpoznawania: z.object({
+    subiektywne: StringListOrGroupedSchema,
+    obiektywne: StringListOrGroupedSchema,
+  }),
+  opisPrzypadku: z.string().min(1),
+  diagnozaPielegniarska: z.string().min(1),
+  celeOpieki: z.array(z.string().min(1)).min(1),
+  interwencje: z
+    .array(
+      z.object({
+        interwencja: z.string().min(1),
+        // Optional: some interventions (e.g. "Ocena efektywności…") have no
+        // separate book rationale; empty means no teaching payload is shown.
+        uzasadnienie: z.string().default(""),
+        // Egzamin v2: where on the mannequin the intervention is performed;
+        // interventions without it are simply not graded for execution.
+        exam: z
+          .object({
+            bodyZone: z.enum(BODY_ZONES),
+            equipment: z.array(z.string()).optional(),
+          })
+          .optional(),
+      })
+    )
+    .min(1),
+  oczekiwaneWyniki: z.string().min(1),
+  practice: z
+    .object({
+      note: z.string().optional(),
+      steps: z.array(DiagnozaPracticeStepSchema).optional(),
+    })
+    .optional(),
+});
+
+/** Container shape of data/diagnozy.json, validated by scripts/seed-diagnozy.ts. */
+export const DiagnozyFileSchema = z.object({
+  schemaVersion: z.literal(1),
+  book: z.object({
+    title: z.string().min(1),
+    editors: z.string().min(1),
+    publisher: z.string().min(1),
+  }),
+  diagnozy: z.array(DiagnozaSchema).min(1),
+});
+
+export const MarkDiagnozaCompletedSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy.")
+    .trim(),
+});
+
+export const DIAGNOZY_EXAM_FIELDS = [
+  "diagnoza",
+  "cele",
+  "interwencje",
+  "ocena",
+] as const;
+
+export const SubmitDiagnozyExamSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy."),
+  answers: z.object({
+    diagnoza: z.array(z.string()).max(1),
+    cele: z.array(z.string()).max(30),
+    interwencje: z.array(z.string()).max(50),
+    ocena: z.array(z.string()).max(1),
+  }),
+  zones: z.record(z.string(), z.enum(BODY_ZONES)).optional(),
+  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas").max(24 * 60 * 60),
 });

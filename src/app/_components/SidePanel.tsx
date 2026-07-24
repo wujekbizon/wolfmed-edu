@@ -15,12 +15,14 @@ interface SidePanelProps {
   children?: React.ReactNode
   pinnedCount?: number
   isPremium?: boolean
+  enrolledCourseSlugs?: string[]
 }
 
 export default function SidePanel({
   children,
   pinnedCount = 0,
-  isPremium
+  isPremium,
+  enrolledCourseSlugs = []
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -98,7 +100,13 @@ export default function SidePanel({
             className={`flex flex-col flex-1 min-h-0 px-4 py-3 gap-3
               ${isSidePanelOpen ? 'overflow-y-auto scrollbar-webkit' : ''}`}
           >
-            {sideMenuNavigationLinks.map((navLink) => (
+            {sideMenuNavigationLinks
+              .filter(
+                (navLink) =>
+                  !navLink.requiresCourse ||
+                  enrolledCourseSlugs.includes(navLink.requiresCourse)
+              )
+              .map((navLink) => (
               <CustomButton
                 key={navLink.label}
                 text={navLink.label}
@@ -109,7 +117,7 @@ export default function SidePanel({
               >
                 {navLink.icon}
               </CustomButton>
-            ))}
+              ))}
           </div>
 
           {isSidePanelOpen && (

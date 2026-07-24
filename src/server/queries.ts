@@ -32,6 +32,9 @@ import {
   learningPlans,
   learningPlanConcepts,
   studyLogs,
+  diagnozy,
+  diagnozyProgress,
+  diagnozyExamAttempts,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -53,6 +56,7 @@ import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
+import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -2297,5 +2301,110 @@ export const getNoteActivitySince = cache(
       })
       .from(notes)
       .where(and(eq(notes.userId, userId), sql`${notes.createdAt} >= ${since}`))
+  }
+)
+
+// ── Diagnozy i Interwencje ──────────────────────────────────────────────────
+
+// List metadata for published diagnozy (no jsonb payload), ordered by section
+export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
+  return db
+    .select({
+      id: diagnozy.id,
+      slug: diagnozy.slug,
+      section: diagnozy.section,
+      chapterNumber: diagnozy.chapterNumber,
+      chapterTitle: diagnozy.chapterTitle,
+      title: diagnozy.title,
+      author: sql<string | null>`${diagnozy.data}->>'author'`,
+      definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
+    })
+    .from(diagnozy)
+    .where(eq(diagnozy.status, "published"))
+})
+
+// Full diagnosis record by slug (published only)
+export const getDiagnozaBySlug = cache(
+  async (slug: string): Promise<Diagnoza | null> => {
+    const row = await db.query.diagnozy.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.slug, slug), eq(model.status, "published")),
+    })
+    return row?.data ?? null
+  }
+)
+
+// Slugs of diagnozy the user completed in fill-out mode
+export const getUserDiagnozyCompletions = cache(
+  async (userId: string): Promise<string[]> => {
+    const rows = await db
+      .select({ diagnozaSlug: diagnozyProgress.diagnozaSlug })
+      .from(diagnozyProgress)
+      .where(eq(diagnozyProgress.userId, userId))
+    return rows.map((row) => row.diagnozaSlug)
+  }
+)
+
+// Idempotent completion upsert; unique (userId, diagnozaSlug) absorbs repeats
+export async function insertDiagnozaCompletion(
+  userId: string,
+  diagnozaSlug: string
+): Promise<void> {
+  await db
+    .insert(diagnozyProgress)
+    .values({ userId, diagnozaSlug })
+    .onConflictDoNothing()
+}
+
+// Diagnoza formulations for the fill-out select (all published, light payload)
+export const getDiagnozaFormulations = cache(
+  async (): Promise<DiagnozaFormulation[]> => {
+    return db
+      .select({
+        slug: diagnozy.slug,
+        text: sql<string>`${diagnozy.data}->>'diagnozaPielegniarska'`,
+      })
+      .from(diagnozy)
+      .where(eq(diagnozy.status, "published"))
+      .orderBy(asc(diagnozy.section))
+  }
+)
+
+// Full published records for exam drawing/distractor pooling (server-side only)
+export const getDiagnozyForExam = cache(async (): Promise<Diagnoza[]> => {
+  const rows = await db
+    .select({ data: diagnozy.data })
+    .from(diagnozy)
+    .where(eq(diagnozy.status, "published"))
+  return rows.map((row) => row.data)
+})
+
+export async function insertDiagnozyExamAttempt(attempt: {
+  userId: string
+  diagnozaSlug: string
+  score: number
+  stepScores: unknown
+  timeSpent: number
+  passed: boolean
+}): Promise<void> {
+  await db.insert(diagnozyExamAttempts).values(attempt)
+}
+
+// Recent exam attempts, newest first (exam landing page)
+export const getUserDiagnozyExamAttempts = cache(
+  async (userId: string, limit = 10) => {
+    return db
+      .select({
+        id: diagnozyExamAttempts.id,
+        diagnozaSlug: diagnozyExamAttempts.diagnozaSlug,
+        score: diagnozyExamAttempts.score,
+        passed: diagnozyExamAttempts.passed,
+        timeSpent: diagnozyExamAttempts.timeSpent,
+        completedAt: diagnozyExamAttempts.completedAt,
+      })
+      .from(diagnozyExamAttempts)
+      .where(eq(diagnozyExamAttempts.userId, userId))
+      .orderBy(desc(diagnozyExamAttempts.completedAt))
+      .limit(limit)
   }
 )

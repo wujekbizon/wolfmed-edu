@@ -1617,5 +1617,408 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
         ]
       }
     }
+  },
+  farmakologia: {
+    category: 'farmakologia',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5pu33VvXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb',
+    description:
+      'Kompleksowe testy z farmakologii dla studentów pielęgniarstwa. Poznaj grupy leków, farmakokinetykę i farmakodynamikę, zasady farmakoterapii, dawkowanie oraz wystawianie recept. Przygotuj się do egzaminu i bezpiecznej praktyki zawodowej.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Farmakologia',
+    keywords: [
+      'farmakologia',
+      'pielęgniarstwo',
+      'leki',
+      'farmakoterapia',
+      'farmakokinetyka',
+      'farmakodynamika',
+      'dawkowanie',
+      'recepty',
+      'interakcje lekowe',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 4,
+      semester: 'Rok I, Semestr II',
+      objectives:
+        'Przygotować studentów do świadomego uczestniczenia w procesie farmakoterapii. Zapoznać studentów z farmakologią ogólną, podstawami farmakokinetyki i farmakodynamiki. Przekazać informacje na temat poszczególnych grup leków i wybranych substancji leczniczych, postaci leków, dróg ich podawania oraz sposobu dawkowania. Zapoznać studentów z zasadami wystawiania recept zgodnie ze zleceniami lekarskimi. Przygotować umiejętności korzystania z baz danych, kart charakterystyki leków i informatorów farmaceutycznych. Zapoznać z problemem interakcji i działań niepożądanych leków oraz obowiązkiem ich zgłaszania. Przygotować studentów do studiowania fachowej literatury. Zaszczepić potrzebę ciągłego samokształcenia.',
+      prerequisites:
+        'Znajomość podstaw biochemii, biofizyki, fizjologii, patofizjologii, mikrobiologii, parazytologii, immunologii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'A.W19',
+            desc: 'Charakteryzuje poszczególne grupy środków leczniczych, główne mechanizmy ich działania i powodowane przez nie przemiany w ustroju i działania uboczne.'
+          },
+          {
+            code: 'A.W20',
+            desc: 'Omawia podstawowe zasady farmakoterapii.'
+          },
+          {
+            code: 'A.W21',
+            desc: 'Omawia poszczególne grupy leków, substancje czynne zawarte w lekach, zastosowanie leków oraz postacie i drogi ich podawania.'
+          },
+          {
+            code: 'A.W22',
+            desc: 'Zna wpływ procesów chorobowych na metabolizm i eliminację leków.'
+          },
+          {
+            code: 'A.W23',
+            desc: 'Zna ważniejsze działania niepożądane leków, w tym wynikające z ich interakcji oraz zna procedurę zgłaszania działań niepożądanych leków.'
+          },
+          {
+            code: 'A.W24',
+            desc: 'Zna zasady wystawiania recept w ramach realizacji zleceń lekarskich.'
+          },
+          {
+            code: 'A.W25',
+            desc: 'Zna grupy leków w terapii krwiozastępczej i zasady leczenia krwią.'
+          }
+        ],
+        skills: [
+          {
+            code: 'A.U7',
+            desc: 'Potrafi szacować niebezpieczeństwo toksykologiczne w określonych grupach wiekowych oraz w różnych stanach klinicznych.'
+          },
+          {
+            code: 'A.U8',
+            desc: 'Posługuje się informatorami farmaceutycznymi i bazami danych o produktach leczniczych.'
+          },
+          {
+            code: 'A.U9',
+            desc: 'Potrafi wystawiać recepty na leki niezbędne do kontynuacji leczenia w ramach realizacji zleceń lekarskich.'
+          },
+          {
+            code: 'A.U10',
+            desc: 'Potrafi przygotowywać zapis form recepturowych substancji leczniczych i środków spożywczych specjalnego przeznaczenia żywieniowego zleconych przez lekarza.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Farmakologia ogólna, podstawy farmakokinetyki, farmakodynamiki.',
+          'Wpływ wieku oraz stanów patologicznych na losy leku w ustroju (LADME).',
+          'Leki anestezjologiczne. Narkoza.',
+          'Leki psychotropowe (neuroleptyki, anksjolityki, leki przeciwdepresyjne i psychostymulujące).',
+          'Opioidy, NLPZ, leki narkotyczne i leki stosowane w RZS.',
+          'Środki krwiopochodne i krwiozastępcze, niedokrwistości, leki działające na układ krwiotwórczy. Leki przeciwzakrzepowe.',
+          'Leki wpływające na naczynia krwionośne. Leczenie nadciśnienia tętniczego, choroby niedokrwiennej serca, niewydolności serca i miażdżycy.',
+          'Farmakologia układu oddechowego (leki przeciwkaszlowe, wykrztuśne, leki stosowane w leczeniu astmy i POChP). Farmakoterapia astmy, nowoczesne formy leków.',
+          'Leki wpływające na czynność wydzielniczą przewodu pokarmowego, leki stosowane w leczeniu choroby wrzodowej żołądka i dwunastnicy, leki wpływające na odruch wymiotny, leki wpływające na czynność motoryczną jelit, leki żółciopędne i żółciotwórcze.',
+          'Leki przeciwnowotworowe, cytostatyczne i cytotoksyczne.',
+          'Ogólne zasady chemioterapii zakażeń drobnoustrojami, antybiotyki i chemioterapeutyki.',
+          'Farmakoterapia cukrzycy, insulinoterapia.'
+        ],
+        seminars: [
+          'Substancje czynne w produktach leczniczych, postacie leków, drogi podania, leki generyczne.',
+          'Rodzaje dawek i sposoby obliczania dawkowania (dzieci, osoby starsze, niewydolność wątroby i nerek).',
+          'Zasady wystawiania recept na leki gotowe i recepturowe, postacie i drogi podania.',
+          'Umiejętność posługiwania się informatorami farmaceutycznymi i bazami danych o produktach leczniczych.',
+          'Karta charakterystyki produktu leczniczego (ChPL), znajomość zawartych informacji i aktywne korzystanie z zawartych w niej informacji o leku.',
+          'Formy recepturowe leków, nazewnictwo recepturowe, sposób zapisu i zasady wystawiania recept.',
+          'Procedura i zasada zgłaszania działań niepożądanych leku, prawa i obowiązki.',
+          'Rozpoznawanie działań niepożądanych leków oraz podstawowych interakcji lekowych.'
+        ],
+        selfStudy: [
+          'Hormony i leki działające na czynność gruczołów wydzielania wewnętrznego.',
+          'Leki przeciwhistaminowe, leczenie uczuleń i stanów alergicznych.',
+          'Leki spazmolityczne i wpływające na czynność macicy.',
+          'Leki wpływające na układ kostny (leczenie osteoporozy).',
+          'Leki przeciwrobacze i przeciwpierwotniakowe.',
+          'Leki przeciwgrzybicze, przeciwwirusowe, leki stosowane w leczeniu gruźlicy.'
+        ]
+      }
+    }
+  },
+  genetyka: {
+    category: 'genetyka',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5D2kdG57Z2fx3PC4csA61VRoig5ELrXbvQz8K',
+    description:
+      'Testy z genetyki dla studentów pielęgniarstwa. Opanuj prawa dziedziczenia Mendla, choroby uwarunkowane genetycznie, budowę chromosomów, mutacje oraz podstawy poradnictwa genetycznego. Przygotuj się kompleksowo do egzaminu.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Genetyka',
+    keywords: [
+      'genetyka',
+      'pielęgniarstwo',
+      'dziedziczenie',
+      'prawa Mendla',
+      'chromosomy',
+      'mutacje',
+      'choroby genetyczne',
+      'poradnictwo genetyczne',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 2,
+      semester: 'Rok I, Semestr II',
+      objectives:
+        'Po realizacji przedmiotu student zna: założenia genetyki Mendlowskiej w odniesieniu do człowieka, zagadnienia dziedziczenia chorób genetycznych (jednogenowe, chromosomowe, mitochondrialne i wielogenowe), ich klasyfikację, patogenezę, diagnostykę oraz możliwości terapii i profilaktyki, a także podstawy biologii i patologii molekularnej; zasady nowoczesnej diagnostyki chorób genetycznie uwarunkowanych, ich interpretację i możliwości wykorzystania w praktyce; zasady prowadzenia poradnictwa genetycznego; znaczenie genetyki i współczesne kierunki jej rozwoju oraz kształtowanie postaw etycznych i społecznych w praktyce klinicznej.',
+      prerequisites:
+        'Wiadomości podstawowe z biologii, ze szczególnym uwzględnieniem biofizyki oraz fizjologii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'A.W9',
+            desc: 'Zna i rozumie uwarunkowania genetyczne grup krwi człowieka oraz konfliktu serologicznego w układzie Rh.'
+          },
+          {
+            code: 'A.W10',
+            desc: 'Zna i rozumie problematykę chorób uwarunkowanych genetycznie.'
+          },
+          {
+            code: 'A.W11',
+            desc: 'Zna i rozumie budowę chromosomów oraz molekularne podłoże mutagenezy.'
+          },
+          {
+            code: 'A.W12',
+            desc: 'Zna i rozumie zasady dziedziczenia różnej liczby cech, dziedziczenia cech ilościowych, niezależnego dziedziczenia cech i dziedziczenia pozajądrowej informacji genetycznej.'
+          }
+        ],
+        skills: [
+          {
+            code: 'A.U3',
+            desc: 'Potrafi szacować ryzyko ujawnienia się danej choroby w oparciu o zasady dziedziczenia i wpływ czynników środowiskowych.'
+          },
+          {
+            code: 'A.U4',
+            desc: 'Potrafi wykorzystywać uwarunkowania chorób genetycznych w profilaktyce chorób.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Znaczenie genetyki w medycynie, kierunki rozwoju genetyki, podstawowe zasady i prawa dziedziczenia. Podstawowe definicje pojęć w genetyce. Materiał genetyczny. Budowa i właściwości kwasów nukleinowych.',
+          'Prawo Mendla, dziedziczenie cech autosomalnych i związanych z płcią. Rodowody w wywiadzie rodzinnym.',
+          'Genom człowieka. Organizacja genomu człowieka. Metody mapowania genomu i wykorzystanie informacji zawartych w genomie.',
+          'Uwarunkowania genetyczne grup krwi człowieka oraz konfliktu serologicznego w układzie Rh.',
+          'Regulacja aktywności genów, mechanizm regulacji aktywności genetycznej.',
+          'Zmienność genetyczna, mutacje jako przyczyny chorób.',
+          'Wady rozwojowe o podłożu genetycznym.',
+          'Genetyczne przyczyny nowotworów. Onkogeny i antyonkogeny, mutacje chromosomowe, liczbowe i strukturalne. Kancerogeneza środowiskowa.',
+          'Znaczenie uwarunkowań chorób genetycznych w profilaktyce chorób.',
+          'Choroby możliwe do leczenia genoterapeutycznego.',
+          'Perspektywy i niebezpieczeństwa transferów genów.',
+          'Etyczne, moralne i prawne aspekty genetyki.',
+          'Genetyczne testy przesiewowe, testy nosicielstwa w rodzinach nieobciążonych.'
+        ],
+        seminars: [],
+        selfStudy: [
+          'Różnice wpływu genetyki i środowiska na powstanie nowotworów.',
+          'Postępy w badaniach dotyczących genetyki.',
+          'Etyczne aspekty badań genetycznych.',
+          'Genetyka w transplantologii.',
+          'Aktualne i proponowane rozwiązania prawne dotyczące badań genetycznych.',
+          'Studiowanie literatury przedmiotu.'
+        ]
+      }
+    }
+  },
+  patologia: {
+    category: 'patologia',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5kfYUFUA5zS3pZrqLGeEj7tHO6cdWvCYm4N2R',
+    description:
+      'Testy z patologii, patofizjologii i patomorfologii dla studentów pielęgniarstwa. Poznaj mechanizmy chorób, etiopatogenezę schorzeń poszczególnych układów, procesy zapalne, nowotworowe oraz zaburzenia homeostazy. Przygotuj się kompleksowo do egzaminu.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Patologia',
+    keywords: [
+      'patologia',
+      'patofizjologia',
+      'patomorfologia',
+      'pielęgniarstwo',
+      'etiopatogeneza',
+      'choroby',
+      'nowotwory',
+      'stan zapalny',
+      'homeostaza',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 2,
+      semester: 'Rok I, Semestr II',
+      objectives:
+        'Zapoznanie studentów ze zmianami występującymi pod wpływem bodźców patologicznych w prawidłowo funkcjonującym organizmie człowieka i z reakcjami obronnymi ustroju na różne patogeny. Charakterystyka etiopatogenezy chorób układu krążenia, układu oddechowego, układu krwionośnego, układu wydzielania wewnętrznego oraz chorób nowotworowych. Zapoznanie studentów z patofizjologią układu nerwowego, pokarmowego, moczowego, procesami starzenia, cukrzycy, podstawami stanu zapalnego i rolą odporności ustroju.',
+      prerequisites:
+        'Posiada wiadomości z zakresu anatomii, fizjologii i biochemii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'A.W6',
+            desc: 'Zna podstawowe pojęcia z zakresu patologii ogólnej i patologii poszczególnych układów organizmu.'
+          },
+          {
+            code: 'A.W7',
+            desc: 'Zna wybrane zagadnienia z zakresu patologii narządowej układu krążenia, układu oddechowego, układu trawiennego, układu hormonalnego, układu metabolicznego, układu moczowo-płciowego i układu nerwowego.'
+          },
+          {
+            code: 'A.W8',
+            desc: 'Zna czynniki chorobotwórcze zewnętrzne i wewnętrzne, modyfikowalne i niemodyfikowalne.'
+          }
+        ],
+        skills: [
+          {
+            code: 'A.U2',
+            desc: 'Potrafi łączyć obrazy uszkodzeń tkankowych i narządowych z objawami klinicznymi choroby, wywiadem i wynikami badań diagnostycznych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Patologia, patofizjologia — pojęcia, zakres, procesy patologiczne.',
+          'Patofizjologia układu krążenia.',
+          'Patofizjologia układu oddechowego.',
+          'Patofizjologia układu wydzielania wewnętrznego.',
+          'Struktura i regulacja hormonalna.',
+          'Patofizjologia układu nerwowego. Zaburzenia procesów w układzie nerwowym.',
+          'Zaburzenia ośrodków regulacji układu autonomicznego.',
+          'Patofizjologia chorób krwi i układu krwiotwórczego.',
+          'Patofizjologia nowotworów.',
+          'Układ immunologiczny.',
+          'Patofizjologia układu pokarmowego.',
+          'Homeostaza i adaptacja.',
+          'Homeostaza a problem zdrowia i choroby.',
+          'Molekularne podstawy dziedziczenia.',
+          'Molekularne podstawy stanu zapalnego.',
+          'Zaburzenia termoregulacji.',
+          'Miażdżyca.',
+          'Rola odporności w patologii.',
+          'Cukrzyca, etiopatogeneza, zaburzenia biochemiczne w cukrzycy.',
+          'Otyłość, patomorfologia i patofizjologia tkanki tłuszczowej.',
+          'Procesy starzenia.'
+        ],
+        seminars: [
+          'Choroba organiczna i czynnościowa — kryteria zjawisk chorobowych, przebieg i zejście choroby.',
+          'Patofizjologia nerki i układu moczowego. Zaburzenia ilościowe i jakościowe filtracji kłębkowej.',
+          'Homeostaza a problem zdrowia i choroby.',
+          'Cukrzyca, etiopatogeneza, zaburzenia biochemiczne w cukrzycy.'
+        ],
+        selfStudy: [
+          'Zaburzenia przemiany materii. Gospodarka wodno-elektrolitowa. Zaburzenia równowagi kwasowo-zasadowej.',
+          'Okres przekwitania. Klimakterium. Andropauza.',
+          'Działanie czynników środowiskowych. Hałas. Wibracja. Zmienione ciśnienie atmosferyczne.'
+        ]
+      }
+    }
+  },
+  dietetyka: {
+    category: 'dietetyka',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5JrZfRllmQWsLSvF0ZVh7qXdCNxbjatwczey8',
+    description:
+      'Testy z dietetyki dla studentów pielęgniarstwa. Opanuj zasady prawidłowego żywienia, rolę składników pokarmowych, diety terapeutyczne, ocenę stanu odżywienia oraz żywienie dojelitowe i pozajelitowe. Przygotuj się do egzaminu i praktyki zawodowej.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Dietetyka',
+    keywords: [
+      'dietetyka',
+      'żywienie',
+      'pielęgniarstwo',
+      'diety terapeutyczne',
+      'składniki pokarmowe',
+      'stan odżywienia',
+      'żywienie kliniczne',
+      'poradnictwo żywieniowe',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 2,
+      semester: 'Rok I, Semestr I',
+      objectives:
+        'Opanowanie podstawowej wiedzy z zakresu prawidłowego żywienia z uwzględnieniem roli składników pokarmowych. Poznanie wpływu sposobu żywienia na zdrowie człowieka.',
+      prerequisites:
+        'Podstawowa wiedza z zakresu zasad żywienia człowieka i fizjologii.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'C.W22',
+            desc: 'Zna zapotrzebowanie organizmu na składniki pokarmowe.'
+          },
+          {
+            code: 'C.W23',
+            desc: 'Zna zasady żywienia osób zdrowych i chorych w różnym wieku oraz żywienia dojelitowego i pozajelitowego.'
+          },
+          {
+            code: 'C.W24',
+            desc: 'Zna zasady leczenia dietetycznego i powikłania dietoterapii.'
+          },
+          {
+            code: 'C.W25',
+            desc: 'Zna rodzaje i zastosowanie środków spożywczych specjalnego przeznaczenia żywieniowego.'
+          }
+        ],
+        skills: [
+          {
+            code: 'C.U35',
+            desc: 'Oceniać stan odżywienia organizmu z wykorzystaniem metod antropometrycznych, biochemicznych i badania podmiotowego oraz prowadzić poradnictwo w zakresie żywienia.'
+          },
+          {
+            code: 'C.U36',
+            desc: 'Stosować diety terapeutyczne w wybranych schorzeniach.'
+          },
+          {
+            code: 'C.U37',
+            desc: 'Dobierać środki spożywcze specjalnego przeznaczenia żywieniowego i wystawiać na nie recepty w ramach realizacji zleceń lekarskich oraz udzielać informacji na temat ich stosowania.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S.4',
+            desc: 'Ponoszenia odpowiedzialności za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'K.S.5',
+            desc: 'Zasięgania opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Ocena stanu odżywienia i sposobu żywienia różnych grup ludności. Charakterystyka niedożywienia i jego następstw.',
+          'Znaczenie żywienia dojelitowego i pozajelitowego — standardy postępowania. Żywienie chorych — uwarunkowania dietetyczne. Zespoły leczenia żywieniowego. Wprowadzenie do problematyki żywieniowej (Evidence Based Nutrition). Podstawowe składniki odżywcze, zapotrzebowanie energetyczne.',
+          'Podstawy prawne pracy pielęgniarki w udzielaniu porad żywieniowych i edukacji pacjenta.',
+          'Warunki prawidłowego żywienia — piramidy żywieniowe.',
+          'Metody oceny stanu odżywienia i sposobu żywienia.',
+          'Klasyfikacja diet. Omówienie wybranych diet.',
+          'Zaburzenia odżywiania. Żywienie dojelitowe i pozajelitowe — standardy postępowania.'
+        ],
+        seminars: [
+          'Podstawy prawne w zakresie refundacji i ordynowania środków spożywczych specjalnego przeznaczenia, w tym preparatów zawierających hydrolizaty białek mleka.',
+          'Charakterystyka i zastosowanie środków spożywczych, które może ordynować pielęgniarka, w tym wystawiać na nie zlecenia lub recepty.',
+          'Rodzaje preparatów mleka modyfikowanego i mlekozastępczych oraz wskazania i przeciwwskazania do ich stosowania.'
+        ],
+        selfStudy: [
+          'Opracowanie wybranych tematycznie testów wiedzy na temat żywienia: racjonalnego oraz w wybranych stanach chorobowych.'
+        ]
+      }
+    }
   }
 }

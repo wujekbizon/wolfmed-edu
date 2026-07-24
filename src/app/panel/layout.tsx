@@ -29,7 +29,11 @@ export default async function DashboardLayout({
 
   return (
     <main className='flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50'>
-      <SidePanel pinnedCount={pinnedCount} isPremium={isPremium}>
+      <SidePanel
+        pinnedCount={pinnedCount}
+        isPremium={isPremium}
+        enrolledCourseSlugs={enrolledCourses.map((c) => c.slug)}
+      >
         <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
           <PinnedNotesFeature pinnedNotes={pinnedNotes} />
         </Suspense>
