@@ -32,6 +32,8 @@ import {
   learningPlans,
   learningPlanConcepts,
   studyLogs,
+  diagnozy,
+  diagnozyProgress,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -53,6 +55,7 @@ import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
+import type { Diagnoza, DiagnozaListItem } from "@/types/diagnozyTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -2299,3 +2302,57 @@ export const getNoteActivitySince = cache(
       .where(and(eq(notes.userId, userId), sql`${notes.createdAt} >= ${since}`))
   }
 )
+
+// ── Diagnozy i Interwencje ──────────────────────────────────────────────────
+
+// List metadata for published diagnozy (no jsonb payload), ordered by section
+export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
+  return db
+    .select({
+      id: diagnozy.id,
+      slug: diagnozy.slug,
+      section: diagnozy.section,
+      chapterNumber: diagnozy.chapterNumber,
+      chapterTitle: diagnozy.chapterTitle,
+      title: diagnozy.title,
+      author: sql<string | null>`${diagnozy.data}->>'author'`,
+      difficulty: sql<DiagnozaListItem['difficulty']>`${diagnozy.data}->>'difficulty'`,
+      definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
+    })
+    .from(diagnozy)
+    .where(eq(diagnozy.status, "published"))
+    .orderBy(asc(diagnozy.section))
+})
+
+// Full diagnosis record by slug (published only)
+export const getDiagnozaBySlug = cache(
+  async (slug: string): Promise<Diagnoza | null> => {
+    const row = await db.query.diagnozy.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.slug, slug), eq(model.status, "published")),
+    })
+    return row?.data ?? null
+  }
+)
+
+// Slugs of diagnozy the user completed in fill-out mode
+export const getUserDiagnozyCompletions = cache(
+  async (userId: string): Promise<string[]> => {
+    const rows = await db
+      .select({ diagnozaSlug: diagnozyProgress.diagnozaSlug })
+      .from(diagnozyProgress)
+      .where(eq(diagnozyProgress.userId, userId))
+    return rows.map((row) => row.diagnozaSlug)
+  }
+)
+
+// Idempotent completion upsert; unique (userId, diagnozaSlug) absorbs repeats
+export async function insertDiagnozaCompletion(
+  userId: string,
+  diagnozaSlug: string
+): Promise<void> {
+  await db
+    .insert(diagnozyProgress)
+    .values({ userId, diagnozaSlug })
+    .onConflictDoNothing()
+}

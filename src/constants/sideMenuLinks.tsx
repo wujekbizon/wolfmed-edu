@@ -1,5 +1,6 @@
 import CourseLibraryIcon from '@/components/icons/CoursesLibraryIcon'
 import DashboardIcon from '@/components/icons/DashboardIcon'
+import DiagnozyIcon from '@/components/icons/DiagnozyIcon'
 import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
 import PlannerIcon from '@/components/icons/PlannerIcon'
@@ -43,6 +44,12 @@ export const sideMenuNavigationLinks = [
     url: '/panel/procedury',
     label: 'Procedury',
     icon: <ProceduresIcon width={26} height={26} />,
+  },
+  {
+    url: '/panel/diagnozy',
+    label: 'Diagnozy i Interwencje',
+    icon: <DiagnozyIcon width={26} height={26} />,
+    requiresCourse: 'pielegniarstwo',
   },
   {
     url: '/panel/wyniki',

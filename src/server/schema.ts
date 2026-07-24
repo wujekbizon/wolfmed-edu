@@ -901,3 +901,96 @@ export const LogStudySchema = z.object({
     .optional(),
   conceptId: z.string().trim().optional().nullable(),
 });
+
+// --- Diagnozy i Interwencje (pielegniarstwo) ---
+
+const DiagnozaStringGroupSchema = z.object({
+  label: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+});
+
+/** Book sections render either as a flat list or as labelled sub-groups. */
+export const StringListOrGroupedSchema = z.union([
+  z.array(z.string().min(1)),
+  z.object({
+    type: z.literal("grouped"),
+    groups: z.array(DiagnozaStringGroupSchema).min(1),
+  }),
+]);
+
+/** Reserved for the future Egzamin mode; unused by the fill-out flow. */
+const DiagnozaPracticeStepSchema = z.object({
+  field: z.string().min(1),
+  prompt: z.string().min(1),
+  type: z.enum(["single-choice", "multi-choice"]),
+  correct: z.union([z.string(), z.array(z.string())]).optional(),
+  correctRef: z.string().optional(),
+  distractors: z.array(z.string()).optional(),
+});
+
+export const DiagnozaSchema = z.object({
+  id: z.uuid(),
+  chapter: z.object({
+    number: z.string().min(1),
+    title: z.string().min(1),
+  }),
+  section: z.string().min(1),
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/, "Slug może zawierać tylko małe litery, cyfry i myślniki."),
+  title: z.string().min(1),
+  author: z.string().optional(),
+  status: z.enum(["draft", "in-review", "published"]).default("published"),
+  difficulty: z.enum(["basic", "intermediate", "advanced"]).optional(),
+  tags: z.array(z.string()).optional(),
+  definicja: z.string().min(1),
+  cechyCharakteryzujace: StringListOrGroupedSchema,
+  czynnikiEtiologiczne: z.object({
+    patofizjologiczne: z.array(z.string().min(1)),
+    zwiazaneZLeczeniem: z.array(z.string().min(1)),
+    sytuacyjne: z.array(z.string().min(1)),
+    rozwojowe: z.array(z.string().min(1)),
+  }),
+  kryteriaRozpoznawania: z.object({
+    subiektywne: StringListOrGroupedSchema,
+    obiektywne: StringListOrGroupedSchema,
+  }),
+  opisPrzypadku: z.string().min(1),
+  diagnozaPielegniarska: z.string().min(1),
+  celeOpieki: z.array(z.string().min(1)).min(1),
+  interwencje: z
+    .array(
+      z.object({
+        interwencja: z.string().min(1),
+        uzasadnienie: z.string().min(1),
+      })
+    )
+    .min(1),
+  oczekiwaneWyniki: z.string().min(1),
+  practice: z
+    .object({
+      note: z.string().optional(),
+      steps: z.array(DiagnozaPracticeStepSchema).optional(),
+    })
+    .optional(),
+});
+
+/** Container shape of data/diagnozy.json, validated by scripts/seed-diagnozy.ts. */
+export const DiagnozyFileSchema = z.object({
+  schemaVersion: z.literal(1),
+  book: z.object({
+    title: z.string().min(1),
+    editors: z.string().min(1),
+    publisher: z.string().min(1),
+  }),
+  diagnozy: z.array(DiagnozaSchema).min(1),
+});
+
+export const MarkDiagnozaCompletedSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy.")
+    .trim(),
+});
