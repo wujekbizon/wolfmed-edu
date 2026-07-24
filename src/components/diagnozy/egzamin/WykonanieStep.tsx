@@ -90,18 +90,29 @@ export default function WykonanieStep({
             selectedZone={active ? (zones[active] ?? null) : null}
             onZoneClick={assign}
           />
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {BODY_ZONES.map((zone) => (
-              <button
-                key={zone}
-                type="button"
-                onClick={() => assign(zone)}
-                className="px-3 py-1.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-600
-                  hover:bg-rose-100 hover:text-rose-700 transition-colors cursor-pointer"
-              >
-                {BODY_ZONE_LABELS[zone]}
-              </button>
-            ))}
+          <p className="text-xs text-zinc-400 mt-2 mb-1">
+            Kliknij część ciała lub wybierz z listy:
+          </p>
+          <div className="flex flex-wrap gap-1.5">
+            {BODY_ZONES.map((zone) => {
+              const isActiveAssignment = !!active && zones[active] === zone
+              return (
+                <button
+                  key={zone}
+                  type="button"
+                  onClick={() => assign(zone)}
+                  aria-pressed={isActiveAssignment}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer
+                    ${
+                      isActiveAssignment
+                        ? 'bg-rose-500 text-white'
+                        : 'bg-zinc-100 text-zinc-600 hover:bg-rose-100 hover:text-rose-700'
+                    }`}
+                >
+                  {BODY_ZONE_LABELS[zone]}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>

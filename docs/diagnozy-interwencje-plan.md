@@ -212,7 +212,31 @@ form, and performs the interventions on a mannequin while documenting them. Two 
   distractors, no uzasadnienie reveal until after submit, submit + result screen).
   ~80% component reuse.
 
-### 7.3 Egzamin v2 — 3D mannequin (`@react-three/fiber`)
+### 7.3 Egzamin v2 — interactive mannequin (`@react-three/fiber`) ✅ built
+
+The execution step ("Wykonanie na fantomie") is the interactive layer: the
+student takes each intervention they planned and clicks **where on the patient**
+it is performed. Correct region → hit; grading is region-match, extras penalized,
+and it runs after intervention-selection so no answers leak.
+
+**Body regions** (widened from 6 to 12 so different chapters map to different
+parts): głowa · oczy · uszy · usta/drogi oddechowe · klatka piersiowa · brzuch ·
+miednica/krocze · kończyny górne · kończyny dolne · plecy/okolica krzyżowa ·
+skóra · całe ciało. Anatomical regions are clickable primitives on the body;
+`plecy`/`skóra`/`całe ciało` are on the labelled button rail (`BUTTON_ONLY_ZONES`).
+The button rail is the reliable path; the 3D body is the interactive layer — no
+precision-clicking required.
+
+**Generalization**: each intervention tags one target region via `exam.bodyZone`
+(optional). Any of the 60+ physically-interactive diagnoses is authored as pure
+data against the Zod schema — no per-diagnosis 3D code. Fidelity is intentionally
+simple; a rigged GLTF can later replace `MannequinModel` with no change to the
+interaction or grading (zones map to named meshes).
+
+Non-physical diagnoses (psychological/social/communication — lęk, żałoba, afazja,
+przemoc…) are out of this step; a future patient-dialog mode covers them.
+
+#### Original v2 sketch
 - Stack: `@react-three/fiber` + `@react-three/drei`, client-only island loaded with
   `next/dynamic` + `ssr: false` so three.js ships **only** on the exam route.
 - The "Planowane interwencje" step becomes act-and-document: the student clicks a body

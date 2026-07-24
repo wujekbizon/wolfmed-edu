@@ -176,7 +176,7 @@
           "interwencja": "Pomiar PEF (szczytowego przepływu wydechowego), FEV1 (natężonej objętości wydechowej pierwszosekundowej).",
           "uzasadnienie": "Pomiar PEF jest stosowany u pacjentów z nagłymi zaostrzeniami w wywiadzie, pozwala na identyfikację pogarszającego się stanu pacjenta oraz monitorowanie skuteczności leczenia. Wykorzystywany jest do potwierdzenia rozpoznania, monitorowania choroby i identyfikacji czynników wyzwalających objawy [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
@@ -190,14 +190,14 @@
           "interwencja": "Pobieranie krwi tętniczej do badania gazometrycznego.",
           "uzasadnienie": "Badanie gazometryczne krwi tętniczej pozwala ocenić utlenowanie krwi oraz wspiera podjęcie decyzji o prowadzeniu tlenoterapii bądź potrzeby intubacji chorej [Mejza, Siga, 2018].",
           "exam": {
-            "bodyZone": "reka"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
           "interwencja": "Pobieranie krwi żylnej do badań biochemicznych (np. białko C-reaktywne, IgG, IgA, IgM, IgE), wykonanie punktowych testów skórnych.",
           "uzasadnienie": "W przypadku pacjentów z utrzymującymi się objawami i/lub zaostrzeniami pomimo dużych dawek GKS należy ocenić fenotyp astmy wpływający na wybór leczenia dodatkowego. Badania laboratoryjne i testy skórne służą rozpoznaniu różnicowemu oraz mogą ujawnić uczulający alergen u chorych na astmę alergiczną [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
           "exam": {
-            "bodyZone": "reka"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -211,7 +211,7 @@
           "interwencja": "Udział w diagnostyce dodatkowej: pobieranie plwociny indukowanej, bronchoskopia.",
           "uzasadnienie": "Ocena dominującego typu komórek zapalnych w plwocinie indukowanej pozwala na określenie rodzaju zapalenia w drogach oddechowych i ustalenie diagnozy astmy. Bronchoskopia pozwala na empiryczną ocenę zmian, pobranie wycinka do badania histopatologicznego, oczyszczenie dolnych dróg oddechowych z patologicznej treści. Nie jest wskazana w przypadku PaO2 < 50 mm Hg [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
@@ -232,35 +232,35 @@
           "interwencja": "Prowadzenie farmakoterapii i płynoterapii: doustne/wziewne glikokortykosteroidy, leki biologiczne (na zlecenie lekarza).",
           "uzasadnienie": "Zastosowanie leków o działaniu rozszerzającym oskrzela oraz zmniejszającym reakcję zapalną pozwala na poprawę oksygenacji i stabilizację stanu pacjentki. Hiperwentylacja prowadzi do odwodnienia, czego skutkiem jest m.in. zwiększenie gęstości wydzieliny w drogach oddechowych [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
           "exam": {
-            "bodyZone": "reka"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
           "interwencja": "Ocena nasilenia objawów, reakcji pacjentki na zastosowane leczenie oraz skutków ubocznych NIV.",
           "uzasadnienie": "Umożliwia to określenie skuteczności zastosowanego działania oraz jego modyfikację. Występowanie skutków ubocznych NIV (np. odleżyna na grzbiecie nosa, rozdęcie żołądka) sugeruje konieczność zmiany wykorzystywanego sprzętu. Nasilenie objawów skłania do podjęcia decyzji o intubacji pacjentki [Mejza, 2016].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
           "interwencja": "Nawilżenie mieszaniny oddechowej przez maskę w przypadku wysychania błon śluzowych lub trudnej do odkrztuszenia wydzieliny.",
           "uzasadnienie": "Nawilżenie mieszaniny upłynnia wydzielinę, przyczyniając się do łatwiejszego jej odkrztuszania [Mejza, 2016].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
           "interwencja": "Przy braku poprawy w leczeniu ocena szczelności dopasowania maski i sprawności portu wydechowego: ocena synchronizacji oddechów własnych chorej z pracą respiratora; zastosowanie usprawniania układu oddechowego (np. drenaż ułożeniowy, oklepywanie, ćwiczenia oddechowe); udział w farmakoterapii (np. leki rozkurczające oskrzela, uspokajające).",
           "uzasadnienie": "Ocena szczelności maski pozwala (przy odpowiedniej konstrukcji respiratora) na skompensowanie przecieków powietrza powstałych z nieszczelności układu pacjent–respirator. Ocena synchronizacji umożliwia wyeliminowanie czynników zakłócających skuteczne leczenie NIV. Usprawnianie układu oddechowego i farmakoterapia wspomagają efektywne leczenie NIV [Mejza, 2016].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
           "interwencja": "W przypadku nieskuteczności powyższego leczenia asystowanie podczas intubacji dotchawiczej: przygotowanie zestawu do intubacji (laryngoskop z łyżką zakrzywioną lub prostą oraz czynnym źródłem światła, żel z lignokainą, rurki intubacyjne różnych rozmiarów, strzykawka do wypełnienia balonu uszczelniającego rurkę, cewnik do odsysania wraz z czynnym źródłem ssania, taśmy do ufiksowania rurki); przygotowanie pacjentki do zabiegu (monitorowanie EKG, akcji serca, tętna, CTK, etCO2, saturacji, napływu kapilarnego; na zlecenie lekarza przygotowanie i podanie leków anestetycznych, opioidowych, zwiotczających; ułożenie płaskie z uniesieniem głowy powyżej poziomu tułowia ok. 10 cm i odgięciem do tyłu – tzw. pozycja wąchania); po zabiegu ocena lokalizacji rurki intubacyjnej.",
           "uzasadnienie": "Narastająca niewydolność oddechowa (obniżenie PaO2, wzrost PaCO2) jest pilnym wskazaniem do intubacji pacjentki. Ścisłe monitorowanie parametrów życiowych pacjentki jest kluczowe dla podjęcia decyzji we właściwym czasie. Zestaw do intubacji powinien być stale dostępny w sali i sprawdzany przed rozpoczęciem dyżuru [Wojtan, 2018].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         }
       ],
@@ -426,7 +426,7 @@
           "interwencja": "Pobranie krwi do badań laboratoryjnych na zlecenie lekarza.",
           "uzasadnienie": "W celu ustalenia ciężkości zapalenia płuc oraz oceny punktowego ryzyka zgonu konieczne jest wykonanie gazometrii krwi tętniczej oraz oznaczenie hematokrytu, glukozy, mocznika, sodu [Hryniewicz i wsp., 2016].",
           "exam": {
-            "bodyZone": "reka"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -441,7 +441,7 @@
           "interwencja": "W razie konieczności podanie tlenu na zlecenie lekarza.",
           "uzasadnienie": "Tlenoterapię stosuje się w celu utrzymania SpO2 w granicach 94–98% oraz PaO2 ≥ 60 mm Hg [Hryniewicz i wsp., 2016].",
           "exam": {
-            "bodyZone": "glowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {

@@ -199,7 +199,7 @@ async function main() {
   check('perfect run scores 100', perfect.score === 100)
   check('wykonanie step present when zones authored', perfect.steps.some((s) => s.field === 'wykonanie'))
 
-  const wrongZones = gradeDiagnozyExam(drawn, perfectAnswers, Object.fromEntries(Object.keys(zonesAll).map((k) => [k, 'noga' as const])))
+  const wrongZones = gradeDiagnozyExam(drawn, perfectAnswers, Object.fromEntries(Object.keys(zonesAll).map((k) => [k, 'konczyny-dolne' as const])))
   const wyk = wrongZones.steps.find((s) => s.field === 'wykonanie')!
   check('all-wrong zones → wykonanie 0%', wyk.scorePercent === 0)
   check('answer steps unaffected by wrong zones', wrongZones.steps.find((s) => s.field === 'diagnoza')!.scorePercent === 100)

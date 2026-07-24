@@ -88,23 +88,38 @@ export type DiagnozyExamResult = {
 
 export const BODY_ZONES = [
   'glowa',
+  'oczy',
+  'uszy',
+  'usta-drogi-oddechowe',
   'klatka-piersiowa',
   'brzuch',
-  'reka',
-  'noga',
+  'miednica',
+  'konczyny-gorne',
+  'konczyny-dolne',
+  'plecy',
+  'skora',
   'cale-cialo',
 ] as const
 
 export type BodyZone = (typeof BODY_ZONES)[number]
 
 export const BODY_ZONE_LABELS: Record<BodyZone, string> = {
-  glowa: 'Głowa i drogi oddechowe',
+  glowa: 'Głowa',
+  oczy: 'Oczy',
+  uszy: 'Uszy',
+  'usta-drogi-oddechowe': 'Usta / drogi oddechowe',
   'klatka-piersiowa': 'Klatka piersiowa',
   brzuch: 'Brzuch',
-  reka: 'Kończyny górne',
-  noga: 'Kończyny dolne',
+  miednica: 'Miednica / krocze',
+  'konczyny-gorne': 'Kończyny górne',
+  'konczyny-dolne': 'Kończyny dolne',
+  plecy: 'Plecy / okolica krzyżowa',
+  skora: 'Skóra (całościowo)',
   'cale-cialo': 'Całe ciało',
 }
+
+/** Regions selectable only via the button rail (no distinct point on the body). */
+export const BUTTON_ONLY_ZONES: BodyZone[] = ['plecy', 'skora', 'cale-cialo']
 
 /** intervention text → body zone the student assigned on the mannequin */
 export type BodyZoneAssignments = Record<string, BodyZone>
