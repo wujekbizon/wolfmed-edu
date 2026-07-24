@@ -22,6 +22,26 @@ export type DiagnozaListItem = {
   author: string | null
   difficulty: Diagnoza['difficulty'] | null
   definicjaSnippet: string
+  tags: string[]
+}
+
+export const DIAGNOZY_SORT_KEYS = [
+  'section-asc',
+  'section-desc',
+  'title-asc',
+  'title-desc',
+  'todo-first',
+] as const
+
+export type DiagnozySortKey = (typeof DIAGNOZY_SORT_KEYS)[number]
+
+export type DiagnozyStatusFilter = 'all' | 'done' | 'todo'
+
+export type DiagnozyBrowseCriteria = {
+  search: string
+  chapter: string // '' = all
+  status: DiagnozyStatusFilter
+  sort: DiagnozySortKey
 }
 
 export type DiagnozyChapter = {

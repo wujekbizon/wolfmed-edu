@@ -28,6 +28,8 @@ import { DiagnozyFileSchema } from '../src/server/schema'
 import { buildDiagnozyExam } from '../src/helpers/buildDiagnozyExam'
 import { gradeDiagnozyExam } from '../src/helpers/gradeDiagnozyExam'
 import { groupDiagnozyByChapter } from '../src/helpers/groupDiagnozyByChapter'
+import { compareDiagnozySection } from '../src/helpers/compareDiagnozySection'
+import { filterAndSortDiagnozy } from '../src/helpers/filterAndSortDiagnozy'
 import type { Diagnoza, DiagnozaListItem } from '../src/types/diagnozyTypes'
 
 const url =
@@ -135,6 +137,7 @@ async function main() {
       author: sql<string | null>`${diagnozy.data}->>'author'`,
       difficulty: sql<DiagnozaListItem['difficulty']>`${diagnozy.data}->>'difficulty'`,
       definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
+      tags: sql<string[]>`coalesce(${diagnozy.data}->'tags', '[]'::jsonb)`,
     })
     .from(diagnozy)
     .where(eq(diagnozy.status, 'published'))
@@ -244,6 +247,39 @@ async function main() {
   const chapters = groupDiagnozyByChapter(list)
   check('groups share chapter number', chapters.every((c) => c.diagnozy.every((d) => d.chapterNumber === c.number)))
   check('every record kept once', chapters.reduce((n, c) => n + c.diagnozy.length, 0) === list.length)
+
+  // ── 9. Natural section sort + browse pipeline (real helpers) ──
+  console.log('\n[9] Search / filter / sort')
+  check('7.x sorts before 10.x (natural, not lexicographic)', compareDiagnozySection('7.1', '10.1') < 0)
+  check('8.2 sorts before 8.10', compareDiagnozySection('8.2', '8.10') < 0)
+  check('20.10 sorts after 20.9', compareDiagnozySection('20.10', '20.9') > 0)
+
+  const sortedAsc = filterAndSortDiagnozy(list, [], { search: '', chapter: '', status: 'all', sort: 'section-asc' })
+  check('section-asc starts at the lowest chapter', sortedAsc[0]!.chapterNumber === '7')
+  check('section-asc ends at the highest chapter', sortedAsc[sortedAsc.length - 1]!.chapterNumber === '23')
+  check('section-asc keeps every record', sortedAsc.length === list.length)
+
+  const chap = list[0]!.chapterNumber
+  const byChapter = filterAndSortDiagnozy(list, [], { search: '', chapter: chap, status: 'all', sort: 'section-asc' })
+  check('chapter filter keeps only that chapter', byChapter.every((d) => d.chapterNumber === chap) && byChapter.length > 0)
+
+  const someSlug = list[0]!.slug
+  const done = filterAndSortDiagnozy(list, [someSlug], { search: '', chapter: '', status: 'done', sort: 'section-asc' })
+  const todo = filterAndSortDiagnozy(list, [someSlug], { search: '', chapter: '', status: 'todo', sort: 'section-asc' })
+  check('status=done returns only completed', done.length === 1 && done[0]!.slug === someSlug)
+  check('status=todo excludes completed', todo.length === list.length - 1 && !todo.some((d) => d.slug === someSlug))
+
+  const term = list[0]!.title.split(' ')[0]!.toLowerCase()
+  const searched = filterAndSortDiagnozy(list, [], { search: term, chapter: '', status: 'all', sort: 'section-asc' })
+  check('search matches by title token', searched.some((d) => d.slug === list[0]!.slug))
+  const diacritic = filterAndSortDiagnozy(list, [], { search: 'lek', chapter: '', status: 'all', sort: 'section-asc' })
+  check('diacritic-insensitive search ("lek" finds "lęk")', diacritic.some((d) => d.title.toLowerCase().includes('lęk')))
+
+  const titleAsc = filterAndSortDiagnozy(list, [], { search: '', chapter: '', status: 'all', sort: 'title-asc' })
+  check('title-asc is alphabetical', titleAsc[0]!.title.localeCompare(titleAsc[titleAsc.length - 1]!.title, 'pl') <= 0)
+
+  const todoFirst = filterAndSortDiagnozy(list, [list[3]!.slug], { search: '', chapter: '', status: 'all', sort: 'todo-first' })
+  check('todo-first puts uncompleted ahead of completed', todoFirst[todoFirst.length - 1]!.slug === list[3]!.slug)
 
   await client.end()
 

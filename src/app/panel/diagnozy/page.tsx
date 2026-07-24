@@ -5,8 +5,8 @@ import { GraduationCap } from 'lucide-react'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
 import { getAllDiagnozy, getUserDiagnozyCompletions } from '@/server/queries'
-import { groupDiagnozyByChapter } from '@/helpers/groupDiagnozyByChapter'
-import DiagnozyChapterGroup from '@/components/diagnozy/DiagnozyChapterGroup'
+import { compareDiagnozySection } from '@/helpers/compareDiagnozySection'
+import DiagnozyBrowser from '@/components/diagnozy/browse/DiagnozyBrowser'
 import NoAccessMessage from '@/components/NoAccessMessage'
 
 export const dynamic = 'force-dynamic'
@@ -28,7 +28,11 @@ export default async function DiagnozyPage() {
     getAllDiagnozy(),
     getUserDiagnozyCompletions(user.userId),
   ])
-  const chapters = groupDiagnozyByChapter(diagnozy)
+  // Natural section order for the initial paint (the query is unordered; the
+  // browser island re-sorts on interaction).
+  const sorted = [...diagnozy].sort((a, b) =>
+    compareDiagnozySection(a.section, b.section)
+  )
 
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-8">
@@ -54,20 +58,12 @@ export default async function DiagnozyPage() {
           </Link>
         </header>
 
-        {chapters.length === 0 ? (
+        {sorted.length === 0 ? (
           <div className="bg-white rounded-2xl border border-zinc-200 p-8 text-center text-zinc-500">
             Wkrótce więcej diagnoz.
           </div>
         ) : (
-          <div className="flex flex-col gap-10">
-            {chapters.map((chapter) => (
-              <DiagnozyChapterGroup
-                key={chapter.number}
-                chapter={chapter}
-                completedSlugs={completedSlugs}
-              />
-            ))}
-          </div>
+          <DiagnozyBrowser diagnozy={sorted} completedSlugs={completedSlugs} />
         )}
       </div>
     </section>
