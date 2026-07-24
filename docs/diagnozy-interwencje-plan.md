@@ -1,29 +1,47 @@
-# Diagnozy i Interwencje — refined implementation plan (codebase-verified)
+# Diagnozy i Interwencje — implementation plan (codebase-verified, fill-out model)
 
-Nursing care-plan trainer for the *Pielęgniarstwo* course, driven by diagnoses from
-*Diagnozy i interwencje w praktyce pielęgniarskiej* (Kózka, Płaszewska-Żywko, PZWL).
-This document supersedes the external `FEATURE_PLAN.md` — every decision below was
-checked against the actual repository patterns.
+Nursing care-plan **memorization/familiarization tool** for the *Pielęgniarstwo* course,
+driven by diagnoses from *Diagnozy i interwencje w praktyce pielęgniarskiej*
+(Kózka, Płaszewska-Żywko, PZWL). The user studies a worked diagnosis, then actively
+**fills out the Przewodnik care-process form by selecting from lists of real,
+book-sourced answers**. There is no scoring, no distractors, no right/wrong — the value
+is active recall (picking, not typing) so the flow of the form is internalized before a
+real exam. A future "Egzamin" mode (actual testing, wrong answers, possibly a 3D dummy
+patient) is explicitly **deferred and undesigned**.
 
-## What changed vs. the original plan (and why)
+## Locked decisions
 
-| Original plan | This plan | Reason |
+1. **Branch**: all work on `claude/practical-exam-branch-u1yhaq`.
+2. **Entitlement**: active `pielegniarstwo` enrollment, **`basic` tier is enough**.
+   (Future AI features inside this module would require `premium` — not in this scope.)
+3. **Sidebar**: link **conditionally rendered** — visible only for users with an active
+   `pielegniarstwo` enrollment; everyone else never sees it. Direct URL hits still show
+   the no-access screen (actions are the real guard).
+4. **Mode**: fill-out ("Wypełnij"), not quiz. No distractors needed — the correct items
+   already in `data/diagnozy.json` (e.g. 7.1's 14 interventions) are the entire lists.
+
+## The Przewodnik mapping (verified against `Przewodnik.docx`)
+
+The form's care-plan core is a 5-row table; fill-out steps mirror it 1:1:
+
+| Przewodnik row | Data source | Step control |
 |---|---|---|
-| Static bundled JSON (path A) for MVP, DB later | **Neon DB from day one** (`wolfmed_diagnozy` table, jsonb `data`) | Owner requirement: DB is the only source of truth. Exact precedent exists: `wolfmed_procedures` + `scripts/seed-procedures.ts`. |
-| Zod schema in `src/server/diagnozy/diagnoza.schema.ts` | Zod schemas in **`src/server/schema.ts`** | CLAUDE.md convention: all Server-Action schemas live there (`GradePracticalExamSchema` is the sibling). |
-| Types in `src/types/diagnoza.ts` | **`src/types/diagnozyTypes.ts`** via `z.infer` | Matches naming (`pielegniastwoTypes.ts`, `praktycznyTypes.ts`). |
-| New loader module `src/server/diagnozy/data.ts` | Queries added to **`src/server/queries.ts`** with `cache()` | Convention: all reads live in `queries.ts` (`getAllProcedures`, `getProcedureById`). |
-| Generic gating helper to invent | Reuse **`checkCourseAccessAction('pielegniarstwo')` + `hasAccessToTier()`** | Already authoritative (DB `courseEnrollments`), used identically by `/panel/procedury/[course]`. |
-| Generic emerald/rose/slate palette, `ring-border`, dark mode | Follow **`globals.css` `@theme` tokens** and existing panel visual language (`PielegniastwoGridCard`, `PracticalExamCard`) | App has its own tokens; there is no app-wide dark mode to design for. |
-| Custom form-state machinery for submit | Mirror **`gradePracticalExamAction`** (`src/actions/praktyczny.ts`) | Same problem already solved: client sends answers, server validates with Zod, grades, persists, returns result. Not a field-form, so the `MottoForm` pattern doesn't apply. |
-| References/piśmiennictwo | Out of scope (unchanged) | |
+| Diagnoza pielęgniarska | `diagnozaPielegniarska` | single-select (one card) |
+| Cel | `celeOpieki[]` | multi-select all goals |
+| Planowane interwencje | `interwencje[].interwencja` | multi-select; picking reveals `uzasadnienie` (the teaching moment) |
+| Zrealizowane interwencje | same list, rendered as confirmation of what was planned | read-only recap row |
+| Ocena | `oczekiwaneWyniki` | single-select |
+
+Completing all steps renders the **filled Przewodnik table** as a summary and marks the
+diagnosis completed.
 
 ## 1. Data & storage (source of truth: Neon)
 
 ### `data/diagnozy.json`
-Container file checked into the repo (same as `data/procedures.json`):
-`{ schemaVersion, book, diagnozy: [...] }` — currently 2 authored diagnoses (7.1, 7.3).
-It is only the **seed input**; the app never imports it.
+Container `{ schemaVersion, book, diagnozy: [...] }` checked into the repo (like
+`data/procedures.json`) — currently 2 diagnoses (7.1, 7.3). Seed input only; the app
+never imports it. The `practice` field present in the JSON is **ignored by this feature**
+(kept optional in the schema, reserved for the future Egzamin mode).
 
 ### DB tables (Drizzle, `src/server/db/schema.ts`)
 
@@ -47,6 +65,7 @@ export const diagnozy = createTable(
           index('diagnozy_slug_idx').on(t.slug)]
 )
 
+// completion flag only — no score, no step breakdown
 export const diagnozyProgress = createTable(
   'diagnozy_progress',
   {
@@ -54,17 +73,14 @@ export const diagnozyProgress = createTable(
     userId: varchar('userId', { length: 256 }).notNull()
       .references(() => users.userId, { onDelete: 'cascade' }),
     diagnozaSlug: varchar('diagnozaSlug', { length: 256 }).notNull(),
-    score: integer('score').notNull(),                 // 0–100
-    stepScores: jsonb('stepScores').notNull(),         // per-step breakdown
-    passed: boolean('passed').notNull().default(false),
     completedAt: timestamp('completedAt').defaultNow().notNull(),
   },
   (t) => [index('diagnozy_progress_user_idx').on(t.userId),
-          index('diagnozy_progress_user_slug_idx').on(t.userId, t.diagnozaSlug)]
+          uniqueIndex('diagnozy_progress_user_slug_uq').on(t.userId, t.diagnozaSlug)]
 )
 ```
 
-Mirrors `challengeCompletions` exactly (multiple attempts kept; latest/best shown).
+Unique `(userId, diagnozaSlug)` + upsert = idempotent completion.
 `pnpm run db:push` to apply.
 
 ### Seed script `scripts/seed-diagnozy.ts`
@@ -73,113 +89,98 @@ the Zod `DiagnozaSchema` before any write** (abort on first error — this is wh
 hand-authored JSON is checked), truncates `wolfmed_diagnozy`, inserts with preserved ids.
 Run: `npx tsx scripts/seed-diagnozy.ts`.
 
-### Zod schemas (`src/server/schema.ts`)
+### Zod schemas (`src/server/schema.ts` — CLAUDE.md convention)
 - `StringListOrGroupedSchema` — `z.union([z.array(z.string()), z.object({ type: z.literal('grouped'), groups: [...] })])`
-- `DiagnozaSchema` — full record incl. `czynnikiEtiologiczne` (4 keys), `kryteriaRozpoznawania`,
-  `interwencje[].{interwencja, uzasadnienie}`, optional `practice.steps` (discriminated by
-  `type: 'single-choice' | 'multi-choice'`, with `correct: string | string[]` + `distractors`).
-- `SubmitDiagnozyPracticeSchema` — `{ slug, answers: Record<field, string[]>, timeSpent }`
-  (client sends **selected option texts only**; correctness is never on the client).
+- `DiagnozaSchema` — full record: `czynnikiEtiologiczne` (4 required keys),
+  `kryteriaRozpoznawania.{subiektywne,obiektywne}`, `interwencje[].{interwencja,uzasadnienie}`,
+  `celeOpieki` (min 1), optional `practice` passthrough (unused, future Egzamin).
+- `MarkDiagnozaCompletedSchema` — `{ slug: z.string().min(1) }`.
 
-Types exported from `src/types/diagnozyTypes.ts` via `z.infer` (schema stays the single
-source of truth; `jsonb('data').$type<Diagnoza>()` consumes it).
+Types exported from `src/types/diagnozyTypes.ts` via `z.infer`
+(`jsonb('data').$type<Diagnoza>()` consumes them).
 
 ## 2. Access gating
-
-Entitlement = **active `pielegniarstwo` enrollment** + required tier (see open question Q2):
 
 ```ts
 // src/helpers/hasDiagnozyAccess.ts  (helpers convention: one file per function)
 export async function hasDiagnozyAccess(): Promise<boolean> {
   const { hasAccess, accessTier } = await checkCourseAccessAction('pielegniarstwo')
-  return hasAccess && hasAccessToTier(accessTier ?? 'free', DIAGNOZY_REQUIRED_TIER)
+  return hasAccess && hasAccessToTier(accessTier ?? 'free', 'basic')
 }
 ```
 
-Used in **both** pages (redirect / `NoAccessMessage`) and **every** server action —
-UI gating is cosmetic, actions are the real guard.
+Used in **both** pages (no-access screen / redirect) and the completion action.
 
 ### Sidebar link
-Add to `sideMenuNavigationLinks`: `{ url: '/panel/diagnozy', label: 'Diagnozy i Interwencje', icon: <...> }`
-with a new optional flag `requiresCourse: 'pielegniarstwo'`. `SidePanel`/`NavDrawer`
-currently only understand `requiresSupporter`; extend the same lock mechanism
-(`CustomButton isPremium` prop → lock style) driven by the user's enrollments, which the
-panel layout already has access to. Non-entitled users see the link locked (same UX as
-"Dodaj Test" for non-supporters) — or hidden, see Q3.
+Add to `sideMenuNavigationLinks`: `{ url: '/panel/diagnozy', label: 'Diagnozy i Interwencje', icon: <...>, requiresCourse: 'pielegniarstwo' }`.
+`SidePanel`/`NavDrawer` **filter out** links whose `requiresCourse` the user is not
+enrolled in (unlike `requiresSupporter`, which locks visibly). The panel layout already
+resolves enrollments; pass them down like `isPremium` is passed today.
 
 ## 3. Routes (App Router, server components)
 
 ```
 src/app/panel/diagnozy/page.tsx          # list — guard, fetch, group by chapter
-src/app/panel/diagnozy/[slug]/page.tsx   # detail — guard, tabs shell Nauka | Ćwicz
+src/app/panel/diagnozy/[slug]/page.tsx   # detail — guard, tabs: Nauka | Wypełnij
 ```
 
 Both `force-dynamic` like `/panel/procedury`. Detail page fetches the full record
-server-side and renders `DiagnozaStudyView` (server) + `PracticeRunner` (client island).
-The practice payload passed to the client contains **shuffled options without correctness
-flags** (correct + distractors merged and shuffled server-side).
+server-side; `DiagnozaStudyView` renders as server component, the fill-out flow is the
+one client island. No result/score route exists.
 
 ## 4. Server layer
 
-Queries (`src/server/queries.ts`, `cache()`-wrapped):
+Queries (`src/server/queries.ts`, `cache()`-wrapped, next to `getAllProcedures`):
 - `getAllDiagnozy()` — list metadata (no `data` payload) for published records, ordered by `section`.
 - `getDiagnozaBySlug(slug)` — full record.
-- `getUserDiagnozyProgress(userId)` — best score per slug (for list chips).
+- `getUserDiagnozyCompletions(userId)` — completed slugs (for list chips).
 
-Actions (`src/actions/diagnozy.ts`, all behind `hasDiagnozyAccess()` + `checkRateLimit`):
-- `submitDiagnozyPracticeAction(payload)` — Zod-parse with `SubmitDiagnozyPracticeSchema`,
-  load diagnosis from DB, grade server-side, insert `diagnozyProgress`, return
-  `{ score, stepResults }` where each step = `{ correct[], missed[], extra[] }`.
+Action (`src/actions/diagnozy.ts`, mirrors `actions/praktyczny.ts` structure):
+- `markDiagnozaCompletedAction({ slug })` — auth → `hasDiagnozyAccess()` →
+  `checkRateLimit` → Zod-parse → verify slug exists in DB → upsert
+  `diagnozyProgress` (`onConflictDoNothing` on the unique index). Returns `{ completed: true }`.
 
-Grading helper `src/helpers/gradeDiagnozyPractice.ts` — pure function
-`(answers, diagnoza) → { score, stepResults }`, set-comparison per step, reusable by the
-future exam mode. (Repo has no test runner today, so no unit-test scaffolding is added —
-the function stays pure so tests can come later.)
-
-### Practice steps & distractors (MVP)
-Only steps authored in `practice.steps` are rendered. 7.1 currently has 2 steps
-(diagnoza, cele); 7.3 has 1. Strategy for the remaining steps (interwencje, ocena) is
-open question Q4 — either author them in JSON, or auto-pool distractors from sibling
-diagnoses' `interwencje`/`oczekiwaneWyniki` at render time.
+No grading helper, no scoring code anywhere.
 
 ## 5. Components (all ≤ ~100 lines, one per file)
 
 ```
 src/components/diagnozy/
-  DiagnozaCard.tsx            # imageless list card: section pill, title, clamped definicja, difficulty/status chips
+  DiagnozaCard.tsx            # imageless list card: section pill, title, clamped definicja, chips (Ukończone ✓)
   DiagnozyChapterGroup.tsx    # chapter header + grid (grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4)
-  DiagnozaTabs.tsx            # client: Nauka | Ćwicz segmented switch (ARIA tabs)
+  DiagnozaTabs.tsx            # client: Nauka | Wypełnij segmented switch (ARIA tabs)
   StudySection.tsx            # collapsible section block
   StringListOrGrouped.tsx     # renders flat list OR grouped (label + items) — used 3×
   DiagnozaStudyView.tsx       # composition of sections in book order
   InterwencjeTable.tsx        # 2-col Interwencja | Uzasadnienie, stacked cards < md
-  practice/
-    PracticeRunner.tsx        # client island: stepper state, calls submit action
-    PracticeCasePanel.tsx     # opisPrzypadku panel (sticky / collapsible)
-    PracticeStepper.tsx       # progress + Wstecz/Dalej/Sprawdź nav
-    SingleChoiceStep.tsx      # radio semantics, card options
-    MultiChoiceStep.tsx       # checkbox semantics, "wybrano X"
-    PracticeResult.tsx        # score + per-step correct/missed/extra + uzasadnienie reveal
+  wypelnij/
+    WypelnijRunner.tsx        # client island: step state, calls completion action at the end
+    WypelnijCasePanel.tsx     # opisPrzypadku panel (sticky / collapsible)
+    WypelnijStepper.tsx       # progress + Wstecz/Dalej nav (no submit/score screen)
+    SelectStep.tsx            # selectable option cards (single or multi via prop); picking an
+                              # intervention reveals its uzasadnienie (AnimatePresence)
+    PrzewodnikSummary.tsx     # the filled 5-row Przewodnik table + "Oznacz jako ukończone"
 ```
 
-Client practice state: local `useState`/`useReducer` inside `PracticeRunner`
-(ephemeral, like `PracticalExamRunner`) — a Zustand store is unnecessary for a single island.
+Every option is correct — selecting simply "writes" it into the form; there are no
+error states, only idle/hover/selected/revealed. Fill-out state is ephemeral local
+state inside `WypelnijRunner` (like `PracticalExamRunner`); no Zustand store needed.
 
-Styling: existing panel look — token-based colors from `@theme`, `rounded` per `--radius`,
-reuse chip/card styling from `PielegniastwoGridCard` / `PracticalExamCard`; feedback
-colors pair with icons (✓/✗) for a11y; Framer Motion for tab/step transitions with
-`prefers-reduced-motion` respected.
+Styling: existing panel look — `@theme` tokens from `globals.css`, `--radius`, chip/card
+language of `PielegniastwoGridCard` / `PracticalExamCard`. Framer Motion for tab/step
+transitions and uzasadnienie reveal, honoring `prefers-reduced-motion`.
 
 ## 6. Delivery order
 
 1. Zod schemas + types; `data/diagnozy.json` checked in.
 2. Drizzle tables + `db:push`; `scripts/seed-diagnozy.ts` + run seed.
 3. Queries + `hasDiagnozyAccess` helper.
-4. List page + cards + sidebar link (with lock gating).
+4. List page + cards + conditional sidebar link.
 5. Study view (all renderers).
-6. Practice runner + steps + submit action + grading + progress write.
-7. Progress chips on list; motion & a11y pass; `pnpm run lint` + `pnpm run build`.
+6. Wypełnij flow + completion action + progress chips.
+7. Motion & a11y pass; `pnpm run lint` + `pnpm run build`.
 
-## 7. Out of scope (unchanged)
-Exam simulation, spaced repetition, admin authoring UI, references section, Stripe add-on
-product (entitlement stays tier-based until decided).
+## 7. Out of scope (deferred, undesigned)
+Egzamin mode (scoring, distractors, wrong answers, 3D dummy patient), spaced repetition,
+admin authoring UI, AI features (would require `premium`), references/piśmiennictwo,
+Stripe add-on product.
