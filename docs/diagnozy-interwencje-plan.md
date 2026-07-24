@@ -180,7 +180,51 @@ transitions and uzasadnienie reveal, honoring `prefers-reduced-motion`.
 6. Wypełnij flow + completion action + progress chips.
 7. Motion & a11y pass; `pnpm run lint` + `pnpm run build`.
 
-## 7. Out of scope (deferred, undesigned)
-Egzamin mode (scoring, distractors, wrong answers, 3D dummy patient), spaced repetition,
-admin authoring UI, AI features (would require `premium`), references/piśmiennictwo,
-Stripe add-on product.
+## 7. Egzamin mode (designed, built after the MVP)
+
+Modeled on the real practical exam: the nurse draws a diagnosis, fills the Przewodnik
+form, and performs the interventions on a mannequin while documenting them. Two phases.
+
+### 7.1 Content at scale (prerequisite)
+- 70+ diagnoses authored from the book, plus AI-generated ones. **Every record — human
+  or AI — passes the same `DiagnozaSchema`** at seed time; AI output enters as
+  `status: 'draft'`, is clinically reviewed, and only `published` records join the exam
+  pool. The existing table/seed pipeline needs no changes.
+- Distractors are **auto-pooled from sibling diagnoses at runtime** (wrong diagnoza
+  formulations, goals/interventions/outcomes from other records). At 70+ records nothing
+  is hand-authored; the JSON `practice.distractors` field becomes redundant and can be
+  retired.
+
+### 7.2 Egzamin v1 — timed draw + graded Przewodnik (no 3D)
+- Flow: start exam → server draws a random published diagnosis → student sees **only**
+  `opisPrzypadku` → fills the Przewodnik steps from **pooled options** (correct items +
+  sibling distractors, merged and shuffled server-side, no correctness flags sent to the
+  client) → submits → server grades, persists the attempt, returns per-step
+  correct/missed/extra + score.
+- Server: `startExamAction()` (draw + build option payload), `submitExamAction()`
+  (Zod-parse selections → grade with a pure `src/helpers/gradeExam.ts` → insert attempt).
+  Both mirror `actions/praktyczny.ts`; timing/countdown reuses the practical-exam UI
+  patterns (`ExamCountdown`, `TestTimer`).
+- New table `wolfmed_diagnozy_exam_attempts` (modeled on `challengeCompletions`):
+  `id, userId, diagnozaSlug, score (0–100), stepScores jsonb, timeSpent, passed, completedAt`.
+  Fill-out completions (`diagnozy_progress`) stay score-free and separate.
+- UI: reuses the Wypełnij step components in an "exam" configuration (options include
+  distractors, no uzasadnienie reveal until after submit, submit + result screen).
+  ~80% component reuse.
+
+### 7.3 Egzamin v2 — 3D mannequin (`@react-three/fiber`)
+- Stack: `@react-three/fiber` + `@react-three/drei`, client-only island loaded with
+  `next/dynamic` + `ssr: false` so three.js ships **only** on the exam route.
+- The "Planowane interwencje" step becomes act-and-document: the student clicks a body
+  zone on the mannequin, picks equipment, and the matching intervention is written into
+  the form. Grading extends to zone/equipment correctness.
+- Schema extension (optional, additive — existing data stays valid):
+  `interwencje[].exam?: { bodyZone: string, equipment?: string[] }`, authored per
+  diagnosis during content review.
+- **Hard dependency: the mannequin asset.** A rigged GLTF model with named interaction
+  zones (airway, chest, limbs, face) is a 3D-artist/licensing deliverable, not a code
+  task — sourcing it gates this phase, so v1 must not wait for it.
+
+## 8. Out of scope
+Spaced repetition, admin authoring UI, AI features inside the module (would require
+`premium`), references/piśmiennictwo, Stripe add-on product.
