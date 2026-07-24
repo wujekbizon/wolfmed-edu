@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
+import { BODY_ZONES } from "@/types/diagnozyTypes";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -964,6 +965,14 @@ export const DiagnozaSchema = z.object({
       z.object({
         interwencja: z.string().min(1),
         uzasadnienie: z.string().min(1),
+        // Egzamin v2: where on the mannequin the intervention is performed;
+        // interventions without it are simply not graded for execution.
+        exam: z
+          .object({
+            bodyZone: z.enum(BODY_ZONES),
+            equipment: z.array(z.string()).optional(),
+          })
+          .optional(),
       })
     )
     .min(1),
@@ -1013,5 +1022,6 @@ export const SubmitDiagnozyExamSchema = z.object({
     interwencje: z.array(z.string()).max(50),
     ocena: z.array(z.string()).max(1),
   }),
+  zones: z.record(z.string(), z.enum(BODY_ZONES)).optional(),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas").max(24 * 60 * 60),
 });

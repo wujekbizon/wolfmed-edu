@@ -13,6 +13,7 @@ import {
 import { buildDiagnozyExam } from "@/helpers/buildDiagnozyExam"
 import { gradeDiagnozyExam } from "@/helpers/gradeDiagnozyExam"
 import type {
+  BodyZoneAssignments,
   DiagnozaFillData,
   DiagnozyExamAnswers,
   DiagnozyExamPayload,
@@ -131,6 +132,7 @@ export async function startDiagnozyExamAction(): Promise<StartExamResult> {
 export async function submitDiagnozyExamAction(payload: {
   slug: string
   answers: DiagnozyExamAnswers
+  zones: BodyZoneAssignments
   timeSpent: number
 }): Promise<SubmitExamResult> {
   const { userId } = await auth()
@@ -161,7 +163,11 @@ export async function submitDiagnozyExamAction(payload: {
       return { status: "ERROR", message: "Nie znaleziono diagnozy." }
     }
 
-    const result = gradeDiagnozyExam(diagnoza, validationResult.data.answers)
+    const result = gradeDiagnozyExam(
+      diagnoza,
+      validationResult.data.answers,
+      validationResult.data.zones ?? {}
+    )
     await insertDiagnozyExamAttempt({
       userId,
       diagnozaSlug: diagnoza.slug,

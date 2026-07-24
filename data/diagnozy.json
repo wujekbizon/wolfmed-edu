@@ -8,17 +8,24 @@
   "diagnozy": [
     {
       "id": "b571ebea-415a-41cc-83d8-2c0a5f4ee74c",
-      "chapter": { "number": "7", "title": "Oddychanie" },
+      "chapter": {
+        "number": "7",
+        "title": "Oddychanie"
+      },
       "section": "7.1",
       "slug": "zaburzenia-droznosci-drog-oddechowych",
       "title": "Zaburzenia drożności dróg oddechowych",
       "author": "Katarzyna Wojnar-Gruszka",
       "status": "published",
       "difficulty": "advanced",
-      "tags": ["układ oddechowy", "OIT", "astma", "NIV", "intubacja"],
-
+      "tags": [
+        "układ oddechowy",
+        "OIT",
+        "astma",
+        "NIV",
+        "intubacja"
+      ],
       "definicja": "Zaburzenia drożności dróg oddechowych to stan, w którym dostarczenie gazów oddechowych do płuc jest częściowo ograniczone (obturacja) lub całkowicie niemożliwe (niedrożność). Częściowa (łagodna, przewlekła) niedrożność dróg oddechowych to sytuacja, w której światło dróg oddechowych nie jest całkowicie zamknięte, a przepływ gazów oddechowych jest możliwy, choć znacznie ograniczony. Całkowita (ciężka, ostra) niedrożność dróg oddechowych cechuje się gwałtownością zmian – zamknięciem światła dróg oddechowych, w wyniku czego przepływ gazów staje się niemożliwy [Larsen, 2013].",
-
       "cechyCharakteryzujace": {
         "type": "grouped",
         "groups": [
@@ -63,7 +70,6 @@
           }
         ]
       },
-
       "czynnikiEtiologiczne": {
         "patofizjologiczne": [
           "Czynnik infekcyjny (np. stridor w ostrym zapaleniu krtani).",
@@ -95,7 +101,6 @@
           "Osoby starsze – fizjologiczne zmiany w układzie oddechowym (np. wiotkość krtani) [Larsen, 2013; Kózka, 2015]."
         ]
       },
-
       "kryteriaRozpoznawania": {
         "subiektywne": [
           "duszność",
@@ -152,78 +157,114 @@
           ]
         }
       },
-
       "opisPrzypadku": "Pacjentka, 57 lat, przyjęta na oddział intensywnej terapii z SOR-u, dokąd została przywieziona z powodu nasilonej duszności wydechowej z osłuchowo słyszalnymi świstami w przebiegu zaostrzenia astmy oskrzelowej, niereagującej na leczenie wstępne. Przy przyjęciu pacjentka była niespokojna, z własnym napędem oddechowym, wspomaganym tlenoterapią bierną przez wąsy tlenowe o przepływie 5 l/min. Widoczna była praca dodatkowych mięśni oddechowych, tachypnöe 30/min, kaszel z odkrztuszaniem plwociny, saturacja 88%, tachykardia 110 ud./min, CTK 150/95 mm Hg. Od kilku minut chora jest senna, splątana. Pomimo tlenoterapii w gazometrii krwi tętniczej utrzymuje się hipoksemia (PaO2 60 mm Hg) z hiperkapnią (PaCO2 50 mm Hg) przy pH 7,30. Leczenie wziewnym glikokortykosteroidem (GKS) nie przyniosło oczekiwanej poprawy. U chorej zastosowano NIV (non-invasive ventilation) przez maskę pełnotwarzową.",
-
       "diagnozaPielegniarska": "Częściowa niedrożność dróg oddechowych spowodowana zwężeniem światła oskrzeli w przebiegu zaostrzenia astmy oskrzelowej, manifestująca się spadkiem saturacji, dusznością wydechową ze świstami, kaszlem i odkrztuszaniem plwociny.",
-
       "celeOpieki": [
         "Zapobieganie wystąpieniu całkowitej niedrożności dróg oddechowych.",
         "Przywrócenie pełnej drożności dróg oddechowych.",
         "Zapewnienie efektywnej wymiany gazowej."
       ],
-
       "interwencje": [
         {
           "interwencja": "Monitorowanie: parametrów życiowych, SpO2, liczby i charakteru oddechów, CTK, tętna, EKG, a także zabarwienia powłok skórnych, błon śluzowych, dystalnych części ciała.",
-          "uzasadnienie": "Monitorowanie parametrów życiowych pozwala na ocenę oksygenacji organizmu, bieżącą kontrolę sytuacji klinicznej pacjentki oraz ocenę przebiegu zaostrzeń. W przypadku SpO2 < 90% konieczne jest wykonanie gazometrii [Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "Monitorowanie parametrów życiowych pozwala na ocenę oksygenacji organizmu, bieżącą kontrolę sytuacji klinicznej pacjentki oraz ocenę przebiegu zaostrzeń. W przypadku SpO2 < 90% konieczne jest wykonanie gazometrii [Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "cale-cialo"
+          }
         },
         {
           "interwencja": "Pomiar PEF (szczytowego przepływu wydechowego), FEV1 (natężonej objętości wydechowej pierwszosekundowej).",
-          "uzasadnienie": "Pomiar PEF jest stosowany u pacjentów z nagłymi zaostrzeniami w wywiadzie, pozwala na identyfikację pogarszającego się stanu pacjenta oraz monitorowanie skuteczności leczenia. Wykorzystywany jest do potwierdzenia rozpoznania, monitorowania choroby i identyfikacji czynników wyzwalających objawy [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "Pomiar PEF jest stosowany u pacjentów z nagłymi zaostrzeniami w wywiadzie, pozwala na identyfikację pogarszającego się stanu pacjenta oraz monitorowanie skuteczności leczenia. Wykorzystywany jest do potwierdzenia rozpoznania, monitorowania choroby i identyfikacji czynników wyzwalających objawy [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "Osłuchiwanie płuc.",
-          "uzasadnienie": "Osłuchiwanie płuc pozwala na ocenę występowania oraz nasilenia patologicznych szmerów (świstów, furczenia)."
+          "uzasadnienie": "Osłuchiwanie płuc pozwala na ocenę występowania oraz nasilenia patologicznych szmerów (świstów, furczenia).",
+          "exam": {
+            "bodyZone": "klatka-piersiowa"
+          }
         },
         {
           "interwencja": "Pobieranie krwi tętniczej do badania gazometrycznego.",
-          "uzasadnienie": "Badanie gazometryczne krwi tętniczej pozwala ocenić utlenowanie krwi oraz wspiera podjęcie decyzji o prowadzeniu tlenoterapii bądź potrzeby intubacji chorej [Mejza, Siga, 2018]."
+          "uzasadnienie": "Badanie gazometryczne krwi tętniczej pozwala ocenić utlenowanie krwi oraz wspiera podjęcie decyzji o prowadzeniu tlenoterapii bądź potrzeby intubacji chorej [Mejza, Siga, 2018].",
+          "exam": {
+            "bodyZone": "reka"
+          }
         },
         {
           "interwencja": "Pobieranie krwi żylnej do badań biochemicznych (np. białko C-reaktywne, IgG, IgA, IgM, IgE), wykonanie punktowych testów skórnych.",
-          "uzasadnienie": "W przypadku pacjentów z utrzymującymi się objawami i/lub zaostrzeniami pomimo dużych dawek GKS należy ocenić fenotyp astmy wpływający na wybór leczenia dodatkowego. Badania laboratoryjne i testy skórne służą rozpoznaniu różnicowemu oraz mogą ujawnić uczulający alergen u chorych na astmę alergiczną [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "W przypadku pacjentów z utrzymującymi się objawami i/lub zaostrzeniami pomimo dużych dawek GKS należy ocenić fenotyp astmy wpływający na wybór leczenia dodatkowego. Badania laboratoryjne i testy skórne służą rozpoznaniu różnicowemu oraz mogą ujawnić uczulający alergen u chorych na astmę alergiczną [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "reka"
+          }
         },
         {
           "interwencja": "Udział w badaniach obrazowych (rentgen klatki piersiowej, tomografia komputerowa, badanie echokardiograficzne).",
-          "uzasadnienie": "Badania obrazowe wspierają diagnostykę i pozwalają na postępowanie różnicowe zaburzeń oraz stopnia zaawansowania zmian. W zaostrzeniu astmy mogą występować cechy rozdęcia płuc i powikłania zaostrzenia (np. odma opłucnowa) [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "Badania obrazowe wspierają diagnostykę i pozwalają na postępowanie różnicowe zaburzeń oraz stopnia zaawansowania zmian. W zaostrzeniu astmy mogą występować cechy rozdęcia płuc i powikłania zaostrzenia (np. odma opłucnowa) [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "klatka-piersiowa"
+          }
         },
         {
           "interwencja": "Udział w diagnostyce dodatkowej: pobieranie plwociny indukowanej, bronchoskopia.",
-          "uzasadnienie": "Ocena dominującego typu komórek zapalnych w plwocinie indukowanej pozwala na określenie rodzaju zapalenia w drogach oddechowych i ustalenie diagnozy astmy. Bronchoskopia pozwala na empiryczną ocenę zmian, pobranie wycinka do badania histopatologicznego, oczyszczenie dolnych dróg oddechowych z patologicznej treści. Nie jest wskazana w przypadku PaO2 < 50 mm Hg [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "Ocena dominującego typu komórek zapalnych w plwocinie indukowanej pozwala na określenie rodzaju zapalenia w drogach oddechowych i ustalenie diagnozy astmy. Bronchoskopia pozwala na empiryczną ocenę zmian, pobranie wycinka do badania histopatologicznego, oczyszczenie dolnych dróg oddechowych z patologicznej treści. Nie jest wskazana w przypadku PaO2 < 50 mm Hg [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "Ocena stanu świadomości, nasilenia duszności i napięcia psychomotorycznego.",
-          "uzasadnienie": "Obserwacja nasilenia duszności wspomaga ocenę stopnia niedotlenienia (np. na podstawie zmodyfikowanej skali duszności Borga, skali VAS) i może w pierwszej kolejności wskazywać na konieczność podjęcia natychmiastowych działań (np. intubacji). Ocena stanu świadomości (skala Glasgow) oraz napięcia psychomotorycznego klinicznie wspiera podjęcie decyzji [Szczeklik, 2020]."
+          "uzasadnienie": "Obserwacja nasilenia duszności wspomaga ocenę stopnia niedotlenienia (np. na podstawie zmodyfikowanej skali duszności Borga, skali VAS) i może w pierwszej kolejności wskazywać na konieczność podjęcia natychmiastowych działań (np. intubacji). Ocena stanu świadomości (skala Glasgow) oraz napięcia psychomotorycznego klinicznie wspiera podjęcie decyzji [Szczeklik, 2020].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "Pomoc w przyjęciu najdogodniejszej pozycji ciała oraz udział w rehabilitacji oddechowej (np. oddychanie przez zasznurowane usta, oddychanie przeponowe).",
-          "uzasadnienie": "Zbyt wysokie ustawienie przepony (np. w pozycji na wznak) zmniejsza ruchomość klatki piersiowej i podciśnienie w klatce piersiowej podczas wdechu, przez co zmniejsza się wentylacja i transport tlenu do pęcherzyków płucnych. Ograniczenie pracy klatki piersiowej na rzecz oddechu przeponowego (brzusznego toru oddychania) zmniejsza duszność [Nowobilski, 2020]."
+          "uzasadnienie": "Zbyt wysokie ustawienie przepony (np. w pozycji na wznak) zmniejsza ruchomość klatki piersiowej i podciśnienie w klatce piersiowej podczas wdechu, przez co zmniejsza się wentylacja i transport tlenu do pęcherzyków płucnych. Ograniczenie pracy klatki piersiowej na rzecz oddechu przeponowego (brzusznego toru oddychania) zmniejsza duszność [Nowobilski, 2020].",
+          "exam": {
+            "bodyZone": "cale-cialo"
+          }
         },
         {
           "interwencja": "Prowadzenie farmakoterapii i płynoterapii: doustne/wziewne glikokortykosteroidy, leki biologiczne (na zlecenie lekarza).",
-          "uzasadnienie": "Zastosowanie leków o działaniu rozszerzającym oskrzela oraz zmniejszającym reakcję zapalną pozwala na poprawę oksygenacji i stabilizację stanu pacjentki. Hiperwentylacja prowadzi do odwodnienia, czego skutkiem jest m.in. zwiększenie gęstości wydzieliny w drogach oddechowych [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
+          "uzasadnienie": "Zastosowanie leków o działaniu rozszerzającym oskrzela oraz zmniejszającym reakcję zapalną pozwala na poprawę oksygenacji i stabilizację stanu pacjentki. Hiperwentylacja prowadzi do odwodnienia, czego skutkiem jest m.in. zwiększenie gęstości wydzieliny w drogach oddechowych [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
+          "exam": {
+            "bodyZone": "reka"
+          }
         },
         {
           "interwencja": "Ocena nasilenia objawów, reakcji pacjentki na zastosowane leczenie oraz skutków ubocznych NIV.",
-          "uzasadnienie": "Umożliwia to określenie skuteczności zastosowanego działania oraz jego modyfikację. Występowanie skutków ubocznych NIV (np. odleżyna na grzbiecie nosa, rozdęcie żołądka) sugeruje konieczność zmiany wykorzystywanego sprzętu. Nasilenie objawów skłania do podjęcia decyzji o intubacji pacjentki [Mejza, 2016]."
+          "uzasadnienie": "Umożliwia to określenie skuteczności zastosowanego działania oraz jego modyfikację. Występowanie skutków ubocznych NIV (np. odleżyna na grzbiecie nosa, rozdęcie żołądka) sugeruje konieczność zmiany wykorzystywanego sprzętu. Nasilenie objawów skłania do podjęcia decyzji o intubacji pacjentki [Mejza, 2016].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "Nawilżenie mieszaniny oddechowej przez maskę w przypadku wysychania błon śluzowych lub trudnej do odkrztuszenia wydzieliny.",
-          "uzasadnienie": "Nawilżenie mieszaniny upłynnia wydzielinę, przyczyniając się do łatwiejszego jej odkrztuszania [Mejza, 2016]."
+          "uzasadnienie": "Nawilżenie mieszaniny upłynnia wydzielinę, przyczyniając się do łatwiejszego jej odkrztuszania [Mejza, 2016].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "Przy braku poprawy w leczeniu ocena szczelności dopasowania maski i sprawności portu wydechowego: ocena synchronizacji oddechów własnych chorej z pracą respiratora; zastosowanie usprawniania układu oddechowego (np. drenaż ułożeniowy, oklepywanie, ćwiczenia oddechowe); udział w farmakoterapii (np. leki rozkurczające oskrzela, uspokajające).",
-          "uzasadnienie": "Ocena szczelności maski pozwala (przy odpowiedniej konstrukcji respiratora) na skompensowanie przecieków powietrza powstałych z nieszczelności układu pacjent–respirator. Ocena synchronizacji umożliwia wyeliminowanie czynników zakłócających skuteczne leczenie NIV. Usprawnianie układu oddechowego i farmakoterapia wspomagają efektywne leczenie NIV [Mejza, 2016]."
+          "uzasadnienie": "Ocena szczelności maski pozwala (przy odpowiedniej konstrukcji respiratora) na skompensowanie przecieków powietrza powstałych z nieszczelności układu pacjent–respirator. Ocena synchronizacji umożliwia wyeliminowanie czynników zakłócających skuteczne leczenie NIV. Usprawnianie układu oddechowego i farmakoterapia wspomagają efektywne leczenie NIV [Mejza, 2016].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "W przypadku nieskuteczności powyższego leczenia asystowanie podczas intubacji dotchawiczej: przygotowanie zestawu do intubacji (laryngoskop z łyżką zakrzywioną lub prostą oraz czynnym źródłem światła, żel z lignokainą, rurki intubacyjne różnych rozmiarów, strzykawka do wypełnienia balonu uszczelniającego rurkę, cewnik do odsysania wraz z czynnym źródłem ssania, taśmy do ufiksowania rurki); przygotowanie pacjentki do zabiegu (monitorowanie EKG, akcji serca, tętna, CTK, etCO2, saturacji, napływu kapilarnego; na zlecenie lekarza przygotowanie i podanie leków anestetycznych, opioidowych, zwiotczających; ułożenie płaskie z uniesieniem głowy powyżej poziomu tułowia ok. 10 cm i odgięciem do tyłu – tzw. pozycja wąchania); po zabiegu ocena lokalizacji rurki intubacyjnej.",
-          "uzasadnienie": "Narastająca niewydolność oddechowa (obniżenie PaO2, wzrost PaCO2) jest pilnym wskazaniem do intubacji pacjentki. Ścisłe monitorowanie parametrów życiowych pacjentki jest kluczowe dla podjęcia decyzji we właściwym czasie. Zestaw do intubacji powinien być stale dostępny w sali i sprawdzany przed rozpoczęciem dyżuru [Wojtan, 2018]."
+          "uzasadnienie": "Narastająca niewydolność oddechowa (obniżenie PaO2, wzrost PaCO2) jest pilnym wskazaniem do intubacji pacjentki. Ścisłe monitorowanie parametrów życiowych pacjentki jest kluczowe dla podjęcia decyzji we właściwym czasie. Zestaw do intubacji powinien być stale dostępny w sali i sprawdzany przed rozpoczęciem dyżuru [Wojtan, 2018].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         }
       ],
-
       "oczekiwaneWyniki": "Pacjentka przytomna, spokojna, nie wymaga wentylacji mechanicznej, wentylowana NIV przez maskę twarzową bez powikłań. Parametry życiowe chorej: saturacja 95%, CTK 125/80 mm Hg, tętno 75 ud./min.",
-
       "practice": {
         "note": "Pola treningowe mapują na tabelę z Przewodnika: Diagnoza pielęgniarska | Cel | Planowane interwencje | Ocena. Dystraktory pochodzą z innych diagnoz w rozdziale.",
         "steps": [
@@ -255,20 +296,25 @@
         ]
       }
     },
-
     {
       "id": "11b9dccc-2d85-45f1-bf1a-8c22eeb17fbd",
-      "chapter": { "number": "7", "title": "Oddychanie" },
+      "chapter": {
+        "number": "7",
+        "title": "Oddychanie"
+      },
       "section": "7.3",
       "slug": "zaburzenia-oddychania",
       "title": "Zaburzenia oddychania",
       "author": "Aurelia Sega",
       "status": "published",
       "difficulty": "intermediate",
-      "tags": ["układ oddechowy", "SOR", "zapalenie płuc", "duszność"],
-
+      "tags": [
+        "układ oddechowy",
+        "SOR",
+        "zapalenie płuc",
+        "duszność"
+      ],
       "definicja": "Zaburzenia oddychania to patologiczne zmiany toru oddychania, regularności oddechu, częstości oddechów, ilości nabieranego powietrza oraz ruchów klatki piersiowej. W warunkach fizjologicznych wydech jest dłuższy niż wdech, częstość oddechów wynosi około 12–15/min, oddechy są regularne. Ilość nabieranego powietrza jest zależna od płci, wieku oraz budowy ciała i wynosi ok. 400–500 ml. Tor oddychania może być piersiowy (częściej u kobiet) lub brzuszny (przeważa wśród mężczyzn) [Witkiewicz, 2020].",
-
       "cechyCharakteryzujace": {
         "type": "grouped",
         "groups": [
@@ -295,11 +341,13 @@
           },
           {
             "label": "Zmiana toru oddychania",
-            "items": ["piersiowy", "brzuszny"]
+            "items": [
+              "piersiowy",
+              "brzuszny"
+            ]
           }
         ]
       },
-
       "czynnikiEtiologiczne": {
         "patofizjologiczne": [
           "Choroby układu oddechowego (POChP, astma, zapalenie płuc, ostra niewydolność oddechowa, gruźlica, mukowiscydoza, choroby oskrzelików, choroby śródmiąższowe płuc, nowotwory płuc, choroby opłucnej).",
@@ -330,7 +378,6 @@
           "Wady wrodzone noworodka."
         ]
       },
-
       "kryteriaRozpoznawania": {
         "subiektywne": [
           "niepokój",
@@ -353,29 +400,34 @@
           "zaburzenia wymiany gazowej w wynikach gazometrii krwi tętniczej"
         ]
       },
-
       "opisPrzypadku": "Pacjent, 62 lata, zgłosił się na szpitalny oddział ratunkowy (SOR) z powodu duszności. W wywiadzie od 2 dni występują: osłabienie, temperatura ciała 38,5°C, kaszel z odpluwaniem ropnej wydzieliny oraz ból w klatce piersiowej podczas kaszlu. W dniu zgłoszenia się na SOR pojawiła się duszność oraz trudności w oddychaniu objawiające się przyspieszeniem i spłyceniem oddechu (25/min), tachykardią (110/min) oraz niepokojem.",
-
       "diagnozaPielegniarska": "Zaburzenia oddychania w przebiegu infekcji dolnych dróg oddechowych objawiające się przyspieszonym i spłyconym oddechem, niepokojem, dusznością i kaszlem.",
-
       "celeOpieki": [
         "Zniwelowanie zaburzeń oddychania.",
         "Zapewnienie bezpieczeństwa i komfortu choremu.",
         "Zapobieganie powikłaniom."
       ],
-
       "interwencje": [
         {
           "interwencja": "Pomiar parametrów życiowych (tętno, temperatura, saturacja, ciśnienie tętnicze krwi), ocena cyklu i toru oddychania, osłuchanie oraz opukanie chorego.",
-          "uzasadnienie": "Badanie fizykalne pozwala na wstępną ocenę stanu klinicznego. Według autorów Rekomendacji postępowania w pozaszpitalnych zakażeniach układu oddechowego stwierdzenie tachykardii powyżej 100/min oraz tachypnöe powyżej 24/min, temperatury ciała powyżej 38°C oraz ogniskowych zmian nad polami płucnymi jest wskazaniem do dalszej diagnostyki obrazowej. W przeciwnym wypadku badanie fizykalne jest wystarczające do zdiagnozowania ostrego zapalenia oskrzeli (nie dotyczy osób po 75. roku życia) [Hryniewicz i wsp., 2016]."
+          "uzasadnienie": "Badanie fizykalne pozwala na wstępną ocenę stanu klinicznego. Według autorów Rekomendacji postępowania w pozaszpitalnych zakażeniach układu oddechowego stwierdzenie tachykardii powyżej 100/min oraz tachypnöe powyżej 24/min, temperatury ciała powyżej 38°C oraz ogniskowych zmian nad polami płucnymi jest wskazaniem do dalszej diagnostyki obrazowej. W przeciwnym wypadku badanie fizykalne jest wystarczające do zdiagnozowania ostrego zapalenia oskrzeli (nie dotyczy osób po 75. roku życia) [Hryniewicz i wsp., 2016].",
+          "exam": {
+            "bodyZone": "klatka-piersiowa"
+          }
         },
         {
           "interwencja": "Przygotowanie pacjenta do badania RTG klatki piersiowej.",
-          "uzasadnienie": "RTG klatki piersiowej jest badaniem koniecznym w celu rozpoznania zapalenia płuc u osób dorosłych [Hryniewicz i wsp., 2016]."
+          "uzasadnienie": "RTG klatki piersiowej jest badaniem koniecznym w celu rozpoznania zapalenia płuc u osób dorosłych [Hryniewicz i wsp., 2016].",
+          "exam": {
+            "bodyZone": "klatka-piersiowa"
+          }
         },
         {
           "interwencja": "Pobranie krwi do badań laboratoryjnych na zlecenie lekarza.",
-          "uzasadnienie": "W celu ustalenia ciężkości zapalenia płuc oraz oceny punktowego ryzyka zgonu konieczne jest wykonanie gazometrii krwi tętniczej oraz oznaczenie hematokrytu, glukozy, mocznika, sodu [Hryniewicz i wsp., 2016]."
+          "uzasadnienie": "W celu ustalenia ciężkości zapalenia płuc oraz oceny punktowego ryzyka zgonu konieczne jest wykonanie gazometrii krwi tętniczej oraz oznaczenie hematokrytu, glukozy, mocznika, sodu [Hryniewicz i wsp., 2016].",
+          "exam": {
+            "bodyZone": "reka"
+          }
         },
         {
           "interwencja": "Ocena punktowego ryzyka zgonu chorego, np. PSI (Pneumonia Severity Index), CRB-65, CURB-65 w celu ustalenia miejsca leczenia pacjenta (ambulatoryjne czy szpitalne).",
@@ -387,16 +439,17 @@
         },
         {
           "interwencja": "W razie konieczności podanie tlenu na zlecenie lekarza.",
-          "uzasadnienie": "Tlenoterapię stosuje się w celu utrzymania SpO2 w granicach 94–98% oraz PaO2 ≥ 60 mm Hg [Hryniewicz i wsp., 2016]."
+          "uzasadnienie": "Tlenoterapię stosuje się w celu utrzymania SpO2 w granicach 94–98% oraz PaO2 ≥ 60 mm Hg [Hryniewicz i wsp., 2016].",
+          "exam": {
+            "bodyZone": "glowa"
+          }
         },
         {
           "interwencja": "W przypadku wskazań do leczenia szpitalnego – przygotowanie chorego do hospitalizacji, umożliwienie kontaktu z rodziną lub osobami bliskimi.",
           "uzasadnienie": "Hospitalizacja jest dla chorego emocjonalnym przeżyciem. Wiąże się z dużym stresem oraz utratą poczucia bezpieczeństwa. Dodatkowo u pacjentów w podeszłym wieku nasilają się dotychczasowe obciążenia psychiczne [Wróblewska i wsp., 2016]."
         }
       ],
-
       "oczekiwaneWyniki": "Chory został zdiagnozowany oraz zastosowano odpowiednie leczenie, uczucie duszności zostało zniwelowane, oddechy oraz akcja serca uległy poprawie, niepokój chorego zmniejszył się.",
-
       "practice": {
         "note": "Dystraktory pochodzą z innych diagnoz rozdziału 7.",
         "steps": [

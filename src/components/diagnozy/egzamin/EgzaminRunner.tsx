@@ -9,7 +9,10 @@ import EgzaminStep from '@/components/diagnozy/egzamin/EgzaminStep'
 import EgzaminNav from '@/components/diagnozy/egzamin/EgzaminNav'
 import EgzaminTimer from '@/components/diagnozy/egzamin/EgzaminTimer'
 import EgzaminResult from '@/components/diagnozy/egzamin/EgzaminResult'
+import WykonanieStep from '@/components/diagnozy/egzamin/WykonanieStep'
 import type {
+  BodyZone,
+  BodyZoneAssignments,
   DiagnozyExamAnswers,
   DiagnozyExamPayload,
   DiagnozyExamResult,
@@ -24,6 +27,7 @@ export default function EgzaminRunner() {
   const [startedAt, setStartedAt] = useState(0)
   const [stepIndex, setStepIndex] = useState(0)
   const [answers, setAnswers] = useState<DiagnozyExamAnswers>(EMPTY_ANSWERS)
+  const [zones, setZones] = useState<BodyZoneAssignments>({})
   const [result, setResult] = useState<DiagnozyExamResult | null>(null)
   const [timeSpent, setTimeSpent] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -39,6 +43,7 @@ export default function EgzaminRunner() {
     if (response.status === 'SUCCESS') {
       setExam(response.exam)
       setAnswers(EMPTY_ANSWERS)
+      setZones({})
       setStepIndex(0)
       setStartedAt(Date.now())
     } else {
@@ -67,7 +72,12 @@ export default function EgzaminRunner() {
     )
     setSubmitting(true)
     setError(null)
-    const response = await submitDiagnozyExamAction({ slug: exam.slug, answers, timeSpent: elapsed })
+    const response = await submitDiagnozyExamAction({
+      slug: exam.slug,
+      answers,
+      zones,
+      timeSpent: elapsed,
+    })
     setSubmitting(false)
     if (response.status === 'SUCCESS') {
       setResult(response.result)
@@ -100,12 +110,20 @@ export default function EgzaminRunner() {
     )
   }
 
-  const step = exam.steps[stepIndex]!
+  // Display steps: payload's 4 + the mannequin "Wykonanie" step before Ocena
+  const WYKONANIE_INDEX = 3
+  const stepCount = exam.steps.length + 1
+  const isWykonanie = stepIndex === WYKONANIE_INDEX
+  const step = isWykonanie
+    ? null
+    : exam.steps[stepIndex < WYKONANIE_INDEX ? stepIndex : stepIndex - 1]!
 
   return (
     <div>
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="text-sm font-bold text-zinc-800 uppercase tracking-wide">{step.label}</h2>
+        <h2 className="text-sm font-bold text-zinc-800 uppercase tracking-wide">
+          {step ? step.label : 'Wykonanie na fantomie'}
+        </h2>
         <EgzaminTimer
           key={startedAt}
           durationMinutes={EXAM_DURATION_MINUTES}
@@ -115,19 +133,29 @@ export default function EgzaminRunner() {
       <div className="mb-6">
         <WypelnijCasePanel opisPrzypadku={exam.caseText} />
       </div>
-      <EgzaminStep
-        step={step}
-        chosen={answers[step.field]}
-        onToggle={(option) => toggle(step.field, option, step.multi)}
-      />
+      {step ? (
+        <EgzaminStep
+          step={step}
+          chosen={answers[step.field]}
+          onToggle={(option) => toggle(step.field, option, step.multi)}
+        />
+      ) : (
+        <WykonanieStep
+          interwencje={answers.interwencje}
+          zones={zones}
+          onAssign={(interwencja: string, zone: BodyZone) =>
+            setZones((prev) => ({ ...prev, [interwencja]: zone }))
+          }
+        />
+      )}
       {error && <p className="mt-3 text-xs text-red-600">{error}</p>}
       <EgzaminNav
         stepIndex={stepIndex}
-        stepCount={exam.steps.length}
-        isLast={stepIndex === exam.steps.length - 1}
+        stepCount={stepCount}
+        isLast={stepIndex === stepCount - 1}
         submitting={submitting}
         onBack={() => setStepIndex((index) => Math.max(0, index - 1))}
-        onNext={() => setStepIndex((index) => Math.min(exam.steps.length - 1, index + 1))}
+        onNext={() => setStepIndex((index) => Math.min(stepCount - 1, index + 1))}
         onSubmit={submit}
       />
     </div>

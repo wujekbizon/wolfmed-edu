@@ -45,10 +45,13 @@ export type DiagnozaFillData = {
 
 // ── Egzamin mode ────────────────────────────────────────────────────────────
 
-export type DiagnozyExamField = 'diagnoza' | 'cele' | 'interwencje' | 'ocena'
+export type DiagnozyExamAnswerField = 'diagnoza' | 'cele' | 'interwencje' | 'ocena'
+
+/** Result steps also include 'wykonanie' — mannequin execution (Egzamin v2). */
+export type DiagnozyExamField = DiagnozyExamAnswerField | 'wykonanie'
 
 export type DiagnozyExamStep = {
-  field: DiagnozyExamField
+  field: DiagnozyExamAnswerField
   label: string
   prompt: string
   multi: boolean
@@ -62,7 +65,7 @@ export type DiagnozyExamPayload = {
   steps: DiagnozyExamStep[]
 }
 
-export type DiagnozyExamAnswers = Record<DiagnozyExamField, string[]>
+export type DiagnozyExamAnswers = Record<DiagnozyExamAnswerField, string[]>
 
 export type DiagnozyExamStepResult = {
   field: DiagnozyExamField
@@ -80,3 +83,28 @@ export type DiagnozyExamResult = {
   /** Uzasadnienia of correct interventions — the teaching payload on reveal. */
   uzasadnienia: Record<string, string>
 }
+
+// ── Egzamin v2: mannequin body zones ────────────────────────────────────────
+
+export const BODY_ZONES = [
+  'glowa',
+  'klatka-piersiowa',
+  'brzuch',
+  'reka',
+  'noga',
+  'cale-cialo',
+] as const
+
+export type BodyZone = (typeof BODY_ZONES)[number]
+
+export const BODY_ZONE_LABELS: Record<BodyZone, string> = {
+  glowa: 'Głowa i drogi oddechowe',
+  'klatka-piersiowa': 'Klatka piersiowa',
+  brzuch: 'Brzuch',
+  reka: 'Kończyny górne',
+  noga: 'Kończyny dolne',
+  'cale-cialo': 'Całe ciało',
+}
+
+/** intervention text → body zone the student assigned on the mannequin */
+export type BodyZoneAssignments = Record<string, BodyZone>
