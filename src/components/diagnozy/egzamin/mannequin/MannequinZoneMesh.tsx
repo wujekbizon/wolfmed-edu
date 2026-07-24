@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import type { BodyZone } from '@/types/diagnozyTypes'
 
-const BASE_COLOR = '#d6c3b6'
-const HOVER_COLOR = '#fda4af'
-const SELECTED_COLOR = '#f43f5e'
+// Rose tint shown over the region on hover / when selected. Idle opacity is 0
+// so the real body shows through — but the mesh still raycasts (geometry-based),
+// so it stays clickable while invisible.
+const TINT = '#f43f5e'
 
 type Part = {
   geometry: 'sphere' | 'capsule' | 'box'
@@ -14,8 +15,8 @@ type Part = {
   rotation?: [number, number, number]
 }
 
-// One clickable body zone: a group of primitive meshes sharing hover/selected
-// color state. Swapping to a rigged GLTF later only replaces the geometry.
+// One clickable body zone: invisible collider group overlaying the GLB body.
+// The visible mesh carries no handlers, so r3f routes the click here.
 export default function MannequinZoneMesh({
   zone,
   parts,
@@ -28,7 +29,7 @@ export default function MannequinZoneMesh({
   onClick: (zone: BodyZone) => void
 }) {
   const [hovered, setHovered] = useState(false)
-  const color = selected ? SELECTED_COLOR : hovered ? HOVER_COLOR : BASE_COLOR
+  const opacity = selected ? 0.5 : hovered ? 0.3 : 0
 
   return (
     <group
@@ -57,7 +58,12 @@ export default function MannequinZoneMesh({
           {part.geometry === 'box' && (
             <boxGeometry args={part.args as [number, number, number]} />
           )}
-          <meshStandardMaterial color={color} roughness={0.6} />
+          <meshBasicMaterial
+            color={TINT}
+            transparent
+            opacity={opacity}
+            depthWrite={false}
+          />
         </mesh>
       ))}
     </group>

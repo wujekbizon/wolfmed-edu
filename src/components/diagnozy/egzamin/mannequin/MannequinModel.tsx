@@ -1,45 +1,40 @@
 'use client'
 
+import MannequinGLTF from '@/components/diagnozy/egzamin/mannequin/MannequinGLTF'
 import MannequinZoneMesh from '@/components/diagnozy/egzamin/mannequin/MannequinZoneMesh'
 import type { BodyZone } from '@/types/diagnozyTypes'
 
 type ZoneParts = Parameters<typeof MannequinZoneMesh>[0]['parts']
 
-// Procedural low-poly patient: primitives grouped into clickable regions.
-// Order matters — smaller face features are listed after the head so they
-// raycast in front of it. plecy/skora/cale-cialo have no mesh (button rail).
+// Invisible click-hotspots overlaying the GLB body. Coordinates are for the
+// normalized figure from MannequinGLTF: height 2.4, centered at the origin, so
+// feet ≈ y -1.2 and head ≈ y +1.2. Tune these fractions in the browser if a
+// region doesn't sit on the body; plecy/skora/cale-cialo use the button rail.
 const ZONE_PARTS: Partial<Record<BodyZone, ZoneParts>> = {
-  glowa: [
-    { geometry: 'sphere', position: [0, 1.62, 0], args: [0.27, 24, 24] },
-    { geometry: 'capsule', position: [0, 1.33, 0], args: [0.09, 0.1, 8, 16] },
-  ],
+  glowa: [{ geometry: 'sphere', position: [0, 1.02, 0], args: [0.22, 20, 20] }],
   oczy: [
-    { geometry: 'sphere', position: [-0.1, 1.66, 0.22], args: [0.045, 16, 16] },
-    { geometry: 'sphere', position: [0.1, 1.66, 0.22], args: [0.045, 16, 16] },
+    { geometry: 'sphere', position: [-0.08, 1.06, 0.16], args: [0.05, 12, 12] },
+    { geometry: 'sphere', position: [0.08, 1.06, 0.16], args: [0.05, 12, 12] },
   ],
   uszy: [
-    { geometry: 'sphere', position: [-0.26, 1.6, 0.02], args: [0.055, 16, 16] },
-    { geometry: 'sphere', position: [0.26, 1.6, 0.02], args: [0.055, 16, 16] },
+    { geometry: 'sphere', position: [-0.2, 1.02, 0], args: [0.06, 12, 12] },
+    { geometry: 'sphere', position: [0.2, 1.02, 0], args: [0.06, 12, 12] },
   ],
   'usta-drogi-oddechowe': [
-    { geometry: 'sphere', position: [0, 1.5, 0.24], args: [0.05, 16, 16] },
+    { geometry: 'sphere', position: [0, 0.9, 0.16], args: [0.06, 12, 12] },
   ],
   'klatka-piersiowa': [
-    { geometry: 'capsule', position: [0, 0.98, 0], args: [0.3, 0.38, 8, 16] },
+    { geometry: 'capsule', position: [0, 0.5, 0], args: [0.3, 0.32, 8, 16] },
   ],
-  brzuch: [
-    { geometry: 'capsule', position: [0, 0.52, 0], args: [0.26, 0.22, 8, 16] },
-  ],
-  miednica: [
-    { geometry: 'capsule', position: [0, 0.18, 0], args: [0.24, 0.14, 8, 16] },
-  ],
+  brzuch: [{ geometry: 'capsule', position: [0, 0.12, 0], args: [0.27, 0.22, 8, 16] }],
+  miednica: [{ geometry: 'capsule', position: [0, -0.2, 0], args: [0.27, 0.16, 8, 16] }],
   'konczyny-gorne': [
-    { geometry: 'capsule', position: [-0.46, 0.9, 0], args: [0.09, 0.72, 8, 16], rotation: [0, 0, 0.28] },
-    { geometry: 'capsule', position: [0.46, 0.9, 0], args: [0.09, 0.72, 8, 16], rotation: [0, 0, -0.28] },
+    { geometry: 'capsule', position: [-0.5, 0.35, 0], args: [0.12, 0.75, 8, 16], rotation: [0, 0, 0.18] },
+    { geometry: 'capsule', position: [0.5, 0.35, 0], args: [0.12, 0.75, 8, 16], rotation: [0, 0, -0.18] },
   ],
   'konczyny-dolne': [
-    { geometry: 'capsule', position: [-0.16, -0.38, 0], args: [0.11, 0.85, 8, 16] },
-    { geometry: 'capsule', position: [0.16, -0.38, 0], args: [0.11, 0.85, 8, 16] },
+    { geometry: 'capsule', position: [-0.17, -0.72, 0], args: [0.14, 0.85, 8, 16] },
+    { geometry: 'capsule', position: [0.17, -0.72, 0], args: [0.14, 0.85, 8, 16] },
   ],
 }
 
@@ -51,7 +46,8 @@ export default function MannequinModel({
   onZoneClick: (zone: BodyZone) => void
 }) {
   return (
-    <group position={[0, -0.35, 0]}>
+    <group>
+      <MannequinGLTF />
       {(Object.entries(ZONE_PARTS) as [BodyZone, ZoneParts][]).map(([zone, parts]) => (
         <MannequinZoneMesh
           key={zone}
