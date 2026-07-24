@@ -944,8 +944,6 @@ export const DiagnozaSchema = z.object({
   title: z.string().min(1),
   author: z.string().optional(),
   status: z.enum(["draft", "in-review", "published"]).default("published"),
-  difficulty: z.enum(["basic", "intermediate", "advanced"]).optional(),
-  tags: z.array(z.string()).optional(),
   definicja: z.string().min(1),
   cechyCharakteryzujace: StringListOrGroupedSchema,
   czynnikiEtiologiczne: z.object({

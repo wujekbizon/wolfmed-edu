@@ -20,9 +20,7 @@ export type DiagnozaListItem = {
   chapterTitle: string
   title: string
   author: string | null
-  difficulty: Diagnoza['difficulty'] | null
   definicjaSnippet: string
-  tags: string[]
 }
 
 export const DIAGNOZY_SORT_KEYS = [

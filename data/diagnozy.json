@@ -17,14 +17,6 @@
       "title": "Zaburzenia drożności dróg oddechowych",
       "author": "Katarzyna Wojnar-Gruszka",
       "status": "published",
-      "difficulty": "advanced",
-      "tags": [
-        "układ oddechowy",
-        "OIT",
-        "astma",
-        "NIV",
-        "intubacja"
-      ],
       "definicja": "Zaburzenia drożności dróg oddechowych to stan, w którym dostarczenie gazów oddechowych do płuc jest częściowo ograniczone (obturacja) lub całkowicie niemożliwe (niedrożność). Częściowa (łagodna, przewlekła) niedrożność dróg oddechowych to sytuacja, w której światło dróg oddechowych nie jest całkowicie zamknięte, a przepływ gazów oddechowych jest możliwy, choć znacznie ograniczony. Całkowita (ciężka, ostra) niedrożność dróg oddechowych cechuje się gwałtownością zmian – zamknięciem światła dróg oddechowych, w wyniku czego przepływ gazów staje się niemożliwy [Larsen, 2013].",
       "cechyCharakteryzujace": {
         "type": "grouped",
@@ -470,13 +462,6 @@
       "title": "Zaburzenia oddychania",
       "author": "Aurelia Sega",
       "status": "published",
-      "difficulty": "intermediate",
-      "tags": [
-        "układ oddechowy",
-        "SOR",
-        "zapalenie płuc",
-        "duszność"
-      ],
       "definicja": "Zaburzenia oddychania to patologiczne zmiany toru oddychania, regularności oddechu, częstości oddechów, ilości nabieranego powietrza oraz ruchów klatki piersiowej. W warunkach fizjologicznych wydech jest dłuższy niż wdech, częstość oddechów wynosi około 12–15/min, oddechy są regularne. Ilość nabieranego powietrza jest zależna od płci, wieku oraz budowy ciała i wynosi ok. 400–500 ml. Tor oddychania może być piersiowy (częściej u kobiet) lub brzuszny (przeważa wśród mężczyzn) [Witkiewicz, 2020].",
       "cechyCharakteryzujace": {
         "type": "grouped",

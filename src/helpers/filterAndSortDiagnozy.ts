@@ -19,7 +19,6 @@ function matchesSearch(item: DiagnozaListItem, query: string): boolean {
       item.definicjaSnippet,
       item.author ?? '',
       item.chapterTitle,
-      ...item.tags,
     ].join(' ')
   )
   return normalize(query)

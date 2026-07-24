@@ -2,12 +2,6 @@ import Link from 'next/link'
 import { ArrowRight, CheckCircle2, User } from 'lucide-react'
 import type { DiagnozaListItem } from '@/types/diagnozyTypes'
 
-const DIFFICULTY_LABELS: Record<string, string> = {
-  basic: 'Podstawowy',
-  intermediate: 'Średni',
-  advanced: 'Zaawansowany',
-}
-
 export default function DiagnozaCard({
   diagnoza,
   completed,
@@ -45,11 +39,6 @@ export default function DiagnozaCard({
             <span className="inline-flex items-center gap-1 text-xs text-zinc-400 truncate">
               <User className="w-3.5 h-3.5 shrink-0" />
               <span className="truncate">{diagnoza.author}</span>
-            </span>
-          )}
-          {diagnoza.difficulty && (
-            <span className="shrink-0 text-xs text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full">
-              {DIFFICULTY_LABELS[diagnoza.difficulty] ?? diagnoza.difficulty}
             </span>
           )}
         </div>

@@ -135,9 +135,7 @@ async function main() {
       chapterTitle: diagnozy.chapterTitle,
       title: diagnozy.title,
       author: sql<string | null>`${diagnozy.data}->>'author'`,
-      difficulty: sql<DiagnozaListItem['difficulty']>`${diagnozy.data}->>'difficulty'`,
       definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
-      tags: sql<string[]>`coalesce(${diagnozy.data}->'tags', '[]'::jsonb)`,
     })
     .from(diagnozy)
     .where(eq(diagnozy.status, 'published'))
