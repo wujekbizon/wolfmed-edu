@@ -50,7 +50,8 @@ export default async function DiagnozaPage({ params }: Props) {
               {diagnoza.section}
             </span>
             <span className="text-xs text-zinc-400">
-              {diagnoza.chapter.number}. {diagnoza.chapter.title}
+              {diagnoza.chapter.number}
+              {diagnoza.chapter.title ? `. ${diagnoza.chapter.title}` : ''}
             </span>
           </div>
           <h1 className="text-2xl font-bold text-zinc-800">{diagnoza.title}</h1>
