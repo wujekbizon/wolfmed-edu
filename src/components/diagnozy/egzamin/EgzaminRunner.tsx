@@ -16,6 +16,7 @@ import type {
 } from '@/types/diagnozyTypes'
 
 const EMPTY_ANSWERS: DiagnozyExamAnswers = { diagnoza: [], cele: [], interwencje: [], ocena: [] }
+const EXAM_DURATION_MINUTES = 30
 
 export default function EgzaminRunner() {
   const router = useRouter()
@@ -59,8 +60,11 @@ export default function EgzaminRunner() {
   }
 
   const submit = async () => {
-    if (!exam) return
-    const elapsed = Math.round((Date.now() - startedAt) / 1000)
+    if (!exam || submitting) return
+    const elapsed = Math.min(
+      Math.round((Date.now() - startedAt) / 1000),
+      EXAM_DURATION_MINUTES * 60
+    )
     setSubmitting(true)
     setError(null)
     const response = await submitDiagnozyExamAction({ slug: exam.slug, answers, timeSpent: elapsed })
@@ -102,7 +106,11 @@ export default function EgzaminRunner() {
     <div>
       <div className="flex items-center justify-between gap-3 mb-4">
         <h2 className="text-sm font-bold text-zinc-800 uppercase tracking-wide">{step.label}</h2>
-        <EgzaminTimer startedAt={startedAt} />
+        <EgzaminTimer
+          key={startedAt}
+          durationMinutes={EXAM_DURATION_MINUTES}
+          onTimeUp={submit}
+        />
       </div>
       <div className="mb-6">
         <WypelnijCasePanel opisPrzypadku={exam.caseText} />

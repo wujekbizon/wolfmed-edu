@@ -41,6 +41,7 @@ export default async function DiagnozyEgzaminPage() {
             System losuje przypadek kliniczny. Przeczytaj opis, a następnie wypełnij
             przewodnik procesu pielęgnowania — tym razem wśród odpowiedzi są też
             pozycje z innych diagnoz, a odpowiedzi zostaną ocenione po zakończeniu.
+            Masz 30 minut — po upływie czasu egzamin zostanie oceniony automatycznie.
           </p>
         </header>
 

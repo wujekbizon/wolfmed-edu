@@ -1,21 +1,36 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Timer } from 'lucide-react'
+import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer'
 import { formatExamClock } from '@/helpers/formatExamClock'
 
-export default function EgzaminTimer({ startedAt }: { startedAt: number }) {
-  const [now, setNow] = useState(() => Date.now())
+export default function EgzaminTimer({
+  durationMinutes,
+  onTimeUp,
+}: {
+  durationMinutes: number
+  onTimeUp: () => void
+}) {
+  const { timeLeft, isWarning, isTimeUp } = useCountdownTestTimer({ durationMinutes })
+  const firedRef = useRef(false)
 
   useEffect(() => {
-    const interval = setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(interval)
-  }, [])
+    if (isTimeUp && !firedRef.current) {
+      firedRef.current = true
+      onTimeUp()
+    }
+  }, [isTimeUp, onTimeUp])
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 bg-zinc-100 rounded-full px-3 py-1.5 tabular-nums">
+    <span
+      role="timer"
+      aria-label="Pozostały czas egzaminu"
+      className={`inline-flex items-center gap-1.5 text-sm font-medium rounded-full px-3 py-1.5 tabular-nums transition-colors
+        ${isWarning ? 'text-rose-700 bg-rose-100 animate-pulse' : 'text-zinc-600 bg-zinc-100'}`}
+    >
       <Timer className="w-4 h-4" />
-      {formatExamClock((now - startedAt) / 1000)}
+      {formatExamClock(timeLeft)}
     </span>
   )
 }
