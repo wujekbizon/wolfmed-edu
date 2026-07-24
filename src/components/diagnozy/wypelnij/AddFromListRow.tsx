@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Plus, X } from 'lucide-react'
+import WypelnijSelect from '@/components/diagnozy/wypelnij/WypelnijSelect'
 
 type Option = { text: string; detail?: string }
 
@@ -76,28 +77,24 @@ export default function AddFromListRow({
       )}
 
       {remaining.length > 0 ? (
-        <div className="flex items-stretch gap-2">
-          <select
-            aria-label={ariaLabel}
-            value={pending}
-            onChange={(event) => setPending(event.target.value)}
-            className="flex-1 min-w-0 max-w-xl rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700
-              cursor-pointer focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-100"
-          >
-            <option value="">{placeholder}</option>
-            {remaining.map((option) => (
-              <option key={option.text} value={option.text}>
-                {option.text}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-col sm:flex-row sm:items-start gap-2 min-w-0">
+          <WypelnijSelect
+            options={remaining.map((option) => ({
+              value: option.text,
+              label: option.text,
+            }))}
+            value={pending || null}
+            onSelect={setPending}
+            placeholder={placeholder}
+            ariaLabel={ariaLabel}
+          />
           <button
             type="button"
             onClick={handleAdd}
             disabled={!pending}
-            className="inline-flex items-center gap-1.5 px-4 text-sm font-medium rounded-xl shrink-0
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium rounded-xl shrink-0
               text-white bg-rose-500 hover:bg-rose-600 transition-colors cursor-pointer
-              disabled:opacity-40 disabled:cursor-not-allowed"
+              disabled:opacity-40 disabled:cursor-not-allowed self-start sm:self-auto"
           >
             <Plus className="w-4 h-4" />
             Dodaj

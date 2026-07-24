@@ -84,7 +84,7 @@ export default function WypelnijRunner({
         uzupełnij kolejne pola, dodając pozycje z list.
       </p>
 
-      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white">
+      <div className="border border-zinc-200 rounded-xl bg-white">
         <PrzewodnikFormRow label="Diagnoza pielęgniarska" active first>
           <SingleSelectRow
             options={formulations.map((f) => ({ value: f.slug, label: f.text }))}
@@ -136,7 +136,7 @@ export default function WypelnijRunner({
           </ul>
         </PrzewodnikFormRow>
 
-        <PrzewodnikFormRow label="Ocena" active={interwencje.length > 0}>
+        <PrzewodnikFormRow label="Ocena" active={interwencje.length > 0} last>
           <SingleSelectRow
             options={fillData ? [{ value: fillData.oczekiwaneWyniki, label: fillData.oczekiwaneWyniki }] : []}
             value={ocena}
