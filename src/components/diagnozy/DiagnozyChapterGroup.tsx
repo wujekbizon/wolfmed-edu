@@ -15,7 +15,8 @@ export default function DiagnozyChapterGroup({
           id={`rozdzial-${chapter.number}`}
           className="text-lg font-bold text-zinc-800 shrink-0"
         >
-          {chapter.number}. {chapter.title}
+          {chapter.number}
+          {chapter.title ? `. ${chapter.title}` : ''}
         </h2>
         <div className="h-px bg-zinc-200 flex-1" />
         <span className="text-xs text-zinc-400 shrink-0">

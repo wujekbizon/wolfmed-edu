@@ -22,7 +22,7 @@ export default function InterwencjeTable({
           >
             <div className="px-4 py-3">{item.interwencja}</div>
             <div className="px-4 py-3 border-l border-zinc-100 text-zinc-500">
-              {item.uzasadnienie}
+              {item.uzasadnienie || <span className="text-zinc-300">—</span>}
             </div>
           </div>
         ))}
@@ -36,10 +36,12 @@ export default function InterwencjeTable({
             className="border border-zinc-200 rounded-xl p-3 bg-white"
           >
             <p className="text-sm text-zinc-700 font-medium mb-2">{item.interwencja}</p>
-            <p className="text-xs text-zinc-500">
-              <span className="font-semibold uppercase tracking-wide">Uzasadnienie: </span>
-              {item.uzasadnienie}
-            </p>
+            {item.uzasadnienie && (
+              <p className="text-xs text-zinc-500">
+                <span className="font-semibold uppercase tracking-wide">Uzasadnienie: </span>
+                {item.uzasadnienie}
+              </p>
+            )}
           </div>
         ))}
       </div>

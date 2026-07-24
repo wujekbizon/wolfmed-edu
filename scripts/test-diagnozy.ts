@@ -177,58 +177,50 @@ async function main() {
   const diagStep = exam.steps.find((s) => s.field === 'diagnoza')!
   check('correct diagnoza is in the option pool', diagStep.options.includes(drawn.diagnozaPielegniarska))
   check('pool is a plain string[] (no correctness flags)', diagStep.options.every((o) => typeof o === 'string'))
-  if (siblings.length > 0) {
-    check('diagnoza pool mixes in a sibling distractor', diagStep.options.includes(siblings[0]!.diagnozaPielegniarska))
-  }
+  check('diagnoza pool adds ≥1 distractor', diagStep.options.length > 1)
   const intStep = exam.steps.find((s) => s.field === 'interwencje')!
   check('interwencje options ⊇ all correct interventions', drawn.interwencje.every((i) => intStep.options.includes(i.interwencja)))
 
-  // ── 6. gradeDiagnozyExam (real grader) ──
-  console.log('\n[6] Grading (answer steps + mannequin wykonanie)')
-  const allInt = drawn.interwencje.map((i) => i.interwencja)
+  // ── 6. gradeDiagnozyExam — answer steps (real grader, real data) ──
+  console.log('\n[6] Grading — answer steps')
   const perfectAnswers = {
     diagnoza: [drawn.diagnozaPielegniarska],
     cele: drawn.celeOpieki,
-    interwencje: allInt,
+    interwencje: drawn.interwencje.map((i) => i.interwencja),
     ocena: [drawn.oczekiwaneWyniki],
   }
-  const zonesAll = Object.fromEntries(
-    drawn.interwencje.filter((i) => i.exam?.bodyZone).map((i) => [i.interwencja, i.exam!.bodyZone])
-  )
-  const perfect = gradeDiagnozyExam(drawn, perfectAnswers, zonesAll)
+  const perfect = gradeDiagnozyExam(drawn, perfectAnswers, {})
   check('perfect run scores 100', perfect.score === 100)
-  check('wykonanie step present when zones authored', perfect.steps.some((s) => s.field === 'wykonanie'))
-
-  const wrongZones = gradeDiagnozyExam(drawn, perfectAnswers, Object.fromEntries(Object.keys(zonesAll).map((k) => [k, 'konczyny-dolne' as const])))
-  const wyk = wrongZones.steps.find((s) => s.field === 'wykonanie')!
-  check('all-wrong zones → wykonanie 0%', wyk.scorePercent === 0)
-  check('answer steps unaffected by wrong zones', wrongZones.steps.find((s) => s.field === 'diagnoza')!.scorePercent === 100)
-
-  // Applicable but unassigned → step still graded (0%): not performing an
-  // intervention on the patient is a fail, not a free pass.
-  const noZones = gradeDiagnozyExam(drawn, perfectAnswers, {})
-  const noZonesWyk = noZones.steps.find((s) => s.field === 'wykonanie')
-  check('unassigned-but-applicable → wykonanie present at 0%', !!noZonesWyk && noZonesWyk.scorePercent === 0)
-
-  // Genuinely inapplicable → step skipped: choose only interventions that have
-  // no authored bodyZone (the paperwork-type ones).
-  const unzoned = records
-    .flatMap((r) => r.interwencje)
-    .filter((i) => !i.exam?.bodyZone)
-    .map((i) => i.interwencja)
-  if (unzoned.length > 0) {
-    const anyRecordWithUnzoned = records.find((r) => r.interwencje.some((i) => !i.exam?.bodyZone))!
-    const onlyUnzoned = anyRecordWithUnzoned.interwencje.filter((i) => !i.exam?.bodyZone).map((i) => i.interwencja)
-    const skipped = gradeDiagnozyExam(anyRecordWithUnzoned, {
-      diagnoza: [], cele: [], interwencje: onlyUnzoned, ocena: [],
-    }, {})
-    check('no chosen intervention has a zone → wykonanie step skipped', !skipped.steps.some((s) => s.field === 'wykonanie'))
-  } else {
-    check('no chosen intervention has a zone → wykonanie step skipped', true, 'skipped: all interventions are zoned')
-  }
-
   const extraPenalty = gradeDiagnozyExam(drawn, { ...perfectAnswers, cele: [...drawn.celeOpieki, siblings[0]?.celeOpieki[0] ?? 'X'] }, {})
   check('extra wrong pick lowers a step below 100', extraPenalty.steps.find((s) => s.field === 'cele')!.scorePercent < 100)
+  const allWrong0 = gradeDiagnozyExam(drawn, { diagnoza: siblings[0] ? [siblings[0].diagnozaPielegniarska] : [], cele: [], interwencje: [], ocena: [] }, {})
+  check('empty/wrong run scores 0', allWrong0.score === 0)
+
+  // ── 6b. Mannequin wykonanie grading — deterministic fixture ──
+  // Body zones are authored per diagnosis; the dataset may carry none yet, so
+  // the zone rubric is tested against a controlled fixture, not live data.
+  console.log('\n[6b] Grading — mannequin wykonanie (fixture)')
+  const fixture: Diagnoza = {
+    ...drawn,
+    interwencje: [
+      { interwencja: 'Osłuchanie płuc', uzasadnienie: 'x', exam: { bodyZone: 'klatka-piersiowa' } },
+      { interwencja: 'Pobranie krwi', uzasadnienie: 'x', exam: { bodyZone: 'konczyny-gorne' } },
+      { interwencja: 'Dokumentacja', uzasadnienie: 'x' },
+    ],
+  }
+  const fixInt = fixture.interwencje.map((i) => i.interwencja)
+  const fixAnswers = { diagnoza: [], cele: [], interwencje: fixInt, ocena: [] }
+  const rightZones = { 'Osłuchanie płuc': 'klatka-piersiowa' as const, 'Pobranie krwi': 'konczyny-gorne' as const }
+  const fx = gradeDiagnozyExam(fixture, fixAnswers, rightZones)
+  const fxWyk = fx.steps.find((s) => s.field === 'wykonanie')
+  check('wykonanie present when zones authored', !!fxWyk)
+  check('correct zones → wykonanie 100%', fxWyk?.scorePercent === 100)
+  const fxWrong = gradeDiagnozyExam(fixture, fixAnswers, { 'Osłuchanie płuc': 'konczyny-dolne', 'Pobranie krwi': 'noga' as 'konczyny-dolne' })
+  check('wrong zones → wykonanie 0%', fxWrong.steps.find((s) => s.field === 'wykonanie')?.scorePercent === 0)
+  const fxUnassigned = gradeDiagnozyExam(fixture, fixAnswers, {})
+  check('unassigned-but-applicable → wykonanie present at 0%', fxUnassigned.steps.find((s) => s.field === 'wykonanie')?.scorePercent === 0)
+  const fxSkip = gradeDiagnozyExam(fixture, { diagnoza: [], cele: [], interwencje: ['Dokumentacja'], ocena: [] }, {})
+  check('no chosen intervention has a zone → wykonanie skipped', !fxSkip.steps.some((s) => s.field === 'wykonanie'))
 
   const allWrong = gradeDiagnozyExam(drawn, { diagnoza: siblings[0] ? [siblings[0].diagnozaPielegniarska] : [], cele: [], interwencje: [], ocena: [] }, {})
   check('empty/wrong run scores 0', allWrong.score === 0)

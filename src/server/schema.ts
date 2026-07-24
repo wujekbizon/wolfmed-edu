@@ -933,7 +933,8 @@ export const DiagnozaSchema = z.object({
   id: z.uuid(),
   chapter: z.object({
     number: z.string().min(1),
-    title: z.string().min(1),
+    // Some chapters in the source lack a title; UI falls back to the number.
+    title: z.string().default(""),
   }),
   section: z.string().min(1),
   slug: z
@@ -964,7 +965,9 @@ export const DiagnozaSchema = z.object({
     .array(
       z.object({
         interwencja: z.string().min(1),
-        uzasadnienie: z.string().min(1),
+        // Optional: some interventions (e.g. "Ocena efektywności…") have no
+        // separate book rationale; empty means no teaching payload is shown.
+        uzasadnienie: z.string().default(""),
         // Egzamin v2: where on the mannequin the intervention is performed;
         // interventions without it are simply not graded for execution.
         exam: z
