@@ -5,10 +5,48 @@ import { checkRateLimit } from "@/lib/rateLimit"
 import { hasDiagnozyAccess } from "@/helpers/hasDiagnozyAccess"
 import { MarkDiagnozaCompletedSchema } from "@/server/schema"
 import { getDiagnozaBySlug, insertDiagnozaCompletion } from "@/server/queries"
+import type { DiagnozaFillData } from "@/types/diagnozyTypes"
 
 type MarkCompletedResult =
   | { status: "SUCCESS" }
   | { status: "ERROR"; message: string }
+
+type FillDataResult =
+  | { status: "SUCCESS"; data: DiagnozaFillData }
+  | { status: "ERROR"; message: string }
+
+// Lists for the form once the user picks a diagnosis formulation in the
+// Wypełnij select — fetched on demand so the client never loads all records.
+export async function getDiagnozaFillDataAction(
+  slug: string
+): Promise<FillDataResult> {
+  const { userId } = await auth()
+  if (!userId) throw new Error("Unauthorized")
+
+  const hasAccess = await hasDiagnozyAccess()
+  if (!hasAccess) {
+    return { status: "ERROR", message: "Brak dostępu do kursu pielęgniarstwo." }
+  }
+
+  const validationResult = MarkDiagnozaCompletedSchema.safeParse({ slug })
+  if (!validationResult.success) {
+    return { status: "ERROR", message: "Nieprawidłowy identyfikator diagnozy." }
+  }
+
+  const diagnoza = await getDiagnozaBySlug(validationResult.data.slug)
+  if (!diagnoza) {
+    return { status: "ERROR", message: "Nie znaleziono diagnozy." }
+  }
+
+  return {
+    status: "SUCCESS",
+    data: {
+      celeOpieki: diagnoza.celeOpieki,
+      interwencje: diagnoza.interwencje,
+      oczekiwaneWyniki: diagnoza.oczekiwaneWyniki,
+    },
+  }
+}
 
 export async function markDiagnozaCompletedAction(
   slug: string

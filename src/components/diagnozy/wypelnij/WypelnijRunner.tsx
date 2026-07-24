@@ -2,51 +2,64 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { motion, useReducedMotion } from 'framer-motion'
-import { markDiagnozaCompletedAction } from '@/actions/diagnozy'
-import { buildWypelnijSteps } from '@/helpers/buildWypelnijSteps'
+import { LoaderCircle } from 'lucide-react'
+import {
+  getDiagnozaFillDataAction,
+  markDiagnozaCompletedAction,
+} from '@/actions/diagnozy'
 import WypelnijCasePanel from '@/components/diagnozy/wypelnij/WypelnijCasePanel'
-import WypelnijStepper from '@/components/diagnozy/wypelnij/WypelnijStepper'
-import SelectStep from '@/components/diagnozy/wypelnij/SelectStep'
-import PrzewodnikSummary from '@/components/diagnozy/wypelnij/PrzewodnikSummary'
-import type { Diagnoza } from '@/types/diagnozyTypes'
+import PrzewodnikFormRow from '@/components/diagnozy/wypelnij/PrzewodnikFormRow'
+import SingleSelectRow from '@/components/diagnozy/wypelnij/SingleSelectRow'
+import AddFromListRow from '@/components/diagnozy/wypelnij/AddFromListRow'
+import WypelnijComplete from '@/components/diagnozy/wypelnij/WypelnijComplete'
+import type { Diagnoza, DiagnozaFillData, DiagnozaFormulation } from '@/types/diagnozyTypes'
 
 export default function WypelnijRunner({
   diagnoza,
+  formulations,
   alreadyCompleted,
 }: {
   diagnoza: Diagnoza
+  formulations: DiagnozaFormulation[]
   alreadyCompleted: boolean
 }) {
   const router = useRouter()
-  const prefersReducedMotion = useReducedMotion()
-  const steps = buildWypelnijSteps(diagnoza)
-  const [stepIndex, setStepIndex] = useState(0)
-  const [selections, setSelections] = useState<Record<string, string[]>>({})
+  const [chosenSlug, setChosenSlug] = useState<string | null>(null)
+  const [fillDataCache, setFillDataCache] = useState<Record<string, DiagnozaFillData>>({
+    [diagnoza.slug]: {
+      celeOpieki: diagnoza.celeOpieki,
+      interwencje: diagnoza.interwencje,
+      oczekiwaneWyniki: diagnoza.oczekiwaneWyniki,
+    },
+  })
+  const [loadingData, setLoadingData] = useState(false)
+  const [cele, setCele] = useState<string[]>([])
+  const [interwencje, setInterwencje] = useState<string[]>([])
+  const [ocena, setOcena] = useState<string | null>(null)
   const [completed, setCompleted] = useState(alreadyCompleted)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const isSummary = stepIndex === steps.length
-  const currentStep = isSummary ? null : steps[stepIndex]!
-  const stepTitles = [...steps.map((step) => step.title), 'Podsumowanie']
+  const fillData = chosenSlug ? (fillDataCache[chosenSlug] ?? null) : null
 
-  const toggle = (stepKey: string, text: string, multi: boolean) => {
-    setSelections((prev) => {
-      const current = prev[stepKey] ?? []
-      if (!multi) return { ...prev, [stepKey]: current.includes(text) ? [] : [text] }
-      return {
-        ...prev,
-        [stepKey]: current.includes(text)
-          ? current.filter((item) => item !== text)
-          : [...current, text],
+  const handleDiagnozaChange = async (slug: string) => {
+    setChosenSlug(slug)
+    setCele([])
+    setInterwencje([])
+    setOcena(null)
+    setError(null)
+    if (!fillDataCache[slug]) {
+      setLoadingData(true)
+      const result = await getDiagnozaFillDataAction(slug)
+      setLoadingData(false)
+      if (result.status === 'SUCCESS') {
+        setFillDataCache((prev) => ({ ...prev, [slug]: result.data }))
+      } else {
+        setError(result.message)
+        setChosenSlug(null)
       }
-    })
+    }
   }
-
-  // Active recall: a step is done when every book-sourced item was selected
-  const stepDone = (index: number) =>
-    (selections[steps[index]!.key] ?? []).length === steps[index]!.options.length
 
   const handleComplete = async () => {
     setSubmitting(true)
@@ -66,43 +79,81 @@ export default function WypelnijRunner({
       <div className="mb-6">
         <WypelnijCasePanel opisPrzypadku={diagnoza.opisPrzypadku} />
       </div>
+      <p className="text-sm text-zinc-600 mb-4">
+        Wypełnij przewodnik procesu pielęgnowania: postaw diagnozę, a następnie
+        uzupełnij kolejne pola, dodając pozycje z list.
+      </p>
 
-      <WypelnijStepper
-        stepTitles={stepTitles}
-        currentIndex={stepIndex}
-        canGoNext={!isSummary && stepDone(stepIndex)}
-        onBack={() => setStepIndex((index) => Math.max(0, index - 1))}
-        onNext={() => setStepIndex((index) => Math.min(steps.length, index + 1))}
-      >
-        <motion.div
-          key={stepIndex}
-          initial={prefersReducedMotion ? false : { opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.25 }}
-        >
-          {currentStep ? (
-            <SelectStep
-              step={currentStep}
-              selected={selections[currentStep.key] ?? []}
-              onToggle={(text) => toggle(currentStep.key, text, currentStep.multi)}
-            />
-          ) : (
-            <PrzewodnikSummary
-              rows={[
-                { label: 'Diagnoza pielęgniarska', items: selections['diagnoza'] ?? [] },
-                { label: 'Cel', items: selections['cele'] ?? [] },
-                { label: 'Planowane interwencje', items: selections['interwencje'] ?? [] },
-                { label: 'Zrealizowane interwencje', items: selections['interwencje'] ?? [] },
-                { label: 'Ocena', items: selections['ocena'] ?? [] },
-              ]}
-              completed={completed}
-              submitting={submitting}
-              error={error}
-              onComplete={handleComplete}
-            />
+      <div className="border border-zinc-200 rounded-xl overflow-hidden bg-white">
+        <PrzewodnikFormRow label="Diagnoza pielęgniarska" active first>
+          <SingleSelectRow
+            options={formulations.map((f) => ({ value: f.slug, label: f.text }))}
+            value={chosenSlug}
+            onChange={handleDiagnozaChange}
+            placeholder="— wybierz diagnozę pielęgniarską —"
+            ariaLabel="Diagnoza pielęgniarska"
+          />
+          {loadingData && (
+            <p className="mt-2 inline-flex items-center gap-2 text-xs text-zinc-400">
+              <LoaderCircle className="w-3.5 h-3.5 animate-spin" />
+              Wczytywanie danych diagnozy…
+            </p>
           )}
-        </motion.div>
-      </WypelnijStepper>
+        </PrzewodnikFormRow>
+
+        <PrzewodnikFormRow label="Cel" active={!!fillData}>
+          <AddFromListRow
+            options={(fillData?.celeOpieki ?? []).map((cel) => ({ text: cel }))}
+            added={cele}
+            onAdd={(text) => setCele((prev) => [...prev, text])}
+            onRemove={(text) => setCele((prev) => prev.filter((item) => item !== text))}
+            placeholder="— wybierz cel opieki —"
+            ariaLabel="Cel opieki"
+          />
+        </PrzewodnikFormRow>
+
+        <PrzewodnikFormRow label="Planowane interwencje" active={cele.length > 0}>
+          <AddFromListRow
+            options={(fillData?.interwencje ?? []).map((item) => ({
+              text: item.interwencja,
+              detail: item.uzasadnienie,
+            }))}
+            added={interwencje}
+            onAdd={(text) => setInterwencje((prev) => [...prev, text])}
+            onRemove={(text) =>
+              setInterwencje((prev) => prev.filter((item) => item !== text))
+            }
+            placeholder="— wybierz interwencję pielęgniarską —"
+            ariaLabel="Planowana interwencja"
+          />
+        </PrzewodnikFormRow>
+
+        <PrzewodnikFormRow label="Zrealizowane interwencje" active={interwencje.length > 0}>
+          <ul className="list-disc pl-5 space-y-1 text-sm text-zinc-600">
+            {interwencje.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </PrzewodnikFormRow>
+
+        <PrzewodnikFormRow label="Ocena" active={interwencje.length > 0}>
+          <SingleSelectRow
+            options={fillData ? [{ value: fillData.oczekiwaneWyniki, label: fillData.oczekiwaneWyniki }] : []}
+            value={ocena}
+            onChange={setOcena}
+            placeholder="— wybierz oczekiwany wynik opieki —"
+            ariaLabel="Ocena / oczekiwany wynik opieki"
+          />
+        </PrzewodnikFormRow>
+      </div>
+
+      <WypelnijComplete
+        completed={completed}
+        submitting={submitting}
+        disabled={!chosenSlug || cele.length === 0 || interwencje.length === 0 || !ocena}
+        error={error}
+        onComplete={handleComplete}
+      />
     </div>
   )
 }

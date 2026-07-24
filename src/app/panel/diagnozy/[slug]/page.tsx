@@ -2,7 +2,11 @@ import { redirect, notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
-import { getDiagnozaBySlug, getUserDiagnozyCompletions } from '@/server/queries'
+import {
+  getDiagnozaBySlug,
+  getDiagnozaFormulations,
+  getUserDiagnozyCompletions,
+} from '@/server/queries'
 import DiagnozaTabs from '@/components/diagnozy/DiagnozaTabs'
 import DiagnozaStudyView from '@/components/diagnozy/DiagnozaStudyView'
 import WypelnijRunner from '@/components/diagnozy/wypelnij/WypelnijRunner'
@@ -30,8 +34,9 @@ export default async function DiagnozaPage({ params }: Props) {
   if (!hasAccess) return <NoAccessMessage />
 
   const { slug } = await params
-  const [diagnoza, completedSlugs] = await Promise.all([
+  const [diagnoza, formulations, completedSlugs] = await Promise.all([
     getDiagnozaBySlug(slug),
+    getDiagnozaFormulations(),
     getUserDiagnozyCompletions(user.userId),
   ])
   if (!diagnoza) notFound()
@@ -59,6 +64,7 @@ export default async function DiagnozaPage({ params }: Props) {
           wypelnij={
             <WypelnijRunner
               diagnoza={diagnoza}
+              formulations={formulations}
               alreadyCompleted={completedSlugs.includes(diagnoza.slug)}
             />
           }

@@ -55,7 +55,7 @@ import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
-import type { Diagnoza, DiagnozaListItem } from "@/types/diagnozyTypes"
+import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -2356,3 +2356,17 @@ export async function insertDiagnozaCompletion(
     .values({ userId, diagnozaSlug })
     .onConflictDoNothing()
 }
+
+// Diagnoza formulations for the fill-out select (all published, light payload)
+export const getDiagnozaFormulations = cache(
+  async (): Promise<DiagnozaFormulation[]> => {
+    return db
+      .select({
+        slug: diagnozy.slug,
+        text: sql<string>`${diagnozy.data}->>'diagnozaPielegniarska'`,
+      })
+      .from(diagnozy)
+      .where(eq(diagnozy.status, "published"))
+      .orderBy(asc(diagnozy.section))
+  }
+)

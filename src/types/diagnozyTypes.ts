@@ -30,26 +30,15 @@ export type DiagnozyChapter = {
   diagnozy: DiagnozaListItem[]
 }
 
-export const WYPELNIJ_STEPS = [
-  'diagnoza',
-  'cele',
-  'interwencje',
-  'ocena',
-  'podsumowanie',
-] as const
-
-export type WypelnijStep = (typeof WYPELNIJ_STEPS)[number]
-
-export type WypelnijOption = {
+/** Option for the "Diagnoza pielęgniarska" select — one per published diagnosis. */
+export type DiagnozaFormulation = {
+  slug: string
   text: string
-  /** Revealed when the option is selected (uzasadnienie for interwencje). */
-  detail?: string
 }
 
-export type WypelnijStepConfig = {
-  key: Exclude<WypelnijStep, 'podsumowanie'>
-  title: string
-  prompt: string
-  multi: boolean
-  options: WypelnijOption[]
+/** Lists that populate the form once a diagnosis formulation is chosen. */
+export type DiagnozaFillData = {
+  celeOpieki: string[]
+  interwencje: DiagnozaInterwencja[]
+  oczekiwaneWyniki: string
 }
