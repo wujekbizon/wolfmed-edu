@@ -34,6 +34,7 @@ import {
   studyLogs,
   diagnozy,
   diagnozyProgress,
+  diagnozyExamAttempts,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -2368,5 +2369,44 @@ export const getDiagnozaFormulations = cache(
       .from(diagnozy)
       .where(eq(diagnozy.status, "published"))
       .orderBy(asc(diagnozy.section))
+  }
+)
+
+// Full published records for exam drawing/distractor pooling (server-side only)
+export const getDiagnozyForExam = cache(async (): Promise<Diagnoza[]> => {
+  const rows = await db
+    .select({ data: diagnozy.data })
+    .from(diagnozy)
+    .where(eq(diagnozy.status, "published"))
+  return rows.map((row) => row.data)
+})
+
+export async function insertDiagnozyExamAttempt(attempt: {
+  userId: string
+  diagnozaSlug: string
+  score: number
+  stepScores: unknown
+  timeSpent: number
+  passed: boolean
+}): Promise<void> {
+  await db.insert(diagnozyExamAttempts).values(attempt)
+}
+
+// Recent exam attempts, newest first (exam landing page)
+export const getUserDiagnozyExamAttempts = cache(
+  async (userId: string, limit = 10) => {
+    return db
+      .select({
+        id: diagnozyExamAttempts.id,
+        diagnozaSlug: diagnozyExamAttempts.diagnozaSlug,
+        score: diagnozyExamAttempts.score,
+        passed: diagnozyExamAttempts.passed,
+        timeSpent: diagnozyExamAttempts.timeSpent,
+        completedAt: diagnozyExamAttempts.completedAt,
+      })
+      .from(diagnozyExamAttempts)
+      .where(eq(diagnozyExamAttempts.userId, userId))
+      .orderBy(desc(diagnozyExamAttempts.completedAt))
+      .limit(limit)
   }
 )

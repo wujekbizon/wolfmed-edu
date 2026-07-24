@@ -43,6 +43,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'egzamin:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 5 },
 
   'diagnozy:complete': { interval: 60 * 60 * 1000, maxRequests: 60 },
+  'diagnozy:exam:submit': { interval: 60 * 60 * 1000, maxRequests: 30 },
 
   'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 },

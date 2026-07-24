@@ -880,6 +880,37 @@ export const diagnozyProgressRelations = relations(diagnozyProgress, ({ one }) =
   }),
 }))
 
+// Graded exam attempts (Egzamin mode) — separate from score-free fill-out flags.
+export const diagnozyExamAttempts = createTable(
+  "diagnozy_exam_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    diagnozaSlug: varchar("diagnozaSlug", { length: 256 }).notNull(),
+    score: integer("score").notNull(),
+    stepScores: jsonb("stepScores").notNull(),
+    timeSpent: integer("timeSpent").notNull(),
+    passed: boolean("passed").notNull().default(false),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("diagnozy_exam_attempts_user_idx").on(table.userId),
+    index("diagnozy_exam_attempts_user_slug_idx").on(
+      table.userId,
+      table.diagnozaSlug
+    ),
+  ]
+)
+
+export const diagnozyExamAttemptsRelations = relations(diagnozyExamAttempts, ({ one }) => ({
+  user: one(users, {
+    fields: [diagnozyExamAttempts.userId],
+    references: [users.userId],
+  }),
+}))
+
 // ── Memory layer (see src/server/memory/) ──────────────────────────────────
 // Re-exported so drizzle-kit (schema entry point) and the ORM client pick up
 // the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —

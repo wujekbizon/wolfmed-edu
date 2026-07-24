@@ -42,3 +42,41 @@ export type DiagnozaFillData = {
   interwencje: DiagnozaInterwencja[]
   oczekiwaneWyniki: string
 }
+
+// ── Egzamin mode ────────────────────────────────────────────────────────────
+
+export type DiagnozyExamField = 'diagnoza' | 'cele' | 'interwencje' | 'ocena'
+
+export type DiagnozyExamStep = {
+  field: DiagnozyExamField
+  label: string
+  prompt: string
+  multi: boolean
+  /** Correct items + sibling distractors, shuffled server-side, no flags. */
+  options: string[]
+}
+
+export type DiagnozyExamPayload = {
+  slug: string
+  caseText: string
+  steps: DiagnozyExamStep[]
+}
+
+export type DiagnozyExamAnswers = Record<DiagnozyExamField, string[]>
+
+export type DiagnozyExamStepResult = {
+  field: DiagnozyExamField
+  label: string
+  hits: string[]
+  missed: string[]
+  extra: string[]
+  scorePercent: number
+}
+
+export type DiagnozyExamResult = {
+  score: number
+  passed: boolean
+  steps: DiagnozyExamStepResult[]
+  /** Uzasadnienia of correct interventions — the teaching payload on reveal. */
+  uzasadnienia: Record<string, string>
+}

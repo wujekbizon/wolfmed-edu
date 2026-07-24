@@ -994,3 +994,24 @@ export const MarkDiagnozaCompletedSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy.")
     .trim(),
 });
+
+export const DIAGNOZY_EXAM_FIELDS = [
+  "diagnoza",
+  "cele",
+  "interwencje",
+  "ocena",
+] as const;
+
+export const SubmitDiagnozyExamSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy."),
+  answers: z.object({
+    diagnoza: z.array(z.string()).max(1),
+    cele: z.array(z.string()).max(30),
+    interwencje: z.array(z.string()).max(50),
+    ocena: z.array(z.string()).max(1),
+  }),
+  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas").max(24 * 60 * 60),
+});
