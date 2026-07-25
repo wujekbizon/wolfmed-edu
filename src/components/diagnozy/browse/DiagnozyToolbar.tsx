@@ -2,7 +2,7 @@
 
 import { Search, X } from 'lucide-react'
 import Input from '@/components/ui/Input'
-import FilterSelect from '@/components/ui/FilterSelect'
+import DropdownSelect from '@/components/ui/DropdownSelect'
 import { getDiagnozyChapterSelectOptions } from '@/helpers/getDiagnozyChapterSelectOptions'
 import { getDiagnozyStatusSelectOptions } from '@/helpers/getDiagnozyStatusSelectOptions'
 import { getDiagnozySortSelectOptions } from '@/helpers/getDiagnozySortSelectOptions'
@@ -47,25 +47,28 @@ export default function DiagnozyToolbar({
         )}
       </div>
 
-      <FilterSelect
+      <DropdownSelect
         value={criteria.chapter}
-        onChangeHandler={(chapter) => onChange({ chapter })}
+        onSelect={(chapter) => onChange({ chapter })}
         options={getDiagnozyChapterSelectOptions(chapters)}
         ariaLabel="Filtruj po rozdziale"
+        className="w-full sm:w-56"
       />
 
-      <FilterSelect
+      <DropdownSelect
         value={criteria.status}
-        onChangeHandler={(status) => onChange({ status: status as DiagnozyStatusFilter })}
+        onSelect={(status) => onChange({ status: status as DiagnozyStatusFilter })}
         options={getDiagnozyStatusSelectOptions()}
         ariaLabel="Filtruj po statusie"
+        className="w-full sm:w-44"
       />
 
-      <FilterSelect
+      <DropdownSelect
         value={criteria.sort}
-        onChangeHandler={(sort) => onChange({ sort: sort as DiagnozySortKey })}
+        onSelect={(sort) => onChange({ sort: sort as DiagnozySortKey })}
         options={getDiagnozySortSelectOptions()}
         ariaLabel="Sortuj"
+        className="w-full sm:w-52"
       />
     </div>
   )
