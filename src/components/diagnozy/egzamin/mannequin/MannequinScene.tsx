@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import MannequinModel from '@/components/diagnozy/egzamin/mannequin/MannequinModel'
@@ -15,7 +15,7 @@ import {
   VIEW_DISTANCE_STEP,
 } from '@/constants/mannequinViews'
 import type { BodyZone } from '@/types/diagnozyTypes'
-import type { CameraPosition, MannequinViewKey } from '@/types/mannequinTypes'
+import type { MannequinViewKey } from '@/types/mannequinTypes'
 
 // Loaded only via next/dynamic (ssr: false) — three.js never reaches the
 // server bundle or any route other than the exam.
@@ -28,16 +28,18 @@ export default function MannequinScene({
 }) {
   const [view, setView] = useState<MannequinViewKey>('front')
   const [distance, setDistance] = useState(DEFAULT_VIEW_DISTANCE)
-  const [target, setTarget] = useState<CameraPosition | null>(null)
 
-  const moveTo = (nextView: MannequinViewKey, nextDistance: number) => {
-    setView(nextView)
-    setDistance(nextDistance)
-    setTarget(getMannequinCameraPosition(nextView, nextDistance))
-  }
+  // Recomputed only when a control is used, so the rig sees a new goal object
+  // exactly once per request rather than on every render.
+  const goal = useMemo(
+    () => getMannequinCameraPosition(view, distance),
+    [view, distance]
+  )
 
-  const zoomBy = (delta: number) =>
-    moveTo(view, Math.min(MAX_VIEW_DISTANCE, Math.max(MIN_VIEW_DISTANCE, distance + delta)))
+  const clampDistance = (value: number) =>
+    Math.min(MAX_VIEW_DISTANCE, Math.max(MIN_VIEW_DISTANCE, value))
+
+  const zoomBy = (delta: number) => setDistance((prev) => clampDistance(prev + delta))
 
   return (
     <div
@@ -51,7 +53,7 @@ export default function MannequinScene({
         <Suspense fallback={null}>
           <MannequinModel selectedZone={selectedZone} onZoneClick={onZoneClick} />
         </Suspense>
-        <MannequinCameraRig target={target} onArrive={() => setTarget(null)} />
+        <MannequinCameraRig goal={goal} onDistanceChange={setDistance} />
         <OrbitControls
           makeDefault
           enablePan={false}
@@ -70,10 +72,13 @@ export default function MannequinScene({
         view={view}
         canZoomIn={distance > MIN_VIEW_DISTANCE}
         canZoomOut={distance < MAX_VIEW_DISTANCE}
-        onSetView={(next) => moveTo(next, distance)}
+        onSetView={setView}
         onZoomIn={() => zoomBy(-VIEW_DISTANCE_STEP)}
         onZoomOut={() => zoomBy(VIEW_DISTANCE_STEP)}
-        onReset={() => moveTo('front', DEFAULT_VIEW_DISTANCE)}
+        onReset={() => {
+          setView('front')
+          setDistance(DEFAULT_VIEW_DISTANCE)
+        }}
       />
     </div>
   )

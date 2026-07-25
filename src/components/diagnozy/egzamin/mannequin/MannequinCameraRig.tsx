@@ -1,32 +1,57 @@
 'use client'
 
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { CameraPosition } from '@/types/mannequinTypes'
 
-// Animates toward a requested preset, then clears it so OrbitControls keeps
-// full ownership of the camera — otherwise the rig would fight manual orbiting.
+const ARRIVAL_EPSILON = 0.02
+const REPORT_THRESHOLD = 0.05
+
+// Animation runs entirely on refs: setting React state per frame would
+// re-render the whole Canvas subtree and, with Fast Refresh remounting it,
+// exhaust the browser's WebGL contexts.
 export default function MannequinCameraRig({
-  target,
-  onArrive,
+  goal,
+  onDistanceChange,
 }: {
-  target: CameraPosition | null
-  onArrive: () => void
+  goal: CameraPosition
+  onDistanceChange: (distance: number) => void
 }) {
   const { camera, controls } = useThree()
-  const goal = useMemo(() => (target ? new THREE.Vector3(...target) : null), [target])
+  const goalVector = useMemo(() => new THREE.Vector3(...goal), [goal])
+  const animating = useRef(false)
+  const mounted = useRef(false)
+  const reported = useRef(0)
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true
+      return
+    }
+    animating.current = true
+  }, [goalVector])
 
   useFrame(() => {
-    if (!goal) return
+    const orbit = controls as unknown as { update?: () => void } | null
 
-    camera.position.lerp(goal, 0.18)
-    camera.lookAt(0, 0, 0)
-    ;(controls as unknown as { update?: () => void } | null)?.update?.()
+    if (!animating.current) {
+      const distance = camera.position.length()
+      if (Math.abs(distance - reported.current) > REPORT_THRESHOLD) {
+        reported.current = distance
+        onDistanceChange(distance)
+      }
+      return
+    }
 
-    if (camera.position.distanceTo(goal) < 0.03) {
-      camera.position.copy(goal)
-      onArrive()
+    camera.position.lerp(goalVector, 0.15)
+    orbit?.update?.()
+
+    if (camera.position.distanceTo(goalVector) < ARRIVAL_EPSILON) {
+      camera.position.copy(goalVector)
+      animating.current = false
+      reported.current = camera.position.length()
+      orbit?.update?.()
     }
   })
 
