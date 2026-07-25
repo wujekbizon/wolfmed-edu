@@ -44,7 +44,7 @@ async function DiagnozyContent() {
 
 export default function DiagnozyPage() {
   return (
-    <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-8">
+    <section className="w-full p-4 lg:p-8">
       <div className="max-w-6xl mx-auto">
         <Suspense fallback={<DiagnozyBrowserSkeleton />}>
           <DiagnozyContent />

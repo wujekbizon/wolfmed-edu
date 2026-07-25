@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default function NoAccessMessage() {
   return (
-    <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
+    <section className='w-full'>
       <div className='max-w-4xl mx-auto'>
         <div className='bg-white rounded-lg shadow p-8'>
           <h2 className='text-2xl font-bold text-red-600 mb-4'>Brak dostępu</h2>
