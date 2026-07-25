@@ -48,6 +48,11 @@ export type DiagnozyChapter = {
   diagnozy: DiagnozaListItem[]
 }
 
+export type DiagnozyChapterOption = {
+  number: string
+  title: string
+}
+
 /** Option for the "Diagnoza pielęgniarska" select — one per published diagnosis. */
 export type DiagnozaFormulation = {
   slug: string

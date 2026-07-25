@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react'
 import { DIAGNOZY_SORT_KEYS } from '@/types/diagnozyTypes'
 import type {
   DiagnozyBrowseCriteria,
+  DiagnozyChapterOption,
   DiagnozySortKey,
   DiagnozyStatusFilter,
 } from '@/types/diagnozyTypes'
@@ -32,7 +33,7 @@ export default function DiagnozyToolbar({
   onChange,
 }: {
   criteria: DiagnozyBrowseCriteria
-  chapters: { number: string; title: string }[]
+  chapters: DiagnozyChapterOption[]
   onChange: (patch: Partial<DiagnozyBrowseCriteria>) => void
 }) {
   return (
