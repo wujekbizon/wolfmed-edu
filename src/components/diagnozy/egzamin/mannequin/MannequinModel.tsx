@@ -36,6 +36,9 @@ const ZONE_PARTS: Partial<Record<BodyZone, ZoneParts>> = {
     { geometry: 'capsule', position: [-0.17, -0.72, 0], args: [0.14, 0.85, 8, 16] },
     { geometry: 'capsule', position: [0.17, -0.72, 0], args: [0.14, 0.85, 8, 16] },
   ],
+  // Sits behind the torso so the chest/abdomen colliders still win from the
+  // front; it only becomes the nearest hit once the camera swings around.
+  plecy: [{ geometry: 'box', position: [0, 0.3, -0.16], args: [0.5, 1.05, 0.14] }],
 }
 
 export default function MannequinModel({

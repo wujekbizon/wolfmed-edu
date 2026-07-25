@@ -157,7 +157,7 @@ export const BODY_ZONE_LABELS: Record<BodyZone, string> = {
 }
 
 /** Regions selectable only via the button rail (no distinct point on the body). */
-export const BUTTON_ONLY_ZONES: BodyZone[] = ['plecy', 'skora', 'cale-cialo']
+export const BUTTON_ONLY_ZONES: BodyZone[] = ['skora', 'cale-cialo']
 
 /** intervention text → body zone the student assigned on the mannequin */
 export type BodyZoneAssignments = Record<string, BodyZone>
