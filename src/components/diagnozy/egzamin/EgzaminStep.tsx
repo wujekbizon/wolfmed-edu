@@ -27,7 +27,7 @@ export default function EgzaminStep({
           return (
             <label
               key={option}
-              className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all
+              className={`relative flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition-all
                 ${
                   isChosen
                     ? 'border-rose-300 bg-rose-50/70 shadow-sm'
