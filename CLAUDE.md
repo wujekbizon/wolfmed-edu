@@ -101,6 +101,14 @@ As specified in **Forms & Validation** below — server-only Zod, `useActionStat
 
 At ~90–100 lines a file gets split into new files. Never shrink a file by collapsing whitespace, merging responsibilities, or golfing the code.
 
+### 8. Use the shared UI components
+
+Never hand-roll a raw `<input>`, `<select>`, `<textarea>`, or `<label>` with ad-hoc Tailwind classes. Use the components in `/src/components/ui` (`Input`, `Label`, `Select`, `Textarea`, …). Check that directory before writing any form control or primitive.
+
+If no existing component fits, **add one to `/src/components/ui`** rather than styling an element inline — a local `const selectClass = '…'` string inside a component is the signal that a shared component is missing. Keep them generic: props for value/options/handlers, no hardcoded `name`/`id`, no binding to a specific store or domain type. A component that only serves one caller belongs next to that caller, not in `/ui`.
+
+The same applies to visual primitives beyond form controls (buttons, cards, badges) — one styled implementation, reused, not copied class strings.
+
 ---
 
 ## 🎯 Component Architecture Patterns
