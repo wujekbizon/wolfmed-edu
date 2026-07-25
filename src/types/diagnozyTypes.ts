@@ -53,6 +53,21 @@ export type DiagnozyChapterOption = {
   title: string
 }
 
+export type DiagnozyExamAttempt = {
+  id: string
+  diagnozaSlug: string
+  score: number
+  passed: boolean
+  timeSpent: number
+  completedAt: Date
+}
+
+export type DiagnozaTitleRow = {
+  slug: string
+  section: string
+  title: string
+}
+
 /** Option for the "Diagnoza pielęgniarska" select — one per published diagnosis. */
 export type DiagnozaFormulation = {
   slug: string

@@ -1,19 +1,11 @@
 import { formatExamClock } from '@/helpers/formatExamClock'
-
-type Attempt = {
-  id: string
-  diagnozaSlug: string
-  score: number
-  passed: boolean
-  timeSpent: number
-  completedAt: Date
-}
+import type { DiagnozyExamAttempt } from '@/types/diagnozyTypes'
 
 export default function EgzaminAttemptsList({
   attempts,
   titlesBySlug,
 }: {
-  attempts: Attempt[]
+  attempts: DiagnozyExamAttempt[]
   titlesBySlug: Record<string, string>
 }) {
   if (attempts.length === 0) return null

@@ -1,13 +1,16 @@
-import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
-import { getAllDiagnozy, getUserDiagnozyExamAttempts } from '@/server/queries'
+import { getDiagnozyTitlesBySlugs, getUserDiagnozyExamAttempts } from '@/server/queries'
+import { getDiagnozyTitlesBySlug } from '@/helpers/getDiagnozyTitlesBySlug'
 import EgzaminRunner from '@/components/diagnozy/egzamin/EgzaminRunner'
+import EgzaminHeader from '@/components/diagnozy/egzamin/EgzaminHeader'
 import EgzaminAttemptsList from '@/components/diagnozy/egzamin/EgzaminAttemptsList'
+import EgzaminAttemptsListSkeleton from '@/components/skeletons/EgzaminAttemptsListSkeleton'
+import EgzaminContentSkeleton from '@/components/skeletons/EgzaminContentSkeleton'
 import NoAccessMessage from '@/components/NoAccessMessage'
-
-export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Egzamin — Diagnozy i Interwencje',
@@ -15,39 +18,45 @@ export const metadata: Metadata = {
     'Egzamin próbny z procesu pielęgnowania: wylosowany przypadek, wypełnienie przewodnika, ocena odpowiedzi',
 }
 
-export default async function DiagnozyEgzaminPage() {
+export const dynamic = 'force-dynamic'
+
+async function EgzaminAttempts({ userId }: { userId: string }) {
+  const attempts = await getUserDiagnozyExamAttempts(userId)
+  const titleRows = await getDiagnozyTitlesBySlugs(attempts.map((a) => a.diagnozaSlug))
+
+  return (
+    <EgzaminAttemptsList
+      attempts={attempts}
+      titlesBySlug={getDiagnozyTitlesBySlug(titleRows)}
+    />
+  )
+}
+
+async function EgzaminContent() {
   const user = await getCurrentUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
   if (!hasAccess) return <NoAccessMessage />
 
-  const [attempts, diagnozy] = await Promise.all([
-    getUserDiagnozyExamAttempts(user.userId),
-    getAllDiagnozy(),
-  ])
-  const titlesBySlug = Object.fromEntries(
-    diagnozy.map((diagnoza) => [diagnoza.slug, `${diagnoza.section} ${diagnoza.title}`])
+  return (
+    <>
+      <EgzaminHeader />
+      <EgzaminRunner />
+      <Suspense fallback={<EgzaminAttemptsListSkeleton />}>
+        <EgzaminAttempts userId={user.userId} />
+      </Suspense>
+    </>
   )
+}
 
+export default function DiagnozyEgzaminPage() {
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-8">
       <div className="max-w-3xl mx-auto">
-        <header className="mb-6">
-          <h1 className="text-2xl font-bold text-zinc-800 mb-2">
-            Egzamin — Diagnozy i Interwencje
-          </h1>
-          <p className="text-sm text-zinc-500">
-            System losuje przypadek kliniczny. Przeczytaj opis, a następnie wypełnij
-            przewodnik procesu pielęgnowania — tym razem wśród odpowiedzi są też
-            pozycje z innych diagnoz, a odpowiedzi zostaną ocenione po zakończeniu.
-            Masz 30 minut — po upływie czasu egzamin zostanie oceniony automatycznie.
-          </p>
-        </header>
-
-        <EgzaminRunner />
-
-        <EgzaminAttemptsList attempts={attempts} titlesBySlug={titlesBySlug} />
+        <Suspense fallback={<EgzaminContentSkeleton />}>
+          <EgzaminContent />
+        </Suspense>
       </div>
     </section>
   )
