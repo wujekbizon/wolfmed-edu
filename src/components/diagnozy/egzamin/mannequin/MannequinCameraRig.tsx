@@ -3,14 +3,20 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { getShortestAngleDelta } from '@/helpers/getShortestAngleDelta'
 import type { CameraPosition } from '@/types/mannequinTypes'
 
-const ARRIVAL_EPSILON = 0.02
+const EASING = 0.15
+const ANGLE_EPSILON = 0.01
+const RADIUS_EPSILON = 0.02
 const REPORT_THRESHOLD = 0.05
 
-// Animation runs entirely on refs: setting React state per frame would
-// re-render the whole Canvas subtree and, with Fast Refresh remounting it,
-// exhaust the browser's WebGL contexts.
+// Orbits on the sphere rather than lerping the position: a straight line from
+// front to back passes through the orbit target, where the radius collapses to
+// zero and OrbitControls clamps the camera back out along an arbitrary angle.
+//
+// Animation runs on refs alone — setting React state per frame would re-render
+// the whole Canvas subtree and exhaust the browser's WebGL contexts.
 export default function MannequinCameraRig({
   goal,
   onDistanceChange,
@@ -19,7 +25,11 @@ export default function MannequinCameraRig({
   onDistanceChange: (distance: number) => void
 }) {
   const { camera, controls } = useThree()
-  const goalVector = useMemo(() => new THREE.Vector3(...goal), [goal])
+  const goalSpherical = useMemo(
+    () => new THREE.Spherical().setFromVector3(new THREE.Vector3(...goal)),
+    [goal]
+  )
+  const current = useRef(new THREE.Spherical())
   const animating = useRef(false)
   const mounted = useRef(false)
   const reported = useRef(0)
@@ -30,7 +40,7 @@ export default function MannequinCameraRig({
       return
     }
     animating.current = true
-  }, [goalVector])
+  }, [goalSpherical])
 
   useFrame(() => {
     const orbit = controls as unknown as { update?: () => void } | null
@@ -44,15 +54,30 @@ export default function MannequinCameraRig({
       return
     }
 
-    camera.position.lerp(goalVector, 0.15)
-    orbit?.update?.()
+    const spherical = current.current.setFromVector3(camera.position)
+    const deltaTheta = getShortestAngleDelta(spherical.theta, goalSpherical.theta)
+    const deltaPhi = goalSpherical.phi - spherical.phi
+    const deltaRadius = goalSpherical.radius - spherical.radius
 
-    if (camera.position.distanceTo(goalVector) < ARRIVAL_EPSILON) {
-      camera.position.copy(goalVector)
+    const arrived =
+      Math.abs(deltaTheta) < ANGLE_EPSILON &&
+      Math.abs(deltaPhi) < ANGLE_EPSILON &&
+      Math.abs(deltaRadius) < RADIUS_EPSILON
+
+    if (arrived) {
+      camera.position.setFromSpherical(goalSpherical)
       animating.current = false
       reported.current = camera.position.length()
-      orbit?.update?.()
+    } else {
+      spherical.theta += deltaTheta * EASING
+      spherical.phi += deltaPhi * EASING
+      spherical.radius += deltaRadius * EASING
+      spherical.makeSafe()
+      camera.position.setFromSpherical(spherical)
     }
+
+    camera.lookAt(0, 0, 0)
+    orbit?.update?.()
   })
 
   return null
