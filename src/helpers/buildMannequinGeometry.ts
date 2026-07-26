@@ -32,6 +32,13 @@ export function buildMannequinGeometry(scene: THREE.Object3D): THREE.BufferGeome
   geometry.scale(scale, scale, scale)
 
   const count = geometry.getAttribute('position').count
+
+  // Selection strength per vertex, added as emissive light by the material.
+  // Brightening through vertex colours instead would multiply the skin texture
+  // and, above 1, expose the model's palette atlas as coloured blocks.
+  geometry.setAttribute('aHighlight', new THREE.BufferAttribute(new Float32Array(count), 1))
+
+  // Only used by the debug view, which recolours the body by zone.
   geometry.setAttribute(
     'color',
     new THREE.BufferAttribute(new Float32Array(count * 3).fill(1), 3)

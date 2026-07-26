@@ -5,6 +5,8 @@ import { useGLTF } from '@react-three/drei'
 import { useLoader } from '@react-three/fiber'
 import * as THREE from 'three'
 import { buildMannequinGeometry } from '@/helpers/buildMannequinGeometry'
+import { createMannequinMaterial } from '@/helpers/createMannequinMaterial'
+import { setMannequinHighlight } from '@/helpers/setMannequinHighlight'
 import { paintMannequinZones } from '@/helpers/paintMannequinZones'
 import type { BodyZone } from '@/types/diagnozyTypes'
 import type { MannequinZoneMap } from '@/types/mannequinTypes'
@@ -42,16 +44,22 @@ export default function MannequinBody({
       const mesh = child as THREE.Mesh
       if (mesh.isMesh && !source) source = mesh.material as THREE.Material
     })
-    const cloned = (source as unknown as THREE.MeshStandardMaterial).clone()
-    cloned.vertexColors = true
-    return cloned
+    return createMannequinMaterial(source as unknown as THREE.MeshStandardMaterial)
   }, [scene])
 
   const selectedIndex = selectedZone ? zones.indexOf(selectedZone) : -1
 
   useEffect(() => {
-    paintMannequinZones(geometry, vertexZones, selectedIndex, hovered, debug, zones)
-  }, [geometry, vertexZones, selectedIndex, hovered, debug, zones])
+    setMannequinHighlight(geometry, vertexZones, selectedIndex, hovered)
+  }, [geometry, vertexZones, selectedIndex, hovered])
+
+  // The debug view recolours the whole body by zone, which needs the
+  // multiplicative vertex-colour path rather than the emissive highlight.
+  useEffect(() => {
+    paintMannequinZones(geometry, vertexZones, debug, zones)
+    material.vertexColors = debug
+    material.needsUpdate = true
+  }, [geometry, vertexZones, debug, zones, material])
 
   useEffect(() => {
     document.body.style.cursor = hovered >= 0 ? 'pointer' : 'auto'

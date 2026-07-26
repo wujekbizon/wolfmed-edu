@@ -9,27 +9,27 @@ import { ContactShadows, Environment, Lightformer } from '@react-three/drei'
 export default function MannequinStageLighting() {
   return (
     <>
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[3, 4, 5]} intensity={1.5} castShadow />
-      <directionalLight position={[-4, 2, -3]} intensity={0.5} color="#dbeafe" />
+      <ambientLight intensity={0.25} />
+      <directionalLight position={[3, 4, 5]} intensity={0.75} castShadow />
+      <directionalLight position={[-4, 2, -3]} intensity={0.25} color="#dbeafe" />
 
       <Environment resolution={256}>
         <Lightformer
-          intensity={2.2}
+          intensity={1.1}
           position={[2, 3, 4]}
           scale={[6, 6, 1]}
           form="rect"
           color="#ffffff"
         />
         <Lightformer
-          intensity={1.4}
+          intensity={0.7}
           position={[-4, 1, -3]}
           scale={[5, 5, 1]}
           form="rect"
           color="#bfdbfe"
         />
         <Lightformer
-          intensity={0.8}
+          intensity={0.4}
           position={[0, -3, 2]}
           scale={[8, 4, 1]}
           form="rect"
@@ -39,7 +39,7 @@ export default function MannequinStageLighting() {
 
       <ContactShadows
         position={[0, -1.22, 0]}
-        opacity={0.35}
+        opacity={0.25}
         scale={5}
         blur={2.6}
         far={2}
