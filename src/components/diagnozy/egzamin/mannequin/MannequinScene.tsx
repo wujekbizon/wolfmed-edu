@@ -3,7 +3,7 @@
 import { Suspense, useMemo, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import MannequinModel from '@/components/diagnozy/egzamin/mannequin/MannequinModel'
+import MannequinBody from '@/components/diagnozy/egzamin/mannequin/MannequinBody'
 import MannequinCameraRig from '@/components/diagnozy/egzamin/mannequin/MannequinCameraRig'
 import MannequinViewControls from '@/components/diagnozy/egzamin/mannequin/MannequinViewControls'
 import { getMannequinCameraPosition } from '@/helpers/getMannequinCameraPosition'
@@ -52,7 +52,7 @@ export default function MannequinScene({
         <directionalLight position={[3, 4, 5]} intensity={1.1} />
         <directionalLight position={[-3, 2, -4]} intensity={0.4} />
         <Suspense fallback={null}>
-          <MannequinModel
+          <MannequinBody
             selectedZone={selectedZone}
             debug={debug}
             onZoneClick={onZoneClick}

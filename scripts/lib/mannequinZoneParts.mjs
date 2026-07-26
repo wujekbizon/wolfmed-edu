@@ -1,18 +1,15 @@
-import type { BodyZone } from '@/types/diagnozyTypes'
-import type { ZonePart } from '@/types/mannequinTypes'
-
 /**
- * Invisible click-hotspots overlaying the GLB body, in the normalized space
+ * Click-hotspot volumes overlaying the GLB body, in the normalized space
  * MannequinGLTF produces: height 2.4 centered at the origin, so feet sit at
  * y -1.2 and the crown at y +1.2.
  *
- * Fitted to the mesh rather than estimated — run `node scripts/measure-mannequin.mjs`
- * to re-derive the per-band extents if the model is ever replaced.
+ * These are a BUILD-TIME input only. bake-mannequin-zones.mjs uses them to
+ * assign each vertex of the model to a zone; nothing renders them at runtime.
  *
- * Face and ear hotspots deliberately protrude past the head sphere; a collider
- * fully inside another is never the nearest raycast hit and cannot be clicked.
+ * Fitted to the mesh rather than estimated — run `node scripts/measure-mannequin.mjs`
+ * to re-derive the per-band extents if the model is ever replaced, then re-bake.
  */
-export const ZONE_PARTS: Partial<Record<BodyZone, ZonePart[]>> = {
+export const ZONE_PARTS = {
   glowa: [{ geometry: 'sphere', position: [0, 1.05, 0], args: [0.15, 20, 20] }],
   oczy: [
     { geometry: 'sphere', position: [-0.055, 1.09, 0.13], args: [0.05, 12, 12] },

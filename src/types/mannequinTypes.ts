@@ -13,3 +13,8 @@ export type ZonePart = {
   args: number[]
   rotation?: [number, number, number]
 }
+
+export type MannequinZoneMap = {
+  zones: string[]
+  vertexZones: number[]
+}
