@@ -179,14 +179,14 @@
           "interwencja": "Pobieranie krwi tętniczej do badania gazometrycznego.",
           "uzasadnienie": "Badanie gazometryczne krwi tętniczej pozwala ocenić utlenowanie krwi oraz wspiera podjęcie decyzji o prowadzeniu tlenoterapii bądź potrzeby intubacji chorej [Mejza, Siga, 2018].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
           "interwencja": "Pobieranie krwi żylnej do badań biochemicznych (np. białko C-reaktywne, IgG, IgA, IgM, IgE), wykonanie punktowych testów skórnych.",
           "uzasadnienie": "W przypadku pacjentów z utrzymującymi się objawami i/lub zaostrzeniami pomimo dużych dawek GKS należy ocenić fenotyp astmy wpływający na wybór leczenia dodatkowego. Badania laboratoryjne i testy skórne służą rozpoznaniu różnicowemu oraz mogą ujawnić uczulający alergen u chorych na astmę alergiczną [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -198,10 +198,7 @@
         },
         {
           "interwencja": "Udział w diagnostyce dodatkowej: pobieranie plwociny indukowanej, bronchoskopia.",
-          "uzasadnienie": "Ocena dominującego typu komórek zapalnych w plwocinie indukowanej pozwala na określenie rodzaju zapalenia w drogach oddechowych i ustalenie diagnozy astmy. Bronchoskopia pozwala na empiryczną ocenę zmian, pobranie wycinka do badania histopatologicznego, oczyszczenie dolnych dróg oddechowych z patologicznej treści. Nie jest wskazana w przypadku PaO2 < 50 mm Hg [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Ocena dominującego typu komórek zapalnych w plwocinie indukowanej pozwala na określenie rodzaju zapalenia w drogach oddechowych i ustalenie diagnozy astmy. Bronchoskopia pozwala na empiryczną ocenę zmian, pobranie wycinka do badania histopatologicznego, oczyszczenie dolnych dróg oddechowych z patologicznej treści. Nie jest wskazana w przypadku PaO2 < 50 mm Hg [Global Initiative for Asthma, 2020; Niżankowska-Mogilnicka i wsp., 2020]."
         },
         {
           "interwencja": "Ocena stanu świadomości, nasilenia duszności i napięcia psychomotorycznego.",
@@ -240,7 +237,7 @@
           "interwencja": "W przypadku nieskuteczności powyższego leczenia asystowanie podczas intubacji dotchawiczej: przygotowanie zestawu do intubacji (laryngoskop z łyżką zakrzywioną lub prostą oraz czynnym źródłem światła, żel z lignokainą, rurki intubacyjne różnych rozmiarów, strzykawka do wypełnienia balonu uszczelniającego rurkę, cewnik do odsysania wraz z czynnym źródłem ssania, taśmy do ufiksowania rurki); przygotowanie pacjentki do zabiegu (monitorowanie EKG, akcji serca, tętna, CTK, etCO2, saturacji, napływu kapilarnego; na zlecenie lekarza przygotowanie i podanie leków anestetycznych, opioidowych, zwiotczających; ułożenie płaskie z uniesieniem głowy powyżej poziomu tułowia ok. 10 cm i odgięciem do tyłu – tzw. pozycja wąchania); po zabiegu ocena lokalizacji rurki intubacyjnej.",
           "uzasadnienie": "Narastająca niewydolność oddechowa (obniżenie PaO2, wzrost PaCO2) jest pilnym wskazaniem do intubacji pacjentki. Ścisłe monitorowanie parametrów życiowych pacjentki jest kluczowe dla podjęcia decyzji we właściwym czasie. Zestaw do intubacji powinien być stale dostępny w sali i sprawdzany przed rozpoczęciem dyżuru [Wojtan, 2018].",
           "exam": {
-            "bodyZone": "usta-drogi-oddechowe"
+            "bodyZone": "cale-cialo"
           }
         }
       ],
@@ -483,7 +480,7 @@
           "interwencja": "Kontrola położenia rurki intubacyjnej poprzez obserwację położenia rurki w kąciku ust, obserwację ruchów klatki piersiowej, osłuchiwanie klatki piersiowej oraz monitorowanie SpO2, etCO2.",
           "uzasadnienie": "Kontrola położenia rurki intubacyjnej zapobiega wysunięciu rurki lub przemieszczeniu głębiej do drzewa oskrzelowego (najczęściej do prawego oskrzela) [Pilch i wsp., 2015a].",
           "exam": {
-            "bodyZone": "klatka-piersiowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
@@ -501,7 +498,7 @@
           "interwencja": "Pobieranie krwi do badań laboratoryjnych (np. morfologii krwi, CRP) i gazometrycznych.",
           "uzasadnienie": "Pobieranie krwi do badań pozwala na ocenę utlenowania organizmu oraz identyfikację rozwijającego się procesu zapalnego [Torres i wsp., 2017].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -644,7 +641,7 @@
           "interwencja": "Pomiar parametrów życiowych (tętno, temperatura, saturacja, ciśnienie tętnicze krwi), ocena cyklu i toru oddychania, osłuchanie oraz opukanie chorego.",
           "uzasadnienie": "Badanie fizykalne pozwala na wstępną ocenę stanu klinicznego. Według autorów Rekomendacji postępowania w pozaszpitalnych zakażeniach układu oddechowego stwierdzenie tachykardii powyżej 100/min oraz tachypnöe powyżej 24/min, temperatury ciała powyżej 38°C oraz ogniskowych zmian nad polami płucnymi jest wskazaniem do dalszej diagnostyki obrazowej. W przeciwnym wypadku badanie fizykalne jest wystarczające do zdiagnozowania ostrego zapalenia oskrzeli (nie dotyczy osób po 75. roku życia) [Hryniewicz i wsp., 2016].",
           "exam": {
-            "bodyZone": "klatka-piersiowa"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -667,10 +664,7 @@
         },
         {
           "interwencja": "Zebranie wywiadu w kierunku wcześniejszych reakcji uczuleniowych na antybiotyki.",
-          "uzasadnienie": "Leczeniem w przypadku pozaszpitalnego zapalenia płuc jest zastosowanie amoksycyliny lub ampicyliny – a w przypadku młodych dorosłych możliwe jest stosowanie makrolidów [Hryniewicz i wsp., 2016].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Leczeniem w przypadku pozaszpitalnego zapalenia płuc jest zastosowanie amoksycyliny lub ampicyliny – a w przypadku młodych dorosłych możliwe jest stosowanie makrolidów [Hryniewicz i wsp., 2016]."
         },
         {
           "interwencja": "W razie konieczności podanie tlenu na zlecenie lekarza.",
@@ -813,7 +807,7 @@
           "interwencja": "Ocena lokalizacji rurki intubacyjnej w celu wykrycia cech ewentualnej destabilizacji, przemieszczenia i niedrożności końcówki rurki poprzez: kontrolę położenia w kąciku ust, obserwację symetrii ruchów klatki piersiowej, osłuchiwanie szmerów oddechowych w szczytach i podstawach płuc, analizę pomiaru kapnometrii i krzywej kapnograficznej.",
           "uzasadnienie": "Ocena lokalizacji rurki intubacyjnej umożliwia ocenę skuteczności wentylacji oraz wykrycie przyczyny zaburzeń, np. przemieszczenie końcówki rurki do prawego oskrzela [Pilch i wsp., 2015].",
           "exam": {
-            "bodyZone": "klatka-piersiowa"
+            "bodyZone": "usta-drogi-oddechowe"
           }
         },
         {
@@ -849,7 +843,7 @@
           "interwencja": "Pobieranie krwi do badania gazometrycznego z dostępu dotętniczego zgodnie ze zleceniem lekarskim, wykonanie pomiaru, analiza oraz udokumentowanie wyniku.",
           "uzasadnienie": "Monitorowanie utlenowania w ARDS jest kluczowym elementem wskazującym na skuteczność postępowania. Najbardziej czułym wskaźnikiem oksygenacji jest gazometria krwi tętniczej. Utlenowanie krwi tętniczej oceniane na podstawie ilorazu PaO2 i zawartości tlenu w mieszaninie wdechowej (FiO2) przedstawionej w postaci ułamka dziesiętnego (PaO2/FiO2) pozwala na wyróżnienie ARDS łagodnego, umiarkowanego i ciężkiego [Mejza, Siga, 2018].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -978,7 +972,7 @@
           "interwencja": "Edukacja pacjenta: • działania wpływające na poprawę przepływu tkankowego w kończynach: – utrzymywanie kończyn poniżej poziomu serca, unikanie krzyżowania kończyn dolnych, – dostosowanie wysiłku fizycznego do tolerancji na niedokrwienie (niedopuszczanie do wystąpienia bólu niedokrwiennego) spacery, ćwiczenia czynne kończyn z uniesieniem ku górze (w przypadku zblednięcia, cierpnięcia lub bólu - opuszczenie kończyny w dół w pozycji siedzącej lub stojącej, czekanie do momentu wystąpienia pełnego ukrwienia stóp, kilkakrotne powtarzanie ćwiczenia w ciągu dnia); regularne, codzienne 30-60-minutowe marsze przy dobrej tolerancji tego rodzaju wysiłku, jazda na rowerze, – unikanie zimna - ciepłe skarpety bawełniane lub wełniane, ochrona przed wilgocią, ciepłe napoje w sytuacji narażenia na działanie niskich temperatur, ubiór dostosowany do pory roku i temperatury otoczenia, – unikanie intensywnego ogrzewania kończyn (np. termoforem, kocem elektrycznym), – unikanie ucisku na stopę (nieuciskające obuwie, skarpety); • pielęgnacja skóry - używanie łagodnych środków do pielęgnacji skóry o pH 5,5, staranne osuszanie, systematyczne nawilżanie i natłuszczanie (np. lanoliną), profilaktyka i leczenie zakażeń grzybiczych; • ochrona przed urazami - wygodne obuwie, delikatny pedikiur, bez rozmiękczania naskórka; • motywowanie chorego do zaprzestania palenia tytoniu, indywidualny dobór sposobów ułatwiających porzucenie nałogu palenia, poinformowanie o konieczności unikania palenia biernego; • modyfikacja współistniejących czynników ryzyka - redukcja nadwagi (dieta ubogo- energetyczna, indywidualny dobór aktywności fizycznej), kontrola cukrzycy, nadciśnienia tętniczego (systematyczne przyjmowanie przepisanych leków, dieta przeciwcukrzycowa, z ograniczeniem soli, nauka samoobserwacji - samodzielne pomiary ciśnienia tętniczego, glikemii); • współpraca z lekarzem w zakresie farmakoterapii, wyjaśnienie działania leków i nauka samoobserwacji.",
           "uzasadnienie": "Kompleksowa edukacja chorego połączona z technikami behawioralnymi jest podstawowym warunkiem zmiany zachowań na prozdrowotne, modyfikacji czynników ryzyka i przygotowania chorego do samoopieki, a przez to zmniejszenia progresji choroby [Barnason i wsp., 2017; Ghisi i wsp., 2014; Janssen i wsp., 2013]. Ułożenie kończyn poniżej poziomu serca poprawia ukrwienie dzięki zwiększeniu ciśnienia hydrostatycznego. Regularny trening marszowy stymuluje rozwój krążenia obocznego, poprawia czynność śródbłonka naczyniowego i usprawnia metabolizm mięśni. Pozwala to na wydłużenie dystansu bez chromania przestankowego. Korzyści z aktywności fizycznej przestają być zauważalne po 6 miesiącach, dlatego konieczna jest systematyczność w ich wykonywaniu [Frołow i wsp., 2020; Krasiński i wsp., 2019]. Niskie temperatury powodują skurcz naczyń i pogłębiają niedokrwienie. Nadmierne ogrzewanie zwiększa zapotrzebowanie tkanek na tlen, którego dostarczanie przez zamknięte lub zwężone naczynia jest upośledzone. Może to doprowadzić do nieodwracalnych zmian w tkankach, zwłaszcza że są one zaopatrywane przez uszkodzone, niedokrwione nerwy, co powoduje osłabienie czucia. Łatwo wówczas dochodzi do oparzeń i martwicy [Ackley i wsp., 2017]. Palenie tytoniu jest dobrze udokumentowanym czynnikiem ryzyka miażdżycy. Modyfikacja stylu życia (zaprzestanie palenia, redukcja nadwagi) oraz leczenie chorób współistniejących, będących czynnikami ryzyka miażdżycy (cukrzyca, nadciśnienie tętnicze, hiperlipidemia/dyslipidemia) od lat są zalecane przez towarzystwa naukowe [Jankowski, 2017; Wytyczne ENSP, 2018; Krasiński i wsp., 2019]. U chorych z miażdżycą tętnic kończyn dolnych należy rozważyć indywidualnie stosowanie leków (np. naczynioaktywnych, zmniejszają- cych czynność krwinek płytkowych, przeciwbólowych, NLPZ) [Frołow i wsp., 2020; Krasiński i wsp., 2019].",
           "exam": {
-            "bodyZone": "konczyny-dolne"
+            "bodyZone": "konczyny-gorne"
           }
         }
       ],
@@ -1108,7 +1102,7 @@
           "interwencja": "Monitorowanie/badanie: • układu krążenia: ciśnienie tętnicze krwi, tętno, • układu oddechowego: częstotliwość oddechów, saturacja, • temperatury ciała, • stanu świadomości - orientacja autoi allopsychiczna, spełnianie poleceń, • stanu przytomności - skala Glasgow (w razie pogarszania się kontaktu z pacjentem), • symetrii źrenic Dokumentowanie wyników pomiarów w karcie obserwacyjnej co 4 godziny.",
           "uzasadnienie": "Udarowi mózgu mogą towarzyszyć zaburzenia ze strony układu krążenia (znaczny wzrost ciśnienia tętniczego krwi, tachykardia, zaburzenia rytmu), które mogą stanowić zagrożenie życia dla pacjenta. Niebezpieczeństwo stanowi również spadek ciśnienia tętniczego, co powoduje zwiększenie strefy niedokrwienia w mózgu. Istotne znaczenie ma wykrywanie zaburzeń oddechowych i utrzymywanie saturacji na poziomie nie niższym niż 95%. Pogorszenie rokowania powoduje również wzrost temperatury ciała w ciągu pierwszych 48 godz. od zachorowania; należy ją obniżać, gdy przekroczy wartość 37,5oC [Członkowska, Niewada, 2019].",
           "exam": {
-            "bodyZone": "oczy"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -1250,28 +1244,28 @@
           "interwencja": "Ocena występowania objawów klinicznych ZŻG: • współudział w monitorowaniu występowania objawów obiektywnych poprzez: – pomiar ciśnienia tętniczego krwi i tętna, temperatury ciała, – obserwację wyglądu skóry kończyny dolnej (zwiększone ucieplenie, obrzęk, nieprawidłowe zabarwienie: sinica, martwica), – pomiar obwodu kończyny chorej i zdrowej na tym samym poziomie, – badanie palpacyjne w celu oceny nadmiernie wypełnionych żył powierzchownych i ewentualnego wyczucia skrzepliny [Kózka, 2020; Szewczyk, Jawień, 2010; Windyga i wsp., 2014], • współudział w badaniach oraz wyjaśnienie pacjentowi postępowania diagnostycznego: – dokonanie oceny prawdopodobieństwa wystąpienia ZŻG na podstawie skali Wellsa oraz ustalenie wskazań do rozszerzonej diagnostyki, – przeprowadzenie kolejnych badań zgodnie ze zleceniem lekarza (np. USG naczyń żylnych oraz pobranie krwi do badań, np. D-dimery, grupa krwi, morfologia, APTT, INR, ewentualnie flebografia, venografia TK lub RM) [Kózka, 2020; Konstantnides i wsp., 2014; Tomkowski i wsp., 2017; Szewczyk, Jawień, 2010; Windyga i wsp., 2014].",
           "uzasadnienie": "Monitorowanie występujących objawów obiektywnych, takich jak: nasilające się dolegliwości bólowe, zwiększenie obrzęku i ucieplenia na kończynie, zabarwienie skóry (sinica), nadmiernie wypełnione żyły powierzchowne, gorączka – pozwala na zwiększenie prawdopodobieństwa wczesnego wykrycia objawów ZŻG [Kózka, 2020; Szewczyk, Jawień, 2010]. Wyjaśnienie pacjentowi jego sytuacji zdrowotnej – zmniejsza niepokój oraz ułatwia współpracę z personelem medycznym. Dobór badań diagnostycznych wynika z przeprowadzonego z pacjentem wywiadu, objawów występujących oraz dotychczasowego leczenia i schorzeń współistniejących. Opiera się w pierwszej kolejności na ocenie prawdopodobieństwa klinicznego wystąpienia epizodu ZŻG na podstawie wyniku skali Wellsa i kolejnej kwalifikacji do dalszego postępowania diagnostycznego (np. USG naczyń żylnych, badań krwi na poziom D-dimerów, czynników układu krzepnięcia) [Di Nisio i wsp., 2016; Tomkowski i wsp., 2017].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "cale-cialo"
           }
         },
         {
           "interwencja": "Współudział w działaniach leczniczo--pielęgnacyjnych adekwatnych do rozpoznanych czynników ryzyka oraz prawdopodobieństwa wystąpienia zakrzepicy żylnej (zgodnie ze zleceniem lekarza): • zastosowanie kompresjoterapii II stopnia ucisku (25-35 mm Hg) na kończynie objętej procesem chorobowym przy użyciu gotowych wyrobów uciskowych lub ewentualnie opasek elastycznych, • poinformowanie pacjenta o konieczności wykonania pomiarów kończyny celem dopasowania do zalecanego stopnia ucisku, • nauczenie pacjenta stosowania kompresjoterapii z wykorzystaniem opaski elastycznej: – opatrunek powinien obejmować kończynę od podstawy palców do guzowatości piszczeli i dawać ucisk zmniejszający się w kierunku od kostki do kolana (jeśli ucisk w okolicy stawu skokowego wynosi 100%, to w kierunku proksymalnym, czyli w pobliżu pachwiny powinien wynosić 40%), – poinformowanie pacjenta o objawach zbyt dużego ucisku (jak: uczucie mrowienia, drętwienia stopy, bladość, sinica palców w czasie chodzenia); w przypadku ich wystąpienia poinformowanie o konieczności usunięcia bandaża i ponownego zabandażowania z efektem mniejszego ucisku, • nauczenie pacjenta zakładania gotowych wyrobów uciskowych (np. pończoch, rajstop: rolowanie wyrobu, a następnie naciąganie na kończynę, tzw. podciąganie w kierunku proksymalnym poprzez wygładzanie całą dłonią z użyciem gumowych rękawic), • zalecenie zakładania wyrobów uciskowych w godzinach rannych przed wstaniem z łóżka przed wystąpieniem zwiększonego obrzęku w ciągu dnia, • motywowanie pacjenta do noszenia wyrobów uciskowych poprzez wskazywanie korzyści leczenia dla poprawy stanu naczyń kończyn dolnych [Kózka, 2020; Szewczyk, Jawień, 2010; Windyga i wsp., 2014; Zawilska, 2016], • zastosowanie przerywanego masażu pneumatycznego przy użyciu specjalnego kompresora oraz mankietów pneumatycznych zakładanych na kończyny dolne [Kózka, Rożnowska, 2009; Szewczyk, Jawień, 2010; Kózka, 2020; Tomkowski i wsp., 2017], • zastosowanie leczenia farmakologicznego: – wyjaśnienie konieczności i zasad przyjmowania zleconych leków flebotropowych, przeciwzakrzepowych, – motywowanie pacjenta do systematycznego zażywania leków, wyjaśnienie mechanizmu ich działania [Kózka, 2020; Windyga i wsp., 2014; Zawilska, 2016], • zastosowanie preparatów działających miejscowo w postaci żelowej lub aerozolu, np. Venożel, Lioton 1000 [Kózka, Rożnowska, 2009; Kózka, 2020], • w przypadku nasilonych objawów i zwiększonego ryzyka wystąpienia zakrzepicy żylnej współudział w modyfikacji leczenia poprzez zastosowanie doustnych antykoagulantów oraz edukacja pacjenta: – zwrócenie uwagi na inne przyjmowane leki, które mogą nasilać lub hamować działanie przeciwzakrzepowe (np. niektóre leki przeciwbólowe, przeciwzapalne) oraz przyjmowane pokarmy (hamująco na doustne antykoagulanty wpływają duże ilości witaminy K w pożywieniu) oraz stopień wysiłku fizycznego [Szewczyk, Jawień, 2010], – obserwacja objawów powikłań antykoagulantów doustnych w zakresie zwiększonej skłonności do krwawień i zgłoszenie się do lekarza w przypadku ich wystąpienia celem dokonania oznaczenia INR oraz poinformowania o dodatkowo przyjmowanych lekach i chorobach współistniejących, – wskazanie pacjentowi potrzeby informowania pracowników medycznych, m.in. lekarzy, dentystów o przyjmowaniu leków przeciwkrzepliwych [Szewczyk, Jawień, 2010].",
           "uzasadnienie": "Po analizie wyników badań diagnostycznych ważnym zadaniem jest jak najszybsze wdrożenie interwencji. Kompresjoterapia jest jedną z metod postępowania zachowawczego, a jej celem jest ucisk z zewnątrz na mięśnie i poprawa działania pompy mięśniowej. Usprawnia to krążenie krwi w naczyniach żylnych poprzez przepływ większej ilości krwi z układu powierzchownego do układu głębokiego oraz powoduje zmniejszenie zalegania krwi w układzie powierzchownym, a tym samym zmniejszenie ciśnienia w układzie żylnym kończyny. Przy ucisku światło żył się zmniejsza, dzięki czemu poprawia się wydolność zastawek. Odpowiednią klasę ucisku ustala lekarz, a wyroby uciskowe dobiera się poprzez pomiar obwodu kończyny w kilku miejscach zgodnie z zalecaną procedurą (w godzinach rannych lub po odpoczynku z zastosowaniem elewacji kończyn, aby usprawnić przepływ żylny i zmniejszyć obrzęk kończyny). Pomiary kończyny wykonuje się: nad kostką, na obwodzie w połowie długości łydki, pod kolanem, na obwodzie środkowej długości uda oraz na obwodzie w górnej części uda [Kózka, 2020; Szewczyk, Jawień, 2010]. Zastosowanie właściwego ucisku jest bardzo ważne, ponieważ ma on za zadanie „wypychać” krew do góry i poprawiać działanie pompy mięśniowej stopy oraz podudzia. Zastosowanie zbyt mocnego ucisku może prowadzić do zaburzeń krążenia i objawów niedokrwienia oraz ucisku na nerwy [Kózka, 2020; Kózka, Rożnowska, 2009; Szewczyk, Jawień 2010; Tomkowski i wsp., 2012]. Codzienne bandażowanie jest dość czasochłonne i wymaga umiejętności, dlatego dla ułatwienia wykorzystuje się gotowe wyroby uciskowe w postaci podkolanówek, pończoch lub rajstop. Są one indywidualnie dobrane dla pacjenta pod względem wielkości oraz siły ucisku. Zakładanie wyrobów uciskowych przed wstaniem z łóżka po odpoczynku pozwoli na zastosowanie ucisku na kończyny przed zwiększeniem się obrzęków podczas pionizacji i chodzenia [Kózka, 2020; Kózka, Rożnowska, 2009; Szewczyk, Jawień, 2010; Tomkowski i wsp., 2012]. Wyroby uciskowe są na ogół niedoceniane przez pacjentów, wymagają motywacji do stosowania i uzasadnienia ważności i skuteczności tej metody leczenia. Systematyczne stosowanie kompresjoterapii przyczynia się do zmniejszenia obrzęków, przyspieszenia przepływu krwi, poprawy wydolności zastawek, co przekłada się na lepsze samopoczucie chorego oraz zmniejszenie dolegliwości bólowych [Kózka, Rożnowska, 2009; Kózka, 2020; Szewczyk, Jawień, 2010; Windyga i wsp., 2014; Zawilska, 2016]. Masaż pneumatyczny jest odmianą leczenia kompresyjnego. Wykorzystanie kompresora do przerywanego masażu polega na wtłaczaniu powietrza do komór mankietu i wypuszczaniu w odpowiednio ustawionych odstępach czasowych. Można zmieniać cykl, stopień i kolejność napełniania komór mankietu w zależności od wskazań. Mankiet pneumatyczny wytwarza zmienne ciśnienie, powodując odprowadzenie chłonki z obrzękniętej kończyny, a kolejno wypełniające się komory mankietu powodują ucisk na stopę, podudzie i udo, doprowadzając do poprawy krążenia żylnego i limfatycznego. Wykorzystanie mankietów wielokomorowych, które wypełniają się sekwencyjnie od komór dystalnych do proksymalnych, pozwala na osiąganie najbardziej skutecznych efektów [Kózka, 2020; Szewczyk, Jawień, 2010]. Farmakoterapia stanowi ważną wspomagającą formę leczenia zachowawczego. Leki powinny być zalecane po dokładnej ocenie stanu układu żylnego oraz według ściśle określonych wskazań. Hamują one rozwój zmian patologicznych w układzie żylnym. Leki o działaniu flebotropowym poprawiają elastyczność kapilar i przywracają ich prawidłową przepuszczalność, wzmacniają ściany naczyń i ich wytrzymałość, nasilają perystaltykę naczyń chłonnych, co powoduje zwiększenie drenażu limfatycznego (np. benzopireny zmniejszają przepuszczalność kapilar z efektem przeciwobrzękowym oraz α-benzopireny, czyli flawonoidy zawierają ekstrakty roślinne, np. diosminę, hesperydynę, rutynę, Cyclo 3 Fort, a także preparat Vessel Due F – stanowi drobnocząsteczkową frakcję heparynową o działaniu Vessel Due F przeciwzakrzepowym, fibrynolitycznym oraz zmniejszającym lepkość krwi). Leki przeciwzakrzepowe (np. heparyna i jej pochodne) powodują wydłużenie czasu krzepnięcia krwi i zmniejszają tendencję do tworzenia zakrzepów. W efekcie działania tych leków zmniejsza się zastój żylny, obrzęki, dolegliwości bólowe, uczucie rozpierania w kończynach. Niesterydowe leki przeciwzapalne – ograniczają stan zapalny, niwelują objawy zwiększonego ucieplenia kończyny w miejscu zaburzeń oraz redukują gorączkę [Windyga i wsp., 2014; Zawilska, 2016]. Preparaty zastosowane miejscowo działają kojąco i łagodząco, znosząc przykre objawy ze strony zmęczonych kończyn [Kózka, Rożnowska, 2009; Kózka, 2020; Szewczyk, Jawień, 2010]. Doustne antykoagulanty są powszechnie uznane za skuteczne leki w stanach zagrożenia zakrzepowego. Stosowanie innych leków oraz niektóre pokarmy, choroby współistniejące i stopień wysiłku fizycznego mogą zmieniać farmakokinetykę i farmakodynamikę leków przeciwzakrzepowych [Szewczyk, Jawień, 2010]. U pacjenta leczonego doustnym antykoagulantem występuje skłonność do krwawień po niedużych urazach (np. podczas golenia, mycia zębów) lub krwawień z nosa i dziąseł oraz wylewów podskórnych i zasinień – wówczas należy kontrolować INR (preferowana wartość wynosi 2,0–3,0, wartość INR przekraczająca 5,0 zwiększa ryzyko małego krwawienia) [Szewczyk, Jawień, 2010]. Przekazanie informacji członkom zespołu terapeutycznego przy podejmowaniu różnego rodzaju procedur medycznych pozwoli na zmniejszenie ryzyka powikłań wynikających z niewłaściwych interakcji oraz wystąpienia skutków ubocznych.",
           "exam": {
-            "bodyZone": "konczyny-dolne"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
           "interwencja": "Edukacja pacjenta w zakresie działań wpływających na poprawę krążenia w naczyniach żylnych: • zachęcanie pacjenta do wykonywania ćwiczeń wpływających na poprawę przepływu żylnego, • motywowanie do regularnego podejmowania aktywności fizycznej i wykonywania ćwiczeń przynajmniej 3 × dziennie (zalecany jest marsz, spacery, pływanie, biegi, jazda rowerem, wykonywanie naprzemiennych ruchów stóp podczas stania lub siedzenia), • zalecenie pacjentowi, aby w czasie wykonywania ćwiczeń dynamicznych wykonywał głębokie oddechy, • zalecenie pacjentowi unikania wykonywania ćwiczeń statycznych, jak: dźwiganie ciężarów i ćwiczeń z dużymi obciążeniami, treningów w siłowni, jazdy na nartach, pchania kuli, długich wycieczek rowerowych lub długich biegów [Kózka, Rożnowska, 2009; Kózka, 2020], • po długotrwałym staniu lub siedzeniu zalecenie pacjentowi odpoczynku z uniesieniem kończyn dolnych powyżej poziomu serca, kilkakrotnie w ciągu dnia, • zalecenie pacjentowi redukcji masy ciała poprzez zastosowanie diety niskokalorycznej, ale zbilansowanej, oraz ograniczenie węglowodanów, tłuszczów pochodzenia zwierzęcego, a uwzględnienie w diecie wysokowartościowych białek, warzyw, owoców, razowego pieczywa i kasz gruboziarnistych, • zalecenie pacjentowi unikania zaparć poprzez przyjmowanie pokarmów bogatych w błonnik, np. otrębów, zwiększenie ilości płynów (najlepiej niegazowanej wody mineralnej), • współudział w modyfikacji współistniejących czynników ryzyka: – unikanie gorących kąpieli i nadmiernego nasłonecznienia, zalecenie chłodnego prysznica przez ok. 10 s na każdą kończynę, rozpoczynając od stóp, oraz marsz w wannie w kilkucentymetrowej wodzie – noszenie odpowiedniej (nieuciskającej) odzieży oraz obuwia na niskich obcasach, – unikanie długotrwałych podróży w bezruchu [Kózka, Rożnowska, 2009; Kózka, 2020; Szewczyk, Jawień, 2010; Tomkowski i wsp., 2017].",
           "uzasadnienie": "Zwiększenie świadomości zagrożeń związanych z zakrzepicą żylną wśród pacjentów stanowi cel i zadanie, których osiągnięcie może poprawić znacząco wyniki leczenia tej choroby [Tomkowski i wsp., 2017]. Ćwiczenia fizyczne wykonywane regularnie powodują przyspieszenie przepływu krwi w żyłach, wzmocnienie ich ścian oraz poprawę wydajności mięśni, zmniejszają obrzęki, poprawiają ruchomość stawów, funkcjonowanie pompy mięśniowej podudzia – zapobiegają zatem powiększeniu się żylaków, zakrzepicy, hamują rozwój choroby żylnej [Kózka, Rożnowska, 2009; Tomkowski i wsp., 2012]. Podejmowanie zwiększonej aktywności ruchowej poprzez różnego rodzaju ćwiczenia jest w dużym stopniu uwarunkowane świadomością pacjenta co do istoty choroby oraz celu wykonywanych ćwiczeń. Istotną rolę w patologii żylnej odgrywa pompa mięśniowa, której zwiększenie wydajności uzyskuje się poprzez naprzemienne skurcze i rozkurcze mięśni kończyn dolnych, dlatego wskazane są biegi, spacery, jazda na rowerze [Kózka, Rożnowska, 2009; Tomkowski i wsp., 2012; Zawilska, 2016]. Wykonywanie głębokich oddechów podczas ćwiczeń dynamicznych powoduje większą aktywność przepony i korzystnie wpływa na ciśnienie w jamie brzusznej [Kózka, Rożnowska, 2009; Kózka, 2020]. Nie zaleca się uprawiania sportów utrudniających odpływ żylny. Ćwiczenia statyczne zwiększają ciśnienie w jamie brzusznej, uciskają naczynia i krew nie może przez nie swobodnie przepływać. Podobny mechanizm wytwarza się przy ćwiczeniach z obciążeniami, wymagających dużego wysiłku. Długotrwałe stanie lub siedzenie utrudnia odpływ krwi w kierunku serca i osłabia pompę mięśniową. Odpoczynek z elewacją kończyn powyżej poziomu serca ułatwia odpływ krwi z kończyn dolnych do serca oraz zmniejsza uczucie ciężkości nóg oraz obrzęki [Szewczyk, Jawień, 2010]. U osób z nadwagą lub otyłych tkanka tłuszczowa uciska na miednicę i żyły udowe, hamuje powrót krwi żylnej oraz utrudnia krążenie limfatyczne, co sprzyja niewydolności żylnej. Zastosowanie się pacjenta do wskazówek dietetycznych pozwoli na redukcję masy ciała i zmniejszenie ryzyka rozwoju choroby. Stosowanie diety w postaci pokarmów ze zwiększoną ilością błonnika powoduje zmniejszone wchłanianie cholesterolu i kwasów tłuszczowych, przyspiesza przemianę materii i sprzyja zmniejszeniu masy ciała [Cohen i wsp., 2016; Szewczyk, Jawień, 2010]. Utrudniona defekacja powoduje wzrost tłoczni brzusznej, ucisk na naczynia żylne w obrębie miednicy i w efekcie utrudniony odpływ krwi. Zastosowanie diety zapobiegającej zaparciom zapewnia regularne wypróżnianie i zmniejsza ryzyko zastoju żylnego [Kózka, Rożnowska, 2009; Szewczyk, Jawień, 2010]. Przegrzewanie kończyn wywiera niekorzystny wpływ z powodu nadmiernego rozszerzenia naczyń żylnych i skłonności do zastoju. Chłodny prysznic powoduje zwężenie średnicy naczyń, co ułatwia przepływ żylny oraz wzmacnia krążenie żylne. Podobnie zbyt uciskające ubrania mogą utrudniać krążenie krwi, a zbyt wysokie obcasy zmniejszają pracę mięśni łydek. Długotrwałe podróże są przyczyną bezruchu, co powoduje unieczynnienie pompy mięśniowej [Kózka, Rożnowska, 2009; Kózka, 2020; Szewczyk, Jawień, 2010; Tomkowski i wsp., 2017].",
           "exam": {
-            "bodyZone": "konczyny-dolne"
+            "bodyZone": "cale-cialo"
           }
         },
         {
           "interwencja": "Pouczenie pacjenta o konieczności systematycznego monitorowania stanu zdrowia w zakresie: • wystąpienia objawów zatorowości płucnej, takich jak: nasilone dolegliwości bólowe, nasilony obrzęk łydki i uda, zaczerwienienie chorej kończyny, gorączka, ból w klatce piersiowej, duszność, • konieczności natychmiastowego zgłoszenia się do lekarza w przypadku pojawienia się niepokojących objawów [Konstantnides i wsp., 2014; Windyga i wsp., 2014].",
           "uzasadnienie": "Znajomość objawów zatorowości płucnej pozwoli na szybką reakcję, zgłoszenie się do lekarza oraz podjęcie natychmiastowych interwencji i zapobiegnięcie niebezpiecznym powikłaniom [Tomkowski i wsp., 2017].",
           "exam": {
-            "bodyZone": "konczyny-dolne"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -1981,7 +1975,7 @@
           "interwencja": "Ocenianie stanu nawodnienia - powrót włośniczkowy, elastyczność skóry, nawilżenie błon śluzowych, diureza, wartość ciśnienia tętniczego krwi, częstotliwość i charakter tętna, oddechu, stan ocieplenia dystalnych części ciała, pragnienie, zachowanie dziecka, stan przytomności.",
           "uzasadnienie": "Obserwacja w kierunku objawów odwodnienia oraz właściwa ich interpretacja pozwolą wcześnie wykryć objawy wskazujące na zaburzenia w gospodarce wodnej i rozpocząć nawadnianie doustne lub dożylne [Pietrzyk, Kwinta, 2018].",
           "exam": {
-            "bodyZone": "miednica"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -1992,7 +1986,7 @@
           "interwencja": "Przygotowanie psychiczne i fizyczne dziecka do pobrania materiału biologicznego - morfologia, stężenie elektrolitów (Na, K, Cl), równowaga kwasowo-zasadowa, stężenie mocznika, kreatyniny, poziom ciał ketonowych w moczu: • przekazanie dziecku w sposób zrozumiały informacji o wykonywanych badaniach, • pozwolenie rodzicom na obecność w czasie badań i zachęcanie ich do udzielania dziecku wsparcia, • wybranie najlepszej żyły obwodowej do uzyskania dostępu dożylnego i nałożenie na skórę kremu o działaniu miejscowo znieczulającym, np. Emla.",
           "uzasadnienie": "Przygotowanie psychiczne zmniejsza lęk i niepokój dziecka, a zastosowanie kremu Emla zminimalizuje ból przy nakłuciu żył powierzchownych [Cepuch, Perek, 2012; Kowalska-Duplaga, 2018].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "miednica"
           }
         },
         {
@@ -2317,7 +2311,7 @@
           "interwencja": "Zebranie wywiadu od pacjentki w celu: • określenia rodzaju, ilości, częstości stosowanych środków przeczyszczających, • oceny rytmu defekacji, konsystencji i ilości stolca, objawów towarzyszących przy oddawaniu stolca, • poznania emocji towarzyszących przyjmowaniu środków przeczyszczających (próby określenia przyczyn natury emocjonalnej), • oceny sposobu odżywiania i prowadzonego trybu życia, • poznania aktywności ruchowej dziecka.",
           "uzasadnienie": "Zebranie dokładnego wywiadu jest pomocne w próbie ustalenia przyczyn nadużywania środków przeczyszczających i pozwala na zaplanowanie działań ułatwiających stopniowe wycofywanie się z używanych środków [Tabbers i wsp., 2014; Pieczarkowski, 2018; El-Sonbaty i wsp., 2019].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "brzuch"
           }
         },
         {
@@ -2359,7 +2353,7 @@
           "interwencja": "Wyjaśnienie na czym polega optymalna pozycja: • zebranie danych dotyczących przyjmowanej przez pacjentkę pozycji w czasie defekacji z równoczesną jej oceną (prawidłowa/ nieprawidłowa) • w razie wskazań omówienie na czym polega prawidłowa pozycja w trakcie defekacji, która ma na celu zapewnienie optymalnego wykorzystania tłoczni brzusznej oraz grawitacji, • zademonstrowanie optymalnej pozycji, jaką należy przyjąć w trakcie defekacji.",
           "uzasadnienie": "Uczenie prawidłowej pozycji, jaką należy przybierać w czasie defekacji, jest jedynym warunkiem fizjologicznego uregulowania wypróżnień. Fizjologiczna pozycja kuczna, z udami uciskającymi brzuch podczas defekacji, ułatwia oddawanie stolca [Tabbers i wsp., 2014].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "brzuch"
           }
         },
         {
@@ -2497,7 +2491,7 @@
           "interwencja": "Monitorowanie terapii wodno-elektrolitowej: • systematyczna ocena klinicznych objawów wskazujących na odwodnienie - elastyczność skóry, stan nawilżenia błon śluzowych, napływ kapilarny, napięcie ciemiączka, nawilżenie gałek ocznych, częstotliwość i charakter tętna i oddechu, wartość ciśnienia tętniczego (spadek ciśnienia tętniczego jest późnym objawem w przebiegu ciężkiego odwodnienia), ocieplenie dystalnych części kończyn, pragnienie (niechęć do picia może wskazywać na odwodnienie hipoosmiczne wzmożone pragnienie występuje w odwodnieniu hiperosmicznym), zachowanie dziecka, stan przytomności, • obserwacja diurezy (w razie wskazań ważenie pieluchomajtek), • pomiar masy ciała (co najmniej 3-krotny w ciągu doby), interpretacja wyniku pomiaru, dokumentowanie, • szczegółowy bilans podaży i strat płynów (prowadzenie karty bilansu płynów), • pobranie moczu do badania ogólnego na zlecenie - ocena ciężaru właściwego moczu oraz obecności ciał ketonowych w moczu, • przy nawadnianiu dożylnym obserwacja dziecka w kierunku przewodnienia organizmu (szybki przyrost masy ciała, obrzęki obwodowe, obrzęk płuc i mózgu, zastoinowa niewydolność krążenia, zwiększona diureza, rozcieńczony mocz o niskiej osmolalności/ciężarze, obniżenie osmolalności osocza, hiponatremia, • pobranie krwi do badań biochemicznych zgodnie z indywidualną kartą zleceń (równowaga kwasowo-zasadowa, stężenie elektrolitów, mocznika i kreatyniny, poziom glikemii, osmolalność krwi), interpretacja wyników badań.",
           "uzasadnienie": "Monitorowanie terapii wodno-elektrolitowej pozwala określić stan nawodnienia dziecka oraz skuteczność prowadzonego postępowania. Wytyczne ESPGHAN/ESPID zalecają stosowanie Klinicznej Skali Odwodnienia (Clinical Dehydraton Scale, CDS) [Guarino i wsp., 2014]. Skala CDS nie powinna być jednak stosowana jako jedyne narzędzie służące do oceny stopnia odwodnienia [Falszewska, Szajewska, 2018]. Dzieci są szczególnie podatne na wystąpienie odwodnienia. W ciężkim odwodnieniu główny objaw to wstrząs oligowolemiczny. Spadek ciśnienia tętniczego jest późnym objawem w przebiegu ciężkiego odwodnienia. Objawy wstrząsu oligowolemicznego przy takiej samej utracie wody najwcześniej występują w odwodnieniu hipoosmicznym. U niemowląt objawy odwodnienia pojawiają się później niż u dzieci starszych, co wynika z większej zawartości wody zewnątrzkomórkowej. Objawy odwodnienia mogą być słabiej wyrażone u niemowląt dobrze odżywionych, z rozwiniętą podskórną tkanką tłuszczową niż u dzieci niedożywionych. Niechęć do picia może wskazywać na odwodnienie hipoosmiczne, wzmożone pragnienie występuje w odwodnieniu hiperosmicznym. U dzieci starszych najbardziej widoczne objawy odwodnienia to zaostrzone rysy twarzy i wpadnięte gałki oczne. Obiektywna ocena stopnia odwodnienia jest oparta na spadku masy ciała w przebiegu biegunki, która odpowiada objętości wody utraconej (1 g = 1 ml). Warunkiem jest wiarygodny pomiar masy ciała w okresie bezpośrednio przed zachorowaniem [Pietrzyk, 2018]. Badania laboratoryjne krwi są pomocne w ocenie zaburzeń homeostazy wodno-elektrolitowej i kwasowo-zasadowej. Wskazane jest oznaczanie stężenia elektrolitów u dzieci hospitalizowanych, ciężko odwodnionych, gdy wywiad lub badanie fizykalne są niewspółmierne do ciężkości stanu dziecka i w przypadku konieczności włączania nawadniania dożylnego [Guarino i wsp., 2014; Shane i wsp., 2017].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -2518,7 +2512,7 @@
           "interwencja": "Na zlecenie - pobranie stolca do badania mikrobiologicznego.",
           "uzasadnienie": "Badanie stolca jest pomocne w ustaleniu czynnika infekcyjnego biegunki. Mikrobiologiczne badanie kału powinno być wykonane w każdym przypadku ostrego nieżytu żołądkowo-jelitowego u dzieci < 3. miesiąca życia oraz u osób z gorączką, krwistymi lub śluzowymi stolcami, kurczowym bólem brzucha lub tkliwością brzucha i sepsą [Shane i wsp., 2017; Kowalska-Duplaga 2018].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "brzuch"
           }
         },
         {
@@ -2902,7 +2896,7 @@
           "interwencja": "Pobranie moczu do badania ogólnego.",
           "uzasadnienie": "Okresowe ogólne badanie moczu pozwala na stwierdzenie zmian w osadzie moczu, które mogą wskazywać na infekcję dróg moczowych: obecność leukocytów, erytrocytów, bakterii, azotynów, esterazy leukocytów w moczu [Hryniewicz, Holecki, 2015].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "miednica"
           }
         },
         {
@@ -2916,7 +2910,7 @@
           "interwencja": "W razie wystąpienia infekcji pobranie moczu na badanie bakteriologiczne i podawanie antybiotyku zgodnie z wynikiem antybiogramu.",
           "uzasadnienie": "Podawanie antybiotyku zgodnego z wynikiem antybiogramu pozwala na skrócenie czasu trwania choroby i zapobiega jej nawrotowi u osób z objawowym zakażeniem dróg moczowych. U osób z bezobjawowym zakażeniem nie jest rekomendowane ze względu na ryzyko rozwoju antybiotykooporności [Hryniewicz, Holecki, 2015].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "miednica"
           }
         }
       ],
@@ -3159,16 +3153,13 @@
       "interwencje": [
         {
           "interwencja": "Zebranie wywiadu z pacjentką.",
-          "uzasadnienie": "Uzyskane informacje mają wpływ na dalsze decyzje dotyczące badań diagnostycznych. Z tego powodu niezbędne jest zebranie wywiadu dotyczącego czasu trwania biegunki oraz czynników ryzyka choroby organicznej (krew w stolcu, biegunka w nocy, niezamierzona utrata masy ciała) [Szczepanek i wsp., 2017].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Uzyskane informacje mają wpływ na dalsze decyzje dotyczące badań diagnostycznych. Z tego powodu niezbędne jest zebranie wywiadu dotyczącego czasu trwania biegunki oraz czynników ryzyka choroby organicznej (krew w stolcu, biegunka w nocy, niezamierzona utrata masy ciała) [Szczepanek i wsp., 2017]."
         },
         {
           "interwencja": "Ocena stanu nawodnienia organizmu (ocena napięcia i elastyczności skóry, wilgotności błon śluzowych, sprężystości gałek ocznych, stopnia wypełnienia żył szyjnych, ośrodkowego ciśnienia żylnego, tętna, ciśnienia tętniczego, ilości wydalanego moczu i stanu świadomości).",
           "uzasadnienie": "Nadmierna utrata płynów ustrojowych przez przewód pokarmowy (wymioty, biegunka) może być przyczyną odwodnienia izotonicznego, którego dominującym objawem jest hipowolemia. Zmniejszenie przestrzeni wodnej pozakomórkowej objawia się klinicznie zaburzeniami czynności układu krążenia (tachykardią, spadkiem ciśnienia tętniczego), nerek (zmniejszeniem diurezy lub anurią), OUN (zaburzeniami świadomości), przewodu pokarmowego (nudnościami, wymiotami) i innych narządów (skórą plastelinowatą, osłabieniem napięcia gałek ocznych) [Kokot, Franek, 2013].",
           "exam": {
-            "bodyZone": "miednica"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -3368,10 +3359,7 @@
       "interwencje": [
         {
           "interwencja": "Zebranie wywiadu z pacjentką na temat objawów klinicznych hipokaliemii i jej potencjalnych przyczyn.",
-          "uzasadnienie": "Dokładnie zebrany wywiad z uwzględnieniem objawów klinicznych i przyczyn hipokaliemii ułatwia jej rozpoznanie. Najczęstszymi przyczynami hipokaliemii są leki moczopędne (z wyjątkiem oszczędzających potas) oraz leki przeczyszczające, biegunki i niektóre zaburzenia hormonalne [Franek, Kokot, 2006]. Objawy kliniczne są uzależnione od szybkości utraty potasu przez ustrój. Mogą być bardziej wyrażone w przypadku gwałtownej utraty potasu [Kokot, Franek, 2013]. Objawami hipokaliemii są: osłabienie siły mięśniowej i napięcia mięśni, upośledzenie funkcji mięśni gładkich (uporczywe zaparcia, niedrożność porażenna, porażenia mięśni gładkich pęcherza moczowego z zatrzymaniem moczu), zaburzenia układu nerwowego (parestezje, nadpobudliwość nerwowa lub apata, brak koncentracji uwagi, senność), nadmierne pragnienie oraz objawy nietolerancji zimna [Kokot, Franek, 2013].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Dokładnie zebrany wywiad z uwzględnieniem objawów klinicznych i przyczyn hipokaliemii ułatwia jej rozpoznanie. Najczęstszymi przyczynami hipokaliemii są leki moczopędne (z wyjątkiem oszczędzających potas) oraz leki przeczyszczające, biegunki i niektóre zaburzenia hormonalne [Franek, Kokot, 2006]. Objawy kliniczne są uzależnione od szybkości utraty potasu przez ustrój. Mogą być bardziej wyrażone w przypadku gwałtownej utraty potasu [Kokot, Franek, 2013]. Objawami hipokaliemii są: osłabienie siły mięśniowej i napięcia mięśni, upośledzenie funkcji mięśni gładkich (uporczywe zaparcia, niedrożność porażenna, porażenia mięśni gładkich pęcherza moczowego z zatrzymaniem moczu), zaburzenia układu nerwowego (parestezje, nadpobudliwość nerwowa lub apata, brak koncentracji uwagi, senność), nadmierne pragnienie oraz objawy nietolerancji zimna [Kokot, Franek, 2013]."
         },
         {
           "interwencja": "Pobranie krwi do badań laboratoryjnych na zlecenie lekarza (ocena poziomu elektrolitów w surowicy krwi).",
@@ -3506,7 +3494,7 @@
           "interwencja": "Pomiar i dokumentowanie temperatury ciała co 30 min przez pierwsze 2 godz., a także tętna, ciśnienia tętniczego krwi, częstości oddechów.",
           "uzasadnienie": "Częsty pomiar temperatury ciała – w początkowym okresie co 30 min, pozwala na dostosowanie interwencji do zmieniającego się stanu pacjenta [Czyż-Szypenbejl i wsp., 2017]. Hipotermii towarzyszy spadek ciśnienia tętniczego, zwolnienie tętna i oddechów.",
           "exam": {
-            "bodyZone": "cale-cialo"
+            "bodyZone": "konczyny-gorne"
           }
         },
         {
@@ -3608,10 +3596,7 @@
       "interwencje": [
         {
           "interwencja": "Zebranie wywiadu od chorego lub świadków zdarzenia.",
-          "uzasadnienie": "Wywiad dotyczy okoliczności zdarzenia oraz ewentualnego występowania chorób przewlekłych, co może mieć wpływ na postępowanie z chorym.",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Wywiad dotyczy okoliczności zdarzenia oraz ewentualnego występowania chorób przewlekłych, co może mieć wpływ na postępowanie z chorym."
         },
         {
           "interwencja": "Przeniesienie chorego do zacienionego pomieszczenia o temperaturze 170C (odpowiednie ustawienie klimatyzatora). Ułożenie pacjenta w pozycji leżącej (w przypadku zaburzeń przytomności w pozycji bezpiecznej). Zdjęcie odzieży wierzchniej.",
@@ -3838,7 +3823,7 @@
           "interwencja": "Postępowanie miejscowe z raną odleżynową według strategii TIME (T - opracowanie tkanek; I - kontrolę infekcji i zapalenia; M - utrzymanie równowagi wilgotności; E - nieprawidłowe brzegi i zaburzenia naskórkowania).",
           "uzasadnienie": "Istotą strategii TIME jest wzmacnianie naturalnego potencjału rany do gojenia. Poszczególne składowe strategii odnoszą się do najważniejszych elementów procesu opracowania dna rany, takich jak oczyszczanie, eliminacja szkodliwych czynników zewnętrznych, oraz do działań zapewniających optymalne mikrośrodowisko gojenia [Dowset, Newton, 2005; Cwajda-Błasiak i wsp., 2019]. Do oczyszczenia rany wykorzystuje się łagodne wodne roztwory preparatów, np. sól fizjologiczną (0,9% NaCl) lub jałową aqua oraz płyn izotoniczny jak PWE (fizjologiczny płyn wieloelektrolitowy izotoniczny) czy roztwór Ringera. W odleżynach z dużą ilością martwicy, włóknika i trudnych do usunięcia powierzchownych zanieczyszczeń zaleca się stosowanie płynów irygacyjnych z zawartością surfaktantów (środków powierzchniowo czynnych) i substancji przeciwdrobnoustrojowych, jak dichlorowodorek octenidyny (OCT) i ethyloheksylogliceryna (oxadermol), najczęściej w stężeniu 0,05% – płyn; poliheksanid (PHMB) z betainą, stężenie 0,1% – płyn; związki na bazie podchlorynu (NaCl 0,001%, NaOCl 0,003%, HOCl 0,002%, H202 0,0004%) – płyn. Roztwory czyszczące z surfaktantem należy stosować w ranach z ryzykiem zakażenia i zainfekowanych. Opracowanie rany polega na dokładnym, miejscowym usunięciu martwicy i uszkodzonych tkanek z wykorzystaniem różnych metod dostosowanych do stanu rany i warunków klinicznych, jak: wycięcie chirurgiczne, demarkacja enzymatyczna, terapia podciśnieniowa, hydroterapia, terapia larwalna [Sopata i wsp., 2017]. Kolejnym etapem postępowania jest zapewnienie optymalnego mikrośrodowiska gojenia. W tym celu wykorzystywane są opatrunki specjalistyczne odpowiednio dobrane do rany z uwzględnieniem: fazy gojenia rany, rodzaju i intensywności wysięku, głębokości rany, stanu mikrobiologicznego rany, uszkodzenia skóry wokół rany [Shi i wsp., 2020]. Gojenie rany odleżynowej przebiega w trzech fazach: zapalnej – wysięku lub zapalenia; fazy proliferacji – ziarninowania lub wzrostu, fazy naprawczej – epitelizacji lub remodelingu. W fazie zapalenia zaleca się opatrunki pochłaniające wysięk, wspomagające proces hemostazy i oczyszczania rany oraz zapewniające ochronę przed bakteriami. W fazie ziarninowania opatrunek powinien zapewnić utrzymanie wilgotnego środowiska w ranie, pozwalać na atraumatyczną pielęgnację, wykazywać działanie przeciwbakteryjne oraz stymulować czynność fibroblastów. W fazie naprawczej opatrunek powinien zapewnić ochronę nowej struktury komórkowej, stymulować produkcję kolagenu oraz umożliwiać atraumatyczną pielęgnację. Obecnie w leczeniu stosowane są następujące opatrunki: hydrokoloidowe (w postaci płytki, pasty, żelu i siatki), hydrożelowe (w postaci płytki, żelu, żelu ze środkiem antyseptycznym), półprzepuszczalne folie poliuretanowe (błony półprzepuszczalne), alginiany, dekstranomery (w postaci granulatu i pasty), lipidokoloidowe (TLC-NOSF), pianki poliuretanowe, siatki, superabsorbenty oparte na inżynierii tkankowej, złożone, o działaniu przeciwdrobnoustrojowym, z mechanizmem płucząco-absorbcyjnym) [Szewczyk i wsp., 2020]. W leczeniu ran wykorzystywane są również metody wspomagające, jak: terapia podciśnieniowa, biochirurgia (wykorzystanie larw muchy Lucilia sericata), terapia tlenem hiperabarycznym, ozonoterapia, hydroterapia, elektrostymulacja wysokonapięciowa [Cwajda-Błasiak i wsp., 2019].",
           "exam": {
-            "bodyZone": "klatka-piersiowa"
+            "bodyZone": "plecy"
           }
         },
         {
@@ -4240,7 +4225,10 @@
         },
         {
           "interwencja": "Udział w farmakoterapii zgodnie ze zleceniem lekarza po ustaleniu przyczyny świądu: • ryfampicyna 300-600 mg/dobę p.o., • naltrekson 50 mg × dziennie p.o., • cholestyramina 4-16 mg/dobę, • kwas ursodeoksycholowy 13-15 mg/kg m.c./dobę, • przetaczanie płynów izotonicznych drogą kroplowego wlewu dożylnego w celu wypłukania kwasów żółciowych, • stosowanie środków uspokajających.",
-          "uzasadnienie": "Leczenie choroby podstawowej często powoduje zmniejszenie dolegliwości [Wolska, 2017]. Europejskie wytyczne dotyczące leczenia świądu w pierwotnych chorobach dróg żółciowych w pierwszym rzucie leczenia zalecają stosowanie kwasu ursodeoksycholowego i cholestyraminy [Chojnicki i wsp., 2018]. Cholestyramina jest szeroko stosowaną żywicą wiążącą kwasy żółciowe, cechuje się małą toksycznością i wydaje się działać przeciwświądowo [Galatan i wsp., 2010]. Antagoniści receptora μ, np. nalokson i naltrekson, działają przeciwświądowo w leczeniu chorych ze świądem pochodzenia cholestatycznego, w którym mechanizmem przyczynowym jest przypuszczalnie pobudzenie wydzielania endogennych opioidów [Galatan i wsp., 2010]. Potencjalne działanie hepatotoksyczne naltreksonu uniemożliwia jego przewlekłe stosowanie. Stosowanie naltreksonu powinno być szczególnie ostrożne u pacjentów z ostrą niewydolnością wątroby. Taka rozwaga jest również wskazana w stosowaniu skutecznego leku przeciwświądowego, jakim jest ryfampicyna [Chojnicki i wsp., 2018]."
+          "uzasadnienie": "Leczenie choroby podstawowej często powoduje zmniejszenie dolegliwości [Wolska, 2017]. Europejskie wytyczne dotyczące leczenia świądu w pierwotnych chorobach dróg żółciowych w pierwszym rzucie leczenia zalecają stosowanie kwasu ursodeoksycholowego i cholestyraminy [Chojnicki i wsp., 2018]. Cholestyramina jest szeroko stosowaną żywicą wiążącą kwasy żółciowe, cechuje się małą toksycznością i wydaje się działać przeciwświądowo [Galatan i wsp., 2010]. Antagoniści receptora μ, np. nalokson i naltrekson, działają przeciwświądowo w leczeniu chorych ze świądem pochodzenia cholestatycznego, w którym mechanizmem przyczynowym jest przypuszczalnie pobudzenie wydzielania endogennych opioidów [Galatan i wsp., 2010]. Potencjalne działanie hepatotoksyczne naltreksonu uniemożliwia jego przewlekłe stosowanie. Stosowanie naltreksonu powinno być szczególnie ostrożne u pacjentów z ostrą niewydolnością wątroby. Taka rozwaga jest również wskazana w stosowaniu skutecznego leku przeciwświądowego, jakim jest ryfampicyna [Chojnicki i wsp., 2018].",
+          "exam": {
+            "bodyZone": "konczyny-gorne"
+          }
         },
         {
           "interwencja": "Udział w postępowaniu niefarmakologicznym w świądzie pochodzenia cholestatycznego: • fototerapia UVB, • plazmafereza, • protezowanie dróg żółciowych, • drenaż nosowo-żółciowy, • przezskórna elektryczna stymulacja nerwów (TENS).",
@@ -4575,10 +4563,7 @@
         },
         {
           "interwencja": "Nawilżenie rogówki oka: • przemycie oka jałową wodą (aqua pro injectone), • podanie do oka kropli o właściwościach nawilżających, bez konserwantów, np. z kwasem hialuronowym (zgodnie ze zleceniem lekarskim).",
-          "uzasadnienie": "Istotą keratopati ekspozycyjnej jest ograniczenie produkcji łez, ich nadmierne parowanie, osłabione mruganie powieki górnej i odwinięcie powieki dolnej. W konsekwencji dochodzi do wysychania rogówki, uszkodzenia nabłonka (erozji), a następnie owrzodzenia rogówki. Dalszym powikłaniem niedomykalności szpary powiekowej może być perforacja rogówki i utrata wzroku [Wylęgała i wsp., 2014]. Kwas hialuronowy wykazuje działanie nawilżające rogówkę [Vasquez, Medel, 2014].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Istotą keratopati ekspozycyjnej jest ograniczenie produkcji łez, ich nadmierne parowanie, osłabione mruganie powieki górnej i odwinięcie powieki dolnej. W konsekwencji dochodzi do wysychania rogówki, uszkodzenia nabłonka (erozji), a następnie owrzodzenia rogówki. Dalszym powikłaniem niedomykalności szpary powiekowej może być perforacja rogówki i utrata wzroku [Wylęgała i wsp., 2014]. Kwas hialuronowy wykazuje działanie nawilżające rogówkę [Vasquez, Medel, 2014]."
         },
         {
           "interwencja": "Podanie do oka żelu o właściwościach regenerujących mikrouszkodzenia rogówki, zawierającego dekspantenol (zgodnie ze zleceniem lekarskim).",
@@ -5267,17 +5252,11 @@
         },
         {
           "interwencja": "Wybieranie ubrań luźnych, z szerokimi rękawami, nogawkami i zapięciem z przodu.",
-          "uzasadnienie": "Zaburzenia funkcjonowania w obszarach: fizycznym, społecznym i emocjonalnym bardzo często wymuszają na chorych korzystanie z częściowej bądź całkowitej pomocy w wykonywaniu czynności dnia codziennego, świadczonej przez osoby bliskie (opiekunów nieprofesjonalnych) i profesjonalistów z zakresu medycyny, w tym pielęgniarek. Zindywidualizowane podejście do pacjentki może jej pomóc w walce z przeciwnościami, jakie pojawiają się w trakcie choroby, w tym głównie w walce z bólem i niepełnosprawnością, oraz znacząco poprawić jakość życia [Żuk, Księżopolska-Orłowska, 2009].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Zaburzenia funkcjonowania w obszarach: fizycznym, społecznym i emocjonalnym bardzo często wymuszają na chorych korzystanie z częściowej bądź całkowitej pomocy w wykonywaniu czynności dnia codziennego, świadczonej przez osoby bliskie (opiekunów nieprofesjonalnych) i profesjonalistów z zakresu medycyny, w tym pielęgniarek. Zindywidualizowane podejście do pacjentki może jej pomóc w walce z przeciwnościami, jakie pojawiają się w trakcie choroby, w tym głównie w walce z bólem i niepełnosprawnością, oraz znacząco poprawić jakość życia [Żuk, Księżopolska-Orłowska, 2009]."
         },
         {
           "interwencja": "Dawanie wystarczająco dużo czasu na ubranie i rozebranie się (szczególnie wtedy, gdy może to być męczące, bolesne lub trudne). Zachęcanie do noszenia ubrania dziennego, a nie nocnego.",
-          "uzasadnienie": "Występujące dolegliwości znacznie obniżają jakość i komfort życia chorych, wielokrotnie czyniąc ich osobami zależnymi od pomocy innych [Wieczorowska-Tobis, Talarska, 2020].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Występujące dolegliwości znacznie obniżają jakość i komfort życia chorych, wielokrotnie czyniąc ich osobami zależnymi od pomocy innych [Wieczorowska-Tobis, Talarska, 2020]."
         },
         {
           "interwencja": "Podanie środków przeciwbólowych (jeśli wskazane) przed ubieraniem lub rozbieraniem się (z uwzględnieniem czasu ich działania i drogi podania).",
@@ -5876,7 +5855,7 @@
           "interwencja": "Edukacja pacjentki - wyjaśnienie znaczenia diety w procesie leczenia i zapobieganiu złamaniom. Istotną rolę w zapobieganiu złamaniom i leczeniu osteoporozy ma optymalizacja spożycia wapnia (ok. 1200 mg/dz.), białka (1,2 g/kg mc./dz.), potasu (ok. 3500 mg/dz.) oraz magnezu (> 300 mg/dz.). Dzienne spożycie witaminy D - 800 IU, z uwagi na występujące endemiczne niedobory witaminy D część wytycznych zaleca dzienną dawkę witaminy D jako 1000-2000 IU/d. Najlepszym źródłem wapnia (i fosforu) w diecie jest mleko i jego przetwory. Liczne produkty są wzbogacone w wapń, np. płatki śniadaniowe i soki owocowe. Należy zmniejszyć spożycie pokarmów ograniczających wchłanianie wapnia, takich jak: szpinak i inne jarzyny zawierające kwas szczawiowy, ziarna zbóż zawierające kwas fitynowy (np. otręby pszenne), herbata (z powodu zawartych w niej tanin), białko zwierzęce oraz produkty zwiększające wydalanie wapnia z moczem: sól, mocna kawa, herbata, coca-cola. Równomierne rozłożenie we wszystkich posiłkach w ciągu dnia produktów bogatych w wapń. W żywności witamina D występuje w niewielkich ilościach: w bogatych w tłuszcze produktach pochodzenia zwierzęcego, takich jak: oleje z wątroby ryb (trany), mięso ryb (węgorz, śledź, makrela), żółtko jaj, wątroba, smalec.",
           "uzasadnienie": "Najważniejszym czynnikiem wpływającym na szczytową masę kostną jest sposób odżywiania, a zwłaszcza dostateczna podaż wapnia (Ca). Najwłaściwszą postacią transportową wapnia jest pożywienie, a najlepszym jego źródłem są produkty mleczne (wapń z produktów mlecznych jest przyswajalny w 30%, a znajdujący się w produktach roślinnych tylko w 10–13%). Produkty odtłuszczone zawierają tyle samo wapnia co pełnotłuste. Ok. 1000 mg wapnia jest zawarte np. w 3–4 szklankach mleka, 1000 ml kefiru, 700 ml jogurtu, 100–120 g sera żółtego, 1000 g sera białego. Dużo wapnia zawierają konserwy rybne spożywane wraz z ośćmi. Łatwo przyswajalnym źródłem są też wody mineralne z dużą zawartością tego pierwiastka. Niedostateczne spożycie wapnia prowadzi do jego ujemnego bilansu w organizmie, a to przy braku kompensacji powoduje ubytek kości. Wiele czynników wpływa na proces absorpcji wapnia. Niezbędna jest aktywna forma witaminy D [1,25(OH)2D], odpowiednia podaż białka dostarczającego aminokwasów biorących udział w transporcie wapnia przez ścianę jelitową, laktozy, ułatwiającej transport wapnia, magnezu, ułatwiającego wchłanianie wapnia. Wchłanianie wapnia obniża się po menopauzie, co związane jest m.in. z niedoborem estrogenów. Hormony te zwiększają absorpcję wapnia pośrednio – przez zwiększenie wytwarzania witaminy D w nerkach, zapewniają również prawidłową odpowiedź jelit na tę witaminę. Wraz z wiekiem narasta też oporność receptorów jelitowych na witaminę D, co zmniejsza efektywność jej wchłaniania; maleją również możliwości produkcji tej witaminy w skórze. Deficyt wapnia w organizmie może być wynikiem nie tylko zmniejszonej podaży, ale i zmniejszonego wchłaniania z przewodu pokarmowego oraz nadmiernego wydalania z moczem. Przewód pokarmowy człowieka nie jest w stanie wchłonąć więcej niż 500 mg spożytego w jednej porcji elementarnego wapnia, dlatego jego dawkowanie wymaga w miarę możliwości równomiernego rozłożenia we wszystkich posiłkach w ciągu dnia [Marcinowska-Suchowierska, 2015]. Produkty roślinne, w porównaniu do zwierzęcych, są uboższe w wapń, a jego biodostępność z tych źródeł jest mocno ograniczona [Dardzińska i wsp., 2016]. Źródłem witaminy D dla człowieka jest głównie jej synteza w skórze pod wpływem promieni słonecznych UVB, co pokrywa nawet do 90% zapotrzebowania organizmu. W naszej strefie geograficznej najlepszy czas dla syntezy skórnej witaminy D panuje od kwietnia do września i w tym okresie osoby o jasnej karnacji powinny codziennie eksponować min. 18% powierzchni ciała (przedramiona i podudzia) przez 15 min, między godziną 10.00 a 15.00 bez używania filtrów ochronnych. Odpowiednie spożycie białka, potasu i magnezu jest niezbędne do podtrzymania sprawności układu mięśniowo-szkieletowego oraz poprawia gojenie się złamań [Głuszko i wsp., 2020].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "miednica"
           }
         },
         {
@@ -6616,10 +6595,7 @@
         },
         {
           "interwencja": "Zmniejszenie poziomu agresji i autoagresji przez: • obserwację chorej w celu wykrycia ewentualnych zachowań bezpośrednio zagrażających jej życiu bądź zdrowiu, • zachowanie spokojnego tonu głosu podczas rozmowy, • stworzenie możliwości odreagowania negatywnych emocji przez rozmowę lub udział w zajęciach terapeutycznych (np. psychorysunek), • umiejętne odpieranie zarzutów chorej, • rozmowa o uczuciach, które powodują agresję, • niemoralizowanie i nieocenianie zachowania chorej.",
-          "uzasadnienie": "Zachowania autodestrukcyjne w anoreksji są uznawane za formę nieświadomego unicestwiania samej siebie [Albiset, 2003]. Osobom z anoreksją towarzyszy lęk przed przytyciem, co powoduje podejmowanie wiele autodestrukcyjnych działań, np. odmowa jedzenia, głodzenie, stosowanie środków przeczyszczających, stosowanie wyczerpujących ćwiczeń fizycznych oraz środków tłumiących odczucie łaknienia [Albiset, 2003; Dutkiewicz, Grzelak, 2016; Koc-Kozłowiec, 2015].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Zachowania autodestrukcyjne w anoreksji są uznawane za formę nieświadomego unicestwiania samej siebie [Albiset, 2003]. Osobom z anoreksją towarzyszy lęk przed przytyciem, co powoduje podejmowanie wiele autodestrukcyjnych działań, np. odmowa jedzenia, głodzenie, stosowanie środków przeczyszczających, stosowanie wyczerpujących ćwiczeń fizycznych oraz środków tłumiących odczucie łaknienia [Albiset, 2003; Dutkiewicz, Grzelak, 2016; Koc-Kozłowiec, 2015]."
         },
         {
           "interwencja": "Przywrócenie kondycji fizycznej pozwalającej na normalne funkcjonowanie poprzez terapię żywieniową: • obserwacja chorej podczas spożywania posiłków, • zmniejszanie lub eliminowanie następstw choroby (niedopuszczenie do zagłodzenia, zapobiegnięcie dalszej utracie masy ciała), • stosowanie w pierwszym okresie choroby diety o wysokiej wartości energetycznej; taką dietę utrzymuje się do czasu, gdy chora uzyska jej wieku, • w przypadku niechęci do przyjmowania pokarmów, połączonej ze znacznym ubytkiem masy ciała należy rozważyć (wspólnie z zespołem terapeutycznym) założenie sondy żołądkowej lub zastosowanie żywienia parenteralnego.",
@@ -6863,10 +6839,7 @@
         },
         {
           "interwencja": "Wzmocnienie poczucia wartości i kompetencji zdrowotnych pacjenta poprzez: • motywowanie pacjenta do podejmowania działania, • chwalenie wysiłków pacjenta, • wspieranie jego działań, • wprowadzenie działań edukacyjnych z zakresu profilaktyki drugorzędowej (poprzez zmianę stylu życia, nawyków zdrowotnych, przygotowanie do życia z chorobą), • okazywanie życzliwości i wyrozumiałości, • podkreślanie jego zalet i umiejętności, • umożliwienie kontaktu z psychologiem, • umożliwienie kontaktu z bliskimi.",
-          "uzasadnienie": "Wzmocnienie kompetencji zdrowotnych pozwala na lepsze przystosowanie się do choroby, radzenie sobie z jej konsekwencjami oraz zwiększa świadomość i celowość działań podejmowanych w procesie leczenia.",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Wzmocnienie kompetencji zdrowotnych pozwala na lepsze przystosowanie się do choroby, radzenie sobie z jej konsekwencjami oraz zwiększa świadomość i celowość działań podejmowanych w procesie leczenia."
         }
       ],
       "oczekiwaneWyniki": "Pacjent efektywnie radzi sobie ze stresem, werbalizuje swoje potrzeby i wyraża emocje, umie odreagować i kontroluje negatywne emocje, konfrontuje się z problemem."
@@ -7077,10 +7050,7 @@
         },
         {
           "interwencja": "Wspieranie działań promujących obraz siebie u pacjentki, takich jak: dostrzeganie swoich myśli, odczuć, pragnień i działań; akceptacja swoich zalet, wad, sukcesów i porażek; asertywność, wyznaczanie celów w życiu i ich realizacja, życie w zgodzie ze sobą.",
-          "uzasadnienie": "W procesie samoopieki niezmiernie istotne jest poczucie własnej wartości. Wyniki badań pokazały, że wysoka samoocena, wsparcie społeczne i optymizm są powiązane z podejmowaniem zachowań prozdrowotnych [Łatka i wsp., 2013; Majewicz, 2017].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "W procesie samoopieki niezmiernie istotne jest poczucie własnej wartości. Wyniki badań pokazały, że wysoka samoocena, wsparcie społeczne i optymizm są powiązane z podejmowaniem zachowań prozdrowotnych [Łatka i wsp., 2013; Majewicz, 2017]."
         },
         {
           "interwencja": "Udzielanie pacjentce wsparcia emocjonalnego w podejmowaniu pozytywnych zachowań zdrowotnych. Kształtowanie poczucia własnej skuteczności u pacjentki.",
@@ -7796,10 +7766,7 @@
         },
         {
           "interwencja": "Ochrona dziecka przed infekcjami: • wykonywanie szczepień ochronnych obowiązkowych i zalecanych, • ubieranie adekwatne do temperatury otoczenia, • chronienie dziecka przed potencjalnymi źródłami zakażenia - unikanie dużych skupisk ludzkich, • przestrzeganie zasad racjonalnego żywienia (w ramach diety bezglutenowej).",
-          "uzasadnienie": "Dzieci z nietolerancją glutenu mają zmniejszoną odporność ze względu na niedobory składników odżywczych (białek, pierwiastków śladowych i witamin – warunkujących prawidłowe funkcjonowanie układu immunologicznego). U dzieci z nietolerancją glutenu infekcje, zwłaszcza przewodu pokarmowego, obniżają możliwości regeneracyjne błony śluzowej jelit [Pietrzyk, Kwinta, 2018; Dobrzańska, Ryżko, 2014; Rybak i wsp., 2014].",
-          "exam": {
-            "bodyZone": "skora"
-          }
+          "uzasadnienie": "Dzieci z nietolerancją glutenu mają zmniejszoną odporność ze względu na niedobory składników odżywczych (białek, pierwiastków śladowych i witamin – warunkujących prawidłowe funkcjonowanie układu immunologicznego). U dzieci z nietolerancją glutenu infekcje, zwłaszcza przewodu pokarmowego, obniżają możliwości regeneracyjne błony śluzowej jelit [Pietrzyk, Kwinta, 2018; Dobrzańska, Ryżko, 2014; Rybak i wsp., 2014]."
         },
         {
           "interwencja": "Edukacja rodziców dotycząca: • istoty choroby, • leczenia dietetycznego (znaczenia diety dla rozwoju dziecka i zapobiegania powikłaniom choroby).",
@@ -8069,7 +8036,7 @@
           "interwencja": "Prowadzenie ćwiczeń biernych we wszystkich stawach kończyn dolnych i górnych. Wykonywanie w czasie kąpieli pełnych ruchów odwodzenia w stawach biodrowych, prostowania w stawach kolanowych i zgięcia grzbietowego stopy przy wyproście w stawie kolanowym. Częsta zmiana pozycji ciała dziecka w ciągu dnia, układanie na brzuchu przed posiłkami (pozycje zmniejszające napięcie mięśniowe).",
           "uzasadnienie": "Są to działania wspierające proces terapii dziecka poprzez wdrożenie elementów rehabilitacji do codziennych czynności pielęgnacyjnych i opiekuńczych, mają na celu zapobieganie przykurczom [Pawlak i wsp., 2017].",
           "exam": {
-            "bodyZone": "konczyny-dolne"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -8228,7 +8195,7 @@
           "interwencja": "Ocena stanu fizycznego dziecka: • uważne oglądanie powłok ciała pod kątem obrażeń: – krwiaków, otarć, zadrapań naskórka, wybroczyn, zasinień, blizn, obrzęków, ran, w tym także po oparzeniach, – określenie tzw. wieku urazu, • obserwacja i ocena błon śluzowych, gałek ocznych, małżowin usznych, • ocena zakresu ruchomości, ustawienia i bolesności kończyn i stawów, • obserwacja pod kątem dolegliwości somatycznych, jak: ból brzucha, zawroty i ból głowy, nudności, wymioty, duszność.",
           "uzasadnienie": "Granica między krzywdzeniem a wypadkiem nie zawsze jest łatwa do określenia. Trudność diagnostyczna jest związana z ukrywaniem krzywdzenia dzieci i brakiem objawów jednoznacznie specyficznych. Znajomość charakterystycznych objawów urazów, a także narzędzi i śladów, jakie one zostawiają (np. śladów klamry paska, sznura elektrycznego zwiniętego w pętlę, przypalania papierosem lub oparzeń typu „rękawiczek i skarpetek”) są ważnym czynnikiem ułatwiającym rozpoznanie krzywdzenia. Zmiany na skórze mogą być w różnych stadiach gojenia i o nietypowym umiejscowieniu. Ważnym kryterium diagnostycznym jest ocena „wieku” urazu (wylewu), który na ogół jest oceniany według zabarwienia (porównanie koloru siniaka z opracowaną skalą kolorów) [Iwaniec, 2012; Horst-Sikorska, Bryl, 2011; Hartman, Jackowska, 2014].",
           "exam": {
-            "bodyZone": "brzuch"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -8383,7 +8350,7 @@
           "interwencja": "Ocena zaburzeń wodno-elektrolitowych: • dokonanie na podstawie badania przedmiotowego oceny stopnia odwodnienia: – osłabienie elastyczności skóry, suchość błon śluzowych, obniżenie ciśnienia tętniczego w pozycji stojącej (hipotonia ortostatyczna), zmniejszenie napięcia gałek ocznych, obniżenie objętości wydalanego moczu, brak łzawienia oczu, obniżona potliwość, uczucie osłabienia, • określenie rodzaju odwodnienia: - hipertoniczne (hiperosmolarne) - wzrost ciśnienia osmotycznego osocza powyżej 290 mmol/kg wody, - hipotoniczne (hipoosmolarne) - obniżenie ciśnienia osmotycznego osocza poniżej 280 mmol/kg wody - izotoniczne (izoosmolarne) - ciśnienie osmotyczne osocza w normie, • ocena objawów przedmiotowych świadczących o zaburzeniach elektrolitowych (głównie w stężeniach sodu i potasu) - osłabienie siły mięśniowej i skurcze mięśni, parastezje, dolegliwości ze strony przewodu pokarmowego, splątanie, senność, pobudzenie, drgawki, zaburzenia orientacji, majaczenie, • wykonanie badań laboratoryjnych, takich jak: morfologia krwi, albuminy, stężenie sodu, potasu, chloru, wapnia, magnezu, fosforanów, pH krwi, dwuwęglanów.",
           "uzasadnienie": "Ocena objawów klinicznych pozwala na dokładną analizę przypadku oraz dostosowanie działań terapeutycznych indywidualnie do pacjenta. Postępujące wraz z wiekiem pogorszenie funkcji narządów (w tym nerek oraz ośrodka pragnienia w mózgu) i obniżenie się rezerw wody w ustroju predysponują do występowania zaburzeń gospodarki wodno-elektrolitowej. Niedostateczna podaż wody u osób starszych szybko może doprowadzić do zachwiania równowagi wewnątrzustrojowej, a w konsekwencji do poważnych zaburzeń stanu zdrowia. U osób starszych początkowe objawy odwodnienia są mało swoiste, dlatego wczesne ich wykrycie jest niezmiernie ważne, aby zapobiegać dalszej dehydratacji [Jośko-Ochojska i wsp., 2014; Jarosz i wsp., 2017]. Charakter zaburzeń równowagi wodno-elektrolitowej, który wpływa na molalność płynów ustrojowych, pozwala na ustalenie rodzaju odwodnienia. Najważniejszym składnikiem sód. Zmiany stężenia jonów sodu w osoczu są odbiciem zmian osmolarności zachodzących w płynach ustrojowych. Określenie rodzaju odwodnienia pozwala na właściwy dobór terapii wyrównującej zaburzenia gospodarki wodno-elektrolitowej. W przypadku osób starszych w większości przypadków występuje odwodnienie hipertoniczne (hiperosmolarne) charakteryzujące się większą utratą wody niż elektrolitów i jest najczęściej spowodowane niedostateczną podażą wody. Długotrwałe odwodnienie hipertoniczne może doprowadzić do zmian martwiczych w naczyniach krwionośnych OUN, zakrzepicy i ogniskowej martwicy tkanki nerwowej. Istnieje również zwiększone ryzyko wystąpienia odwodnienia hipotonicznego (hipoosmolarnego) cechujące się przewagą utraty elektrolitów. Ten rodzaj odwodnienia występuje najczęściej podczas nieodpowiednio dostosowanej do wieku i stanu klinicznego farmakoterapii lekami moczopędnymi [Jośko-Ochojska i wsp., 2014; Kokot, Franek, 2013]. Nasilone zaburzenia elektrolitowe mogą prowadzić do zmian ładunków błon komórkowych i potencjałów elektrycznych między komórkami, a w konsekwencji do zaburzeń przewodnictwa nerwowo-mięśniowego i zaburzeń gospodarki kwasowo-zasadowej. Obserwacja w kierunku objawów nieprawidłowości elektrolitowych pozwala zapobiec groźnym powikłaniom [Kanikowska i wsp., 2015; Jarosz i wsp. 2017; Kokot, Franek, 2013]. Badania laboratoryjne mają na celu potwierdzenie rozpoznania oraz ułatwienie obliczenia niedoboru wody i wyboru metody leczenia. Odgrywają szczególna rolę, ponieważ nie wszystkie zaburzenia stężeń jonów (szczególnie potasu) są objawowe. Jeśli zaburzenia narastają długotrwale, najczęściej objawy nie występują lub są bardzo dyskretne [Kokot, Franek, 2013; Jarosz i wsp. 2017].",
           "exam": {
-            "bodyZone": "oczy"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -8412,7 +8379,7 @@
           "interwencja": "Podjęcie działań zapobiegających powikłaniom wynikającym z zaburzeń metabolizmu (obniżenie odporności, skłonność do infekcji, zmiany na skórze, zaburzenia ze strony układu oddechowego, pokarmowego, krążenia): • obserwacja skóry w miejscach narażonych na zmiany oraz wykonanie toalety przeciwodleżynowej z dokładnym osuszeniem, następnie nawilżeniem i natłuszczeniem skóry, zachęcanie pacjenta do ćwiczeń ruchowych i aktywności, • obserwacja pacjenta w kierunku objawów ze strony układu oddechowego oraz edukacja i zachęcanie pacjenta do wykonywania ćwiczeń oddechowych, • obserwacja objawów ze strony układu pokarmowego (np. dolegliwości bólowe, pieczenie w przełyku, wzdęcia, biegunka, zaparcia) oraz niwelowanie zaburzeń na podstawie objawów i zaleceń lekarza, • obserwacja objawów ze strony układu krążenia oraz edukacja pacjenta w zakresie działań zapobiegających powikłaniom zakrzepowo-zatorowym, motywowanie chorego do wykonywania ćwiczeń przeciwzakrzepowych, • przeciwdziałanie infekcjom miejscowym i ogólnoustrojowym przez przestrzeganie zasad aseptyki i antyseptyki oraz zastosowanie profilaktyki antybiotykowej.",
           "uzasadnienie": "W wyniku zachodzących w organizmie rekcji chemicznych (metabolizmu) dochodzi do rozkładu spożytych składników, budowy komórek, tkanek i narządów. Niedożywienie wpływa na wszelkie zaburzenia w tych przemianach co powoduje brak zdolności komórek do pełnienia funkcji życiowych i tym samym powikłania ze strony poszczególnych narządów. W następstwie niedożywienia dochodzi do wielu niekorzystnych następstw we wszystkich narządach i układach organizmu starszego człowieka. Obserwuje się zmniejszenie masy ciała, osłabienie siły mięśniowej i sprawności psychomotorycznej. Występują też zaburzenia funkcji przewodu pokarmowego (osłabienie perystaltyki jelit, zaburzenia trawienia i wchłaniania, kolonizacja jelita cienkiego bakteriami, stłuszczenie wątroby i zmniejszenie syntezy białek, zmniejszenie wydzielania enzymów trawiennych). Niekorzystne następstwa dotyczą także układu oddechowego (zanik mięśni oddechowych z następczym pogorszeniem sprawności wentylacyjnej i większą predyspo- zycją do zapaleń płuc), układu krążenia (upośledzenie czynności skurczowej mięśnia sercowego) czy kostnego (zwiększone ryzyko osteoporozy) [Szczygieł, 2017].",
           "exam": {
-            "bodyZone": "plecy"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -8593,7 +8560,7 @@
           "interwencja": "Wspieranie relacji dziecko-matka/rodzice przez: • okazywanie życzliwości, tolerancji, szacunku, empati, • zapewnienie matce warunków do przebywania z dzieckiem na oddziale, • zachęcanie matki/rodziców do włączenia się w proces pielęgnowania dziecka, • wyrażanie wiary w możliwości dziecka, odwoływanie się do mocnych stron dziecka, • pomoc w tworzeniu pozytywnego obrazu dziecka, • pomoc w rozwijaniu umiejętności skutecznego zmagania się z ograniczeniami i wymaganiami, jakie stwarza sytuacja niepełnosprawności dziecka, • pomoc rodzicom w stymulowaniu optymalnego rozwoju dziecka, stosownie do rodzaju i stopnia niepełnosprawności, • wyeliminowanie lub ograniczenie do minimum czynników powodujących lub nasilających rozdrażnienie, stres, niepokój dziecka i rodziców, • pomoc rodzicom w zorganizowani: bezpiecznego (fizycznie i psychicznie) środowiska domowego, dostosowanego do rodzaju i stopnia niepełnosprawności dziecka.",
           "uzasadnienie": "Niepełnosprawność dziecka jest sytuacją trudną zarówno dla dziecka, jak i dla rodziców. Wspieranie relacji pomaga rodzicom w kształtowaniu prawidłowej postawy wobec dziecka, wpływa na akceptację nowej trudnej sytuacji, jest pomocne w powrocie do normalnego życia. Rodzice stają się bardziej zdolni do konstruktywnej walki ze skutkami niepełnosprawności. Pozytywne relacje dziecko–rodzice wpływają na lepsze efekty w procesie leczenia, rehabilitacji i pielęgnowania dziecka. Zapewnienie bezpiecznego środowiska domowego poprawia jakość życia dziecka, a jednocześnie zmniejsza stres/niepokój rodziców związany z opieką nad niepełnosprawnym dzieckiem [Twarduś, Perek, 2011].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "glowa"
           }
         },
         {
@@ -9129,7 +9096,7 @@
           "interwencja": "Podłączenie aparatury monitorującej podstawowe funkcje życiowe i stała kontrola parametrów życiowych pacjenta do momentu ustąpienia objawów zatrucia substancją psychoaktywną (12-24/72 godz.): ciśnienia tętniczego krwi, tętna, oddechu, saturacji, temperatury ciała, EKG, diurezy, gospodarki wodno-elektrolitowej.",
           "uzasadnienie": "Stałe monitorowanie parametrów życiowych pacjenta pozwala na bieżącą ocenę jego stanu i wczesne wykrycie powikłań [Wojnar, 2018; Dudek, 2019; Rak, 2019; Rutkiewicz i wsp., 2019].",
           "exam": {
-            "bodyZone": "klatka-piersiowa"
+            "bodyZone": "cale-cialo"
           }
         },
         {
@@ -9155,7 +9122,7 @@
           "interwencja": "Pobranie materiału do badań podstawowych oraz toksykologicznych - jeżeli ośrodek dysponuje odpowiednią pracownią (takich jak: gazometria krwi tętniczej, morfologia, elektrolity, mocznik, kreatynina, transaminazy, CK, w przypadku bólu w klatce piersiowej i/lub odchyleń w badaniu EKG dodatkowo oznaczenie troponin).",
           "uzasadnienie": "Wyniki badań są podstawą oceny stanu klinicznego pacjenta i ustalania dalszego postępowania [Wojnar, 2018; Dudek, 2019; Rak, 2019; Rutkiewicz i wsp., 2019].",
           "exam": {
-            "bodyZone": "skora"
+            "bodyZone": "klatka-piersiowa"
           }
         },
         {
