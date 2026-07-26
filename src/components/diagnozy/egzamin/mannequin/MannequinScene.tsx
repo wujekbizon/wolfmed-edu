@@ -45,7 +45,7 @@ export default function MannequinScene({
 
   return (
     <div
-      className="relative h-125 rounded-card border border-surface-border bg-gradient-to-b from-white to-slate-50 shadow-card overflow-hidden"
+      className="relative h-125 rounded-2xl ring-1 ring-zinc-900/[0.06] bg-gradient-to-b from-white via-white to-slate-50/80 shadow-[0_1px_2px_rgba(16,24,40,0.04)] overflow-hidden"
       aria-label="Fantom pacjenta — kliknij część ciała"
     >
       <Canvas
@@ -72,7 +72,7 @@ export default function MannequinScene({
         />
       </Canvas>
 
-      <p className="absolute top-2 left-2 px-2 py-1 rounded-full bg-white/90 border border-zinc-200 text-xs text-zinc-500 backdrop-blur-sm">
+      <p className="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-white/80 ring-1 ring-zinc-900/[0.06] text-[11px] font-medium text-zinc-500 backdrop-blur-md">
         Widok: {MANNEQUIN_VIEWS[view].label}
       </p>
 
@@ -80,7 +80,7 @@ export default function MannequinScene({
         <button
           type="button"
           onClick={() => setDebug((shown) => !shown)}
-          className="absolute top-10 left-2 px-2 py-1 rounded-full bg-white/90 border border-zinc-200 text-xs text-zinc-500 backdrop-blur-sm cursor-pointer hover:border-zinc-400"
+          className="absolute top-12 left-3 px-2.5 py-1 rounded-lg bg-white/80 ring-1 ring-zinc-900/[0.06] text-[11px] font-medium text-zinc-500 backdrop-blur-md cursor-pointer hover:text-zinc-700"
         >
           {debug ? 'Ukryj strefy' : 'Pokaż strefy'}
         </button>

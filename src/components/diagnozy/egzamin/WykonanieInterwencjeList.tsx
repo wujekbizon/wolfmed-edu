@@ -27,12 +27,12 @@ export default function WykonanieInterwencjeList({
             type="button"
             onClick={() => onSelect(item)}
             aria-pressed={isActive}
-            className={`flex items-start gap-2.5 text-left p-3 rounded-card border shadow-card
-              transition-all cursor-pointer hover:shadow-card-raised
+            className={`flex items-start gap-3 text-left p-3.5 rounded-2xl cursor-pointer
+              transition-all duration-200 ring-1
               ${
                 isActive
-                  ? 'bg-rose-50/60 border-rose-300'
-                  : 'bg-white border-surface-border hover:border-zinc-300'
+                  ? 'bg-rose-50/40 ring-rose-400/40 shadow-[0_12px_28px_-16px_rgba(190,24,93,0.3)]'
+                  : 'bg-white ring-zinc-900/[0.06] hover:ring-zinc-900/[0.12] hover:-translate-y-0.5 hover:shadow-[0_12px_24px_-16px_rgba(16,24,40,0.2)]'
               }`}
           >
             <span
@@ -41,10 +41,10 @@ export default function WykonanieInterwencjeList({
                 tabular-nums flex items-center justify-center
                 ${
                   isActive
-                    ? 'bg-exam-primary border-exam-primary text-white'
+                    ? 'bg-rose-500 border-rose-500 text-white'
                     : assignedZone
-                      ? 'bg-emerald-50 border-emerald-300 text-exam-success'
-                      : 'bg-white border-zinc-300 text-zinc-400'
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-600'
+                      : 'bg-zinc-50 border-zinc-200 text-zinc-400'
                 }`}
             >
               {assignedZone && !isActive ? <Check className="w-3.5 h-3.5" /> : index + 1}
@@ -54,7 +54,7 @@ export default function WykonanieInterwencjeList({
               <span className="block text-sm text-zinc-700 line-clamp-2">{item}</span>
               <span
                 className={`mt-1.5 inline-block text-xs font-medium ${
-                  assignedZone ? 'text-exam-success' : 'text-zinc-400'
+                  assignedZone ? 'text-emerald-600' : 'text-zinc-400'
                 }`}
               >
                 {assignedZone ? BODY_ZONE_LABELS[assignedZone] : 'Oczekuje na przypisanie'}

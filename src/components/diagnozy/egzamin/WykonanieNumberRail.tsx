@@ -31,13 +31,14 @@ export default function WykonanieNumberRail({
             aria-pressed={isActive}
             aria-label={label}
             title={item}
-            className={`w-8 h-8 shrink-0 rounded-full text-xs font-semibold tabular-nums border transition-colors cursor-pointer
+            className={`w-8 h-8 shrink-0 rounded-xl text-xs font-semibold tabular-nums
+              transition-all cursor-pointer ring-1
               ${
                 isActive
-                  ? 'bg-rose-500 border-rose-500 text-white'
+                  ? 'bg-rose-500 ring-rose-500 text-white shadow-[0_6px_14px_-6px_rgba(244,63,94,0.7)]'
                   : assignedZone
-                    ? 'bg-emerald-50 border-emerald-300 text-emerald-700 hover:border-emerald-400'
-                    : 'bg-white border-zinc-300 text-zinc-500 hover:border-zinc-400'
+                    ? 'bg-emerald-50 ring-emerald-200 text-emerald-600 hover:ring-emerald-300'
+                    : 'bg-zinc-50 ring-zinc-900/[0.06] text-zinc-400 hover:text-zinc-600 hover:ring-zinc-900/[0.12]'
               }`}
           >
             {index + 1}

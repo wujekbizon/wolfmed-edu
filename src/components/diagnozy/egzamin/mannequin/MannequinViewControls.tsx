@@ -5,9 +5,10 @@ import { MANNEQUIN_VIEWS, MANNEQUIN_VIEW_KEYS } from '@/constants/mannequinViews
 import type { MannequinViewKey } from '@/types/mannequinTypes'
 
 const iconButtonClass =
-  'w-8 h-8 rounded-full bg-white/90 border border-zinc-300 text-zinc-600 backdrop-blur-sm ' +
-  'flex items-center justify-center transition-colors cursor-pointer hover:border-zinc-400 ' +
-  'disabled:opacity-40 disabled:cursor-not-allowed'
+  'w-8 h-8 rounded-xl bg-white/80 ring-1 ring-zinc-900/[0.06] text-zinc-500 backdrop-blur-md ' +
+  'flex items-center justify-center transition-all cursor-pointer hover:text-zinc-700 ' +
+  'hover:ring-zinc-900/[0.12] shadow-[0_1px_2px_rgba(16,24,40,0.04)] ' +
+  'disabled:opacity-30 disabled:cursor-not-allowed'
 
 export default function MannequinViewControls({
   view,
@@ -28,7 +29,7 @@ export default function MannequinViewControls({
 }) {
   return (
     <>
-      <div className="absolute top-2 right-2 flex flex-col gap-1.5">
+      <div className="absolute top-3 right-3 flex flex-col gap-1.5">
         <button
           type="button"
           onClick={onZoomIn}
@@ -57,18 +58,18 @@ export default function MannequinViewControls({
         </button>
       </div>
 
-      <div className="absolute bottom-2 left-2 right-2 flex flex-wrap gap-1.5">
+      <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
         {MANNEQUIN_VIEW_KEYS.map((key) => (
           <button
             key={key}
             type="button"
             onClick={() => onSetView(key)}
             aria-pressed={view === key}
-            className={`px-2.5 py-1 rounded-full text-xs font-medium border backdrop-blur-sm transition-colors cursor-pointer
+            className={`px-2.5 py-1 rounded-lg text-xs font-medium backdrop-blur-md transition-all cursor-pointer ring-1
               ${
                 view === key
-                  ? 'bg-rose-500 border-rose-500 text-white'
-                  : 'bg-white/90 border-zinc-300 text-zinc-600 hover:border-zinc-400'
+                  ? 'bg-rose-500 ring-rose-500 text-white shadow-[0_6px_14px_-6px_rgba(244,63,94,0.7)]'
+                  : 'bg-white/80 ring-zinc-900/[0.06] text-zinc-500 hover:text-zinc-700 hover:ring-zinc-900/[0.12]'
               }`}
           >
             {MANNEQUIN_VIEWS[key].label}

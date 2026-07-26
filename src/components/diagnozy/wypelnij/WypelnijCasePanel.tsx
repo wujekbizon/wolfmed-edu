@@ -15,10 +15,10 @@ export default function WypelnijCasePanel({
       <details open={defaultOpen} className="group">
         <summary
           className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer
-            select-none text-sm font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors"
+            select-none text-sm font-semibold text-zinc-700 hover:bg-zinc-50/70 transition-colors rounded-2xl"
         >
           <span className="inline-flex items-center gap-2">
-            <FileText className="w-4 h-4 text-exam-secondary" />
+            <FileText className="w-4 h-4 text-zinc-400" />
             Opis przypadku
           </span>
           <ChevronDown className="w-4 h-4 text-zinc-400 transition-transform group-open:rotate-180" />

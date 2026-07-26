@@ -12,7 +12,7 @@ export default function WykonanieProgress({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className="text-xs font-medium text-zinc-500">Przypisano</span>
+        <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-400">Przypisano</span>
         <span className="text-xs font-semibold tabular-nums text-zinc-700">
           {assigned} / {total}
         </span>
@@ -22,10 +22,10 @@ export default function WykonanieProgress({
         aria-valuenow={assigned}
         aria-valuemin={0}
         aria-valuemax={total}
-        className="h-1.5 rounded-full bg-zinc-200 overflow-hidden"
+        className="h-1 rounded-full bg-zinc-100 overflow-hidden"
       >
         <div
-          className="h-full rounded-full bg-exam-success transition-all duration-300"
+          className="h-full rounded-full bg-emerald-500 transition-all duration-500"
           style={{ width: `${percent}%` }}
         />
       </div>

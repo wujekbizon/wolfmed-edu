@@ -7,6 +7,8 @@ import BodyZonePicker from '@/components/diagnozy/egzamin/BodyZonePicker'
 import Card from '@/components/ui/Card'
 import type { BodyZone, BodyZoneAssignments } from '@/types/diagnozyTypes'
 
+// One card divided by hairlines, not four stacked cards — the rail is a single
+// panel of related controls, and boxing each group made it read as clutter.
 export default function WykonanieSidePanel({
   interwencje,
   zones,
@@ -27,31 +29,37 @@ export default function WykonanieSidePanel({
   const assignedZone = active ? (zones[active] ?? null) : null
 
   return (
-    <div className="flex flex-col gap-4">
-      <WykonanieProgress assigned={assignedCount} total={interwencje.length} />
+    <Card tone="plain" className="divide-y divide-zinc-900/[0.06]">
+      <div className="p-4">
+        <WykonanieProgress assigned={assignedCount} total={interwencje.length} />
+      </div>
 
-      <WykonanieActiveCaption
-        index={activeIndex}
-        interwencja={active}
-        assignedZone={assignedZone}
-      />
+      <div className="p-4">
+        <WykonanieActiveCaption
+          index={activeIndex}
+          interwencja={active}
+          assignedZone={assignedZone}
+        />
+      </div>
 
-      <Card tone="plain" className="p-4">
-        <p className="text-xs font-medium text-zinc-500 mb-2">Przejdź do interwencji</p>
+      <div className="p-4">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400 mb-2.5">
+          Interwencje
+        </p>
         <WykonanieNumberRail
           interwencje={interwencje}
           zones={zones}
           active={active}
           onSelect={onSelect}
         />
-      </Card>
+      </div>
 
-      <Card tone="plain" className="p-4">
-        <p className="text-xs font-medium text-zinc-500 mb-2">
-          Kliknij ciało pacjenta lub wybierz obszar
+      <div className="p-4">
+        <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-400 mb-2.5">
+          Obszar ciała
         </p>
         <BodyZonePicker assignedZone={assignedZone} onAssign={onAssign} />
-      </Card>
-    </div>
+      </div>
+    </Card>
   )
 }

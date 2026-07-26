@@ -18,11 +18,11 @@ export default function BodyZonePicker({
           type="button"
           onClick={() => onAssign(zone)}
           aria-pressed={assignedZone === zone}
-          className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer
+          className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors cursor-pointer
             ${
               assignedZone === zone
                 ? 'bg-rose-500 text-white'
-                : 'bg-zinc-100 text-zinc-600 hover:bg-rose-100 hover:text-rose-700'
+                : 'bg-zinc-100/80 text-zinc-600 hover:bg-zinc-200/80 hover:text-zinc-800'
             }`}
         >
           {BODY_ZONE_LABELS[zone]}

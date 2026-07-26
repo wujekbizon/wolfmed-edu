@@ -1,7 +1,6 @@
 'use client'
 
 import { Check, MousePointerClick } from 'lucide-react'
-import Card from '@/components/ui/Card'
 import { BODY_ZONE_LABELS } from '@/types/diagnozyTypes'
 import type { BodyZone } from '@/types/diagnozyTypes'
 
@@ -18,33 +17,31 @@ export default function WykonanieActiveCaption({
 }) {
   if (!interwencja) {
     return (
-      <Card tone="muted" className="p-4">
-        <p className="text-sm text-zinc-500">
-          Wybierz interwencję z listy, aby wskazać miejsce na ciele pacjenta.
-        </p>
-      </Card>
+      <p className="text-sm text-zinc-400">
+        Wybierz interwencję, aby wskazać miejsce na ciele pacjenta.
+      </p>
     )
   }
 
   return (
-    <Card tone="active" className="p-4" aria-live="polite">
+    <div aria-live="polite">
       <div className="flex items-center justify-between gap-2 mb-2">
-        <span className="text-xs font-semibold uppercase tracking-wide text-exam-primary">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           Interwencja {index + 1}
         </span>
         {assignedZone ? (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-exam-success">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
             <Check className="w-3.5 h-3.5" />
             {BODY_ZONE_LABELS[assignedZone]}
           </span>
         ) : (
-          <span className="inline-flex items-center gap-1 text-xs font-medium text-exam-secondary">
+          <span className="inline-flex items-center gap-1 text-xs font-medium text-rose-500">
             <MousePointerClick className="w-3.5 h-3.5" />
             Wskaż miejsce
           </span>
         )}
       </div>
       <p className="text-sm leading-relaxed text-zinc-700">{interwencja}</p>
-    </Card>
+    </div>
   )
 }
