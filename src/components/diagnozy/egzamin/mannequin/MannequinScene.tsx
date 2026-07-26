@@ -4,6 +4,7 @@ import { Suspense, useMemo, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import MannequinBody from '@/components/diagnozy/egzamin/mannequin/MannequinBody'
+import MannequinStageLighting from '@/components/diagnozy/egzamin/mannequin/MannequinStageLighting'
 import MannequinCameraRig from '@/components/diagnozy/egzamin/mannequin/MannequinCameraRig'
 import MannequinViewControls from '@/components/diagnozy/egzamin/mannequin/MannequinViewControls'
 import { getMannequinCameraPosition } from '@/helpers/getMannequinCameraPosition'
@@ -47,11 +48,13 @@ export default function MannequinScene({
       className="relative h-105 rounded-xl border border-zinc-200 bg-gradient-to-b from-zinc-50 to-zinc-100 overflow-hidden"
       aria-label="Fantom pacjenta — kliknij część ciała"
     >
-      <Canvas camera={{ position: [0, 0.2, DEFAULT_VIEW_DISTANCE], fov: 45 }}>
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[3, 4, 5]} intensity={1.1} />
-        <directionalLight position={[-3, 2, -4]} intensity={0.4} />
+      <Canvas
+        dpr={[1, 2]}
+        gl={{ antialias: true }}
+        camera={{ position: [0, 0.2, DEFAULT_VIEW_DISTANCE], fov: 45 }}
+      >
         <Suspense fallback={null}>
+          <MannequinStageLighting />
           <MannequinBody
             selectedZone={selectedZone}
             debug={debug}
