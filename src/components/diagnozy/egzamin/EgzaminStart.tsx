@@ -15,9 +15,10 @@ export default function EgzaminStart({
         type="button"
         onClick={onStart}
         disabled={loading}
-        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-full
-          text-white bg-rose-500 hover:bg-rose-600 transition-colors cursor-pointer
-          disabled:opacity-60 disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-xl
+          text-white bg-rose-500 hover:bg-rose-600 cursor-pointer transition-all
+          shadow-[0_10px_22px_-10px_rgba(244,63,94,0.9)]
+          disabled:opacity-60 disabled:cursor-not-allowed disabled:shadow-none"
       >
         {loading ? (
           <LoaderCircle className="w-4 h-4 animate-spin" />

@@ -39,7 +39,7 @@ export default function EgzaminRunner() {
   return (
     <div>
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="text-sm font-bold text-zinc-800 uppercase tracking-wide">
+        <h2 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           {step ? step.label : 'Wykonanie na fantomie'}
         </h2>
         <EgzaminTimer
