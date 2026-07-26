@@ -28,6 +28,7 @@ export default function MannequinScene({
 }) {
   const [view, setView] = useState<MannequinViewKey>('front')
   const [distance, setDistance] = useState(DEFAULT_VIEW_DISTANCE)
+  const [debug, setDebug] = useState(false)
 
   // Recomputed only when a control is used, so the rig sees a new goal object
   // exactly once per request rather than on every render.
@@ -51,7 +52,11 @@ export default function MannequinScene({
         <directionalLight position={[3, 4, 5]} intensity={1.1} />
         <directionalLight position={[-3, 2, -4]} intensity={0.4} />
         <Suspense fallback={null}>
-          <MannequinModel selectedZone={selectedZone} onZoneClick={onZoneClick} />
+          <MannequinModel
+            selectedZone={selectedZone}
+            debug={debug}
+            onZoneClick={onZoneClick}
+          />
         </Suspense>
         <MannequinCameraRig goal={goal} onDistanceChange={setDistance} />
         <OrbitControls
@@ -67,6 +72,16 @@ export default function MannequinScene({
       <p className="absolute top-2 left-2 px-2 py-1 rounded-full bg-white/90 border border-zinc-200 text-xs text-zinc-500 backdrop-blur-sm">
         Widok: {MANNEQUIN_VIEWS[view].label}
       </p>
+
+      {process.env.NODE_ENV === 'development' && (
+        <button
+          type="button"
+          onClick={() => setDebug((shown) => !shown)}
+          className="absolute top-10 left-2 px-2 py-1 rounded-full bg-white/90 border border-zinc-200 text-xs text-zinc-500 backdrop-blur-sm cursor-pointer hover:border-zinc-400"
+        >
+          {debug ? 'Ukryj strefy' : 'Pokaż strefy'}
+        </button>
+      )}
 
       <MannequinViewControls
         view={view}
