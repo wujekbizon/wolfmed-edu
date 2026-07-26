@@ -26,6 +26,27 @@
   --ring: 240 10% 3.9%;
   --slidein-delay: 0s;
   --radius: 0.5rem;
+
+  /* Exam surface tokens — one scale so panels stop competing for attention.
+     Pink is reserved for the active selection and nothing else. */
+  --color-surface: #f8fafc;
+  --color-surface-card: #ffffff;
+  --color-surface-border: #e5e7eb;
+  --color-exam-primary: #e91e63;
+  --color-exam-secondary: #64748b;
+  --color-exam-success: #10b981;
+  --color-exam-warning: #f59e0b;
+
+  --spacing-step-1: 0.5rem;
+  --spacing-step-2: 0.75rem;
+  --spacing-step-3: 1rem;
+  --spacing-step-4: 1.5rem;
+  --spacing-step-5: 2rem;
+  --spacing-step-6: 3rem;
+
+  --radius-card: 1rem;
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-card-raised: 0 8px 24px rgba(0, 0, 0, 0.06);
   --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0s) forwards;
   --animate-fadeInUp: fadeInUp 0.5s ease-out var(--slidein-delay, 0s) forwards;
   --animate-scaleIn: scaleIn 0.5s ease-out forwards;

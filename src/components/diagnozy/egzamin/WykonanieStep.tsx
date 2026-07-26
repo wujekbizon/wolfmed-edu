@@ -3,10 +3,12 @@
 import { useState } from 'react'
 import WykonanieInterwencjeList from '@/components/diagnozy/egzamin/WykonanieInterwencjeList'
 import WykonanieMannequinPanel from '@/components/diagnozy/egzamin/WykonanieMannequinPanel'
+import WykonanieSidePanel from '@/components/diagnozy/egzamin/WykonanieSidePanel'
 import type { BodyZone, BodyZoneAssignments } from '@/types/diagnozyTypes'
 
 // Act-and-document: for each planned intervention the student indicates WHERE
-// on the patient it is performed — by clicking the mannequin or a zone button.
+// on the patient it is performed. The patient is the workspace — the case and
+// the intervention list support it rather than compete with it.
 export default function WykonanieStep({
   interwencje,
   zones,
@@ -40,32 +42,32 @@ export default function WykonanieStep({
   const activeIndex = active ? interwencje.indexOf(active) : -1
 
   return (
-    <div>
-      <p className="text-sm text-zinc-600 mb-1">
-        Wskaż, gdzie u pacjenta wykonasz każdą z zaplanowanych interwencji.
-      </p>
-      <p className="text-xs text-zinc-400 mb-4" aria-live="polite">
-        Wybierz interwencję, a następnie kliknij część ciała fantomu. Przypisano{' '}
-        {assignedCount} z {interwencje.length}
-      </p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
-        <WykonanieInterwencjeList
-          interwencje={interwencje}
-          zones={zones}
-          active={active}
-          onSelect={setActive}
-        />
-
+    <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_20rem] gap-6 items-start">
         <WykonanieMannequinPanel
-          interwencje={interwencje}
-          zones={zones}
-          active={active}
-          activeIndex={activeIndex}
-          onSelect={setActive}
+          selectedZone={active ? (zones[active] ?? null) : null}
           onAssign={assign}
         />
+
+        <div className="lg:sticky lg:top-4">
+          <WykonanieSidePanel
+            interwencje={interwencje}
+            zones={zones}
+            active={active}
+            activeIndex={activeIndex}
+            assignedCount={assignedCount}
+            onSelect={setActive}
+            onAssign={assign}
+          />
+        </div>
       </div>
+
+      <WykonanieInterwencjeList
+        interwencje={interwencje}
+        zones={zones}
+        active={active}
+        onSelect={setActive}
+      />
     </div>
   )
 }

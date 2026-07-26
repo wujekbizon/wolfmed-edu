@@ -45,7 +45,7 @@ export default function MannequinScene({
 
   return (
     <div
-      className="relative h-105 rounded-xl border border-zinc-200 bg-gradient-to-b from-zinc-50 to-zinc-100 overflow-hidden"
+      className="relative h-125 rounded-card border border-surface-border bg-gradient-to-b from-white to-slate-50 shadow-card overflow-hidden"
       aria-label="Fantom pacjenta — kliknij część ciała"
     >
       <Canvas

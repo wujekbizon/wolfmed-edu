@@ -50,7 +50,7 @@ export default function EgzaminRunner() {
       </div>
 
       <div className="mb-6">
-        <WypelnijCasePanel opisPrzypadku={exam.caseText} />
+        <WypelnijCasePanel opisPrzypadku={exam.caseText} defaultOpen={stepIndex === 0} />
       </div>
 
       {step ? (

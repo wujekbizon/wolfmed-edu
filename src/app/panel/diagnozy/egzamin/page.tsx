@@ -52,8 +52,8 @@ async function EgzaminContent() {
 
 export default function DiagnozyEgzaminPage() {
   return (
-    <section className="w-full p-4 lg:p-8">
-      <div className="max-w-3xl mx-auto">
+    <section className="w-full bg-surface p-4 lg:p-8">
+      <div className="max-w-6xl mx-auto">
         <Suspense fallback={<EgzaminContentSkeleton />}>
           <EgzaminContent />
         </Suspense>

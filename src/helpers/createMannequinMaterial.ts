@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-const HIGHLIGHT_COLOR = new THREE.Color('#cfe8ff')
+const HIGHLIGHT_COLOR = new THREE.Color('#f43f5e')
 
 /**
  * Clones the model's skin material and injects the highlight as emissive
