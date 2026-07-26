@@ -4,7 +4,36 @@
  * Weights encode specificity: a named anatomical structure outranks a
  * procedure that merely implies a region, which outranks a generic care word.
  * Patterns are stem-based because the source text is inflected.
+ *
+ * Stems carry a leading \b wherever they could otherwise match inside a longer
+ * word — "ranie" sits inside "Pobieranie", which tagged every blood draw as a
+ * wound until the boundary was added.
  */
+
+/**
+ * Procedures that name their own site. These decide the zone outright, because
+ * scoring alone lets an incidental tissue word outrank the actual procedure:
+ * a blood draw happens through skin, but it belongs to the arm.
+ */
+export const ZONE_OVERRIDES = [
+  {
+    zone: 'konczyny-gorne',
+    pattern:
+      /pobra\w* krwi|pobiera\w* krwi|wkłuci|kaniulac|wenflon|dostęp\w* (żyln|obwodow)|wlew\w* dożyln|gazometr|ciśnieni\w* tętnicz|mankiet/i,
+  },
+  {
+    zone: 'usta-drogi-oddechowe',
+    pattern:
+      /odsysani|intubac|tracheostom|toalet\w* jamy ustnej|tlenoterapi|inhalac|nebuliza|rurk\w* (intubacyjn|tracheo)/i,
+  },
+  { zone: 'miednica', pattern: /cewnikowani|cewnik\w* (moczow|Foley)|pęcherz\w* moczow/i },
+  { zone: 'brzuch', pattern: /sond[aęy] (żołądkow|dożołądkow)|gastrostom|\bPEG\b|perystaltyk/i },
+  { zone: 'plecy', pattern: /odleżyn|kości? krzyżow|materac\w* przeciwodleżynow/i },
+  { zone: 'klatka-piersiowa', pattern: /osłuchiwani\w* płuc|\bEKG\b|\bRKO\b|rentgen\w* klatki/i },
+  { zone: 'oczy', pattern: /spojówk|źrenic/i },
+  { zone: 'uszy', pattern: /małżowin|przewód słuchow/i },
+]
+
 export const ZONE_RULES = [
   {
     zone: 'oczy',
@@ -63,8 +92,8 @@ export const ZONE_RULES = [
   {
     zone: 'konczyny-gorne',
     patterns: [
-      [/przedrami|nadgarstk|dłon|palc\w* rąk|ramie|ramien/i, 6],
-      [/wkłuci|kaniul|wenflon|dostęp\w* (żyln|obwodow)|pobrani\w* krwi|wlew dożyln/i, 5],
+      [/przedrami|nadgarstk|dłon|palc\w* rąk|\bramie|\bramien/i, 6],
+      [/wkłuci|kaniul|wenflon|dostęp\w* (żyln|obwodow)|pobra\w* krwi|pobiera\w* krwi|wlew dożyln/i, 5],
       [/kończyn\w* górn/i, 5],
       [/ciśnieni\w* tętnicz|mankiet|\bRR\b|tętn(o|a|ie)\b/i, 3],
     ],
@@ -88,9 +117,9 @@ export const ZONE_RULES = [
   {
     zone: 'skora',
     patterns: [
-      [/opatrun|ran(a|y|ę|ie)\b|otarci|zaczerwienieni|maceracj/i, 5],
-      [/skór(a|y|ę|ze|ą)|natłuszcz|nawilża\w* skór|balsam|krem|maś[cć]/i, 4],
-      [/kąpiel|myci[ea]|higien[aęy] (ciała|osobist)|toalet[aęy] ciała/i, 3],
+      [/opatrun|\bran(a|y|ę|ie)\b|otarci|zaczerwienieni|maceracj/i, 5],
+      [/skór(a|y|ę|ze|ą)|natłuszcz|nawilża\w* skór|balsam|\bkrem|maś[cć]/i, 4],
+      [/kąpiel|\bmyci[ea]\b|higien[aęy] (ciała|osobist)|toalet[aęy] ciała/i, 3],
     ],
   },
   {
@@ -102,7 +131,10 @@ export const ZONE_RULES = [
   },
 ]
 
-/** Returns { zone, score, alternatives } or null when nothing matches. */
+/** A sentence touching this many regions is a survey, not a single site. */
+const SURVEY_ZONE_COUNT = 4
+
+/** Returns { zone, score, confidence, alternatives } or null when nothing matches. */
 export function suggestBodyZone(text) {
   const scores = []
 
@@ -112,6 +144,39 @@ export function suggestBodyZone(text) {
       if (pattern.test(text)) score += weight
     }
     if (score > 0) scores.push({ zone, score })
+  }
+
+  // Head-to-toe assessments ("oglądanie powłok ciała… otarć, blizn, małżowin")
+  // name many regions; without this the first specific term wins the whole
+  // intervention. Flagged low so a reviewer confirms the call.
+  if (scores.length >= SURVEY_ZONE_COUNT) {
+    return {
+      zone: 'cale-cialo',
+      score: scores.length,
+      confidence: 'low',
+      alternatives: scores
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3)
+        .map((s) => `${s.zone}:${s.score}`),
+    }
+  }
+
+  const overridden = ZONE_OVERRIDES.filter(({ pattern }) => pattern.test(text))
+  if (overridden.length === 1) {
+    return {
+      zone: overridden[0].zone,
+      score: 10,
+      confidence: 'high',
+      alternatives: [],
+    }
+  }
+
+  // Two site-naming procedures in one sentence: let scoring break the tie, but
+  // only between the zones those overrides nominated.
+  if (overridden.length > 1) {
+    const nominated = new Set(overridden.map(({ zone }) => zone))
+    const contested = scores.filter(({ zone }) => nominated.has(zone))
+    if (contested.length > 0) scores.length = 0, scores.push(...contested)
   }
 
   if (scores.length === 0) return null

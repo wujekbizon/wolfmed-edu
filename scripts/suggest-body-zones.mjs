@@ -12,8 +12,13 @@
  * zone, or blank it for interventions that have no body site (education,
  * psychological support, documentation). Then run apply-body-zones.mjs.
  *
+ * Existing exam.bodyZone values are treated as authored and kept. Pass
+ * --resuggest to re-derive every row from the current rules instead, which is
+ * what you want after correcting them — the column then shows the new
+ * suggestion and previousZone records what it replaces.
+ *
  * Usage:
- *   node scripts/suggest-body-zones.mjs
+ *   node scripts/suggest-body-zones.mjs [--resuggest]
  */
 
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -23,6 +28,7 @@ import { suggestBodyZone } from './lib/bodyZoneRules.mjs'
 const DIAGNOZY_PATH = path.join(process.cwd(), 'data', 'diagnozy.json')
 const TYPES_PATH = path.join(process.cwd(), 'src', 'types', 'diagnozyTypes.ts')
 const OUTPUT_PATH = path.join(process.cwd(), 'data', 'body-zones-review.csv')
+const resuggest = process.argv.includes('--resuggest')
 
 // Read the zone list from the type definition so this can never drift from the
 // enum the Zod schema validates against.
@@ -42,16 +48,21 @@ const zones = readBodyZones()
 const { diagnozy } = JSON.parse(readFileSync(DIAGNOZY_PATH, 'utf-8'))
 
 const rows = []
-const stats = { high: 0, medium: 0, low: 0, none: 0, existing: 0 }
+const stats = { high: 0, medium: 0, low: 0, none: 0, existing: 0, changed: 0 }
 
 for (const diagnoza of diagnozy) {
   ;(diagnoza.interwencje ?? []).forEach((item, index) => {
     const existing = item.exam?.bodyZone ?? ''
     const suggestion = suggestBodyZone(item.interwencja)
 
-    if (existing) stats.existing++
+    const keepExisting = existing && !resuggest
+    const finalZone = keepExisting ? existing : (suggestion?.zone ?? '')
+
+    if (keepExisting) stats.existing++
     else if (!suggestion) stats.none++
     else stats[suggestion.confidence]++
+
+    if (existing && finalZone !== existing) stats.changed++
 
     rows.push({
       slug: diagnoza.slug,
@@ -61,7 +72,8 @@ for (const diagnoza of diagnozy) {
       suggestedZone: suggestion?.zone ?? '',
       confidence: suggestion?.confidence ?? 'none',
       alternatives: suggestion?.alternatives.join(' ') ?? '',
-      finalZone: existing || suggestion?.zone || '',
+      previousZone: existing,
+      finalZone,
     })
   })
 }
@@ -74,6 +86,7 @@ const header = [
   'suggestedZone',
   'confidence',
   'alternatives',
+  'previousZone',
   'finalZone',
 ]
 
@@ -93,5 +106,6 @@ console.log(`  high confidence:   ${stats.high}`)
 console.log(`  medium confidence: ${stats.medium}`)
 console.log(`  low confidence:    ${stats.low}`)
 console.log(`no body site:        ${stats.none}`)
+if (resuggest) console.log(`changed vs authored: ${stats.changed}`)
 console.log(`\nvalid zones: ${zones.join(', ')}`)
 console.log(`written: ${path.relative(process.cwd(), OUTPUT_PATH)}`)
