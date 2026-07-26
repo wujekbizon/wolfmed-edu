@@ -7,22 +7,22 @@ const GROUPS = [
     key: 'hits',
     label: 'Poprawnie zaznaczone',
     icon: Check,
-    row: 'bg-emerald-50/60 text-zinc-700',
-    mark: 'text-emerald-600',
+    row: 'bg-zinc-50/70 border-l-2 border-emerald-400',
+    mark: 'text-emerald-500',
   },
   {
     key: 'missed',
     label: 'Pominięte',
     icon: Minus,
-    row: 'bg-amber-50/60 text-zinc-700',
-    mark: 'text-amber-600',
+    row: 'bg-zinc-50/70 border-l-2 border-amber-400',
+    mark: 'text-amber-500',
   },
   {
     key: 'extra',
     label: 'Zaznaczone błędnie',
     icon: X,
-    row: 'bg-rose-50/60 text-zinc-700',
-    mark: 'text-rose-500',
+    row: 'bg-zinc-50/70 border-l-2 border-rose-400',
+    mark: 'text-rose-400',
   },
 ] as const
 
@@ -59,7 +59,7 @@ export default function EgzaminResultStep({
                 {items.map((item) => (
                   <li
                     key={item}
-                    className={`flex items-start gap-2.5 text-sm rounded-xl p-2.5 ${group.row}`}
+                    className={`flex items-start gap-2.5 text-sm text-zinc-700 rounded-r-xl p-2.5 ${group.row}`}
                   >
                     <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${group.mark}`} aria-hidden />
                     <span className="min-w-0 leading-relaxed">
