@@ -62,6 +62,30 @@ export type DiagnozyExamAttempt = {
   completedAt: Date
 }
 
+export const EXAM_ATTEMPT_SORT_KEYS = [
+  'date-desc',
+  'date-asc',
+  'score-desc',
+  'score-asc',
+] as const
+
+export type ExamAttemptSortKey = (typeof EXAM_ATTEMPT_SORT_KEYS)[number]
+
+export type ExamAttemptStatusFilter = 'all' | 'passed' | 'failed'
+
+export type ExamAttemptCriteria = {
+  search: string
+  status: ExamAttemptStatusFilter
+  sort: ExamAttemptSortKey
+}
+
+export type ExamAttemptStats = {
+  total: number
+  best: number
+  average: number
+  passed: number
+}
+
 export type DiagnozaTitleRow = {
   slug: string
   section: string

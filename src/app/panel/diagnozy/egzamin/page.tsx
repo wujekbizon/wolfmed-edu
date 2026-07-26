@@ -5,9 +5,10 @@ import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
 import { getDiagnozyTitlesBySlugs, getUserDiagnozyExamAttempts } from '@/server/queries'
 import { getDiagnozyTitlesBySlug } from '@/helpers/getDiagnozyTitlesBySlug'
+import { ATTEMPTS_HISTORY_LIMIT } from '@/constants/examAttempts'
 import EgzaminRunner from '@/components/diagnozy/egzamin/EgzaminRunner'
 import EgzaminHeader from '@/components/diagnozy/egzamin/EgzaminHeader'
-import EgzaminAttemptsList from '@/components/diagnozy/egzamin/EgzaminAttemptsList'
+import EgzaminAttemptsPanel from '@/components/diagnozy/egzamin/EgzaminAttemptsPanel'
 import EgzaminAttemptsListSkeleton from '@/components/skeletons/EgzaminAttemptsListSkeleton'
 import EgzaminContentSkeleton from '@/components/skeletons/EgzaminContentSkeleton'
 import NoAccessMessage from '@/components/NoAccessMessage'
@@ -21,11 +22,11 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 async function EgzaminAttempts({ userId }: { userId: string }) {
-  const attempts = await getUserDiagnozyExamAttempts(userId)
+  const attempts = await getUserDiagnozyExamAttempts(userId, ATTEMPTS_HISTORY_LIMIT)
   const titleRows = await getDiagnozyTitlesBySlugs(attempts.map((a) => a.diagnozaSlug))
 
   return (
-    <EgzaminAttemptsList
+    <EgzaminAttemptsPanel
       attempts={attempts}
       titlesBySlug={getDiagnozyTitlesBySlug(titleRows)}
     />
