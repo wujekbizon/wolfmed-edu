@@ -2,17 +2,17 @@
 
 import { useState } from 'react'
 import { useFlashcardDecks } from '@/hooks/useFlashcardDecks'
+import { useFlashcardReviewStore } from '@/store/useFlashcardReviewStore'
 import { FLASHCARD_FILTERS } from '@/constants/flashcards'
 import FlashcardDeckCard from './FlashcardDeckCard'
-import FlashcardReviewModal from './FlashcardReviewModal'
-import type { Flashcard, FlashcardDeck } from '@/types/flashcardTypes'
+import type { FlashcardDeck } from '@/types/flashcardTypes'
 
 type Filter = (typeof FLASHCARD_FILTERS)[number]['value']
 
 export default function FlashcardsSection({ initialDecks }: { initialDecks: FlashcardDeck[] }) {
   const decks = useFlashcardDecks(initialDecks)
+  const openReview = useFlashcardReviewStore((s) => s.openReview)
   const [filter, setFilter] = useState<Filter>('all')
-  const [reviewCards, setReviewCards] = useState<Flashcard[] | null>(null)
 
   if (decks.length === 0) return null
 
@@ -49,14 +49,10 @@ export default function FlashcardsSection({ initialDecks }: { initialDecks: Flas
             <FlashcardDeckCard
               key={deck.id}
               deck={deck}
-              onReview={() => setReviewCards(deck.cards)}
+              onReview={() => openReview(deck.cards)}
             />
           ))}
         </div>
-      )}
-
-      {reviewCards && (
-        <FlashcardReviewModal flashcards={reviewCards} onClose={() => setReviewCards(null)} />
       )}
     </section>
   )

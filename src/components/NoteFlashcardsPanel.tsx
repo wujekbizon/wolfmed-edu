@@ -1,9 +1,8 @@
 'use client'
 
-import { useState } from 'react'
 import { Layers } from 'lucide-react'
 import { useNoteFlashcardDeck } from '@/hooks/useNoteFlashcardDeck'
-import FlashcardReviewModal from './FlashcardReviewModal'
+import { useFlashcardReviewStore } from '@/store/useFlashcardReviewStore'
 import Button from './ui/Button'
 import type { FlashcardDeck } from '@/types/flashcardTypes'
 
@@ -14,7 +13,7 @@ interface NoteFlashcardsPanelProps {
 
 export default function NoteFlashcardsPanel({ noteId, initialDeck }: NoteFlashcardsPanelProps) {
   const { cards } = useNoteFlashcardDeck(noteId, initialDeck)
-  const [isReviewing, setIsReviewing] = useState(false)
+  const openReview = useFlashcardReviewStore((s) => s.openReview)
 
   return (
     <div className='bg-white rounded-xl shadow-sm border border-zinc-200 p-4'>
@@ -29,13 +28,14 @@ export default function NoteFlashcardsPanel({ noteId, initialDeck }: NoteFlashca
           Zaznacz tekst w trybie nauki, aby utworzyć pierwszą fiszkę.
         </p>
       ) : (
-        <Button variant='secondary' size='sm' className='w-full' onClick={() => setIsReviewing(true)}>
+        <Button
+          variant='secondary'
+          size='sm'
+          className='w-full'
+          onClick={() => openReview(cards)}
+        >
           Przeglądaj
         </Button>
-      )}
-
-      {isReviewing && (
-        <FlashcardReviewModal flashcards={cards} onClose={() => setIsReviewing(false)} />
       )}
     </div>
   )

@@ -9,10 +9,10 @@ import { $getSelection, $isRangeSelection } from 'lexical'
 import StudyToolbar from './StudyToolbar'
 import HighlightPlugin from './editor/plugins/HighlightPlugin'
 import CommentPlugin from './editor/plugins/CommentPlugin'
-import FlashcardReviewModal from './FlashcardReviewModal'
 import CommentModal from './CommentModal'
 import FlashcardCreateModal from './FlashcardCreateModal'
 import SelectionTooltip from './SelectionTooltip'
+import { useFlashcardReviewStore } from '@/store/useFlashcardReviewStore'
 import { useNoteFlashcardDeck } from '@/hooks/useNoteFlashcardDeck'
 import { useTextSelection } from '@/hooks/useTextSelection'
 
@@ -26,11 +26,11 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
     const [editor] = useLexicalComposerContext()
     const [showCommentModal, setShowCommentModal] = useState(false)
     const [showFlashcardModal, setShowFlashcardModal] = useState(false)
-    const [showReviewModal, setShowReviewModal] = useState(false)
     const [isStudyMode, setIsStudyMode] = useState(false)
     const [flashcardFromTooltip, setFlashcardFromTooltip] = useState(false)
     const [selectedText, setSelectedText] = useState('')
     const { cards: flashcards } = useNoteFlashcardDeck(noteId)
+    const openReview = useFlashcardReviewStore((s) => s.openReview)
     const { selectedText: tooltipText, selectionRect, clearSelection } = useTextSelection(isStudyMode)
 
     const handleFlashcardClick = () => {
@@ -68,7 +68,7 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
                     onEditClick={onEditClick}
                     onCommentClick={() => setShowCommentModal(true)}
                     onFlashcardClick={handleFlashcardClick}
-                    onReviewClick={() => setShowReviewModal(true)}
+                    onReviewClick={() => openReview(flashcards)}
                     flashcardsCount={flashcards.length}
                     isStudyMode={isStudyMode}
                     onToggleStudyMode={() => setIsStudyMode(!isStudyMode)}
@@ -103,7 +103,6 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
                     onClose={handleFlashcardModalClose}
                 />
             )}
-            {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}
         </>
     )
 }
