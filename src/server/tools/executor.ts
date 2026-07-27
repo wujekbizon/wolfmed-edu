@@ -395,6 +395,20 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 async function fiszkaTool(args: any): Promise<ToolResult> {
   const { cardCount = 10, topic = 'medycyna', content = '' } = args;
 
+  // Reached when the model calls this tool of its own accord on an ungrounded
+  // question; generating from nothing yields flashcards about having no content.
+  if (!content.trim()) {
+    return {
+      cellType: 'flashcard',
+      content: JSON.stringify({ topic, flashcards: [] }),
+      metadata: {
+        count: 0,
+        topic,
+        error: 'Brak treści źródłowej — nie wygenerowano fiszek.',
+      }
+    };
+  }
+
   const template = await getFlashcardTemplate()
   const ai = getGoogleAI()
 

@@ -19,6 +19,7 @@ import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
+import { TOOL_COMMANDS, TOOL_COMMAND_NAMES } from '@/constants/toolCommands'
 import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
@@ -196,7 +197,18 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
+    const { cleanQuestion, resources, tools, unknownTools } = parseMcpCommands(validationResult.data.question)
+
+    // Without this an unrecognised command falls through to a free-form question,
+    // where the model may still call a tool with arguments it invented.
+    if (unknownTools.length > 0 && tools.length === 0) {
+      const available = TOOL_COMMAND_NAMES.map((name) => `/${name}`).join(', ')
+      if (jobId) await errorJob(jobId, 'Nieznane polecenie', `Unknown command: /${unknownTools[0]}`)
+      return toFormState(
+        'ERROR',
+        `Nieznane polecenie /${unknownTools[0]}. Dostępne polecenia: ${available}`
+      )
+    }
 
     if (tools.length > 0 && tools[0]) {
       const toolName = tools[0]
@@ -273,21 +285,14 @@ export async function askRagQuestion(
 
     if (tools.length > 0) {
       const toolName = tools[0]
-      const toolMap: Record<string, any> = {
-        'notatka': TOOL_DEFINITIONS.find(t => t.name === 'notatka_tool'),
-        'utworz': TOOL_DEFINITIONS.find(t => t.name === 'utworz_test'),
-        'podsumuj': TOOL_DEFINITIONS.find(t => t.name === 'podsumuj'),
-        'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool'),
-        'fiszka': TOOL_DEFINITIONS.find(t => t.name === 'fiszka_tool'),
-        'planuj': TOOL_DEFINITIONS.find(t => t.name === 'planuj_tool'),
-        'wyklad': TOOL_DEFINITIONS.find(t => t.name === 'wyklad_tool'),
-      }
+      const command = toolName ? TOOL_COMMANDS[toolName] : undefined
+      const toolDefinition = command
+        ? TOOL_DEFINITIONS.find((t) => t.name === command.toolName)
+        : undefined
 
-      if (!toolName || !toolMap[toolName]) {
+      if (!toolDefinition) {
         return toFormState('ERROR', `Unknown tool: ${toolName}`)
       }
-
-      const toolDefinition = toolMap[toolName]
 
       if (jobId) {
         await emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
@@ -342,6 +347,16 @@ export async function askRagQuestion(
           jobId, 'searching', 60,
           'Używam wybranego źródła...',
           'RAG', 'Skipping knowledge base — user provided a primary source'
+        )
+      }
+
+      // The dispatch call forces a function call, so a source-backed tool handed an
+      // empty prompt invents its own subject instead of declining. Stop before that.
+      if (command?.requiresSource && !toolInputContent.trim() && pdfFiles.length === 0) {
+        if (jobId) await errorJob(jobId, 'Brak materiałów', `No grounded content for ${toolDefinition.name}`)
+        return toFormState(
+          'ERROR',
+          `Nie znalazłem w bazie wiedzy materiałów na temat "${effectiveQuestion}". Doprecyzuj temat lub dołącz własne źródło przez @zasób.`
         )
       }
 
