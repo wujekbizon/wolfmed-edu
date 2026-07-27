@@ -1,141 +1,141 @@
-# Fantom 3D — jak to działa i jak to zmienić
+# 3D Mannequin — how it works and how to change it
 
-Krok "Wykonanie na fantomie" w egzaminie z diagnoz: student wybiera interwencję,
-po czym klika miejsce na ciele pacjenta. Ten plik opisuje cały przepływ — od
-pliku modelu po ocenę odpowiedzi.
+The "Wykonanie na fantomie" step of the diagnozy exam: the student picks an
+intervention, then clicks where on the patient it is performed. This file covers
+the whole flow, from the model file to how an answer is graded.
 
 ---
 
-## Skąd się co bierze
+## Where everything comes from
 
 ```
-public/models/mannequin.glb          model (546 KB, CC-BY-4.0 — patrz CREDITS.md)
-public/models/mannequin-zones.json   mapa: wierzchołek → strefa ciała  ← GENEROWANY
-data/diagnozy.json                   exam.bodyZone — poprawna odpowiedź
-src/types/diagnozyTypes.ts           BODY_ZONES — lista 12 stref
-scripts/lib/mannequinZoneParts.mjs   bryły stref (tylko build, nic tego nie renderuje)
+public/models/mannequin.glb          the model (546 KB, CC-BY-4.0 — see CREDITS.md)
+public/models/mannequin-zones.json   vertex → body zone map            ← GENERATED
+data/diagnozy.json                   exam.bodyZone — the correct answer
+src/types/diagnozyTypes.ts           BODY_ZONES — the 12 zone names
+scripts/lib/mannequinZoneParts.mjs   zone volumes (build-time only, never rendered)
 ```
 
-Tylko `mannequin-zones.json` jest generowany. Reszta to źródła.
+Only `mannequin-zones.json` is generated. Everything else is a source file.
 
 ---
 
-## Przepływ w przeglądarce
+## What happens in the browser
 
-1. `MannequinBody.tsx` pobiera `.glb` **oraz** `mannequin-zones.json`.
-2. `buildMannequinGeometry` skaluje model do wysokości 2.4 i centruje w punkcie
-   (0,0,0) — dzięki temu mapa stref pasuje niezależnie od tego, jak model został
-   wyeksportowany.
-3. Klik → raycast trafia w prawdziwą geometrię → z trójkąta odczytujemy indeks
-   wierzchołka → z mapy strefę. **Nie ma niewidzialnych kształtów do klikania.**
-4. Podświetlenie: atrybut `aHighlight` (0–1 na wierzchołek) trafia do
-   `totalEmissiveRadiance` przez `onBeforeCompile`.
+1. `MannequinBody.tsx` fetches the `.glb` **and** `mannequin-zones.json`.
+2. `buildMannequinGeometry` scales the model to height 2.4 and centres it on the
+   origin, so the zone map lines up regardless of how the model was exported.
+3. A click raycasts the real geometry → reads the vertex index off the hit
+   triangle → looks up the zone. **There are no invisible hit shapes.**
+4. Highlighting: an `aHighlight` attribute (0–1 per vertex) is added to
+   `totalEmissiveRadiance` via `onBeforeCompile`.
 
-> **Dlaczego emissive, a nie kolor wierzchołków?** Kolory wierzchołków *mnożą*
-> teksturę, więc na brązowym ciele mogą je tylko przyciemnić. Podbicie powyżej 1
-> rozjaśnia, ale wzmacnia też teksturę i na modelu wychodzą kolorowe kwadraty z
-> atlasu palety. Emissive dodaje światło i nie dotyka tekstury.
+> **Why emissive rather than vertex colours?** Vertex colours *multiply* the base
+> texture, so on a brown body they can only darken it. Pushing them above 1
+> brightens, but it also amplifies the texture until the model's palette atlas
+> shows through as coloured blocks. Emissive adds light and never touches the map.
 
 ---
 
-## Zadanie 1 — poprawić zasięg strefy
+## Task 1 — fix a zone's reach
 
-Objaw: klikam przedramię, zaznacza się tułów.
+Symptom: you click the forearm and the torso highlights.
 
 ```bash
-# 1. Włącz podgląd stref
-#    /panel/diagnozy/egzamin → "Pokaż strefy" (widoczne tylko w dev)
-#    Ciało pokoloruje się według stref — od razu widać, gdzie są granice.
+# 1. Turn on the zone preview
+#    /panel/diagnozy/egzamin → "Pokaż strefy" (dev builds only)
+#    The body recolours by zone, so the boundaries are visible directly.
 
-# 2. Popraw bryłę w scripts/lib/mannequinZoneParts.mjs
-#    Układ: y -1.2 = stopy, y +1.2 = czubek głowy, x dodatnie = LEWA strona pacjenta
+# 2. Adjust the volume in scripts/lib/mannequinZoneParts.mjs
+#    Space: y -1.2 = feet, y +1.2 = crown, positive x = the patient's LEFT
 
-# 3. Przelicz mapę
+# 3. Re-bake the map
 node scripts/bake-mannequin-zones.mjs
 
-# 4. Odśwież stronę i sprawdź ponownie w podglądzie stref
+# 4. Reload and check the preview again
 ```
 
-Skrypt wypisuje procent wierzchołków na strefę — jeśli `brzuch` ma 2%, a
-`klatka-piersiowa` 8%, to znaczy, że klatka schodzi za nisko.
+The script prints the share of vertices per zone. If `brzuch` is 2% while
+`klatka-piersiowa` is 8%, the chest box is reaching too far down.
 
-**Kolejność w `PRIORITY` (w `bake-mannequin-zones.mjs`) ma znaczenie.** Oczy leżą
-wewnątrz kuli głowy, a plecy zachodzą na klatkę — testujemy od najmniejszych do
-największych, inaczej większa bryła "zjada" mniejszą.
+**The `PRIORITY` order in `bake-mannequin-zones.mjs` matters.** The eye spheres
+sit inside the head sphere and the back box overlaps the chest, so volumes are
+tested smallest-first — otherwise the larger one swallows the smaller.
 
 ---
 
-## Zadanie 2 — wymienić model
+## Task 2 — replace the model
 
 ```bash
-# 1. Podmień public/models/mannequin.glb (zaktualizuj CREDITS.md — licencja!)
+# 1. Swap public/models/mannequin.glb (update CREDITS.md — it's a licence term)
 
-# 2. Zmierz nowy model
+# 2. Measure the new model
 node scripts/measure-mannequin.mjs
-#    Wypisze zakresy x/z w pasmach wysokości i rozdzieli kończyny od tułowia:
+#    Prints x/z extents per height band and separates limbs from torso:
 #     0.40..0.50 | [-0.46,-0.31] [-0.22,0.22] [0.31,0.46]
-#                     ramię          tułów        ramię
+#                      arm            torso        arm
 
-# 3. Na tej podstawie popraw bryły w scripts/lib/mannequinZoneParts.mjs
+# 3. Use those numbers to refit scripts/lib/mannequinZoneParts.mjs
 # 4. node scripts/bake-mannequin-zones.mjs
-# 5. Sprawdź w podglądzie stref
+# 5. Verify with the zone preview
 ```
 
-Nazwa pliku `.glb` jest cache'owana przez przeglądarkę bez hasha — przy podmianie
-lepiej zmienić nazwę pliku (np. `mannequin-v2.glb`) niż nadpisać starą.
+Files in `public/` are served unhashed, so browsers cache the `.glb` by path.
+When replacing it, rename the file (e.g. `mannequin-v2.glb`) rather than
+overwriting — otherwise returning users may keep the stale model.
 
 ---
 
-## Zadanie 3 — poprawić poprawne odpowiedzi (`exam.bodyZone`)
+## Task 3 — correct the answers (`exam.bodyZone`)
 
-Krok fantomu ocenia tylko te interwencje, które mają `exam.bodyZone` w
-`data/diagnozy.json`. Bez tego pola interwencja jest pomijana przy ocenie.
+The mannequin step only grades interventions that carry `exam.bodyZone` in
+`data/diagnozy.json`. Without it, the intervention is skipped at grading time.
 
 ```bash
 node scripts/suggest-body-zones.mjs --resuggest   # → data/body-zones-review.csv
-#   Popraw kolumnę finalZone w Excelu.
-#   Puste = interwencja bez miejsca na ciele (edukacja, wsparcie) — to normalne.
+#   Correct the finalZone column in Excel.
+#   Blank = no body site (education, emotional support) — that's expected.
 
-node scripts/apply-body-zones.mjs --dry-run       # pokazuje liczby, nic nie zapisuje
+node scripts/apply-body-zones.mjs --dry-run       # reports counts, writes nothing
 node scripts/apply-body-zones.mjs                 # → data/diagnozy.json
-npx tsx scripts/seed-diagnozy.ts                  # walidacja + zapis do bazy
+npx tsx scripts/seed-diagnozy.ts                  # validates, then loads the table
 ```
 
-- Bez `--resuggest` skrypt **zachowuje** wartości już zapisane w `diagnozy.json`.
-  Po poprawieniu reguł w `lib/bodyZoneRules.mjs` używaj `--resuggest`, inaczej
-  stare wartości zostaną na miejscu. Kolumna `previousZone` pokazuje, co się zmieni.
-- `apply` dopasowuje wiersze po `slug` + `index` i **sprawdza treść interwencji**,
-  więc nieaktualny CSV przerwie działanie zamiast zapisać strefy w złych miejscach.
-- CSV jest w `.gitignore` — to plik roboczy, generowany na nowo w sekundę.
-- `seed-diagnozy.ts` robi `TRUNCATE` i wstawia wszystko od nowa. Id i slugi są
-  zachowane, więc postępy i historia podejść (klucz: `diagnozaSlug`) przeżywają.
+- Without `--resuggest` the script **keeps** values already in `diagnozy.json`.
+  After changing the rules in `lib/bodyZoneRules.mjs` you want `--resuggest`, or
+  the old values stay put. The `previousZone` column shows what each row replaces.
+- `apply` matches rows on `slug` + `index` **and verifies the intervention text**,
+  so a stale CSV aborts instead of writing zones onto the wrong interventions.
+- The CSV is gitignored — it's a working file, regenerated in a second.
+- `seed-diagnozy.ts` runs `TRUNCATE` and re-inserts. Ids and slugs are preserved,
+  so user progress and attempt history (keyed on `diagnozaSlug`) survive.
 
 ---
 
-## Skrypty
+## The scripts
 
-| Plik | Kiedy uruchamiać |
+| File | When to run it |
 |---|---|
-| `bake-mannequin-zones.mjs` | po każdej zmianie bryły lub modelu |
-| `measure-mannequin.mjs` | tylko przy podmianie modelu |
-| `suggest-body-zones.mjs` | gdy poprawiasz reguły lub chcesz zweryfikować odpowiedzi |
-| `apply-body-zones.mjs` | po sprawdzeniu CSV |
-| `lib/mannequinZoneParts.mjs` | bryły stref — edytujesz, nie uruchamiasz |
-| `lib/bodyZoneRules.mjs` | reguły słownikowe — edytujesz, nie uruchamiasz |
+| `bake-mannequin-zones.mjs` | after any change to a volume or the model |
+| `measure-mannequin.mjs` | only when replacing the model |
+| `suggest-body-zones.mjs` | when changing the rules or reviewing the answers |
+| `apply-body-zones.mjs` | after reviewing the CSV |
+| `lib/mannequinZoneParts.mjs` | zone volumes — edited, not run |
+| `lib/bodyZoneRules.mjs` | keyword rules — edited, not run |
 
-Wszystkie działają na czystym `node`, bez `tsx` — stąd rozszerzenie `.mjs`.
+All run under plain `node` with no `tsx` step, hence the `.mjs` extension.
 
 ---
 
-## Uwagi
+## Things worth knowing
 
-**Strony ciała są liczone od pacjenta, nie od ekranu.** Postać zwrócona do kamery
-ma lewą stronę po prawej stronie ekranu (x dodatnie). Przyciski "Lewy bok" /
-"Prawy bok" pokazują boki *pacjenta* — tak jak w dokumentacji pielęgniarskiej.
+**Sides are the patient's, not the screen's.** A figure facing the camera has its
+left side toward positive x — screen-right. The "Lewy bok" / "Prawy bok" buttons
+show the *patient's* sides, matching how nursing notes are written.
 
-**Reguły słownikowe wymagają `\b` na początku rdzenia.** `ran(a|y|ę|ie)` bez
-granicy słowa trafia w środek "Pobie-ranie" i każde pobranie krwi lądowało w
-strefie `skora`. Przy dodawaniu wzorca sprawdź, czy rdzeń nie siedzi w innym słowie.
+**Keyword rules need a leading `\b` on the stem.** `ran(a|y|ę|ie)` without one
+matches inside "Pobie-ranie", which filed every blood draw under `skora`. When
+adding a pattern, check the stem doesn't live inside an unrelated word.
 
-**Znane braki:** czas egzaminu (`timeSpent`) jest przysyłany przez klienta i
-serwer go nie weryfikuje; egzamin w toku nie przeżywa odświeżenia strony.
+**Known gaps:** `timeSpent` is asserted by the client and not verified on the
+server; an exam in progress does not survive a page refresh.
