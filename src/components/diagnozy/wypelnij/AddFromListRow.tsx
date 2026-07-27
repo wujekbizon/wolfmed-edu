@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Plus, X } from 'lucide-react'
-import WypelnijSelect from '@/components/diagnozy/wypelnij/WypelnijSelect'
+import DropdownSelect from '@/components/ui/DropdownSelect'
 
 type Option = { text: string; detail?: string }
 
@@ -78,7 +78,7 @@ export default function AddFromListRow({
 
       {remaining.length > 0 ? (
         <div className="flex flex-col sm:flex-row sm:items-start gap-2 min-w-0">
-          <WypelnijSelect
+          <DropdownSelect
             options={remaining.map((option) => ({
               value: option.text,
               label: option.text,

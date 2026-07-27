@@ -1,8 +1,7 @@
 'use client'
 
-import WypelnijSelect from '@/components/diagnozy/wypelnij/WypelnijSelect'
-
-type Option = { value: string; label: string }
+import DropdownSelect from '@/components/ui/DropdownSelect'
+import type { SelectOption } from '@/types/uiTypes'
 
 // Pick one correct answer; the chosen full text renders below, because long
 // clinical formulations don't fit in the closed control.
@@ -13,7 +12,7 @@ export default function SingleSelectRow({
   placeholder,
   ariaLabel,
 }: {
-  options: Option[]
+  options: SelectOption[]
   value: string | null
   onChange: (value: string) => void
   placeholder: string
@@ -23,7 +22,7 @@ export default function SingleSelectRow({
 
   return (
     <div className="flex flex-col gap-2.5 min-w-0">
-      <WypelnijSelect
+      <DropdownSelect
         options={options}
         value={value}
         onSelect={onChange}

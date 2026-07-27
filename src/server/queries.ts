@@ -2323,6 +2323,19 @@ export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
     .where(eq(diagnozy.status, "published"))
 })
 
+export const getDiagnozyTitlesBySlugs = cache(async (slugs: string[]) => {
+  if (slugs.length === 0) return []
+
+  return db
+    .select({
+      slug: diagnozy.slug,
+      section: diagnozy.section,
+      title: diagnozy.title,
+    })
+    .from(diagnozy)
+    .where(inArray(diagnozy.slug, slugs))
+})
+
 // Full diagnosis record by slug (published only)
 export const getDiagnozaBySlug = cache(
   async (slug: string): Promise<Diagnoza | null> => {

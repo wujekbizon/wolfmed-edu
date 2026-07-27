@@ -1,5 +1,6 @@
-import { redirect, notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { Metadata } from 'next'
+import { redirect, notFound } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
 import {
@@ -8,15 +9,19 @@ import {
   getUserDiagnozyCompletions,
 } from '@/server/queries'
 import DiagnozaTabs from '@/components/diagnozy/DiagnozaTabs'
+import DiagnozaHeader from '@/components/diagnozy/DiagnozaHeader'
 import DiagnozaStudyView from '@/components/diagnozy/DiagnozaStudyView'
 import WypelnijRunner from '@/components/diagnozy/wypelnij/WypelnijRunner'
+import DiagnozaContentSkeleton from '@/components/skeletons/DiagnozaContentSkeleton'
+import WypelnijRunnerSkeleton from '@/components/skeletons/WypelnijRunnerSkeleton'
 import NoAccessMessage from '@/components/NoAccessMessage'
-
-export const dynamic = 'force-dynamic'
+import type { Diagnoza } from '@/types/diagnozyTypes'
 
 interface Props {
   params: Promise<{ slug: string }>
 }
+
+export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
@@ -26,50 +31,54 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function DiagnozaPage({ params }: Props) {
+async function WypelnijPanel({ diagnoza, userId }: { diagnoza: Diagnoza; userId: string }) {
+  const [formulations, completedSlugs] = await Promise.all([
+    getDiagnozaFormulations(),
+    getUserDiagnozyCompletions(userId),
+  ])
+
+  return (
+    <WypelnijRunner
+      diagnoza={diagnoza}
+      formulations={formulations}
+      alreadyCompleted={completedSlugs.includes(diagnoza.slug)}
+    />
+  )
+}
+
+async function DiagnozaContent({ params }: Props) {
   const user = await getCurrentUser()
-  if (!user) redirect('/')
+  if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
   if (!hasAccess) return <NoAccessMessage />
 
   const { slug } = await params
-  const [diagnoza, formulations, completedSlugs] = await Promise.all([
-    getDiagnozaBySlug(slug),
-    getDiagnozaFormulations(),
-    getUserDiagnozyCompletions(user.userId),
-  ])
+  const diagnoza = await getDiagnozaBySlug(slug)
   if (!diagnoza) notFound()
 
   return (
+    <>
+      <DiagnozaHeader diagnoza={diagnoza} />
+      <DiagnozaTabs
+        nauka={<DiagnozaStudyView diagnoza={diagnoza} />}
+        wypelnij={
+          <Suspense fallback={<WypelnijRunnerSkeleton />}>
+            <WypelnijPanel diagnoza={diagnoza} userId={user.userId} />
+          </Suspense>
+        }
+      />
+    </>
+  )
+}
+
+export default function DiagnozaPage({ params }: Props) {
+  return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-8">
       <div className="max-w-4xl mx-auto">
-        <header className="mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
-              {diagnoza.section}
-            </span>
-            <span className="text-xs text-zinc-400">
-              {diagnoza.chapter.number}
-              {diagnoza.chapter.title ? `. ${diagnoza.chapter.title}` : ''}
-            </span>
-          </div>
-          <h1 className="text-2xl font-bold text-zinc-800">{diagnoza.title}</h1>
-          {diagnoza.author && (
-            <p className="text-xs text-zinc-400 mt-1">{diagnoza.author}</p>
-          )}
-        </header>
-
-        <DiagnozaTabs
-          nauka={<DiagnozaStudyView diagnoza={diagnoza} />}
-          wypelnij={
-            <WypelnijRunner
-              diagnoza={diagnoza}
-              formulations={formulations}
-              alreadyCompleted={completedSlugs.includes(diagnoza.slug)}
-            />
-          }
-        />
+        <Suspense fallback={<DiagnozaContentSkeleton />}>
+          <DiagnozaContent params={params} />
+        </Suspense>
       </div>
     </section>
   )

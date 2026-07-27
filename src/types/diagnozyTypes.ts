@@ -48,6 +48,50 @@ export type DiagnozyChapter = {
   diagnozy: DiagnozaListItem[]
 }
 
+export type DiagnozyChapterOption = {
+  number: string
+  title: string
+}
+
+export type DiagnozyExamAttempt = {
+  id: string
+  diagnozaSlug: string
+  score: number
+  passed: boolean
+  timeSpent: number
+  completedAt: Date
+}
+
+export const EXAM_ATTEMPT_SORT_KEYS = [
+  'date-desc',
+  'date-asc',
+  'score-desc',
+  'score-asc',
+] as const
+
+export type ExamAttemptSortKey = (typeof EXAM_ATTEMPT_SORT_KEYS)[number]
+
+export type ExamAttemptStatusFilter = 'all' | 'passed' | 'failed'
+
+export type ExamAttemptCriteria = {
+  search: string
+  status: ExamAttemptStatusFilter
+  sort: ExamAttemptSortKey
+}
+
+export type ExamAttemptStats = {
+  total: number
+  best: number
+  average: number
+  passed: number
+}
+
+export type DiagnozaTitleRow = {
+  slug: string
+  section: string
+  title: string
+}
+
 /** Option for the "Diagnoza pielęgniarska" select — one per published diagnosis. */
 export type DiagnozaFormulation = {
   slug: string
@@ -135,9 +179,6 @@ export const BODY_ZONE_LABELS: Record<BodyZone, string> = {
   skora: 'Skóra (całościowo)',
   'cale-cialo': 'Całe ciało',
 }
-
-/** Regions selectable only via the button rail (no distinct point on the body). */
-export const BUTTON_ONLY_ZONES: BodyZone[] = ['plecy', 'skora', 'cale-cialo']
 
 /** intervention text → body zone the student assigned on the mannequin */
 export type BodyZoneAssignments = Record<string, BodyZone>

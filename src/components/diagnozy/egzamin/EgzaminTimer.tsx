@@ -26,8 +26,13 @@ export default function EgzaminTimer({
     <span
       role="timer"
       aria-label="Pozostały czas egzaminu"
-      className={`inline-flex items-center gap-1.5 text-sm font-medium rounded-full px-3 py-1.5 tabular-nums transition-colors
-        ${isWarning ? 'text-rose-700 bg-rose-100 animate-pulse' : 'text-zinc-600 bg-zinc-100'}`}
+      className={`inline-flex items-center gap-1.5 text-sm font-medium rounded-xl px-3 py-1.5 tabular-nums
+        ring-1 transition-colors
+        ${
+          isWarning
+            ? 'text-rose-600 bg-rose-50 ring-rose-500/20 animate-pulse'
+            : 'text-zinc-600 bg-white ring-zinc-900/[0.06]'
+        }`}
     >
       <Timer className="w-4 h-4" />
       {formatExamClock(timeLeft)}

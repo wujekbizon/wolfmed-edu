@@ -1,17 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { SearchX } from 'lucide-react'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import DiagnozyToolbar from '@/components/diagnozy/browse/DiagnozyToolbar'
-import DiagnozyChapterGroup from '@/components/diagnozy/DiagnozyChapterGroup'
-import DiagnozaCard from '@/components/diagnozy/DiagnozaCard'
+import DiagnozyResults from '@/components/diagnozy/browse/DiagnozyResults'
 import { filterAndSortDiagnozy } from '@/helpers/filterAndSortDiagnozy'
-import { groupDiagnozyByChapter } from '@/helpers/groupDiagnozyByChapter'
-import { compareDiagnozySection } from '@/helpers/compareDiagnozySection'
-import type {
-  DiagnozaListItem,
-  DiagnozyBrowseCriteria,
-} from '@/types/diagnozyTypes'
+import { getDiagnozyChapters } from '@/helpers/getDiagnozyChapters'
+import type { DiagnozaListItem, DiagnozyBrowseCriteria } from '@/types/diagnozyTypes'
 
 const DEFAULT_CRITERIA: DiagnozyBrowseCriteria = {
   search: '',
@@ -31,18 +27,30 @@ export default function DiagnozyBrowser({
   const onChange = (patch: Partial<DiagnozyBrowseCriteria>) =>
     setCriteria((prev) => ({ ...prev, ...patch }))
 
-  const chapters = useMemo(() => {
-    const map = new Map<string, string>()
-    for (const d of diagnozy) if (!map.has(d.chapterNumber)) map.set(d.chapterNumber, d.chapterTitle)
-    return [...map.entries()]
-      .map(([number, title]) => ({ number, title }))
-      .sort((a, b) => compareDiagnozySection(a.number, b.number))
-  }, [diagnozy])
+  const debouncedSearch = useDebouncedValue(criteria.search, 250)
+  const effectiveCriteria = { ...criteria, search: debouncedSearch }
 
-  const results = useMemo(
-    () => filterAndSortDiagnozy(diagnozy, completedSlugs, criteria),
-    [diagnozy, completedSlugs, criteria]
-  )
+  const { data: chapters } = useQuery({
+    queryKey: ['diagnozyChapters', diagnozy.length],
+    queryFn: async () => getDiagnozyChapters(diagnozy),
+    initialData: () => getDiagnozyChapters(diagnozy),
+    staleTime: 10 * 60 * 1000,
+  })
+
+  const { data: results } = useQuery({
+    queryKey: [
+      'diagnozy',
+      diagnozy.length,
+      completedSlugs.length,
+      debouncedSearch,
+      criteria.chapter,
+      criteria.status,
+      criteria.sort,
+    ],
+    queryFn: async () => filterAndSortDiagnozy(diagnozy, completedSlugs, effectiveCriteria),
+    initialData: () => filterAndSortDiagnozy(diagnozy, completedSlugs, effectiveCriteria),
+    staleTime: 10 * 60 * 1000,
+  })
 
   const grouped = criteria.sort === 'section-asc' || criteria.sort === 'section-desc'
 
@@ -56,32 +64,11 @@ export default function DiagnozyBrowser({
           : `${results.length} z ${diagnozy.length} diagnoz`}
       </p>
 
-      {results.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-zinc-200 p-8 text-center text-zinc-500 flex flex-col items-center gap-2">
-          <SearchX className="w-6 h-6 text-zinc-300" />
-          Brak wyników dla wybranych filtrów.
-        </div>
-      ) : grouped ? (
-        <div className="flex flex-col gap-10">
-          {groupDiagnozyByChapter(results).map((chapter) => (
-            <DiagnozyChapterGroup
-              key={chapter.number}
-              chapter={chapter}
-              completedSlugs={completedSlugs}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-          {results.map((diagnoza) => (
-            <DiagnozaCard
-              key={diagnoza.id}
-              diagnoza={diagnoza}
-              completed={completedSlugs.includes(diagnoza.slug)}
-            />
-          ))}
-        </div>
-      )}
+      <DiagnozyResults
+        results={results}
+        completedSlugs={completedSlugs}
+        grouped={grouped}
+      />
     </div>
   )
 }

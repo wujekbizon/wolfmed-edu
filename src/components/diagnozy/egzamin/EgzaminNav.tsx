@@ -20,19 +20,19 @@ export default function EgzaminNav({
   onSubmit: () => void
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 mt-6">
+    <div className="sticky bottom-0 z-20 -mx-1 px-1 py-3 mt-6 flex items-center justify-between gap-3 bg-slate-50/80 backdrop-blur-md border-t border-zinc-900/[0.06]">
       <button
         type="button"
         onClick={onBack}
         disabled={stepIndex === 0 || submitting}
         className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-full
-          text-zinc-600 bg-zinc-100 hover:bg-zinc-200 transition-colors cursor-pointer
+          text-zinc-600 bg-white ring-1 ring-zinc-900/[0.08] hover:ring-zinc-900/[0.16] transition-all cursor-pointer
           disabled:opacity-40 disabled:cursor-not-allowed"
       >
         <ArrowLeft className="w-4 h-4" />
         Wstecz
       </button>
-      <span className="text-xs text-zinc-400">
+      <span className="text-xs font-medium tabular-nums text-zinc-400">
         {stepIndex + 1} / {stepCount}
       </span>
       {isLast ? (
@@ -41,7 +41,7 @@ export default function EgzaminNav({
           onClick={onSubmit}
           disabled={submitting}
           className="inline-flex items-center gap-1.5 px-5 py-2 text-sm font-medium rounded-full
-            text-white bg-rose-500 hover:bg-rose-600 transition-colors cursor-pointer
+            text-white bg-rose-500 hover:bg-rose-600 shadow-[0_8px_18px_-8px_rgba(244,63,94,0.8)] transition-all cursor-pointer
             disabled:opacity-60 disabled:cursor-not-allowed"
         >
           {submitting && <LoaderCircle className="w-4 h-4 animate-spin" />}

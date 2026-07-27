@@ -62,6 +62,55 @@ src/
 
 ---
 
+## 🥇 Golden Rules
+
+**Non-negotiable. These override any pattern found in existing code — where old code disagrees, the old code is wrong.**
+
+### 1. Comments — zero by default
+
+The only acceptable comment explains **why** on genuinely non-obvious logic (see the `decodeURIComponent` note in `panel/nauka/[category]/page.tsx` — it exists because category names contain Polish characters). Never write section banners, restatements of the code, or JSDoc on self-evident functions. If a comment is needed to explain *what* code does, rename the thing instead.
+
+### 2. `page.tsx` is a shell, not a screen
+
+Reference: `src/app/panel/testy/page.tsx`.
+
+- A page contains only: `metadata` / `generateMetadata`, `export const dynamic`, and a default export returning a layout wrapper plus `<Suspense>` boundaries.
+- Each async data fetch lives in its own `async function` (or its own file) behind its own `<Suspense fallback={<XSkeleton />}>`, so the shell paints immediately instead of the route blocking on the slowest query.
+- Fallbacks are real skeletons from `@/components/skeletons` — never `<div>Loading...</div>`, and `fallback={null}` only when the subtree renders nothing visible.
+- No markup beyond the layout wrapper. Headers, empty states, cards, and CTAs are their own component files.
+
+### 3. Nothing lives in a page that isn't the page
+
+No helper functions, constant maps, or data-shaping loops inside `page.tsx`. Helpers → `/src/helpers` (one file per function; search first). Constants → `/src/constants`. Types → `/src/types/<domain>Types.ts`.
+
+### 4. Server/client boundary
+
+Auth, data fetching, and redirects run on the server; interactivity lives in a `'use client'` island receiving data as props. A page is never a client component.
+
+### 5. Caching, filtering, and sorting go through react-query
+
+Reference: `src/components/AllTests.tsx`.
+
+Client-side search, filter, and sort use `useQuery` with a stable `queryKey` that includes the discriminator (category, slug, session), `initialData` seeded from server props, and a shared `staleTime`. Search inputs debounce via `useDebouncedValue`. Never hand-roll `useState` + `useEffect` + `.filter()`.
+
+### 6. Forms
+
+As specified in **Forms & Validation** below — server-only Zod, `useActionState`, `FieldError` per field, `useToastMessage`. No client-side validation, ever.
+
+### 7. Extract, don't compress
+
+At ~90–100 lines a file gets split into new files. Never shrink a file by collapsing whitespace, merging responsibilities, or golfing the code.
+
+### 8. Use the shared UI components
+
+Never hand-roll a raw `<input>`, `<select>`, `<textarea>`, or `<label>` with ad-hoc Tailwind classes. Use the components in `/src/components/ui` (`Input`, `Label`, `Select`, `Textarea`, …). Check that directory before writing any form control or primitive.
+
+If no existing component fits, **add one to `/src/components/ui`** rather than styling an element inline — a local `const selectClass = '…'` string inside a component is the signal that a shared component is missing. Keep them generic: props for value/options/handlers, no hardcoded `name`/`id`, no binding to a specific store or domain type. A component that only serves one caller belongs next to that caller, not in `/ui`.
+
+The same applies to visual primitives beyond form controls (buttons, cards, badges) — one styled implementation, reused, not copied class strings.
+
+---
+
 ## 🎯 Component Architecture Patterns
 
 ### Modal Components

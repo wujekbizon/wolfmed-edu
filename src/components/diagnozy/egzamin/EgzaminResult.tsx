@@ -1,9 +1,8 @@
 'use client'
 
 import { RotateCcw } from 'lucide-react'
+import EgzaminScoreCard from '@/components/diagnozy/egzamin/EgzaminScoreCard'
 import EgzaminResultStep from '@/components/diagnozy/egzamin/EgzaminResultStep'
-import { formatExamClock } from '@/helpers/formatExamClock'
-import { DIAGNOZY_EXAM_PASS_THRESHOLD } from '@/helpers/gradeDiagnozyExam'
 import type { DiagnozyExamResult } from '@/types/diagnozyTypes'
 
 export default function EgzaminResult({
@@ -16,32 +15,14 @@ export default function EgzaminResult({
   onRetry: () => void
 }) {
   return (
-    <div aria-live="polite">
-      <div
-        className={`rounded-2xl border p-6 mb-6 text-center ${
-          result.passed
-            ? 'bg-emerald-50 border-emerald-200'
-            : 'bg-rose-50 border-rose-200'
-        }`}
-      >
-        <p className="text-4xl font-bold text-zinc-800 tabular-nums mb-1">
-          {result.score}%
-        </p>
-        <p
-          className={`text-sm font-semibold ${
-            result.passed ? 'text-emerald-700' : 'text-rose-700'
-          }`}
-        >
-          {result.passed
-            ? 'Zaliczono!'
-            : `Nie zaliczono — próg zaliczenia to ${DIAGNOZY_EXAM_PASS_THRESHOLD}%.`}
-        </p>
-        <p className="text-xs text-zinc-500 mt-1">
-          Czas: {formatExamClock(timeSpent)}
-        </p>
-      </div>
+    <div aria-live="polite" className="flex flex-col gap-6">
+      <EgzaminScoreCard
+        score={result.score}
+        passed={result.passed}
+        timeSpent={timeSpent}
+      />
 
-      <div className="flex flex-col gap-4 mb-6">
+      <div className="flex flex-col gap-3">
         {result.steps.map((step) => (
           <EgzaminResultStep
             key={step.field}
@@ -54,8 +35,9 @@ export default function EgzaminResult({
       <button
         type="button"
         onClick={onRetry}
-        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full
-          text-white bg-rose-500 hover:bg-rose-600 transition-colors cursor-pointer"
+        className="self-start inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium
+          rounded-xl text-white bg-rose-500 hover:bg-rose-600 cursor-pointer transition-all
+          shadow-[0_8px_18px_-8px_rgba(244,63,94,0.8)]"
       >
         <RotateCcw className="w-4 h-4" />
         Spróbuj ponownie
