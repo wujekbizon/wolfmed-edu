@@ -8,7 +8,8 @@ import NaukaLecturesSection from '@/components/NaukaLecturesSection'
 import NaukaNotesSection from '@/components/NaukaNotesSection'
 import NaukaFlashcardsSection from '@/components/NaukaFlashcardsSection'
 import NaukaMaterialsSection from '@/components/NaukaMaterialsSection'
-import NaukaSectionSkeleton from '@/components/skeletons/NaukaSectionSkeleton'
+import NaukaCategoriesSkeleton from '@/components/skeletons/NaukaCategoriesSkeleton'
+import NaukaCardGridSkeleton from '@/components/skeletons/NaukaCardGridSkeleton'
 import PdfPreviewModal from '@/components/PdfPreviewModal'
 import TextPreviewModal from '@/components/TextPreviewModal'
 import UploadMaterialModal from '@/components/UploadMaterialModal'
@@ -30,7 +31,7 @@ export default async function NaukaPage() {
       <div className='w-full space-y-8'>
         <LearningHubHeader />
 
-        <Suspense fallback={<NaukaSectionSkeleton />}>
+        <Suspense fallback={<NaukaCategoriesSkeleton />}>
           <NaukaCategoriesSection userId={user.userId} />
         </Suspense>
 
@@ -42,7 +43,7 @@ export default async function NaukaPage() {
           <NaukaLecturesSection userId={user.userId} />
         </Suspense>
 
-        <Suspense fallback={<NaukaSectionSkeleton />}>
+        <Suspense fallback={<NaukaCardGridSkeleton titleWidth='w-36' />}>
           <NaukaNotesSection userId={user.userId} />
         </Suspense>
 
@@ -50,7 +51,7 @@ export default async function NaukaPage() {
           <NaukaFlashcardsSection userId={user.userId} />
         </Suspense>
 
-        <Suspense fallback={<NaukaSectionSkeleton rows={1} />}>
+        <Suspense fallback={<NaukaCardGridSkeleton titleWidth='w-44' cards={3} />}>
           <NaukaMaterialsSection userId={user.userId} />
         </Suspense>
       </div>
