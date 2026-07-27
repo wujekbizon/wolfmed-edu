@@ -1,4 +1,5 @@
 import type { DraftQuestion } from '@/components/cells/TestQuestionEditor'
+import { randomId } from '@/helpers/randomId'
 
 export function parseQuestions(content: string): DraftQuestion[] {
   try {
@@ -17,7 +18,7 @@ export function parseQuestions(content: string): DraftQuestion[] {
 
 export function blankDraft(category: string): DraftQuestion {
   return {
-    id: crypto.randomUUID(),
+    id: randomId(),
     data: {
       question: '',
       answers: Array(4).fill(null).map(() => ({ option: '', isCorrect: false })),

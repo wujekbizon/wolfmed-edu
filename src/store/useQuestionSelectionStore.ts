@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { randomId } from '@/helpers/randomId'
 
 interface CustomCategory {
   id: string
@@ -29,7 +30,7 @@ export const useQuestionSelectionStore = create<QuestionSelection>()(
       categoryToDelete: null,
       createCategory: (name) =>
         set((state) => ({
-          customCategories: [...state.customCategories, { id: crypto.randomUUID(), name, questionIds: [] }],
+          customCategories: [...state.customCategories, { id: randomId(), name, questionIds: [] }],
         })),
       editCategory: (id, newName) =>
         set((state) => ({
