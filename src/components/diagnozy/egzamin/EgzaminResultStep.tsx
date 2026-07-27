@@ -34,7 +34,7 @@ export default function EgzaminResultStep({
   uzasadnienia: Record<string, string>
 }) {
   return (
-    <Card tone="plain" className="p-4">
+    <Card className="p-4">
       <div className="flex items-center justify-between gap-2 mb-3">
         <h3 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           {step.label}

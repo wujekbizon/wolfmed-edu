@@ -11,7 +11,7 @@ export default function WypelnijCasePanel({
   defaultOpen?: boolean
 }) {
   return (
-    <Card tone="plain" className="overflow-hidden">
+    <Card className="overflow-hidden">
       <details open={defaultOpen} className="group">
         <summary
           className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer

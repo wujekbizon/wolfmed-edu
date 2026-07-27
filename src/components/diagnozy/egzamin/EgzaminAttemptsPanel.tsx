@@ -53,7 +53,7 @@ export default function EgzaminAttemptsPanel({
   const hidden = results.length - visible.length
 
   return (
-    <Card tone="plain" className="mt-8 divide-y divide-zinc-900/[0.06]">
+    <Card className="mt-8 divide-y divide-zinc-900/[0.06]">
       <div className="p-4 flex items-center gap-2">
         <History className="w-4 h-4 text-zinc-400" />
         <h2 className="text-sm font-semibold text-zinc-700">Historia podejść</h2>

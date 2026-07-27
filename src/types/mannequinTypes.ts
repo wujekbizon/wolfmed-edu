@@ -7,13 +7,6 @@ export type MannequinView = {
 
 export type CameraPosition = [number, number, number]
 
-export type ZonePart = {
-  geometry: 'sphere' | 'capsule' | 'box'
-  position: [number, number, number]
-  args: number[]
-  rotation?: [number, number, number]
-}
-
 export type MannequinZoneMap = {
   zones: string[]
   vertexZones: number[]

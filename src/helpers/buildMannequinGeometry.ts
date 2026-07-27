@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 
-export const MANNEQUIN_HEIGHT = 2.4
+const MANNEQUIN_HEIGHT = 2.4
 
 /**
  * Bakes the GLB into a single origin-centred geometry of a known height, so the

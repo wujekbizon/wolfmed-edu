@@ -29,7 +29,7 @@ export default function WykonanieSidePanel({
   const assignedZone = active ? (zones[active] ?? null) : null
 
   return (
-    <Card tone="plain" className="divide-y divide-zinc-900/[0.06]">
+    <Card className="divide-y divide-zinc-900/[0.06]">
       <div className="p-4">
         <WykonanieProgress assigned={assignedCount} total={interwencje.length} />
       </div>

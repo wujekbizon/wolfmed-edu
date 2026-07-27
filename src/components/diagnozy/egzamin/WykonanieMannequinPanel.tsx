@@ -9,7 +9,7 @@ const MannequinScene = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="h-125 rounded-card border border-surface-border bg-white flex items-center justify-center">
+      <div className="h-125 rounded-2xl ring-1 ring-zinc-900/[0.06] bg-white flex items-center justify-center">
         <LoaderCircle className="w-6 h-6 animate-spin text-zinc-300" />
       </div>
     ),
