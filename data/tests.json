@@ -198312,5 +198312,4658 @@
     },
     "createdAt": "2026-07-27 09:22:26.619594",
     "updatedAt": null
+  },
+  {
+    "id": "e0951074-9046-4bb0-895e-de3615b42b07",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie nie jest stanem statycznym. We wszystkich okresach życia należy:",
+      "answers": [
+        {
+          "option": "chronić - czyli zapobiegać chorobom (profilaktyka)",
+          "isCorrect": false
+        },
+        {
+          "option": "doskonalić - pomnażać, zwiększać jego potencjał (promocja zdrowia)",
+          "isCorrect": false
+        },
+        {
+          "option": "przywracać - gdy pojawi się choroba (leczenie i rehabilitacja)",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie odpowiedzi są poprawne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "ed126bd6-5935-41dc-94f9-066a97812209",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Do czynników determinujących zdrowie tzw. pola zdrowotne zaliczamy:",
+      "answers": [
+        {
+          "option": "styl życia (53%); środowisko fizyczne (21%); czynniki genetyczne (16%); opieka zdrowotna (10%)",
+          "isCorrect": true
+        },
+        {
+          "option": "styl życia (50%); środowisko fizyczne (20%); czynniki genetyczne (20%); opieka zdrowotna (10%)",
+          "isCorrect": false
+        },
+        {
+          "option": "styl życia (55%); środowisko fizyczne (25%); czynniki genetyczne (15%); opieka zdrowotna (5%)",
+          "isCorrect": false
+        },
+        {
+          "option": "styl życia (45%); środowisko fizyczne (26%); czynniki genetyczne (19%); opieka zdrowotna (10%)",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "a98b4eb3-980f-4310-8d97-783ab7bd165f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zagrożenia zdrowotne to:",
+      "answers": [
+        {
+          "option": "palenie papierosów; stres, zachowania seksualne",
+          "isCorrect": true
+        },
+        {
+          "option": "sposób odżywiania; palenie papierosów; odżywianie",
+          "isCorrect": false
+        },
+        {
+          "option": "palenie papierosów; sposób odżywiania; spożycie alkoholu; aktywność fizyczna; stres, zachowania seksualne",
+          "isCorrect": false
+        },
+        {
+          "option": "aktywność fizyczna; odżywianie; stres",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "08138313-aaf0-4f0d-8c49-d9f5130d81f8",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "W ewaluacji zdrowia dominującymi technikami są:",
+      "answers": [
+        {
+          "option": "samoobserwacja, pomiar, badanie",
+          "isCorrect": false
+        },
+        {
+          "option": "obserwacja; samoobserwacja; pomiar; analiza dokumentów",
+          "isCorrect": true
+        },
+        {
+          "option": "samobadanie; pomiar; badania",
+          "isCorrect": false
+        },
+        {
+          "option": "żadna odpowiedź nie jest poprawna",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "710bd9aa-87a3-4c68-9dc1-b092d1b866ee",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie publiczne to:",
+      "answers": [
+        {
+          "option": "monitorowanie stanu zdrowia oraz określenie potrzeb zdrowotnych ludności",
+          "isCorrect": false
+        },
+        {
+          "option": "kształcenie i doskonalenie zawodowe personelu medycznego zgodnie z wymogami współczesnej wiedzy medycznej",
+          "isCorrect": false
+        },
+        {
+          "option": "dyscyplina naukowa obejmująca zagadnienia zdrowia społeczeństwa, współzależności stanu zdrowia od warunków życia i form trosk o zdrowie, w odniesieniu zarówno do jednostki, rodziny, jak i większych społeczności",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "db9ffd85-9b79-4851-9a40-55702e0e2f79",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Profilaktyka wtórna obejmuje:",
+      "answers": [
+        {
+          "option": "zapobieganie chorobom poprzez kontrolowanie czynnika ryzyka",
+          "isCorrect": false
+        },
+        {
+          "option": "zapobieganie / zahamowanie postępu choroby i powikłań",
+          "isCorrect": true
+        },
+        {
+          "option": "zapobieganie konsekwencjom choroby poprzez jej wczesne wykrycie i leczenie",
+          "isCorrect": false
+        },
+        {
+          "option": "poprawna odpowiedź A, B, C",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "09f0da1e-7bd1-47f6-995f-42755f43bcec",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wskaż wymiary zdrowia:",
+      "answers": [
+        {
+          "option": "psychiczny; intelektualny; społeczny",
+          "isCorrect": false
+        },
+        {
+          "option": "moralny; społeczny; fizyczny",
+          "isCorrect": false
+        },
+        {
+          "option": "duchowy; fizyczny; zawodowy; psychiczny; społeczny",
+          "isCorrect": false
+        },
+        {
+          "option": "fizyczny; psychiczny; zawodowy; intelektualny; duchowy; społeczny",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3aabe8d8-bdcd-42de-84a3-f33cf86bae13",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zaznacz poziomy promocji zdrowia:",
+      "answers": [
+        {
+          "option": "społeczny",
+          "isCorrect": false
+        },
+        {
+          "option": "środowiskowy",
+          "isCorrect": false
+        },
+        {
+          "option": "organizacyjny",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie odpowiedzi są poprawne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "43bae310-8d78-4091-8812-ef7954d0e977",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wskaż działania tworzące strategię promocji zdrowia:",
+      "answers": [
+        {
+          "option": "określenie polityki zdrowia publicznego",
+          "isCorrect": false
+        },
+        {
+          "option": "tworzenie środowisk wsparcia",
+          "isCorrect": false
+        },
+        {
+          "option": "wzmocnienie inicjatyw i działań społecznych na rzecz zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie odpowiedzi są poprawne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c08ee75c-e14f-4442-998a-52816b2ca87c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Obecnie obowiązujący Program Narodowy Zdrowia jest na lata:",
+      "answers": [
+        {
+          "option": "1995-2020",
+          "isCorrect": false
+        },
+        {
+          "option": "2015-2021",
+          "isCorrect": false
+        },
+        {
+          "option": "2021-2025",
+          "isCorrect": true
+        },
+        {
+          "option": "2022-2025",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "695b6416-8073-4da7-bcf9-ad981ce715f4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Holistyczny model zdrowia tworzą następujące czynniki:",
+      "answers": [
+        {
+          "option": "fizyczne; psychiczne; emocjonalne; społeczne; duchowe",
+          "isCorrect": true
+        },
+        {
+          "option": "duchowe; rodzinne; społeczne",
+          "isCorrect": false
+        },
+        {
+          "option": "somatyczne; fizyczne; duchowe; logiczne myślenie",
+          "isCorrect": false
+        },
+        {
+          "option": "Poprawne odpowiedzi B i C",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "e8a634c8-0b62-4531-a756-66eaa6333d64",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Czym jest zdrowie?",
+      "answers": [
+        {
+          "option": "wartością - realizacja aspiracji, potrzeb, osiągania satysfakcji",
+          "isCorrect": false
+        },
+        {
+          "option": "zasobem dla społeczeństwa - zdrowe społeczeństwo osiąga odpowiednią jakość życia",
+          "isCorrect": false
+        },
+        {
+          "option": "środkiem do osiągnięcia lepszej jakości życia",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie odpowiedzi są poprawne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "08b4d348-9756-4130-8ad9-673a19cf08a6",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zachowania zagrażające zdrowiu (antyzdrowotne, negatywne) to:",
+      "answers": [
+        {
+          "option": "palenie tytoniu, ryzykowne zachowania, leki",
+          "isCorrect": false
+        },
+        {
+          "option": "palenie tytoniu, nadużywanie alkoholu, substancje psychoaktywne, ryzykowne zachowania seksualne",
+          "isCorrect": true
+        },
+        {
+          "option": "nadużywanie alkoholu, leki, substancje psychoaktywne",
+          "isCorrect": false
+        },
+        {
+          "option": "żadna z odpowiedzi nie jest poprawna",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "226a7fe4-9935-42d3-8a44-e95531457810",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Model holistyczny - zdrowie uzależnione jest od:",
+      "answers": [
+        {
+          "option": "zwyczajów i nawyków człowieka",
+          "isCorrect": false
+        },
+        {
+          "option": "czynników środowiskowych tj. jakość powietrza, woda, pożywienie",
+          "isCorrect": false
+        },
+        {
+          "option": "poprawna odpowiedź A i B",
+          "isCorrect": true
+        },
+        {
+          "option": "poprawna odpowiedź tylko A",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "50feaa90-0286-4c67-9bef-cfc7f3b62890",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Program profilaktyki gruźlicy kierowany jest do osób:",
+      "answers": [
+        {
+          "option": "powyżej 18. roku życia, które nie miały w wywiadzie rozpoznanej gruźlicy",
+          "isCorrect": true
+        },
+        {
+          "option": "poniżej 18. roku życia, które nie miały w wywiadzie rozpoznanej gruźlicy",
+          "isCorrect": false
+        },
+        {
+          "option": "które miały bezpośredni kontakt z osobami z już rozpoznaną gruźlicą",
+          "isCorrect": false
+        },
+        {
+          "option": "poprawna odpowiedź A i C",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3c2dfecb-cdd4-47f4-989d-fc8a9bf3eaa0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Koncepcji holistycznej zdrowia - choroba jest:",
+      "answers": [
+        {
+          "option": "definicją odrębną",
+          "isCorrect": false
+        },
+        {
+          "option": "elementem zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "definicją wspólną",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "74bd3d25-801d-4af5-8a18-c4331ae94d81",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Kiedy została opublikowana pierwsza mapa potrzeb zdrowotnych opracowana zgodnie z nowymi zasadami po nowelizacji ustawy o świadczeniach opieki zdrowotnej finansowanych ze środków publicznych - obwieszczenie Ministra Zdrowia z dnia 27 sierpnia 2021 r. w sprawie mapy potrzeb zdrowotnych:",
+      "answers": [
+        {
+          "option": "30 sierpnia 2021 r.",
+          "isCorrect": true
+        },
+        {
+          "option": "01 stycznia 2020 r.",
+          "isCorrect": false
+        },
+        {
+          "option": "01 marca 2021 r.",
+          "isCorrect": false
+        },
+        {
+          "option": "30 lipca 2020 r.",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "6424c084-032c-48ab-acee-807c486a43ff",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wskaż płatnika świadczeń zdrowotnych udzielanych dla osób ubezpieczonych:",
+      "answers": [
+        {
+          "option": "Ministerstwo Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "Narodowy Fundusz Zdrowia",
+          "isCorrect": true
+        },
+        {
+          "option": "Samorząd terytorialny",
+          "isCorrect": false
+        },
+        {
+          "option": "ZUS",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "535339d2-e711-4dfa-a169-771736c0eb7c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Program polityki zdrowotnej to zaplanowane, szerokie działania z zakresu opieki zdrowotnej które są:",
+      "answers": [
+        {
+          "option": "bezpieczne, mądre i przemyślane",
+          "isCorrect": false
+        },
+        {
+          "option": "skuteczne, bezpieczne i uzasadnione",
+          "isCorrect": true
+        },
+        {
+          "option": "dobre, realne i skuteczne",
+          "isCorrect": false
+        },
+        {
+          "option": "bezpieczne, rzeczywiste i opłacalne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3663b6bd-04ea-4523-b338-9e528a0fbdc3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Główny cel zdrowia publicznego to:",
+      "answers": [
+        {
+          "option": "zmniejszenie chorobowości i liczby przedwczesnych zgonów oraz stanów powodujących cierpienie i niepełnosprawność",
+          "isCorrect": true
+        },
+        {
+          "option": "ocena sytuacji zdrowotnej kraju na tle porównań międzynarodowych, analiza wyzwań i zagrożeń wynikających z procesu globalizacji",
+          "isCorrect": false
+        },
+        {
+          "option": "identyfikacja i zwalczanie czynników ryzyka zdrowotnego w środowisku miejsca zamieszkania, pracy i nauki",
+          "isCorrect": false
+        },
+        {
+          "option": "identyfikacja i zwalczanie czynników ryzyka zdrowotnego w środowisku miejsca zamieszkania, pracy i nauki",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c0db5d3f-5b77-47ab-8b7b-b99247f5906d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie nie jest stanem statycznym. We wszystkich okresach życia należy:",
+      "answers": [
+        {
+          "option": "chronić - czyli zapobiegać chorobom (profilaktyka)",
+          "isCorrect": false
+        },
+        {
+          "option": "doskonalić - pomnażać, zwiększać jego potencjał (promocja zdrowia)",
+          "isCorrect": false
+        },
+        {
+          "option": "przywracać - gdy pojawi się choroba (leczenie i rehabilitacja)",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie odpowiedzi są poprawne",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "89d9be5b-0a81-44c0-acaf-889d0b1f9fd0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Kto odpowiada za Programy Politykę Zdrowotną w Polsce (opracowanie, wdrożenie, realizację i finansowanie)?",
+      "answers": [
+        {
+          "option": "Ministerstwo Rodziny i Polityki Społecznej",
+          "isCorrect": false
+        },
+        {
+          "option": "Ministrowie oraz jednostki samorządu terytorialnego",
+          "isCorrect": true
+        },
+        {
+          "option": "Prezes NFZ",
+          "isCorrect": false
+        },
+        {
+          "option": "Narodowy Instytut Zdrowia Publicznego - Państwowy Zakład Higieny",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "37beea84-da38-4424-88d1-93a0e706181f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Cele systemu opieki zdrowotnej:",
+      "answers": [
+        {
+          "option": "dostępność, jakość, efektywność, dynamika",
+          "isCorrect": true
+        },
+        {
+          "option": "powszechność, jakość, wydajność, ciągłość",
+          "isCorrect": false
+        },
+        {
+          "option": "dostępność, równość, sprawność, stabilność",
+          "isCorrect": false
+        },
+        {
+          "option": "efektywność, powszechność, elastyczność, trwałość",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "68244dbb-6f53-4a09-a4c5-bf7c9b7d7658",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie publiczne w systemie ochrony zdrowia może być postrzegane poprzez:",
+      "answers": [
+        {
+          "option": "wskaźniki finansowania świadczeń medycznych",
+          "isCorrect": false
+        },
+        {
+          "option": "system kształcenia kadry medycznej",
+          "isCorrect": false
+        },
+        {
+          "option": "strategię rozwiązywania problemów zdrowotnych populacji",
+          "isCorrect": true
+        },
+        {
+          "option": "sposób organizacji lecznictwa zamkniętego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "26d34630-0f3b-4428-b9e8-a34be8c9fd0d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wyjaśnij założenia modeli edukacji zdrowotnej:",
+      "answers": [
+        {
+          "option": "zorientowany na chorobę, czynniki ryzyka, zdrowie",
+          "isCorrect": true
+        },
+        {
+          "option": "zorientowany na profilaktykę, leczenie, rehabilitację",
+          "isCorrect": false
+        },
+        {
+          "option": "zorientowany na jednostkę, rodzinę, społeczność",
+          "isCorrect": false
+        },
+        {
+          "option": "zorientowany na styl życia, środowisko, genetykę",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "b55c1b1b-73ca-4521-b17b-96708b097f4e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Podstawowe funkcje zdrowia publicznego:",
+      "answers": [
+        {
+          "option": "kształcenie kadry medycznej i naukowej",
+          "isCorrect": false
+        },
+        {
+          "option": "monitoring i analiza stanu zdrowia społeczeństwa",
+          "isCorrect": true
+        },
+        {
+          "option": "finansowanie świadczeń zdrowotnych ludności",
+          "isCorrect": false
+        },
+        {
+          "option": "nadzór nad jakością usług medycznych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "398f5284-a2e7-4820-9fd1-e9464d6af367",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "W państwach, w których obowiązuje narodowy system ochrony zdrowia, pacjent nie płaci za świadczenia:",
+      "answers": [
+        {
+          "option": "tak, z wyjątkiem ewentualnego ryczałtu obowiązującego w niektórych państwach",
+          "isCorrect": true
+        },
+        {
+          "option": "nie, każde świadczenie jest częściowo odpłatne",
+          "isCorrect": false
+        },
+        {
+          "option": "tak, ale tylko w zakresie leczenia szpitalnego",
+          "isCorrect": false
+        },
+        {
+          "option": "nie, opłaty zależą wyłącznie od wysokości dochodu",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "cebb5a65-a9df-4b04-acf4-9bdfb424aa0d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zagwarantowanie powszechnej opieki zdrowotnej na minimalnym poziomie jest założeniem w modelu opieki zdrowotnej:",
+      "answers": [
+        {
+          "option": "opartym na zasadzie pomocy publicznej",
+          "isCorrect": true
+        },
+        {
+          "option": "opartym na zasadzie ubezpieczenia dobrowolnego",
+          "isCorrect": false
+        },
+        {
+          "option": "opartym na zasadzie pełnej odpłatności",
+          "isCorrect": false
+        },
+        {
+          "option": "opartym na zasadzie ubezpieczenia korporacyjnego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "57627b22-acf6-4fcb-87e4-23da0946f2da",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Cechy modelu ubezpieczeniowego typu Bismarck'a:",
+      "answers": [
+        {
+          "option": "powszechna dostępność i bezpłatność",
+          "isCorrect": false
+        },
+        {
+          "option": "nadzór państwa",
+          "isCorrect": false
+        },
+        {
+          "option": "ubezpieczenia alternatywne i dodatkowe",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie prawidłowe",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "65f905f4-57f0-43ea-9ac3-834d2a649474",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Model prywatnych ubezpieczeń i usług zdrowotnych:",
+      "answers": [
+        {
+          "option": "dostępny tylko dla ubezpieczonych",
+          "isCorrect": true
+        },
+        {
+          "option": "dostępny dla wszystkich obywateli bezpłatnie",
+          "isCorrect": false
+        },
+        {
+          "option": "finansowany wyłącznie z budżetu państwa",
+          "isCorrect": false
+        },
+        {
+          "option": "obowiązkowy dla całej populacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "e65fce3c-7941-457a-8cb9-28a163684988",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Głównym zadaniem zdrowia publicznego i medycyny społecznej jest:",
+      "answers": [
+        {
+          "option": "ocena stanu zdrowia ludności, jego wszelkich uwarunkowań, w tym uwarunkowań środowiskowych, ze środowiskiem społecznym włącznie",
+          "isCorrect": true
+        },
+        {
+          "option": "leczenie chorób przewlekłych i zakaźnych w populacji ogólnej",
+          "isCorrect": false
+        },
+        {
+          "option": "nadzorowanie kształcenia zawodowego pracowników medycznych",
+          "isCorrect": false
+        },
+        {
+          "option": "koordynacja działań ratownictwa medycznego na poziomie krajowym",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "7eda47a4-0567-46e7-a941-2d6563641899",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Kto odpowiada za politykę zdrowotną w Polsce:",
+      "answers": [
+        {
+          "option": "Minister Zdrowia",
+          "isCorrect": true
+        },
+        {
+          "option": "Prezes Narodowego Funduszu Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "Główny Inspektor Sanitarny",
+          "isCorrect": false
+        },
+        {
+          "option": "Rzecznik Praw Pacjenta",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "078e5e98-c408-47c5-b299-0ddeab7b13b0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Popularyzowana powszechnie koncepcja zdrowia publicznego zakłada podejmowanie zintegrowanych wysiłków:",
+      "answers": [
+        {
+          "option": "Państwa, społeczności lokalnej i jednostki",
+          "isCorrect": true
+        },
+        {
+          "option": "Ministerstwa Zdrowia, samorządów i pracodawców",
+          "isCorrect": false
+        },
+        {
+          "option": "służby zdrowia, rodziny i szkoły",
+          "isCorrect": false
+        },
+        {
+          "option": "organizacji pozarządowych, kościoła i mediów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "360f36bc-3dbf-4137-9a59-141a2f840d94",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wskaźniki, które mierzą różne wymiary uczestnictwa w życiu społecznym ze względu na stan zdrowia nazywane są:",
+      "answers": [
+        {
+          "option": "epidemiologicznymi wskaźnikami zdrowia",
+          "isCorrect": true
+        },
+        {
+          "option": "demograficznymi wskaźnikami rozwoju",
+          "isCorrect": false
+        },
+        {
+          "option": "społecznymi wskaźnikami jakości życia",
+          "isCorrect": false
+        },
+        {
+          "option": "klinicznymi wskaźnikami niepełnosprawności",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c0ce2c52-0cab-4a79-aa1e-4d1b72c5a6ef",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Czynniki determinujące zdrowie człowieka:",
+      "answers": [
+        {
+          "option": "czynniki genetyczne 5-15%, środowisko fizyczne 5-10%, środowisko społeczne 20-25%, styl życia człowieka 50%, medycyna naprawcza 10-20%",
+          "isCorrect": true
+        },
+        {
+          "option": "czynniki genetyczne 20%, środowisko fizyczne 20%, środowisko społeczne 10%, styl życia człowieka 40%, medycyna naprawcza 10%",
+          "isCorrect": false
+        },
+        {
+          "option": "czynniki genetyczne 10%, środowisko fizyczne 20%, środowisko społeczne 10%, styl życia człowieka 55%, medycyna naprawcza 5%",
+          "isCorrect": false
+        },
+        {
+          "option": "czynniki genetyczne 25%, środowisko fizyczne 15%, środowisko społeczne 15%, styl życia człowieka 35%, medycyna naprawcza 10%",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "eb7fdb1d-503f-4797-a1ca-e77ff0a6ac54",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Rozwiń skrót, zaznacz poprawny:",
+      "answers": [
+        {
+          "option": "Agencja Ochrony Terytorium i Mienia Instytucji Terenowych",
+          "isCorrect": false
+        },
+        {
+          "option": "Agencja Oceny Technologii Medycznych i Taryfikacji",
+          "isCorrect": true
+        },
+        {
+          "option": "Agencja Organizacji Terapii Medycznej i Transportu",
+          "isCorrect": false
+        },
+        {
+          "option": "Agencja Opieki Terminalnej i Medycyny Trzeciego wieku",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "4127389f-a248-47a3-bd32-9653f14da0c5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Czynniki warunkujące zdrowie w ujęciu globalnym:",
+      "answers": [
+        {
+          "option": "uwarunkowania genetyczne zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "uwarunkowania środowiskowe zdrowia",
+          "isCorrect": true
+        },
+        {
+          "option": "uwarunkowania kulturowe zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "uwarunkowania ekonomiczne zdrowia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "71a3c22e-d940-4417-9c20-91da1c519054",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Definicja zadania zdrowia publicznego wg Winslowa:",
+      "answers": [
+        {
+          "option": "Nauka i sztuka zapobiegania chorobom, przedłużania życia, promowania zdrowia i sprawności fizycznej poprzez zorganizowane wysiłki na rzecz higieny środowiskowej, kontroli chorób zakaźnych, szerzenia zasad higieny osobistej",
+          "isCorrect": true
+        },
+        {
+          "option": "Zespół działań administracyjnych i prawnych mających na celu ograniczenie kosztów leczenia szpitalnego",
+          "isCorrect": false
+        },
+        {
+          "option": "Dziedzina wiedzy zajmująca się wyłącznie kontrolą chorób zakaźnych w środowisku pracy",
+          "isCorrect": false
+        },
+        {
+          "option": "System organizacyjny mający na celu koordynację działań personelu medycznego w zakresie diagnostyki",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3a5f5143-76ac-4d71-bb94-ab1ac6532b12",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Najmniejszy wpływ na zdrowie populacji mają:",
+      "answers": [
+        {
+          "option": "ochrona zdrowia",
+          "isCorrect": true
+        },
+        {
+          "option": "styl życia",
+          "isCorrect": false
+        },
+        {
+          "option": "czynniki genetyczne",
+          "isCorrect": false
+        },
+        {
+          "option": "środowisko fizyczne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "d1627093-59ae-41c1-956d-3410b1a0e7c1",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Funkcje zdrowia publicznego w Polsce wg Lelowskiego:",
+      "answers": [
+        {
+          "option": "kontrola finansowania świadczeń medycznych",
+          "isCorrect": false
+        },
+        {
+          "option": "działanie na rzecz ochrony zdrowia i indywidualnych osób",
+          "isCorrect": true
+        },
+        {
+          "option": "nadzorowanie kształcenia personelu pielęgniarskiego",
+          "isCorrect": false
+        },
+        {
+          "option": "koordynacja badań klinicznych i naukowych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "200ec040-f412-4a2c-844e-b3a97a37bb8a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wymień czynniki warunkujące stan zdrowia w modelu ekologicznym zdrowia:",
+      "answers": [
+        {
+          "option": "styl życia",
+          "isCorrect": true
+        },
+        {
+          "option": "dostęp do świadczeń zdrowotnych",
+          "isCorrect": false
+        },
+        {
+          "option": "poziom wykształcenia społeczeństwa",
+          "isCorrect": false
+        },
+        {
+          "option": "struktura demograficzna populacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "db946833-55bd-40a2-baeb-336e2f86ae8b",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Który z paradygmatów zdrowia zawiera cechy naukowego holizmu:",
+      "answers": [
+        {
+          "option": "paradygmat biomedyczny",
+          "isCorrect": false
+        },
+        {
+          "option": "paradygmat socjoekologiczny",
+          "isCorrect": true
+        },
+        {
+          "option": "paradygmat behawiorystyczny",
+          "isCorrect": false
+        },
+        {
+          "option": "paradygmat epidemiologiczny",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "93a6cb51-a6ae-4277-b6c2-7166fde9ba74",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Do pozytywnych mierników zdrowia zalicza się wskaźnik:",
+      "answers": [
+        {
+          "option": "chorobowości",
+          "isCorrect": false
+        },
+        {
+          "option": "długości życia",
+          "isCorrect": true
+        },
+        {
+          "option": "umieralności okołoporodowej",
+          "isCorrect": false
+        },
+        {
+          "option": "hospitalizacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "29ba9de5-56cc-4770-a925-7f5a283a106c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Umieralność to:",
+      "answers": [
+        {
+          "option": "Zgony w danej populacji do liczby członków tej populacji",
+          "isCorrect": true
+        },
+        {
+          "option": "Liczba zachorowań w danej populacji w danym okresie",
+          "isCorrect": false
+        },
+        {
+          "option": "Liczba zgonów niemowląt do liczby urodzeń żywych",
+          "isCorrect": false
+        },
+        {
+          "option": "Odsetek osób niepełnosprawnych w danej populacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "68087bb7-22b6-4d99-b8e3-0138dd36ac5c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Opieka zdrowotna w systemie Beveridge'a finansowana jest głównie:",
+      "answers": [
+        {
+          "option": "z budżetu pochodzącego z podatków",
+          "isCorrect": true
+        },
+        {
+          "option": "ze składek ubezpieczenia zdrowotnego",
+          "isCorrect": false
+        },
+        {
+          "option": "z prywatnych polis ubezpieczeniowych",
+          "isCorrect": false
+        },
+        {
+          "option": "z dopłat bezpośrednich pacjentów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "afce78c0-385b-4d73-a48e-526b909258d5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Organy kontroli nadzoru systemu ochrony zdrowia:",
+      "answers": [
+        {
+          "option": "Narodowy Fundusz Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "Ministerstwo Rodziny i Polityki Społecznej",
+          "isCorrect": false
+        },
+        {
+          "option": "Państwowa Inspekcja Pracy",
+          "isCorrect": true
+        },
+        {
+          "option": "Naczelna Izba Pielęgniarek i Położnych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "a40952ce-3c30-4434-80ef-aaa8266858c4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Determinant zdrowia populacji wg WHO:",
+      "answers": [
+        {
+          "option": "zachowania jednostki",
+          "isCorrect": true
+        },
+        {
+          "option": "struktura opieki medycznej",
+          "isCorrect": false
+        },
+        {
+          "option": "poziom rozwoju gospodarczego",
+          "isCorrect": false
+        },
+        {
+          "option": "dostępność leków refundowanych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "6e971fb6-6172-484d-8594-2d1b019ec453",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Określ podstawowe założenia koncepcji wychowania zdrowotnego:",
+      "answers": [
+        {
+          "option": "kształtowanie podstaw zdrowotnych i zmian z negatywnych na pozytywne",
+          "isCorrect": true
+        },
+        {
+          "option": "leczenie schorzeń przewlekłych za pomocą metod niefarmakologicznych",
+          "isCorrect": false
+        },
+        {
+          "option": "eliminowanie czynników ryzyka wyłącznie w środowisku pracy",
+          "isCorrect": false
+        },
+        {
+          "option": "monitorowanie realizacji szczepień ochronnych w populacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "a1bcd810-302d-41e5-ab87-63a8c8758045",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "BMI=26 wskazuje na:",
+      "answers": [
+        {
+          "option": "nadwagę",
+          "isCorrect": true
+        },
+        {
+          "option": "otyłość I stopnia",
+          "isCorrect": false
+        },
+        {
+          "option": "otyłość II stopnia",
+          "isCorrect": false
+        },
+        {
+          "option": "optymalną masę ciała",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "10cd3ec9-7bdb-45e7-b4b8-e16cf1cf94c4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Ile wynosi wskaźnik BMI u pacjenta ważącego 78 kg, przy wzroście 170 cm?:",
+      "answers": [
+        {
+          "option": "24,8",
+          "isCorrect": false
+        },
+        {
+          "option": "25,96",
+          "isCorrect": false
+        },
+        {
+          "option": "26,98",
+          "isCorrect": true
+        },
+        {
+          "option": "27,21",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "7b747960-57c3-486a-a2e6-8ef881cae772",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Według BMI otyłość mieści się w granicach:",
+      "answers": [
+        {
+          "option": "20-25",
+          "isCorrect": false
+        },
+        {
+          "option": "25-30",
+          "isCorrect": false
+        },
+        {
+          "option": "30-40",
+          "isCorrect": true
+        },
+        {
+          "option": "35-45",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "8d4d9c4b-eb26-4e46-b2ea-f3f5b2b08c17",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Bogatym źródłem pokarmowym błonnika są:",
+      "answers": [
+        {
+          "option": "świeże pszenne pieczywo",
+          "isCorrect": false
+        },
+        {
+          "option": "pieczywo razowe",
+          "isCorrect": false
+        },
+        {
+          "option": "otręby, warzywa, owoce",
+          "isCorrect": false
+        },
+        {
+          "option": "odpowiedzi \"pieczywo razowe\" i \"otręby, warzywa, owoce\" są prawidłowe",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "fd568d32-c100-477a-aeba-882a0b47516a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Które z wymienionych składników pokarmowych dostarczają organizmowi energii:",
+      "answers": [
+        {
+          "option": "tłuszcze, białka, węglowodany",
+          "isCorrect": true
+        },
+        {
+          "option": "białka, tłuszcze, witaminy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko tłuszcze",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko węglowodany",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "06ccb2f6-0a5b-4173-889d-e4471b82416c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Która instytucja ponosi koszt poboru i ewidencjonowania składek na ubezpieczenie zdrowotne w Polsce:",
+      "answers": [
+        {
+          "option": "Zakład Ubezpieczeń Społecznych",
+          "isCorrect": true
+        },
+        {
+          "option": "Kasa Rolniczego Ubezpieczenia Społecznego",
+          "isCorrect": false
+        },
+        {
+          "option": "Ministerstwo Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "Narodowy Fundusz Zdrowia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "66a1ad24-be0b-436c-80f0-d3f28e196b66",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zjawisko „nadużywania” pozycji w systemie ochrony zdrowia, tzw. moral hazard odnosi się:",
+      "answers": [
+        {
+          "option": "zarówno do postaw lekarzy jak i pacjentów",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie do postaw lekarzy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie do zachowań pacjentów",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie do polityki firm farmaceutycznych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "203783dc-5bc3-40d9-98f9-91fc6d962f51",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zgon przedwczesny w rozumieniu zdrowia publicznego to:",
+      "answers": [
+        {
+          "option": "zgon występujący przed 65 rokiem życia",
+          "isCorrect": true
+        },
+        {
+          "option": "zgon występujący przed 60 rokiem życia",
+          "isCorrect": false
+        },
+        {
+          "option": "zgon spowodowany wyłącznie chorobami zakaźnymi",
+          "isCorrect": false
+        },
+        {
+          "option": "zgon w wyniku wypadku komunikacyjnego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c86ff68a-0bdd-493e-be55-15689ec0fea0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie publiczne to:",
+      "answers": [
+        {
+          "option": "nauka traktująca w sposób interdyscyplinarny problemy zdrowotne społeczeństwa",
+          "isCorrect": true
+        },
+        {
+          "option": "nauka zajmująca się wyłącznie leczeniem chorób zakaźnych",
+          "isCorrect": false
+        },
+        {
+          "option": "dziedzina prawa regulująca funkcjonowanie szpitali",
+          "isCorrect": false
+        },
+        {
+          "option": "dyscyplina kliniczna skoncentrowana na diagnostyce indywidualnego pacjenta",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "dba40fdf-44f0-4df6-ac15-937f6f3c8515",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie publiczne realizuje swoje cele przede wszystkim przez:",
+      "answers": [
+        {
+          "option": "zaangażowanie działań całego społeczeństwa",
+          "isCorrect": true
+        },
+        {
+          "option": "działania wyłącznie personelu medycznego",
+          "isCorrect": false
+        },
+        {
+          "option": "regulacje prawne Ministerstwa Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "finansowanie ze środków prywatnych ubezpieczycieli",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "dde264f3-3607-4a83-a8f2-e97949a61b73",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "ZOZ może udzielić zamówienia na świadczenia zdrowotne:",
+      "answers": [
+        {
+          "option": "niepublicznemu zakładowi opieki zdrowotnej oraz indywidualnej specjalistycznej praktyce",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie innemu samodzielnemu publicznemu ZOZ-owi",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie podmiotom zagranicznym",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie jednostkom samorządu terytorialnego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "4eb14329-83f4-4685-a283-c92c2dff1af2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Związek między paleniem tytoniu, a rozwojem nowotworu jest najsilniejszy w przypadku:",
+      "answers": [
+        {
+          "option": "raka krtani",
+          "isCorrect": true
+        },
+        {
+          "option": "raka jelita grubego",
+          "isCorrect": false
+        },
+        {
+          "option": "raka tarczycy",
+          "isCorrect": false
+        },
+        {
+          "option": "raka prostaty",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "ac3431c7-7886-40c4-9b49-2cae3e9bfcde",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zdrowie w socjoekologicznej koncepcji jest:",
+      "answers": [
+        {
+          "option": "dobrostanem biopsychospołecznym uwzględniającym zdrowie i chorobę",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie brakiem choroby i niepełnosprawności",
+          "isCorrect": false
+        },
+        {
+          "option": "stanem determinowanym wyłącznie przez czynniki genetyczne",
+          "isCorrect": false
+        },
+        {
+          "option": "wynikiem działania systemu opieki zdrowotnej",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3d94f73f-1b5d-4fcb-b57c-a702a29a28dd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zarządzanie jakością, to sposób zarządzania, w którym podmiotem jest:",
+      "answers": [
+        {
+          "option": "pacjent",
+          "isCorrect": true
+        },
+        {
+          "option": "personel medyczny",
+          "isCorrect": false
+        },
+        {
+          "option": "płatnik świadczeń zdrowotnych",
+          "isCorrect": false
+        },
+        {
+          "option": "kierownictwo placówki",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "2cd5e18d-06ad-47b4-8b91-937f6ff361a0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zapobieganie uzależnieniom może być realizowane na poziomie:",
+      "answers": [
+        {
+          "option": "profilaktyki pierwszo-, drugo- i trzeciorzędowej",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie profilaktyki pierwszorzędowej",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie leczenia szpitalnego",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie edukacji szkolnej",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "0ad60df7-5573-48e3-9757-4ed1fa6c6cdc",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Za całkowicie niezdolną do pracy uważa się osobę, która:",
+      "answers": [
+        {
+          "option": "utraciła zdolność jakiegokolwiek zatrudnienia",
+          "isCorrect": true
+        },
+        {
+          "option": "utraciła zdolność wykonywania dotychczasowego zawodu",
+          "isCorrect": false
+        },
+        {
+          "option": "wymaga okresowej rehabilitacji",
+          "isCorrect": false
+        },
+        {
+          "option": "korzysta ze zwolnienia lekarskiego dłużej niż 30 dni",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "fa26431b-e9df-4712-b47f-36b1df0e075e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zawód pielęgniarki po 1 maja 2004 roku reguluje w Polsce:",
+      "answers": [
+        {
+          "option": "ustawa o zawodzie pielęgniarki i położnej oraz dyrektywa dotycząca zawodu pielęgniarek",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie ustawa o zawodzie pielęgniarki i położnej",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie przepisy Unii Europejskiej",
+          "isCorrect": false
+        },
+        {
+          "option": "kodeks etyki zawodowej pielęgniarek",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "e9c91143-af3a-4145-b134-e7b640716b95",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zasiłek opiekuńczy z tytułu opieki nad chorym dzieckiem przysługuje przez okres:",
+      "answers": [
+        {
+          "option": "60 dni w roku kalendarzowym",
+          "isCorrect": true
+        },
+        {
+          "option": "14 dni w roku kalendarzowym",
+          "isCorrect": false
+        },
+        {
+          "option": "30 dni w roku kalendarzowym",
+          "isCorrect": false
+        },
+        {
+          "option": "90 dni w roku kalendarzowym",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c3cba853-91ca-4b08-a854-ace0ab688024",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zakładem opieki zdrowotnej NIE jest:",
+      "answers": [
+        {
+          "option": "dom pomocy społecznej",
+          "isCorrect": true
+        },
+        {
+          "option": "szpital",
+          "isCorrect": false
+        },
+        {
+          "option": "przychodnia",
+          "isCorrect": false
+        },
+        {
+          "option": "sanatorium",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "f61851dc-e228-4ba5-a565-25ea109fdfa8",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Zakażenie wirusem HIV następuje:",
+      "answers": [
+        {
+          "option": "drogą płciową, drogą parenteralną, drogą wertykalną",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie drogą kropelkową",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie poprzez kontakt ze skórą",
+          "isCorrect": false
+        },
+        {
+          "option": "drogą pokarmową i płciową",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "8093b8a5-578c-4a11-ae1b-b32fec9b28ad",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wydatki ogółem na ochronę zdrowia w Polsce w relacji do Produktu Krajowego Brutto stanowią w przybliżeniu:",
+      "answers": [
+        {
+          "option": "6,5%",
+          "isCorrect": true
+        },
+        {
+          "option": "3%",
+          "isCorrect": false
+        },
+        {
+          "option": "10%",
+          "isCorrect": false
+        },
+        {
+          "option": "15%",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "8424202e-2385-427c-bbe7-fefc48f40534",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wydanie zarządzeń mających na celu zapobieżenie epidemii należy do kompetencji:",
+      "answers": [
+        {
+          "option": "wojewody",
+          "isCorrect": true
+        },
+        {
+          "option": "ministra zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "starosty",
+          "isCorrect": false
+        },
+        {
+          "option": "wójta",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3a976079-46bc-41bb-853f-74a1e3ee527a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wybierz prawidłową kolejność faz rozwoju alkoholizmu wg Jellinka:",
+      "answers": [
+        {
+          "option": "faza wstępna, faza zwiastunów, faza krytyczna, faza chroniczna",
+          "isCorrect": true
+        },
+        {
+          "option": "faza krytyczna, faza wstępna, faza chroniczna, faza zwiastunów",
+          "isCorrect": false
+        },
+        {
+          "option": "faza zwiastunów, faza wstępna, faza chroniczna, faza krytyczna",
+          "isCorrect": false
+        },
+        {
+          "option": "faza chroniczna, faza krytyczna, faza zwiastunów, faza wstępna",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "872a5fe2-3bff-40d3-872f-f2e5d989f7c8",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "W systemie bismarckowskim fundusze dysponowane są przez:",
+      "answers": [
+        {
+          "option": "kasy chorych niezależne od rządu i instytucje typu kasy chorych",
+          "isCorrect": true
+        },
+        {
+          "option": "budżet państwa zarządzany centralnie",
+          "isCorrect": false
+        },
+        {
+          "option": "prywatne firmy ubezpieczeniowe",
+          "isCorrect": false
+        },
+        {
+          "option": "samorządy terytorialne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "c0662b0e-437d-4536-8148-e43d2c4869e5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wskaźnik umieralności i chorobowości są obliczane na podstawie:",
+      "answers": [
+        {
+          "option": "danych GUS i MZ",
+          "isCorrect": true
+        },
+        {
+          "option": "danych NFZ i ZUS",
+          "isCorrect": false
+        },
+        {
+          "option": "danych szpitalnych bez udziału GUS",
+          "isCorrect": false
+        },
+        {
+          "option": "danych WHO wyłącznie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "0bac2c78-84bb-40c0-8fe3-9521a7f1c5c4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "W jakim kraju nie obowiązuje ogólnokrajowy monitoring list pacjentów oczekujących na uzyskanie świadczenia zdrowotnego?",
+      "answers": [
+        {
+          "option": "w Polsce",
+          "isCorrect": true
+        },
+        {
+          "option": "w Wielkiej Brytanii",
+          "isCorrect": false
+        },
+        {
+          "option": "w Danii",
+          "isCorrect": false
+        },
+        {
+          "option": "w Szwecji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "64032569-3ead-4c21-823b-550e8a47a7ea",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Wg koncepcji Lalonda grupą czynników, która w najmniejszym stopniu wpływa na stan zdrowia populacji są:",
+      "answers": [
+        {
+          "option": "działania systemu opieki zdrowotnej (10-15%)",
+          "isCorrect": true
+        },
+        {
+          "option": "styl życia",
+          "isCorrect": false
+        },
+        {
+          "option": "czynniki środowiskowe",
+          "isCorrect": false
+        },
+        {
+          "option": "czynniki genetyczne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "7636c6ff-6a4d-4034-9ca2-ecf4d60f82fe",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Uzależnienie to:",
+      "answers": [
+        {
+          "option": "stan psychiczny, a niekiedy także fizyczny wynikający z interakcji pomiędzy organizmem a środkiem odurzającym",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie stan fizyczny organizmu",
+          "isCorrect": false
+        },
+        {
+          "option": "jednostka chorobowa o podłożu wyłącznie genetycznym",
+          "isCorrect": false
+        },
+        {
+          "option": "przejściowy stan emocjonalny niewymagający leczenia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "1609bdc6-f7b3-4aaf-be37-5e5280f03b66",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Udanym sukcesem WHO jest:",
+      "answers": [
+        {
+          "option": "wyeliminowanie wirusa ospy prawdziwej",
+          "isCorrect": true
+        },
+        {
+          "option": "wyeliminowanie wirusa HIV",
+          "isCorrect": false
+        },
+        {
+          "option": "wyeliminowanie gruźlicy na świecie",
+          "isCorrect": false
+        },
+        {
+          "option": "wyeliminowanie malarii na świecie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "fec47b57-a5bf-4c7d-98cc-6e1234e77430",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Uczestnictwo w programie akredytacji jest:",
+      "answers": [
+        {
+          "option": "fakultatywne",
+          "isCorrect": true
+        },
+        {
+          "option": "obowiązkowe dla wszystkich szpitali",
+          "isCorrect": false
+        },
+        {
+          "option": "obowiązkowe wyłącznie dla ZOZ publicznych",
+          "isCorrect": false
+        },
+        {
+          "option": "wymagane przepisami unijnymi",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "905c43b5-114c-4d91-84bc-99bb44b2c9dd",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Środkami odwoławczymi w postępowaniu konkursowym są:",
+      "answers": [
+        {
+          "option": "skarga i protest",
+          "isCorrect": true
+        },
+        {
+          "option": "apelacja i kasacja",
+          "isCorrect": false
+        },
+        {
+          "option": "odwołanie i zażalenie",
+          "isCorrect": false
+        },
+        {
+          "option": "wniosek i sprzeciw",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "6053a4a0-a3a4-42f7-bd47-7f6488f9a17e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Po raz pierwszy temat zdrowia publicznego w UE został poruszony:",
+      "answers": [
+        {
+          "option": "w traktacie z Maastricht (1992)",
+          "isCorrect": true
+        },
+        {
+          "option": "w traktacie rzymskim (1957)",
+          "isCorrect": false
+        },
+        {
+          "option": "w traktacie amsterdamskim (1997)",
+          "isCorrect": false
+        },
+        {
+          "option": "w traktacie lizbońskim (2007)",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "2d2d0e96-8a33-488a-ac70-bc86183f2587",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Powoływanie zespołów problemowych dokonuje się w celu:",
+      "answers": [
+        {
+          "option": "rozwiązania problemu organizacyjnego",
+          "isCorrect": true
+        },
+        {
+          "option": "zwiększenia zatrudnienia w placówce",
+          "isCorrect": false
+        },
+        {
+          "option": "kontroli finansowej jednostki",
+          "isCorrect": false
+        },
+        {
+          "option": "nadzoru nad personelem medycznym",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "8a091033-4074-44be-8276-e0bb76054c50",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Powierzenie pracownikowi kierownictwa nad zespołem pracowników jest wyrazem:",
+      "answers": [
+        {
+          "option": "awansu zawodowego",
+          "isCorrect": true
+        },
+        {
+          "option": "kary porządkowej",
+          "isCorrect": false
+        },
+        {
+          "option": "okresowej oceny pracowniczej",
+          "isCorrect": false
+        },
+        {
+          "option": "delegowania obowiązków bez zmiany stanowiska",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "8c78cce9-b8a9-48b7-8634-ca704e85a411",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Polskie pielęgniarki podejmowały współpracę z Międzynarodową Radą Pielęgniarek w roku:",
+      "answers": [
+        {
+          "option": "1925",
+          "isCorrect": true
+        },
+        {
+          "option": "1935",
+          "isCorrect": false
+        },
+        {
+          "option": "1957",
+          "isCorrect": false
+        },
+        {
+          "option": "1961",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "3477ad1f-be84-4c8d-92cb-103182b06eb3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Podaj kolejność stosowania form opieki nad osobą z HIV/AIDS:",
+      "answers": [
+        {
+          "option": "formy opieki uzależnione są od stanu zdrowia pacjenta",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze najpierw opieka szpitalna, potem domowa",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie opieka paliatywna od momentu rozpoznania",
+          "isCorrect": false
+        },
+        {
+          "option": "opieka ambulatoryjna, a następnie hospicyjna niezależnie od stanu pacjenta",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "327ba9c0-cb97-4fb7-896b-15d989b98fb7",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Przed podjęciem zatrudnienia należy przeprowadzić:",
+      "answers": [
+        {
+          "option": "badania wstępne",
+          "isCorrect": true
+        },
+        {
+          "option": "badania okresowe",
+          "isCorrect": false
+        },
+        {
+          "option": "badania kontrolne",
+          "isCorrect": false
+        },
+        {
+          "option": "szkolenie BHP bez badań lekarskich",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "eb57dc31-bd61-4eba-8e2c-52d13ebf1aca",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Podstawowy okres zasiłkowy w przypadku orzeczenia niezdolności do pracy z powodu gruźlicy wynosi:",
+      "answers": [
+        {
+          "option": "270 dni",
+          "isCorrect": true
+        },
+        {
+          "option": "90 dni",
+          "isCorrect": false
+        },
+        {
+          "option": "182 dni",
+          "isCorrect": false
+        },
+        {
+          "option": "365 dni",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "4862e0ed-45b8-4089-a6fc-59a63957c43a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Prognoza demograficzna dla Polski przewiduje na najbliższe lata:",
+      "answers": [
+        {
+          "option": "spadek ogólnej liczby ludności",
+          "isCorrect": true
+        },
+        {
+          "option": "wzrost ogólnej liczby ludności",
+          "isCorrect": false
+        },
+        {
+          "option": "stabilizację liczby ludności",
+          "isCorrect": false
+        },
+        {
+          "option": "wzrost liczby urodzeń przewyższający liczbę zgonów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  {
+    "id": "74246f0d-d433-4277-91c9-ed46eb173fc1",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zdrowie-publiczne"
+    },
+    "data": {
+      "question": "Proces doskonalenia jakości jest:",
+      "answers": [
+        {
+          "option": "ciągły i dynamiczny",
+          "isCorrect": true
+        },
+        {
+          "option": "jednorazowy i statyczny",
+          "isCorrect": false
+        },
+        {
+          "option": "okresowy i sformalizowany wyłącznie przepisami",
+          "isCorrect": false
+        },
+        {
+          "option": "zakończony po uzyskaniu akredytacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:30:26.089286",
+    "updatedAt": null
+  },
+  
+  {
+    "id": "b0ea9ca1-2baa-46b7-abaf-b5ea790b237d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W myśl przepisów pielęgniarka epidemiologiczna powinna być zatrudniona w zależności od...",
+      "answers": [
+        {
+          "option": "liczby leczonych",
+          "isCorrect": false
+        },
+        {
+          "option": "liczby pacjentodni",
+          "isCorrect": false
+        },
+        {
+          "option": "liczby łóżek",
+          "isCorrect": true
+        },
+        {
+          "option": "nie ma takich wymogów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "831ea783-8774-4bb8-81e5-adfa0ef725c2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Kohortacja polega na",
+      "answers": [
+        {
+          "option": "odosobnieniu chorego",
+          "isCorrect": false
+        },
+        {
+          "option": "połączeniu chorych z tym samym schorzeniem",
+          "isCorrect": true
+        },
+        {
+          "option": "połączenie w sali chorych w tym samym wieku",
+          "isCorrect": false
+        },
+        {
+          "option": "umieszczenie w jednej sali chorych tej samej płci",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "c1560d64-27d0-42d7-8313-0de5e731118f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakażenia szpitalne można nabyć w",
+      "answers": [
+        {
+          "option": "szpitalu",
+          "isCorrect": false
+        },
+        {
+          "option": "gabinecie kosmetycznym",
+          "isCorrect": false
+        },
+        {
+          "option": "u fryzjera",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "67897faa-e363-4b7e-bbdc-f17b0efe66ee",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Źródłem zakażenia nie może być",
+      "answers": [
+        {
+          "option": "nosiciel",
+          "isCorrect": false
+        },
+        {
+          "option": "zakażony",
+          "isCorrect": false
+        },
+        {
+          "option": "otoczenie chorego",
+          "isCorrect": false
+        },
+        {
+          "option": "materiał sterylny",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "a4dff994-81e7-4f0e-9480-ca531ea379e0",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakażenia szpitalne mogą szerzyć się droga",
+      "answers": [
+        {
+          "option": "pokarmową",
+          "isCorrect": false
+        },
+        {
+          "option": "kontaktową",
+          "isCorrect": false
+        },
+        {
+          "option": "powietrzną",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkimi wskazanymi",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "08915f4a-3ed8-475d-99cb-bfc08beec25b",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W przypadku identyfikacji zakażenia pochodzącego z biofilmu postępowaniem jest",
+      "answers": [
+        {
+          "option": "dezynfekcja rąk",
+          "isCorrect": false
+        },
+        {
+          "option": "zmiana bielizny",
+          "isCorrect": false
+        },
+        {
+          "option": "usunięcie cewnika",
+          "isCorrect": true
+        },
+        {
+          "option": "wycofanie się z terapii",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "41484fd2-159c-4d0c-bff8-08841fa5cd79",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Rezerwuar zakażenia szpitalnego to inaczej",
+      "answers": [
+        {
+          "option": "inkubator",
+          "isCorrect": true
+        },
+        {
+          "option": "przyleganie",
+          "isCorrect": false
+        },
+        {
+          "option": "źródło",
+          "isCorrect": false
+        },
+        {
+          "option": "wyeliminowanie drobnoustroju",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "8878401d-b7e6-4e11-a3ef-5a0c6d999e54",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakazeniom miejsca operowanego nie zapobiega się poprzez",
+      "answers": [
+        {
+          "option": "dezynfekcję rąk",
+          "isCorrect": false
+        },
+        {
+          "option": "dezynfekcja skóry",
+          "isCorrect": false
+        },
+        {
+          "option": "podawanie antybiotyku",
+          "isCorrect": true
+        },
+        {
+          "option": "usuwanie owłosienia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "0bcfa33c-1545-4a9c-be43-105f57ddc79c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Personel medyczny w pracy zawodowej jest narażony na",
+      "answers": [
+        {
+          "option": "deratyzację",
+          "isCorrect": false
+        },
+        {
+          "option": "eradykację",
+          "isCorrect": true
+        },
+        {
+          "option": "ekspozycję",
+          "isCorrect": false
+        },
+        {
+          "option": "sublimację",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "4e0d1fde-4c1e-4f2c-bc27-ee0dd374cefe",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Metodą zapobiegania zakażeniom układu moczowego nie jest",
+      "answers": [
+        {
+          "option": "utrzymanie higieny okolicy krocza",
+          "isCorrect": false
+        },
+        {
+          "option": "przyjmowanie małej ilości płynów",
+          "isCorrect": true
+        },
+        {
+          "option": "przyjmowanie pokarmów zakwaszających ph moczu",
+          "isCorrect": false
+        },
+        {
+          "option": "częste oddawanie moczu",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "1640088b-8b02-4a66-86ee-36fd173d2097",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Pacjent w oddziale intensywnej terapii z założoną rurką intubacyjną jest narażony na",
+      "answers": [
+        {
+          "option": "zakażenie układu moczowego",
+          "isCorrect": false
+        },
+        {
+          "option": "zakażenie krwi",
+          "isCorrect": false
+        },
+        {
+          "option": "zapalenie płuc",
+          "isCorrect": true
+        },
+        {
+          "option": "ryzyko zakażenia jest zbliżone, jak w innych oddziałach",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "93cc7609-e4c7-4416-87fc-53450a7b8653",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Najprostrzym sposobem zapobiegania zakażeniom szpitalnym jest",
+      "answers": [
+        {
+          "option": "antybiotykoterapia",
+          "isCorrect": false
+        },
+        {
+          "option": "dezynfekcja rąk",
+          "isCorrect": true
+        },
+        {
+          "option": "stosowanie sprzętu jałowego",
+          "isCorrect": false
+        },
+        {
+          "option": "izolacja",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "234e2396-b06a-4fbb-83fc-e977aa9c7ee6",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Preparat oznaczony TBC skutecznie działa na",
+      "answers": [
+        {
+          "option": "grzyby",
+          "isCorrect": false
+        },
+        {
+          "option": "wirusy",
+          "isCorrect": false
+        },
+        {
+          "option": "prątki gruźlicy",
+          "isCorrect": true
+        },
+        {
+          "option": "bakterie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "10d46d22-e27e-4d1b-9304-62f07e7ee764",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Podział zabiegów operacyjnych wg CDC przewiduje pole zabiegowe",
+      "answers": [
+        {
+          "option": "czyste,jałowe,skazone,brudne",
+          "isCorrect": false
+        },
+        {
+          "option": "czyste, skażone czyste, skażone, brudne",
+          "isCorrect": true
+        },
+        {
+          "option": "skażone otwarte czyste brudne",
+          "isCorrect": false
+        },
+        {
+          "option": "brudne zakażone oczyszczone czysto skażone",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "50c1be75-af64-4cde-aa97-80402d1498b4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Najskuteczniejszym sposobem zapobiegania zakażeniom CLOSTRIDIUM DIFFICILE jest",
+      "answers": [
+        {
+          "option": "dezynfekcja rąk",
+          "isCorrect": false
+        },
+        {
+          "option": "mycie rąk",
+          "isCorrect": true
+        },
+        {
+          "option": "fumigacja",
+          "isCorrect": false
+        },
+        {
+          "option": "sterylizacja",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "24404807-0bbd-4fa9-aec4-e5a28d43f4ac",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Materiał ograniczony to",
+      "answers": [
+        {
+          "option": "krew",
+          "isCorrect": false
+        },
+        {
+          "option": "ślina",
+          "isCorrect": false
+        },
+        {
+          "option": "mocz",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "1681aabb-ba02-4a20-8673-28be9a916f09",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zużyty skalpel to odpad zaliczany do odpadów",
+      "answers": [
+        {
+          "option": "pozostałych",
+          "isCorrect": false
+        },
+        {
+          "option": "komunalnych",
+          "isCorrect": false
+        },
+        {
+          "option": "specjalnych",
+          "isCorrect": true
+        },
+        {
+          "option": "skażonych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "490f0ae5-db49-4f89-8330-f83284f07fdb",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Opis pojemnika z odpadami zakażonymi zawiera",
+      "answers": [
+        {
+          "option": "nazwę wytwórcy",
+          "isCorrect": false
+        },
+        {
+          "option": "datę i godzinę zamknięcia",
+          "isCorrect": false
+        },
+        {
+          "option": "nazwę odpadów i kod",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "1e4194d9-d1c7-4395-bfa6-fa944ebcfbde",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Ampułkę po leku należy odłożyć do odpadów",
+      "answers": [
+        {
+          "option": "specjalnych",
+          "isCorrect": false
+        },
+        {
+          "option": "zakażonych",
+          "isCorrect": false
+        },
+        {
+          "option": "komunalnych",
+          "isCorrect": false
+        },
+        {
+          "option": "ostrzy",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "3e9b1c41-6fb1-4487-886e-01a8a41a6539",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Dekontaminacja",
+      "answers": [
+        {
+          "option": "mycie",
+          "isCorrect": false
+        },
+        {
+          "option": "dezynfekcja",
+          "isCorrect": false
+        },
+        {
+          "option": "sterylizacja",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "37c4c7c2-752e-44a1-bf1d-d37d8e325bca",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zabrudzony krwią pacjenta fartuch zaliczany zostanie do bielizny",
+      "answers": [
+        {
+          "option": "brudnej",
+          "isCorrect": false
+        },
+        {
+          "option": "skażonej",
+          "isCorrect": true
+        },
+        {
+          "option": "roboczej",
+          "isCorrect": false
+        },
+        {
+          "option": "ochronnej",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "27071818-4c9d-4b04-8de0-69cbce52b046",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W przypadku izolacji kontaktowej należy zastosować",
+      "answers": [
+        {
+          "option": "maskę, fartuch",
+          "isCorrect": false
+        },
+        {
+          "option": "rękawiczki, maskę",
+          "isCorrect": false
+        },
+        {
+          "option": "maskę, rękawiczki",
+          "isCorrect": false
+        },
+        {
+          "option": "rękawiczki, fartuch",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "2037dbe2-cbfc-4513-99b0-b17c9695330e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Procedurę dezynfekcji rąk wykonuje się wg techniki",
+      "answers": [
+        {
+          "option": "Norton",
+          "isCorrect": false
+        },
+        {
+          "option": "Apgr",
+          "isCorrect": false
+        },
+        {
+          "option": "Aylife",
+          "isCorrect": true
+        },
+        {
+          "option": "nie ma specjalnej techniki",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "c922e392-f29c-43c5-819c-fc67e621cf14",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Drobnoustrojem alarmowym wytwarzającym spory jest",
+      "answers": [
+        {
+          "option": "MRSA",
+          "isCorrect": false
+        },
+        {
+          "option": "WZW B",
+          "isCorrect": false
+        },
+        {
+          "option": "Clostridium Difficile",
+          "isCorrect": true
+        },
+        {
+          "option": "grypa",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "b250ae73-7821-46a1-8fad-0bb6c90c062f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Ekspozycja oznacza",
+      "answers": [
+        {
+          "option": "Sposób i mechanizm przenoszenia zakażenia",
+          "isCorrect": false
+        },
+        {
+          "option": "zespół przyczyn składających się na powstanie choroby",
+          "isCorrect": false
+        },
+        {
+          "option": "wystawienie organizmu na działanie czynników",
+          "isCorrect": true
+        },
+        {
+          "option": "wyeliminowanie czynnika chorobotwórczego z otoczenia",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "58a0828c-3705-4678-9905-a068afe72f8a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Do środków ochrony indywidualnej zaliczamy",
+      "answers": [
+        {
+          "option": "rękawiczki",
+          "isCorrect": false
+        },
+        {
+          "option": "fartuch",
+          "isCorrect": false
+        },
+        {
+          "option": "maskę",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "62cc52ed-0a6d-4ba1-859e-1e9107d39771",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Ognisko epidemiologiczne to",
+      "answers": [
+        {
+          "option": "czas, kiedy zostaje ogłoszona epidemia",
+          "isCorrect": false
+        },
+        {
+          "option": "miejsce w której znajduje się rezerwuar zarazka wraz z całym otoczeniem",
+          "isCorrect": false
+        },
+        {
+          "option": "człowiek lub zwierzę, od którego pochodzi nowy przypadek tej samej choroby",
+          "isCorrect": false
+        },
+        {
+          "option": "dwa przypadki zachorowań połączone ze sobą",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "87b4bcce-438d-4e15-a0f2-39b8271dc541",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Gwałtowny wzrost występowania choroby w danym miejscu i danym czasie pod wpływem tego samego i zwykle pojedynczego czynnika sprawczego to",
+      "answers": [
+        {
+          "option": "endemia",
+          "isCorrect": false
+        },
+        {
+          "option": "epidemia",
+          "isCorrect": true
+        },
+        {
+          "option": "pandemia",
+          "isCorrect": false
+        },
+        {
+          "option": "izolacja",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "0470d10e-4daf-4a19-b4b6-40145ebac48c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Rany, które powstają w wyniku cięcia otwierającego światło dróg oddechowych, pokarmowych, rozrodczych układu moczowego w warunkach kontrolowanych i bez istniejącej infekcji to rany",
+      "answers": [
+        {
+          "option": "czyste",
+          "isCorrect": false
+        },
+        {
+          "option": "czyste-skażone",
+          "isCorrect": true
+        },
+        {
+          "option": "skażone",
+          "isCorrect": false
+        },
+        {
+          "option": "brudne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "0f7ba84b-c609-491c-bea9-a2a783ba30b3",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakażenia wczesne to zakażenia rozwijające się",
+      "answers": [
+        {
+          "option": "do 5-7 doby pobytu w szpitalu",
+          "isCorrect": true
+        },
+        {
+          "option": "po 7 dobie pobytu",
+          "isCorrect": false
+        },
+        {
+          "option": "po 14 dniach",
+          "isCorrect": false
+        },
+        {
+          "option": "po roku",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "8fee0c06-70d5-4017-ad52-ed7f51fb5002",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Klasyfikacje ran pod koatem czystości mikrologicznej",
+      "answers": [
+        {
+          "option": "WHO",
+          "isCorrect": false
+        },
+        {
+          "option": "CDC",
+          "isCorrect": true
+        },
+        {
+          "option": "GIS",
+          "isCorrect": false
+        },
+        {
+          "option": "WSSE",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "1629463f-8cdc-46d1-9ad4-5e089a02a1d4",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "MRSA to",
+      "answers": [
+        {
+          "option": "gronkowce oporne na metycyline",
+          "isCorrect": true
+        },
+        {
+          "option": "gruźlica oporna na leki przeciwprątkowe",
+          "isCorrect": false
+        },
+        {
+          "option": "enterokokioporne na wankomycynę",
+          "isCorrect": false
+        },
+        {
+          "option": "gronkowce wrażliwe na metycyline",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "939a5e87-d6f2-4983-b7d5-cd817f13c396",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zapobieganie zakażeniom poprzez szczepienie jest możliwe w przypadku",
+      "answers": [
+        {
+          "option": "WZW D",
+          "isCorrect": false
+        },
+        {
+          "option": "WZW B",
+          "isCorrect": true
+        },
+        {
+          "option": "WZW C",
+          "isCorrect": false
+        },
+        {
+          "option": "HIV",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "ea0af207-1807-43fb-8b52-c429d40bb119",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W wodzie można spodziewać się obecności",
+      "answers": [
+        {
+          "option": "Clostridium difficile",
+          "isCorrect": false
+        },
+        {
+          "option": "Aspergillus",
+          "isCorrect": false
+        },
+        {
+          "option": "Legionella",
+          "isCorrect": true
+        },
+        {
+          "option": "żadnego z drobnoustrojów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "9a0795c9-b956-4def-bb33-c25a71de49cc",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W skład zespołu zakażeń szpitalnych według ustawy wchodzi",
+      "answers": [
+        {
+          "option": "pielęgniarka",
+          "isCorrect": false
+        },
+        {
+          "option": "mikrobiolog",
+          "isCorrect": false
+        },
+        {
+          "option": "lekarz",
+          "isCorrect": false
+        },
+        {
+          "option": "wszyscy",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "a991b5cd-124d-45a3-8fcb-e05c3814ea02",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Dezynfekcja to",
+      "answers": [
+        {
+          "option": "proces redukcji ilości biologicznych czynników chorobotwórczych przez zastosowanie metod fizycznych i chemicznych",
+          "isCorrect": true
+        },
+        {
+          "option": "odosobnienie osoby lub grupy osób chorych na chorobę na chorobę zakaźną albo osoby lub grupy osób podejrzanych o chorobę zakaźną w celu uniemożliwienia przeniesienia biologicznego czynnika chorobotwórczego na inne osoby",
+          "isCorrect": false
+        },
+        {
+          "option": "proces niszczenia biologicznych czynników chorobotwórczych przez mycie, dezynfekcje, sterylizacje",
+          "isCorrect": false
+        },
+        {
+          "option": "żadna definicja nie jest poprawna",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "6e167f28-6ff7-448a-ac9f-7ae2dd209542",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Czystość mikrobiologiczna ocenia się wg",
+      "answers": [
+        {
+          "option": "normy ISO",
+          "isCorrect": false
+        },
+        {
+          "option": "wytycznych WHO",
+          "isCorrect": false
+        },
+        {
+          "option": "klasyfikacji Spauldinfa",
+          "isCorrect": true
+        },
+        {
+          "option": "miejsca przechowywania",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "e90c29a1-d8a5-43dd-bfc9-e524f774380e",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Sala po pobycie chorego na gruźlicę należy poddać dekontaminacji z wykorzystaniem środka działającego na",
+      "answers": [
+        {
+          "option": "spory",
+          "isCorrect": false
+        },
+        {
+          "option": "wirusy",
+          "isCorrect": false
+        },
+        {
+          "option": "prątki",
+          "isCorrect": true
+        },
+        {
+          "option": "grzyby",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "7607c0ee-39bc-434f-8ba8-81a9e5f74bea",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakażenia szpitalne mogą szerzyć się z powodu kontaktu z chorym",
+      "answers": [
+        {
+          "option": "odwiedzjącymi",
+          "isCorrect": false
+        },
+        {
+          "option": "personelem",
+          "isCorrect": false
+        },
+        {
+          "option": "otoczeniem szpitalnym",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "439ff4c9-84eb-4c05-8cbe-be6afb626eb9",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "W izolacji kontaktowej obowiązuje używanie",
+      "answers": [
+        {
+          "option": "maski",
+          "isCorrect": false
+        },
+        {
+          "option": "fartucha higienicznego",
+          "isCorrect": true
+        },
+        {
+          "option": "foliowego fartucha",
+          "isCorrect": false
+        },
+        {
+          "option": "jałowego fartucha",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "588cea1f-7983-48e4-a655-1a4da3eb6508",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Ostrza powinny być gromadzone w",
+      "answers": [
+        {
+          "option": "czerwonym worku foliowym",
+          "isCorrect": false
+        },
+        {
+          "option": "w niebieskim pojemniku",
+          "isCorrect": false
+        },
+        {
+          "option": "jako odpad specjalny",
+          "isCorrect": false
+        },
+        {
+          "option": "w pojemniku twardościennym",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "68e5e59c-94e2-4cd2-b52f-75f7631d79aa",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "BCA oznacza",
+      "answers": [
+        {
+          "option": "bakteryjna choroba aktywna",
+          "isCorrect": false
+        },
+        {
+          "option": "biologiczna choroba aktywna",
+          "isCorrect": false
+        },
+        {
+          "option": "biologiczny czynnik alarmowy",
+          "isCorrect": true
+        },
+        {
+          "option": "bakteryjny czynnik alarmowy",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "c020d34c-4737-406e-b706-2a368239be0f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "CPE oznacza",
+      "answers": [
+        {
+          "option": "gronkowca",
+          "isCorrect": false
+        },
+        {
+          "option": "oporny szczep gruźlicy",
+          "isCorrect": false
+        },
+        {
+          "option": "rodzaj wirusa",
+          "isCorrect": false
+        },
+        {
+          "option": "szczep wytwarzający karbapenemazy",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "9dfb5071-7300-45f6-b27f-d678050d1c94",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Symbolem KPC oznacza się",
+      "answers": [
+        {
+          "option": "zakres działania środka dezynfekcyjnego",
+          "isCorrect": false
+        },
+        {
+          "option": "rodzaj drobnoustroju alarmowego",
+          "isCorrect": true
+        },
+        {
+          "option": "rodzaj normy",
+          "isCorrect": false
+        },
+        {
+          "option": "nazwę organizacji",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:19:34.592738",
+    "updatedAt": null
+  },
+  {
+    "id": "3fa5e465-c9bf-4f00-bed9-6121898fff2c",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Zakażenia szpitalne mogą szerzyć się z powodu kontaktu chorego z:",
+      "answers": [
+        {
+          "option": "odwiedzającymi",
+          "isCorrect": false
+        },
+        {
+          "option": "personelem",
+          "isCorrect": false
+        },
+        {
+          "option": "otoczeniem szpitalnym",
+          "isCorrect": false
+        },
+        {
+          "option": "wszystkie wymienione",
+          "isCorrect": true
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+  {
+    "id": "8c0fe79e-f7a7-4648-8446-41c40414b9ff",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Klasyfikację ran pod kątem czystości mikrobiologicznej rekomenduje:",
+      "answers": [
+        {
+          "option": "WHO",
+          "isCorrect": false
+        },
+        {
+          "option": "CDC",
+          "isCorrect": true
+        },
+        {
+          "option": "GIS",
+          "isCorrect": false
+        },
+        {
+          "option": "WSSE",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+  {
+    "id": "9f967c37-0642-4bcb-bbaf-bbcaee5a8f7f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Czystość mikrobiologiczną ocenia się wg:",
+      "answers": [
+        {
+          "option": "normy ISO",
+          "isCorrect": false
+        },
+        {
+          "option": "wytycznych WHO",
+          "isCorrect": false
+        },
+        {
+          "option": "klasyfikacji Spauldinga",
+          "isCorrect": true
+        },
+        {
+          "option": "miejsca przechowywania",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+  {
+    "id": "3452d7c2-b042-4cf0-9888-e0cc3096fada",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Personel medyczny w pracy zawodowej jest narażony na:",
+      "answers": [
+        {
+          "option": "deratyzację",
+          "isCorrect": false
+        },
+        {
+          "option": "eradykację",
+          "isCorrect": false
+        },
+        {
+          "option": "ekspozycję",
+          "isCorrect": true
+        },
+        {
+          "option": "sublimację",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+  {
+    "id": "097f2689-6f05-495a-889b-4d9cc699d9b7",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Technika Aylife wykorzystywana jest w dekontaminacji:",
+      "answers": [
+        {
+          "option": "pola zabiegu",
+          "isCorrect": false
+        },
+        {
+          "option": "rąk",
+          "isCorrect": true
+        },
+        {
+          "option": "sali operacyjnej",
+          "isCorrect": false
+        },
+        {
+          "option": "szpitala",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+  {
+    "id": "345d8cc3-88b5-4fc7-b246-320f743bdc88",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "zakazenia-szpitalne"
+    },
+    "data": {
+      "question": "Czynniki mające wpływ na występowanie zakażenia u chorego wynikające z jego stanu to czynniki:",
+      "answers": [
+        {
+          "option": "egzogenne",
+          "isCorrect": false
+        },
+        {
+          "option": "endogenne",
+          "isCorrect": true
+        },
+        {
+          "option": "latentne",
+          "isCorrect": false
+        },
+        {
+          "option": "nieznane",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:21:19.251110",
+    "updatedAt": null
+  },
+{
+    "id": "fc451817-9f0e-4db8-9570-339d81b309c9",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Psychologia jako nauka zajmuje się przede wszystkim:",
+      "answers": [
+        {
+          "option": "badaniem zachowania i procesów psychicznych człowieka",
+          "isCorrect": true
+        },
+        {
+          "option": "leczeniem wyłącznie zaburzeń psychicznych",
+          "isCorrect": false
+        },
+        {
+          "option": "analizą wyłącznie biologicznych funkcji organizmu",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "6db842a6-2b1e-409a-8d45-8d58e6fdcdca",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Do podstawowych determinant zachowania człowieka zalicza się:",
+      "answers": [
+        {
+          "option": "czynniki biologiczne, psychiczne i społeczne",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie cechy wrodzone",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko wpływ środowiska fizycznego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "b9b21b2a-35f7-44fd-990a-ec4cd6874d52",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Odruch bezwarunkowy to:",
+      "answers": [
+        {
+          "option": "wrodzona, automatyczna reakcja organizmu na bodziec",
+          "isCorrect": true
+        },
+        {
+          "option": "reakcja wyuczona w toku doświadczenia",
+          "isCorrect": false
+        },
+        {
+          "option": "zachowanie zależne wyłącznie od woli",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "a9a2a130-3609-472f-939e-fe81841b53c8",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Trzy bloki funkcjonalne mózgu według Łurii odpowiadają głównie za:",
+      "answers": [
+        {
+          "option": "regulację napięcia, odbiór informacji i programowanie działania",
+          "isCorrect": true
+        },
+        {
+          "option": "jedynie procesy emocjonalne",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie kontrolę ruchów",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "586f82c6-2ec0-4fe2-b3e1-166d88f683f5",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Rozwój psychiczny człowieka to:",
+      "answers": [
+        {
+          "option": "proces jakościowych i ilościowych zmian w psychice na przestrzeni życia",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie rozwój intelektualny",
+          "isCorrect": false
+        },
+        {
+          "option": "zmiany zachodzące tylko w dzieciństwie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "d658f2ba-e0ca-4874-95f4-a538aad676de",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Osobowość jako system regulacji oznacza:",
+      "answers": [
+        {
+          "option": "względnie stały zespół cech kierujących zachowaniem człowieka",
+          "isCorrect": true
+        },
+        {
+          "option": "chwilowy stan emocjonalny",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie temperament",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "06b5428c-a21b-48bf-9b95-be062bc46fbe",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Zdrowie psychiczne najtrafniej określa:",
+      "answers": [
+        {
+          "option": "zdolność do rozwoju, radzenia sobie ze stresem i budowania relacji",
+          "isCorrect": true
+        },
+        {
+          "option": "całkowity brak trudnych emocji",
+          "isCorrect": false
+        },
+        {
+          "option": "brak jakichkolwiek problemów życiowych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "3da59e9b-d8be-4334-88d9-9671773deb2b",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Mechanizmy obronne to:",
+      "answers": [
+        {
+          "option": "nieświadome sposoby radzenia sobie z lękiem i konfliktem",
+          "isCorrect": true
+        },
+        {
+          "option": "celowe manipulowanie innymi",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zachowania agresywne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "4d5ac42f-c6e4-471d-9036-7f46dc33e917",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Choroba i hospitalizacja mogą prowadzić do:",
+      "answers": [
+        {
+          "option": "zmian w zachowaniu, emocjach i obrazie siebie",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze do poprawy funkcjonowania psychicznego",
+          "isCorrect": false
+        },
+        {
+          "option": "braku jakiegokolwiek wpływu na osobowość",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "1b778d77-d843-4159-a3fd-b10d71d2048f",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Komunikacja interpersonalna polega na:",
+      "answers": [
+        {
+          "option": "przekazywaniu i wymianie informacji między ludźmi",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie nadawaniu komunikatów werbalnych",
+          "isCorrect": false
+        },
+        {
+          "option": "jednostronnym oddziaływaniu nadawcy",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "8b792b0a-e273-476e-9f0a-1f88b3ad1b22",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Emocje w zachowaniu człowieka pełnią głównie funkcję:",
+      "answers": [
+        {
+          "option": "regulacyjną i motywacyjną",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie dezorganizującą",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie informacyjną",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "5b4d3bfc-fb2f-45b7-bf39-c24ea2da375a",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Wypalenie zawodowe charakteryzuje się:",
+      "answers": [
+        {
+          "option": "wyczerpaniem emocjonalnym, depersonalizacją i obniżeniem satysfakcji",
+          "isCorrect": true
+        },
+        {
+          "option": "nagłym wystąpieniem psychozy",
+          "isCorrect": false
+        },
+        {
+          "option": "krótkotrwałym zmęczeniem fizycznym",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "9d765e33-c0bd-4320-af03-8d472bd0987d",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Przykładem zachowania zaburzonego jest:",
+      "answers": [
+        {
+          "option": "utrwalony lęk dezorganizujący codzienne funkcjonowanie",
+          "isCorrect": true
+        },
+        {
+          "option": "krótkotrwały smutek po trudnym wydarzeniu",
+          "isCorrect": false
+        },
+        {
+          "option": "zmęczenie po pracy",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "162d59ca-5972-4824-9b99-6a18309dbf56",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "W ocenie wpływu choroby na pacjenta należy uwzględnić:",
+      "answers": [
+        {
+          "option": "stan fizyczny, psychiczny i społeczny",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie wyniki badań laboratoryjnych",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko aktualne objawy somatyczne",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "dbb3bb3b-1b7b-4b6e-975e-2cfe45786690",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Do podstawowych form pomocy psychologicznej w stresie należy:",
+      "answers": [
+        {
+          "option": "wsparcie emocjonalne i psychoedukacja",
+          "isCorrect": true
+        },
+        {
+          "option": "krytykowanie reakcji pacjenta",
+          "isCorrect": false
+        },
+        {
+          "option": "unikanie rozmowy o problemie",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "c341ab85-1962-4a59-b8e2-0ca0678312c2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Barierą komunikacyjną jest:",
+      "answers": [
+        {
+          "option": "ocenianie i moralizowanie wypowiedzi rozmówcy",
+          "isCorrect": true
+        },
+        {
+          "option": "aktywne słuchanie",
+          "isCorrect": false
+        },
+        {
+          "option": "parafraza",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "177d3fe0-4a15-4165-83bd-5e7a5ddf8ee2",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Techniką redukcji lęku jest:",
+      "answers": [
+        {
+          "option": "trening relaksacyjny i ćwiczenia oddechowe",
+          "isCorrect": true
+        },
+        {
+          "option": "zwiększanie napięcia emocjonalnego",
+          "isCorrect": false
+        },
+        {
+          "option": "izolowanie pacjenta",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "e195b901-1fc6-4293-a7d0-bcfa59b0c115",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Zapobieganie wypaleniu zawodowemu obejmuje:",
+      "answers": [
+        {
+          "option": "dbanie o równowagę między pracą a odpoczynkiem oraz wsparcie społeczne",
+          "isCorrect": true
+        },
+        {
+          "option": "całkowite poświęcenie się pracy",
+          "isCorrect": false
+        },
+        {
+          "option": "rezygnację z kontaktów interpersonalnych",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "02b0068f-185d-4e69-a2eb-c68289044091",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Przejawem kompetencji społecznych pielęgniarki/pielęgniarza jest:",
+      "answers": [
+        {
+          "option": "świadomość własnych ograniczeń i gotowość do rozwoju",
+          "isCorrect": true
+        },
+        {
+          "option": "przekonanie o nieomylności zawodowej",
+          "isCorrect": false
+        },
+        {
+          "option": "unikanie współpracy z zespołem",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
+  },
+  {
+    "id": "0ca856c5-8a66-40f8-bab0-5c37b9dc77ac",
+    "meta": {
+      "course": "pielegniarstwo",
+      "category": "psychologia"
+    },
+    "data": {
+      "question": "Rozpoznawanie własnych braków kompetencyjnych sprzyja:",
+      "answers": [
+        {
+          "option": "podnoszeniu jakości opieki i bezpieczeństwa pacjenta",
+          "isCorrect": true
+        },
+        {
+          "option": "obniżeniu odpowiedzialności zawodowej",
+          "isCorrect": false
+        },
+        {
+          "option": "rezygnacji z doskonalenia zawodowego",
+          "isCorrect": false
+        }
+      ]
+    },
+    "createdAt": "2026-07-27 11:07:24.565104",
+    "updatedAt": null
   }
 ]
