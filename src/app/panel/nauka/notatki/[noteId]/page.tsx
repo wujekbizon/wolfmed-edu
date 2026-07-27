@@ -6,7 +6,9 @@ import NotePageContent from '@/components/NotePageContent'
 import BackToNotesLink from '@/components/BackToNotesLink'
 import NoteMetadataCard from '@/components/NoteMetadataCard'
 import NoteNotFound from '@/components/NoteNotFound'
+import NoteFlashcardsSection from '@/components/NoteFlashcardsSection'
 import NotePageSkeleton from '@/components/skeletons/NotePageSkeleton'
+import NoteFlashcardsSkeleton from '@/components/skeletons/NoteFlashcardsSkeleton'
 
 type Props = {
     params: Promise<{
@@ -25,7 +27,7 @@ async function NoteData({ noteId, userId }: { noteId: string; userId: string }) 
 
     return (
         <div className="flex flex-col lg:grid lg:grid-cols-[260px_1fr] lg:gap-8 lg:items-start gap-4">
-            <aside className="lg:sticky lg:top-6">
+            <aside className="lg:sticky lg:top-6 flex flex-col gap-4">
                 <NoteMetadataCard
                     title={note.title}
                     category={note.category}
@@ -34,6 +36,9 @@ async function NoteData({ noteId, userId }: { noteId: string; userId: string }) 
                     createdAt={note.createdAt}
                     updatedAt={note.updatedAt}
                 />
+                <Suspense fallback={<NoteFlashcardsSkeleton />}>
+                    <NoteFlashcardsSection noteId={note.id} userId={userId} />
+                </Suspense>
             </aside>
             <NotePageContent note={note} />
         </div>

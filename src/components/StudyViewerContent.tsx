@@ -9,12 +9,11 @@ import { $getSelection, $isRangeSelection } from 'lexical'
 import StudyToolbar from './StudyToolbar'
 import HighlightPlugin from './editor/plugins/HighlightPlugin'
 import CommentPlugin from './editor/plugins/CommentPlugin'
-import FlashcardPlugin from './editor/plugins/FlashcardPlugin'
 import FlashcardReviewModal from './FlashcardReviewModal'
 import CommentModal from './CommentModal'
 import FlashcardCreateModal from './FlashcardCreateModal'
 import SelectionTooltip from './SelectionTooltip'
-import { useFlashcards } from '@/hooks/useFlashcards'
+import { useNoteFlashcardDeck } from '@/hooks/useNoteFlashcardDeck'
 import { useTextSelection } from '@/hooks/useTextSelection'
 
 interface StudyViewerContentProps {
@@ -31,7 +30,7 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
     const [isStudyMode, setIsStudyMode] = useState(false)
     const [flashcardFromTooltip, setFlashcardFromTooltip] = useState(false)
     const [selectedText, setSelectedText] = useState('')
-    const { flashcards } = useFlashcards(noteId)
+    const { cards: flashcards } = useNoteFlashcardDeck(noteId)
     const { selectedText: tooltipText, selectionRect, clearSelection } = useTextSelection(isStudyMode)
 
     const handleFlashcardClick = () => {
@@ -87,7 +86,6 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
                     />
                     <HighlightPlugin />
                     <CommentPlugin />
-                    <FlashcardPlugin />
                 </div>
             </div>
             {isStudyMode && selectionRect && tooltipText && !showFlashcardModal && (
@@ -103,7 +101,6 @@ export function StudyViewerContent({ noteId, content, onEditClick }: StudyViewer
                     selectedText={selectedText}
                     selectedAsAnswer={flashcardFromTooltip}
                     onClose={handleFlashcardModalClose}
-                    onSuccess={() => {}}
                 />
             )}
             {showReviewModal && <FlashcardReviewModal flashcards={flashcards} onClose={() => setShowReviewModal(false)} />}

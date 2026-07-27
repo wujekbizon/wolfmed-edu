@@ -1,104 +1,100 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useActionState } from 'react'
 import { BookmarkPlus, X } from 'lucide-react'
+import { createNoteFlashcardAction } from '@/actions/flashcardDecks'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { FLASHCARD_MODAL_TEXT } from '@/constants/studyViewer'
-import { useFlashcardStore } from '@/store/useFlashcardStore'
-
+import { flashcardDecksKey, flashcardNoteDeckKey } from '@/constants/flashcards'
+import { useInvalidateOnSuccess } from '@/hooks/useInvalidateOnSuccess'
+import { useOnFormSuccess } from '@/hooks/useOnFormSuccess'
+import { useToastMessage } from '@/hooks/useToastMessage'
+import FieldError from '@/components/FieldError'
+import Button from '@/components/ui/Button'
+import Label from '@/components/ui/Label'
+import { Textarea } from '@/components/ui/Textarea'
 
 interface FlashcardCreateModalProps {
   noteId: string
   selectedText?: string
   selectedAsAnswer?: boolean
   onClose: () => void
-  onSuccess: () => void
 }
 
-export default function FlashcardCreateModal({ noteId, selectedText, selectedAsAnswer, onClose, onSuccess }: FlashcardCreateModalProps) {
-  const addFlashcard = useFlashcardStore((state) => state.addFlashcard)
-  const [flashcardQuestion, setFlashcardQuestion] = useState('')
-  const [flashcardAnswer, setFlashcardAnswer] = useState('')
+export default function FlashcardCreateModal({
+  noteId,
+  selectedText,
+  selectedAsAnswer,
+  onClose,
+}: FlashcardCreateModalProps) {
+  const [state, action, isPending] = useActionState(createNoteFlashcardAction, EMPTY_FORM_STATE)
+  const noScriptFallback = useToastMessage(state)
 
-  useEffect(() => {
-    if (!selectedText) return
-    if (selectedAsAnswer) {
-      setFlashcardAnswer(selectedText)
-    } else {
-      setFlashcardQuestion(selectedText)
-    }
-  }, [selectedText, selectedAsAnswer])
-
-  const handleCreateFlashcard = () => {
-    if (flashcardQuestion.trim() && flashcardAnswer.trim()) {
-      addFlashcard(noteId, flashcardQuestion.trim(), flashcardAnswer.trim())
-      setFlashcardQuestion('')
-      setFlashcardAnswer('')
-      onSuccess()
-      onClose()
-    }
-  }
+  useInvalidateOnSuccess(state, [flashcardNoteDeckKey(noteId), flashcardDecksKey()])
+  useOnFormSuccess(state, onClose)
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-xl shadow-2xl border border-zinc-200 p-6 max-w-md w-full animate-[scaleIn_0.2s_ease-out_forwards]" onClick={(e) => e.stopPropagation()}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-              <BookmarkPlus className="w-4 h-4 text-purple-600" />
+    <div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4' onClick={onClose}>
+      <div
+        className='bg-white rounded-xl shadow-2xl border border-zinc-200 p-6 max-w-md w-full animate-[scaleIn_0.2s_ease-out_forwards]'
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className='flex items-center justify-between mb-4'>
+          <div className='flex items-center gap-2'>
+            <div className='w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center'>
+              <BookmarkPlus className='w-4 h-4 text-purple-600' />
             </div>
-            <h3 className="text-lg font-semibold text-zinc-900">{FLASHCARD_MODAL_TEXT.createTitle}</h3>
+            <h3 className='text-lg font-semibold text-zinc-900'>{FLASHCARD_MODAL_TEXT.createTitle}</h3>
           </div>
           <button
+            type='button'
             onClick={onClose}
-            className="text-zinc-400 hover:text-zinc-600 transition-colors"
+            className='text-zinc-400 hover:text-zinc-600 transition-colors cursor-pointer'
+            aria-label={FLASHCARD_MODAL_TEXT.cancel}
           >
-            <X className="w-5 h-5" />
+            <X className='w-5 h-5' />
           </button>
         </div>
-        <p className="text-sm text-zinc-600 mb-4">
-          {FLASHCARD_MODAL_TEXT.createDescription}
-        </p>
-        <div className="space-y-4">
+        <p className='text-sm text-zinc-600 mb-4'>{FLASHCARD_MODAL_TEXT.createDescription}</p>
+
+        <form action={action} className='space-y-3'>
+          <input type='hidden' name='noteId' value={noteId} />
+
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
-              {FLASHCARD_MODAL_TEXT.questionLabel}
-            </label>
-            <input
-              type="text"
-              value={flashcardQuestion}
-              onChange={(e) => setFlashcardQuestion(e.target.value)}
+            <Label label={FLASHCARD_MODAL_TEXT.questionLabel} htmlFor='flashcard-question' />
+            <Textarea
+              id='flashcard-question'
+              name='questionText'
+              defaultValue={selectedAsAnswer ? '' : (selectedText ?? '')}
               placeholder={FLASHCARD_MODAL_TEXT.questionPlaceholder}
-              className="w-full px-4 py-3 border border-zinc-200 rounded-lg text-sm text-zinc-700 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500"
+              rows={2}
               autoFocus
             />
+            <FieldError name='questionText' formState={state} />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-zinc-700 mb-2">
-              {FLASHCARD_MODAL_TEXT.answerLabel}
-            </label>
-            <textarea
-              value={flashcardAnswer}
-              onChange={(e) => setFlashcardAnswer(e.target.value)}
+            <Label label={FLASHCARD_MODAL_TEXT.answerLabel} htmlFor='flashcard-answer' />
+            <Textarea
+              id='flashcard-answer'
+              name='answerText'
+              defaultValue={selectedAsAnswer ? (selectedText ?? '') : ''}
               placeholder={FLASHCARD_MODAL_TEXT.answerPlaceholder}
-              className="w-full h-24 px-4 py-3 border border-zinc-200 rounded-lg text-sm text-zinc-700 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-purple-500/30 focus:border-purple-500 resize-none"
+              rows={3}
             />
+            <FieldError name='answerText' formState={state} />
           </div>
-        </div>
-        <div className="flex items-center justify-end gap-3 mt-6">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 text-sm text-zinc-600 hover:text-zinc-800 font-medium transition-colors"
-          >
-            {FLASHCARD_MODAL_TEXT.cancel}
-          </button>
-          <button
-            onClick={handleCreateFlashcard}
-            disabled={!flashcardQuestion.trim() || !flashcardAnswer.trim()}
-            className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg text-sm font-medium hover:shadow-md transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {FLASHCARD_MODAL_TEXT.submit}
-          </button>
-        </div>
+
+          <div className='flex items-center justify-end gap-3 pt-1'>
+            <Button variant='ghost' onClick={onClose}>
+              {FLASHCARD_MODAL_TEXT.cancel}
+            </Button>
+            <Button variant='accent' type='submit' disabled={isPending}>
+              {isPending ? 'Zapisywanie...' : FLASHCARD_MODAL_TEXT.submit}
+            </Button>
+          </div>
+          {noScriptFallback}
+        </form>
       </div>
     </div>
   )

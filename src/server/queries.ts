@@ -57,6 +57,7 @@ import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
+import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -1530,6 +1531,78 @@ export const updateUserCellsList = cache(
         updatedAt: new Date(),
       })
       .where(eq(userCellsList.userId, userId))
+  }
+)
+
+const toFlashcardDeck = (deck: {
+  id: string
+  name: string
+  sourceType: FlashcardSource
+  sourceRef: string | null
+  cards: { id: string; deckId: string; questionText: string; answerText: string; position: number }[]
+}): FlashcardDeck => ({
+  id: deck.id,
+  name: deck.name,
+  sourceType: deck.sourceType,
+  sourceRef: deck.sourceRef,
+  cards: deck.cards.map((card) => ({
+    id: card.id,
+    deckId: card.deckId,
+    questionText: card.questionText,
+    answerText: card.answerText,
+    position: card.position,
+  })),
+})
+
+export const getFlashcardDecksByUser = cache(
+  async (userId: string): Promise<FlashcardDeck[]> => {
+    const decks = await db.query.flashcardDecks.findMany({
+      where: (model, { eq }) => eq(model.userId, userId),
+      orderBy: (model, { desc }) => desc(model.createdAt),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    return decks.map(toFlashcardDeck)
+  }
+)
+
+export const getFlashcardDeckById = cache(
+  async (userId: string, deckId: string): Promise<FlashcardDeck | null> => {
+    const deck = await db.query.flashcardDecks.findFirst({
+      where: (model, { and, eq }) =>
+        and(eq(model.id, deckId), eq(model.userId, userId)),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    if (!deck) return null
+
+    return toFlashcardDeck(deck)
+  }
+)
+
+export const getFlashcardDeckByNoteId = cache(
+  async (userId: string, noteId: string): Promise<FlashcardDeck | null> => {
+    const deck = await db.query.flashcardDecks.findFirst({
+      where: (model, { and, eq }) =>
+        and(eq(model.userId, userId), eq(model.sourceRef, noteId)),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    if (!deck) return null
+
+    return toFlashcardDeck(deck)
   }
 )
 

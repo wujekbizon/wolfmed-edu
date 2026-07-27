@@ -17,6 +17,10 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'file:upload': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'flashcard:create': { interval: 60 * 60 * 1000, maxRequests: 50 },
+  'flashcard:update': { interval: 60 * 60 * 1000, maxRequests: 100 },
+  'flashcard:delete': { interval: 60 * 60 * 1000, maxRequests: 100 },
+  'flashcard:deck:create': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'flashcard:deck:delete': { interval: 60 * 60 * 1000, maxRequests: 30 },
 
   'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'email:send': { interval: 60 * 60 * 1000, maxRequests: 3 },

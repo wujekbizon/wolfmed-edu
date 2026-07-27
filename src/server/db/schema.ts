@@ -475,6 +475,64 @@ export const userCellsList = createTable(
   ]
 )
 
+export const flashcardSourceEnum = pgEnum("flashcard_source", ["ai", "manual", "note"])
+
+export const flashcardDecks = createTable(
+  "flashcard_decks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    name: varchar("name", { length: 256 }).notNull(),
+    sourceType: flashcardSourceEnum("sourceType").notNull().default("manual"),
+    sourceRef: varchar("sourceRef", { length: 256 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("flashcard_decks_user_id_idx").on(table.userId),
+    uniqueIndex("flashcard_decks_user_source_ref_uq").on(
+      table.userId,
+      table.sourceRef
+    ),
+  ]
+)
+
+export const flashcards = createTable(
+  "flashcards",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    deckId: uuid("deckId")
+      .notNull()
+      .references(() => flashcardDecks.id, { onDelete: "cascade" }),
+    questionText: text("questionText").notNull(),
+    answerText: text("answerText").notNull(),
+    position: integer("position").notNull().default(0),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("flashcards_deck_id_idx").on(table.deckId),
+    index("flashcards_deck_id_position_idx").on(table.deckId, table.position),
+  ]
+)
+
+export const flashcardDecksRelations = relations(flashcardDecks, ({ one, many }) => ({
+  user: one(users, {
+    fields: [flashcardDecks.userId],
+    references: [users.userId],
+  }),
+  cards: many(flashcards),
+}))
+
+export const flashcardsRelations = relations(flashcards, ({ one }) => ({
+  deck: one(flashcardDecks, {
+    fields: [flashcards.deckId],
+    references: [flashcardDecks.id],
+  }),
+}))
+
 export const materials = createTable(
   "materials",
   {
