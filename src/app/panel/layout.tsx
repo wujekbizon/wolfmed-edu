@@ -6,6 +6,7 @@ import SidePanel from '@/app/_components/SidePanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
 import ConfirmModal from '@/components/ConfirmModal'
+import FlashcardReviewModalHost from '@/components/FlashcardReviewModalHost'
 import SettingsModal from '@/components/SettingsModal'
 import MobileAIFloat from '@/components/MobileAIFloat'
 import type { NotesType } from '@/types/notesTypes'
@@ -45,6 +46,7 @@ export default async function DashboardLayout({
         <div className='py-10'>{children}</div>
       </div>
       <ConfirmModal />
+      <FlashcardReviewModalHost />
       <SettingsModal />
       <MobileAIFloat />
     </main>

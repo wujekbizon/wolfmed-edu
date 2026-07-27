@@ -11,8 +11,8 @@ import { useRagProgress } from '@/hooks/useRagProgress'
 import RagResponse from './RagResponse'
 import RagProgressIndicator from './RagProgressIndicator'
 import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
-import { useCellsStore } from '@/store/useCellsStore'
 import { useRagStore } from '@/store/useRagStore'
+import { useInsertGeneratedCell } from '@/hooks/useInsertGeneratedCell'
 import type { CellTypes } from '@/types/cellTypes'
 
 export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
@@ -24,7 +24,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const handleSubmitRef = useRef<(fd: FormData) => void>(null!)
 
   const noScriptFallback = useToastMessage(state)
-  const { insertCellAfterWithContent } = useCellsStore()
+  const insertGeneratedCell = useInsertGeneratedCell()
   const { pendingAutoSubmitCellId, setPendingAutoSubmitCellId } = useRagStore()
 
   const {
@@ -118,10 +118,10 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
       if (typedResult.cellType && !processedToolResults.current.has(resultKey)) {
         processedToolResults.current.add(resultKey)
-        insertCellAfterWithContent(cell.id, typedResult.cellType, typedResult.content)
+        void insertGeneratedCell(cell.id, typedResult.cellType, typedResult.content)
       }
     })
-  }, [state.status, state.values?.toolResults, cell.id, insertCellAfterWithContent])
+  }, [state.status, state.values?.toolResults, cell.id, insertGeneratedCell])
 
   const showConversation = state.status === 'SUCCESS' || isPending
   const userQuestion = submittedQuestion.current || cell.content

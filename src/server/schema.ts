@@ -273,13 +273,74 @@ export type NoteInput = z.infer<typeof NoteSchema>;
  */
 export const CellSchema = z.object({
   id: z.string(),
-  type: z.enum(["note", "rag", "draw"]),
+  type: z.enum([
+    "note",
+    "rag",
+    "draw",
+    "test",
+    "flashcard",
+    "plan",
+    "media",
+    "mindmap",
+  ]),
   content: z.string(),
 });
 
 export const UserCellsListSchema = z.object({
   order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
   cells: z.record(z.string(), CellSchema),
+});
+
+export const DeckIdSchema = z.object({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+});
+
+export const FlashcardIdSchema = z.object({
+  cardId: z.string().min(1, "Musisz podać poprawny identyfikator fiszki.").trim(),
+});
+
+export const DeckNameSchema = z
+  .string({ error: "Nazwa zestawu jest wymagana" })
+  .trim()
+  .min(1, { message: "Nazwa zestawu jest wymagana" })
+  .max(256, { message: "Nazwa nie może przekraczać 256 znaków" });
+
+export const FlashcardContentSchema = z.object({
+  questionText: z
+    .string({ error: "Pytanie jest wymagane" })
+    .trim()
+    .min(1, { message: "Pytanie jest wymagane" })
+    .max(1000, { message: "Pytanie nie może przekraczać 1000 znaków" }),
+  answerText: z
+    .string({ error: "Odpowiedź jest wymagana" })
+    .trim()
+    .min(1, { message: "Odpowiedź jest wymagana" })
+    .max(2000, { message: "Odpowiedź nie może przekraczać 2000 znaków" }),
+});
+
+export const CreateFlashcardSchema = FlashcardContentSchema.extend({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+});
+
+export const UpdateFlashcardSchema = FlashcardContentSchema.extend({
+  cardId: z.string().min(1, "Musisz podać poprawny identyfikator fiszki.").trim(),
+});
+
+export const RenameDeckSchema = z.object({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+  name: DeckNameSchema,
+});
+
+export const CreateNoteFlashcardSchema = FlashcardContentSchema.extend({
+  noteId: z.string().min(1, "Musisz podać poprawny identyfikator notatki.").trim(),
+});
+
+export const CreateGeneratedDeckSchema = z.object({
+  name: DeckNameSchema,
+  cards: z
+    .array(FlashcardContentSchema)
+    .min(1, { message: "Zestaw musi zawierać co najmniej jedną fiszkę" })
+    .max(100, { message: "Zestaw nie może zawierać więcej niż 100 fiszek" }),
 });
 
 /**

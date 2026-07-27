@@ -1,7 +1,8 @@
 'use server'
 
-import { notes } from "@/server/db/schema"
+import { flashcardDecks, notes } from "@/server/db/schema"
 import { db } from "@/server/db/index"
+import { and, eq } from "drizzle-orm"
 import { DeleteNoteIdSchema, NoteInput, NoteSchema, NoteUpdateSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
@@ -101,7 +102,12 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
       return toFormState("ERROR", "Brak notatki do usunięcia")
     }
 
-    await deleteNote(userId,noteId)
+    await deleteNote(userId, noteId)
+
+    // Note decks reference the note by id without a foreign key, so nothing cascades.
+    await db
+      .delete(flashcardDecks)
+      .where(and(eq(flashcardDecks.userId, userId), eq(flashcardDecks.sourceRef, noteId)))
   } catch (error) {
     return fromErrorToFormState(error)
   }
