@@ -3,18 +3,29 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
 import { useFlashcardCell } from '@/hooks/useFlashcardCell'
+import { useCellsStore } from '@/store/useCellsStore'
 import FlashcardRow from './FlashcardRow'
 import FlashcardAddForm from './FlashcardAddForm'
 import FlashcardCellEmpty from './FlashcardCellEmpty'
+import FlashcardCellCreateDeck from './FlashcardCellCreateDeck'
 import type { Cell } from '@/types/cellTypes'
 
 export default function FlashcardCellPreview({ cell }: { cell: Cell }) {
-  const { deckId, cards, topic, isLoading } = useFlashcardCell(cell.content)
+  const { deckId, deck, cards, topic, isLoading } = useFlashcardCell(cell.content)
+  const updateCell = useCellsStore((s) => s.updateCell)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
 
-  if (!deckId) return <FlashcardCellEmpty variant='missing' />
+  if (!deckId) {
+    return (
+      <FlashcardCellCreateDeck
+        onCreated={(newDeckId) => updateCell(cell.id, JSON.stringify({ deckId: newDeckId }))}
+      />
+    )
+  }
+
   if (isLoading) return <FlashcardCellEmpty variant='loading' />
+  if (!deck) return <FlashcardCellEmpty variant='missing' />
 
   return (
     <div className='flex flex-col h-full'>

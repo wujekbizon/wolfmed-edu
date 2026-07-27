@@ -13,6 +13,7 @@ import {
   CreateGeneratedDeckSchema,
   CreateNoteFlashcardSchema,
   DeckIdSchema,
+  DeckNameSchema,
   RenameDeckSchema,
 } from '@/server/schema'
 import type { FormState } from '@/types/actionTypes'
@@ -56,6 +57,36 @@ export async function createGeneratedDeckAction(
   } catch (error) {
     console.error('Failed to create generated deck:', error)
     return { success: false, error: 'Nie udało się zapisać fiszek' }
+  }
+}
+
+export async function createEmptyDeckAction(
+  formState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const limited = await rateLimitFormState(userId, 'flashcard:deck:create')
+  if (limited) return limited
+
+  const parsed = DeckNameSchema.safeParse(formData.get('name'))
+  if (!parsed.success) {
+    return { ...toFormState('ERROR', ''), fieldErrors: { name: [parsed.error.issues[0]!.message] } }
+  }
+
+  try {
+    const [deck] = await db
+      .insert(flashcardDecks)
+      .values({ userId, name: parsed.data, sourceType: 'manual' })
+      .returning({ id: flashcardDecks.id })
+
+    if (!deck) throw new Error('Nie udało się utworzyć zestawu fiszek')
+
+    revalidatePath('/panel/nauka')
+    return { ...toFormState('SUCCESS', 'Zestaw fiszek utworzony'), values: { deckId: deck.id } }
+  } catch (error) {
+    return fromErrorToFormState(error)
   }
 }
 
