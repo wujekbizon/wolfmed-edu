@@ -15,7 +15,7 @@ export default function PlanStatTiles({
   const dayForm = (n: number) => pluralizePl(n, ['dzień', 'dni', 'dni'])
 
   return (
-    <div className="mt-6 flex rounded-xl border border-zinc-200 bg-gradient-to-b from-white to-zinc-50 overflow-hidden">
+    <div className="mt-6 flex flex-col xs:flex-row rounded-xl border border-zinc-200 bg-gradient-to-b from-white to-zinc-50 overflow-hidden">
       <StatTile
         icon={CalendarClock}
         value={String(progress.daysLeft)}

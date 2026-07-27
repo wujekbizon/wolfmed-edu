@@ -36,7 +36,7 @@ export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
         </Link>
       </div>
 
-      <div className="flex rounded-xl border border-zinc-200 bg-gradient-to-b from-white to-zinc-50 overflow-hidden">
+      <div className="flex flex-col xs:flex-row rounded-xl border border-zinc-200 bg-gradient-to-b from-white to-zinc-50 overflow-hidden">
         <StatTile
           icon={CalendarClock}
           value={String(plan.daysLeft)}
