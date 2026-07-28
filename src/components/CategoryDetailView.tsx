@@ -6,6 +6,7 @@ import CourseInfoSection from './CourseInfoSection'
 import LearningOutcomesSection from './LearningOutcomesSection'
 import ProgramContentSection from './ProgramContentSection'
 import CategoryCTA from './CategoryCTA'
+import CategoryActionBar from './CategoryActionBar'
 
 interface CategoryDetailViewProps {
   categoryData: CategoryMetadata
@@ -25,7 +26,8 @@ export default function CategoryDetailView({
 
   const competencies = categoryData?.details?.learningOutcomes.competencies ?? []
   return (
-    <div className='max-w-6xl mx-auto'>
+    <>
+      <div className='max-w-6xl mx-auto'>
       <CategoryHeader
         categoryName={categoryName}
         categoryImage={categoryData.image}
@@ -75,11 +77,19 @@ export default function CategoryDetailView({
             isPremium={isPremium}
           />
 
-          <CategoryCTA categoryName={categoryName} />
+          <CategoryCTA
+            categoryName={categoryName}
+            testCount={testCount}
+            details={categoryData.details}
+            isPremium={isPremium}
+          />
         </>
       ) : (
-        <CategoryCTA categoryName={categoryName} />
+        <CategoryCTA categoryName={categoryName} testCount={testCount} isPremium={isPremium} />
       )}
-    </div>
+      </div>
+
+      <CategoryActionBar categoryName={categoryName} />
+    </>
   )
 }
