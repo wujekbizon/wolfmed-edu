@@ -7,7 +7,9 @@ interface CategoryActionBarProps {
 
 export default function CategoryActionBar({ categoryName }: CategoryActionBarProps) {
   return (
-    <div className='sticky bottom-0 z-20 -mx-4 lg:-mx-16 mt-6 px-4 lg:px-16 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-white/80 backdrop-blur-md border-t border-zinc-200 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]'>
+    // -mb-10 cancels the panel layout's py-10 wrapper so the bar ends flush with
+    // the scroll area; the page section drops its own bottom padding to match.
+    <div className='sticky bottom-0 z-20 -mx-4 lg:-mx-16 -mb-10 mt-6 px-4 lg:px-16 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-white/80 backdrop-blur-md border-t border-zinc-200 shadow-[0_-4px_24px_rgba(0,0,0,0.08)]'>
       <div className='max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between'>
         <p className='hidden sm:block text-sm text-zinc-500 truncate'>
           Gotowy, żeby ruszyć z kategorią{' '}
