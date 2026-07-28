@@ -67,7 +67,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
         <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
           Co oferuje platforma
         </h3>
-        <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {FEATURES.map((feature) => {
             const locked = feature.premium && !hasPremium
             return (
