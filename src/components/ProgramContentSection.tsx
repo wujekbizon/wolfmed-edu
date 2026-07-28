@@ -17,7 +17,7 @@ export default function ProgramContentSection({
   isPremium = false,
 }: ProgramContentSectionProps) {
   return (
-    <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
+    <div className='bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8 mb-6'>
       <h2 className='text-2xl font-bold mb-6'>Program kursu</h2>
 
       {lectures.length > 0 && (
