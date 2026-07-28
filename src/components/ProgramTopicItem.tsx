@@ -32,25 +32,25 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
         <p className='flex-1 text-sm leading-relaxed text-gray-700 break-words'>{item}</p>
 
         {isPremium ? (
-          <div className={`mt-3 flex items-center gap-2 ${REVEAL}`}>
+          <div className={`mt-3 flex items-center justify-end gap-2 ${REVEAL}`}>
             <TopicActionButton
               icon={Sparkles}
               label='Wyjaśnij'
               fullLabel='Wyjaśnij z AI'
-              gradientClassName='bg-gradient-to-r from-slate-600 to-rose-600 hover:from-slate-700 hover:to-rose-700'
+              colorClassName='bg-zinc-800 text-white hover:bg-zinc-700'
               onClick={() => openInAssistant(item)}
             />
             <TopicActionButton
               icon={BookOpen}
               label='Plan nauki'
               fullLabel='Stwórz plan nauki'
-              gradientClassName='bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:from-rose-600 hover:to-fuchsia-700'
+              colorClassName='bg-zinc-200 text-zinc-700 hover:bg-zinc-300'
               onClick={() => openInAssistant(`/planuj ${item}`)}
             />
           </div>
         ) : (
-          <div className={`mt-3 flex items-center ${REVEAL}`}>
-            <span className='inline-flex items-center gap-1.5 rounded-full bg-zinc-200 px-3 py-2 text-xs font-medium text-zinc-500'>
+          <div className={`mt-3 flex items-center justify-end ${REVEAL}`}>
+            <span className='inline-flex items-center gap-1.5 rounded-lg bg-zinc-200 px-3 py-2 text-xs font-medium text-zinc-500'>
               <Lock className='w-3.5 h-3.5 shrink-0' />
               Tylko premium
             </span>

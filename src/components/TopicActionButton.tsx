@@ -4,7 +4,7 @@ interface TopicActionButtonProps {
   icon: LucideIcon
   label: string
   fullLabel: string
-  gradientClassName: string
+  colorClassName: string
   onClick: () => void
 }
 
@@ -12,7 +12,7 @@ export default function TopicActionButton({
   icon: Icon,
   label,
   fullLabel,
-  gradientClassName,
+  colorClassName,
   onClick,
 }: TopicActionButtonProps) {
   return (
@@ -21,10 +21,10 @@ export default function TopicActionButton({
       onClick={onClick}
       aria-label={fullLabel}
       title={fullLabel}
-      className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 pointer-coarse:min-h-11 text-xs font-medium text-white shadow-sm transition-shadow hover:shadow-md ${gradientClassName}`}
+      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-lg h-11 w-11 sm:h-auto sm:w-auto sm:px-3 sm:py-2 sm:min-h-9 pointer-coarse:sm:min-h-11 text-xs font-medium transition-colors ${colorClassName}`}
     >
-      <Icon className='w-3.5 h-3.5 shrink-0' />
-      <span className='truncate'>{label}</span>
+      <Icon className='w-4 h-4 sm:w-3.5 sm:h-3.5 shrink-0' />
+      <span className='hidden sm:inline'>{label}</span>
     </button>
   )
 }
