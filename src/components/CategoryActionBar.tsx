@@ -7,9 +7,7 @@ interface CategoryActionBarProps {
 
 export default function CategoryActionBar({ categoryName }: CategoryActionBarProps) {
   return (
-    // -mb-10 swallows the panel layout's py-10 wrapper so no dead padding is left
-    // below the bar; bottom-4 keeps it floating clear of the edge while pinned.
-    <div className='sticky bottom-4 z-20 max-w-6xl mx-auto mt-6 -mb-10 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-md shadow-lg px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]'>
+    <div className='sticky bottom-0 z-20 max-w-6xl mx-auto mt-6 rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-md shadow-lg px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]'>
       <div className='flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between'>
         <p className='hidden sm:block text-sm text-zinc-500 truncate'>
           Gotowy, żeby ruszyć z kategorią{' '}
