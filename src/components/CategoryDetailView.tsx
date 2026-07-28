@@ -60,9 +60,9 @@ export default function CategoryDetailView({
             </div>
             <Link
               href={`/panel/plan?zakres=${encodeURIComponent(decodedCategory)}`}
-              className='inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-red-500 text-white text-sm font-semibold hover:bg-red-600 transition-colors whitespace-nowrap self-start sm:self-auto'
+              className='inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2.5 rounded-lg bg-red-500 text-white text-xs sm:text-sm font-semibold hover:bg-red-600 transition-colors text-center'
             >
-              <CalendarCheck className='w-4 h-4' />
+              <CalendarCheck className='w-4 h-4 shrink-0' />
               Zaplanuj naukę tego przedmiotu
             </Link>
           </div>
