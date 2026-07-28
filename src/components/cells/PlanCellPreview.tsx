@@ -91,44 +91,45 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   }
 
   return (
-    // One scroll region for the whole plan: with the steps list as the only
-    // scroller it collapsed to zero height and the footer was clipped by the
-    // cell's overflow-hidden, leaving nothing scrollable.
-    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-webkit">
+    <>
       <PlanHeader
         topic={plan.topic}
         goal={plan.goal}
         estimatedTotalMinutes={plan.estimatedTotalMinutes}
       />
 
-      <PlanPrerequisites prerequisites={plan.prerequisites ?? []} />
+      {/* min-h-0 lets this shrink below its content; without it the flex child
+          refuses to scroll and the footer gets clipped by the cell instead. */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-webkit">
+        <PlanPrerequisites prerequisites={plan.prerequisites ?? []} />
 
-      <div className="divide-y divide-zinc-100">
-        {plan.steps?.map((step, index) => (
-          <PlanStepItem
-            key={step.number}
-            step={step}
-            isExpanded={expandedSteps.has(index)}
-            onToggle={() => toggleStep(index)}
-          />
-        ))}
+        <div className="divide-y divide-zinc-100">
+          {plan.steps?.map((step, index) => (
+            <PlanStepItem
+              key={step.number}
+              step={step}
+              isExpanded={expandedSteps.has(index)}
+              onToggle={() => toggleStep(index)}
+            />
+          ))}
+        </div>
+
+        <PlanFooter
+          summary={plan.summary}
+          examRelevance={plan.examRelevance}
+          isPending={isPending}
+          lectureGenerated={generatedLecture !== null}
+          onGenerate={handleGenerate}
+          onSaveScript={generatedLecture ? handleSaveScript : undefined}
+          stage={stage}
+          progress={progress}
+          progressMessage={progressMessage}
+          tool={tool}
+          userLogs={userLogs}
+          technicalLogs={technicalLogs}
+          progressError={progressError}
+        />
       </div>
-
-      <PlanFooter
-        summary={plan.summary}
-        examRelevance={plan.examRelevance}
-        isPending={isPending}
-        lectureGenerated={generatedLecture !== null}
-        onGenerate={handleGenerate}
-        onSaveScript={generatedLecture ? handleSaveScript : undefined}
-        stage={stage}
-        progress={progress}
-        progressMessage={progressMessage}
-        tool={tool}
-        userLogs={userLogs}
-        technicalLogs={technicalLogs}
-        progressError={progressError}
-      />
-    </div>
+    </>
   )
 }
