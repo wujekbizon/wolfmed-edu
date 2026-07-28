@@ -1,14 +1,10 @@
 'use client'
 
+import type { TimelinePoint } from '@/types/analyticsTypes'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface ProgressLineChartProps {
-  data: Array<{
-    date: string
-    avgScore: string
-    testsCount: number
-    studyMinutes?: number
-  }>
+  data: TimelinePoint[]
 }
 
 export default function ProgressLineChart({ data }: ProgressLineChartProps) {
@@ -27,7 +23,7 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
 
   const chartData = data.map((item) => ({
     date: new Date(item.date).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' }),
-    score: parseFloat(item.avgScore),
+    score: item.avgScore === null ? null : parseFloat(item.avgScore),
     minutes: item.studyMinutes ?? 0,
   }))
 
@@ -92,6 +88,7 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
             strokeWidth={3}
             dot={{ fill: '#ff9898', r: 4 }}
             activeDot={{ r: 6, fill: '#ff5b5b' }}
+            connectNulls
           />
           {hasEffort && (
             <Line

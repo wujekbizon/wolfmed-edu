@@ -1,16 +1,12 @@
 'use client'
 
 import ProgressLineChart from './ProgressLineChart'
+import type { TimelinePoint } from '@/types/analyticsTypes'
 import QuestionAccuracyList from './QuestionAccuracyList'
 import CategoryPerformanceTable from './CategoryPerformanceTable'
 
 interface AnalyticsDetailedProps {
-  timeline: Array<{
-    date: string
-    avgScore: string
-    testsCount: number
-    studyMinutes: number
-  }>
+  timeline: TimelinePoint[]
   categories: Array<{
     category: string
     totalTests: number

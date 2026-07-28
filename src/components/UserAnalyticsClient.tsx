@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LayoutGrid, LineChart, CalendarCheck } from 'lucide-react'
 import type { PlanProgress } from '@/types/plannerTypes'
+import type { TimelinePoint } from '@/types/analyticsTypes'
 import AnalyticsOverview from './AnalyticsOverview'
 import AnalyticsDetailed from './AnalyticsDetailed'
 import AnalyticsPlanTab from './AnalyticsPlanTab'
@@ -13,12 +14,7 @@ interface UserAnalyticsClientProps {
     totalQuestions: number
     testsAttempted: number
   }
-  timeline: Array<{
-    date: string
-    avgScore: string
-    testsCount: number
-    studyMinutes: number
-  }>
+  timeline: TimelinePoint[]
   categories: Array<{
     category: string
     totalTests: number
