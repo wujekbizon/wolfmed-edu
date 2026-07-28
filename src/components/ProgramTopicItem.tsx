@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation'
 import { Sparkles, Lock, BookOpen } from 'lucide-react'
 import { useRagStore } from '@/store/useRagStore'
-import Card from './ui/Card'
 import TopicActionButton from './TopicActionButton'
 
 interface ProgramTopicItemProps {
@@ -29,7 +28,7 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
 
   return (
     <li className='h-full'>
-      <Card className='group h-full flex flex-col p-3 sm:p-4 transition-shadow hover:shadow-md'>
+      <div className='group h-full flex flex-col p-3 bg-zinc-50 rounded-lg border border-zinc-200 hover:bg-white hover:border-zinc-300 transition-colors'>
         <p className='flex-1 text-sm leading-relaxed text-gray-700 break-words'>{item}</p>
 
         {isPremium ? (
@@ -57,7 +56,7 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
             </span>
           </div>
         )}
-      </Card>
+      </div>
     </li>
   )
 }
