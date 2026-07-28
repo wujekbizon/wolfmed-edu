@@ -47,11 +47,11 @@ export default function CustomTestCard({ test }: CustomTestCardProps) {
               <span className={`font-semibold ${answer.isCorrect ? "text-green-700" : "text-zinc-500"}`}>
                 {String.fromCharCode(65 + index)}.
               </span>
-              <span className={answer.isCorrect ? "text-zinc-800" : "text-zinc-600"}>
+              <span className={`min-w-0 break-words ${answer.isCorrect ? "text-zinc-800" : "text-zinc-600"}`}>
                 {answer.option}
               </span>
               {answer.isCorrect && (
-                <span className="ml-auto text-green-700 text-sm font-semibold">✓ Poprawna</span>
+                <span className="ml-auto shrink-0 text-green-700 text-sm font-semibold" aria-label="Poprawna odpowiedź">✓</span>
               )}
             </div>
             ))}
