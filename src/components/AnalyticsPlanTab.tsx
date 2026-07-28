@@ -55,8 +55,13 @@ export default function AnalyticsPlanTab({ plan }: { plan: PlanProgress }) {
       </div>
 
       <div>
-        <h4 className="text-sm font-semibold text-zinc-700 mb-3">Zagadnienia w planie</h4>
-        <ul className="space-y-2">
+        <div className="flex items-baseline justify-between gap-2 mb-3">
+          <h4 className="text-sm font-semibold text-zinc-700">Zagadnienia w planie</h4>
+          <span className="text-xs text-zinc-400 tabular-nums shrink-0">
+            {plan.concepts.length}
+          </span>
+        </div>
+        <ul className="space-y-2 max-h-72 sm:max-h-96 overflow-y-auto scrollbar-thin scrollbar-webkit pr-2">
           {plan.concepts.map((concept) => {
             const spent = concept.autoMinutes + concept.manualMinutes
             const ratio = concept.targetMinutes > 0 ? Math.min(1, spent / concept.targetMinutes) : 0
