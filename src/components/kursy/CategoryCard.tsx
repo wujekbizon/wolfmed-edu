@@ -29,7 +29,7 @@ export function CategoryCard({ category, userTier }: CategoryCardProps) {
         : 'bg-zinc-100/50 border-zinc-200 grayscale-[0.6] cursor-not-allowed'
       }`}>
  
-      <div className="relative h-56 w-full overflow-hidden">
+      <div className="relative h-40 min-[360px]:h-56 w-full overflow-hidden">
         {category.image ? (
           <img
             src={category.image}
@@ -49,7 +49,7 @@ export function CategoryCard({ category, userTier }: CategoryCardProps) {
         </div>
       </div>
 
-      <div className="flex flex-col flex-1 p-6">
+      <div className="flex flex-col flex-1 p-4 min-[360px]:p-6">
         <div className="mb-3">
           <h3 className="text-xl font-bold text-slate-900 leading-tight mb-2 group-hover:text-slate-700 transition-colors">
           {category.title || category.category.replace(/-/g, ' ')}
@@ -85,10 +85,10 @@ export function CategoryCard({ category, userTier }: CategoryCardProps) {
     </div>
   )
 
-  if (!hasTierAccess) return <div className="aspect-4/5">{cardContent}</div>
+  if (!hasTierAccess) return <div className="min-[360px]:aspect-4/5">{cardContent}</div>
 
   return (
-    <Link href={`/panel/kursy/${category.category}`} className="block aspect-4/5">
+    <Link href={`/panel/kursy/${category.category}`} className="block min-[360px]:aspect-4/5">
       {cardContent}
     </Link>
   )
