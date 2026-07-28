@@ -37,20 +37,20 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
               icon={Sparkles}
               label='Wyjaśnij'
               fullLabel='Wyjaśnij z AI'
-              colorClassName='bg-zinc-700/90 text-white border border-zinc-800/50 shadow-sm hover:bg-zinc-700 hover:shadow-md'
+              colorClassName='bg-zinc-700 text-white border border-zinc-800 shadow-sm hover:bg-zinc-800 hover:shadow-md'
               onClick={() => openInAssistant(item)}
             />
             <TopicActionButton
               icon={BookOpen}
               label='Plan nauki'
               fullLabel='Stwórz plan nauki'
-              colorClassName='bg-zinc-100/80 text-zinc-700 border border-zinc-300/80 shadow-sm hover:bg-zinc-100 hover:shadow-md'
+              colorClassName='bg-zinc-100 text-zinc-700 border border-zinc-300 shadow-sm hover:bg-zinc-200 hover:shadow-md'
               onClick={() => openInAssistant(`/planuj ${item}`)}
             />
           </div>
         ) : (
           <div className={`mt-3 flex items-center justify-end ${REVEAL}`}>
-            <span className='inline-flex items-center gap-1.5 rounded-xl bg-zinc-100/80 border border-zinc-300/80 px-3 py-2 text-xs font-medium text-zinc-500 shadow-sm'>
+            <span className='inline-flex items-center gap-1.5 rounded-xl bg-zinc-100 border border-zinc-300 px-3 py-2 text-xs font-medium text-zinc-500 shadow-sm'>
               <Lock className='w-3.5 h-3.5 shrink-0' />
               Tylko premium
             </span>
