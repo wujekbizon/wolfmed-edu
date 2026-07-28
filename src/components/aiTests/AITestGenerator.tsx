@@ -54,7 +54,7 @@ export default function AITestGenerator({ categories }: { categories: PopulatedC
 
   if (!preview) {
     return (
-      <div className="w-full bg-white/60 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-md p-6 space-y-4 hover:shadow-lg transition-all duration-300">
+      <div className="w-full bg-white/60 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-md p-4 sm:p-6 space-y-4 hover:shadow-lg transition-all duration-300">
         <p className="text-sm text-zinc-600">
           Opisz temat lub problem medyczny — AI wygeneruje pytania w oparciu o materiały kursu.
         </p>
@@ -65,7 +65,7 @@ export default function AITestGenerator({ categories }: { categories: PopulatedC
   }
 
   return (
-    <div className="w-full bg-white/60 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-md p-6 space-y-4">
+    <div className="w-full bg-white/60 backdrop-blur-sm rounded-xl border border-zinc-200/60 shadow-md p-4 sm:p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-base font-semibold text-zinc-900">
           Podgląd — {preview.questions.length} pytań

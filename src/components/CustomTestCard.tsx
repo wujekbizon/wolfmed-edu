@@ -25,7 +25,7 @@ export default function CustomTestCard({ test }: CustomTestCardProps) {
     : "nieznana data"
 
   return (
-    <div className="relative bg-white border border-zinc-200/50 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+    <div className="relative bg-white border border-zinc-200/50 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1">
           <div className="mb-3">
