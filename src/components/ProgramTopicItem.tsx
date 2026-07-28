@@ -28,7 +28,7 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
 
   return (
     <li className='h-full'>
-      <div className='group h-full flex flex-col p-3 bg-zinc-50 rounded-lg border border-zinc-200 hover:bg-white hover:border-zinc-300 transition-colors'>
+      <div className='@container group h-full flex flex-col p-3 bg-zinc-50 rounded-lg border border-zinc-200 hover:bg-white hover:border-zinc-300 transition-colors'>
         <p className='flex-1 text-sm leading-relaxed text-gray-700 break-words'>{item}</p>
 
         {isPremium ? (
