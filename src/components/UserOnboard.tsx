@@ -30,7 +30,7 @@ const FEATURES = [
     icon: <Headphones className="w-5 h-5" />,
     label: 'Wykłady AI',
     desc: 'Słuchaj i ucz się',
-    href: '/panel/nauka/wykladania',
+    href: '/panel/nauka',
     premium: true,
   },
 ]
@@ -67,12 +67,12 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
         <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
           Co oferuje platforma
         </h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
           {FEATURES.map((feature) => {
             const locked = feature.premium && !hasPremium
             return (
               <Link
-                key={feature.href}
+                key={feature.label}
                 href={locked ? '#' : feature.href}
                 className={`relative flex flex-col gap-2 p-4 border rounded-xl transition-all duration-200 group ${
                   locked
@@ -94,7 +94,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 <span className={`text-sm font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
                   {feature.label}
                 </span>
-                <span className={`text-xs ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                <span className={`text-xs break-words ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
                   {feature.desc}
                 </span>
               </Link>
