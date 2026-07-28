@@ -1,6 +1,7 @@
 'use client'
 
 import type { TimelinePoint } from '@/types/analyticsTypes'
+import { formatCompactMinutes } from '@/helpers/formatCompactMinutes'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 
 interface ProgressLineChartProps {
@@ -10,7 +11,7 @@ interface ProgressLineChartProps {
 export default function ProgressLineChart({ data }: ProgressLineChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-6 shadow-md">
+      <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md">
         <h3 className="text-lg font-bold text-slate-900 mb-4">Postępy w czasie</h3>
         <div className="flex items-center justify-center h-64 text-zinc-500">
           Brak danych do wyświetlenia
@@ -28,7 +29,7 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
   }))
 
   return (
-    <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+    <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300">
       <div className="mb-6">
         <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-2">Postępy w czasie</h3>
         <p className="text-sm text-zinc-600">
@@ -38,19 +39,22 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
         </p>
       </div>
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+        <LineChart data={chartData} margin={{ top: 5, right: 8, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" opacity={0.5} />
           <XAxis
             dataKey="date"
             stroke="#71717a"
             fontSize={12}
             tickLine={false}
+            tickMargin={6}
+            minTickGap={16}
           />
           <YAxis
             yAxisId="score"
             stroke="#71717a"
             fontSize={12}
             tickLine={false}
+            width={30}
             domain={[0, 100]}
             ticks={[0, 25, 50, 75, 100]}
           />
@@ -61,6 +65,8 @@ export default function ProgressLineChart({ data }: ProgressLineChartProps) {
               stroke="#c084fc"
               fontSize={12}
               tickLine={false}
+              width={34}
+              tickFormatter={formatCompactMinutes}
               allowDecimals={false}
             />
           )}
