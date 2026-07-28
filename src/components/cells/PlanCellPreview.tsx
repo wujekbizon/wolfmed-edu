@@ -91,7 +91,10 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   }
 
   return (
-    <>
+    // One scroll region for the whole plan: with the steps list as the only
+    // scroller it collapsed to zero height and the footer was clipped by the
+    // cell's overflow-hidden, leaving nothing scrollable.
+    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-webkit">
       <PlanHeader
         topic={plan.topic}
         goal={plan.goal}
@@ -100,7 +103,7 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
 
       <PlanPrerequisites prerequisites={plan.prerequisites ?? []} />
 
-      <div className="divide-y divide-zinc-100 overflow-y-auto flex-1 scrollbar-thin scrollbar-webkit">
+      <div className="divide-y divide-zinc-100">
         {plan.steps?.map((step, index) => (
           <PlanStepItem
             key={step.number}
@@ -126,6 +129,6 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
         technicalLogs={technicalLogs}
         progressError={progressError}
       />
-    </>
+    </div>
   )
 }
