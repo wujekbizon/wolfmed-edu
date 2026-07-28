@@ -50,7 +50,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
+    <div className="h-full p-4 lg:p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
       {/* Heading */}
       <div className="text-center pt-2">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
