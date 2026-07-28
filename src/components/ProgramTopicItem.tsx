@@ -42,7 +42,7 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
             />
             <TopicActionButton
               icon={BookOpen}
-              label='Plan nauki'
+              label='Stwórz plan'
               fullLabel='Stwórz plan nauki'
               colorClassName='bg-zinc-100 text-zinc-700 border border-zinc-300 shadow-sm hover:bg-zinc-200 hover:shadow-md'
               onClick={() => openInAssistant(`/planuj ${item}`)}
