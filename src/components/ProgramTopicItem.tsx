@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { Sparkles, Lock, BookOpen } from 'lucide-react'
 import { useRagStore } from '@/store/useRagStore'
+import Card from './ui/Card'
 import TopicActionButton from './TopicActionButton'
 
 interface ProgramTopicItemProps {
@@ -10,6 +11,12 @@ interface ProgramTopicItemProps {
   categoryId: string
   isPremium?: boolean
 }
+
+// The action row is revealed on hover only where hovering exists. Tailwind wraps
+// every group-hover rule in @media (hover: hover), so on touch the base state is
+// what ships — visible actions — and no width breakpoint has to guess at it.
+const REVEAL =
+  'transition-opacity duration-200 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:pointer-events-auto'
 
 export default function ProgramTopicItem({ item, isPremium = false }: ProgramTopicItemProps) {
   const router = useRouter()
@@ -21,31 +28,36 @@ export default function ProgramTopicItem({ item, isPremium = false }: ProgramTop
   }
 
   return (
-    <li className='group flex items-start gap-2 pl-1 sm:pl-7 py-1 text-sm text-gray-700'>
-      <span className='shrink-0 text-zinc-400'>•</span>
-      <span className='flex-1 min-w-0 break-words'>{item}</span>
+    <li className='h-full'>
+      <Card className='group h-full flex flex-col p-3 sm:p-4 transition-shadow hover:shadow-md'>
+        <p className='flex-1 text-sm leading-relaxed text-gray-700 break-words'>{item}</p>
 
-      {isPremium ? (
-        <span className='flex shrink-0 items-center gap-1.5'>
-          <TopicActionButton
-            icon={Sparkles}
-            label='Wyjaśnij z AI'
-            gradientClassName='bg-gradient-to-r from-slate-600 to-rose-600 hover:from-slate-700 hover:to-rose-700'
-            onClick={() => openInAssistant(item)}
-          />
-          <TopicActionButton
-            icon={BookOpen}
-            label='Stwórz plan nauki'
-            gradientClassName='bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:from-rose-600 hover:to-fuchsia-700'
-            onClick={() => openInAssistant(`/planuj ${item}`)}
-          />
-        </span>
-      ) : (
-        <span className='hidden lg:inline-flex shrink-0 items-center gap-1.5 rounded-full bg-zinc-200 px-3 py-1.5 text-xs text-zinc-400 opacity-0 transition-opacity group-hover:opacity-100'>
-          <Lock className='w-3.5 h-3.5' />
-          <span>Tylko premium</span>
-        </span>
-      )}
+        {isPremium ? (
+          <div className={`mt-3 flex items-center gap-2 ${REVEAL}`}>
+            <TopicActionButton
+              icon={Sparkles}
+              label='Wyjaśnij'
+              fullLabel='Wyjaśnij z AI'
+              gradientClassName='bg-gradient-to-r from-slate-600 to-rose-600 hover:from-slate-700 hover:to-rose-700'
+              onClick={() => openInAssistant(item)}
+            />
+            <TopicActionButton
+              icon={BookOpen}
+              label='Plan nauki'
+              fullLabel='Stwórz plan nauki'
+              gradientClassName='bg-gradient-to-r from-rose-500 to-fuchsia-600 hover:from-rose-600 hover:to-fuchsia-700'
+              onClick={() => openInAssistant(`/planuj ${item}`)}
+            />
+          </div>
+        ) : (
+          <div className={`mt-3 flex items-center ${REVEAL}`}>
+            <span className='inline-flex items-center gap-1.5 rounded-full bg-zinc-200 px-3 py-2 text-xs font-medium text-zinc-500'>
+              <Lock className='w-3.5 h-3.5 shrink-0' />
+              Tylko premium
+            </span>
+          </div>
+        )}
+      </Card>
     </li>
   )
 }

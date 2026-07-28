@@ -3,6 +3,7 @@ import type { LucideIcon } from 'lucide-react'
 interface TopicActionButtonProps {
   icon: LucideIcon
   label: string
+  fullLabel: string
   gradientClassName: string
   onClick: () => void
 }
@@ -10,6 +11,7 @@ interface TopicActionButtonProps {
 export default function TopicActionButton({
   icon: Icon,
   label,
+  fullLabel,
   gradientClassName,
   onClick,
 }: TopicActionButtonProps) {
@@ -17,14 +19,12 @@ export default function TopicActionButton({
     <button
       type='button'
       onClick={onClick}
-      aria-label={label}
-      title={label}
-      className={`inline-flex shrink-0 items-center justify-center min-w-9 min-h-9 lg:min-w-0 lg:min-h-0 rounded-full p-1.5 text-white shadow-md transition-all hover:shadow-lg ${gradientClassName}`}
+      aria-label={fullLabel}
+      title={fullLabel}
+      className={`inline-flex flex-1 items-center justify-center gap-1.5 rounded-full px-3 py-2 pointer-coarse:min-h-11 text-xs font-medium text-white shadow-sm transition-shadow hover:shadow-md ${gradientClassName}`}
     >
-      <Icon className='w-4 h-4 lg:w-3.5 lg:h-3.5 shrink-0' />
-      <span className='hidden lg:block max-w-0 overflow-hidden whitespace-nowrap text-xs font-medium opacity-0 transition-all duration-300 group-hover:ml-1.5 group-hover:max-w-40 group-hover:opacity-100'>
-        {label}
-      </span>
+      <Icon className='w-3.5 h-3.5 shrink-0' />
+      <span className='truncate'>{label}</span>
     </button>
   )
 }
