@@ -1,5 +1,10 @@
+'use client'
+
+import { useState } from 'react'
 import { PopulatedCategories } from '@/types/categoryType'
+import { getCategorySelectOptions } from '@/helpers/getCategorySelectOptions'
 import Label from './ui/Label'
+import DropdownSelect from './ui/DropdownSelect'
 
 /**
  * Required select that ties a freshly named custom category to a real
@@ -9,6 +14,8 @@ import Label from './ui/Label'
 export default function LinkedSubjectSelect(props: {
   categories: PopulatedCategories[]
 }) {
+  const [linkedCategory, setLinkedCategory] = useState('')
+
   return (
     <div className="flex w-full flex-col">
       <Label
@@ -16,21 +23,14 @@ export default function LinkedSubjectSelect(props: {
         htmlFor="linkedCategory"
         className="text-xs sm:text-sm text-zinc-700 font-medium"
       />
-      <select
+      <DropdownSelect
+        options={getCategorySelectOptions(props.categories)}
+        value={linkedCategory}
+        onSelect={setLinkedCategory}
         name="linkedCategory"
-        id="linkedCategory"
-        defaultValue=""
-        className="h-10 w-full cursor-pointer rounded-lg border border-zinc-200 bg-white/90 px-3 text-sm text-zinc-700 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300"
-      >
-        <option value="" disabled>
-          Wybierz przedmiot…
-        </option>
-        {props.categories.map((item, index) => (
-          <option key={`${item.value}/${index}`} value={item.value}>
-            {item.category}
-          </option>
-        ))}
-      </select>
+        ariaLabel="Przypisz do przedmiotu"
+        placeholder="Wybierz przedmiot…"
+      />
       <p className="mt-1 text-xs text-zinc-500">
         Twoje testy z tej kategorii wliczą się do postępu nauki wybranego przedmiotu.
       </p>
