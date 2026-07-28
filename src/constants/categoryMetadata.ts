@@ -750,7 +750,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
-      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k54pC04HH9lLqODmv7er0SPRQB8C9VnfbTHisc',
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5rKVZXnDJ4x1k8yEQjwiVOufWtG7U0K2FIB5C',
     description:
       'Testy ze zdrowia publicznego dla pielęgniarstwa. Epidemiologia, profilaktyka, polityka zdrowotna, statystyka medyczna oraz organizacja systemu ochrony zdrowia w Polsce.',
     duration: [25, 40, 60],
@@ -2017,6 +2017,180 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
         ],
         selfStudy: [
           'Opracowanie wybranych tematycznie testów wiedzy na temat żywienia: racjonalnego oraz w wybranych stanach chorobowych.'
+        ]
+      }
+    }
+  },
+  'choroby-wewnetrzne-interna': {
+    category: 'choroby-wewnetrzne-interna',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+    description:
+      'Testy z chorób wewnętrznych i pielęgniarstwa internistycznego dla studentów pielęgniarstwa. Poznaj etiopatogenezę, objawy, leczenie i zasady opieki pielęgniarskiej nad pacjentami z chorobami układu krążenia, oddechowego, pokarmowego, moczowego, kostno-stawowego, dokrewnego oraz krwi. Przygotuj się do zaliczenia i praktyki zawodowej.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Choroby wewnętrzne i pielęgniarstwo internistyczne',
+    keywords: [
+      'choroby wewnętrzne',
+      'interna',
+      'pielęgniarstwo internistyczne',
+      'układ krążenia',
+      'układ oddechowy',
+      'układ pokarmowy',
+      'układ moczowy',
+      'cukrzyca',
+      'kardiologia',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 13,
+      semester: 'Rok II, Semestr III',
+      objectives:
+        'Kształtowanie umiejętności rozpoznawania potrzeb chorego w sferze bio-psycho-społecznej z uwzględnieniem sfery kulturowej i duchowej. Nauczenie działania pielęgniarki w zespole interdyscyplinarnym w procesie edukacji zdrowotnej, profilaktyki, diagnozowania, leczenia i rehabilitacji chorych internistycznych. Wykształcenie umiejętności wykorzystania wiedzy klinicznej w formułowaniu diagnozy pielęgniarskiej, ustalania celów i planu opieki pielęgniarskiej u pacjentów z chorobami układu krążenia, serca, naczyń krwionośnych, układu oddechowego, układu pokarmowego, wątroby, trzustki, układu moczowego, układu kostno-stawowego, mięśni, układu dokrewnego oraz krwi.',
+      prerequisites:
+        'Wiedza, umiejętności i kompetencje z przedmiotów podstawowych (anatomia, fizjologia, patologia, farmakologia) oraz wybranych treści kierunkowych (podstawy pielęgniarstwa, filozofia i etyka zawodu pielęgniarki, promocja zdrowia).',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'D.W1',
+            desc: 'Czynniki ryzyka i zagrożenia zdrowotne u pacjentów w różnym wieku.'
+          },
+          {
+            code: 'D.W2',
+            desc: 'Etiopatogeneza, objawy kliniczne, przebieg, leczenie, rokowanie i zasady opieki pielęgniarskiej nad pacjentami w wybranych chorobach.'
+          },
+          {
+            code: 'D.W3',
+            desc: 'Zasady diagnozowania i planowania opieki nad pacjentem w pielęgniarstwie internistycznym, chirurgicznym, położniczo-ginekologicznym, pediatrycznym, geriatrycznym, neurologicznym, psychiatrycznym, w intensywnej opiece medycznej, opiece paliatywnej i długoterminowej.'
+          },
+          {
+            code: 'D.W4',
+            desc: 'Rodzaje badań diagnostycznych i zasady ich zlecania.'
+          },
+          {
+            code: 'D.W5',
+            desc: 'Zasady przygotowania pacjenta do badań oraz zabiegów diagnostycznych, a także zasady opieki w trakcie oraz po tych badaniach i zabiegach.'
+          },
+          {
+            code: 'D.W6',
+            desc: 'Właściwości grup leków i ich działanie na układy i narządy pacjenta w różnych chorobach, z uwzględnieniem działań niepożądanych i interakcji z innymi lekami.'
+          },
+          {
+            code: 'D.W7',
+            desc: 'Standardy i procedury pielęgniarskie stosowane w opiece nad pacjentem w różnym wieku i stanie zdrowia.'
+          },
+          {
+            code: 'D.W8',
+            desc: 'Reakcje pacjenta na chorobę, przyjęcie do szpitala i hospitalizację.'
+          },
+          {
+            code: 'D.W9',
+            desc: 'Zasady organizacji opieki specjalistycznej (geriatrycznej, intensywnej opieki medycznej, neurologicznej, psychiatrycznej, pediatrycznej, internistycznej, chirurgicznej, paliatywnej, długoterminowej oraz na bloku operacyjnym).'
+          }
+        ],
+        skills: [
+          {
+            code: 'D.U1',
+            desc: 'Gromadzi informacje, formułuje diagnozę pielęgniarską, ustala cele i plan opieki pielęgniarskiej, wdraża interwencje pielęgniarskie oraz dokonuje ewaluacji opieki.'
+          },
+          {
+            code: 'D.U2',
+            desc: 'Prowadzi poradnictwo w zakresie samoopieki pacjentów dotyczące wad rozwojowych, chorób i uzależnień.'
+          },
+          {
+            code: 'D.U9',
+            desc: 'Doraźnie podaje tlen i monitoruje jego stan podczas tlenoterapii.'
+          },
+          {
+            code: 'D.U10',
+            desc: 'Wykonuje badanie elektrokardiograficzne i rozpoznaje zaburzenia zagrażające życiu.'
+          },
+          {
+            code: 'D.U11',
+            desc: 'Modyfikuje dawkę stałą insuliny szybko- i krótko działającej.'
+          },
+          {
+            code: 'D.U15',
+            desc: 'Dokumentuje sytuację zdrowotną pacjenta, dynamikę jej zmian i realizowaną opiekę pielęgniarską, z uwzględnieniem narzędzi informatycznych.'
+          },
+          {
+            code: 'D.U18',
+            desc: 'Rozpoznaje powikłania leczenia farmakologicznego, dietetycznego, rehabilitacyjnego i leczniczo-pielęgnacyjnego.'
+          },
+          {
+            code: 'D.U26',
+            desc: 'Przygotowuje i podaje pacjentom leki różnymi drogami, samodzielnie lub na zlecenie lekarza.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S1',
+            desc: 'Kieruje się dobrem pacjenta, poszanowaniem godności i autonomii osób powierzonych opiece, okazuje zrozumienie dla różnic światopoglądowych i kulturowych oraz empatię w relacji z pacjentem i jego rodziną.'
+          },
+          {
+            code: 'K.S2',
+            desc: 'Przestrzega praw pacjenta i zachowuje w tajemnicy informacje związane z pacjentem.'
+          },
+          {
+            code: 'K.S4',
+            desc: 'Ponosi odpowiedzialność za wykonywane czynności zawodowe.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Choroba wrzodowa żołądka i dwunastnicy oraz choroba refluksowa przełyku — etiopatogeneza, objawy, leczenie.',
+          'Przewlekłe zapalenie i marskość wątroby.',
+          'Ostre i przewlekłe zapalenie trzustki oraz nieswoiste zapalenia jelit.',
+          'Cukrzyca typu 1 i 2 — symptomatologia, diagnostyka, zasady leczenia insuliną i lekami doustnymi.',
+          'Schorzenia tarczycy — choroba Gravesa-Basedowa, symptomatologia, diagnostyka i leczenie.',
+          'Funkcja układu krążenia i mechanizmy kompensacyjne. Objawy chorób układu krążenia groźne dla życia.',
+          'Obrzęk płuc i wstrząs kardiogenny — przyczyny, objawy, zasady postępowania i pierwszej pomocy.',
+          'Symptomatologia i rozpoznawanie chorób układu oddechowego.',
+          'Przewlekła obturacyjna choroba płuc, astma oskrzelowa.',
+          'Zapalenie płuc i opłucnej, gruźlica, rak, niewydolność oddechowa i zatorowość.',
+          'Reumatoidalne zapalenie stawów.',
+          'Układowe choroby tkanki łącznej (kolagenozy). Reumatyzm tkanek miękkich.',
+          'Choroby układu czerwonokrwinkowego — niedokrwistość.',
+          'Choroby układu białokrwinkowego — leuko- i limfocytozy odczynowe, limfo- i mieloproliferacje.',
+          'Infekcje dróg moczowych.',
+          'Przewlekła i ostra niewydolność nerek.',
+          'Rodzaje i zasady zlecania badań diagnostycznych.'
+        ],
+        seminars: [
+          'Problemy pacjentów z chorobami narządów wewnętrznych zależne od charakteru i przebiegu procesu chorobowego.',
+          'Zadania pielęgniarki w opiece nad chorym z chorobą niedokrwienną serca.',
+          'Diagnoza pielęgniarska i procedury rozwiązywania problemów opiekuńczych chorych z przewlekłą niewydolnością krążenia.',
+          'Zadania pielęgniarki wobec chorego z astmą oskrzelową, obturacyjną chorobą płuc i przewlekłą niewydolnością oddechową.',
+          'Zadania pielęgniarki wobec pacjenta z chorobą wrzodową żołądka i dwunastnicy oraz marskością wątroby.',
+          'Postępowanie pielęgniarskie wobec chorego z zapaleniem pęcherzyka i dróg żółciowych.',
+          'Problemy pielęgnacyjne pacjentów z nadczynnością i niedoczynnością tarczycy.',
+          'Diagnoza pielęgniarska i procedury rozwiązywania problemów opiekuńczych chorych na cukrzycę typu I i II, rola pielęgniarki w edukacji pacjenta.',
+          'Diagnoza pielęgniarska i procedury rozwiązywania problemów opiekuńczych chorych z zapaleniem układu moczowego i przewlekłą niewydolnością nerek.',
+          'Diagnoza pielęgniarska i procedury rozwiązywania problemów opiekuńczych chorych z białaczką i niedokrwistością.',
+          'Zadania pielęgniarki wobec pacjenta z reumatoidalnym zapaleniem stawów i osteoporozą.'
+        ],
+        selfStudy: [
+          'Udział pielęgniarki w opiece nad chorym z chorobą niedokrwienną serca.',
+          'Rola pielęgniarki w przygotowaniu pacjenta z nadciśnieniem tętniczym do samoopieki.',
+          'Zadania pielęgniarki w opiece nad pacjentem z niewydolnością serca.',
+          'Postępowanie pielęgniarskie wobec pacjenta z zapaleniem płuc.',
+          'Zadania pielęgniarki w opiece nad chorym z astmą oskrzelową i z gruźlicą.',
+          'Problemy opiekuńcze i sposoby ich rozwiązywania u pacjentów z przewlekłą obturacyjną chorobą płuc.',
+          'Rola pielęgniarki w przygotowaniu pacjenta z cukrzycą do samoopieki.',
+          'Kierunki opieki pielęgniarskiej wobec pacjentów z reumatoidalnym zapaleniem stawów oraz ZZSK.',
+          'Problemy opiekuńcze pacjentów z chorobą wrzodową żołądka i dwunastnicy oraz przewlekłym zapaleniem trzustki.',
+          'Zadania pielęgniarki wobec pacjenta z wrzodziejącym zapaleniem jelita grubego i chorobą Leśniowskiego-Crohna.',
+          'Zadania pielęgniarki wobec chorego ze stanem zapalnym dróg moczowych oraz przewlekłą niewydolnością nerek.',
+          'Zadania pielęgniarki w opiece nad pacjentem z niedokrwistością i białaczką oraz zaburzeniami tarczycy.',
+          'Zadania pielęgniarki w farmakoterapii i leczeniu dietetycznym chorych na cukrzycę.',
+          'Zakres zadań pielęgniarki w opiece nad pacjentem z zaburzeniami rytmu serca — tachy- i bradyarytmie.'
         ]
       }
     }

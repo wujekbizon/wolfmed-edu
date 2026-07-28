@@ -14,34 +14,11 @@ import {
 } from 'lucide-react'
 import { PRACTICAL_PASSING_PERCENT } from '@/types/praktycznyTypes'
 import type { PublicExam } from '@/types/praktycznyTypes'
+import ExamStatTile from './ExamStatTile'
 
 interface Props {
   exam: PublicExam
   onStart: () => void
-}
-
-function StatTile({
-  icon: Icon,
-  value,
-  label,
-  accent,
-}: {
-  icon: typeof Clock
-  value: string
-  label: string
-  accent?: boolean
-}) {
-  return (
-    <div className="flex items-center gap-3 rounded-xl border border-zinc-200 bg-white p-3">
-      <span className="flex items-center justify-center w-9 h-9 rounded-lg bg-zinc-100 text-zinc-500 shrink-0">
-        <Icon className="w-4 h-4" />
-      </span>
-      <div className="flex flex-col leading-tight">
-        <span className={`text-sm font-bold ${accent ? 'text-[#ff5b5b]' : 'text-zinc-800'}`}>{value}</span>
-        <span className="text-[11px] text-zinc-500">{label}</span>
-      </div>
-    </div>
-  )
 }
 
 export default function ExamArkuszBrief({ exam, onStart }: Props) {
@@ -60,7 +37,7 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
 
         {/* Header */}
         <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden">
-          <div className="border-l-4 border-slate-700 p-5 sm:p-6 bg-zinc-50">
+          <div className="border-l-4 border-slate-700 p-4 sm:p-6 bg-zinc-50">
             <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest">
               Egzamin zawodowy — część praktyczna
             </p>
@@ -72,20 +49,20 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 p-4 sm:p-6">
-            <StatTile icon={Clock} value={`${exam.durationMinutes} min`} label="Czas trwania" />
-            <StatTile
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6">
+            <ExamStatTile icon={Clock} value={`${exam.durationMinutes} min`} label="Czas trwania" />
+            <ExamStatTile
               icon={FileText}
               value={`${exam.forms.length} ${exam.forms.length === 1 ? 'karta' : 'karty'}`}
               label="Do uzupełnienia"
             />
-            <StatTile icon={ClipboardCheck} value={`${assessedCount}`} label="Zadania oceniane" />
-            <StatTile icon={Target} value={`${PRACTICAL_PASSING_PERCENT}%`} label="Próg zaliczenia" accent />
+            <ExamStatTile icon={ClipboardCheck} value={`${assessedCount}`} label="Zadania oceniane" />
+            <ExamStatTile icon={Target} value={`${PRACTICAL_PASSING_PERCENT}%`} label="Próg zaliczenia" accent />
           </div>
         </div>
 
         {/* Task */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6">
           <h2 className="flex items-center gap-2 text-base font-bold text-zinc-900 mb-3">
             <ClipboardList className="w-4 h-4 text-zinc-400" />
             Zadanie egzaminacyjne
@@ -95,7 +72,7 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
 
         {/* Patient — focal card */}
         <div className="rounded-2xl border border-zinc-200 bg-white overflow-hidden">
-          <div className="flex items-center gap-3 p-5 border-b border-zinc-100 bg-zinc-50">
+          <div className="flex items-center gap-3 p-4 sm:p-5 border-b border-zinc-100 bg-zinc-50">
             <span className="flex items-center justify-center w-11 h-11 rounded-full bg-slate-100 border border-slate-200 text-slate-600 shrink-0">
               <User className="w-5 h-5" />
             </span>
@@ -111,13 +88,13 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
               </div>
             </div>
           </div>
-          <div className="p-5">
+          <div className="p-4 sm:p-5">
             <p className="text-sm text-zinc-700 leading-relaxed">{exam.patient.description}</p>
           </div>
         </div>
 
         {/* Scope */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 sm:p-6 flex flex-col gap-4">
+        <div className="rounded-2xl border border-zinc-200 bg-white p-4 sm:p-6 flex flex-col gap-4">
           <div>
             <h2 className="flex items-center gap-2 text-base font-bold text-zinc-900">
               <ListChecks className="w-4 h-4 text-zinc-400" />
@@ -163,7 +140,7 @@ export default function ExamArkuszBrief({ exam, onStart }: Props) {
         {/* CTA */}
         <button
           onClick={onStart}
-          className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-slate-700 hover:bg-slate-800 text-white text-base font-semibold rounded-xl transition-colors w-full"
+          className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-700 hover:bg-slate-800 text-white text-sm sm:text-base font-semibold rounded-xl transition-colors w-full"
         >
           <Play className="w-5 h-5" />
           Rozpocznij egzamin ({exam.durationMinutes} min)

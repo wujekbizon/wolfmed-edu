@@ -6,30 +6,34 @@ import LearningPaginationControls from './LearningPaginationControls'
 
 interface FilteredTestsListProps {
   tests: Test[]
+  category: string
   isLoading: boolean
   error?: Error | null
 }
 
-export default function FilteredTestsList({ tests, isLoading, error }: FilteredTestsListProps) {
-  const { currentPage, perPage, setCurrentPage } = useSearchTermStore()
+export default function FilteredTestsList({ tests, category, error }: FilteredTestsListProps) {
+  const { perPage, pageByCategory, setCurrentPage } = useSearchTermStore()
   const listRef = useRef<HTMLDivElement>(null)
 
-  // Scroll to top of list when page changes
+  const totalPages = Math.max(1, Math.ceil(tests.length / perPage))
+  const bookmarkedPage = pageByCategory[category] ?? 1
+
+  // Reading the bookmark by category keeps the first paint correct: a category
+  // with no bookmark renders page 1 instead of flashing the previous category's
+  // page. Clamping is derived rather than written during render — the effect
+  // below only repairs a bookmark left beyond a category that has since shrunk.
+  const currentPage = Math.min(bookmarkedPage, totalPages)
+
+  useEffect(() => {
+    if (bookmarkedPage !== currentPage) setCurrentPage(currentPage)
+  }, [bookmarkedPage, currentPage, setCurrentPage])
+
   useEffect(() => {
     if (listRef.current) {
       listRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [currentPage])
 
-  // Calculate the total number of pages
-  const totalPages = Math.ceil(tests?.length / perPage)
-
-  // Adjust currentPage if it exceeds totalPages after filtering
-  if (currentPage > totalPages && totalPages > 0) {
-    setCurrentPage(totalPages)
-  }
-
-  // Calculate the start and end indices for the current page
   const startIndex = (currentPage - 1) * perPage
   const paginatedTests = tests.slice(startIndex, startIndex + perPage)
 

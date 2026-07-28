@@ -3,6 +3,7 @@ import { getPlanProgress, getStudyMinutesTimeline } from '@/server/planner/progr
 import { fetchProblematicQuestionDetails } from '@/actions/fetchProblematicQuestionDetails'
 import UserAnalyticsClient from './UserAnalyticsClient'
 import { getCurrentUser } from '@/server/user'
+import { mergeProgressTimeline } from '@/helpers/mergeProgressTimeline'
 
 export default async function UserAnalytics() {
   const user = await getCurrentUser()
@@ -18,11 +19,7 @@ export default async function UserAnalytics() {
 
   const enrichedProblemQuestions = await fetchProblematicQuestionDetails(problemQuestions)
 
-  const minutesByDate = new Map(studyMinutes.map((entry) => [entry.date, entry.minutes]))
-  const enrichedTimeline = timeline.map((point) => ({
-    ...point,
-    studyMinutes: minutesByDate.get(point.date) ?? 0,
-  }))
+  const enrichedTimeline = mergeProgressTimeline(timeline, studyMinutes)
 
   const plannedCategoryKeys = new Set(
     plan?.concepts

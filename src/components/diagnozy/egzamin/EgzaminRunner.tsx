@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef } from 'react'
 import { useDiagnozyExam } from '@/hooks/useDiagnozyExam'
 import { getEgzaminStepAt } from '@/helpers/getEgzaminStepAt'
 import { EXAM_DURATION_MINUTES } from '@/constants/diagnozyEgzamin'
@@ -29,6 +30,19 @@ export default function EgzaminRunner() {
     submit,
   } = useDiagnozyExam()
 
+  const topRef = useRef<HTMLDivElement>(null)
+  const skipInitialScroll = useRef(true)
+
+  // The panel scrolls #scroll-container, not the window, so window.scrollTo is a
+  // no-op here; scrollIntoView walks up to whichever ancestor actually scrolls.
+  useEffect(() => {
+    if (skipInitialScroll.current) {
+      skipInitialScroll.current = false
+      return
+    }
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [stepIndex])
+
   if (result) return <EgzaminResult result={result} timeSpent={timeSpent} onRetry={start} />
 
   if (!exam) return <EgzaminStart loading={loading} onStart={start} />
@@ -37,7 +51,7 @@ export default function EgzaminRunner() {
   const step = getEgzaminStepAt(exam.steps, stepIndex)
 
   return (
-    <div>
+    <div ref={topRef}>
       <div className="flex items-center justify-between gap-3 mb-4">
         <h2 className="text-[11px] font-semibold uppercase tracking-wider text-zinc-400">
           {step ? step.label : 'Wykonanie na fantomie'}

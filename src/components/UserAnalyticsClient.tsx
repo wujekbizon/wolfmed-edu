@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { LayoutGrid, LineChart, CalendarCheck } from 'lucide-react'
 import type { PlanProgress } from '@/types/plannerTypes'
+import type { TimelinePoint } from '@/types/analyticsTypes'
 import AnalyticsOverview from './AnalyticsOverview'
 import AnalyticsDetailed from './AnalyticsDetailed'
 import AnalyticsPlanTab from './AnalyticsPlanTab'
@@ -13,12 +14,7 @@ interface UserAnalyticsClientProps {
     totalQuestions: number
     testsAttempted: number
   }
-  timeline: Array<{
-    date: string
-    avgScore: string
-    testsCount: number
-    studyMinutes: number
-  }>
+  timeline: TimelinePoint[]
   categories: Array<{
     category: string
     totalTests: number
@@ -66,7 +62,7 @@ export default function UserAnalyticsClient({
           <button
             key={id}
             onClick={() => setActiveTab(id)}
-            className={`inline-flex items-center gap-1.5 px-4 sm:px-6 py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 ${
+            className={`inline-flex flex-1 xs:flex-none items-center justify-center gap-1.5 whitespace-nowrap px-2 xs:px-4 sm:px-6 py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
               activeTab === id
                 ? 'bg-zinc-900 text-white shadow-sm'
                 : 'text-zinc-500 hover:text-zinc-800 hover:bg-zinc-50'

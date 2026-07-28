@@ -26,17 +26,17 @@ export default function CategoryHeader({
       </nav>
 
       <div className='bg-white rounded-lg shadow-md overflow-hidden mb-6'>
-        <div className='p-6 md:p-8'>
-          <div className='flex items-start gap-6'>
+        <div className='p-4 sm:p-6 md:p-8'>
+          <div className='flex flex-col sm:flex-row items-start gap-4 sm:gap-6'>
             {categoryImage && (
               <img
                 src={categoryImage}
                 alt={categoryName}
-                className='w-24 h-24 md:w-32 md:h-32 rounded-lg object-cover'
+                className='w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 shrink-0 rounded-lg object-cover'
               />
             )}
-            <div className='flex-1'>
-              <h1 className='text-3xl font-bold mb-2'>{categoryName}</h1>
+            <div className='flex-1 min-w-0'>
+              <h1 className='text-2xl sm:text-3xl font-bold mb-2 break-words'>{categoryName}</h1>
               <p className='text-gray-600 mb-4'>{description}</p>
 
               <div className='flex flex-wrap gap-4 text-sm'>
