@@ -59,9 +59,11 @@ export default function ResizableComponent({
 
     // On mobile a side-by-side (horizontal) split doesn't fit: drop the fixed
     // pixel width and let the content go full width so it can stack vertically,
-    // growing into whatever height the stacked siblings leave behind.
+    // growing into whatever height the stacked siblings leave behind. The cap
+    // keeps a long note scrolling inside the editor instead of stretching the
+    // stack, and is a share of the cell so it follows the cell as it is resized.
     if (direction === "horizontal" && innerWidth < 768) {
-        return <div className="flex w-full flex-1 flex-col">{children}</div>;
+        return <div className="flex w-full flex-1 flex-col max-h-[60%]">{children}</div>;
     }
 
     const resizableProps =
