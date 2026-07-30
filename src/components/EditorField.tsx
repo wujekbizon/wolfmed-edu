@@ -21,7 +21,7 @@ export const EditorField = memo(function EditorField({
 }) {
 
     return (
-        <div className="w-full">
+        <div className="flex h-full min-h-0 w-full flex-col">
             <input type="hidden" name="content" ref={contentRef} defaultValue="" />
             <input type="hidden" name="plainText" ref={plainTextRef} defaultValue="" />
             <input type="hidden" name="excerpt" ref={excerptRef} defaultValue="" />
@@ -29,7 +29,7 @@ export const EditorField = memo(function EditorField({
                 key={editorKey}
                 onChange={onChange}
                 placeholder="Napisz swoją notatkę..."
-                className="min-h-64 overflow-y-auto scrollbar-webkit"
+                className="min-h-40 flex-1 overflow-y-auto scrollbar-webkit"
                 initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
             <FieldError name="content" formState={formState} />
