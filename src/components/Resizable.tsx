@@ -61,7 +61,7 @@ export default function ResizableComponent({
     // pixel width and let the content go full width so it can stack vertically,
     // growing into whatever height the stacked siblings leave behind.
     if (direction === "horizontal" && innerWidth < 768) {
-        return <div className="flex min-h-0 w-full flex-1 flex-col">{children}</div>;
+        return <div className="flex w-full flex-1 flex-col">{children}</div>;
     }
 
     const resizableProps =
