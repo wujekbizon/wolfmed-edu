@@ -40,7 +40,7 @@ export default function ReaderFooterNav({
         <button
           onClick={onPrevious}
           disabled={currentSection === 0}
-          className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors w-full lg:w-auto"
+          className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors shrink-0 whitespace-nowrap"
         >
           <ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4" />
           Cofnij
@@ -48,7 +48,7 @@ export default function ReaderFooterNav({
 
         <button
           onClick={isLastSection ? onReset : onNext}
-          className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
+          className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
         >
           {isLastSection ? (
             <>

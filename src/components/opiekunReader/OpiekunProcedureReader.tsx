@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useScrollToTopOnChange } from '@/hooks/useScrollToTopOnChange'
 import { useProcedureStepsStore } from '@/store/useProcedureStepsStore'
 import type { Procedure } from '@/types/dataTypes'
 import type { OpiekunReaderSection, ReaderDirection } from '@/types/procedureReaderTypes'
@@ -20,6 +21,7 @@ export default function OpiekunProcedureReader({
 }) {
   const [currentSection, setCurrentSection] = useState(0)
   const [direction, setDirection] = useState<ReaderDirection>(1)
+  const scrollRef = useScrollToTopOnChange(currentSection)
 
   const { name, procedure: description, algorithm } = procedure.data
   const markedSteps = useProcedureStepsStore((s) => s.marked[name] ?? EMPTY)
@@ -71,7 +73,7 @@ export default function OpiekunProcedureReader({
           currentSection={currentSection}
           totalSections={totalSections}
         />
-        <div className="flex-1 overflow-y-auto scrollbar-webkit">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-webkit">
           <div className="px-4 md:px-10 py-6 md:py-10 max-w-4xl w-full mx-auto">
             <OpiekunSectionContent
               section={sections[currentSection]!}
