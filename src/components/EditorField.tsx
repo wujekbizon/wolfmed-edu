@@ -26,7 +26,7 @@ export const EditorField = memo(function EditorField({
         Boolean(formState.message || formState.fieldErrors?.content?.[0])
 
     return (
-        <div className="flex h-full min-h-0 w-full flex-col">
+        <div className="flex h-full min-h-0 w-full flex-col rounded-lg bg-zinc-800">
             <input type="hidden" name="content" ref={contentRef} defaultValue="" />
             <input type="hidden" name="plainText" ref={plainTextRef} defaultValue="" />
             <input type="hidden" name="excerpt" ref={excerptRef} defaultValue="" />
@@ -38,7 +38,7 @@ export const EditorField = memo(function EditorField({
                 initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
             {hasError && (
-                <div className="shrink-0">
+                <div className="shrink-0 px-3 pb-1">
                     <FieldError name="content" formState={formState} />
                 </div>
             )}
