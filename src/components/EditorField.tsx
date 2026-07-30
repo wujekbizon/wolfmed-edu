@@ -34,7 +34,7 @@ export const EditorField = memo(function EditorField({
                 key={editorKey}
                 onChange={onChange}
                 placeholder="Napisz swoją notatkę..."
-                className="min-h-40 flex-1 overflow-y-auto scrollbar-webkit"
+                className="flex-1 overflow-y-auto scrollbar-webkit"
                 initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
             {hasError && (
