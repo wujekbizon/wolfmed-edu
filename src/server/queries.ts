@@ -1850,13 +1850,16 @@ export const saveChallengeCompletion = async (
     .limit(1)
 
   if (existing.length > 0) {
-    // Update existing completion
+    // A retake never revokes a pass or a personal best — the procedure badge
+    // is granted off `passed`, so downgrading it would strip an earned badge.
+    const previous = existing[0]
+
     await tx
       .update(challengeCompletions)
       .set({
-        score: data.score,
+        score: Math.max(previous.score, data.score),
         timeSpent: data.timeSpent,
-        passed,
+        passed: previous.passed || passed,
         attempts: sql`${challengeCompletions.attempts} + 1`,
         completedAt: new Date(),
       })

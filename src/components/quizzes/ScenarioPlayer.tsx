@@ -39,12 +39,12 @@ export default function ScenarioPlayer({
           ))}
         </div>
 
-        <div className="flex justify-end mt-6 pt-5 border-t border-zinc-100">
+        <div className="flex mt-6 pt-5 border-t border-zinc-100 xs:justify-end">
           <button
             type="button"
             onClick={onSubmit}
             disabled={selectedOption === null || isSubmitting}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
+            className="inline-flex w-full xs:w-auto shrink-0 items-center justify-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
           >
             <Send className="w-4 h-4" />
             {isSubmitting ? 'Sprawdzanie…' : 'Zatwierdź decyzję'}

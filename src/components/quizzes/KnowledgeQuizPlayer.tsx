@@ -64,12 +64,12 @@ export default function KnowledgeQuizPlayer({
         </motion.div>
       </AnimatePresence>
 
-      <div className="flex gap-3 mt-8 pt-5 border-t border-zinc-100">
+      <div className="flex flex-col xs:flex-row gap-3 mt-8 pt-5 border-t border-zinc-100">
         <button
           type="button"
           onClick={() => setIndex((i) => Math.max(0, i - 1))}
           disabled={index === 0}
-          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-sm font-medium border border-zinc-200 transition-colors"
+          className="inline-flex shrink-0 items-center justify-center xs:justify-start gap-1.5 whitespace-nowrap px-4 py-2.5 rounded-xl bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-sm font-medium border border-zinc-200 transition-colors"
         >
           <ChevronLeft className="w-4 h-4" />
           Wstecz
@@ -79,7 +79,7 @@ export default function KnowledgeQuizPlayer({
             type="button"
             onClick={onSubmit}
             disabled={!allAnswered || isSubmitting}
-            className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
           >
             <Send className="w-4 h-4" />
             {isSubmitting ? 'Sprawdzanie…' : 'Zakończ i sprawdź'}
@@ -88,7 +88,7 @@ export default function KnowledgeQuizPlayer({
           <button
             type="button"
             onClick={() => setIndex((i) => Math.min(questions.length - 1, i + 1))}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 whitespace-nowrap px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-800 text-white text-sm font-semibold transition-colors"
           >
             Dalej
             <ChevronRight className="w-4 h-4" />
