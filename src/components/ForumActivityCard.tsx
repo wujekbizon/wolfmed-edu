@@ -1,24 +1,22 @@
-import { getCurrentUser } from '@/server/user'
-import { getLastUserForumPost, getLastUserForumComment } from '@/server/queries'
+import {
+  getLastUserForumPost,
+  getLastUserForumComment,
+  getForumNotifications,
+} from '@/server/queries'
 import Link from 'next/link'
 import { MessageSquare } from 'lucide-react'
-
-function formatRelativeDate(date: Date): string {
-  const now = new Date()
-  const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
-  if (diff < 60) return 'przed chwilą'
-  if (diff < 3600) return `${Math.floor(diff / 60)} min temu`
-  if (diff < 86400) return `${Math.floor(diff / 3600)} godz. temu`
-  return `${Math.floor(diff / 86400)} dni temu`
-}
+import { getCurrentUser } from '@/server/user'
+import { formatRelativeDate } from '@/helpers/formatRelativeDate'
+import ForumNotificationBadges from './ForumNotificationBadges'
 
 export default async function ForumActivityCard() {
   const user = await getCurrentUser()
   if (!user) return null
 
-  const [lastPost, lastComment] = await Promise.all([
+  const [lastPost, lastComment, notifications] = await Promise.all([
     getLastUserForumPost(user.userId),
     getLastUserForumComment(user.userId),
+    getForumNotifications(user.userId),
   ])
 
   const hasActivity = lastPost || lastComment
@@ -30,6 +28,7 @@ export default async function ForumActivityCard() {
           <MessageSquare className="w-4 h-4 text-zinc-400" />
           <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
         </div>
+        <ForumNotificationBadges notifications={notifications} />
         <p className="text-sm text-zinc-500 mb-3">
           Nie masz jeszcze żadnych postów na forum.
         </p>
@@ -58,6 +57,7 @@ export default async function ForumActivityCard() {
         <MessageSquare className="w-4 h-4 text-zinc-400" />
         <h3 className="text-base font-semibold text-zinc-800">Forum</h3>
       </div>
+      <ForumNotificationBadges notifications={notifications} />
       <div className="bg-white/50 border border-white/50 rounded-xl px-4 py-3">
         <p className="text-xs text-zinc-500 mb-1">
           {mostRecent.type === 'post' ? 'Twój post' : 'Twój komentarz'} ·{' '}

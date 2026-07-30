@@ -1,11 +1,12 @@
 import { Suspense } from 'react'
-import { getForumPostById } from '@/server/queries'
+import { getForumPostById, getForumNotifications } from '@/server/queries'
 import { notFound } from 'next/navigation'
 import { auth } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import ForumDetailHeader from '@/components/ForumDetailHeader'
 import ForumDetailContent from '@/components/ForumDetailContent'
 import ForumDetailComments from '@/components/ForumDetailComments'
+import MarkForumSeen from '@/components/MarkForumSeen'
 import Loading from './loading'
 import { Metadata } from 'next'
 
@@ -31,6 +32,11 @@ export async function generateMetadata({ params }: { params: Promise<{ postId: s
     title: forumPost.title,
     description: forumPost.content.substring(0, 120) + '...',
   }
+}
+
+async function CommentsSeenMarker({ userId }: { userId: string }) {
+  const { newComments } = await getForumNotifications(userId)
+  return <MarkForumSeen scope="comments" hasUnread={newComments > 0} />
 }
 
 async function ForumPost({ postId }: { postId: string }) {
@@ -71,6 +77,11 @@ async function ForumPost({ postId }: { postId: string }) {
           readonly={post.readonly}
         />
       </article>
+      {isAuthor && userId && (
+        <Suspense fallback={null}>
+          <CommentsSeenMarker userId={userId} />
+        </Suspense>
+      )}
     </section>
   )
 }
