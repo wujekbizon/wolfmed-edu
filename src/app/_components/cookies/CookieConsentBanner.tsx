@@ -58,7 +58,10 @@ export default function CookieConsentBanner() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 p-3 md:p-6 animate-slideInUp">
-      <div className="mx-auto flex w-full max-w-4xl max-h-[calc(100vh-1.5rem)] md:max-h-[calc(100vh-3rem)] flex-col">
+      <div
+        style={{ maxHeight: 'calc(100vh - 3rem)' }}
+        className="mx-auto flex w-full max-w-4xl flex-col"
+      >
         <div className="relative flex min-h-0 flex-col overflow-hidden rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-950 to-black backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50">
 
           <div className="relative min-h-0 overflow-y-auto overscroll-contain scrollbar-webkit px-5 pt-5 pb-4 md:px-7 md:pt-7">
