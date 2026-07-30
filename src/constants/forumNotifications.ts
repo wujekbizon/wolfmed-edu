@@ -7,3 +7,5 @@
 export const FORUM_NOTIFICATIONS_EPOCH = new Date('2026-07-30T00:00:00Z')
 
 export const FORUM_NOTIFICATION_BADGE_CAP = 9
+
+export const ADMIN_FORUM_PAGE_SIZE = 20

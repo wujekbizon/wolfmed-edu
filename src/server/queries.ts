@@ -1345,7 +1345,7 @@ export const getForumStats = cache(async (): Promise<ForumStats> => {
 })
 
 export const getRecentForumPosts = cache(
-  async (limit = 5): Promise<RecentForumPost[]> => {
+  async (limit = 5, offset = 0): Promise<RecentForumPost[]> => {
     return db
       .select({
         id: forumPosts.id,
@@ -1358,8 +1358,9 @@ export const getRecentForumPosts = cache(
       .from(forumPosts)
       .leftJoin(forumComments, eq(forumComments.postId, forumPosts.id))
       .groupBy(forumPosts.id)
-      .orderBy(desc(forumPosts.createdAt))
+      .orderBy(desc(forumPosts.createdAt), desc(forumPosts.id))
       .limit(limit)
+      .offset(offset)
   }
 )
 
