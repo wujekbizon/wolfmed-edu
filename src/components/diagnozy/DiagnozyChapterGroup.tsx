@@ -10,10 +10,10 @@ export default function DiagnozyChapterGroup({
 }) {
   return (
     <section aria-labelledby={`rozdzial-${chapter.number}`}>
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4">
         <h2
           id={`rozdzial-${chapter.number}`}
-          className="text-lg font-bold text-zinc-800 min-w-0"
+          className="text-lg font-bold text-zinc-800 shrink-0 max-w-full"
         >
           {chapter.number}
           {chapter.title ? `. ${chapter.title}` : ''}
