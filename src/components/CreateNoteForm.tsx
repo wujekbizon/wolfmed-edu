@@ -52,11 +52,11 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   return (
     <form action={action} className="h-full min-h-0 flex flex-col md:flex-row gap-3 overflow-y-auto md:overflow-visible">
       {isFullscreen ? (
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col">{editorField}</div>
+        <div className="flex min-h-64 min-w-0 flex-1 flex-col">{editorField}</div>
       ) : (
         <ResizableComponent direction="horizontal">{editorField}</ResizableComponent>
       )}
-      <div className="flex flex-col justify-between grow max-md:grow-0 min-h-80 md:min-h-0 max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
+      <div className="flex flex-col justify-between grow max-md:grow-0 sm:h-64 h-full md:min-h-0  overflow-y-auto scrollbar-webkit py-2 pl-2">
         <div>
 
         <div>

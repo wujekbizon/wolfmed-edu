@@ -62,7 +62,7 @@ export default function ResizableComponent({
     // taking whatever height the stacked siblings leave behind rather than
     // growing with the note.
     if (direction === "horizontal" && innerWidth < 768) {
-        return <div className="flex min-h-0 w-full flex-1 flex-col">{children}</div>;
+        return <div className="flex min-h-64 w-full flex-1 flex-col">{children}</div>;
     }
 
     const resizableProps =
