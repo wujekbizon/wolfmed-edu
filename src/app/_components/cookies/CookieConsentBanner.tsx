@@ -58,10 +58,10 @@ export default function CookieConsentBanner() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 p-3 md:p-6 animate-slideInUp">
-      <div className="max-w-4xl mx-auto">
-        <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-950 to-black backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50">
-         
-          <div className="relative p-5 md:p-7">
+      <div className="max-w-4xl mx-auto flex max-h-[calc(100dvh-1.5rem)] md:max-h-[calc(100dvh-3rem)] flex-col">
+        <div className="relative flex min-h-0 flex-col overflow-hidden rounded-3xl bg-linear-to-br from-zinc-900 via-zinc-950 to-black backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/50">
+
+          <div className="relative min-h-0 overflow-y-auto overscroll-contain scrollbar-webkit px-5 pt-5 pb-4 md:px-7 md:pt-7">
             <div className="flex items-center gap-3 mb-5">
               <div className="shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-zinc-900 border border-white/15 flex items-center justify-center">
                 <svg className="w-5 h-5 md:w-6 md:h-6 text-[#f58a8a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,14 +94,14 @@ export default function CookieConsentBanner() {
                   key={category.id} 
                   className="group relative overflow-hidden rounded-2xl bg-white/5 hover:bg-white/8 border border-white/10 hover:border-white/20 transition-all duration-300 p-4"
                 >
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center justify-between gap-3 sm:gap-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-1">
                         <span className="text-sm md:text-base font-semibold text-white">
                           {category.label}
                         </span>
                         {category.required && (
-                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-500/30 text-xs font-medium text-[#f58a8a]">
+                          <span className="inline-flex shrink-0 items-center gap-1 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-500/30 text-xs font-medium text-[#f58a8a]">
                             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
@@ -138,7 +138,16 @@ export default function CookieConsentBanner() {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+
+            {showDetails && (
+              <div className="mt-4 animate-fadeInUp">
+                <CookieDetails />
+              </div>
+            )}
+          </div>
+
+          <div className="shrink-0 border-t border-white/10 bg-zinc-950/60 px-5 py-4 md:px-7 md:py-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
               <button
                 onClick={handleSave}
                 className="group relative overflow-hidden px-6 py-3.5 rounded-2xl font-semibold text-zinc-900 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl"
@@ -180,15 +189,6 @@ export default function CookieConsentBanner() {
               </svg>
               {showDetails ? 'Ukryj szczegóły' : 'Pokaż szczegóły'}
             </button>
-            <div 
-              className={`transition-all duration-300 ease-in-out ${
-                showDetails 
-                  ? 'max-h-[800px] opacity-100 mt-4' 
-                  : 'max-h-0 opacity-0 overflow-hidden'
-              }`}
-            >
-              <CookieDetails />
-            </div>
           </div>
         </div>
       </div>
