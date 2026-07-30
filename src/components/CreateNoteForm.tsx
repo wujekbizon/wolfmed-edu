@@ -33,7 +33,7 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   }, [state.status])
 
   const handleTagCountChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => setTagCount(Number(e.target.value) || ""),
+    (value: string) => setTagCount(Number(value) || ""),
     []
   )
 
