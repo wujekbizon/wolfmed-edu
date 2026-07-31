@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Metadata } from 'next'
 import AdminNav from '@/components/admin/AdminNav'
 import AdminNavBadged from '@/components/admin/AdminNavBadged'
+import { requireAdmin } from '@/helpers/requireAdmin'
 
 export const metadata: Metadata = {
   title: 'Admin Panel - Wolfmed Blog',
@@ -15,6 +16,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  await requireAdmin()
 
   return (
     <div className="min-h-screen bg-zinc-50">

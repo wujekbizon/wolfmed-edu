@@ -180,9 +180,9 @@ export default function Page() {
 
 ## ❤️ Blog Likes
 
-Authenticated users can like/unlike blog posts. The whole `/blog(.*)` route is
-auth-gated in `src/proxy.ts`, so every viewer is signed in — there is no
-signed-out UI path.
+Authenticated users can like/unlike blog posts. The whole `/blog` segment is
+auth-gated in `src/app/blog/layout.tsx` via `requireUser()`, so every viewer is
+signed in — there is no signed-out UI path.
 
 **Data flow**
 - **Table**: `blogLikes` (`blog_likes`) — composite `(userId, postId)`, cascade delete on post (`server/db/schema.ts`).
@@ -190,12 +190,13 @@ signed-out UI path.
 - **Read helper**: `getBlogLikeState(postId) → { liked, count }` — used by the client button to hydrate per-user state.
 - **Counts**: `getBlogPostBySlug` returns `_count.likes`; `getAllBlogPosts` adds counts via a grouped `blogLikes` query for the list cards.
 
-**Why a client island** — the detail page (`/blog/[slug]`) is statically
-generated (`revalidate` + `generateStaticParams`). Calling Clerk `auth()` in the
-page would force dynamic rendering, so per-user like state lives in the
-`BlogLikeButton` client component (`useActionState` + `<form>` + `useToastMessage`,
-the standard form pattern), which hydrates on mount via `getBlogLikeState`. The
-list card (`BlogPostCard`) shows a read-only heart + count only.
+**Why a client island** — the blog routes render dynamically (the layout's
+`requireUser()` reads request auth), but the page itself stays user-agnostic so
+its payload is cacheable per post, not per user. Per-user like state lives in
+the `BlogLikeButton` client component (`useActionState` + `<form>` +
+`useToastMessage`, the standard form pattern), which hydrates on mount via
+`getBlogLikeState`. The list card (`BlogPostCard`) shows a read-only heart +
+count only.
 
 ---
 
