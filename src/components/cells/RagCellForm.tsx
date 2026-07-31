@@ -208,6 +208,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
             <SubmitButton
               label="Wyślij"
               loading="Wysyłam..."
+              disabled={isPending}
               className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
             />
           </div>
