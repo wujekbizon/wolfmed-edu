@@ -1,6 +1,7 @@
 import clerkNext from '@clerk/eslint-plugin/next'
 
 export default [
+  { ignores: ['.next/**'] },
   {
     plugins: { '@clerk/next': clerkNext },
 
@@ -13,7 +14,6 @@ export default [
             "app/blog/**",
             "app/forum/**",
             "app/admin/**",
-            "app/success/**",
          ],
          public: ['src/app/sign-in/**', 'src/app/sign-up/**'],
          resources: {
