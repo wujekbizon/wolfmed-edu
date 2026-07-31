@@ -35,6 +35,7 @@ import {
   diagnozy,
   diagnozyProgress,
   diagnozyExamAttempts,
+  forumReadState,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -48,9 +49,15 @@ import {
   Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
-import { eq, asc, desc, sql, and, or, like, count, inArray, notInArray } from "drizzle-orm"
+import { eq, asc, desc, sql, and, or, like, count, gt, ne, inArray, notInArray } from "drizzle-orm"
 import { challengeTypesForCourse } from "@/helpers/challengeTypesForCourse"
-import { Post as ForumPost } from "@/types/forumPostsTypes"
+import {
+  Post as ForumPost,
+  ForumNotifications,
+  ForumStats,
+  RecentForumPost,
+} from "@/types/forumPostsTypes"
+import { forumWatermark } from "@/helpers/forumWatermark"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
@@ -1143,6 +1150,7 @@ export const createForumPost = cache(
     content: string
     authorId: string
     authorName: string
+    authorRole: string
     readonly: boolean
   }) => {
     const post = await db
@@ -1246,6 +1254,113 @@ export const getLastUserForumComment = cache(
       .limit(1)
 
     return lastComment ?? null
+  }
+)
+
+export const getForumNotifications = cache(
+  async (userId: string): Promise<ForumNotifications> => {
+    const [readState] = await db
+      .select({
+        lastSeenPostsAt: forumReadState.lastSeenPostsAt,
+        lastSeenCommentsAt: forumReadState.lastSeenCommentsAt,
+        accountCreatedAt: users.createdAt,
+      })
+      .from(users)
+      .leftJoin(forumReadState, eq(forumReadState.userId, users.userId))
+      .where(eq(users.userId, userId))
+
+    if (!readState) return { newPosts: 0, newAdminPosts: 0, newComments: 0 }
+
+    const postsSince = forumWatermark(
+      readState.lastSeenPostsAt ?? readState.accountCreatedAt
+    )
+    const commentsSince = forumWatermark(
+      readState.lastSeenCommentsAt ?? readState.accountCreatedAt
+    )
+
+    const [postCounts, commentCounts] = await Promise.all([
+      db
+        .select({
+          newPosts: count(),
+          newAdminPosts: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.authorRole} = 'admin')`,
+        })
+        .from(forumPosts)
+        .where(
+          and(
+            gt(forumPosts.createdAt, postsSince),
+            ne(forumPosts.authorId, userId)
+          )
+        ),
+      db
+        .select({ newComments: count() })
+        .from(forumComments)
+        .innerJoin(forumPosts, eq(forumPosts.id, forumComments.postId))
+        .where(
+          and(
+            gt(forumComments.createdAt, commentsSince),
+            eq(forumPosts.authorId, userId),
+            ne(forumComments.authorId, userId)
+          )
+        ),
+    ])
+
+    return {
+      newPosts: Number(postCounts[0]?.newPosts) || 0,
+      newAdminPosts: Number(postCounts[0]?.newAdminPosts) || 0,
+      newComments: Number(commentCounts[0]?.newComments) || 0,
+    }
+  }
+)
+
+export const getForumStats = cache(async (): Promise<ForumStats> => {
+  const oneWeekAgo = new Date()
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+  const oneMonthAgo = new Date()
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+
+  const answeredPostIds = db
+    .selectDistinct({ postId: forumComments.postId })
+    .from(forumComments)
+
+  const [stats, [comments]] = await Promise.all([
+    db
+      .select({
+        total: count(),
+        thisWeek: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.createdAt} >= ${oneWeekAgo})`,
+        thisMonth: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.createdAt} >= ${oneMonthAgo})`,
+        unanswered: sql<number>`COUNT(*) FILTER (WHERE ${notInArray(forumPosts.id, answeredPostIds)})`,
+      })
+      .from(forumPosts),
+    db.select({ total: count() }).from(forumComments),
+  ])
+
+  return {
+    total: stats[0]?.total || 0,
+    thisWeek: Number(stats[0]?.thisWeek) || 0,
+    thisMonth: Number(stats[0]?.thisMonth) || 0,
+    unanswered: Number(stats[0]?.unanswered) || 0,
+    totalComments: comments?.total || 0,
+  }
+})
+
+export const getRecentForumPosts = cache(
+  async (limit = 5, offset = 0): Promise<RecentForumPost[]> => {
+    return db
+      .select({
+        id: forumPosts.id,
+        title: forumPosts.title,
+        authorName: forumPosts.authorName,
+        authorRole: forumPosts.authorRole,
+        createdAt: forumPosts.createdAt,
+        commentCount: count(forumComments.id),
+      })
+      .from(forumPosts)
+      .leftJoin(forumComments, eq(forumComments.postId, forumPosts.id))
+      .groupBy(forumPosts.id)
+      .orderBy(desc(forumPosts.createdAt), desc(forumPosts.id))
+      .limit(limit)
+      .offset(offset)
   }
 )
 
@@ -1735,13 +1850,16 @@ export const saveChallengeCompletion = async (
     .limit(1)
 
   if (existing.length > 0) {
-    // Update existing completion
+    // A retake never revokes a pass or a personal best — the procedure badge
+    // is granted off `passed`, so downgrading it would strip an earned badge.
+    const previous = existing[0]
+
     await tx
       .update(challengeCompletions)
       .set({
-        score: data.score,
+        score: Math.max(previous.score, data.score),
         timeSpent: data.timeSpent,
-        passed,
+        passed: previous.passed || passed,
         attempts: sql`${challengeCompletions.attempts} + 1`,
         completedAt: new Date(),
       })

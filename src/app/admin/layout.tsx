@@ -1,5 +1,8 @@
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { Metadata } from 'next'
+import AdminNav from '@/components/admin/AdminNav'
+import AdminNavBadged from '@/components/admin/AdminNavBadged'
 
 export const metadata: Metadata = {
   title: 'Admin Panel - Wolfmed Blog',
@@ -22,44 +25,9 @@ export default async function AdminLayout({
               <h1 className="text-xl font-bold text-red-500">
                 Admin Panel
               </h1>
-              <nav className="hidden md:flex space-x-4">
-                <Link
-                  href="/admin"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  href="/admin/posts"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Posty
-                </Link>
-                <Link
-                  href="/admin/posts/new"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Nowy Post
-                </Link>
-                <Link
-                  href="/admin/messages"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Wiadomości
-                </Link>
-                <Link
-                  href="/admin/categories"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Kategorie
-                </Link>
-                <Link
-                  href="/admin/rag"
-                  className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  RAG
-                </Link>
-              </nav>
+              <Suspense fallback={<AdminNav variant="desktop" />}>
+                <AdminNavBadged variant="desktop" />
+              </Suspense>
             </div>
             <div>
               <Link
@@ -70,44 +38,9 @@ export default async function AdminLayout({
               </Link>
             </div>
           </div>
-          <nav className="md:hidden pb-4 flex flex-wrap gap-2">
-            <Link
-              href="/admin"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Dashboard
-            </Link>
-            <Link
-              href="/admin/posts"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Posty
-            </Link>
-            <Link
-              href="/admin/posts/new"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Nowy Post
-            </Link>
-            <Link
-              href="/admin/messages"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Wiadomości
-            </Link>
-            <Link
-              href="/admin/categories"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Kategorie
-            </Link>
-            <Link
-              href="/admin/rag"
-              className="text-zinc-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              RAG
-            </Link>
-          </nav>
+          <Suspense fallback={<AdminNav variant="mobile" />}>
+            <AdminNavBadged variant="mobile" />
+          </Suspense>
         </div>
       </header>
 

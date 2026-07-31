@@ -497,8 +497,13 @@ export async function createForumPostAction(
   formState: FormState,
   formData: FormData
 ) {
-  const { userId } = await auth()
+  const { userId, sessionClaims } = await auth()
   if (!userId) throw new Error("Unauthorized")
+
+  const authorRole =
+    (sessionClaims?.metadata as { role?: string })?.role === "admin"
+      ? "admin"
+      : "user"
 
   // Rate limiting: 5 posts per hour
   const rateLimit = await checkRateLimit(userId, "forum:post:create")
@@ -543,6 +548,7 @@ export async function createForumPostAction(
         content: validationResult.data.content,
         authorId: userId,
         authorName: user.username || "Anonymous",
+        authorRole,
         readonly: validationResult.data.readonly
       })
     })

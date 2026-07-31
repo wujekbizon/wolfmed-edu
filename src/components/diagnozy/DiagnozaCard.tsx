@@ -27,11 +27,11 @@ export default function DiagnozaCard({
         )}
       </div>
 
-      <h3 className="text-base font-bold text-zinc-800 mb-2 line-clamp-2 leading-tight">
+      <h3 className="text-base font-bold text-zinc-800 mb-2 line-clamp-2 leading-tight break-words">
         {diagnoza.title}
       </h3>
 
-      <p className="text-xs text-zinc-500 line-clamp-3 mb-4">{diagnoza.definicjaSnippet}…</p>
+      <p className="text-xs text-zinc-500 line-clamp-3 mb-4 break-words">{diagnoza.definicjaSnippet}…</p>
 
       <div className="mt-auto flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">

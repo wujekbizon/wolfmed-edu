@@ -12,7 +12,7 @@ export default function EditorToolbar() {
     `p-2 rounded text-zinc-300 hover:text-zinc-100 ${active ? 'bg-zinc-700 text-zinc-100' : 'hover:bg-zinc-700'}`
 
   return (
-    <div className="flex flex-wrap items-center gap-1 p-2 border-b border-zinc-700 bg-zinc-800/50">
+    <div className="sticky top-0 z-10 flex flex-wrap items-center gap-1 p-2 border-b border-zinc-700 bg-zinc-800 shrink-0">
       <div className="flex flex-wrap items-center gap-1">
         {TOOLBAR_BUTTONS.map((button) => {
           if ('type' in button && button.type === 'divider') {

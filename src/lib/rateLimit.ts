@@ -29,6 +29,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'forum:post:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
   'forum:comment:create': { interval: 60 * 60 * 1000, maxRequests: 20 },
   'forum:comment:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'forum:seen': { interval: 60 * 60 * 1000, maxRequests: 120 },
 
   'blog:post:create': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'blog:post:update': { interval: 60 * 60 * 1000, maxRequests: 10 },

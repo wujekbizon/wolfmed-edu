@@ -58,9 +58,11 @@ export default function ResizableComponent({
     }
 
     // On mobile a side-by-side (horizontal) split doesn't fit: drop the fixed
-    // pixel width and let the content go full width so it can stack vertically.
+    // pixel width and let the content go full width so it can stack vertically,
+    // taking whatever height the stacked siblings leave behind rather than
+    // growing with the note.
     if (direction === "horizontal" && innerWidth < 768) {
-        return <div className="w-full">{children}</div>;
+        return <div className="flex min-h-64 w-full flex-1 flex-col">{children}</div>;
     }
 
     const resizableProps =

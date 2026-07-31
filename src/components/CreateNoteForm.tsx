@@ -11,6 +11,7 @@ import { PinnedCheckbox } from "./PinnedCheckbox"
 import { EditorField } from "./EditorField"
 import { useNoteEditor } from "@/hooks/useNoteEditor"
 import ResizableComponent from "./Resizable"
+import { useCellFullscreen } from "@/context/CellFullscreenContext"
 
 interface CreateNoteFormProps {
   initialContent?: string | undefined
@@ -23,6 +24,7 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   const [tagCount, setTagCount] = useState<number | "">("")
   const [editorKey, setEditorKey] = useState(0)
   const noScriptFallback = useToastMessage(state)
+  const isFullscreen = useCellFullscreen()
 
   useEffect(() => {
     if (state.status !== "SUCCESS") return
@@ -31,24 +33,30 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   }, [state.status])
 
   const handleTagCountChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => setTagCount(Number(e.target.value) || ""),
+    (value: string) => setTagCount(Number(value) || ""),
     []
   )
 
+  const editorField = (
+    <EditorField
+      formState={state}
+      editorKey={editorKey}
+      contentRef={contentRef}
+      plainTextRef={plainTextRef}
+      excerptRef={excerptRef}
+      onChange={handleEditorChange}
+      initialContent={initialContent}
+    />
+  )
+
   return (
-    <form action={action} className="h-full flex flex-col md:flex-row gap-3">
-      <ResizableComponent direction="horizontal">
-        <EditorField
-          formState={state}
-          editorKey={editorKey}
-          contentRef={contentRef}
-          plainTextRef={plainTextRef}
-          excerptRef={excerptRef}
-          onChange={handleEditorChange}
-          initialContent={initialContent}
-        />
-      </ResizableComponent>
-      <div className="flex flex-col justify-between grow max-h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
+    <form action={action} className="h-full min-h-0 flex flex-col md:flex-row gap-3 overflow-y-auto md:overflow-visible">
+      {isFullscreen ? (
+        <div className="flex min-h-64 min-w-0 flex-1 flex-col">{editorField}</div>
+      ) : (
+        <ResizableComponent direction="horizontal">{editorField}</ResizableComponent>
+      )}
+      <div className="flex flex-col justify-between grow max-md:grow-0 sm:h-64 h-full md:min-h-0  overflow-y-auto scrollbar-webkit py-2 pl-2">
         <div>
 
         <div>

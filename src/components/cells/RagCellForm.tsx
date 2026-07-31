@@ -128,18 +128,18 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   return (
     <div className="flex flex-col h-full bg-zinc-50 rounded-lg border border-zinc-200">
-      <div ref={conversationRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={conversationRef} className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4">
         {showConversation ? (
           <>
             <div className="flex justify-end">
-              <div className="max-w-[80%] bg-zinc-800 text-white rounded-lg px-4 py-3 shadow-sm">
+              <div className="max-w-[92%] sm:max-w-[80%] bg-zinc-800 text-white rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-sm">
                 <p className="text-sm whitespace-pre-wrap">{userQuestion}</p>
               </div>
             </div>
 
             {isPending && (
               <div className="flex justify-start">
-                <div className="max-w-[80%] w-full">
+                <div className="w-full sm:max-w-[80%]">
                   <RagProgressIndicator
                     stage={stage}
                     progress={progress}
@@ -155,7 +155,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             {state.status === 'SUCCESS' && state.message && !isPending && (
               <div className="flex justify-start">
-                <div className="max-w-[80%]">
+                <div className="w-full sm:w-auto sm:max-w-[80%]">
                   <RagResponse
                     answer={state.message}
                     sources={state.values?.sources as string[] | undefined}
@@ -173,7 +173,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
         )}
       </div>
 
-      <div className="border-t border-zinc-200 bg-white p-4">
+      <div className="border-t border-zinc-200 bg-white p-2 sm:p-4">
         <form ref={formRef} action={handleSubmit} className="space-y-3">
           <input type="hidden" name="cellId" value={cell.id} />
 
@@ -208,6 +208,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
             <SubmitButton
               label="Wyślij"
               loading="Wysyłam..."
+              disabled={isPending}
               className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
             />
           </div>

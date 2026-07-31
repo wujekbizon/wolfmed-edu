@@ -63,24 +63,24 @@ export default function Editor({
   return (
     <LexicalComposer initialConfig={config}>
       <div
-        className={`bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 h-full ${className}`}
+        className={`bg-zinc-800 rounded-lg overflow-hidden border border-zinc-700 flex flex-col h-full ${className}`}
         role="textbox"
         aria-multiline="true"
         aria-label="Edytor tekstu"
       >
         <EditorToolbar />
-        <div className="p-2 sm:p-4 flex-1 relative">
+        <div className="relative flex-1 min-h-0 overflow-y-auto scrollbar-webkit">
           <RichTextPlugin
             contentEditable={
               <ContentEditable
-                className="h-full overflow-y-auto scrollbar-webkit outline-none text-zinc-200"
+                className="min-h-full p-2 sm:p-4 outline-none text-zinc-200"
                 aria-describedby="editor-placeholder"
               />
             }
             placeholder={
               <div
                 id="editor-placeholder"
-                className="absolute top-[16px] left-[16px] text-zinc-600 pointer-events-none"
+                className="absolute top-2 left-2 sm:top-4 sm:left-4 text-zinc-600 pointer-events-none"
               >
                 {placeholder}
               </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useScrollToTopOnChange } from '@/hooks/useScrollToTopOnChange'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, RotateCcw, ArrowLeft, Clock, Award, Check, Swords } from 'lucide-react'
 import Link from 'next/link'
@@ -20,6 +21,7 @@ export default function PielegniastwoProcedureReader({
   procedure: PielegniastwoProcedure
 }) {
   const [currentSection, setCurrentSection] = useState(0)
+  const scrollRef = useScrollToTopOnChange(currentSection)
   const [direction, setDirection] = useState<Direction>(1)
   const procedureSlug = getPielegniastwoSlug(procedure)
 
@@ -179,7 +181,7 @@ export default function PielegniastwoProcedureReader({
             </Link>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto scrollbar-webkit">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-webkit">
           <div className="px-4 md:px-10 py-6 md:py-10 max-w-4xl w-full mx-auto">
 
             <div className="flex items-center gap-3 mb-8 flex-wrap">
@@ -286,7 +288,7 @@ export default function PielegniastwoProcedureReader({
             <button
               onClick={handlePrevious}
               disabled={isFirstSection}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors w-full lg:w-auto"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors shrink-0 whitespace-nowrap"
             >
               <ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Cofnij
@@ -294,7 +296,7 @@ export default function PielegniastwoProcedureReader({
 
             <button
               onClick={isLastSection ? handleReset : handleNext}
-              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
+              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
             >
               {isLastSection ? (
                 <>

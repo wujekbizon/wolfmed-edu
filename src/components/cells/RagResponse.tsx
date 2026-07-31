@@ -23,7 +23,7 @@ export default function RagResponse({ answer, sources }: RagResponseProps) {
   return (
     <div className="space-y-3">
       {/* Answer Section */}
-      <div className="p-4 bg-white border border-zinc-200 rounded-lg">
+      <div className="p-3 sm:p-4 bg-white border border-zinc-200 rounded-lg">
         <div className="flex items-start justify-between gap-3 mb-3">
           <h3 className="text-sm font-semibold text-zinc-700">Odpowiedź AI</h3>
           <button

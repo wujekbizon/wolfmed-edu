@@ -322,6 +322,7 @@ export const forumPosts = createTable(
       .notNull()
       .references(() => users.userId, { onDelete: "cascade" }),
     authorName: varchar("authorName", { length: 256 }).notNull(),
+    authorRole: varchar("authorRole", { length: 32 }).default("user").notNull(),
     readonly: boolean("readonly").default(false).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -329,8 +330,21 @@ export const forumPosts = createTable(
   (table) => [
     index("forum_posts_author_id_idx").on(table.authorId),
     index("forum_posts_created_at_idx").on(table.createdAt),
+    index("forum_posts_author_role_created_at_idx").on(
+      table.authorRole,
+      table.createdAt
+    ),
   ]
 )
+
+export const forumReadState = createTable("forum_read_state", {
+  userId: varchar("userId", { length: 256 })
+    .primaryKey()
+    .references(() => users.userId, { onDelete: "cascade" }),
+  lastSeenPostsAt: timestamp("lastSeenPostsAt").defaultNow().notNull(),
+  lastSeenCommentsAt: timestamp("lastSeenCommentsAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+})
 
 export const forumComments = createTable(
   "forum_comments",

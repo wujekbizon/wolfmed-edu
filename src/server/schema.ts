@@ -106,6 +106,10 @@ export const CreateCommentSchema = z.object({
 export type CreatePostInput = z.infer<typeof CreatePostSchema>;
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
 
+export const MarkForumSeenSchema = z.object({
+  scope: z.enum(["posts", "comments"]),
+});
+
 export const CreateTestimonialSchema = z.object({
   content: z
     .string()

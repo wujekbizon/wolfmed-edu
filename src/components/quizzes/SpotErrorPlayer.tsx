@@ -59,7 +59,7 @@ export default function SpotErrorPlayer({
         })}
       </div>
 
-      <div className="flex items-center justify-between gap-4 mt-6 pt-5 border-t border-zinc-100">
+      <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 mt-6 pt-5 border-t border-zinc-100">
         <span className="text-sm text-zinc-500">
           Oznaczone błędy:{' '}
           <span className="font-bold text-zinc-800 tabular-nums">{selectedErrors.length}</span>
@@ -68,7 +68,7 @@ export default function SpotErrorPlayer({
           type="button"
           onClick={onSubmit}
           disabled={selectedErrors.length === 0 || isSubmitting}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
+          className="inline-flex w-full xs:w-auto shrink-0 items-center justify-center gap-2 whitespace-nowrap px-5 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 disabled:opacity-40 disabled:pointer-events-none text-white text-sm font-semibold transition-colors"
         >
           <Send className="w-4 h-4" />
           {isSubmitting ? 'Sprawdzanie…' : 'Zakończ i sprawdź'}
