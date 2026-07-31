@@ -17,12 +17,15 @@ import {
   DEFAULT_EMBEDDING_MODEL,
 } from '@/server/vertex-rag'
 import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
+import { ensureAdmin } from '@/helpers/ensureAdmin'
 
 export async function createFileSearchStoreAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const displayName = formData.get('displayName') as string
 
     const validationResult = CreateStoreSchema.safeParse({ displayName })
@@ -54,6 +57,8 @@ export async function uploadFilesAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {
@@ -109,6 +114,7 @@ export async function getStoreStatusAction(): Promise<{
   error?: string
 }> {
   try {
+    await ensureAdmin()
 
     const config = await getRagConfig()
 
@@ -147,6 +153,8 @@ export async function listStoreDocumentsAction(): Promise<{
   error?: string
 }> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {
@@ -176,6 +184,8 @@ export async function testRagQueryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const question = formData.get('question') as string
     const storeName = (formData.get('storeName') as string) || undefined
 
@@ -208,6 +218,8 @@ export async function deleteFileSearchStoreAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {

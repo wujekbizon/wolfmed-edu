@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs/server'
+import { requireUser } from '@/helpers/requireUser'
 import { getAllUserNotes, getUserEnrolledCourses } from '@/server/queries'
 import SidePanel from '@/app/_components/SidePanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
@@ -17,13 +17,13 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const user = await currentUser()
+  const { userId } = await requireUser()
 
-  const enrolledCourses = await getUserEnrolledCourses(user!.id)
-  if (enrolledCourses.length === 0) redirect('/kierunki')
-  
+  const enrolledCourses = await getUserEnrolledCourses(userId)
+  if (enrolledCourses.length === 0) redirect('/kierunki?from=panel')
+
   const isPremium = enrolledCourses.some(c => hasAccessToTier(c.accessTier, 'premium'))
-  const notes = user ? ((await getAllUserNotes(user.id)) as NotesType[]) : []
+  const notes = (await getAllUserNotes(userId)) as NotesType[]
   const pinnedNotes = notes.filter((note) => note.pinned)
   const pinnedCount = notes.filter((n) => n.pinned).length
 

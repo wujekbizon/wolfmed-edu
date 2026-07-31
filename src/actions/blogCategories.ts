@@ -24,7 +24,7 @@ export async function createBlogCategoryAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
     const description = formData.get('description') as string | null
@@ -76,7 +76,7 @@ export async function updateBlogCategoryAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
     const slug = formData.get('slug') as string | null
@@ -140,7 +140,7 @@ export async function deleteBlogCategoryAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     const id = formData.get('id') as string
 
     if (!id) {
@@ -173,7 +173,7 @@ export async function createBlogTagAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     const name = formData.get('name') as string
     const slug = formData.get('slug') as string
 
@@ -213,7 +213,7 @@ export async function updateBlogTagAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     
     const id = formData.get('id') as string
     const name = formData.get('name') as string | null
@@ -264,7 +264,7 @@ export async function deleteBlogTagAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     
     const id = formData.get('id') as string
 

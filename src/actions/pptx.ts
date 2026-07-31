@@ -25,7 +25,7 @@ export async function importPptxAction(
   try {
     const { userId, sessionClaims } = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
-    if (!userId && userRole !== 'admin') {
+    if (!userId || userRole !== 'admin') {
       return { success: false, error: 'Brak uprawnień' }
     }
 

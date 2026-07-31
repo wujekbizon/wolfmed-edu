@@ -1,7 +1,8 @@
 import { Success } from '@/app/_components/Success'
+import { requireUser } from '@/helpers/requireUser'
 
-export const dynamic = 'force-static'
+export default async function SuccessPage() {
+  await requireUser()
 
-export default function SuccessPage() {
   return <Success />
 }
