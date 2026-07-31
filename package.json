@@ -90,6 +90,7 @@
     "zustand": "5.0.14"
   },
   "devDependencies": {
+    "@clerk/eslint-plugin": "^0.2.0",
     "@eslint/eslintrc": "^3.3.6",
     "@gltf-transform/core": "^4.4.2",
     "@gltf-transform/functions": "^4.4.2",
