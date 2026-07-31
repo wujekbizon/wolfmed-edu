@@ -1,7 +1,10 @@
 import Link from 'next/link'
 import { getBlogStatistics } from '@/server/queries'
+import { isAdmin } from '@/helpers/isAdmin'
 
 export default async function AdminBlogWidget() {
+  if (!(await isAdmin())) return null
+
   const stats = await getBlogStatistics()
 
   return (
