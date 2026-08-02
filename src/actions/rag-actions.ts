@@ -20,7 +20,6 @@ import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } fro
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { TOOL_COMMANDS, TOOL_COMMAND_NAMES } from '@/constants/toolCommands'
-import { mcpServer } from '@/server/mcp/server'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
@@ -45,23 +44,10 @@ async function progressStep(
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
-    // Build resources list directly from DB (not API) to include user's notes/materials
+    // Only the student's own notes and materials: an attachment can never reach
+    // outside the user, and nothing in the request path reads from disk.
     const resources: Resource[] = []
 
-    // Get docs from MCP server
-    const mcpResult = await mcpServer.readResource('docs://list')
-    const fileList = mcpResult.contents?.[0]?.text
-      ? JSON.parse(mcpResult.contents[0].text)
-      : []
-
-    const docResources: Resource[] = fileList.map((filename: string) => ({
-      name: filename,
-      displayName: filename.replace('.md', '').replace(/_/g, ' '),
-      type: 'doc' as const,
-    }))
-    resources.push(...docResources)
-
-    // Get user's notes and materials directly from DB
     if (userId) {
       const [notes, materials] = await Promise.all([
         getAllUserNotes(userId),
@@ -138,14 +124,7 @@ async function fetchResourceContent(uri: string, userId: string): Promise<Resour
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  const response = await fetch(`${baseUrl}/api/mcp`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tool: 'read', args: { filename: uri } }),
-  })
-  const data = await response.json()
-  return { type: 'text', content: data.content?.[0]?.text || '' }
+  return { type: 'text', content: '' }
 }
 
 export async function askRagQuestion(
