@@ -40,6 +40,107 @@ Everything below is about making tier 2 real without breaking the others.
 
 ---
 
+## 2b. The flow
+
+`[exists]` is in the code today. `[NEW]` is what this plan builds.
+
+### Getting content in
+
+```
+   NOTE SAVED  [exists]              MATERIAL UPLOADED  [exists]
+        │                                     │
+        │ Lexical JSON                        │ PDF → UploadThing
+        ▼                                     │ (original kept, for download)
+ getLexicalContent()  [exists]                ▼
+        │                            materials row  [exists]
+        │                                     │
+        │                            ┌────────┴────────┐
+        │                            │  JOB SYSTEM     │  [NEW wiring,
+        │                            │  progress-store │   existing machinery]
+        │                            │  + SSE progress │
+        │                            │  Gemini extract │  "Przetwarzam PDF…"
+        │                            └────────┬────────┘
+        │                                     ▼
+        │                            materials.extractedText  [NEW column]
+        │                                     │
+        └──────────────────┬──────────────────┘
+                           ▼
+                       chunk()  [NEW]   ~1000 chars
+                           ▼
+        ┌──────────────────────────────────────┐
+        │  lib_chunks  [NEW TABLE]             │
+        │  userId · sourceType · sourceId      │
+        │  title · content · contentHash       │
+        │  embedding = NULL  ◄─────────────────┼── findable NOW, by trigram
+        └──────────────────────────────────────┘
+                           │
+                    lazy embed  [NEW]
+                           ▼
+                  UPDATE embedding
+                           │
+                           └──► also findable by meaning
+```
+
+Extraction is **not** on a cron. A material has no text until it runs, so a
+nightly sweep would leave a PDF uploaded at 09:00 invisible until 03:30. Embedding
+*is* lazy, because trigram already covers unembedded rows once text exists.
+
+### Answering a question
+
+```
+                    student's question
+                            │
+                 parse: @attachment? /command?
+                            │
+              ┌─────────────┴─────────────┐
+              │                           │
+        @attachment                  no attachment
+              │                           │
+    that source is PRIMARY,               ▼
+    corpus skipped  [exists]     retrieveContext()  [NEW]
+              │                           │
+              │              ┌────────────┴────────────┐
+              │              ▼                         ▼
+              │      Vertex corpus              lib_chunks
+              │      curriculum,                WHERE userId = …
+              │      everyone  [exists]         vector + trigram  [NEW]
+              │              │                         │
+              │        ranked list A            ranked list B
+              │              └────────────┬────────────┘
+              │                           ▼
+              │                RECIPROCAL RANK FUSION  [NEW]
+              │                  ranks, never scores
+              │                           │
+              └─────────────┬─────────────┘
+                            ▼
+                 chunks labelled by origin
+             [curriculum] [your note] [your PDF]
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+      /command  [exists]          plain question  [exists]
+   tool generates test/           grounded answer
+   plan/note/diagram              + sources panel
+```
+
+Memory appears in neither diagram on purpose: it shapes the tutor's tone in the
+system instruction and never reaches a retrieval query.
+
+### What dies
+
+```
+TODAY    every question  →  download PDF  →  base64  →  model
+                            the whole file, every single time
+
+AFTER    upload once     →  extract  →  chunk  →  embed
+         every question  →  retrieve a few chunks  →  model
+```
+
+Same feature, paid for once instead of per question — and searchable rather than
+reachable only by typing its exact name after `@`.
+
+---
+
 ## 3. Architecture — the three decisions that matter
 
 ### 3.1 The personal library lives in your Postgres
