@@ -37,10 +37,17 @@ export default function MindMapCell({ cell }: { cell: Cell }) {
           ? `Wyjaśnij zagadnienie „${path[path.length - 1]}” w kontekście: ${path.join(" → ")}. Wytłumacz przystępnie i zwięźle.`
           : `Wyjaśnij temat „${path[0]}” przystępnie i zwięźle.`
 
+      // The prose above is what the student reads; retrieval gets the subject
+      // alone, since instruction words dilute the query embedding.
+      const searchTopic = path.length > 1 ? `${path[path.length - 1]} — ${path.join(", ")}` : path[0]!
+
       const newCellId = insertCellAfterWithContent(
         cell.id,
         "rag",
-        buildRagCellContent(query, { mapCellId: cell.id, nodeId })
+        buildRagCellContent(query, {
+          origin: { mapCellId: cell.id, nodeId },
+          searchTopic,
+        })
       )
       setPendingAutoSubmitCellId(newCellId)
 

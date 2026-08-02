@@ -46,6 +46,41 @@ Proszę o szczegółową odpowiedź zawierającą:
 WAŻNE: Odpowiedź MUSI być po polsku.`
 }
 
+interface GroundedPromptParts {
+  question: string
+  corpusText?: string | undefined
+  userContext?: string | undefined
+  memoryTail?: string | undefined
+}
+
+// Retrieved material first, the question last — closest to the answer. Nothing
+// here reaches retrieval: the corpus was already searched with the bare subject.
+export function buildGroundedPrompt({
+  question,
+  corpusText,
+  userContext,
+  memoryTail,
+}: GroundedPromptParts): string {
+  const sections: string[] = []
+
+  if (corpusText) {
+    sections.push(`=== DOKUMENTACJA (baza wiedzy) ===\n${corpusText}`)
+  }
+  if (userContext) {
+    sections.push(`=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${userContext}`)
+  }
+  if (memoryTail) {
+    sections.push(`=== KONTEKST UCZNIA ===\n${memoryTail}`)
+  }
+
+  sections.push(`PYTANIE UŻYTKOWNIKA:\n${question}`)
+  sections.push(
+    'Odpowiedz po polsku na podstawie powyższych materiałów. Cytuj źródłowy dokument gdy to możliwe. Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
+  )
+
+  return sections.join('\n\n')
+}
+
 export function getNoDataFoundMessage(): string {
   return 'Nie znalazłem tej informacji w dostępnych dokumentach medycznych. Spróbuj zadać pytanie inaczej lub skontaktuj się z administratorem.'
 }

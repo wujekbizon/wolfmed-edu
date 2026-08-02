@@ -1,5 +1,15 @@
 import type { RagExplainOrigin } from '@/types/ragCellTypes'
 
-export function buildRagCellContent(topic: string, origin?: RagExplainOrigin): string {
-  return JSON.stringify({ topic, messages: [], ...(origin ? { origin } : {}) })
+interface RagCellSeed {
+  origin?: RagExplainOrigin
+  searchTopic?: string
+}
+
+export function buildRagCellContent(topic: string, seed: RagCellSeed = {}): string {
+  return JSON.stringify({
+    topic,
+    messages: [],
+    ...(seed.origin ? { origin: seed.origin } : {}),
+    ...(seed.searchTopic ? { searchTopic: seed.searchTopic } : {}),
+  })
 }

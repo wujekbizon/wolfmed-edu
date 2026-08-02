@@ -37,12 +37,13 @@ export function parseRagCellContent(raw: string): RagCellContent {
     return { topic: raw, messages: [] }
   }
 
-  const { topic, messages, origin } = parsed as Record<string, unknown>
+  const { topic, messages, origin, searchTopic } = parsed as Record<string, unknown>
   const parsedOrigin = parseOrigin(origin)
 
   return {
     topic: typeof topic === 'string' ? topic : '',
     messages: parseMessages(messages),
     ...(parsedOrigin ? { origin: parsedOrigin } : {}),
+    ...(typeof searchTopic === 'string' && searchTopic ? { searchTopic } : {}),
   }
 }

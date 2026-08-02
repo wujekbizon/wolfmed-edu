@@ -42,6 +42,7 @@ export function useRagCellConversation({ cell, state, isPending }: UseRagCellCon
     topic: content.topic,
     messages: content.messages,
     origin: content.origin,
+    searchTopic: content.searchTopic,
     pendingQuestion: isPending ? askedQuestion.current || content.topic : null,
     rememberQuestion: (question: string) => {
       askedQuestion.current = question

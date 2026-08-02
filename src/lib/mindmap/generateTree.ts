@@ -7,7 +7,8 @@ import { TOPIC_TYPES } from "@/types/mindmapTypes"
 // Shares the RAG feature's Vertex AI client (single-sourced project/location +
 // ADC-or-service-account auth that also works on Vercel).
 import { getGoogleAI } from "@/server/vertex-rag/client"
-import { retrieveContexts } from "@/server/vertex-rag/retrieve"
+import { retrieveCorpusContext } from "@/server/vertex-rag/context"
+import { RAG_TOP_K_BROAD } from "@/constants/rag"
 import { queryFileSearchOnly } from "@/server/vertex-rag/generate"
 
 const MODEL = process.env.MINDMAP_MODEL || "gemini-2.5-flash"
@@ -18,16 +19,16 @@ const NO_THINKING = { thinkingBudget: 0 } as const
 
 // Grounds the map in the knowledge base so its leaves correspond to real corpus
 // content (and are therefore answerable by the tutor, which queries the same
-// corpus). Primary path is retrieveContexts (cheap, raw chunks); on endpoint
+// corpus). Primary path is retrieveCorpusContext (cheap, raw chunks); on endpoint
 // error it falls back to the proven managed-grounding query. Returns null when
 // the topic genuinely isn't in the corpus.
 async function getCorpusContext(topic: string): Promise<string | null> {
   try {
-    const contexts = await retrieveContexts(topic, { topK: 20 })
-    if (contexts.length === 0) return null
-    return contexts.map((c, i) => `[${i + 1}] ${c.text}`).join("\n\n")
+    const corpus = await retrieveCorpusContext(topic, { topK: RAG_TOP_K_BROAD })
+    if (!corpus) return null
+    return corpus.text
   } catch (error) {
-    console.error("[mindmap] retrieveContexts failed, falling back to grounded query:", error)
+    console.error("[mindmap] retrieveCorpusContext failed, falling back to grounded query:", error)
     const result = await queryFileSearchOnly(`Przedstaw najważniejsze informacje na temat: ${topic}`)
     const answer = result.answer?.trim()
     if (!answer || /nie mam tej informacji|nie znalazłem/i.test(answer)) return null

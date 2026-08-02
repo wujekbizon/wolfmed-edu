@@ -1,6 +1,7 @@
 import 'server-only'
 import { PROJECT_ID, LOCATION, vertexFetch } from './client'
 import { getRagConfig } from '@/server/rag-queries'
+import { RAG_TOP_K, RAG_VECTOR_DISTANCE_THRESHOLD } from '@/constants/rag'
 import { parseGoogleApiError } from './errors'
 
 export interface RetrievedContext {
@@ -43,9 +44,10 @@ export async function retrieveContexts(
           query: {
             text: question,
             rag_retrieval_config: {
-              top_k: options.topK ?? 10,
+              top_k: options.topK ?? RAG_TOP_K,
               filter: {
-                vector_distance_threshold: options.vectorDistanceThreshold ?? 0.3,
+                vector_distance_threshold:
+                  options.vectorDistanceThreshold ?? RAG_VECTOR_DISTANCE_THRESHOLD,
               },
             },
           },

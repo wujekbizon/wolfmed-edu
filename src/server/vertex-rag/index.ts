@@ -25,6 +25,8 @@ export { uploadFiles, importFilesFromGcs, listCorpusFiles } from './ingest'
 
 export { retrieveContexts, type RetrievedContext } from './retrieve'
 
+export { retrieveCorpusContext, type CorpusContext } from './context'
+
 export {
   queryWithFileSearch,
   queryFileSearchOnly,

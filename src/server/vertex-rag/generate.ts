@@ -1,9 +1,10 @@
 import 'server-only'
 import { FunctionCallingConfigMode } from '@google/genai'
-import { SYSTEM_PROMPT, enhanceUserQuery } from '@/helpers/rag-prompts'
+import { SYSTEM_PROMPT, buildGroundedPrompt, enhanceUserQuery } from '@/helpers/rag-prompts'
 import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI, logUsage } from './client'
+import { retrieveCorpusContext } from './context'
 import { parseGoogleApiError } from './errors'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
@@ -36,24 +37,27 @@ export async function queryWithFileSearch(
       throw new Error('File Search Store nie jest skonfigurowany')
     }
 
-    const finalQuestion = additionalContext
-      ? `${additionalContext}\n\n${question}`
-      : question
+    const corpus = await retrieveCorpusContext(question, { corpusName: fileSearchStoreName })
 
-    const enhancedQuery = enhanceUserQuery(finalQuestion)
+    const enhancedQuery = corpus
+      ? buildGroundedPrompt({ question, corpusText: corpus.text, userContext: additionalContext })
+      : enhanceUserQuery(additionalContext ? `${question}\n\n${additionalContext}` : question)
 
     // Note: `fileSearch` is a Gemini Developer API tool. Vertex AI's RAG Engine
     // exposes retrieval through `retrieval.vertexRagStore` instead, pointed at
-    // the ragCorpus resource name.
-    const configTools: any[] = [
-      {
-        retrieval: {
-          vertexRagStore: {
-            ragCorpora: [fileSearchStoreName]
+    // the ragCorpus resource name. Only needed as a fallback — when retrieval
+    // returned chunks they are already inline.
+    const configTools: any[] = corpus
+      ? []
+      : [
+          {
+            retrieval: {
+              vertexRagStore: {
+                ragCorpora: [fileSearchStoreName]
+              }
+            }
           }
-        }
-      }
-    ]
+        ]
 
     if (tools && tools.length > 0) {
       configTools.push({
@@ -137,7 +141,7 @@ Based on the tool execution results above, please provide a comprehensive final 
 
       return {
         answer: finalAnswer,
-        sources: [],
+        sources: corpus?.sources ?? [],
         toolResults: toolResultsFormatted
       }
     }
@@ -150,7 +154,7 @@ Based on the tool execution results above, please provide a comprehensive final 
 
     return {
       answer,
-      sources: [],
+      sources: corpus?.sources ?? [],
       toolResults: undefined
     }
   } catch (error) {
@@ -188,16 +192,29 @@ export async function answerFromMemory(
   return { answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.' }
 }
 
+export interface CorpusAnswerOptions {
+  // The subject alone, when the question is prose the user reads rather than a
+  // search phrase (a mind-map node sends its label + breadcrumb here).
+  searchQuery?: string | undefined
+  storeName?: string | undefined
+  userContext?: string | undefined
+  memoryTail?: string | undefined
+  memoryPrefix?: string | undefined
+}
+
+/**
+ * Answers from the corpus: retrieve with the bare subject, then generate with
+ * the retrieved chunks in the prompt. Falls back to managed grounding only when
+ * retrieval comes back empty.
+ */
 export async function queryFileSearchOnly(
   question: string,
-  storeName?: string,
-  additionalContext?: string,
-  memoryPrefix?: string
+  options: CorpusAnswerOptions = {}
 ): Promise<{ answer: string; sources?: string[] }> {
   try {
     const ai = getGoogleAI()
 
-    let fileSearchStoreName = storeName
+    let fileSearchStoreName = options.storeName
 
     if (!fileSearchStoreName) {
       const config = await getRagConfig()
@@ -208,30 +225,31 @@ export async function queryFileSearchOnly(
       throw new Error('File Search Store nie jest skonfigurowany')
     }
 
-    const finalQuestion = additionalContext
-      ? `${additionalContext}\n\n${question}`
-      : question
-
-    const enhancedQuery = enhanceUserQuery(finalQuestion)
+    const corpus = await retrieveCorpusContext(options.searchQuery || question, {
+      corpusName: fileSearchStoreName,
+    })
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: enhancedQuery,
+      contents: corpus
+        ? buildGroundedPrompt({
+            question,
+            corpusText: corpus.text,
+            userContext: options.userContext,
+            memoryTail: options.memoryTail,
+          })
+        : enhanceUserQuery(question),
       config: {
-        systemInstruction: composeSystemInstruction(memoryPrefix),
-        tools: [
-          {
-            retrieval: {
-              vertexRagStore: {
-                ragCorpora: [fileSearchStoreName]
-              }
-            }
-          }
-        ],
+        systemInstruction: composeSystemInstruction(options.memoryPrefix),
+        // No retrieval tool once the context is inline — the corpus was already
+        // searched with the subject alone, which is the whole point.
+        ...(corpus
+          ? {}
+          : { tools: [{ retrieval: { vertexRagStore: { ragCorpora: [fileSearchStoreName] } } }] }),
         thinkingConfig: NO_THINKING
       }
     })
-    logUsage('queryFileSearchOnly', response)
+    logUsage(corpus ? 'queryFileSearchOnly:retrieved' : 'queryFileSearchOnly:grounded', response)
 
     const answer = response.text || ''
 
@@ -241,7 +259,7 @@ export async function queryFileSearchOnly(
 
     return {
       answer,
-      sources: []
+      sources: corpus?.sources ?? []
     }
   } catch (error) {
     console.error('Error in RAG-only query:', error)

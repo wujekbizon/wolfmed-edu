@@ -12,7 +12,7 @@ import {
   uploadFiles,
   getCorpus,
   listCorpusFiles,
-  queryWithFileSearch,
+  queryFileSearchOnly,
   deleteCorpus,
   DEFAULT_EMBEDDING_MODEL,
 } from '@/server/vertex-rag'
@@ -198,10 +198,10 @@ export async function testRagQueryAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const result = await queryWithFileSearch(
-      validationResult.data.question,
-      validationResult.data.storeName
-    )
+    // Same path production uses, so a green admin probe means the tutor works.
+    const result = await queryFileSearchOnly(validationResult.data.question, {
+      ...(validationResult.data.storeName ? { storeName: validationResult.data.storeName } : {}),
+    })
 
     return {
       ...toFormState('SUCCESS', result.answer),

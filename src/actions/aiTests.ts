@@ -5,7 +5,7 @@ import { checkPremiumAccessAction } from "@/actions/course-actions"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { toFormState, fromErrorToFormState } from "@/helpers/toFormState"
 import { GenerateAITestsSchema, TestFileSchema } from "@/server/schema"
-import { retrieveContexts } from "@/server/vertex-rag/retrieve"
+import { retrieveCorpusContext } from "@/server/vertex-rag/context"
 import { executeToolLocally } from "@/server/tools/executor"
 import { getAccessibleCategories } from "@/helpers/populateCategories"
 import type { FormState } from "@/types/actionTypes"
@@ -66,12 +66,12 @@ export async function generateAITestsAction(
     // knowledge base has nothing relevant so the feature still works.
     let content = parsed.data.topic
     try {
-      const contexts = await retrieveContexts(parsed.data.topic, { topK: 12 })
-      if (contexts.length > 0) {
-        content = contexts.map((c, i) => `[${i + 1}] ${c.text}`).join("\n\n")
+      const corpus = await retrieveCorpusContext(parsed.data.topic)
+      if (corpus) {
+        content = corpus.text
       }
     } catch (error) {
-      console.error("[aiTests] retrieveContexts failed, using raw topic:", error)
+      console.error("[aiTests] retrieveCorpusContext failed, using raw topic:", error)
     }
 
     const result = await executeToolLocally("utworz_test", {

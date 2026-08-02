@@ -32,9 +32,13 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     action(formData)
   }
 
+  // searchTopic rides the auto-submit only: it describes the prose this cell was
+  // seeded with, and would misdirect retrieval once the student types their own
+  // question.
   useRagAutoSubmit({
     cellId: cell.id,
     topic: conversation.topic,
+    searchTopic: conversation.searchTopic,
     textareaRef: input.textareaRef,
     onSubmit: handleSubmit,
   })

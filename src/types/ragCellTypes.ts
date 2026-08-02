@@ -18,4 +18,7 @@ export interface RagCellContent {
   topic: string
   messages: RagMessage[]
   origin?: RagExplainOrigin | undefined
+  // Subject alone, when `topic` is prose composed for the user to read. Drives
+  // corpus retrieval; `topic` still drives the answer.
+  searchTopic?: string | undefined
 }

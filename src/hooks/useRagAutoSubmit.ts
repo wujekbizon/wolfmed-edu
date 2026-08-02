@@ -4,12 +4,19 @@ import { useRagStore } from '@/store/useRagStore'
 interface UseRagAutoSubmitArgs {
   cellId: string
   topic: string
+  searchTopic?: string | undefined
   textareaRef: RefObject<HTMLTextAreaElement | null>
   onSubmit: (formData: FormData) => void
 }
 
 /** Submits the cell's topic on its own once the learning hub or a mind map spawned it. */
-export function useRagAutoSubmit({ cellId, topic, textareaRef, onSubmit }: UseRagAutoSubmitArgs) {
+export function useRagAutoSubmit({
+  cellId,
+  topic,
+  searchTopic,
+  textareaRef,
+  onSubmit,
+}: UseRagAutoSubmitArgs) {
   const { pendingAutoSubmitCellId, setPendingAutoSubmitCellId } = useRagStore()
   const submitRef = useRef(onSubmit)
   submitRef.current = onSubmit
@@ -28,6 +35,7 @@ export function useRagAutoSubmit({ cellId, topic, textareaRef, onSubmit }: UseRa
     const formData = new FormData()
     formData.set('question', topic)
     formData.set('cellId', cellId)
+    if (searchTopic) formData.set('searchTopic', searchTopic)
     startTransition(() => submitRef.current(formData))
-  }, [pendingAutoSubmitCellId, cellId, topic, setPendingAutoSubmitCellId, textareaRef])
+  }, [pendingAutoSubmitCellId, cellId, topic, searchTopic, setPendingAutoSubmitCellId, textareaRef])
 }
