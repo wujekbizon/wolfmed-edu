@@ -13,7 +13,9 @@ import { useRagCellConversation } from '@/hooks/useRagCellConversation'
 import { useRagAutoSubmit } from '@/hooks/useRagAutoSubmit'
 import { useRagToolResults } from '@/hooks/useRagToolResults'
 import { useAttachExplanationToMindMap } from '@/hooks/useAttachExplanationToMindMap'
+import { useCommandSelection } from '@/hooks/useCommandSelection'
 import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
+import CommandBar from './CommandBar'
 import RagConversation from './RagConversation'
 import RagProgressIndicator from './RagProgressIndicator'
 
@@ -25,6 +27,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   const input = useRagCellInput()
   const progress = useRagProgress()
   const conversation = useRagCellConversation({ cell, state, isPending })
+  const commandSelection = useCommandSelection()
 
   const handleSubmit = (formData: FormData) => {
     conversation.rememberQuestion(formData.get('question') as string)
@@ -105,9 +108,11 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
               name="question"
               defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
               placeholder={
-                input.slashCommandsEnabled
-                  ? 'Zadaj pytanie... (@ pliki, / polecenia)'
-                  : 'Zadaj pytanie... (@ pliki)'
+                commandSelection.command
+                  ? `Podaj temat, np. „${commandSelection.command.example}"`
+                  : input.slashCommandsEnabled
+                    ? 'Zadaj pytanie... (@ pliki, / polecenia)'
+                    : 'Zadaj pytanie... (@ pliki)'
               }
               rows={2}
               onChange={input.handleChange}
@@ -119,6 +124,9 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             <FieldError formState={state} name="question" />
           </div>
+
+          <CommandBar selection={commandSelection} disabled={isPending} />
+          <FieldError formState={state} name="commandCount" />
 
           <div className="flex items-center justify-between">
             <SubmitButton

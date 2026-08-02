@@ -16,6 +16,7 @@ import {
 } from '@/server/memory/assemble'
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
+import { resolveCommandCount } from '@/helpers/resolveCommandCount'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
@@ -161,6 +162,8 @@ export async function askRagQuestion(
     const cellId = formData.get('cellId') as string
     const searchTopicField = (formData.get('searchTopic') as string | null)?.trim()
     const commandsEnabled = formData.get('commandsEnabled') !== 'false'
+    const commandField = (formData.get('command') as string | null)?.trim()
+    const commandCountField = (formData.get('commandCount') as string | null)?.trim()
 
     await progressStep(
       jobId, 'parsing', 10,
@@ -172,6 +175,8 @@ export async function askRagQuestion(
       question,
       cellId,
       ...(searchTopicField ? { searchTopic: searchTopicField } : {}),
+      ...(commandField ? { command: commandField } : {}),
+      ...(commandCountField ? { commandCount: commandCountField } : {}),
     })
 
     if (!validationResult.success) {
@@ -179,11 +184,24 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const { cleanQuestion, resources, tools, unknownTools } = parseMcpCommands(
-      validationResult.data.question,
-      { commandsEnabled }
-    )
+    const parsed = parseMcpCommands(validationResult.data.question, { commandsEnabled })
+    const { cleanQuestion, resources, unknownTools } = parsed
     const searchTopic = validationResult.data.searchTopic
+
+    // A chip is an explicit mode, so it wins over anything typed. Slash stays as
+    // an accelerator and lands on the same invocation.
+    const selectedCommand = validationResult.data.command
+    const tools = selectedCommand ? [selectedCommand] : parsed.tools
+
+    // The count reaches the tool as a validated number rather than as prose the
+    // dispatch model has to re-extract. That extraction failing, and a silent
+    // default absorbing the failure, is what turned „10 pytań" into 5.
+    const commandSpec = tools[0] ? TOOL_COMMANDS[tools[0]] : undefined
+    const requestedCount = resolveCommandCount(commandSpec, validationResult.data.commandCount)
+    const countOverride =
+      commandSpec?.count && requestedCount !== null
+        ? { [commandSpec.count.param]: requestedCount }
+        : undefined
 
     // Without this an unrecognised command falls through to a free-form question,
     // where the model may still call a tool with arguments it invented.
@@ -357,6 +375,7 @@ export async function askRagQuestion(
         request: effectiveQuestion,
         content: toolInputContent,
         pdfFiles,
+        ...(countOverride ? { overrideArgs: countOverride } : {}),
       })
 
       await progressStep(
@@ -368,11 +387,19 @@ export async function askRagQuestion(
 
       // The answer is payload for the cell, not toast text: FormState.message is
       // what useToastMessage shows, so it stays a short human status.
+      const generated = toolResult.toolResults?.[toolDefinition.name]?.metadata
+      const label = (toolName && TOOL_LABELS_ACCUSATIVE[toolName]) || 'zawartość'
+
+      // A generator that came up short says so. Silently returning 7 of the 10
+      // asked for is indistinguishable, to the student, from the request never
+      // having arrived.
+      const statusMessage =
+        generated?.shortfall > 0
+          ? `Utworzono ${generated.count} z ${generated.requested} — model nie zwrócił pełnej liczby. Spróbuj ponownie lub zawęź temat.`
+          : `Gotowe — utworzono ${label}`
+
       return {
-        ...toFormState(
-          'SUCCESS',
-          `Gotowe — utworzono ${(toolName && TOOL_LABELS_ACCUSATIVE[toolName]) || 'zawartość'}`
-        ),
+        ...toFormState('SUCCESS', statusMessage),
         values: {
           answer: toolResult.answer,
           sources: [],

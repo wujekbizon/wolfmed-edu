@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 import { BODY_ZONES } from "@/types/diagnozyTypes";
+import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -798,6 +799,17 @@ export const RagQuerySchema = z.object({
   // Subject alone, sent when the question is prose a cell composed for the user
   // to read. Drives retrieval; the question still drives the answer.
   searchTopic: z.string().max(300).optional(),
+  // Set by the chip palette. A selected command is a mode, so the name never has
+  // to be recovered from the question text.
+  command: z.enum(TOOL_COMMAND_NAMES as [string, ...string[]]).optional(),
+  // The item count for commands that produce countable output. Bounds per
+  // command are enforced by resolveCommandCount; this only rejects nonsense.
+  commandCount: z.coerce
+    .number("Podaj liczbę")
+    .int("Liczba musi być całkowita")
+    .min(1, "Minimum to 1")
+    .max(100, "Maksimum to 100")
+    .optional(),
 });
 
 // Admin: Create File Search Store

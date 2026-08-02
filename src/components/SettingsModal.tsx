@@ -34,17 +34,19 @@ export default function SettingsModal() {
             checked={showMobileAI}
             onChange={setShowMobileAI}
           />
-          <SettingsToggle
-            label="Komendy /"
-            description="Szybkie polecenia (/utworz, /notatka) w asystencie AI"
-            checked={slashCommandsEnabled}
-            onChange={setSlashCommandsEnabled}
-          />
         </div>
 
         <p className="text-xs font-semibold tracking-widest text-zinc-500 uppercase mt-6 mb-4">
           Nauka
         </p>
+        <div className="flex flex-col gap-5 mb-5">
+          <SettingsToggle
+            label="Komendy /"
+            description="Wpisywanie poleceń ukośnikiem. Przyciski nad polem działają zawsze."
+            checked={slashCommandsEnabled}
+            onChange={setSlashCommandsEnabled}
+          />
+        </div>
         <Link
           href="/panel/ustawienia"
           onClick={closeSettingsModal}

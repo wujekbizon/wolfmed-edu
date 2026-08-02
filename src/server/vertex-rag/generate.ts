@@ -116,16 +116,20 @@ type PdfFile = { title: string; base64: string; mimeType: string }
 interface ToolDispatchInput {
   // What the student actually asked for. Without it the model only sees the
   // meta-instruction and the source material, so „/planuj Opiekun medyczny"
-  // plans how to use planuj_tool and „10 pytań" silently becomes the default 5.
+  // plans how to use planuj_tool instead of planning the subject.
   request: string
   content?: string | undefined
   pdfFiles?: PdfFile[] | undefined
+  // Arguments the caller already knows, applied over whatever the dispatch model
+  // extracted. A count the student typed into a field is data, not something to
+  // recover from prose — extraction failing is how „10 pytań" became 5.
+  overrideArgs?: Record<string, unknown> | undefined
 }
 
 export async function executeToolWithContent(
   toolName: string,
   toolDefinition: { name: string; description: string; parameters: any },
-  { request, content, pdfFiles }: ToolDispatchInput
+  { request, content, pdfFiles, overrideArgs }: ToolDispatchInput
 ): Promise<{ answer: string; toolResults: any }> {
   try {
     const ai = getGoogleAI()
@@ -210,7 +214,7 @@ ${content}
       // Content the model extracted from the PDF, else our source material, else
       // the request itself — a tool handed nothing invents its own subject.
       const toolContent = call.args?.content || content || request
-      const args = { ...call.args, content: toolContent }
+      const args = { ...call.args, content: toolContent, ...overrideArgs }
       const result = await executeToolLocally(call.name, args)
 
       const finalPrompt = `Tool ${call.name} executed successfully.
