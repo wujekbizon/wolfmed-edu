@@ -22,6 +22,8 @@ import { useCommandAutocompleteInput } from './useCommandAutocompleteInput'
  *   {input.showResourceAutocomplete && <ResourceAutocomplete ... />}
  *   {input.showCommandAutocomplete && <CommandAutocomplete ... />}
  */
+export type RagCellInput = ReturnType<typeof useRagCellInput>
+
 export function useRagCellInput() {
   const { resources, loading: resourcesLoading } = useResourceAutocomplete()
 

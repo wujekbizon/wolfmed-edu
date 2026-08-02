@@ -20,20 +20,8 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
   const pathname = usePathname()
   const isFloating = !!onDismiss
 
-  const {
-    textareaRef,
-    showResourceAutocomplete,
-    filteredResources,
-    resourceSelectedIndex,
-    resourcesLoading,
-    insertResource,
-    showCommandAutocomplete,
-    filteredCommands,
-    commandSelectedIndex,
-    insertCommand,
-    handleChange: ragHandleChange,
-    handleKeyDown: ragHandleKeyDown,
-  } = useRagCellInput()
+  const input = useRagCellInput()
+  const { textareaRef } = input
 
   const handleSubmit = () => {
     const trimmed = textareaRef.current?.value.trim()
@@ -48,12 +36,12 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    ragHandleChange(e)
+    input.handleChange(e)
     setHasText(!!e.target.value.trim())
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    ragHandleKeyDown(e)
+    input.handleKeyDown(e)
     if (e.key === 'Enter' && !e.shiftKey && !e.defaultPrevented) {
       e.preventDefault()
       handleSubmit()
@@ -112,18 +100,7 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
           </div>
         </div>
 
-        <AIAutocompleteDropdowns
-          showResourceAutocomplete={showResourceAutocomplete}
-          showCommandAutocomplete={showCommandAutocomplete}
-          filteredResources={filteredResources}
-          filteredCommands={filteredCommands}
-          resourceSelectedIndex={resourceSelectedIndex}
-          commandSelectedIndex={commandSelectedIndex}
-          resourcesLoading={resourcesLoading}
-          insertResource={insertResource}
-          insertCommand={insertCommand}
-          direction="up"
-        />
+        <AIAutocompleteDropdowns input={input} direction="up" />
       </div>
 
       {!isFloating && (
