@@ -59,7 +59,7 @@ export default function NodeDetailCard({
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto scrollbar-thin scrollbar-webkit">
         <p className="text-sm leading-relaxed text-zinc-300">
           {notes || "Brak krótkiego opisu. Kliknij „Wyjaśnij”, aby uzyskać pełne wyjaśnienie od asystenta AI."}
         </p>

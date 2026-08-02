@@ -70,7 +70,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   return (
     <div className="flex flex-col h-full bg-zinc-50 rounded-lg border border-zinc-200">
-      <div ref={conversationRef} className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4">
+      <div ref={conversationRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-webkit p-2 sm:p-4 space-y-4">
         <RagConversation
           messages={conversation.messages}
           pendingQuestion={conversation.pendingQuestion}
