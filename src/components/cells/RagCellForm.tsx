@@ -93,13 +93,22 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
       <div className="border-t border-zinc-200 bg-white p-2 sm:p-4">
         <form action={handleSubmit} className="space-y-3">
           <input type="hidden" name="cellId" value={cell.id} />
+          <input
+            type="hidden"
+            name="commandsEnabled"
+            value={String(input.slashCommandsEnabled)}
+          />
 
           <div className="relative">
             <textarea
               ref={input.textareaRef}
               name="question"
               defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
-              placeholder="Zadaj pytanie... (@ pliki, / polecenia)"
+              placeholder={
+                input.slashCommandsEnabled
+                  ? 'Zadaj pytanie... (@ pliki, / polecenia)'
+                  : 'Zadaj pytanie... (@ pliki)'
+              }
               rows={2}
               onChange={input.handleChange}
               onKeyDown={input.handleKeyDown}

@@ -181,6 +181,7 @@ export async function askRagQuestion(
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
     const searchTopicField = (formData.get('searchTopic') as string | null)?.trim()
+    const commandsEnabled = formData.get('commandsEnabled') !== 'false'
 
     await progressStep(
       jobId, 'parsing', 10,
@@ -199,7 +200,10 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const { cleanQuestion, resources, tools, unknownTools } = parseMcpCommands(validationResult.data.question)
+    const { cleanQuestion, resources, tools, unknownTools } = parseMcpCommands(
+      validationResult.data.question,
+      { commandsEnabled }
+    )
     const searchTopic = validationResult.data.searchTopic
 
     // Without this an unrecognised command falls through to a free-form question,
@@ -370,12 +374,11 @@ export async function askRagQuestion(
         'Generuję zawartość z AI...',
         'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`
       )
-      const toolResult = await executeToolWithContent(
-        toolDefinition.name,
-        toolInputContent,
-        toolDefinition,
-        pdfFiles
-      )
+      const toolResult = await executeToolWithContent(toolDefinition.name, toolDefinition, {
+        request: effectiveQuestion,
+        content: toolInputContent,
+        pdfFiles,
+      })
 
       await progressStep(
         jobId, 'finalizing', 95,

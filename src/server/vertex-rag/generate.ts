@@ -113,11 +113,19 @@ export async function queryFileSearchOnly(
 
 type PdfFile = { title: string; base64: string; mimeType: string }
 
+interface ToolDispatchInput {
+  // What the student actually asked for. Without it the model only sees the
+  // meta-instruction and the source material, so „/planuj Opiekun medyczny"
+  // plans how to use planuj_tool and „10 pytań" silently becomes the default 5.
+  request: string
+  content?: string | undefined
+  pdfFiles?: PdfFile[] | undefined
+}
+
 export async function executeToolWithContent(
   toolName: string,
-  content: string,
   toolDefinition: { name: string; description: string; parameters: any },
-  pdfFiles?: PdfFile[]
+  { request, content, pdfFiles }: ToolDispatchInput
 ): Promise<{ answer: string; toolResults: any }> {
   try {
     const ai = getGoogleAI()
@@ -139,8 +147,13 @@ export async function executeToolWithContent(
       }
     }
 
-    // Build the prompt - tell the model to READ the PDF and use it for the tool
-    let prompt = `ZADANIE: Użyj narzędzia ${toolName} aby przetworzyć treść.
+    // The request comes first: it carries the subject and any parameters the
+    // student named (liczba pytań, kategoria), which the tool's own arguments
+    // are meant to be filled from.
+    let prompt = `ZADANIE: wywołaj narzędzie ${toolName}.
+
+POLECENIE UŻYTKOWNIKA:
+${request}
 
 `
     if (pdfFiles && pdfFiles.length > 0) {
@@ -150,13 +163,13 @@ export async function executeToolWithContent(
     }
 
     if (content) {
-      prompt += `DODATKOWE INFORMACJE:
+      prompt += `MATERIAŁ ŹRÓDŁOWY:
 ${content}
 
 `
     }
 
-    prompt += `WAŻNE: Musisz teraz wywołać funkcję ${toolName}, przekazując treść z PDF (jeśli jest) jako parametr 'content'.`
+    prompt += `WAŻNE: Wywołaj funkcję ${toolName}. Wypełnij jej parametry dokładnie według POLECENIA UŻYTKOWNIKA — jeśli podano liczbę (np. liczbę pytań), użyj dokładnie tej liczby, a nie wartości domyślnej. Jako 'content' przekaż materiał źródłowy (w tym treść z PDF, jeśli jest); gdy go brak, użyj tematu z polecenia.`
 
     parts.push({ text: prompt })
 
@@ -194,8 +207,9 @@ ${content}
         throw new Error('Invalid function call from Gemini')
       }
 
-      // Use the content the model extracted from PDF, fallback to our text content
-      const toolContent = call.args?.content || content
+      // Content the model extracted from the PDF, else our source material, else
+      // the request itself — a tool handed nothing invents its own subject.
+      const toolContent = call.args?.content || content || request
       const args = { ...call.args, content: toolContent }
       const result = await executeToolLocally(call.name, args)
 
