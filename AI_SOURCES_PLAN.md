@@ -260,8 +260,13 @@ Indexes mirroring `mem_facts`: `(userId, sourceType)`, a GIN trigram index on
 
 On note save: derive text with the existing `getLexicalContent` helper — **not**
 from `plainText`, which is a client-supplied hidden input and nullable — chunk it,
-replace that note's rows, leave `embedding` NULL. Carry embeddings across on
-matching `contentHash` so fixing a typo does not re-embed the whole note.
+then **diff against the existing rows by `contentHash`**. Only changed chunks are
+written; unchanged ones are left alone entirely, keeping their embeddings.
+
+Diff rather than delete-and-replace, for two reasons. It avoids re-embedding a
+whole note to fix one paragraph, and — see §5b — Neon bills instant restore per
+GB of write history, so rewriting every 4 KB chunk row on every save costs real
+money for no change in content.
 
 Nothing reads these chunks yet. Reversible by dropping one table.
 
@@ -308,6 +313,41 @@ safe.
 3. **Gemini extraction on one real scanned Polish skrypt.** The whole materials
    case rests on this working acceptably. One file settles it, and it should be
    settled before Step 3, not during.
+
+---
+
+## 5b. What it costs
+
+Neon does not charge for embeddings — it is Postgres hosting, and `pgvector` is a
+free extension. Embedding *generation* is a Google cost you already pay for the
+memory layer.
+
+On the current Launch plan: **$0.35/GB-month storage, $0.20/GB-month instant
+restore**, autoscale to 16 CU, scale to zero after 5 minutes, 500 GB transfer
+included.
+
+**Storage.** A chunk row is a 768-dim `float4` vector (3.0 KB) plus ~1 KB of text
+plus ~0.3 KB of columns and overhead, and the HNSW index roughly doubles the
+vector portion — call it 8-9 KB all-in per chunk. Rule of thumb: **a student who
+fills their 20 MB upload quota generates roughly 16 MB of chunks and index**, so
+about 1:1 with what they uploaded. A thousand such students is ~16 GB, ~$5.60 a
+month. Most will not fill the quota.
+
+**Instant restore is billed on write churn, not data size.** This is why Step 2
+diffs by `contentHash` instead of delete-and-replace: rewriting every chunk of a
+note to fix one paragraph generates history for content that did not change.
+Check the configured restore window — it multiplies this directly.
+
+**Compute.** Vector queries and index builds burn CU-hours. Scale-to-zero means
+you only pay while students are active, which is another reason extraction runs
+in the job system (§3.3) rather than on a frequent cron: a sweep would wake a
+sleeping database on its own schedule to do work nobody is waiting for. The two
+existing nightly crons are fine precisely because they run once a day.
+
+**None of this is what decides the plan.** The cost this project removes is a
+Gemini bill, not a Neon one — today a student asking six questions about one
+skrypt base64-encodes and uploads that skrypt six times. Storage at $0.35/GB is
+noise against that.
 
 ---
 
