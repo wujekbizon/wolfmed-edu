@@ -384,9 +384,15 @@ export async function askRagQuestion(
       )
       if (jobId) await completeJob(jobId)
 
+      // The answer is payload for the cell, not toast text: FormState.message is
+      // what useToastMessage shows, so it stays a short human status.
       return {
-        ...toFormState('SUCCESS', toolResult.answer),
+        ...toFormState(
+          'SUCCESS',
+          `Gotowe — utworzono ${(toolName && TOOL_LABELS_ACCUSATIVE[toolName]) || 'zawartość'}`
+        ),
         values: {
+          answer: toolResult.answer,
           sources: [],
           toolResults: toolResult.toolResults
         }
@@ -406,7 +412,10 @@ export async function askRagQuestion(
         )
         const memAnswer = await answerFromMemory(cleanQuestion, selfState)
         if (jobId) await completeJob(jobId)
-        return { ...toFormState('SUCCESS', memAnswer.answer), values: { sources: [] } }
+        return {
+          ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
+          values: { answer: memAnswer.answer, sources: [] },
+        }
       }
     }
 
@@ -446,8 +455,9 @@ export async function askRagQuestion(
     if (jobId) await completeJob(jobId)
 
     return {
-      ...toFormState('SUCCESS', result.answer),
+      ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
       values: {
+        answer: result.answer,
         sources: result.sources
       }
     }

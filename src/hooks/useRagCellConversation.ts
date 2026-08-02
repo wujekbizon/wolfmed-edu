@@ -24,7 +24,12 @@ export function useRagCellConversation({ cell, state, isPending }: UseRagCellCon
   // paint, or the conversation renders one empty frame between the action
   // settling and the message landing in history.
   useLayoutEffect(() => {
-    if (isPending || state.status !== 'SUCCESS' || !state.message) return
+    if (isPending || state.status !== 'SUCCESS') return
+
+    // The answer travels in `values`, not `message` — `message` is the short
+    // status the toast shows.
+    const answer = typeof state.values?.answer === 'string' ? state.values.answer : ''
+    if (!answer) return
     if (persistedTimestamp.current === state.timestamp) return
     persistedTimestamp.current = state.timestamp
 
@@ -32,7 +37,7 @@ export function useRagCellConversation({ cell, state, isPending }: UseRagCellCon
       cell.id,
       appendRagExchange(content, {
         question: askedQuestion.current || content.topic,
-        answer: state.message,
+        answer,
         sources: state.values?.sources as string[] | undefined,
       })
     )

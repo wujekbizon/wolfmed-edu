@@ -6,6 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import { useOnFormSuccess } from '@/hooks/useOnFormSuccess'
 import { useRagCellInput } from '@/hooks/useRagCellInput'
 import { useRagProgress } from '@/hooks/useRagProgress'
 import { useRagCellConversation } from '@/hooks/useRagCellConversation'
@@ -58,6 +59,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
     }
   }, [isPending, state.status, resetProgress])
 
+  // Clear by hand rather than form.reset(): reset restores defaultValue, which
+  // would put the answered question straight back. Errors keep the text so a
+  // failed question isn't lost.
+  useOnFormSuccess(state, () => {
+    if (input.textareaRef.current) {
+      input.textareaRef.current.value = ''
+    }
+  })
+
   return (
     <div className="flex flex-col h-full bg-zinc-50 rounded-lg border border-zinc-200">
       <div ref={conversationRef} className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4">
@@ -88,7 +98,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
             <textarea
               ref={input.textareaRef}
               name="question"
-              defaultValue={conversation.topic}
+              defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
               placeholder="Zadaj pytanie... (@ pliki, / polecenia)"
               rows={2}
               onChange={input.handleChange}
