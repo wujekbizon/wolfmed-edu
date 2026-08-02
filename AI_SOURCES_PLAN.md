@@ -8,8 +8,11 @@ Status: the rule and Phase 0 are **done**. The architecture in §4 is **decided
 but not built**. Steps in §5 are specced to the point of being implementable;
 constants marked *tune* are first guesses that need real data.
 
-An external review of revision 1 is folded in throughout; §8 records where each
-suggestion landed, including the one place this revision argues against it.
+An external review of revision 1 arrived after this revision was drafted. §8 records
+what it moved: one design change, one improved signature, three points this revision
+had already reached on its own, and one recommendation rejected. It is recorded that
+way deliberately — a review that mostly confirms is a useful signal, and filing
+confirmations as "adopted" would misrepresent both documents.
 
 ---
 
@@ -462,29 +465,34 @@ noticed.
 
 ## 8. Response to the external review
 
-The review approved Phase 0 and Step 1 and made five suggestions. Four are adopted;
-one rests on a premise the codebase contradicts.
+The review read revision 1 and approved Phase 0 and Step 1. It did not see this
+revision, so most of what it suggests, this revision had already decided
+independently — which is a useful signal, and not the same thing as a change.
+Recorded honestly, one suggestion changed the design.
 
-**Adopted — make chunk size configurable.** §4.5. Extended past chunk size to
-every retrieval knob, on the reviewer's underlying reasoning: a value that will be
-tuned against real usage should never be a literal at its use site.
+**Changed the design — incremental re-indexing.** §5 Step 1, via `contentHash`.
+This revision had delete-and-replace with no refinement, and would have re-embedded
+a whole note to fix a typo in its first paragraph. The reviewer scoped it to "if
+notes become significantly larger later"; the cost of building it now is one column
+and one comparison, so it goes in now. This is the review's real contribution.
 
-**Adopted — leave room for incremental re-indexing.** §5 Step 1, via `contentHash`.
-The reviewer scoped this to "if notes become significantly larger later," but the
-cost of building it now is one column and one comparison, and it becomes the
-difference between a typo fix costing one embedding and costing forty once
-materials land.
+**Converged independently — configurable chunking.** §4.5 already put every
+retrieval knob in `config.ts` before the review arrived, for the same reason the
+reviewer gives. Agreement, not adoption.
 
-**Adopted, and promoted — introduce the retrieval interface early.** §5 Step 3,
-using the reviewer's flag-based shape over the options object this revision had.
-Moved from last to third.
+**Converged independently — introduce the retrieval interface early.** §5 Step 3
+was already moved from last to third on this revision's own reasoning (writing the
+personal search standalone means rewriting its call sites later). What the review
+contributed is the *shape*: flags per source rather than an options object. That is
+a genuine improvement — it makes the tier table in `CLAUDE.md` executable — but it
+changed a signature, not a plan.
 
-**Adopted — keep notes searchable, labelled as the student's own.** §7. This
-revision reaches the same answer by a different route: the `origin` discriminator
-that rank fusion needs anyway is also what carries the label, so "From your notes"
-falls out of the retrieval design rather than being bolted onto the prompt.
+**Converged independently — keep notes searchable and labelled.** §7 reached this
+before the review, by a different route: the `origin` discriminator that rank fusion
+needs anyway is also what carries the label, so "From your notes" falls out of the
+retrieval design rather than being bolted onto the prompt.
 
-**Already load-bearing, not deferred — hybrid retrieval.** The review lists
+**Partly rejected — hybrid retrieval as a later improvement.** The review lists
 lexical matching as a possible later improvement over pure vector search. It is in
 the design from day one, and not for ranking quality: the trigram tier is what
 makes a just-saved note findable before the embedding sweep runs (§4.3), and what
@@ -494,7 +502,7 @@ adding** — `lib_chunks.title` is already there and a student searching for a n
 title is searching for the note. Recency weighting is not: the newest note is not
 the most relevant one, and study material does not decay.
 
-**Argued against — defer PDFs to keep Step 1 small.** The review praises Step 1 for
+**Rejected — defer PDFs to keep Step 1 small.** The review praises Step 1 for
 validating the pipeline on notes rather than "solving PDF extraction, OCR,
 background jobs, storage, and retrieval simultaneously." That reasoning is right,
 and the premise is wrong: PDF extraction is not an unsolved problem here, because
