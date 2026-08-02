@@ -24,7 +24,11 @@ export function useAttachExplanationToMindMap({
   const attachedTimestamp = useRef(0)
 
   useEffect(() => {
-    if (!origin || isPending || state.status !== 'SUCCESS' || !state.message) return
+    if (!origin || isPending || state.status !== 'SUCCESS') return
+
+    // The answer lives in `values`; `message` is the short status the toast shows.
+    const answer = typeof state.values?.answer === 'string' ? state.values.answer : ''
+    if (!answer) return
     if (attachedTimestamp.current === state.timestamp) return
     attachedTimestamp.current = state.timestamp
 
@@ -38,7 +42,7 @@ export function useAttachExplanationToMindMap({
       origin.mapCellId,
       JSON.stringify({
         ...content,
-        root: setNodeExplanation(content.root, origin.nodeId, state.message),
+        root: setNodeExplanation(content.root, origin.nodeId, answer),
       })
     )
   }, [origin, isPending, state, updateCell])
