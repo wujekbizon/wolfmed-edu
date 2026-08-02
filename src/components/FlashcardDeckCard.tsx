@@ -4,7 +4,7 @@ import { useActionState } from 'react'
 import { Trash2Icon } from 'lucide-react'
 import { deleteFlashcardDeckAction } from '@/actions/flashcardDecks'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { flashcardDecksKey } from '@/constants/flashcards'
+import { flashcardDeckKey, flashcardDecksKey, flashcardNoteDeckKey } from '@/constants/flashcards'
 import { useInvalidateOnSuccess } from '@/hooks/useInvalidateOnSuccess'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import type { FlashcardDeck } from '@/types/flashcardTypes'
@@ -18,7 +18,11 @@ export default function FlashcardDeckCard({ deck, onReview }: FlashcardDeckCardP
   const [state, action, isPending] = useActionState(deleteFlashcardDeckAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
-  useInvalidateOnSuccess(state, [flashcardDecksKey()])
+  useInvalidateOnSuccess(state, [
+    flashcardDecksKey(),
+    flashcardDeckKey(deck.id),
+    ...(deck.sourceRef ? [flashcardNoteDeckKey(deck.sourceRef)] : []),
+  ])
 
   return (
     <div className='flex flex-col justify-evenly gap-3 bg-zinc-50 border border-zinc-200 rounded-2xl shadow-sm hover:shadow-md hover:border-zinc-300 transition-all duration-300 p-5'>

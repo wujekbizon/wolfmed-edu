@@ -1,9 +1,9 @@
 const MESSAGES = {
   loading: { title: 'Wczytywanie fiszek...', hint: '' },
   empty: { title: 'Brak dostępnych fiszek', hint: 'Dodaj pierwszą fiszkę!' },
-  missing: {
-    title: 'Nie znaleziono zestawu fiszek',
-    hint: 'Wygeneruj fiszki ponownie, aby utworzyć nowy zestaw.',
+  error: {
+    title: 'Nie udało się wczytać fiszek',
+    hint: 'Odśwież stronę, aby spróbować ponownie.',
   },
 } as const
 

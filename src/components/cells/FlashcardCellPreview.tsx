@@ -11,21 +11,23 @@ import FlashcardCellCreateDeck from './FlashcardCellCreateDeck'
 import type { Cell } from '@/types/cellTypes'
 
 export default function FlashcardCellPreview({ cell }: { cell: Cell }) {
-  const { deckId, deck, cards, topic, isLoading } = useFlashcardCell(cell.content)
+  const { deckId, deck, cards, topic, isLoading, isMissing } = useFlashcardCell(cell.content)
   const updateCell = useCellsStore((s) => s.updateCell)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
 
-  if (!deckId) {
+  if (isLoading) return <FlashcardCellEmpty variant='loading' />
+
+  if (!deckId || isMissing) {
     return (
       <FlashcardCellCreateDeck
+        hint={isMissing ? 'Poprzedni zestaw fiszek został usunięty.' : undefined}
         onCreated={(newDeckId) => updateCell(cell.id, JSON.stringify({ deckId: newDeckId }))}
       />
     )
   }
 
-  if (isLoading) return <FlashcardCellEmpty variant='loading' />
-  if (!deck) return <FlashcardCellEmpty variant='missing' />
+  if (!deck) return <FlashcardCellEmpty variant='error' />
 
   return (
     <div className='flex flex-col h-full'>

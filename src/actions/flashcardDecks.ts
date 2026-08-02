@@ -108,9 +108,7 @@ export async function createNoteFlashcardAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const note = await getNoteById(userId, parsed.data.noteId)
-  if (!note) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { noteId: ['Nie znaleziono notatki.'] } }
-  }
+  if (!note) return toFormState('ERROR', 'Ta notatka już nie istnieje.')
 
   try {
     const deckId = await resolveNoteDeckId(userId, note.id, note.title)
@@ -166,9 +164,7 @@ export async function renameFlashcardDeckAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const deck = await findOwnedDeck(userId, parsed.data.deckId)
-  if (!deck) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { deckId: ['Nie znaleziono zestawu fiszek.'] } }
-  }
+  if (!deck) return toFormState('ERROR', 'Ten zestaw fiszek już nie istnieje.')
 
   try {
     await db
@@ -197,9 +193,7 @@ export async function deleteFlashcardDeckAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const deck = await findOwnedDeck(userId, parsed.data.deckId)
-  if (!deck) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { deckId: ['Nie znaleziono zestawu fiszek.'] } }
-  }
+  if (!deck) return toFormState('ERROR', 'Ten zestaw fiszek już nie istnieje.')
 
   try {
     await db.delete(flashcardDecks).where(eq(flashcardDecks.id, deck.id))

@@ -4,6 +4,7 @@ import { db } from '@/server/db/index'
 import { flashcards } from '@/server/db/schema'
 import { eq } from 'drizzle-orm'
 import { auth } from '@clerk/nextjs/server'
+import { revalidatePath } from 'next/cache'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { rateLimitFormState } from '@/helpers/rateLimitFormState'
 import { findOwnedCard, findOwnedDeck, nextCardPosition } from '@/server/flashcardAccess'
@@ -32,9 +33,7 @@ export async function createFlashcardAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const deck = await findOwnedDeck(userId, parsed.data.deckId)
-  if (!deck) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { deckId: ['Nie znaleziono zestawu fiszek.'] } }
-  }
+  if (!deck) return toFormState('ERROR', 'Ten zestaw fiszek już nie istnieje.')
 
   try {
     await db.insert(flashcards).values({
@@ -47,6 +46,7 @@ export async function createFlashcardAction(
     return fromErrorToFormState(error)
   }
 
+  revalidatePath('/panel/nauka')
   return toFormState('SUCCESS', 'Fiszka dodana')
 }
 
@@ -68,9 +68,7 @@ export async function updateFlashcardAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const card = await findOwnedCard(userId, parsed.data.cardId)
-  if (!card) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { cardId: ['Nie znaleziono fiszki.'] } }
-  }
+  if (!card) return toFormState('ERROR', 'Ta fiszka już nie istnieje.')
 
   try {
     await db
@@ -85,6 +83,7 @@ export async function updateFlashcardAction(
     return fromErrorToFormState(error)
   }
 
+  revalidatePath('/panel/nauka')
   return toFormState('SUCCESS', 'Fiszka zaktualizowana')
 }
 
@@ -102,9 +101,7 @@ export async function deleteFlashcardAction(
   if (!parsed.success) return fromErrorToFormState(parsed.error)
 
   const card = await findOwnedCard(userId, parsed.data.cardId)
-  if (!card) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { cardId: ['Nie znaleziono fiszki.'] } }
-  }
+  if (!card) return toFormState('ERROR', 'Ta fiszka już nie istnieje.')
 
   try {
     await db.delete(flashcards).where(eq(flashcards.id, card.id))
@@ -112,5 +109,6 @@ export async function deleteFlashcardAction(
     return fromErrorToFormState(error)
   }
 
+  revalidatePath('/panel/nauka')
   return toFormState('SUCCESS', 'Fiszka usunięta')
 }
