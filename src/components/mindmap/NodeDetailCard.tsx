@@ -1,8 +1,8 @@
 import { motion } from "framer-motion"
 import { getCategoryColor } from "@/lib/mindmap/design"
+import { ChevronRight } from "lucide-react"
 import { getCategoryIcon, CloseIcon, ExplainIcon } from "@/components/mindmap/icons"
 import NodeMasteryPicker from "./NodeMasteryPicker"
-import NodeExplanationSection from "./NodeExplanationSection"
 import type { MasteryLevel, MindMapNode } from "@/types/mindmapTypes"
 
 interface NodeDetailCardProps {
@@ -11,9 +11,17 @@ interface NodeDetailCardProps {
   onClose: () => void
   onSetMastery: (level: MasteryLevel) => void
   onExplain: () => void
+  onOpenExplanation: () => void
 }
 
-export default function NodeDetailCard({ node, path, onClose, onSetMastery, onExplain }: NodeDetailCardProps) {
+export default function NodeDetailCard({
+  node,
+  path,
+  onClose,
+  onSetMastery,
+  onExplain,
+  onOpenExplanation,
+}: NodeDetailCardProps) {
   const category = node.metadata?.category
   const color = getCategoryColor(category)
   const Icon = getCategoryIcon(category)
@@ -57,7 +65,19 @@ export default function NodeDetailCard({ node, path, onClose, onSetMastery, onEx
         </p>
       </div>
 
-      {explanation && <NodeExplanationSection explanation={explanation} />}
+      {explanation && (
+        <button
+          type="button"
+          onClick={onOpenExplanation}
+          className="mt-3 flex shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left text-zinc-300 transition-colors hover:bg-white/10 hover:text-zinc-100"
+        >
+          <ExplainIcon size={14} />
+          <span className="flex-1 text-[11px] font-semibold uppercase tracking-wide">
+            Wyjaśnienie AI
+          </span>
+          <ChevronRight size={14} className="shrink-0" />
+        </button>
+      )}
 
       {isLeaf && <NodeMasteryPicker current={node.metadata?.masteryLevel} onSelect={onSetMastery} />}
 
