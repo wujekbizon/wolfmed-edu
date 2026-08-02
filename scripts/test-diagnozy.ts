@@ -69,7 +69,6 @@ async function main() {
       "chapterNumber" varchar(8) NOT NULL,
       "chapterTitle" varchar(256) NOT NULL,
       title varchar(256) NOT NULL,
-      status varchar(16) NOT NULL DEFAULT 'published',
       data jsonb NOT NULL,
       "createdAt" timestamp DEFAULT now(),
       "updatedAt" timestamp
@@ -117,7 +116,6 @@ async function main() {
       chapterNumber: d.chapter.number,
       chapterTitle: d.chapter.title,
       title: d.title,
-      status: d.status,
       data: d as Diagnoza,
     })
   }
@@ -138,18 +136,16 @@ async function main() {
       definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
     })
     .from(diagnozy)
-    .where(eq(diagnozy.status, 'published'))
     .orderBy(asc(diagnozy.section))) as DiagnozaListItem[]
 
   check('list returns published rows', list.length === records.length)
   check('ordered by section asc', list[0]!.section <= list[list.length - 1]!.section)
-  check('author extracted from jsonb', typeof list[0]!.author === 'string')
   check('snippet capped at 220 chars', list.every((r) => r.definicjaSnippet.length <= 220))
 
   // ── 3. getDiagnozaBySlug (relational findFirst) ──
   console.log('\n[3] Detail query by slug')
   const found = await db.query.diagnozy.findFirst({
-    where: (m, { eq: e, and }) => and(e(m.slug, records[0]!.slug), e(m.status, 'published')),
+    where: (m, { eq: e, and }) => and(e(m.slug, records[0]!.slug),),
   })
   check('found record by slug', !!found && found.data.slug === records[0]!.slug)
   check('jsonb round-trips interwencje', (found?.data.interwencje.length ?? 0) === records[0]!.interwencje.length)

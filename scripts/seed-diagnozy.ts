@@ -60,7 +60,7 @@ async function main() {
   for (const d of diagnozy) {
     await sql`
       INSERT INTO wolfmed_diagnozy
-        (id, course, slug, section, "chapterNumber", "chapterTitle", title, status, data, "createdAt")
+        (id, course, slug, section, "chapterNumber", "chapterTitle", title, data, "createdAt")
       VALUES (
         ${d.id}::uuid,
         'pielegniarstwo',
@@ -69,7 +69,6 @@ async function main() {
         ${d.chapter.number},
         ${d.chapter.title},
         ${d.title},
-        ${d.status},
         ${JSON.stringify(d)}::jsonb,
         ${new Date().toISOString()}
       )

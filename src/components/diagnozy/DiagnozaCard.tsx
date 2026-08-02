@@ -35,12 +35,6 @@ export default function DiagnozaCard({
 
       <div className="mt-auto flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          {diagnoza.author && (
-            <span className="inline-flex items-center gap-1 text-xs text-zinc-400 truncate">
-              <User className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate">{diagnoza.author}</span>
-            </span>
-          )}
         </div>
         <span
           className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-700 group-hover:text-zinc-900

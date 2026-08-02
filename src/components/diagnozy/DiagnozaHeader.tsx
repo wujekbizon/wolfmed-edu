@@ -13,7 +13,6 @@ export default function DiagnozaHeader({ diagnoza }: { diagnoza: Diagnoza }) {
         </span>
       </div>
       <h1 className="text-2xl font-bold text-zinc-800">{diagnoza.title}</h1>
-      {diagnoza.author && <p className="text-xs text-zinc-400 mt-1">{diagnoza.author}</p>}
     </header>
   )
 }

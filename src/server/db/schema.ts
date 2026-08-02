@@ -765,8 +765,6 @@ export const generatedPracticalExams = createTable(
 export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
 export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
 
-// AI-generated procedure quizzes (knowledge-quiz, spot-error, scenario-based).
-// Correct answers stay server-side in quizJson — grading loads the stored row.
 export const generatedQuizzes = createTable(
   "generated_quizzes",
   {
@@ -792,7 +790,6 @@ export const generatedQuizzes = createTable(
 export type GeneratedQuizRow = typeof generatedQuizzes.$inferSelect
 export type NewGeneratedQuizRow = typeof generatedQuizzes.$inferInsert
 
-// Learning planner
 export const learningPlans = createTable(
   "learning_plans",
   {
@@ -839,9 +836,6 @@ export const learningPlanConcepts = createTable(
   ]
 )
 
-// Activity ledger: every learning feature can emit an entry here. `source`
-// values: manual | practical-exam (more as features migrate). Optional
-// categoryKey/procedureId let the planner attribute minutes to concepts.
 export const studyLogs = createTable(
   "study_logs",
   {
@@ -899,9 +893,6 @@ export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
 export type StudyLogRow = typeof studyLogs.$inferSelect
 export type NewStudyLogRow = typeof studyLogs.$inferInsert
 
-// ── Diagnozy i Interwencje (pielegniarstwo) ────────────────────────────────
-// Content source of truth: seeded from data/diagnozy.json via
-// scripts/seed-diagnozy.ts (records are Zod-validated before insert).
 export const diagnozy = createTable(
   "diagnozy",
   {
@@ -914,7 +905,6 @@ export const diagnozy = createTable(
     chapterNumber: varchar("chapterNumber", { length: 8 }).notNull(),
     chapterTitle: varchar("chapterTitle", { length: 256 }).notNull(),
     title: varchar("title", { length: 256 }).notNull(),
-    status: varchar("status", { length: 16 }).notNull().default("published"),
     data: jsonb("data").$type<Diagnoza>().notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
     updatedAt: timestamp("updatedAt"),
@@ -925,7 +915,6 @@ export const diagnozy = createTable(
   ]
 )
 
-// Fill-out completions — a flag per (user, diagnosis), no score.
 export const diagnozyProgress = createTable(
   "diagnozy_progress",
   {
@@ -952,7 +941,6 @@ export const diagnozyProgressRelations = relations(diagnozyProgress, ({ one }) =
   }),
 }))
 
-// Graded exam attempts (Egzamin mode) — separate from score-free fill-out flags.
 export const diagnozyExamAttempts = createTable(
   "diagnozy_exam_attempts",
   {
