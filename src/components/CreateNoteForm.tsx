@@ -51,11 +51,12 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
 
   return (
     <form action={action} className="h-full min-h-0 flex flex-col md:flex-row gap-3 overflow-y-auto md:overflow-visible">
-      {isFullscreen ? (
-        <div className="flex min-h-64 min-w-0 flex-1 flex-col">{editorField}</div>
-      ) : (
+      {/* Stable element type in both modes — swapping it would remount the editor
+          and lose whatever is being typed. Fullscreen styles the wrapper; otherwise
+          `contents` removes it so the resizable box stays the form's flex child. */}
+      <div className={isFullscreen ? "flex min-h-64 min-w-0 flex-1 flex-col" : "contents"}>
         <ResizableComponent direction="horizontal">{editorField}</ResizableComponent>
-      )}
+      </div>
       <div className="flex flex-col justify-between grow max-md:grow-0 sm:h-64 h-full md:min-h-0  overflow-y-auto scrollbar-webkit py-2 pl-2">
         <div>
 
