@@ -19,7 +19,6 @@ export type DiagnozaListItem = {
   chapterNumber: string
   chapterTitle: string
   title: string
-  author: string | null
   definicjaSnippet: string
 }
 

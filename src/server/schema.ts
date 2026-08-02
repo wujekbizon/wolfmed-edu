@@ -1007,8 +1007,6 @@ export const DiagnozaSchema = z.object({
     .min(1)
     .regex(/^[a-z0-9-]+$/, "Slug może zawierać tylko małe litery, cyfry i myślniki."),
   title: z.string().min(1),
-  author: z.string().optional(),
-  status: z.enum(["draft", "in-review", "published"]).default("published"),
   definicja: z.string().min(1),
   cechyCharakteryzujace: StringListOrGroupedSchema,
   czynnikiEtiologiczne: z.object({
@@ -1054,11 +1052,6 @@ export const DiagnozaSchema = z.object({
 /** Container shape of data/diagnozy.json, validated by scripts/seed-diagnozy.ts. */
 export const DiagnozyFileSchema = z.object({
   schemaVersion: z.literal(1),
-  book: z.object({
-    title: z.string().min(1),
-    editors: z.string().min(1),
-    publisher: z.string().min(1),
-  }),
   diagnozy: z.array(DiagnozaSchema).min(1),
 });
 

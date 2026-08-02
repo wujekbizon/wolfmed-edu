@@ -2495,9 +2495,6 @@ export const getNoteActivitySince = cache(
   }
 )
 
-// ── Diagnozy i Interwencje ──────────────────────────────────────────────────
-
-// List metadata for published diagnozy (no jsonb payload), ordered by section
 export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
   return db
     .select({
@@ -2507,11 +2504,9 @@ export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
       chapterNumber: diagnozy.chapterNumber,
       chapterTitle: diagnozy.chapterTitle,
       title: diagnozy.title,
-      author: sql<string | null>`${diagnozy.data}->>'author'`,
       definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
     })
     .from(diagnozy)
-    .where(eq(diagnozy.status, "published"))
 })
 
 export const getDiagnozyTitlesBySlugs = cache(async (slugs: string[]) => {
@@ -2527,18 +2522,16 @@ export const getDiagnozyTitlesBySlugs = cache(async (slugs: string[]) => {
     .where(inArray(diagnozy.slug, slugs))
 })
 
-// Full diagnosis record by slug (published only)
 export const getDiagnozaBySlug = cache(
   async (slug: string): Promise<Diagnoza | null> => {
     const row = await db.query.diagnozy.findFirst({
       where: (model, { eq, and }) =>
-        and(eq(model.slug, slug), eq(model.status, "published")),
+        and(eq(model.slug, slug)),
     })
     return row?.data ?? null
   }
 )
 
-// Slugs of diagnozy the user completed in fill-out mode
 export const getUserDiagnozyCompletions = cache(
   async (userId: string): Promise<string[]> => {
     const rows = await db
@@ -2549,7 +2542,6 @@ export const getUserDiagnozyCompletions = cache(
   }
 )
 
-// Idempotent completion upsert; unique (userId, diagnozaSlug) absorbs repeats
 export async function insertDiagnozaCompletion(
   userId: string,
   diagnozaSlug: string
@@ -2560,7 +2552,6 @@ export async function insertDiagnozaCompletion(
     .onConflictDoNothing()
 }
 
-// Diagnoza formulations for the fill-out select (all published, light payload)
 export const getDiagnozaFormulations = cache(
   async (): Promise<DiagnozaFormulation[]> => {
     return db
@@ -2569,17 +2560,14 @@ export const getDiagnozaFormulations = cache(
         text: sql<string>`${diagnozy.data}->>'diagnozaPielegniarska'`,
       })
       .from(diagnozy)
-      .where(eq(diagnozy.status, "published"))
       .orderBy(asc(diagnozy.section))
   }
 )
 
-// Full published records for exam drawing/distractor pooling (server-side only)
 export const getDiagnozyForExam = cache(async (): Promise<Diagnoza[]> => {
   const rows = await db
     .select({ data: diagnozy.data })
     .from(diagnozy)
-    .where(eq(diagnozy.status, "published"))
   return rows.map((row) => row.data)
 })
 
@@ -2594,7 +2582,6 @@ export async function insertDiagnozyExamAttempt(attempt: {
   await db.insert(diagnozyExamAttempts).values(attempt)
 }
 
-// Recent exam attempts, newest first (exam landing page)
 export const getUserDiagnozyExamAttempts = cache(
   async (userId: string, limit = 10) => {
     return db
