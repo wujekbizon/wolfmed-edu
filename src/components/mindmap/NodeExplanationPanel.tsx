@@ -56,7 +56,7 @@ export default function NodeExplanationPanel({
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-webkit">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 scrollbar-dark">
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-zinc-300">{explanation}</p>
       </div>
 
