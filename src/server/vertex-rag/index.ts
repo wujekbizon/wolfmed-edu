@@ -28,7 +28,6 @@ export { retrieveContexts, type RetrievedContext } from './retrieve'
 export { retrieveCorpusContext, type CorpusContext } from './context'
 
 export {
-  queryWithFileSearch,
   queryFileSearchOnly,
   executeToolWithContent,
   answerFromMemory,
