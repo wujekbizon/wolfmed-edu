@@ -5,6 +5,7 @@ import AddCell from './AddCell'
 import CellListItem from './CellListItem'
 import { useCellsStore } from '@/store/useCellsStore'
 import { useRagStore } from '@/store/useRagStore'
+import { buildRagCellContent } from '@/helpers/buildRagCellContent'
 
 export default function CellList({ isPremium = false }: { isPremium?: boolean }) {
   const { data, order, insertCellAfter, updateCell } = useCellsStore()
@@ -17,7 +18,7 @@ export default function CellList({ isPremium = false }: { isPremium?: boolean })
       const newCellId = useCellsStore.getState().order[0]
 
       if (newCellId) {
-        updateCell(newCellId, pendingTopic)
+        updateCell(newCellId, buildRagCellContent(pendingTopic))
         setPendingAutoSubmitCellId(newCellId)
       }
 

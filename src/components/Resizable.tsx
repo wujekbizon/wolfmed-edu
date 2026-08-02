@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Resizable } from "re-resizable";
+import { Resizable, type ResizeCallback } from "re-resizable";
 import BottomResizableHandle from "./BottomResizableHandle";
 import RightResizableHandle from "./RightResizableHandle";
 import { useCellFullscreen } from "@/context/CellFullscreenContext";
+import { buildResizableProps } from "@/helpers/buildResizableProps";
 
 interface ResizableProps {
     direction: "horizontal" | "vertical";
     children?: React.ReactNode;
     constraint?: number;
 }
+
+const handleComponent = {
+    right: <RightResizableHandle />,
+    bottom: <BottomResizableHandle />,
+};
 
 export default function ResizableComponent({
     direction,
@@ -51,68 +57,29 @@ export default function ResizableComponent({
         return null;
     }
 
-    // When the enclosing cell is expanded to fullscreen, fill the container
-    // instead of constraining to the resizable width/height.
-    if (isFullscreen) {
-        return <div className="h-full w-full">{children}</div>;
-    }
+    const handleResizeStop: ResizeCallback = (_event, _dir, ref) => {
+        if (direction === "horizontal") {
+            setWidth(ref.offsetWidth);
+        } else {
+            setHeight(ref.offsetHeight);
+        }
+    };
 
-    // On mobile a side-by-side (horizontal) split doesn't fit: drop the fixed
-    // pixel width and let the content go full width so it can stack vertically,
-    // taking whatever height the stacked siblings leave behind rather than
-    // growing with the note.
-    if (direction === "horizontal" && innerWidth < 768) {
-        return <div className="flex min-h-64 w-full flex-1 flex-col">{children}</div>;
-    }
-
-    const resizableProps =
-        direction === "horizontal"
-            ? {
-                size: { width, height: "100%" },
-                handleComponent: {
-                    right: <RightResizableHandle />
-                },
-                minWidth: innerWidth * 0.2,
-                maxWidth: innerWidth * 0.60,
-                minHeight: "100%",
-                maxHeight: "100%",
-                enable: {
-                    right: true,
-                    bottom: false,
-                    bottomRight: false,
-                },
-                onResizeStop: (
-                    e: MouseEvent | TouchEvent,
-                    dir: any,
-                    ref: HTMLElement
-                ) => {
-                    setWidth(ref.offsetWidth);
-                },
-                style: { display: "flex" },
-            }
-            : {
-                size: { width: "100%", height },
-                handleComponent: { bottom: <BottomResizableHandle />},
-                minHeight: constraint || 480,
-                maxHeight: innerHeight * 0.7,
-                minWidth: "100%",
-                maxWidth: "100%",
-                enable: {
-                    bottom: true,
-                    right: false,
-                    bottomRight: false,
-                },
-                onResizeStop: (
-                    e: MouseEvent | TouchEvent,
-                    dir: any,
-                    ref: HTMLElement
-                ) => {
-                    setHeight(ref.offsetHeight);
-                },
-                style: { width: "100%" },
-            };
-
-    return <Resizable {...resizableProps}>{children}</Resizable>;
+    return (
+        <Resizable
+            {...buildResizableProps({
+                direction,
+                isFullscreen,
+                innerWidth,
+                innerHeight,
+                width,
+                height,
+                constraint,
+            })}
+            handleComponent={handleComponent}
+            onResizeStop={handleResizeStop}
+        >
+            {children}
+        </Resizable>
+    );
 };
-
-

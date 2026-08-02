@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { getCategoryColor } from "@/lib/mindmap/design"
+import { ChevronRight } from "lucide-react"
 import { getCategoryIcon, CloseIcon, ExplainIcon } from "@/components/mindmap/icons"
 import NodeMasteryPicker from "./NodeMasteryPicker"
 import type { MasteryLevel, MindMapNode } from "@/types/mindmapTypes"
@@ -10,13 +11,22 @@ interface NodeDetailCardProps {
   onClose: () => void
   onSetMastery: (level: MasteryLevel) => void
   onExplain: () => void
+  onOpenExplanation: () => void
 }
 
-export default function NodeDetailCard({ node, path, onClose, onSetMastery, onExplain }: NodeDetailCardProps) {
+export default function NodeDetailCard({
+  node,
+  path,
+  onClose,
+  onSetMastery,
+  onExplain,
+  onOpenExplanation,
+}: NodeDetailCardProps) {
   const category = node.metadata?.category
   const color = getCategoryColor(category)
   const Icon = getCategoryIcon(category)
   const notes = node.metadata?.notes?.trim()
+  const explanation = node.metadata?.explanation?.trim()
   const isLeaf = node.children.length === 0
   const breadcrumb = path.slice(0, -1)
 
@@ -49,21 +59,35 @@ export default function NodeDetailCard({ node, path, onClose, onSetMastery, onEx
         </button>
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="min-h-0 flex-1 overflow-y-auto scrollbar-dark">
         <p className="text-sm leading-relaxed text-zinc-300">
           {notes || "Brak krótkiego opisu. Kliknij „Wyjaśnij”, aby uzyskać pełne wyjaśnienie od asystenta AI."}
         </p>
       </div>
+
+      {explanation && (
+        <button
+          type="button"
+          onClick={onOpenExplanation}
+          className="mt-3 flex shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left text-zinc-300 transition-colors hover:bg-white/10 hover:text-zinc-100"
+        >
+          <ExplainIcon size={14} />
+          <span className="flex-1 text-[11px] font-semibold uppercase tracking-wide">
+            Wyjaśnienie AI
+          </span>
+          <ChevronRight size={14} className="shrink-0" />
+        </button>
+      )}
 
       {isLeaf && <NodeMasteryPicker current={node.metadata?.masteryLevel} onSelect={onSetMastery} />}
 
       <button
         type="button"
         onClick={onExplain}
-        className="mt-3 flex items-center justify-center gap-2 rounded-lg bg-[#f58a8a] px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-[#ff9898]"
+        className="mt-3 flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#f58a8a] px-4 py-2.5 text-sm font-semibold text-zinc-900 transition-colors hover:bg-[#ff9898]"
       >
         <ExplainIcon />
-        Wyjaśnij szerzej (AI)
+        {explanation ? "Wyjaśnij ponownie (AI)" : "Wyjaśnij szerzej (AI)"}
       </button>
     </motion.div>
   )

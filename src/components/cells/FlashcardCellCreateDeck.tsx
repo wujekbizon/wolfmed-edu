@@ -15,8 +15,10 @@ import Label from '@/components/ui/Label'
 
 export default function FlashcardCellCreateDeck({
   onCreated,
+  hint,
 }: {
   onCreated: (deckId: string) => void
+  hint?: string | undefined
 }) {
   const [state, action, isPending] = useActionState(createEmptyDeckAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
@@ -31,7 +33,9 @@ export default function FlashcardCellCreateDeck({
     <div className='flex flex-col items-center justify-center flex-1 text-center px-4'>
       <Layers className='w-8 h-8 text-[#f58a8a] mb-3' />
       <h3 className='text-lg text-zinc-600 mb-1 font-medium'>Nowy zestaw fiszek</h3>
-      <p className='text-sm text-zinc-400 mb-4'>Nazwij zestaw, aby zacząć dodawać fiszki.</p>
+      <p className='text-sm text-zinc-400 mb-4'>
+        {hint ?? 'Nazwij zestaw, aby zacząć dodawać fiszki.'}
+      </p>
 
       <form action={action} className='w-full max-w-sm'>
         <Label label='Nazwa zestawu' htmlFor='deck-name' />

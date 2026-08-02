@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { useSettingsStore } from '@/store/useSettingsStore'
 import { useResourceAutocomplete } from './useResourceAutocomplete'
 import { useResourceAutocompleteInput } from './useResourceAutocompleteInput'
 import { useCommandAutocompleteInput } from './useCommandAutocompleteInput'
@@ -22,8 +23,11 @@ import { useCommandAutocompleteInput } from './useCommandAutocompleteInput'
  *   {input.showResourceAutocomplete && <ResourceAutocomplete ... />}
  *   {input.showCommandAutocomplete && <CommandAutocomplete ... />}
  */
+export type RagCellInput = ReturnType<typeof useRagCellInput>
+
 export function useRagCellInput() {
   const { resources, loading: resourcesLoading } = useResourceAutocomplete()
+  const slashCommandsEnabled = useSettingsStore((s) => s.slashCommandsEnabled)
 
   const {
     textareaRef,
@@ -36,7 +40,7 @@ export function useRagCellInput() {
   } = useResourceAutocompleteInput(resources)
 
   const {
-    showCommandAutocomplete,
+    showCommandAutocomplete: commandAutocompleteOpen,
     filteredCommands,
     commandSelectedIndex,
     handleCommandInputChange,
@@ -44,15 +48,20 @@ export function useRagCellInput() {
     insertCommand,
   } = useCommandAutocompleteInput(textareaRef)
 
+  // Turned off in settings, the slash is ordinary text: no dropdown, and the
+  // form tells the action to skip command parsing so it can't fire anyway.
+  const showCommandAutocomplete = slashCommandsEnabled && commandAutocompleteOpen
+
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       const cursorPos = e.target.selectionStart ?? 0
-      const commandHandled = handleCommandInputChange(e.target.value, cursorPos)
+      const commandHandled =
+        slashCommandsEnabled && handleCommandInputChange(e.target.value, cursorPos)
       if (!commandHandled) {
         handleResourceInputChange(e)
       }
     },
-    [handleCommandInputChange, handleResourceInputChange]
+    [slashCommandsEnabled, handleCommandInputChange, handleResourceInputChange]
   )
 
   const handleKeyDown = useCallback(
@@ -70,6 +79,7 @@ export function useRagCellInput() {
 
   return {
     textareaRef,
+    slashCommandsEnabled,
     // Resource autocomplete
     showResourceAutocomplete,
     filteredResources,

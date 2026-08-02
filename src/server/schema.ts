@@ -795,6 +795,9 @@ export const RagQuerySchema = z.object({
     .min(5, "Pytanie musi mieć min. 5 znaków")
     .max(500, "Pytanie zbyt długie (max 500 znaków)"),
   cellId: z.string().min(1, "ID komórki jest wymagane"),
+  // Subject alone, sent when the question is prose a cell composed for the user
+  // to read. Drives retrieval; the question still drives the answer.
+  searchTopic: z.string().max(300).optional(),
 });
 
 // Admin: Create File Search Store

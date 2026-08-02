@@ -12,7 +12,7 @@ import { parseFlashcardCellContent } from '@/helpers/parseFlashcardCellContent'
 export function useFlashcardCell(cellContent: string) {
   const deckId = parseFlashcardCellContent(cellContent)
 
-  const { data: deck, isLoading } = useQuery({
+  const { data: deck, isLoading, isSuccess } = useQuery({
     queryKey: flashcardDeckKey(deckId ?? ''),
     queryFn: () => fetchFlashcardDeckAction(deckId!),
     enabled: Boolean(deckId),
@@ -25,5 +25,6 @@ export function useFlashcardCell(cellContent: string) {
     cards: deck?.cards ?? [],
     topic: deck?.name ?? 'Fiszki',
     isLoading: Boolean(deckId) && isLoading,
+    isMissing: isSuccess && deck === null,
   }
 }

@@ -200,6 +200,53 @@ count only.
 
 ---
 
+## 🧠 Data Sources — what the LLM may see
+
+Every AI feature (tutor, mind map, tests, flashcards, plans, lectures, `/commands`)
+draws on the same four tiers. Three carry content; the fourth never does. Place a
+new feature's inputs in these terms before writing code.
+
+**1. Curriculum — the corpus.** Global, identical for every student, searchable by
+every feature through one entry point: `retrieveCorpusContext`
+(`server/vertex-rag/context.ts`). Knobs live in `constants/rag.ts` — never inline a
+topK or threshold.
+
+> **The search query is the subject and nothing else.** Memory, attachments,
+> formatting instructions and prose wrappers dilute the query embedding, and a term
+> that *is* in the corpus comes back as "no information". When a feature's question
+> is prose composed for the student to read, it sends a separate `searchTopic`
+> carrying the subject alone.
+
+**2. Personal library.** The student's notes and uploaded materials. Scoped to one
+user, never visible to another.
+
+**3. Attachments — `@resource`.** An explicit pick of one note or material by exact
+display name — "summarise *this* note" is a different intent from "search
+everything". An attachment is the PRIMARY source; corpus chunks stay secondary.
+Nothing in the request path reads from disk.
+
+**4. Student memory — never content.** Memory describes the *student*, not the
+subject, and is not evidence. Preferences and policies (`memoryPrefix`) shape tone
+and depth for the conversational tutor only. Facts and episodes (`memoryTail`)
+belong solely to questions about the student themselves, which `isSelfStateQuestion`
+routes to a memory-only path; they never enter a subject answer and never reach a
+retrieval query.
+
+| Feature | Corpus | Personal | Attachments | Memory |
+|---|---|---|---|---|
+| Conversational tutor | yes | yes | yes | preferences only |
+| Self-state questions | no | no | no | yes — memory only |
+| Mind map · AI tests · `/commands` · lectures | yes | yes | yes | **no** |
+
+**No source, no output.** A generator with nothing to ground on says so. It never
+falls back to the model's own knowledge and presents the result as if it came from
+the documents — a plan invented from pretraining is indistinguishable, to the
+student, from one built on the curriculum. Commands producing study material carry
+`requiresSource` in `constants/toolCommands.ts` and stop with a message naming what
+was missing.
+
+---
+
 ## 🚀 Development Commands
 
 ```bash

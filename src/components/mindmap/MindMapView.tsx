@@ -1,6 +1,7 @@
 "use client"
 
 import "@xyflow/react/dist/style.css"
+import { useEffect, useState } from "react"
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -19,6 +20,7 @@ import { FIT_VIEW_OPTIONS } from "@/constants/mindmapCanvas"
 import MindMapNode from "./MindMapNode"
 import MasteryToolbar from "./MasteryToolbar"
 import NodeDetailCard from "./NodeDetailCard"
+import NodeExplanationPanel from "./NodeExplanationPanel"
 import MindMapLegend from "./MindMapLegend"
 import MindMapControls from "./MindMapControls"
 
@@ -32,6 +34,15 @@ interface MindMapViewProps {
 
 function Canvas(props: MindMapViewProps) {
   const map = useMindMapCanvas(props)
+
+  // Lifted out of the card: the panel is the card's sibling, not its child, so
+  // it can take the full canvas height instead of a box inside a 320px rail.
+  const [isExplanationOpen, setIsExplanationOpen] = useState(false)
+  const explanation = map.selectedNode?.metadata?.explanation?.trim()
+
+  useEffect(() => {
+    setIsExplanationOpen(false)
+  }, [map.selectedId])
 
   return (
     <div ref={map.wrapperRef} className="relative h-full w-full">
@@ -87,12 +98,24 @@ function Canvas(props: MindMapViewProps) {
         </Panel>
       </ReactFlow>
 
-      {map.selectedNode && map.selectedIsLeaf && (
+      {map.selectedNode && (map.selectedIsLeaf || explanation) && (
         <NodeDetailCard
           node={map.selectedNode}
           path={map.selectedPath}
           onClose={map.clearSelection}
           onSetMastery={map.handleMastery}
+          onExplain={map.handleExplain}
+          onOpenExplanation={() => setIsExplanationOpen(true)}
+        />
+      )}
+
+      {map.selectedNode && explanation && (
+        <NodeExplanationPanel
+          label={map.selectedNode.label}
+          breadcrumb={map.selectedPath.slice(0, -1)}
+          explanation={explanation}
+          isOpen={isExplanationOpen}
+          onClose={() => setIsExplanationOpen(false)}
           onExplain={map.handleExplain}
         />
       )}

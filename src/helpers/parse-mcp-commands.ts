@@ -11,7 +11,10 @@ export interface ParsedMcpCommand {
 // Built per call because a shared /g regex carries lastIndex between invocations.
 const commandPattern = () => /(?<![\p{L}\p{N}/])\/(\p{L}+)/gu;
 
-export function parseMcpCommands(input: string): ParsedMcpCommand {
+export function parseMcpCommands(
+  input: string,
+  { commandsEnabled = true }: { commandsEnabled?: boolean } = {}
+): ParsedMcpCommand {
   const resources: string[] = [];
   const tools: string[] = [];
   const unknownTools: string[] = [];
@@ -28,7 +31,7 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
   }
 
   const toolPattern = commandPattern();
-  while ((match = toolPattern.exec(input)) !== null) {
+  while (commandsEnabled && (match = toolPattern.exec(input)) !== null) {
     const name = match[1]?.toLowerCase();
     if (!name) continue;
 
@@ -41,7 +44,11 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
   for (const resource of resources) {
     cleanQuestion = cleanQuestion.replace(`@${resource}`, '');
   }
-  cleanQuestion = cleanQuestion.replace(commandPattern(), '').trim();
+  // With commands off a typed „/utworz" is ordinary text, so it stays in the question.
+  if (commandsEnabled) {
+    cleanQuestion = cleanQuestion.replace(commandPattern(), '');
+  }
+  cleanQuestion = cleanQuestion.trim();
 
   return {
     cleanQuestion,

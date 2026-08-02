@@ -1,23 +1,11 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
-import { mcpServer } from '@/server/mcp/server';
 import { getAllUserNotes, getMaterialsByUser } from '@/server/queries';
 import type { Resource } from '@/types/resourceTypes';
 
 export async function GET() {
   try {
     const { userId } = await auth();
-
-    const mcpResult = await mcpServer.readResource('docs://list');
-    const fileList = mcpResult.contents?.[0]?.text
-      ? JSON.parse(mcpResult.contents[0].text)
-      : [];
-
-    const docResources: Resource[] = fileList.map((filename: string) => ({
-      name: filename,
-      displayName: filename.replace('.md', '').replace(/_/g, ' '),
-      type: 'doc' as const,
-    }));
 
     let userResources: Resource[] = [];
 
@@ -50,12 +38,9 @@ export async function GET() {
       userResources = [...noteResources, ...materialResources];
     }
 
-    const allResources = [...userResources, ...docResources];
-
     return NextResponse.json({
-      resources: allResources,
+      resources: userResources,
       counts: {
-        docs: docResources.length,
         notes: userResources.filter((r) => r.type === 'note').length,
         materials: userResources.filter((r) => r.type === 'material').length,
       },

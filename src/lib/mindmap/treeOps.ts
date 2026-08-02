@@ -16,6 +16,22 @@ export function setNodeMastery(
   return walk(root)
 }
 
+/** Returns a new tree with an AI explanation stored on the target node. Pure. */
+export function setNodeExplanation(
+  root: MindMapNode,
+  nodeId: string,
+  explanation: string
+): MindMapNode {
+  function walk(node: MindMapNode): MindMapNode {
+    if (node.id === nodeId) {
+      return { ...node, metadata: { ...node.metadata, explanation } }
+    }
+    if (node.children.length === 0) return node
+    return { ...node, children: node.children.map(walk) }
+  }
+  return walk(root)
+}
+
 /** Returns a new tree with the target node's collapsed flag toggled. Pure. */
 export function toggleNodeCollapse(root: MindMapNode, nodeId: string): MindMapNode {
   function walk(node: MindMapNode): MindMapNode {
