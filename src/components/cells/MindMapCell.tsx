@@ -7,24 +7,16 @@ import MindMapGenerateForm from "./MindMapGenerateForm"
 import { useCellsStore } from "@/store/useCellsStore"
 import { useRagStore } from "@/store/useRagStore"
 import { getNodePath } from "@/lib/mindmap/treeOps"
+import { parseMindMapCellContent } from "@/helpers/parseMindMapCellContent"
+import { buildRagCellContent } from "@/helpers/buildRagCellContent"
 import type { Cell } from "@/types/cellTypes"
-import type { MindMapCellContent, MindMapNode } from "@/types/mindmapTypes"
-
-function parseContent(raw: string): MindMapCellContent | null {
-  if (!raw) return null
-  try {
-    const parsed = JSON.parse(raw) as MindMapCellContent
-    return parsed?.root ? parsed : null
-  } catch {
-    return null
-  }
-}
+import type { MindMapNode } from "@/types/mindmapTypes"
 
 export default function MindMapCell({ cell }: { cell: Cell }) {
   const updateCell = useCellsStore((s) => s.updateCell)
   const insertCellAfterWithContent = useCellsStore((s) => s.insertCellAfterWithContent)
   const setPendingAutoSubmitCellId = useRagStore((s) => s.setPendingAutoSubmitCellId)
-  const content = parseContent(cell.content)
+  const content = parseMindMapCellContent(cell.content)
 
   const handleRootChange = (root: MindMapNode) => {
     if (!content) return
@@ -33,7 +25,8 @@ export default function MindMapCell({ cell }: { cell: Cell }) {
 
   // „Wyjaśnij” spawns an AI Asystent cell right below the map, pre-filled with a
   // breadcrumb-context query, and auto-submits it (same mechanism the learning
-  // hub uses via pendingAutoSubmitCellId).
+  // hub uses via pendingAutoSubmitCellId). The origin travels with the cell so the
+  // answer can be written back onto the node that asked for it.
   const handleExplain = useCallback(
     (nodeId: string) => {
       if (!content) return
@@ -44,7 +37,11 @@ export default function MindMapCell({ cell }: { cell: Cell }) {
           ? `Wyjaśnij zagadnienie „${path[path.length - 1]}” w kontekście: ${path.join(" → ")}. Wytłumacz przystępnie i zwięźle.`
           : `Wyjaśnij temat „${path[0]}” przystępnie i zwięźle.`
 
-      const newCellId = insertCellAfterWithContent(cell.id, "rag", query)
+      const newCellId = insertCellAfterWithContent(
+        cell.id,
+        "rag",
+        buildRagCellContent(query, { mapCellId: cell.id, nodeId })
+      )
       setPendingAutoSubmitCellId(newCellId)
 
       // The rag cell mounts dynamically; give it a beat before scrolling to it.

@@ -15,6 +15,7 @@ export interface MindMapNodeData {
   collapsed: boolean
   isLeaf: boolean
   hiddenCount: number
+  hasExplanation: boolean
   // Set by buildFlowGraph when a selection exists and this node is off the
   // root→selected path; the node renderer fades it.
   dimmed?: boolean
@@ -88,6 +89,7 @@ export function treeToFlow(
         collapsed: Boolean(node.collapsed),
         isLeaf: kids.length === 0,
         hiddenCount: node.collapsed ? countDescendants(node) : 0,
+        hasExplanation: Boolean(node.metadata?.explanation),
       },
     })
 

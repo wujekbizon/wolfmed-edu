@@ -87,7 +87,7 @@ function Canvas(props: MindMapViewProps) {
         </Panel>
       </ReactFlow>
 
-      {map.selectedNode && map.selectedIsLeaf && (
+      {map.selectedNode && (map.selectedIsLeaf || map.selectedNode.metadata?.explanation) && (
         <NodeDetailCard
           node={map.selectedNode}
           path={map.selectedPath}

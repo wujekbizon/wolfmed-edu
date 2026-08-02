@@ -26,6 +26,8 @@ export type MasteryLevel = "unseen" | "learning" | "mastered"
 
 export interface MindMapNodeMetadata {
   notes?: string
+  /** Full answer written back by „Wyjaśnij szerzej", unlike the short generated `notes`. */
+  explanation?: string
   tags?: string[]
   quizCount?: number
   masteryLevel?: MasteryLevel

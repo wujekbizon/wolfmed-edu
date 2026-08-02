@@ -1,7 +1,7 @@
 import { Handle, Position, type NodeProps, type Node } from "@xyflow/react"
 import { motion } from "framer-motion"
 import { getDepthSize, MASTERY_COLORS, lightenColor } from "@/lib/mindmap/design"
-import { getCategoryIcon } from "@/components/mindmap/icons"
+import { getCategoryIcon, ExplainIcon } from "@/components/mindmap/icons"
 import type { MindMapNodeData } from "@/lib/mindmap/treeToFlow"
 
 type MindMapFlowNode = Node<MindMapNodeData>
@@ -71,6 +71,15 @@ export default function MindMapNode({
       {data.collapsed && data.hiddenCount > 0 && (
         <span className="absolute -bottom-1 -right-1 min-w-5 rounded-full bg-zinc-950 px-1 text-center text-[10px] font-semibold leading-5 text-white shadow ring-1 ring-white/20">
           +{data.hiddenCount}
+        </span>
+      )}
+
+      {data.hasExplanation && (
+        <span
+          className="absolute -left-1 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-zinc-950 text-[#f58a8a] shadow ring-1 ring-white/20"
+          title="Ma wyjaśnienie AI"
+        >
+          <ExplainIcon size={10} />
         </span>
       )}
 
