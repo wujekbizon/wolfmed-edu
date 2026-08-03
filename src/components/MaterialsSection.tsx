@@ -7,9 +7,10 @@ import { useMaterialModalStore } from "@/store/useMaterialModalStore"
 
 type Props = {
   materials: MaterialsType[]
+  isPremium: boolean
 }
 
-export default function MaterialsSection({ materials }: Props) {
+export default function MaterialsSection({ materials, isPremium }: Props) {
   const { openUploadModal } = useMaterialModalStore()
 
   return (
@@ -17,8 +18,15 @@ export default function MaterialsSection({ materials }: Props) {
       <div className="flex flex-wrap justify-between items-center gap-y-3 mb-6">
         <h2 className="text-base sm:text-xl font-bold text-zinc-800">Materiały i Zasoby</h2>
           <button
-            className="flex items-center justify-center bg-slate-600 text-white p-2 sm:p-2.5 rounded-full transition-colors cursor-pointer hover:bg-slate-700"
+            className="flex items-center justify-center bg-slate-600 text-white p-2 sm:p-2.5 rounded-full transition-colors cursor-pointer hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-slate-600"
             onClick={openUploadModal}
+            disabled={!isPremium}
+            title={
+              isPremium
+                ? 'Prześlij materiał'
+                : 'Wgrywanie materiałów jest dostępne w planie premium'
+            }
+            aria-label="Prześlij materiał"
           >
             <FilePlus2 className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>

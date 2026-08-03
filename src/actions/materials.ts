@@ -12,6 +12,7 @@ import { after } from "next/server"
 import { UTApi } from "uploadthing/server"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { removeMaterialChunks, syncMaterialChunks } from "@/server/library/sync-material"
+import { getIsPremium } from "@/server/premium"
 
 const utapi = new UTApi()
 
@@ -76,6 +77,13 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
+
+    // Second gate. The uploader's middleware already refuses the bytes, but the
+    // action is a separate entry point and each one has to stand on its own.
+    const isPremium = await getIsPremium();
+    if (!isPremium) {
+      return toFormState("ERROR", "Wgrywanie materiałów jest dostępne w planie premium.");
+    }
 
     // Rate limiting: 5 material uploads per hour
     const rateLimit = await checkRateLimit(userId, 'material:upload')
