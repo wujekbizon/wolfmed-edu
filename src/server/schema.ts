@@ -88,7 +88,10 @@ export const CreatePostSchema = z.object({
     .max(100, "Tytuł nie może przekraczać 100 znaków"),
   content: z.string().refine(
     (content) => {
-      const textContent = getLexicalContent(content);
+      // Collapse whitespace before measuring: the limit is about how much a
+      // reader has to read, and it should not move when the extractor changes
+      // how it separates blocks.
+      const textContent = getLexicalContent(content).replace(/\s+/g, " ").trim();
       return textContent.length >= 10 && textContent.length <= 2000;
     },
     { message: "Treść musi mieć od 10 do 2000 znaków" }
