@@ -33,12 +33,11 @@ export const ourFileRouter = {
       return { userId };
     })
     .onUploadError(({ error, fileKey }) => {
-      console.log(fileKey);
-      console.error("Upload error:", error);
+      console.error("Upload error:", fileKey, error);
     })
-    .onUploadComplete(async ({ metadata, file }) => {
-      console.log("#CORE: Upload complete for userId:", metadata.userId);
-      console.log("#CORE: File available at:", file.ufsUrl);
+    .onUploadComplete(async () => {
+      // The material row and its indexing are created by uploadMaterialAction,
+      // which the client calls once the upload resolves. Nothing to do here.
     }),
   lectureAudio: f({ "audio/mpeg": { maxFileSize: "32MB", maxFileCount: 1 } })
     .middleware(async ({ req }) => {
