@@ -36,8 +36,14 @@ export async function createFileSearchStoreAction(
 
     const storeName = await createCorpus(validationResult.data.displayName)
 
+    // Read the model back rather than recording what we asked for. RAG Engine
+    // substitutes a fallback when it rejects the requested model, and the live
+    // corpus is evidence that this happens silently — rag_config has to describe
+    // the corpus that exists, since retrieval quality is debugged from it.
+    const created = await getCorpus(storeName).catch(() => null)
+
     await setRagConfig(storeName, validationResult.data.displayName, {
-      embeddingModel: DEFAULT_EMBEDDING_MODEL,
+      embeddingModel: created?.embeddingModel ?? DEFAULT_EMBEDDING_MODEL,
     })
 
     revalidatePath('/admin/rag')
