@@ -310,12 +310,16 @@ safe.
 
 ## 5. Check these three things before starting
 
-1. **Your Vercel plan.** Two crons, both daily, is exactly the Hobby ceiling. If
-   you are on Hobby, the job-system route in §3.3 is not merely better — it is the
-   only one available.
-2. **The corpus embedding dimensionality.** One `getCorpus(storeName)` call. §3.2
-   holds for any mismatch, but record the real number in `rag_config`, which
-   already has an `embeddingModel` column waiting beside it.
+1. ~~**Your Vercel plan.**~~ **Settled.** Hobby allows 100 cron jobs, not 2 — the
+   real limits are a once-per-day minimum interval and ±59 min precision. Both are
+   fine for a backstop, so `/api/cron/library-index` is registered. The
+   once-per-day floor is also why extraction runs in `after()` rather than on the
+   cron: a daily sweep would leave a freshly uploaded PDF unreadable for up to
+   24 hours (§3.3).
+2. **The corpus embedding dimensionality.** Verification, not a decision — the
+   architecture already assumes the spaces differ and fuses by rank (§3.2), which
+   is correct either way. Worth one `getCorpus(storeName)` call to record the real
+   number in `rag_config`, beside the `embeddingModel` column already there.
 3. ~~**Gemini extraction on one real scanned Polish skrypt.**~~ **Settled — it
    works.** An Adobe Scan of a signed form produced 11 clean chunks: Polish
    diacritics intact, checkbox states (`☑`), legal citations verbatim, email
