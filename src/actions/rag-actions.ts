@@ -103,7 +103,14 @@ async function fetchResourceContent(uri: string, userId: string): Promise<Resour
       return { type: 'text', content: '' }
     }
 
-    // Fetch PDF bytes from the URL
+    // The text was read once at upload, so an attached PDF costs a database
+    // read rather than a download plus a base64 copy of the whole file on every
+    // single question about it.
+    if (material.extractedText) {
+      return { type: 'text', content: `# ${material.title}\n\n${material.extractedText}` }
+    }
+
+    // Not extracted yet, or extraction failed: fall back to shipping the file.
     try {
       const response = await fetch(material.url)
       if (!response.ok) {

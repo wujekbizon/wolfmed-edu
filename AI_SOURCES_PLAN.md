@@ -270,7 +270,7 @@ money for no change in content.
 
 Nothing reads these chunks yet. Reversible by dropping one table.
 
-### Step 3 — Materials: extract at upload
+### Step 3 — Materials: extract at upload *(built)*
 
 Add `extractedText` to `materials`, plus a status (`pending` / `indexed` /
 `unindexable` — the uploader also accepts MP4 and JSON, which yield no text).

@@ -8,8 +8,10 @@ import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
 import { and, eq, sql } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
+import { after } from "next/server"
 import { UTApi } from "uploadthing/server"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { removeMaterialChunks, syncMaterialChunks } from "@/server/library/sync-material"
 
 const utapi = new UTApi()
 
@@ -54,6 +56,8 @@ export async function deleteMaterialAction(formState: FormState, formData: FormD
         })
         .where(eq(userLimits.userId, userId))
     })
+
+    await removeMaterialChunks(userId, materialId)
 
     try {
       await utapi.deleteFiles([materialToDelete.key])
@@ -106,6 +110,8 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       }
     }
 
+    let materialId: string | null = null;
+
     try {
     await db.transaction(async (tx) => {
       // Ensure userLimits exists
@@ -137,7 +143,7 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       }
 
       // Insert material
-      await tx.insert(materials).values({
+      const [created] = await tx.insert(materials).values({
         userId,
         title: validationResult.data.title,
         key: validationResult.data.key,
@@ -145,7 +151,9 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         type: validationResult.data.type,
         category: validationResult.data.category,
         size: validationResult.data.size
-      });
+      }).returning({ id: materials.id });
+
+      materialId = created?.id ?? null;
 
       // Update storage atomically
       await tx
@@ -160,6 +168,15 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
     } catch (error: any) {
       await utapi.deleteFiles([key]);
       return toFormState("ERROR", error.message);
+    }
+
+    // Reading a PDF is a model call measured in seconds, so it runs after the
+    // response rather than holding the upload open. The material is usable as a
+    // file immediately; it becomes searchable when this finishes, and the cron
+    // backstop picks it up if the function is torn down first.
+    if (materialId) {
+      const pendingId = materialId;
+      after(() => syncMaterialChunks(userId, pendingId));
     }
   } catch (error: any) {
     return toFormState("ERROR", error.message);
