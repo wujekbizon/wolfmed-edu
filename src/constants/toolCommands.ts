@@ -16,6 +16,15 @@ import type { ToolCommand } from '@/types/commandTypes'
  * reaches the tool as a validated form field and overrides whatever the dispatch
  * model extracted — asking for 10 and receiving 5 was a reported bug, caused by
  * making an LLM re-read a number the student had already typed.
+ *
+ * This list is exactly what the AI cell offers. `wyklad_tool` is deliberately
+ * absent: lectures are generated from a saved plan by generateLectureAction,
+ * which calls the tool directly, and should not be reachable by a student typing
+ * into this cell.
+ *
+ * `fiszka` stays despite the dedicated flashcard cell, because that cell only
+ * displays and hand-edits a deck — useInsertGeneratedCell routes this tool's
+ * output into it. Removing the command removes AI flashcard generation entirely.
  */
 export const TOOL_COMMANDS: Record<string, ToolCommand> = {
   notatka: {
@@ -66,14 +75,6 @@ export const TOOL_COMMANDS: Record<string, ToolCommand> = {
     label: 'Plan nauki',
     description: 'Tworzy szczegółowy plan nauki',
     example: 'Anatomia kończyny górnej',
-    requiresSource: true,
-  },
-  wyklad: {
-    name: 'wyklad',
-    toolName: 'wyklad_tool',
-    label: 'Wykład',
-    description: 'Generuje wykład z planu nauki',
-    example: 'Fizjologia układu krążenia',
     requiresSource: true,
   },
 }

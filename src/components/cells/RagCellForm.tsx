@@ -108,7 +108,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
               name="question"
               defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
               placeholder={
-                commandSelection.command
+                !input.slashCommandsEnabled && commandSelection.command
                   ? `Podaj temat, np. „${commandSelection.command.example}"`
                   : input.slashCommandsEnabled
                     ? 'Zadaj pytanie... (@ pliki, / polecenia)'
@@ -125,8 +125,14 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
             <FieldError formState={state} name="question" />
           </div>
 
-          <CommandBar selection={commandSelection} disabled={isPending} />
-          <FieldError formState={state} name="commandCount" />
+          {/* One surface at a time. With slash on, the dropdown is the way in and
+              chips would duplicate it; with slash off, the chips are the only way. */}
+          {!input.slashCommandsEnabled && (
+            <>
+              <CommandBar selection={commandSelection} disabled={isPending} />
+              <FieldError formState={state} name="commandCount" />
+            </>
+          )}
 
           <div className="flex items-center justify-between">
             <SubmitButton

@@ -42,7 +42,7 @@ export default function SettingsModal() {
         <div className="flex flex-col gap-5 mb-5">
           <SettingsToggle
             label="Komendy /"
-            description="Wpisywanie poleceń ukośnikiem. Przyciski nad polem działają zawsze."
+            description="Wpisuj polecenia ukośnikiem zamiast wybierać je przyciskami"
             checked={slashCommandsEnabled}
             onChange={setSlashCommandsEnabled}
           />

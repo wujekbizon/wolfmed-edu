@@ -15,8 +15,12 @@ export function resolveCommandCount(
   if (!command?.count) return null
 
   const { defaultValue, min, max } = command.count
-  const parsed = typeof requested === 'number' ? requested : Number(requested)
 
+  // Number(null) is 0 and Number('') is 0, both of which would clamp to the
+  // minimum rather than fall back — an absent count must mean the default.
+  if (requested === null || requested === undefined || requested === '') return defaultValue
+
+  const parsed = typeof requested === 'number' ? requested : Number(requested)
   if (!Number.isFinite(parsed)) return defaultValue
 
   return Math.min(max, Math.max(min, Math.round(parsed)))

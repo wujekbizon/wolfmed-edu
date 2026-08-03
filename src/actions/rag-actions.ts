@@ -17,6 +17,7 @@ import {
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { resolveCommandCount } from '@/helpers/resolveCommandCount'
+import { extractLeadingCount } from '@/helpers/extractLeadingCount'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
@@ -196,8 +197,13 @@ export async function askRagQuestion(
     // The count reaches the tool as a validated number rather than as prose the
     // dispatch model has to re-extract. That extraction failing, and a silent
     // default absorbing the failure, is what turned „10 pytań" into 5.
+    //
+    // Both surfaces converge here: the chip palette posts commandCount, a typed
+    // „/utworz 10 …" yields the same number from its leading token, and either
+    // way it is clamped by the command's own spec before dispatch.
     const commandSpec = tools[0] ? TOOL_COMMANDS[tools[0]] : undefined
-    const requestedCount = resolveCommandCount(commandSpec, validationResult.data.commandCount)
+    const rawCount = validationResult.data.commandCount ?? extractLeadingCount(cleanQuestion)
+    const requestedCount = resolveCommandCount(commandSpec, rawCount)
     const countOverride =
       commandSpec?.count && requestedCount !== null
         ? { [commandSpec.count.param]: requestedCount }
