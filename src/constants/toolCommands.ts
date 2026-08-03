@@ -17,10 +17,13 @@ import type { ToolCommand } from '@/types/commandTypes'
  * model extracted — asking for 10 and receiving 5 was a reported bug, caused by
  * making an LLM re-read a number the student had already typed.
  *
- * `hiddenFromPalette` keeps a command out of the chip row without removing it:
- * `fiszka` and `wyklad` belong to the flashcard cell and the lecture flow, so
- * they are not offered as buttons, but both stay dispatchable by slash and by
- * the code paths that call their tools directly.
+ * `hiddenFromPalette` keeps a command out of the chip row without removing it.
+ * Only `wyklad` carries it: PlanCellPreview generates lectures from a saved plan
+ * by calling generateLectureAction, so the cell needs no button for it.
+ *
+ * `fiszka` stays in the palette. The flashcard cell creates empty decks to fill
+ * by hand — this command is the only way to generate cards with AI, and with
+ * slash commands switched off the chip is the only way to reach it.
  */
 export const TOOL_COMMANDS: Record<string, ToolCommand> = {
   notatka: {
@@ -64,7 +67,6 @@ export const TOOL_COMMANDS: Record<string, ToolCommand> = {
     example: 'Układ kostny',
     requiresSource: true,
     count: { param: 'cardCount', label: 'Liczba fiszek', defaultValue: 10, min: 1, max: 50 },
-    hiddenFromPalette: true,
   },
   planuj: {
     name: 'planuj',
