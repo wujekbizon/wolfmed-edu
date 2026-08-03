@@ -8,30 +8,22 @@ interface CommandChipsProps {
   disabled?: boolean | undefined
 }
 
-const CHIP_BASE =
-  'shrink-0 rounded-full border px-3 py-1 text-xs font-medium transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed'
-const CHIP_IDLE = 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
-const CHIP_ACTIVE = 'border-zinc-800 bg-zinc-800 text-white hover:bg-zinc-700'
-
 export default function CommandChips({ selectedName, onToggle, disabled }: CommandChipsProps) {
   return (
     <div className="flex gap-1.5 overflow-x-auto scrollbar-thin scrollbar-webkit pb-1">
-      {PALETTE_COMMANDS.map((command) => {
-        const isActive = command.name === selectedName
-        return (
-          <button
-            key={command.name}
-            type="button"
-            onClick={() => onToggle(command.name)}
-            disabled={disabled}
-            title={command.description}
-            aria-pressed={isActive}
-            className={`${CHIP_BASE} ${isActive ? CHIP_ACTIVE : CHIP_IDLE}`}
-          >
-            {command.label}
-          </button>
-        )
-      })}
+      {PALETTE_COMMANDS.map((command) => (
+        <button
+          key={command.name}
+          type="button"
+          onClick={() => onToggle(command.name)}
+          disabled={disabled}
+          title={command.description}
+          aria-pressed={command.name === selectedName}
+          className="chip"
+        >
+          {command.label}
+        </button>
+      ))}
     </div>
   )
 }
