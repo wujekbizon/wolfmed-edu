@@ -1,6 +1,7 @@
 import 'server-only'
 import { FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, buildGroundedPrompt, enhanceUserQuery } from '@/helpers/rag-prompts'
+import { stripContentParameter } from '@/helpers/stripContentParameter'
 import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI, logUsage } from './client'
@@ -173,7 +174,18 @@ ${content}
 `
     }
 
-    prompt += `WAŻNE: Wywołaj funkcję ${toolName}. Wypełnij jej parametry dokładnie według POLECENIA UŻYTKOWNIKA — jeśli podano liczbę (np. liczbę pytań), użyj dokładnie tej liczby, a nie wartości domyślnej. Jako 'content' przekaż materiał źródłowy (w tym treść z PDF, jeśli jest); gdy go brak, użyj tematu z polecenia.`
+    // The model only supplies `content` when it is the one who can read it —
+    // i.e. from an attached PDF. When we already hold the text, echoing it back
+    // as a function argument costs an output token per input token and, past a
+    // dozen retrieved chunks, truncates the call so no function call arrives at
+    // all. That is what surfaced as "Tool planuj_tool was not called by Gemini".
+    const hasPdf = Boolean(pdfFiles && pdfFiles.length > 0)
+    const dispatchDefinition = hasPdf ? toolDefinition : stripContentParameter(toolDefinition)
+
+    prompt += `WAŻNE: Wywołaj funkcję ${toolName}. Wypełnij jej parametry dokładnie według POLECENIA UŻYTKOWNIKA — jeśli podano liczbę (np. liczbę pytań), użyj dokładnie tej liczby, a nie wartości domyślnej.`
+    prompt += hasPdf
+      ? ` Jako 'content' przekaż treść odczytaną z pliku PDF.`
+      : ` NIE przepisuj materiału źródłowego do parametrów — zostanie dołączony automatycznie.`
 
     parts.push({ text: prompt })
 
@@ -190,7 +202,7 @@ ${content}
         systemInstruction: SYSTEM_PROMPT,
         tools: [
           {
-            functionDeclarations: [toolDefinition]
+            functionDeclarations: [dispatchDefinition]
           }
         ],
         toolConfig: {
@@ -204,60 +216,56 @@ ${content}
     })
     logUsage('executeToolWithContent:dispatch', response)
 
-    if (response.functionCalls && response.functionCalls.length > 0) {
-      const call = response.functionCalls[0]
+    const call = response.functionCalls?.[0]
 
-      if (!call || !call.name) {
-        throw new Error('Invalid function call from Gemini')
+    // The dispatch fills the optional arguments — focus, diagramType, category.
+    // The content and the count are already known here, so a missing function
+    // call is recoverable: run the tool with what we hold rather than failing a
+    // request the student has been waiting on. The forced ANY mode makes this
+    // rare, but truncation and safety blocks both land here.
+    if (!call?.name) {
+      console.warn(`[tools] ${toolName}: no function call returned, dispatching with server-side arguments`)
+    }
+
+    // Content the model extracted from the PDF, else our source material, else
+    // the request itself — a tool handed nothing invents its own subject.
+    const modelArgs = call?.name === toolName ? (call.args ?? {}) : {}
+    const toolContent = modelArgs.content || content || request
+    const args = { ...modelArgs, content: toolContent, ...overrideArgs }
+    const result = await executeToolLocally(toolName, args)
+
+    // A tool that produces no cell produced prose, and that prose IS the
+    // answer — /podsumuj generated a summary that useRagToolResults then
+    // dropped, because it only inserts results carrying a cellType. Returning
+    // it directly also skips the confirmation call, which has nothing left to
+    // confirm.
+    if (!result.cellType) {
+      return {
+        answer: result.content,
+        toolResults: { [toolName]: result } as Record<string, ToolResult>,
       }
+    }
 
-      // Content the model extracted from the PDF, else our source material, else
-      // the request itself — a tool handed nothing invents its own subject.
-      const toolContent = call.args?.content || content || request
-      const args = { ...call.args, content: toolContent, ...overrideArgs }
-      const result = await executeToolLocally(call.name, args)
-
-      // A tool that produces no cell produced prose, and that prose IS the
-      // answer — /podsumuj generated a summary that useRagToolResults then
-      // dropped, because it only inserts results carrying a cellType. Returning
-      // it directly also skips the confirmation call, which has nothing left to
-      // confirm.
-      if (!result.cellType) {
-        return {
-          answer: result.content,
-          toolResults: { [call.name]: result } as Record<string, ToolResult>,
-        }
-      }
-
-      const finalPrompt = `Tool ${call.name} executed successfully.
+    const finalPrompt = `Tool ${toolName} executed successfully.
 
 Result: ${JSON.stringify(result, null, 2)}
 
 Please provide a brief confirmation message to the user about what was created.`
 
-      const finalResponse = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-lite',
-        contents: finalPrompt,
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          thinkingConfig: NO_THINKING
-        }
-      })
-      logUsage('executeToolWithContent:confirm', finalResponse)
-
-      const finalAnswer = finalResponse.text || 'Content created successfully.'
-
-      const toolResultsFormatted: Record<string, ToolResult> = {
-        [call.name]: result
+    const finalResponse = await ai.models.generateContent({
+      model: 'gemini-2.5-flash-lite',
+      contents: finalPrompt,
+      config: {
+        systemInstruction: SYSTEM_PROMPT,
+        thinkingConfig: NO_THINKING
       }
+    })
+    logUsage('executeToolWithContent:confirm', finalResponse)
 
-      return {
-        answer: finalAnswer,
-        toolResults: toolResultsFormatted
-      }
+    return {
+      answer: finalResponse.text || 'Content created successfully.',
+      toolResults: { [toolName]: result } as Record<string, ToolResult>,
     }
-
-    throw new Error(`Tool ${toolName} was not called by Gemini`)
   } catch (error) {
     console.error('Error in tool execution:', error)
     throw parseGoogleApiError(error)
