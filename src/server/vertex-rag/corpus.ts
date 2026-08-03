@@ -1,10 +1,17 @@
 import 'server-only'
 import { PROJECT_ID, LOCATION, vertexFetch } from './client'
 
-// Default embedding model. gemini-embedding-001 is multilingual (MTEB leader) —
-// correct for Polish medical content, unlike the English text-embedding-005 that
-// RAG Engine silently falls back to when no model is specified. The memory layer
-// uses this same model, so the platform speaks one embedding space.
+// Default for corpora created from here on. gemini-embedding-001 is multilingual
+// (MTEB leader) — correct for Polish medical content, unlike the English
+// text-embedding-005 that RAG Engine falls back to when no model is specified.
+//
+// This is an intention, not a description of the live corpus. The corpus in
+// production predates this config and runs text-multilingual-embedding-002 at 768
+// dimensions (recorded in rag_config.embedding_model, which is the source of
+// truth). So the platform does NOT speak one embedding space: corpus and personal
+// library vectors are the same length but come from different models, and their
+// distances are not comparable. That is why retrieval fuses the two by rank
+// rather than by score.
 export const DEFAULT_EMBEDDING_MODEL = 'gemini-embedding-001'
 
 function embeddingEndpoint(embeddingModel: string): string {
