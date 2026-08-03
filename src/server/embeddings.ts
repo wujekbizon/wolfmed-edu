@@ -1,6 +1,11 @@
 import 'server-only'
 import { getGoogleAI } from '@/server/vertex-rag/client'
-import { EMBED_DIM, EMBEDDING_MODEL, EMBED_TIMEOUT_MS } from '@/constants/embeddings'
+import {
+  EMBED_BACKGROUND_TIMEOUT_MS,
+  EMBED_DIM,
+  EMBEDDING_MODEL,
+  EMBED_TIMEOUT_MS,
+} from '@/constants/embeddings'
 
 // Thrown when the embedding call times out or fails. Callers catch this and
 // cascade to the lexical (trgm/ILIKE) tiers instead of hanging or 500-ing the
@@ -53,16 +58,25 @@ async function embedOnce(text: string, taskType: EmbedTaskType): Promise<number[
   return values
 }
 
-// Embeds a single text, bounded by EMBED_TIMEOUT_MS. Throws EmbeddingUnavailable
-// on timeout or any API error so callers can cascade deterministically.
-export async function embed(text: string, taskType: EmbedTaskType): Promise<number[]> {
+// Embeds a single text, bounded by a timeout chosen for the caller's context.
+// Throws EmbeddingUnavailable on timeout or any API error so callers can cascade
+// deterministically.
+export async function embed(
+  text: string,
+  taskType: EmbedTaskType,
+  timeoutMs: number = EMBED_TIMEOUT_MS
+): Promise<number[]> {
   try {
-    return await withTimeout(embedOnce(text, taskType), EMBED_TIMEOUT_MS)
+    return await withTimeout(embedOnce(text, taskType), timeoutMs)
   } catch (error) {
     if (error instanceof EmbeddingUnavailable) throw error
     throw new EmbeddingUnavailable(error)
   }
 }
 
-export const embedDocument = (text: string) => embed(text, 'RETRIEVAL_DOCUMENT')
+// Documents are embedded off the request path, so they get the background budget
+// by default. A caller inside a request can still pass its own.
+export const embedDocument = (text: string, timeoutMs = EMBED_BACKGROUND_TIMEOUT_MS) =>
+  embed(text, 'RETRIEVAL_DOCUMENT', timeoutMs)
+
 export const embedQuery = (text: string) => embed(text, 'RETRIEVAL_QUERY')

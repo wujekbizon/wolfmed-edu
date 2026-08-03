@@ -13,6 +13,11 @@ export const EMBED_DIM = 768
 // vectors are NOT in the same space and their distances are not comparable.
 export const EMBEDDING_MODEL = 'gemini-embedding-001'
 
-// Embedding is a best-effort projection. If it can't return quickly, callers
-// must cascade to lexical search rather than hang on the request path.
+// Request path. Embedding is a best-effort projection here: if it can't return
+// quickly, retrieval cascades to lexical search rather than make a student wait.
 export const EMBED_TIMEOUT_MS = 1500
+
+// Background work — the indexing sweep. Nobody is waiting, so the only thing a
+// short budget buys is failure: a cold Vertex call routinely exceeds 1.5 s, and
+// giving up on it leaves the chunk permanently unembedded.
+export const EMBED_BACKGROUND_TIMEOUT_MS = 20_000

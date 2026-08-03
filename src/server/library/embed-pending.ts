@@ -36,6 +36,8 @@ export async function embedPendingChunks(
     .orderBy(asc(libChunks.createdAt))
     .limit(limit)
 
+  if (pending.length === 0) return { embedded: 0, remaining: 0 }
+
   let embedded = 0
 
   for (const chunk of pending) {
@@ -47,13 +49,21 @@ export async function embedPendingChunks(
         .where(eq(libChunks.chunkId, chunk.chunkId))
       embedded++
     } catch (error) {
-      // The row keeps its null embedding and the next pass retries it. Giving up
-      // on the whole batch because one chunk failed would strand the rest.
+      // Rows keep their null embedding and the next pass retries them. Stop the
+      // batch rather than hammer a service that just failed — but say so loudly,
+      // with the cause. A silent warning here is how every chunk stayed NULL
+      // while the write path looked like it was working.
+      const reason = error instanceof EmbeddingUnavailable ? error.cause ?? error.message : error
+      console.error(
+        `[library] Embedding failed after ${embedded}/${pending.length} chunks:`,
+        reason
+      )
       if (!(error instanceof EmbeddingUnavailable)) throw error
-      console.warn('[library] Embedding unavailable, leaving chunk for the next pass')
       break
     }
   }
+
+  console.info(`[library] Embedded ${embedded}/${pending.length} pending chunks`)
 
   return { embedded, remaining: pending.length - embedded }
 }
