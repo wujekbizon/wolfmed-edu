@@ -71,6 +71,33 @@ test("a short tail rides along instead of becoming a fragment", () => {
   assert.ok(last.content.includes("Koniec."), "the tail text must survive")
 })
 
+test("no chunk opens mid-word", () => {
+  const text = paragraphs(40)
+
+  for (const chunk of chunkText(text)) {
+    const firstWord = chunk.content.split(/\s+/)[0]!
+    const escaped = firstWord.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+
+    assert.match(
+      text,
+      new RegExp(`(^|\\s)${escaped}`),
+      `chunk starts mid-word: "${chunk.content.slice(0, 40)}…"`
+    )
+  }
+})
+
+test("chunks overlap so a boundary sentence survives on one side", () => {
+  const chunks = chunkText(paragraphs(40))
+  assert.ok(chunks.length > 1)
+
+  // Consecutive chunks share text: the tail of one appears in the next.
+  const first = chunks[0]!.content
+  const second = chunks[1]!.content
+  const tail = first.slice(-40)
+
+  assert.ok(second.includes(tail), "expected the overlap to carry the tail forward")
+})
+
 test("a pathological source cannot exceed the per-source cap", () => {
   const chunks = chunkText(paragraphs(4000))
   assert.ok(chunks.length <= MAX_CHUNKS_PER_SOURCE)

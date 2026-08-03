@@ -9,6 +9,27 @@ export interface TextChunk {
 // embedding and reads badly when a chunk is quoted back as a source.
 const BOUNDARY_PATTERNS = [/\n\s*\n/g, /(?<=[.!?])\s+/g, /\s+/g]
 
+/**
+ * How far to advance so the next chunk overlaps the current one by roughly
+ * CHUNK_OVERLAP characters — but never opens mid-word.
+ *
+ * Stepping back a fixed number of characters lands wherever it lands, which
+ * produced chunks beginning "rzymanie homeostazy". A fragment like that is a
+ * token in no language and blurs the embedding of everything around it.
+ */
+function overlapAdvance(text: string, breakAt: number): number {
+  const target = breakAt - CHUNK_OVERLAP
+  // The chunk is shorter than the overlap, so overlapping would re-emit it.
+  if (target < 1) return breakAt
+
+  for (let i = target; i < breakAt; i++) {
+    if (/\s/.test(text[i]!)) return i + 1
+  }
+
+  // A single unbroken run longer than the overlap: no boundary to snap to.
+  return breakAt
+}
+
 function lastBoundaryBefore(text: string, limit: number): number {
   for (const pattern of BOUNDARY_PATTERNS) {
     let best = -1
@@ -59,7 +80,7 @@ export function chunkText(text: string): TextChunk[] {
 
     // Always advance, even if the boundary search returned something degenerate,
     // or a pathological input loops forever.
-    cursor += Math.max(breakAt - CHUNK_OVERLAP, 1)
+    cursor += Math.max(overlapAdvance(remaining, breakAt), 1)
   }
 
   return chunks
