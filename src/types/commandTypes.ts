@@ -19,6 +19,9 @@ export interface ToolCommand {
   // Present when the command produces a countable number of items. The count
   // travels as a form field, never as prose for the model to re-extract.
   count?: CommandCountSpec
+  // Kept out of the chip palette while staying fully dispatchable by slash —
+  // for tools that belong to another surface but must remain reachable.
+  hiddenFromPalette?: boolean
 }
 
 export interface Command {

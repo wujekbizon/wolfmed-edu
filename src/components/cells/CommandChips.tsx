@@ -1,6 +1,6 @@
 'use client'
 
-import { TOOL_COMMAND_LIST } from '@/constants/toolCommands'
+import { PALETTE_COMMANDS } from '@/constants/toolCommands'
 
 interface CommandChipsProps {
   selectedName: string | null
@@ -16,7 +16,7 @@ const CHIP_ACTIVE = 'border-zinc-800 bg-zinc-800 text-white hover:bg-zinc-700'
 export default function CommandChips({ selectedName, onToggle, disabled }: CommandChipsProps) {
   return (
     <div className="flex gap-1.5 overflow-x-auto scrollbar-thin scrollbar-webkit pb-1">
-      {TOOL_COMMAND_LIST.map((command) => {
+      {PALETTE_COMMANDS.map((command) => {
         const isActive = command.name === selectedName
         return (
           <button

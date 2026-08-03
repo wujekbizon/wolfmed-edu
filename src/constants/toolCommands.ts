@@ -17,14 +17,10 @@ import type { ToolCommand } from '@/types/commandTypes'
  * model extracted — asking for 10 and receiving 5 was a reported bug, caused by
  * making an LLM re-read a number the student had already typed.
  *
- * This list is exactly what the AI cell offers. `wyklad_tool` is deliberately
- * absent: lectures are generated from a saved plan by generateLectureAction,
- * which calls the tool directly, and should not be reachable by a student typing
- * into this cell.
- *
- * `fiszka` stays despite the dedicated flashcard cell, because that cell only
- * displays and hand-edits a deck — useInsertGeneratedCell routes this tool's
- * output into it. Removing the command removes AI flashcard generation entirely.
+ * `hiddenFromPalette` keeps a command out of the chip row without removing it:
+ * `fiszka` and `wyklad` belong to the flashcard cell and the lecture flow, so
+ * they are not offered as buttons, but both stay dispatchable by slash and by
+ * the code paths that call their tools directly.
  */
 export const TOOL_COMMANDS: Record<string, ToolCommand> = {
   notatka: {
@@ -68,6 +64,7 @@ export const TOOL_COMMANDS: Record<string, ToolCommand> = {
     example: 'Układ kostny',
     requiresSource: true,
     count: { param: 'cardCount', label: 'Liczba fiszek', defaultValue: 10, min: 1, max: 50 },
+    hiddenFromPalette: true,
   },
   planuj: {
     name: 'planuj',
@@ -77,8 +74,20 @@ export const TOOL_COMMANDS: Record<string, ToolCommand> = {
     example: 'Anatomia kończyny górnej',
     requiresSource: true,
   },
+  wyklad: {
+    name: 'wyklad',
+    toolName: 'wyklad_tool',
+    label: 'Wykład',
+    description: 'Generuje wykład z planu nauki',
+    example: 'Fizjologia układu krążenia',
+    requiresSource: true,
+    hiddenFromPalette: true,
+  },
 }
 
 export const TOOL_COMMAND_NAMES = Object.keys(TOOL_COMMANDS)
 
 export const TOOL_COMMAND_LIST = Object.values(TOOL_COMMANDS)
+
+// What the chip row offers. Slash still reaches everything in TOOL_COMMANDS.
+export const PALETTE_COMMANDS = TOOL_COMMAND_LIST.filter((c) => !c.hiddenFromPalette)
