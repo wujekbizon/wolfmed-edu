@@ -14,6 +14,7 @@
  */
 
 import { useCallback, useRef, useEffect, useMemo } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 import { useProgressStore } from '@/store/useProgressStore'
 import type { SSEProgressData, SSELogData, UseRagProgressReturn } from '@/types/progressTypes'
 
@@ -33,6 +34,7 @@ export function useRagProgress(): UseRagProgressReturn {
     addLog,
     setComplete,
     setError,
+    setJobId,
     reset: resetStore,
   } = useProgressStore()
 
@@ -52,10 +54,16 @@ export function useRagProgress(): UseRagProgressReturn {
       eventSourceRef.current.close()
     }
 
-    setConnectionState('connecting')
-    resetStore()
+    // A fresh id per run. The endpoint returns 204 for a job it has already
+    // completed, so reusing the id meant every run after the first opened a
+    // stream that closed immediately and rendered no progress.
+    const nextJobId = uuidv4()
 
-    const eventSource = new EventSource(`/api/rag/progress?jobId=${jobId}`)
+    resetStore()
+    setJobId(nextJobId)
+    setConnectionState('connecting')
+
+    const eventSource = new EventSource(`/api/rag/progress?jobId=${nextJobId}`)
     eventSourceRef.current = eventSource
 
     eventSource.onopen = () => {
@@ -115,7 +123,9 @@ export function useRagProgress(): UseRagProgressReturn {
         setConnectionState('connecting')
       }
     }
-  }, [jobId, setConnectionState, resetStore, updateProgress, addLog, setComplete, setError])
+
+    return nextJobId
+  }, [setConnectionState, resetStore, setJobId, updateProgress, addLog, setComplete, setError])
 
   const stopListening = useCallback(() => {
     if (eventSourceRef.current) {

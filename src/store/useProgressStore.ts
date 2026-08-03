@@ -33,7 +33,7 @@ interface ProgressActions {
   setComplete: () => void
   setError: (message: string) => void
   reset: () => void
-  regenerateJobId: () => void
+  setJobId: (jobId: string) => void
 }
 
 type ProgressStore = ProgressState & ProgressActions
@@ -105,5 +105,7 @@ export const useProgressStore = create<ProgressStore>((set) => ({
       error: null,
     }),
 
-  regenerateJobId: () => set({ jobId: uuidv4() }),
+  // Every request needs its own id: the progress endpoint answers 204 for a job
+  // it has already completed, so a reused id streams nothing on the second run.
+  setJobId: (jobId) => set({ jobId }),
 }))

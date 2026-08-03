@@ -31,8 +31,8 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   const handleSubmit = (formData: FormData) => {
     conversation.rememberQuestion(formData.get('question') as string)
-    formData.append('jobId', progress.jobId)
-    progress.startListening()
+    // Send the id the stream was actually opened for, not the previous run's.
+    formData.append('jobId', progress.startListening())
     action(formData)
   }
 
