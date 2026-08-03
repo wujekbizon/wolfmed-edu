@@ -140,7 +140,7 @@ Kolejność na produkcji:
   pierwszego deploya kodu (wpisy wyzwań niosą procedureId od zawsze).
 
 ### M6 — Biblioteka osobista: tabela lib_chunks
-*Status: do wypchnięcia na dev.*
+*Status: wdrożone na dev (2026-08-03), zweryfikowane na realnych danych.*
 
 - Nowa tabela `wolfmed_lib_chunks` — fragmenty notatek i materiałów ucznia:
   `chunk_id` (PK), `user_id` (FK → `wolfmed_users.userId`, `ON DELETE CASCADE`),
@@ -163,7 +163,73 @@ Kolejność na produkcji:
   dodatkowo czyści `lib_chunks` w tej samej transakcji (RODO).
 - Brak kroku „contract" — nic nie jest usuwane.
 
-### M7+ — (dopisuj kolejne zmiany tutaj)
+### M7 — Materiały: tekst wyodrębniony raz przy uploadzie
+*Status: do wypchnięcia na dev.*
+
+Zmiany schematu — `wolfmed_materials`, wyłącznie addytywne:
+
+| kolumna | typ | uwagi |
+|---|---|---|
+| `extracted_text` | `text NULL` | tekst odczytany z pliku raz, przy uploadzie |
+| `index_status` | `varchar(32) NOT NULL DEFAULT 'pending'` | `pending` / `indexed` / `unindexable` / `failed` |
+| `indexed_at` | `timestamptz NULL` | kiedy ostatnio próbowano |
+
+Plus indeks `materials_index_status_idx` na `index_status` (steruje zamiataczem).
+
+Zgodne z zasadą 4: kolumna NOT NULL dodana z DEFAULT, więc stare wiersze nie
+blokują migracji. Plik w UploadThing pozostaje nietknięty — `extracted_text`
+służy AI, plik służy uczniowi (podgląd, pobieranie, limit 20 MB).
+
+**SQL (prod): expand, bez backfillu w tej samej transakcji.**
+`drizzle-kit generate` → przejrzyj → wykonaj. Zero destrukcji, brak kroku
+„contract". Rollback = `DROP COLUMN` (dane są odtwarzalne — wystarczy ponowna
+ekstrakcja).
+
+#### Przypadki brzegowe — przeczytaj przed wdrożeniem na prod
+
+1. **Wszystkie istniejące materiały dostają `pending`.** To znaczy, że zamiatacz
+   `/api/cron/library-index` spróbuje wyodrębnić tekst z **każdego** pliku, który
+   już jest w bazie. Każda próba to wywołanie Gemini na pliku do 4 MB. Przy
+   `EXTRACTION_SWEEP_BATCH = 5` i crona raz dziennie to 5 plików/dobę — biblioteka
+   500 plików schodzi ~100 dni.
+   *Do decyzji przed prodem:* albo jednorazowy skrypt backfillu z własnym tempem
+   i limitem kosztu, albo świadome ustawienie starych wierszy na `unindexable`
+   (`UPDATE ... SET index_status='unindexable' WHERE created_at < '<data wdrożenia>'`)
+   i indeksowanie tylko nowych uploadów.
+
+2. **`failed` jest ponawiane w nieskończoność.** Trwale uszkodzony PDF wraca do
+   zamiatacza przy każdym przebiegu i za każdym razem kosztuje wywołanie modelu.
+   Brakuje licznika prób. *Zalecenie:* dodać `index_attempts integer NOT NULL
+   DEFAULT 0` i przestać ponawiać powyżej progu (np. 3) — najlepiej **razem z tą
+   migracją**, żeby nie robić drugiego ALTER-a na tej samej tabeli.
+
+3. **Podwójna ekstrakcja.** `after()` startuje przy uploadzie, a cron widzi ten
+   sam wiersz dopóki jest `pending`. Jeśli oba wejdą jednocześnie, plik zostanie
+   przeczytany dwa razy. Skutek jest nieszkodliwy (ten sam tekst, chunki wchodzą
+   idempotentnie przez `ON CONFLICT`), ale to podwójny koszt modelu. *Zalecenie:*
+   status `processing` ustawiany warunkowo (`UPDATE ... WHERE index_status IN
+   ('pending','failed')` z `RETURNING`) jako claim wiersza.
+
+4. **`extracted_text` bywa duże.** 4 MB PDF-a to rzędu 100–300 kB tekstu.
+   Postgres schowa to w TOAST, więc `SELECT` bez tej kolumny nie drożeje — ale
+   `getMaterialById` pobiera cały wiersz. Jeśli listing materiałów zacznie zwalniać,
+   pierwszy krok to wybierać kolumny jawnie zamiast `findFirst` bez projekcji.
+
+5. **Instant restore.** Każda ekstrakcja to jeden zapis dużej wartości do historii
+   (0,20 USD/GB-miesiąc na planie Launch). Jednorazowy backfill 500 plików × ~200 kB
+   to ~100 MB historii — pomijalne, ale warto wiedzieć, że backfill kosztuje
+   dwa razy: model plus historia zapisu.
+
+6. **Kolejność wobec M6 jest dowolna** — te kolumny nie zależą od `lib_chunks`,
+   a `lib_chunks` nie zależy od nich. Można wypchnąć razem.
+
+7. **Cron nie jest zarejestrowany w `vercel.json`.** Są tam dwa zadania, co jest
+   dokładnie limitem planu Hobby — trzecie wywróciłoby deploy. Na Pro dopisać
+   `{"path": "/api/cron/library-index", "schedule": "0 4 * * *"}`. Bez crona
+   ekstrakcja i tak działa (`after()` przy uploadzie); cron łapie tylko przypadki,
+   w których funkcja została ubita w trakcie.
+
+### M8+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 
