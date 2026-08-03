@@ -12,11 +12,12 @@ import {
   uploadFiles,
   getCorpus,
   listCorpusFiles,
-  queryFileSearchOnly,
+  generateGroundedAnswer,
   deleteCorpus,
   DEFAULT_EMBEDDING_MODEL,
 } from '@/server/vertex-rag'
 import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
+import { retrieveContext } from '@/server/retrieval/context'
 import { ensureAdmin } from '@/helpers/ensureAdmin'
 
 export async function createFileSearchStoreAction(
@@ -190,7 +191,7 @@ export async function testRagQueryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    await ensureAdmin()
+    const adminUserId = await ensureAdmin()
 
     const question = formData.get('question') as string
     const storeName = (formData.get('storeName') as string) || undefined
@@ -204,10 +205,19 @@ export async function testRagQueryAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    // Same path production uses, so a green admin probe means the tutor works.
-    const result = await queryFileSearchOnly(validationResult.data.question, {
-      ...(validationResult.data.storeName ? { storeName: validationResult.data.storeName } : {}),
+    // Same path production uses, so a green admin probe means the tutor works —
+    // now including the split between retrieval and generation. canonical_only:
+    // this probes the corpus, and mixing in an admin's own notes would make a
+    // green result mean less than it looks like it means.
+    //
+    // The store comes from rag_config rather than the submitted storeName, which
+    // was only ever the configured store echoed back by the form.
+    const context = await retrieveContext({
+      userId: adminUserId,
+      query: validationResult.data.question,
+      mode: 'canonical_only',
     })
+    const result = await generateGroundedAnswer(validationResult.data.question, context)
 
     return {
       ...toFormState('SUCCESS', result.answer),

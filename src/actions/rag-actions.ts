@@ -7,7 +7,10 @@ import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
-import { queryFileSearchOnly, retrieveCorpusContext, executeToolWithContent, answerFromMemory } from '@/server/vertex-rag'
+import { generateGroundedAnswer, executeToolWithContent, answerFromMemory } from '@/server/vertex-rag'
+import { retrieveContext } from '@/server/retrieval/context'
+import { formatContextChunks } from '@/helpers/formatContextChunks'
+import { getNoDataFoundMessage } from '@/helpers/rag-prompts'
 import {
   buildStaticPrefix,
   buildMemoryTail,
@@ -250,6 +253,9 @@ export async function askRagQuestion(
 
     let additionalContext = ''
     let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
+    // Ids behind the resolved @resources, so retrieval can load those exact
+    // sources rather than searching for something the student already named.
+    const attachmentSourceIds: string[] = []
 
     if (resources.length > 0) {
       await progressStep(
@@ -266,6 +272,10 @@ export async function askRagQuestion(
         )
 
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
+
+        attachmentSourceIds.push(
+          ...validResources.map(({ uri }) => uri.replace(/^(note|material):\/\//, ''))
+        )
 
         if (validResources.length > 0) {
           await progressStep(
@@ -351,14 +361,23 @@ export async function askRagQuestion(
         )
         // Raw chunks, not a generated summary of them: one Flash call cheaper and
         // the tool sees the source wording instead of a paraphrase.
-        const corpus = await retrieveCorpusContext(effectiveQuestion)
-        if (corpus) {
-          toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${corpus.text}\n\n`
+        //
+        // canonical_only: a generator builds study material, and material built
+        // partly on the student's own half-written note would be indistinguishable
+        // from material built on the curriculum. Widening this is a later,
+        // deliberate step — see the plan's staged rollout.
+        const corpus = await retrieveContext({
+          userId,
+          query: effectiveQuestion,
+          mode: 'canonical_only',
+        })
+        if (corpus.chunks.length > 0) {
+          toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${formatContextChunks(corpus.chunks)}\n\n`
           const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
           await progressStep(
             jobId, 'searching', 65,
             `Znaleziono informacje na temat: ${topic}`,
-            'RAG', `Retrieved ${corpus.chunkCount} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
+            'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
           )
         }
       } else {
@@ -453,11 +472,33 @@ export async function askRagQuestion(
     const memoryPrefix = await buildStaticPrefix(userId)
     const memoryTail = await buildMemoryTail(userId, cleanQuestion)
 
-    // Retrieval sees the question alone. Memory and attached resources ride in
-    // the generation prompt — putting them in front of the subject is what made
-    // corpus terms come back as "no information".
-    const result = await queryFileSearchOnly(cleanQuestion, {
-      ...(searchTopic ? { searchQuery: searchTopic } : {}),
+    const hasAttachment = attachmentSourceIds.length > 0 || pdfFiles.length > 0
+
+    // An attachment is the student's explicit pick, so it is the primary source
+    // and the corpus is not consulted. Without one, the tutor reads the
+    // curriculum and — capped, floored and labelled — the student's own library.
+    const context = await retrieveContext({
+      userId,
+      // Retrieval sees the subject alone. Memory and attachments ride in the
+      // generation prompt; putting them in front of the subject is what made
+      // corpus terms come back as "no information".
+      query: searchTopic || cleanQuestion,
+      mode: hasAttachment ? 'explicit_resource' : 'canonical_with_personal',
+      ...(attachmentSourceIds.length ? { attachmentSourceIds } : {}),
+    })
+
+    // Nothing from the curriculum and nothing the student attached: answering
+    // anyway would mean writing curriculum from the model's own knowledge, which
+    // is the failure the source rule exists to prevent.
+    if (!context.hasCanonical && context.chunks.length === 0) {
+      if (jobId) await completeJob(jobId)
+      return {
+        ...toFormState('SUCCESS', 'Brak materiałów'),
+        values: { answer: getNoDataFoundMessage(), sources: [] },
+      }
+    }
+
+    const result = await generateGroundedAnswer(cleanQuestion, context, {
       ...(additionalContext ? { userContext: additionalContext } : {}),
       ...(memoryTail ? { memoryTail } : {}),
       ...(memoryPrefix ? { memoryPrefix } : {}),
@@ -544,14 +585,16 @@ export async function generateLectureAction(
       'RAG', 'Querying knowledge base for lecture content'
     )
 
-    const corpus = await retrieveCorpusContext(topic)
+    // canonical_only: a lecture is study material, so it is built on the
+    // curriculum alone.
+    const corpus = await retrieveContext({ userId, query: topic, mode: 'canonical_only' })
     let enrichedContent = planContent
-    if (corpus) {
-      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${corpus.text}`
+    if (corpus.chunks.length > 0) {
+      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${formatContextChunks(corpus.chunks)}`
       await progressStep(
         jobId, 'searching', 55,
         `Znaleziono materiały na temat: ${topic}`,
-        'RAG', `Retrieved ${corpus.chunkCount} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
+        'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
       )
     }
 

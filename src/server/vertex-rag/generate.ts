@@ -1,11 +1,11 @@
 import 'server-only'
 import { FunctionCallingConfigMode } from '@google/genai'
-import { SYSTEM_PROMPT, buildGroundedPrompt, enhanceUserQuery } from '@/helpers/rag-prompts'
+import { SYSTEM_PROMPT, buildGroundedPrompt, getNoDataFoundMessage } from '@/helpers/rag-prompts'
+import { formatContextChunks } from '@/helpers/formatContextChunks'
+import type { RetrievedContext } from '@/types/retrievalTypes'
 import { stripContentParameter } from '@/helpers/stripContentParameter'
-import { getRagConfig } from '@/server/rag-queries'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI, logUsage } from './client'
-import { retrieveCorpusContext } from './context'
 import { parseGoogleApiError } from './errors'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
@@ -37,77 +37,61 @@ export async function answerFromMemory(
   return { answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.' }
 }
 
-export interface CorpusAnswerOptions {
-  // The subject alone, when the question is prose the user reads rather than a
-  // search phrase (a mind-map node sends its label + breadcrumb here).
-  searchQuery?: string | undefined
-  storeName?: string | undefined
+export interface GroundedAnswerOptions {
   userContext?: string | undefined
   memoryTail?: string | undefined
   memoryPrefix?: string | undefined
 }
 
 /**
- * Answers from the corpus: retrieve with the bare subject, then generate with
- * the retrieved chunks in the prompt. Falls back to managed grounding only when
- * retrieval comes back empty.
+ * Writes an answer from context that has already been retrieved.
+ *
+ * Generation only — retrieval belongs to retrieveContext, which is the single
+ * place that decides what a feature may read. Splitting them is what stops a
+ * second retrieval pipeline growing back inside the generator.
+ *
+ * There is deliberately no managed-grounding fallback. The previous version,
+ * when disciplined retrieval returned nothing, handed the full prose question
+ * plus formatting instructions to the grounding tool — the most diluted query
+ * possible, at exactly the moment the precise one had already failed. Nothing
+ * retrieved now means nothing to answer from, and saying so is the honest
+ * outcome.
  */
-export async function queryFileSearchOnly(
+export async function generateGroundedAnswer(
   question: string,
-  options: CorpusAnswerOptions = {}
-): Promise<{ answer: string; sources?: string[] }> {
+  context: RetrievedContext,
+  options: GroundedAnswerOptions = {}
+): Promise<{ answer: string; sources: string[] }> {
   try {
+    if (context.chunks.length === 0) {
+      return { answer: getNoDataFoundMessage(), sources: [] }
+    }
+
     const ai = getGoogleAI()
-
-    let fileSearchStoreName = options.storeName
-
-    if (!fileSearchStoreName) {
-      const config = await getRagConfig()
-      fileSearchStoreName = config?.storeName
-    }
-
-    if (!fileSearchStoreName) {
-      throw new Error('File Search Store nie jest skonfigurowany')
-    }
-
-    const corpus = await retrieveCorpusContext(options.searchQuery || question, {
-      corpusName: fileSearchStoreName,
-    })
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: corpus
-        ? buildGroundedPrompt({
-            question,
-            corpusText: corpus.text,
-            userContext: options.userContext,
-            memoryTail: options.memoryTail,
-          })
-        : enhanceUserQuery(question),
+      contents: buildGroundedPrompt({
+        question,
+        contextText: formatContextChunks(context.chunks),
+        userContext: options.userContext,
+        memoryTail: options.memoryTail,
+      }),
       config: {
         systemInstruction: composeSystemInstruction(options.memoryPrefix),
-        // No retrieval tool once the context is inline — the corpus was already
-        // searched with the subject alone, which is the whole point.
-        ...(corpus
-          ? {}
-          : { tools: [{ retrieval: { vertexRagStore: { ragCorpora: [fileSearchStoreName] } } }] }),
-        thinkingConfig: NO_THINKING
-      }
+        thinkingConfig: NO_THINKING,
+      },
     })
-    logUsage(corpus ? 'queryFileSearchOnly:retrieved' : 'queryFileSearchOnly:grounded', response)
+    logUsage('generateGroundedAnswer', response)
 
     const answer = response.text || ''
-
     if (!answer) {
       throw new Error('Empty response from Gemini')
     }
 
-    return {
-      answer,
-      sources: corpus?.sources ?? []
-    }
+    return { answer, sources: context.sources }
   } catch (error) {
-    console.error('Error in RAG-only query:', error)
+    console.error('Error generating grounded answer:', error)
     throw parseGoogleApiError(error)
   }
 }

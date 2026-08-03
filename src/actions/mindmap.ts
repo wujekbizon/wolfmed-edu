@@ -48,7 +48,7 @@ export async function generateMindMapAction(formState: FormState, formData: Form
   }
 
   try {
-    const { root, topicType } = await generateTree(parsed.data.topic)
+    const { root, topicType } = await generateTree(userId, parsed.data.topic)
 
     // Never trust model output even after normalization.
     const validated = MindMapNodeSchema.safeParse(root)

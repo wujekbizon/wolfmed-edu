@@ -7,33 +7,37 @@ import { TOPIC_TYPES } from "@/types/mindmapTypes"
 // Shares the RAG feature's Vertex AI client (single-sourced project/location +
 // ADC-or-service-account auth that also works on Vercel).
 import { getGoogleAI } from "@/server/vertex-rag/client"
-import { retrieveCorpusContext } from "@/server/vertex-rag/context"
 import { RAG_TOP_K_BROAD } from "@/constants/rag"
-import { queryFileSearchOnly } from "@/server/vertex-rag/generate"
+import { retrieveContext } from "@/server/retrieval/context"
+import { formatContextChunks } from "@/helpers/formatContextChunks"
 
 const MODEL = process.env.MINDMAP_MODEL || "gemini-2.5-flash"
+
 const MAX_ATTEMPTS = 3
 // Thinking off: a corpus-grounded map is summarising/structuring a source, not
 // reasoning from scratch. If map quality drops, give it a small budget instead.
 const NO_THINKING = { thinkingBudget: 0 } as const
 
 // Grounds the map in the knowledge base so its leaves correspond to real corpus
-// content (and are therefore answerable by the tutor, which queries the same
-// corpus). Primary path is retrieveCorpusContext (cheap, raw chunks); on endpoint
-// error it falls back to the proven managed-grounding query. Returns null when
-// the topic genuinely isn't in the corpus.
-async function getCorpusContext(topic: string): Promise<string | null> {
-  try {
-    const corpus = await retrieveCorpusContext(topic, { topK: RAG_TOP_K_BROAD })
-    if (!corpus) return null
-    return corpus.text
-  } catch (error) {
-    console.error("[mindmap] retrieveCorpusContext failed, falling back to grounded query:", error)
-    const result = await queryFileSearchOnly(`Przedstaw najważniejsze informacje na temat: ${topic}`)
-    const answer = result.answer?.trim()
-    if (!answer || /nie mam tej informacji|nie znalazłem/i.test(answer)) return null
-    return answer
-  }
+// content, and are therefore answerable by the tutor searching the same corpus.
+//
+// canonical_only: a map is a picture of the curriculum's structure. Folding a
+// student's own notes into it would draw their gaps as though they were the
+// subject's shape.
+//
+// Returns null when the topic genuinely isn't in the corpus. The previous
+// fallback re-asked with a prose sentence wrapped around the topic — a more
+// diluted query than the one that had just failed, so it mostly produced an
+// answer about having no information, which was then parsed back out by regex.
+async function getCorpusContext(userId: string, topic: string): Promise<string | null> {
+  const corpus = await retrieveContext({
+    userId,
+    query: topic,
+    mode: 'canonical_only',
+    limit: RAG_TOP_K_BROAD,
+  })
+
+  return corpus.chunks.length > 0 ? formatContextChunks(corpus.chunks) : null
 }
 
 function stripFences(text: string): string {
@@ -60,12 +64,12 @@ export interface GeneratedMindMap {
  * repaired rather than rejected; on genuine failure it retries with the
  * validation errors appended, up to MAX_ATTEMPTS. Throws on total failure.
  */
-export async function generateTree(topic: string): Promise<GeneratedMindMap> {
+export async function generateTree(userId: string, topic: string): Promise<GeneratedMindMap> {
   const ai = getGoogleAI()
   const systemPrompt = buildSystemPrompt()
 
   // Ground the map in the corpus so it stays consistent with the tutor.
-  const context = await getCorpusContext(topic)
+  const context = await getCorpusContext(userId, topic)
   if (!context) {
     throw new Error("Ten temat nie znajduje się jeszcze w bazie wiedzy. Dodaj materiały do bazy i spróbuj ponownie.")
   }

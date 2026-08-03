@@ -61,26 +61,32 @@ WAŻNE: Odpowiedź MUSI być po polsku.`
 
 interface GroundedPromptParts {
   question: string
-  corpusText?: string | undefined
+  // Retrieved chunks, already labelled by origin. See formatContextChunks.
+  contextText?: string | undefined
   userContext?: string | undefined
   memoryTail?: string | undefined
 }
 
-// Retrieved material first, the question last — closest to the answer. Nothing
-// here reaches retrieval: the corpus was already searched with the bare subject.
+// The student's own explicit pick comes first, then retrieved material, then the
+// question — last, closest to the answer. Order matches the hierarchy the system
+// instruction states; the previous version put the knowledge base above a source
+// the student had deliberately chosen, contradicting it.
+//
+// Nothing here reaches retrieval: the search already happened, with the bare
+// subject, which is the whole point.
 export function buildGroundedPrompt({
   question,
-  corpusText,
+  contextText,
   userContext,
   memoryTail,
 }: GroundedPromptParts): string {
   const sections: string[] = []
 
-  if (corpusText) {
-    sections.push(`=== DOKUMENTACJA (baza wiedzy) ===\n${corpusText}`)
-  }
   if (userContext) {
     sections.push(`=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${userContext}`)
+  }
+  if (contextText) {
+    sections.push(`=== MATERIAŁY ===\n${contextText}`)
   }
   if (memoryTail) {
     sections.push(`=== KONTEKST UCZNIA ===\n${memoryTail}`)
@@ -88,7 +94,7 @@ export function buildGroundedPrompt({
 
   sections.push(`PYTANIE UŻYTKOWNIKA:\n${question}`)
   sections.push(
-    'Odpowiedz po polsku na podstawie powyższych materiałów. Cytuj źródłowy dokument gdy to możliwe. Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
+    'Odpowiedz po polsku na podstawie powyższych materiałów. Podaj źródło, gdy to możliwe, i respektuj oznaczenia fragmentów. Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
   )
 
   return sections.join('\n\n')

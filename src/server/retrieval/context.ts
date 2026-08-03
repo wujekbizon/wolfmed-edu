@@ -9,7 +9,7 @@ import {
 } from '@/server/library/config'
 import { retrieveLibrary, type LibraryHit } from '@/server/library/retrieve'
 import { getAttachedSourceText } from '@/server/library/attached-source'
-import { retrieveCorpusContext } from '@/server/vertex-rag/context'
+import { retrieveContexts } from '@/server/vertex-rag/retrieve'
 import { reciprocalRankFusion } from '@/helpers/reciprocalRankFusion'
 import type {
   ContextChunk,
@@ -25,21 +25,19 @@ const libraryChunk = (hit: LibraryHit): ContextChunk => ({
   label: hit.title,
 })
 
-async function readCorpus(query: string): Promise<ContextChunk[]> {
+async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> {
   try {
-    const corpus = await retrieveCorpusContext(query)
-    if (!corpus) return []
+    // The raw contexts, not retrieveCorpusContext's joined block. Fusion needs
+    // each chunk to hold its own rank, and each one carries its own source
+    // document — collapsing them to one string loses both.
+    const contexts = await retrieveContexts(query, { topK })
 
-    // retrieveCorpusContext joins its chunks into one numbered block. Split it
-    // back apart so each chunk takes its own rank in the fusion.
-    return corpus.text
-      .split(/\n\n(?=\[\d+\]\s)/)
-      .map((part) => part.replace(/^\[\d+\]\s*/, '').trim())
-      .filter(Boolean)
-      .map((text) => ({
-        text,
+    return contexts
+      .filter((context) => context.text.trim().length > 0)
+      .map((context) => ({
+        text: context.text,
         origin: 'corpus' as const,
-        label: corpus.sources[0] ?? 'Baza wiedzy',
+        label: context.sourceDisplayName ?? 'Baza wiedzy',
       }))
   } catch (error) {
     // One of two sources. Losing it should degrade the answer, not fail a
@@ -87,7 +85,7 @@ export async function retrieveContext({
   const wantsPersonal = mode === 'canonical_with_personal' && ENABLE_IMPLICIT_PERSONAL_RETRIEVAL
 
   const [corpusChunks, personalChunks] = await Promise.all([
-    readCorpus(subject),
+    readCorpus(subject, RAG_TOP_K),
     wantsPersonal ? readPersonal(userId, subject) : Promise.resolve([]),
   ])
 
