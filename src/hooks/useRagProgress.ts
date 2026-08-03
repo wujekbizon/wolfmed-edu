@@ -7,44 +7,29 @@
  * progress updates during RAG queries. Manages connection lifecycle and
  * separates user-friendly logs from technical logs.
  *
+ * State is per-hook-instance, so concurrent generations in different cells do
+ * not overwrite one another's progress.
+ *
  * Usage:
  *   const { startListening, progress, userLogs } = useRagProgress()
- *   // Call startListening() when submitting a RAG query
- *   // Progress updates will stream in real-time
+ *   // Send the id startListening() returns with the request
  */
 
 import { useCallback, useRef, useEffect, useMemo } from 'react'
 import { v4 as uuidv4 } from 'uuid'
-import { useProgressStore } from '@/store/useProgressStore'
+import { useProgressState } from './useProgressState'
 import type { SSEProgressData, SSELogData, UseRagProgressReturn } from '@/types/progressTypes'
 
 export function useRagProgress(): UseRagProgressReturn {
-  const {
-    jobId,
-    stage,
-    message,
-    progress,
-    tool,
-    logs,
-    connectionState,
-    isComplete,
-    error,
-    setConnectionState,
-    updateProgress,
-    addLog,
-    setComplete,
-    setError,
-    setJobId,
-    reset: resetStore,
-  } = useProgressStore()
+  const [state, dispatch] = useProgressState()
 
   const userLogs = useMemo(
-    () => logs.filter((log) => log.audience === 'user' || !log.audience),
-    [logs]
+    () => state.logs.filter((log) => log.audience === 'user' || !log.audience),
+    [state.logs]
   )
   const technicalLogs = useMemo(
-    () => logs.filter((log) => log.audience === 'technical'),
-    [logs]
+    () => state.logs.filter((log) => log.audience === 'technical'),
+    [state.logs]
   )
 
   const eventSourceRef = useRef<EventSource | null>(null)
@@ -58,27 +43,18 @@ export function useRagProgress(): UseRagProgressReturn {
     // completed, so reusing the id meant every run after the first opened a
     // stream that closed immediately and rendered no progress.
     const nextJobId = uuidv4()
-
-    resetStore()
-    setJobId(nextJobId)
-    setConnectionState('connecting')
+    dispatch({ type: 'start', jobId: nextJobId })
 
     const eventSource = new EventSource(`/api/rag/progress?jobId=${nextJobId}`)
     eventSourceRef.current = eventSource
 
     eventSource.onopen = () => {
-      setConnectionState('open')
+      dispatch({ type: 'connection', connectionState: 'open' })
     }
 
     eventSource.addEventListener('progress', (e) => {
       try {
-        const data: SSEProgressData = JSON.parse(e.data)
-        updateProgress({
-          stage: data.stage,
-          message: data.message,
-          progress: data.progress,
-          ...(data.tool && { tool: data.tool }),
-        })
+        dispatch({ type: 'progress', data: JSON.parse(e.data) as SSEProgressData })
       } catch {
         // Ignore parse errors
       }
@@ -86,20 +62,14 @@ export function useRagProgress(): UseRagProgressReturn {
 
     eventSource.addEventListener('log', (e) => {
       try {
-        const data: SSELogData = JSON.parse(e.data)
-        addLog({
-          level: data.level,
-          message: data.message,
-          timestamp: data.timestamp,
-          ...(data.audience && { audience: data.audience }),
-        })
+        dispatch({ type: 'log', data: JSON.parse(e.data) as SSELogData })
       } catch {
         // Ignore parse errors
       }
     })
 
     eventSource.addEventListener('complete', () => {
-      setComplete()
+      dispatch({ type: 'complete' })
       eventSource.close()
     })
 
@@ -108,7 +78,7 @@ export function useRagProgress(): UseRagProgressReturn {
       if (messageEvent.data) {
         try {
           const data = JSON.parse(messageEvent.data)
-          setError(data.message || 'Wystąpił błąd')
+          dispatch({ type: 'error', message: data.message || 'Wystąpił błąd' })
           eventSource.close()
         } catch {
           // Not a valid JSON error event
@@ -118,27 +88,27 @@ export function useRagProgress(): UseRagProgressReturn {
 
     eventSource.onerror = () => {
       if (eventSource.readyState === EventSource.CLOSED) {
-        setConnectionState('closed')
+        dispatch({ type: 'connection', connectionState: 'closed' })
       } else if (eventSource.readyState === EventSource.CONNECTING) {
-        setConnectionState('connecting')
+        dispatch({ type: 'connection', connectionState: 'connecting' })
       }
     }
 
     return nextJobId
-  }, [setConnectionState, resetStore, setJobId, updateProgress, addLog, setComplete, setError])
+  }, [dispatch])
 
   const stopListening = useCallback(() => {
     if (eventSourceRef.current) {
       eventSourceRef.current.close()
       eventSourceRef.current = null
     }
-    setConnectionState('closed')
-  }, [setConnectionState])
+    dispatch({ type: 'connection', connectionState: 'closed' })
+  }, [dispatch])
 
   const reset = useCallback(() => {
     stopListening()
-    resetStore()
-  }, [stopListening, resetStore])
+    dispatch({ type: 'reset' })
+  }, [stopListening, dispatch])
 
   useEffect(() => {
     return () => {
@@ -149,16 +119,16 @@ export function useRagProgress(): UseRagProgressReturn {
   }, [])
 
   return {
-    jobId,
-    stage,
-    message,
-    progress,
-    tool,
+    jobId: state.jobId,
+    stage: state.stage,
+    message: state.message,
+    progress: state.progress,
+    tool: state.tool,
     userLogs,
     technicalLogs,
-    connectionState,
-    isComplete,
-    error,
+    connectionState: state.connectionState,
+    isComplete: state.isComplete,
+    error: state.error,
     startListening,
     stopListening,
     reset,
