@@ -4,6 +4,7 @@ import { db } from '@/server/db/index'
 import { materials } from '@/server/db/schema'
 import { extractDocumentText, isExtractable } from './extract'
 import { indexSource, removeSourceChunks } from './index-source'
+import { embedPendingChunks } from './embed-pending'
 import { MIN_EXTRACTED_CHARS, type MaterialIndexStatus } from './config'
 
 async function setStatus(
@@ -65,6 +66,10 @@ export async function syncMaterialChunks(userId: string, materialId: string): Pr
       title: material.title,
       text,
     })
+
+    // Already off the request path, so embed now rather than leaving the whole
+    // document to a nightly sweep. The cron remains the backstop.
+    await embedPendingChunks({ userId, sourceId: materialId })
   } catch (error) {
     console.error('[library] Failed to index material', materialId, error)
     await setStatus(materialId, 'failed').catch(() => {})

@@ -3,6 +3,7 @@ import { materials } from '@/server/db/schema'
 import { inArray, asc } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { syncMaterialChunks } from '@/server/library/sync-material'
+import { embedPendingChunks } from '@/server/library/embed-pending'
 import { EXTRACTION_SWEEP_BATCH } from '@/server/library/config'
 
 // Backstop, not the main path. Extraction normally runs straight after upload
@@ -34,9 +35,15 @@ export async function GET(request: Request) {
       await syncMaterialChunks(material.userId, material.id)
     }
 
+    // Chunks whose embedding never landed — an after() call torn down, or a
+    // transient failure. Until this runs they are still findable by trigram, so
+    // the sweep improves ranking rather than restoring visibility.
+    const { embedded } = await embedPendingChunks()
+
     return NextResponse.json({
       success: true,
       processed: stalled.length,
+      embedded,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {

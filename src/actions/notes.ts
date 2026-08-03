@@ -11,7 +11,9 @@ import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { after } from "next/server"
 import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
+import { embedPendingChunks } from "@/server/library/embed-pending"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -68,12 +70,17 @@ export const createNoteAction = async (
       .returning()
 
     if (created) {
+      // Chunk rows are written synchronously — pure Postgres, transactional with
+      // the note. Embedding them is a model call per chunk, so it happens after
+      // the response; the trigram index keeps the note findable meanwhile.
+      const noteId = created.id
       await syncNoteChunks({
         userId,
-        noteId: created.id,
+        noteId,
         title: created.title,
         content: contentResult.content,
       })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
     }
   } catch (error) {
     console.error('Database error creating note:', error)
@@ -174,6 +181,7 @@ export const updateNoteContentAction = async (
         title: updated.title,
         content: updated.content,
       })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
     }
   } catch (error) {
     return {

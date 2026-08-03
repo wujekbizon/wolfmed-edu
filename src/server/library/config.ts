@@ -54,3 +54,29 @@ export const MIN_EXTRACTED_CHARS = 40
 // How many stalled materials one backstop run picks up. Bounded so a run cannot
 // exceed the function timeout.
 export const EXTRACTION_SWEEP_BATCH = 5
+
+// ── Embedding ───────────────────────────────────────────────────────────────
+// Chunks are written with a null embedding and filled afterwards. How many one
+// pass handles — bounded so neither an after() call nor a cron run overruns.
+export const EMBED_SWEEP_BATCH = 40
+
+// ── Retrieval ───────────────────────────────────────────────────────────────
+// Lexical is weighted above vector, as in the memory layer: trigram similarity
+// catches the inflected forms and near-spellings of Polish medical vocabulary
+// that a 768-dimension truncated embedding blurs.
+export const LIB_FUSION_WEIGHTS = { vector: 0.4, lexical: 0.6 } as const
+
+// TUNE. Below this a hit is noise; dropping it beats padding the context.
+export const LIB_SCORE_FLOOR = 0.4
+
+// How many library candidates to gather before fusing with the corpus. Wider
+// than the final slot count so rank fusion has something to choose between.
+export const LIB_TOP_K = 12
+
+// TUNE. Reciprocal rank fusion constant. The conventional 60 is calibrated for
+// lists of hundreds; against a dozen it flattens every rank into the same score.
+export const RRF_K = 10
+
+// TUNE. At most this share of the final context may come from the student's own
+// library. The curriculum is the authority; the library is context.
+export const LIB_SLOT_SHARE = 1 / 3
