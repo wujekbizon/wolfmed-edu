@@ -270,7 +270,13 @@ money for no change in content.
 
 Nothing reads these chunks yet. Reversible by dropping one table.
 
-### Step 3 — Materials: extract at upload *(built)*
+### Step 3 — Materials: extract at upload *(built and verified)*
+
+Measured on a real `@material` request after this shipped: 5753 prompt tokens,
+**all of them `modality: TEXT`** — no document tokens, so no PDF is being sent —
+of which 5733 hit implicit context caching, and 6 output tokens on the dispatch
+call. Base64 could never cache, because every request re-encoded the file.
+
 
 Add `extractedText` to `materials`, plus a status (`pending` / `indexed` /
 `unindexable` — the uploader also accepts MP4 and JSON, which yield no text).
@@ -310,9 +316,12 @@ safe.
 2. **The corpus embedding dimensionality.** One `getCorpus(storeName)` call. §3.2
    holds for any mismatch, but record the real number in `rag_config`, which
    already has an `embeddingModel` column waiting beside it.
-3. **Gemini extraction on one real scanned Polish skrypt.** The whole materials
-   case rests on this working acceptably. One file settles it, and it should be
-   settled before Step 3, not during.
+3. ~~**Gemini extraction on one real scanned Polish skrypt.**~~ **Settled — it
+   works.** An Adobe Scan of a signed form produced 11 clean chunks: Polish
+   diacritics intact, checkbox states (`☑`), legal citations verbatim, email
+   addresses and a URL read off the scan, and form fields kept next to their
+   labels. A text-layer parser returns nothing at all for that file. This was the
+   assumption the whole materials case rested on.
 
 ---
 
