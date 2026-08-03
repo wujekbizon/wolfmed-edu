@@ -165,15 +165,27 @@ timeouts and a lexical fallback. This decision adds no infrastructure.
 
 ### 3.2 Corpus and library results merge by rank, not by score
 
-`createCorpus` sets `gemini-embedding-001` but never sets an output
-dimensionality, so the corpus embeds at the model's default. The library
-truncates to 768. **Different vector spaces — the cosine distances are not on a
-comparable scale**, so `RAG_VECTOR_DISTANCE_THRESHOLD = 0.5` means nothing on the
-library side and `FUSED_SCORE_FLOOR = 0.4` means nothing on the corpus side.
+Checked against the live corpus (resource `1112960854006956032`): it runs on
+**`text-multilingual-embedding-002` at 768 dimensions**. The library uses
+`gemini-embedding-001`, also truncated to 768.
+
+So the dimensions match — and it changes nothing. **Different models produce
+different vector spaces**, and matching lengths only mean the arrays are the same
+size, not that the geometry is shared. A cosine distance of 0.3 in one has no
+relationship to 0.3 in the other, which is why
+`RAG_VECTOR_DISTANCE_THRESHOLD = 0.5` means nothing on the library side and
+`FUSED_SCORE_FLOOR = 0.4` means nothing on the corpus side.
 
 Sorting both lists by score would let whichever space produces tighter distances
 dominate every answer, and it would look like a relevance result rather than a
 units bug.
+
+Worth knowing separately: `corpus.ts` declares `DEFAULT_EMBEDDING_MODEL =
+'gemini-embedding-001'` and carries a comment about the config silently reverting
+to a fallback model. That is what happened — the corpus predates the fixed
+config. `text-multilingual-embedding-002` handles Polish properly, so retrieval
+quality is not at risk, but the code states an intention rather than reality, and
+recreating the corpus would change which model it uses.
 
 So: reciprocal rank fusion. Each chunk scores `1 / (k + rank)` summed across the
 lists it appears in. Start `k` around 10 and tune — the conventional 60 is
@@ -316,10 +328,11 @@ safe.
    once-per-day floor is also why extraction runs in `after()` rather than on the
    cron: a daily sweep would leave a freshly uploaded PDF unreadable for up to
    24 hours (§3.3).
-2. **The corpus embedding dimensionality.** Verification, not a decision — the
-   architecture already assumes the spaces differ and fuses by rank (§3.2), which
-   is correct either way. Worth one `getCorpus(storeName)` call to record the real
-   number in `rag_config`, beside the `embeddingModel` column already there.
+2. ~~**The corpus embedding dimensionality.**~~ **Checked.** Both sides are 768,
+   but the corpus runs `text-multilingual-embedding-002` while the library runs
+   `gemini-embedding-001` — different models, so different spaces, so rank fusion
+   stands (§3.2). The remaining question is whether `rag_config.embeddingModel`
+   records the model actually in use or the one `corpus.ts` intended.
 3. ~~**Gemini extraction on one real scanned Polish skrypt.**~~ **Settled — it
    works.** An Adobe Scan of a signed form produced 11 clean chunks: Polish
    diacritics intact, checkbox states (`☑`), legal citations verbatim, email
