@@ -217,6 +217,18 @@ ${content}
       const args = { ...call.args, content: toolContent, ...overrideArgs }
       const result = await executeToolLocally(call.name, args)
 
+      // A tool that produces no cell produced prose, and that prose IS the
+      // answer — /podsumuj generated a summary that useRagToolResults then
+      // dropped, because it only inserts results carrying a cellType. Returning
+      // it directly also skips the confirmation call, which has nothing left to
+      // confirm.
+      if (!result.cellType) {
+        return {
+          answer: result.content,
+          toolResults: { [call.name]: result } as Record<string, ToolResult>,
+        }
+      }
+
       const finalPrompt = `Tool ${call.name} executed successfully.
 
 Result: ${JSON.stringify(result, null, 2)}
