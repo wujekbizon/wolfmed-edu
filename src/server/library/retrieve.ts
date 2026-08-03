@@ -78,6 +78,9 @@ async function ilikeSearch(userId: string, query: string, limit: number, sourceI
     )
     .limit(limit)
 
+  // Deliberately below the note floor and above the material floor: a literal
+  // substring match is weak evidence, good enough for a document but not enough
+  // to promote a note over curriculum.
   return rows.map((r) => ({ ...r, score: 0.45 }))
 }
 
@@ -104,7 +107,7 @@ function fuse(vec: Scored[], lex: Scored[], topK: number): LibraryHit[] {
           ? LIB_FUSION_WEIGHTS.vector * v + LIB_FUSION_WEIGHTS.lexical * l
           : (v ?? l ?? 0),
     }))
-    .filter((h) => h.score >= LIB_SCORE_FLOOR)
+    .filter((h) => h.score >= LIB_SCORE_FLOOR[h.sourceType])
     .sort((a, b) => b.score - a.score)
     .slice(0, topK)
 }
@@ -125,6 +128,11 @@ export async function retrieveLibrary(
   const { sourceId } = options
   if (!query.trim()) return []
 
+  // Every path exits through fuse(), which is where the source-specific floor
+  // lives. Returning a tier's rows directly would let a note in at the material
+  // threshold.
+  const lastResort = async () => fuse([], await ilikeSearch(userId, query, topK, sourceId), topK)
+
   try {
     const queryVec = await embedQuery(query)
     const [vec, lex] = await Promise.all([
@@ -132,13 +140,10 @@ export async function retrieveLibrary(
       trgmSearch(userId, query, topK * 2, sourceId),
     ])
     const hits = fuse(vec, lex, topK)
-    if (hits.length > 0) return hits
-    return ilikeSearch(userId, query, topK, sourceId) as Promise<LibraryHit[]>
+    return hits.length > 0 ? hits : lastResort()
   } catch (error) {
     if (!(error instanceof EmbeddingUnavailable)) throw error
-    const lex = await trgmSearch(userId, query, topK, sourceId)
-    const hits = fuse([], lex, topK)
-    if (hits.length > 0) return hits
-    return ilikeSearch(userId, query, topK, sourceId) as Promise<LibraryHit[]>
+    const hits = fuse([], await trgmSearch(userId, query, topK, sourceId), topK)
+    return hits.length > 0 ? hits : lastResort()
   }
 }

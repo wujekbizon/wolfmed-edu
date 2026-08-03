@@ -66,8 +66,11 @@ export const EMBED_SWEEP_BATCH = 40
 // that a 768-dimension truncated embedding blurs.
 export const LIB_FUSION_WEIGHTS = { vector: 0.4, lexical: 0.6 } as const
 
-// TUNE. Below this a hit is noise; dropping it beats padding the context.
-export const LIB_SCORE_FLOOR = 0.4
+// TUNE. Source-specific, because the sources are not equally trustworthy. An
+// uploaded skrypt is a finished document someone else wrote and edited; a note
+// is whatever the student typed, possibly mid-thought. The note has to clear a
+// higher bar to occupy a slot the curriculum could have used.
+export const LIB_SCORE_FLOOR = { material: 0.4, note: 0.55 } as const
 
 // How many library candidates to gather before fusing with the corpus. Wider
 // than the final slot count so rank fusion has something to choose between.
@@ -77,6 +80,19 @@ export const LIB_TOP_K = 12
 // lists of hundreds; against a dozen it flattens every rank into the same score.
 export const RRF_K = 10
 
-// TUNE. At most this share of the final context may come from the student's own
-// library. The curriculum is the authority; the library is context.
+// TUNE. A ceiling, never a target. Personal chunks fill these slots only when
+// they clear their floor — a thin corpus yields fewer chunks rather than a
+// context padded out with notes.
 export const LIB_SLOT_SHARE = 1 / 3
+
+// The curriculum's guaranteed allocation, taken before fusion runs. Without it,
+// rank fusion alone lets a personal chunk sitting at rank 0 of a short list
+// outscore curriculum at rank 4 of a long one, so the ceiling above fills every
+// single time and stops being a ceiling.
+export const CANONICAL_RESERVED_SLOTS = 8
+
+// Kill switch for implicit personal retrieval. Flipping this turns
+// canonical_with_personal into canonical_only everywhere. It deliberately does
+// NOT touch explicit_resource: the student named that source, and honouring an
+// @attachment is not the behaviour anyone would want to switch off in a hurry.
+export const ENABLE_IMPLICIT_PERSONAL_RETRIEVAL = true
