@@ -139,7 +139,31 @@ Kolejność na produkcji:
 - Brak skryptów. Atrybucja czasu wyzwań do zagadnień zaczyna działać od
   pierwszego deploya kodu (wpisy wyzwań niosą procedureId od zawsze).
 
-### M6+ — (dopisuj kolejne zmiany tutaj)
+### M6 — Biblioteka osobista: tabela lib_chunks
+*Status: do wypchnięcia na dev.*
+
+- Nowa tabela `wolfmed_lib_chunks` — fragmenty notatek i materiałów ucznia:
+  `chunk_id` (PK), `user_id` (FK → `wolfmed_users.userId`, `ON DELETE CASCADE`),
+  `source_type`, `source_id`, `title`, `position`, `content`, `content_hash`,
+  `embedding vector(768) NULL`, `created_at`.
+- Indeksy: `idx_lib_chunk_scope` (user_id, source_type), `idx_lib_chunk_source`
+  (source_id, position), `uq_lib_chunk_position` UNIQUE (source_id, position),
+  `idx_lib_chunk_trgm` GIN (pg_trgm), `idx_lib_chunk_vec` HNSW (vector_cosine_ops)
+  oraz częściowy `idx_lib_chunk_pending` na `embedding IS NULL`.
+- **Rozszerzenia:** wymaga `vector` i `pg_trgm` — te same, których używa warstwa
+  pamięci, więc na bazach z wdrożonym `mem_*` nie trzeba nic dodawać. Na czystej
+  bazie: `pnpm db:memory:extensions` przed pushem.
+- Produkcja: czysto addytywne, tabela startuje pusta, brak backfillu. Istniejące
+  notatki dopiszą swoje fragmenty przy pierwszej edycji; jednorazowy backfill dla
+  starych notatek dopiszemy razem z zamiataczem embeddingów (następny krok).
+- `embedding` jest celowo NULL-owalne: wiersze powstają synchronicznie razem
+  z notatką, wektory dolicza osobny przebieg. Fragment bez wektora jest niewidoczny
+  dla wyszukiwania wektorowego, ale w pełni widoczny dla indeksu trigramowego.
+- Kasowanie: FK kasuje kaskadowo przy usunięciu konta, a `eraseUserMemory`
+  dodatkowo czyści `lib_chunks` w tej samej transakcji (RODO).
+- Brak kroku „contract" — nic nie jest usuwane.
+
+### M7+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

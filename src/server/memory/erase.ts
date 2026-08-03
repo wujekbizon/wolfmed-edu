@@ -8,6 +8,7 @@ import {
   memTraces,
   memDeletionEvents,
 } from '@/server/db/memory-schema'
+import { libChunks } from '@/server/db/library-schema'
 
 // GDPR/RODO erasure of a student's memory, in one transaction. Facts and episodes
 // are tombstoned (personal content wiped, embedding nulled, status revoked) rather
@@ -44,6 +45,11 @@ export async function eraseUserMemory(userId: string, reason = 'account_deletion
 
     await tx.delete(memPreferences).where(eq(memPreferences.userId, userId))
     await tx.delete(memTraces).where(eq(memTraces.userId, userId))
+
+    // Library chunks are hard-deleted rather than tombstoned: they carry no
+    // self-referential FK, and they are a copy of the student's own notes and
+    // materials, so nothing is lost that the source rows do not still hold.
+    await tx.delete(libChunks).where(eq(libChunks.userId, userId))
 
     await tx.insert(memDeletionEvents).values({ userId, scope: 'all', reason })
   })

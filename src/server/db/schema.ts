@@ -976,3 +976,7 @@ export const diagnozyExamAttemptsRelations = relations(diagnozyExamAttempts, ({ 
 // the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —
 // run scripts/setup-memory-extensions.ts before the first db:push.
 export * from "./memory-schema"
+
+// Personal library: chunks of a student's own notes and materials. Same "vector"
+// and "pg_trgm" extension requirement as the memory tables.
+export * from "./library-schema"

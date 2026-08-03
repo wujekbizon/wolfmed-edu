@@ -11,6 +11,7 @@ import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -55,7 +56,7 @@ export const createNoteAction = async (
   }
 
   try {
-    await db
+    const [created] = await db
       .insert(notes)
       .values({
         ...validationResult.data,
@@ -65,6 +66,15 @@ export const createNoteAction = async (
         updatedAt: new Date(),
       })
       .returning()
+
+    if (created) {
+      await syncNoteChunks({
+        userId,
+        noteId: created.id,
+        title: created.title,
+        content: contentResult.content,
+      })
+    }
   } catch (error) {
     console.error('Database error creating note:', error)
     return {
@@ -103,6 +113,7 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
     }
 
     await deleteNote(userId, noteId)
+    await removeNoteChunks(userId, noteId)
 
     // Note decks reference the note by id without a foreign key, so nothing cascades.
     await db
@@ -154,7 +165,16 @@ export const updateNoteContentAction = async (
   }
 
   try {
-    await updateNote(userId, noteId, validationResult.data)
+    const updated = await updateNote(userId, noteId, validationResult.data)
+
+    if (updated) {
+      await syncNoteChunks({
+        userId,
+        noteId: updated.id,
+        title: updated.title,
+        content: updated.content,
+      })
+    }
   } catch (error) {
     return {
       ...fromErrorToFormState(error),
