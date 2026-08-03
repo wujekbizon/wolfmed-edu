@@ -2,7 +2,7 @@ import 'server-only'
 import { and, cosineDistance, desc, eq, isNull, isNotNull, or, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { memFacts } from '@/server/db/memory-schema'
-import { embedQuery, EmbeddingUnavailable } from './embeddings'
+import { embedQuery, EmbeddingUnavailable } from '@/server/embeddings'
 import {
   FUSION_WEIGHTS,
   FUSED_SCORE_FLOOR,

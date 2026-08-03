@@ -4,7 +4,7 @@ import { db } from '@/server/db/index'
 import { completedTestes, testSessions } from '@/server/db/schema'
 import { promoteFact } from './gate'
 import { insertEpisode } from './stores/episodes'
-import { embedDocument } from './embeddings'
+import { embedDocument } from '@/server/embeddings'
 
 // Deterministic extraction — no LLM, $0, zero poisoning risk. Product events are
 // the highest-recall fact source for the things that matter (weakness/mastery).

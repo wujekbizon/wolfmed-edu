@@ -13,7 +13,8 @@ import {
   type AnyPgColumn,
 } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
-import { EMBED_DIM, MEM_TABLES } from '@/server/memory/config'
+import { MEM_TABLES } from '@/server/memory/config'
+import { EMBED_DIM } from '@/constants/embeddings'
 
 // Local table creator (same 'wolfmed_' prefix as the main schema). Declared here
 // rather than imported from schema.ts to avoid a circular import — schema.ts

@@ -1,0 +1,18 @@
+// Platform-wide embedding settings. Shared by the memory layer and the personal
+// library, so neither owns them and neither imports them from the other.
+
+// Embedding dimension. Hard rule: this constant is the ONLY place the number 768
+// appears. Every VECTOR() column and the embeddings client's
+// outputDimensionality import it — dimension drift between code and the column
+// type is a known real-world failure.
+export const EMBED_DIM = 768
+
+// Same multilingual model the Vertex corpus uses, truncated to EMBED_DIM via
+// Matryoshka (MRL) so the pgvector HNSW indexes stay small. Note the corpus
+// itself embeds at the model's default dimensionality, so corpus and local
+// vectors are NOT in the same space and their distances are not comparable.
+export const EMBEDDING_MODEL = 'gemini-embedding-001'
+
+// Embedding is a best-effort projection. If it can't return quickly, callers
+// must cascade to lexical search rather than hang on the request path.
+export const EMBED_TIMEOUT_MS = 1500

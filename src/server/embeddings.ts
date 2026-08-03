@@ -1,9 +1,9 @@
 import 'server-only'
 import { getGoogleAI } from '@/server/vertex-rag/client'
-import { EMBED_DIM, EMBEDDING_MODEL, EMBED_TIMEOUT_MS } from './config'
+import { EMBED_DIM, EMBEDDING_MODEL, EMBED_TIMEOUT_MS } from '@/constants/embeddings'
 
-// Thrown when the embedding call times out or fails. Retrieval catches this and
-// cascades to the lexical (trgm/ILIKE) tiers instead of hanging or 500-ing the
+// Thrown when the embedding call times out or fails. Callers catch this and
+// cascade to the lexical (trgm/ILIKE) tiers instead of hanging or 500-ing the
 // request — the embedding is a projection, never a hard dependency.
 export class EmbeddingUnavailable extends Error {
   constructor(cause?: unknown) {
