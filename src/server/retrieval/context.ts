@@ -12,6 +12,8 @@ import { getAttachedSourceText } from '@/server/library/attached-source'
 import { retrieveContexts } from '@/server/vertex-rag/retrieve'
 import { reciprocalRankFusion } from '@/helpers/reciprocalRankFusion'
 import { logRetrievalScores } from '@/helpers/logRetrievalScores'
+import { isCorpusMiss } from '@/helpers/isCorpusMiss'
+import { stripQueryFiller } from '@/helpers/stripQueryFiller'
 import type {
   ContextChunk,
   RetrieveContextOptions,
@@ -46,7 +48,7 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
     // document — collapsing them to one string loses both.
     const contexts = await retrieveContexts(query, { topK })
 
-    return contexts
+    const chunks = contexts
       .filter((context) => context.text.trim().length > 0)
       .map((context) => ({
         text: context.text,
@@ -54,6 +56,16 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
         label: context.sourceDisplayName ?? 'Baza wiedzy',
         score: context.score,
       }))
+
+    // A corpus that missed is not thin grounding, it is none. Returning its
+    // least-bad chunks reserved two thirds of the context for medical text on a
+    // sociology question, and left hasCanonical true so nothing downstream knew.
+    if (isCorpusMiss(chunks)) {
+      console.log('[retrieval] corpus miss, dropping', chunks.length, 'chunks')
+      return []
+    }
+
+    return chunks
   } catch (error) {
     // One of two sources. Losing it should degrade the answer, not fail a
     // request the library could still serve.
@@ -64,7 +76,8 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
 
 async function readPersonal(userId: string, query: string): Promise<ContextChunk[]> {
   try {
-    return (await retrieveLibrary(userId, query, { topK: LIB_TOP_K })).map(libraryChunk)
+    const subject = stripQueryFiller(query)
+    return (await retrieveLibrary(userId, subject, { topK: LIB_TOP_K })).map(libraryChunk)
   } catch (error) {
     console.error('[retrieval] Personal library search failed:', error)
     return []
