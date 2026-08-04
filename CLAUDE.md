@@ -329,7 +329,7 @@ For detailed implementation patterns, refer to the following markdown files in t
 | **Database Queries** | [queries.md](./.claude/queries.md) |
 | **Server Actions & Validation** | [server-actions.md](./.claude/server-actions.md) |
 | **Styling & Tailwind Configuration** | [tailwind-styles.md](./.claude/tailwind-styles.md) |
-| **Retrieval Flows (write · read · prompt · cost)** | [retrieval-flows.md](./.claude/retrieval-flows.md) |
+| **System Flows (tutor · tools · memory · retrieval · planner)** | [flows.md](./.claude/flows.md) |
 
 Each of these files contains specific conventions, examples, and best practices for their respective areas.  
 Claude should defer to these files for deeper technical references.
