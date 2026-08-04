@@ -57,8 +57,13 @@ export const EXTRACTION_SWEEP_BATCH = 5
 
 // ── Embedding ───────────────────────────────────────────────────────────────
 // Chunks are written with a null embedding and filled afterwards. How many one
-// pass handles — bounded so neither an after() call nor a cron run overruns.
-export const EMBED_SWEEP_BATCH = 40
+// pass handles.
+//
+// Bounded by wall clock, not appetite: calls are paced at EMBED_PACE_MS to stay
+// under Vertex's per-minute request quota, so this many chunks takes at least
+// batch × pace, before any retry. Whatever a pass does not reach stays pending
+// and the next one picks it up, so a small batch costs nothing but time.
+export const EMBED_SWEEP_BATCH = 15
 
 // ── Retrieval ───────────────────────────────────────────────────────────────
 // Lexical is weighted above vector, as in the memory layer: trigram similarity

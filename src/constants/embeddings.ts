@@ -21,3 +21,22 @@ export const EMBED_TIMEOUT_MS = 1500
 // short budget buys is failure: a cold Vertex call routinely exceeds 1.5 s, and
 // giving up on it leaves the chunk permanently unembedded.
 export const EMBED_BACKGROUND_TIMEOUT_MS = 20_000
+
+// Vertex meters online_prediction_requests_per_base_model per minute, and the
+// default allowance for gemini-embedding is small — a 24-chunk document sent
+// back to back exhausts it within a second. These govern how the background
+// path stays inside it.
+
+// Retries for a rate-limited or briefly unavailable call. Background only: on
+// the request path a retry would just make a student wait longer for something
+// the lexical tier already covers.
+export const EMBED_MAX_RETRIES = 4
+
+// Exponential, with jitter: 1s, 2s, 4s, 8s. A quota window is a minute, so a
+// handful of doublings is enough to cross it.
+export const EMBED_RETRY_BASE_MS = 1000
+
+// Spacing between successive calls. Cheap insurance that a long document does
+// not hit the ceiling in the first place — retrying is recovery, pacing is
+// avoidance, and avoidance is what keeps other callers working.
+export const EMBED_PACE_MS = 250

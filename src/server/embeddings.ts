@@ -3,6 +3,8 @@ import { getGoogleAI } from '@/server/vertex-rag/client'
 import {
   EMBED_BACKGROUND_TIMEOUT_MS,
   EMBED_DIM,
+  EMBED_MAX_RETRIES,
+  EMBED_RETRY_BASE_MS,
   EMBEDDING_MODEL,
   EMBED_TIMEOUT_MS,
 } from '@/constants/embeddings'
@@ -58,25 +60,61 @@ async function embedOnce(text: string, taskType: EmbedTaskType): Promise<number[
   return values
 }
 
+// Worth waiting out rather than giving up on: a per-minute quota that will
+// refill, or a transient unavailability. Anything else — a bad key, a wrong
+// dimension, a malformed request — will fail identically on every attempt, so
+// retrying only delays the error.
+function isRetryable(error: unknown): boolean {
+  const status = (error as { status?: number } | undefined)?.status
+  if (status === 429 || status === 503) return true
+
+  const message = error instanceof Error ? error.message : String(error)
+  return /RESOURCE_EXHAUSTED|UNAVAILABLE|\b(429|503)\b/.test(message)
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+interface EmbedOptions {
+  timeoutMs?: number
+  // Attempts after the first. Zero on the request path, where a retry only makes
+  // a student wait for something the lexical tier already covers.
+  retries?: number
+}
+
 // Embeds a single text, bounded by a timeout chosen for the caller's context.
 // Throws EmbeddingUnavailable on timeout or any API error so callers can cascade
 // deterministically.
 export async function embed(
   text: string,
   taskType: EmbedTaskType,
-  timeoutMs: number = EMBED_TIMEOUT_MS
+  { timeoutMs = EMBED_TIMEOUT_MS, retries = 0 }: EmbedOptions = {}
 ): Promise<number[]> {
-  try {
-    return await withTimeout(embedOnce(text, taskType), timeoutMs)
-  } catch (error) {
-    if (error instanceof EmbeddingUnavailable) throw error
-    throw new EmbeddingUnavailable(error)
+  let lastError: unknown
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await withTimeout(embedOnce(text, taskType), timeoutMs)
+    } catch (error) {
+      lastError = error instanceof EmbeddingUnavailable ? error.cause ?? error : error
+      if (attempt === retries || !isRetryable(lastError)) break
+
+      // Exponential, with jitter so a batch of chunks that all failed together
+      // does not come back together and trip the same quota again.
+      const backoff = EMBED_RETRY_BASE_MS * 2 ** attempt
+      await sleep(backoff + Math.random() * EMBED_RETRY_BASE_MS)
+    }
   }
+
+  if (lastError instanceof EmbeddingUnavailable) throw lastError
+  throw new EmbeddingUnavailable(lastError)
 }
 
 // Documents are embedded off the request path, so they get the background budget
-// by default. A caller inside a request can still pass its own.
-export const embedDocument = (text: string, timeoutMs = EMBED_BACKGROUND_TIMEOUT_MS) =>
-  embed(text, 'RETRIEVAL_DOCUMENT', timeoutMs)
+// and the retries by default.
+export const embedDocument = (text: string) =>
+  embed(text, 'RETRIEVAL_DOCUMENT', {
+    timeoutMs: EMBED_BACKGROUND_TIMEOUT_MS,
+    retries: EMBED_MAX_RETRIES,
+  })
 
 export const embedQuery = (text: string) => embed(text, 'RETRIEVAL_QUERY')

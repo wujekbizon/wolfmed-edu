@@ -3,6 +3,7 @@ import { and, eq, isNull, asc } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { libChunks } from '@/server/db/library-schema'
 import { embedDocument, EmbeddingUnavailable } from '@/server/embeddings'
+import { EMBED_PACE_MS } from '@/constants/embeddings'
 import { EMBED_SWEEP_BATCH } from './config'
 
 export interface EmbedSweepResult {
@@ -40,7 +41,13 @@ export async function embedPendingChunks(
 
   let embedded = 0
 
-  for (const chunk of pending) {
+  for (const [index, chunk] of pending.entries()) {
+    // Space the calls out. Vertex meters embedding requests per minute, and a
+    // 24-chunk document sent back to back exhausts the allowance in about a
+    // second — the retry inside embedDocument then recovers it, but slowly, and
+    // every other caller shares the same ceiling meanwhile.
+    if (index > 0) await new Promise((resolve) => setTimeout(resolve, EMBED_PACE_MS))
+
     try {
       const embedding = await embedDocument(chunk.content)
       await db
@@ -55,7 +62,8 @@ export async function embedPendingChunks(
       // while the write path looked like it was working.
       const reason = error instanceof EmbeddingUnavailable ? error.cause ?? error.message : error
       console.error(
-        `[library] Embedding failed after ${embedded}/${pending.length} chunks:`,
+        `[library] Embedding failed after ${embedded}/${pending.length} chunks — ` +
+          `the rest stay pending for the next pass:`,
         reason
       )
       if (!(error instanceof EmbeddingUnavailable)) throw error
