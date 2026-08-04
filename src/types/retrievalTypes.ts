@@ -38,10 +38,20 @@ export interface RetrieveContextOptions {
   limit?: number
 }
 
+// A cited source, carrying where it came from. The origin has to survive as far
+// as the UI: labelling chunks for the model but showing the student an
+// undifferentiated list means an answer resting on their own half-written note
+// looks exactly like one resting on the curriculum, which was the whole
+// justification for indexing notes at all.
+export type SourceRef = {
+  label: string
+  origin: ChunkOrigin
+}
+
 export interface RetrievedContext {
   chunks: ContextChunk[]
-  // Distinct source labels, for the sources panel.
-  sources: string[]
+  // Distinct sources, for the sources panel.
+  sources: SourceRef[]
   // False when the curriculum was searched and returned nothing. The caller has
   // to know: answering a curriculum question from a student's own notes alone,
   // in the curriculum's voice, is the failure the source rule exists to prevent.

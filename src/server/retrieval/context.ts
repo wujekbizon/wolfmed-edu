@@ -15,9 +15,21 @@ import type {
   ContextChunk,
   RetrieveContextOptions,
   RetrievedContext,
+  SourceRef,
 } from '@/types/retrievalTypes'
 
 const EMPTY: RetrievedContext = { chunks: [], sources: [], hasCanonical: false }
+
+// One entry per document, keyed by label AND origin: a student's note may share
+// a title with a curriculum file, and collapsing them would attribute one to the
+// other.
+function dedupeSources(chunks: ContextChunk[]): SourceRef[] {
+  const seen = new Map<string, SourceRef>()
+  for (const chunk of chunks) {
+    seen.set(`${chunk.origin}:${chunk.label}`, { label: chunk.label, origin: chunk.origin })
+  }
+  return [...seen.values()]
+}
 
 const libraryChunk = (hit: LibraryHit): ContextChunk => ({
   text: hit.content,
@@ -108,7 +120,7 @@ export async function retrieveContext({
 
   return {
     chunks,
-    sources: [...new Set(chunks.map((chunk) => chunk.label))],
+    sources: dedupeSources(chunks),
     hasCanonical: corpusChunks.length > 0,
   }
 }

@@ -51,7 +51,7 @@ export async function getAttachedSourceText(
 
   return {
     chunks,
-    sources: chunks.map((chunk) => chunk.label),
+    sources: chunks.map(({ label, origin }) => ({ label, origin })),
     // The corpus was deliberately not consulted. Not a failure — the student
     // chose this source, so the caller must not treat it as a missing curriculum.
     hasCanonical: true,

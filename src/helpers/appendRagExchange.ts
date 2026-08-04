@@ -1,10 +1,11 @@
 import { RAG_MAX_MESSAGES } from '@/constants/ragCell'
 import type { RagCellContent } from '@/types/ragCellTypes'
+import type { SourceRef } from '@/types/retrievalTypes'
 
 interface RagExchange {
   question: string
   answer: string
-  sources?: string[] | undefined
+  sources?: SourceRef[] | undefined
 }
 
 export function appendRagExchange(

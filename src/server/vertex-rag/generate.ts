@@ -2,7 +2,7 @@ import 'server-only'
 import { FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, buildGroundedPrompt, getNoDataFoundMessage } from '@/helpers/rag-prompts'
 import { formatContextChunks } from '@/helpers/formatContextChunks'
-import type { RetrievedContext } from '@/types/retrievalTypes'
+import type { RetrievedContext, SourceRef } from '@/types/retrievalTypes'
 import { stripContentParameter } from '@/helpers/stripContentParameter'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI, logUsage } from './client'
@@ -61,7 +61,7 @@ export async function generateGroundedAnswer(
   question: string,
   context: RetrievedContext,
   options: GroundedAnswerOptions = {}
-): Promise<{ answer: string; sources: string[] }> {
+): Promise<{ answer: string; sources: SourceRef[] }> {
   try {
     if (context.chunks.length === 0) {
       return { answer: getNoDataFoundMessage(), sources: [] }

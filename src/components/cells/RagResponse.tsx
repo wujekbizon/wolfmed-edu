@@ -2,9 +2,12 @@
 
 import { useState } from 'react'
 
+import type { SourceRef } from '@/types/retrievalTypes'
+import SourceChip from './SourceChip'
+
 interface RagResponseProps {
   answer: string
-  sources?: string[] | undefined
+  sources?: SourceRef[] | undefined
 }
 
 export default function RagResponse({ answer, sources }: RagResponseProps) {
@@ -62,12 +65,7 @@ export default function RagResponse({ answer, sources }: RagResponseProps) {
           <p className="text-xs font-medium text-blue-800 mb-2">Źródła:</p>
           <div className="flex flex-wrap gap-1.5">
             {sources.map((source, index) => (
-              <span
-                key={index}
-                className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs font-medium"
-              >
-                {source}
-              </span>
+              <SourceChip key={index} source={source} />
             ))}
           </div>
         </div>
