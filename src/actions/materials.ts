@@ -13,6 +13,7 @@ import { UTApi } from "uploadthing/server"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { removeMaterialChunks, syncMaterialChunks } from "@/server/library/sync-material"
 import { getIsPremium } from "@/server/premium"
+import { UNINDEXED_STATUS } from "@/server/library/config"
 
 const utapi = new UTApi()
 
@@ -78,12 +79,9 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    // Second gate. The uploader's middleware already refuses the bytes, but the
-    // action is a separate entry point and each one has to stand on its own.
+    // Storage is sold with the course, so every plan uploads. What premium buys
+    // is the model call that reads the file — see the indexStatus below.
     const isPremium = await getIsPremium();
-    if (!isPremium) {
-      return toFormState("ERROR", "Wgrywanie materiałów jest dostępne w planie premium.");
-    }
 
     // Rate limiting: 5 material uploads per hour
     const rateLimit = await checkRateLimit(userId, 'material:upload')
@@ -158,7 +156,8 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
         url: validationResult.data.url,
         type: validationResult.data.type,
         category: validationResult.data.category,
-        size: validationResult.data.size
+        size: validationResult.data.size,
+        ...(isPremium ? {} : { indexStatus: UNINDEXED_STATUS }),
       }).returning({ id: materials.id });
 
       materialId = created?.id ?? null;
@@ -182,7 +181,7 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
     // response rather than holding the upload open. The material is usable as a
     // file immediately; it becomes searchable when this finishes, and the cron
     // backstop picks it up if the function is torn down first.
-    if (materialId) {
+    if (materialId && isPremium) {
       const pendingId = materialId;
       after(() => syncMaterialChunks(userId, pendingId));
     }

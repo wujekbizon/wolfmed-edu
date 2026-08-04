@@ -30,9 +30,17 @@ export const LIB_TABLE = 'lib_chunks'
 export type LibrarySourceType = 'note' | 'material'
 
 // ── Material extraction ─────────────────────────────────────────────────────
-// 'unindexable' is terminal: a video has no text layer and never will, so the
-// backstop must not keep retrying it. 'failed' is retryable.
-export type MaterialIndexStatus = 'pending' | 'indexed' | 'unindexable' | 'failed'
+// 'unindexable' and 'not_indexed' are terminal: a video has no text layer and
+// never will, and a basic-plan upload is deliberately never read. 'failed' is
+// retryable. The cron selects 'pending' and 'failed' by name, so a terminal
+// status is excluded by construction.
+export type MaterialIndexStatus = 'pending' | 'indexed' | 'unindexable' | 'failed' | 'not_indexed'
+
+// Basic plans include the 20 MB of storage the course was sold with, but not the
+// Gemini call that reads a PDF. Set at upload rather than skipped silently: left
+// as 'pending' the cron would extract it within a day, and the cost would arrive
+// detached from the upload that caused it.
+export const UNINDEXED_STATUS: MaterialIndexStatus = 'not_indexed'
 
 // Only these yield text. The uploader also accepts video/mp4 and
 // application/json; both are marked unindexable on arrival.

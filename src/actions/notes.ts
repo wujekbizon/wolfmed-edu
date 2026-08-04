@@ -14,6 +14,7 @@ import { checkRateLimit } from "@/lib/rateLimit"
 import { after } from "next/server"
 import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
 import { embedPendingChunks } from "@/server/library/embed-pending"
+import { getIsPremium } from "@/server/premium"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -69,7 +70,10 @@ export const createNoteAction = async (
       })
       .returning()
 
-    if (created) {
+    // Writing the note is Postgres. Indexing it is a model call per chunk, and
+    // that is what premium buys — a basic plan keeps its notes in full and gets
+    // no chunk rows at all, so `embedding IS NULL` keeps meaning "queued".
+    if (created && (await getIsPremium())) {
       // Chunk rows are written synchronously — pure Postgres, transactional with
       // the note. Embedding them is a model call per chunk, so it happens after
       // the response; the trigram index keeps the note findable meanwhile.
@@ -174,7 +178,9 @@ export const updateNoteContentAction = async (
   try {
     const updated = await updateNote(userId, noteId, validationResult.data)
 
-    if (updated) {
+    // Also the upgrade path: an unindexed note written on a basic plan gets its
+    // chunks the first time it is edited on a premium one.
+    if (updated && (await getIsPremium())) {
       await syncNoteChunks({
         userId,
         noteId: updated.id,
