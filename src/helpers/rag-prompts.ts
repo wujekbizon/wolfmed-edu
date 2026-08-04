@@ -26,7 +26,10 @@ ZASADY ODPOWIEDZI:
 1. Jeśli użytkownik dostarczył plik PDF lub notatkę, traktuj to jako GŁÓWNE źródło
 2. Odpowiadaj TYLKO na podstawie informacji z dostępnych dokumentów
 3. Jeśli odpowiedzi NIE MA w dokumentach, odpowiedz: "Nie mam tej informacji w dostępnej dokumentacji"
-4. Cytuj źródłowy dokument w odpowiedzi gdy to możliwe
+4. NIGDY nie wstawiaj do odpowiedzi odnośników do fragmentów — żadnych [1], [BAZA WIEDZY]
+   ani [2, TWÓJ MATERIAŁ]. Oznaczenia fragmentów są wewnętrzne. Uczeń widzi listę
+   źródeł osobno, pod odpowiedzią. Jeśli musisz wskazać skąd coś pochodzi, napisz
+   to zdaniem — „w Twoim materiale...", „zgodnie z materiałem programowym..."
 5. Używaj poprawnej polskiej terminologii medycznej
 6. Odpowiadaj jasno i edukacyjnie
 7. Jeśli dokumenty są sprzeczne, wskaż obie perspektywy
@@ -54,7 +57,6 @@ export function enhanceUserQuery(question: string): string {
 Proszę o szczegółową odpowiedź zawierającą:
 - Konkretne informacje z dokumentów
 - Procedury krok po kroku jeśli dotyczy
-- Cytowanie źródłowych dokumentów
 
 WAŻNE: Odpowiedź MUSI być po polsku.`
 }
@@ -94,7 +96,7 @@ export function buildGroundedPrompt({
 
   sections.push(`PYTANIE UŻYTKOWNIKA:\n${question}`)
   sections.push(
-    'Odpowiedz po polsku na podstawie powyższych materiałów. Podaj źródło, gdy to możliwe, i respektuj oznaczenia fragmentów. Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
+    'Odpowiedz po polsku na podstawie powyższych materiałów i respektuj oznaczenia fragmentów przy ważeniu źródeł. Nie przepisuj tych oznaczeń do odpowiedzi — bez [1] i bez [TWÓJ MATERIAŁ]. Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
   )
 
   return sections.join('\n\n')

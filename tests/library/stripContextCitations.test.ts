@@ -1,0 +1,38 @@
+import test from "node:test"
+import assert from "node:assert/strict"
+import { stripContextCitations } from "@/helpers/stripContextCitations"
+
+test("removes the citation shapes Gemini actually emits", () => {
+  assert.equal(
+    stripContextCitations("Płynność błony komórkowej. [10, TWÓJ MATERIAŁ]"),
+    "Płynność błony komórkowej."
+  )
+  assert.equal(stripContextCitations("Selektywna przepuszczalność. [2, BAZA WIEDZY]"), "Selektywna przepuszczalność.")
+  assert.equal(stripContextCitations("Szkielet błonowy. [1, 3, BAZA WIEDZY]"), "Szkielet błonowy.")
+  assert.equal(stripContextCitations("Notatka ucznia. [TWOJA NOTATKA]"), "Notatka ucznia.")
+  assert.equal(stripContextCitations("Fragment pierwszy [1] i drugi [2]."), "Fragment pierwszy i drugi.")
+})
+
+test("leaves bracketed content that is not a citation", () => {
+  const chemistry = "Stężenie [Na+] rośnie, a [K+] maleje."
+  assert.equal(stripContextCitations(chemistry), chemistry)
+
+  const figure = "Zobacz [Ryc. 2] w podręczniku."
+  assert.equal(stripContextCitations(figure), figure)
+
+  const link = "Więcej w [dokumentacji](https://example.com)."
+  assert.equal(stripContextCitations(link), link)
+})
+
+test("does not leave a space before punctuation or double spaces", () => {
+  assert.equal(stripContextCitations("Błona jest płynna [4, BAZA WIEDZY], a białka się przemieszczają."), "Błona jest płynna, a białka się przemieszczają.")
+  assert.equal(stripContextCitations("Pierwsze [1] drugie."), "Pierwsze drugie.")
+})
+
+test("preserves markdown structure", () => {
+  const bullets = "*   **Płynność** - opis. [10, TWÓJ MATERIAŁ]\n*   **Cholesterol** - opis. [1, 2, BAZA WIEDZY]"
+  assert.equal(
+    stripContextCitations(bullets),
+    "*   **Płynność** - opis.\n*   **Cholesterol** - opis."
+  )
+})

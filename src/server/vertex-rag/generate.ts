@@ -4,6 +4,7 @@ import { SYSTEM_PROMPT, buildGroundedPrompt, getNoDataFoundMessage } from '@/hel
 import { formatContextChunks } from '@/helpers/formatContextChunks'
 import type { RetrievedContext, SourceRef } from '@/types/retrievalTypes'
 import { stripContentParameter } from '@/helpers/stripContentParameter'
+import { stripContextCitations } from '@/helpers/stripContextCitations'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI, logUsage } from './client'
 import { parseGoogleApiError } from './errors'
@@ -89,7 +90,7 @@ export async function generateGroundedAnswer(
       throw new Error('Empty response from Gemini')
     }
 
-    return { answer, sources: context.sources }
+    return { answer: stripContextCitations(answer), sources: context.sources }
   } catch (error) {
     console.error('Error generating grounded answer:', error)
     throw parseGoogleApiError(error)
