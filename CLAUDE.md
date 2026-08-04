@@ -247,6 +247,61 @@ was missing.
 
 ---
 
+## 🔒 Retrieval rules
+
+**Non-negotiable. Every one of these was written after the opposite behaviour
+shipped and had to be measured out again.**
+
+1. **`retrieveContext` is the only way to read context.** One entry point,
+   `server/retrieval/context.ts`. A feature declares a `RetrievalMode` at the call
+   site. Never call `retrieveContexts` or `retrieveLibrary` directly from a
+   feature — a second retrieval path is how the tier table above stops being true.
+
+2. **The query is the subject alone.** Prose wrappers dilute it. `word_similarity`
+   scores the whole query against a chunk's best extent, so two filler words took
+   a chunk that *contained the answer* from 1.000 to 0.467 and buried it. The
+   library query goes through `stripQueryFiller`; features that compose prose for
+   the student to read send a separate `searchTopic`.
+
+3. **Scores from different tiers are never comparable.** Corpus is a Vertex vector
+   **distance** (lower is better); library is a similarity (higher is better), from
+   a different model. Combine by **rank** — `reciprocalRankFusion` — never by score.
+   Never build a UI or a threshold that puts them in one column.
+
+4. **A tier that missed contributes nothing.** `isCorpusMiss` and
+   `dropMissedSources` drop a whole source rather than let its least-bad chunks
+   occupy slots. Both judge the **best** chunk: per query for the corpus, **per
+   document** for the library — a tier-wide gate lets one relevant note admit every
+   unrelated file behind it. `hasCanonical` follows from the corpus being empty, and
+   the prompt says so when it is false.
+
+5. **Chunk labels are internal.** Origin labels weight sources for the model; they
+   are not citations. Answers carry no `[1]`, no `(BAZA WIEDZY)`, no
+   `(TWOJA NOTATKA — plik.md)` — the student reads the sources panel.
+   `stripContextCitations` is the backstop, the prompt is the fix. Chunks go in
+   **unnumbered**: a numbered list is an invitation to cite a number.
+
+6. **Answer the question, not the retrieved topic.** Retrieval returns adjacent
+   material by design. Fragments are candidates, not an agenda.
+
+7. **Contradictions are named on both sides, and only when relevant.** Curriculum
+   wins the fact; the answer states what the student's note claimed and what the
+   curriculum says. "W notatce jest inaczej" alone is a failure — so is dragging an
+   unrelated note's error into an answer that never asked about it.
+
+8. **Thresholds are measured, not chosen.** `LIB_TRGM_FLOOR`,
+   `CORPUS_MISS_DISTANCE`, `PERSONAL_MISS_SCORE` each carry the distribution they
+   came from in a comment. Change one only against real data, and update the
+   comment with it.
+
+**Cost boundary.** Storage and notes ship with the course, so every plan writes
+notes and uploads to its 20 MB. Premium buys the **model calls** — PDF extraction
+and embedding. A basic plan writes **no `lib_chunks` rows at all**, which is what
+keeps `embedding IS NULL` meaning "queued" and nothing else. Basic uploads are
+marked `not_indexed` at insert, or the cron backstop extracts them anyway.
+
+---
+
 ## 🚀 Development Commands
 
 ```bash
