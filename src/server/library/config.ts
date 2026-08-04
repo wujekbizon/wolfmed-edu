@@ -77,21 +77,9 @@ export const LIB_FUSION_WEIGHTS = { vector: 0.4, lexical: 0.6 } as const
 // higher bar to occupy a slot the curriculum could have used.
 export const LIB_SCORE_FLOOR = { material: 0.4, note: 0.55 } as const
 
-// Threshold for word_similarity(query, chunk). Measured, not guessed —
-// scripts/measure-trgm.ts reproduces it on Postgres 16 / pg_trgm 1.6 against a
-// real 929-character slide from a student PDF plus 1418 chunks of real Polish
-// medical prose as the negative population.
-//
-// Nine genuine questions about that slide scored 0.337 – 1.000 on it, and it
-// ranked #1 of 1420 for every one of them. Irrelevant chunks topped out at
-// 0.480. Positives and noise therefore overlap in absolute terms, and no single
-// value separates them — word_similarity falls as the query grows, because the
-// matching extent has to cover more of it.
-//
-// That is why this is a noise cut and not a selector: ranking already puts the
-// right chunk first, so the floor only has to sit below the weakest real
-// positive (0.337) rather than above the loudest noise. Raising it towards 0.5
-// buys nothing and starts discarding long conversational questions.
+// Noise cut for word_similarity, not a selector — ranking picks the chunk, this
+// only has to sit below the weakest real positive. Measured at 0.337 (positives
+// 0.337-1.0, noise up to 0.48, so the ranges overlap): scripts/measure-trgm.ts.
 export const LIB_TRGM_FLOOR = 0.3
 
 // How many library candidates to gather before fusing with the corpus. Wider

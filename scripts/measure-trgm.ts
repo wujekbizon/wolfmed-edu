@@ -42,9 +42,7 @@ wolniejsze niż dla lipidów. W odniesieniu do białek nie spotyka się
 natomiast procesu analogicznego do "flip-flop" - białka nie zmieniają
 swej orientacji względem powierzchni błony.`
 
-// Realistic negatives: the same student's other library rows would be other
-// medical prose. procedures.json and diagnozy.json are the only real Polish
-// medical corpora in the repo, chunked by the production chunker so the length
+// Real Polish medical prose, chunked by the production chunker so the length
 // distribution matches what retrieval actually scores against.
 function buildNegatives(): string[] {
   const out: string[] = []
