@@ -56,20 +56,12 @@ export async function retrieveContexts(
     )
 
     const contexts: Array<Record<string, unknown>> = response.contexts?.contexts ?? []
-
-    // `score` and `distance` are read interchangeably below, and the API docs do
-    // not agree with each other on which one this endpoint returns or whether
-    // higher is better. Print the real keys once per call so the threshold is set
-    // against the field Vertex actually sends.
-    if (contexts[0]) {
-      const { text: _text, ...rest } = contexts[0]
-      console.log('[retrieval] vertex context fields:', JSON.stringify(rest))
-    }
-
     return contexts.map((ctx) => ({
       text: String(ctx.text ?? ''),
       sourceUri: (ctx.sourceUri ?? ctx.source_uri) as string | undefined,
       sourceDisplayName: (ctx.sourceDisplayName ?? ctx.source_display_name) as string | undefined,
+      // A vector DISTANCE despite the name — measured, lower is better. The
+      // filter above is a ceiling, and isCorpusMiss compares against the minimum.
       score: (ctx.score ?? ctx.distance) as number | undefined,
     }))
   } catch (error) {
