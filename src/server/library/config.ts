@@ -86,8 +86,9 @@ export const LIB_FUSION_WEIGHTS = { vector: 0.4, lexical: 0.6 } as const
 export const LIB_SCORE_FLOOR = { material: 0.4, note: 0.55 } as const
 
 // Noise cut for word_similarity, not a selector — ranking picks the chunk, this
-// only has to sit below the weakest real positive. Measured at 0.337 (positives
-// 0.337-1.0, noise up to 0.48, so the ranges overlap): scripts/measure-trgm.ts.
+// only has to sit below the weakest real positive. Measured on pg_trgm 1.6
+// against real chunks: genuine hits scored 0.337-1.0 and irrelevant chunks
+// reached 0.48, so the ranges overlap and no value separates them cleanly.
 export const LIB_TRGM_FLOOR = 0.3
 
 // How many library candidates to gather before fusing with the corpus. Wider
