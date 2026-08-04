@@ -164,14 +164,16 @@ Kolejność na produkcji:
 - Brak kroku „contract" — nic nie jest usuwane.
 
 ### M7 — Materiały: tekst wyodrębniony raz przy uploadzie
-*Status: do wypchnięcia na dev.*
+*Status: wdrożone na dev (2026-08-04) — ekstrakcja, chunkowanie i wyszukiwanie
+zweryfikowane na realnych PDF-ach. Na prod nie wypchnięte; przed wdrożeniem
+przeczytaj przypadki brzegowe, zwłaszcza 1 i 8.*
 
 Zmiany schematu — `wolfmed_materials`, wyłącznie addytywne:
 
 | kolumna | typ | uwagi |
 |---|---|---|
 | `extracted_text` | `text NULL` | tekst odczytany z pliku raz, przy uploadzie |
-| `index_status` | `varchar(32) NOT NULL DEFAULT 'pending'` | `pending` / `indexed` / `unindexable` / `failed` |
+| `index_status` | `varchar(32) NOT NULL DEFAULT 'pending'` | `pending` / `indexed` / `unindexable` / `failed` / `not_indexed` |
 | `indexed_at` | `timestamptz NULL` | kiedy ostatnio próbowano |
 
 Plus indeks `materials_index_status_idx` na `index_status` (steruje zamiataczem).
@@ -179,6 +181,13 @@ Plus indeks `materials_index_status_idx` na `index_status` (steruje zamiataczem)
 Zgodne z zasadą 4: kolumna NOT NULL dodana z DEFAULT, więc stare wiersze nie
 blokują migracji. Plik w UploadThing pozostaje nietknięty — `extracted_text`
 służy AI, plik służy uczniowi (podgląd, pobieranie, limit 20 MB).
+
+`not_indexed` jest terminalny i oznacza upload z planu podstawowego: kurs jest
+sprzedawany z 20 MB miejsca i notatkami, więc wgrywanie działa na każdym planie,
+ale wywołanie Gemini czytające plik jest płatne i przysługuje tylko premium.
+Zamiatacz wybiera `pending` i `failed` po nazwie, więc status terminalny jest
+wykluczony z automatu. **To nie jest zmiana schematu** — kolumna to `varchar(32)`,
+nie enum, więc nowa wartość nie wymaga ALTER-a.
 
 **SQL (prod): expand, bez backfillu w tej samej transakcji.**
 `drizzle-kit generate` → przejrzyj → wykonaj. Zero destrukcji, brak kroku
@@ -189,13 +198,22 @@ ekstrakcja).
 
 1. **Wszystkie istniejące materiały dostają `pending`.** To znaczy, że zamiatacz
    `/api/cron/library-index` spróbuje wyodrębnić tekst z **każdego** pliku, który
-   już jest w bazie. Każda próba to wywołanie Gemini na pliku do 4 MB. Przy
+   już jest w bazie — również z plików uczniów bez premium, bo DEFAULT nie zna
+   planu. Każda próba to wywołanie Gemini na pliku do 4 MB. Przy
    `EXTRACTION_SWEEP_BATCH = 5` i crona raz dziennie to 5 plików/dobę — biblioteka
    500 plików schodzi ~100 dni.
-   *Do decyzji przed prodem:* albo jednorazowy skrypt backfillu z własnym tempem
-   i limitem kosztu, albo świadome ustawienie starych wierszy na `unindexable`
-   (`UPDATE ... SET index_status='unindexable' WHERE created_at < '<data wdrożenia>'`)
-   i indeksowanie tylko nowych uploadów.
+
+   *Zalecenie przed prodem — wykonać w tej samej sesji co migrację:*
+
+   ```sql
+   -- pliki sprzed wdrożenia nie były sprzedawane jako przeszukiwalne przez AI
+   UPDATE wolfmed_materials SET index_status = 'not_indexed'
+   WHERE index_status = 'pending';
+   ```
+
+   Uczeń z premium odzyskuje indeks, gdy wgra plik ponownie. Alternatywa
+   (jednorazowy backfill z limitem kosztu) ma sens tylko wtedy, gdy dokupisz
+   podwyższony limit zapytań w Vertex — patrz punkt 8.
 
 2. **`failed` jest ponawiane w nieskończoność.** Trwale uszkodzony PDF wraca do
    zamiatacza przy każdym przebiegu i za każdym razem kosztuje wywołanie modelu.
@@ -223,11 +241,25 @@ ekstrakcja).
 6. **Kolejność wobec M6 jest dowolna** — te kolumny nie zależą od `lib_chunks`,
    a `lib_chunks` nie zależy od nich. Można wypchnąć razem.
 
-7. **Cron nie jest zarejestrowany w `vercel.json`.** Są tam dwa zadania, co jest
-   dokładnie limitem planu Hobby — trzecie wywróciłoby deploy. Na Pro dopisać
-   `{"path": "/api/cron/library-index", "schedule": "0 4 * * *"}`. Bez crona
-   ekstrakcja i tak działa (`after()` przy uploadzie); cron łapie tylko przypadki,
-   w których funkcja została ubita w trakcie.
+7. **Cron jest zarejestrowany** — `/api/cron/library-index` o 4:00 w `vercel.json`.
+   (Wcześniejsza notatka mówiła, że Hobby dopuszcza dwa zadania; to nieprawda —
+   limit to 100 zadań, a realnym ograniczeniem jest minimalny interwał dobowy
+   i dokładność ±59 min. Oba są dla backstopu bez znaczenia.) Bez crona ekstrakcja
+   i tak działa (`after()` przy uploadzie); cron łapie tylko przypadki, w których
+   funkcja została ubita w trakcie.
+
+8. **Limit zapytań Vertex.** `online_prediction_requests_per_base_model` liczy
+   **żądania**, nie tokeny — w trakcie testów udało się go wyczerpać samym
+   zamiataczem embeddingów. Uczeń widzi wtedy „Baza wiedzy jest chwilowo
+   przeciążona". *Do zrobienia przed prodem:* złożyć wniosek o podwyższenie limitu.
+   Dopóki limit jest domyślny, nie uruchamiaj masowego backfillu z punktu 1.
+
+9. **`embedPendingChunks()` bez argumentów nie filtruje po właścicielu.** Tak woła
+   go cron — bierze każdy fragment z `embedding IS NULL`, czyj by nie był.
+   Poprawność opiera się więc na tym, że plany podstawowe **w ogóle nie tworzą
+   wierszy** w `lib_chunks` (bramka w `notes.ts` i `materials.ts`). Jeśli ktoś doda
+   trzecią ścieżkę zapisu fragmentów, musi powtórzyć tę bramkę — albo dołożyć filtr
+   planu w zamiataczu.
 
 ### M8+ — (dopisuj kolejne zmiany tutaj)
 
