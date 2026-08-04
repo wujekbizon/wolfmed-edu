@@ -1,11 +1,20 @@
 import 'server-only'
 import { PROJECT_ID, LOCATION, vertexFetch } from './client'
 
-// Default embedding model. gemini-embedding-001 is multilingual (MTEB leader) —
-// correct for Polish medical content, unlike the English text-embedding-005 that
-// RAG Engine silently falls back to when no model is specified. The memory layer
-// uses this same model, so the platform speaks one embedding space.
-export const DEFAULT_EMBEDDING_MODEL = 'gemini-embedding-001'
+// What production actually runs, so creating a corpus reproduces current
+// behaviour instead of silently changing it. Verified against the live corpus and
+// recorded in rag_config.embedding_model, which is the source of truth.
+//
+// It is multilingual, which is what matters for Polish — the failure to avoid is
+// the English text-embedding-005 that RAG Engine falls back to when no model is
+// given at all.
+//
+// Switching models is a migration, not a default: every document has to be
+// re-ingested, and the new vectors live in a different space from the old. Note
+// that gemini-embedding-001 would also need an explicit output dimensionality —
+// it defaults to 3072, so adopting it without that would match neither this
+// corpus nor the 768-dimension personal library.
+export const DEFAULT_EMBEDDING_MODEL = 'text-multilingual-embedding-002'
 
 function embeddingEndpoint(embeddingModel: string): string {
   return `projects/${PROJECT_ID}/locations/${LOCATION}/publishers/google/models/${embeddingModel}`
@@ -88,15 +97,32 @@ export async function deleteCorpus(corpusName: string): Promise<void> {
   }
 }
 
+// Pulls the model id out of the endpoint path the corpus reports, e.g.
+// projects/x/locations/y/publishers/google/models/text-multilingual-embedding-002
+function embeddingModelFromCorpus(corpus: Record<string, any>): string | undefined {
+  const config = corpus.vectorDbConfig ?? corpus.vector_db_config
+  const endpoint =
+    config?.ragEmbeddingModelConfig?.vertexPredictionEndpoint?.endpoint ??
+    config?.rag_embedding_model_config?.vertex_prediction_endpoint?.endpoint
+
+  return typeof endpoint === 'string' ? endpoint.split('/models/')[1] : undefined
+}
+
 export async function getCorpus(corpusName: string): Promise<{
   name: string
   displayName?: string | undefined
+  embeddingModel?: string | undefined
 }> {
   try {
     const corpus = await vertexFetch(corpusName)
     return {
       name: corpus.name || corpusName,
       displayName: corpus.displayName ?? corpus.display_name ?? undefined,
+      // What the corpus reports, not what we asked for. RAG Engine substitutes a
+      // fallback model when it dislikes the request, and recording the request
+      // instead of the result is how rag_config comes to describe a corpus that
+      // does not exist.
+      embeddingModel: embeddingModelFromCorpus(corpus),
     }
   } catch (error) {
     console.error('Error getting corpus info:', error)

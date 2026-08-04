@@ -60,6 +60,8 @@ export async function retrieveContexts(
       text: String(ctx.text ?? ''),
       sourceUri: (ctx.sourceUri ?? ctx.source_uri) as string | undefined,
       sourceDisplayName: (ctx.sourceDisplayName ?? ctx.source_display_name) as string | undefined,
+      // A vector DISTANCE despite the name — measured, lower is better. The
+      // filter above is a ceiling, and isCorpusMiss compares against the minimum.
       score: (ctx.score ?? ctx.distance) as number | undefined,
     }))
   } catch (error) {

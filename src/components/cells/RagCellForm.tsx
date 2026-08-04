@@ -13,23 +13,28 @@ import { useRagCellConversation } from '@/hooks/useRagCellConversation'
 import { useRagAutoSubmit } from '@/hooks/useRagAutoSubmit'
 import { useRagToolResults } from '@/hooks/useRagToolResults'
 import { useAttachExplanationToMindMap } from '@/hooks/useAttachExplanationToMindMap'
+import { useCommandSelection } from '@/hooks/useCommandSelection'
+import { useStickToBottom } from '@/hooks/useStickToBottom'
 import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
+import CommandBar from './CommandBar'
 import RagConversation from './RagConversation'
 import RagProgressIndicator from './RagProgressIndicator'
 
 export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
   const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
   const conversationRef = useRef<HTMLDivElement>(null)
+  const conversationContentRef = useRef<HTMLDivElement>(null)
 
   const noScriptFallback = useToastMessage(state)
   const input = useRagCellInput()
   const progress = useRagProgress()
   const conversation = useRagCellConversation({ cell, state, isPending })
+  const commandSelection = useCommandSelection()
 
   const handleSubmit = (formData: FormData) => {
     conversation.rememberQuestion(formData.get('question') as string)
-    formData.append('jobId', progress.jobId)
-    progress.startListening()
+    // Send the id the stream was actually opened for, not the previous run's.
+    formData.append('jobId', progress.startListening())
     action(formData)
   }
 
@@ -46,11 +51,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
   useRagToolResults({ state, cellId: cell.id })
   useAttachExplanationToMindMap({ origin: conversation.origin, state, isPending })
 
-  useEffect(() => {
-    if (conversationRef.current) {
-      conversationRef.current.scrollTop = conversationRef.current.scrollHeight
-    }
-  }, [conversation.messages.length, isPending])
+  useStickToBottom(conversationRef, conversationContentRef)
 
   const { reset: resetProgress } = progress
   useEffect(() => {
@@ -70,24 +71,26 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   return (
     <div className="flex flex-col h-full bg-zinc-50 rounded-lg border border-zinc-200">
-      <div ref={conversationRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-webkit p-2 sm:p-4 space-y-4">
-        <RagConversation
-          messages={conversation.messages}
-          pendingQuestion={conversation.pendingQuestion}
-          progress={
-            isPending && (
-              <RagProgressIndicator
-                stage={progress.stage}
-                progress={progress.progress}
-                message={progress.message}
-                tool={progress.tool}
-                userLogs={progress.userLogs}
-                technicalLogs={progress.technicalLogs}
-                error={progress.error}
-              />
-            )
-          }
-        />
+      <div ref={conversationRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-webkit p-2 sm:p-4">
+        <div ref={conversationContentRef} className="space-y-4 min-h-full">
+          <RagConversation
+            messages={conversation.messages}
+            pendingQuestion={conversation.pendingQuestion}
+            progress={
+              isPending && (
+                <RagProgressIndicator
+                  stage={progress.stage}
+                  progress={progress.progress}
+                  message={progress.message}
+                  tool={progress.tool}
+                  userLogs={progress.userLogs}
+                  technicalLogs={progress.technicalLogs}
+                  error={progress.error}
+                />
+              )
+            }
+          />
+        </div>
       </div>
 
       <div className="border-t border-zinc-200 bg-white p-2 sm:p-4">
@@ -105,9 +108,11 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
               name="question"
               defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
               placeholder={
-                input.slashCommandsEnabled
-                  ? 'Zadaj pytanie... (@ pliki, / polecenia)'
-                  : 'Zadaj pytanie... (@ pliki)'
+                !input.slashCommandsEnabled && commandSelection.command
+                  ? `Podaj temat, np. „${commandSelection.command.example}"`
+                  : input.slashCommandsEnabled
+                    ? 'Zadaj pytanie... (@ pliki, / polecenia)'
+                    : 'Zadaj pytanie... (@ pliki)'
               }
               rows={2}
               onChange={input.handleChange}
@@ -119,6 +124,15 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
             <FieldError formState={state} name="question" />
           </div>
+
+          {/* One surface at a time. With slash on, the dropdown is the way in and
+              chips would duplicate it; with slash off, the chips are the only way. */}
+          {!input.slashCommandsEnabled && (
+            <>
+              <CommandBar selection={commandSelection} disabled={isPending} />
+              <FieldError formState={state} name="commandCount" />
+            </>
+          )}
 
           <div className="flex items-center justify-between">
             <SubmitButton

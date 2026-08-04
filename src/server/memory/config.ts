@@ -1,22 +1,12 @@
 // ── Single source of truth for the memory layer ─────────────────────────────
-// Anything the schema, embeddings, retrieval, gate, and assembly all need to
-// agree on lives here. Pure constants only — no 'server-only', no DB, no Vertex
-// client — so the Drizzle schema (and drizzle-kit tooling) can import it without
-// pulling in server-only runtime dependencies.
-
-// Embedding dimension. Hard rule from the plan: this constant is the ONLY place
-// the number 768 appears. The Drizzle schema's VECTOR() columns and the
-// embeddings client's outputDimensionality both import it — dimension drift
-// between code and the column type is a known real-world failure.
-export const EMBED_DIM = 768
-
-// Same multilingual model the corpus uses (RAG plan Phase 2), truncated to
-// EMBED_DIM via Matryoshka (MRL) so the pgvector HNSW index stays small.
-export const EMBEDDING_MODEL = 'gemini-embedding-001'
-
-// Embedding is a best-effort projection. If it can't return quickly, retrieval
-// must cascade to the lexical tiers rather than hang on the request path.
-export const EMBED_TIMEOUT_MS = 1500
+// Anything the schema, retrieval, gate, and assembly all need to agree on lives
+// here. Pure constants only — no 'server-only', no DB, no Vertex client — so the
+// Drizzle schema (and drizzle-kit tooling) can import it without pulling in
+// server-only runtime dependencies.
+//
+// Embedding settings are NOT here: EMBED_DIM and the model are platform-wide
+// (the personal library uses the same space), so they live in
+// @/constants/embeddings and neither layer owns them.
 
 // Multi-tenant on single-tenant bones. Constant until a B2B tier arrives; kept
 // so class/school scopes slot in later with zero schema change.

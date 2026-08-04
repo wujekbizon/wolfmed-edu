@@ -1,11 +1,13 @@
 import MaterialsSection from './MaterialsSection'
 import { getMaterialsByUser } from '@/server/queries'
-import { getMergedMaterials } from '@/helpers/mergeMaterials'
+import { getIsPremium } from '@/server/premium'
 import type { MaterialsType } from '@/types/materialsTypes'
 
 export default async function NaukaMaterialsSection({ userId }: { userId: string }) {
-  const userMaterials = (await getMaterialsByUser(userId)) as MaterialsType[]
-  const materials = await getMergedMaterials(userMaterials)
+  const [materials, isPremium] = await Promise.all([
+    getMaterialsByUser(userId) as Promise<MaterialsType[]>,
+    getIsPremium(),
+  ])
 
-  return <MaterialsSection materials={materials} />
+  return <MaterialsSection materials={materials} isPremium={isPremium} />
 }

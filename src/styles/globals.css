@@ -171,6 +171,32 @@
   to   { transform: scale3d(1, 1, 1); }
 }
 
+/* Command palette chip (AI cell). State comes from aria-pressed, which the
+   button sets anyway for assistive tech, so the markup carries no state classes
+   and needs no ternary. @utility rather than @layer components: v4 only resolves
+   @apply for class names it knows about, and @layer components does not
+   register them. */
+@utility chip {
+  @apply shrink-0 cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-colors;
+  @apply border-zinc-200 bg-white text-zinc-600;
+
+  &:hover {
+    @apply border-zinc-300 bg-zinc-50;
+  }
+
+  &[aria-pressed='true'] {
+    @apply border-zinc-800 bg-zinc-800 text-white;
+
+    &:hover {
+      @apply bg-zinc-700;
+    }
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;

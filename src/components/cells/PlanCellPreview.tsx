@@ -25,7 +25,6 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   const insertCellAfterWithContent = useCellsStore(s => s.insertCellAfterWithContent)
 
   const {
-    jobId,
     stage,
     progress,
     message: progressMessage,
@@ -59,9 +58,11 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   }
 
   const handleGenerate = () => {
-    startListening()
+    // The id the stream was opened for. Generating a second lecture with the
+    // previous run's id gets a 204 from the already-completed job.
+    const runJobId = startListening()
     startTransition(async () => {
-      const result = await generateLectureAction(cell.content, jobId)
+      const result = await generateLectureAction(cell.content, runJobId)
       resetProgress()
 
       if (result.status === 'SUCCESS') {

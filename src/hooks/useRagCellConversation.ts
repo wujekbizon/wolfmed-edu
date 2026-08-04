@@ -3,6 +3,7 @@ import { useCellsStore } from '@/store/useCellsStore'
 import { parseRagCellContent } from '@/helpers/parseRagCellContent'
 import { appendRagExchange } from '@/helpers/appendRagExchange'
 import type { FormState } from '@/types/actionTypes'
+import type { SourceRef } from '@/types/retrievalTypes'
 
 interface UseRagCellConversationArgs {
   cell: { id: string; content: string }
@@ -38,7 +39,7 @@ export function useRagCellConversation({ cell, state, isPending }: UseRagCellCon
       appendRagExchange(content, {
         question: askedQuestion.current || content.topic,
         answer,
-        sources: state.values?.sources as string[] | undefined,
+        sources: state.values?.sources as SourceRef[] | undefined,
       })
     )
   }, [isPending, state, cell.id, content, updateCell])

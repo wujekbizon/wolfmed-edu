@@ -47,7 +47,8 @@ detail_layers.txt
 /outputs
 /inputs
 
-/.claude
+/.claude/*
+!/.claude/*.md
 
 *.sql
 *.toml

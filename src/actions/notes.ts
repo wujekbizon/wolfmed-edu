@@ -11,6 +11,10 @@ import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { after } from "next/server"
+import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
+import { embedPendingChunks } from "@/server/library/embed-pending"
+import { getIsPremium } from "@/server/premium"
 
 export const createNoteAction = async (
   formState: FormState,
@@ -55,7 +59,7 @@ export const createNoteAction = async (
   }
 
   try {
-    await db
+    const [created] = await db
       .insert(notes)
       .values({
         ...validationResult.data,
@@ -65,6 +69,23 @@ export const createNoteAction = async (
         updatedAt: new Date(),
       })
       .returning()
+
+    // Writing the note is Postgres. Indexing it is a model call per chunk, and
+    // that is what premium buys — a basic plan keeps its notes in full and gets
+    // no chunk rows at all, so `embedding IS NULL` keeps meaning "queued".
+    if (created && (await getIsPremium())) {
+      // Chunk rows are written synchronously — pure Postgres, transactional with
+      // the note. Embedding them is a model call per chunk, so it happens after
+      // the response; the trigram index keeps the note findable meanwhile.
+      const noteId = created.id
+      await syncNoteChunks({
+        userId,
+        noteId,
+        title: created.title,
+        content: contentResult.content,
+      })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
+    }
   } catch (error) {
     console.error('Database error creating note:', error)
     return {
@@ -103,6 +124,7 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
     }
 
     await deleteNote(userId, noteId)
+    await removeNoteChunks(userId, noteId)
 
     // Note decks reference the note by id without a foreign key, so nothing cascades.
     await db
@@ -154,7 +176,19 @@ export const updateNoteContentAction = async (
   }
 
   try {
-    await updateNote(userId, noteId, validationResult.data)
+    const updated = await updateNote(userId, noteId, validationResult.data)
+
+    // Also the upgrade path: an unindexed note written on a basic plan gets its
+    // chunks the first time it is edited on a premium one.
+    if (updated && (await getIsPremium())) {
+      await syncNoteChunks({
+        userId,
+        noteId: updated.id,
+        title: updated.title,
+        content: updated.content,
+      })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
+    }
   } catch (error) {
     return {
       ...fromErrorToFormState(error),

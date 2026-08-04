@@ -1,7 +1,9 @@
+import type { SourceRef } from './retrievalTypes'
+
 export interface RagMessage {
   role: 'user' | 'assistant'
   text: string
-  sources?: string[] | undefined
+  sources?: SourceRef[] | undefined
 }
 
 // Set when the cell was spawned by „Wyjaśnij szerzej" on a mind-map node, so the

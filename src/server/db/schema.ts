@@ -560,6 +560,14 @@ export const materials = createTable(
     type: varchar("type", { length: 64 }).notNull(),
     category: varchar("category", { length: 128 }).notNull(),
     size: integer("size").notNull(),
+    // Text read out of the file once, at upload. Everything downstream reads
+    // this instead of re-downloading and base64-encoding the file per request.
+    extractedText: text("extracted_text"),
+    // pending | indexed | unindexable | failed. A material the sweep can never
+    // read (video, and anything else with no text layer) is marked terminal
+    // rather than retried forever.
+    indexStatus: varchar("index_status", { length: 32 }).notNull().default("pending"),
+    indexedAt: timestamp("indexed_at", { withTimezone: true }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
@@ -567,6 +575,8 @@ export const materials = createTable(
     index("materials_user_id_idx").on(table.userId),
     index("materials_category_idx").on(table.category),
     index("materials_type_idx").on(table.type),
+    // Drives the backstop sweep, which only looks at material still waiting.
+    index("materials_index_status_idx").on(table.indexStatus),
   ]
 );
 
@@ -976,3 +986,7 @@ export const diagnozyExamAttemptsRelations = relations(diagnozyExamAttempts, ({ 
 // the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —
 // run scripts/setup-memory-extensions.ts before the first db:push.
 export * from "./memory-schema"
+
+// Personal library: chunks of a student's own notes and materials. Same "vector"
+// and "pg_trgm" extension requirement as the memory tables.
+export * from "./library-schema"

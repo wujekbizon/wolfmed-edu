@@ -2,6 +2,7 @@ import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 import { BODY_ZONES } from "@/types/diagnozyTypes";
+import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -87,7 +88,10 @@ export const CreatePostSchema = z.object({
     .max(100, "Tytuł nie może przekraczać 100 znaków"),
   content: z.string().refine(
     (content) => {
-      const textContent = getLexicalContent(content);
+      // Collapse whitespace before measuring: the limit is about how much a
+      // reader has to read, and it should not move when the extractor changes
+      // how it separates blocks.
+      const textContent = getLexicalContent(content).replace(/\s+/g, " ").trim();
       return textContent.length >= 10 && textContent.length <= 2000;
     },
     { message: "Treść musi mieć od 10 do 2000 znaków" }
@@ -798,6 +802,17 @@ export const RagQuerySchema = z.object({
   // Subject alone, sent when the question is prose a cell composed for the user
   // to read. Drives retrieval; the question still drives the answer.
   searchTopic: z.string().max(300).optional(),
+  // Set by the chip palette. A selected command is a mode, so the name never has
+  // to be recovered from the question text.
+  command: z.enum(TOOL_COMMAND_NAMES as [string, ...string[]]).optional(),
+  // The item count for commands that produce countable output. Bounds per
+  // command are enforced by resolveCommandCount; this only rejects nonsense.
+  commandCount: z.coerce
+    .number("Podaj liczbę")
+    .int("Liczba musi być całkowita")
+    .min(1, "Minimum to 1")
+    .max(100, "Maksimum to 100")
+    .optional(),
 });
 
 // Admin: Create File Search Store

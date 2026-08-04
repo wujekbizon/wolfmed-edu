@@ -1,29 +1,11 @@
 import type { Command } from '@/types/commandTypes'
+import { TOOL_COMMAND_LIST } from './toolCommands'
 
-export const COMMANDS: Command[] = [
-  {
-    name: 'notatka',
-    description: 'Tworzy gotową notatkę',
-    example: '/notatka Stwórz notatkę o działach w fizjologii',
-  },
-  {
-    name: 'diagram',
-    description: 'Generuje diagram wizualny',
-    example: '/diagram Utwórz schemat budowy serca',
-  },
-  {
-    name: 'utworz',
-    description: 'Generuje pytania testowe',
-    example: '/utworz 10 pytań o anatomii serca',
-  },
-  {
-    name: 'fiszka',
-    description: 'Generuje fiszki edukacyjne',
-    example: '/fiszka 20 fiszek z układu kostnego',
-  },
-  {
-    name: 'planuj',
-    description: 'Tworzy szczegółowy plan nauki',
-    example: '/planuj Anatomia kończyny górnej',
-  },
-]
+// Derived so the slash autocomplete can never offer a command the dispatcher
+// doesn't know, or omit one it does. The two lists had drifted to five entries
+// against seven before this was derived.
+export const COMMANDS: Command[] = TOOL_COMMAND_LIST.map(({ name, description, example }) => ({
+  name,
+  description,
+  example: `/${name} ${example}`,
+}))

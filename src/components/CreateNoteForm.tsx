@@ -57,7 +57,7 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
       <div className={isFullscreen ? "flex min-h-64 min-w-0 flex-1 flex-col" : "contents"}>
         <ResizableComponent direction="horizontal">{editorField}</ResizableComponent>
       </div>
-      <div className="flex flex-col justify-between grow max-md:grow-0 sm:h-64 h-full md:min-h-0  overflow-y-auto scrollbar-webkit py-2 pl-2">
+      <div className="flex flex-col justify-between grow max-md:grow-0 h-full overflow-y-auto scrollbar-webkit py-2 pl-2">
         <div>
 
         <div>

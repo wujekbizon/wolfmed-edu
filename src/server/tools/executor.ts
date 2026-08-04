@@ -3,6 +3,7 @@ import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { getGoogleAI, logUsage } from '../vertex-rag/client'
+import { enforceItemCount } from '@/helpers/enforceItemCount'
 
 // Content generation stays on gemini-2.5-flash, but thinking is disabled — the
 // tools produce structured/creative output, not reasoning chains, and thinking
@@ -247,11 +248,15 @@ Return ONLY the JSON array, no additional text.`
     throw new Error('Failed to generate valid test questions')
   }
 
+  const enforced = enforceItemCount(questions, questionCount)
+
   return {
     cellType: 'test' as const,
-    content: JSON.stringify({ questions }, null, 2),
+    content: JSON.stringify({ questions: enforced.items }, null, 2),
     metadata: {
-      count: questions.length,
+      count: enforced.items.length,
+      requested: enforced.requested,
+      shortfall: enforced.shortfall,
       category,
       generated: new Date().toISOString(),
     }
@@ -453,11 +458,15 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
     throw new Error('Failed to generate valid flashcards')
   }
 
+  const enforced = enforceItemCount(flashcards, cardCount)
+
   return {
     cellType: 'flashcard',
-    content: JSON.stringify({ topic, flashcards }),
+    content: JSON.stringify({ topic, flashcards: enforced.items }),
     metadata: {
-      count: flashcards.length,
+      count: enforced.items.length,
+      requested: enforced.requested,
+      shortfall: enforced.shortfall,
       topic,
       generated: new Date().toISOString(),
     }
