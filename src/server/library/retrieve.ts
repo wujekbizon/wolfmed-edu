@@ -46,16 +46,21 @@ async function vectorSearch(userId: string, queryVec: number[], limit: number, s
 // Catches the inflected forms Polish generates, and covers chunks the embedding
 // sweep has not reached yet — which is why a just-saved note is findable at all.
 //
-// word_similarity, not similarity. similarity() is symmetric and normalised over
-// both strings' trigram sets, so a 40-character question against a
-// 900-character chunk tops out near 40/900 ≈ 0.04 even when every trigram of the
-// question is present — below any useful threshold. That is not a tuning
-// problem; it makes the whole lexical tier unreachable for chunk-sized text.
+// word_similarity, not similarity, and the reason is a scale mismatch rather
+// than a missed match. similarity() is symmetric and normalised over both
+// strings' trigram sets, so a question scored against a 1000-character chunk
+// lands around 0.05–0.18 however well it matches. It still ranks correctly —
+// measured, the right chunk came back #1 of 1420 — but fuse() blends that ~0.1
+// at 0.6 weight against LIB_SCORE_FLOOR of 0.4, so a chunk needed a cosine
+// similarity of 0.85 to survive. A firing lexical tier dragged its own hits
+// below the floor.
 //
-// word_similarity(query, content) instead measures the question against the best
-// matching extent of the chunk, which is the actual question being asked. The
-// memory layer keeps similarity() correctly: its facts are single sentences,
-// comparable in length to a query.
+// word_similarity(query, content) scores the question against the chunk's
+// best-matching extent, putting real hits in the 0.34–1.0 range the floors were
+// written for. The memory layer keeps similarity() correctly: its facts are
+// single sentences, comparable in length to a query.
+//
+// scripts/measure-trgm.ts reproduces both measurements.
 async function trgmSearch(userId: string, query: string, limit: number, sourceId?: string) {
   const sim = sql<number>`word_similarity(${query}, ${libChunks.content})`
   const rows = await db
