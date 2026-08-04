@@ -11,6 +11,7 @@ import { retrieveLibrary, type LibraryHit } from '@/server/library/retrieve'
 import { getAttachedSourceText } from '@/server/library/attached-source'
 import { retrieveContexts } from '@/server/vertex-rag/retrieve'
 import { reciprocalRankFusion } from '@/helpers/reciprocalRankFusion'
+import { logRetrievalScores } from '@/helpers/logRetrievalScores'
 import type {
   ContextChunk,
   RetrieveContextOptions,
@@ -35,6 +36,7 @@ const libraryChunk = (hit: LibraryHit): ContextChunk => ({
   text: hit.content,
   origin: hit.sourceType,
   label: hit.title,
+  score: hit.score,
 })
 
 async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> {
@@ -50,6 +52,7 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
         text: context.text,
         origin: 'corpus' as const,
         label: context.sourceDisplayName ?? 'Baza wiedzy',
+        score: context.score,
       }))
   } catch (error) {
     // One of two sources. Losing it should degrade the answer, not fail a
@@ -117,6 +120,7 @@ export async function retrieveContext({
   )
 
   const chunks = [...reserved, ...contested].slice(0, limit)
+  logRetrievalScores(subject, corpusChunks, personalChunks, chunks)
 
   return {
     chunks,

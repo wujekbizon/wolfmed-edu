@@ -8,6 +8,10 @@ export interface ContextChunk {
   origin: ChunkOrigin
   // Document or note title, for citation.
   label: string
+  // Retrieval score as the tier reported it. Corpus and library scores come from
+  // different models and are NOT comparable to each other — this exists so each
+  // tier can be judged against its own distribution, not to rank across them.
+  score?: number | undefined
 }
 
 /**
