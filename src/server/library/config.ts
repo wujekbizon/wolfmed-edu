@@ -77,6 +77,12 @@ export const LIB_FUSION_WEIGHTS = { vector: 0.4, lexical: 0.6 } as const
 // higher bar to occupy a slot the curriculum could have used.
 export const LIB_SCORE_FLOOR = { material: 0.4, note: 0.55 } as const
 
+// TUNE. Threshold for word_similarity(query, chunk). Not comparable to the
+// similarity() thresholds used in the memory layer: word_similarity normalises
+// against the best-matching extent of the chunk rather than the whole string, so
+// a genuine match scores several times higher and the floor has to move with it.
+export const LIB_TRGM_FLOOR = 0.35
+
 // How many library candidates to gather before fusing with the corpus. Wider
 // than the final slot count so rank fusion has something to choose between.
 export const LIB_TOP_K = 12

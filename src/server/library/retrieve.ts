@@ -3,7 +3,7 @@ import { and, cosineDistance, desc, eq, isNotNull, or, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { libChunks } from '@/server/db/library-schema'
 import { embedQuery, EmbeddingUnavailable } from '@/server/embeddings'
-import { LIB_FUSION_WEIGHTS, LIB_SCORE_FLOOR, LIB_TOP_K } from './config'
+import { LIB_FUSION_WEIGHTS, LIB_SCORE_FLOOR, LIB_TOP_K, LIB_TRGM_FLOOR } from './config'
 import type { LibrarySourceType } from './config'
 
 export interface LibraryHit {
@@ -45,12 +45,28 @@ async function vectorSearch(userId: string, queryVec: number[], limit: number, s
 
 // Catches the inflected forms Polish generates, and covers chunks the embedding
 // sweep has not reached yet — which is why a just-saved note is findable at all.
+//
+// word_similarity, not similarity. similarity() is symmetric and normalised over
+// both strings' trigram sets, so a 40-character question against a
+// 900-character chunk tops out near 40/900 ≈ 0.04 even when every trigram of the
+// question is present — below any useful threshold. That is not a tuning
+// problem; it makes the whole lexical tier unreachable for chunk-sized text.
+//
+// word_similarity(query, content) instead measures the question against the best
+// matching extent of the chunk, which is the actual question being asked. The
+// memory layer keeps similarity() correctly: its facts are single sentences,
+// comparable in length to a query.
 async function trgmSearch(userId: string, query: string, limit: number, sourceId?: string) {
-  const sim = sql<number>`similarity(${libChunks.content}, ${query})`
+  const sim = sql<number>`word_similarity(${query}, ${libChunks.content})`
   const rows = await db
     .select({ ...columns, sim })
     .from(libChunks)
-    .where(and(scopeFor(userId, sourceId), sql`similarity(${libChunks.content}, ${query}) > 0.1`))
+    .where(
+      and(
+        scopeFor(userId, sourceId),
+        sql`word_similarity(${query}, ${libChunks.content}) > ${LIB_TRGM_FLOOR}`
+      )
+    )
     .orderBy(desc(sim))
     .limit(limit)
 
