@@ -40,24 +40,45 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   })
 }
 
-async function embedOnce(text: string, taskType: EmbedTaskType): Promise<number[]> {
+async function embedManyOnce(
+  texts: string[],
+  taskType: EmbedTaskType
+): Promise<number[][]> {
   const ai = getGoogleAI()
   const response = await ai.models.embedContent({
     model: EMBEDDING_MODEL,
-    contents: [text],
+    contents: texts,
     config: {
       taskType,
       outputDimensionality: EMBED_DIM,
     },
   })
 
-  const values = response.embeddings?.[0]?.values
-  if (!values || values.length !== EMBED_DIM) {
+  const embeddings = response.embeddings ?? []
+
+  // A model that only accepts one input per request answers a batch with a
+  // single embedding rather than an error. Treating that as success would
+  // silently write one chunk's vector onto every chunk in the batch.
+  if (embeddings.length !== texts.length) {
     throw new EmbeddingUnavailable(
-      `expected ${EMBED_DIM}-dim vector, got ${values?.length ?? 'none'}`
+      `expected ${texts.length} embeddings, got ${embeddings.length}`
     )
   }
-  return values
+
+  return embeddings.map((embedding, index) => {
+    const values = embedding.values
+    if (!values || values.length !== EMBED_DIM) {
+      throw new EmbeddingUnavailable(
+        `expected ${EMBED_DIM}-dim vector at index ${index}, got ${values?.length ?? 'none'}`
+      )
+    }
+    return values
+  })
+}
+
+async function embedOnce(text: string, taskType: EmbedTaskType): Promise<number[]> {
+  const [values] = await embedManyOnce([text], taskType)
+  return values!
 }
 
 // Worth waiting out rather than giving up on: a per-minute quota that will
@@ -118,3 +139,50 @@ export const embedDocument = (text: string) =>
   })
 
 export const embedQuery = (text: string) => embed(text, 'RETRIEVAL_QUERY')
+
+/**
+ * Embeds several documents in one request where the model allows it.
+ *
+ * The quota that matters here meters *requests*, not tokens, so a 24-chunk
+ * document costs 24 units one-at-a-time and 2 in batches of 16. That is the
+ * difference between fitting the allowance and exhausting it.
+ *
+ * Falls back to sequential calls when the model rejects multiple inputs, and
+ * says which path it took — whether a given model supports batching is not
+ * something to assume silently in either direction.
+ */
+export async function embedDocuments(texts: string[]): Promise<number[][]> {
+  if (texts.length === 0) return []
+  if (texts.length === 1) return [await embedDocument(texts[0]!)]
+
+  let lastError: unknown
+
+  for (let attempt = 0; attempt <= EMBED_MAX_RETRIES; attempt++) {
+    try {
+      return await withTimeout(
+        embedManyOnce(texts, 'RETRIEVAL_DOCUMENT'),
+        EMBED_BACKGROUND_TIMEOUT_MS
+      )
+    } catch (error) {
+      lastError = error instanceof EmbeddingUnavailable ? error.cause ?? error : error
+
+      // A refusal to batch is not a rate limit and will not improve with time.
+      if (!isRetryable(lastError)) break
+
+      const backoff = EMBED_RETRY_BASE_MS * 2 ** attempt
+      await sleep(backoff + Math.random() * EMBED_RETRY_BASE_MS)
+    }
+  }
+
+  if (isRetryable(lastError)) {
+    throw lastError instanceof EmbeddingUnavailable
+      ? lastError
+      : new EmbeddingUnavailable(lastError)
+  }
+
+  console.info('[embeddings] Batch rejected, falling back to one request per text:', lastError)
+
+  const results: number[][] = []
+  for (const text of texts) results.push(await embedDocument(text))
+  return results
+}

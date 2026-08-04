@@ -30,13 +30,23 @@ export const EMBED_BACKGROUND_TIMEOUT_MS = 20_000
 // Retries for a rate-limited or briefly unavailable call. Background only: on
 // the request path a retry would just make a student wait longer for something
 // the lexical tier already covers.
-export const EMBED_MAX_RETRIES = 4
+export const EMBED_MAX_RETRIES = 5
 
-// Exponential, with jitter: 1s, 2s, 4s, 8s. A quota window is a minute, so a
-// handful of doublings is enough to cross it.
-export const EMBED_RETRY_BASE_MS = 1000
+// Exponential, with jitter: 2s, 4s, 8s, 16s, 32s — a full minute of waiting.
+// The quota refills on a per-minute window, so a backoff that tops out before
+// sixty seconds gives up while still inside the window that rejected it.
+export const EMBED_RETRY_BASE_MS = 2000
 
 // Spacing between successive calls. Cheap insurance that a long document does
 // not hit the ceiling in the first place — retrying is recovery, pacing is
 // avoidance, and avoidance is what keeps other callers working.
 export const EMBED_PACE_MS = 250
+
+// How many texts to send per request. The quota meters REQUESTS, not tokens, so
+// embedding a document in one call instead of twenty-four is the difference
+// between fitting the allowance and exhausting it.
+//
+// Not every embedding model accepts more than one input per request. The batch
+// path falls back to one-at-a-time when a model refuses, and logs which path it
+// took, so this is safe to leave on regardless.
+export const EMBED_BATCH_SIZE = 16
