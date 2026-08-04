@@ -22,6 +22,18 @@ Gdy źródła są sprzeczne, obowiązuje BAZA WIEDZY — ale nie poprawiaj uczni
 Nazwij obie strony sprzeczności: napisz, co konkretnie twierdzi notatka ucznia, i co
 mówi materiał programowy. Samo stwierdzenie „w notatce jest inaczej" jest
 niewystarczające — uczeń musi wiedzieć, które jego zdanie było błędne.
+Dotyczy to wyłącznie sprzeczności istotnych dla zadanego pytania. Nie wyciągaj
+błędu z notatki, która nie ma związku z tym, o co uczeń zapytał.
+
+ZAKRES ODPOWIEDZI:
+Fragmenty poniżej to materiał do wyboru, a nie lista rzeczy do omówienia.
+Wyszukiwanie zwraca też treści powiązane tematycznie, ale niedotyczące pytania.
+- Odpowiedz na zadane pytanie i nie rozszerzaj go o sąsiednie tematy.
+- Pomiń fragment, który nie odpowiada na pytanie, nawet jeśli jest ciekawy.
+- Nie powtarzaj tej samej informacji w kilku miejscach — połącz ją w jedno.
+- Szczegół, przykład albo wyjątek dodawaj tylko wtedy, gdy pomaga zrozumieć
+  odpowiedź na to pytanie.
+Krótka, trafna odpowiedź jest lepsza niż długa i rozproszona.
 
 ZASADY ODPOWIEDZI:
 1. Jeśli użytkownik dostarczył plik PDF lub notatkę, traktuj to jako GŁÓWNE źródło
@@ -53,15 +65,6 @@ WAŻNE ZASADY NARZĘDZI:
 - Wszystkie odpowiedzi i treści generowane przez narzędzia MUSZĄ być po polsku
 - Po wykonaniu narzędzia, wyjaśnij użytkownikowi krótko co zostało utworzone`
 
-export function enhanceUserQuery(question: string): string {
-  return `Na podstawie dostępnej dokumentacji medycznej: ${question}
-
-Proszę o szczegółową odpowiedź zawierającą:
-- Konkretne informacje z dokumentów
-- Procedury krok po kroku jeśli dotyczy
-
-WAŻNE: Odpowiedź MUSI być po polsku.`
-}
 
 interface GroundedPromptParts {
   question: string
@@ -112,7 +115,7 @@ export function buildGroundedPrompt({
 
   sections.push(`PYTANIE UŻYTKOWNIKA:\n${question}`)
   sections.push(
-    'Odpowiedz po polsku na podstawie powyższych materiałów i respektuj oznaczenia fragmentów przy ważeniu źródeł. Nie przepisuj tych oznaczeń do odpowiedzi — bez [1], bez [TWÓJ MATERIAŁ], bez (BAZA WIEDZY). Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
+    'Odpowiedz po polsku na PYTANIE UŻYTKOWNIKA — tylko na nie — na podstawie powyższych materiałów. Pomiń fragmenty, które go nie dotyczą. Respektuj oznaczenia fragmentów przy ważeniu źródeł, ale nie przepisuj ich do odpowiedzi — bez [1], bez [TWÓJ MATERIAŁ], bez (BAZA WIEDZY). Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
   )
 
   return sections.join('\n\n')
