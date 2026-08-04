@@ -5,6 +5,7 @@ import {
   ENABLE_IMPLICIT_PERSONAL_RETRIEVAL,
   LIB_SLOT_SHARE,
   LIB_TOP_K,
+  PERSONAL_MISS_SCORE,
   RRF_K,
 } from '@/server/library/config'
 import { retrieveLibrary, type LibraryHit } from '@/server/library/retrieve'
@@ -13,6 +14,7 @@ import { retrieveContexts } from '@/server/vertex-rag/retrieve'
 import { reciprocalRankFusion } from '@/helpers/reciprocalRankFusion'
 import { logRetrievalScores } from '@/helpers/logRetrievalScores'
 import { isCorpusMiss } from '@/helpers/isCorpusMiss'
+import { isPersonalMiss } from '@/helpers/isPersonalMiss'
 import { stripQueryFiller } from '@/helpers/stripQueryFiller'
 import type {
   ContextChunk,
@@ -79,7 +81,20 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
 
 async function readPersonal(userId: string, query: string): Promise<ContextChunk[]> {
   try {
-    return (await retrieveLibrary(userId, query, { topK: LIB_TOP_K })).map(libraryChunk)
+    const chunks = (await retrieveLibrary(userId, query, { topK: LIB_TOP_K })).map(libraryChunk)
+
+    // Citing a sociology PDF under a blood-pressure answer teaches the student
+    // that the source chips are decoration. LIB_SCORE_FLOOR is a per-chunk trust
+    // bar and cannot see that the whole library missed.
+    if (isPersonalMiss(chunks)) {
+      const best = Math.max(...chunks.map((chunk) => chunk.score ?? -Infinity))
+      console.log(
+        `[retrieval] personal miss (best ${best.toFixed(3)} < ${PERSONAL_MISS_SCORE}), dropping ${chunks.length} chunks`
+      )
+      return []
+    }
+
+    return chunks
   } catch (error) {
     console.error('[retrieval] Personal library search failed:', error)
     return []

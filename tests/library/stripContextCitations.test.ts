@@ -13,6 +13,23 @@ test("removes the citation shapes Gemini actually emits", () => {
   assert.equal(stripContextCitations("Fragment pierwszy [1] i drugi [2]."), "Fragment pierwszy i drugi.")
 })
 
+test("catches the parenthesised form the square-bracket ban pushed it into", () => {
+  assert.equal(
+    stripContextCitations("Pomiar na tętnicy ramiennej (BAZA WIEDZY)."),
+    "Pomiar na tętnicy ramiennej."
+  )
+  assert.equal(stripContextCitations("Ramię na poziomie serca (2, BAZA WIEDZY)"), "Ramię na poziomie serca")
+  assert.equal(stripContextCitations("Notatka ucznia (TWOJA NOTATKA)."), "Notatka ucznia.")
+})
+
+test("leaves parenthesised content alone unless it names an origin", () => {
+  const enumeration = "Kroki: (1) przygotuj zestaw, (2) umyj ręce."
+  assert.equal(stripContextCitations(enumeration), enumeration)
+
+  const aside = "receptorów błonowych (np. transporterów glukozy GLUT)."
+  assert.equal(stripContextCitations(aside), aside)
+})
+
 test("leaves bracketed content that is not a citation", () => {
   const chemistry = "Stężenie [Na+] rośnie, a [K+] maleje."
   assert.equal(stripContextCitations(chemistry), chemistry)

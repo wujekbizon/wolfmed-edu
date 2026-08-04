@@ -101,6 +101,16 @@ export const LIB_SLOT_SHARE = 1 / 3
 // single time and stops being a ceiling.
 export const CANONICAL_RESERVED_SLOTS = 8
 
+// Below this best score the library did not answer the question. Measured over
+// four questions: hits peaked at 0.635, 0.674 and 0.930, while a sociology PDF
+// against a blood-pressure question produced eleven chunks in a 0.485-0.558
+// band — the same flat cluster a missed corpus makes. LIB_SCORE_FLOOR alone let
+// that band through and cited sociology under a physiology answer.
+//
+// Expect to revisit this sooner than the corpus gate: a larger library means
+// more chances for something irrelevant to reach 0.6 by accident.
+export const PERSONAL_MISS_SCORE = 0.6
+
 // Kill switch for implicit personal retrieval. Flipping this turns
 // canonical_with_personal into canonical_only everywhere. It deliberately does
 // NOT touch explicit_resource: the student named that source, and honouring an
