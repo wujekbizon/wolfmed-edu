@@ -77,6 +77,7 @@ export async function generateGroundedAnswer(
         contextText: formatContextChunks(context.chunks),
         userContext: options.userContext,
         memoryTail: options.memoryTail,
+        hasCanonical: context.hasCanonical,
       }),
       config: {
         systemInstruction: composeSystemInstruction(options.memoryPrefix),

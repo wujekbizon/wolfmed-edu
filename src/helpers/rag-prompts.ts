@@ -67,7 +67,17 @@ interface GroundedPromptParts {
   contextText?: string | undefined
   userContext?: string | undefined
   memoryTail?: string | undefined
+  // False when the curriculum returned nothing for this question.
+  hasCanonical?: boolean | undefined
 }
+
+// Without this the honesty of a no-curriculum answer rests on the model
+// happening to hedge. It shapes attribution, never refusal — the student's own
+// material is still the answer, it just may not borrow the curriculum's voice.
+const NO_CANONICAL_NOTICE = `UWAGA: dla tego pytania nie znaleziono żadnego materiału programowego.
+Odpowiadaj wyłącznie na podstawie materiałów i notatek ucznia, i powiedz wprost, że to jego własne źródło.
+Nie sugeruj, że odpowiedź jest potwierdzona programem nauczania.
+Jeśli źródło jest niepełne lub niejednoznaczne, powiedz o tym.`
 
 // The student's own explicit pick comes first, then retrieved material, then the
 // question — last, closest to the answer. Order matches the hierarchy the system
@@ -81,9 +91,13 @@ export function buildGroundedPrompt({
   contextText,
   userContext,
   memoryTail,
+  hasCanonical = true,
 }: GroundedPromptParts): string {
   const sections: string[] = []
 
+  if (!hasCanonical) {
+    sections.push(NO_CANONICAL_NOTICE)
+  }
   if (userContext) {
     sections.push(`=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${userContext}`)
   }

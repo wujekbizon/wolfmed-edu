@@ -1,5 +1,5 @@
 import 'server-only'
-import { RAG_TOP_K } from '@/constants/rag'
+import { CORPUS_MISS_DISTANCE, RAG_TOP_K } from '@/constants/rag'
 import {
   CANONICAL_RESERVED_SLOTS,
   ENABLE_IMPLICIT_PERSONAL_RETRIEVAL,
@@ -61,7 +61,10 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
     // least-bad chunks reserved two thirds of the context for medical text on a
     // sociology question, and left hasCanonical true so nothing downstream knew.
     if (isCorpusMiss(chunks)) {
-      console.log('[retrieval] corpus miss, dropping', chunks.length, 'chunks')
+      const best = Math.min(...chunks.map((chunk) => chunk.score ?? Infinity))
+      console.log(
+        `[retrieval] corpus miss (best ${best.toFixed(3)} > ${CORPUS_MISS_DISTANCE}), dropping ${chunks.length} chunks`
+      )
       return []
     }
 
@@ -76,8 +79,7 @@ async function readCorpus(query: string, topK: number): Promise<ContextChunk[]> 
 
 async function readPersonal(userId: string, query: string): Promise<ContextChunk[]> {
   try {
-    const subject = stripQueryFiller(query)
-    return (await retrieveLibrary(userId, subject, { topK: LIB_TOP_K })).map(libraryChunk)
+    return (await retrieveLibrary(userId, query, { topK: LIB_TOP_K })).map(libraryChunk)
   } catch (error) {
     console.error('[retrieval] Personal library search failed:', error)
     return []
@@ -112,9 +114,13 @@ export async function retrieveContext({
 
   const wantsPersonal = mode === 'canonical_with_personal' && ENABLE_IMPLICIT_PERSONAL_RETRIEVAL
 
+  // Stripped here rather than inside readPersonal so the query the library
+  // actually ran is visible to the log alongside the one the student typed.
+  const personalQuery = stripQueryFiller(subject)
+
   const [corpusChunks, personalChunks] = await Promise.all([
     readCorpus(subject, RAG_TOP_K),
-    wantsPersonal ? readPersonal(userId, subject) : Promise.resolve([]),
+    wantsPersonal ? readPersonal(userId, personalQuery) : Promise.resolve([]),
   ])
 
   // Curriculum takes its allocation before any fusion. Rank fusion alone lets a
@@ -133,7 +139,7 @@ export async function retrieveContext({
   )
 
   const chunks = [...reserved, ...contested].slice(0, limit)
-  logRetrievalScores(subject, corpusChunks, personalChunks, chunks)
+  logRetrievalScores(subject, personalQuery, corpusChunks, personalChunks, chunks)
 
   return {
     chunks,

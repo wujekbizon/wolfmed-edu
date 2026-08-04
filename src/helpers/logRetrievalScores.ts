@@ -11,6 +11,7 @@ const line = (chunk: ContextChunk, kept: boolean): string =>
 
 export function logRetrievalScores(
   query: string,
+  personalQuery: string,
   corpus: ContextChunk[],
   personal: ContextChunk[],
   selected: ContextChunk[]
@@ -22,9 +23,14 @@ export function logRetrievalScores(
   console.log(
     [
       `[retrieval] "${query}"`,
-      `  corpus (${corpus.length}), personal (${personal.length}), selected ${selected.length}`,
+      // The query personal retrieval actually ran. When ranking looks wrong this
+      // is the first thing to check, and it was previously invisible.
+      personalQuery === query ? '' : `  personal query: "${personalQuery}"`,
+      `  corpus (${corpus.length}) · distance, lower better`,
       render(corpus),
+      `  personal (${personal.length}) · score, higher better`,
       render(personal),
+      `  selected ${selected.length}`,
     ]
       .filter(Boolean)
       .join('\n')
