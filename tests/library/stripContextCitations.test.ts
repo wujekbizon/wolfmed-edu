@@ -22,6 +22,21 @@ test("catches the parenthesised form the square-bracket ban pushed it into", () 
   assert.equal(stripContextCitations("Notatka ucznia (TWOJA NOTATKA)."), "Notatka ucznia.")
 })
 
+test("catches an origin label however the citation is dressed", () => {
+  assert.equal(
+    stripContextCitations("Wymaga energii. (BAZA WIEDZY — 01_fizjologia_komorki.md)"),
+    "Wymaga energii."
+  )
+  assert.equal(
+    stripContextCitations("Zużywa ATP. (TWOJA NOTATKA — transport przez błonę)"),
+    "Zużywa ATP."
+  )
+  assert.equal(
+    stripContextCitations("Płynność błony [TWÓJ MATERIAŁ: wyklad.pdf] jest kluczowa."),
+    "Płynność błony jest kluczowa."
+  )
+})
+
 test("leaves parenthesised content alone unless it names an origin", () => {
   const enumeration = "Kroki: (1) przygotuj zestaw, (2) umyj ręce."
   assert.equal(stripContextCitations(enumeration), enumeration)
