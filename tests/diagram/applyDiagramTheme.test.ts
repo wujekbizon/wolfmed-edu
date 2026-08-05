@@ -68,6 +68,18 @@ test("leaves a sequence diagram untouched — Mermaid rejects classDef there", (
   assert.equal(applyDiagramTheme(sequence), sequence)
 })
 
+test("does not count a bracket inside a label as another node", () => {
+  assert.equal(
+    countMermaidNodes(`flowchart TD
+    A[Badanie fizykalne (osluchanie)] --> B[Pomiar cisnienia]
+    B --> C[Wstawki (dyski wtracone)]`),
+    3
+  )
+
+  assert.equal(countMermaidNodes(`flowchart TD
+    Start(["Pacjent z dusznoscia"]) --> O1[Pomiar]`), 2)
+})
+
 test("counts declared nodes, not edges, containers or directives", () => {
   assert.equal(countMermaidNodes(FLOWCHART), 4)
 
