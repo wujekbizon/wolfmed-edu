@@ -16,7 +16,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
 
     useHandleLibrary({ excalidrawAPI });
 
-    const { scene, isConverting, persist } = useMermaidScene(cell.id, cellContent, excalidrawAPI);
+    const { scene, isConverting, onChange, onPointerUp } = useMermaidScene(cell.id, cellContent, excalidrawAPI);
 
     // Only what the canvas mounts with. A scene that arrives later is pushed
     // through updateScene, because Excalidraw reads this once.
@@ -30,7 +30,8 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                     <Draw
                         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
                         theme={theme}
-                        onChange={(elements, appState, files) => persist(elements, appState as never, files)}
+                        onChange={(elements, appState, files) => onChange(elements, appState as never, files)}
+                        onPointerUp={onPointerUp}
                         initialData={initialData}
                     >
                         <ExcalidrawMenu theme={theme} onThemeChange={setTheme} />

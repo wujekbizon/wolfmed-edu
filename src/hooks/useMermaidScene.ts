@@ -1,10 +1,11 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types'
 import { parseDiagramCellContent } from '@/helpers/parseDiagramCellContent'
 import { serializeDiagramCell } from '@/helpers/serializeDiagramCell'
 import { convertMermaidScene } from '@/lib/diagram/convertMermaidScene'
+import { useDiagramPersistence } from '@/hooks/useDiagramPersistence'
 import { SCENE_FOCUS } from '@/constants/diagramCanvas'
 import type { ExcalidrawScene } from '@/types/diagramTypes'
 import { useCellsStore } from '@/store/useCellsStore'
@@ -29,8 +30,9 @@ export function useMermaidScene(
 
   const sourceRef = useRef<string | null>(null)
   sourceRef.current = cell.kind === 'source' || cell.kind === 'diagram' ? cell.source : null
-  const lastWrittenRef = useRef<string | null>(null)
   const appliedRef = useRef<ExcalidrawScene | null>(null)
+
+  const { handleChange, handlePointerUp, markSaved } = useDiagramPersistence(cellId, sourceRef)
 
   const pendingSource = cell.kind === 'source' ? cell.source : null
 
@@ -44,10 +46,9 @@ export function useMermaidScene(
         const scene = await convertMermaidScene(mermaid)
         if (cancelled) return
 
-        const serialized = serializeDiagramCell(mermaid, scene)
-        lastWrittenRef.current = serialized
+        markSaved(scene)
         setConverted(scene)
-        updateCell(cellId, serialized)
+        updateCell(cellId, serializeDiagramCell(mermaid, scene))
       } catch (error) {
         console.error('[Excalidraw] Failed to convert Mermaid to Excalidraw:', error)
         if (!cancelled) setConverted({ elements: [], appState: { collaborators: [] } })
@@ -60,7 +61,7 @@ export function useMermaidScene(
     return () => {
       cancelled = true
     }
-  }, [pendingSource, cellId, updateCell])
+  }, [pendingSource, cellId, updateCell, markSaved])
 
   const scene = converted ?? (cell.kind === 'diagram' || cell.kind === 'scene' ? cell.scene : null)
 
@@ -76,21 +77,5 @@ export function useMermaidScene(
     })
   }, [excalidrawAPI, scene])
 
-  // Excalidraw fires onChange on its first paint, so persisting unconditionally
-  // rewrote every cell that was merely opened — and, once the source lives in
-  // the same blob, that first write replaced the payload with a bare scene and
-  // the diagram lost its graph.
-  const persist = useCallback(
-    (elements: readonly unknown[], appState: Record<string, unknown>, files?: unknown) => {
-      const scene = { elements: [...elements], appState, files } as ExcalidrawScene
-      const next = serializeDiagramCell(sourceRef.current, scene)
-      if (next === lastWrittenRef.current) return
-
-      lastWrittenRef.current = next
-      updateCell(cellId, next)
-    },
-    [cellId, updateCell]
-  )
-
-  return { scene, isConverting, persist }
+  return { scene, isConverting, onChange: handleChange, onPointerUp: handlePointerUp }
 }
