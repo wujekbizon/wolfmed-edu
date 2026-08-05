@@ -1,9 +1,10 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { Excalidraw as Draw, useHandleLibrary } from '@excalidraw/excalidraw';
 import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import ResizableComponent from '../Resizable';
 import { Cell } from '@/types/cellTypes';
 import { useCellsStore } from '@/store/useCellsStore';
+import { useCellFullscreen } from '@/context/CellFullscreenContext';
 import { useMermaidScene } from '@/hooks/useMermaidScene';
 import { useDiagramCamera } from '@/hooks/useDiagramCamera';
 import { useDiagramViewport } from '@/hooks/useDiagramViewport';
@@ -21,7 +22,8 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
 
     useHandleLibrary({ excalidrawAPI });
 
-    const { isAuto, fitAuto, resume, notifyScroll } = useDiagramCamera(excalidrawAPI);
+    const isFullscreen = useCellFullscreen();
+    const { isAuto, fitAuto, resume, armAuto, notifyScroll } = useDiagramCamera(excalidrawAPI);
     const { scene, isConverting, hasFailed, retry, onChange, onPointerUp } = useMermaidScene(
         cell.id,
         cellContent,
@@ -29,6 +31,19 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
         fitAuto
     );
     useDiagramViewport(wrapperRef, excalidrawAPI, fitAuto);
+
+    // Expanding a cell is an explicit request to see the whole diagram, so it
+    // overrides a camera the student had taken over. Resizing by hand does not:
+    // there they are adjusting the frame around a view they chose, and the
+    // "Dopasuj widok" button is how they ask for it back.
+    const didMountRef = useRef(false);
+    useEffect(() => {
+        if (!didMountRef.current) {
+            didMountRef.current = true;
+            return;
+        }
+        armAuto();
+    }, [isFullscreen, armAuto]);
 
     // Only what the canvas mounts with. A scene that arrives later is pushed
     // through updateScene, because Excalidraw reads this once.

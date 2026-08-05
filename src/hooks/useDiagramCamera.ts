@@ -61,6 +61,17 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
     move(true)
   }, [move])
 
+  /**
+   * Hands the camera back without moving it yet, for an explicit action that is
+   * about to change the container anyway — entering fullscreen re-arms here and
+   * lets the resize observer fit once the new layout has settled, rather than
+   * fitting twice against a size that is still changing.
+   */
+  const armAuto = useCallback(() => {
+    isAutoRef.current = true
+    setIsAuto(true)
+  }, [])
+
   // Runs at pointer frequency during a pan — keep it to a ref read.
   const notifyScroll = useCallback(() => {
     if (suppressedRef.current || !isAutoRef.current) return
@@ -75,5 +86,5 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
     []
   )
 
-  return { isAuto, fitAuto, resume, notifyScroll }
+  return { isAuto, fitAuto, resume, armAuto, notifyScroll }
 }
