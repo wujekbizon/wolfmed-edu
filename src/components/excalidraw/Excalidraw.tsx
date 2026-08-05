@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { Excalidraw as Draw, useHandleLibrary } from '@excalidraw/excalidraw';
 import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import ResizableComponent from '../Resizable';
@@ -8,8 +8,11 @@ import { useCellFullscreen } from '@/context/CellFullscreenContext';
 import { useMermaidScene } from '@/hooks/useMermaidScene';
 import { useDiagramCamera } from '@/hooks/useDiagramCamera';
 import { useDiagramViewport } from '@/hooks/useDiagramViewport';
+import { useDiagramSelection } from '@/hooks/useDiagramSelection';
+import { useDiagramFocus } from '@/hooks/useDiagramFocus';
 import ExcalidrawMenu from './ExcalidrawMenu';
 import DiagramControls from './DiagramControls';
+import DiagramNodeToolbar from './DiagramNodeToolbar';
 import DiagramConvertingState from './DiagramConvertingState';
 import DiagramErrorState from './DiagramErrorState';
 
@@ -23,7 +26,9 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     useHandleLibrary({ excalidrawAPI });
 
     const isFullscreen = useCellFullscreen();
-    const { isAuto, fitAuto, resume, armAuto, notifyScroll } = useDiagramCamera(excalidrawAPI);
+    const { isAuto, fitAuto, focus, resume, armAuto, notifyScroll } = useDiagramCamera(excalidrawAPI);
+    const { selection, sync } = useDiagramSelection();
+    const { focusNode, focusGroup } = useDiagramFocus(excalidrawAPI, focus);
     const { scene, isConverting, hasFailed, retry, onChange, onPointerUp } = useMermaidScene(
         cell.id,
         cellContent,
@@ -45,6 +50,16 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
         armAuto();
     }, [isFullscreen, armAuto]);
 
+    // Excalidraw also calls onChange when the host re-renders, so an inline
+    // closure here feeds a loop back into anything that sets state from it.
+    const handleChange = useCallback(
+        (elements: readonly never[], appState: never, files: never) => {
+            onChange(elements, appState, files);
+            sync(elements, appState);
+        },
+        [onChange, sync]
+    );
+
     // Only what the canvas mounts with. A scene that arrives later is pushed
     // through updateScene, because Excalidraw reads this once.
     const initialData = useMemo(() => scene ?? {}, [scene]);
@@ -58,7 +73,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                     <Draw
                         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
                         theme={theme}
-                        onChange={(elements, appState, files) => onChange(elements, appState as never, files)}
+                        onChange={handleChange as never}
                         onPointerUp={onPointerUp}
                         onScrollChange={notifyScroll}
                         initialData={initialData}
@@ -66,6 +81,13 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                     >
                         <ExcalidrawMenu theme={theme} onThemeChange={setTheme} />
                     </Draw>
+                    {selection && (
+                        <DiagramNodeToolbar
+                            selection={selection}
+                            onFocusNode={() => focusNode(selection)}
+                            onFocusGroup={() => focusGroup(selection)}
+                        />
+                    )}
                 </div>
             </ResizableComponent>
         </div>

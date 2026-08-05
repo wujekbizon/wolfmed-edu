@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types'
+import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import { CAMERA_SUPPRESS_BUFFER_MS, SCENE_FOCUS } from '@/constants/diagramCanvas'
 
 /**
@@ -22,9 +23,9 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const move = useCallback(
-    (animate: boolean) => {
+    (target: readonly ExcalidrawElement[] | null, animate: boolean) => {
       if (!excalidrawAPI) return
-      const elements = excalidrawAPI.getSceneElements()
+      const elements = target ?? excalidrawAPI.getSceneElements()
       if (elements.length === 0) return
 
       suppressedRef.current = true
@@ -49,7 +50,7 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
   /** A resize or a new scene: reframe only while the view is still ours. */
   const fitAuto = useCallback(
     (animate = false) => {
-      if (isAutoRef.current) move(animate)
+      if (isAutoRef.current) move(null, animate)
     },
     [move]
   )
@@ -58,8 +59,23 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
   const resume = useCallback(() => {
     isAutoRef.current = true
     setIsAuto(true)
-    move(true)
+    move(null, true)
   }, [move])
+
+  /**
+   * Zooming to part of the diagram is a view the student chose, so it takes the
+   * camera off auto the same way panning does — a later resize keeps what they
+   * are reading, and "Dopasuj widok" is how they get the whole diagram back.
+   */
+  const focus = useCallback(
+    (target: readonly ExcalidrawElement[]) => {
+      if (target.length === 0) return
+      isAutoRef.current = false
+      setIsAuto(false)
+      move(target, true)
+    },
+    [move]
+  )
 
   /**
    * Hands the camera back without moving it yet, for an explicit action that is
@@ -86,5 +102,5 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
     []
   )
 
-  return { isAuto, fitAuto, resume, armAuto, notifyScroll }
+  return { isAuto, fitAuto, focus, resume, armAuto, notifyScroll }
 }

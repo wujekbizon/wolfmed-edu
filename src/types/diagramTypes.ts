@@ -11,6 +11,16 @@ export interface DiagramElementData {
   role?: DiagramNodeRole
 }
 
+export interface DiagramSelection {
+  /** A subgraph selects as one Excalidraw group, so a click is often a group. */
+  kind: 'node' | 'group'
+  elementId: string
+  label: string
+  groupId: string | null
+  /** Viewport position of the selection's top edge, relative to the canvas box. */
+  anchor: { x: number; y: number }
+}
+
 export interface ExcalidrawScene {
   elements: unknown[]
   appState?: Record<string, unknown>

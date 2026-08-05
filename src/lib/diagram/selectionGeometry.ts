@@ -1,0 +1,59 @@
+import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
+import type { DiagramSelection } from '@/types/diagramTypes'
+
+type Elements = readonly ExcalidrawElement[]
+
+/**
+ * Guards the selection state against re-render loops.
+ *
+ * onChange also fires when the host re-renders, not only when the scene
+ * changes, so storing a freshly built object every time meant setState ->
+ * render -> onChange -> setState, which React eventually kills with "maximum
+ * update depth exceeded".
+ */
+export function isSameSelection(a: DiagramSelection | null, b: DiagramSelection | null): boolean {
+  if (a === b) return true
+  if (!a || !b) return false
+
+  return (
+    a.kind === b.kind &&
+    a.elementId === b.elementId &&
+    a.groupId === b.groupId &&
+    Math.round(a.anchor.x) === Math.round(b.anchor.x) &&
+    Math.round(a.anchor.y) === Math.round(b.anchor.y)
+  )
+}
+
+/**
+ * The group every selected element belongs to, innermost first.
+ *
+ * Nested subgraphs give a member several group ids ordered inside-out, so the
+ * first shared one is the tightest group that covers the whole selection.
+ */
+export function getCommonGroupId(selected: Elements): string | null {
+  const first = selected[0]
+  if (!first?.groupIds?.length) return null
+
+  return (
+    first.groupIds.find((groupId) =>
+      selected.every((element) => element.groupIds?.includes(groupId))
+    ) ?? null
+  )
+}
+
+/** Top-centre of the selection's bounding box, in scene coordinates. */
+export function getSelectionAnchor(selected: Elements): { x: number; y: number } {
+  if (selected.length === 0) return { x: 0, y: 0 }
+
+  let minX = Infinity
+  let minY = Infinity
+  let maxX = -Infinity
+
+  for (const element of selected) {
+    minX = Math.min(minX, element.x)
+    minY = Math.min(minY, element.y)
+    maxX = Math.max(maxX, element.x + element.width)
+  }
+
+  return { x: (minX + maxX) / 2, y: minY }
+}
