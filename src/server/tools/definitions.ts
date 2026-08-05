@@ -55,7 +55,7 @@ export const TOOL_DEFINITIONS = [
   },
   {
     name: 'diagram_tool',
-    description: 'Generate a visual diagram in Excalidraw format. Creates an editable diagram cell with shapes, arrows, and labels in Polish. Choose diagramType based on content: flowchart for processes/algorithms, sequence for time-based interactions.',
+    description: 'Generate a visual diagram in Excalidraw format. Creates an editable diagram cell with colour-coded shapes, arrows, grouping and labels in Polish. Choose diagramType based on content: flowchart for processes/algorithms, structure for anatomy and linear pathways, sequence for time-based interactions.',
     parameters: {
       type: 'object',
       properties: {
@@ -65,8 +65,13 @@ export const TOOL_DEFINITIONS = [
         },
         diagramType: {
           type: 'string',
-          enum: ['flowchart', 'sequence'], // 'class' - hierarchies/classifications (commented out for now)
-          description: 'Type of diagram: flowchart (processes, decisions), sequence (signaling, interactions over time). Default: flowchart'
+          enum: ['flowchart', 'structure', 'sequence'], // 'class' - hierarchies/classifications (commented out for now)
+          description: 'Type of diagram: flowchart (processes, decisions), structure (anatomy, linear pathways such as blood or air flow), sequence (signaling, interactions over time). Default: flowchart'
+        },
+        detail: {
+          type: 'string',
+          enum: ['prosty', 'szczegolowy'],
+          description: 'How much of the material to include: prosty (overview, ~8 nodes), szczegolowy (full pathway with branches, ~16 nodes). Default: szczegolowy'
         },
         focus: {
           type: 'string',
