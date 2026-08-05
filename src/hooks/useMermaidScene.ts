@@ -30,6 +30,8 @@ export function useMermaidScene(
   const cell = parseDiagramCellContent(content)
   const [converted, setConverted] = useState<ExcalidrawScene | null>(null)
   const [isConverting, setIsConverting] = useState(false)
+  const [hasFailed, setHasFailed] = useState(false)
+  const [retryToken, setRetryToken] = useState(0)
   const updateCell = useCellsStore((s) => s.updateCell)
 
   const sourceRef = useRef<string | null>(null)
@@ -46,6 +48,7 @@ export function useMermaidScene(
 
     async function convert(mermaid: string) {
       setIsConverting(true)
+      setHasFailed(false)
       try {
         const scene = await convertMermaidScene(mermaid)
         if (cancelled) return
@@ -55,7 +58,9 @@ export function useMermaidScene(
         updateCell(cellId, serializeDiagramCell(mermaid, scene))
       } catch (error) {
         console.error('[Excalidraw] Failed to convert Mermaid to Excalidraw:', error)
-        if (!cancelled) setConverted({ elements: [], appState: { collaborators: [] } })
+        // The cell keeps its source, so this is recoverable — leave the scene
+        // alone rather than writing an empty one over a diagram that exists.
+        if (!cancelled) setHasFailed(true)
       } finally {
         if (!cancelled) setIsConverting(false)
       }
@@ -65,7 +70,7 @@ export function useMermaidScene(
     return () => {
       cancelled = true
     }
-  }, [pendingSource, cellId, updateCell, markSaved])
+  }, [pendingSource, cellId, updateCell, markSaved, retryToken])
 
   const scene = converted ?? (cell.kind === 'diagram' || cell.kind === 'scene' ? cell.scene : null)
 
@@ -77,5 +82,12 @@ export function useMermaidScene(
     fitAuto(true)
   }, [excalidrawAPI, scene, fitAuto])
 
-  return { scene, isConverting, onChange: handleChange, onPointerUp: handlePointerUp }
+  return {
+    scene,
+    isConverting,
+    hasFailed,
+    retry: () => setRetryToken((token) => token + 1),
+    onChange: handleChange,
+    onPointerUp: handlePointerUp,
+  }
 }

@@ -10,6 +10,7 @@ import { useDiagramViewport } from '@/hooks/useDiagramViewport';
 import ExcalidrawMenu from './ExcalidrawMenu';
 import DiagramControls from './DiagramControls';
 import DiagramConvertingState from './DiagramConvertingState';
+import DiagramErrorState from './DiagramErrorState';
 
 const Excalidraw = ({cell}:{cell:Cell}) => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
@@ -21,7 +22,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     useHandleLibrary({ excalidrawAPI });
 
     const { isAuto, fitAuto, resume, notifyScroll } = useDiagramCamera(excalidrawAPI);
-    const { scene, isConverting, onChange, onPointerUp } = useMermaidScene(
+    const { scene, isConverting, hasFailed, retry, onChange, onPointerUp } = useMermaidScene(
         cell.id,
         cellContent,
         excalidrawAPI,
@@ -38,6 +39,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
             <ResizableComponent direction="vertical">
                 <div ref={wrapperRef} className="relative h-full pb-2 rounded">
                     {isConverting && <DiagramConvertingState />}
+                    {hasFailed && !isConverting && <DiagramErrorState onRetry={retry} />}
                     <Draw
                         excalidrawAPI={(api: ExcalidrawImperativeAPI) => setExcalidrawAPI(api)}
                         theme={theme}

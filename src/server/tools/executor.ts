@@ -6,6 +6,7 @@ import { getGoogleAI, logUsage } from '../vertex-rag/client'
 import { enforceItemCount } from '@/helpers/enforceItemCount'
 import { applyDiagramTheme } from '@/helpers/applyDiagramTheme'
 import { countMermaidNodes } from '@/helpers/countMermaidNodes'
+import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
 import {
   DEFAULT_DIAGRAM_DETAIL,
   DIAGRAM_BUDGET_OVERRUN_FACTOR,
@@ -391,7 +392,7 @@ async function diagramTool(args: any): Promise<ToolResult> {
       }
     })
     logUsage('diagram_tool', response)
-    return stripCodeFences(response.text || example)
+    return repairMermaidSubgraphs(stripCodeFences(response.text || example))
   }
 
   let mermaidContent = await generate(userMessage)
