@@ -6,7 +6,6 @@ import { parseDiagramCellContent } from '@/helpers/parseDiagramCellContent'
 import { serializeDiagramCell } from '@/helpers/serializeDiagramCell'
 import { convertMermaidScene } from '@/lib/diagram/convertMermaidScene'
 import { useDiagramPersistence } from '@/hooks/useDiagramPersistence'
-import { SCENE_FOCUS } from '@/constants/diagramCanvas'
 import type { ExcalidrawScene } from '@/types/diagramTypes'
 import { useCellsStore } from '@/store/useCellsStore'
 
@@ -17,11 +16,16 @@ import { useCellsStore } from '@/store/useCellsStore'
  * initialData once, so the previous version only worked because flipping the
  * converting flag unmounted and remounted the canvas — an accidental remount
  * that would have broken the moment the loading state changed.
+ *
+ * Framing the new scene goes through the camera owner rather than calling
+ * scrollToContent here: two independent camera writers means a resize landing
+ * mid-move yanks the view somewhere neither of them intended.
  */
 export function useMermaidScene(
   cellId: string,
   content: string | undefined,
-  excalidrawAPI: ExcalidrawImperativeAPI | null
+  excalidrawAPI: ExcalidrawImperativeAPI | null,
+  fitAuto: (animate?: boolean) => void
 ) {
   const cell = parseDiagramCellContent(content)
   const [converted, setConverted] = useState<ExcalidrawScene | null>(null)
@@ -70,12 +74,8 @@ export function useMermaidScene(
     appliedRef.current = scene
 
     excalidrawAPI.updateScene({ elements: scene.elements as never })
-    excalidrawAPI.scrollToContent(scene.elements as never, {
-      fitToContent: true,
-      animate: true,
-      duration: SCENE_FOCUS.duration,
-    })
-  }, [excalidrawAPI, scene])
+    fitAuto(true)
+  }, [excalidrawAPI, scene, fitAuto])
 
   return { scene, isConverting, onChange: handleChange, onPointerUp: handlePointerUp }
 }

@@ -2,6 +2,18 @@ export const SCENE_FOCUS = {
   duration: 400,
 }
 
+/** Collapses a resize drag into one fit instead of one per observed frame. */
+export const RESIZE_DEBOUNCE_MS = 120
+
+/**
+ * How long after a programmatic camera move to keep ignoring scroll events.
+ *
+ * One animated scrollToContent emits ~19 onScrollChange calls; without this the
+ * very first auto-fit would be read as the student taking manual control and
+ * auto-fit would switch itself off.
+ */
+export const CAMERA_SUPPRESS_BUFFER_MS = 150
+
 /**
  * Excalidraw reports scroll, zoom, selection and cursor through the same
  * callback as real edits, so persisting the whole appState wrote a new revision
