@@ -3,7 +3,7 @@ import GradientOverlay from "@/components/GradientOverlay";
 import FadeInSection from "@/components/FadeInSection";
 import PathHero from "@/components/path/PathHero";
 import PathStoryHero from "@/components/path/PathStoryHero";
-import PathFeatures from "@/components/path/PathFeatures";
+import PathTools from "@/components/path/PathTools";
 import PricingSection from "@/components/pricing/PricingSection";
 import PathTimeline from "@/components/path/PathTimeline";
 import { CAREER_STORY } from "@/constants/careerStory";
@@ -36,10 +36,8 @@ export default function SimplePathLayout({
           </FadeInSection>
         )}
 
-        {features && features.length > 0 && (
-          <FadeInSection className='w-full'>
-            <PathFeatures features={features} />
-          </FadeInSection>
+        {features && features.length > 0 && pricing && (
+          <PathTools features={features} courseSlug={pricing.courseSlug} />
         )}
 
         {pricing && (

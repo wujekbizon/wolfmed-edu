@@ -2,7 +2,7 @@ import { PathLayoutProps } from "@/types/careerPathsTypes";
 import GradientOverlay from "@/components/GradientOverlay";
 import CurriculumMap from "../../components/CurriculumMap";
 import PathHero from "@/components/path/PathHero";
-import PathFeatures from "@/components/path/PathFeatures";
+import PathTools from "@/components/path/PathTools";
 import PricingSection from "@/components/pricing/PricingSection";
 
 export default function RichPathLayout({
@@ -37,7 +37,9 @@ export default function RichPathLayout({
         </div>
       </section>
 
-      {features && features.length > 0 && <PathFeatures features={features} />}
+      {features && features.length > 0 && pricing && (
+        <PathTools features={features} courseSlug={pricing.courseSlug} />
+      )}
 
       {pricing && (
         <PricingSection
