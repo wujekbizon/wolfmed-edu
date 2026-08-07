@@ -11,7 +11,7 @@ export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
   const { active, setScene } = useSceneReveal(scenes.length)
 
   return (
-    <div className="px-6 sm:px-10 lg:pl-10 lg:pr-12">
+    <div className="px-6 pb-6 sm:px-10 sm:pb-10 lg:pl-0 lg:pr-14 lg:pb-0">
       {scenes.map((scene, index) => (
         <article
           key={scene.time}
