@@ -9,12 +9,15 @@ import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { Settings } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
+import { usePremiumAccess } from '@/hooks/usePremiumAccess'
+import DrawerNavLink from '@/components/nav/DrawerNavLink'
 
 export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
   const { user } = useUser()
+  const isPremium = usePremiumAccess()
   const ownedCourses = (user?.publicMetadata?.ownedCourses as string[]) ?? []
   const hasCourses = ownedCourses.length > 0
   const visibleSideMenuLinks = sideMenuNavigationLinks.filter(
@@ -60,57 +63,18 @@ export default function NavDrawer() {
               Menu główne
             </h3>
             <div className="flex flex-col">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.linkUrl
-                const isPanelDisabled = link.linkUrl === '/panel' && !hasCourses
-
-                if (isPanelDisabled) {
-                  return (
-                    <span
-                      key={link.id}
-                      title="Kup kurs, aby uzyskać dostęp do panelu"
-                      className="relative flex items-center gap-3.5 px-3 py-2 rounded-xl opacity-40 cursor-not-allowed select-none"
-                    >
-                      <span className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 bg-white/50 border border-white/60">
-                        {link.icon}
-                      </span>
-                      <span className="text-sm font-medium text-zinc-700">{link.label}</span>
-                    </span>
-                  )
-                }
-
-                return (
-                  <Link
-                    onClick={toggleMenu}
-                    href={link.linkUrl}
-                    key={link.id}
-                    className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
-                      transition-all duration-200
-                      ${isActive
-                        ? 'text-rose-600'
-                        : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
-                      }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
-                    )}
-                    <span
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
-                        ${isActive
-                          ? 'bg-gradient-to-br from-rose-400/25 to-red-300/15 shadow-sm shadow-rose-200/40'
-                          : 'bg-white/50 border border-white/60 group-hover:bg-white/70 group-hover:shadow-sm'
-                        }`}
-                    >
-                      <span className="transition-transform duration-200 group-hover:scale-110">
-                        {link.icon}
-                      </span>
-                    </span>
-                    <span className={`text-sm font-medium ${isActive ? 'font-semibold' : ''}`}>
-                      {link.label}
-                    </span>
-                  </Link>
-                )
-              })}
+              {navLinks.map((link) => (
+                <DrawerNavLink
+                  key={link.id}
+                  href={link.linkUrl}
+                  label={link.label}
+                  icon={link.icon}
+                  active={pathname === link.linkUrl}
+                  locked={link.linkUrl === '/panel' && !hasCourses}
+                  lockedTitle="Kup kurs, aby uzyskać dostęp do panelu"
+                  onNavigate={toggleMenu}
+                />
+              ))}
             </div>
           </div>
 
@@ -119,40 +83,18 @@ export default function NavDrawer() {
               Panel użytkownika
             </h3>
             <div className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
-              {visibleSideMenuLinks.map((link) => {
-                const isActive = pathname === link.url
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.url}
-                    onClick={toggleMenu}
-                    className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl
-                      transition-all duration-200
-                      ${isActive
-                        ? 'text-rose-600'
-                        : 'text-zinc-700 hover:text-zinc-900 hover:bg-white/40'
-                      }`}
-                  >
-                    {isActive && (
-                      <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-rose-400" />
-                    )}
-                    <span
-                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200
-                        ${isActive
-                          ? 'bg-gradient-to-br from-rose-400/25 to-red-300/15 shadow-sm shadow-rose-200/40'
-                          : 'bg-white/50 border border-white/60 group-hover:bg-white/70 group-hover:shadow-sm'
-                        }`}
-                    >
-                      <span className="transition-transform duration-200 group-hover:scale-110">
-                        {link.icon}
-                      </span>
-                    </span>
-                    <span className={`text-sm font-medium ${isActive ? 'font-semibold' : ''}`}>
-                      {link.label}
-                    </span>
-                  </Link>
-                )
-              })}
+              {visibleSideMenuLinks.map((link) => (
+                <DrawerNavLink
+                  key={link.label}
+                  href={link.url}
+                  label={link.label}
+                  icon={link.icon}
+                  active={pathname === link.url}
+                  locked={!!link.requiresSupporter && !isPremium}
+                  lockedTitle="Wymaga planu Premium"
+                  onNavigate={toggleMenu}
+                />
+              ))}
             </div>
           </div>
         </nav>
