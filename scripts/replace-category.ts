@@ -24,7 +24,7 @@ function parseArgs(args: string[]) {
 
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i]
-    if (arg === '--') {
+    if (arg === undefined || arg === '--') {
       continue
     } else if (arg === '--dry-run') {
       dryRun = true
@@ -45,8 +45,8 @@ function parseArgs(args: string[]) {
     }
   }
 
-  if (positional.length !== 2) usage()
   const [oldCategory, newCategory] = positional
+  if (oldCategory === undefined || newCategory === undefined || positional.length !== 2) usage()
 
   return { oldCategory, newCategory, file, output: output ?? file, dryRun }
 }
@@ -66,8 +66,9 @@ async function main() {
   let changed = 0
   for (const value of json as QuestionRecord[]) {
     if (!value || typeof value !== 'object' || Array.isArray(value)) continue
-    if (value.meta?.category === oldCategory) {
-      value.meta.category = newCategory
+    const meta = value.meta
+    if (meta && meta.category === oldCategory) {
+      meta.category = newCategory
       changed += 1
     }
   }

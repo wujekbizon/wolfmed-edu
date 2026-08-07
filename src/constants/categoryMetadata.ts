@@ -2021,8 +2021,8 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  'choroby-wewnetrzne-interna': {
-    category: 'choroby-wewnetrzne-interna',
+  'pielegniarstwo-internistyczne': {
+    category: 'pielegniarstwo-internistyczne',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
