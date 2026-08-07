@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { getCommonGroupId, getSelectionAnchor, isSameSelection } from "@/lib/diagram/selectionGeometry"
+import { getCommonGroupId, getSelectionBounds, isSameSelection } from "@/lib/diagram/selectionGeometry"
 import type { DiagramSelection } from "@/types/diagramTypes"
 
 const box = (id: string, x: number, y: number, groupIds: string[] = []) =>
@@ -26,10 +26,14 @@ test("elements with no group have none", () => {
   assert.equal(getCommonGroupId([]), null)
 })
 
-test("the anchor is the top-centre of the bounding box", () => {
-  const anchor = getSelectionAnchor([box("a", 0, 200), box("b", 300, 40)])
-
-  assert.deepEqual(anchor, { x: 200, y: 40 })
+test("the bounds cover every selected element", () => {
+  assert.deepEqual(getSelectionBounds([box("a", 0, 200), box("b", 300, 40)]), {
+    minX: 0,
+    minY: 40,
+    maxX: 400,
+    maxY: 250,
+  })
+  assert.equal(getSelectionBounds([]), null)
 })
 
 const selection = (over: Partial<DiagramSelection> = {}): DiagramSelection => ({

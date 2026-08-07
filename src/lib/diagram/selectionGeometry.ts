@@ -1,34 +1,6 @@
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
-import { TOOLBAR_GAP, TOOLBAR_MARGIN } from '@/constants/diagramCanvas'
-import type { DiagramAnchor, DiagramSelection } from '@/types/diagramTypes'
+import type { DiagramSelection } from '@/types/diagramTypes'
 
-interface Size {
-  width: number
-  height: number
-}
-
-/**
- * Keeps the toolbar inside the cell.
- *
- * The anchor follows the selection, which is often partly or wholly outside
- * the visible canvas — a group whose top edge is above the viewport gives a
- * negative y, and the toolbar was drawn over the page above the cell.
- *
- * The element is drawn centred above the anchor, so the limits are expressed
- * in terms of where that puts its box.
- */
-export function clampAnchor(anchor: DiagramAnchor, toolbar: Size, canvas: Size): DiagramAnchor {
-  const halfWidth = toolbar.width / 2
-  const minX = TOOLBAR_MARGIN + halfWidth
-  const maxX = Math.max(minX, canvas.width - TOOLBAR_MARGIN - halfWidth)
-  const minY = TOOLBAR_MARGIN + toolbar.height + TOOLBAR_GAP
-  const maxY = Math.max(minY, canvas.height - TOOLBAR_MARGIN)
-
-  return {
-    x: Math.min(Math.max(anchor.x, minX), maxX),
-    y: Math.min(Math.max(anchor.y, minY), maxY),
-  }
-}
 
 type Elements = readonly ExcalidrawElement[]
 
@@ -65,19 +37,29 @@ export function getCommonGroupId(selected: Elements): string | null {
   )
 }
 
-/** Top-centre of the selection's bounding box, in scene coordinates. */
-export function getSelectionAnchor(selected: Elements): { x: number; y: number } {
-  if (selected.length === 0) return { x: 0, y: 0 }
+export interface SceneBounds {
+  minX: number
+  minY: number
+  maxX: number
+  maxY: number
+}
+
+/** The selection's bounding box, in scene coordinates. */
+export function getSelectionBounds(selected: Elements): SceneBounds | null {
+  if (selected.length === 0) return null
 
   let minX = Infinity
   let minY = Infinity
   let maxX = -Infinity
+  let maxY = -Infinity
 
   for (const element of selected) {
     minX = Math.min(minX, element.x)
     minY = Math.min(minY, element.y)
     maxX = Math.max(maxX, element.x + element.width)
+    maxY = Math.max(maxY, element.y + element.height)
   }
 
-  return { x: (minX + maxX) / 2, y: minY }
+  return { minX, minY, maxX, maxY }
 }
+

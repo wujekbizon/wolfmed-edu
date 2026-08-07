@@ -1,12 +1,16 @@
 import { useLayoutEffect, type RefObject } from 'react'
-import Button from '@/components/ui/Button'
+import { Group, ZoomIn } from 'lucide-react'
 import { applyAnchor } from '@/hooks/useDiagramSelection'
-import type { DiagramAnchor, DiagramSelection } from '@/types/diagramTypes'
+import DiagramIconButton from './DiagramIconButton'
+import { DIAGRAM_SURFACE, type DiagramTheme } from '@/constants/diagramChrome'
+import type { ToolbarPlacement } from '@/lib/diagram/toolbarPlacement'
+import type { DiagramSelection } from '@/types/diagramTypes'
 
 interface DiagramNodeToolbarProps {
   selection: DiagramSelection
   toolbarRef: RefObject<HTMLDivElement | null>
-  anchorRef: RefObject<DiagramAnchor>
+  anchorRef: RefObject<ToolbarPlacement>
+  theme: DiagramTheme
   onFocusNode: () => void
   onFocusGroup: () => void
 }
@@ -17,17 +21,13 @@ interface DiagramNodeToolbarProps {
  * who was reaching for a node is worse than making them press a button.
  *
  * Position comes from a ref rather than props — it changes on every frame of a
- * camera move, which no component should re-render for. It is clamped to the
- * canvas: the anchor follows a selection that is often partly off-screen, and
- * an unclamped toolbar was drawn over the page above the cell.
- *
- * Buttons are full size rather than compact — nearly all of this is used on a
- * phone, where a 32px target is a miss waiting to happen.
+ * camera move, which no component should re-render for.
  */
 export default function DiagramNodeToolbar({
   selection,
   toolbarRef,
   anchorRef,
+  theme,
   onFocusNode,
   onFocusGroup,
 }: DiagramNodeToolbarProps) {
@@ -40,17 +40,13 @@ export default function DiagramNodeToolbar({
   return (
     <div
       ref={toolbarRef}
-      className="pointer-events-auto absolute z-20 flex -translate-x-1/2 -translate-y-full gap-1 rounded-lg border border-zinc-200 bg-white/95 p-1 shadow-md"
+      className={`pointer-events-auto absolute z-20 flex gap-0.5 rounded-lg border p-1 shadow-md ${DIAGRAM_SURFACE[theme].panel}`}
     >
       {selection.kind === 'node' && (
-        <Button variant="ghost" size="md" onClick={onFocusNode} title="Powiększ ten element i jego powiązania">
-          Powiększ
-        </Button>
+        <DiagramIconButton icon={ZoomIn} label="Powiększ element i jego powiązania" theme={theme} onClick={onFocusNode} />
       )}
       {selection.groupId && (
-        <Button variant="ghost" size="md" onClick={onFocusGroup} title="Powiększ całą grupę">
-          Pokaż grupę
-        </Button>
+        <DiagramIconButton icon={Group} label="Powiększ całą grupę" theme={theme} onClick={onFocusGroup} />
       )}
     </div>
   )

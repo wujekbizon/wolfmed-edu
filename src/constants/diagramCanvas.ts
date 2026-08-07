@@ -2,6 +2,21 @@ export const SCENE_FOCUS = {
   duration: 400,
 }
 
+/**
+ * The readable zoom range a fit is allowed to produce.
+ *
+ * Below the floor the labels stop being legible and the student zooms in by
+ * hand anyway; above the ceiling a three-node diagram would balloon. Between
+ * them the fit is honoured exactly, which is why a wide cell still shows the
+ * whole diagram and a phone shows a readable part of it — with no check for
+ * what kind of device it is.
+ */
+export const MIN_FIT_ZOOM = 0.45
+export const MAX_FIT_ZOOM = 1
+
+/** Share of the canvas the drawing occupies when it fits, leaving a margin. */
+export const FIT_PADDING = 0.9
+
 /** Collapses a resize drag into one fit instead of one per observed frame. */
 export const RESIZE_DEBOUNCE_MS = 120
 
@@ -40,6 +55,14 @@ export const SAVE_SETTLE_MS = 80
  *  when the selection sits above or beside the visible area. */
 export const TOOLBAR_GAP = 8
 export const TOOLBAR_MARGIN = 8
+
+/**
+ * Bands at the top and bottom of the canvas that Excalidraw's own UI occupies —
+ * the tool island above, and the shape actions bar on mobile below. The
+ * selection toolbar keeps out of both rather than being drawn underneath them.
+ */
+export const TOOLBAR_SAFE_TOP = 56
+export const TOOLBAR_SAFE_BOTTOM = 64
 
 /** Used until the toolbar has been measured, on the frame it first appears. */
 export const TOOLBAR_FALLBACK_SIZE = { width: 120, height: 36 }

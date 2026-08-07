@@ -4,9 +4,10 @@ import { useCallback, useRef, useState, type RefObject } from 'react'
 import { sceneCoordsToViewportCoords } from '@excalidraw/excalidraw'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import { DIAGRAM_GROUP_ROLE } from '@/constants/diagramRoles'
-import { clampAnchor, getCommonGroupId, getSelectionAnchor, isSameSelection } from '@/lib/diagram/selectionGeometry'
+import { getCommonGroupId, getSelectionBounds, isSameSelection } from '@/lib/diagram/selectionGeometry'
+import { getToolbarPlacement, type ToolbarPlacement } from '@/lib/diagram/toolbarPlacement'
 import { TOOLBAR_FALLBACK_SIZE, TOOLBAR_GAP } from '@/constants/diagramCanvas'
-import type { DiagramAnchor, DiagramSelection } from '@/types/diagramTypes'
+import type { DiagramSelection } from '@/types/diagramTypes'
 
 interface AppStateLike {
   selectedElementIds?: Record<string, boolean>
@@ -34,7 +35,7 @@ interface AppStateLike {
  */
 export function useDiagramSelection(toolbarRef: RefObject<HTMLDivElement | null>) {
   const [selection, setSelection] = useState<DiagramSelection | null>(null)
-  const anchorRef = useRef<DiagramAnchor>({ x: 0, y: 0 })
+  const anchorRef = useRef<ToolbarPlacement>({ x: 0, y: 0, placement: 'above' })
 
   const sync = useCallback(
     (elements: readonly ExcalidrawElement[], appState: AppStateLike) => {
@@ -52,23 +53,35 @@ export function useDiagramSelection(toolbarRef: RefObject<HTMLDivElement | null>
       const representative = single ?? container ?? named[0]
       if (!representative) return
 
-      const bounds = getSelectionAnchor(selected)
-      const { x, y } = sceneCoordsToViewportCoords(
-        { sceneX: bounds.x, sceneY: bounds.y },
+      const bounds = getSelectionBounds(selected)
+      if (!bounds) return
+
+      // sceneCoordsToViewportCoords includes the canvas offset; the toolbar
+      // sits inside that same box, so it has to come back off.
+      const topLeft = sceneCoordsToViewportCoords(
+        { sceneX: bounds.minX, sceneY: bounds.minY },
         appState as never
       )
+      const bottomRight = sceneCoordsToViewportCoords(
+        { sceneX: bounds.maxX, sceneY: bounds.maxY },
+        appState as never
+      )
+      const canvas = { width: appState.width, height: appState.height }
 
       const toolbar = toolbarRef.current
       const size = toolbar?.offsetWidth
         ? { width: toolbar.offsetWidth, height: toolbar.offsetHeight }
         : TOOLBAR_FALLBACK_SIZE
 
-      // sceneCoordsToViewportCoords includes the canvas offset; the toolbar
-      // sits inside that same box, so it has to come back off.
-      anchorRef.current = clampAnchor(
-        { x: x - appState.offsetLeft, y: y - appState.offsetTop },
-        size,
-        { width: appState.width, height: appState.height }
+      anchorRef.current = getToolbarPlacement(
+        {
+          left: topLeft.x - appState.offsetLeft,
+          top: topLeft.y - appState.offsetTop,
+          right: bottomRight.x - appState.offsetLeft,
+          bottom: bottomRight.y - appState.offsetTop,
+        },
+        canvas,
+        size
       )
       applyAnchor(toolbar, anchorRef.current)
 
@@ -87,8 +100,15 @@ export function useDiagramSelection(toolbarRef: RefObject<HTMLDivElement | null>
   return { selection, anchorRef, sync }
 }
 
-export function applyAnchor(element: HTMLElement | null, anchor: DiagramAnchor): void {
+/**
+ * Position is written to the element rather than rendered, so the transform
+ * that flips the toolbar above or below its selection goes with it.
+ */
+export function applyAnchor(element: HTMLElement | null, placement: ToolbarPlacement): void {
   if (!element) return
-  element.style.left = `${anchor.x}px`
-  element.style.top = `${anchor.y - TOOLBAR_GAP}px`
+
+  const isAbove = placement.placement === 'above'
+  element.style.left = `${placement.x}px`
+  element.style.top = `${placement.y + (isAbove ? -TOOLBAR_GAP : TOOLBAR_GAP)}px`
+  element.style.transform = isAbove ? 'translate(-50%, -100%)' : 'translate(-50%, 0)'
 }

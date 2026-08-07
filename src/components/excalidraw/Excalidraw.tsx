@@ -78,7 +78,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                         onPointerUp={onPointerUp}
                         onScrollChange={notifyScroll}
                         initialData={initialData}
-                        renderTopRightUI={() => <DiagramControls isAuto={isAuto} onFit={resume} />}
+                        renderTopRightUI={() => <DiagramControls isAuto={isAuto} theme={theme} onFit={resume} />}
                     >
                         <ExcalidrawMenu theme={theme} onThemeChange={setTheme} />
                     </Draw>
@@ -87,6 +87,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                             selection={selection}
                             toolbarRef={toolbarRef}
                             anchorRef={anchorRef}
+                            theme={theme}
                             onFocusNode={() => focusNode(selection)}
                             onFocusGroup={() => focusGroup(selection)}
                         />

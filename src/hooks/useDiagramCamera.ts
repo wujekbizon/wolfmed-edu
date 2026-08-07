@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
+import { CaptureUpdateAction } from '@excalidraw/excalidraw'
+import { computeFitView } from '@/lib/diagram/computeFitView'
 import { CAMERA_SUPPRESS_BUFFER_MS, SCENE_FOCUS } from '@/constants/diagramCanvas'
 
 /**
@@ -31,11 +33,24 @@ export function useDiagramCamera(excalidrawAPI: ExcalidrawImperativeAPI | null) 
       suppressedRef.current = true
       if (timerRef.current) clearTimeout(timerRef.current)
 
-      excalidrawAPI.scrollToContent(elements, {
-        fitToContent: true,
-        animate,
-        duration: SCENE_FOCUS.duration,
-      })
+      const appState = excalidrawAPI.getAppState()
+      const view = computeFitView(elements, { width: appState.width, height: appState.height })
+
+      // scrollToContent has no zoom floor, so a view that had to be clamped is
+      // applied directly. It only happens when fitting would be unreadable, and
+      // there is nothing to animate away from in that case anyway.
+      if (view?.isClamped) {
+        excalidrawAPI.updateScene({
+          appState: { ...appState, zoom: { value: view.zoom as never }, scrollX: view.scrollX, scrollY: view.scrollY },
+          captureUpdate: CaptureUpdateAction.NEVER,
+        })
+      } else {
+        excalidrawAPI.scrollToContent(elements, {
+          fitToContent: true,
+          animate,
+          duration: SCENE_FOCUS.duration,
+        })
+      }
 
       timerRef.current = setTimeout(
         () => {
