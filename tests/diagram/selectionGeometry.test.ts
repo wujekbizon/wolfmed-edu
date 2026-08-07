@@ -1,6 +1,6 @@
 import test from "node:test"
 import assert from "node:assert/strict"
-import { getCommonGroupId, getSelectionBounds, isSameSelection } from "@/lib/diagram/selectionGeometry"
+import { getCommonGroupId, isSameSelection } from "@/lib/diagram/selectionGeometry"
 import type { DiagramSelection } from "@/types/diagramTypes"
 
 const box = (id: string, x: number, y: number, groupIds: string[] = []) =>
@@ -24,16 +24,6 @@ test("a group shared by only part of the selection is not common", () => {
 test("elements with no group have none", () => {
   assert.equal(getCommonGroupId([box("a", 0, 0)]), null)
   assert.equal(getCommonGroupId([]), null)
-})
-
-test("the bounds cover every selected element", () => {
-  assert.deepEqual(getSelectionBounds([box("a", 0, 200), box("b", 300, 40)]), {
-    minX: 0,
-    minY: 40,
-    maxX: 400,
-    maxY: 250,
-  })
-  assert.equal(getSelectionBounds([]), null)
 })
 
 const selection = (over: Partial<DiagramSelection> = {}): DiagramSelection => ({

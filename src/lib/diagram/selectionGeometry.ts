@@ -37,29 +37,4 @@ export function getCommonGroupId(selected: Elements): string | null {
   )
 }
 
-export interface SceneBounds {
-  minX: number
-  minY: number
-  maxX: number
-  maxY: number
-}
-
-/** The selection's bounding box, in scene coordinates. */
-export function getSelectionBounds(selected: Elements): SceneBounds | null {
-  if (selected.length === 0) return null
-
-  let minX = Infinity
-  let minY = Infinity
-  let maxX = -Infinity
-  let maxY = -Infinity
-
-  for (const element of selected) {
-    minX = Math.min(minX, element.x)
-    minY = Math.min(minY, element.y)
-    maxX = Math.max(maxX, element.x + element.width)
-    maxY = Math.max(maxY, element.y + element.height)
-  }
-
-  return { minX, minY, maxX, maxY }
-}
 

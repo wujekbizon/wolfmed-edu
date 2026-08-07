@@ -12,7 +12,6 @@ import { useDiagramSelection } from '@/hooks/useDiagramSelection';
 import { useDiagramFocus } from '@/hooks/useDiagramFocus';
 import ExcalidrawMenu from './ExcalidrawMenu';
 import DiagramControls from './DiagramControls';
-import DiagramNodeToolbar from './DiagramNodeToolbar';
 import DiagramConvertingState from './DiagramConvertingState';
 import DiagramErrorState from './DiagramErrorState';
 
@@ -20,7 +19,6 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
     const [theme, setTheme] = useState<'light' | 'dark'>('dark');
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const toolbarRef = useRef<HTMLDivElement>(null);
 
     const cellContent = useCellsStore((s) => s.data[cell.id]?.content);
 
@@ -28,8 +26,8 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
 
     const isFullscreen = useCellFullscreen();
     const { isAuto, fitAuto, focus, resume, armAuto, notifyScroll } = useDiagramCamera(excalidrawAPI);
-    const { selection, anchorRef, sync } = useDiagramSelection(toolbarRef);
-    const { focusNode, focusGroup } = useDiagramFocus(excalidrawAPI, focus);
+    const { selection, sync } = useDiagramSelection();
+    const focusSelection = useDiagramFocus(excalidrawAPI, focus);
     const { scene, isConverting, hasFailed, retry, onChange, onPointerUp } = useMermaidScene(
         cell.id,
         cellContent,
@@ -78,20 +76,18 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                         onPointerUp={onPointerUp}
                         onScrollChange={notifyScroll}
                         initialData={initialData}
-                        renderTopRightUI={() => <DiagramControls isAuto={isAuto} theme={theme} onFit={resume} />}
+                        renderTopRightUI={() => (
+                            <DiagramControls
+                                isAuto={isAuto}
+                                selection={selection}
+                                theme={theme}
+                                onFit={resume}
+                                onFocus={() => selection && focusSelection(selection)}
+                            />
+                        )}
                     >
                         <ExcalidrawMenu theme={theme} onThemeChange={setTheme} />
                     </Draw>
-                    {selection && (
-                        <DiagramNodeToolbar
-                            selection={selection}
-                            toolbarRef={toolbarRef}
-                            anchorRef={anchorRef}
-                            theme={theme}
-                            onFocusNode={() => focusNode(selection)}
-                            onFocusGroup={() => focusGroup(selection)}
-                        />
-                    )}
                 </div>
             </ResizableComponent>
         </div>
