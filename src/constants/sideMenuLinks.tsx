@@ -50,6 +50,7 @@ export const sideMenuNavigationLinks = [
     label: 'Diagnozy i Interwencje',
     icon: <DiagnozyIcon width={26} height={26} />,
     requiresCourse: 'pielegniarstwo',
+    requiresSupporter: true,
   },
   {
     url: '/panel/wyniki',
