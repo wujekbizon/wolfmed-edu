@@ -1,34 +1,36 @@
-import { useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 
-// Marks a scene active as its trigger crosses the vertical middle of the
-// viewport: the -50%/-50% root margin collapses the observer's root to a
-// centre line, so exactly one trigger intersects at a time.
-export function useActiveScene(count: number) {
+// Marks a scene active as it crosses the middle of the scroll frame. The
+// observer's root is the frame itself, not the viewport — the scenes scroll
+// inside it, so the page would never report them moving.
+export function useActiveScene(count: number, root: RefObject<HTMLElement | null>) {
   const [active, setActive] = useState(0)
-  const triggers = useRef<(HTMLElement | null)[]>([])
+  const scenes = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
+    if (!root.current) return
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue
-          const index = triggers.current.indexOf(entry.target as HTMLElement)
+          const index = scenes.current.indexOf(entry.target as HTMLElement)
           if (index !== -1) setActive(index)
         }
       },
-      { rootMargin: '-50% 0px -50% 0px', threshold: 0 }
+      { root: root.current, rootMargin: '-45% 0px -45% 0px', threshold: 0 }
     )
 
-    for (const trigger of triggers.current) {
-      if (trigger) observer.observe(trigger)
+    for (const scene of scenes.current) {
+      if (scene) observer.observe(scene)
     }
 
     return () => observer.disconnect()
-  }, [count])
+  }, [count, root])
 
-  const setTrigger = (index: number) => (node: HTMLElement | null) => {
-    triggers.current[index] = node
+  const setScene = (index: number) => (node: HTMLElement | null) => {
+    scenes.current[index] = node
   }
 
-  return { active, setTrigger }
+  return { active, setScene }
 }

@@ -1,45 +1,37 @@
 'use client'
 
+import { useRef } from 'react'
 import { useActiveScene } from '@/hooks/useActiveScene'
 import StorySceneCard from './StorySceneCard'
 import type { StoryScene } from '@/types/pathStoryTypes'
 
-// One scene at a time: the triggers below supply the scroll distance while the
-// frame stays pinned, so scrolling swaps the scene instead of moving it.
+// One scene fills the frame at a time. Scroll snapping does the sequencing;
+// the active index only drives the fade, so the track still works if the
+// observer never fires.
 export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
-  const { active, setTrigger } = useActiveScene(scenes.length)
+  const frame = useRef<HTMLDivElement>(null)
+  const { active, setScene } = useActiveScene(scenes.length, frame)
 
   return (
-    <div className="relative">
-      <div aria-hidden>
-        {scenes.map((scene, index) => (
-          <div key={scene.time} ref={setTrigger(index)} className="h-[85vh]" />
-        ))}
-      </div>
-
-      <div className="absolute inset-0">
-        <div className="sticky top-24 h-[70vh] flex items-center">
-          <div className="grid w-full">
-            {scenes.map((scene, index) => (
-              <div
-                key={scene.time}
-                aria-hidden={index !== active}
-                className={`col-start-1 row-start-1 transition-all duration-500 ease-out motion-reduce:transition-none ${
-                  index === active
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-3 pointer-events-none'
-                }`}
-              >
-                <StorySceneCard
-                  scene={scene}
-                  index={index}
-                  total={scenes.length}
-                />
-              </div>
-            ))}
+    <div
+      ref={frame}
+      className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-thin overscroll-contain"
+    >
+      {scenes.map((scene, index) => (
+        <div
+          key={scene.time}
+          ref={setScene(index)}
+          className="h-full snap-start flex items-center py-8"
+        >
+          <div
+            className={`w-full transition-all duration-500 ease-out motion-reduce:transition-none ${
+              index === active ? 'opacity-100 translate-y-0' : 'opacity-30 translate-y-2'
+            }`}
+          >
+            <StorySceneCard scene={scene} index={index} total={scenes.length} />
           </div>
         </div>
-      </div>
+      ))}
     </div>
   )
 }
