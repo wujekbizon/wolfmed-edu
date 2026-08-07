@@ -1,11 +1,15 @@
 import { stripMermaidLabels } from '@/helpers/stripMermaidLabels'
+import { MERMAID_ID } from '@/constants/mermaidSyntax'
 import { rewriteGroupRefs } from './rewriteGroupRefs'
 import type { DiagramGroup } from '@/types/diagramTypes'
 
-const SUBGRAPH_OPEN = /^\s*subgraph\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:\[\s*"?([^"\]]*)"?\s*\])?/
+const SUBGRAPH_OPEN = new RegExp(
+  String.raw`^\s*subgraph\s+(${MERMAID_ID})\s*(?:\[\s*"?([^"\]]*)"?\s*\])?`,
+  'u'
+)
 const BLOCK_END = /^\s*end\s*;?\s*$/
 const DIRECTIVE = /^\s*(classDef|class|style|linkStyle|direction|flowchart|graph|%%)/
-const IDENTIFIER = /[A-Za-z_][A-Za-z0-9_]*/g
+const IDENTIFIER = new RegExp(MERMAID_ID, 'gu')
 const KEYWORDS = new Set(['TD', 'TB', 'LR', 'RL', 'BT', 'o', 'x'])
 
 /**

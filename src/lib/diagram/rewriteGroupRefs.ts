@@ -1,6 +1,11 @@
+import { MERMAID_ID, MERMAID_ID_LIST } from '@/constants/mermaidSyntax'
+
 const OPENERS: Record<string, string> = { '[': ']', '(': ')', '{': '}' }
-const CLASS_LINE = /^(\s*class\s+)([\w,\s]+?)(\s+\w+\s*;?\s*)$/
-const IDENTIFIER = /[A-Za-z_][A-Za-z0-9_]*/g
+const CLASS_LINE = new RegExp(
+  String.raw`^(\s*class\s+)(${MERMAID_ID_LIST}+?)(\s+${MERMAID_ID}\s*;?\s*)$`,
+  'u'
+)
+const IDENTIFIER = new RegExp(MERMAID_ID, 'gu')
 
 /**
  * Repoints edges that referred to a group.

@@ -1,8 +1,15 @@
 import { DIAGRAM_GROUP_ROLE, DIAGRAM_ROLES } from '@/constants/diagramRoles'
+import { MERMAID_ID, MERMAID_ID_LIST } from '@/constants/mermaidSyntax'
 import type { DiagramNodeRole, DiagramRoleMap } from '@/types/diagramTypes'
 
-const CLASS_ASSIGNMENT = /^\s*class\s+([\w,\s]+?)\s+(\w+)\s*;?\s*$/
-const INLINE_ROLE = /(?:^|[\s>|-])([A-Za-z_][A-Za-z0-9_]*)(?:\[|\(|\{)[^\n]*?:::(\w+)/g
+const CLASS_ASSIGNMENT = new RegExp(
+  String.raw`^\s*class\s+(${MERMAID_ID_LIST}+?)\s+(${MERMAID_ID})\s*;?\s*$`,
+  'u'
+)
+const INLINE_ROLE = new RegExp(
+  String.raw`(?:^|[\s>|-])(${MERMAID_ID})(?:\[|\(|\{)[^\n]*?:::(${MERMAID_ID})`,
+  'gu'
+)
 
 const isRole = (value: string): value is DiagramNodeRole =>
   value === DIAGRAM_GROUP_ROLE || (DIAGRAM_ROLES as readonly string[]).includes(value)

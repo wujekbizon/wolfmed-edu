@@ -1,9 +1,13 @@
 import { DIAGRAM_CLASSDEFS, DIAGRAM_GROUP_ROLE, DIAGRAM_ROLES } from '@/constants/diagramRoles'
+import { MERMAID_ID, MERMAID_ID_LIST } from '@/constants/mermaidSyntax'
 
 const FLOWCHART_HEADER = /^\s*(flowchart|graph)\b/
-const SUBGRAPH_ID = /^\s*subgraph\s+([A-Za-z_][\w]*)/
-const CLASS_ASSIGNMENT = /^\s*class\s+([\w,\s]+?)\s+(\w+)\s*;?\s*$/
-const INLINE_ROLE = /:::(\w+)/g
+const SUBGRAPH_ID = new RegExp(String.raw`^\s*subgraph\s+(${MERMAID_ID})`, 'u')
+const CLASS_ASSIGNMENT = new RegExp(
+  String.raw`^\s*class\s+(${MERMAID_ID_LIST}+?)\s+(${MERMAID_ID})\s*;?\s*$`,
+  'u'
+)
+const INLINE_ROLE = new RegExp(String.raw`:::(${MERMAID_ID})`, 'gu')
 
 const isKnownRole = (role: string): boolean =>
   (DIAGRAM_ROLES as readonly string[]).includes(role) || role === DIAGRAM_GROUP_ROLE

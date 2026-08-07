@@ -1,6 +1,7 @@
 import { stripMermaidLabels } from '@/helpers/stripMermaidLabels'
+import { MERMAID_ID } from '@/constants/mermaidSyntax'
 
-const DECLARATION = /(?:^|[\s>|-])([A-Za-z_][A-Za-z0-9_]*)(?:\[|\(|\{)/g
+const DECLARATION = new RegExp(String.raw`(?:^|[\s>|-])(${MERMAID_ID})(?:\[|\(|\{)`, 'gu')
 const DIRECTIVE = /^\s*(classDef|class|style|linkStyle|subgraph|end|flowchart|graph|direction)\b/
 
 /**

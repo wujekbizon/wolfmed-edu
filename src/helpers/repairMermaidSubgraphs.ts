@@ -1,6 +1,12 @@
 import { stripMermaidLabels } from '@/helpers/stripMermaidLabels'
+import { MERMAID_ID } from '@/constants/mermaidSyntax'
 
-const SUBGRAPH_OPEN = /^(\s*subgraph\s+)([A-Za-z_][A-Za-z0-9_]*)(.*)$/
+const SUBGRAPH_OPEN = new RegExp(String.raw`^(\s*subgraph\s+)(${MERMAID_ID})(.*)$`, 'u')
+const WORD_CHAR = String.raw`[\p{L}\p{N}_]`
+
+/** Whole-identifier match, so "Uklad" does not match inside "UkladKrazenia". */
+const mentions = (text: string, id: string): boolean =>
+  new RegExp(String.raw`(?:^|(?!${WORD_CHAR})[^])${id}(?!${WORD_CHAR})`, 'u').test(text)
 const BLOCK_END = /^\s*end\s*;?\s*$/
 
 /**
@@ -37,7 +43,7 @@ export function repairMermaidSubgraphs(mermaid: string): string {
 
     const bare = stripMermaidLabels(line)
     for (const id of stack) {
-      if (new RegExp(`(?:^|[^\\w])${id}(?![\\w])`).test(bare)) selfReferencing.add(id)
+      if (mentions(bare, id)) selfReferencing.add(id)
     }
   }
 

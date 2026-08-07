@@ -116,3 +116,36 @@ test("a group whose members never rendered produces no container", () => {
 
   assert.deepEqual(buildGroupContainers([], groups).containers, [])
 })
+
+// The template asks for ASCII ids, but the model does not always comply, and an
+// ASCII-only pattern does not reject a Polish id — it matches its prefix.
+test("a Polish group id is read whole, not as its ASCII prefix", () => {
+  const { groups } = extractSubgraphs(`flowchart TD
+    subgraph Połączenie["Połączenie synaptyczne"]
+      Receptory[Receptory] --> Szczelina[Szczelina]
+    end`)
+
+  assert.equal(groups[0]?.id, "Połączenie")
+  assert.deepEqual(groups[0]?.nodeIds, ["Receptory", "Szczelina"])
+})
+
+test("rewriting never cuts a Polish identifier in half", () => {
+  const { source } = extractSubgraphs(`flowchart TD
+    subgraph Połączenie["Połączenie"]
+      Receptory[Receptory] --> Szczelina[Szczelina]
+    end
+    Połączenie --> Dzialanie{Dzialanie?}`)
+
+  assert.match(source, /Receptory --> Dzialanie\{Dzialanie\?\}/)
+  assert.equal(source.includes("Receptoryłączenie"), false)
+})
+
+test("Polish node ids stay whole and keep their groups", () => {
+  const { source, groups } = extractSubgraphs(`flowchart TD
+    subgraph Grupa["Grupa"]
+      Połączenie[Polaczenie] --> Wlokna[Wlokna]
+    end`)
+
+  assert.deepEqual(groups[0]?.nodeIds, ["Połączenie", "Wlokna"])
+  assert.match(source, /Połączenie\[Polaczenie\] --> Wlokna/)
+})
