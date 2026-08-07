@@ -4,6 +4,16 @@ import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { getGoogleAI, logUsage } from '../vertex-rag/client'
 import { enforceItemCount } from '@/helpers/enforceItemCount'
+import { applyDiagramTheme } from '@/helpers/applyDiagramTheme'
+import { countMermaidNodes } from '@/helpers/countMermaidNodes'
+import { quoteMermaidLabels } from '@/helpers/quoteMermaidLabels'
+import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
+import {
+  DEFAULT_DIAGRAM_DETAIL,
+  DIAGRAM_BUDGET_OVERRUN_FACTOR,
+  DIAGRAM_DETAIL_LEVELS,
+  type DiagramDetail,
+} from '@/constants/diagramRoles'
 
 // Content generation stays on gemini-2.5-flash, but thinking is disabled — the
 // tools produce structured/creative output, not reasoning chains, and thinking
@@ -28,11 +38,12 @@ interface NoteTemplate {
 }
 
 interface MermaidTemplate {
-  prompt: string;
+  systemPrompt: string;
+  userPrompt: string;
   examples: {
     flowchart: string;
+    structure: string;
     sequence: string;
-    class: string;
   };
 }
 
@@ -342,56 +353,78 @@ Return ONLY the markdown summary content.`
   };
 }
 
+function stripCodeFences(text: string): string {
+  return text
+    .replace(/```mermaid\n?/g, '')
+    .replace(/```\n?/g, '')
+    .trim()
+}
+
 async function diagramTool(args: any): Promise<ToolResult> {
-  const { content = '', diagramType = 'flowchart', focus = '' } = args;
+  const { content = '', diagramType = 'flowchart', focus = '', detail } = args;
 
   const template = await getMermaidTemplate()
   const ai = getGoogleAI()
 
-  const prompt = template.prompt.replace('{{diagramType}}', diagramType)
+  const detailLevel: DiagramDetail = detail in DIAGRAM_DETAIL_LEVELS ? detail : DEFAULT_DIAGRAM_DETAIL
+  const { nodeBudget, description } = DIAGRAM_DETAIL_LEVELS[detailLevel]
 
-  // Select appropriate example based on diagram type
   const exampleKey = diagramType === 'sequence' ? 'sequence'
-    : diagramType === 'class' ? 'class'
+    : diagramType === 'structure' ? 'structure'
     : 'flowchart'
   const example = template.examples[exampleKey]
 
-  const fullPrompt = `${prompt}
+  const userMessage = template.userPrompt
+    .replace('{{diagramType}}', diagramType === 'sequence' ? 'sequenceDiagram' : 'flowchart')
+    .replace('{{nodeBudget}}', String(nodeBudget))
+    .replace('{{detailDescription}}', description)
+    .replace('{{focus}}', focus ? `\nSZCZEGÓLNY NACISK NA: ${focus}\n` : '')
+    .replace('{{content}}', content)
+    .replace('{{example}}', example)
 
-${focus ? `Focus specifically on: ${focus}` : ''}
+  const generate = async (message: string) => {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: message,
+      config: {
+        systemInstruction: template.systemPrompt,
+        temperature: 0.7,
+        thinkingConfig: NO_THINKING
+      }
+    })
+    logUsage('diagram_tool', response)
+    return repairMermaidSubgraphs(quoteMermaidLabels(stripCodeFences(response.text || example)))
+  }
 
-CONTENT:
-${content}
+  let mermaidContent = await generate(userMessage)
+  let nodeCount = countMermaidNodes(mermaidContent)
+  let repaired = false
 
-EXAMPLE FOR ${diagramType.toUpperCase()}:
-${example}
-
-Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: fullPrompt,
-    config: {
-      temperature: 0.7,
-      thinkingConfig: NO_THINKING
+  // A prompt-stated budget alone let a 15-node instruction return 50 nodes, at
+  // which point the diagram is unreadable at any zoom. One repair call is the
+  // cheapest fix that still returns a usable diagram rather than none.
+  if (nodeCount > nodeBudget * DIAGRAM_BUDGET_OVERRUN_FACTOR) {
+    const retry = await generate(
+      `${userMessage}\n\nPOPRZEDNIA PRÓBA MIAŁA ${nodeCount} WĘZŁÓW ZAMIAST ${nodeBudget}. Ogranicz diagram do najważniejszych zależności i zmieść się w limicie.`
+    )
+    const retryCount = countMermaidNodes(retry)
+    if (retryCount < nodeCount) {
+      mermaidContent = retry
+      nodeCount = retryCount
+      repaired = true
     }
-  })
-  logUsage('diagram_tool', response)
-
-  let mermaidContent = response.text || example
-
-  // Clean up any markdown code blocks if present
-  mermaidContent = mermaidContent
-    .replace(/```mermaid\n?/g, '')
-    .replace(/```\n?/g, '')
-    .trim()
+  }
 
   return {
     cellType: 'draw',
-    content: mermaidContent,
+    content: applyDiagramTheme(mermaidContent),
     metadata: {
       type: diagramType,
       format: 'mermaid',
+      detail: detailLevel,
+      nodeCount,
+      nodeBudget,
+      repaired,
       generated: new Date().toISOString()
     }
   };
