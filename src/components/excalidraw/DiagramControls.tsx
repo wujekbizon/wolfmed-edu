@@ -11,13 +11,22 @@ interface DiagramControlsProps {
 /**
  * Shown only once the student has taken the camera: while auto-fit is on, the
  * diagram already reframes itself and the button would do nothing visible.
+ *
+ * The surface goes on the button rather than a wrapper around it. Excalidraw's
+ * own top-right controls are bare 36px chips, and an island wrapper added its
+ * padding and border on top, leaving ours 46px and visibly taller than the
+ * Library button beside it.
  */
 export default function DiagramControls({ isAuto, theme, onFit }: DiagramControlsProps) {
   if (isAuto) return null
 
   return (
-    <div className={`flex rounded-lg border p-1 shadow-md ${DIAGRAM_SURFACE[theme].panel}`}>
-      <DiagramIconButton icon={Scan} label="Dopasuj widok do rozmiaru komórki" theme={theme} onClick={onFit} />
-    </div>
+    <DiagramIconButton
+      icon={Scan}
+      label="Dopasuj widok do rozmiaru komórki"
+      theme={theme}
+      onClick={onFit}
+      className={`border shadow-md ${DIAGRAM_SURFACE[theme].panel}`}
+    />
   )
 }
