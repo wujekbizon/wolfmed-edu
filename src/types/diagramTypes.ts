@@ -11,14 +11,26 @@ export interface DiagramElementData {
   role?: DiagramNodeRole
 }
 
+/**
+ * What is selected — deliberately without its screen position.
+ *
+ * The anchor moves on every animation frame of a camera move; keeping it in
+ * React state meant setState -> render -> onChange -> setState until React
+ * killed it. Identity changes rarely and lives in state; the position is
+ * written straight to the toolbar element.
+ */
 export interface DiagramSelection {
   /** A subgraph selects as one Excalidraw group, so a click is often a group. */
   kind: 'node' | 'group'
   elementId: string
   label: string
   groupId: string | null
-  /** Viewport position of the selection's top edge, relative to the canvas box. */
-  anchor: { x: number; y: number }
+}
+
+/** Viewport position of the selection's top edge, relative to the canvas box. */
+export interface DiagramAnchor {
+  x: number
+  y: number
 }
 
 export interface ExcalidrawScene {

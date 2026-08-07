@@ -37,7 +37,6 @@ const selection = (over: Partial<DiagramSelection> = {}): DiagramSelection => ({
   elementId: "a",
   label: "A",
   groupId: null,
-  anchor: { x: 10, y: 20 },
   ...over,
 })
 
@@ -46,13 +45,14 @@ test("an identical selection is treated as unchanged", () => {
   assert.equal(isSameSelection(null, null), true)
 })
 
-test("sub-pixel anchor drift does not count as a change", () => {
-  assert.equal(isSameSelection(selection(), selection({ anchor: { x: 10.4, y: 20.2 } })), true)
-})
-
-test("a different element, group or moved anchor does count", () => {
+test("a different element, kind or group counts as a change", () => {
   assert.equal(isSameSelection(selection(), selection({ elementId: "b" })), false)
   assert.equal(isSameSelection(selection(), selection({ groupId: "g" })), false)
-  assert.equal(isSameSelection(selection(), selection({ anchor: { x: 60, y: 20 } })), false)
+  assert.equal(isSameSelection(selection(), selection({ kind: "group" })), false)
   assert.equal(isSameSelection(selection(), null), false)
+})
+
+// The label is display-only; a change to it must not remount the toolbar.
+test("identity ignores the label", () => {
+  assert.equal(isSameSelection(selection(), selection({ label: "inne" })), true)
 })

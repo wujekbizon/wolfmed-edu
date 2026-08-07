@@ -20,6 +20,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawImperativeAPI | null>(null);
     const [theme, setTheme] = useState<'light' | 'dark'>('dark');
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const toolbarRef = useRef<HTMLDivElement>(null);
 
     const cellContent = useCellsStore((s) => s.data[cell.id]?.content);
 
@@ -27,7 +28,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
 
     const isFullscreen = useCellFullscreen();
     const { isAuto, fitAuto, focus, resume, armAuto, notifyScroll } = useDiagramCamera(excalidrawAPI);
-    const { selection, sync } = useDiagramSelection();
+    const { selection, anchorRef, sync } = useDiagramSelection(toolbarRef);
     const { focusNode, focusGroup } = useDiagramFocus(excalidrawAPI, focus);
     const { scene, isConverting, hasFailed, retry, onChange, onPointerUp } = useMermaidScene(
         cell.id,
@@ -84,6 +85,8 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                     {selection && (
                         <DiagramNodeToolbar
                             selection={selection}
+                            toolbarRef={toolbarRef}
+                            anchorRef={anchorRef}
                             onFocusNode={() => focusNode(selection)}
                             onFocusGroup={() => focusGroup(selection)}
                         />

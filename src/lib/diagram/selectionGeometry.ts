@@ -6,22 +6,17 @@ type Elements = readonly ExcalidrawElement[]
 /**
  * Guards the selection state against re-render loops.
  *
- * onChange also fires when the host re-renders, not only when the scene
- * changes, so storing a freshly built object every time meant setState ->
- * render -> onChange -> setState, which React eventually kills with "maximum
- * update depth exceeded".
+ * onChange fires when the host re-renders as well as when the scene changes,
+ * so storing a freshly built object every time meant setState -> render ->
+ * onChange -> setState, which React kills with "maximum update depth
+ * exceeded". Position is excluded on purpose: it changes on every frame of a
+ * camera animation and is applied to the toolbar directly.
  */
 export function isSameSelection(a: DiagramSelection | null, b: DiagramSelection | null): boolean {
   if (a === b) return true
   if (!a || !b) return false
 
-  return (
-    a.kind === b.kind &&
-    a.elementId === b.elementId &&
-    a.groupId === b.groupId &&
-    Math.round(a.anchor.x) === Math.round(b.anchor.x) &&
-    Math.round(a.anchor.y) === Math.round(b.anchor.y)
-  )
+  return a.kind === b.kind && a.elementId === b.elementId && a.groupId === b.groupId
 }
 
 /**
