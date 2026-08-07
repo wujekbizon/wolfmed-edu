@@ -50,6 +50,7 @@ export default function DiagramControls({
           }
           theme={theme}
           onClick={onFocus}
+          compact={isVertical}
           className={chrome}
         />
       )}
@@ -59,6 +60,7 @@ export default function DiagramControls({
           label="Dopasuj widok do rozmiaru komórki"
           theme={theme}
           onClick={onFit}
+          compact={isVertical}
           className={chrome}
         />
       )}

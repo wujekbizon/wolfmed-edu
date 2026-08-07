@@ -6,6 +6,8 @@ interface DiagramIconButtonProps {
   label: string
   theme: DiagramTheme
   onClick: () => void
+  /** The side rail's buttons are 36px; the top row's chips are 40px. */
+  compact?: boolean
   className?: string
 }
 
@@ -13,16 +15,17 @@ interface DiagramIconButtonProps {
  * Sized and coloured to match Excalidraw's own controls, so the canvas reads as
  * one toolbar rather than an app widget dropped on top of it.
  *
- * 40px is the Library chip's height in the app. That chip sizes itself from its
- * padding plus the line height of its label, so it measures differently under
- * different font metrics — a fixed square matches it without inheriting that
- * dependency.
+ * Excalidraw's controls are not one size: the top-row Library chip is 40px
+ * tall, the side rail's buttons are 36. Both are matched with a fixed square —
+ * the chip derives its height from padding plus the line height of its label,
+ * so it measures differently under different font metrics.
  */
 export default function DiagramIconButton({
   icon: Icon,
   label,
   theme,
   onClick,
+  compact = false,
   className = '',
 }: DiagramIconButtonProps) {
   return (
@@ -31,7 +34,7 @@ export default function DiagramIconButton({
       onClick={onClick}
       title={label}
       aria-label={label}
-      className={`flex h-10 w-10 shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors ${DIAGRAM_SURFACE[theme].button} ${className}`}
+      className={`flex ${compact ? 'h-9 w-9' : 'h-10 w-10'} shrink-0 cursor-pointer items-center justify-center rounded-lg transition-colors ${DIAGRAM_SURFACE[theme].button} ${className}`}
     >
       <Icon size={16} strokeWidth={1.75} aria-hidden />
     </button>
