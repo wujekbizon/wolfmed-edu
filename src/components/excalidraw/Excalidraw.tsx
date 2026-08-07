@@ -10,6 +10,7 @@ import { useDiagramCamera } from '@/hooks/useDiagramCamera';
 import { useDiagramViewport } from '@/hooks/useDiagramViewport';
 import { useDiagramSelection } from '@/hooks/useDiagramSelection';
 import { useDiagramFocus } from '@/hooks/useDiagramFocus';
+import { useCanvasChrome } from '@/hooks/useCanvasChrome';
 import ExcalidrawMenu from './ExcalidrawMenu';
 import DiagramControls from './DiagramControls';
 import DiagramConvertingState from './DiagramConvertingState';
@@ -35,6 +36,7 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
         fitAuto
     );
     useDiagramViewport(wrapperRef, excalidrawAPI, fitAuto);
+    const chrome = useCanvasChrome(wrapperRef, Boolean(excalidrawAPI));
 
     // Expanding a cell is an explicit request to see the whole diagram, so it
     // overrides a camera the student had taken over. Resizing by hand does not:
@@ -63,6 +65,17 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
     // through updateScene, because Excalidraw reads this once.
     const initialData = useMemo(() => scene ?? {}, [scene]);
 
+    const controls = (isVertical: boolean) => (
+        <DiagramControls
+            isAuto={isAuto}
+            selection={selection}
+            theme={theme}
+            isVertical={isVertical}
+            onFit={resume}
+            onFocus={() => selection && focusSelection(selection)}
+        />
+    );
+
     return (
         <div className="relative h-full w-full">
             <ResizableComponent direction="vertical">
@@ -76,18 +89,15 @@ const Excalidraw = ({cell}:{cell:Cell}) => {
                         onPointerUp={onPointerUp}
                         onScrollChange={notifyScroll}
                         initialData={initialData}
-                        renderTopRightUI={() => (
-                            <DiagramControls
-                                isAuto={isAuto}
-                                selection={selection}
-                                theme={theme}
-                                onFit={resume}
-                                onFocus={() => selection && focusSelection(selection)}
-                            />
-                        )}
+                        renderTopRightUI={() => (chrome.isCompact ? null : controls(false))}
                     >
                         <ExcalidrawMenu theme={theme} onThemeChange={setTheme} />
                     </Draw>
+                    {chrome.isCompact && (
+                        <div className="absolute z-20" style={{ top: chrome.top, right: chrome.right }}>
+                            {controls(true)}
+                        </div>
+                    )}
                 </div>
             </ResizableComponent>
         </div>

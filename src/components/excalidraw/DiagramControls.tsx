@@ -7,6 +7,8 @@ interface DiagramControlsProps {
   isAuto: boolean
   selection: DiagramSelection | null
   theme: DiagramTheme
+  /** The compact layout stacks them under Excalidraw's side rail. */
+  isVertical?: boolean
   onFit: () => void
   onFocus: () => void
 }
@@ -30,6 +32,7 @@ export default function DiagramControls({
   isAuto,
   selection,
   theme,
+  isVertical = false,
   onFit,
   onFocus,
 }: DiagramControlsProps) {
@@ -38,7 +41,7 @@ export default function DiagramControls({
   const chrome = `border shadow-md ${DIAGRAM_SURFACE[theme].panel}`
 
   return (
-    <div className="flex gap-1">
+    <div className={`flex gap-1 ${isVertical ? 'flex-col' : ''}`}>
       {selection && (
         <DiagramIconButton
           icon={selection.kind === 'group' ? Group : ZoomIn}
