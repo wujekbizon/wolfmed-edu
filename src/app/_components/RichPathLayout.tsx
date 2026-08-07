@@ -1,7 +1,7 @@
 import { PathLayoutProps } from "@/types/careerPathsTypes";
 import GradientOverlay from "@/components/GradientOverlay";
 import CurriculumMap from "../../components/CurriculumMap";
-import CoursePricingCard from "@/components/CoursePricingCard";
+import PricingSection from "@/components/pricing/PricingSection";
 import SimplePathCard from "@/components/SimplePathCard";
 
 export default function RichPathLayout({
@@ -10,7 +10,8 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
-  ownedCourses
+  ownedCourses,
+  subjectYears
 }: PathLayoutProps) {
   return (
     <section className="relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden">
@@ -73,44 +74,11 @@ export default function RichPathLayout({
       )}
 
       {pricing && (
-        <section aria-labelledby="pricing-title" className="w-full min-h-[65vh] flex items-center relative">
-          <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16">
-            <header className="mb-8 sm:mb-12 lg:mb-16 text-center">
-              <span className="inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide">
-                Cennik
-              </span>
-              <h2 id="pricing-title" className="mt-3 text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900">
-                Plany cenowe
-              </h2>
-              <p className="mt-3 text-zinc-600 text-base md:text-lg">Jednorazowa płatność. Dostęp na zawsze.</p>
-            </header>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 items-stretch">
-              {Object.entries(pricing)
-                .filter(([key]) => key !== 'courseSlug')
-                .map(([tierName, tierData]) => {
-                  const tier = tierData as { price: string; priceId: string; accessTier: string; features: string[]; badge?: string }
-                  const isPremium = tierName.toLowerCase().includes('premium')
-                  return (
-                    <CoursePricingCard
-                      key={tierName}
-                      tierName={tierName}
-                      price={tier.price}
-                      priceId={tier.priceId}
-                      courseSlug={pricing.courseSlug}
-                      accessTier={tier.accessTier}
-                      features={tier.features}
-                      isPremium={isPremium}
-                      {...(tier.badge ? { badge: tier.badge } : {})}
-                       alreadyOwned={
-                        ownedCourses?.includes(`${pricing?.courseSlug}-${isPremium ? 'premium' : 'basic'}`) ||
-                        (!isPremium && ownedCourses?.includes(`${pricing?.courseSlug}-premium`))
-                      }
-                    />
-                  )
-                })}
-            </div>
-          </div>
-        </section>
+        <PricingSection
+          pricing={pricing}
+          ownedCourses={ownedCourses ?? []}
+          years={subjectYears}
+        />
       )}
     </section>
   );

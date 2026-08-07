@@ -1,4 +1,5 @@
 import { CardProps } from "@/constants/educationalPathCards";
+import { CourseSubjectYear } from "@/types/pricingTypes";
 import { StaticImageData } from "next/image";
 
 type TemplateType = "simple" | "rich";
@@ -54,4 +55,7 @@ export type PathData = {
   testimonials?: Testimonial[];
   features?: CardProps[];
 };
-export type PathLayoutProps = PathData & { ownedCourses: string[] }
+export type PathLayoutProps = PathData & {
+  ownedCourses: string[];
+  subjectYears: CourseSubjectYear[];
+}
