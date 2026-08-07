@@ -16,7 +16,7 @@ export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
         <article
           key={scene.time}
           ref={setScene(index)}
-          className="flex flex-col justify-center py-10 lg:py-0 lg:h-screen"
+          className="flex flex-col justify-center py-10 lg:py-0 lg:h-[90vh]"
         >
           <div className="scene-reveal" data-active={active[index] ? 'true' : 'false'}>
             <StorySceneCard scene={scene} index={index} total={scenes.length} />

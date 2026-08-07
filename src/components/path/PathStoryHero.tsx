@@ -20,8 +20,8 @@ export default function PathStoryHero({
           {/* The panel tint sits on the column, not the sticky aside: the aside
               travels with the scroll, so its own background would leave the
               rest of the column bare behind it. */}
-          <div className="rounded-t-3xl bg-gradient-to-br from-rose-50/95 to-rose-50/50 lg:rounded-tr-none lg:rounded-bl-3xl lg:border-r lg:border-zinc-900/5">
-            <aside className="flex flex-col gap-12 p-6 sm:p-10 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)] lg:justify-between lg:p-14">
+          <div className="rounded-t-3xl bg-gradient-to-br from-rose-50/95 to-rose-50/50 lg:rounded-tr-none lg:rounded-bl-3xl">
+            <aside className="flex flex-col gap-8 p-6 sm:p-10 lg:sticky lg:top-24 lg:h-[90vh] lg:justify-center lg:p-14">
               <div>
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-zinc-600">
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-400" />

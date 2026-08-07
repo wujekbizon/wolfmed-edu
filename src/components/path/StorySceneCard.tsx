@@ -27,7 +27,7 @@ export default function StorySceneCard({
         </span>
       </div>
 
-      <div className="relative aspect-[16/10] max-h-[46vh] w-full overflow-hidden rounded-2xl ring-1 ring-zinc-900/5">
+      <div className="relative aspect-[16/10] max-h-[52vh] w-full overflow-hidden rounded-2xl ring-1 ring-zinc-900/5">
         {scene.imgSrc ? (
           <Image
             src={scene.imgSrc}
