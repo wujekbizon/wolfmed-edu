@@ -50,3 +50,9 @@ export const SAVE_DEBOUNCE_MS = 400
  */
 export const SAVE_SETTLE_MS = 80
 
+
+/** Breathing room between a group's members and its container edge. */
+export const GROUP_PADDING = 14
+
+/** Extra height at the top of a container so its title clears the members. */
+export const GROUP_TITLE_SPACE = 22

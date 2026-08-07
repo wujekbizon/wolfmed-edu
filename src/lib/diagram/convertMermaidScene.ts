@@ -3,6 +3,8 @@ import { parseMermaidToExcalidraw } from '@excalidraw/mermaid-to-excalidraw'
 import { parseDiagramRoles } from '@/helpers/parseDiagramRoles'
 import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
 import { buildDiagramLegend } from './buildDiagramLegend'
+import { buildGroupContainers } from './buildGroupContainers'
+import { extractSubgraphs } from './extractSubgraphs'
 import { styleDiagramSkeleton } from './styleDiagramSkeleton'
 import type { ExcalidrawScene } from '@/types/diagramTypes'
 
@@ -13,14 +15,28 @@ import type { ExcalidrawScene } from '@/types/diagramTypes'
  * The repair also runs here, not only at generation: cells written before it
  * existed still hold the source that fails to convert, and this is where they
  * get another chance at it.
+ *
+ * Groups are lifted out before conversion and drawn afterwards — see
+ * extractSubgraphs for why the converter is not shown them.
  */
 export async function convertMermaidScene(source: string): Promise<ExcalidrawScene> {
   const mermaid = repairMermaidSubgraphs(source)
-  const { elements: skeleton, files } = await parseMermaidToExcalidraw(mermaid)
-  const roles = parseDiagramRoles(mermaid)
+  const { source: ungrouped, groups } = extractSubgraphs(mermaid)
 
+  const { elements: skeleton, files } = await parseMermaidToExcalidraw(ungrouped)
+  const roles = parseDiagramRoles(mermaid)
+  const { containers, groupIdsById } = buildGroupContainers(skeleton, groups)
+
+  const grouped = skeleton.map((element) => {
+    const groupIds = groupIdsById.get(String(element.id))
+    return groupIds ? { ...element, groupIds } : element
+  })
+
+  // Containers go through the styling pass too: it is what marks them with the
+  // group role that selection and the dashed treatment both read.
   const elements = convertToExcalidrawElements([
-    ...styleDiagramSkeleton(skeleton, roles),
+    ...styleDiagramSkeleton(containers, roles),
+    ...styleDiagramSkeleton(grouped, roles),
     ...buildDiagramLegend(skeleton, roles),
   ])
 

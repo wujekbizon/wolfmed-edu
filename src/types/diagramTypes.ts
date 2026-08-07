@@ -33,6 +33,18 @@ export interface DiagramAnchor {
   y: number
 }
 
+/**
+ * A subgraph, lifted out of the Mermaid source so the container can be drawn
+ * from its members rather than by the converter.
+ */
+export interface DiagramGroup {
+  id: string
+  title: string
+  nodeIds: string[]
+  /** Enclosing groups, innermost first. */
+  ancestors: string[]
+}
+
 export interface ExcalidrawScene {
   elements: unknown[]
   appState?: Record<string, unknown>

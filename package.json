@@ -113,10 +113,5 @@
     "tsx": "^4.23.1",
     "typescript": "^6.0.2"
   },
-  "type": "module",
-  "pnpm": {
-    "patchedDependencies": {
-      "@excalidraw/mermaid-to-excalidraw@2.2.2": "patches/@excalidraw__mermaid-to-excalidraw@2.2.2.patch"
-    }
-  }
+  "type": "module"
 }
