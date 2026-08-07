@@ -42,8 +42,3 @@ export function getNeighbourhood(elements: Elements, elementId: string): Excalid
 export function getGroupElements(elements: Elements, groupId: string): ExcalidrawElement[] {
   return elements.filter((element) => element.groupIds?.includes(groupId))
 }
-
-/** The subgraph an element belongs to — the innermost one when nested. */
-export function getOwnGroupId(element: ExcalidrawElement | undefined): string | null {
-  return element?.groupIds?.[0] ?? null
-}
