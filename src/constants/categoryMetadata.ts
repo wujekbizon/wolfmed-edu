@@ -2200,7 +2200,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
-      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5G5GvuJptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
     description:
       'Testy z chirurgii i pielęgniarstwa chirurgicznego dla studentów pielęgniarstwa. Poznaj zasady opieki okołooperacyjnej, przygotowanie pacjenta do zabiegu w trybie pilnym i planowym, zapobieganie powikłaniom pooperacyjnym, pielęgnację ran i przetok oraz postępowanie w stanach zagrożenia życia w chirurgii.',
     duration: [25, 40, 60],
@@ -2419,7 +2419,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
-      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5arfwh6ktQrdmqhSKIRj5fanksB630Te2FpiO',
     description:
       'Testy z neurologii i pielęgniarstwa neurologicznego dla studentów pielęgniarstwa. Poznaj zespoły uszkodzenia układu nerwowego, choroby naczyniowe mózgu, choroby demielinizacyjne i zwyrodnieniowe, padaczkę oraz zasady opieki nad chorym z zaburzeniami świadomości, mowy, czucia i mobilności.',
     duration: [25, 40, 60],
@@ -2687,7 +2687,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
-      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5EsWLi5icmxY7yfWXOQoKS6ujlVhadLJtzgFp',
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UEui6vIxs2k5EyuGdN4SRigYP6qreJDvtVZl',
     description:
       'Testy z pediatrii i pielęgniarstwa pediatrycznego dla studentów pielęgniarstwa. Poznaj rozwój psychomotoryczny dziecka, choroby wieku rozwojowego układu oddechowego, pokarmowego, moczowego, krążenia i nerwowego, opiekę nad noworodkiem i wcześniakiem oraz zasady szczepień ochronnych i żywienia dzieci.',
     duration: [25, 40, 60],
