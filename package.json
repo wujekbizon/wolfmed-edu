@@ -18,6 +18,7 @@
     "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
     "db:studio": "drizzle-kit studio",
     "test:diagnozy": "tsx scripts/test-diagnozy.ts",
+    "tests:replace-category": "tsx scripts/replace-category.ts",
     "start": "next start",
     "lint": "eslint .",
     "test": "tsx --test \"tests/**/*.test.ts\""

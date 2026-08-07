@@ -2021,8 +2021,8 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  'choroby-wewnetrzne-interna': {
-    category: 'choroby-wewnetrzne-interna',
+  'pielegniarstwo-internistyczne': {
+    category: 'pielegniarstwo-internistyczne',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
     image:
@@ -2191,6 +2191,737 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
           'Zadania pielęgniarki w opiece nad pacjentem z niedokrwistością i białaczką oraz zaburzeniami tarczycy.',
           'Zadania pielęgniarki w farmakoterapii i leczeniu dietetycznym chorych na cukrzycę.',
           'Zakres zadań pielęgniarki w opiece nad pacjentem z zaburzeniami rytmu serca — tachy- i bradyarytmie.'
+        ]
+      }
+    }
+  },
+  'pielegniarstwo-chirurgiczne': {
+    category: 'pielegniarstwo-chirurgiczne',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5G5GvuJptmTzWn2MCIiBjAQoFa6kbwYUZJScD',
+    description:
+      'Testy z chirurgii i pielęgniarstwa chirurgicznego dla studentów pielęgniarstwa. Poznaj zasady opieki okołooperacyjnej, przygotowanie pacjenta do zabiegu w trybie pilnym i planowym, zapobieganie powikłaniom pooperacyjnym, pielęgnację ran i przetok oraz postępowanie w stanach zagrożenia życia w chirurgii.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Pielęgniarstwo chirurgiczne',
+    keywords: [
+      'chirurgia',
+      'pielęgniarstwo chirurgiczne',
+      'opieka okołooperacyjna',
+      'powikłania pooperacyjne',
+      'pielęgnacja ran',
+      'przetoka jelitowa',
+      'oparzenia',
+      'blok operacyjny',
+      'ERAS',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 13,
+      semester: 'Rok II, Semestr III',
+      objectives:
+        'Pogłębienie wiedzy o pielęgnowaniu chorych z uwzględnieniem leczenia chirurgicznego w wybranych jednostkach chorobowych. Przygotowanie studenta do samodzielnego pielęgnowania chorych leczonych chirurgicznie przy zapewnieniu profesjonalnej, całościowej opieki bez względu na miejsce, czas i technikę zabiegu operacyjnego. Doskonalenie umiejętności samokształcenia i samokontroli.',
+      prerequisites:
+        'Wiedza, umiejętności i kompetencje z przedmiotów realizujących treści podstawowe i wybrane treści kierunkowe (podstawy pielęgniarstwa, etyka zawodu pielęgniarki, promocja zdrowia, interna i pielęgniarstwo internistyczne, anatomia i fizjologia oraz patologia).',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'D.W1',
+            desc: 'Czynniki ryzyka i zagrożenia zdrowotne u pacjentów w różnym wieku.'
+          },
+          {
+            code: 'D.W2',
+            desc: 'Etiopatogeneza, objawy kliniczne, przebieg, leczenie, rokowanie i zasady opieki pielęgniarskiej nad pacjentami w wybranych chorobach.'
+          },
+          {
+            code: 'D.W3',
+            desc: 'Zasady diagnozowania i planowania opieki nad pacjentem w pielęgniarstwie chirurgicznym.'
+          },
+          {
+            code: 'D.W4',
+            desc: 'Rodzaje badań diagnostycznych i zasady ich zlecania.'
+          },
+          {
+            code: 'D.W5',
+            desc: 'Zasady przygotowania pacjenta w różnym wieku i stanie zdrowia do badań oraz zabiegów diagnostycznych, a także zasady opieki w trakcie oraz po tych badaniach i zabiegach.'
+          },
+          {
+            code: 'D.W6',
+            desc: 'Właściwości grup leków i ich działanie na układy i narządy pacjenta w różnych chorobach w zależności od wieku i stanu zdrowia, z uwzględnieniem działań niepożądanych, interakcji z innymi lekami i dróg podania.'
+          },
+          {
+            code: 'D.W7',
+            desc: 'Standardy i procedury pielęgniarskie stosowane w opiece nad pacjentem w różnym wieku i stanie zdrowia.'
+          },
+          {
+            code: 'D.W8',
+            desc: 'Reakcje pacjenta na chorobę, przyjęcie do szpitala i hospitalizację.'
+          },
+          {
+            code: 'D.W10',
+            desc: 'Zasady organizacji opieki specjalistycznej (chirurgicznej).'
+          },
+          {
+            code: 'D.W22',
+            desc: 'Zasady żywienia pacjentów, z uwzględnieniem leczenia dietetycznego, wskazań przed- i pooperacyjnych według protokołu kompleksowej opieki okołooperacyjnej dla poprawy wyników leczenia (Enhanced Recovery After Surgery, ERAS).'
+          },
+          {
+            code: 'D.W23',
+            desc: 'Czynniki zwiększające ryzyko okołooperacyjne.'
+          },
+          {
+            code: 'D.W24',
+            desc: 'Zasady przygotowania pacjenta do zabiegu operacyjnego w trybie pilnym i planowym, w chirurgii jednego dnia oraz zasady opieki nad pacjentem po zabiegu operacyjnym w celu zapobiegania wczesnym i późnym powikłaniom.'
+          },
+          {
+            code: 'D.W25',
+            desc: 'Zasady opieki nad pacjentem z przetoką jelitową i moczową.'
+          },
+          {
+            code: 'D.W29',
+            desc: 'Zasady obserwacji pacjenta po zabiegu operacyjnym, obejmujące monitorowanie w zakresie podstawowym i rozszerzonym.'
+          }
+        ],
+        skills: [
+          {
+            code: 'D.U1',
+            desc: 'Gromadzi informacje, formułuje diagnozę pielęgniarską, ustala cele i plan opieki pielęgniarskiej, wdraża interwencje pielęgniarskie oraz dokonuje ewaluacji opieki.'
+          },
+          {
+            code: 'D.U2',
+            desc: 'Prowadzi poradnictwo w zakresie samoopieki pacjentów w różnym wieku i stanie zdrowia dotyczące wad rozwojowych, chorób i uzależnień.'
+          },
+          {
+            code: 'D.U3',
+            desc: 'Prowadzi profilaktykę powikłań występujących w przebiegu chorób.'
+          },
+          {
+            code: 'D.U6',
+            desc: 'Dobiera technikę i sposoby pielęgnowania rany, w tym zakładania opatrunków.'
+          },
+          {
+            code: 'D.U7',
+            desc: 'Dobiera metody i środki pielęgnacji ran na podstawie ich klasyfikacji.'
+          },
+          {
+            code: 'D.U8',
+            desc: 'Rozpoznaje powikłania po specjalistycznych badaniach diagnostycznych i zabiegach operacyjnych.'
+          },
+          {
+            code: 'D.U15',
+            desc: 'Dokumentuje sytuację zdrowotną pacjenta, dynamikę jej zmian i realizowaną opiekę pielęgniarską, z uwzględnieniem narzędzi informatycznych do gromadzenia danych.'
+          },
+          {
+            code: 'D.U17',
+            desc: 'Prowadzi u osób dorosłych i dzieci żywienie dojelitowe (przez zgłębnik i przetokę odżywczą) oraz żywienie pozajelitowe.'
+          },
+          {
+            code: 'D.U18',
+            desc: 'Rozpoznaje powikłania leczenia farmakologicznego, dietetycznego, rehabilitacyjnego i leczniczo-pielęgnacyjnego.'
+          },
+          {
+            code: 'D.U19',
+            desc: 'Pielęgnuje pacjenta z przetoką jelitową oraz rurką intubacyjną i tracheotomijną.'
+          },
+          {
+            code: 'D.U20',
+            desc: 'Prowadzi rozmowę terapeutyczną.'
+          },
+          {
+            code: 'D.U22',
+            desc: 'Przekazuje informacje członkom zespołu terapeutycznego o stanie zdrowia pacjenta.'
+          },
+          {
+            code: 'D.U24',
+            desc: 'Ocenia poziom bólu, reakcję pacjenta na ból i jego nasilenie oraz stosuje farmakologiczne i niefarmakologiczne postępowanie przeciwbólowe.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S1',
+            desc: 'Kieruje się dobrem pacjenta, poszanowaniem godności i autonomii osób powierzonych opiece, okazuje zrozumienie dla różnic światopoglądowych i kulturowych oraz empatię w relacji z pacjentem i jego rodziną.'
+          },
+          {
+            code: 'K.S2',
+            desc: 'Przestrzega praw pacjenta i zachowuje w tajemnicy informacje związane z pacjentem.'
+          },
+          {
+            code: 'K.S3',
+            desc: 'Samodzielnie i rzetelnie wykonuje zawód zgodnie z zasadami etyki, w tym przestrzega wartości i powinności moralnych w opiece nad pacjentem.'
+          },
+          {
+            code: 'K.S4',
+            desc: 'Ponosi odpowiedzialność za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'K.S5',
+            desc: 'Zasięga opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          },
+          {
+            code: 'K.S6',
+            desc: 'Przewiduje i uwzględnia czynniki wpływające na reakcje własne i pacjenta.'
+          },
+          {
+            code: 'K.S7',
+            desc: 'Dostrzega i rozpoznaje własne ograniczenia w zakresie wiedzy, umiejętności i kompetencji społecznych oraz dokonuje samooceny deficytów i potrzeb edukacyjnych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Nowoczesne metody diagnozowania i leczenia chirurgicznego.',
+          'Ocena stanu pacjenta po zabiegu operacyjnym i zapobieganie powikłaniom pooperacyjnym.',
+          'Powikłania pooperacyjne.',
+          'Odżywianie chorego w chirurgii. Zaburzenia gospodarki wodno-elektrolitowej.',
+          'Ostre choroby jamy brzusznej (zapalenie otrzewnej, niedrożność jelit, krwotok z przewodu pokarmowego, ostre zapalenie wyrostka robaczkowego, ostre zapalenie trzustki). Zachowawcze i chirurgiczne leczenie schorzeń jamy brzusznej.',
+          'Choroby gruczołu piersiowego. Chirurgiczne leczenie schorzeń gruczołu piersiowego.',
+          'Chirurgiczne leczenie schorzeń tarczycy. Opieka pielęgniarska po operacji z powodu schorzeń gruczołów wydzielania wewnętrznego.',
+          'Choroby układu moczowo-płciowego wymagające zachowawczego lub zabiegowego leczenia chirurgicznego.',
+          'Schorzenia naczyń obwodowych tętniczych i żylnych (choroba Buergera, niedokrwienie kończyn, żylaki kończyn dolnych i amputacja kończyny, zatory).',
+          'Oparzenia i odmrożenia.',
+          'Stany zagrożenia życia w chirurgii.',
+          'Pacjent w chirurgii jednego dnia.'
+        ],
+        seminars: [
+          'Rola pielęgniarki w diagnozowaniu pacjenta ze schorzeniami leczonymi w oddziałach chirurgii.',
+          'Przygotowanie chorego do zabiegu operacyjnego.',
+          'Zasady pielęgnowania pacjenta w okresie okołooperacyjnym.',
+          'Zadania pielęgniarki w zapobieganiu i wczesnym rozpoznawaniu powikłań pooperacyjnych.',
+          'Rola pielęgniarki w odżywianiu chorego w chirurgii.',
+          'Pielęgnowanie chorego po urazach.',
+          'Zasady pielęgnowania pacjenta z chirurgicznym schorzeniem narządów jamy brzusznej i przewodu pokarmowego.',
+          'Model opieki pielęgniarskiej chorej/chorego z chorobami gruczołu piersiowego.',
+          'Model opieki pielęgniarskiej chorego po zabiegu usunięcia tarczycy.',
+          'Zadania pielęgniarki w opiece nad pacjentem po operacji w obrębie układu moczowo-płciowego.',
+          'Model opieki pielęgniarskiej chorego z chorobą niedokrwienną kończyn, żylakami kończyn dolnych i po amputacji kończyny dolnej.',
+          'Problemy pielęgnacyjne w opiece nad chorym z oparzeniami i odmrożeniami.',
+          'Standardy postępowania pielęgniarskiego w wybranych stanach zagrożenia życia w schorzeniach chirurgicznych.',
+          'Pielęgnowanie chorych z ranami (pooperacyjną, owrzodzeniową, oparzeniową). Zapobieganie zakażeniom szpitalnym ran w chirurgii.'
+        ],
+        selfStudy: [
+          'Profilaktyka wybranego schorzenia chirurgicznego.',
+          'Rola pielęgniarki w zapobieganiu zakażeniom wewnątrzszpitalnym na oddziale chirurgicznym i bloku operacyjnym.',
+          'Rola pielęgniarki w zapobieganiu powikłaniom pooperacyjnym u pacjenta z wybranym schorzeniem chirurgicznym.',
+          'Udział pielęgniarki w edukacji chorego leczonego w oddziałach zabiegowych.',
+          'Żywienie chorych i rodzaje diet w oddziale chirurgicznym.'
+        ]
+      }
+    }
+  },
+  'pielegniarstwo-neurologiczne': {
+    category: 'pielegniarstwo-neurologiczne',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5arfwh6ktQrdmqhSKIRj5fanksB630Te2FpiO',
+    description:
+      'Testy z neurologii i pielęgniarstwa neurologicznego dla studentów pielęgniarstwa. Poznaj zespoły uszkodzenia układu nerwowego, choroby naczyniowe mózgu, choroby demielinizacyjne i zwyrodnieniowe, padaczkę oraz zasady opieki nad chorym z zaburzeniami świadomości, mowy, czucia i mobilności.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Pielęgniarstwo neurologiczne',
+    keywords: [
+      'neurologia',
+      'pielęgniarstwo neurologiczne',
+      'udar mózgu',
+      'stwardnienie rozsiane',
+      'padaczka',
+      'choroba Parkinsona',
+      'choroba Alzheimera',
+      'guzy mózgu',
+      'zaburzenia świadomości',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 8,
+      semester: 'Rok II, Semestr IV',
+      objectives:
+        'Przekazanie wiedzy i umiejętności z zakresu neurologii i pielęgniarstwa neurologicznego.',
+      prerequisites:
+        'Anatomia i fizjologia człowieka, podstawy pielęgniarstwa, pielęgniarstwo internistyczne, pielęgniarstwo chirurgiczne, pielęgniarstwo pediatryczne.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'D.W1',
+            desc: 'Czynniki ryzyka i zagrożenia zdrowotne u pacjentów w różnym wieku.'
+          },
+          {
+            code: 'D.W2',
+            desc: 'Etiopatogeneza, objawy kliniczne, przebieg, leczenie, rokowanie i zasady opieki pielęgniarskiej nad pacjentami w wybranych chorobach.'
+          },
+          {
+            code: 'D.W3',
+            desc: 'Zasady diagnozowania i planowania opieki nad pacjentem w pielęgniarstwie neurologicznym.'
+          },
+          {
+            code: 'D.W4',
+            desc: 'Rodzaje badań diagnostycznych i zasady ich zlecania.'
+          },
+          {
+            code: 'D.W5',
+            desc: 'Zasady przygotowania pacjenta w różnym wieku i stanie zdrowia do badań oraz zabiegów diagnostycznych, a także zasady opieki w trakcie oraz po tych badaniach i zabiegach.'
+          },
+          {
+            code: 'D.W6',
+            desc: 'Właściwości grup leków i ich działanie na układy i narządy pacjenta w różnych chorobach w zależności od wieku i stanu zdrowia, z uwzględnieniem działań niepożądanych, interakcji z innymi lekami i dróg podania.'
+          },
+          {
+            code: 'D.W7',
+            desc: 'Standardy i procedury pielęgniarskie stosowane w opiece nad pacjentem w różnym wieku i stanie zdrowia.'
+          },
+          {
+            code: 'D.W8',
+            desc: 'Reakcje pacjenta na chorobę, przyjęcie do szpitala i hospitalizację.'
+          },
+          {
+            code: 'D.W10',
+            desc: 'Zasady organizacji opieki specjalistycznej (neurologicznej).'
+          },
+          {
+            code: 'D.W11',
+            desc: 'Etiopatogeneza najczęstszych schorzeń wieku podeszłego.'
+          },
+          {
+            code: 'D.W12',
+            desc: 'Narzędzia i skale oceny wsparcia osób starszych i ich rodzin oraz zasady ich aktywizacji.'
+          },
+          {
+            code: 'D.W18',
+            desc: 'Metody, techniki i narzędzia oceny stanu świadomości i przytomności.'
+          },
+          {
+            code: 'D.W19',
+            desc: 'Etiopatogeneza i objawy kliniczne podstawowych zaburzeń psychicznych.'
+          },
+          {
+            code: 'D.W20',
+            desc: 'Zasady obowiązujące przy zastosowaniu przymusu bezpośredniego.'
+          },
+          {
+            code: 'D.W26',
+            desc: 'Podstawowe kierunki rehabilitacji leczniczej i zawodowej.'
+          },
+          {
+            code: 'D.W27',
+            desc: 'Przebieg i sposoby postępowania rehabilitacyjnego w różnych chorobach.'
+          },
+          {
+            code: 'D.W28',
+            desc: 'Standardy i procedury postępowania w stanach nagłych i zabiegach ratujących życie.'
+          },
+          {
+            code: 'D.W32',
+            desc: 'Patofizjologia i objawy kliniczne chorób stanowiących zagrożenie dla życia (niewydolność oddechowa, niewydolność krążenia, niewydolność układu nerwowego, wstrząs, sepsa).'
+          },
+          {
+            code: 'D.W33',
+            desc: 'Metody i skale oceny bólu, poziomu sedacji oraz zaburzeń snu i stanów delirycznych u pacjentów w stanach zagrożenia życia.'
+          },
+          {
+            code: 'D.W34',
+            desc: 'Metody i techniki komunikowania się z pacjentem niezdolnym do nawiązania i podtrzymania efektywnej komunikacji ze względu na stan zdrowia lub stosowane leczenie.'
+          },
+          {
+            code: 'D.W35',
+            desc: 'Zasady udzielania pierwszej pomocy i algorytmy postępowania resuscytacyjnego w zakresie podstawowych zabiegów resuscytacyjnych (Basic Life Support, BLS) i zaawansowanego podtrzymywania życia (Advanced Life Support, ALS).'
+          }
+        ],
+        skills: [
+          {
+            code: 'D.U1',
+            desc: 'Gromadzi informacje, formułuje diagnozę pielęgniarską, ustala cele i plan opieki pielęgniarskiej, wdraża interwencje pielęgniarskie oraz dokonuje ewaluacji opieki.'
+          },
+          {
+            code: 'D.U2',
+            desc: 'Prowadzi poradnictwo w zakresie samoopieki pacjentów w różnym wieku i stanie zdrowia dotyczące wad rozwojowych, chorób i uzależnień.'
+          },
+          {
+            code: 'D.U3',
+            desc: 'Prowadzi profilaktykę powikłań występujących w przebiegu chorób.'
+          },
+          {
+            code: 'D.U4',
+            desc: 'Organizuje izolację pacjentów z chorobą zakaźną w miejscach publicznych i w warunkach domowych.'
+          },
+          {
+            code: 'D.U8',
+            desc: 'Rozpoznaje powikłania po specjalistycznych badaniach diagnostycznych i zabiegach operacyjnych.'
+          },
+          {
+            code: 'D.U9',
+            desc: 'Doraźnie podaje pacjentowi tlen i monitoruje jego stan podczas tlenoterapii.'
+          },
+          {
+            code: 'D.U11',
+            desc: 'Modyfikuje dawkę stałą insuliny szybko- i krótko działającej.'
+          },
+          {
+            code: 'D.U12',
+            desc: 'Przygotowuje pacjenta fizycznie i psychicznie do badań diagnostycznych.'
+          },
+          {
+            code: 'D.U15',
+            desc: 'Dokumentuje sytuację zdrowotną pacjenta, dynamikę jej zmian i realizowaną opiekę pielęgniarską, z uwzględnieniem narzędzi informatycznych do gromadzenia danych.'
+          },
+          {
+            code: 'D.U18',
+            desc: 'Rozpoznaje powikłania leczenia farmakologicznego, dietetycznego, rehabilitacyjnego i leczniczo-pielęgnacyjnego.'
+          },
+          {
+            code: 'D.U20',
+            desc: 'Prowadzi rozmowę terapeutyczną.'
+          },
+          {
+            code: 'D.U21',
+            desc: 'Prowadzi rehabilitację przyłóżkową i aktywizację z wykorzystaniem elementów terapii zajęciowej.'
+          },
+          {
+            code: 'D.U22',
+            desc: 'Przekazuje informacje członkom zespołu terapeutycznego o stanie zdrowia pacjenta.'
+          },
+          {
+            code: 'D.U23',
+            desc: 'Asystuje lekarzowi w trakcie badań diagnostycznych.'
+          },
+          {
+            code: 'D.U24',
+            desc: 'Ocenia poziom bólu, reakcję pacjenta na ból i jego nasilenie oraz stosuje farmakologiczne i niefarmakologiczne postępowanie przeciwbólowe.'
+          },
+          {
+            code: 'D.U25',
+            desc: 'Postępuje zgodnie z procedurą z ciałem zmarłego pacjenta.'
+          },
+          {
+            code: 'D.U26',
+            desc: 'Przygotowuje i podaje pacjentom leki różnymi drogami, samodzielnie lub na zlecenie lekarza.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S1',
+            desc: 'Kieruje się dobrem pacjenta, poszanowaniem godności i autonomii osób powierzonych opiece, okazuje zrozumienie dla różnic światopoglądowych i kulturowych oraz empatię w relacji z pacjentem i jego rodziną.'
+          },
+          {
+            code: 'K.S2',
+            desc: 'Przestrzega praw pacjenta.'
+          },
+          {
+            code: 'K.S3',
+            desc: 'Samodzielnie i rzetelnie wykonuje zawód zgodnie z zasadami etyki, w tym przestrzega wartości i powinności moralnych w opiece nad pacjentem.'
+          },
+          {
+            code: 'K.S4',
+            desc: 'Ponosi odpowiedzialność za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'K.S5',
+            desc: 'Zasięga opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          },
+          {
+            code: 'K.S6',
+            desc: 'Przewiduje i uwzględnia czynniki wpływające na reakcje własne i pacjenta.'
+          },
+          {
+            code: 'K.S7',
+            desc: 'Dostrzega i rozpoznaje własne ograniczenia w zakresie wiedzy, umiejętności i kompetencji społecznych oraz dokonuje samooceny deficytów i potrzeb edukacyjnych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Podstawowe wiadomości dotyczące anatomii układu nerwowego.',
+          'Zespoły uszkodzenia układu nerwowego.',
+          'Badania diagnostyczne w neurologii.',
+          'Wywiad, podstawowe objawy patologiczne ze strony układu nerwowego, badanie neurologiczne pacjenta.',
+          'Choroby naczyniowe mózgu: zawał mózgu, krwotok śródmózgowy, krwotok podpajęczynówkowy.',
+          'Choroby demielinizacyjne.',
+          'Padaczka.',
+          'Choroby zwyrodnieniowe układu nerwowego: stwardnienie boczne zanikowe, choroba Alzheimera, choroba Parkinsona.',
+          'Choroby zapalne układu nerwowego.',
+          'Zespoły korzeniowe.',
+          'Poliradikulopatie i polineuropatie.',
+          'Choroby nerwowo-mięśniowe.',
+          'Guzy mózgu.',
+          'Urazy czaszkowo-mózgowe.',
+          'Bóle głowy.'
+        ],
+        seminars: [
+          'Udział pielęgniarki w diagnozowaniu, leczeniu i rehabilitacji chorych neurologicznie.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorego po udarze mózgu.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne pacjentów po urazie rdzenia kręgowego w różnych fazach leczenia.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych w chorobach demielinizacyjnych.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych na stwardnienie rozsiane.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych na padaczkę.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne w chorobach degeneracyjnych ośrodkowego układu nerwowego.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne w zespołach otępiennych pochodzenia neurologicznego.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych z guzem mózgu.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych z zespołem korzeniowym i dyskopatią.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych po urazie czaszkowo-mózgowym.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych z zaburzeniami mowy.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych z zaburzeniami czucia.',
+          'Zakres rozpoznania pielęgniarskiego i problemy pielęgnacyjne chorych z zaburzeniami świadomości.'
+        ],
+        selfStudy: [
+          'Epidemiologia wybranych chorób układu nerwowego na świecie i w Polsce.',
+          'Metody monitorowania chorych neurologicznych.',
+          'Metody terapii stosowane w oddziałach neurologicznych.',
+          'Opieka pielęgniarska nad chorym w wybranych zaburzeniach funkcji układu nerwowego.',
+          'Zapobieganie zakażeniom w oddziale neurologicznym.',
+          'Zapobieganie odleżynom u chorych neurologicznych.',
+          'Opieka psychologiczna nad pacjentem oraz jego rodziną w oddziale neurologicznym.'
+        ]
+      }
+    }
+  },
+  'pielegniarstwo-pediatryczne': {
+    category: 'pielegniarstwo-pediatryczne',
+    course: 'pielegniarstwo',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UEui6vIxs2k5EyuGdN4SRigYP6qreJDvtVZl',
+    description:
+      'Testy z pediatrii i pielęgniarstwa pediatrycznego dla studentów pielęgniarstwa. Poznaj rozwój psychomotoryczny dziecka, choroby wieku rozwojowego układu oddechowego, pokarmowego, moczowego, krążenia i nerwowego, opiekę nad noworodkiem i wcześniakiem oraz zasady szczepień ochronnych i żywienia dzieci.',
+    duration: [25, 40, 60],
+    popularity: 'Sprawdź swoją wiedzę już teraz!',
+    status: true,
+    numberOfQuestions: [10, 40],
+    title: 'Pielęgniarstwo pediatryczne',
+    keywords: [
+      'pediatria',
+      'pielęgniarstwo pediatryczne',
+      'noworodek',
+      'wcześniak',
+      'choroby wieku rozwojowego',
+      'szczepienia ochronne',
+      'żywienie dzieci',
+      'wady wrodzone',
+      'rozwój psychomotoryczny',
+      'egzamin pielęgniarski',
+      'testy wiedzy',
+      'pytania egzaminacyjne'
+    ],
+    details: {
+      ects: 15,
+      semester: 'Rok II, Semestr IV',
+      objectives:
+        'Zapoznanie studentów z najczęściej występującymi chorobami wieku rozwojowego oraz zasadami ich profilaktyki, diagnostyki i leczenia. Przekazanie wiedzy i kształtowanie umiejętności w zakresie oceny i monitorowania rozwoju psychofizycznego dzieci i młodzieży. Przygotowanie studenta do samodzielnego pielęgnowania chorych dzieci przy zapewnieniu profesjonalnej, całościowej opieki bez względu na miejsce, czas i rodzaj schorzenia. Doskonalenie umiejętności samokształcenia i samokontroli.',
+      prerequisites:
+        'Wiedza, umiejętności i kompetencje z przedmiotów realizujących treści podstawowe i wybrane treści kierunkowe (podstawy pielęgniarstwa, filozofia i etyka zawodu pielęgniarki, promocja zdrowia, interna i pielęgniarstwo internistyczne, chirurgia i pielęgniarstwo chirurgiczne).',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'D.W1',
+            desc: 'Czynniki ryzyka i zagrożenia zdrowotne u pacjentów w różnym wieku.'
+          },
+          {
+            code: 'D.W2',
+            desc: 'Etiopatogeneza, objawy kliniczne, przebieg, leczenie, rokowanie i zasady opieki pielęgniarskiej nad pacjentami w wybranych chorobach.'
+          },
+          {
+            code: 'D.W3',
+            desc: 'Zasady diagnozowania i planowania opieki nad pacjentem w pielęgniarstwie pediatrycznym.'
+          },
+          {
+            code: 'D.W4',
+            desc: 'Rodzaje badań diagnostycznych i zasady ich zlecania.'
+          },
+          {
+            code: 'D.W5',
+            desc: 'Zasady przygotowania pacjenta w różnym wieku i stanie zdrowia do badań oraz zabiegów diagnostycznych, a także zasady opieki w trakcie oraz po tych badaniach i zabiegach.'
+          },
+          {
+            code: 'D.W6',
+            desc: 'Właściwości grup leków i ich działanie na układy i narządy pacjenta w różnych chorobach w zależności od wieku i stanu zdrowia, z uwzględnieniem działań niepożądanych, interakcji z innymi lekami i dróg podania.'
+          },
+          {
+            code: 'D.W7',
+            desc: 'Standardy i procedury pielęgniarskie stosowane w opiece nad pacjentem w różnym wieku i stanie zdrowia.'
+          },
+          {
+            code: 'D.W8',
+            desc: 'Reakcje pacjenta na chorobę, przyjęcie do szpitala i hospitalizację.'
+          },
+          {
+            code: 'D.W10',
+            desc: 'Zasady organizacji opieki specjalistycznej (pediatrycznej).'
+          },
+          {
+            code: 'D.W13',
+            desc: 'Patofizjologia, objawy kliniczne, przebieg, leczenie i rokowanie chorób wieku rozwojowego: układu oddechowego, układu krążenia, układu nerwowego, dróg moczowych, układu pokarmowego oraz chorób endokrynologicznych, metabolicznych, alergicznych i krwi.'
+          },
+          {
+            code: 'D.W14',
+            desc: 'Patofizjologia, objawy kliniczne chorób i stanów zagrożenia życia noworodka, w tym wcześniaka, oraz podstawy opieki pielęgniarskiej w tym zakresie.'
+          },
+          {
+            code: 'D.W18',
+            desc: 'Metody, techniki i narzędzia oceny stanu świadomości i przytomności.'
+          },
+          {
+            code: 'D.W28',
+            desc: 'Standardy i procedury postępowania w stanach nagłych i zabiegach ratujących życie.'
+          },
+          {
+            code: 'D.W31',
+            desc: 'Patofizjologia i objawy kliniczne chorób stanowiących zagrożenie dla życia (niewydolność oddechowa, niewydolność krążenia, niewydolność układu nerwowego, wstrząs, sepsa).'
+          }
+        ],
+        skills: [
+          {
+            code: 'D.U1',
+            desc: 'Gromadzi informacje, formułuje diagnozę pielęgniarską, ustala cele i plan opieki pielęgniarskiej, wdraża interwencje pielęgniarskie oraz dokonuje ewaluacji opieki.'
+          },
+          {
+            code: 'D.U2',
+            desc: 'Prowadzi poradnictwo w zakresie samoopieki pacjentów w różnym wieku i stanie zdrowia dotyczące wad rozwojowych, chorób i uzależnień.'
+          },
+          {
+            code: 'D.U3',
+            desc: 'Prowadzi profilaktykę powikłań występujących w przebiegu chorób.'
+          },
+          {
+            code: 'D.U4',
+            desc: 'Organizuje izolację pacjentów z chorobą zakaźną w miejscach publicznych i w warunkach domowych.'
+          },
+          {
+            code: 'D.U5',
+            desc: 'Ocenia rozwój psychofizyczny dziecka, wykonuje testy przesiewowe i wykrywa zaburzenia w rozwoju.'
+          },
+          {
+            code: 'D.U9',
+            desc: 'Doraźnie podaje pacjentowi tlen i monitoruje jego stan podczas tlenoterapii.'
+          },
+          {
+            code: 'D.U12',
+            desc: 'Przygotowuje pacjenta fizycznie i psychicznie do badań diagnostycznych.'
+          },
+          {
+            code: 'D.U13',
+            desc: 'Wystawia skierowania na wykonanie określonych badań diagnostycznych.'
+          },
+          {
+            code: 'D.U15',
+            desc: 'Dokumentuje sytuację zdrowotną pacjenta, dynamikę jej zmian i realizowaną opiekę pielęgniarską, z uwzględnieniem narzędzi informatycznych do gromadzenia danych.'
+          },
+          {
+            code: 'D.U17',
+            desc: 'Prowadzi u osób dorosłych i dzieci żywienie dojelitowe (przez zgłębnik i przetokę odżywczą) oraz żywienie pozajelitowe.'
+          },
+          {
+            code: 'D.U18',
+            desc: 'Rozpoznaje powikłania leczenia farmakologicznego, dietetycznego, rehabilitacyjnego i leczniczo-pielęgnacyjnego.'
+          },
+          {
+            code: 'D.U20',
+            desc: 'Prowadzi rozmowę terapeutyczną.'
+          },
+          {
+            code: 'D.U22',
+            desc: 'Przekazuje informacje członkom zespołu terapeutycznego o stanie zdrowia pacjenta.'
+          },
+          {
+            code: 'D.U23',
+            desc: 'Asystuje lekarzowi w trakcie badań diagnostycznych.'
+          },
+          {
+            code: 'D.U24',
+            desc: 'Ocenia poziom bólu, reakcję pacjenta na ból i jego nasilenie oraz stosuje farmakologiczne i niefarmakologiczne postępowanie przeciwbólowe.'
+          },
+          {
+            code: 'D.U25',
+            desc: 'Postępuje zgodnie z procedurą z ciałem zmarłego pacjenta.'
+          },
+          {
+            code: 'D.U26',
+            desc: 'Przygotowuje i podaje pacjentom leki różnymi drogami, samodzielnie lub na zlecenie lekarza.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'K.S1',
+            desc: 'Kieruje się dobrem pacjenta, poszanowaniem godności i autonomii osób powierzonych opiece, okazuje zrozumienie dla różnic światopoglądowych i kulturowych oraz empatię w relacji z pacjentem i jego rodziną.'
+          },
+          {
+            code: 'K.S2',
+            desc: 'Przestrzega praw pacjenta.'
+          },
+          {
+            code: 'K.S3',
+            desc: 'Samodzielnie i rzetelnie wykonuje zawód zgodnie z zasadami etyki, w tym przestrzega wartości i powinności moralnych w opiece nad pacjentem.'
+          },
+          {
+            code: 'K.S4',
+            desc: 'Ponosi odpowiedzialność za wykonywane czynności zawodowe.'
+          },
+          {
+            code: 'K.S5',
+            desc: 'Zasięga opinii ekspertów w przypadku trudności z samodzielnym rozwiązaniem problemu.'
+          },
+          {
+            code: 'K.S6',
+            desc: 'Przewiduje i uwzględnia czynniki wpływające na reakcje własne i pacjenta.'
+          },
+          {
+            code: 'K.S7',
+            desc: 'Dostrzega i rozpoznaje własne ograniczenia w zakresie wiedzy, umiejętności i kompetencji społecznych oraz dokonuje samooceny deficytów i potrzeb edukacyjnych.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Rozwój psychomotoryczny dziecka w poszczególnych okresach rozwojowych.',
+          'Stany zagrażające życiu i zdrowiu wcześniaka i noworodka.',
+          'Semiotyka. Badanie fizykalne w pediatrii.',
+          'Schorzenia układu pokarmowego u dzieci — symptomatologia, badania diagnostyczne, biegunki infekcyjne ostre i przewlekłe, zaburzenia trawienia i wchłaniania (choroba glutenowa, alergie pokarmowe, mukowiscydoza), choroba refluksowa przełyku, choroby wątroby i trzustki.',
+          'Alergie pokarmowe u dzieci.',
+          'Najczęstsze wady wrodzone: wady cewy nerwowej i twarzoczaszki. Wady wrodzone układu pokarmowego — atrezja odbytu, zarośnięcie odcinków przewodu pokarmowego, przetoki przełykowo-oskrzelowe, zwężenie odźwiernika.',
+          'Schorzenia układu oddechowego w pediatrii — symptomatologia, metody diagnostyki, infekcje górnych dróg oddechowych, zapalenie płuc i oskrzeli, alergie oddechowe, astma oskrzelowa, RDS.',
+          'Schorzenia układu moczowego u dzieci — odrębności funkcjonowania, symptomatologia w zależności od wieku, wady wrodzone, refluks pęcherzowo-moczowy, infekcje układu moczowego, kłębuszkowe zapalenie nerek, zespół nerczycowy, przewlekła niewydolność nerek i leczenie nerkozastępcze.',
+          'Choroby układu nerwowego u dzieci (porażenie mózgowe, zapalenie opon mózgowo-rdzeniowych).',
+          'Schorzenia układu krążenia u dzieci — symptomatologia i badania diagnostyczne w zależności od wieku, rytm serca i ciśnienie tętnicze w okresie rozwojowym, wady wrodzone serca, niewydolność krążenia, zaburzenia rytmu i przewodnictwa.',
+          'Wybrane choroby zakaźne wieku dziecięcego (odra, ospa wietrzna, różyczka, błonica).',
+          'Choroby pasożytnicze przewodu pokarmowego u dzieci — charakterystyka pasożytów, sposoby zakażenia, objawy, leczenie farmakologiczne i profilaktyka.',
+          'Schorzenia ortopedyczne u dzieci.',
+          'Choroby nowotworowe układu krwiotwórczego u dzieci. Najczęściej występujące choroby nowotworowe u dzieci.'
+        ],
+        seminars: [
+          'Hospitalizacja jako sytuacja trudna. Reakcja dzieci i rodziców na fakt hospitalizacji. Zadania pielęgniarki.',
+          'Pielęgnowanie noworodka i wcześniaka (testy przesiewowe, żółtaczka fizjologiczna i przedłużająca się, zaburzenia oddychania).',
+          'Profilaktyka zakażeń w oddziałach pediatrycznych.',
+          'Żywienie dzieci zdrowych i chorych. Schemat sztucznego karmienia niemowląt i małych dzieci. Diety eliminacyjne i suplementacyjne. Schorzenia związane z niedoborami pokarmowymi — anemia niedoborowa, krzywica.',
+          'Przygotowanie dziecka do zabiegu operacyjnego. Opieka pielęgniarska przed zabiegiem i po nim.',
+          'Pielęgnowanie dziecka w chorobach układu oddechowego. Drenaż ułożeniowy. Standard postępowania pielęgnacyjnego.',
+          'Problemy pielęgnacyjne i sposoby ich rozwiązywania u dzieci z chorobami alergicznymi. Standard opieki nad dzieckiem z astmą oskrzelową.',
+          'Problemy pielęgnacyjne dzieci z chorobami układu nerwowego (porażenie mózgowe, zapalenie opon mózgowo-rdzeniowych).',
+          'Planowanie i realizacja opieki nad dzieckiem z chorobą układu pokarmowego.',
+          'Problemy pielęgnacyjne dzieci z chorobą układu krążenia i krwi (choroba Henocha-Schönleina, anemia z niedoboru żelaza, anemia sierpowata).',
+          'Problemy pielęgnacyjne dzieci w chorobach zakaźnych wieku dziecięcego (odra, ospa wietrzna, różyczka, błonica).',
+          'Planowanie i realizacja opieki pielęgniarskiej u dzieci z zaburzeniami metabolicznymi.',
+          'Mukowiscydoza — planowanie opieki pielęgniarskiej.',
+          'Postępowanie i pielęgnacja dzieci w najczęstszych schorzeniach ortopedycznych.',
+          'Planowanie opieki pielęgniarskiej wobec małego pacjenta i jego rodziny w przypadku wady wrodzonej. Poradnictwo genetyczne.',
+          'Problemy pielęgnacyjne dzieci i rodziców w przypadku choroby nowotworowej układu krwiotwórczego.',
+          'Pielęgnowanie dzieci z chorobami pasożytniczymi przewodu pokarmowego.',
+          'Kształtowanie się pojęcia śmierci u dzieci. Opieka terminalna.',
+          'Rola i zadania pielęgniarki w uodpornieniu populacji — szczepienia ochronne obowiązkowe według kalendarza i zalecane.',
+          'Dziecko maltretowane. SIDS. Urazowość. Uzależnienia u dzieci.'
+        ],
+        selfStudy: [
+          'Padaczka u dzieci — postępowanie i pielęgnacja.',
+          'Planowanie opieki pielęgniarskiej w zaburzeniach neurologicznych u dzieci.',
+          'Pielęgnowanie dziecka ze zmianami na skórze i błonach śluzowych.',
+          'Wirus nabytego niedoboru odporności u dzieci — planowanie opieki pielęgniarskiej.',
+          'Zespół nadpobudliwości psychoruchowej i zaburzeń koncentracji uwagi u dzieci.',
+          'Najczęstsze problemy psychospołeczne wieku dziecięcego. Fobie i samobójstwa.'
         ]
       }
     }
