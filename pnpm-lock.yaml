@@ -97,9 +97,6 @@ importers:
       '@upstash/redis':
         specifier: ^1.38.1
         version: 1.38.2
-      '@vercel/postgres':
-        specifier: ^0.10.0
-        version: 0.10.0
       '@xyflow/react':
         specifier: ^12.11.2
         version: 12.11.2(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(immer@11.1.16)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7627,6 +7624,7 @@ snapshots:
   '@neondatabase/serverless@0.9.5':
     dependencies:
       '@types/pg': 8.11.6
+    optional: true
 
   '@neondatabase/serverless@1.1.0': {}
 
@@ -8644,6 +8642,7 @@ snapshots:
       '@types/node': 26.1.2
       pg-protocol: 1.15.0
       pg-types: 4.1.0
+    optional: true
 
   '@types/prismjs@1.26.6': {}
 
@@ -8898,6 +8897,7 @@ snapshots:
       ws: 8.21.2(bufferutil@4.1.0)
     transitivePeerDependencies:
       - utf-8-validate
+    optional: true
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -9223,6 +9223,7 @@ snapshots:
   bufferutil@4.1.0:
     dependencies:
       node-gyp-build: 4.8.4
+    optional: true
 
   bytes@3.1.2: {}
 
@@ -11537,7 +11538,8 @@ snapshots:
       detect-libc: 2.1.2
     optional: true
 
-  node-gyp-build@4.8.4: {}
+  node-gyp-build@4.8.4:
+    optional: true
 
   node-releases@2.0.53: {}
 
@@ -11585,7 +11587,8 @@ snapshots:
       define-properties: 1.2.1
       es-object-atoms: 1.1.2
 
-  obuf@1.1.2: {}
+  obuf@1.1.2:
+    optional: true
 
   on-finished@2.4.1:
     dependencies:
@@ -11676,7 +11679,8 @@ snapshots:
 
   pg-int8@1.0.1: {}
 
-  pg-numeric@1.0.2: {}
+  pg-numeric@1.0.2:
+    optional: true
 
   pg-pool@3.14.0(pg@8.22.0):
     dependencies:
@@ -11701,6 +11705,7 @@ snapshots:
       postgres-date: 2.1.0
       postgres-interval: 3.0.0
       postgres-range: 1.1.4
+    optional: true
 
   pg@8.22.0:
     dependencies:
@@ -11768,25 +11773,30 @@ snapshots:
 
   postgres-array@2.0.0: {}
 
-  postgres-array@3.0.4: {}
+  postgres-array@3.0.4:
+    optional: true
 
   postgres-bytea@1.0.1: {}
 
   postgres-bytea@3.0.0:
     dependencies:
       obuf: 1.1.2
+    optional: true
 
   postgres-date@1.0.7: {}
 
-  postgres-date@2.1.0: {}
+  postgres-date@2.1.0:
+    optional: true
 
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
 
-  postgres-interval@3.0.0: {}
+  postgres-interval@3.0.0:
+    optional: true
 
-  postgres-range@1.1.4: {}
+  postgres-range@1.1.4:
+    optional: true
 
   postgres@3.4.9: {}
 
