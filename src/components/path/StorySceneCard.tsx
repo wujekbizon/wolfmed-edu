@@ -4,7 +4,7 @@ import type { StoryScene } from '@/types/pathStoryTypes'
 // Until real photography lands, the frame keeps the scene's rhythm with a
 // hatched placeholder rather than collapsing the layout.
 const HATCH =
-  'repeating-linear-gradient(135deg, rgba(244,63,94,0.06) 0px, rgba(244,63,94,0.06) 8px, rgba(255,255,255,0.5) 8px, rgba(255,255,255,0.5) 16px)'
+  'repeating-linear-gradient(45deg, rgba(25,26,28,.05) 0 7px, transparent 7px 15px), linear-gradient(135deg, #E4F3EE, #EAE2F8)'
 
 export default function StorySceneCard({
   scene,
