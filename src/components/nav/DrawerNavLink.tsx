@@ -39,7 +39,7 @@ export default function DrawerNavLink({
   return (
     <Link
       href={href}
-      onClick={onNavigate}
+      {...(onNavigate ? { onClick: onNavigate } : {})}
       className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl transition-all duration-200
         ${active
           ? 'text-rose-600'
