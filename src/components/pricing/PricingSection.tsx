@@ -1,4 +1,5 @@
 import { PLAN_COMPARISON } from '@/constants/planComparison'
+import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import PricingCardsGrid from './PricingCardsGrid'
 import PlanComparisonTable from './PlanComparisonTable'
 import PlanComparisonCards from './PlanComparisonCards'
@@ -21,7 +22,11 @@ export default function PricingSection({
   const groups = PLAN_COMPARISON[pricing.courseSlug] ?? []
 
   return (
-    <section aria-labelledby="pricing-title" className="w-full relative">
+    <section
+      id={PRICING_ANCHOR}
+      aria-labelledby="pricing-title"
+      className="w-full relative scroll-mt-24"
+    >
       <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16 flex flex-col gap-12 sm:gap-16">
         <div>
           <SectionHeading
