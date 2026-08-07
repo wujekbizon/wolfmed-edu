@@ -41,9 +41,11 @@ export default function PathTools({
   const active = features[selected]
 
   return (
+    // relative is load-bearing: GradientOverlay in the parent section is
+    // absolutely positioned and paints above any static sibling.
     <section
       aria-labelledby="tools-title"
-      className="w-full bg-gradient-to-b from-zinc-800 to-zinc-950 px-6 py-14 sm:px-10 lg:px-[60px] lg:py-[68px]"
+      className="relative w-full overflow-hidden rounded-3xl bg-gradient-to-b from-[#2A262B] to-[#1C1A1E] px-6 py-14 sm:px-10 lg:px-[60px] lg:py-[68px]"
     >
       <div className="mx-auto max-w-[1180px]">
         <header className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
@@ -53,9 +55,11 @@ export default function PathTools({
             </p>
             <h2
               id="tools-title"
-              className="mt-4 text-3xl lg:text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-zinc-100 text-balance"
+              className="mt-4 text-3xl lg:text-[42px] font-bold leading-[1.08] tracking-[-0.03em] text-zinc-100"
             >
-              {intro.headline}
+              {intro.headline[0]}
+              <br />
+              {intro.headline[1]}
             </h2>
           </div>
           <p className="max-w-[340px] text-[15px] leading-[1.7] text-white/55 text-pretty">

@@ -34,7 +34,7 @@ export default function ToolListItem({
         {String(index + 1).padStart(2, '0')}
       </span>
 
-      <span className="min-w-0">
+      <span className="block min-w-0 flex-1">
         <span
           className={`block text-[17px] font-semibold leading-[1.3] transition-colors duration-300 ${
             selected ? 'text-zinc-100' : 'text-white/50 group-hover:text-white/70'
@@ -47,7 +47,7 @@ export default function ToolListItem({
             popping; the value only has to exceed the tallest description. */}
         <span
           className={`grid overflow-hidden transition-[max-height,opacity] duration-[400ms] ease-[cubic-bezier(.2,.7,.3,1)] motion-reduce:transition-none ${
-            selected ? 'max-h-[200px] opacity-100' : 'max-h-0 opacity-0'
+            selected ? 'max-h-[260px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <span className="mt-2.5 block text-sm leading-[1.65] text-white/60 text-pretty">
