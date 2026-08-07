@@ -18,32 +18,36 @@ export default function SimplePathLayout({
   const story = pricing ? CAREER_STORY[pricing.courseSlug] : undefined
 
   return (
-    <section className='relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden'>
-      <GradientOverlay />
+    <>
+      {/* Outside the section below on purpose: its overflow-hidden would
+          become the sticky column's scroll container and break the pinning. */}
+      {story && <PathStoryHero title={title} story={story} />}
 
-      <FadeInSection className='w-full'>
-        {story ? (
-          <PathStoryHero title={title} story={story} />
-        ) : (
-          <PathHero title={title} description={description} />
+      <section className='relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden'>
+        <GradientOverlay />
+
+        {!story && (
+          <FadeInSection className='w-full'>
+            <PathHero title={title} description={description} />
+          </FadeInSection>
         )}
-      </FadeInSection>
 
-      {features && features.length > 0 && (
-        <FadeInSection className='w-full'>
-          <PathFeatures features={features} />
-        </FadeInSection>
-      )}
+        {features && features.length > 0 && (
+          <FadeInSection className='w-full'>
+            <PathFeatures features={features} />
+          </FadeInSection>
+        )}
 
-      {pricing && (
-        <FadeInSection className='w-full'>
-          <PricingSection
-            pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
-            subjectTitles={subjectTitles}
-          />
-        </FadeInSection>
-      )}
-    </section>
+        {pricing && (
+          <FadeInSection className='w-full'>
+            <PricingSection
+              pricing={pricing}
+              ownedCourses={ownedCourses ?? []}
+              subjectTitles={subjectTitles}
+            />
+          </FadeInSection>
+        )}
+      </section>
+    </>
   )
 }

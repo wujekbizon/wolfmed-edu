@@ -1,42 +1,28 @@
 'use client'
 
-import { useRef } from 'react'
-import { useSceneFocus } from '@/hooks/useSceneFocus'
+import { useSceneReveal } from '@/hooks/useSceneReveal'
 import StorySceneCard from './StorySceneCard'
 import type { StoryScene } from '@/types/pathStoryTypes'
 
-// Scroll snapping sequences the scenes; focus only shapes the fade, so the
-// track still reads one-at-a-time if the measurement never runs.
+// Scenes sit in the page's own scroll, one viewport tall each, so the sticky
+// column beside them has something to stay put against. No inner scroller —
+// that would take the wheel away from the page.
 export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
-  const frame = useRef<HTMLDivElement>(null)
-  const { focus, setScene } = useSceneFocus(scenes.length, frame)
+  const { active, setScene } = useSceneReveal(scenes.length)
 
   return (
-    <div
-      ref={frame}
-      className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hidden overscroll-contain"
-    >
-      {scenes.map((scene, index) => {
-        const value = focus[index] ?? 0
-
-        return (
-          <div
-            key={scene.time}
-            ref={setScene(index)}
-            className="h-full snap-start flex items-center py-8"
-          >
-            <div
-              className="w-full will-change-[opacity,transform]"
-              style={{
-                opacity: 0.08 + 0.92 * value ** 1.6,
-                transform: `translate3d(0, ${(1 - value) * 18}px, 0)`,
-              }}
-            >
-              <StorySceneCard scene={scene} index={index} total={scenes.length} />
-            </div>
+    <div className="px-6 sm:px-10 lg:pl-10 lg:pr-12">
+      {scenes.map((scene, index) => (
+        <article
+          key={scene.time}
+          ref={setScene(index)}
+          className="flex flex-col justify-center py-10 lg:py-0 lg:h-screen"
+        >
+          <div className="scene-reveal" data-active={active[index] ? 'true' : 'false'}>
+            <StorySceneCard scene={scene} index={index} total={scenes.length} />
           </div>
-        )
-      })}
+        </article>
+      ))}
     </div>
   )
 }
