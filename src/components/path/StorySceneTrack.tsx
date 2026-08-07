@@ -1,37 +1,42 @@
 'use client'
 
 import { useRef } from 'react'
-import { useActiveScene } from '@/hooks/useActiveScene'
+import { useSceneFocus } from '@/hooks/useSceneFocus'
 import StorySceneCard from './StorySceneCard'
 import type { StoryScene } from '@/types/pathStoryTypes'
 
-// One scene fills the frame at a time. Scroll snapping does the sequencing;
-// the active index only drives the fade, so the track still works if the
-// observer never fires.
+// Scroll snapping sequences the scenes; focus only shapes the fade, so the
+// track still reads one-at-a-time if the measurement never runs.
 export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
   const frame = useRef<HTMLDivElement>(null)
-  const { active, setScene } = useActiveScene(scenes.length, frame)
+  const { focus, setScene } = useSceneFocus(scenes.length, frame)
 
   return (
     <div
       ref={frame}
-      className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-thin overscroll-contain"
+      className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hidden overscroll-contain"
     >
-      {scenes.map((scene, index) => (
-        <div
-          key={scene.time}
-          ref={setScene(index)}
-          className="h-full snap-start flex items-center py-8"
-        >
+      {scenes.map((scene, index) => {
+        const value = focus[index] ?? 0
+
+        return (
           <div
-            className={`w-full transition-all duration-500 ease-out motion-reduce:transition-none ${
-              index === active ? 'opacity-100 translate-y-0' : 'opacity-30 translate-y-2'
-            }`}
+            key={scene.time}
+            ref={setScene(index)}
+            className="h-full snap-start flex items-center py-8"
           >
-            <StorySceneCard scene={scene} index={index} total={scenes.length} />
+            <div
+              className="w-full will-change-[opacity,transform]"
+              style={{
+                opacity: 0.08 + 0.92 * value ** 1.6,
+                transform: `translate3d(0, ${(1 - value) * 18}px, 0)`,
+              }}
+            >
+              <StorySceneCard scene={scene} index={index} total={scenes.length} />
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
