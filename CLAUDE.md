@@ -347,6 +347,7 @@ Claude (or any coding assistant) should follow these principles when interacting
 5. **Use TailwindCSS v4 conventions** defined in `tailwind-styles.md`.
 6. **Keep code clean and self-documenting** — Only add comments to code that is genuinely complex or difficult to understand. Prefer clear naming and simple logic over excessive commenting. Comments should explain "why", not "what".
 7. **Check before creating** — Before adding any new function, query, or utility, search the codebase to verify it doesn't already exist. Use grep/search to check `/server/queries.ts`, `/actions`, and `/lib` for similar functionality.  
+8. **Never run scripts without asking** — Do NOT execute anything in `/scripts`, any `pnpm run` task that mutates data, or any command that writes to `/data`, the database, or an external service. Write the script, show the exact command, and wait for the user to run it or explicitly approve. This holds even when the script was written for the task at hand and even when the change looks obviously correct — the user decides when data changes. Read-only inspection (`grep`, `git status`, `git diff`, `tsc --noEmit`, `pnpm run lint`) does not need approval.
 
 ---
 
