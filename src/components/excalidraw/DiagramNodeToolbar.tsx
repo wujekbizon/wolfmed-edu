@@ -17,7 +17,12 @@ interface DiagramNodeToolbarProps {
  * who was reaching for a node is worse than making them press a button.
  *
  * Position comes from a ref rather than props — it changes on every frame of a
- * camera move, which no component should re-render for.
+ * camera move, which no component should re-render for. It is clamped to the
+ * canvas: the anchor follows a selection that is often partly off-screen, and
+ * an unclamped toolbar was drawn over the page above the cell.
+ *
+ * Buttons are full size rather than compact — nearly all of this is used on a
+ * phone, where a 32px target is a miss waiting to happen.
  */
 export default function DiagramNodeToolbar({
   selection,
@@ -35,15 +40,15 @@ export default function DiagramNodeToolbar({
   return (
     <div
       ref={toolbarRef}
-      className="pointer-events-auto absolute z-20 flex -translate-x-1/2 -translate-y-[calc(100%+8px)] gap-1 rounded-lg border border-zinc-200 bg-white/95 p-1 shadow-md"
+      className="pointer-events-auto absolute z-20 flex -translate-x-1/2 -translate-y-full gap-1 rounded-lg border border-zinc-200 bg-white/95 p-1 shadow-md"
     >
       {selection.kind === 'node' && (
-        <Button variant="ghost" size="sm" onClick={onFocusNode} title="Powiększ ten element i jego powiązania">
+        <Button variant="ghost" size="md" onClick={onFocusNode} title="Powiększ ten element i jego powiązania">
           Powiększ
         </Button>
       )}
       {selection.groupId && (
-        <Button variant="ghost" size="sm" onClick={onFocusGroup} title="Powiększ całą grupę">
+        <Button variant="ghost" size="md" onClick={onFocusGroup} title="Powiększ całą grupę">
           Pokaż grupę
         </Button>
       )}

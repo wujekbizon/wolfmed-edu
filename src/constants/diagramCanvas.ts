@@ -34,3 +34,12 @@ export const SAVE_DEBOUNCE_MS = 400
  * the state before last.
  */
 export const SAVE_SETTLE_MS = 80
+
+/** Gap between a selection and its toolbar, and the toolbar's inset from the
+ *  canvas edge — the toolbar is clamped rather than allowed to escape the cell
+ *  when the selection sits above or beside the visible area. */
+export const TOOLBAR_GAP = 8
+export const TOOLBAR_MARGIN = 8
+
+/** Used until the toolbar has been measured, on the frame it first appears. */
+export const TOOLBAR_FALLBACK_SIZE = { width: 120, height: 36 }

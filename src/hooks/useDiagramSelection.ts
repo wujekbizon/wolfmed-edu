@@ -4,7 +4,8 @@ import { useCallback, useRef, useState, type RefObject } from 'react'
 import { sceneCoordsToViewportCoords } from '@excalidraw/excalidraw'
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
 import { DIAGRAM_GROUP_ROLE } from '@/constants/diagramRoles'
-import { getCommonGroupId, getSelectionAnchor, isSameSelection } from '@/lib/diagram/selectionGeometry'
+import { clampAnchor, getCommonGroupId, getSelectionAnchor, isSameSelection } from '@/lib/diagram/selectionGeometry'
+import { TOOLBAR_FALLBACK_SIZE, TOOLBAR_GAP } from '@/constants/diagramCanvas'
 import type { DiagramAnchor, DiagramSelection } from '@/types/diagramTypes'
 
 interface AppStateLike {
@@ -14,6 +15,8 @@ interface AppStateLike {
   zoom: { value: number }
   offsetLeft: number
   offsetTop: number
+  width: number
+  height: number
 }
 
 /**
@@ -55,10 +58,19 @@ export function useDiagramSelection(toolbarRef: RefObject<HTMLDivElement | null>
         appState as never
       )
 
+      const toolbar = toolbarRef.current
+      const size = toolbar?.offsetWidth
+        ? { width: toolbar.offsetWidth, height: toolbar.offsetHeight }
+        : TOOLBAR_FALLBACK_SIZE
+
       // sceneCoordsToViewportCoords includes the canvas offset; the toolbar
       // sits inside that same box, so it has to come back off.
-      anchorRef.current = { x: x - appState.offsetLeft, y: y - appState.offsetTop }
-      applyAnchor(toolbarRef.current, anchorRef.current)
+      anchorRef.current = clampAnchor(
+        { x: x - appState.offsetLeft, y: y - appState.offsetTop },
+        size,
+        { width: appState.width, height: appState.height }
+      )
+      applyAnchor(toolbar, anchorRef.current)
 
       const next: DiagramSelection = {
         kind: single && !container ? 'node' : 'group',
@@ -78,5 +90,5 @@ export function useDiagramSelection(toolbarRef: RefObject<HTMLDivElement | null>
 export function applyAnchor(element: HTMLElement | null, anchor: DiagramAnchor): void {
   if (!element) return
   element.style.left = `${anchor.x}px`
-  element.style.top = `${anchor.y}px`
+  element.style.top = `${anchor.y - TOOLBAR_GAP}px`
 }

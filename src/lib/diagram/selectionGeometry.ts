@@ -1,5 +1,34 @@
 import type { ExcalidrawElement } from '@excalidraw/excalidraw/element/types'
-import type { DiagramSelection } from '@/types/diagramTypes'
+import { TOOLBAR_GAP, TOOLBAR_MARGIN } from '@/constants/diagramCanvas'
+import type { DiagramAnchor, DiagramSelection } from '@/types/diagramTypes'
+
+interface Size {
+  width: number
+  height: number
+}
+
+/**
+ * Keeps the toolbar inside the cell.
+ *
+ * The anchor follows the selection, which is often partly or wholly outside
+ * the visible canvas — a group whose top edge is above the viewport gives a
+ * negative y, and the toolbar was drawn over the page above the cell.
+ *
+ * The element is drawn centred above the anchor, so the limits are expressed
+ * in terms of where that puts its box.
+ */
+export function clampAnchor(anchor: DiagramAnchor, toolbar: Size, canvas: Size): DiagramAnchor {
+  const halfWidth = toolbar.width / 2
+  const minX = TOOLBAR_MARGIN + halfWidth
+  const maxX = Math.max(minX, canvas.width - TOOLBAR_MARGIN - halfWidth)
+  const minY = TOOLBAR_MARGIN + toolbar.height + TOOLBAR_GAP
+  const maxY = Math.max(minY, canvas.height - TOOLBAR_MARGIN)
+
+  return {
+    x: Math.min(Math.max(anchor.x, minX), maxX),
+    y: Math.min(Math.max(anchor.y, minY), maxY),
+  }
+}
 
 type Elements = readonly ExcalidrawElement[]
 
