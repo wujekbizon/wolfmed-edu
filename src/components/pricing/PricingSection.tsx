@@ -2,22 +2,21 @@ import { PLAN_COMPARISON } from '@/constants/planComparison'
 import PricingCardsGrid from './PricingCardsGrid'
 import PlanComparisonTable from './PlanComparisonTable'
 import PlanComparisonCards from './PlanComparisonCards'
-import CourseSubjectsTable from './CourseSubjectsTable'
+import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
-import type { CourseSubjectYear } from '@/types/pricingTypes'
 
-// `years` arrives as a prop rather than being read here: SimplePathLayout is a
-// client component, and importing CATEGORY_METADATA through it would ship the
-// whole category catalogue to the browser.
+// `subjectTitles` arrives as a prop rather than being read here:
+// SimplePathLayout is a client component, and importing CATEGORY_METADATA
+// through it would ship the whole category catalogue to the browser.
 export default function PricingSection({
   pricing,
   ownedCourses,
-  years,
+  subjectTitles,
 }: {
   pricing: NonNullable<PathData['pricing']>
   ownedCourses: string[]
-  years: CourseSubjectYear[]
+  subjectTitles: string[]
 }) {
   const groups = PLAN_COMPARISON[pricing.courseSlug] ?? []
 
@@ -43,17 +42,7 @@ export default function PricingSection({
             />
             <PlanComparisonTable groups={groups} />
             <PlanComparisonCards groups={groups} />
-          </div>
-        )}
-
-        {years.length > 0 && (
-          <div>
-            <SectionHeading
-              eyebrow="Program"
-              title="Przedmioty w kursie"
-              subtitle="Wszystkie kategorie dostępne w ramach kursu, wraz z semestrem i punktami ECTS."
-            />
-            <CourseSubjectsTable years={years} />
+            {subjectTitles.length > 0 && <CourseSubjectList titles={subjectTitles} />}
           </div>
         )}
       </div>
