@@ -1,5 +1,6 @@
 import PathFacts from './PathFacts'
 import StorySceneCard from './StorySceneCard'
+import StorySceneTrack from './StorySceneTrack'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import type { PathStory } from '@/types/pathStoryTypes'
 
@@ -40,7 +41,11 @@ export default function PathStoryHero({
           </a>
         </div>
 
-        <div className="p-6 sm:p-10 lg:p-14 lg:pl-0 flex flex-col gap-14">
+        <div className="hidden lg:block p-14 pl-0">
+          <StorySceneTrack scenes={story.scenes} />
+        </div>
+
+        <div className="lg:hidden p-6 sm:p-10 flex flex-col gap-14">
           {story.scenes.map((scene, index) => (
             <StorySceneCard
               key={scene.time}
