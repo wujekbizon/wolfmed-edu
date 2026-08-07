@@ -1,6 +1,7 @@
 import { convertToExcalidrawElements } from '@excalidraw/excalidraw'
 import { parseMermaidToExcalidraw } from '@excalidraw/mermaid-to-excalidraw'
 import { parseDiagramRoles } from '@/helpers/parseDiagramRoles'
+import { quoteMermaidLabels } from '@/helpers/quoteMermaidLabels'
 import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
 import { buildDiagramLegend } from './buildDiagramLegend'
 import { buildGroupContainers } from './buildGroupContainers'
@@ -21,7 +22,7 @@ import type { ExcalidrawScene } from '@/types/diagramTypes'
  * extractSubgraphs for why the converter is not shown them.
  */
 export async function convertMermaidScene(source: string): Promise<ExcalidrawScene> {
-  const mermaid = repairMermaidSubgraphs(source)
+  const mermaid = repairMermaidSubgraphs(quoteMermaidLabels(source))
   const { source: ungrouped, groups } = extractSubgraphs(mermaid)
 
   const { elements: raw, files } = await parseMermaidToExcalidraw(ungrouped)
