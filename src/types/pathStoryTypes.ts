@@ -16,3 +16,17 @@ export type PathStory = {
   facts: PathFact[]
   scenes: StoryScene[]
 }
+
+export type PathStep = {
+  step: string
+  duration: string
+  title: string
+  description: string
+  photoHint: string
+  imgSrc?: string
+}
+
+export type CareerPath = {
+  headline: string
+  steps: PathStep[]
+}
