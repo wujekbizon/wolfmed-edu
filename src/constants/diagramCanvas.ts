@@ -56,3 +56,12 @@ export const GROUP_PADDING = 14
 
 /** Extra height at the top of a container so its title clears the members. */
 export const GROUP_TITLE_SPACE = 22
+
+/**
+ * Gap left between two group containers that had to be pushed apart, and how
+ * many times to look for a collision. Mermaid no longer reserves space around a
+ * cluster, so overlaps are resolved afterwards; a handful of passes settles the
+ * diagrams a student actually gets and bounds the work on a pathological one.
+ */
+export const GROUP_SEPARATION = 32
+export const GROUP_SEPARATION_PASSES = 8

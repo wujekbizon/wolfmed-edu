@@ -5,6 +5,7 @@ import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
 import { buildDiagramLegend } from './buildDiagramLegend'
 import { buildGroupContainers } from './buildGroupContainers'
 import { extractSubgraphs } from './extractSubgraphs'
+import { separateGroups } from './separateGroups'
 import { styleDiagramSkeleton } from './styleDiagramSkeleton'
 import type { ExcalidrawScene } from '@/types/diagramTypes'
 
@@ -23,8 +24,9 @@ export async function convertMermaidScene(source: string): Promise<ExcalidrawSce
   const mermaid = repairMermaidSubgraphs(source)
   const { source: ungrouped, groups } = extractSubgraphs(mermaid)
 
-  const { elements: skeleton, files } = await parseMermaidToExcalidraw(ungrouped)
+  const { elements: raw, files } = await parseMermaidToExcalidraw(ungrouped)
   const roles = parseDiagramRoles(mermaid)
+  const skeleton = separateGroups(raw, groups)
   const { containers, groupIdsById } = buildGroupContainers(skeleton, groups)
 
   const grouped = skeleton.map((element) => {
