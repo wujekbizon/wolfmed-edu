@@ -11,13 +11,11 @@ import SubmitButton from '@/components/SubmitButton'
 export default function CourseCheckoutButton({
   courseSlug,
   priceId,
-  accessTier,
-  alreadyOwned = false
+  accessTier
 }: {
   courseSlug: string
   priceId: string
   accessTier: string
-  alreadyOwned?: boolean
 }) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
@@ -29,10 +27,11 @@ export default function CourseCheckoutButton({
       <input type='hidden' name='accessTier' value={accessTier} />
       <input type='hidden' name='priceId' value={priceId} />
       <SubmitButton
-        label={alreadyOwned ? 'Masz już dostęp' : 'Uzyskaj dostęp do kursu'}
+        label='Uzyskaj dostęp do kursu'
         loading='Przekierowywanie...'
-        disabled={alreadyOwned}
-        className='h-13 text-base font-semibold'
+        variant='cta'
+        size='lg'
+        shape='pill'
       />
     </form>
   )

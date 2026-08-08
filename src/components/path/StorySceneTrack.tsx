@@ -8,7 +8,7 @@ export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
   const { active, setScene } = useSceneReveal(scenes.length)
 
   return (
-    <ol className='px-6 pb-6 sm:px-10 sm:pb-10 lg:pl-0 lg:pr-14 lg:pb-0'>
+    <ol className='px-6 pb-6 sm:px-10 sm:pb-10 lg:px-12 lg:pb-12 xl:flex xl:flex-col xl:gap-24 xl:px-14 xl:py-14'>
       {scenes.map((scene, index) => {
         const headingId = `scene-${index + 1}-title`
 
@@ -16,7 +16,7 @@ export default function StorySceneTrack({ scenes }: { scenes: StoryScene[] }) {
           <li
             key={scene.time}
             ref={setScene(index)}
-            className='flex flex-col justify-center py-10 lg:py-0 lg:h-[90vh]'
+            className='flex flex-col justify-center py-10 xl:py-0'
           >
             <article
               aria-labelledby={headingId}

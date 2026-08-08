@@ -27,13 +27,13 @@ export default function StorySceneCard({
         </span>
       </p>
 
-      <figure className='relative aspect-[16/10] max-h-[52vh] w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5'>
+      <figure className='relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5 xl:max-h-[52vh]'>
         {scene.imgSrc ? (
           <Image
             src={scene.imgSrc}
             alt={scene.photoHint}
             fill
-            sizes='(max-width: 1024px) 100vw, 60vw'
+            sizes='(max-width: 1279px) calc(100vw - 5rem), 60vw'
             priority={index === 0}
             className='object-cover'
           />

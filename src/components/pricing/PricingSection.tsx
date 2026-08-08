@@ -3,6 +3,8 @@ import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import PricingCardsGrid from './PricingCardsGrid'
 import PlanComparisonTable from './PlanComparisonTable'
 import PlanComparisonCards from './PlanComparisonCards'
+import PlanComparisonPanel from './PlanComparisonPanel'
+import PlanComparisonToggle from './PlanComparisonToggle'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
@@ -25,7 +27,7 @@ export default function PricingSection({
     <section
       id={PRICING_ANCHOR}
       aria-labelledby='pricing-title'
-      className='panel-dark relative w-full overflow-hidden rounded-3xl scroll-mt-24 px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
+      className='relative w-full scroll-mt-24 px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
     >
       <div className='mx-auto flex w-full max-w-6xl flex-col gap-12 sm:gap-16'>
         <div>
@@ -34,25 +36,24 @@ export default function PricingSection({
             title='Plany cenowe'
             subtitle='Jednorazowa płatność. Dostęp na zawsze.'
             titleId='pricing-title'
-            tone='dark'
           />
           <PricingCardsGrid pricing={pricing} ownedCourses={ownedCourses} />
+          {groups.length > 0 && <PlanComparisonToggle />}
         </div>
 
         {groups.length > 0 && (
-          <div>
+          <PlanComparisonPanel>
             <SectionHeading
               eyebrow='Porównanie'
               title='Co zawiera każdy plan'
               subtitle='Pełna lista funkcji dostępnych w planach Standard i Premium.'
-              tone='dark'
             />
             <PlanComparisonTable groups={groups} />
             <PlanComparisonCards groups={groups} />
             {subjectTitles.length > 0 && (
               <CourseSubjectList titles={subjectTitles} />
             )}
-          </div>
+          </PlanComparisonPanel>
         )}
       </div>
     </section>

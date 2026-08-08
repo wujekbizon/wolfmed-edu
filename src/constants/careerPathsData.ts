@@ -1,4 +1,7 @@
 import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
+import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
+import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
+import { PIELEGNIARSTWO_QUESTIONS } from '@/constants/careerQuestions'
 
 export const careerPaths = [
   {
@@ -348,6 +351,8 @@ export const curriculum: CurriculumBlock[] = [
 
 export const careerPathsData: Record<string, PathData> = {
   'opiekun-medyczny': {
+    story: OPIEKUN_MEDYCZNY_STORY,
+    careerPath: OPIEKUN_MEDYCZNY_PATH,
     title: 'Opiekun Medyczny',
     description:
       'Nasz program edukacyjny wspiera zarówno osoby przygotowujące się do egzaminu, jak i tych, którzy już pracują w branży i chcą utrwalać wiedzę oraz rozwijać kompetencje przed kolejnym zawodowym wyzwaniem.',
@@ -457,6 +462,7 @@ export const careerPathsData: Record<string, PathData> = {
     }
   },
   pielegniarstwo: {
+    questions: PIELEGNIARSTWO_QUESTIONS,
     title: 'Pielęgniarstwo',
     description:
       'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
