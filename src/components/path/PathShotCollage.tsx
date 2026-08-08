@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import { useSceneReveal } from '@/hooks/useSceneReveal'
-import { PATH_SHOT_HEIGHTS } from '@/constants/pathShotHeights'
 import type { PathShot } from '@/types/pathStoryTypes'
 
 export default function PathShotCollage({ shots }: { shots: PathShot[] }) {
@@ -17,11 +16,7 @@ export default function PathShotCollage({ shots }: { shots: PathShot[] }) {
           className='scene-reveal'
           data-active={active[index] ? 'true' : 'false'}
         >
-          <figure
-            className={`relative w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5 ${
-              PATH_SHOT_HEIGHTS[index % PATH_SHOT_HEIGHTS.length]
-            }`}
-          >
+          <figure className='relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5'>
             {shot.imgSrc ? (
               <Image
                 src={shot.imgSrc}

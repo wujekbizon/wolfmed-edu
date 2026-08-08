@@ -2,7 +2,7 @@ import type { PathQuestions } from '@/types/pathStoryTypes'
 
 export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
   eyebrow: 'Kierunek Edukacyjny',
-  lead: 'Prowadzimy Cię przez trzy lata studiów pielęgniarskich — przedmioty podstawowe i kierunkowe, proces pielęgnowania i testy sprawdzające, na jednej platformie. Zobacz, czego uczymy i do jakiej pracy Cię przygotowujemy.',
+  lead: 'Prowadzimy Cię przez cały tok studiów pielęgniarskich — przedmioty podstawowe i kierunkowe, proces pielęgnowania i testy sprawdzające, na jednej platformie. Zobacz, czego uczymy i do jakiej pracy Cię przygotowujemy.',
   cta: 'Zobacz szczegółowy program',
   items: [
     {
@@ -13,12 +13,12 @@ export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
     {
       question: 'Jak długo trwa nauka?',
       answer:
-        '3 lata studiów licencjackich — 2260 godzin zajęć i 63 punkty ECTS. Dalej opcjonalnie 2 lata magisterskich.'
+        'Studia licencjackie, a po nich opcjonalnie magisterskie i specjalizacje. Rozkład godzin i punktów ECTS na każdy rok znajdziesz w mapie programu.'
     },
     {
       question: 'Jaki egzamin kończy studia?',
       answer:
-        'Egzamin dyplomowy — teoria i praktyka. Przygotowuje do niego baza 22 700 pytań z 22 kategorii.'
+        'Egzamin dyplomowy — teoria i praktyka. Przygotowuje do niego nasza baza pytań, obejmująca wszystkie kategorie z programu studiów.'
     }
   ],
   shots: [
