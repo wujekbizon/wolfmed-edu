@@ -16,6 +16,8 @@ export const CAREER_STORY: Record<string, PathStory> = {
         description:
           'Przejmuje dyżur, sprawdza, co zmieniło się w nocy, i układa plan opieki na najbliższe godziny.',
         photoHint: 'poranna zmiana, przekazanie dyżuru',
+        imgSrc:
+          'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5gIymAkK1JZolbvwfgWCAFPh8xz9BIKNsVjGk',
       },
       {
         time: '09:15',
@@ -23,6 +25,8 @@ export const CAREER_STORY: Record<string, PathStory> = {
         description:
           'Higiena, ubieranie, karmienie, zmiana pozycji, pionizacja. Codzienne czynności, które dla pacjenta znaczą najwięcej.',
         photoHint: 'pomoc przy wstawaniu z łóżka',
+        imgSrc:
+          'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5zz5r38UX7YQSa26hxGoeVpbCPILvOygltknr',
       },
       {
         time: '12:30',
@@ -30,6 +34,8 @@ export const CAREER_STORY: Record<string, PathStory> = {
         description:
           'Mierzy parametry, zauważa zmiany w stanie pacjenta i informuje pielęgniarkę lub lekarza. Prowadzi dokumentację.',
         photoHint: 'pomiar ciśnienia i wpis w karcie',
+        imgSrc:
+          'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5UhO3MAoIxs2k5EyuGdN4SRigYP6qreJDvtVZ',
       },
       {
         time: '17:00',
@@ -37,6 +43,8 @@ export const CAREER_STORY: Record<string, PathStory> = {
         description:
           'Rozmawia, uspokaja, towarzyszy. To ta część zawodu, której nie widać w podstawie programowej, a decyduje o wszystkim.',
         photoHint: 'rozmowa z pacjentką przy oknie',
+        imgSrc:
+          'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5fc00XzkI5V0qsnml6MSPCKvYTXFJWdZBO1H2',
       },
     ],
   },
