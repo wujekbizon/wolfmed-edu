@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import PathFacts from './PathFacts'
 import StorySceneTrack from './StorySceneTrack'
 import CourseCheckoutButton from './CourseCheckoutButton'
@@ -55,7 +56,7 @@ export default function PathStoryHero({
 
               <div>
                 <PathFacts facts={story.facts} />
-                <a
+                <Link
                   href={`#${PRICING_ANCHOR}`}
                   className='group mt-6 inline-flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors'
                 >
@@ -63,7 +64,7 @@ export default function PathStoryHero({
                   <span className='transition-transform duration-200 group-hover:translate-y-0.5'>
                     ↓
                   </span>
-                </a>
+                </Link>
               </div>
             </aside>
           </div>
