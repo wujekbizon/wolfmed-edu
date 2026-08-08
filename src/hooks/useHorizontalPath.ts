@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { clampPercent } from '@/helpers/clampPercent'
 
 // The track is moved by writing to its style directly rather than through
 // state: this runs on every scroll frame, and re-rendering the cards at 60fps
@@ -9,6 +10,7 @@ export function useHorizontalPath(count: number) {
   const track = useRef<HTMLDivElement>(null)
 
   const [percent, setPercent] = useState(0)
+  const [pinned, setPinned] = useState(false)
   const [height, setHeight] = useState<number | null>(null)
   const [near, setNear] = useState<boolean[]>(() =>
     Array.from({ length: count }, (_, index) => index === 0)
@@ -22,11 +24,21 @@ export function useHorizontalPath(count: number) {
 
     // Below the breakpoint the steps are a plain vertical list, so any leftover
     // transform would push them off screen.
-    if (!window.matchMedia('(min-width: 1024px)').matches) {
+    if (!window.matchMedia('(min-width: 1280px)').matches) {
       rail.style.transform = ''
       setHeight(null)
+      setPinned(false)
+
+      // Stacked, progress is how far the list itself has travelled up the
+      // viewport. Reading it from the reveal state instead would fall back to
+      // zero once the last step passes the top, undoing a full bar.
+      const span = stage.offsetHeight
+      const travelled = window.innerHeight - stage.getBoundingClientRect().top
+      setPercent(clampPercent(span > 0 ? travelled / span : 0))
       return
     }
+
+    setPinned(true)
 
     // Travel comes from the track, never from the section's own height — the
     // section is sized *from* this number, and reading it back would feed a
@@ -43,10 +55,7 @@ export function useHorizontalPath(count: number) {
 
     rail.style.transform = `translate3d(${-progress * travel}px, 0, 0)`
 
-    setPercent((current) => {
-      const next = Math.round(progress * 100)
-      return next === current ? current : next
-    })
+    setPercent(clampPercent(progress))
 
     const centre = progress * travel + frame.clientWidth / 2
     const steps = [...rail.children] as HTMLElement[]
@@ -79,5 +88,5 @@ export function useHorizontalPath(count: number) {
     }
   }, [update, count])
 
-  return { section, viewport, track, percent, near, height }
+  return { section, viewport, track, percent, near, height, pinned }
 }

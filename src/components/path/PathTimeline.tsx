@@ -1,14 +1,15 @@
 'use client'
 
 import { useHorizontalPath } from '@/hooks/useHorizontalPath'
+import { useSceneReveal } from '@/hooks/useSceneReveal'
 import PathStepCard from './PathStepCard'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import type { CareerPath } from '@/types/pathStoryTypes'
 
 export default function PathTimeline({ path }: { path: CareerPath }) {
-  const { section, viewport, track, percent, near, height } = useHorizontalPath(
-    path.steps.length
-  )
+  const { section, viewport, track, percent, near, height, pinned } =
+    useHorizontalPath(path.steps.length)
+  const { active, setScene } = useSceneReveal(path.steps.length)
 
   return (
     <section
@@ -17,7 +18,7 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
       className='relative w-full h-auto px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 lg:px-12 lg:pb-12'
       style={height ? { height } : undefined}
     >
-      <div className='lg:sticky lg:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 lg:h-[64vh] lg:min-h-[560px]'>
+      <div className='xl:sticky xl:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 xl:max-h-[calc(100vh-7rem)]'>
         <header className='flex-none px-6 pt-8 sm:px-10 lg:px-12 lg:pt-9'>
           <p className='font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-rose-500'>
             Ścieżka zawodowa
@@ -30,7 +31,7 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
             >
               {path.headline}
             </h2>
-            <div className='hidden lg:block flex-none text-right'>
+            <div className='hidden xl:block flex-none text-right'>
               <b className='block text-[34px] font-bold leading-none text-slate-900 tabular-nums'>
                 {percent}%
               </b>
@@ -48,16 +49,17 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
           </div>
         </header>
 
-        <div ref={viewport} className='flex-1 pt-6 lg:overflow-hidden'>
+        <div ref={viewport} className='flex-1 pt-6 xl:overflow-hidden'>
           <div
             ref={track}
-            className='flex flex-col gap-6 px-6 sm:px-10 lg:w-max lg:flex-row lg:px-12 lg:will-change-transform'
+            className='flex flex-col gap-6 px-6 sm:px-10 lg:px-12 xl:w-max xl:flex-row xl:will-change-transform'
           >
             {path.steps.map((step, index) => (
               <PathStepCard
                 key={step.step}
                 step={step}
-                near={near[index] ?? false}
+                ref={setScene(index)}
+                near={(pinned ? near[index] : active[index]) ?? false}
               />
             ))}
           </div>
