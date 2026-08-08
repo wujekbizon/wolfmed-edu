@@ -53,7 +53,7 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 | Doc | Contents |
 |---|---|
 | [`40-testing-guide.md`](./40-testing-guide.md) | Manual QA test cases (preconditions, steps, expected results, edge cases) derived from the flow docs. A living document — grows every doc-test round. |
-| [`reports/`](./reports/) | Doc-quality test reports. Each round: a technical reader tries real tasks using only these docs, scores findability/accuracy, and produces a prioritized fix list, then the next round retests the fixes before adding new coverage. Latest: [`reports/round-05-doc-test.md`](./reports/round-05-doc-test.md) ([round 4](./reports/round-04-doc-test.md), [round 3](./reports/round-03-doc-test.md), [round 2](./reports/round-02-doc-test.md), [round 1](./reports/round-01-doc-test.md)). |
+| [`reports/`](./reports/) | Doc-quality test reports. Each round: a technical reader tries real tasks using only these docs, scores findability/accuracy, and produces a prioritized fix list, then the next round retests the fixes before adding new coverage. Latest: [`reports/round-06-doc-test.md`](./reports/round-06-doc-test.md) ([round 5](./reports/round-05-doc-test.md), [round 4](./reports/round-04-doc-test.md), [round 3](./reports/round-03-doc-test.md), [round 2](./reports/round-02-doc-test.md), [round 1](./reports/round-01-doc-test.md)). |
 
 ---
 
