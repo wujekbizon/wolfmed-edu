@@ -48,7 +48,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | Form | Action | Schema | Writes |
 |---|---|---|---|
 | Manual question entry (`CreateTestTabs`) | `createTestAction` | `CreateTestSchema` | `userCustomTests` |
-| Bulk file upload | `uploadTestsFromFile` | `TestFileSchema` | `userCustomTests` |
+| Bulk file upload (**admin-only**, despite living on this premium page) | `uploadTestsFromFile` | `TestFileSchema` | `userCustomTests` |
 | AI generation preview | `generateAITestsAction` | `GenerateAITestsSchema` | (preview only — `FormState.values`) |
 | Save AI-generated set | `saveAIGeneratedTestsAction` | (validates the previewed set) | `userCustomTests` |
 | Create custom category | `createCustomCategoryAction` | `CreateCustomCategorySchema` | `userCustomCategories` |
