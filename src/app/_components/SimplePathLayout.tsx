@@ -29,7 +29,14 @@ export default function SimplePathLayout({
       <GradientOverlay />
 
       <div className='relative'>
-        {story && <PathStoryHero title={title} story={story} />}
+        {story && (
+          <PathStoryHero
+            title={title}
+            story={story}
+            pricing={pricing}
+            ownedCourses={ownedCourses ?? []}
+          />
+        )}
         {story && careerPath && <SectionDivider />}
         {careerPath && <PathTimeline path={careerPath} />}
 
