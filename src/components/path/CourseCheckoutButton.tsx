@@ -32,7 +32,9 @@ export default function CourseCheckoutButton({
         label={alreadyOwned ? 'Masz już dostęp' : 'Uzyskaj dostęp do kursu'}
         loading='Przekierowywanie...'
         disabled={alreadyOwned}
-        className='h-13 text-base font-semibold'
+        variant='cta'
+        size='lg'
+        shape='pill'
       />
     </form>
   )
