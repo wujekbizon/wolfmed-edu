@@ -22,9 +22,25 @@ export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
     }
   ],
   shots: [
-    { photoHint: 'pielęgniarka przy łóżku pacjenta' },
-    { photoHint: 'przygotowanie leków' },
-    { photoHint: 'zrzut: platforma — test próbny' },
-    { photoHint: 'zespół na dyżurce' }
+    {
+      photoHint: 'pielęgniarka przy łóżku pacjenta',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5LfaSoQyT6ikNIWjyZsOdaGtHcBb3PAS8E7u5'
+    },
+    {
+      photoHint: 'przygotowanie leków',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k54CeCBW9lLqODmv7er0SPRQB8C9VnfbTHisc1'
+    },
+    {
+      photoHint: 'zrzut: platforma — test próbny',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5XsKjQQxVpDmWAcOabR2YPhrGzwTdQFLHCilt'
+    },
+    {
+      photoHint: 'zespół na dyżurce',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5N8G4NnH2M1UuCEmiKr7chszHj6GeZpqAJ4w2'
+    }
   ]
 }

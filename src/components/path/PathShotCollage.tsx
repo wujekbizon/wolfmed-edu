@@ -18,7 +18,7 @@ export default function PathShotCollage({ shots }: { shots: PathShot[] }) {
           data-active={active[index] ? 'true' : 'false'}
         >
           <figure
-            className={`relative flex items-end overflow-hidden rounded-xl bg-gradient-to-br from-[#e4f3ee] to-[#e7ddf7] p-4 ${
+            className={`relative w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5 ${
               PATH_SHOT_HEIGHTS[index % PATH_SHOT_HEIGHTS.length]
             }`}
           >
@@ -31,7 +31,7 @@ export default function PathShotCollage({ shots }: { shots: PathShot[] }) {
                 className='object-cover'
               />
             ) : (
-              <figcaption className='relative rounded-md bg-white/85 px-2.5 py-1.5 font-mono text-[11px] leading-tight text-zinc-700'>
+              <figcaption className='absolute inset-0 flex items-center justify-center p-6 text-center font-mono text-[11px] leading-[1.5] text-zinc-400'>
                 [ foto: {shot.photoHint} ]
               </figcaption>
             )}
