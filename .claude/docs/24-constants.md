@@ -84,7 +84,7 @@ All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's
 
 | File | Exports | Purpose |
 |---|---|---|
-| `rag.ts` | `RAG_TOP_K`, `RAG_TOP_K_BROAD`, `RAG_VECTOR_DISTANCE_THRESHOLD`, `CORPUS_MISS_DISTANCE` | The retrieval tuning knobs documented in [`00-architecture.md`](./00-architecture.md) — every corpus-reading feature imports these rather than inlining a number. |
+| `rag.ts` | `RAG_TOP_K` (= 12), `RAG_TOP_K_BROAD` (= 20, used by mind-map generation — it summarizes a whole topic rather than one question, so it casts a wider net), `RAG_VECTOR_DISTANCE_THRESHOLD` (= 0.5), `CORPUS_MISS_DISTANCE` (= 0.34) | The retrieval tuning knobs documented in [`00-architecture.md`](./00-architecture.md) — every corpus-reading feature imports these rather than inlining a number. |
 | `embeddings.ts` | `EMBED_DIM`, `EMBEDDING_MODEL`, `EMBED_TIMEOUT_MS`, `EMBED_BACKGROUND_TIMEOUT_MS`, `EMBED_MAX_RETRIES`, `EMBED_RETRY_BASE_MS`, `EMBED_PACE_MS`, `EMBED_BATCH_SIZE` | Embedding model + retry/pacing config shared by the personal library (`libChunks`) and memory (`memFacts`/`memEpisodes`) vector columns — see [`01-database-schema.md`](./01-database-schema.md). |
 | `memoryPolicies.ts` | `PolicyType`, `DefaultPolicy`, `DEFAULT_POLICIES` | Seed data for the `memPolicies` table. |
 | `memoryPreferences.ts` | `PreferenceOption`, `PreferenceDef`, `PREFERENCE_DEFS`, `PREFERENCE_KEYS`, `preferenceValueLabel`, `preferenceLabel` | The allow-list `updatePreferencesAction` validates against (see [`21-server-actions.md`](./21-server-actions.md)) — drives `PreferencesForm` on `/panel/ustawienia`. |

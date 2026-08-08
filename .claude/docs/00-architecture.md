@@ -113,6 +113,15 @@ See root `CLAUDE.md` → "🔒 Retrieval rules" for the full non-negotiable list
 | `src/server/planner/` | Learning-plan catalog, scheduling engine, progress tracking |
 | `src/server/tools/` | Tool/command definitions + executor for the AI tutor's `/commands` |
 
+## Rate limiting (`src/lib/rateLimit.ts`)
+
+Found undocumented in rounds 1–4 of doc-testing — every flow/forms doc names the rate-limit **bucket** an action uses (e.g. `test:start`, `blog:like`) but none point at where the actual numbers live or explain the mechanism. One file, `checkRateLimit(userId, bucket)`, backs every `checkRateLimit(...)` call in the codebase:
+
+- **Config is a single object**, `RATE_LIMITS: Record<string, {interval, maxRequests}>` — over 35 buckets, each independently tuned (examples: `note:create` 10/hour, `material:upload` 5/hour, `testimonial:create` 2/hour, `quiz:generate` 20/**day**, `egzamin:generate` 5/**day**, `blog:like` 100/hour, `forum:seen` 120/hour). Calling `checkRateLimit` with a bucket name not in this object **throws** — the bucket must exist in the config, so a new rate-limited action always needs a matching entry added here first.
+- **Sliding window via Redis sorted sets** (`getRedis()`, Upstash) in production: old entries outside the window get trimmed (`zremrangebyscore`), the current count is read (`zcard`), then the new request is added — genuinely sliding, not fixed-window.
+- **In-memory fallback for local dev** (`checkInMemoryRateLimit`) when `getRedis()` returns nothing — fixed-window, explicitly documented in the source as "not suitable for production (doesn't persist across server restarts)."
+- **Fails open, not closed**: if the Redis call itself throws (an outage, a network error), `checkRateLimit` catches it and returns `{ success: true, ... }` — the source comment states this is deliberate, prioritizing availability over strict enforcement. Worth knowing: **every rate limit in this app is soft during a Redis outage**, not a hard guarantee — relevant if debugging "why did an abuse-prevention limit not trigger."
+
 ## Cron & background jobs
 
 Three cron routes under `src/app/api/cron/` (see [`14-api-routes.md`](./14-api-routes.md)): session cleanup, personal-library embedding sweep, and memory-trace retention (90-day cleanup of `memTraces`, per the schema doc).

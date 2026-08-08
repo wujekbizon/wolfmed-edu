@@ -183,6 +183,27 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. Hard-refresh the page.
 3. Expect: the **typed search term is gone** (empty again), but `isExpanded` and `perPage` (and per-category page bookmarks) **persisted** — this is a deliberate `partialize` split in the store, not a bug if the search term resets, but *would* be a bug if it persisted (a stale filter silently hiding results on a fresh visit) or if the display prefs didn't.
 
+## TC-14 — Rate limit actually triggers at the documented threshold
+
+**Source**: [`00-architecture.md`](./00-architecture.md) → Rate limiting.
+
+**Steps**:
+1. Pick a low-threshold bucket to make this fast — `testimonial:create` (2/hour) is the lowest in the config.
+2. Submit two testimonials in quick succession. Expect: both succeed.
+3. Submit a third within the same hour. Expect: rejected with the "Zbyt wiele żądań... Spróbuj ponownie za N minut" message, and `N` should roughly match time remaining in the hour window (sliding window, not a fixed clock-hour boundary).
+4. **Fail-open check (needs a way to simulate a Redis outage — e.g. temporarily point `REDIS_URL`/Upstash env vars at an unreachable host in a local/staging environment only, never production)**: with Redis unreachable, repeat step 3 past the limit. Expect: the request **succeeds anyway** — per the source's explicit fail-open design, an unreachable Redis must not block legitimate traffic. This is a deliberate design choice, not a test looking for a bug — confirm it behaves as documented, since a rate limit that fails *closed* during a real Redis outage would take down the whole app's write path.
+
+## TC-15 — Material upload is quota-checked before the file finishes transferring
+
+**Source**: [`14-api-routes.md`](./14-api-routes.md) → `/api/uploadthing`.
+
+**Preconditions**: an account at or near its 20 MB `userLimits.storageLimit`.
+
+**Steps**:
+1. Attempt to upload a file that would exceed the remaining quota.
+2. Expect: rejected **during the upload itself** (UploadThing's `materialUploader` middleware throws before the transfer completes) — not accepted, then rejected afterward when `uploadMaterialAction` runs. Watch the network tab: the upload request itself should fail, not succeed followed by a separate failed save.
+3. Confirm no partial file is left behind in storage and no `materials` row was created.
+
 ---
 
-*(Rounds 5+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+*(Rounds 6+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

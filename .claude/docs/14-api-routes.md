@@ -8,7 +8,7 @@ All under `src/app/api/`. These are Next.js Route Handlers (`route.ts`), not Ser
 
 ## Cron jobs
 
-All three cron routes share the same guard: `Authorization: Bearer ${CRON_SECRET}` header check, returning `401` otherwise — this is how Vercel Cron (or any external scheduler) authenticates instead of user auth.
+All three cron routes share the same guard: `Authorization: Bearer ${CRON_SECRET}` header check, returning `401` otherwise — this is how Vercel Cron (or any external scheduler) authenticates instead of user auth. Minor, low-severity note: the comparison is a plain `!==`, not a constant-time comparison — a common and generally accepted pattern for this kind of bearer-token check (timing attacks over real HTTP/TLS jitter are hard to exploit in practice), not flagged as a numbered audit item since the risk is more theoretical than the other findings in this doc set.
 
 ### `GET /api/cron/cleanup-sessions`
 `src/app/api/cron/cleanup-sessions/route.ts`. Bulk-expires **every** user's stale `testSessions` rows (not just one user's, unlike the per-user cleanup inside `startTestAction` — see [`11-pages-panel-core.md`](./11-pages-panel-core.md)): `status = 'ACTIVE'` AND (`expiresAt` passed OR no heartbeat in `INACTIVITY_THRESHOLD_MINUTES = 5`) → `status = 'EXPIRED'`.
@@ -40,7 +40,10 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 
 ## `/api/uploadthing` — File upload endpoint
 
-`src/app/api/uploadthing/route.ts` — a 5-line wrapper: `createRouteHandler({ router: ourFileRouter })` from the `uploadthing` package. The actual upload router (allowed file types/sizes, per-route auth middleware, `onUploadComplete` hooks that write to `materials`/`lectures` etc.) lives in `./core.ts` beside it, not duplicated here.
+`src/app/api/uploadthing/route.ts` — a 5-line wrapper: `createRouteHandler({ router: ourFileRouter })` from the `uploadthing` package. The actual router is `./core.ts` (44 lines), with two upload endpoints:
+
+- **`materialUploader`** — accepts `pdf` (max 4 MB), `video/mp4` (max 8 MB), `application/json` (max 1 MB), one file each. Its `.middleware()` runs **before the file is even accepted**: requires `auth()`, then calls `getUserStorageUsage(userId)` and throws `UploadThingError` if `storageUsed >= storageLimit`. This is a **second, earlier quota gate** in addition to the one inside `uploadMaterialAction`'s own DB transaction (see [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 2) — UploadThing itself refuses oversized-for-quota uploads before they finish transferring, and the action's transactional check is the authoritative backstop in case of a race between the two. `.onUploadComplete()` deliberately does nothing — the comment notes the `materials` row and its indexing are created by `uploadMaterialAction`, called by the client once the upload resolves, not by this hook.
+- **`lectureAudio`** — accepts `audio/mpeg` up to 32 MB. Simpler: just an `auth()` check, `.onUploadComplete()` returns `{ url, key }` for the caller (`generateLectureAction`, see [`33-flows-ai-tutor.md`](./33-flows-ai-tutor.md)) to persist.
 
 ## `/api/rag/progress` — SSE progress stream
 

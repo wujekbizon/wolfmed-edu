@@ -25,7 +25,7 @@
 
 ## Flow 2 — User uploads a study material
 
-Two-phase upload: the file bytes go through UploadThing's own route; this action persists the database record and enforces the storage quota.
+Two-phase upload: the file bytes go through UploadThing's own route; this action persists the database record and enforces the storage quota. Quota is actually checked **twice** — UploadThing's own upload middleware rejects an over-quota upload before the file finishes transferring, and this action's DB transaction (step 4 below) is the authoritative second check; see [`14-api-routes.md`](./14-api-routes.md) → `/api/uploadthing` for the first gate.
 
 1. Client uploads the file via the UploadThing widget (`UploadMaterialModal` → `UploadMaterialForm`), which hits `POST /api/uploadthing` directly (`src/app/api/uploadthing/route.ts` → `ourFileRouter`) — bytes never pass through a Server Action.
 2. Once UploadThing returns the file's `key`/`url`, the client calls `uploadMaterialAction` (`src/actions/materials.ts:77`) with the file's metadata (`title`, `key`, `fileUrl`, `type`, `category`, `size`).
