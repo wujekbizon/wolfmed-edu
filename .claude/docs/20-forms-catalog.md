@@ -153,3 +153,54 @@ A few actions validate against something other than a `z.object` in `schema.ts`:
 - `updatePreferencesAction` — validates against `PREFERENCE_DEFS` (`@/constants/...`), an allow-list of preference keys/values rather than a Zod object, since the shape is a flat key-value map.
 - `createCheckoutSession` — trusts `priceId` to be one Stripe already knows (an invalid price fails at the Stripe API call, not at a local schema).
 - `submitTestAction` — uses `CreateAnswersSchema(allowedLengths)`, a schema **factory function** rather than a static schema, because the valid answer-array shape depends on how many questions were in that specific test session.
+
+---
+
+## `src/server/schema.ts` line index
+
+`schema.ts` is 1104 lines with 68 exported schemas — every table above names the schema but not its location in the file. Alphabetical index, so a name from any table above (or from [`21-server-actions.md`](./21-server-actions.md)) can be jumped to directly rather than grepped for:
+
+| Schema | Line | Schema | Line |
+|---|---|---|---|
+| `AddConceptSchema` | 960 | `GenerateAITestsSchema` | 176 |
+| `AddQuestionToCategorySchema` | 763 | `GenerateMindMapSchema` | 869 |
+| `CellSchema` | 282 | `GenerateProcedureQuizSchema` | 456 |
+| `ConceptIdSchema` | 956 | `GeneratedKnowledgeQuizSchema` | 406 |
+| `CreateAnswersSchema` (factory) | 37 | `GeneratedPracticalExamSchema` | 584 |
+| `CreateBlogCategorySchema` | 672 | `GeneratedScenarioQuizSchema` | 447 |
+| `CreateBlogPostSchema` | 607 | `GeneratedSpotErrorQuizSchema` | 421 |
+| `CreateBlogTagSchema` | 714 | `GradePracticalExamSchema` | 479 |
+| `CreateCommentSchema` | 102 | `LikeBlogPostSchema` | 737 |
+| `CreateCustomCategorySchema` | 746 | `LogStudySchema` | 975 |
+| `CreateFlashcardSchema` | 329 | `MarkDiagnozaCompletedSchema` | 1076 |
+| `CreateGeneratedDeckSchema` | 346 | `MarkForumSeenSchema` | 113 |
+| `CreateMessageSchema` | 68 | `MaterialsSchema` | 364 |
+| `CreateNoteFlashcardSchema` | 342 | `MindMapNodeSchema` | 857 |
+| `CreatePlanSchema` | 906 | `NoteSchema` | 237 |
+| `CreatePostSchema` | 84 | `NoteUpdateSchema` | 273 |
+| `CreateStoreSchema` | 819 | `PlanIdSchema` | 952 |
+| `CreateTestSchema` | 150 | `PublishBlogPostSchema` | 666 |
+| `CreateTestimonialSchema` | 117 | `RagQuerySchema` | 796 |
+| `DeckIdSchema` | 302 | `RenameDeckSchema` | 337 |
+| `DeckNameSchema` | 310 | `SignupForSchema` | 54 |
+| `DeleteBlogCategorySchema` | 709 | `StartTestSchema` | 133 |
+| `DeleteBlogPostSchema` | 662 | `StringListOrGroupedSchema` | 997 |
+| `DeleteBlogTagSchema` | 732 | `SubmitDiagnozyExamSchema` | 1091 |
+| `DeleteCategorySchema` | 28 | `SubmitGeneratedQuizSchema` | 463 |
+| `DeleteCustomCategorySchema` | 759 | `SubmitOrderStepsSchema` | 377 |
+| `DeleteMaterialIdSchema` | 21 | `TestFileSchema` | 203 |
+| `DeleteNoteIdSchema` | 14 | `TestRagQuerySchema` | 827 |
+| `DeleteTestIdSchema` | 7 | `UnlikeBlogPostSchema` | 741 |
+| `DiagnozaSchema` | 1015 | `UpdateBlogCategorySchema` | 696 |
+| `DiagnozyFileSchema` | 1071 | `UpdateBlogPostSchema` | 649 |
+| `FlashcardContentSchema` | 316 | `UpdateBlogTagSchema` | 728 |
+| `FlashcardIdSchema` | 306 | `UpdateCategoryNameSchema` | 768 |
+| — | — | `UpdateCategoryQuestionsSchema` | 754 |
+| — | — | `UpdateFlashcardSchema` | 333 |
+| — | — | `UpdateMottoSchema` | 47 |
+| — | — | `UpdatePlanSchema` | 933 |
+| — | — | `UpdateUsernameSchema` | 77 |
+| — | — | `UserCellsListSchema` | 297 |
+
+`SignupForSchema` and `StringListOrGroupedSchema` are field-level building blocks reused by other schemas (e.g. `DiagnozaSchema`), not directly bound to a form action — see [`23-types.md`](./23-types.md) if the corresponding type is what's needed instead.
+

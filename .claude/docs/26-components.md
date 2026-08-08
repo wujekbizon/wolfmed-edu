@@ -2,7 +2,11 @@
 
 [← Back to index](./README.md)
 
-591 files across `src/components/`, one component per file (Golden Rule #1). This is a full inventory, organized by directory/domain. Where a component is already walked through in a page-flow doc, that's cross-referenced instead of repeated. Names generally self-describe their purpose (PascalCase, descriptive) — per-item notes are added only where the name alone is ambiguous or the component is central to a documented flow.
+591 files across `src/components/`, plus 32 route-local files under `src/app/_components/` (see "Route-local components" below) — **623 components total**, one component per file (Golden Rule #1). This is a full inventory, organized by directory/domain. Where a component is already walked through in a page-flow doc, that's cross-referenced instead of repeated. Names generally self-describe their purpose (PascalCase, descriptive) — per-item notes are added only where the name alone is ambiguous or the component is central to a documented flow.
+
+**Two component locations exist in this codebase**, and both are covered here:
+- `src/components/` — shared/reusable components, importable as `@/components/Foo` from anywhere.
+- `src/app/_components/` — components used only by the root-level marketing/legal pages (home, kierunki path layouts, blog article rendering, terms, cookies), imported via relative paths (e.g. `../_components/Hero`) since they're colocated with the routes that use them. There is currently only one such folder, at the `src/app/` root — no other route segment (`panel/`, `admin/`, etc.) has its own `_components/`.
 
 ## Directory overview
 
@@ -32,6 +36,27 @@
 | `reader/` | 2 | PDF viewer (client-wrapped for `react-pdf`). |
 | `skeletons/` | 29 | Suspense fallback skeletons — Golden Rule #2 requires a real skeleton per async boundary, never `<div>Loading...</div>`. |
 | `ui/` | 10 | The shared primitive kit — `Button`, `Input`, `Label`, `Select`, `Textarea`, `Card`, `DropdownSelect`, `LinkButton`, `FeatureCheck` (Golden Rule #8: use these instead of hand-rolled elements). |
+| `src/app/_components/` | 32 | Route-local: home page, path landing-page layouts, blog article rendering, terms/cookies. See its own section below — **not** part of `src/components/`, easy to miss if only that directory is searched. |
+
+---
+
+## `src/app/_components/` — route-local components (32 files)
+
+Everything here is specific to the root-level marketing/content routes and imported via relative paths, not `@/components/...`. Grouped by which route(s) use them — cross-referenced to [`10-pages-public.md`](./10-pages-public.md) where a fuller flow write-up exists.
+
+**Root layout & providers** (used by every page, see [`00-architecture.md`](./00-architecture.md)): `ClerkProviderWrapper.tsx`, `ToastProvider.tsx`, `Navbar.tsx`, `Footer.tsx`, `GoogleAnalytics.tsx`, `GoogleAnalyticsHead.tsx`, `GoogleAnalyticsNoscript.tsx`.
+
+**Cookie consent** (`cookies/` subfolder): `CookieConsentBanner.tsx`, `CookieDetails.tsx`, `CookieSettingsButton.tsx`, `AboutCookies.tsx`, `index.ts` (barrel export).
+
+**Home page** (`/`, see [`10-pages-public.md`](./10-pages-public.md) → Home page): `Hero.tsx`, `HeroContent.tsx`, `EducationalPaths.tsx`, `Testimonials.tsx`, `About.tsx`, `Contact.tsx`, `ContactForm.tsx` (the contact-form flow, submits `sendEmail`), `ContactSkeleton.tsx`, `DynamicBoard.tsx` (the interactive board widget — also used inside `/panel`, imported there via `../_components/DynamicBoard` from `src/app/panel/page.tsx`; this is the **one** component in this folder reused outside the root route group).
+
+**`/kierunki/[slug]` path landing pages** (see [`10-pages-public.md`](./10-pages-public.md) → Purchase flow): `RichPathLayout.tsx`, `SimplePathLayout.tsx`, `SidePanel.tsx`.
+
+**Blog** (`/blog`, `/blog/[slug]`): `BlogPost.tsx`, `BlogPostCard.tsx`, `BlogPostList.tsx`, `BlogLikeButton.tsx` (the like/unlike flow, submits `toggleBlogLikeAction` — see [`34-flows-social-admin.md`](./34-flows-social-admin.md) → Flow 2).
+
+**Legal / terms** (`/(terms)/*`): `Policy.tsx`, `Terms.tsx`, `LegalCompliance.tsx`.
+
+**Stripe redirect target**: `Success.tsx` (rendered by `/success`).
 
 ---
 

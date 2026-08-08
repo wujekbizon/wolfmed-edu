@@ -18,8 +18,8 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | Store | Backing component | Purpose |
 |---|---|---|
 | `useConfirmModalStore.ts` | `<ConfirmModal />` | App-wide confirmation dialog (rendered in `panel/layout.tsx`) — see [`00-architecture.md`](./00-architecture.md) → Modal rendering rule. |
-| `useSettingsModalStore.ts` | `<SettingsModal />` | Settings modal open/closed + payload. |
-| `useMaterialModalStore.ts` | `PdfPreviewModal` / `TextPreviewModal` / `UploadMaterialModal` | Which material-related modal is open and with what content (`/panel/nauka`). |
+| `useSettingsModalStore.ts` | `<SettingsModal />` | `isOpen` boolean + `openSettingsModal()`/`closeSettingsModal()` only — no payload. |
+| `useMaterialModalStore.ts` | `PdfPreviewModal` / `TextPreviewModal` / `UploadMaterialModal` | Four independent modal slots (`pdfModal`, `videoModal`, `textModal`, `uploadModal`), each `{isOpen, src/content, title?}`; opening any one closes the other three. Note: the store tracks a `videoModal` slot but there is currently no dedicated video-preview modal component consuming it — only the PDF/text/upload slots have a rendering component today. |
 | `useFlashcardReviewStore.ts` | `<FlashcardReviewModalHost />` | Flashcard spaced-review session modal state. |
 
 ## Cookie consent & banners
@@ -63,8 +63,8 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | Store | Purpose |
 |---|---|
 | `useRagStore.ts` | Tutor chat UI state (open/closed drawer, current conversation reference, etc. — feeds the `MobileAIFloat` chat surface). |
-| `useSettingsStore.ts` | General user-settings UI state, distinct from `useSettingsModalStore` (that one is just the modal's open/closed state; this one likely holds the settings values being edited). |
+| `useSettingsStore.ts` | Two **persisted** (localStorage, key `wolfmed-settings`) preference flags: `showMobileAI`, `slashCommandsEnabled`. Confirmed distinct from `useSettingsModalStore` — that one holds only the modal's `isOpen` boolean, this one holds the actual preference values, and only this one survives a page reload. |
 
 ---
 
-**Audit note**: `useSettingsStore.ts` vs. `useSettingsModalStore.ts`, and `useMaterialModalStore.ts` backing three different modal components, are worth a quick confirmation pass that responsibilities don't blur — the store layer is otherwise cleanly one-store-per-concern.
+Confirmed clean: every store here has exactly one concern, and the two that looked like they might overlap by name (`useSettingsStore`/`useSettingsModalStore`) don't.

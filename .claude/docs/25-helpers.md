@@ -142,8 +142,8 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 
 | File | Signature | Purpose |
 |---|---|---|
-| `flashcardCellHelpers.ts` | `parseFlashcardContent(content)` | Parses a flashcard board cell's stored content. |
-| `parseFlashcardCellContent.ts` | `parseFlashcardCellContent(content)` | A second, narrower flashcard-cell parser — worth confirming this doesn't overlap `flashcardCellHelpers.ts` (audit note). |
+| `flashcardCellHelpers.ts` | `parseFlashcardContent(content: string): { flashcards: {questionText, answerText}[], topic: string }` | Parses the **AI-generation preview** shape — a flashcard cell mid-generation, before a deck exists (`content` is a JSON blob with a `flashcards` array + `topic`, defaults to `[]`/`'Fiszki'` on parse failure). |
+| `parseFlashcardCellContent.ts` | `parseFlashcardCellContent(content: string): string \| null` | Parses the **saved** shape — a flashcard cell that already points at a real deck (`content` is JSON with just a `deckId`; returns that id or `null`). Confirmed not a duplicate of the above: different input shape, different point in the generate-then-save lifecycle (see [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 3). |
 | `mediaCellHelpers.ts` | `seededBars(seed, count = 30)` | Deterministic waveform-bar heights for an audio player UI, seeded so the same lecture always renders the same waveform. |
 | `resolveSource.ts` | `resolveSrc(m)` | Resolves a media source URL from a loosely-typed input. |
 
@@ -152,7 +152,8 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 | File | Signature | Purpose |
 |---|---|---|
 | `formatBytes.ts` | `formatBytes(bytes)` | Human-readable file size (storage quota display). |
-| `formatCompactMinutes.ts` / `formatMinutes.ts` | — | Duration formatting, compact vs. full variants. |
+| `formatCompactMinutes.ts` | `formatCompactMinutes(minutes: number): string` | Chart-axis-tick formatting only — `37 → "37"`, `1500 → "1,5k"`. Deliberately terse: the inline comment explains `formatMinutes` would render `"37 h 30 min"` for one tick and blow out the axis width. Not for general display. |
+| `formatMinutes.ts` | `formatMinutes(minutes: number): string` | General human-readable duration — `30 → "30 min"`, `60 → "1 h"`, `90 → "1 h 30 min"`. This is the one to reach for outside a chart axis. |
 | `formatDate.ts` / `formatPlDate.ts` / `formatRelativeDate.ts` | — | Date formatting: ISO/generic, Polish-locale, and relative ("2 dni temu") variants. |
 | `formatExamClock.ts` | `formatExamClock(totalSeconds)` | `MM:SS` countdown display. |
 | `pluralizePl.ts` | `pluralizePl(count, [one, few, many])` | Polish plural-form selection (Polish has three plural forms, unlike English's two). |
@@ -188,4 +189,4 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 
 ---
 
-**Audit note**: `flashcardCellHelpers.ts` (`parseFlashcardContent`) and `parseFlashcardCellContent.ts` (`parseFlashcardCellContent`) have near-identical names and both parse flashcard cell content — worth a quick look to confirm they're not redundant (Golden Rule #3: "check `/src/helpers` for an existing one before writing a new one").
+**Resolved from an earlier audit note**: `flashcardCellHelpers.ts` and `parseFlashcardCellContent.ts` looked redundant by name alone. Reading both (see their entries above) confirmed they parse two different points in the flashcard-cell lifecycle — not a duplication.
