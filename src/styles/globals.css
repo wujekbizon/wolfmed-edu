@@ -320,12 +320,13 @@
   transform: none;
 }
 
-/* Below the two-column breakpoint the scenes stack and each one is simply
-   read in turn, so there is nothing to reveal. */
-@media (max-width: 1023px) {
+/* Stacked, the scenes sit close together and several share the screen at once,
+   so the full-strength lift reads as flicker rather than as a reveal. Same
+   effect, dialled back — the scale drop is what stops carrying at this size. */
+@media (max-width: 1279px) {
   .scene-reveal {
-    opacity: 1;
-    transform: none;
+    opacity: 0.35;
+    transform: translateY(16px);
   }
 }
 

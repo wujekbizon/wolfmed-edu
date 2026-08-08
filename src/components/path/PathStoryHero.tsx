@@ -25,13 +25,13 @@ export default function PathStoryHero({
   return (
     <div className='w-full p-4 sm:p-6 md:p-8 lg:p-12'>
       <div className='relative w-full rounded-3xl bg-white ring-1 ring-zinc-900/5'>
-        <div className='grid grid-cols-1 lg:grid-cols-[2fr_3fr]'>
+        <div className='grid grid-cols-1 xl:grid-cols-[2fr_3fr]'>
           {/* The tint sits on the column, not on the aside: the aside is
               sticky, so its own background would ride down the page as a
               floating panel instead of reading as a left column. Warm rose
               rather than grey, so it sits under the CTA's own hue. */}
-          <div className='rounded-t-3xl bg-gradient-to-b from-[#fdf7f7] to-[#faecec] lg:rounded-tr-none lg:rounded-bl-3xl'>
-            <aside className='flex flex-col gap-8 p-6 sm:p-10 lg:sticky lg:top-24 lg:h-[90vh] lg:justify-around lg:p-14'>
+          <div className='rounded-t-3xl bg-gradient-to-b from-[#fdf7f7] to-[#faecec] xl:rounded-tr-none xl:rounded-bl-3xl'>
+            <aside className='flex flex-col gap-8 p-6 sm:p-10 lg:p-12 xl:sticky xl:top-24 xl:h-[90vh] xl:justify-around xl:p-14'>
               <div>
                 <span className='inline-flex items-center gap-2 self-start rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-zinc-600'>
                   <span className='w-1.5 h-1.5 rounded-full bg-rose-400' />
@@ -42,7 +42,7 @@ export default function PathStoryHero({
                   {title}
                 </h1>
 
-                <p className='mt-5 max-w-md text-zinc-600 text-base sm:text-lg leading-relaxed text-pretty'>
+                <p className='mt-5 max-w-md lg:max-w-2xl xl:max-w-md text-zinc-600 text-base sm:text-lg leading-relaxed text-pretty'>
                   {story.intro}
                 </p>
 
