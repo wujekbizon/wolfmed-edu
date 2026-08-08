@@ -3,7 +3,7 @@ import type { PathStory } from '@/types/pathStoryTypes'
 export const CAREER_STORY: Record<string, PathStory> = {
   'opiekun-medyczny': {
     intro:
-      'Zawód, w którym najwięcej znaczy obecność. Zobacz, jak wygląda dzień pracy — a potem sprawdź, czego uczymy.',
+      'Przygotowujemy Cię do egzaminu zawodowego MED.14 — teoria, procedury krok po kroku i testy sprawdzające, na jednej platformie. Zobacz, do jakiej pracy Cię uczymy.',
     facts: [
       { label: 'Nauka', value: 'Szkoła policealna, 1,5 roku' },
       { label: 'Egzamin', value: 'Zawodowy MED.14 — pisemny i praktyczny' },

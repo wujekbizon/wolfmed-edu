@@ -46,13 +46,12 @@ export default function PathStoryHero({
                   {story.intro}
                 </p>
 
-                {pricing && entry && (
+                {pricing && entry && !owned && (
                   <div className='mt-8'>
                     <CourseCheckoutButton
                       courseSlug={pricing.courseSlug}
                       priceId={entry.priceId}
                       accessTier={entry.accessTier}
-                      alreadyOwned={owned}
                     />
                   </div>
                 )}
