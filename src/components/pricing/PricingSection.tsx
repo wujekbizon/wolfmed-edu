@@ -3,6 +3,8 @@ import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import PricingCardsGrid from './PricingCardsGrid'
 import PlanComparisonTable from './PlanComparisonTable'
 import PlanComparisonCards from './PlanComparisonCards'
+import PlanComparisonPanel from './PlanComparisonPanel'
+import PlanComparisonToggle from './PlanComparisonToggle'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
@@ -37,10 +39,11 @@ export default function PricingSection({
             tone='dark'
           />
           <PricingCardsGrid pricing={pricing} ownedCourses={ownedCourses} />
+          {groups.length > 0 && <PlanComparisonToggle />}
         </div>
 
         {groups.length > 0 && (
-          <div>
+          <PlanComparisonPanel>
             <SectionHeading
               eyebrow='Porównanie'
               title='Co zawiera każdy plan'
@@ -52,7 +55,7 @@ export default function PricingSection({
             {subjectTitles.length > 0 && (
               <CourseSubjectList titles={subjectTitles} />
             )}
-          </div>
+          </PlanComparisonPanel>
         )}
       </div>
     </section>
