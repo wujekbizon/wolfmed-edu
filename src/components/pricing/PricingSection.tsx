@@ -5,7 +5,6 @@ import PlanComparisonTable from './PlanComparisonTable'
 import PlanComparisonCards from './PlanComparisonCards'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
-import GradientOverlay from '@/components/GradientOverlay'
 import type { PathData } from '@/types/careerPathsTypes'
 
 // `subjectTitles` arrives as a prop rather than being read here:
@@ -28,11 +27,7 @@ export default function PricingSection({
       aria-labelledby='pricing-title'
       className='panel-dark relative w-full overflow-hidden rounded-3xl scroll-mt-24 px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
     >
-      <GradientOverlay />
-
-      {/* relative so the content sits above the overlay, which is absolutely
-          positioned and would otherwise paint over it. */}
-      <div className='relative mx-auto flex w-full max-w-6xl flex-col gap-12 sm:gap-16'>
+      <div className='mx-auto flex w-full max-w-6xl flex-col gap-12 sm:gap-16'>
         <div>
           <SectionHeading
             eyebrow='Cennik'
