@@ -21,17 +21,16 @@ export default function PathStepCard({
         {step.imgSrc ? (
           <Image
             src={step.imgSrc}
-            alt={step.title}
+            alt={step.photoHint}
             fill
             sizes='(max-width: 1279px) calc(100vw - 5rem), 30vw'
             className='object-cover'
           />
         ) : (
-          <div className='absolute inset-0' />
+          <span className='absolute bottom-3.5 left-3.5 rounded-md bg-white/85 px-2.5 py-1 font-mono text-[10.5px] leading-[1.4] text-zinc-600'>
+            [ foto: {step.photoHint} ]
+          </span>
         )}
-        <span className='absolute bottom-3.5 left-3.5 rounded-md bg-white/85 px-2.5 py-1 font-mono text-[10.5px] leading-[1.4] text-zinc-600'>
-          [ foto: {step.photoHint} ]
-        </span>
       </div>
 
       <div className='px-6 pb-6 pt-5'>
