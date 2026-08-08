@@ -23,6 +23,18 @@ For high-level project conventions and non-negotiable rules, see the root [`CLAU
 | [`13-pages-admin.md`](./13-pages-admin.md) | `/admin*` — dashboard, categories/tags, posts, forum moderation, messages, RAG corpus management. |
 | [`14-api-routes.md`](./14-api-routes.md) | Cron jobs, session heartbeat/expire beacons, UploadThing, SSE progress stream, MCP resources, Clerk + Stripe webhooks. |
 
+## Business logic — user flows end-to-end
+
+The `1x`/`2x` docs above answer "what does this page render" and "what does this action do" in isolation. These answer **"what actually happens when a user does X"** — a full trace from the UI trigger through every hook/action/DB write involved, across pages where a flow spans more than one.
+
+| Doc | Flows covered |
+|---|---|
+| [`30-flows-auth-payments.md`](./30-flows-auth-payments.md) | User registers (Clerk webhook), signs in, purchases/enrolls in a course (Stripe checkout + webhook + `courseEnrollments`), account deletion (+ GDPR memory erasure). |
+| [`31-flows-testing.md`](./31-flows-testing.md) | Takes a theory test (session lifecycle: start → heartbeat → submit → memory extraction), generates an AI test, attempts a practical exam (static or AI-generated), attempts or practices a diagnozy case. |
+| [`32-flows-learning-content.md`](./32-flows-learning-content.md) | Creates a note (+ premium library indexing), uploads a material (+ storage quota + indexing), creates flashcards (3 origins), generates a mind map, completes a procedure challenge (+ badge award), creates a learning plan. |
+| [`33-flows-ai-tutor.md`](./33-flows-ai-tutor.md) | The AI tutor chat end-to-end — `/command` execution, self-state questions, the conversational grounded-answer path, and generated lectures — all through `askRagQuestion`, with SSE progress streaming throughout. |
+| [`34-flows-social-admin.md`](./34-flows-social-admin.md) | Forum posting/commenting + unread notifications, blog likes, the contact form, admin blog publishing, admin RAG corpus setup and management. |
+
 ## Cross-cutting catalogs
 
 | Doc | Contents |
@@ -45,6 +57,7 @@ For high-level project conventions and non-negotiable rules, see the root [`CLAU
 - **"Where does this table get written?"** → search [`01-database-schema.md`](./01-database-schema.md) for the table name, then [`21-server-actions.md`](./21-server-actions.md) lists which functions write it.
 - **"Is there already a helper/hook/component for X?"** → [`25-helpers.md`](./25-helpers.md) / [`22-hooks.md`](./22-hooks.md) / [`26-components.md`](./26-components.md) before writing a new one (Golden Rule #3).
 - **"How does the AI tutor decide what it's allowed to read?"** → [`00-architecture.md`](./00-architecture.md) → AI data sources, then `askRagQuestion` in [`21-server-actions.md`](./21-server-actions.md).
+- **"Walk me through what happens when a user does X (registers, pays, takes a test, generates a mind map, ...)"** → the `3x-flows-*` docs — start with [`30-flows-auth-payments.md`](./30-flows-auth-payments.md) and work through to [`34-flows-social-admin.md`](./34-flows-social-admin.md).
 
 ---
 
@@ -60,6 +73,7 @@ Documenting the app end-to-end surfaced a handful of small deviations from the r
 6. **Filename typo**: `src/components/KieurnkiPageContent.tsx` (should be "Kierunki") — a working import path, cosmetic only.
 7. **Possible store overlap**: `src/store/useSettingsStore.ts` vs. `src/store/useSettingsModalStore.ts` — worth a quick pass to confirm the split (modal visibility vs. settings values) is clean and not partially duplicated. See [`27-state-stores.md`](./27-state-stores.md).
 8. **Possible legacy constant**: `src/constants/commands.ts` (`COMMANDS`) vs. `src/constants/toolCommands.ts` (`TOOL_COMMANDS`, the one referenced by root `CLAUDE.md`'s `requiresSource` rule) — worth confirming `commands.ts` isn't dead/superseded. See [`24-constants.md`](./24-constants.md).
+9. **Ownership check trusts a client-submitted field**: `deletePostAction` (`src/actions/actions.ts:572`) authorizes the delete by comparing the session's real `userId` against an `authorId` value read from the submitted `FormData`, rather than re-fetching the post server-side and checking its stored `authorId`. The comparison itself can't be bypassed (an attacker still needs their own real `userId` to equal whatever `authorId` they send, which only matches if they submit their own id), but it's a looser pattern than the rest of the codebase's ownership checks (e.g. `findOwnedDeck`, `renameFlashcardDeckAction`) and worth tightening to look the post up by id and compare server-side. See [`34-flows-social-admin.md`](./34-flows-social-admin.md) → Flow 1.
 
 What was verified and found **sound** (worth stating, since it was checked, not assumed):
 - Every admin Server Action independently re-checks the admin role (`ensureAdmin()` or an inline `sessionClaims.metadata.role` check) rather than relying solely on the `admin/layout.tsx` gate — genuine defense-in-depth, not a gap. See [`13-pages-admin.md`](./13-pages-admin.md).
