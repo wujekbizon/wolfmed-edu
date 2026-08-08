@@ -58,7 +58,7 @@ Every function starts with `await ensureAdmin()`. See [`13-pages-admin.md`](./13
 `createBlogCategoryAction`, `updateBlogCategoryAction`, `deleteBlogCategoryAction`, `createBlogTagAction`, `updateBlogTagAction`, `deleteBlogTagAction` — each independently calls `auth()` and checks `sessionClaims.metadata.role === 'admin'` (defense-in-depth alongside the `admin/layout.tsx` gate, same pattern as `admin-rag-actions.ts`).
 
 ## `cells.ts` — Mind-map/board cells
-`saveCellsAction` — persists the `userCellsList` blob (`cells` + `order`). `syncCellsAction` — reconciliation/sync variant (no form args, returns a result object directly).
+`saveCellsAction` — persists the `userCellsList` blob (`cells` + `order`) as a **full, unconditional overwrite**: no version/`updatedAt` check against what's currently stored, so a save from one tab/device silently discards any edits made concurrently in another — see README audit note #17. `syncCellsAction` (no form args, returns a result object directly) is **not** a merge or conflict-reconciliation mechanism despite the name suggesting one — it's a plain read (`getUserCellsList`), wired to a manual `SyncCellsButton` the user has to click themselves; nothing calls it automatically and nothing warns a stale tab before it saves over newer data.
 
 ## `challenges.ts` — Procedure challenges
 `getChallengeProgressAction(procedureId, procedureName)` — read-only progress summary for `ChallengesHub`. `submitOrderStepsAction` — **server-side score calculation** for the drag-to-reorder challenge (client never computes or can spoof its own score), writes `challengeCompletions` and potentially `procedureBadges`.

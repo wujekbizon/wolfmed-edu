@@ -233,6 +233,18 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 4. Confirm this is reachable on mobile too: locking the phone screen mid-test triggers the same `visibilitychange` → `document.hidden` path.
 5. This is filed as a product-intent question (README audit note #16), not an asserted bug — if switching tabs is meant to be treated as abandonment (e.g. anti-cheating), this case documents that it does; if not, this is the reproduction case for the fix.
 
+## TC-19 — Board/cells save from a second tab/device silently overwrites the first's unsaved edits
+
+**Source**: [`21-server-actions.md`](./21-server-actions.md), README audit note #17.
+
+**Steps**:
+1. Open `/panel/nauka` (or wherever the board renders — `DynamicBoard`/`NaukaCellsSection`) in two separate sessions (two browser tabs is enough; a second device makes the scenario more realistic).
+2. In tab A, add or edit a cell but **don't** click Save yet.
+3. In tab B, add a different cell and click **Save**.
+4. Back in tab A, click **Save** (without first clicking `SyncCellsButton` to pull tab B's change).
+5. Reload either tab. Expect, per current behavior: tab A's save fully overwrote tab B's — tab B's cell is gone, with no error, no merge, and no warning that a newer version existed server-side at the time of tab A's save.
+6. This is filed as a product-intent question (README audit note #17), not an asserted bug — worth a decision on whether a lightweight optimistic-concurrency check (compare `updatedAt` before overwriting, warn/block if stale) is worth adding.
+
 ---
 
 *(Rounds 9+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
