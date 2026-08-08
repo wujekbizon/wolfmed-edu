@@ -2,7 +2,7 @@
 
 [← Back to index](./README.md)
 
-All 119 files in `src/helpers/`, one function per file per the project convention (Golden Rule #3: "check here before writing any helper"). Grouped by domain.
+All 121 files in `src/helpers/`, one function per file per the project convention (Golden Rule #3: "check here before writing any helper"). Grouped by domain.
 
 ## Auth & access
 
@@ -15,6 +15,7 @@ All 119 files in `src/helpers/`, one function per file per the project conventio
 | `accessTiers.ts` | `TIER_HIERARCHY`, `hasAccessToTier(tier, required)` | The tier-comparison logic used throughout course/category access gates. |
 | `hasDiagnozyAccess.ts` | `hasDiagnozyAccess()` | Diagnozy-feature-specific access check. |
 | `getUserIdWithRetry.ts` | `getUserIdWithRetry(...)` | Retries a Clerk `userId` lookup (mitigates a transient auth race). |
+| `ownsCourse.ts` | `ownsCourse(courseSlug, ownedCourses)` | Checks whether `ownedCourses` (the `"${slug}-${accessTier}"` strings from `getUserEnrollmentsAction()`) contains either the `-basic` or `-premium` variant of `courseSlug` — used by `PathStoryHero`/`PathQuestionsHero` to decide whether to show a `CourseCheckoutButton`. |
 
 ## Forms & Server Action plumbing
 
@@ -180,6 +181,7 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 | `mergeProgressTimeline.ts` | `mergeProgressTimeline(...)` | Merges SSE progress events into a display timeline. |
 | `limitPageBookmarks.ts` | `limitPageBookmarks(bookmarks)` | Caps a stored bookmarks map's size. |
 | `buildResizableProps.ts` | `buildResizableProps({...})` | Props builder for `re-resizable` panels. |
+| `clampPercent.ts` | `clampPercent(ratio)` | Clamps a `0–1` ratio to `[0,1]` and rounds to a whole percent — the scroll-progress math backing `useHorizontalPath` (see [`22-hooks.md`](./22-hooks.md)). |
 | `getDeviceMeta.ts` | `getDeviceMeta()` (default export) | Captures browser/screen/network/system/performance metadata (user agent, screen size, connection type, timezone, JS heap usage, etc.). Confirmed one caller: `StartTestForm.tsx` — this is metadata attached to a **test-start event**, not a general analytics or responsive-layout signal as an earlier pass of this doc guessed. |
 | `getCourseSubjectTitles.ts` | `getCourseSubjectTitles(courseSlug)` | Subject-title list for a course (used on `/kierunki/[slug]`, see [`10-pages-public.md`](./10-pages-public.md)). |
 | `generateRandomMotto.ts` | `generateRandomMotto()` | Random starter motto for new users (used by the Clerk `user.created` webhook, see [`14-api-routes.md`](./14-api-routes.md)). |

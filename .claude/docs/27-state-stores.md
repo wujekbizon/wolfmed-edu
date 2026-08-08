@@ -2,7 +2,7 @@
 
 [← Back to index](./README.md)
 
-All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.md`](./00-architecture.md), these hold **ephemeral UI state**, not server/cached data (that's React Query's job, per Golden Rule #5). Reminder: `src/store/useStore.ts` is a real Zustand store instance, distinct from the generic hydration-safe selector wrapper at `src/hooks/useStore.ts` — see [`22-hooks.md`](./22-hooks.md) for that disambiguation.
+All 28 files in `src/store/`, one Zustand store per file. Per [`00-architecture.md`](./00-architecture.md), these hold **ephemeral UI state**, not server/cached data (that's React Query's job, per Golden Rule #5). Reminder: `src/store/useStore.ts` is a real Zustand store instance, distinct from the generic hydration-safe selector wrapper at `src/hooks/useStore.ts` — see [`22-hooks.md`](./22-hooks.md) for that disambiguation.
 
 ## Global UI chrome
 
@@ -12,6 +12,7 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile()`. **Correction (round 7 of doc-testing)**: an earlier pass of this doc hedged that something "likely" calls `setIsMobile` on resize. Checked directly — grepping the whole codebase for `setIsMobile` and for `useMobileStore` outside its own definition file returns **zero results**. This store is defined and exported but never imported anywhere. Apparently dead code — flagged in the README audit list. |
 | `useTopPanelStore.ts` | Top-panel/header UI state within the dashboard. |
 | `useDashboardStore.ts` | General `/panel` dashboard UI state. |
+| `usePlanComparisonStore.ts` | `isOpen` boolean + `open()`/`close()`/`toggle()`. Not persisted — starts closed on every page load. Backs `PlanComparisonToggle`/`PlanComparisonPanel` on `/kierunki/[slug]` (see [`26-components.md`](./26-components.md) → `pricing/`); despite the "planner"-adjacent name, this is the marketing pricing-plan comparison table, unrelated to the learning-planner stores below. |
 
 ## Modals (rendered once at layout level per the Modal Rendering Rule)
 

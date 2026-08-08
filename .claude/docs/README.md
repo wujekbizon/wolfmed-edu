@@ -43,10 +43,10 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 | [`21-server-actions.md`](./21-server-actions.md) | All 27 files in `src/actions/`, every exported function, grouped by file. |
 | [`22-hooks.md`](./22-hooks.md) | All 60 files in `src/hooks/`, grouped by domain. |
 | [`23-types.md`](./23-types.md) | All 46 files in `src/types/`, key exported types per file. |
-| [`24-constants.md`](./24-constants.md) | All 61 files in `src/constants/`, grouped by domain. |
-| [`25-helpers.md`](./25-helpers.md) | All 119 files in `src/helpers/`, grouped by domain (one function per file). |
-| [`26-components.md`](./26-components.md) | All 591 files in `src/components/`, by directory and domain grouping. |
-| [`27-state-stores.md`](./27-state-stores.md) | All 27 Zustand stores in `src/store/`. |
+| [`24-constants.md`](./24-constants.md) | All 65 files in `src/constants/`, grouped by domain. |
+| [`25-helpers.md`](./25-helpers.md) | All 121 files in `src/helpers/`, grouped by domain (one function per file). |
+| [`26-components.md`](./26-components.md) | All 597 files in `src/components/`, by directory and domain grouping. |
+| [`27-state-stores.md`](./27-state-stores.md) | All 28 Zustand stores in `src/store/`. |
 | [`28-queries.md`](./28-queries.md) | All 136 exported functions in `src/server/queries.ts` (2,601 lines) — the read-side data-access layer, grouped by domain. Added in doc-test round 8; previously referenced constantly but never catalogued as its own file. |
 
 ## Testing & QA

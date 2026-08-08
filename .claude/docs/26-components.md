@@ -2,7 +2,7 @@
 
 [← Back to index](./README.md)
 
-591 files across `src/components/`, plus 32 route-local files under `src/app/_components/` (see "Route-local components" below) — **623 components total**, one component per file (Golden Rule #1). This is a full inventory, organized by directory/domain. Where a component is already walked through in a page-flow doc, that's cross-referenced instead of repeated. Names generally self-describe their purpose (PascalCase, descriptive) — per-item notes are added only where the name alone is ambiguous or the component is central to a documented flow.
+597 files across `src/components/`, plus 32 route-local files under `src/app/_components/` (see "Route-local components" below) — **629 components total**, one component per file (Golden Rule #1). This is a full inventory, organized by directory/domain. Where a component is already walked through in a page-flow doc, that's cross-referenced instead of repeated. Names generally self-describe their purpose (PascalCase, descriptive) — per-item notes are added only where the name alone is ambiguous or the component is central to a documented flow.
 
 **Two component locations exist in this codebase**, and both are covered here:
 - `src/components/` — shared/reusable components, importable as `@/components/Foo` from anywhere.
@@ -28,9 +28,9 @@
 | `modal/` | 6 | A generic modal primitive kit (`BaseModal`, `ModalHeader`/`Body`/`Footer`) — distinct from the many domain-specific `*Modal.tsx` files at the top level. |
 | `nav/` | 1 | `DrawerNavLink`. |
 | `opiekunReader/` | 6 | `opiekun-medyczny` procedure reader — see [`12-pages-panel-learning.md`](./12-pages-panel-learning.md). |
-| `path/` | 11 | `/kierunki/[slug]` rich-path landing-page pieces. |
+| `path/` | 15 | `/kierunki/[slug]` rich-path landing-page pieces, including the questions-hero variant (`PathQuestionsHero`/`PathQuestionList`/`PathQuestionItem`/`PathShotCollage`). |
 | `planner/` | 34 | Learning planner: wizard (16 files), dashboard (6), settings (2), plus top-level planner components. |
-| `pricing/` | 6 | Pricing/tier comparison UI. |
+| `pricing/` | 8 | Pricing/tier comparison UI, plus the collapsible full-comparison panel (`PlanComparisonPanel`/`PlanComparisonToggle`). |
 | `quizzes/` | 12 | AI-generated + order-steps challenge UI. |
 | `rag/` | 5 | `/admin/rag` management UI — see [`13-pages-admin.md`](./13-pages-admin.md). |
 | `reader/` | 2 | PDF viewer (client-wrapped for `react-pdf`). |
@@ -126,6 +126,8 @@ The "cell" is the app's generic board-widget abstraction (`userCellsList` in the
 
 `PathHero.tsx`, `PathTools.tsx`, `PathFacts.tsx`, `PathStepCard.tsx`, `PathStoryHero.tsx`, `PathTimeline.tsx`, `StorySceneCard.tsx`, `StorySceneTrack.tsx`, `ToolListItem.tsx`, `SectionDivider.tsx`, `CourseCheckoutButton.tsx` (the pricing-tier buy button, submits `createCheckoutSession` — see [`10-pages-public.md`](./10-pages-public.md)).
 
+**Questions-hero variant** (added for `careerPathsData[slug].questions`, e.g. `pielegniarstwo` — see [`10-pages-public.md`](./10-pages-public.md)): `PathQuestionsHero.tsx` (two-column sticky hero — a Q&A list on the left, `PathShotCollage` photo stack on the right, plus its own `CourseCheckoutButton`), `PathQuestionList.tsx` (`'use client'`, drives per-item reveal via `useSceneReveal`), `PathQuestionItem.tsx` (pure — one Q&A row), `PathShotCollage.tsx` (`'use client'`, staggered photo frames using `useSceneReveal` + `PATH_SHOT_HEIGHTS` from [`24-constants.md`](./24-constants.md) for the "collage" height variety).
+
 ## `planner/` — see [`11-pages-panel-core.md`](./11-pages-panel-core.md) (34 files)
 
 - **Top level**: `ConceptList.tsx`, `PlanDashboard.tsx`, `PlanSettings.tsx`, `PlanWizard.tsx`, `QuickStudyLogForm.tsx`, `StatTile.tsx`.
@@ -136,6 +138,8 @@ The "cell" is the app's generic board-widget abstraction (`userCellsList` in the
 ## `pricing/`
 
 `PricingSection.tsx` (the top-level orchestrator used on `/kierunki/[slug]`), `PricingCardsGrid.tsx`, `CourseSubjectList.tsx`, `PlanComparisonCards.tsx`, `PlanComparisonTable.tsx`, `SectionHeading.tsx`.
+
+`PlanComparisonPanel.tsx` (`'use client'`) and `PlanComparisonToggle.tsx` (`'use client'`) — a collapsible wrapper around the full plan-comparison table/cards + `CourseSubjectList`, only rendered when `PLAN_COMPARISON[courseSlug]` has entries. Both read/write `usePlanComparisonStore` (see [`27-state-stores.md`](./27-state-stores.md)); the toggle button and the panel are siblings under `PricingSection`, wired together only by `PLAN_COMPARISON_PANEL_ID` (`aria-controls`/`id`) from `@/constants/planComparisonPanel`. On open, the panel moves focus into itself and scrolls itself into view (`scrollIntoView({ block: 'start' })`, `preventScroll` on the focus call to avoid a double-jump).
 
 ## `quizzes/`
 
@@ -181,7 +185,7 @@ Not yet carved into subfolders; grouped here by naming/functional cluster for na
 
 **Forum**: `AddCommentButton`, `CreateCommentForm`, `CreatePostButton`, `CreatePostForm`, `DeleteCommentButton`, `DeletePostButton`, `ForumActivityCard`, `ForumDetailComments`, `ForumDetailContent`, `ForumDetailHeader`, `ForumNotificationBadges`, `ForumPostActions`, `ForumPostCard`, `ForumPostComments`, `ForumPostHeader`, `ForumPostList`, `ForumPosts`, `ForumPostsSkeleton`, `ForumSearch`, `ForumSort`, `MarkForumSeen`.
 
-**User profile & dashboard**: `AdminBlogWidget`, `BadgeWidget`, `BadgeWidgetSkeleton`, `DashboardInfo`, `MottoForm`, `OnboardingChecklist`, `UserAnalytics`, `UserAnalyticsClient`, `UserMotto`, `UserOnboard`, `UserProgress`, `Username`, `UsernameForm`, `TestimonialForm`, `TestimonialsCarousel`, `AnalyticsDetailed`, `AnalyticsOverview`, `AnalyticsPlanTab`, `ProgressLineChart`, `QuestionAccuracyList`, `ProblematicQuestionCard`, `CircularProgressBar`, `LinearProgressBar`, `StatsRow`.
+**User profile & dashboard**: `AdminBlogWidget`, `BadgeWidget`, `BadgeWidgetSkeleton`, `DashboardInfo`, `MottoForm`, `OnboardingChecklist`, `UserAnalytics`, `UserAnalyticsClient`, `UserMotto`, `UserOnboard`, `UserProgress`, `Username`, `UsernameForm`, `TestimonialForm`, `TestimonialsCarousel`, `AnalyticsDetailed`, `AnalyticsOverview`, `AnalyticsPlanTab`, `ProgressLineChart`, `QuestionAccuracyList`, `ProblematicQuestionCard`, `CircularProgressBar`, `LinearProgressBar`, `StatsRow`, `PlanCountdown` (async Server Component, `/panel` dashboard: active learning plan → countdown to its own due date; no plan + `opiekun-medyczny` → legacy state-exam countdown via `ExamCountdown`; no plan + other course → CTA to create a plan, via `CountdownTimer`), `ConfirmModal` (renders `useConfirmModalStore` — the app-wide confirm dialog, rendered once at `panel/layout.tsx` level per the Modal Rendering Rule; see [`27-state-stores.md`](./27-state-stores.md)).
 
 **Courses & enrollment**: `EnrolledCoursesList`, `CourseAccessWidget`, `CourseInfoSection`, `CoursePricingCard`, `CurriculumMap`, `ProgramContentSection`, `ProgramTopicItem`, `NoAccessMessage`, `NoCoursesBanner`, `TierUpgradeMessage`, `PremiumLock`, `KieurnkiPageContent` [sic — filename typo for "Kierunki"].
 
