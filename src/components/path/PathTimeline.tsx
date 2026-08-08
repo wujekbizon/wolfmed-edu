@@ -48,7 +48,7 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
           </div>
         </header>
 
-        <div ref={viewport} className='flex-1 pt-6 xl:overflow-hidden'>
+        <div ref={viewport} className='flex-1 py-6 xl:overflow-hidden xl:[@media(max-height:859px)]:py-2'>
           <div
             ref={track}
             className='flex flex-col gap-6 px-6 sm:px-10 lg:px-12 xl:w-max xl:flex-row xl:will-change-transform'

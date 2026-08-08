@@ -14,10 +14,18 @@ export default function PathStepCard({
     <article
       ref={ref}
       className={`w-full xl:w-[clamp(340px,30vw,560px)] xl:flex-none overflow-hidden rounded-2xl bg-white border border-zinc-900/[0.06] shadow-[0_6px_22px_rgba(25,26,28,0.07)] transition-all duration-[400ms] ease-out motion-reduce:transition-none ${
-        near ? 'opacity-100 translate-y-0' : 'opacity-45 translate-y-3'
+        near
+          ? 'opacity-100 translate-y-0 xl:my-0'
+          : 'opacity-45 translate-y-3 xl:my-6'
       }`}
     >
-      <div className='relative aspect-[16/9] max-h-[280px] w-full xl:aspect-auto xl:h-[200px]'>
+      <div
+        className={`relative aspect-[16/9] max-h-[280px] w-full transition-[height] duration-[400ms] ease-out motion-reduce:transition-none xl:aspect-auto ${
+          near
+            ? 'xl:h-[160px] xl:[@media(min-height:860px)]:h-[240px]'
+            : 'xl:h-[160px] xl:[@media(min-height:860px)]:h-[200px]'
+        }`}
+      >
         {step.imgSrc ? (
           <Image
             src={step.imgSrc}
