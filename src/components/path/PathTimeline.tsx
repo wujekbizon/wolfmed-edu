@@ -14,7 +14,7 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
     <section
       ref={section}
       aria-labelledby='path-title'
-      className='relative w-full h-auto px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 lg:px-12 lg:pb-12'
+      className='relative w-full h-auto p-4 sm:p-6 md:p-8 lg:p-12'
       style={height ? { height } : undefined}
     >
       <div className='xl:sticky xl:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 xl:max-h-[calc(100vh-7rem)]'>
