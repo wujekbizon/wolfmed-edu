@@ -14,7 +14,7 @@ export default function PlanComparisonToggle() {
         onClick={toggle}
         aria-expanded={isOpen}
         aria-controls={PLAN_COMPARISON_PANEL_ID}
-        className='group inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-rose-400 transition-colors hover:text-rose-300'
+        className='group inline-flex cursor-pointer items-center gap-2 text-sm font-medium text-rose-600 transition-colors hover:text-rose-700'
       >
         {isOpen ? 'Ukryj porównanie planów' : 'Zobacz pełne porównanie planów'}
         <span
