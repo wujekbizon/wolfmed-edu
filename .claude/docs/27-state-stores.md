@@ -2,76 +2,82 @@
 
 [← Back to index](./README.md)
 
-All 28 files in `src/store/`, one Zustand store per file. Per [`00-architecture.md`](./00-architecture.md), these hold **ephemeral UI state**, not server/cached data (that's React Query's job, per Golden Rule #5). Reminder: `src/store/useStore.ts` is a real Zustand store instance, distinct from the generic hydration-safe selector wrapper at `src/hooks/useStore.ts` — see [`22-hooks.md`](./22-hooks.md) for that disambiguation.
+All 28 files in `src/store/`, one Zustand store per file. Per [`00-architecture.md`](./00-architecture.md), these hold **ephemeral UI state**, not server/cached data (that's React Query's job, per Golden Rule #5). Every entry below lists the real state shape and actions read directly from source. Reminder: `src/store/useStore.ts` is a real Zustand store instance, distinct from the generic hydration-safe selector wrapper at `src/hooks/useStore.ts` — see [`22-hooks.md`](./22-hooks.md) for that disambiguation.
 
 ## Global UI chrome
 
-| Store | Purpose |
-|---|---|
-| `useStore.ts` | The app-wide store — `isMenuOpen`/`toggleMenu` for the mobile nav drawer (see `Navbar` in [`10-pages-public.md`](./10-pages-public.md)). |
-| `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile()`. **Correction (round 7 of doc-testing)**: an earlier pass of this doc hedged that something "likely" calls `setIsMobile` on resize. Checked directly — grepping the whole codebase for `setIsMobile` and for `useMobileStore` outside its own definition file returns **zero results**. This store is defined and exported but never imported anywhere. Apparently dead code — flagged in the README audit list. |
-| `useTopPanelStore.ts` | Top-panel/header UI state within the dashboard. |
-| `useDashboardStore.ts` | General `/panel` dashboard UI state. |
-| `usePlanComparisonStore.ts` | `isOpen` boolean + `open()`/`close()`/`toggle()`. Not persisted — starts closed on every page load. Backs `PlanComparisonToggle`/`PlanComparisonPanel` on `/kierunki/[slug]` (see [`26-components.md`](./26-components.md) → `pricing/`); despite the "planner"-adjacent name, this is the marketing pricing-plan comparison table, unrelated to the learning-planner stores below. |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useStore.ts` | `isMenuOpen`, `isSidePanelOpen`, `isDeleteModalOpen`, `testIdToDelete` + `toggleMenu()`, `toggleSidePanel()`, `closeSidePanel()`, `openDeleteModal(testId)`, `closeDeleteModal()` | The app-wide store — `isMenuOpen`/`toggleMenu` drives the mobile nav drawer (see `Navbar` in [`10-pages-public.md`](./10-pages-public.md)). Also holds a delete-test confirmation modal's state, despite the generic name — worth knowing when searching for "where does a test get marked for deletion." Not persisted. |
+| `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile(isMobile)` | **Dead code** (confirmed round 7, re-confirmed here): grepping the whole codebase for `setIsMobile` or `useMobileStore` outside this file returns zero results. Defined and exported, never imported anywhere. Flagged in the README audit list — see audit note #15. Not persisted. |
+| `useTopPanelStore.ts` | `isTopPanelOpen`, `activeFeature: 'pinned' \| null`, `expandedNoteId` + `setTopPanelOpen(open)`, `toggleTopPanel()`, `setActiveFeature(feature)`, `setExpandedNote(id)`, `close()` (clears `activeFeature`+`expandedNoteId` only, leaves `isTopPanelOpen` alone) | Top panel/header UI state within the dashboard — which pinned-content feature is active and which note is expanded inside it. **Persisted** (`persist`, key `top-panel-storage`, plain `localStorage`, no `partialize` — the whole state including `isTopPanelOpen` survives a reload). |
+| `useDashboardStore.ts` | `isDragEnabled`, `isSupporter`, `isDeleteModalOpen`, `noteIdToDelete`, `materialIdToDelete`, `postIdToDelete` + `toggleDrag()`, `setIsSupporter(v)`, `openDeleteModal(noteId)`, `openDeleteMaterialModal(materialId)`, `openDeletePostModal(postId)`, `closeDeleteModal()` (clears all three id fields at once) | General `/panel` dashboard UI state — drag-mode toggle for the board, supporter-badge flag, and **one shared delete-confirmation modal for three different entity types** (note/material/post), disambiguated by which id field is non-null rather than three separate modal stores. Not persisted. |
+| `usePlanComparisonStore.ts` | `isOpen` + `open()`/`close()`/`toggle()` | Not persisted — starts closed on every page load. Backs `PlanComparisonToggle`/`PlanComparisonPanel` on `/kierunki/[slug]` (see [`26-components.md`](./26-components.md) → `pricing/`); despite the "planner"-adjacent name, this is the marketing pricing-plan comparison table, unrelated to the learning-planner stores below. |
 
 ## Modals (rendered once at layout level per the Modal Rendering Rule)
 
-| Store | Backing component | Purpose |
+| Store | State & actions | Backing component |
 |---|---|---|
-| `useConfirmModalStore.ts` | `<ConfirmModal />` | App-wide confirmation dialog (rendered in `panel/layout.tsx`) — see [`00-architecture.md`](./00-architecture.md) → Modal rendering rule. |
-| `useSettingsModalStore.ts` | `<SettingsModal />` | `isOpen` boolean + `openSettingsModal()`/`closeSettingsModal()` only — no payload. |
-| `useMaterialModalStore.ts` | `PdfPreviewModal` / `TextPreviewModal` / `UploadMaterialModal` | Four independent modal slots (`pdfModal`, `videoModal`, `textModal`, `uploadModal`), each `{isOpen, src/content, title?}`; opening any one closes the other three. Note: the store tracks a `videoModal` slot but there is currently no dedicated video-preview modal component consuming it — only the PDF/text/upload slots have a rendering component today. |
-| `useFlashcardReviewStore.ts` | `<FlashcardReviewModalHost />` | Flashcard spaced-review session modal state. |
+| `useConfirmModalStore.ts` | `isOpen`, `title` (default `'Potwierdź'`), `message`, `confirmLabel`/`cancelLabel` (defaults `'Potwierdź'`/`'Anuluj'`), `onConfirm`/`onCancel: (() => void) \| null` + `openConfirmModal({title?, message, confirmLabel?, cancelLabel?, onConfirm, onCancel?})`, `closeConfirmModal()` | `<ConfirmModal />` (rendered in `panel/layout.tsx`) — see [`00-architecture.md`](./00-architecture.md) → Modal rendering rule. Generic enough for any confirm-before-destructive-action prompt: the caller supplies the copy and both callbacks. Not persisted (deliberately — a stale confirm dialog surviving a reload would be a genuine hazard). |
+| `useSettingsModalStore.ts` | `isOpen` + `openSettingsModal()`/`closeSettingsModal()` | `<SettingsModal />` — `isOpen` boolean only, no payload. Not persisted. |
+| `useMaterialModalStore.ts` | Four independent slots — `pdfModal: {isOpen, src, title?}`, `videoModal: {isOpen, src, title?}`, `textModal: {isOpen, content, src?, title?}`, `uploadModal: {isOpen}` — plus `openPdfModal(src, title?)`/`closePdfModal()`/`downloadPdf()`/`openFullPdf()`, `openVideoModal(src, title?)`/`closeVideoModal()`, `openTextModal(src, title?)` (async — **fetches `src` itself** and stores the response text as `content`, falling back to `"Błąd wczytywania pliku."` on a fetch failure rather than surfacing an error state)/`closeTextModal()`, `openUploadModal()`/`closeUploadModal()` | `PdfPreviewModal`/`TextPreviewModal`/`UploadMaterialModal`. Opening any one slot explicitly closes the other three in the same `set()` call, so only one of the four can ever be open at once. **The `videoModal` slot has no rendering component consuming it today** — `openVideoModal` can be called and will update state, but nothing currently renders a video preview modal from it. `downloadPdf()`/`openFullPdf()` read `pdfModal.src` via `get()` and trigger a browser download / new-tab open respectively — the only store in this file that does DOM side effects (creating and clicking a synthetic `<a>` element) rather than pure state. Not persisted. |
+| `useFlashcardReviewStore.ts` | `isOpen`, `cards: Flashcard[]`, `sessionId: number` + `openReview(cards)` (sets `sessionId: Date.now()`), `closeReview()` | `<FlashcardReviewModalHost />`. `sessionId` is a fresh timestamp per `openReview` call — likely used downstream to force-remount/reset review-progress state on each new session rather than reusing whatever was left over from a previous review. Not persisted. |
 
 ## Cookie consent & banners
 
-| Store | Purpose |
-|---|---|
-| `useCookieConsentStore.ts` | Exports `COOKIE_CONSENT_KEY`, `COOKIE_CONSENT_DURATION_DAYS`, `defaultConsent` alongside the store — persisted cookie-category consent state backing `CookieConsentBanner`. |
-| `useInstagramBannerStore.ts` | Dismiss state for the `FloatingInstagram` banner. |
-| `useNoCoursesBannerStore.ts` | Dismiss/visibility state for the "you have no courses yet" banner shown to unenrolled users. |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useCookieConsentStore.ts` | `consent: CookieConsent \| null`, `showBanner`, `isLoaded` + `initialize()`, `openBanner()`, `closeBanner()`, `acceptAll()`, `declineAll()`, `savePreferences(partial)`. Also exports `COOKIE_CONSENT_KEY`, `COOKIE_CONSENT_DURATION_DAYS = 180`, `defaultConsent`. | Persists to `localStorage` — but **manually**, not via Zustand's `persist` middleware: `initialize()` reads `localStorage.getItem(COOKIE_CONSENT_KEY)` directly, validates it hasn't expired (`isConsentValid`, 180-day window from `consent.timestamp`), and every write path (`acceptAll`/`declineAll`/`savePreferences`) calls a local `saveConsentToStorage()` helper that both writes `localStorage` and dispatches a `window.dispatchEvent(new CustomEvent('cookieConsentChanged'))` so `GoogleAnalytics` can react to a consent change without polling. **Correction**: an earlier version of this doc's "which stores persist" list (below) included this store as a `persist`-middleware user — it isn't; see the corrected list. `necessary` is always forced `true` in every write path, never actually configurable. |
+| `useInstagramBannerStore.ts` | `isDismissed` + `dismiss()`/`reset()` | Dismiss state for the `FloatingInstagram` banner. Not persisted — dismissal doesn't survive a reload. |
+| `useNoCoursesBannerStore.ts` | `isOpen` + `show()`/`hide()` | Visibility state for the "you have no courses yet" banner shown to unenrolled users. Not persisted. |
 
 ## Tests & test-authoring
 
-| Store | Purpose |
-|---|---|
-| `useGenerateTestStore.ts` | In-progress state for the timed test-taking UI (`GenerateTests`). |
-| `useCustomTestsStore.ts` | UI state for the custom-test-authoring flow (`/panel/dodaj-test`). |
-| `useTestFormStore.ts` | Form state for creating/editing a single test question. |
-| `useTestCellStore.ts` | State for a "test" board cell (draft questions typed inline). |
-| `useQuestionSelectionStore.ts` | Multi-select state (e.g. picking questions to add to a custom category). |
-| `useSortCompletedTestsStore.ts` | Sort preference for the completed-tests list (`/panel/wyniki`). |
-| `useProblematicQuestionsStore.ts` | UI state around the "problematic questions" analytics view. |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useGenerateTestStore.ts` | `numberTests: number \| null`, `isTest: boolean` + `setNumberTests(n)`, `setIsTest(v)` | Feeds `useGeneratedTest` (the hook that draws a random subset of tests — see [`22-hooks.md`](./22-hooks.md)); `isTest` gates whether the drawn set is actually presented as a live test. Not persisted. |
+| `useCustomTestsStore.ts` | `isDeleteTestModalOpen`/`testToDelete: {id, question} \| null`, `isDeleteCategoryModalOpen`/`categoryToDelete: {name, count} \| null` + `openDeleteTestModal(test)`/`closeDeleteTestModal()`, `openDeleteCategoryModal(category)`/`closeDeleteCategoryModal()` | Two independent delete-confirmation modal slots for `/panel/dodaj-test` (custom-test authoring) — one for a single test, one for a whole category. Not persisted. |
+| `useTestFormStore.ts` | `answersNumber` (default `3`), `selectionMethod` (default `"existingCategory"`) + `setSelectionMethod(method)`, `setAnswersNumber(n)` | Form state for creating/editing a single custom test question — how many answer options, and whether the question is being filed under an existing or new category. Not persisted. |
+| `useTestCellStore.ts` | `cells: Record<cellId, {questions: DraftQuestion[], editingId, saved, addingMore}>` + `initCell(id, questions)`, `setEditingId`, `setSaved`, `setAddingMore`, `removeQuestion`, `updateQuestion`, `addQuestion` | Per-cell draft state for a "test" board cell (questions typed inline into the board, not yet saved as a real test). Keyed by cell id so multiple test cells on the same board don't share state; a `DEFAULT_CELL` fallback (via a `cell(state, id)` helper) means reading an uninitialized cell's state never throws. Not persisted — draft questions are lost on reload if never saved. |
+| `useQuestionSelectionStore.ts` | `customCategories: {id, name, questionIds: string[]}[]`, `isDeleteModalOpen`, `categoryToDelete` + `createCategory(name)`, `editCategory(id, newName)`, `deleteCategory(id)`, `addQuestionToCategory(categoryId, questionId)`, `removeQuestionFromCategory(categoryId, questionId)`, `clearAll()`, `openDeleteModal(categoryId)`, `closeDeleteModal()` | Client-side ad-hoc question grouping (distinct from the server-persisted `userCustomCategories` table — this is a lighter-weight, browser-local grouping mechanism, not the same feature as `/panel/dodaj-test`'s custom categories). **Persisted** (`persist`, key `question-categories-storage`, no `storage` option specified — defaults to `localStorage`). |
+| `useSortCompletedTestsStore.ts` | `sortOption: 'dateAsc' \| 'dateDesc' \| 'scoreAsc' \| 'scoreDesc'` (default `'dateDesc'`) + `setSortOption(option)` | Sort preference for the completed-tests list (`/panel/wyniki`), consumed by `useSortedTests` (see [`22-hooks.md`](./22-hooks.md)). Not persisted. |
+| `useProblematicQuestionsStore.ts` | `searchTerm`, `isExpanded`, `currentPage` (default `1`), `perPage` (default `5`) + `setSearchTerm(term)` (resets `currentPage` to 1), `clearSearchTerm()`, `toggleExpand()`, `setCurrentPage(page)` | UI state for the "problematic questions" analytics view (`ProblematicQuestionCard`/`QuestionAccuracyList`). **Persisted** (`persist`, key `problematic-questions-storage`, `localStorage`) — including `searchTerm` itself, unlike `useSearchTermStore` below which deliberately excludes it. |
 
 ## Procedures & challenges
 
-| Store | Purpose |
-|---|---|
-| `useProceduresStore.ts` | UI state for procedure browsing. |
-| `useProcedureStepsStore.ts` | Step-navigation state within a procedure reader. |
-| `useChallengeStore.ts` | In-progress challenge attempt UI state. |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useProceduresStore.ts` | `procedures: Procedure[]`, `steps: StepWithId[]`, `currentProcedure: Procedure \| null`, `score: number` + `setProcedures`, `setCurrentProcedure`, `setScore`, `setSteps(steps \| updaterFn)` (accepts either a plain array or a functional updater, unlike most stores here) | UI state for procedure browsing/reading, including the current in-progress step list and score for a procedure walkthrough. **Persisted** (`persist`, key `procedures-storage`, `localStorage`, no `partialize` — the whole state, including in-progress `score`/`steps`, survives a reload). |
+| `useProcedureStepsStore.ts` | `marked: Record<procedureId, number[]>` + `toggleStep(procedureId, stepNumber)`, `clearProcedure(procedureId)` | Tracks which step numbers a student has manually marked/checked off, keyed per procedure — distinct from `useProceduresStore.steps` above (that's the *content* of the current walkthrough; this is a per-procedure checklist of marks, independent of which procedure is "current"). Not persisted. |
+| `useChallengeStore.ts` | `activeChallenge: string \| null`, `isLocked: boolean` + `setActiveChallenge(id)`, `setIsLocked(isLocked)` | Which procedure-challenge is currently active and whether interaction is locked (e.g. mid-submission). Not persisted. |
 
 ## Search
 
-| Store | Purpose |
-|---|---|
-| `useSearchTermStore.ts` | Generic shared search-term state. |
-| `useBlogSearch.ts` | Blog list search term. |
-| `useForumSearch.ts` | Forum list search term. |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useSearchTermStore.ts` | `searchTerm`, `isExpanded`, `perPage` (default `10`), `activeCategory: string \| null`, `pageByCategory: Record<category, page>` + `openCategory(category)` (no-ops if already the active category, else switches and clears `searchTerm`), `setSearchTerm(term)`, `clearSearchTerm()`, `toggleExpand()`, `setCurrentPage(page)`, `setPerPage(perPage)` | The generic shared search-term store used across test-category browsing lists. **Persisted with `partialize`** (`persist`, key `searchTerm-storage`, `version: 2` with a `migrate` function for the v1→v2 shape change) — only `isExpanded`/`perPage`/`pageByCategory` are actually written to `localStorage`; `searchTerm` and `activeCategory` are excluded. The source comment states why: "Bookmarks and display preferences outlive a session; the search term is a filter and must not, or a stale one silently empties the list on the next visit." `pageByCategory` is capped via `limitPageBookmarks()` (see [`25-helpers.md`](./25-helpers.md)) on every write — re-setting a category's remembered page moves it to the end of the object's key order, which is what lets the cap evict the *least recently opened* category rather than an arbitrary one. |
+| `useBlogSearch.ts` | `searchTerm`, `isExpanded`, `currentPage` (default `1`), `perPage` (default `6`), `sortBy: 'newest' \| 'oldest' \| 'popular'` + `setSearchTerm(term)`/`clearSearchTerm()` (both reset `currentPage` to 1), `toggleExpand()`, `setCurrentPage(page)`, `setPerPage(perPage)`, `setSortBy(sortBy)` (also resets `currentPage`) | Blog list (`/blog`) search/sort/pagination state. **Persisted in full**, unlike `useSearchTermStore` — no `partialize`, so `searchTerm` itself does survive a reload here (`persist`, key `blogSearch-storage`, `localStorage`). Worth noting the inconsistency: two structurally similar search stores made different persistence choices for the live search term. |
+| `useForumSearch.ts` | `searchTerm`, `sortOption: SortOption` (`'newest' \| 'oldest' \| 'most_comments' \| 'recent_activity'`, default `'newest'`), `currentPage` (default `1`), `perPage` (default `10`) + `setSearchTerm(term)` (resets page to 1), `setSortOption(sort)`, `clearSearchTerm()` (resets page to 1), `setCurrentPage`, `setPerPage` | Forum list (`/forum`) search/sort/pagination state, consumed by `useSortedForumPosts` (see [`22-hooks.md`](./22-hooks.md)). **Persisted in full** (`persist`, key `forumSearch-storage`, `localStorage`) — same as `useBlogSearch`, `searchTerm` survives a reload here too. |
 
 ## AI tutor & settings
 
-| Store | Purpose |
-|---|---|
-| `useRagStore.ts` | Tutor chat UI state (open/closed drawer, current conversation reference, etc. — feeds the `MobileAIFloat` chat surface). |
-| `useSettingsStore.ts` | Two **persisted** (localStorage, key `wolfmed-settings`) preference flags: `showMobileAI`, `slashCommandsEnabled`. Confirmed distinct from `useSettingsModalStore` — that one holds only the modal's `isOpen` boolean, this one holds the actual preference values. (Not the only store that persists — see the note at the bottom of this doc; an earlier version of this entry incorrectly implied it was.) |
+| Store | State & actions | Notes |
+|---|---|---|
+| `useRagStore.ts` | `pendingTopic: string \| null`, `pendingAutoSubmitCellId: string \| null` + `setPendingTopic`, `setPendingAutoSubmitCellId` | Cross-component signaling for the tutor: when the learning hub or a mind-map "explain this" action spawns a new RAG cell with a topic already chosen, it sets `pendingTopic`/`pendingAutoSubmitCellId` here; `useRagAutoSubmit` (see [`22-hooks.md`](./22-hooks.md)) watches for its own cell id to match and fires the query automatically, then clears the pending id. Not persisted — this is a one-shot handoff, not durable state. |
+| `useSettingsStore.ts` | `showMobileAI` (default `true`), `slashCommandsEnabled` (default `true`) + `setShowMobileAI(v)`, `setSlashCommandsEnabled(v)` | Two **persisted** (`persist`, key `wolfmed-settings`, `localStorage`) preference flags. Confirmed distinct from `useSettingsModalStore` — that one holds only the settings modal's `isOpen` boolean; this one holds the actual preference values the modal edits. `slashCommandsEnabled` is read by `useRagCellInput`/`useRagAutoSubmit` to gate whether a typed `/` triggers the command autocomplete/dispatcher at all. |
 
 ---
 
 ## Which stores persist (localStorage), and why it matters for debugging
 
-An earlier version of this doc implied `useSettingsStore` was the only persisted store. It isn't — **9 of the 27** use Zustand's `persist` middleware, verified by grepping every file in `src/store/` for the import: `useBlogSearch`, `useCellsStore`, `useCookieConsentStore`, `useForumSearch`, `useProblematicQuestionsStore`, `useProceduresStore`, `useQuestionSelectionStore`, `useSearchTermStore`, `useSettingsStore`. This matters for debugging a "why does this UI state survive a hard refresh / reappear after I thought I cleared it" report — check this list before assuming a store resets on reload.
+**Corrected this pass** (an earlier version of this list included `useCookieConsentStore` and omitted `useTopPanelStore` — checked by grepping every file in `src/store/` for an actual `import ... from 'zustand/middleware'`, not just "does this store end up in localStorage somehow"): **9 of the 28** stores use Zustand's `persist` middleware — `useBlogSearch`, `useCellsStore`, `useForumSearch`, `useProblematicQuestionsStore`, `useProceduresStore`, `useQuestionSelectionStore`, `useSearchTermStore`, `useSettingsStore`, `useTopPanelStore`. `useCookieConsentStore` also ends up in `localStorage`, but via its own **hand-rolled** read/write logic, not the middleware — worth knowing the distinction if you're debugging by grepping for `persist(` and it doesn't turn up.
 
-Worth calling out specifically: `useSearchTermStore` uses a `partialize` function to persist `isExpanded`/`perPage`/`pageByCategory` but **deliberately excludes** the live `searchTerm` itself from persistence — the source comment explains why: "Bookmarks and display preferences outlive a session; the search term is a filter and must not, or a stale one silently empties the list on the next visit." A useful pattern to know about (partial persistence, not all-or-nothing) if another store ever needs the same treatment.
+This matters for debugging a "why does this UI state survive a hard refresh / reappear after I thought I cleared it" report — check this list (plus `useCookieConsentStore`'s manual path) before assuming a store resets on reload.
+
+Worth calling out specifically:
+- `useSearchTermStore` uses a `partialize` function to persist only `isExpanded`/`perPage`/`pageByCategory`, deliberately excluding the live `searchTerm` — see its entry above for the source comment's reasoning. A useful pattern to know about (partial persistence, not all-or-nothing) if another store ever needs the same treatment.
+- `useBlogSearch` and `useForumSearch` are structurally similar to `useSearchTermStore` (search + sort + pagination) but persist their `searchTerm` **in full**, with no `partialize` — an inconsistency across three otherwise-parallel stores, not a bug, but worth knowing if "does a stale search term reappear after reload" behavior needs to be consistent across all three.
+- `useCellsStore` (`cells-storage`, `localStorage`, no `partialize` — persists the entire board `order`/`data` blob) persisting to `localStorage` is a separate mechanism from the server-side `userCellsList` DB row it also syncs with via `saveCellsAction`/`syncCellsAction` — see README audit note #17 for the save-conflict risk this creates: a stale `localStorage` copy on one device and a newer DB row from another device are two more copies of the same data that can disagree, on top of the tab-to-tab conflict already documented there.
+- `useQuestionSelectionStore` (`question-categories-storage`) doesn't specify a `storage` option, so it takes Zustand's default (`localStorage`) rather than explicitly constructing one via `createJSONStorage` like most of the others here — functionally identical, just a different way of arriving at the same default.
 
 Confirmed clean otherwise: every store here has exactly one concern, and the two that looked like they might overlap by name (`useSettingsStore`/`useSettingsModalStore`) don't.
