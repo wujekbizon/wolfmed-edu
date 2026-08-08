@@ -3,6 +3,7 @@
 import { useRef, useState } from 'react'
 import Image from 'next/image'
 import ToolListItem from './ToolListItem'
+import GradientOverlay from '@/components/GradientOverlay'
 import { PATH_TOOLS_INTRO } from '@/constants/pathTools'
 import type { CardProps } from '@/constants/educationalPathCards'
 
@@ -43,7 +44,11 @@ export default function PathTools({
       aria-labelledby='tools-title'
       className='panel-dark relative w-full overflow-hidden rounded-3xl px-6 py-14 sm:px-10 lg:px-[60px] lg:py-[68px]'
     >
-      <div className='mx-auto max-w-[1180px]'>
+      <GradientOverlay />
+
+      {/* relative so the content sits above the overlay, which is absolutely
+          positioned and would otherwise paint over it. */}
+      <div className='relative mx-auto max-w-[1180px]'>
         <header className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-10'>
           <div>
             <p className='font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-rose-500'>
