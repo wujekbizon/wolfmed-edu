@@ -122,6 +122,26 @@ Four small `src/server/*.ts` files, each referenced by name throughout the flow 
 - **`src/server/flashcardAccess.ts`** — `findOwnedDeck(userId, deckId)`, `findOwnedCard(userId, cardId)`, `nextCardPosition(deckId)`. The ownership-scoping helpers behind every flashcard action in [`21-server-actions.md`](./21-server-actions.md) (`renameFlashcardDeckAction`, `deleteFlashcardDeckAction`, etc.) — the "does this deck/card actually belong to this user" check they all share.
 - **`src/server/rag-queries.ts`** — `getRagConfig()`, `setRagConfig()`, `deleteRagConfig()`. Thin CRUD over the `ragConfig` table, called from `src/actions/admin-rag-actions.ts`.
 
+## Personal-library, memory-store, and Vertex internals (found in a follow-up reverse-direction pass)
+
+Ten more files, one level deeper than the modules above — the actual implementations behind `src/server/library/`, `src/server/memory/stores/`, and `src/server/vertex-rag/`, none previously described even though `retrieveContext()`, `sync-note.ts`/`sync-material.ts`, and the memory-extraction flow (all documented) call straight into them:
+
+**`src/server/library/`** (personal-library retrieval — see root `CLAUDE.md` → Data Sources tier 2):
+- **`chunk.ts`** — `chunkText(text): TextChunk[]`. Splits on paragraph boundaries first, then sentence boundaries, then whitespace, sized by `CHUNK_SIZE`/`CHUNK_OVERLAP`/`MIN_CHUNK_CHARS`/`MAX_CHUNKS_PER_SOURCE` (`library/config.ts`). The overlap step deliberately never breaks mid-word — the source comment notes an earlier fixed-character-offset version produced chunks starting mid-token (e.g. `"rzymanie homeostazy"`), which blurs the embedding of everything around it.
+- **`index-source.ts`** — `indexSource({ userId, sourceType, sourceId, title, text })`, called by `sync-note.ts`/`sync-material.ts` (see [`32-flows-learning-content.md`](./32-flows-learning-content.md)). Diffs by content hash rather than replacing a source's chunks wholesale: an unchanged chunk keeps its existing embedding and generates no write (relevant because Neon bills instant-restore storage per GB of write history). New/changed rows land with `embedding: null` — filled later by the `library-index` cron sweep — but stay searchable immediately via the trigram index. Also exports `removeSourceChunks(userId, sourceId)` for deletion.
+- **`attached-source.ts`** — `getAttachedSourceText(userId, sourceIds)`. Backs the `@resource` attachment tier (tier 3 in the Data Sources table below): loads a note/material's **whole** content rather than retrieving chunks, because an explicit attachment means the student already did the selecting — chunk retrieval would hand back only the passages that happened to match the query. A material with no `extractedText` yet contributes nothing here (the caller falls back to shipping the raw file).
+
+**`src/server/memory/stores/`** (per-slot DB access behind `memory/assemble.ts`/`extract.ts` — see [`33-flows-ai-tutor.md`](./33-flows-ai-tutor.md)):
+- **`episodes.ts`** — `insertEpisode(episode)`, `getRecentEpisodes(...)`. The `memTraces`-backed episodic-memory slot (a timestamped record of a specific past interaction).
+- **`facts.ts`** — `getFactByHash`, `getActiveFactsForSlot`, `insertFact`, `revokeFact`, `getActiveFacts`. Facts carry a `FactStatus` (`'provisional' | 'active' | 'revoked'`) and a `FactSource`; `revokeFact` supersedes rather than deletes (`supersededByFactId`), preserving history.
+- **`preferences.ts`** — `getPreferences`, `getPreferencesMap`, `upsertPreference(s)`. Backs `memoryPrefix` (see root `CLAUDE.md` → Data Sources tier 4) — preferences carry a `PreferenceSource` (`'user_stated' | 'llm_inferred' | 'admin_set'`) distinguishing what the student typed from what the model inferred.
+
+**`src/server/vertex-rag/`** (the curriculum-corpus client — tier 1 in the Data Sources table):
+- **`client.ts`** — `getAccessToken()`, `getGoogleAI()`, `vertexFetch(path, options)`, `vertexUploadFetch(...)`, `logUsage(...)`. The shared low-level HTTP/auth client every other `vertex-rag/*.ts` file calls through — exports `PROJECT_ID`/`LOCATION` (env-driven, with a hardcoded fallback project/region for local dev).
+- **`ingest.ts`** — `uploadFiles(...)`, `importFilesFromGcs(...)`, `listCorpusFiles(corpusName)`. The admin corpus-upload path behind `/admin/rag` (see [`13-pages-admin.md`](./13-pages-admin.md)) — pushes documents into the Vertex File Search Store.
+- **`errors.ts`** — `parseGoogleApiError(error)`. Normalizes Vertex/Google API error shapes into a plain `Error` with a readable message, used by the corpus-management actions to surface something better than a raw API error to the admin UI.
+
+**`src/server/db/populateDb.ts`** — `populateTests()`, `populateAnyCategoryTests(category)`, `populateProcedures()`, `populatePosts()`, `populateUsers()`, `populateCompletedTests()`. Seed-data functions called by the `/scripts` seeders (see Scripts & operational tooling below) — not part of any runtime request path.
 ## Rate limiting (`src/lib/rateLimit.ts`)
 
 Found undocumented in rounds 1–4 of doc-testing — every flow/forms doc names the rate-limit **bucket** an action uses (e.g. `test:start`, `blog:like`) but none point at where the actual numbers live or explain the mechanism. One file, `checkRateLimit(userId, bucket)`, backs every `checkRateLimit(...)` call in the codebase:

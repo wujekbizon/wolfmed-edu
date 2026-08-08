@@ -158,7 +158,7 @@ A few actions validate against something other than a `z.object` in `schema.ts`:
 
 ## `src/server/schema.ts` line index
 
-`schema.ts` is 1104 lines with 68 exported schemas — every table above names the schema but not its location in the file. Alphabetical index, so a name from any table above (or from [`21-server-actions.md`](./21-server-actions.md)) can be jumped to directly rather than grepped for:
+`schema.ts` is 1104 lines with 72 exported schemas — every table above names the schema but not its location in the file. Alphabetical index, so a name from any table above (or from [`21-server-actions.md`](./21-server-actions.md)) can be jumped to directly rather than grepped for:
 
 | Schema | Line | Schema | Line |
 |---|---|---|---|

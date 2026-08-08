@@ -64,6 +64,9 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 ### Testimonials
 - **`testimonials`** — `content`, `rating` (real, default 5), `visible` flag, FK to `users`. `testimonialsRelations` / `usersRelations` link them via a named relation (`testimonialsAuthor`).
 
+### Contact messages
+- **`customersMessages`** (table name `messages`) — `email`, `message`, `isRead` (boolean, default `false`), no FK to `users` (the home-page contact form is reachable by any signed-in user, but the row only stores the email they typed, not their `userId`). Written by `sendEmail` (see [`10-pages-public.md`](./10-pages-public.md) → Contact form flow); read/marked-read from `/admin/messages` via `markMessageAsReadAction` (see [`13-pages-admin.md`](./13-pages-admin.md)).
+
 ### Study materials & library
 - **`notes`** — rich-text (Lexical) note: `content` (jsonb Lexical tree), `plainText`, `excerpt`, `category`, `tags` (jsonb array), `pinned`.
 - **`userCellsList`** — a user's mind-map/flowcharting cell layout: `cells` (jsonb) + `order` (jsonb), one row per user.
