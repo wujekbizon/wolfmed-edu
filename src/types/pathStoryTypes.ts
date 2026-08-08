@@ -30,3 +30,23 @@ export type CareerPath = {
   headline: string
   steps: PathStep[]
 }
+
+export type PathQuestion = {
+  question: string
+  answer: string
+}
+
+export type PathShot = {
+  photoHint: string
+  imgSrc?: string
+}
+
+export type PathQuestions = {
+  eyebrow: string
+  title: string
+  accent: string
+  lead: string
+  cta: string
+  items: PathQuestion[]
+  shots: PathShot[]
+}

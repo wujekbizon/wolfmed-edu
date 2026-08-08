@@ -5,7 +5,9 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 // a 90vh one does, so one rule serves both layouts.
 const REVEAL_LINE = '0px 0px -25% 0px'
 
-export function useSceneReveal(count: number) {
+// `once` latches a revealed item on. A sticky column stops moving as soon as it
+// pins, so without it the items there would flick back off on the way up.
+export function useSceneReveal(count: number, once = false) {
   const [active, setActive] = useState<boolean[]>(() =>
     Array.from({ length: count }, (_, index) => index === 0)
   )
@@ -27,6 +29,8 @@ export function useSceneReveal(count: number) {
             if (!Number.isInteger(index)) continue
 
             const isActive = entry.isIntersecting
+            if (once && !isActive) continue
+
             if (next[index] !== isActive) {
               next[index] = isActive
               changed = true
@@ -48,7 +52,7 @@ export function useSceneReveal(count: number) {
       io.disconnect()
       observer.current = null
     }
-  }, [])
+  }, [once])
 
   // Returning a cleanup ties observe/unobserve to the node's own lifetime, so
   // re-renders cannot leave a scene unobserved.
