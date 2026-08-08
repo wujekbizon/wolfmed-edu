@@ -75,7 +75,6 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | Deck delete | `deleteFlashcardDeckAction` | `DeckIdSchema` | `flashcardDecks` |
 | Card create/update/delete | `createFlashcardAction` / `updateFlashcardAction` / `deleteFlashcardAction` | `CreateFlashcardSchema` / `UpdateFlashcardSchema` / `FlashcardIdSchema` | `flashcards` |
 | Mind map generation (cell content) | `generateMindMapAction` | `GenerateMindMapSchema` (nodes: `MindMapNodeSchema`) | `userCellsList` (cell content) |
-| PPTX import | `importPptxAction` | (file-based, parsed via `src/lib/parsePptx.ts`) | notes/materials (via downstream note creation) |
 
 ## Panel — procedures, challenges, diagnozy
 
@@ -112,6 +111,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | `BlogLikeButton` | `/blog/[slug]` | `toggleBlogLikeAction` | `LikeBlogPostSchema` | `blogLikes` |
 | (legacy) like/unlike | — | `likeBlogPostAction` / `unlikeBlogPostAction` | `LikeBlogPostSchema` / `UnlikeBlogPostSchema` | `blogLikes` |
 | `BlogPostForm` create/edit | `/admin/posts/new`, `/admin/posts/[id]/edit` | `createBlogPostAction` / `updateBlogPostAction` | `CreateBlogPostSchema` / `UpdateBlogPostSchema` | `blogPosts` |
+| `PptxImportPanel` (inside `BlogPostForm`, admin-only) — imports a `.pptx` deck as a starting draft, does **not** write directly | `/admin/posts/new` | `importPptxAction` | (file-based, parsed via `src/lib/parsePptx.ts`) | Nothing itself — returns `{title, slug, excerpt, content}` into the form's fields; only `createBlogPostAction` above actually persists to `blogPosts` once the admin submits. Not a notes/materials path — see [`21-server-actions.md`](./21-server-actions.md). |
 | Post delete | `/admin/posts` | `deleteBlogPostAction` (or `deleteBlogPost`) | `DeleteBlogPostSchema` | `blogPosts` |
 | Publish / archive controls | `/admin/posts` | `publishBlogPostAction` / `archiveBlogPostAction` | `PublishBlogPostSchema` | `blogPosts.status` |
 | `CategoryForm` create/edit | `/admin/categories/*` | `createBlogCategoryAction` / `updateBlogCategoryAction` | `CreateBlogCategorySchema` / `UpdateBlogCategorySchema` | `blogCategories` |
