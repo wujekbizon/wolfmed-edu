@@ -1,14 +1,24 @@
-import LinkButton from '@/components/ui/LinkButton'
+import Link from 'next/link'
 import PathQuestionList from './PathQuestionList'
 import PathShotCollage from './PathShotCollage'
+import CourseCheckoutButton from './CourseCheckoutButton'
 import { CURRICULUM_ANCHOR } from '@/constants/curriculumAnchor'
+import { ownsCourse } from '@/helpers/ownsCourse'
+import type { PathData } from '@/types/careerPathsTypes'
 import type { PathQuestions } from '@/types/pathStoryTypes'
 
 export default function PathQuestionsHero({
-  questions
+  questions,
+  pricing,
+  ownedCourses
 }: {
   questions: PathQuestions
+  pricing?: PathData['pricing']
+  ownedCourses: string[]
 }) {
+  const entry = pricing?.basic
+  const owned = !!pricing && ownsCourse(pricing.courseSlug, ownedCourses)
+
   return (
     <section
       aria-labelledby='questions-title'
@@ -35,16 +45,28 @@ export default function PathQuestionsHero({
 
             <PathQuestionList items={questions.items} />
 
-            <LinkButton
+            {pricing && entry && !owned && (
+              <div className='mt-8'>
+                <CourseCheckoutButton
+                  courseSlug={pricing.courseSlug}
+                  priceId={entry.priceId}
+                  accessTier={entry.accessTier}
+                />
+              </div>
+            )}
+
+            <Link
               href={`#${CURRICULUM_ANCHOR}`}
-              variant='cta'
-              size='lg'
-              shape='pill'
-              className='mt-8 self-start'
+              className='group mt-6 inline-flex items-center gap-2 self-start text-sm font-medium text-rose-400 transition-colors hover:text-rose-300'
             >
               {questions.cta}
-              <span aria-hidden='true'>→</span>
-            </LinkButton>
+              <span
+                aria-hidden='true'
+                className='transition-transform duration-200 group-hover:translate-x-0.5'
+              >
+                →
+              </span>
+            </Link>
           </div>
 
           <PathShotCollage shots={questions.shots} />

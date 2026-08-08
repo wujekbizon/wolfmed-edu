@@ -3,6 +3,7 @@ import PathFacts from './PathFacts'
 import StorySceneTrack from './StorySceneTrack'
 import CourseCheckoutButton from './CourseCheckoutButton'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
+import { ownsCourse } from '@/helpers/ownsCourse'
 import type { PathData } from '@/types/careerPathsTypes'
 import type { PathStory } from '@/types/pathStoryTypes'
 
@@ -18,10 +19,7 @@ export default function PathStoryHero({
   ownedCourses: string[]
 }) {
   const entry = pricing?.basic
-  const owned =
-    !!pricing &&
-    (ownedCourses.includes(`${pricing.courseSlug}-basic`) ||
-      ownedCourses.includes(`${pricing.courseSlug}-premium`))
+  const owned = !!pricing && ownsCourse(pricing.courseSlug, ownedCourses)
 
   return (
     <div className='w-full p-4 sm:p-6 md:p-8 lg:p-12'>
