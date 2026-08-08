@@ -1,14 +1,12 @@
 import type { PathQuestions } from '@/types/pathStoryTypes'
 
 export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
-  eyebrow: 'Zanim wybierzesz',
-  title: 'Kim jest pielęgniarka',
-  accent: '?',
-  lead: 'Trzy pytania, które padają najczęściej — zanim pokażemy Ci program nauczania.',
+  eyebrow: 'Kierunek Edukacyjny',
+  lead: 'Prowadzimy Cię przez trzy lata studiów pielęgniarskich — przedmioty podstawowe i kierunkowe, proces pielęgnowania i testy sprawdzające, na jednej platformie. Zobacz, czego uczymy i do jakiej pracy Cię przygotowujemy.',
   cta: 'Zobacz szczegółowy program',
   items: [
     {
-      question: 'Co robi na co dzień?',
+      question: 'Czym zajmuje się pielęgniarka?',
       answer:
         'Prowadzi proces pielęgnowania: ocenia stan pacjenta, planuje opiekę, podaje leki, wykonuje zabiegi i uczy pacjenta oraz rodzinę życia z chorobą.'
     },
@@ -18,7 +16,7 @@ export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
         '3 lata studiów licencjackich — 2260 godzin zajęć i 63 punkty ECTS. Dalej opcjonalnie 2 lata magisterskich.'
     },
     {
-      question: 'Jaki egzamin kończy naukę?',
+      question: 'Jaki egzamin kończy studia?',
       answer:
         'Egzamin dyplomowy — teoria i praktyka. Przygotowuje do niego baza 22 700 pytań z 22 kategorii.'
     }

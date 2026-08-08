@@ -43,8 +43,6 @@ export type PathShot = {
 
 export type PathQuestions = {
   eyebrow: string
-  title: string
-  accent: string
   lead: string
   cta: string
   items: PathQuestion[]

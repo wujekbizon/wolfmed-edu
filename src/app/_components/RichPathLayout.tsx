@@ -26,6 +26,7 @@ export default function RichPathLayout({
       <div className='relative'>
         {questions && (
           <PathQuestionsHero
+            title={title}
             questions={questions}
             pricing={pricing}
             ownedCourses={ownedCourses ?? []}

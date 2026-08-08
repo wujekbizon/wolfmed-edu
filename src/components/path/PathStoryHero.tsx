@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import PathBadge from './PathBadge'
 import PathFacts from './PathFacts'
 import StorySceneTrack from './StorySceneTrack'
 import CourseCheckoutButton from './CourseCheckoutButton'
@@ -28,10 +29,7 @@ export default function PathStoryHero({
           <div className='rounded-t-3xl bg-gradient-to-b from-[#fdf7f7] to-[#faecec] xl:rounded-tr-none xl:rounded-bl-3xl'>
             <aside className='flex flex-col gap-8 p-6 sm:p-10 lg:p-12 xl:sticky xl:top-24 xl:h-[90vh] xl:justify-around xl:p-14'>
               <div>
-                <span className='inline-flex items-center gap-2 self-start rounded-full bg-white/80 backdrop-blur-sm border border-zinc-200/60 shadow-sm px-3 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-zinc-600'>
-                  <span className='w-1.5 h-1.5 rounded-full bg-rose-400' />
-                  Kierunek Edukacyjny
-                </span>
+                <PathBadge label='Kierunek Edukacyjny' />
 
                 <h1 className='mt-6 text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.05] tracking-tight'>
                   {title}
