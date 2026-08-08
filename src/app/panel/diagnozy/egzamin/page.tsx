@@ -11,7 +11,6 @@ import EgzaminHeader from '@/components/diagnozy/egzamin/EgzaminHeader'
 import EgzaminAttemptsPanel from '@/components/diagnozy/egzamin/EgzaminAttemptsPanel'
 import EgzaminAttemptsListSkeleton from '@/components/skeletons/EgzaminAttemptsListSkeleton'
 import EgzaminContentSkeleton from '@/components/skeletons/EgzaminContentSkeleton'
-import NoAccessMessage from '@/components/NoAccessMessage'
 
 export const metadata: Metadata = {
   title: 'Egzamin — Diagnozy i Interwencje',
@@ -38,7 +37,7 @@ async function EgzaminContent() {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) return <NoAccessMessage />
+  if (!hasAccess) redirect('/panel/kursy')
 
   return (
     <>

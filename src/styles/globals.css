@@ -285,3 +285,54 @@
     }
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The dark stage shared by the tools scene and the pricing section. A
+   background, not decoration: as a utility it needs no extra node and no
+   stacking context, so children never have to fight it for clicks the way
+   they do with GradientOverlay. Defined once so the two cannot drift. */
+@utility panel-dark {
+  background-image: linear-gradient(to bottom, #2a262b, #1c1a1e);
+}
+
+/* Story scenes reveal as they reach the middle of the viewport. Opacity and
+   transform run on separate durations on purpose: the lift finishes after the
+   fade, which is what stops the change reading as a single hard switch. */
+@utility scene-reveal {
+  opacity: 0.14;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Kept out of the utility above rather than nested inside it. @utility lands
+   in the utilities cascade layer, and the unlayered rules below would outrank
+   it whatever the specificity; as its own unlayered rule this one competes on
+   equal terms and wins on specificity. */
+.scene-reveal[data-active='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Below the two-column breakpoint the scenes stack and each one is simply
+   read in turn, so there is nothing to reveal. */
+@media (max-width: 1023px) {
+  .scene-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

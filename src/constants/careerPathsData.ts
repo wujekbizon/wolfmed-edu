@@ -430,15 +430,12 @@ export const careerPathsData: Record<string, PathData> = {
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
-          'Bogata baza pytań – ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego',
-          'Procedury Opiekuna Medycznego',
-          'Przegląd postępów i wyników testów',
+          'Ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego',
           'Testy praktyczne i Egzamin Próbny',
-          'Forum i Blog Medyczny',
-          'Materiały i zasoby - 20MB miejsce na dysku',
-          'Moje Notatki - twórz notatki z nauki',
-          'Dostęp do modułu praktycznego i tablicy',
-          'Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki'
+          'Procedury Opiekuna Medycznego',
+          'Fiszki, notatki i plan nauki z analizą postępów',
+          'Wyzwania i quizy procedur — zdobywaj odznaki',
+          'Forum i Blog Medyczny'
         ]
       },
       premium: {
@@ -450,12 +447,11 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
-          'Każda nowa treść dla Opiekuna Medycznego dodawana automatycznie – bez dodatkowych opłat',
-          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny',
-          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
-          'Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne',
-          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
-          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
+          'Każda nowa treść dodawana automatycznie – bez dodatkowych opłat',
+          'Asystent AI, który zna cały materiał egzaminacyjny',
+          'Automatyczne notatki, streszczenia i wykłady audio',
+          'Własne testy i quizy generowane przez AI',
+          'Edytowalne diagramy i interaktywna tablica'
         ]
       }
     }
@@ -533,14 +529,12 @@ export const careerPathsData: Record<string, PathData> = {
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
-          'Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne',
-          'Ponad 2000 pytań egzaminacyjnych z 1. semestru',
-          'Przegląd postępów i wyników testów',
+          'Ponad 22 700 pytań egzaminacyjnych z 22 kategorii',
+          'Przedmioty podstawowe, kierunkowe i specjalizacje kliniczne',
           'Testy praktyczne i egzaminy próbne',
-          'Forum i Blog Medyczny',
-          'Materiały i zasoby - 20MB miejsce na dysku',
-          'Moje Notatki - twórz notatki z nauki',
-          'Dostęp do modułu praktycznego i tablicy'
+          'Fiszki, notatki i plan nauki z analizą postępów',
+          'Wyzwania i quizy — zdobywaj odznaki',
+          'Forum i Blog Medyczny'
         ]
       },
       premium: {
@@ -552,12 +546,11 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
-          'Pełne 3 lata nauki – nowe semestry i kategorie dodawane automatycznie przez cały tok studiów',
-          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski',
-          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
-          'Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć',
-          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
-          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
+          'Pełne 3 lata nauki – nowe semestry dodawane automatycznie',
+          'Diagnozy i Interwencje – pełny proces pielęgnowania',
+          'Asystent AI, który zna cały materiał pielęgniarski',
+          'Automatyczne notatki, streszczenia i wykłady audio',
+          'Własne testy AI, edytowalne diagramy i tablica'
         ]
       }
     }

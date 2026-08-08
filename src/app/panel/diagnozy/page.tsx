@@ -8,7 +8,6 @@ import DiagnozyBrowser from '@/components/diagnozy/browse/DiagnozyBrowser'
 import DiagnozyHeader from '@/components/diagnozy/browse/DiagnozyHeader'
 import DiagnozyEmptyState from '@/components/diagnozy/browse/DiagnozyEmptyState'
 import DiagnozyBrowserSkeleton from '@/components/skeletons/DiagnozyBrowserSkeleton'
-import NoAccessMessage from '@/components/NoAccessMessage'
 
 export const metadata: Metadata = {
   title: 'Diagnozy i Interwencje',
@@ -23,7 +22,7 @@ async function DiagnozyContent() {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) return <NoAccessMessage />
+  if (!hasAccess) redirect('/panel/kursy')
 
   const [diagnozy, completedSlugs] = await Promise.all([
     getAllDiagnozy(),

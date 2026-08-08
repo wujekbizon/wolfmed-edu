@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import SimplePathLayout from '@/app/_components/SimplePathLayout'
 import RichPathLayout from '@/app/_components/RichPathLayout'
 import { careerPathsData } from '@/constants/careerPathsData'
+import { getCourseSubjectTitles } from '@/helpers/getCourseSubjectTitles'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
 
 export const dynamic = 'force-dynamic'
@@ -45,7 +46,13 @@ function PathPageComponent({
 
   if (!LayoutComponent) notFound()
 
-  return <LayoutComponent {...data} ownedCourses={ownedCourses} />
+  return (
+    <LayoutComponent
+      {...data}
+      ownedCourses={ownedCourses}
+      subjectTitles={getCourseSubjectTitles(data.pricing?.courseSlug ?? slug)}
+    />
+  )
 }
 
 export default async function PathPage({

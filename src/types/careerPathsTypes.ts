@@ -54,4 +54,7 @@ export type PathData = {
   testimonials?: Testimonial[];
   features?: CardProps[];
 };
-export type PathLayoutProps = PathData & { ownedCourses: string[] }
+export type PathLayoutProps = PathData & {
+  ownedCourses: string[];
+  subjectTitles: string[];
+}

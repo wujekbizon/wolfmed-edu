@@ -14,7 +14,6 @@ import DiagnozaStudyView from '@/components/diagnozy/DiagnozaStudyView'
 import WypelnijRunner from '@/components/diagnozy/wypelnij/WypelnijRunner'
 import DiagnozaContentSkeleton from '@/components/skeletons/DiagnozaContentSkeleton'
 import WypelnijRunnerSkeleton from '@/components/skeletons/WypelnijRunnerSkeleton'
-import NoAccessMessage from '@/components/NoAccessMessage'
 import type { Diagnoza } from '@/types/diagnozyTypes'
 
 interface Props {
@@ -51,7 +50,7 @@ async function DiagnozaContent({ params }: Props) {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) return <NoAccessMessage />
+  if (!hasAccess) redirect('/panel/kursy')
 
   const { slug } = await params
   const diagnoza = await getDiagnozaBySlug(slug)

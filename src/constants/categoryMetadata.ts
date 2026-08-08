@@ -129,7 +129,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  anatomia: {
+  'anatomia': {
     category: 'anatomia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -216,7 +216,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  fizjologia: {
+  'fizjologia': {
     category: 'fizjologia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -377,7 +377,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  socjologia: {
+  'socjologia': {
     category: 'socjologia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -543,7 +543,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  psychologia: {
+  'psychologia': {
     category: 'psychologia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -666,7 +666,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  pedagogika: {
+  'pedagogika': {
     category: 'pedagogika',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -1618,7 +1618,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  farmakologia: {
+  'farmakologia': {
     category: 'farmakologia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -1738,7 +1738,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  genetyka: {
+  'genetyka': {
     category: 'genetyka',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -1829,7 +1829,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  patologia: {
+  'patologia': {
     category: 'patologia',
     course: 'pielegniarstwo',
     requiredTier: 'basic',
@@ -1923,7 +1923,7 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
-  dietetyka: {
+  'dietetyka': {
     category: 'dietetyka',
     course: 'pielegniarstwo',
     requiredTier: 'basic',

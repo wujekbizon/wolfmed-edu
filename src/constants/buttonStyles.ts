@@ -1,5 +1,5 @@
 export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'ghost'
-export type ButtonSize = 'sm' | 'md'
+export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export const BUTTON_BASE =
   'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-lg font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed'
@@ -16,4 +16,7 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
 export const BUTTON_SIZES: Record<ButtonSize, string> = {
   sm: 'h-8 px-3 py-1.5 text-xs',
   md: 'h-10 px-4 py-2 text-base',
+  // Section-level calls to action, where the button is the point of the
+  // column rather than one control among several.
+  lg: 'h-13 px-7 py-3 text-base font-semibold',
 }
