@@ -1,7 +1,7 @@
 import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
 import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
 import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
-import { PIELEGNIARSTWO_QUESTIONS } from '@/constants/careerQuestions'
+import { PIELEGNIARSTWO_STORY } from '@/constants/pielegniarstwoStory'
 
 export const careerPaths = [
   {
@@ -462,7 +462,7 @@ export const careerPathsData: Record<string, PathData> = {
     }
   },
   pielegniarstwo: {
-    questions: PIELEGNIARSTWO_QUESTIONS,
+    story: PIELEGNIARSTWO_STORY,
     title: 'Pielęgniarstwo',
     description:
       'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
