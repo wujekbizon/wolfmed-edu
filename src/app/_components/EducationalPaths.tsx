@@ -2,6 +2,7 @@
 
 import EducationalPathCard from "@/components/EducationalPathCard";
 import SectionHalo from "@/components/SectionHalo";
+import DarkStage from "@/components/ui/DarkStage";
 import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
@@ -24,17 +25,8 @@ export default function EducationPathsSection() {
           </p>
         </div>
       </div>
-      <div className="relative overflow-hidden p-4 sm:p-8 bg-gradient-to-b from-zinc-800/90 to-zinc-950/90 rounded-3xl border-3 border-white shadow-2xl shadow-zinc-950/50 ring-1 ring-inset ring-white/10">
-        {/* Interior depth: a warm radial bloom from the top and a faint dot grid */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_-10%,rgba(255,91,91,0.07),transparent_55%)]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(rgba(255,255,255,0.7)_1px,transparent_1px)] [background-size:22px_22px]"
-        />
-        <div className="relative z-10 flex flex-col divide-y divide-white/10">
+      <DarkStage className="overflow-hidden p-4 sm:p-8">
+        <div className="flex flex-col divide-y divide-white/10">
           <EducationalPathCard {...CAREGIVER} />
           <EducationalPathCard
             {...NURSE}
@@ -42,7 +34,7 @@ export default function EducationPathsSection() {
           />
           <EducationalPathCard {...INFO} vertical />
         </div>
-      </div>
+      </DarkStage>
     </section>
   );
 }

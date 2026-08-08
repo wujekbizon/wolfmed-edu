@@ -3,7 +3,6 @@
 import { useHorizontalPath } from '@/hooks/useHorizontalPath'
 import { useSceneReveal } from '@/hooks/useSceneReveal'
 import PathStepCard from './PathStepCard'
-import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import type { CareerPath } from '@/types/pathStoryTypes'
 
 export default function PathTimeline({ path }: { path: CareerPath }) {
@@ -65,13 +64,7 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
           </div>
         </div>
 
-        <footer className='flex-none flex flex-col items-start gap-4 px-6 pb-10 pt-8 sm:px-10 lg:flex-row lg:items-center lg:px-12 lg:pb-8 lg:pt-6'>
-          <a
-            href={`#${PRICING_ANCHOR}`}
-            className='inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-slate-800'
-          >
-            Zacznij od darmowego testu
-          </a>
+        <footer className='flex-none px-6 pb-10 pt-8 text-center sm:px-10 lg:px-12 lg:pb-8 lg:pt-6'>
           <small className='text-[13px] leading-[1.5] text-zinc-400'>
             Przewiń, aby zobaczyć całą ścieżkę
           </small>

@@ -17,17 +17,17 @@ export default function StorySceneCard({
       <p className='flex items-center gap-4'>
         <time
           dateTime={scene.time}
-          className='text-xs font-mono font-medium text-rose-500 tabular-nums'
+          className='text-xs font-mono font-medium text-rose-400 tabular-nums'
         >
           {scene.time}
         </time>
-        <span aria-hidden='true' className='h-px flex-1 bg-zinc-900/10' />
+        <span aria-hidden='true' className='h-px flex-1 bg-white/15' />
         <span className='text-[11px] uppercase tracking-widest text-zinc-400'>
           Scena {index + 1} z {total}
         </span>
       </p>
 
-      <figure className='relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-zinc-50 ring-1 ring-zinc-900/5 xl:max-h-[52vh]'>
+      <figure className='relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10 xl:max-h-[52vh]'>
         {scene.imgSrc ? (
           <Image
             src={scene.imgSrc}
@@ -49,11 +49,11 @@ export default function StorySceneCard({
       <div>
         <h3
           id={headingId}
-          className='text-xl md:text-2xl font-bold text-slate-900 leading-snug'
+          className='text-xl md:text-2xl font-bold text-white leading-snug'
         >
           {scene.title}
         </h3>
-        <p className='mt-2 text-zinc-600 text-sm md:text-base leading-relaxed text-pretty'>
+        <p className='mt-2 text-zinc-300 text-sm md:text-base leading-relaxed text-pretty'>
           {scene.description}
         </p>
       </div>
