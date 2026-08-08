@@ -7,8 +7,6 @@ import PathTools from '@/components/path/PathTools'
 import PricingSection from '@/components/pricing/PricingSection'
 import PathTimeline from '@/components/path/PathTimeline'
 import SectionDivider from '@/components/path/SectionDivider'
-import { CAREER_STORY } from '@/constants/careerStory'
-import { CAREER_PATH } from '@/constants/careerPath'
 
 export default function SimplePathLayout({
   features,
@@ -16,11 +14,10 @@ export default function SimplePathLayout({
   title,
   pricing,
   ownedCourses,
-  subjectTitles
+  subjectTitles,
+  story,
+  careerPath
 }: PathLayoutProps) {
-  const story = pricing ? CAREER_STORY[pricing.courseSlug] : undefined
-  const careerPath = pricing ? CAREER_PATH[pricing.courseSlug] : undefined
-
   return (
     // One background for the whole page. No overflow-hidden here: it would
     // become the scroll container for the story column and the timeline stage,

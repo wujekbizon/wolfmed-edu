@@ -1,4 +1,6 @@
 import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
+import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
+import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
 
 export const careerPaths = [
   {
@@ -348,6 +350,8 @@ export const curriculum: CurriculumBlock[] = [
 
 export const careerPathsData: Record<string, PathData> = {
   'opiekun-medyczny': {
+    story: OPIEKUN_MEDYCZNY_STORY,
+    careerPath: OPIEKUN_MEDYCZNY_PATH,
     title: 'Opiekun Medyczny',
     description:
       'Nasz program edukacyjny wspiera zarówno osoby przygotowujące się do egzaminu, jak i tych, którzy już pracują w branży i chcą utrwalać wiedzę oraz rozwijać kompetencje przed kolejnym zawodowym wyzwaniem.',
