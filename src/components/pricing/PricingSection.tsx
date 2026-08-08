@@ -13,7 +13,7 @@ import type { PathData } from '@/types/careerPathsTypes'
 export default function PricingSection({
   pricing,
   ownedCourses,
-  subjectTitles,
+  subjectTitles
 }: {
   pricing: NonNullable<PathData['pricing']>
   ownedCourses: string[]
@@ -24,16 +24,17 @@ export default function PricingSection({
   return (
     <section
       id={PRICING_ANCHOR}
-      aria-labelledby="pricing-title"
-      className="w-full relative scroll-mt-24"
+      aria-labelledby='pricing-title'
+      className='panel-dark relative w-full overflow-hidden rounded-3xl scroll-mt-24 px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
     >
-      <div className="mx-auto w-full max-w-none lg:max-w-6xl px-0 sm:px-6 py-8 sm:py-12 lg:py-16 flex flex-col gap-12 sm:gap-16">
+      <div className='mx-auto flex w-full max-w-6xl flex-col gap-12 sm:gap-16'>
         <div>
           <SectionHeading
-            eyebrow="Cennik"
-            title="Plany cenowe"
-            subtitle="Jednorazowa płatność. Dostęp na zawsze."
-            titleId="pricing-title"
+            eyebrow='Cennik'
+            title='Plany cenowe'
+            subtitle='Jednorazowa płatność. Dostęp na zawsze.'
+            titleId='pricing-title'
+            tone='dark'
           />
           <PricingCardsGrid pricing={pricing} ownedCourses={ownedCourses} />
         </div>
@@ -41,13 +42,16 @@ export default function PricingSection({
         {groups.length > 0 && (
           <div>
             <SectionHeading
-              eyebrow="Porównanie"
-              title="Co zawiera każdy plan"
-              subtitle="Pełna lista funkcji dostępnych w planach Standard i Premium."
+              eyebrow='Porównanie'
+              title='Co zawiera każdy plan'
+              subtitle='Pełna lista funkcji dostępnych w planach Standard i Premium.'
+              tone='dark'
             />
             <PlanComparisonTable groups={groups} />
             <PlanComparisonCards groups={groups} />
-            {subjectTitles.length > 0 && <CourseSubjectList titles={subjectTitles} />}
+            {subjectTitles.length > 0 && (
+              <CourseSubjectList titles={subjectTitles} />
+            )}
           </div>
         )}
       </div>

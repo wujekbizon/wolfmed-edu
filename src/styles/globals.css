@@ -292,6 +292,14 @@
   }
 }
 
+/* The dark stage shared by the tools scene and the pricing section. A
+   background, not decoration: as a utility it needs no extra node and no
+   stacking context, so children never have to fight it for clicks the way
+   they do with GradientOverlay. Defined once so the two cannot drift. */
+@utility panel-dark {
+  background-image: linear-gradient(to bottom, #2a262b, #1c1a1e);
+}
+
 /* Story scenes reveal as they reach the middle of the viewport. Opacity and
    transform run on separate durations on purpose: the lift finishes after the
    fade, which is what stops the change reading as a single hard switch. */
