@@ -222,6 +222,17 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. With server-side logging temporarily added to `getCurrentUser()`/`getIsPremium()` (or DB query logging), confirm the underlying `auth()`/DB lookup fires **once per request**, not once per Suspense boundary that needs it — that's the whole point of wrapping them in React's `cache()`.
 3. Load the page again (new request). Expect: fires again — this is **request-scoped** dedup, not cross-request caching. A premium upgrade should be reflected on the very next page load, not stuck behind a stale cache.
 
+## TC-18 — A timed test session expires on tab-switch, not just on tab-close
+
+**Source**: [`31-flows-testing.md`](./31-flows-testing.md), README audit note #16. Distinct from the existing Edge case C above (`30-flows-auth-payments.md`'s abandoned-tab case only tests actually closing the tab, which is the one scenario this behavior is correct for).
+
+**Steps**:
+1. Start a timed test (`/panel/testy/[value]`), leave `testSessions.status` at `ACTIVE`.
+2. Without closing the tab, switch to a different browser tab (or minimize the window) for a few seconds, then switch back.
+3. Check `testSessions.status` in the DB (or watch the network tab for a `POST /api/session/expire` firing the moment the tab loses visibility). Expect, per current behavior: the session is marked `EXPIRED` **immediately** on the visibility change — before the 5-minute inactivity threshold, before the cron sweep, and even though the student never closed or navigated away.
+4. Confirm this is reachable on mobile too: locking the phone screen mid-test triggers the same `visibilitychange` → `document.hidden` path.
+5. This is filed as a product-intent question (README audit note #16), not an asserted bug — if switching tabs is meant to be treated as abandonment (e.g. anti-cheating), this case documents that it does; if not, this is the reproduction case for the fix.
+
 ---
 
 *(Rounds 9+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
