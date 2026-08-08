@@ -47,13 +47,14 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 | [`25-helpers.md`](./25-helpers.md) | All 119 files in `src/helpers/`, grouped by domain (one function per file). |
 | [`26-components.md`](./26-components.md) | All 591 files in `src/components/`, by directory and domain grouping. |
 | [`27-state-stores.md`](./27-state-stores.md) | All 27 Zustand stores in `src/store/`. |
+| [`28-queries.md`](./28-queries.md) | All 136 exported functions in `src/server/queries.ts` (2,601 lines) — the read-side data-access layer, grouped by domain. Added in doc-test round 8; previously referenced constantly but never catalogued as its own file. |
 
 ## Testing & QA
 
 | Doc | Contents |
 |---|---|
 | [`40-testing-guide.md`](./40-testing-guide.md) | Manual QA test cases (preconditions, steps, expected results, edge cases) derived from the flow docs. A living document — grows every doc-test round. |
-| [`reports/`](./reports/) | Doc-quality test reports. Each round: a technical reader tries real tasks using only these docs, scores findability/accuracy, and produces a prioritized fix list, then the next round retests the fixes before adding new coverage. Latest: [`reports/round-07-doc-test.md`](./reports/round-07-doc-test.md) ([round 6](./reports/round-06-doc-test.md), [round 5](./reports/round-05-doc-test.md), [round 4](./reports/round-04-doc-test.md), [round 3](./reports/round-03-doc-test.md), [round 2](./reports/round-02-doc-test.md), [round 1](./reports/round-01-doc-test.md)). |
+| [`reports/`](./reports/) | Doc-quality test reports. Each round: a technical reader tries real tasks using only these docs, scores findability/accuracy, and produces a prioritized fix list, then the next round retests the fixes before adding new coverage. Latest: [`reports/round-08-doc-test.md`](./reports/round-08-doc-test.md) ([round 7](./reports/round-07-doc-test.md), [round 6](./reports/round-06-doc-test.md), [round 5](./reports/round-05-doc-test.md), [round 4](./reports/round-04-doc-test.md), [round 3](./reports/round-03-doc-test.md), [round 2](./reports/round-02-doc-test.md), [round 1](./reports/round-01-doc-test.md)). |
 
 ---
 

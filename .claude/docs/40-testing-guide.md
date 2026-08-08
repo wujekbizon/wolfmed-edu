@@ -213,6 +213,15 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. Compare the category lists shown on each page for that course. Expect: **identical** sets of accessible categories, since both are supposed to implement the same access rule.
 3. Repeat after upgrading to premium, and again while enrolled in a second course. If the two lists ever disagree, that's the duplication in audit note #14 having drifted into an actual bug (one copy of the filter logic changed without the other) — not just a code-cleanliness issue anymore.
 
+## TC-17 — `getIsPremium()`/`getCurrentUser()` dedupe within a request, not just cache stale data
+
+**Source**: [`00-architecture.md`](./00-architecture.md) → Small server utility modules.
+
+**Steps**:
+1. Load `/panel/nauka` (renders several independent Suspense boundaries — categories, cells, lectures, notes, flashcards, materials — several of which call `getIsPremium()`/`getCurrentUser()` independently).
+2. With server-side logging temporarily added to `getCurrentUser()`/`getIsPremium()` (or DB query logging), confirm the underlying `auth()`/DB lookup fires **once per request**, not once per Suspense boundary that needs it — that's the whole point of wrapping them in React's `cache()`.
+3. Load the page again (new request). Expect: fires again — this is **request-scoped** dedup, not cross-request caching. A premium upgrade should be reflected on the very next page load, not stuck behind a stale cache.
+
 ---
 
-*(Rounds 8+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+*(Rounds 9+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

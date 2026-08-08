@@ -113,6 +113,15 @@ See root `CLAUDE.md` → "🔒 Retrieval rules" for the full non-negotiable list
 | `src/server/planner/` | Learning-plan catalog, scheduling engine, progress tracking |
 | `src/server/tools/` | Tool/command definitions + executor for the AI tutor's `/commands` |
 
+## Small server utility modules (found in round 8's reverse-direction check)
+
+Four small `src/server/*.ts` files, each referenced by name throughout the flow docs but never described as files in their own right:
+
+- **`src/server/user.ts`** — `getCurrentUser()`, wrapped in React's `cache()` so multiple independent calls within one request (e.g. several Suspense-boundary components on the same page each needing the current user) collapse into a single `auth()` + DB lookup rather than one per caller. Its own header comment says `// server/queries/user.ts` — stale, left over from a prior file move; the real path is `server/user.ts`.
+- **`src/server/premium.ts`** — `getIsPremium()`, same `cache()` pattern, wrapping `checkPremiumAccessAction()`. The source comment explains why: `/panel/nauka` renders several independent Suspense boundaries that each need the premium flag, and `cache()` collapses those into one access check per request instead of N.
+- **`src/server/flashcardAccess.ts`** — `findOwnedDeck(userId, deckId)`, `findOwnedCard(userId, cardId)`, `nextCardPosition(deckId)`. The ownership-scoping helpers behind every flashcard action in [`21-server-actions.md`](./21-server-actions.md) (`renameFlashcardDeckAction`, `deleteFlashcardDeckAction`, etc.) — the "does this deck/card actually belong to this user" check they all share.
+- **`src/server/rag-queries.ts`** — `getRagConfig()`, `setRagConfig()`, `deleteRagConfig()`. Thin CRUD over the `ragConfig` table, called from `src/actions/admin-rag-actions.ts`.
+
 ## Rate limiting (`src/lib/rateLimit.ts`)
 
 Found undocumented in rounds 1–4 of doc-testing — every flow/forms doc names the rate-limit **bucket** an action uses (e.g. `test:start`, `blog:like`) but none point at where the actual numbers live or explain the mechanism. One file, `checkRateLimit(userId, bucket)`, backs every `checkRateLimit(...)` call in the codebase:
