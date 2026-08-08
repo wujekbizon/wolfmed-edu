@@ -10,17 +10,17 @@ export default function PathStepCard({
 }) {
   return (
     <article
-      className={`w-full lg:w-[360px] lg:flex-none overflow-hidden rounded-2xl bg-white border border-zinc-900/[0.06] shadow-[0_6px_22px_rgba(25,26,28,0.07)] transition-all duration-[400ms] ease-out motion-reduce:transition-none ${
+      className={`w-full lg:w-[clamp(340px,30vw,560px)] lg:flex-none overflow-hidden rounded-2xl bg-white border border-zinc-900/[0.06] shadow-[0_6px_22px_rgba(25,26,28,0.07)] transition-all duration-[400ms] ease-out motion-reduce:transition-none ${
         near ? 'opacity-100 translate-y-0' : 'opacity-45 translate-y-3'
       }`}
     >
-      <div className='relative h-[170px] w-full'>
+      <div className='relative h-[200px] w-full'>
         {step.imgSrc ? (
           <Image
             src={step.imgSrc}
             alt={step.title}
             fill
-            sizes='360px'
+            sizes='(max-width: 1024px) 100vw, 30vw'
             className='object-cover'
           />
         ) : (

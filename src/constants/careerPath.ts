@@ -1,9 +1,5 @@
 import type { CareerPath } from '@/types/pathStoryTypes'
 
-// Roughly 80vh of scroll per card, plus a screen for the stage itself. Add a
-// step and this has to grow with it, or the track runs out of travel.
-export const PATH_SCROLL_HEIGHT = '340vh'
-
 export const CAREER_PATH: Record<string, CareerPath> = {
   'opiekun-medyczny': {
     headline: 'Od pierwszego semestru do pracy przy pacjencie',

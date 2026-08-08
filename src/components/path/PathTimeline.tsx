@@ -2,12 +2,11 @@
 
 import { useHorizontalPath } from '@/hooks/useHorizontalPath'
 import PathStepCard from './PathStepCard'
-import { PATH_SCROLL_HEIGHT } from '@/constants/careerPath'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import type { CareerPath } from '@/types/pathStoryTypes'
 
 export default function PathTimeline({ path }: { path: CareerPath }) {
-  const { section, viewport, track, percent, near } = useHorizontalPath(
+  const { section, viewport, track, percent, near, height } = useHorizontalPath(
     path.steps.length
   )
 
@@ -15,10 +14,10 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
     <section
       ref={section}
       aria-labelledby='path-title'
-      className='relative w-full h-auto px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 lg:h-[var(--path-height)] lg:px-12 lg:pb-12'
-      style={{ '--path-height': PATH_SCROLL_HEIGHT } as React.CSSProperties}
+      className='relative w-full h-auto px-4 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 lg:px-12 lg:pb-12'
+      style={height ? { height } : undefined}
     >
-      <div className='lg:sticky lg:top-24 mx-auto flex w-full max-w-6xl flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 lg:h-[60vh] lg:min-h-[580px]'>
+      <div className='lg:sticky lg:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 lg:h-[64vh] lg:min-h-[560px]'>
         <header className='flex-none px-6 pt-8 sm:px-10 lg:px-12 lg:pt-9'>
           <p className='font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-rose-500'>
             Ścieżka zawodowa

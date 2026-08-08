@@ -6,6 +6,7 @@ import PathStoryHero from "@/components/path/PathStoryHero";
 import PathTools from "@/components/path/PathTools";
 import PricingSection from "@/components/pricing/PricingSection";
 import PathTimeline from "@/components/path/PathTimeline";
+import SectionDivider from "@/components/path/SectionDivider";
 import { CAREER_STORY } from "@/constants/careerStory";
 import { CAREER_PATH } from "@/constants/careerPath";
 
@@ -25,6 +26,7 @@ export default function SimplePathLayout({
       {/* Outside the section below on purpose: its overflow-hidden would
           become the sticky column's scroll container and break the pinning. */}
       {story && <PathStoryHero title={title} story={story} />}
+      {story && careerPath && <SectionDivider />}
       {careerPath && <PathTimeline path={careerPath} />}
 
       <section className='relative @container flex flex-col w-full bg-white p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16 overflow-hidden'>
