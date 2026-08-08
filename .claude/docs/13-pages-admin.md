@@ -47,6 +47,8 @@ Both fetch `getBlogCategories()` + `getBlogTags()` (needed for the post's catego
 2. If **not configured** (`storeStatus.data.isConfigured` false) → renders `<CreateStoreSection />` only (bootstraps a new File Search Store / corpus — writes to the `ragConfig` table, see schema doc).
 3. If **configured** → `<UploadDocsSection storeName />` (ingest new curriculum documents), `<DocumentListTable documents={...} />` (what's currently indexed), and `<TestQueryForm storeName />` — lets an admin run a probe query against the corpus directly, independent of any student-facing feature, to sanity-check retrieval quality.
 
+**No single-document removal**: `admin-rag-actions.ts` has no "delete this one document" action — `DocumentListTable` is read-only, and the only deletion capability is `deleteFileSearchStoreAction`, which tears down the **entire** corpus and `ragConfig` row (see [`21-server-actions.md`](./21-server-actions.md)). Removing one bad document from the curriculum currently means rebuilding the whole store — worth knowing before uploading anything an admin might later want to retract individually.
+
 This page is the operational front-end for the "Curriculum — the corpus" tier described in root `CLAUDE.md` → Data Sources.
 
 ---

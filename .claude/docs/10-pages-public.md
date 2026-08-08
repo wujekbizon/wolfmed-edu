@@ -93,7 +93,7 @@ Per-user like state hydrates client-side (the page itself stays cacheable/user-a
 
 ## `/forum/[postId]` — Forum thread detail
 
-**File**: `src/app/forum/[postId]/page.tsx` — `experimental_ppr = true`. `getForumPostById(postId)`; `notFound()` if missing. `isAuthor = userId === post.authorId` drives edit/delete affordances in `ForumDetailHeader`. Structure: `ForumDetailHeader` (title/author/edit-delete) → `ForumDetailContent` (post body) → `ForumDetailComments` (comment list + add-comment form, respects `post.readonly` — admin-lockable threads). If the viewer is the post author, a second suspended `CommentsSeenMarker` clears the "new comments" badge.
+**File**: `src/app/forum/[postId]/page.tsx` — `experimental_ppr = true`. `getForumPostById(postId)`; `notFound()` if missing. `isAuthor = userId === post.authorId` drives edit/delete affordances in `ForumDetailHeader`. Structure: `ForumDetailHeader` (title/author/edit-delete) → `ForumDetailContent` (post body) → `ForumDetailComments` (comment list + add-comment form, respects `post.readonly` — a comments-disabled flag the author sets when creating the post, not an admin action). If the viewer is the post author, a second suspended `CommentsSeenMarker` clears the "new comments" badge.
 
 ### Comment flow
 `ForumDetailComments` → `createCommentAction` (`src/actions/actions.ts:610`) to add, `deleteCommentAction` (`:681`) to remove. Post-level `deletePostAction` (`:572`) lives in `ForumDetailHeader`'s author-only delete control.

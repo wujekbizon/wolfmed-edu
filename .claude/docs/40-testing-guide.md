@@ -152,4 +152,26 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 ---
 
-*(Rounds 3+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+## TC-10 — Any user (not just admins) can disable comments on their own forum post
+
+**Source**: [`34-flows-social-admin.md`](./34-flows-social-admin.md) → Flow 1 (corrects an earlier documentation error that called this "admin-lockable").
+
+**Steps**:
+1. As a **regular, non-admin** user, click "Dodaj temat" on `/forum`, check the "Wyłącz komentarze" checkbox, and submit.
+2. As a **different** user, open that post and try to comment. Expect: rejected server-side ("Ten post ma wyłączone komentarze"), not just hidden in the UI.
+3. As the **author**, revisit the post later and look for any control to turn comments back on. Expect: **none exists** — confirm there is genuinely no toggle-after-creation anywhere (author view or admin view), matching the code (`readonly` is only ever set once, at insert, in `createForumPostAction`).
+
+**Product question worth raising, not just a test**: if comment-locking is meant to be a moderation tool, it currently isn't one — any user can lock their own thread's comments off, and nothing (including an admin) can unlock it after the fact. Worth confirming this matches intent.
+
+## TC-11 — Deleting one bad document from the RAG corpus requires rebuilding the whole store
+
+**Source**: [`13-pages-admin.md`](./13-pages-admin.md) → `/admin/rag`.
+
+**Steps**:
+1. Upload two documents to the corpus.
+2. Look for a per-document delete control in `DocumentListTable`. Expect: none — it's read-only.
+3. Confirm the only deletion path (`deleteFileSearchStoreAction`) removes the **entire** store, both documents, and requires recreating the store and re-uploading everything else that should stay. This is a real operational cost worth knowing before an admin uploads anything they might later want to retract individually — not a bug, just a workflow trap.
+
+---
+
+*(Rounds 4+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

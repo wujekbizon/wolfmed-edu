@@ -56,7 +56,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 - Relations: `blogPostsRelations` (one category, many tags, many likes), `blogCategoriesRelations`, `blogTagsRelations`, `blogPostTagsRelations`, `blogLikesRelations`.
 
 ### Forum
-- **`forumPosts`** — `title`, `content`, `authorId/authorName/authorRole`, `readonly` (admin-lockable thread).
+- **`forumPosts`** — `title`, `content`, `authorId/authorName/authorRole`, `readonly` (comments disabled — set by **any author at creation time** via a checkbox on the create-post form, not an admin moderation action; see [`34-flows-social-admin.md`](./34-flows-social-admin.md)).
 - **`forumComments`** — `content`, FK to `forumPosts` (cascade) and `users` (cascade).
 - **`forumReadState`** — one row per user (`userId` is the PK): `lastSeenPostsAt`, `lastSeenCommentsAt`, drives unread-badge logic.
 - Relations: `forumPostsRelations` (many comments), `forumCommentsRelations` (one post).
