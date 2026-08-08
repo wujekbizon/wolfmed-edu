@@ -48,6 +48,13 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 | [`26-components.md`](./26-components.md) | All 591 files in `src/components/`, by directory and domain grouping. |
 | [`27-state-stores.md`](./27-state-stores.md) | All 27 Zustand stores in `src/store/`. |
 
+## Testing & QA
+
+| Doc | Contents |
+|---|---|
+| [`40-testing-guide.md`](./40-testing-guide.md) | Manual QA test cases (preconditions, steps, expected results, edge cases) derived from the flow docs. A living document — grows every doc-test round. |
+| [`reports/`](./reports/) | Doc-quality test reports. Each round: a technical reader tries real tasks using only these docs, scores findability/accuracy, and produces a prioritized fix list — see [`reports/round-01-doc-test.md`](./reports/round-01-doc-test.md) for the format and the first round's findings. |
+
 ---
 
 ## How to use this

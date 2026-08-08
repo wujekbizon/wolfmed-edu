@@ -11,7 +11,7 @@ All routes here sit under `src/app/panel/layout.tsx`, which is both **auth-gated
 **File**: `src/app/panel/page.tsx` — `dynamic = 'force-dynamic'`. The reference-quality example of Golden Rule #2 (page as shell): every data-bearing block is its own `async function`/component behind its own `<Suspense>` with a matching skeleton.
 
 Composition, top to bottom:
-- `DynamicBoard` (`src/app/panel/_components/DynamicBoard.tsx`) — the interactive canvas/board widget.
+- `DynamicBoard` (`src/app/_components/DynamicBoard.tsx` — the shared root `_components`, not a panel-local one, imported via `../_components/DynamicBoard`) — the interactive canvas/board widget.
 - `Username` / `UserMotto` — read-only profile display, each in its own Suspense boundary (`UsernameSkeleton`, `UserMottoSkeleton`).
 - `UserAnalytics` — test-taking stats, behind `UserAnalyticsSkeleton`.
 - `BadgeWidget` — earned procedure badges, behind `BadgeWidgetSkeleton`.
