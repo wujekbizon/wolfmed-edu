@@ -14,7 +14,7 @@ Composition, top to bottom:
 - `DynamicBoard` (`src/app/_components/DynamicBoard.tsx` — the shared root `_components`, not a panel-local one, imported via `../_components/DynamicBoard`) — the interactive canvas/board widget.
 - `Username` / `UserMotto` — read-only profile display, each in its own Suspense boundary (`UsernameSkeleton`, `UserMottoSkeleton`).
 - `UserAnalytics` — test-taking stats, behind `UserAnalyticsSkeleton`.
-- `BadgeWidget` — earned procedure badges, behind `BadgeWidgetSkeleton`.
+- `BadgeWidget` — earned procedure badges, behind `BadgeWidgetSkeleton`. Reads via `getUserBadges(userId)` (see [`28-queries.md`](./28-queries.md)) — the read-side counterpart to `awardBadge()`'s write inside `submitOrderStepsAction`'s all-5-complete transaction (see [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 5).
 - `AdminBlogWidget` — admin-only shortcut card (renders nothing for non-admins), `fallback={null}`.
 - Three inline forms in a grid: `UsernameForm`, `MottoForm` (**the canonical form pattern reference** — root `CLAUDE.md` cites this file explicitly), `TestimonialForm`.
 - `StorageQuotaWidget` — personal-library storage usage bar, behind `StorageQuotaWidgetSkeleton`.
