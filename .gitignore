@@ -49,6 +49,8 @@ detail_layers.txt
 
 /.claude/*
 !/.claude/*.md
+!/.claude/docs/
+!/.claude/docs/*.md
 
 *.sql
 *.toml
