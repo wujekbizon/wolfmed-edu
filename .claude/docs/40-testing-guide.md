@@ -127,4 +127,29 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 ---
 
-*(Rounds 2+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+## TC-8 — Upload a study material within the storage quota
+
+**Source**: [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 2.
+
+**Preconditions**: signed-in, enrolled user close to (or exactly at) their 20 MB `userLimits.storageLimit`.
+
+**Steps**:
+1. Upload a file that fits within the remaining quota. Expect: succeeds, `userLimits.storageUsed` increases by exactly the file's size.
+2. Upload a file that would **exceed** the remaining quota. Expect: rejected with the "Przekroczono limit 20MB" message, and — check this specifically — the file is **not** left behind in UploadThing storage (the action deletes the orphaned upload on this failure path; a lingering file with no DB row would be an easy-to-miss leak).
+3. Delete a previously uploaded material. Expect: `storageUsed` decreases by exactly that file's size, never below zero even if run concurrently with another delete (`GREATEST(0, ...)` floor).
+
+**Edge case — premium toggled mid-session (confirmed gap, not just a test)**: upload a file on a basic plan, then upgrade to premium, then wait for/trigger the `library-index` cron sweep. Expect, per the current code: the material **stays unindexed forever** — it's saved with `indexStatus: 'not_indexed'` (`UNINDEXED_STATUS`, `src/server/library/config.ts:43`), and the cron sweep only picks up `'pending'`/`'failed'` rows (`src/app/api/cron/library-index/route.ts`), never `'not_indexed'`. Unlike notes (where `updateNoteContentAction` re-checks premium status on every edit and indexes retroactively), **there is no edit action for materials at all** — `src/actions/materials.ts` only has `uploadMaterialAction`/`deleteMaterialAction` — so a basic-plan upload has no path to ever become searchable after a later upgrade short of deleting and re-uploading it. Confirm this behavior matches the intended product design (it may be intentional — "upgrade, then re-upload" is a defensible policy) rather than an oversight; if unintentional, this is a real product bug, not just a doc gap.
+
+## TC-9 — Cron endpoints reject unauthenticated calls
+
+**Source**: [`14-api-routes.md`](./14-api-routes.md) → Cron jobs.
+
+**Steps**:
+1. `curl` (or hit directly in a browser) each of `GET /api/cron/cleanup-sessions`, `GET /api/cron/library-index`, `GET /api/cron/memory-retention` with no `Authorization` header.
+2. Expect: `401 {"error":"Unauthorized"}` from all three — these must never be reachable by a normal, non-scheduler request, since they operate across **all users**, not just the caller.
+3. Repeat with `Authorization: Bearer <wrong-secret>`. Expect: still `401`.
+4. Repeat with the real `CRON_SECRET`. Expect: `200` with a summary payload (`expiredCount`/`processed`/`traces` etc. depending on the route).
+
+---
+
+*(Rounds 3+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

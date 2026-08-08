@@ -117,6 +117,25 @@ See root `CLAUDE.md` → "🔒 Retrieval rules" for the full non-negotiable list
 
 Three cron routes under `src/app/api/cron/` (see [`14-api-routes.md`](./14-api-routes.md)): session cleanup, personal-library embedding sweep, and memory-trace retention (90-day cleanup of `memTraces`, per the schema doc).
 
+## Scripts & operational tooling (`/scripts`)
+
+One-off and setup scripts, run via `pnpm run <name>` (see root `CLAUDE.md` → Development Commands) — **not** part of the running app, and per root `CLAUDE.md`'s Agent Instructions, never run without explicit user approval.
+
+| Command | Script | Purpose |
+|---|---|---|
+| `db:seed` | `seed-courses.ts` | Seeds the `courses` table. |
+| `db:seed:procedures` | `seed-procedures.ts` | Seeds `procedures` from `data/procedures.json` — see [`01-database-schema.md`](./01-database-schema.md). |
+| `db:reset:challenges` | `reset-challenge-progress.ts` | Clears `challengeCompletions`/`procedureBadges` (dev reset, not a production path). |
+| `db:memory:extensions` | `setup-memory-extensions.ts` | Installs the Postgres `vector`/`pg_trgm` extensions the memory and library tables require — must run before the first `db:push` touches those tables. |
+| `db:memory:seed` | `seed-memory-policies.ts` | Seeds `memPolicies` (`DEFAULT_POLICIES`, see [`24-constants.md`](./24-constants.md)). |
+| `rag:preflight` | `rag-preflight.ts` | Pre-flight checks before touching the Vertex RAG corpus. |
+| `rag:migrate` | `rag-migrate.ts` | Corpus migration tooling. |
+| `rag:set-corpus` | `rag-set-corpus.ts` | Points the app at a specific corpus (writes `ragConfig`). |
+| `test:diagnozy` | `test-diagnozy.ts` | Diagnozy content/grading test harness. |
+| `tests:replace-category` | `replace-category.ts` | Bulk category-rename tooling over existing test data. |
+
+Not wired to a `package.json` script but present in the directory: `seed-diagnozy.ts`, `seed-pielegniarstwo-tests.ts`, `sync-clerk-metadata.ts`, `export-users.ts`, `generateProcedureSlugs.ts`, `fix_duplicates.py`, and a small cluster of `.mjs` mannequin-geometry tools (`apply-body-zones`, `bake-mannequin-zones`, `measure-mannequin`, `prune-mannequin`, `suggest-body-zones` — see `scripts/MANNEQUIN.md` for that subsystem specifically) used to prep the 3D mannequin asset consumed by the diagnozy exam (see [`31-flows-testing.md`](./31-flows-testing.md) → Flow 5). Run any of these directly with `tsx scripts/<name>.ts` (or `python3` for the one `.py` file).
+
 ## Where to look next
 
 - Route-by-route flow documentation: [`10-pages-public.md`](./10-pages-public.md) through [`14-api-routes.md`](./14-api-routes.md)
