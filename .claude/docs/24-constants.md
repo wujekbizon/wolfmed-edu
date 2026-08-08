@@ -27,7 +27,7 @@ All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's
 | `categoryMetadata.ts` | `DEFAULT_CATEGORY_METADATA`, `CATEGORY_METADATA` | Per-category SEO/display metadata — the map driving `generateMetadata` across `/panel/testy`, `/panel/nauka/[category]`, `/panel/kursy/[categoryId]`. |
 | `categoryOptions.ts` | (data, no named type export matched) | Category option list for pickers. |
 | `tagCountOptions.ts` | `TAG_COUNT_OPTIONS` | Selectable counts for tag-related UI. |
-| `questionnaireOptions.ts` | `questionnaireOptions` | Options for a questionnaire-style form (likely tied to `enums.ts`'s `SelectedOptions*`). |
+| `questionnaireOptions.ts` | `questionnaireOptions` | Options for a questionnaire-style form — confirmed tied to `enums.ts`'s `SelectedOptions1`–`5` (imports them directly to build each question's option list). |
 
 ## Blog & forum
 
@@ -62,7 +62,7 @@ All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's
 | `flashcards.ts` | `FLASHCARD_STALE_TIME`, `flashcardDecksKey`, `flashcardDeckKey`, `flashcardNoteDeckKey`, `FLASHCARD_FILTERS` | React Query keys/staleTime + filter options for flashcard data (Golden Rule #5). |
 | `cellButtons.ts` | `cellButtons` | Board "add cell" toolbar button definitions. |
 | `mediaPlayer.ts` | `SPEED_OPTIONS`, `SpeedOption` | Playback-speed options for the audio/video player hooks. |
-| `timeSegments.ts` | `TIME_SEGMENTS` | Time-of-day or duration segmentation (likely for scheduling/planner UI). |
+| `timeSegments.ts` | `TIME_SEGMENTS` | `[{key: 'days', label: 'Dni'}, 'hours', 'minutes', 'seconds']` — confirmed its only consumer is `CountdownTimer.tsx`, a generic countdown display, not planner-specific as an earlier pass of this doc guessed. |
 
 ## Mind maps & diagrams
 

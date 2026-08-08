@@ -116,5 +116,5 @@ All 46 files in `src/types/`, one domain per file per Golden Rule #4. Listed wit
 
 **Audit notes** (deviations from Golden Rule #4 worth reconciling, not fixed here since it's out of scope for a documentation pass):
 - `dataTypes.ts` is a large multi-domain catch-all (tests, procedures, users, blog) rather than one-domain-per-file; blog types in particular could move to a `blogTypes.ts`.
-- `testData.ts` (legacy `TestDataInterface`/`TestsData`) appears to overlap with `dataTypes.ts`'s `Test`/`TestMeta` — worth confirming whether `testData.ts` is still referenced anywhere or is dead code.
+- `testData.ts` (legacy `TestDataInterface`/`TestsData`) is confirmed **live**, not dead (imported by `src/helpers/extractAnswerData.ts` — checked in round 2 of doc-testing, see [`README.md`](./README.md) audit note #3). Still worth reconciling with `dataTypes.ts`'s overlapping `Test`/`TestMeta` at some point, but it's real code, not a stray file.
 - `shapes.ts` and the diagram/mind-map type files share the word "shape"/"scene" but are unrelated domains — no action needed, just a naming note for readers.

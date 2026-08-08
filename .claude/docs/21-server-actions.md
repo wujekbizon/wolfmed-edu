@@ -94,7 +94,7 @@ Small read-only lookups: given a list of question refs (from a completed test's 
 `saveLectureInternal` — **internal helper, not a form action** (no `formState`/`formData` signature; called directly by `rag-actions.ts`'s `generateLectureAction`). `deleteLectureAction`, `updateLectureDurationAction` (duration is only known once the audio element loads client-side, so it's patched in after creation).
 
 ## `materials.ts` — Uploaded study materials
-`deleteMaterialAction` — deletes a `materials` row (and presumably the UploadThing file + its `libChunks`). `uploadMaterialAction` — the record-creation half of the upload flow (the file bytes go via UploadThing's own route; this persists the `materials` row + triggers extraction).
+`deleteMaterialAction` — deletes a `materials` row, refunds the storage quota, and (confirmed against source) deletes both the `libChunks` (`removeMaterialChunks`) and the underlying UploadThing file (`utapi.deleteFiles`, best-effort — a failure here is logged but doesn't fail the action). `uploadMaterialAction` — the record-creation half of the upload flow (the file bytes go via UploadThing's own route; this persists the `materials` row + triggers extraction).
 
 ## `memory-actions.ts` — Tutor preferences
 `updatePreferencesAction` — validates values against `PREFERENCE_DEFS` before writing `memPreferences` (a store that "never holds junk", per the inline comment). `getUserPreferencesAction` — fail-safe read (`{}` if memory tables aren't migrated yet), backs `/panel/ustawienia`.
@@ -118,7 +118,7 @@ Small read-only lookups: given a list of question refs (from a completed test's 
 | `logStudySessionAction` | Writes a `studyLogs` row (manual or auto-sourced study time). |
 
 ## `pptx.ts`
-`importPptxAction` — parses an uploaded `.pptx` (via `src/lib/parsePptx.ts`) into structured content for the app to reuse (likely as note/material content).
+`importPptxAction` — parses an uploaded `.pptx` (via `src/lib/parsePptx.ts`) into structured content. Confirmed via its one caller, `PptxImportPanel.tsx` (rendered inside `BlogPostForm.tsx`, see [`13-pages-admin.md`](./13-pages-admin.md)): this is specifically an **admin blog-post-authoring aid** — importing a slide deck's content as a starting point for a new post — not a general note/material creation path.
 
 ## `praktyczny.ts` — Practical exams
 `gradePracticalExamAction` — grades a submitted practical exam attempt. `generatePracticalExamAction` — AI-generates a new practical exam, writes `generatedPracticalExams`.

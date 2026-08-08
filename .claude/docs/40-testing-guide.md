@@ -204,6 +204,15 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. Expect: rejected **during the upload itself** (UploadThing's `materialUploader` middleware throws before the transfer completes) — not accepted, then rejected afterward when `uploadMaterialAction` runs. Watch the network tab: the upload request itself should fail, not succeed followed by a separate failed save.
 3. Confirm no partial file is left behind in storage and no `materials` row was created.
 
+## TC-16 — The two independent category-access filters agree with each other
+
+**Source**: [`25-helpers.md`](./25-helpers.md), README audit note #14.
+
+**Steps**:
+1. As a user enrolled in one course at `basic` tier (not premium), open `/panel/testy` (uses `populateCategories.ts`'s `getAccessibleCategories`) and `/panel/nauka` (uses `buildAccessibleCategories.ts` via `NaukaCategoriesSection`).
+2. Compare the category lists shown on each page for that course. Expect: **identical** sets of accessible categories, since both are supposed to implement the same access rule.
+3. Repeat after upgrading to premium, and again while enrolled in a second course. If the two lists ever disagree, that's the duplication in audit note #14 having drifted into an actual bug (one copy of the filter logic changed without the other) — not just a code-cleanliness issue anymore.
+
 ---
 
-*(Rounds 6+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+*(Rounds 8+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

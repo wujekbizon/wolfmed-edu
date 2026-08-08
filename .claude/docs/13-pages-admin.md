@@ -30,7 +30,7 @@ Same pattern via `<TagForm mode="create" | "edit" tag={...} />` (`src/components
 
 ## `/admin/posts/new`, `/admin/posts/[id]/edit`
 
-Both fetch `getBlogCategories()` + `getBlogTags()` (needed for the post's category/tag pickers); edit also fetches `getBlogPostById(id)` (`notFound()` if missing). Both render `<BlogPostForm mode="create" | "edit" post={...} categories={...} tags={...} />` (`src/components/admin/BlogPostForm.tsx`) — the Lexical rich-text post editor, SEO fields, publish status.
+Both fetch `getBlogCategories()` + `getBlogTags()` (needed for the post's category/tag pickers); edit also fetches `getBlogPostById(id)` (`notFound()` if missing). Both render `<BlogPostForm mode="create" | "edit" post={...} categories={...} tags={...} />` (`src/components/admin/BlogPostForm.tsx`) — the Lexical rich-text post editor, SEO fields, publish status. `BlogPostForm` also renders `<PptxImportPanel />` (found via a round-7 doc-test sweep — not mentioned by name anywhere else in this doc set before now), which submits `importPptxAction` (`src/actions/pptx.ts`, see [`21-server-actions.md`](./21-server-actions.md)) to import a `.pptx` deck's content as a starting draft for the post.
 
 ## `/admin/forum` — Forum moderation
 

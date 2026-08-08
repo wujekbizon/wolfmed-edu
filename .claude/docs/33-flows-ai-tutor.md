@@ -32,7 +32,7 @@ From here the function branches into one of four flows:
 ## Flow B — Self-state questions ("jak mi idzie z farmakologią?", "co powinienem powtórzyć?")
 
 1. Only reached if the student didn't attach their own resource (`@resource`/PDF).
-2. `isSelfStateQuestion(cleanQuestion)` (`src/server/memory/gate.ts` presumably) classifies the question as being about the *student themselves* rather than subject matter.
+2. `isSelfStateQuestion(cleanQuestion)` (`src/server/memory/assemble.ts:130` — corrected this round; an earlier pass guessed `gate.ts`) classifies the question as being about the *student themselves* rather than subject matter.
 3. If so: `buildSelfStateContext(userId)` assembles the student's own progress data, and `answerFromMemory(question, selfState)` answers **from memory alone — no corpus retrieval, no grounded generation at all**. This is the routing root `CLAUDE.md` describes: "Facts and episodes... belong solely to questions about the student themselves... they never enter a subject answer."
 
 ## Flow C — Free-form question (the conversational tutor)

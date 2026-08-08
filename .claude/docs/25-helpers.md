@@ -113,8 +113,8 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 
 | File | Signature | Purpose |
 |---|---|---|
-| `buildAccessibleCategories.ts` | `buildAccessibleCategories(...)` | Builds the category list a user can access, given their enrollments/tier. |
-| `populateCategories.ts` | `getAccessibleCategories()` | The higher-level entry point used directly by pages (`/panel/testy`, etc.) — likely composes `buildAccessibleCategories`. |
+| `buildAccessibleCategories.ts` | `buildAccessibleCategories(categories)` | Filters a supplied category list to ones the user can access (`checkCourseAccessAction` + `hasAccessToTier`). One caller: `NaukaCategoriesSection.tsx`. See the next row — this duplicates rather than composes with `populateCategories.ts`. |
+| `populateCategories.ts` | `getAccessibleCategories()` | The higher-level entry point used directly by pages (`/panel/testy`, etc.). **Correction from an earlier pass of this doc, which guessed it composes `buildAccessibleCategories.ts`** — checked both files directly: it does not. `getAccessibleCategories` inlines its own copy of the same course-access/tier-filtering logic (`checkCourseAccessAction` + `hasAccessToTier`, filtering to `hasAccess`) independently of `buildAccessibleCategories()`, which implements the identical algorithm over a caller-supplied category list for its one caller, `NaukaCategoriesSection.tsx`. See the audit note below — this looks like genuine duplicated logic, not composition. |
 | `countCategoryContent.ts` | `countCategoryContent(details)` | Question/content counts for a category detail view. |
 | `getCategorySelectOptions.ts` | `getCategorySelectOptions(...)` | `SelectOption[]` builder for category pickers. |
 | `titleizeCategory.ts` | `titleizeCategory(key)` | `some-category-key` → `Some Category Key` display formatting. |
@@ -180,7 +180,7 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 | `mergeProgressTimeline.ts` | `mergeProgressTimeline(...)` | Merges SSE progress events into a display timeline. |
 | `limitPageBookmarks.ts` | `limitPageBookmarks(bookmarks)` | Caps a stored bookmarks map's size. |
 | `buildResizableProps.ts` | `buildResizableProps({...})` | Props builder for `re-resizable` panels. |
-| `getDeviceMeta.ts` | `getDeviceMeta()` (default export) | Device/browser metadata (likely for analytics or responsive behavior). |
+| `getDeviceMeta.ts` | `getDeviceMeta()` (default export) | Captures browser/screen/network/system/performance metadata (user agent, screen size, connection type, timezone, JS heap usage, etc.). Confirmed one caller: `StartTestForm.tsx` — this is metadata attached to a **test-start event**, not a general analytics or responsive-layout signal as an earlier pass of this doc guessed. |
 | `getCourseSubjectTitles.ts` | `getCourseSubjectTitles(courseSlug)` | Subject-title list for a course (used on `/kierunki/[slug]`, see [`10-pages-public.md`](./10-pages-public.md)). |
 | `generateRandomMotto.ts` | `generateRandomMotto()` | Random starter motto for new users (used by the Clerk `user.created` webhook, see [`14-api-routes.md`](./14-api-routes.md)). |
 | `slugify.ts` | `generateProcedureSlug(name)` | Procedure-name-to-slug conversion. |
@@ -190,3 +190,5 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 ---
 
 **Resolved from an earlier audit note**: `flashcardCellHelpers.ts` and `parseFlashcardCellContent.ts` looked redundant by name alone. Reading both (see their entries above) confirmed they parse two different points in the flashcard-cell lifecycle — not a duplication.
+
+**New audit finding (round 7 of doc-testing, from checking a hedged claim rather than trusting it)**: `buildAccessibleCategories.ts` and `populateCategories.ts`'s `getAccessibleCategories` genuinely do duplicate the same course-access/tier-filtering algorithm independently, rather than one composing the other as an earlier pass of this doc assumed without checking. Different callers (`NaukaCategoriesSection.tsx` vs. most of `/panel`), same logic, copy-pasted rather than shared. Flagged in the README audit list — this is exactly the kind of thing Golden Rule #3 ("check `/src/helpers` for an existing one") is meant to prevent, and here it looks like it didn't.

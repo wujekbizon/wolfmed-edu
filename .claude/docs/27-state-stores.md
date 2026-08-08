@@ -9,7 +9,7 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | Store | Purpose |
 |---|---|
 | `useStore.ts` | The app-wide store — `isMenuOpen`/`toggleMenu` for the mobile nav drawer (see `Navbar` in [`10-pages-public.md`](./10-pages-public.md)). |
-| `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile()`. Confirmed against source — a single flag, no persistence, no breakpoint logic in the store itself (that logic lives wherever calls `setIsMobile`, likely a resize listener). |
+| `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile()`. **Correction (round 7 of doc-testing)**: an earlier pass of this doc hedged that something "likely" calls `setIsMobile` on resize. Checked directly — grepping the whole codebase for `setIsMobile` and for `useMobileStore` outside its own definition file returns **zero results**. This store is defined and exported but never imported anywhere. Apparently dead code — flagged in the README audit list. |
 | `useTopPanelStore.ts` | Top-panel/header UI state within the dashboard. |
 | `useDashboardStore.ts` | General `/panel` dashboard UI state. |
 
