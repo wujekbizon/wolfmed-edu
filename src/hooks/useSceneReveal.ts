@@ -9,33 +9,61 @@ export function useSceneReveal(count: number) {
   const [active, setActive] = useState<boolean[]>(() =>
     Array.from({ length: count }, (_, index) => index === 0)
   )
-  const scenes = useRef<(HTMLElement | null)[]>([])
+  const observer = useRef<IntersectionObserver | null>(null)
+  const pending = useRef(new Set<HTMLElement>())
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const io = new IntersectionObserver(
       (entries) => {
         setActive((current) => {
           const next = [...current]
+          let changed = false
+
           for (const entry of entries) {
-            const index = scenes.current.indexOf(entry.target as HTMLElement)
-            if (index !== -1) next[index] = entry.intersectionRatio > ACTIVE_RATIO
+            // The index rides on the element. Looking it up in a ref array
+            // instead means a lookup can miss while React is re-attaching
+            // refs, and that scene silently stops updating.
+            const index = Number((entry.target as HTMLElement).dataset.sceneIndex)
+            if (!Number.isInteger(index)) continue
+
+            const isActive = entry.intersectionRatio > ACTIVE_RATIO
+            if (next[index] !== isActive) {
+              next[index] = isActive
+              changed = true
+            }
           }
-          return next
+
+          return changed ? next : current
         })
       },
       { threshold: [0, ACTIVE_RATIO, 1] }
     )
 
-    for (const scene of scenes.current) {
-      if (scene) observer.observe(scene)
+    observer.current = io
+    // Anything mounted before this effect ran is waiting here: refs attach
+    // first, so on the initial render every scene lands in `pending`.
+    for (const node of pending.current) io.observe(node)
+
+    return () => {
+      io.disconnect()
+      observer.current = null
     }
+  }, [])
 
-    return () => observer.disconnect()
-  }, [count])
-
+  // Returning a cleanup ties observe/unobserve to the node's own lifetime, so
+  // re-renders cannot leave a scene unobserved.
   const setScene = useCallback(
     (index: number) => (node: HTMLElement | null) => {
-      scenes.current[index] = node
+      if (!node) return
+
+      node.dataset.sceneIndex = String(index)
+      pending.current.add(node)
+      observer.current?.observe(node)
+
+      return () => {
+        pending.current.delete(node)
+        observer.current?.unobserve(node)
+      }
     },
     []
   )
