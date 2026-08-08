@@ -9,7 +9,7 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | Store | Purpose |
 |---|---|
 | `useStore.ts` | The app-wide store — `isMenuOpen`/`toggleMenu` for the mobile nav drawer (see `Navbar` in [`10-pages-public.md`](./10-pages-public.md)). |
-| `useMobileStore.ts` | Mobile-viewport UI state (likely the responsive breakpoint flag driving `MobileAIFloat` and similar). |
+| `useMobileStore.ts` | `isMobile: boolean` + `setIsMobile()`. Confirmed against source — a single flag, no persistence, no breakpoint logic in the store itself (that logic lives wherever calls `setIsMobile`, likely a resize listener). |
 | `useTopPanelStore.ts` | Top-panel/header UI state within the dashboard. |
 | `useDashboardStore.ts` | General `/panel` dashboard UI state. |
 
@@ -63,8 +63,14 @@ All 27 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 | Store | Purpose |
 |---|---|
 | `useRagStore.ts` | Tutor chat UI state (open/closed drawer, current conversation reference, etc. — feeds the `MobileAIFloat` chat surface). |
-| `useSettingsStore.ts` | Two **persisted** (localStorage, key `wolfmed-settings`) preference flags: `showMobileAI`, `slashCommandsEnabled`. Confirmed distinct from `useSettingsModalStore` — that one holds only the modal's `isOpen` boolean, this one holds the actual preference values, and only this one survives a page reload. |
+| `useSettingsStore.ts` | Two **persisted** (localStorage, key `wolfmed-settings`) preference flags: `showMobileAI`, `slashCommandsEnabled`. Confirmed distinct from `useSettingsModalStore` — that one holds only the modal's `isOpen` boolean, this one holds the actual preference values. (Not the only store that persists — see the note at the bottom of this doc; an earlier version of this entry incorrectly implied it was.) |
 
 ---
 
-Confirmed clean: every store here has exactly one concern, and the two that looked like they might overlap by name (`useSettingsStore`/`useSettingsModalStore`) don't.
+## Which stores persist (localStorage), and why it matters for debugging
+
+An earlier version of this doc implied `useSettingsStore` was the only persisted store. It isn't — **9 of the 27** use Zustand's `persist` middleware, verified by grepping every file in `src/store/` for the import: `useBlogSearch`, `useCellsStore`, `useCookieConsentStore`, `useForumSearch`, `useProblematicQuestionsStore`, `useProceduresStore`, `useQuestionSelectionStore`, `useSearchTermStore`, `useSettingsStore`. This matters for debugging a "why does this UI state survive a hard refresh / reappear after I thought I cleared it" report — check this list before assuming a store resets on reload.
+
+Worth calling out specifically: `useSearchTermStore` uses a `partialize` function to persist `isExpanded`/`perPage`/`pageByCategory` but **deliberately excludes** the live `searchTerm` itself from persistence — the source comment explains why: "Bookmarks and display preferences outlive a session; the search term is a filter and must not, or a stale one silently empties the list on the next visit." A useful pattern to know about (partial persistence, not all-or-nothing) if another store ever needs the same treatment.
+
+Confirmed clean otherwise: every store here has exactly one concern, and the two that looked like they might overlap by name (`useSettingsStore`/`useSettingsModalStore`) don't.

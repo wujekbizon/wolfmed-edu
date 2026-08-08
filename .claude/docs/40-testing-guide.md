@@ -48,6 +48,8 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 **Edge case C — sign-in interruption**: start the purchase flow while signed out (if reachable via a public entry point) — or simulate an expired session mid-click. Expect: redirected to `/sign-in?redirect_url=/kierunki/<slug>`, and the purchase can be resumed after signing in.
 
+**Edge case D — double-submit the Buy form (confirmed gap, not just a test)**: rapidly double-click "Buy" (or open the pricing page in two tabs and click Buy in both within a second or two). Per the code, `createCheckoutSession`'s `stripe.checkout.sessions.create()` call has **no idempotency key** (unlike the customer-creation call right above it, which does). Expect: **two separate Stripe Checkout Sessions get created.** If you complete payment on only one, no harm — the abandoned session simply expires unpaid. If you complete payment on **both** (test mode, two tabs): expect two `payments` rows and `users.testLimit` bumped by `+2000` instead of `+1000`, since each session fires its own `checkout.session.completed` event with a distinct event id — the `processedEvents` idempotency check only prevents *replay of the same event*, not two genuinely different sessions. `courseEnrollments` should still end up correct (single active row, not duplicated) since `enrollUserAction` is update-if-exists. This is a real, verified gap, not speculation — confirm the financial/reward double-count in a test-mode run before deciding whether it needs fixing (adding an idempotency key keyed on, e.g., `userId + priceId + a short time window` would close it, mirroring the pattern already used one line above).
+
 ---
 
 ## TC-3 — Like/unlike a blog post
@@ -172,6 +174,15 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. Look for a per-document delete control in `DocumentListTable`. Expect: none — it's read-only.
 3. Confirm the only deletion path (`deleteFileSearchStoreAction`) removes the **entire** store, both documents, and requires recreating the store and re-uploading everything else that should stay. This is a real operational cost worth knowing before an admin uploads anything they might later want to retract individually — not a bug, just a workflow trap.
 
+## TC-12 — Search filter resets on reload; display prefs don't
+
+**Source**: [`27-state-stores.md`](./27-state-stores.md) → "Which stores persist."
+
+**Steps**:
+1. On any page using `useSearchTermStore` (a test-category browsing list), type a search term, expand the panel (`isExpanded`), and change items-per-page (`perPage`) if that control exists.
+2. Hard-refresh the page.
+3. Expect: the **typed search term is gone** (empty again), but `isExpanded` and `perPage` (and per-category page bookmarks) **persisted** — this is a deliberate `partialize` split in the store, not a bug if the search term resets, but *would* be a bug if it persisted (a stale filter silently hiding results on a fresh visit) or if the display prefs didn't.
+
 ---
 
-*(Rounds 4+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+*(Rounds 5+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*

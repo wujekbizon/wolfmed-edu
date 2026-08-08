@@ -85,7 +85,7 @@ Full catalog of every form → action → schema mapping: [`20-forms-catalog.md`
 
 ## AI data sources — the four tiers
 
-Every AI feature (tutor, mind map, tests, flashcards, plans, lectures, `/commands`) reads from up to four tiers, entirely through **one function**: `retrieveContext()` in `src/server/retrieval/context.ts`. A feature declares a `RetrievalMode` at the call site (e.g. `canonical_only`, `canonical_with_personal`, `explicit_resource`) — this makes the CLAUDE.md tier table executable rather than aspirational.
+Every AI feature (tutor, mind map, tests, flashcards, plans, lectures, `/commands`) reads from up to four tiers, entirely through **one function**: `retrieveContext()` in `src/server/retrieval/context.ts`. A feature declares a `RetrievalMode` at the call site — a **closed set of exactly three** string literals (`src/types/retrievalTypes.ts`), not an example list: `canonical_only` (curriculum alone — what mind maps, AI tests, and plain `/commands` use today), `canonical_with_personal` (curriculum + the student's own notes/materials when they earn a slot), `explicit_resource` (the student named a specific note/material; it's the primary source and the corpus isn't consulted). Deliberately a closed union rather than independent `corpus`/`personal` booleans — the type's own comment notes `corpus: false, personal: false` isn't a state anything wants, and an attachment is a different *intent* from a search, not a filter bolted onto one. This makes the CLAUDE.md tier table executable rather than aspirational.
 
 | Tier | Source | Notes |
 |---|---|---|
