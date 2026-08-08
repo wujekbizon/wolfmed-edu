@@ -26,10 +26,6 @@ export default function PathStoryHero({
     <div className='w-full p-4 sm:p-6 md:p-8 lg:p-12'>
       <div className='relative w-full rounded-3xl bg-white border-3 border-stone-800/30 shadow-[0_10px_24px_-12px_rgba(60,40,40,0.28)]'>
         <div className='grid grid-cols-1 xl:grid-cols-[2fr_3fr]'>
-          {/* The tint sits on the column, not on the aside: the aside is
-              sticky, so its own background would ride down the page as a
-              floating panel instead of reading as a left column. Warm rose
-              rather than grey, so it sits under the CTA's own hue. */}
           <div className='rounded-t-3xl bg-gradient-to-b from-[#fdf7f7] to-[#faecec] xl:rounded-tr-none xl:rounded-bl-3xl'>
             <aside className='flex flex-col gap-8 p-6 sm:p-10 lg:p-12 xl:sticky xl:top-24 xl:h-[90vh] xl:justify-around xl:p-14'>
               <div>
@@ -59,7 +55,6 @@ export default function PathStoryHero({
 
               <div>
                 <PathFacts facts={story.facts} />
-
                 <a
                   href={`#${PRICING_ANCHOR}`}
                   className='group mt-6 inline-flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors'
@@ -72,7 +67,6 @@ export default function PathStoryHero({
               </div>
             </aside>
           </div>
-
           <StorySceneTrack scenes={story.scenes} />
         </div>
       </div>

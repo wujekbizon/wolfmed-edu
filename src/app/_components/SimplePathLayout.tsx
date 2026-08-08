@@ -19,9 +19,6 @@ export default function SimplePathLayout({
   careerPath
 }: PathLayoutProps) {
   return (
-    // One background for the whole page. No overflow-hidden here: it would
-    // become the scroll container for the story column and the timeline stage,
-    // and neither would pin. GradientOverlay clips itself.
     <div className='relative w-full'>
       <GradientOverlay />
 
