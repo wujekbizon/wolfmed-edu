@@ -6,7 +6,7 @@ import PathStepCard from './PathStepCard'
 import type { CareerPath } from '@/types/pathStoryTypes'
 
 export default function PathTimeline({ path }: { path: CareerPath }) {
-  const { section, viewport, track, percent, near, height, pinned } =
+  const { section, card, viewport, track, percent, near, height, pinned } =
     useHorizontalPath(path.steps.length)
   const { active, setScene } = useSceneReveal(path.steps.length)
 
@@ -17,7 +17,10 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
       className='relative w-full h-auto p-4 sm:p-6 md:p-8 lg:p-12'
       style={height ? { height } : undefined}
     >
-      <div className='xl:sticky xl:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 xl:max-h-[calc(100vh-7rem)]'>
+      <div
+        ref={card}
+        className='xl:sticky xl:top-24 mx-auto flex w-full max-w-[1600px] flex-col overflow-hidden rounded-3xl bg-white ring-1 ring-zinc-900/5 xl:h-[calc(100vh-7rem)]'
+      >
         <header className='flex-none px-6 pt-8 sm:px-10 lg:px-12 lg:pt-9'>
           <p className='font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-rose-500'>
             Ścieżka zawodowa
@@ -48,7 +51,10 @@ export default function PathTimeline({ path }: { path: CareerPath }) {
           </div>
         </header>
 
-        <div ref={viewport} className='flex-1 py-6 xl:overflow-hidden xl:[@media(max-height:859px)]:py-2'>
+        <div
+          ref={viewport}
+          className='flex-1 py-6 xl:flex xl:flex-col xl:justify-center xl:overflow-hidden xl:[@media(max-height:859px)]:py-2'
+        >
           <div
             ref={track}
             className='flex flex-col gap-6 px-6 sm:px-10 lg:px-12 xl:w-max xl:flex-row xl:will-change-transform'

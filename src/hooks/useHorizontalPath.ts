@@ -6,6 +6,7 @@ import { clampPercent } from '@/helpers/clampPercent'
 // to change one transform is the difference between smooth and not.
 export function useHorizontalPath(count: number) {
   const section = useRef<HTMLElement>(null)
+  const card = useRef<HTMLDivElement>(null)
   const viewport = useRef<HTMLDivElement>(null)
   const track = useRef<HTMLDivElement>(null)
 
@@ -18,9 +19,10 @@ export function useHorizontalPath(count: number) {
 
   const update = useCallback(() => {
     const stage = section.current
+    const shell = card.current
     const rail = track.current
     const frame = viewport.current
-    if (!stage || !rail || !frame) return
+    if (!stage || !shell || !rail || !frame) return
 
     // Below the breakpoint the steps are a plain vertical list, so any leftover
     // transform would push them off screen.
@@ -48,7 +50,17 @@ export function useHorizontalPath(count: number) {
     // One pixel of scrolling moves the track one pixel. Fixing the section
     // height instead makes the pace depend on how much the cards happen to
     // overflow, which is what made this feel endless.
-    setHeight(window.innerHeight + travel)
+    //
+    // The card is what pins, so the section needs to hold the card plus the
+    // distance the track travels, and nothing more. Sizing from the viewport
+    // left (viewport - card) of scrolling after the track had already
+    // stopped, and that same distance of empty page under the card the whole
+    // way down. Reading the card back is safe where reading the section would
+    // not be: its height comes from the viewport, never from the value set
+    // here.
+    const box = getComputedStyle(stage)
+    const padding = parseFloat(box.paddingTop) + parseFloat(box.paddingBottom)
+    setHeight(shell.offsetHeight + padding + travel)
 
     const scrolled = -stage.getBoundingClientRect().top
     const progress = travel > 0 ? Math.min(1, Math.max(0, scrolled / travel)) : 0
@@ -88,5 +100,5 @@ export function useHorizontalPath(count: number) {
     }
   }, [update, count])
 
-  return { section, viewport, track, percent, near, height, pinned }
+  return { section, card, viewport, track, percent, near, height, pinned }
 }
