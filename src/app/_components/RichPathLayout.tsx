@@ -4,6 +4,7 @@ import CurriculumMap from '../../components/CurriculumMap'
 import PathHero from '@/components/path/PathHero'
 import PathQuestionsHero from '@/components/path/PathQuestionsHero'
 import PathStoryHero from '@/components/path/PathStoryHero'
+import SectionScrollCue from '@/components/path/SectionScrollCue'
 import PathTools from '@/components/path/PathTools'
 import PricingSection from '@/components/pricing/PricingSection'
 import { CURRICULUM_ANCHOR } from '@/constants/curriculumAnchor'
@@ -73,6 +74,8 @@ export default function RichPathLayout({
               <CurriculumMap curriculum={curriculum ?? []} />
             </div>
           </section>
+
+          {features && features.length > 0 && pricing && <SectionScrollCue />}
 
           {features && features.length > 0 && pricing && (
             <PathTools features={features} courseSlug={pricing.courseSlug} />

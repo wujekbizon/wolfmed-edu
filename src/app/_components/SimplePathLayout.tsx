@@ -7,6 +7,7 @@ import PathTools from '@/components/path/PathTools'
 import PricingSection from '@/components/pricing/PricingSection'
 import PathTimeline from '@/components/path/PathTimeline'
 import SectionDivider from '@/components/path/SectionDivider'
+import SectionScrollCue from '@/components/path/SectionScrollCue'
 
 export default function SimplePathLayout({
   features,
@@ -33,6 +34,7 @@ export default function SimplePathLayout({
         )}
         {story && careerPath && <SectionDivider />}
         {careerPath && <PathTimeline path={careerPath} />}
+        {careerPath && <SectionScrollCue />}
 
         <section className='@container flex flex-col w-full p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16'>
           {!story && (
