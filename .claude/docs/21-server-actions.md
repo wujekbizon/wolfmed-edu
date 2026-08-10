@@ -169,7 +169,7 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 | Function | Behavior |
 |---|---|
-| `createNoteAction` | Rate-limited (`note:create`), `NoteSchema`, then `parseLexicalContent()` validates the editor JSON before insert. **The premium/indexing split**: chunk rows are written synchronously (pure Postgres, transactional with the note) only if `getIsPremium()`; embedding those chunks is a model call, so it runs `after()` the response. A basic plan writes **no chunk rows at all**, which is what keeps `embedding IS NULL` meaning "queued" and nothing else. |
+| `createNoteAction` | Rate-limited (`note:create`), `NoteSchema`, then `parseLexicalContent()` validates the editor JSON before insert. Every error returns raw submitted values so metadata, tags, and pinned state survive validation alongside editor content. **The premium/indexing split**: chunk rows are written synchronously (pure Postgres, transactional with the note) only if `getIsPremium()`; embedding those chunks is a model call, so it runs `after()` the response. A basic plan writes **no chunk rows at all**, which is what keeps `embedding IS NULL` meaning "queued" and nothing else. |
 | `updateNoteContentAction` | Same pattern, plus it's **the upgrade path**: a note written on a basic plan gets its chunks the first time it's edited on a premium one. |
 | `deleteNoteAction` | Rate-limited (`note:delete`). Deletes the note, removes its `libChunks`, then **manually deletes any flashcard deck referencing it** — the inline comment explains why: note decks reference the note by id **without a foreign key**, so nothing cascades. |
 

@@ -27,10 +27,21 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
   const isFullscreen = useCellFullscreen()
 
   useEffect(() => {
-    if (state.status !== "SUCCESS") return
-    setPinned(false)
-    setEditorKey(prev => prev + 1)
-  }, [state.status])
+    if (state.status === "SUCCESS") {
+      setPinned(false)
+      setTagCount("")
+      setEditorKey(prev => prev + 1)
+      return
+    }
+
+    if (state.status !== "ERROR") return
+
+    setPinned(state.values?.pinned === "true")
+    const submittedTagCount = [1, 2, 3].filter((index) =>
+      Object.hasOwn(state.values ?? {}, `tag${index}`)
+    ).length
+    setTagCount(submittedTagCount || "")
+  }, [state.status, state.timestamp, state.values])
 
   const handleTagCountChange = useCallback(
     (value: string) => setTagCount(Number(value) || ""),
@@ -64,7 +75,11 @@ export default function CreateNoteForm({ initialContent }: CreateNoteFormProps) 
           <NoteMetaFields formState={state} />
         </div>
         <div className="flex flex-col gap-4 my-4">
-          <TagSelector tagCount={tagCount} onTagCountChange={handleTagCountChange} />
+          <TagSelector
+            tagCount={tagCount}
+            onTagCountChange={handleTagCountChange}
+            formState={state}
+          />
         </div>
         </div>
         <div className="flex flex-col items-end justify-end gap-4">

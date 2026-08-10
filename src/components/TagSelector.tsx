@@ -3,13 +3,17 @@ import Input from "@/components/ui/Input"
 import Label from "@/components/ui/Label"
 import DropdownSelect from "@/components/ui/DropdownSelect"
 import { TAG_COUNT_OPTIONS } from "@/constants/tagCountOptions"
+import type { FormState } from "@/types/actionTypes"
+import FieldError from "@/components/FieldError"
 
 export const TagSelector = memo(function TagSelector({
   tagCount,
   onTagCountChange,
+  formState,
 }: {
   tagCount: number | string
   onTagCountChange: (value: string) => void
+  formState: FormState
 }) {
   return (
     <div className="flex gap-4 flex-col justify-between">
@@ -30,6 +34,7 @@ export const TagSelector = memo(function TagSelector({
             <Input
               id={`tag${i + 1}`}
               name={`tag${i + 1}`}
+              defaultValue={formState.values?.[`tag${i + 1}`]?.toString() || ""}
               placeholder={`Tag ${i + 1} - opcjonalnie`}
               className="peer w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-transparent"
             />
@@ -41,6 +46,7 @@ export const TagSelector = memo(function TagSelector({
           </div>
         ))}
       </div>
+      <FieldError name="tags" formState={formState} />
     </div>
   )
 })

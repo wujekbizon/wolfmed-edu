@@ -10,6 +10,8 @@ import Input from '../../src/components/ui/Input'
 import { getFormStringValues } from '../../src/helpers/getFormStringValues'
 import { getCreateTestFieldErrors } from '../../src/helpers/getCreateTestFieldErrors'
 import { CreateTestSchema } from '../../src/server/schema'
+import { NoteMetaFields } from '../../src/components/NoteMetaFields'
+import { TagSelector } from '../../src/components/TagSelector'
 
 const state = (overrides: Partial<FormState>): FormState => ({
   status: 'ERROR',
@@ -106,4 +108,24 @@ test('manual-test answer errors map only to the invalid answer input', () => {
     assert.equal(fieldErrors.option2, undefined)
     assert.deepEqual(fieldErrors.option3, ['Pole odpowiedzi nie może być puste'])
   }
+})
+
+test('note metadata and tags render submitted defaults after an error', () => {
+  const formState = state({
+    values: {
+      title: 'My note',
+      category: 'Anatomy',
+      tag1: 'heart',
+    },
+  })
+  const metadata = renderToStaticMarkup(createElement(NoteMetaFields, { formState }))
+  const tags = renderToStaticMarkup(createElement(TagSelector, {
+    tagCount: 1,
+    onTagCountChange: () => {},
+    formState,
+  }))
+
+  assert.match(metadata, /value="My note"/)
+  assert.match(metadata, /value="Anatomy"/)
+  assert.match(tags, /value="heart"/)
 })
