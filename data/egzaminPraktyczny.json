@@ -113,7 +113,7 @@
             "kind": "list",
             "id": "dzialania",
             "label": "Działania opiekuna dotyczące pielęgnacji skóry, z uwzględnieniem częstotliwości (co najmniej 5 działań)",
-            "minRequired": 4,
+            "minRequired": 5,
             "lines": 7,
             "acceptedAnswers": [
               {
@@ -175,7 +175,7 @@
             "kind": "list",
             "id": "srodki",
             "label": "Środki ochronne na skórę miejsc narażonych na odleżyny (co najmniej 5 środków)",
-            "minRequired": 4,
+            "minRequired": 5,
             "lines": 5,
             "acceptedAnswers": [
               {
@@ -268,7 +268,7 @@
             "kind": "list",
             "id": "zasady",
             "label": "Zasady zapobiegające powstawaniu odleżyn, z uwzględnieniem sprzętu, materiałów i częstotliwości (co najmniej 6 zasad)",
-            "minRequired": 5,
+            "minRequired": 6,
             "lines": 8,
             "acceptedAnswers": [
               {
