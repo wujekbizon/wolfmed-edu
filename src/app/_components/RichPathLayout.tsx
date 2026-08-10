@@ -3,6 +3,8 @@ import GradientOverlay from '@/components/GradientOverlay'
 import CurriculumMap from '../../components/CurriculumMap'
 import PathHero from '@/components/path/PathHero'
 import PathQuestionsHero from '@/components/path/PathQuestionsHero'
+import PathStoryHero from '@/components/path/PathStoryHero'
+import SectionDivider from '@/components/path/SectionDivider'
 import PathTools from '@/components/path/PathTools'
 import PricingSection from '@/components/pricing/PricingSection'
 import { CURRICULUM_ANCHOR } from '@/constants/curriculumAnchor'
@@ -15,8 +17,11 @@ export default function RichPathLayout({
   pricing,
   ownedCourses,
   subjectTitles,
-  questions
+  questions,
+  story
 }: PathLayoutProps) {
+  const hasHero = !!story || !!questions
+
   return (
     // One background for the whole page, with no overflow-hidden so anything
     // sticky further down can still pin. GradientOverlay clips itself.
@@ -24,8 +29,18 @@ export default function RichPathLayout({
       <GradientOverlay />
 
       <div className='relative'>
-        {questions && (
+        {story && (
+          <PathStoryHero
+            title={title}
+            story={story}
+            pricing={pricing}
+            ownedCourses={ownedCourses ?? []}
+          />
+        )}
+
+        {!story && questions && (
           <PathQuestionsHero
+            title={title}
             questions={questions}
             pricing={pricing}
             ownedCourses={ownedCourses ?? []}
@@ -33,7 +48,7 @@ export default function RichPathLayout({
         )}
 
         <section className='@container flex flex-col w-full p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16'>
-          {!questions && <PathHero title={title} description={description} />}
+          {!hasHero && <PathHero title={title} description={description} />}
 
           <section
             id={CURRICULUM_ANCHOR}
@@ -59,6 +74,8 @@ export default function RichPathLayout({
               <CurriculumMap curriculum={curriculum ?? []} />
             </div>
           </section>
+
+          {features && features.length > 0 && pricing && <SectionDivider />}
 
           {features && features.length > 0 && pricing && (
             <PathTools features={features} courseSlug={pricing.courseSlug} />

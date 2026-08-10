@@ -58,12 +58,12 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 ## Webhooks
 
 ### `POST /api/webhooks/clerk`
-`src/app/api/webhooks/clerk/route.ts`. Verifies the Svix signature (`svix-id`/`svix-timestamp`/`svix-signature` headers + `CLERK_WEBHOOK_SECRET`) before trusting the payload — standard webhook-authenticity pattern, distinct from user-session auth.
-- **`user.created`** → `insertUserToDb()` (`@/server/db`) creates the `wolfmed_users` row (random username, a random motto via `generateRandomMotto()`), then sets Clerk `publicMetadata.ownedCourses = []`. This is the origin of the `users` table row — nothing else in the app creates one.
-- **`user.deleted`** → `deleteUserFromDb(id)`; the cascade-delete FKs throughout the schema (see [`01-database-schema.md`](./01-database-schema.md)) clean up everything owned by that user automatically.
+`src/app/api/webhooks/clerk/route.ts`. Verifies the Svix signature (`svix-id`/`svix-timestamp`/`svix-signature` headers + `CLERK_WEBHOOK_SECRET`) before trusting the payload — standard webhook-authenticity pattern, distinct from user-session auth. Dispatch is a sequence of `if (eventType === '...')` blocks, not a `switch` — a new event type is a new `if` block alongside the two below.
+- **`user.created`** (`:56`) → `insertUserToDb()` (`@/server/db`) creates the `wolfmed_users` row (random username, a random motto via `generateRandomMotto()`), then sets Clerk `publicMetadata.ownedCourses = []`. This is the origin of the `users` table row — nothing else in the app creates one.
+- **`user.deleted`** (`:89`) → `deleteUserFromDb(id)`; the cascade-delete FKs throughout the schema (see [`01-database-schema.md`](./01-database-schema.md)) clean up everything owned by that user automatically.
 
 ### `POST /api/webhooks/stripe`
-`src/app/api/webhooks/stripe/route.ts`. Verifies via `stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET)`. This is where the purchase flow started in [`10-pages-public.md`](./10-pages-public.md) (`createCheckoutSession`) actually completes:
+`src/app/api/webhooks/stripe/route.ts`. Verifies via `stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET)`. This is where the purchase flow started in [`10-pages-public.md`](./10-pages-public.md) (`createCheckoutSession`) actually completes. Events are dispatched via `switch (event.type)` at `:29`; a new event type is a new `case` alongside the two below (`checkout.session.completed` at `:30`, `charge.succeeded` at `:136`).
 
 **`checkout.session.completed`** (the only event with real handling; `charge.succeeded` is a stub for future refund handling):
 1. **Idempotency**: checks `processedEvents` for `event.id` — Stripe can redeliver the same webhook, and this makes redelivery a no-op.

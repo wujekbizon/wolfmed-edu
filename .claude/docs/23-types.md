@@ -95,7 +95,7 @@ All 46 files in `src/types/`, one domain per file per Golden Rule #4. Listed wit
 | File | Key exports |
 |---|---|
 | `careerPathsTypes.ts` | `CurriculumBlock`, `Testimonial`, `PathData`, `PathLayoutProps` — backs `careerPathsData` and `RichPathLayout`/`SimplePathLayout` (see [`10-pages-public.md`](./10-pages-public.md)). |
-| `pathStoryTypes.ts` | `StoryScene`, `PathFact`, `PathStory`, `PathStep`, `CareerPath` |
+| `pathStoryTypes.ts` | `StoryScene`, `PathFact`, `PathStory`, `PathStep`, `CareerPath`, `PathQuestion`, `PathShot`, `PathQuestions` — the last three back the `PathQuestionsHero` variant (a Q&A list + photo `shots`, alternative to `PathStoryHero`/`PathTimeline`). |
 | `pricingTypes.ts` | `ComparisonValue`, `ComparisonRow`, `ComparisonGroup` — pricing/tier comparison table shape. |
 | `productsTypes.ts` | `Product` |
 | `stripeTypes.ts` | `Subscription`, `Payment`, `Supporter` |

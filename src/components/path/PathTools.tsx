@@ -41,7 +41,7 @@ export default function PathTools({
   return (
     <section
       aria-labelledby='tools-title'
-      className='panel-dark relative w-full overflow-hidden rounded-3xl px-6 py-14 sm:px-10 lg:px-[60px] lg:py-[68px]'
+      className='panel-dark relative mx-auto w-full max-w-[1600px] overflow-hidden rounded-3xl px-6 py-14 sm:px-10 lg:px-[60px] lg:py-[68px]'
     >
       <div className='mx-auto max-w-[1180px]'>
         <header className='flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-10'>

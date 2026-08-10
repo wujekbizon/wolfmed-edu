@@ -8,12 +8,12 @@ export default function PathQuestionList({ items }: { items: PathQuestion[] }) {
   const { active, setScene } = useSceneReveal(items.length, true)
 
   return (
-    <dl className='mt-8 border-t border-zinc-100/15'>
+    <dl className='mt-8 border-t border-zinc-900/10'>
       {items.map((item, index) => (
         <div
           key={item.question}
           ref={setScene(index)}
-          className='border-b border-zinc-100/15 py-4'
+          className='border-b border-zinc-900/10 py-4'
         >
           <PathQuestionItem
             item={item}

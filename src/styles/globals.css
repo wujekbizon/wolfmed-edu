@@ -311,11 +311,22 @@
     transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 
+/* 0.14 was measured against the dark story panel, where it reads as dimmed. The
+   questions panel is pale, and body text at that opacity there is not dimmed
+   but gone. Same motion, resting high enough to stay readable. */
+@utility scene-reveal-soft {
+  opacity: 0.4;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
 /* Kept out of the utility above rather than nested inside it. @utility lands
    in the utilities cascade layer, and the unlayered rules below would outrank
    it whatever the specificity; as its own unlayered rule this one competes on
    equal terms and wins on specificity. */
-.scene-reveal[data-active='true'] {
+:is(.scene-reveal, .scene-reveal-soft)[data-active='true'] {
   opacity: 1;
   transform: none;
 }
@@ -331,7 +342,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene-reveal {
+  :is(.scene-reveal, .scene-reveal-soft) {
     opacity: 1;
     transform: none;
     transition: none;

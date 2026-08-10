@@ -1,32 +1,46 @@
 import type { PathQuestions } from '@/types/pathStoryTypes'
 
 export const PIELEGNIARSTWO_QUESTIONS: PathQuestions = {
-  eyebrow: 'Zanim wybierzesz',
-  title: 'Kim jest pielęgniarka',
-  accent: '?',
-  lead: 'Trzy pytania, które padają najczęściej — zanim pokażemy Ci program nauczania.',
+  eyebrow: 'Kierunek Edukacyjny',
+  lead: 'Prowadzimy Cię przez cały tok studiów pielęgniarskich — przedmioty podstawowe i kierunkowe, proces pielęgnowania i testy sprawdzające, na jednej platformie. Zobacz, czego uczymy i do jakiej pracy Cię przygotowujemy.',
   cta: 'Zobacz szczegółowy program',
   items: [
     {
-      question: 'Co robi na co dzień?',
+      question: 'Czym zajmuje się pielęgniarka?',
       answer:
         'Prowadzi proces pielęgnowania: ocenia stan pacjenta, planuje opiekę, podaje leki, wykonuje zabiegi i uczy pacjenta oraz rodzinę życia z chorobą.'
     },
     {
       question: 'Jak długo trwa nauka?',
       answer:
-        '3 lata studiów licencjackich — 2260 godzin zajęć i 63 punkty ECTS. Dalej opcjonalnie 2 lata magisterskich.'
+        'Studia licencjackie, a po nich opcjonalnie magisterskie i specjalizacje. Rozkład godzin i punktów ECTS na każdy rok znajdziesz w mapie programu.'
     },
     {
-      question: 'Jaki egzamin kończy naukę?',
+      question: 'Jaki egzamin kończy studia?',
       answer:
-        'Egzamin dyplomowy — teoria i praktyka. Przygotowuje do niego baza 22 700 pytań z 22 kategorii.'
+        'Egzamin dyplomowy — teoria i praktyka. Przygotowuje do niego nasza baza pytań, obejmująca wszystkie kategorie z programu studiów.'
     }
   ],
   shots: [
-    { photoHint: 'pielęgniarka przy łóżku pacjenta' },
-    { photoHint: 'przygotowanie leków' },
-    { photoHint: 'zrzut: platforma — test próbny' },
-    { photoHint: 'zespół na dyżurce' }
+    {
+      photoHint: 'pielęgniarka przy łóżku pacjenta',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5LfaSoQyT6ikNIWjyZsOdaGtHcBb3PAS8E7u5'
+    },
+    {
+      photoHint: 'przygotowanie leków',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k54CeCBW9lLqODmv7er0SPRQB8C9VnfbTHisc1'
+    },
+    {
+      photoHint: 'zrzut: platforma — test próbny',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5XsKjQQxVpDmWAcOabR2YPhrGzwTdQFLHCilt'
+    },
+    {
+      photoHint: 'zespół na dyżurce',
+      imgSrc:
+        'https://zw3dk8dyy9.ufs.sh/f/UVAwLrIxs2k5N8G4NnH2M1UuCEmiKr7chszHj6GeZpqAJ4w2'
+    }
   ]
 }
