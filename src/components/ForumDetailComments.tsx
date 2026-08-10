@@ -32,7 +32,7 @@ export default function ForumDetailComments({ postId, comments, userId, isAuthor
                 <time>{formatDate(comment.createdAt)}</time>
               </div>
               {!readonly && (isAuthor || userId === comment.authorId) && (
-                <DeleteCommentButton postId={postId} commentId={comment.id} authorId={comment.authorId} />
+                <DeleteCommentButton commentId={comment.id} />
               )}
             </div>
             <p className="text-zinc-300 text-sm leading-relaxed">{comment.content}</p>

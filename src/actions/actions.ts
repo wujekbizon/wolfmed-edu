@@ -29,6 +29,8 @@ import {
   UpdateUsernameSchema,
   CreatePostSchema,
   CreateCommentSchema,
+  DeleteForumPostSchema,
+  DeleteForumCommentSchema,
   CreateTestimonialSchema,
   CreateTestSchema,
   TestFileSchema,
@@ -586,15 +588,18 @@ export async function deletePostAction(
     )
   }
 
-  const postId = formData.get("postId") as string
-  const authorId = formData.get("authorId") as string
-
-  if (userId !== authorId) {
-    return toFormState("ERROR", "Nie masz uprawnień do usunięcia tego posta")
+  const validationResult = DeleteForumPostSchema.safeParse({
+    postId: formData.get("postId")
+  })
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
   }
 
   try {
-    await deleteForumPost(postId)
+    const deleted = await deleteForumPost(validationResult.data.postId, userId)
+    if (!deleted) {
+      return toFormState("ERROR", "Post nie istnieje lub nie masz uprawnień do jego usunięcia")
+    }
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -695,18 +700,18 @@ export async function deleteCommentAction(
     )
   }
 
-  const commentId = formData.get("commentId") as string
-  const authorId = formData.get("authorId") as string
-
-  if (userId !== authorId) {
-    return toFormState(
-      "ERROR",
-      "Nie masz uprawnień do usunięcia tego komentarza"
-    )
+  const validationResult = DeleteForumCommentSchema.safeParse({
+    commentId: formData.get("commentId")
+  })
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
   }
 
   try {
-    await deleteForumComment(commentId)
+    const deleted = await deleteForumComment(validationResult.data.commentId, userId)
+    if (!deleted) {
+      return toFormState("ERROR", "Komentarz nie istnieje lub nie masz uprawnień do jego usunięcia")
+    }
   } catch (error) {
     return fromErrorToFormState(error)
   }

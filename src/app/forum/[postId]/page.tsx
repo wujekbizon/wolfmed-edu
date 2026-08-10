@@ -66,7 +66,6 @@ async function ForumPost({ postId }: { postId: string }) {
           createdAt={post.createdAt}
           isAuthor={isAuthor}
           postId={post.id}
-          authorId={post.authorId}
         />
         <ForumDetailContent content={post.content} />
         <ForumDetailComments

@@ -1167,9 +1167,14 @@ export const createForumPost = cache(
 )
 
 // Delete a forum post and its associated comments
-export const deleteForumPost = cache(async (postId: string) => {
-  await db.delete(forumPosts).where(eq(forumPosts.id, postId))
-})
+export const deleteForumPost = async (postId: string, userId: string) => {
+  const deleted = await db
+    .delete(forumPosts)
+    .where(and(eq(forumPosts.id, postId), eq(forumPosts.authorId, userId)))
+    .returning({ id: forumPosts.id })
+
+  return deleted.length > 0
+}
 
 // Create a new comment on a forum post
 export const createForumComment = cache(
@@ -1192,9 +1197,27 @@ export const createForumComment = cache(
 )
 
 // Delete a specific comment
-export const deleteForumComment = cache(async (commentId: string) => {
-  await db.delete(forumComments).where(eq(forumComments.id, commentId))
-})
+export const deleteForumComment = async (commentId: string, userId: string) => {
+  const ownedPostIds = db
+    .select({ id: forumPosts.id })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+
+  const deleted = await db
+    .delete(forumComments)
+    .where(
+      and(
+        eq(forumComments.id, commentId),
+        or(
+          eq(forumComments.authorId, userId),
+          inArray(forumComments.postId, ownedPostIds)
+        )
+      )
+    )
+    .returning({ id: forumComments.id })
+
+  return deleted.length > 0
+}
 
 // Get the timestamp of user's last forum post
 export const getLastUserPostTime = cache(

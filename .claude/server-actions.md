@@ -397,16 +397,18 @@ export async function deletePostAction(
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
-  const postId = formData.get("postId") as string
-  const authorId = formData.get("authorId") as string
-
-  // PERMISSION CHECK
-  if (userId !== authorId) {
-    return toFormState("ERROR", "You don't have permission to delete this post")
+  const validationResult = DeleteForumPostSchema.safeParse({
+    postId: formData.get("postId")
+  })
+  if (!validationResult.success) {
+    return fromErrorToFormState(validationResult.error)
   }
 
   try {
-    await deleteForumPost(postId)
+    const deleted = await deleteForumPost(validationResult.data.postId, userId)
+    if (!deleted) {
+      return toFormState("ERROR", "Post not found or unauthorized")
+    }
   } catch (error) {
     return fromErrorToFormState(error)
   }
@@ -709,11 +711,11 @@ if (postId) {
   await deletePost(postId)
 }
 
-// ✅ Strong check
-if (userId !== authorId) {
-  return toFormState("ERROR", "Unauthorized")
+// ✅ Strong check: ownership is part of the mutation predicate
+const deleted = await deletePost(postId, userId)
+if (!deleted) {
+  return toFormState("ERROR", "Not found or unauthorized")
 }
-await deletePost(postId)
 ```
 
 ---

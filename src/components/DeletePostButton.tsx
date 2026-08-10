@@ -8,10 +8,9 @@ import DeleteIcon from '@/components/icons/DeleteIcon'
 
 type Props = {
   postId: string
-  authorId: string
 }
 
-export default function DeletePostButton({ postId, authorId }: Props) {
+export default function DeletePostButton({ postId }: Props) {
   const [state, action] = useActionState(deletePostAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
@@ -19,7 +18,6 @@ export default function DeletePostButton({ postId, authorId }: Props) {
     <>
       <form action={action}>
         <input type="hidden" name="postId" value={postId} />
-        <input type="hidden" name="authorId" value={authorId} />
         <button
           //disabled
           type="submit"

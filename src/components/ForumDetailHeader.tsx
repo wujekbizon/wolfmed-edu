@@ -7,10 +7,9 @@ type Props = {
   createdAt: string
   isAuthor: boolean
   postId: string
-  authorId: string
 }
 
-export default function ForumDetailHeader({ title, authorName, createdAt, isAuthor, postId, authorId }: Props) {
+export default function ForumDetailHeader({ title, authorName, createdAt, isAuthor, postId }: Props) {
   return (
     <div className="p-6 border-b border-zinc-800">
       <div className="flex justify-between items-start">
@@ -22,7 +21,7 @@ export default function ForumDetailHeader({ title, authorName, createdAt, isAuth
           <span>•</span>
           <time>{formatDate(createdAt)}</time>
         </div>
-        {isAuthor && <DeletePostButton postId={postId} authorId={authorId} />}
+        {isAuthor && <DeletePostButton postId={postId} />}
       </div>
     </div>
   )

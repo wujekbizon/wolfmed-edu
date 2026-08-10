@@ -107,6 +107,14 @@ export const CreateCommentSchema = z.object({
   postId: z.string().min(1, "ID posta jest wymagane"),
 });
 
+export const DeleteForumPostSchema = z.object({
+  postId: z.string().uuid("Nieprawidłowe ID posta"),
+});
+
+export const DeleteForumCommentSchema = z.object({
+  commentId: z.string().uuid("Nieprawidłowe ID komentarza"),
+});
+
 export type CreatePostInput = z.infer<typeof CreatePostSchema>;
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
 
