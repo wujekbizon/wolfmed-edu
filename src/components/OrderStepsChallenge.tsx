@@ -15,6 +15,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import type { Procedure, StepWithId } from '@/types/dataTypes'
 import Link from 'next/link'
 import { getProcedureSlugFromId } from '@/constants/procedureSlugs'
+import FormError from '@/components/FormError'
 
 interface Props {
   procedure: Procedure
@@ -167,6 +168,7 @@ export default function OrderStepsChallenge({ procedure }: Props) {
             Anuluj
           </Link>
 
+          <FormError formState={state} />
           {noScriptFallback}
         </form>
       </div>

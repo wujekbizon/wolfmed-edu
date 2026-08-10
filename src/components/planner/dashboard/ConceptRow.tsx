@@ -6,6 +6,7 @@ import { removeConceptAction, toggleConceptAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import type { ConceptProgress } from '@/types/plannerTypes'
+import FormError from '@/components/FormError'
 
 export default function ConceptRow({ concept }: { concept: ConceptProgress }) {
   const [toggleState, toggleAction, togglePending] = useActionState(toggleConceptAction, EMPTY_FORM_STATE)
@@ -36,6 +37,7 @@ export default function ConceptRow({ concept }: { concept: ConceptProgress }) {
         >
           <Check className="w-3.5 h-3.5" strokeWidth={3} />
         </button>
+        <FormError formState={toggleState} />
       </form>
 
       <div className="flex-1 min-w-0">
@@ -71,6 +73,7 @@ export default function ConceptRow({ concept }: { concept: ConceptProgress }) {
         >
           <X className="w-4 h-4" />
         </button>
+        <FormError formState={removeState} />
       </form>
     </li>
   )

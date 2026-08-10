@@ -963,12 +963,15 @@ export const getUserIdByCustomer = cache(
   }
 )
 
-export async function getTestSessionDetails(sessionId: string) {
+export async function getTestSessionDetails(sessionId: string, userId: string) {
   const session = await db.query.testSessions.findFirst({
-    where: eq(testSessions.id, sessionId),
+    where: and(eq(testSessions.id, sessionId), eq(testSessions.userId, userId)),
     columns: {
+      category: true,
       durationMinutes: true,
       numberOfQuestions: true,
+      status: true,
+      expiresAt: true,
     },
   })
   return session
@@ -1167,9 +1170,14 @@ export const createForumPost = cache(
 )
 
 // Delete a forum post and its associated comments
-export const deleteForumPost = cache(async (postId: string) => {
-  await db.delete(forumPosts).where(eq(forumPosts.id, postId))
-})
+export const deleteForumPost = async (postId: string, userId: string) => {
+  const deleted = await db
+    .delete(forumPosts)
+    .where(and(eq(forumPosts.id, postId), eq(forumPosts.authorId, userId)))
+    .returning({ id: forumPosts.id })
+
+  return deleted.length > 0
+}
 
 // Create a new comment on a forum post
 export const createForumComment = cache(
@@ -1192,9 +1200,27 @@ export const createForumComment = cache(
 )
 
 // Delete a specific comment
-export const deleteForumComment = cache(async (commentId: string) => {
-  await db.delete(forumComments).where(eq(forumComments.id, commentId))
-})
+export const deleteForumComment = async (commentId: string, userId: string) => {
+  const ownedPostIds = db
+    .select({ id: forumPosts.id })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+
+  const deleted = await db
+    .delete(forumComments)
+    .where(
+      and(
+        eq(forumComments.id, commentId),
+        or(
+          eq(forumComments.authorId, userId),
+          inArray(forumComments.postId, ownedPostIds)
+        )
+      )
+    )
+    .returning({ id: forumComments.id })
+
+  return deleted.length > 0
+}
 
 // Get the timestamp of user's last forum post
 export const getLastUserPostTime = cache(
@@ -1454,7 +1480,7 @@ export const updateTestimonial = async (
 ) => {
   const updated = await db
     .update(testimonials)
-    .set({ ...data, createdAt: new Date() })
+    .set({ ...data, updatedAt: new Date() })
     .where(eq(testimonials.id, id))
     .returning()
 
@@ -2228,7 +2254,7 @@ export const getProgressTimeline = cache(
 // ─── Lectures ────────────────────────────────────────────────────────────────
 
 import { lectures } from "./db/schema"
-import type { Lecture, NewLecture } from "./db/schema"
+import type { Lecture } from "./db/schema"
 
 export async function getLectureByHash(userId: string, contentHash: string): Promise<Lecture | null> {
   const rows = await db
@@ -2236,19 +2262,6 @@ export async function getLectureByHash(userId: string, contentHash: string): Pro
     .from(lectures)
     .where(and(eq(lectures.userId, userId), eq(lectures.contentHash, contentHash)))
     .limit(1)
-  return rows[0] ?? null
-}
-
-export async function insertLecture(data: NewLecture): Promise<Lecture> {
-  const rows = await db.insert(lectures).values(data).returning()
-  return rows[0]!
-}
-
-export async function deleteLectureById(userId: string, lectureId: string): Promise<Lecture | null> {
-  const rows = await db
-    .delete(lectures)
-    .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
-    .returning()
   return rows[0] ?? null
 }
 

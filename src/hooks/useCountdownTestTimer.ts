@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 
 interface UseCountdownTestTimerProps {
-  durationMinutes: number;
+  expiresAt?: string;
+  durationMinutes?: number;
   warningThresholdSeconds?: number;
 }
 
@@ -16,28 +17,36 @@ interface UseCountdownTestTimerReturn {
  * Anchors to a wall-clock end timestamp via useRef so displayed time stays
  * accurate even if the browser throttles the tab or skips ticks.
  *
- * @param durationMinutes Total test duration in minutes
+ * @param expiresAt Absolute server session deadline when persistence across reloads is required
+ * @param durationMinutes Relative duration for non-persistent exam flows
  * @param warningThresholdSeconds Seconds remaining at which isWarning becomes true (default 300)
  */
-export function useCountdownTestTimer({ durationMinutes, warningThresholdSeconds = 300 }: UseCountdownTestTimerProps): UseCountdownTestTimerReturn {
-  const [timeLeft, setTimeLeft] = useState(durationMinutes * 60);
-  const endTime = useRef(Date.now() + durationMinutes * 60 * 1000);
+export function getRemainingSeconds(expiresAt: string | number, now = Date.now()) {
+  const deadline = new Date(expiresAt).getTime()
+  if (!Number.isFinite(deadline)) return 0
+  return Math.max(0, Math.floor((deadline - now) / 1000))
+}
+
+export function useCountdownTestTimer({ expiresAt, durationMinutes, warningThresholdSeconds = 300 }: UseCountdownTestTimerProps): UseCountdownTestTimerReturn {
+  const endTime = useRef(
+    expiresAt ? new Date(expiresAt).getTime() : Date.now() + (durationMinutes ?? 0) * 60 * 1000
+  )
+  const [timeLeft, setTimeLeft] = useState(() => getRemainingSeconds(endTime.current));
 
   useEffect(() => {
-    // Reset end time and displayed value whenever durationMinutes changes —
-    // without this, the interval would compute remaining time against the
-    // stale ref from the previous duration.
-    endTime.current = Date.now() + durationMinutes * 60 * 1000;
-    setTimeLeft(durationMinutes * 60);
+    endTime.current = expiresAt
+      ? new Date(expiresAt).getTime()
+      : Date.now() + (durationMinutes ?? 0) * 60 * 1000
+    setTimeLeft(getRemainingSeconds(endTime.current));
 
     const timer = setInterval(() => {
-      const remaining = Math.max(0, Math.floor((endTime.current - Date.now()) / 1000));
+      const remaining = getRemainingSeconds(endTime.current);
       setTimeLeft(remaining);
       if (remaining === 0) clearInterval(timer);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [durationMinutes]);
+  }, [expiresAt, durationMinutes]);
 
   // Derived from timeLeft — avoids separate useState calls and the extra
   // re-renders they would cause on every tick.

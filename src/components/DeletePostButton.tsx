@@ -5,13 +5,13 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { deletePostAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import DeleteIcon from '@/components/icons/DeleteIcon'
+import FormError from '@/components/FormError'
 
 type Props = {
   postId: string
-  authorId: string
 }
 
-export default function DeletePostButton({ postId, authorId }: Props) {
+export default function DeletePostButton({ postId }: Props) {
   const [state, action] = useActionState(deletePostAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
@@ -19,7 +19,6 @@ export default function DeletePostButton({ postId, authorId }: Props) {
     <>
       <form action={action}>
         <input type="hidden" name="postId" value={postId} />
-        <input type="hidden" name="authorId" value={authorId} />
         <button
           //disabled
           type="submit"
@@ -27,6 +26,7 @@ export default function DeletePostButton({ postId, authorId }: Props) {
         >
           <DeleteIcon width={18} height={18} color="red" />
         </button>
+        <FormError formState={state} />
       </form>
       {noScriptFallback}
     </>

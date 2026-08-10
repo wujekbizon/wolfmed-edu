@@ -8,6 +8,7 @@ import { flashcardDeckKey, flashcardDecksKey, flashcardNoteDeckKey } from '@/con
 import { useInvalidateOnSuccess } from '@/hooks/useInvalidateOnSuccess'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import type { FlashcardDeck } from '@/types/flashcardTypes'
+import FormError from '@/components/FormError'
 
 interface FlashcardDeckCardProps {
   deck: FlashcardDeck
@@ -55,6 +56,7 @@ export default function FlashcardDeckCard({ deck, onReview }: FlashcardDeckCardP
           >
             <Trash2Icon size={16} />
           </button>
+          <FormError formState={state} />
           {noScriptFallback}
         </form>
       </div>

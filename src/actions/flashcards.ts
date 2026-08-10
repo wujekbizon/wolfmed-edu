@@ -14,26 +14,30 @@ import {
   UpdateFlashcardSchema,
 } from '@/server/schema'
 import type { FormState } from '@/types/actionTypes'
+import { getFormStringValues } from '@/helpers/getFormStringValues'
 
 export async function createFlashcardAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({ ...state, values: submittedValues })
+
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const limited = await rateLimitFormState(userId, 'flashcard:create')
-  if (limited) return limited
+  if (limited) return errorWithValues(limited)
 
   const parsed = CreateFlashcardSchema.safeParse({
     deckId: formData.get('deckId'),
     questionText: formData.get('questionText'),
     answerText: formData.get('answerText'),
   })
-  if (!parsed.success) return fromErrorToFormState(parsed.error)
+  if (!parsed.success) return errorWithValues(fromErrorToFormState(parsed.error))
 
   const deck = await findOwnedDeck(userId, parsed.data.deckId)
-  if (!deck) return toFormState('ERROR', 'Ten zestaw fiszek już nie istnieje.')
+  if (!deck) return errorWithValues(toFormState('ERROR', 'Ten zestaw fiszek już nie istnieje.'))
 
   try {
     await db.insert(flashcards).values({
@@ -43,7 +47,7 @@ export async function createFlashcardAction(
       position: await nextCardPosition(deck.id),
     })
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 
   revalidatePath('/panel/nauka')
@@ -54,21 +58,24 @@ export async function updateFlashcardAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({ ...state, values: submittedValues })
+
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const limited = await rateLimitFormState(userId, 'flashcard:update')
-  if (limited) return limited
+  if (limited) return errorWithValues(limited)
 
   const parsed = UpdateFlashcardSchema.safeParse({
     cardId: formData.get('cardId'),
     questionText: formData.get('questionText'),
     answerText: formData.get('answerText'),
   })
-  if (!parsed.success) return fromErrorToFormState(parsed.error)
+  if (!parsed.success) return errorWithValues(fromErrorToFormState(parsed.error))
 
   const card = await findOwnedCard(userId, parsed.data.cardId)
-  if (!card) return toFormState('ERROR', 'Ta fiszka już nie istnieje.')
+  if (!card) return errorWithValues(toFormState('ERROR', 'Ta fiszka już nie istnieje.'))
 
   try {
     await db
@@ -80,7 +87,7 @@ export async function updateFlashcardAction(
       })
       .where(eq(flashcards.id, card.id))
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 
   revalidatePath('/panel/nauka')

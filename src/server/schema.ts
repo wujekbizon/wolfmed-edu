@@ -26,23 +26,11 @@ export const DeleteMaterialIdSchema = z.object({
 });
 
 export const DeleteCategorySchema = z.object({
-  meta: z.object({
-    category: z
-      .string()
-      .min(1, "Kategoria jest wymagana.")
-      .trim(),
-  }),
+  category: z
+    .string()
+    .min(1, "Kategoria jest wymagana.")
+    .trim(),
 });
-
-export const CreateAnswersSchema = (allowedLengths: number[]) => {
-  return z
-    .array(
-      z.record(z.string().min(1, "Odpowiedz na wszystkie pytania"), z.string())
-    )
-    .refine((data) => allowedLengths.includes(data.length), {
-      message: "Odpowiedz na wszystkie pytania.",
-    });
-};
 
 export const UpdateMottoSchema = z.object({
   motto: z
@@ -105,6 +93,14 @@ export const CreateCommentSchema = z.object({
     .min(3, "Komentarz musi mieć minimum 3 znaki")
     .max(300, "Komentarz nie może przekraczać 300 znaków"),
   postId: z.string().min(1, "ID posta jest wymagane"),
+});
+
+export const DeleteForumPostSchema = z.object({
+  postId: z.string().uuid("Nieprawidłowe ID posta"),
+});
+
+export const DeleteForumCommentSchema = z.object({
+  commentId: z.string().uuid("Nieprawidłowe ID komentarza"),
 });
 
 export type CreatePostInput = z.infer<typeof CreatePostSchema>;
@@ -222,7 +218,11 @@ export const TestFileSchema = z.array(
           })
         )
         .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
-        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
+        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" })
+        .refine(
+          (answers) => answers.filter((answer) => answer.isCorrect).length === 1,
+          { message: "Dokładnie jedna odpowiedź musi być poprawna" }
+        ),
     }),
     meta: z.object({
       course: z.string().min(1, { message: "Pole kursu jest wymagane" }),

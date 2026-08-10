@@ -195,7 +195,7 @@ Not yet carved into subfolders; grouped here by naming/functional cluster for na
 
 **Decorative SVGs**: `AggressiveVirusSVG`, `BacteriaSVG`, `HumanCellSVG`, `PathogenBacteriaSVG`, `VirusSVG`.
 
-**Generic UI**: `AuthButton`, `AuthSection`, `BackToNotesLink`, `Checkbox`, `CustomButton`, `CustomRadioInput`, `DrawerHandle`, `EditorField`, `ExploreLink`, `FieldError`, `HomeButton`, `LoadingSpinner`, `Logo`, `NavDrawer`, `PaginationButton`, `PaginationControls`, `Resizable`, `BottomResizableHandle`, `RightResizableHandle`, `SearchTerm`, `SortSelect`, `SubmitButton`, `TabNavigation`, `TermsHeader`, `TopCustomButton`, `TopPanel`, `TopicActionButton`, `Tooltip`, `PdfPreviewModal`, `TextPreviewModal`, `QuestionnaireForm`.
+**Generic UI**: `AuthButton`, `AuthSection`, `BackToNotesLink`, `Checkbox`, `CustomButton`, `CustomRadioInput`, `DrawerHandle`, `EditorField`, `ExploreLink`, `FieldError`, `FormError`, `HomeButton`, `LoadingSpinner`, `Logo`, `NavDrawer`, `PaginationButton`, `PaginationControls`, `Resizable`, `BottomResizableHandle`, `RightResizableHandle`, `SearchTerm`, `SortSelect`, `SubmitButton`, `TabNavigation`, `TermsHeader`, `TopCustomButton`, `TopPanel`, `TopicActionButton`, `Tooltip`, `PdfPreviewModal`, `TextPreviewModal`, `QuestionnaireForm`.
 
 **Admin dashboard widget**: `AdminBlogPanel`.
 

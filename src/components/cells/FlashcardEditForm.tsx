@@ -31,7 +31,7 @@ export default function FlashcardEditForm({ card, onDone }: FlashcardEditFormPro
 
       <Textarea
         name='questionText'
-        defaultValue={card.questionText}
+        defaultValue={state.values?.questionText?.toString() ?? card.questionText}
         placeholder='Pytanie'
         rows={2}
         aria-label='Pytanie'
@@ -40,7 +40,7 @@ export default function FlashcardEditForm({ card, onDone }: FlashcardEditFormPro
 
       <Textarea
         name='answerText'
-        defaultValue={card.answerText}
+        defaultValue={state.values?.answerText?.toString() ?? card.answerText}
         placeholder='Odpowiedź'
         rows={2}
         aria-label='Odpowiedź'

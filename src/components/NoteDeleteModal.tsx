@@ -5,9 +5,11 @@ import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from './SubmitButton'
 import FieldError from './FieldError'
 import { deleteNoteAction } from '@/actions/notes'
+import { useRouter } from 'next/navigation'
 
 export default function NoteDeleteModal({ noteId }: { noteId: string | undefined }) {
   const { closeDeleteModal } = useDashboardStore()
+  const router = useRouter()
   const [state, action] = useActionState(deleteNoteAction, EMPTY_FORM_STATE)
 
   const noScriptFallback = useToastMessage(state)
@@ -15,8 +17,9 @@ export default function NoteDeleteModal({ noteId }: { noteId: string | undefined
   useEffect(() => {
     if (state.status === 'SUCCESS') {
       closeDeleteModal()
+      router.refresh()
     }
-  }, [state.status, closeDeleteModal])
+  }, [state.status, closeDeleteModal, router])
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70">

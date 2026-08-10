@@ -81,6 +81,8 @@ Every form in the app follows one pattern (Golden Rule in root `CLAUDE.md`, refe
 5. `useToastMessage(state)` for form-wide (non-field) errors
 6. Validation happens **only** inside the Server Action via a Zod schema — no client-side `safeParse`, no HTML `required`/`pattern` attributes
 
+`FieldError` renders only its named `fieldErrors` entry. Button/hidden-input forms use `FormError` to render the first server field error once. `message` is reserved for `useToastMessage`.
+
 Full catalog of every form → action → schema mapping: [`20-forms-catalog.md`](./20-forms-catalog.md).
 
 ## AI data sources — the four tiers

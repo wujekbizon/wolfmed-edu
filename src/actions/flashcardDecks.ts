@@ -17,6 +17,7 @@ import {
   RenameDeckSchema,
 } from '@/server/schema'
 import type { FormState } from '@/types/actionTypes'
+import { getFormStringValues } from '@/helpers/getFormStringValues'
 
 export async function createGeneratedDeckAction(
   name: string,
@@ -64,15 +65,21 @@ export async function createEmptyDeckAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({ ...state, values: submittedValues })
+
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const limited = await rateLimitFormState(userId, 'flashcard:deck:create')
-  if (limited) return limited
+  if (limited) return errorWithValues(limited)
 
   const parsed = DeckNameSchema.safeParse(formData.get('name'))
   if (!parsed.success) {
-    return { ...toFormState('ERROR', ''), fieldErrors: { name: [parsed.error.issues[0]!.message] } }
+    return errorWithValues({
+      ...toFormState('ERROR', ''),
+      fieldErrors: { name: [parsed.error.issues[0]!.message] },
+    })
   }
 
   try {
@@ -86,7 +93,7 @@ export async function createEmptyDeckAction(
     revalidatePath('/panel/nauka')
     return { ...toFormState('SUCCESS', 'Zestaw fiszek utworzony'), values: { deckId: deck.id } }
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 }
 
@@ -94,21 +101,24 @@ export async function createNoteFlashcardAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({ ...state, values: submittedValues })
+
   const { userId } = await auth()
   if (!userId) throw new Error('Unauthorized')
 
   const limited = await rateLimitFormState(userId, 'flashcard:create')
-  if (limited) return limited
+  if (limited) return errorWithValues(limited)
 
   const parsed = CreateNoteFlashcardSchema.safeParse({
     noteId: formData.get('noteId'),
     questionText: formData.get('questionText'),
     answerText: formData.get('answerText'),
   })
-  if (!parsed.success) return fromErrorToFormState(parsed.error)
+  if (!parsed.success) return errorWithValues(fromErrorToFormState(parsed.error))
 
   const note = await getNoteById(userId, parsed.data.noteId)
-  if (!note) return toFormState('ERROR', 'Ta notatka już nie istnieje.')
+  if (!note) return errorWithValues(toFormState('ERROR', 'Ta notatka już nie istnieje.'))
 
   try {
     const deckId = await resolveNoteDeckId(userId, note.id, note.title)
@@ -120,7 +130,7 @@ export async function createNoteFlashcardAction(
       position: await nextCardPosition(deckId),
     })
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 
   revalidatePath(`/panel/nauka/notatki/${note.id}`)

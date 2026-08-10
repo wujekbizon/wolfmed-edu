@@ -7,19 +7,19 @@ import { expireSessionAction } from '@/actions/actions'
 import { useCountdownTestTimer } from '@/hooks/useCountdownTestTimer'
 
 interface TestTimerProps {
-  durationMinutes: number
+  expiresAt: string
   sessionId: string
   onExpiration: () => void
   message: string
 }
 
-export default function TestTimer({ durationMinutes, sessionId, onExpiration, message }: TestTimerProps) {
+export default function TestTimer({ expiresAt, sessionId, onExpiration, message }: TestTimerProps) {
   const [isPending, startTransition] = useTransition()
   const [expired, setExpired] = useState(false)
   const router = useRouter()
 
   const { timeLeft, isWarning, isTimeUp } = useCountdownTestTimer({
-    durationMinutes,
+    expiresAt,
     warningThresholdSeconds: 300
   });
 

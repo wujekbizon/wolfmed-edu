@@ -3,6 +3,8 @@
 import { useActionState, useState } from 'react'
 import { updateCategoryNameAction } from '@/actions/actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
+import FieldError from './FieldError'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
 interface Props {
   id: string
@@ -11,7 +13,8 @@ interface Props {
 
 export default function EditableCategoryName({ id, name }: Props) {
   const [isEditing, setIsEditing] = useState(false)
-  const [, action] = useActionState(updateCategoryNameAction, EMPTY_FORM_STATE)
+  const [state, action] = useActionState(updateCategoryNameAction, EMPTY_FORM_STATE)
+  const noScriptFallback = useToastMessage(state)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -64,6 +67,13 @@ export default function EditableCategoryName({ id, name }: Props) {
           {name}
         </h3>
       )}
+      {state.status === 'ERROR' && (
+        <>
+          <FieldError name="categoryName" formState={state} />
+          <FieldError name="categoryId" formState={state} />
+        </>
+      )}
+      {noScriptFallback}
     </div>
   )
 }

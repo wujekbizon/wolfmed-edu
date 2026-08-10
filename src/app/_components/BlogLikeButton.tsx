@@ -6,6 +6,7 @@ import { Heart } from 'lucide-react'
 import { toggleBlogLikeAction, getBlogLikeState } from '@/actions/blog'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import FormError from '@/components/FormError'
 
 interface BlogLikeButtonProps {
   postId: string
@@ -67,6 +68,7 @@ export default function BlogLikeButton({ postId, initialCount }: BlogLikeButtonP
     <form action={action}>
       <input type="hidden" name="postId" value={postId} />
       <HeartButton liked={liked} count={count} />
+      <FormError formState={state} />
       {noScriptFallback}
     </form>
   )

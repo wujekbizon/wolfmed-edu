@@ -35,8 +35,7 @@ export async function generateMindMapAction(formState: FormState, formData: Form
   })
   if (!parsed.success) {
     return {
-      ...toFormState("ERROR", "Popraw błędy w formularzu."),
-      fieldErrors: parsed.error.flatten().fieldErrors,
+      ...fromErrorToFormState(parsed.error),
       values: { topic: (formData.get("topic") as string) ?? "" },
     }
   }

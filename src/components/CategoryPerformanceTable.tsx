@@ -6,6 +6,7 @@ import { addConceptAction } from '@/actions/planner'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { titleizeCategory } from '@/helpers/titleizeCategory'
+import FormError from '@/components/FormError'
 
 interface CategoryPerformanceRow {
   category: string
@@ -42,6 +43,7 @@ function AddToPlanButton({ planId, category }: { planId: string; category: strin
         <CalendarPlus className="w-3.5 h-3.5" />
         {isPending ? 'Dodaję…' : 'Dodaj do planu'}
       </button>
+      <FormError formState={formState} />
     </form>
   )
 }

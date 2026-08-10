@@ -3,15 +3,13 @@
 import { auth } from '@clerk/nextjs/server'
 import { UTApi } from 'uploadthing/server'
 import { db } from '@/server/db/index'
-import { userLimits } from '@/server/db/schema'
-import { sql, eq } from 'drizzle-orm'
+import { lectures, userLimits } from '@/server/db/schema'
+import { and, sql, eq } from 'drizzle-orm'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { revalidatePath } from 'next/cache'
 import {
-  insertLecture,
-  deleteLectureById,
   updateLectureDuration,
   getUserStorageUsage,
 } from '@/server/queries'
@@ -61,14 +59,18 @@ export async function saveLectureInternal(input: SaveLectureInput): Promise<Lect
         .set({ storageUsed: sql`${userLimits.storageUsed} + ${audioSize}` })
         .where(eq(userLimits.userId, userId))
 
-      return insertLecture({
+      const [lecture] = await tx.insert(lectures).values({
         userId,
         title,
         contentHash,
         audioKey: uploadResult.data!.key,
         audioUrl: uploadResult.data!.ufsUrl,
+        size: audioSize,
         scriptText,
-      })
+      }).returning()
+
+      if (!lecture) throw new Error('Failed to save lecture')
+      return lecture
     })
 
     return lecture
@@ -89,7 +91,25 @@ export async function deleteLectureAction(lectureId: string): Promise<FormState>
       return toFormState('ERROR', `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`)
     }
 
-    const deleted = await deleteLectureById(userId, lectureId)
+    const deleted = await db.transaction(async (tx) => {
+      const [lecture] = await tx
+        .delete(lectures)
+        .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
+        .returning()
+
+      if (!lecture) return null
+
+      await tx
+        .update(userLimits)
+        .set({
+          storageUsed: sql`GREATEST(0, ${userLimits.storageUsed} - ${lecture.size})`,
+          updatedAt: new Date(),
+        })
+        .where(eq(userLimits.userId, userId))
+
+      return lecture
+    })
+
     if (!deleted) {
       return toFormState('ERROR', 'Nie znaleziono wykładu.')
     }

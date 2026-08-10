@@ -98,8 +98,8 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 | File | Signature | Purpose |
 |---|---|---|
 | `calculateAverageScore.ts` | `calculateAverageScore(totalScore, totalQuestions)` | Used for `users` aggregate display. |
-| `countTestScore.ts` | `countTestScore(results)` | Scores a submitted test's answers. |
-| `parseAnswerRecord.ts` | `parseAnswerRecord(results)` | Converts raw results into `FormattedAnswer[]`. |
+| `selectSessionTests.ts` | `selectSessionTests(tests, count, sessionId)` | Deterministically selects and orders a session's questions and answers. |
+| `gradeSessionAnswers.ts` | `gradeSessionAnswers(tests, submittedAnswers)` | Rejects missing, extra or invalid option indexes and grades against canonical answers. |
 | `generatedRandomTests.ts` | `generateRandomTests(testArray, numOfQuestions)` | Random-subset sampling for a test session. |
 | `shuffleArray.ts` | `shuffleArray<T>(array)` | Generic Fisher–Yates shuffle (question/option randomization). |
 | `enforceItemCount.ts` | `enforceItemCount<T>(items, requested)` | Pads/trims a list to an exact requested count. |

@@ -15,20 +15,29 @@ import { after } from "next/server"
 import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
 import { embedPendingChunks } from "@/server/library/embed-pending"
 import { getIsPremium } from "@/server/premium"
+import { getFormStringValues } from "@/helpers/getFormStringValues"
 
 export const createNoteAction = async (
   formState: FormState,
   formData: FormData
 ) => {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({
+    ...state,
+    values: submittedValues,
+  })
+
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
   const rateLimit = await checkRateLimit(userId, 'note:create')
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    return errorWithValues(
+      toFormState(
+        "ERROR",
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
     )
   }
 
@@ -46,16 +55,15 @@ export const createNoteAction = async (
 
   const validationResult = NoteSchema.safeParse(data)
   if (!validationResult.success) {
-    return {
-      ...fromErrorToFormState(validationResult.error),
-      values: data,
-    }
+    return errorWithValues(fromErrorToFormState(validationResult.error))
   }
 
   const contentResult = parseLexicalContent(validationResult.data.content)
 
   if (!contentResult.success) {
-    return toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+    return errorWithValues(
+      toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+    )
   }
 
   try {
@@ -88,10 +96,7 @@ export const createNoteAction = async (
     }
   } catch (error) {
     console.error('Database error creating note:', error)
-    return {
-      ...fromErrorToFormState(error),
-      values: data,
-    }
+    return errorWithValues(fromErrorToFormState(error))
   }
   revalidatePath("panel/nauka")
   return toFormState("SUCCESS", "Notatka została utworzona pomyślnie!")
@@ -134,8 +139,7 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
     return fromErrorToFormState(error)
   }
 
-  revalidatePath("panel/nauka")
-  return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
+  return toFormState("SUCCESS", "Notatka została usunięta pomyślnie")
 }
 
 export const updateNoteContentAction = async (

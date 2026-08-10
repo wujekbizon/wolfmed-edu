@@ -168,10 +168,11 @@ export default function Page() {
 6. The Server Action validates with a Zod schema from `/src/server/schema.ts` and returns errors via `toFormState` / `fromErrorToFormState`.
 
 **Returning validation errors (do this exactly):**
-- On a Zod failure, return `fromErrorToFormState(error)` — it produces `{ status: 'ERROR', message: '', fieldErrors, timestamp }`. The **empty `message` is intentional**: `FieldError` renders `state.message` on *every* field, so a non-empty top-level message would repeat under each input.
-- **Never** pair a generic top-level message with `fieldErrors` (e.g. ``toFormState('ERROR', 'Popraw błędy w formularzu.')`` + `fieldErrors`). That is the exact anti-pattern that repeats the same text on every field.
+- On a Zod failure, return `fromErrorToFormState(error)` — it produces `{ status: 'ERROR', message: '', fieldErrors, timestamp }`. The **empty `message` is intentional**: validation errors stay beside their named inputs and do not also trigger a toast.
+- **Never** pair a generic top-level message with `fieldErrors` (e.g. ``toFormState('ERROR', 'Popraw błędy w formularzu.')`` + `fieldErrors`). Choose one channel: named input error or form-wide toast.
 - For a single server-side business error tied to one field (e.g. "subject not accessible"), return `{ ...toFormState('ERROR', ''), fieldErrors: { fieldName: ['message'] } }`.
 - Reserve a non-empty top-level `message` for form-wide, non-field errors (rate limit, auth, unexpected failure) — surfaced via the toast.
+- Button-only forms with no editable field render returned `fieldErrors` once through `<FormError formState={state} />`.
 - Give a Zod field a custom message for the empty/`null` case with `z.string({ error: '…' })` (an unpicked `<select>` submits `null`, which fails the type check before `.min()` runs).
 
 **Why** — a single server-side Zod schema keeps validation authoritative and avoids drift between two rule sets. Errors already round-trip cleanly through `FormState` → `FieldError` + `useToastMessage`, so the server round-trip *is* the UX.

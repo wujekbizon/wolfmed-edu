@@ -22,6 +22,14 @@ export interface Test {
   updatedAt?: Date | null
 }
 
+export type ExamQuestion = {
+  id: string
+  data: {
+    question: string
+    answers: Array<{ option: string }>
+  }
+}
+
 // Create a custom type that uses the Omit utility type to exclude the data property
 // from TestsData and then adds it back with the type unknown.
 // this is because Drizzle doesn't support typed JSON in their schemas
@@ -48,7 +56,6 @@ export interface Procedure {
 export type ExtendedProcedures = Omit<Procedure, 'data'> & { data: unknown }
 
 export type ServerData = Procedure[] | Test[]
-export type QuestionAnswer = Record<string, string>
 export type FormattedAnswer = { questionId: string; answer: boolean }
 
 export interface CompletedTest {

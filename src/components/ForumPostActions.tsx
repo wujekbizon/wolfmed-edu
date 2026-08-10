@@ -4,7 +4,6 @@ import DeletePostButton from './DeletePostButton'
 
 type Props = {
   postId: string
-  authorId: string
   isAuthor: boolean
   commentCount: number
   showComments: boolean
@@ -14,7 +13,6 @@ type Props = {
 
 export default function ForumPostActions({
   postId,
-  authorId,
   isAuthor,
   commentCount,
   showComments,
@@ -36,7 +34,7 @@ export default function ForumPostActions({
 
       <div className="flex items-center gap-3 text-sm justify-between">
         {!readonly && <AddCommentButton postId={postId} />}
-        {isAuthor && <DeletePostButton postId={postId} authorId={authorId} />}
+        {isAuthor && <DeletePostButton postId={postId} />}
       </div>
     </div>
   )

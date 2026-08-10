@@ -34,11 +34,21 @@ export default function FlashcardAddForm({ deckId, onDone }: FlashcardAddFormPro
       <input type='hidden' name='deckId' value={deckId} />
 
       <Label label='Pytanie:' htmlFor='new-question' />
-      <Textarea id='new-question' name='questionText' placeholder='Dodaj pytanie do fiszki' />
+      <Textarea
+        id='new-question'
+        name='questionText'
+        defaultValue={state.values?.questionText?.toString() || ''}
+        placeholder='Dodaj pytanie do fiszki'
+      />
       <FieldError name='questionText' formState={state} />
 
       <Label label='Odpowiedź:' htmlFor='new-answer' />
-      <Textarea id='new-answer' name='answerText' placeholder='Dodaj odpowiedź do fiszki' />
+      <Textarea
+        id='new-answer'
+        name='answerText'
+        defaultValue={state.values?.answerText?.toString() || ''}
+        placeholder='Dodaj odpowiedź do fiszki'
+      />
       <FieldError name='answerText' formState={state} />
 
       <div className='flex gap-2 justify-end'>

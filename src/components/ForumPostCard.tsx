@@ -37,7 +37,6 @@ export default function ForumPostCard({ post }: { post: Post }) {
       <div className="border-t border-zinc-800 pt-4">
         <ForumPostActions
           postId={post.id}
-          authorId={post.authorId}
           isAuthor={isAuthor}
           commentCount={commentCount}
           showComments={showComments}
@@ -53,7 +52,6 @@ export default function ForumPostCard({ post }: { post: Post }) {
         {showComments && commentCount > 0 && user?.id && !post.readonly && (
           <ForumPostComments
             comments={visibleComments}
-            postId={post.id}
             visibleCount={displayedComments}
             isAuthor={isAuthor}
             userId={user.id}

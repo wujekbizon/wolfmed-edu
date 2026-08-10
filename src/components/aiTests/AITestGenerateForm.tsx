@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { PopulatedCategories } from '@/types/categoryType'
 import type { FormState } from '@/types/actionTypes'
 import { Textarea } from '@/components/ui/Textarea'
@@ -23,6 +23,15 @@ export default function AITestGenerateForm(props: {
   const [questionCount, setQuestionCount] = useState('5')
   const [linkedCategory, setLinkedCategory] = useState('')
 
+  useEffect(() => {
+    if (props.state.status !== 'ERROR') return
+
+    const submittedCount = props.state.values?.questionCount?.toString()
+    const submittedCategory = props.state.values?.linkedCategory?.toString()
+    if (submittedCount) setQuestionCount(submittedCount)
+    if (submittedCategory) setLinkedCategory(submittedCategory)
+  }, [props.state.timestamp, props.state.status, props.state.values])
+
   return (
     <form action={props.action} className="flex flex-col gap-4">
       <div className="flex flex-col">
@@ -30,6 +39,7 @@ export default function AITestGenerateForm(props: {
         <Textarea
           id="topic"
           name="topic"
+          defaultValue={props.state.values?.topic?.toString() || ''}
           placeholder="np. Powikłania cukrzycy typu 2, opieka nad pacjentem po udarze..."
           className={inputClass}
         />
@@ -39,7 +49,14 @@ export default function AITestGenerateForm(props: {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col">
           <Label htmlFor="categoryName" label="Nazwa Twojej kategorii:" className="text-xs sm:text-sm text-zinc-700 font-medium" />
-          <Input type="text" id="categoryName" name="categoryName" placeholder="np. Moje pytania z cukrzycy" className={inputClass} />
+          <Input
+            type="text"
+            id="categoryName"
+            name="categoryName"
+            defaultValue={props.state.values?.categoryName?.toString() || ''}
+            placeholder="np. Moje pytania z cukrzycy"
+            className={inputClass}
+          />
           <FieldError name="categoryName" formState={props.state} />
         </div>
         <div className="flex flex-col">
