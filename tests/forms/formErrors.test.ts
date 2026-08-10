@@ -8,6 +8,8 @@ import type { FormState } from '../../src/types/actionTypes'
 import { DeleteCategorySchema } from '../../src/server/schema'
 import Input from '../../src/components/ui/Input'
 import { getFormStringValues } from '../../src/helpers/getFormStringValues'
+import { getCreateTestFieldErrors } from '../../src/helpers/getCreateTestFieldErrors'
+import { CreateTestSchema } from '../../src/server/schema'
 
 const state = (overrides: Partial<FormState>): FormState => ({
   status: 'ERROR',
@@ -83,4 +85,25 @@ test('Input forwards restored text and checkbox defaults', () => {
 
   assert.match(text, /value="Answer one"/)
   assert.match(checkbox, /checked=""/)
+})
+
+test('manual-test answer errors map only to the invalid answer input', () => {
+  const result = CreateTestSchema.safeParse({
+    category: 'anatomia-test',
+    linkedCategory: 'anatomia',
+    question: 'Test question',
+    answers: [
+      { option: 'Answer one', isCorrect: true },
+      { option: 'Answer two', isCorrect: false },
+      { option: '', isCorrect: false },
+    ],
+  })
+
+  assert.equal(result.success, false)
+  if (!result.success) {
+    const fieldErrors = getCreateTestFieldErrors(result.error)
+    assert.equal(fieldErrors.option1, undefined)
+    assert.equal(fieldErrors.option2, undefined)
+    assert.deepEqual(fieldErrors.option3, ['Pole odpowiedzi nie może być puste'])
+  }
 })

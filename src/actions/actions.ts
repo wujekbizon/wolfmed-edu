@@ -72,6 +72,7 @@ import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
 import { getUserEnrollmentsAction } from "@/actions/course-actions"
 import { getFormStringValues } from "@/helpers/getFormStringValues"
+import { getCreateTestFieldErrors } from "@/helpers/getCreateTestFieldErrors"
 
 export async function startTestAction(
   formState: FormState,
@@ -848,12 +849,21 @@ export async function createTestAction(
       ? ((formData.get("linkedCategory") as string) ?? "").trim()
       : String(testCategory).trim()
 
-    const { answers, category, question, linkedCategory } = CreateTestSchema.parse({
+    const validationResult = CreateTestSchema.safeParse({
       category: testCategory,
       linkedCategory: linkedCategoryRaw,
       question: formData.get("question"),
       answers: answersData
     })
+
+    if (!validationResult.success) {
+      return errorWithValues({
+        ...toFormState("ERROR", ""),
+        fieldErrors: getCreateTestFieldErrors(validationResult.error),
+      })
+    }
+
+    const { answers, category, question, linkedCategory } = validationResult.data
 
     // The linked subject must be one the user can actually access.
     const accessibleValues = new Set(
@@ -869,9 +879,10 @@ export async function createTestAction(
 
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
     if (correctAnswers.length !== 1) {
-      return errorWithValues(
-        toFormState("ERROR", "Wybierz dokładnie jedną poprawną odpowiedź.")
-      )
+      return errorWithValues({
+        ...toFormState("ERROR", ""),
+        fieldErrors: { checkbox: ["Wybierz dokładnie jedną poprawną odpowiedź."] },
+      })
     }
 
     const data = {
