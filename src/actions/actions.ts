@@ -1,10 +1,7 @@
 "use server"
 
-import { countTestScore } from "@/helpers/countTestScore"
-import { parseAnswerRecord } from "@/helpers/parseAnswerRecord"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
-import { QuestionAnswer } from "@/types/dataTypes"
 import { redirect } from "next/navigation"
 import { db } from "@/server/db/index"
 import {
@@ -20,7 +17,6 @@ import {
   userCustomCategories
 } from "@/server/db/schema"
 import {
-  CreateAnswersSchema,
   CreateMessageSchema,
   DeleteTestIdSchema,
   DeleteMaterialIdSchema,
@@ -73,6 +69,8 @@ import { getCurrentUser } from "@/server/user"
 import { getUserEnrollmentsAction } from "@/actions/course-actions"
 import { getFormStringValues } from "@/helpers/getFormStringValues"
 import { getCreateTestFieldErrors } from "@/helpers/getCreateTestFieldErrors"
+import { getSessionQuestions } from "@/server/testSessionQuestions"
+import { gradeSessionAnswers } from "@/helpers/gradeSessionAnswers"
 
 export async function startTestAction(
   formState: FormState,
@@ -201,6 +199,22 @@ export async function submitTestAction(
   formState: FormState,
   formData: FormData
 ) {
+  const submittedValues = getFormStringValues(formData)
+  const answerValues: Record<string, string> = Object.fromEntries(
+    Object.entries(submittedValues).filter(
+      (entry): entry is [string, string] =>
+        entry[0].startsWith("answer-") && typeof entry[1] === "string"
+    )
+  )
+  const errorWithAnswers = (state: FormState): FormState => ({
+    ...state,
+    values: answerValues,
+    fieldErrors: {
+      ...state.fieldErrors,
+      ...(state.message ? { general: [state.message] } : {})
+    }
+  })
+
   const { userId } = await auth()
   if (!userId) {
     const err = new Error("Sesja wygasła. Zaloguj się ponownie.")
@@ -211,53 +225,73 @@ export async function submitTestAction(
   const rateLimit = await checkRateLimit(userId, "test:submit")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    return errorWithAnswers(
+      toFormState(
+        "ERROR",
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
     )
   }
 
-  const sessionId = formData.get("sessionId")
-  if (!sessionId) {
-    return toFormState("ERROR", "No session ID provided")
+  const sessionId = submittedValues.sessionId
+  if (typeof sessionId !== "string" || !sessionId) {
+    return errorWithAnswers(toFormState("ERROR", "Brak identyfikatora sesji testowej."))
   }
-
-  const answers: QuestionAnswer[] = []
-  formData.forEach((value, key) => {
-    if (key.slice(0, 6) === "answer") {
-      answers.push({ [key]: value.toString() })
-    }
-  })
-
-  const allowedLengths = [10, 20, 40]
-  const answersSchema = CreateAnswersSchema(allowedLengths)
-  const validationResult = answersSchema.safeParse(answers)
-
-  if (!validationResult.success) {
-    const formValues: Record<string, string> = {}
-    formData.forEach((value, key) => {
-      if (key.startsWith("answer-")) {
-        formValues[key] = value.toString()
-      }
-    })
-    return {
-      ...toFormState(
-        "ERROR",
-        validationResult.error.issues[0]?.message || "Wybierz jedną odpowiedź"
-      ),
-      values: formValues
-    }
-  }
-
-  const { correct } = countTestScore(validationResult?.data as QuestionAnswer[])
-  const testResult = parseAnswerRecord(
-    validationResult?.data as QuestionAnswer[]
-  )
 
   let quizCategory: string | null = null
   let quizSessionId: string | null = null
 
   try {
+    const sessionSnapshot = await db.query.testSessions.findFirst({
+      where: and(
+        eq(testSessions.id, sessionId),
+        eq(testSessions.userId, userId),
+        eq(testSessions.status, "ACTIVE")
+      ),
+      columns: {
+        id: true,
+        category: true,
+        numberOfQuestions: true,
+        expiresAt: true
+      }
+    })
+
+    if (!sessionSnapshot) {
+      return errorWithAnswers(toFormState("ERROR", "Nie znaleziono aktywnej sesji testu."))
+    }
+
+    if (new Date() > sessionSnapshot.expiresAt) {
+      await db
+        .update(testSessions)
+        .set({ status: "EXPIRED", finishedAt: new Date() })
+        .where(
+          and(
+            eq(testSessions.id, sessionSnapshot.id),
+            eq(testSessions.userId, userId),
+            eq(testSessions.status, "ACTIVE")
+          )
+        )
+      return errorWithAnswers(toFormState("ERROR", "Sesja wygasła — czas się skończył."))
+    }
+
+    const sessionTests = await getSessionQuestions(
+      userId,
+      sessionSnapshot.category,
+      sessionSnapshot.numberOfQuestions,
+      sessionSnapshot.id
+    )
+
+    if (sessionTests.length !== sessionSnapshot.numberOfQuestions) {
+      return errorWithAnswers(toFormState("ERROR", "Nie udało się odtworzyć pytań sesji."))
+    }
+
+    const gradeResult = gradeSessionAnswers(sessionTests, answerValues)
+    if (!gradeResult.success) {
+      return errorWithAnswers(toFormState("ERROR", gradeResult.message))
+    }
+
+    const { correct, testResult } = gradeResult
+
     await db.transaction(async (tx) => {
       const now = new Date()
 
@@ -277,7 +311,7 @@ export async function submitTestAction(
       quizCategory = session.category
       quizSessionId = session.id
 
-      if (now > session.expiresAt) {
+      if (now > new Date(session.expiresAt)) {
         await tx
           .update(testSessions)
           .set({ status: "EXPIRED", finishedAt: now })
@@ -307,7 +341,7 @@ export async function submitTestAction(
         .where(eq(testSessions.id, session.id))
     })
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithAnswers(fromErrorToFormState(error))
   }
 
   // Deterministic memory extraction, off the hot path — recompute the student's

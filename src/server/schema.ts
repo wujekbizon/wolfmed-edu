@@ -32,16 +32,6 @@ export const DeleteCategorySchema = z.object({
     .trim(),
 });
 
-export const CreateAnswersSchema = (allowedLengths: number[]) => {
-  return z
-    .array(
-      z.record(z.string().min(1, "Odpowiedz na wszystkie pytania"), z.string())
-    )
-    .refine((data) => allowedLengths.includes(data.length), {
-      message: "Odpowiedz na wszystkie pytania.",
-    });
-};
-
 export const UpdateMottoSchema = z.object({
   motto: z
     .string()

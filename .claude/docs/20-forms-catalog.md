@@ -42,7 +42,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | Form | Page | Action | Schema | Writes |
 |---|---|---|---|---|
 | Start-test control (in `TestsCategoriesList`/category page) | `/panel/testy/[value]` | `startTestAction` | `StartTestSchema` | `testSessions` |
-| Test-taking submit (`GenerateTests`) | `/panel/testy/[value]` | `submitTestAction` | (answers validated via `CreateAnswersSchema(allowedLengths)`, a schema *factory* — the shape depends on question count) | `completedTestes`, `users` aggregates |
+| Test-taking submit (`GenerateTests`) | `/panel/testy/[value]` | `submitTestAction` | Deterministic session question set + server-side option-index validation and grading | `completedTestes`, `users` aggregates |
 | Delete test control | admin/content tooling | `deleteTestAction` | `DeleteTestIdSchema` | `tests` |
 | Practical exam submit (`PracticalExamRunner`) | `/panel/egzaminy/[slug]` | `gradePracticalExamAction` | `GradePracticalExamSchema` | (scoring — see `praktyczny.ts`) |
 | AI practical exam generation | `/panel/egzaminy` flow | `generatePracticalExamAction` | `GeneratedPracticalExamSchema` | `generatedPracticalExams` |
@@ -156,7 +156,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 A few actions validate against something other than a `z.object` in `schema.ts`:
 - `updatePreferencesAction` — validates against `PREFERENCE_DEFS` (`@/constants/...`), an allow-list of preference keys/values rather than a Zod object, since the shape is a flat key-value map.
 - `createCheckoutSession` — trusts `priceId` to be one Stripe already knows (an invalid price fails at the Stripe API call, not at a local schema).
-- `submitTestAction` — uses `CreateAnswersSchema(allowedLengths)`, a schema **factory function** rather than a static schema, because the valid answer-array shape depends on how many questions were in that specific test session.
+- `submitTestAction` — reloads the deterministic session question set and validates every submitted option index against canonical DB answers; the browser never receives or submits correctness.
 
 ---
 
@@ -170,7 +170,7 @@ A few actions validate against something other than a `z.object` in `schema.ts`:
 | `AddQuestionToCategorySchema` | 763 | `GenerateMindMapSchema` | 869 |
 | `CellSchema` | 282 | `GenerateProcedureQuizSchema` | 456 |
 | `ConceptIdSchema` | 956 | `GeneratedKnowledgeQuizSchema` | 406 |
-| `CreateAnswersSchema` (factory) | 37 | `GeneratedPracticalExamSchema` | 584 |
+| `UpdateMottoSchema` | 35 | `GeneratedPracticalExamSchema` | 584 |
 | `CreateBlogCategorySchema` | 672 | `GeneratedScenarioQuizSchema` | 447 |
 | `CreateBlogPostSchema` | 607 | `GeneratedSpotErrorQuizSchema` | 421 |
 | `CreateBlogTagSchema` | 714 | `GradePracticalExamSchema` | 479 |

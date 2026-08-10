@@ -963,12 +963,15 @@ export const getUserIdByCustomer = cache(
   }
 )
 
-export async function getTestSessionDetails(sessionId: string) {
+export async function getTestSessionDetails(sessionId: string, userId: string) {
   const session = await db.query.testSessions.findFirst({
-    where: eq(testSessions.id, sessionId),
+    where: and(eq(testSessions.id, sessionId), eq(testSessions.userId, userId)),
     columns: {
+      category: true,
       durationMinutes: true,
       numberOfQuestions: true,
+      status: true,
+      expiresAt: true,
     },
   })
   return session

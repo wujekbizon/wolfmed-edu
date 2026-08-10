@@ -2,7 +2,6 @@
 
 import { useActionState, useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useGeneratedTest } from '@/hooks/useGeneratedTest'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { submitTestAction } from '@/actions/actions'
@@ -11,26 +10,43 @@ import SubmitButton from '@/components/SubmitButton'
 import TestTimer from './TestTimer'
 import FieldError from './FieldError'
 import Input from './ui/Input'
-import type { Test } from '@/types/dataTypes'
+import type { ExamQuestion } from '@/types/dataTypes'
 import { useSessionHeartbeat } from '@/hooks/useSessionHeartbeat'
 import { useBeaconCleanup } from '@/hooks/useBeaconCleanup'
 
 export default function GenerateTests(props: {
-  tests: Test[]
+  tests: ExamQuestion[]
   sessionId: string
   duration: number
-  questions: number
 }) {
   const [state, action, isPending] = useActionState(
     submitTestAction,
     EMPTY_FORM_STATE
   )
   const router = useRouter()
-  const randomTest = useGeneratedTest(props.tests, props.questions)
   const noScriptFallback = useToastMessage(state)
   useSessionHeartbeat(props.sessionId)
   useBeaconCleanup(props.sessionId)
   const [isTimerExpired, setIsTimerExpired] = useState(false)
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, number>>({})
+
+  useEffect(() => {
+    if (!state.values) return
+
+    const restored = Object.fromEntries(
+      Object.entries(state.values).flatMap(([key, value]) => {
+        if (!key.startsWith('answer-') || typeof value !== 'string') return []
+        const selectedIndex = Number(value)
+        return Number.isInteger(selectedIndex)
+          ? [[key.slice('answer-'.length), selectedIndex]]
+          : []
+      })
+    )
+
+    if (Object.keys(restored).length) {
+      setSelectedAnswers((current) => ({ ...current, ...restored }))
+    }
+  }, [state.values])
 
   useEffect(() => {
     if (state.status === 'SUCCESS') {
@@ -57,15 +73,20 @@ export default function GenerateTests(props: {
           className='grid w-full grid-cols-1 gap-8 lg:w-3/4 xl:w-2/3 '
         >
           <Input type='hidden' name='sessionId' value={props.sessionId} />
-          {props.questions && (
+          {props.tests.length > 0 && (
             <>
-              {randomTest.map((item, index) => {
+              {props.tests.map((item, index) => {
                 return (
                   <div className='flex flex-col' key={`${item.id}/${index}`}>
                     <TestCard
                       formState={state}
                       test={item}
-                      questionNumber={`${index + 1}/${randomTest.length}`}
+                      questionNumber={`${index + 1}/${props.tests.length}`}
+                      selectedIndex={selectedAnswers[item.id] ?? null}
+                      onSelect={(selectedIndex) => setSelectedAnswers((current) => ({
+                        ...current,
+                        [item.id]: selectedIndex,
+                      }))}
                     />
                   </div>
                 )

@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import { Metadata } from "next";
-import { getTestSessionDetails, getTestsByCategory, getUserCustomCategoryById, getUserCustomTestsByIds } from '@/server/queries'
+import { getTestSessionDetails } from '@/server/queries'
 import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { getCurrentUser } from "@/server/user";
 import { redirect } from "next/navigation";
-import { Test } from "@/types/dataTypes";
+import { getSessionQuestions } from '@/server/testSessionQuestions'
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -29,30 +29,38 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
 
-  const CUSTOM_PREFIX = 'moje-testy__'
-  let categoryTests: Test[]
+  const sessionDetails = await getTestSessionDetails(sessionId, user.userId);
 
-  if (decodedCategory.startsWith(CUSTOM_PREFIX)) {
-    const catId = decodedCategory.slice(CUSTOM_PREFIX.length)
-    const cat = await getUserCustomCategoryById(user.userId, catId)
-    if (!cat) redirect('/panel/testy')
-    categoryTests = (await getUserCustomTestsByIds(cat.questionIds)) as Test[]
-  } else {
-    categoryTests = await getTestsByCategory(decodedCategory) as Test[]
-  }
-
-  const sessionDetails = await getTestSessionDetails(sessionId);
-
-  if (!categoryTests || categoryTests.length === 0) {
-    return <p>Brak dostępnych testów. Proszę spróbować później.</p>
-  }
-
-  if (!sessionDetails) {
+  if (
+    !sessionDetails
+    || sessionDetails.category !== decodedCategory
+    || sessionDetails.status !== 'ACTIVE'
+    || sessionDetails.expiresAt < new Date()
+  ) {
     return <p>Nie znaleziono szczegółów sesji testowej.</p>;
   }
 
   const { numberOfQuestions, durationMinutes } = sessionDetails
-  return <GenerateTests tests={categoryTests} sessionId={sessionId} duration={durationMinutes} questions={numberOfQuestions} />;
+  const sessionTests = await getSessionQuestions(
+    user.userId,
+    sessionDetails.category,
+    numberOfQuestions,
+    sessionId
+  )
+
+  if (sessionTests.length !== numberOfQuestions) {
+    return <p>Brak dostępnych testów. Proszę spróbować później.</p>
+  }
+
+  const questions = sessionTests.map((test) => ({
+    id: test.id,
+    data: {
+      question: test.data.question,
+      answers: test.data.answers.map(({ option }) => ({ option })),
+    },
+  }))
+
+  return <GenerateTests tests={questions} sessionId={sessionId} duration={durationMinutes} />;
 }
 
 export default async function CategoryTestPage(props: CategoryPageProps) {

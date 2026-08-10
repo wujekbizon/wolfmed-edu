@@ -47,12 +47,12 @@ Composition, top to bottom:
 `TestsByCategory` (inline async component):
 - Decodes the category slug (`decodeURIComponent` — needed because category names contain Polish characters; this is the one comment root `CLAUDE.md` calls out by name as justified).
 - If the category is a custom set (`moje-testy__<id>` prefix), resolves it via `getUserCustomCategoryById` + `getUserCustomTestsByIds`; otherwise `getTestsByCategory(decodedCategory)`.
-- Loads the active `testSessions` row via `getTestSessionDetails(sessionId)` (session id arrives as a `searchParam`, created by `startTestAction` before navigating here).
-- Renders `<GenerateTests tests={...} sessionId={...} duration={...} questions={...} />` — the actual test-taking UI/timer/answer flow.
+- Loads the user's session via `getTestSessionDetails(sessionId, userId)` and rejects category mismatch, inactive status, or expiry.
+- Derives a deterministic question/answer order from `sessionId`, strips answer correctness, and renders `<GenerateTests tests={...} sessionId={...} duration={...} />`.
 
 ### Test session lifecycle (server actions in `src/actions/actions.ts`)
 - **`startTestAction`** (`:73`) — rate-limited (`test:start`), Zod-validated (`StartTestSchema`). Inside a DB transaction: locks the user row (`for("update")`), auto-expires any of the user's stale `ACTIVE` sessions (past `expiresAt` or no heartbeat in 5 min), rejects if a genuinely active session still exists ("finish it before starting a new one"), then inserts a new `testSessions` row and returns `{ sessionId, expiresAt, durationMinutes, numberOfQuestions }` for the client to navigate with.
-- **`submitTestAction`** (`:196`) — grades the submitted answers, updates user aggregates (`testsAttempted`, `totalScore`, `totalQuestions`) and inserts a `completedTestes` row, inside a DB transaction.
+- **`submitTestAction`** (`:196`) — server-validates selected option indexes against the deterministic canonical question set, grades them, updates aggregates, and inserts a `completedTestes` row transactionally.
 - **`deleteTestAction`** (`:368`) / **`expireSessionAction`** (`:1095`) — cleanup paths.
 - Session **heartbeat/expiry** during an in-progress test is handled client-side by hooks hitting `api/session/heartbeat` and `api/session/expire` — see [`14-api-routes.md`](./14-api-routes.md).
 
