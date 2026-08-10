@@ -224,14 +224,14 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 ## TC-18 — A timed test session expires on tab-switch, not just on tab-close
 
-**Source**: [`31-flows-testing.md`](./31-flows-testing.md), README audit note #16. Distinct from the existing Edge case C above (`30-flows-auth-payments.md`'s abandoned-tab case only tests actually closing the tab, which is the one scenario this behavior is correct for).
+**Source**: [`31-flows-testing.md`](./31-flows-testing.md), README audit note #16. This is intentional anti-cheat behavior.
 
 **Steps**:
 1. Start a timed test (`/panel/testy/[value]`), leave `testSessions.status` at `ACTIVE`.
 2. Without closing the tab, switch to a different browser tab (or minimize the window) for a few seconds, then switch back.
-3. Check `testSessions.status` in the DB (or watch the network tab for a `POST /api/session/expire` firing the moment the tab loses visibility). Expect, per current behavior: the session is marked `EXPIRED` **immediately** on the visibility change — before the 5-minute inactivity threshold, before the cron sweep, and even though the student never closed or navigated away.
+3. Check `testSessions.status` in the DB (or watch the network tab for `POST /api/session/expire`). Expect: `EXPIRED` **immediately** on visibility loss.
 4. Confirm this is reachable on mobile too: locking the phone screen mid-test triggers the same `visibilitychange` → `document.hidden` path.
-5. This is filed as a product-intent question (README audit note #16), not an asserted bug — if switching tabs is meant to be treated as abandonment (e.g. anti-cheating), this case documents that it does; if not, this is the reproduction case for the fix.
+5. Start another session, submit with missing answers, and trigger a development Fast Refresh without hiding/reloading the page. Expect: validation preserves answers and the session stays `ACTIVE`; React cleanup alone must not send expiry.
 
 ## TC-19 — Board/cells save from a second tab/device silently overwrites the first's unsaved edits
 
