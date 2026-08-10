@@ -12,6 +12,8 @@ const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)   // src/
 const noScriptFallback = useToastMessage(state)                         // top-level toast
 ```
 
+`FieldError` renders only its named server error. Button-only forms without an editable input use `FormError` once. Form-wide `message` values remain toast-only.
+
 Validation is **server-only** — every schema below lives in `src/server/schema.ts` and is applied inside the Server Action, never on the client. `FormState` shape and `toFormState`/`fromErrorToFormState` helpers: `src/types/actionTypes.ts`, `src/helpers/toFormState.ts`.
 
 Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This table is the reverse index: **form/page → action → schema → table written**.
