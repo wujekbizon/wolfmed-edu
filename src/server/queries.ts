@@ -2251,7 +2251,7 @@ export const getProgressTimeline = cache(
 // ─── Lectures ────────────────────────────────────────────────────────────────
 
 import { lectures } from "./db/schema"
-import type { Lecture, NewLecture } from "./db/schema"
+import type { Lecture } from "./db/schema"
 
 export async function getLectureByHash(userId: string, contentHash: string): Promise<Lecture | null> {
   const rows = await db
@@ -2259,19 +2259,6 @@ export async function getLectureByHash(userId: string, contentHash: string): Pro
     .from(lectures)
     .where(and(eq(lectures.userId, userId), eq(lectures.contentHash, contentHash)))
     .limit(1)
-  return rows[0] ?? null
-}
-
-export async function insertLecture(data: NewLecture): Promise<Lecture> {
-  const rows = await db.insert(lectures).values(data).returning()
-  return rows[0]!
-}
-
-export async function deleteLectureById(userId: string, lectureId: string): Promise<Lecture | null> {
-  const rows = await db
-    .delete(lectures)
-    .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
-    .returning()
   return rows[0] ?? null
 }
 

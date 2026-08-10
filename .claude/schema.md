@@ -240,6 +240,25 @@ Storage quotas and usage tracking.
 **Relations:**
 - One-to-one with `users`
 
+### Lectures (`wolfmed_lectures`)
+AI-generated audio stored through UploadThing.
+
+```typescript
+{
+  id: uuid (PK, auto-generated)
+  userId: varchar(256) (not null)
+  title: varchar(256) (not null)
+  contentHash: varchar(64) (not null)
+  audioKey: varchar(256) (not null)
+  audioUrl: text (not null)
+  size: integer (default: 0, not null) // Bytes charged/refunded against user quota
+  scriptText: text (not null)
+  duration: integer
+  createdAt: timestamp (auto, not null)
+  updatedAt: timestamp (auto, not null)
+}
+```
+
 ---
 
 ## 💬 Community Features

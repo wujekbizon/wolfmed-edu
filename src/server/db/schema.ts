@@ -744,6 +744,7 @@ export const lectures = createTable(
     contentHash: varchar("contentHash", { length: 64 }).notNull(),
     audioKey:    varchar("audioKey", { length: 256 }).notNull(),
     audioUrl:    text("audioUrl").notNull(),
+    size:        integer("size").notNull().default(0),
     scriptText:  text("scriptText").notNull(),
     duration:    integer("duration"),
     createdAt:   timestamp("createdAt").defaultNow().notNull(),

@@ -84,7 +84,7 @@ Covered above under Procedures & courses (`courses`, `courseEnrollments`).
 - Relations: `learningPlansRelations` (many concepts, many studyLogs), `learningPlanConceptsRelations`, `studyLogsRelations`.
 
 ### AI-generated content
-- **`lectures`** — AI-generated audio lecture: `contentHash` (dedup key), `audioKey/audioUrl` (UploadThing), `scriptText`, `duration`.
+- **`lectures`** — AI-generated audio lecture: `contentHash` (dedup key), `audioKey/audioUrl` (UploadThing), `size` (bytes charged/refunded against quota), `scriptText`, `duration`. Existing rows receive `size: 0`; newly generated lectures persist their real byte size.
 - **`generatedPracticalExams`** — AI-generated practical exam (`examJson`), scoped by `userId`.
 - **`generatedQuizzes`** — AI-generated quiz for a procedure challenge (`procedureId`, `challengeType`, `quizJson`).
 
