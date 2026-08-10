@@ -11,6 +11,7 @@ import LinkedSubjectSelect from "./LinkedSubjectSelect";
 import SwitchLeftIcon from "./icons/SwitchLeftIcon";
 import SwitchRightIcon from "./icons/SwitchRightIcon";
 import type { FormState } from "@/types/actionTypes";
+import FieldError from "./FieldError";
 
 export default function CategorySelection(props: {
   categories: PopulatedCategories[];
@@ -46,6 +47,7 @@ export default function CategorySelection(props: {
               name="category"
               ariaLabel="Wybierz kategorię"
             />
+            <FieldError formState={props.formState} name="category" />
           </div>
         ) : (
           <div className="flex w-full flex-col">
@@ -57,6 +59,7 @@ export default function CategorySelection(props: {
               defaultValue={props.formState.values?.newCategory?.toString() || ""}
               className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm"
             />
+            <FieldError formState={props.formState} name="category" />
           </div>
         )}
 
