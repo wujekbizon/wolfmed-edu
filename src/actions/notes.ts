@@ -139,8 +139,7 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
     return fromErrorToFormState(error)
   }
 
-  revalidatePath("panel/nauka")
-  return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
+  return toFormState("SUCCESS", "Notatka została usunięta pomyślnie")
 }
 
 export const updateNoteContentAction = async (
