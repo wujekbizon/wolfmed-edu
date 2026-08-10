@@ -71,6 +71,7 @@ import { getFormStringValues } from "@/helpers/getFormStringValues"
 import { getCreateTestFieldErrors } from "@/helpers/getCreateTestFieldErrors"
 import { getSessionQuestions } from "@/server/testSessionQuestions"
 import { gradeSessionAnswers } from "@/helpers/gradeSessionAnswers"
+import { hasSessionExpired } from "@/helpers/hasSessionExpired"
 
 export async function startTestAction(
   formState: FormState,
@@ -260,7 +261,7 @@ export async function submitTestAction(
       return errorWithAnswers(toFormState("ERROR", "Nie znaleziono aktywnej sesji testu."))
     }
 
-    if (new Date() > sessionSnapshot.expiresAt) {
+    if (hasSessionExpired(sessionSnapshot.expiresAt)) {
       await db
         .update(testSessions)
         .set({ status: "EXPIRED", finishedAt: new Date() })
@@ -295,14 +296,17 @@ export async function submitTestAction(
     await db.transaction(async (tx) => {
       const now = new Date()
 
-      const result = await tx.execute(
-        sql`SELECT * FROM ${testSessions}
-            WHERE ${testSessions.id} = ${sessionId}
-            AND ${testSessions.userId} = ${userId}
-            AND ${testSessions.status} = 'ACTIVE'
-            FOR UPDATE`
-      )
-      const session = result.rows?.[0] as any
+      const [session] = await tx
+        .select()
+        .from(testSessions)
+        .where(
+          and(
+            eq(testSessions.id, sessionId),
+            eq(testSessions.userId, userId),
+            eq(testSessions.status, "ACTIVE")
+          )
+        )
+        .for("update")
 
       if (!session) {
         throw new Error("Nie znaleziono aktywnej sesji testu")
@@ -311,7 +315,7 @@ export async function submitTestAction(
       quizCategory = session.category
       quizSessionId = session.id
 
-      if (now > new Date(session.expiresAt)) {
+      if (hasSessionExpired(session.expiresAt, now)) {
         await tx
           .update(testSessions)
           .set({ status: "EXPIRED", finishedAt: now })
