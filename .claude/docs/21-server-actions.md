@@ -195,7 +195,7 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 ## `aiTests.ts` (120 lines)
 
-`generateAITestsAction` — premium-gated, `GenerateAITestsSchema`, then validates `linkedCategory` against `getAccessibleCategories()` server-side, then rate-limited (`quiz:generate`). Retrieves grounding in **`canonical_only` mode** with an explicit rationale: a generated test is study material, and questions built partly on a student's own note could carry their misunderstanding into an answer key. **Falls back to the raw topic** if retrieval throws, so the feature degrades rather than failing. Model output is reshaped and re-validated against `TestFileSchema`. Preview only — persistence is `saveAIGeneratedTestsAction` in `actions.ts`. Uses the **correct** field-error pattern.
+`generateAITestsAction` — premium-gated, `GenerateAITestsSchema`, then validates `linkedCategory` against `getAccessibleCategories()` server-side, then rate-limited (`quiz:generate`). Retrieves grounding in **`canonical_only` mode** with an explicit rationale: a generated test is study material, and questions built partly on a student's own note could carry their misunderstanding into an answer key. **Falls back to the raw topic** if retrieval throws, so the feature degrades rather than failing. Model output is reshaped and re-validated against `TestFileSchema`. Preview only — persistence is `saveAIGeneratedTestsAction` in `actions.ts`. Uses the **correct** field-error pattern and returns submitted values on every error so the generator form is preserved.
 
 ## `memory-actions.ts` (70 lines) — tutor preferences
 

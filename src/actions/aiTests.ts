@@ -10,6 +10,7 @@ import { formatContextChunks } from "@/helpers/formatContextChunks"
 import { executeToolLocally } from "@/server/tools/executor"
 import { getAccessibleCategories } from "@/helpers/populateCategories"
 import type { FormState } from "@/types/actionTypes"
+import { getFormStringValues } from "@/helpers/getFormStringValues"
 
 const CUSTOM_COURSE = "kategoria-wlasna"
 
@@ -23,12 +24,20 @@ export async function generateAITestsAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({
+    ...state,
+    values: submittedValues,
+  })
+
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
   const isPremium = await checkPremiumAccessAction()
   if (!isPremium) {
-    return toFormState("ERROR", "Funkcja dostępna tylko dla użytkowników premium.")
+    return errorWithValues(
+      toFormState("ERROR", "Funkcja dostępna tylko dla użytkowników premium.")
+    )
   }
 
   const parsed = GenerateAITestsSchema.safeParse({
@@ -38,25 +47,27 @@ export async function generateAITestsAction(
     questionCount: formData.get("questionCount"),
   })
   if (!parsed.success) {
-    return fromErrorToFormState(parsed.error)
+    return errorWithValues(fromErrorToFormState(parsed.error))
   }
 
   const accessibleValues = new Set(
     (await getAccessibleCategories()).map((c) => c.value.toLowerCase())
   )
   if (!accessibleValues.has(parsed.data.linkedCategory.toLowerCase())) {
-    return {
+    return errorWithValues({
       ...toFormState("ERROR", ""),
       fieldErrors: { linkedCategory: ["Wybierz przedmiot z listy dostępnych kategorii."] },
-    }
+    })
   }
 
   const rateLimit = await checkRateLimit(userId, "quiz:generate")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Limit generowania na dziś wyczerpany. Spróbuj ponownie za ${resetMinutes} minut.`
+    return errorWithValues(
+      toFormState(
+        "ERROR",
+        `Limit generowania na dziś wyczerpany. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
     )
   }
 
@@ -100,9 +111,11 @@ export async function generateAITestsAction(
 
     const validation = TestFileSchema.safeParse(reshaped)
     if (!validation.success || validation.data.length === 0) {
-      return toFormState(
-        "ERROR",
-        "Wygenerowane pytania były nieprawidłowe. Spróbuj ponownie."
+      return errorWithValues(
+        toFormState(
+          "ERROR",
+          "Wygenerowane pytania były nieprawidłowe. Spróbuj ponownie."
+        )
       )
     }
 
@@ -115,6 +128,6 @@ export async function generateAITestsAction(
       },
     }
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 }
