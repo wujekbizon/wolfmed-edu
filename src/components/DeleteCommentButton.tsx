@@ -5,6 +5,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { deleteCommentAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import DeleteIcon from '@/components/icons/DeleteIcon'
+import FormError from '@/components/FormError'
 
 type Props = {
   commentId: string
@@ -25,6 +26,7 @@ export default function DeleteCommentButton({ commentId }: Props) {
         >
           <DeleteIcon width={14} height={14} color="red" />
         </button>
+        <FormError formState={state} />
       </form>
       {noScriptFallback}
     </>

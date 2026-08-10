@@ -7,6 +7,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { flashcardDeckKey, flashcardDecksKey } from '@/constants/flashcards'
 import { useInvalidateOnSuccess } from '@/hooks/useInvalidateOnSuccess'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import FormError from '@/components/FormError'
 
 interface FlashcardDeleteButtonProps {
   cardId: string
@@ -31,6 +32,7 @@ export default function FlashcardDeleteButton({ cardId, deckId }: FlashcardDelet
       >
         <Trash2 className='w-3.5 h-3.5' />
       </button>
+      <FormError formState={state} />
       {noScriptFallback}
     </form>
   )

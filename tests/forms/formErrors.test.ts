@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import FieldError from '../../src/components/FieldError'
 import FormError from '../../src/components/FormError'
 import type { FormState } from '../../src/types/actionTypes'
+import { DeleteCategorySchema } from '../../src/server/schema'
 
 const state = (overrides: Partial<FormState>): FormState => ({
   status: 'ERROR',
@@ -42,4 +43,13 @@ test('FormError ignores form-wide messages', () => {
   }))
 
   assert.equal(html, '')
+})
+
+test('delete-category validation maps to its visible field', () => {
+  const result = DeleteCategorySchema.safeParse({ category: '' })
+
+  assert.equal(result.success, false)
+  if (!result.success) {
+    assert.deepEqual(result.error.flatten().fieldErrors.category, ['Kategoria jest wymagana.'])
+  }
 })

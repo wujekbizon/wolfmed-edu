@@ -26,12 +26,10 @@ export const DeleteMaterialIdSchema = z.object({
 });
 
 export const DeleteCategorySchema = z.object({
-  meta: z.object({
-    category: z
-      .string()
-      .min(1, "Kategoria jest wymagana.")
-      .trim(),
-  }),
+  category: z
+    .string()
+    .min(1, "Kategoria jest wymagana.")
+    .trim(),
 });
 
 export const CreateAnswersSchema = (allowedLengths: number[]) => {

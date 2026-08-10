@@ -10,8 +10,12 @@ import { getCategorySelectOptions } from "@/helpers/getCategorySelectOptions";
 import LinkedSubjectSelect from "./LinkedSubjectSelect";
 import SwitchLeftIcon from "./icons/SwitchLeftIcon";
 import SwitchRightIcon from "./icons/SwitchRightIcon";
+import type { FormState } from "@/types/actionTypes";
 
-export default function CategorySelection(props: { categories: PopulatedCategories[] }) {
+export default function CategorySelection(props: {
+  categories: PopulatedCategories[];
+  formState: FormState;
+}) {
   const { selectionMethod, setSelectionMethod } = useTestFormStore();
   // The native select it replaces submitted its first option by default.
   const [category, setCategory] = useState(props.categories[0]?.value ?? "");
@@ -51,7 +55,7 @@ export default function CategorySelection(props: { categories: PopulatedCategori
       </div>
 
       {selectionMethod === "newCategory" && (
-        <LinkedSubjectSelect categories={props.categories} />
+        <LinkedSubjectSelect categories={props.categories} formState={props.formState} />
       )}
     </div>
   );

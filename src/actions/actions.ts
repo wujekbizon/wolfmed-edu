@@ -850,7 +850,10 @@ export async function createTestAction(
     )
     const normalizedLink = linkedCategory.toLowerCase()
     if (!accessibleValues.has(normalizedLink)) {
-      return toFormState("ERROR", "Wybierz przedmiot z listy dostępnych kategorii.")
+      return {
+        ...toFormState("ERROR", ""),
+        fieldErrors: { linkedCategory: ["Wybierz przedmiot z listy dostępnych kategorii."] },
+      }
     }
 
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
@@ -1175,7 +1178,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   const category = formData.get("category") as string
 
-  const validationResult = DeleteCategorySchema.safeParse({ meta: { category } })
+  const validationResult = DeleteCategorySchema.safeParse({ category })
 
   if (!validationResult.success) {
     return {
@@ -1190,7 +1193,7 @@ export async function deleteUserCustomTestsByCategoryAction(
       .where(
         and(
           eq(userCustomTests.userId, userId),
-          sql`${userCustomTests.meta}->>'category' = ${validationResult.data.meta.category}`
+          sql`${userCustomTests.meta}->>'category' = ${validationResult.data.category}`
         )
       )
 
@@ -1198,7 +1201,7 @@ export async function deleteUserCustomTestsByCategoryAction(
       return toFormState("ERROR", "Nie znaleziono testów w tej kategorii")
     }
 
-    const cat = await getUserCustomCategoryByName(userId, validationResult.data.meta.category)
+    const cat = await getUserCustomCategoryByName(userId, validationResult.data.category)
     if (cat) {
       await deleteUserCustomCategory(userId, cat.id)
     }
@@ -1212,7 +1215,7 @@ export async function deleteUserCustomTestsByCategoryAction(
 
   return toFormState(
     "SUCCESS",
-    `Usunięto wszystkie testy z kategorii: ${validationResult.data.meta.category}`
+    `Usunięto wszystkie testy z kategorii: ${validationResult.data.category}`
   )
 }
 

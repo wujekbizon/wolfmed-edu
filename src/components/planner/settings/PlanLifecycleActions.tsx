@@ -7,6 +7,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { useConfirmModalStore } from '@/store/useConfirmModalStore'
 import type { PlanProgress } from '@/types/plannerTypes'
+import FormError from '@/components/FormError'
 
 export default function PlanLifecycleActions({ plan }: { plan: PlanProgress['plan'] }) {
   const [archiveState, archiveAction] = useActionState(archivePlanAction, EMPTY_FORM_STATE)
@@ -38,6 +39,7 @@ export default function PlanLifecycleActions({ plan }: { plan: PlanProgress['pla
           <CircleCheckBig className="w-4 h-4" />
           Oznacz jako ukończony
         </button>
+        <FormError formState={completeState} />
       </form>
 
       <form action={archiveAction} ref={archiveFormRef}>
@@ -58,6 +60,7 @@ export default function PlanLifecycleActions({ plan }: { plan: PlanProgress['pla
           <Archive className="w-4 h-4" />
           Archiwizuj plan
         </button>
+        <FormError formState={archiveState} />
       </form>
     </div>
   )

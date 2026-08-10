@@ -5,6 +5,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { deletePostAction } from '@/actions/actions'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import DeleteIcon from '@/components/icons/DeleteIcon'
+import FormError from '@/components/FormError'
 
 type Props = {
   postId: string
@@ -25,6 +26,7 @@ export default function DeletePostButton({ postId }: Props) {
         >
           <DeleteIcon width={18} height={18} color="red" />
         </button>
+        <FormError formState={state} />
       </form>
       {noScriptFallback}
     </>

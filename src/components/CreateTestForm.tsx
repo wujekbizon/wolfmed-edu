@@ -26,7 +26,7 @@ export default function CreateTestForm(props: { categories: PopulatedCategories[
     >
       <div className="flex w-full flex-col items-end sm:flex-row">
         <div className="flex w-full flex-col gap-1">
-          <CategorySelection categories={props.categories} />
+          <CategorySelection categories={props.categories} formState={formState} />
           <FieldError formState={formState} name="category" />
         </div>
       </div>
