@@ -71,6 +71,7 @@ import { getAccessibleCategories } from "@/helpers/populateCategories"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { getCurrentUser } from "@/server/user"
 import { getUserEnrollmentsAction } from "@/actions/course-actions"
+import { getFormStringValues } from "@/helpers/getFormStringValues"
 
 export async function startTestAction(
   formState: FormState,
@@ -807,21 +808,31 @@ export async function createTestAction(
   formState: FormState,
   formData: FormData
 ) {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({
+    ...state,
+    values: submittedValues,
+  })
+
   const user = await getCurrentUser()
   if (!user) throw new Error("Unauthorized")
 
   const { enrollments } = await getUserEnrollmentsAction()
   if (enrollments.length === 0) {
-    return toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
+    return errorWithValues(
+      toFormState("ERROR", "Ta funkcja jest dostępna tylko dla użytkowników z aktywnym kursem.")
+    )
   }
 
   // Rate limiting: 5 test creations per hour
   const rateLimit = await checkRateLimit(user.userId, "test:create")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    return errorWithValues(
+      toFormState(
+        "ERROR",
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
     )
   }
 
@@ -850,15 +861,17 @@ export async function createTestAction(
     )
     const normalizedLink = linkedCategory.toLowerCase()
     if (!accessibleValues.has(normalizedLink)) {
-      return {
+      return errorWithValues({
         ...toFormState("ERROR", ""),
         fieldErrors: { linkedCategory: ["Wybierz przedmiot z listy dostępnych kategorii."] },
-      }
+      })
     }
 
     const correctAnswers = answersData.filter((answer) => answer.isCorrect)
     if (correctAnswers.length !== 1) {
-      return toFormState("ERROR", "Wybierz dokładnie jedną poprawną odpowiedź.")
+      return errorWithValues(
+        toFormState("ERROR", "Wybierz dokładnie jedną poprawną odpowiedź.")
+      )
     }
 
     const data = {
@@ -881,7 +894,7 @@ export async function createTestAction(
     if (!inserted) throw new Error('Nie udało się zapisać testu')
     await upsertCustomCategory(user.userId, category.toLowerCase(), [inserted.id], normalizedLink)
   } catch (error) {
-    return fromErrorToFormState(error)
+    return errorWithValues(fromErrorToFormState(error))
   }
 
   revalidatePath("/panel/dodaj-test")

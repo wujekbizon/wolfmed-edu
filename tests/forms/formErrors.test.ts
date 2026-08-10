@@ -6,6 +6,8 @@ import FieldError from '../../src/components/FieldError'
 import FormError from '../../src/components/FormError'
 import type { FormState } from '../../src/types/actionTypes'
 import { DeleteCategorySchema } from '../../src/server/schema'
+import Input from '../../src/components/ui/Input'
+import { getFormStringValues } from '../../src/helpers/getFormStringValues'
 
 const state = (overrides: Partial<FormState>): FormState => ({
   status: 'ERROR',
@@ -52,4 +54,33 @@ test('delete-category validation maps to its visible field', () => {
   if (!result.success) {
     assert.deepEqual(result.error.flatten().fieldErrors.category, ['Kategoria jest wymagana.'])
   }
+})
+
+test('submitted string fields and checked boxes survive an error round trip', () => {
+  const formData = new FormData()
+  formData.set('question', 'Test question')
+  formData.set('option1', 'Answer one')
+  formData.set('checkbox1', 'on')
+  formData.set('attachment', new Blob(['ignored']))
+
+  assert.deepEqual(getFormStringValues(formData), {
+    question: 'Test question',
+    option1: 'Answer one',
+    checkbox1: 'on',
+  })
+})
+
+test('Input forwards restored text and checkbox defaults', () => {
+  const text = renderToStaticMarkup(createElement(Input, {
+    name: 'option1',
+    defaultValue: 'Answer one',
+  }))
+  const checkbox = renderToStaticMarkup(createElement(Input, {
+    name: 'checkbox1',
+    type: 'checkbox',
+    defaultChecked: true,
+  }))
+
+  assert.match(text, /value="Answer one"/)
+  assert.match(checkbox, /checked=""/)
 })

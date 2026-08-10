@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PopulatedCategories } from '@/types/categoryType'
 import { getCategorySelectOptions } from '@/helpers/getCategorySelectOptions'
 import Label from './ui/Label'
@@ -18,6 +18,13 @@ export default function LinkedSubjectSelect(props: {
   formState: FormState
 }) {
   const [linkedCategory, setLinkedCategory] = useState('')
+
+  useEffect(() => {
+    if (props.formState.status !== 'ERROR') return
+
+    const submittedCategory = props.formState.values?.linkedCategory?.toString()
+    if (submittedCategory) setLinkedCategory(submittedCategory)
+  }, [props.formState.timestamp, props.formState.status, props.formState.values])
 
   return (
     <div className="flex w-full flex-col">

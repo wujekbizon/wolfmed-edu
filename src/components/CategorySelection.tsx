@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTestFormStore } from "@/store/useTestFormStore";
 import { PopulatedCategories } from "@/types/categoryType";
 import Label from "./ui/Label";
@@ -19,6 +19,20 @@ export default function CategorySelection(props: {
   const { selectionMethod, setSelectionMethod } = useTestFormStore();
   // The native select it replaces submitted its first option by default.
   const [category, setCategory] = useState(props.categories[0]?.value ?? "");
+
+  useEffect(() => {
+    if (props.formState.status !== "ERROR") return;
+
+    const submittedCategory = props.formState.values?.category?.toString();
+    if (submittedCategory) setCategory(submittedCategory);
+
+    if (Object.hasOwn(props.formState.values ?? {}, "newCategory")) {
+      setSelectionMethod("newCategory");
+    } else if (Object.hasOwn(props.formState.values ?? {}, "category")) {
+      setSelectionMethod("existingCategory");
+    }
+  }, [props.formState.timestamp, props.formState.status, props.formState.values, setSelectionMethod]);
+
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="flex w-full items-end gap-6">
@@ -40,6 +54,7 @@ export default function CategorySelection(props: {
               type="text"
               id="addCategory"
               name="newCategory"
+              defaultValue={props.formState.values?.newCategory?.toString() || ""}
               className="w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/90 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-zinc-400 placeholder:text-sm"
             />
           </div>
