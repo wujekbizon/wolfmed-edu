@@ -2,7 +2,7 @@
 
 [← Back to index](./README.md)
 
-All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's exports and a one-line purpose.
+All 65 files in `src/constants/`. Grouped by domain; each entry lists the file's exports and a one-line purpose.
 
 ## Access & premium
 
@@ -15,7 +15,7 @@ All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's
 | File | Exports | Purpose |
 |---|---|---|
 | `formState.ts` | `EMPTY_FORM_STATE` | The initial value passed to every `useActionState` call app-wide — see [`20-forms-catalog.md`](./20-forms-catalog.md). |
-| `buttonStyles.ts` | `ButtonVariant`, `ButtonSize`, `BUTTON_BASE`, `BUTTON_VARIANTS`, `BUTTON_SIZES` | Shared button style tokens backing the `ui` Button component (Golden Rule #8). |
+| `buttonStyles.ts` | `ButtonVariant` (`primary`/`secondary`/`accent`/`ghost`/`cta`), `ButtonSize` (`sm`/`md`/`lg`/`submit`), `ButtonShape` (`soft`/`rounded`/`pill`), `BUTTON_BASE`, `BUTTON_VARIANTS`, `BUTTON_SIZES`, `BUTTON_SHAPES` | Shared button style tokens backing `ui/Button.tsx`, `ui/LinkButton.tsx`, and `SubmitButton.tsx` (Golden Rule #8) — one style system for all three so a variant/size/shape added here is available to buttons, links styled as buttons, and form submit buttons alike. |
 | `optionsLetters.ts` | `LETTERS` | A/B/C/D-style option labeling for quiz/test choices. |
 | `uiTypes` companion `uiTypes.ts` is in `types/`, not here — see [`23-types.md`](./23-types.md). |
 
@@ -104,11 +104,15 @@ All 61 files in `src/constants/`. Grouped by domain; each entry lists the file's
 
 | File | Exports | Purpose |
 |---|---|---|
-| `careerPath.ts` | `CAREER_PATH` | Single career-path marketing content block. |
-| `careerPathsData.ts` | `careerPaths`, `curriculum`, `careerPathsData` | The full `/kierunki/[slug]` content source — see [`10-pages-public.md`](./10-pages-public.md). |
-| `careerStory.ts` | `CAREER_STORY` | Narrative marketing content. |
+| `careerPath.ts` | `OPIEKUN_MEDYCZNY_PATH: CareerPath` | The `opiekun-medyczny` career-timeline content (`PathTimeline`/`PathStepCard`) — headline + ordered `steps` (title, duration, description, photo). One named export per path, not a generic single constant. |
+| `careerPathsData.ts` | `careerPaths`, `curriculum`, `careerPathsData` | The full `/kierunki/[slug]` content source, keyed by slug — assembles `careerStory.ts`/`careerPath.ts`/`careerQuestions.ts` per path into `PathData` (see [`23-types.md`](./23-types.md)). See [`10-pages-public.md`](./10-pages-public.md). |
+| `careerQuestions.ts` | `PIELEGNIARSTWO_QUESTIONS: PathQuestions` | The Q&A + photo-shot content for `PathQuestionsHero` (the `pielegniarstwo` landing page's questions-first variant, used instead of `PathStoryHero`/`PathTimeline` when `careerPathsData[slug].questions` is set). |
+| `careerStory.ts` | `OPIEKUN_MEDYCZNY_STORY: PathStory` | Narrative marketing content for `PathStoryHero`/`StorySceneTrack` (intro, `facts`, scrollytelling `scenes`) — one named export per path, not a generic single constant. |
 | `courseProcedureCards.ts` | `CourseProcedureCard`, `COURSE_PROCEDURE_CARDS` | Landing/marketing cards showcasing procedures per course. |
+| `curriculumAnchor.ts` | `CURRICULUM_ANCHOR` | Scroll-anchor id (`'program'`) for jumping to the curriculum-map section from `PathQuestionsHero`'s CTA link. |
+| `pathShotHeights.ts` | `PATH_SHOT_HEIGHTS` | Cycling list of Tailwind height classes so `PathShotCollage`'s photo frames read as an uneven collage rather than a uniform grid. |
 | `pathTools.ts` | `PATH_TOOLS_INTRO` | Intro copy for `PathTools` (feature list on a course landing page). |
+| `planComparisonPanel.ts` | `PLAN_COMPARISON_PANEL_ID` | Shared DOM id string wiring `PlanComparisonToggle`'s `aria-controls` to `PlanComparisonPanel`'s `id` (see [`26-components.md`](./26-components.md) → `pricing/`). |
 | `pricingAnchor.ts` | `PRICING_ANCHOR` | Scroll-anchor id/config for jumping to the pricing section. |
 | `procedureSlugs.ts` | `PROCEDURE_SLUG_TO_ID`, `PROCEDURE_ID_TO_SLUG`, `getProcedureIdFromSlug`, `getProcedureSlugFromId` | Bidirectional slug↔id lookup for procedures (stable public URLs vs. internal ids). |
 | `educationalPathCards.tsx` | `CardProps`, `CAREGIVER`, `NURSE`, `INFO` | The three home-page education-path cards (see [`10-pages-public.md`](./10-pages-public.md)). |

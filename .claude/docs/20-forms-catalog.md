@@ -48,7 +48,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | Form | Action | Schema | Writes |
 |---|---|---|---|
 | Manual question entry (`CreateTestTabs`) | `createTestAction` | `CreateTestSchema` | `userCustomTests` |
-| Bulk file upload | `uploadTestsFromFile` | `TestFileSchema` | `userCustomTests` |
+| Bulk file upload (**admin-only**, despite living on this premium page) | `uploadTestsFromFile` | `TestFileSchema` | `userCustomTests` |
 | AI generation preview | `generateAITestsAction` | `GenerateAITestsSchema` | (preview only — `FormState.values`) |
 | Save AI-generated set | `saveAIGeneratedTestsAction` | (validates the previewed set) | `userCustomTests` |
 | Create custom category | `createCustomCategoryAction` | `CreateCustomCategorySchema` | `userCustomCategories` |
@@ -75,7 +75,6 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | Deck delete | `deleteFlashcardDeckAction` | `DeckIdSchema` | `flashcardDecks` |
 | Card create/update/delete | `createFlashcardAction` / `updateFlashcardAction` / `deleteFlashcardAction` | `CreateFlashcardSchema` / `UpdateFlashcardSchema` / `FlashcardIdSchema` | `flashcards` |
 | Mind map generation (cell content) | `generateMindMapAction` | `GenerateMindMapSchema` (nodes: `MindMapNodeSchema`) | `userCellsList` (cell content) |
-| PPTX import | `importPptxAction` | (file-based, parsed via `src/lib/parsePptx.ts`) | notes/materials (via downstream note creation) |
 
 ## Panel — procedures, challenges, diagnozy
 
@@ -112,6 +111,7 @@ Full per-action detail: [`21-server-actions.md`](./21-server-actions.md). This t
 | `BlogLikeButton` | `/blog/[slug]` | `toggleBlogLikeAction` | `LikeBlogPostSchema` | `blogLikes` |
 | (legacy) like/unlike | — | `likeBlogPostAction` / `unlikeBlogPostAction` | `LikeBlogPostSchema` / `UnlikeBlogPostSchema` | `blogLikes` |
 | `BlogPostForm` create/edit | `/admin/posts/new`, `/admin/posts/[id]/edit` | `createBlogPostAction` / `updateBlogPostAction` | `CreateBlogPostSchema` / `UpdateBlogPostSchema` | `blogPosts` |
+| `PptxImportPanel` (inside `BlogPostForm`, admin-only) — imports a `.pptx` deck as a starting draft, does **not** write directly | `/admin/posts/new` | `importPptxAction` | (file-based, parsed via `src/lib/parsePptx.ts`) | Nothing itself — returns `{title, slug, excerpt, content}` into the form's fields; only `createBlogPostAction` above actually persists to `blogPosts` once the admin submits. Not a notes/materials path — see [`21-server-actions.md`](./21-server-actions.md). |
 | Post delete | `/admin/posts` | `deleteBlogPostAction` (or `deleteBlogPost`) | `DeleteBlogPostSchema` | `blogPosts` |
 | Publish / archive controls | `/admin/posts` | `publishBlogPostAction` / `archiveBlogPostAction` | `PublishBlogPostSchema` | `blogPosts.status` |
 | `CategoryForm` create/edit | `/admin/categories/*` | `createBlogCategoryAction` / `updateBlogCategoryAction` | `CreateBlogCategorySchema` / `UpdateBlogCategorySchema` | `blogCategories` |
@@ -158,7 +158,7 @@ A few actions validate against something other than a `z.object` in `schema.ts`:
 
 ## `src/server/schema.ts` line index
 
-`schema.ts` is 1104 lines with 68 exported schemas — every table above names the schema but not its location in the file. Alphabetical index, so a name from any table above (or from [`21-server-actions.md`](./21-server-actions.md)) can be jumped to directly rather than grepped for:
+`schema.ts` is 1104 lines with 72 exported schemas — every table above names the schema but not its location in the file. Alphabetical index, so a name from any table above (or from [`21-server-actions.md`](./21-server-actions.md)) can be jumped to directly rather than grepped for:
 
 | Schema | Line | Schema | Line |
 |---|---|---|---|

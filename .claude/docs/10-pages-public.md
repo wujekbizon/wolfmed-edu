@@ -47,14 +47,16 @@ A pure composition shell rendering, in order: `Hero` → `EducationPathsSection`
 Flow:
 1. Fetches `getUserEnrollmentsAction()` (`src/actions/course-actions.ts`) → builds `ownedCourses` as `"${slug}-${accessTier}"` strings.
 2. Looks up `careerPathsData[slug]`; `notFound()` if missing.
-3. Picks a layout component by `data.templateType`: `SimplePathLayout` or `RichPathLayout` (both in `src/app/_components/`).
+3. Picks a layout component by `data.templateType`: `SimplePathLayout` or `RichPathLayout` (both in `src/app/_components/`), passing `ownedCourses` plus the full `PathData` (see [`23-types.md`](./23-types.md)) through as `PathLayoutProps`.
 
-**`RichPathLayout`** (`opiekun-medyczny`/`pielegniarstwo` style pages): `PathHero` → `CurriculumMap` (`curriculum` data, expandable subject/ECTS table) → `PathTools` (feature list) → `PricingSection` (`src/components/pricing/`), passed `ownedCourses` so it can render "already owned" vs. "buy" states per tier.
+**`RichPathLayout`** (`opiekun-medyczny`/`pielegniarstwo` style pages): if `data.questions` is set, renders `PathQuestionsHero` first (a Q&A-led hero — see below); otherwise `PathHero` (plain title/description). Then always: `CurriculumMap` (`curriculum` data, expandable subject/ECTS table, `id={CURRICULUM_ANCHOR}` from `@/constants/curriculumAnchor` — the scroll target for both heroes' "see the program" link) → `PathTools` (feature list) → `PricingSection` (`src/components/pricing/`).
 
-**`SimplePathLayout`**: lighter variant for paths without a full curriculum map (info/other cards).
+**`SimplePathLayout`**: if `data.story` is set, renders `PathStoryHero` (narrative intro + `StorySceneTrack` scrollytelling) instead of the plain `PathHero`; if `data.careerPath` is also set, `PathTimeline` (the pin-and-scroll horizontal step track, via `useHorizontalPath` — see [`22-hooks.md`](./22-hooks.md)) renders below it, separated by `SectionDivider`. Falls back to `PathHero` + `PathTools` + `PricingSection` when neither `story` nor `careerPath` is present.
+
+**Questions-hero variant** — `PathQuestionsHero` (`src/components/path/`, used by `RichPathLayout` when `questions` is set, e.g. `pielegniarstwo` via `careerQuestions.ts`): a two-column sticky hero, `PathQuestionList` (Q&A, revealed on scroll via `useSceneReveal`) on the left and `PathShotCollage` (staggered photo frames) on the right, with its own `CourseCheckoutButton` and a "see the program" link scrolling to `CURRICULUM_ANCHOR`.
 
 ### Purchase flow (Stripe)
-`PricingSection` → a per-tier "Buy" form submits `createCheckoutSession` (`src/actions/stripe.ts`):
+Two entry points submit the same action: the per-tier "Buy" card in `PricingSection` (`PricingCardsGrid`), and `CourseCheckoutButton` (`src/components/path/`) rendered directly inside `PathStoryHero`/`PathQuestionsHero` for an above-the-fold buy CTA — both submit `createCheckoutSession` (`src/actions/stripe.ts`) and both are hidden once `ownsCourse(courseSlug, ownedCourses)` (`src/helpers/ownsCourse.ts`) is true:
 1. Reads `priceId`, `courseSlug`, `accessTier` from `FormData`.
 2. Redirects to `/sign-in?redirect_url=...` if not authenticated.
 3. `getOrCreateStripeCustomer(userId)` (`src/server/stripe.ts`) to reuse/create the Stripe customer.
@@ -62,6 +64,9 @@ Flow:
 5. `redirect(session.url)` to Stripe-hosted checkout.
 
 The actual enrollment write happens later, asynchronously, in the Stripe webhook — see [`14-api-routes.md`](./14-api-routes.md) → `api/webhooks/stripe`, which calls `enrollUserAction(userId, courseSlug, accessTier)` (`src/actions/course-actions.ts`).
+
+### Plan comparison panel
+Below `PricingCardsGrid`, `PlanComparisonToggle` (only rendered when `PLAN_COMPARISON[courseSlug]` has entries — `@/constants/planComparison`) expands `PlanComparisonPanel`: the full feature-comparison table/cards (`PlanComparisonTable`/`PlanComparisonCards`) plus `CourseSubjectList`. Both read `usePlanComparisonStore` (see [`27-state-stores.md`](./27-state-stores.md)), wired together by a shared DOM id (`PLAN_COMPARISON_PANEL_ID`); opening it moves focus into the panel and scrolls it under the sticky navbar.
 
 `checkCourseAccessAction` / `checkPremiumAccessAction` (same file) are the read-side helpers used throughout the app to gate premium features — DB enrollment row is the single source of truth (deliberately not Clerk `publicMetadata`, to avoid a Clerk API rate-limit hit when fanned out per-category — see the inline comment in `course-actions.ts`).
 

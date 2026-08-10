@@ -29,6 +29,8 @@ Three modals rendered at page level (Modal Rendering Rule): `PdfPreviewModal`, `
 
 **File**: `src/app/panel/nauka/notatki/[noteId]/page.tsx`. `getNoteById(userId, noteId)` → `NoteNotFound` if missing. Two-column layout: sticky sidebar (`NoteMetadataCard` + suspended `NoteFlashcardsSection`, letting the user generate/review flashcards derived from this note) and `NotePageContent` (the Lexical rich-text editor/viewer).
 
+`NoteFlashcardsSection` (async Server Component) reads the note's deck back via `getFlashcardDeckByNoteId(userId, noteId)` (see [`28-queries.md`](./28-queries.md)) — the read-side counterpart to `createNoteFlashcardAction`'s `resolveNoteDeckId()` write (see [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 3), both keyed off the same `flashcardDecks.sourceRef` value. Passes the result as `initialDeck` to `NoteFlashcardsPanel` (client) to hydrate without a loading flash.
+
 ---
 
 ## `/panel/procedury` — Procedures hub
