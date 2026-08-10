@@ -43,6 +43,7 @@ export default function FlashcardCellCreateDeck({
           id='deck-name'
           name='name'
           type='text'
+          defaultValue={state.values?.name?.toString() || ''}
           placeholder='np. Fizjologia serca'
           className='flex w-full rounded-lg border border-zinc-200 bg-white/80 px-4 py-2.5 text-sm text-zinc-700 placeholder:text-zinc-400 focus:ring-2 focus:ring-[#ff9898]/50 focus:border-transparent outline-none transition-all duration-300'
         />

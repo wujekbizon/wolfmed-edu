@@ -157,10 +157,10 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 | Function | File | Behavior |
 |---|---|---|
 | `createGeneratedDeckAction` | `flashcardDecks.ts` | `(name, cards) => {success, deckId?, error?}` — a plain object, not `FormState`, because it's called from a hook (`useInsertGeneratedCell`) rather than a form. One transaction inserts the deck then all its cards with sequential `position` values. |
-| `createEmptyDeckAction` | `flashcardDecks.ts` | Manual empty deck; returns the new `deckId` in `values`. Uses the **correct** field-error pattern (empty top-level message + `fieldErrors`). |
-| `createNoteFlashcardAction` | `flashcardDecks.ts` | Re-validates the source note exists, then `resolveNoteDeckId()` (module-private): inserts a deck with `.onConflictDoNothing()` against the `(userId, sourceRef)` unique constraint and re-selects if the insert lost a race — so **a note can only ever have one deck**, created lazily on its first flashcard. |
+| `createEmptyDeckAction` | `flashcardDecks.ts` | Manual empty deck; returns the new `deckId` in `values`. Uses the **correct** field-error pattern (empty top-level message + `fieldErrors`) and returns submitted values on errors. |
+| `createNoteFlashcardAction` | `flashcardDecks.ts` | Re-validates the source note exists, then `resolveNoteDeckId()` (module-private): inserts a deck with `.onConflictDoNothing()` against the `(userId, sourceRef)` unique constraint and re-selects if the insert lost a race — so **a note can only ever have one deck**, created lazily on its first flashcard. Returns submitted values on errors. |
 | `renameFlashcardDeckAction` / `deleteFlashcardDeckAction` | `flashcardDecks.ts` | Ownership-checked via `findOwnedDeck`. |
-| `createFlashcardAction` / `updateFlashcardAction` / `deleteFlashcardAction` | `flashcards.ts` | Individual card CRUD; each re-checks ownership via `findOwnedDeck`/`findOwnedCard` before touching a row. New cards get `position: await nextCardPosition(deckId)`. |
+| `createFlashcardAction` / `updateFlashcardAction` / `deleteFlashcardAction` | `flashcards.ts` | Individual card CRUD; each re-checks ownership via `findOwnedDeck`/`findOwnedCard` before touching a row. New cards get `position: await nextCardPosition(deckId)`. Create/update return submitted values on errors so forms preserve input. |
 | `fetchFlashcardDecksAction` / `fetchFlashcardDeckAction` / `fetchNoteFlashcardDeckAction` | `flashcardFetch.ts` | Read-only, return `[]`/`null` for unauthenticated callers rather than throwing — they back React Query hooks that shouldn't error-boundary on a signed-out flash. |
 
 ## `notes.ts` (201 lines)

@@ -74,6 +74,19 @@ test('submitted string fields and checked boxes survive an error round trip', ()
   })
 })
 
+test('flashcard values survive an error round trip', () => {
+  const formData = new FormData()
+  formData.set('questionText', 'Pytanie')
+  formData.set('answerText', 'Odpowiedź')
+  formData.set('name', 'Anatomia')
+
+  assert.deepEqual(getFormStringValues(formData), {
+    questionText: 'Pytanie',
+    answerText: 'Odpowiedź',
+    name: 'Anatomia',
+  })
+})
+
 test('Input forwards restored text and checkbox defaults', () => {
   const text = renderToStaticMarkup(createElement(Input, {
     name: 'option1',

@@ -65,7 +65,10 @@ export default function FlashcardCreateModal({
             <Textarea
               id='flashcard-question'
               name='questionText'
-              defaultValue={selectedAsAnswer ? '' : (selectedText ?? '')}
+              defaultValue={
+                state.values?.questionText?.toString()
+                ?? (selectedAsAnswer ? '' : (selectedText ?? ''))
+              }
               placeholder={FLASHCARD_MODAL_TEXT.questionPlaceholder}
               rows={2}
               autoFocus
@@ -78,7 +81,10 @@ export default function FlashcardCreateModal({
             <Textarea
               id='flashcard-answer'
               name='answerText'
-              defaultValue={selectedAsAnswer ? (selectedText ?? '') : ''}
+              defaultValue={
+                state.values?.answerText?.toString()
+                ?? (selectedAsAnswer ? (selectedText ?? '') : '')
+              }
               placeholder={FLASHCARD_MODAL_TEXT.answerPlaceholder}
               rows={3}
             />
