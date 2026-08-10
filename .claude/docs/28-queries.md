@@ -159,10 +159,8 @@ Every function below is read directly from source: real signature, return shape,
 
 | Function | Signature | Behavior |
 |---|---|---|
-| `getUserCellsList` | `(userId) => UserCellsList \| null` | One row per user (the whole board is a single blob) — reshapes the DB row's JSONB `cells`/`order` columns into typed objects. |
-| `createUserCellsList` | `(userId, cells, order) => void` — **write** | Plain insert (first-ever save for a user). **Wrapped in `cache()`** — see Findings below. |
-| `updateUserCellsList` | `(userId, cells, order) => void` — **write** | **Full unconditional overwrite** of `cells`/`order`, no version/timestamp check against what's stored — this is the exact function behind README audit note #17 (a save from one tab/device silently discards another's concurrent edits). Bumps `updatedAt`. **Wrapped in `cache()`.** |
-| `checkUserCellsList` | `(userId) => row \| null` | Existence check — used by `saveCellsAction` to decide insert-vs-update. |
+| `getUserCellsList` | `(userId) => UserCellsList \| null` | Reads the user's unique board row and returns `cells`, `order`, and concurrency `version`. |
+| `saveUserCellsList` | `(userId, cells, order, expectedVersion) => saved \| conflict` — **write** | Uncached atomic persistence. `null` version inserts with `ON CONFLICT DO NOTHING`; an existing board updates only where `version = expectedVersion` and increments it. Identical repeats resolve as success; divergent stale writes return the current snapshot without writing. |
 
 ## Courses & enrollment
 
@@ -224,7 +222,7 @@ Every function below is read directly from source: real signature, return shape,
 
 ## Findings from this pass
 
-**Mutations wrapped in React's `cache()`** — a pattern worth flagging on its own. `cache()` is a per-request read-dedup primitive: calling a `cache()`-wrapped function twice with identical arguments *within the same request* returns the same memoized promise instead of running the function body twice. That's the right behavior for a read. For a **write**, it means a second call with the same arguments in the same request would silently **not perform a second mutation**. 12 write functions remain wrapped this way: `deleteCompletedTest`, `createForumPost`, `createForumComment`, `updateUsernameByUserId`, `updateMottoByUserId`, `createNote`, `updateNote`, `deleteNote`, `createUserCellsList`, `updateUserCellsList`, `deleteMaterial`, `deleteTestimonial`. Forum deletes were removed from this list when their authorization fix made them uncached mutations. No current call site invokes any remaining write twice per request, so this is a latent correctness footgun, not an observed bug.
+**Mutations wrapped in React's `cache()`** — 10 remain: `deleteCompletedTest`, `createForumPost`, `createForumComment`, `updateUsernameByUserId`, `updateMottoByUserId`, `createNote`, `updateNote`, `deleteNote`, `deleteMaterial`, `deleteTestimonial`. The cells mutations were removed when the atomic save replaced them. No current call site invokes a remaining write twice per request, so this is a latent correctness footgun, not an observed bug.
 
 **Resolved: `updateTestimonial` now sets `updatedAt`.** Edits preserve the original creation timestamp and no longer move old testimonials to the top of creation-date ordering.
 

@@ -69,7 +69,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 
 ### Study materials & library
 - **`notes`** — rich-text (Lexical) note: `content` (jsonb Lexical tree), `plainText`, `excerpt`, `category`, `tags` (jsonb array), `pinned`.
-- **`userCellsList`** — a user's mind-map/flowcharting cell layout: `cells` (jsonb) + `order` (jsonb), one row per user.
+- **`userCellsList`** — a user's mind-map/flowcharting cell layout: `cells` (jsonb) + `order` (jsonb), exactly one row per user (unique `userId`). Integer `version` drives optimistic concurrency; each successful update increments it.
 - **`materials`** — an uploaded file (UploadThing): `key` (unique), `url`, `type`, `category`, `size`, `extractedText` (text pulled once at upload time — everything downstream reads this instead of re-downloading/re-encoding), `indexStatus: pending | indexed | unindexable | failed` (drives the personal-library embedding sweep).
 - **`userLimits`** — one row per user: `storageLimit` (default 20,000,000 bytes / 20 MB), `storageUsed`. This is the hard cap referenced throughout the CLAUDE.md cost-boundary rules.
 - **`flashcardDecks`** / **`flashcards`** — a deck (`sourceType: ai | manual | note`, unique on `userId + sourceRef` so a note/AI-source can only spawn one deck) containing ordered cards (`position`).

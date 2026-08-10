@@ -65,6 +65,7 @@ import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
+import { boardsEqual } from "@/helpers/cellsConcurrency"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -1632,48 +1633,71 @@ export const deleteMaterial = cache(
   }
 )
 
-export const getUserCellsList = cache(
-  async (userId: string): Promise<UserCellsList | null> => {
-    const rows = await db
-      .select()
-      .from(userCellsList)
-      .where(eq(userCellsList.userId, userId))
-      .limit(1)
+async function readUserCellsList(userId: string): Promise<UserCellsList | null> {
+  const rows = await db
+    .select()
+    .from(userCellsList)
+    .where(eq(userCellsList.userId, userId))
+    .limit(1)
 
-    const userCells = rows[0] ?? null
+  const userCells = rows[0] ?? null
+  if (!userCells) return null
 
-    if (!userCells) return null
-
-    return {
-      id: userCells.id,
-      cells: userCells.cells as Record<string, Cell>,
-      order: userCells.order as string[],
-    }
+  return {
+    id: userCells.id,
+    cells: userCells.cells as Record<string, Cell>,
+    order: userCells.order as string[],
+    version: userCells.version,
   }
-)
+}
 
-export const createUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db.insert(userCellsList).values({
-      userId,
-      cells,
-      order,
-    })
-  }
-)
+export const getUserCellsList = cache(readUserCellsList)
 
-export const updateUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db
+export type SaveUserCellsResult =
+  | { status: "saved"; version: number }
+  | { status: "conflict"; current: UserCellsList | null }
+
+export async function saveUserCellsList(
+  userId: string,
+  cells: Record<string, Cell>,
+  order: string[],
+  expectedVersion: number | null
+): Promise<SaveUserCellsResult> {
+  if (expectedVersion === null) {
+    const [created] = await db
+      .insert(userCellsList)
+      .values({ userId, cells, order, version: 0 })
+      .onConflictDoNothing({ target: userCellsList.userId })
+      .returning({ version: userCellsList.version })
+
+    if (created) return { status: "saved", version: created.version }
+  } else {
+    const [updated] = await db
       .update(userCellsList)
       .set({
         cells,
         order,
+        version: sql`${userCellsList.version} + 1`,
         updatedAt: new Date(),
       })
-      .where(eq(userCellsList.userId, userId))
+      .where(
+        and(
+          eq(userCellsList.userId, userId),
+          eq(userCellsList.version, expectedVersion)
+        )
+      )
+      .returning({ version: userCellsList.version })
+
+    if (updated) return { status: "saved", version: updated.version }
   }
-)
+
+  const current = await readUserCellsList(userId)
+  if (current && boardsEqual({ cells, order }, current)) {
+    return { status: "saved", version: current.version }
+  }
+
+  return { status: "conflict", current }
+}
 
 const toFlashcardDeck = (deck: {
   id: string
@@ -1746,16 +1770,6 @@ export const getFlashcardDeckByNoteId = cache(
     return toFlashcardDeck(deck)
   }
 )
-
-export const checkUserCellsList = cache(async (userId: string) => {
-  const existing = await db
-    .select()
-    .from(userCellsList)
-    .where(eq(userCellsList.userId, userId))
-    .limit(1)
-
-  return existing[0] || null
-})
 
 export const getMaterialsByUser = cache(async (userId: string) => {
   const rows = await db.query.materials.findMany({
