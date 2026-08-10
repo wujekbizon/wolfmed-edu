@@ -650,6 +650,8 @@ const myTestimonials = await getUserTestimonials(userId)
 ### `updateTestimonial(id: string, data)`
 Updates an existing testimonial.
 
+Sets `updatedAt` while preserving the original `createdAt` timestamp.
+
 **Parameters:**
 - `id` - Testimonial UUID
 - `data` - Partial update object

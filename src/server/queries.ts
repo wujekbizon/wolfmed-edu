@@ -1477,7 +1477,7 @@ export const updateTestimonial = async (
 ) => {
   const updated = await db
     .update(testimonials)
-    .set({ ...data, createdAt: new Date() })
+    .set({ ...data, updatedAt: new Date() })
     .where(eq(testimonials.id, id))
     .returning()
 
