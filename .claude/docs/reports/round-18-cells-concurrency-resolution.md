@@ -1,5 +1,7 @@
 # Cells concurrency resolution — Round 18
 
+PR: [#57](https://github.com/wujekbizon/wolfmed-edu/pull/57) → `practical-exam` (draft).
+
 ## Confirmed
 
 - Main and the working branch used the same check-then-insert/update code.
@@ -15,6 +17,10 @@
 - Stale divergent saves write nothing and return the current server snapshot.
 - Local storage tracks the base server version and dirty state; hydration reconciles legacy data.
 - Conflict UI preserves local work and requires an explicit server/local choice.
+- Choosing local keeps the complete draft across refresh; the next save overwrites
+  only if the server version is still current, otherwise it conflicts again.
+- Conflict banner scrolls into view, receives focus, and replaces the redundant toast.
+- Dirty Sync uses the global layout-level confirmation modal; no browser alerts/confirms.
 - Full board validation rejects duplicate order IDs, missing cells, orphan cells, and mismatched IDs.
 - Pending saves lock every rendered Save control; Sync confirms before dropping dirty work.
 
