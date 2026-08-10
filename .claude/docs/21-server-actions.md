@@ -177,8 +177,8 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 | Function | Behavior |
 |---|---|
-| `saveCellsAction` | Rate-limited (`cells:update`), `UserCellsListSchema` over JSON-parsed `order`/`cells`. Then insert-or-update depending on `checkUserCellsList`. **Full unconditional overwrite** with no version check — README audit note #17. ⚠️ The `db.transaction()` wrapper here is **inert**: the three functions called inside it (`checkUserCellsList`, `updateUserCellsList`, `createUserCellsList`) each use the module-level `db` handle, not the `tx` passed into the callback, so none of them join the transaction. Harmless today (the body is one logical write), but it reads as atomic when it isn't — contrast `submitOrderStepsAction`, which correctly threads `tx` into every call. |
-| `syncCellsAction` | `() => {success, data?, error?}` — no form args. **Not a merge or reconciliation** despite the name: a plain read (`getUserCellsList`) wired to a manual `SyncCellsButton`. Nothing calls it automatically. |
+| `saveCellsAction` | Rate-limited (`cells:update`), validates the full `order`/`cells` relationship, then calls one atomic versioned save. New rows use unique-`userId` insert; existing rows update only when the submitted version matches. Identical repeated submissions are idempotent. A stale divergent save returns the server snapshot as a conflict and writes nothing. |
+| `syncCellsAction` | Authenticated plain read of the latest board and version. The client confirms before discarding dirty local work. |
 
 ## `course-actions.ts` (134 lines) — enrollment & access
 
@@ -231,7 +231,7 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 **3. Resolved: field and form-wide errors now use separate channels.** `FieldError` renders only its named server error; `message` is toast-only; button-only forms use `FormError`. Mind-map Zod validation delegates to `fromErrorToFormState`, and manual-test category failures now bind to `linkedCategory`.
 
-**4. `saveCellsAction`'s transaction is inert.** The `db.transaction(async (tx) => {...})` callback never uses `tx` — the three query functions inside all use the module-level `db` handle, so nothing actually runs in the transaction. Harmless today (one logical write), but it reads as atomic when it isn't. `submitOrderStepsAction`/`submitGeneratedQuizAction` show the correct pattern of threading `tx` through.
+**4. Resolved: cells save concurrency.** The inert transaction/check-then-write flow was removed. `saveUserCellsList` now performs a unique insert or compare-and-swap update against `version`; stale writes return conflict without changing the row.
 
 **5. `checkPremiumAccessAction`'s docstring describes an architecture that was deliberately removed.** It claims a "two-layer check… Clerk metadata for fast-path ownership" — but `checkCourseAccessAction`, which it calls, documents having removed exactly that fast-path to stop tripping Clerk's rate limit. The code is right; the comment would mislead anyone reasoning about where access decisions come from.
 

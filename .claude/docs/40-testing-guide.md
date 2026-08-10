@@ -233,7 +233,7 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 4. Confirm this is reachable on mobile too: locking the phone screen mid-test triggers the same `visibilitychange` → `document.hidden` path.
 5. Start another session, submit with missing answers, and trigger a development Fast Refresh without hiding/reloading the page. Expect: validation preserves answers and the session stays `ACTIVE`; React cleanup alone must not send expiry.
 
-## TC-19 — Board/cells save from a second tab/device silently overwrites the first's unsaved edits
+## TC-19 — Board/cells stale save is blocked
 
 **Source**: [`21-server-actions.md`](./21-server-actions.md), README audit note #17.
 
@@ -242,8 +242,9 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 2. In tab A, add or edit a cell but **don't** click Save yet.
 3. In tab B, add a different cell and click **Save**.
 4. Back in tab A, click **Save** (without first clicking `SyncCellsButton` to pull tab B's change).
-5. Reload either tab. Expect, per current behavior: tab A's save fully overwrote tab B's — tab B's cell is gone, with no error, no merge, and no warning that a newer version existed server-side at the time of tab A's save.
-6. This is filed as a product-intent question (README audit note #17), not an asserted bug — worth a decision on whether a lightweight optimistic-concurrency check (compare `updatedAt` before overwriting, warn/block if stale) is worth adding.
+5. Expect: tab A's save is rejected and the conflict banner appears. Tab A's local edit remains visible; tab B's server data is unchanged.
+6. Click **Wczytaj wersję serwera**. Expect tab B's saved board to replace tab A's local state.
+7. Repeat, then click **Zachowaj wersję lokalną** and Save. Expect the explicit local choice to overwrite the still-current server version; if another save landed meanwhile, conflict appears again.
 
 ---
 

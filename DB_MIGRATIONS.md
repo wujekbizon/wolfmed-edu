@@ -42,6 +42,7 @@ Wszystkie czytają `NEON_DATABASE_URL` (skrypty `tsx` ładują `.env.local`, pot
 | Komenda | Co robi | Kiedy |
 |---|---|---|
 | `pnpm db:push` | wypycha schemat z `schema.ts` prosto do bazy (bez pliku SQL) | **tylko dev** |
+| `pnpm db:migrate:cells` | bezpiecznie deduplikuje plansze, dodaje `version` i unikalny indeks `userId` | M8 na dev i prod |
 | `pnpm db:generate` | generuje wersjonowaną migrację SQL do `./drizzle` na podstawie różnicy schematu | przed wdrożeniem na prod |
 | `pnpm db:migrate` | wykonuje oczekujące migracje SQL z `./drizzle` na bazie z konfiguracji | prod (po `db:generate` i review) |
 | `pnpm db:studio` | podgląd/edycja danych (Drizzle Studio) | dev / debug prod |
@@ -261,7 +262,23 @@ ekstrakcja).
    trzecią ścieżkę zapisu fragmentów, musi powtórzyć tę bramkę — albo dołożyć filtr
    planu w zamiataczu.
 
-### M8+ — (dopisuj kolejne zmiany tutaj)
+### M8 — Komórki: unikalny rekord użytkownika i wersjonowanie zapisu
+*Status: wdrożone i zweryfikowane na dev (2026-08-10).*
+
+- `wolfmed_user_cells_list.version integer NOT NULL DEFAULT 0` — licznik do
+  optymistycznej kontroli współbieżności.
+- Unikalny indeks `user_cells_list_user_id_uq` na `userId` wymusza jeden rekord
+  planszy na użytkownika.
+- `pnpm db:migrate:cells` blokuje tabelę na czas migracji, odrzuca rozbieżne
+  duplikaty, usuwa wyłącznie identyczne duplikaty i dodaje kolumnę oraz indeks.
+- Dev: migracja wykonana. Zweryfikowano 1 rekord, 1 użytkownika, 0 duplikatów,
+  kolumnę `version` i wyłącznie unikalny indeks `user_cells_list_user_id_uq`.
+- Dla M8 nie używać `db:push`: nie wykonuje kontrolowanej walidacji i deduplikacji.
+- Produkcja: Neon branch/backup → `pnpm db:migrate:cells` → sprawdzić jeden rekord
+  na użytkownika i indeks → wdrożyć kod wersjonowanego zapisu. Produkcja jeszcze
+  niezmigrowana.
+
+### M9+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

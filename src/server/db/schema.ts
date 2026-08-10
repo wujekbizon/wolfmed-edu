@@ -481,11 +481,12 @@ export const userCellsList = createTable(
       .references(() => users.userId, { onDelete: "cascade" }),
     cells: jsonb("cells").notNull(),
     order: jsonb("order").notNull(),
+    version: integer("version").default(0).notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => [
-    index("user_cells_list_user_id_idx").on(table.userId),
+    uniqueIndex("user_cells_list_user_id_uq").on(table.userId),
   ]
 )
 

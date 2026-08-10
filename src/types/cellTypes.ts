@@ -11,6 +11,7 @@ export interface UserCellsList {
   userId?: string
   order: string[]
   cells: Record<string, Cell>
+  version: number
   updatedAt?: Date
   createdAt?: Date
 }

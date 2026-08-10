@@ -297,6 +297,26 @@ export const CellSchema = z.object({
 export const UserCellsListSchema = z.object({
   order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
   cells: z.record(z.string(), CellSchema),
+}).superRefine(({ order, cells }, ctx) => {
+  const uniqueOrder = new Set(order)
+  if (uniqueOrder.size !== order.length) {
+    ctx.addIssue({ code: "custom", path: ["order"], message: "Lista zawiera duplikaty" })
+  }
+
+  for (const id of order) {
+    if (!cells[id]) {
+      ctx.addIssue({ code: "custom", path: ["order"], message: `Brak komórki ${id}` })
+    }
+  }
+
+  for (const [key, cell] of Object.entries(cells)) {
+    if (!uniqueOrder.has(key)) {
+      ctx.addIssue({ code: "custom", path: ["cells", key], message: "Komórka nie jest na liście" })
+    }
+    if (cell.id !== key) {
+      ctx.addIssue({ code: "custom", path: ["cells", key, "id"], message: "Niezgodny identyfikator" })
+    }
+  }
 });
 
 export const DeckIdSchema = z.object({
