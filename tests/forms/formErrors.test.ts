@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import FieldError from '../../src/components/FieldError'
 import FormError from '../../src/components/FormError'
 import type { FormState } from '../../src/types/actionTypes'
-import { DeleteCategorySchema } from '../../src/server/schema'
+import { DeleteCategorySchema, TestFileSchema } from '../../src/server/schema'
 import Input from '../../src/components/ui/Input'
 import { getFormStringValues } from '../../src/helpers/getFormStringValues'
 import { getCreateTestFieldErrors } from '../../src/helpers/getCreateTestFieldErrors'
@@ -141,4 +141,18 @@ test('note metadata and tags render submitted defaults after an error', () => {
   assert.match(metadata, /value="My note"/)
   assert.match(metadata, /value="Anatomy"/)
   assert.match(tags, /value="heart"/)
+})
+
+test('test-cell schema requires exactly one correct answer', () => {
+  const question = (correct: boolean[]) => [{
+    data: {
+      question: 'Pytanie',
+      answers: correct.map((isCorrect, index) => ({ option: `Odpowiedź ${index + 1}`, isCorrect })),
+    },
+    meta: { course: 'kategoria-wlasna', category: 'anatomia' },
+  }]
+
+  assert.equal(TestFileSchema.safeParse(question([false, false])).success, false)
+  assert.equal(TestFileSchema.safeParse(question([true, true])).success, false)
+  assert.equal(TestFileSchema.safeParse(question([true, false])).success, true)
 })

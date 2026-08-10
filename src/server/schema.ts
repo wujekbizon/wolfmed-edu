@@ -228,7 +228,11 @@ export const TestFileSchema = z.array(
           })
         )
         .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
-        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
+        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" })
+        .refine(
+          (answers) => answers.filter((answer) => answer.isCorrect).length === 1,
+          { message: "Dokładnie jedna odpowiedź musi być poprawna" }
+        ),
     }),
     meta: z.object({
       course: z.string().min(1, { message: "Pole kursu jest wymagane" }),
