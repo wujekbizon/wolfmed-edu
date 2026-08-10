@@ -7,6 +7,7 @@ import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { getCurrentUser } from "@/server/user";
 import { redirect } from "next/navigation";
 import { getSessionQuestions } from '@/server/testSessionQuestions'
+import { getTestSessionPageState } from '@/helpers/getTestSessionPageState'
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -30,13 +31,11 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
   if (!user) redirect('/sign-in')
 
   const sessionDetails = await getTestSessionDetails(sessionId, user.userId);
+  const sessionState = getTestSessionPageState(sessionDetails, decodedCategory)
 
-  if (
-    !sessionDetails
-    || sessionDetails.category !== decodedCategory
-    || sessionDetails.status !== 'ACTIVE'
-    || sessionDetails.expiresAt < new Date()
-  ) {
+  if (sessionState === 'COMPLETED') redirect('/panel/wyniki')
+
+  if (sessionState === 'INVALID' || !sessionDetails) {
     return <p>Nie znaleziono szczegółów sesji testowej.</p>;
   }
 
