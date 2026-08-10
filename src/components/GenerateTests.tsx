@@ -17,7 +17,7 @@ import { useBeaconCleanup } from '@/hooks/useBeaconCleanup'
 export default function GenerateTests(props: {
   tests: ExamQuestion[]
   sessionId: string
-  duration: number
+  expiresAt: string
 }) {
   const [state, action, isPending] = useActionState(
     submitTestAction,
@@ -62,7 +62,7 @@ export default function GenerateTests(props: {
       <div className='flex w-full flex-col items-center overflow-y-auto scrollbar-webkit p-2'>
         <div className='sticky top-0 z-20 w-full flex justify-end py-2 '>
           <TestTimer
-            durationMinutes={props.duration}
+            expiresAt={props.expiresAt}
             sessionId={props.sessionId}
             onExpiration={handleTimerExpiration}
             message='Sesja egzaminacyjna rozpoczęta, proszę ukończyć w określonym czasie.'

@@ -48,7 +48,7 @@ Composition, top to bottom:
 - Decodes the category slug (`decodeURIComponent` — needed because category names contain Polish characters; this is the one comment root `CLAUDE.md` calls out by name as justified).
 - If the category is a custom set (`moje-testy__<id>` prefix), resolves it via `getUserCustomCategoryById` + `getUserCustomTestsByIds`; otherwise `getTestsByCategory(decodedCategory)`.
 - Loads the user's session via `getTestSessionDetails(sessionId, userId)` and rejects category mismatch, inactive status, or expiry.
-- Derives a deterministic question/answer order from `sessionId`, strips answer correctness, and renders `<GenerateTests tests={...} sessionId={...} duration={...} />`.
+- Derives a deterministic question/answer order from `sessionId`, strips answer correctness, and renders `<GenerateTests tests={...} sessionId={...} expiresAt={...} />`. The absolute server deadline prevents timer resets after remount/reload.
 
 ### Test session lifecycle (server actions in `src/actions/actions.ts`)
 - **`startTestAction`** (`:73`) — rate-limited (`test:start`), Zod-validated (`StartTestSchema`). Inside a DB transaction: locks the user row (`for("update")`), auto-expires any of the user's stale `ACTIVE` sessions (past `expiresAt` or no heartbeat in 5 min), rejects if a genuinely active session still exists ("finish it before starting a new one"), then inserts a new `testSessions` row and returns `{ sessionId, expiresAt, durationMinutes, numberOfQuestions }` for the client to navigate with.

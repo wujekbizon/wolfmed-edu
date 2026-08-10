@@ -40,7 +40,7 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
     return <p>Nie znaleziono szczegółów sesji testowej.</p>;
   }
 
-  const { numberOfQuestions, durationMinutes } = sessionDetails
+  const { numberOfQuestions } = sessionDetails
   const sessionTests = await getSessionQuestions(
     user.userId,
     sessionDetails.category,
@@ -60,7 +60,13 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
     },
   }))
 
-  return <GenerateTests tests={questions} sessionId={sessionId} duration={durationMinutes} />;
+  return (
+    <GenerateTests
+      tests={questions}
+      sessionId={sessionId}
+      expiresAt={sessionDetails.expiresAt.toISOString()}
+    />
+  );
 }
 
 export default async function CategoryTestPage(props: CategoryPageProps) {
