@@ -851,7 +851,7 @@ export async function createTestAction(
     const normalizedLink = linkedCategory.toLowerCase()
     if (!accessibleValues.has(normalizedLink)) {
       return {
-        ...toFormState("ERROR", "Wybierz przedmiot z listy dostępnych kategorii."),
+        ...toFormState("ERROR", ""),
         fieldErrors: { linkedCategory: ["Nieprawidłowy przedmiot."] },
       }
     }
