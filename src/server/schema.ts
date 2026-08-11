@@ -3,6 +3,13 @@ import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 import { BODY_ZONES } from "@/types/diagnozyTypes";
 import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
+import { PAYMENT_OFFER_KEYS } from "@/constants/paymentOffers";
+
+export const CreateCheckoutSchema = z.object({
+  offerKey: z.enum(PAYMENT_OFFER_KEYS, {
+    error: "Nieprawidłowa oferta płatności.",
+  }),
+});
 
 export const DeleteTestIdSchema = z.object({
   testId: z

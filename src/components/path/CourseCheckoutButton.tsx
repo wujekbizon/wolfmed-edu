@@ -5,17 +5,13 @@ import { createCheckoutSession } from '@/actions/stripe'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
+import FormError from '@/components/FormError'
+import type { PaymentOfferKey } from '@/types/paymentTypes'
 
-// The same server action the plan cards post to, so the hero sells the course
-// rather than pointing at something that does.
 export default function CourseCheckoutButton({
-  courseSlug,
-  priceId,
-  accessTier
+  offerKey
 }: {
-  courseSlug: string
-  priceId: string
-  accessTier: string
+  offerKey: PaymentOfferKey
 }) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
@@ -23,9 +19,8 @@ export default function CourseCheckoutButton({
   return (
     <form action={action} className='w-full max-w-xs'>
       {noScriptFallback}
-      <input type='hidden' name='courseSlug' value={courseSlug} />
-      <input type='hidden' name='accessTier' value={accessTier} />
-      <input type='hidden' name='priceId' value={priceId} />
+      <FormError formState={state} />
+      <input type='hidden' name='offerKey' value={offerKey} />
       <SubmitButton
         label='Uzyskaj dostęp do kursu'
         loading='Przekierowywanie...'

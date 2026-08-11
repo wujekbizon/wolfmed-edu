@@ -23,9 +23,7 @@ export default function PricingCardsGrid({
               key={tierName}
               tierName={tierName}
               price={tier.price}
-              priceId={tier.priceId}
-              courseSlug={pricing.courseSlug}
-              accessTier={tier.accessTier}
+              offerKey={tier.offerKey}
               features={tier.features}
               isPremium={isPremium}
               {...(tier.badge ? { badge: tier.badge } : {})}

@@ -1,6 +1,7 @@
 import { CardProps } from "@/constants/educationalPathCards";
 import { StaticImageData } from "next/image";
 import type { CareerPath, PathQuestions, PathStory } from "@/types/pathStoryTypes";
+import type { PaymentOfferKey } from "@/types/paymentTypes";
 
 type TemplateType = "simple" | "rich";
 
@@ -22,7 +23,7 @@ export type CurriculumBlock = {
 type PricingTier = {
   price: string;
   features: string[];
-  priceId: string;
+  offerKey: PaymentOfferKey;
   accessTier: string;
   badge?: string;
 };

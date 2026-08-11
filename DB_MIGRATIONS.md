@@ -278,6 +278,20 @@ ekstrakcja).
   na użytkownika i indeks → wdrożyć kod wersjonowanego zapisu. Produkcja jeszcze
   niezmigrowana.
 
+## Stripe Dashboard — katalog produktów
+
+*Status: do wykonania przed uruchomieniem płatności produkcyjnych. To nie jest
+migracja bazy danych.*
+
+- Uzupełnić krótki opis i obraz dla każdego istniejącego produktu jednorazowego:
+  Opiekun Medyczny Standard/Premium oraz Pielęgniarstwo Standard/Premium.
+- Tak samo uzupełnić każdy nowy produkt subskrypcyjny podczas jego tworzenia.
+- Zmiany wykonać osobno w Stripe sandbox i live mode; produkty i ich dane nie są
+  współdzielone między trybami.
+- Nie zmieniać istniejących Price ID. Opis i obraz należą do Stripe Product.
+- Po zmianach utworzyć nowe Checkout Session dla każdego wariantu i sprawdzić
+  nazwę, opis, obraz, cenę oraz tryb płatności jednorazowej/subskrypcji.
+
 ### M9+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
