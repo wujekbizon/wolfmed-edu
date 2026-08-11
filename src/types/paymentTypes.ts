@@ -18,6 +18,93 @@ export type PaymentOffer = {
     | 'STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID'
 }
 
+export type CheckoutPurchaseModel = 'lifetime' | 'subscription'
+
+export type CheckoutOrderStatus =
+  | 'CREATING'
+  | 'OPEN'
+  | 'PROCESSING'
+  | 'PAID'
+  | 'COMPLETED'
+  | 'CANCELED'
+  | 'EXPIRED'
+  | 'FAILED'
+
+export type EntitlementSourceType =
+  | 'legacy_lifetime'
+  | 'lifetime_purchase'
+  | 'lifetime_upgrade'
+  | 'subscription'
+  | 'manual'
+
+export type CheckoutStartResult =
+  | { status: 'READY'; url: string }
+  | { status: 'ACTIVE_CONFLICT' }
+  | { status: 'ALREADY_OWNED' }
+  | { status: 'COMPLETED' }
+
+export type CheckoutSessionSnapshot = {
+  id: string
+  mode: string | null
+  paymentStatus: string
+  amountTotal: number | null
+  currency: string | null
+  clientReferenceId: string | null
+  customerId: string | null
+  paymentIntentId: string | null
+  invoiceId: string | null
+  createdAt: Date
+  expiresAt: Date
+  lineItems: Array<{ priceId: string | null; quantity: number | null }>
+}
+
+export type CheckoutSessionExpectation = {
+  sessionId: string | null
+  userId: string
+  customerId: string | null
+  priceId: string
+  amount: number
+  currency: string
+}
+
+export type StripeCheckoutEventType =
+  | 'checkout.session.completed'
+  | 'checkout.session.async_payment_succeeded'
+  | 'checkout.session.async_payment_failed'
+
+export type CheckoutPaymentState = 'paid' | 'failed' | 'processing' | 'invalid'
+
+export type CheckoutFulfillmentContext = {
+  orderId: string | null
+  userId: string
+  offerKey: PaymentOfferKey
+  courseSlug: PaymentOffer['courseSlug']
+  accessTier: PaymentOffer['accessTier']
+  stripeCustomerId: string
+  snapshot: CheckoutSessionSnapshot
+}
+
+export type EnrollmentGrant = {
+  courseSlug: string
+  accessTier: string
+  isActive: boolean
+  enrolledAt: Date
+  startsAt: Date | null
+  expiresAt: Date | null
+  revokedAt: Date | null
+}
+
+export type LifetimeEnrollmentCandidate = {
+  id: string
+  accessTier: string
+}
+
+export type LifetimeEnrollmentMerge = {
+  canonicalId: string | null
+  staleIds: string[]
+  shouldApplyPurchase: boolean
+}
+
 export type CoursePricingDetailsProps = {
   tierName: string
   price: string

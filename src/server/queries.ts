@@ -66,6 +66,7 @@ import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
 import { boardsEqual } from "@/helpers/cellsConcurrency"
+import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -308,7 +309,12 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
     )
     .orderBy(asc(courseEnrollments.enrolledAt))
 
-  return enrollments.map((row) => ({
+  const effectiveIds = new Set(
+    getEffectiveEnrollmentGrants(enrollments.map((row) => row.enrollment))
+      .map((enrollment) => enrollment.id)
+  )
+
+  return enrollments.filter((row) => effectiveIds.has(row.enrollment.id)).map((row) => ({
     ...row.course,
     enrolledAt: row.enrollment.enrolledAt,
     accessTier: row.enrollment.accessTier,
@@ -318,7 +324,7 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
 
 // Check if user has any active enrollments (used for /panel layout guard)
 export const getUserEnrollments = cache(async (userId: string) => {
-  return await db
+  const enrollments = await db
     .select()
     .from(courseEnrollments)
     .where(
@@ -327,6 +333,8 @@ export const getUserEnrollments = cache(async (userId: string) => {
         eq(courseEnrollments.isActive, true)
       )
     )
+
+  return getEffectiveEnrollmentGrants(enrollments)
 })
 
 // ============================================================================

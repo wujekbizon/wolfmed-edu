@@ -2,14 +2,12 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
-import stripe from '@/lib/stripeClient'
-import { getOrCreateStripeCustomer } from '@/server/stripe'
-import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import { FormState } from '@/types/actionTypes'
-import { CreateCheckoutSchema } from '@/server/schema'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
+import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkRateLimit } from '@/lib/rateLimit'
-import { getVerifiedStripeOffer } from '@/server/stripeOffer'
+import { startCheckout } from '@/server/payments/startCheckout'
+import { CreateCheckoutSchema } from '@/server/schema'
+import type { FormState } from '@/types/actionTypes'
 
 export async function createCheckoutSession(
   _prevState: FormState,
@@ -27,9 +25,7 @@ export async function createCheckoutSession(
     redirect(`/sign-in?redirect_url=${encodeURIComponent(returnPath)}`)
   }
 
-  if (!validation.success) {
-    return fromErrorToFormState(validation.error)
-  }
+  if (!validation.success) return fromErrorToFormState(validation.error)
 
   const rateLimit = await checkRateLimit(userId, 'stripe:checkout')
   if (!rateLimit.success) {
@@ -37,49 +33,22 @@ export async function createCheckoutSession(
   }
 
   let redirectUrl: string | null = null
-
   try {
-    const offer = await getVerifiedStripeOffer(validation.data.offerKey)
-    const customerId = await getOrCreateStripeCustomer(userId)
-    const cancelUrl = new URL('/canceled', process.env.NEXT_PUBLIC_APP_URL)
-    cancelUrl.searchParams.set('course', offer.courseSlug)
-
-    const session = await stripe.checkout.sessions.create({
-      customer: customerId,
-      customer_update: { address: 'auto', name: 'auto' },
-      billing_address_collection: 'required',
-      name_collection: { individual: { enabled: true, optional: false } },
-      tax_id_collection: { enabled: true, required: 'never' },
-      invoice_creation: { enabled: true },
-      locale: 'pl',
-      line_items: [
-        {
-          price: offer.priceId,
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl.toString(),
-      client_reference_id: userId,
-      metadata: {
-        offerKey: offer.key,
-        courseSlug: offer.courseSlug,
-        accessTier: offer.accessTier,
-      },
-      payment_intent_data: {
-        metadata: { offerKey: offer.key },
-      },
-    })
-
-    if (!session.url) {
-      return toFormState('ERROR', 'Nie udało się utworzyć sesji płatności')
+    const result = await startCheckout(userId, validation.data.offerKey)
+    if (result.status === 'ALREADY_OWNED') {
+      return toFormState('ERROR', 'Masz już ten dostęp.')
     }
-
-    redirectUrl = session.url
+    if (result.status === 'ACTIVE_CONFLICT') {
+      return toFormState('ERROR', 'Dokończ lub anuluj rozpoczętą płatność.')
+    }
+    if (result.status === 'COMPLETED') {
+      return toFormState('ERROR', 'Ta płatność została już zakończona.')
+    }
+    redirectUrl = result.url
   } catch (error) {
     console.error('Error creating Stripe checkout session:', error)
     return toFormState('ERROR', 'Nie udało się rozpocząć płatności. Spróbuj ponownie.')
   }
+
   redirect(redirectUrl!)
 }

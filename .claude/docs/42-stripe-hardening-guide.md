@@ -1,7 +1,7 @@
 # Stripe one-time payment hardening guide
 
-Status: Phase 1 active. Subscriptions are out of scope until every checkpoint is
-tested and approved by Greg.
+Status: Phase 2A and 2B implemented in code. Dev migration and combined Stripe
+test pending. Subscriptions remain out of scope.
 
 Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
 
@@ -33,7 +33,7 @@ the agent runs them.
 
 ## Checkpoint 1 - trusted Checkout input
 
-Status: implemented and automated checks passed; waiting for Greg's Stripe test.
+Status: approved by Greg on 2026-08-11.
 
 Changes:
 
@@ -105,19 +105,21 @@ Approval evidence:
 - [ ] Cancel returns to the same course offer.
 - [ ] Greg approved checkpoint 1.
 
-## Checkpoint 2 - checkout orders and idempotency
+## Checkpoint 2 - checkout orders and idempotency (Phase 2A)
 
-Status: blocked on checkpoint 1 approval.
+Status: implemented in code; waiting for combined Phase 2A+2B dev test.
 
 Changes:
 
 - Add an additive `stripe_checkout_orders` table.
 - Store UUID, user, offer, status, active deduplication key, Stripe Session ID,
   expiry, and timestamps.
+- Snapshot Price ID, amount, currency, course and tier on the local order.
 - Reuse one active order per user/course/purchase model.
 - Create Checkout with `checkout:<orderId>` as Stripe idempotency key.
 - Reuse the existing Session URL for concurrent double-click/tab requests.
 - Mark canceled and expired attempts terminal without granting access.
+- Temporarily keep legacy course/tier metadata until Phase 2B is deployed with it.
 
 Acceptance:
 
@@ -127,9 +129,9 @@ Acceptance:
 - A terminal/expired attempt permits a new Checkout.
 - Existing Checkout behavior remains unchanged.
 
-## Checkpoint 3 - atomic ledger and entitlement fulfillment
+## Checkpoint 3 - atomic ledger and entitlement fulfillment (Phase 2B)
 
-Status: blocked on checkpoint 2 approval.
+Status: implemented in code; waiting for migration and combined dev test.
 
 Changes:
 
@@ -142,14 +144,42 @@ Changes:
 - Remove the unused `testLimit` purchase reward.
 - Remove Clerk API calls from the transaction/webhook path.
 - Keep DB access authoritative.
+- Handle completed, asynchronous success and asynchronous failure events.
+- Store no new billing email locally; Stripe Customer remains the PII source.
 
 Acceptance:
 
 - Replaying one event changes nothing.
 - A second event for the same Session changes nothing.
 - Forced transaction failure grants nothing; Stripe retry later succeeds once.
-- One payment creates one lifetime entitlement and one storage row.
+- First payment creates one lifetime entitlement; an upgrade updates it in place.
 - Backfilled owners keep identical access.
+
+### Combined Phase 2A+2B dev test
+
+Prerequisite: execute M9 from `DB_MIGRATIONS.md` against dev only.
+
+1. Forward `checkout.session.completed`,
+   `checkout.session.async_payment_succeeded`, and
+   `checkout.session.async_payment_failed` to the local webhook.
+2. Double-click one offer and open the same offer in two tabs. Expect one local
+   active order and one Stripe Session ID; both requests reuse the Session.
+3. Start Basic, then request Premium for the same course. Expect the active-order
+   conflict until Basic is canceled or expires.
+4. Cancel Checkout. Expect Stripe Session `expired`, local order `CANCELED`, no
+   payment and no entitlement. A new attempt must create a new order.
+5. Pay each of the four offers. Expect one order and payment per Session, one
+   `lifetime_purchase` entitlement per user/course updated to the highest paid
+   tier, plus one user limits row.
+6. Resend the same event and then send another paid event for the same Session.
+   Counts must not change.
+7. Confirm amount, currency, Price, Customer or user mismatch returns webhook
+   `500` and writes nothing.
+8. Force a DB failure inside fulfillment. Expect no event, payment, entitlement,
+   order-state or storage partial write; retry succeeds once after restoring DB.
+9. Confirm no `testLimit` increase and no Clerk API request from Stripe webhook.
+10. Confirm course page and panel access reflect DB grants. Navbar/Drawer must
+    not depend on Clerk course metadata.
 
 ## Checkpoint 4 - verified result UI
 
@@ -163,7 +193,6 @@ Changes:
 - Render paid, processing, failed, and invalid-owner states.
 - Never claim access from URL parameters.
 - Update canceled order state safely.
-- Replace stale Clerk-owned-course UI signals with a DB-backed access summary.
 
 Acceptance:
 

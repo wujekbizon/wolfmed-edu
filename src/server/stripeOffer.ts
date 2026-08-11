@@ -16,7 +16,7 @@ export async function getVerifiedStripeOffer(offerKey: PaymentOfferKey) {
     throw new Error(`Missing Stripe Price: ${offer.priceEnvName}`)
   }
 
-  const price = await stripe.prices.retrieve(priceId)
+  const price = await stripe.prices.retrieve(priceId, { expand: ['product'] })
   if (!isStripePriceValidForOffer(price, offer)) {
     throw new Error(`Invalid Stripe Price configuration: ${offer.priceEnvName}`)
   }

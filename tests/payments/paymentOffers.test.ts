@@ -13,6 +13,7 @@ const stripePrice = (
   currency: 'pln',
   type: 'one_time',
   unit_amount: 15999,
+  product: { active: true } as Stripe.Product,
   ...overrides,
 } as Stripe.Price)
 
@@ -50,6 +51,10 @@ test('configured Stripe Price must match active one-time offer', () => {
   assert.equal(isStripePriceValidForOffer(stripePrice({ currency: 'eur' }), offer), false)
   assert.equal(isStripePriceValidForOffer(stripePrice({ unit_amount: 1 }), offer), false)
   assert.equal(isStripePriceValidForOffer(stripePrice({ type: 'recurring' }), offer), false)
+  assert.equal(
+    isStripePriceValidForOffer(stripePrice({ product: { active: false } as Stripe.Product }), offer),
+    false
+  )
 })
 
 test('canceled checkout returns only to a known course offer', () => {

@@ -1,7 +1,7 @@
 import 'server-only'
 import type Stripe from 'stripe'
 import { clerkClient } from '@clerk/nextjs/server'
-import { and, eq, isNull } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import stripe from '@/lib/stripeClient'
 import { db } from '@/server/db/index'
 import { users } from '@/server/db/schema'
@@ -36,20 +36,4 @@ export async function getOrCreateStripeCustomer(userId: string): Promise<string>
   await db.update(users).set({ stripeCustomerId: customer.id }).where(eq(users.userId, userId))
 
   return customer.id
-}
-
-/**
- * Links a Stripe Customer to a user only if none is stored yet. Used by the
- * webhook to backfill users who paid through a session created before this
- * field existed.
- */
-export async function backfillStripeCustomerId(userId: string, customerId: string): Promise<void> {
-  try {
-    await db
-      .update(users)
-      .set({ stripeCustomerId: customerId })
-      .where(and(eq(users.userId, userId), isNull(users.stripeCustomerId)))
-  } catch (error) {
-    console.error(`Failed to backfill stripeCustomerId for user ${userId}:`, error)
-  }
 }

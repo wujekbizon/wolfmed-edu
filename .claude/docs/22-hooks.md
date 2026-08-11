@@ -106,7 +106,7 @@ Naming collision to know about: `src/hooks/useStore.ts` (a generic hydration-saf
 
 | Hook | Signature → Return | Behavior |
 |---|---|---|
-| `usePremiumAccess` | `() => boolean` | React Query wrapper (`premiumAccessKey()`, `PREMIUM_STALE_TIME`) around `checkPremiumAccessAction()` — the DB-authoritative server check, not a client-side guess. The source comment explains why this can't be answered from Clerk `publicMetadata.ownedCourses` alone: it carries bare course slugs with no access tier, so a client component can't tell basic from premium without asking the server. Shared query key/staleTime across every caller keeps this to one network round-trip per session rather than one per component that needs it. Returns `false` while the query hasn't resolved (fail-closed for UI gating). |
+| `usePremiumAccess` | `() => boolean` | React Query wrapper around the DB-authoritative `checkPremiumAccessAction()`. Shared key/stale time avoid duplicate requests; returns `false` while loading. |
 
 ## Generic UI/UX utilities
 
@@ -138,5 +138,5 @@ Naming collision to know about: `src/hooks/useStore.ts` (a generic hydration-saf
 
 - Forms pattern (`useOnFormSuccess`, `useToastMessage`, `useInvalidateOnSuccess`) is the canonical mutation-feedback trio described in root `CLAUDE.md` → Forms & Validation.
 - `useSessionHeartbeat`/`useBeaconCleanup` — see [`31-flows-testing.md`](./31-flows-testing.md) and resolved README audit note #16 for intentional anti-cheat expiry and remount protection.
-- `usePremiumAccess`/`checkPremiumAccessAction` — see [`00-architecture.md`](./00-architecture.md) → Small server utility modules for the server-side `cache()`-wrapped counterpart (`getIsPremium()`).
+- `usePremiumAccess`/`checkPremiumAccessAction` — DB-authoritative premium check used by client UI and access gates.
 - Every Excalidraw/diagram hook (`useDiagramCamera`, `useDiagramFocus`, `useDiagramPersistence`, `useDiagramSelection`, `useDiagramViewport`, `useCanvasChrome`, `useMermaidScene`) is designed around **one owner per concern** (one camera owner, one persistence debouncer) — worth reading as a set if extending the diagram canvas, since the comments throughout explain specific bugs each ownership boundary was added to prevent.

@@ -292,7 +292,58 @@ migracja bazy danych.*
 - Po zmianach utworzyć nowe Checkout Session dla każdego wariantu i sprawdzić
   nazwę, opis, obraz, cenę oraz tryb płatności jednorazowej/subskrypcji.
 
-### M9+ — (dopisuj kolejne zmiany tutaj)
+### M9 — Stripe: zamówienia, atomowe płatności i źródła dostępu
+
+*Status: kod przygotowany; dev i prod jeszcze niezmigrowane.*
+
+- Nowa tabela `wolfmed_stripe_checkout_orders`: użytkownik, oferta, model zakupu,
+  snapshot ceny/kursu/poziomu, status, aktywny klucz deduplikacji, Stripe Customer
+  i Session, wygaśnięcie oraz daty.
+- `wolfmed_stripe_payments`: nullable `order_id`, `offer_key`, `access_tier`,
+  `invoice_id`; `customerEmail` staje się nullable. Unikalne nullable identyfikatory
+  Stripe Session, PaymentIntent i Invoice.
+- `wolfmed_processed_events`: nullable `event_type`, `stripe_object_id`, `order_id`
+  i `payment_id`. Marker zdarzenia jest zapisywany w tej samej transakcji co zakup.
+- `wolfmed_course_enrollments`: nullable `source_type`, `source_id`, `starts_at`,
+  `revoked_at`; unikalne `(source_type, source_id)`. Zakup Premium aktualizuje
+  istniejący grant lifetime; osobne modele źródłowe mogą współistnieć.
+- `wolfmed_stripe_subscriptions` bez zmian.
+
+Preflight przed dodaniem unikalnych indeksów:
+
+```sql
+SELECT "sessionId", COUNT(*) FROM wolfmed_stripe_payments
+WHERE "sessionId" IS NOT NULL GROUP BY "sessionId" HAVING COUNT(*) > 1;
+
+SELECT "paymentIntentId", COUNT(*) FROM wolfmed_stripe_payments
+WHERE "paymentIntentId" IS NOT NULL
+GROUP BY "paymentIntentId" HAVING COUNT(*) > 1;
+```
+
+Oba zapytania muszą zwrócić zero wierszy. Duplikatów nie usuwać automatycznie;
+najpierw porównać je ze Stripe Dashboard.
+
+Kolejność na dev:
+
+1. Wykonać preflight.
+2. `pnpm db:push`.
+3. Oznaczyć istniejące dostępy jako historyczne lifetime:
+
+```sql
+UPDATE wolfmed_course_enrollments
+SET source_type = 'legacy_lifetime',
+    source_id = id::text,
+    starts_at = enrolled_at
+WHERE source_type IS NULL;
+```
+
+4. Sprawdzić, że każdy stary dostęp pozostał aktywny i ma unikalny `source_id`.
+5. Wykonać test Stripe Phase 2A+2B z przewodnika 42.
+
+Produkcja: osobna wersjonowana migracja expand/backfill po backupie. Nie ustawiać
+nowych kolumn `NOT NULL` i nie usuwać `customerEmail` w pierwszym deployu.
+
+### M10+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

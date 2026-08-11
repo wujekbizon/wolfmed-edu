@@ -17,8 +17,8 @@ There is **no custom registration form**. Account creation is entirely delegated
    - `userId` = the Clerk id (the app's user identity is always the Clerk id, never its own generated one, for this table's FK purposes)
    - `username` = `User-${randomUUID().slice(0,8)}` (a throwaway default, changeable later via `updateUsername`)
    - `motto` = `generateRandomMotto()` (`src/helpers/generateRandomMotto.ts`) — a random starter motto
-5. Also sets Clerk `publicMetadata.ownedCourses = []` on the user — this is the fast-path signal the Navbar reads to decide whether to gray out the `/panel` nav link (see [`10-pages-public.md`](./10-pages-public.md)); it is **not** the access-control source of truth (that's the DB `courseEnrollments` table, checked separately).
-6. User is redirected to `/` (`fallbackRedirectUrl`). At this point they have an account but **zero course enrollments**, so `/panel` will redirect them to `/kierunki?from=panel` if they try to enter it (see `panel/layout.tsx`, [`00-architecture.md`](./00-architecture.md)).
+5. No Clerk course metadata is initialized; PostgreSQL is the enrollment source of truth.
+6. User is redirected to `/` (`fallbackRedirectUrl`). At this point they have an account but **zero course enrollments**, so `/panel` redirects them to `/kierunki?from=panel` (see `panel/layout.tsx`, [`00-architecture.md`](./00-architecture.md)). Dismissing that banner removes the query parameter; no global banner state survives navigation.
 
 **Files**: `src/app/sign-up/[[...sign-up]]/page.tsx`, `src/app/api/webhooks/clerk/route.ts`, `src/server/db.ts`, `src/helpers/generateRandomMotto.ts`.
 
@@ -35,28 +35,41 @@ There is **no custom registration form**. Account creation is entirely delegated
 
 The full loop: client-initiated checkout → Stripe-hosted payment → asynchronous webhook completes the purchase. Two separate requests, at two separate times, on two separate trust levels.
 
-**Part A — starting checkout** (`src/app/kierunki/[slug]/page.tsx` → `PricingSection` → a per-tier "Buy" form):
-1. Form submits `createCheckoutSession` (`src/actions/stripe.ts:10`) with `priceId`, `courseSlug`, `accessTier` in `FormData`.
-2. If not signed in: `redirect('/sign-in?redirect_url=/kierunki/<slug>')` — the purchase resumes once they're back.
-3. `getOrCreateStripeCustomer(userId)` (`src/server/stripe.ts:14`) — looks up `users.stripeCustomerId`; if absent, fetches the user's email/name from Clerk and creates a Stripe Customer with an **idempotency key** (`customer-create-<userId>`) so a double-click or race can't create two Stripe customers for one user, then persists the id back onto `users.stripeCustomerId`.
-4. Creates a Stripe Checkout Session (`mode: 'payment'`, Polish locale, tax ID collection, `client_reference_id: userId`, `metadata: { courseSlug, accessTier }`, `success_url=/success?session_id=...`, `cancel_url=/canceled`). **Unlike the customer-creation call one line above, this `stripe.checkout.sessions.create()` call has no idempotency key** — verified by grepping `stripe.ts`/`actions/stripe.ts` for `idempotencyKey`, only one hit. A rapid double-submit of the "Buy" form (double-click before the first `redirect()` navigates away, or two tabs racing) can create **two distinct Checkout Sessions**. This is lower-severity than it sounds — completing a payment still requires the user to separately pay on each session's hosted page, so it's not an automatic double-charge — but if a user *did* complete both (e.g. two tabs, pays in each), each produces its own `checkout.session.completed` event with its own event id, so the webhook's `processedEvents` idempotency check (step 2 below) does **not** catch this: two `payments` rows and two rounds of `processPurchaseRewards` (a second `+1000 testLimit` bump) would both land. `enrollUserAction` itself is safe either way (update-if-exists, not insert-only), so course access wouldn't double-grant incorrectly — the exposure is specifically financial/reward double-counting, not access-control.
-5. `redirect(session.url)` — the user leaves the app entirely for Stripe's hosted checkout page. Nothing has been written to `courseEnrollments` yet.
-6. User lands on `/success` or `/canceled` (both static pages, see [`10-pages-public.md`](./10-pages-public.md)) — **neither page itself grants access**; they're purely informational. `/success` can render before the webhook below has even landed, since Stripe redirects the browser immediately on payment success while the webhook fires as a separate, out-of-band server-to-server call.
+**Part A — starting checkout** (`src/app/kierunki/[slug]/page.tsx` → pricing form):
+1. Form submits only a server-known `offerKey`. Zod, authentication and rate
+   limiting run before Stripe or DB mutation.
+2. Server validates the configured Stripe Product/Price and checks DB access.
+3. A local `stripe_checkout_orders` row snapshots owner, offer, course, tier,
+   Price, amount and currency. A unique active key permits one lifetime attempt
+   per user/course.
+4. Concurrent requests reuse the same order. Checkout creation uses
+   `checkout:<orderId>` as Stripe's idempotency key, so they also reuse one Session.
+5. Session metadata carries `orderId`. Course/tier metadata remains temporarily
+   for already-open legacy Sessions only and is not trusted by the new webhook.
+6. Cancel redirects with the order UUID. The authenticated canceled page expires
+   the Stripe Session and releases the local active-order key.
 
-**Part B — completing the purchase** (`POST /api/webhooks/stripe`, `src/app/api/webhooks/stripe/route.ts`):
-1. Verifies the webhook signature via `stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET)`.
-2. On `checkout.session.completed`:
-   - **Idempotency check**: looks up `event.id` in `processedEvents` — if already processed, does nothing (Stripe redelivers webhooks; this makes redelivery safe).
-   - **Resolves the user**: primarily via `client_reference_id` set in Part A step 4; if somehow absent, falls back to a live Clerk API lookup by the checkout session's email. No resolvable user → returns `500` so Stripe retries later rather than silently losing the payment.
-   - `backfillStripeCustomerId()` (`src/server/stripe.ts:46`) — links the Stripe customer id onto `users` even on the email-fallback path, but only if `users.stripeCustomerId` is still `NULL` (won't clobber an existing link).
-   - If `mode === 'payment'`: `insertPayment()` (`src/server/db.ts:133`) records the `payments` row (amount, currency, status, Stripe ids).
-   - If `courseSlug` is present and `payment_status === 'paid'`: `enrollUserAction(userId, courseSlug, accessTier)` (`src/actions/course-actions.ts:89`) — inserts or reactivates a `courseEnrollments` row (**this is the actual access grant** — everything downstream that checks `checkCourseAccessAction`/`checkPremiumAccessAction` reads this table). Also mirrors the course slug into Clerk `publicMetadata.ownedCourses` for the Navbar's fast-path UI check.
-   - `processPurchaseRewards(userId, event.id)` (`src/server/db.ts:80`) — inside one transaction: bumps `users.testLimit` by `+1000`, ensures a `userLimits` row exists (`storageLimit: 20_000_000` / 20 MB, `onConflictDoNothing` so a repeat purchase doesn't reset an existing quota), and records the event in `processedEvents` for the idempotency check above.
-3. Returns `{ received: true }`. If any step before this throws, Stripe will retry the webhook — so a transient DB error becomes an automatic retry rather than a silently lost purchase (aside from the `insertPayment` failure path, which returns `500` explicitly rather than continuing to enroll on an unrecorded payment).
+**Part B — completing the purchase** (`POST /api/webhooks/stripe`):
+1. Route verifies the raw-body Stripe signature and handles completed,
+   asynchronous success and asynchronous failure Checkout events.
+2. Handler retrieves the canonical Session and line items from Stripe, resolves
+   owner through local `orderId`, and compares Session, user, Customer, Price,
+   amount, currency, mode and quantity with the immutable order snapshot.
+3. One DB transaction locks fulfillment per user/course, inserts the unique event
+   marker, upserts the payment, updates order state, creates or upgrades the single
+   lifetime entitlement and initializes storage once. Any failure rolls everything
+   back and returns `500` for retry.
+4. Event, Session, PaymentIntent, Invoice and entitlement-source uniqueness make
+   replay, concurrent and out-of-order delivery idempotent.
+5. The webhook performs no Clerk call, email identity lookup, metadata mirror,
+   model work or `testLimit` reward. Stripe keeps billing PII; DB access is
+   authoritative.
 
-**What the user actually experiences**: click "Buy" → redirected to Stripe → pay → redirected back to `/success` — typically the webhook has already landed by the time they navigate back and check `/panel/kursy`, but there's no hard guarantee of ordering, so `/success` deliberately doesn't claim "you now have access," it's just a thank-you page.
+**What the user experiences**: the hosted Checkout journey is unchanged. The
+actual panel access reads DB grants. Navbar/Drawer do not read Clerk course metadata.
 
-**Files**: `src/actions/stripe.ts`, `src/app/api/webhooks/stripe/route.ts`, `src/server/stripe.ts`, `src/server/db.ts`, `src/actions/course-actions.ts`.
+**Files**: `src/actions/stripe.ts`, `src/server/payments/*`,
+`src/app/api/webhooks/stripe/route.ts`, `src/server/db/schema.ts`.
 
 ## Flow 4 — User deletes their account
 

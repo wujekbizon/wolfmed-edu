@@ -59,18 +59,23 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 
 ### `POST /api/webhooks/clerk`
 `src/app/api/webhooks/clerk/route.ts`. Verifies the Svix signature (`svix-id`/`svix-timestamp`/`svix-signature` headers + `CLERK_WEBHOOK_SECRET`) before trusting the payload — standard webhook-authenticity pattern, distinct from user-session auth. Dispatch is a sequence of `if (eventType === '...')` blocks, not a `switch` — a new event type is a new `if` block alongside the two below.
-- **`user.created`** (`:56`) → `insertUserToDb()` (`@/server/db`) creates the `wolfmed_users` row (random username, a random motto via `generateRandomMotto()`), then sets Clerk `publicMetadata.ownedCourses = []`. This is the origin of the `users` table row — nothing else in the app creates one.
+- **`user.created`** (`:56`) → `insertUserToDb()` (`@/server/db`) creates the `wolfmed_users` row with a random username and motto. It does not initialize course metadata in Clerk; PostgreSQL owns enrollment state.
 - **`user.deleted`** (`:89`) → `deleteUserFromDb(id)`; the cascade-delete FKs throughout the schema (see [`01-database-schema.md`](./01-database-schema.md)) clean up everything owned by that user automatically.
 
 ### `POST /api/webhooks/stripe`
-`src/app/api/webhooks/stripe/route.ts`. Verifies via `stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET)`. This is where the purchase flow started in [`10-pages-public.md`](./10-pages-public.md) (`createCheckoutSession`) actually completes. Events are dispatched via `switch (event.type)` at `:29`; a new event type is a new `case` alongside the two below (`checkout.session.completed` at `:30`, `charge.succeeded` at `:136`).
+`src/app/api/webhooks/stripe/route.ts`. Verifies the raw body with
+`stripe.webhooks.constructEvent`, then delegates completed/asynchronous Checkout
+events to `src/server/payments/*`.
 
-**`checkout.session.completed`** (the only event with real handling; `charge.succeeded` is a stub for future refund handling):
-1. **Idempotency**: checks `processedEvents` for `event.id` — Stripe can redeliver the same webhook, and this makes redelivery a no-op.
-2. **Resolve the user**: primarily `client_reference_id` (set to `userId` when the Checkout session was created); if absent, falls back to a live Clerk API lookup by `customer_details.email`. No resolvable user ⇒ `500` (so Stripe retries).
-3. `backfillStripeCustomerId(resolvedUserId, stripeCustomerId)` — keeps `users.stripeCustomerId` in sync even on the fallback-email path.
-4. If `mode === 'payment'`: `insertPayment()` (`@/server/db`) records the `payments` row.
-5. If `courseSlug` present and `payment_status === 'paid'`: `enrollUserAction(resolvedUserId, courseSlug, accessTier)` (writes/updates `courseEnrollments` — the DB-authoritative access record used by `checkCourseAccessAction` everywhere else in the app) **and** mirrors it into Clerk `publicMetadata.ownedCourses` (the fast, non-authoritative signal used by the Navbar to decide whether to gray out the `/panel` link — see [`10-pages-public.md`](./10-pages-public.md)).
-6. `processPurchaseRewards(resolvedUserId, event.id)` (`@/server/db`) — any purchase-triggered bonuses (referral credit, etc.).
+1. Retrieves the canonical Session with expanded line items.
+2. Resolves ownership from local `orderId`; legacy open Sessions may use their
+   server-issued `offerKey` plus `client_reference_id`. Email is never identity.
+3. Validates Session, user, Customer, Price, amount, currency, mode and quantity
+   against the immutable local order snapshot/server catalog.
+4. One transaction inserts the unique event marker, upserts payment, updates the
+   order, creates/reactivates the source-aware entitlement and initializes storage.
+5. Duplicate events/business IDs are no-ops. Any failure rolls back and returns
+   `500`, allowing Stripe retry.
 
-This webhook is the single write path for `courseEnrollments` from a real purchase; `enrollUserAction` is also exported for reuse (e.g. admin/manual enrollment) but this is its production caller.
+No Clerk API call, Clerk metadata update, `testLimit` reward or AI/indexing work
+runs in this webhook.

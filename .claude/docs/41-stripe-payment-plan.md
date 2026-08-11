@@ -1,6 +1,8 @@
 # Stripe payments and subscriptions plan
 
-Status: approved for consideration; not implemented.
+Status: implementation active. Trusted Checkout, local orders, idempotency,
+atomic one-time fulfillment and source-aware lifetime grants are implemented in
+code. Dev migration/test and later checkpoints remain pending.
 
 Branch: `codex/practical-exam-next`.
 
@@ -26,15 +28,11 @@ lifetime/subscription billing for the same course.
 
 ## Current implementation risks
 
-- Checkout trusts client-submitted Price ID, course, and tier.
-- Checkout Session creation has no idempotency key or local order deduplication.
-- Webhook event checks and side effects are not one atomic transaction.
-- Payments and enrollments lack sufficient uniqueness guarantees.
+- Phase 2A+2B schema has not yet been migrated or tested against the dev DB.
 - Success UI cannot authoritatively verify fulfillment.
-- Refund, dispute, asynchronous payment, and subscription events are absent.
+- Refund, dispute, and subscription events are absent.
 - Subscription schema cannot model the required lifecycle or two courses.
 - Billing management UI and Stripe Customer Portal are absent.
-- Clerk course metadata can become stale relative to DB access.
 - Basic materials are not indexed when access later becomes Premium.
 
 ## Server-first architecture

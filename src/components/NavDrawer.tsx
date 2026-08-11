@@ -4,7 +4,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useStore } from '@/store/useStore'
-import { useUser } from '@clerk/nextjs'
 import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { Settings } from 'lucide-react'
@@ -16,13 +15,7 @@ export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
-  const { user } = useUser()
   const isPremium = usePremiumAccess()
-  const ownedCourses = (user?.publicMetadata?.ownedCourses as string[]) ?? []
-  const hasCourses = ownedCourses.length > 0
-  const visibleSideMenuLinks = sideMenuNavigationLinks.filter(
-    (link) => !link.requiresCourse || ownedCourses.includes(link.requiresCourse)
-  )
 
   return (
     <>
@@ -70,8 +63,6 @@ export default function NavDrawer() {
                   label={link.label}
                   icon={link.icon}
                   active={pathname === link.linkUrl}
-                  locked={link.linkUrl === '/panel' && !hasCourses}
-                  lockedTitle="Kup kurs, aby uzyskać dostęp do panelu"
                   onNavigate={toggleMenu}
                 />
               ))}
@@ -83,7 +74,7 @@ export default function NavDrawer() {
               Panel użytkownika
             </h3>
             <div className="flex flex-col flex-1 overflow-y-auto [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-zinc-300/60 [&::-webkit-scrollbar-thumb]:rounded-full">
-              {visibleSideMenuLinks.map((link) => (
+              {sideMenuNavigationLinks.map((link) => (
                 <DrawerNavLink
                   key={link.label}
                   href={link.url}

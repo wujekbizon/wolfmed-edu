@@ -1,162 +1,17 @@
 import 'server-only'
-import { UserData } from '@/types/dataTypes'
+import { eq } from 'drizzle-orm'
 import { db } from '@/server/db/index'
-import { eq, sql } from 'drizzle-orm'
-import { payments, processedEvents, subscriptions, users, userLimits } from './db/schema'
-import { Payment, Subscription } from '@/types/stripeTypes'
-import { eraseUserMemory } from './memory/erase'
+import { users } from '@/server/db/schema'
+import { eraseUserMemory } from '@/server/memory/erase'
+import type { UserData } from '@/types/dataTypes'
 
 export async function insertUserToDb(userData: UserData): Promise<void> {
-  try {
-    await db.transaction(async (tx) => {
-      // Insert user
-      await tx.insert(users).values(userData)
-
-    })
-  } catch (error) {
-    console.error('Error inserting users:', error)
-    // Ensure the error is actually an Error object before re-throwing
-    if (error instanceof Error) {
-      throw new Error(`Wystąpił błąd podczas tworzenia konta użytkownika: ${error.message}`)
-    } else {
-      // Handle non-Error type errors
-      console.error('Unexpected error type:', error)
-      throw new Error('Wystąpił nieoczekiwany błąd podczas tworzenia konta')
-    }
-  }
+  await db.transaction(async (tx) => {
+    await tx.insert(users).values(userData)
+  })
 }
 
-export async function deleteUserFromDb(id: string): Promise<void> {
-  try {
-    // GDPR: erase the student's memory (facts/episodes/preferences/traces) as part
-    // of account deletion — memory tables aren't FK'd to users, so they won't
-    // cascade on their own.
-    await eraseUserMemory(id)
-    await db.delete(users).where(eq(users.userId, id))
-  } catch (error) {
-    console.error('Error deleting user:', error)
-    // Ensure the error is actually an Error object before re-throwing
-    if (error instanceof Error) {
-      throw new Error(`Wystąpił błąd podczas usuwania użytkownika: ${error.message}`)
-    } else {
-      // Handle non-Error type errors
-      console.error('Unexpected error type:', error)
-      throw new Error('Wystąpił nieoczekiwany błąd podczas usuwania użytkownika')
-    }
-  }
-}
-
-export async function updateTestLimit(id: string, testLimit: number, eventId: string) {
-  try {
-    // Check if the event has already been processed (idempotency)
-    const existingEvent = await db.query.processedEvents.findFirst({
-      where: (model, { eq }) => eq(model.eventId, eventId),
-    })
-
-    if (existingEvent) {
-      console.log(`Event ${eventId} already processed`)
-      return
-    }
-
-    // Use a transaction to update the user and record the event
-    await db.transaction(async (tx) => {
-      // Update the user's testLimit
-      await tx.update(users).set({ testLimit }).where(eq(users.userId, id))
-
-      // Log the processed event for idempotency
-      await tx.insert(processedEvents).values({
-        eventId,
-        userId: id,
-      })
-    })
-
-    console.log(`Updated testLimit to ${testLimit} for user with ID: ${id}`)
-  } catch (error) {
-    console.error(`Failed to update testLimit for user with ID: ${id}`, error)
-    throw new Error('Błąd aktualizacji limitu testów')
-  }
-}
-
-export async function processPurchaseRewards(userId: string, eventId: string) {
-  try {
-    await db.transaction(async (tx) => {
-      await tx.update(users).set({ testLimit: sql`${users.testLimit} + 1000` }).where(eq(users.userId, userId))
-
-      await tx.insert(userLimits)
-        .values({ userId, storageLimit: 20_000_000, storageUsed: 0 })
-        .onConflictDoNothing()
-
-      await tx.insert(processedEvents).values({ eventId, userId })
-    })
-
-    console.log(`Purchase rewards processed for user ${userId}`)
-  } catch (error) {
-    console.error(`Failed to process purchase rewards for user ${userId}:`, error)
-    throw new Error('Błąd przetwarzania nagrody zakupu')
-  }
-}
-
-export async function insertSubscription({
-  userId,
-  sessionId,
-  amountTotal,
-  currency,
-  customerEmail,
-  invoiceId,
-  paymentStatus,
-  subscriptionId,
-  customerId,
-  courseSlug,
-  createdAt,
-}: Subscription) {
-  try {
-    await db.insert(subscriptions).values({
-      userId,
-      sessionId,
-      amountTotal,
-      currency,
-      customerEmail,
-      customerId,
-      invoiceId,
-      paymentStatus,
-      subscriptionId,
-      courseSlug: courseSlug || null,
-      createdAt: createdAt,
-    })
-    console.log(`Subscription for user ${userId} inserted successfully.`)
-  } catch (error) {
-    console.error(`Failed to insert subscription for user ${userId}:`, error)
-    throw new Error('Błąd dodawania subskrypcji')
-  }
-}
-
-export async function insertPayment({
-  userId,
-  amountTotal,
-  currency,
-  customerEmail,
-  paymentStatus,
-  courseSlug,
-  createdAt,
-  stripeCustomerId,
-  sessionId,
-  paymentIntentId,
-}: Payment) {
-  try {
-    await db.insert(payments).values({
-      userId,
-      amountTotal,
-      currency,
-      customerEmail,
-      paymentStatus,
-      courseSlug: courseSlug || null,
-      createdAt: createdAt,
-      stripeCustomerId: stripeCustomerId || null,
-      sessionId: sessionId || null,
-      paymentIntentId: paymentIntentId || null,
-    })
-  } catch (error) {
-    console.error(`Failed to insert payment for user ${userId}:`, error)
-    throw new Error('Błąd dodawania płatności')
-  }
+export async function deleteUserFromDb(userId: string): Promise<void> {
+  await eraseUserMemory(userId)
+  await db.delete(users).where(eq(users.userId, userId))
 }

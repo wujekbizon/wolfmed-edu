@@ -5,7 +5,7 @@ import PaymentResultSkeleton from '@/components/skeletons/PaymentResultSkeleton'
 export default function CanceledPage({
   searchParams,
 }: {
-  searchParams: Promise<{ course?: string | string[] }>
+  searchParams: Promise<{ course?: string | string[]; order?: string | string[] }>
 }) {
   return (
     <Suspense fallback={<PaymentResultSkeleton />}>

@@ -11,6 +11,8 @@ export const CreateCheckoutSchema = z.object({
   }),
 });
 
+export const CheckoutOrderIdSchema = z.string().uuid();
+
 export const DeleteTestIdSchema = z.object({
   testId: z
     .string()

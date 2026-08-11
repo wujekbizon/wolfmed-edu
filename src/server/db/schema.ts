@@ -15,6 +15,13 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 import type { Diagnoza } from "@/types/diagnozyTypes"
+import type {
+  CheckoutOrderStatus,
+  CheckoutPurchaseModel,
+  EntitlementSourceType,
+  PaymentOffer,
+  PaymentOfferKey,
+} from "@/types/paymentTypes"
 
 interface TestMeta {
   course: string;
@@ -47,19 +54,61 @@ export const users = createTable(
   ]
 )
 
+export const checkoutOrders = createTable("stripe_checkout_orders", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("user_id", { length: 256 }).notNull(),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>().notNull(),
+  courseSlug: varchar("course_slug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>()
+    .notNull(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>()
+    .notNull(),
+  stripePriceId: varchar("stripe_price_id", { length: 256 }).notNull(),
+  amountTotal: integer("amount_total").notNull(),
+  currency: currencyEnum("currency").notNull(),
+  purchaseModel: varchar("purchase_model", { length: 32 })
+    .$type<CheckoutPurchaseModel>()
+    .default("lifetime")
+    .notNull(),
+  status: varchar("status", { length: 32 })
+    .$type<CheckoutOrderStatus>()
+    .default("CREATING")
+    .notNull(),
+  deduplicationKey: varchar("deduplication_key", { length: 512 }),
+  stripeSessionId: varchar("stripe_session_id", { length: 256 }),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("checkout_orders_active_dedup_uq").on(table.deduplicationKey),
+  uniqueIndex("checkout_orders_session_id_uq").on(table.stripeSessionId),
+  index("checkout_orders_user_id_idx").on(table.userId),
+  index("checkout_orders_status_idx").on(table.status),
+  index("checkout_orders_expires_at_idx").on(table.expiresAt),
+])
+
 export const payments = createTable("stripe_payments", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: varchar("userId", { length: 256 }).notNull(),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
+  accessTier: varchar("access_tier", { length: 50 }),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   courseSlug: varchar("courseSlug", { length: 100 }),
   stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
   sessionId: varchar("sessionId", { length: 256 }),
   paymentIntentId: varchar("paymentIntentId", { length: 256 }),
+  invoiceId: varchar("invoice_id", { length: 256 }),
   createdAt: timestamp("createdAt").defaultNow(),
 }, (table) => [
+  uniqueIndex("stripe_payments_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_payments_intent_id_uq").on(table.paymentIntentId),
+  uniqueIndex("stripe_payments_invoice_id_uq").on(table.invoiceId),
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
@@ -85,6 +134,10 @@ export const processedEvents = createTable("processed_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   eventId: varchar("eventId", { length: 256 }).notNull().unique(),
   userId: varchar("userId", { length: 256 }).notNull(),
+  eventType: varchar("event_type", { length: 100 }),
+  stripeObjectId: varchar("stripe_object_id", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  paymentId: uuid("payment_id").references(() => payments.id),
   processedAt: timestamp("processedAt").defaultNow(),
 })
 
@@ -637,11 +690,16 @@ export const courseEnrollments = createTable(
     userId: varchar("userId", { length: 256 }).notNull(),
     courseSlug: varchar("course_slug", { length: 100 }).notNull(),
     accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    sourceType: varchar("source_type", { length: 50 }).$type<EntitlementSourceType>(),
+    sourceId: varchar("source_id", { length: 256 }),
     isActive: boolean("is_active").default(true).notNull(),
     enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    startsAt: timestamp("starts_at"),
     expiresAt: timestamp("expires_at"),
+    revokedAt: timestamp("revoked_at"),
   },
   (table) => [
+    uniqueIndex("enrollments_source_uq").on(table.sourceType, table.sourceId),
     index("enrollments_user_id_idx").on(table.userId),
     index("enrollments_course_slug_idx").on(table.courseSlug),
     index("enrollments_is_active_idx").on(table.isActive),

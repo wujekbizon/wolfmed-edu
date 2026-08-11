@@ -24,9 +24,10 @@ Both `library-schema.ts` and `memory-schema.ts` require the Postgres `vector` an
 The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks test-taking aggregates (`testsAttempted`, `totalScore`, `totalQuestions`), a free-text `motto`, `supporter` flag, and `stripeCustomerId` for billing lookups. `testLimit` gates how many tests a non-premium account may take.
 
 ### Payments & subscriptions
-- **`payments`** (`stripe_payments`) — one row per completed Stripe Checkout session (one-time course purchases). Indexed by `userId`, `paymentStatus`, `createdAt`, `stripeCustomerId`.
+- **`checkoutOrders`** (`stripe_checkout_orders`) — server-owned Checkout attempts. Snapshots offer/course/tier/Price/amount/currency and uniquely holds the active user/course/purchase-model deduplication key plus Stripe Session/Customer and lifecycle status.
+- **`payments`** (`stripe_payments`) — one row per Stripe Checkout Session. Session, PaymentIntent and Invoice IDs are unique nullable business keys; links to order/offer/tier are nullable for legacy rows. New rows do not copy billing email from Stripe.
 - **`subscriptions`** (`stripe_subscriptions`) — one row per user's active subscription (`userId` unique). Holds `subscriptionId`, `invoiceId`, `courseSlug`.
-- **`processedEvents`** (`processed_events`) — Stripe webhook idempotency ledger; `eventId` is unique so a replayed webhook is a no-op.
+- **`processedEvents`** (`processed_events`) — Stripe webhook idempotency ledger linked to event type, Stripe object, order and payment. Its unique marker is inserted in the same transaction as fulfillment.
 - **`currencyEnum`** — `pln | usd | eur`, shared by both payment tables.
 
 ### Tests & sessions
@@ -39,7 +40,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 ### Procedures & courses
 - **`procedures`** — single table for every course's procedural-learning content. `course` + `slug` identify it; `data` (jsonb) holds the full procedure body. `data.meta` mirrors the `course`/`slug` columns for convenience, but the columns are the query-side source of truth. Seeded from `data/procedures.json` via `scripts/seed-procedures.ts`.
 - **`courses`** — the multi-course catalog (`slug`, `name`, `isActive`).
-- **`courseEnrollments`** — links a user to a course with an `accessTier` (`basic` default) and optional `expiresAt`.
+- **`courseEnrollments`** — source-aware access grants (`legacy_lifetime`, `lifetime_purchase`, later subscription/manual). A lifetime upgrade updates the existing lifetime grant; different source models may coexist. Readers choose the highest active, started, non-expired and non-revoked tier. `(sourceType, sourceId)` is unique.
 - **`challengeCompletions`** — a scored attempt at a procedure's practice challenge (quiz/recognition/etc.): `score`, `timeSpent`, `attempts`, `passed`.
 - **`procedureBadges`** — an earned badge per completed procedure (`badgeImageUrl`, `earnedAt`).
 

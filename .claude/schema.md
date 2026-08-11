@@ -42,6 +42,23 @@ Primary user account and profile information.
 
 ## 💳 Payment & Subscription Tables
 
+### Checkout Orders (`wolfmed_stripe_checkout_orders`)
+Server-owned attempt created before Stripe Checkout.
+
+```typescript
+{
+  id: uuid (PK)
+  userId: varchar(256)
+  offerKey, courseSlug, accessTier, purchaseModel
+  stripePriceId, amountTotal, currency // immutable purchase snapshot
+  status: CREATING | OPEN | PROCESSING | PAID | COMPLETED | CANCELED | EXPIRED | FAILED
+  deduplicationKey: varchar(512) (unique, nullable when terminal)
+  stripeSessionId: varchar(256) (unique, nullable)
+  stripeCustomerId: varchar(256) (nullable)
+  expiresAt, createdAt, updatedAt: timestamp
+}
+```
+
 ### Payments (`wolfmed_stripe_payments`)
 Tracks one-time payments via Stripe.
 
@@ -49,10 +66,13 @@ Tracks one-time payments via Stripe.
 {
   id: uuid (PK, auto-generated)
   userId: varchar(256) (not null)
+  orderId: uuid (nullable FK → checkout orders)
+  offerKey, accessTier: varchar (nullable for legacy rows)
   amountTotal: integer (not null)
   currency: enum('pln', 'usd', 'eur')
-  customerEmail: varchar(256) (not null)
+  customerEmail: varchar(256) (nullable; no longer written)
   paymentStatus: varchar(50) (not null)
+  sessionId, paymentIntentId, invoiceId: varchar(256) (unique, nullable)
   createdAt: timestamp (auto)
 }
 ```
@@ -84,9 +104,27 @@ Prevents duplicate webhook processing.
   id: uuid (PK, auto-generated)
   eventId: varchar(256) (unique, not null)
   userId: varchar(256) (not null)
+  eventType, stripeObjectId: varchar (nullable)
+  orderId, paymentId: uuid (nullable FK)
   processedAt: timestamp (auto)
 }
 ```
+
+### Course Entitlements (`wolfmed_course_enrollments`)
+Access grants. Multiple rows for one user/course are valid; readers choose the
+highest active, started, non-expired and non-revoked tier.
+
+```typescript
+{
+  userId, courseSlug, accessTier
+  sourceType: legacy_lifetime | lifetime_purchase | lifetime_upgrade | subscription | manual
+  sourceId: varchar(256)
+  isActive, enrolledAt, startsAt, expiresAt, revokedAt
+}
+```
+
+`(sourceType, sourceId)` is unique. Legacy rows are backfilled with their row UUID
+as `sourceId`.
 
 ---
 
