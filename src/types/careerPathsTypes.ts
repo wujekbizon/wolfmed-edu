@@ -1,7 +1,11 @@
 import { CardProps } from "@/constants/educationalPathCards";
 import { StaticImageData } from "next/image";
 import type { CareerPath, PathQuestions, PathStory } from "@/types/pathStoryTypes";
-import type { PaymentOfferKey } from "@/types/paymentTypes";
+import type {
+  LifetimeUpgradeOfferKey,
+  PaymentOffer,
+  PaymentOfferKey,
+} from "@/types/paymentTypes";
 
 type TemplateType = "simple" | "rich";
 
@@ -24,12 +28,12 @@ type PricingTier = {
   price: string;
   features: string[];
   offerKey: PaymentOfferKey;
-  accessTier: string;
+  accessTier: PaymentOffer['accessTier'];
   badge?: string;
 };
 
 type PricingTable = {
-  courseSlug: string;
+  courseSlug: PaymentOffer['courseSlug'];
   basic: PricingTier;
   premium?: PricingTier;
   pro?: PricingTier;
@@ -62,4 +66,5 @@ export type PathData = {
 export type PathLayoutProps = PathData & {
   ownedCourses: string[];
   subjectTitles: string[];
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null;
 }

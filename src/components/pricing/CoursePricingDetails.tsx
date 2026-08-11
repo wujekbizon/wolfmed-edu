@@ -3,6 +3,7 @@ import type { CoursePricingDetailsProps } from '@/types/paymentTypes'
 export default function CoursePricingDetails({
   tierName,
   price,
+  originalPrice,
   features,
   isPremium,
   badge,
@@ -29,9 +30,18 @@ export default function CoursePricingDetails({
         {tierName}
       </h3>
       <div className="mb-4 md:mb-6">
-        <p className="text-3xl md:text-4xl font-bold tracking-tight text-slate-700">
-          {price}
-        </p>
+        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          {originalPrice && (
+            <p className="text-lg md:text-xl font-semibold text-zinc-400 line-through decoration-2">
+              <span className="sr-only">Cena regularna: </span>
+              {originalPrice}
+            </p>
+          )}
+          <p className="text-3xl md:text-4xl font-bold tracking-tight text-slate-700">
+            {originalPrice && <span className="sr-only">Cena aktualizacji: </span>}
+            {price}
+          </p>
+        </div>
         <p className="text-sm text-zinc-500 mt-1">
           {isPremium
             ? 'Całe aktualne i przyszłe treści kursu + AI'

@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { getEffectiveEnrollmentGrants } from '@/helpers/getEffectiveEnrollmentGrants'
-import { getLifetimeEnrollmentMerge } from '@/helpers/getLifetimeEnrollmentMerge'
-import type { EnrollmentGrant } from '@/types/paymentTypes'
+import { getEligibleLifetimeUpgradeOfferKey } from '@/helpers/getEligibleLifetimeUpgradeOfferKey'
+import { resolveLifetimeCheckoutEligibility } from '@/helpers/resolveLifetimeCheckoutEligibility'
+import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
+import type { EnrollmentGrant, LifetimeUpgradeGrant } from '@/types/paymentTypes'
 
 const now = new Date('2026-08-11T12:00:00Z')
 
@@ -14,6 +16,14 @@ const grant = (overrides: Partial<EnrollmentGrant> = {}): EnrollmentGrant => ({
   startsAt: null,
   expiresAt: null,
   revokedAt: null,
+  ...overrides,
+})
+
+const upgradeGrant = (
+  overrides: Partial<LifetimeUpgradeGrant> = {}
+): LifetimeUpgradeGrant => ({
+  ...grant(),
+  sourceType: 'lifetime_purchase',
   ...overrides,
 })
 
@@ -46,23 +56,94 @@ test('legacy grants without source fields remain active', () => {
   assert.deepEqual(getEffectiveEnrollmentGrants([grant()], now), [grant()])
 })
 
-test('lifetime upgrade updates one canonical enrollment', () => {
-  assert.deepEqual(getLifetimeEnrollmentMerge([
-    { id: 'basic', accessTier: 'basic' },
-  ], 'premium'), {
-    canonicalId: 'basic',
-    staleIds: [],
-    shouldApplyPurchase: true,
-  })
+test('lifetime Basic grants receive the course upgrade offer', () => {
+  const grants = [upgradeGrant()]
+
+  assert.equal(
+    getEligibleLifetimeUpgradeOfferKey(grants, 'opiekun-medyczny'),
+    'opiekun_premium_upgrade'
+  )
+  assert.equal(
+    getEligibleLifetimeUpgradeOfferKey(grants, 'pielegniarstwo'),
+    null
+  )
 })
 
-test('duplicate lifetime grants keep highest tier without downgrade', () => {
-  assert.deepEqual(getLifetimeEnrollmentMerge([
-    { id: 'basic', accessTier: 'basic' },
-    { id: 'premium', accessTier: 'premium' },
-  ], 'basic'), {
-    canonicalId: 'premium',
-    staleIds: ['basic'],
-    shouldApplyPurchase: false,
-  })
+test('manual Basic and Premium owners cannot buy a lifetime upgrade', () => {
+  assert.equal(getEligibleLifetimeUpgradeOfferKey([
+    upgradeGrant({ sourceType: 'manual' }),
+  ], 'opiekun-medyczny'), null)
+  assert.equal(getEligibleLifetimeUpgradeOfferKey([
+    upgradeGrant({ accessTier: 'premium' }),
+  ], 'opiekun-medyczny'), null)
+})
+
+test('server permits only the eligible difference-price upgrade', () => {
+  const grants = [upgradeGrant()]
+
+  assert.equal(resolveLifetimeCheckoutEligibility(
+    grants,
+    PAYMENT_OFFERS.opiekun_premium_upgrade
+  ), 'ALLOWED')
+  assert.equal(resolveLifetimeCheckoutEligibility(
+    [],
+    PAYMENT_OFFERS.opiekun_premium_upgrade
+  ), 'NOT_ELIGIBLE')
+  assert.equal(resolveLifetimeCheckoutEligibility(
+    [],
+    PAYMENT_OFFERS.opiekun_premium_lifetime
+  ), 'ALLOWED')
+  assert.equal(resolveLifetimeCheckoutEligibility(
+    grants,
+    PAYMENT_OFFERS.opiekun_premium_lifetime
+  ), 'UPGRADE_REQUIRED')
+})
+
+test('expired or revoked Basic grants cannot buy a lifetime upgrade', () => {
+  assert.equal(getEligibleLifetimeUpgradeOfferKey([
+    upgradeGrant({ expiresAt: new Date('2026-08-10T00:00:00Z') }),
+  ], 'opiekun-medyczny', now), null)
+  assert.equal(getEligibleLifetimeUpgradeOfferKey([
+    upgradeGrant({ revokedAt: new Date('2026-08-10T00:00:00Z') }),
+  ], 'opiekun-medyczny', now), null)
+})
+
+test('manual Basic does not hide an eligible lifetime Basic grant', () => {
+  const grants = [
+    upgradeGrant({ sourceType: 'manual' }),
+    upgradeGrant({ sourceType: 'legacy_lifetime' }),
+  ]
+
+  assert.equal(
+    getEligibleLifetimeUpgradeOfferKey(grants, 'opiekun-medyczny', now),
+    'opiekun_premium_upgrade'
+  )
+})
+
+test('active Premium hides the upgrade even when Basic remains', () => {
+  const grants = [
+    upgradeGrant(),
+    upgradeGrant({
+      accessTier: 'premium',
+      sourceType: 'lifetime_upgrade',
+    }),
+  ]
+
+  assert.equal(
+    getEligibleLifetimeUpgradeOfferKey(grants, 'opiekun-medyczny', now),
+    null
+  )
+})
+
+test('revoked Premium upgrade falls back to lifetime Basic', () => {
+  const effective = getEffectiveEnrollmentGrants([
+    grant(),
+    grant({
+      accessTier: 'premium',
+      enrolledAt: new Date('2026-02-01T00:00:00Z'),
+      revokedAt: new Date('2026-08-10T00:00:00Z'),
+    }),
+  ], now)
+
+  assert.equal(effective[0]?.accessTier, 'basic')
 })

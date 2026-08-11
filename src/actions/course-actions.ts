@@ -2,7 +2,8 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { hasAccessToTier } from "@/helpers/accessTiers";
-import { getUserEnrollments } from "@/server/queries";
+import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants";
+import { getUserEnrollmentGrants, getUserEnrollments } from "@/server/queries";
 
 /**
  * Check if user has access to a specific course.
@@ -44,14 +45,17 @@ export async function checkCourseAccessAction(courseSlug: string) {
  */
 export async function getUserEnrollmentsAction() {
   const { userId } = await auth()
-  if (!userId) return { enrollments: [] }
+  if (!userId) return { enrollments: [], enrollmentGrants: [] }
 
   try {
-    const enrollments = await getUserEnrollments(userId)
-    return { enrollments }
+    const enrollmentGrants = await getUserEnrollmentGrants(userId)
+    return {
+      enrollments: getEffectiveEnrollmentGrants(enrollmentGrants),
+      enrollmentGrants,
+    }
   } catch (error) {
     console.error('Error fetching enrollments:', error)
-    return { enrollments: [] }
+    return { enrollments: [], enrollmentGrants: [] }
   }
 }
 

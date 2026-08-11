@@ -322,9 +322,8 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
   }))
 })
 
-// Check if user has any active enrollments (used for /panel layout guard)
-export const getUserEnrollments = cache(async (userId: string) => {
-  const enrollments = await db
+export const getUserEnrollmentGrants = cache(async (userId: string) => {
+  return db
     .select()
     .from(courseEnrollments)
     .where(
@@ -334,7 +333,11 @@ export const getUserEnrollments = cache(async (userId: string) => {
       )
     )
 
-  return getEffectiveEnrollmentGrants(enrollments)
+})
+
+// Check if user has any active enrollments (used for /panel layout guard)
+export const getUserEnrollments = cache(async (userId: string) => {
+  return getEffectiveEnrollmentGrants(await getUserEnrollmentGrants(userId))
 })
 
 // ============================================================================

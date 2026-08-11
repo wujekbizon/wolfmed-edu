@@ -12,15 +12,17 @@ import type { CoursePricingCardProps } from '@/types/paymentTypes'
 export default function CoursePricingCard({
   tierName,
   price,
+  originalPrice,
   offerKey,
   features,
   isPremium = false,
   badge,
   alreadyOwned,
+  purchaseLabel,
 }: CoursePricingCardProps) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
-  const label = alreadyOwned ? 'W posiadaniu' : 'Kup teraz'
+  const label = alreadyOwned ? 'W posiadaniu' : purchaseLabel ?? 'Kup teraz'
 
   return (
     <article className="h-full">
@@ -34,6 +36,7 @@ export default function CoursePricingCard({
         <CoursePricingDetails
           tierName={tierName}
           price={price}
+          {...(originalPrice ? { originalPrice } : {})}
           features={features}
           isPremium={isPremium}
           {...(badge ? { badge } : {})}

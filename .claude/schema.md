@@ -124,7 +124,9 @@ highest active, started, non-expired and non-revoked tier.
 ```
 
 `(sourceType, sourceId)` is unique. Legacy rows are backfilled with their row UUID
-as `sourceId`.
+as source ID. A lifetime Basic purchase and its Premium upgrade remain separate
+grants; effective access is Premium while both are active and falls back to Basic
+when only the upgrade is revoked.
 
 ---
 

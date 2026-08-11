@@ -3,7 +3,9 @@ import SimplePathLayout from '@/app/_components/SimplePathLayout'
 import RichPathLayout from '@/app/_components/RichPathLayout'
 import { careerPathsData } from '@/constants/careerPathsData'
 import { getCourseSubjectTitles } from '@/helpers/getCourseSubjectTitles'
+import { getEligibleLifetimeUpgradeOfferKey } from '@/helpers/getEligibleLifetimeUpgradeOfferKey'
 import { getUserEnrollmentsAction } from '@/actions/course-actions'
+import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,10 +35,12 @@ const layoutComponents = {
 
 function PathPageComponent({
   slug,
-  ownedCourses
+  ownedCourses,
+  eligibleLifetimeUpgradeOfferKey,
 }: {
   slug: string
   ownedCourses: string[]
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }) {
   const data = careerPathsData[slug]
 
@@ -50,6 +54,7 @@ function PathPageComponent({
     <LayoutComponent
       {...data}
       ownedCourses={ownedCourses}
+      eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
       subjectTitles={getCourseSubjectTitles(data.pricing?.courseSlug ?? slug)}
     />
   )
@@ -61,8 +66,18 @@ export default async function PathPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { enrollments } = await getUserEnrollmentsAction()
+  const { enrollments, enrollmentGrants } = await getUserEnrollmentsAction()
   const ownedCourses = enrollments.map(e => `${e.courseSlug}-${e.accessTier}`)
+  const pricing = careerPathsData[slug]?.pricing
+  const eligibleLifetimeUpgradeOfferKey = pricing
+    ? getEligibleLifetimeUpgradeOfferKey(enrollmentGrants, pricing.courseSlug)
+    : null
 
-  return <PathPageComponent slug={slug} ownedCourses={ownedCourses} />
+  return (
+    <PathPageComponent
+      slug={slug}
+      ownedCourses={ownedCourses}
+      eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+    />
+  )
 }

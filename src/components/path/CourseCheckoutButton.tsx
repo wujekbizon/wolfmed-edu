@@ -9,9 +9,11 @@ import FormError from '@/components/FormError'
 import type { PaymentOfferKey } from '@/types/paymentTypes'
 
 export default function CourseCheckoutButton({
-  offerKey
+  offerKey,
+  label = 'Uzyskaj dostęp do kursu',
 }: {
   offerKey: PaymentOfferKey
+  label?: string
 }) {
   const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
@@ -22,7 +24,7 @@ export default function CourseCheckoutButton({
       <FormError formState={state} />
       <input type='hidden' name='offerKey' value={offerKey} />
       <SubmitButton
-        label='Uzyskaj dostęp do kursu'
+        label={label}
         loading='Przekierowywanie...'
         variant='cta'
         size='lg'

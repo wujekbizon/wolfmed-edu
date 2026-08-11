@@ -8,6 +8,7 @@ import PlanComparisonToggle from './PlanComparisonToggle'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
+import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
 
 // `subjectTitles` arrives as a prop rather than being read here:
 // SimplePathLayout is a client component, and importing CATEGORY_METADATA
@@ -15,11 +16,13 @@ import type { PathData } from '@/types/careerPathsTypes'
 export default function PricingSection({
   pricing,
   ownedCourses,
-  subjectTitles
+  subjectTitles,
+  eligibleLifetimeUpgradeOfferKey,
 }: {
   pricing: NonNullable<PathData['pricing']>
   ownedCourses: string[]
   subjectTitles: string[]
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }) {
   const groups = PLAN_COMPARISON[pricing.courseSlug] ?? []
 
@@ -37,7 +40,11 @@ export default function PricingSection({
             subtitle='Jednorazowa płatność. Dostęp na zawsze.'
             titleId='pricing-title'
           />
-          <PricingCardsGrid pricing={pricing} ownedCourses={ownedCourses} />
+          <PricingCardsGrid
+            pricing={pricing}
+            ownedCourses={ownedCourses}
+            eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+          />
           {groups.length > 0 && <PlanComparisonToggle />}
         </div>
 

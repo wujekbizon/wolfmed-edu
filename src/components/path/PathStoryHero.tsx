@@ -6,21 +6,25 @@ import CourseCheckoutButton from './CourseCheckoutButton'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import { ownsCourse } from '@/helpers/ownsCourse'
 import type { PathData } from '@/types/careerPathsTypes'
+import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
 import type { PathStory } from '@/types/pathStoryTypes'
 
 export default function PathStoryHero({
   title,
   story,
   pricing,
-  ownedCourses
+  ownedCourses,
+  eligibleLifetimeUpgradeOfferKey,
 }: {
   title: string
   story: PathStory
   pricing?: PathData['pricing']
   ownedCourses: string[]
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }) {
   const entry = pricing?.basic
   const owned = !!pricing && ownsCourse(pricing.courseSlug, ownedCourses)
+  const offerKey = eligibleLifetimeUpgradeOfferKey ?? (!owned ? entry?.offerKey : null)
 
   return (
     <div className='w-full p-4 sm:p-6 md:p-8 lg:p-12'>
@@ -39,10 +43,13 @@ export default function PathStoryHero({
                   {story.intro}
                 </p>
 
-                {pricing && entry && !owned && (
+                {pricing && offerKey && (
                   <div className='mt-8'>
                     <CourseCheckoutButton
-                      offerKey={entry.offerKey}
+                      offerKey={offerKey}
+                      {...(eligibleLifetimeUpgradeOfferKey
+                        ? { label: 'Odblokuj AI w Premium' }
+                        : {})}
                     />
                   </div>
                 )}

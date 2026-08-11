@@ -1,4 +1,5 @@
 import 'server-only'
+import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { isCheckoutSessionValidForOrder } from '@/helpers/isCheckoutSessionValidForOrder'
 import stripe from '@/lib/stripeClient'
 import { getCheckoutOrderById } from '@/server/payments/checkoutOrders'
@@ -43,13 +44,16 @@ export async function getCheckoutFulfillmentContext(
   })
   if (!valid) throw new Error(`Checkout Session ${sessionId} failed catalog validation`)
 
+  const offerKey = order?.offerKey ?? legacyOffer!.key
+
   return {
     orderId: order?.id ?? null,
     orderStatus: order?.status ?? null,
     userId,
-    offerKey: order?.offerKey ?? legacyOffer!.key,
+    offerKey,
     courseSlug: order?.courseSlug ?? legacyOffer!.courseSlug,
     accessTier: order?.accessTier ?? legacyOffer!.accessTier,
+    entitlementSourceType: PAYMENT_OFFERS[offerKey].entitlementSourceType,
     stripeCustomerId: customerId,
     snapshot,
   }

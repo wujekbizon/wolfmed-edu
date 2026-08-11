@@ -1,8 +1,14 @@
 export type PaymentOfferKey =
   | 'opiekun_basic_lifetime'
   | 'opiekun_premium_lifetime'
+  | 'opiekun_premium_upgrade'
   | 'pielegniarstwo_basic_lifetime'
   | 'pielegniarstwo_premium_lifetime'
+  | 'pielegniarstwo_premium_upgrade'
+
+export type LifetimeUpgradeOfferKey =
+  | 'opiekun_premium_upgrade'
+  | 'pielegniarstwo_premium_upgrade'
 
 export type PaymentOffer = {
   key: PaymentOfferKey
@@ -11,11 +17,14 @@ export type PaymentOffer = {
   amount: number
   currency: 'pln'
   available: boolean
+  entitlementSourceType: 'lifetime_purchase' | 'lifetime_upgrade'
   priceEnvName:
     | 'STRIPE_OPIEKUN_STANDARD_PRICE_ID'
     | 'STRIPE_OPIEKUN_PREMIUM_PRICE_ID'
+    | 'STRIPE_OPIEKUN_PREMIUM_UPGRADE_PRICE_ID'
     | 'STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID'
     | 'STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID'
+    | 'STRIPE_PIELEGNIARSTWO_PREMIUM_UPGRADE_PRICE_ID'
 }
 
 export type CheckoutPurchaseModel = 'lifetime' | 'subscription'
@@ -41,7 +50,15 @@ export type CheckoutStartResult =
   | { status: 'READY'; url: string }
   | { status: 'ACTIVE_CONFLICT' }
   | { status: 'ALREADY_OWNED' }
+  | { status: 'NOT_ELIGIBLE' }
+  | { status: 'UPGRADE_REQUIRED' }
   | { status: 'COMPLETED' }
+
+export type LifetimeCheckoutEligibility =
+  | 'ALLOWED'
+  | 'ALREADY_OWNED'
+  | 'NOT_ELIGIBLE'
+  | 'UPGRADE_REQUIRED'
 
 export type CheckoutSessionSnapshot = {
   id: string
@@ -82,6 +99,7 @@ export type CheckoutFulfillmentContext = {
   offerKey: PaymentOfferKey
   courseSlug: PaymentOffer['courseSlug']
   accessTier: PaymentOffer['accessTier']
+  entitlementSourceType: PaymentOffer['entitlementSourceType']
   stripeCustomerId: string
   snapshot: CheckoutSessionSnapshot
 }
@@ -128,20 +146,14 @@ export type EnrollmentGrant = {
   revokedAt: Date | null
 }
 
-export type LifetimeEnrollmentCandidate = {
-  id: string
-  accessTier: string
-}
-
-export type LifetimeEnrollmentMerge = {
-  canonicalId: string | null
-  staleIds: string[]
-  shouldApplyPurchase: boolean
+export type LifetimeUpgradeGrant = EnrollmentGrant & {
+  sourceType: EntitlementSourceType | null
 }
 
 export type CoursePricingDetailsProps = {
   tierName: string
   price: string
+  originalPrice?: string
   features: string[]
   isPremium: boolean
   badge?: string
@@ -151,4 +163,5 @@ export type CoursePricingCardProps = Omit<CoursePricingDetailsProps, 'isPremium'
   offerKey: PaymentOfferKey
   isPremium?: boolean
   alreadyOwned?: boolean
+  purchaseLabel?: string
 }

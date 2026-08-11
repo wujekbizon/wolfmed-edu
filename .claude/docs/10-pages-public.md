@@ -56,10 +56,10 @@ Flow:
 **Questions-hero variant** — `PathQuestionsHero` (`src/components/path/`, used by `RichPathLayout` when `questions` is set, e.g. `pielegniarstwo` via `careerQuestions.ts`): a two-column sticky hero, `PathQuestionList` (Q&A, revealed on scroll via `useSceneReveal`) on the left and `PathShotCollage` (staggered photo frames) on the right, with its own `CourseCheckoutButton` and a "see the program" link scrolling to `CURRICULUM_ANCHOR`.
 
 ### Purchase flow (Stripe)
-Two entry points submit the same action: the per-tier "Buy" card in `PricingSection` (`PricingCardsGrid`), and `CourseCheckoutButton` (`src/components/path/`) rendered directly inside `PathStoryHero`/`PathQuestionsHero` for an above-the-fold buy CTA — both submit `createCheckoutSession` (`src/actions/stripe.ts`) and both are hidden once `ownsCourse(courseSlug, ownedCourses)` (`src/helpers/ownsCourse.ts`) is true:
+Two entry points submit the same action: the per-tier "Buy" card in `PricingSection` (`PricingCardsGrid`), and `CourseCheckoutButton` (`src/components/path/`) rendered directly inside `PathStoryHero`/`PathQuestionsHero` for an above-the-fold CTA. Both submit `createCheckoutSession` (`src/actions/stripe.ts`). The hero button is hidden for Premium owners; eligible lifetime Basic owners instead see `Odblokuj AI w Premium` using their upgrade offer:
 1. Reads only a server-known `offerKey` from `FormData`.
 2. Redirects to `/sign-in?redirect_url=...` if not authenticated.
-3. Validates Product/Price and creates or reuses one active local order per user/course/lifetime model.
+3. Validates Product/Price and eligibility, then creates or reuses one active local order per user/course/lifetime model. Active lifetime Basic owners see only their course's difference-price Premium upgrade (290.00 PLN for Opiekun, 320.00 PLN for Pielegniarstwo); direct offer tampering is rejected server-side.
 4. Creates Stripe Checkout with `checkout:<orderId>` idempotency, required name/address, optional NIP and invoice creation.
 5. Concurrent requests reuse the Session; cancel expires it and releases the order.
 
@@ -127,4 +127,4 @@ Both are pure content pages — no forms, no data fetching.
 - **`/success`** (server-first) — authenticates the user, validates `session_id`, retrieves the canonical Stripe Session, verifies ownership and the trusted order snapshot, then runs the same idempotent fulfillment used by the webhook. It renders paid, processing, failed, invalid, or temporarily unavailable states from verified server data.
 - **`/canceled`** (server-first) — expires the authenticated user's local/Stripe order and returns to the same course pricing section.
 
-Either `/success` or the webhook may fulfill first; transaction locks, processed-event IDs, unique Stripe object IDs, and enrollment merging keep both paths idempotent. See [`14-api-routes.md`](./14-api-routes.md).
+Either `/success` or the webhook may fulfill first; transaction locks, processed-event IDs, unique Stripe object IDs, and source-grant uniqueness keep both paths idempotent. See [`14-api-routes.md`](./14-api-routes.md).

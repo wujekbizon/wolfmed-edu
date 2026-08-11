@@ -15,6 +15,7 @@ export default function SimplePathLayout({
   pricing,
   ownedCourses,
   subjectTitles,
+  eligibleLifetimeUpgradeOfferKey,
   story,
   careerPath
 }: PathLayoutProps) {
@@ -29,6 +30,7 @@ export default function SimplePathLayout({
             story={story}
             pricing={pricing}
             ownedCourses={ownedCourses ?? []}
+            eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
         {story && careerPath && <SectionDivider />}
@@ -52,6 +54,7 @@ export default function SimplePathLayout({
                 pricing={pricing}
                 ownedCourses={ownedCourses ?? []}
                 subjectTitles={subjectTitles}
+                eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
               />
             </FadeInSection>
           )}

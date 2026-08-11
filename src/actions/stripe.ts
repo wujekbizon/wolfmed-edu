@@ -38,6 +38,12 @@ export async function createCheckoutSession(
     if (result.status === 'ALREADY_OWNED') {
       return toFormState('ERROR', 'Masz już ten dostęp.')
     }
+    if (result.status === 'NOT_ELIGIBLE') {
+      return toFormState('ERROR', 'Ta oferta aktualizacji nie jest dostępna.')
+    }
+    if (result.status === 'UPGRADE_REQUIRED') {
+      return toFormState('ERROR', 'Skorzystaj z ceny aktualizacji do Premium.')
+    }
     if (result.status === 'ACTIVE_CONFLICT') {
       return toFormState('ERROR', 'Dokończ lub anuluj rozpoczętą płatność.')
     }

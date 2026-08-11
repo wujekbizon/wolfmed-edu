@@ -1,8 +1,7 @@
 # Stripe one-time payment hardening guide
 
-Status: Checkpoints 1-3 approved by Greg on 2026-08-11. Development migration,
-card/BLIK payments, upgrade, replay, rollback, cancel and access tests passed.
-Checkpoint 4 is next. Subscriptions remain out of scope.
+Status: Checkpoints 1-4 and difference-price lifetime upgrades approved by Greg on
+2026-08-11. Refunds and disputes are next. Subscriptions remain out of scope.
 
 Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
 
@@ -161,7 +160,8 @@ Acceptance:
 - Replaying one event changes nothing.
 - A second event for the same Session changes nothing.
 - Forced transaction failure grants nothing; Stripe retry later succeeds once.
-- First payment creates one lifetime entitlement; an upgrade updates it in place.
+- Each paid Session creates one source grant; effective access uses the highest
+  active tier.
 - Backfilled owners keep identical access.
 
 Evidence:
@@ -171,8 +171,8 @@ Evidence:
 - [x] Real event replay kept one event, payment and enrollment.
 - [x] Forced rollback left no event row; synthetic rows were cleaned.
 - [x] Tampered owner, Customer, Price, amount, currency and mode are rejected.
-- [x] Basic-to-Premium purchase updated one lifetime enrollment in place.
 - [x] Payment history retained separate Basic and Premium payment rows.
+- [x] Separate entitlement-source acceptance passed with the lifetime upgrade.
 - [x] No Clerk metadata dependency remains in webhook or navigation access state.
 - [x] Greg approved Phase 2B.
 
@@ -189,9 +189,9 @@ Prerequisite: execute M9 from `DB_MIGRATIONS.md` against dev only.
    conflict until Basic is canceled or expires.
 4. Cancel Checkout. Expect Stripe Session `expired`, local order `CANCELED`, no
    payment and no entitlement. A new attempt must create a new order.
-5. Pay each of the four offers. Expect one order and payment per Session, one
-   `lifetime_purchase` entitlement per user/course updated to the highest paid
-   tier, plus one user limits row.
+5. Pay each of the four offers. Expect one order, payment and source grant per
+   Session. Effective access uses the highest active tier. Expect one user limits
+   row.
 6. Resend the same event and then send another paid event for the same Session.
    Counts must not change.
 7. Confirm amount, currency, Price, Customer or user mismatch returns webhook
@@ -204,7 +204,7 @@ Prerequisite: execute M9 from `DB_MIGRATIONS.md` against dev only.
 
 ## Checkpoint 4 - verified result UI
 
-Status: ready to implement; checkpoint 3 approved.
+Status: approved by Greg on 2026-08-11.
 
 Changes:
 
@@ -223,9 +223,59 @@ Acceptance:
 - Pending/failed payments never claim active access.
 - Navbar/panel state matches DB access after payment.
 
+Evidence:
+
+- [x] Paid, pending, failed, malformed-ID and unavailable states passed.
+- [x] Cross-user Session showed the invalid state and revealed no purchase data.
+- [x] Refresh and retry remained idempotent.
+- [x] Greg approved checkpoint 4.
+
+## Difference-price lifetime upgrades
+
+Status: approved by Greg on 2026-08-11.
+
+Changes:
+
+- Add active one-time PLN offers `opiekun_premium_upgrade` (290.00) and
+  `pielegniarstwo_premium_upgrade` (320.00).
+- Show the difference price only to an active lifetime Basic owner for that course.
+- Recheck eligibility server-side before Checkout and atomically before granting.
+- Store Basic and Premium upgrade as separate source grants. Revoking the upgrade
+  later leaves Basic effective without reconstructing it.
+- No database schema change or migration.
+
+Environment:
+
+- `STRIPE_OPIEKUN_PREMIUM_UPGRADE_PRICE_ID`
+- `STRIPE_PIELEGNIARSTWO_PREMIUM_UPGRADE_PRICE_ID`
+
+Acceptance:
+
+1. Create both active, one-time PLN Prices in Stripe test mode and set the two env
+   values above.
+2. Lifetime Basic owner sees the regular Premium price struck through, the
+   290.00/320.00 upgrade price and `Ulepsz do Premium`.
+3. User without lifetime Basic sees the normal Premium offer. Forging an upgrade
+   `offerKey` is rejected before Stripe Checkout.
+4. Complete an upgrade. Expect the Basic grant plus one `lifetime_upgrade` Premium
+   grant and effective Premium access.
+5. Refresh `/success`. Expect no duplicate payment or grant.
+6. Cancel an upgrade. Expect no grant and a retry link to the same course.
+7. Delete the stored test Customer in Stripe and retry Checkout. Expect a new
+   Customer, updated local Customer ID and a working Checkout Session.
+
+Evidence:
+
+- [x] Eligible Basic owner saw the difference price and completed the upgrade.
+- [x] Basic and `lifetime_upgrade` grants remained separate; Premium became effective.
+- [x] Success refresh and synchronous/asynchronous webhook delivery stayed idempotent.
+- [x] Deleted Stripe Customer was replaced automatically and Checkout recovered.
+- [x] Non-owner full Premium eligibility and forged-upgrade rejection passed in terminal.
+- [x] Greg approved lifetime upgrades.
+
 ## Checkpoint 5 - refunds and disputes
 
-Status: blocked on checkpoint 4 approval.
+Status: ready to implement; lifetime upgrades approved.
 
 Changes:
 
@@ -245,13 +295,14 @@ Acceptance:
 
 ## Phase 1 completion gate
 
-- [ ] All five checkpoints approved; checkpoints 1-3 complete.
-- [x] Current full automated suite and TypeScript pass: 155 tests.
+- [ ] All five checkpoints approved; checkpoints 1-4 complete.
+- [x] Current full automated suite (166 tests), TypeScript, lint and production
+  build pass after lifetime upgrades.
 - [ ] Final lint and production build after checkpoints 4-5.
 - [ ] Stripe CLI replay and Dashboard refund/dispute tests pass.
 - [ ] Dev DB reconciles one-to-one with Stripe Sessions and payments.
-- [x] Payment flow, schema, API, forms, testing, and migration docs updated for
-  checkpoints 1-3.
+- [x] Payment flow, schema, API, forms, testing, and migration docs updated through
+  lifetime-upgrade implementation.
 - [x] No subscription Product, Price, Portal, or lifecycle code introduced.
 - [ ] Greg approves beginning subscription implementation.
 

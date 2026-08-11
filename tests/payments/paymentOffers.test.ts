@@ -6,6 +6,7 @@ import { isStripePriceValidForOffer } from '@/helpers/isStripePriceValidForOffer
 import { CheckoutSessionIdSchema, CreateCheckoutSchema } from '@/server/schema'
 import { getCanceledReturnHref } from '@/helpers/getCanceledReturnHref'
 import { isStripeInvalidRequestError } from '@/helpers/isStripeInvalidRequestError'
+import { isMissingStripeCustomer } from '@/helpers/isMissingStripeCustomer'
 
 const stripePrice = (
   overrides: Partial<Stripe.Price> = {}
@@ -25,6 +26,9 @@ test('checkout accepts only known offer keys', () => {
   assert.equal(CreateCheckoutSchema.safeParse({
     offerKey: 'attacker_price',
   }).success, false)
+  assert.equal(CreateCheckoutSchema.safeParse({
+    offerKey: 'opiekun_premium_upgrade',
+  }).success, true)
 })
 
 test('success accepts only Stripe Checkout Session IDs', () => {
@@ -49,6 +53,24 @@ test('Stripe Session request errors are invalid, not temporary outages', () => {
   assert.equal(isStripeInvalidRequestError(new Error('Network unavailable')), false)
 })
 
+test('missing or deleted Stripe Customers require replacement', () => {
+  const missing = new Stripe.errors.StripeInvalidRequestError({
+    message: 'No such customer',
+    type: 'invalid_request_error',
+    code: 'resource_missing',
+  })
+  const otherError = new Stripe.errors.StripeInvalidRequestError({
+    message: 'Bad request',
+    type: 'invalid_request_error',
+    code: 'parameter_invalid_empty',
+  })
+
+  assert.equal(isMissingStripeCustomer(missing), true)
+  assert.equal(isMissingStripeCustomer({ id: 'cus_deleted', deleted: true }), true)
+  assert.equal(isMissingStripeCustomer({ id: 'cus_active' }), false)
+  assert.equal(isMissingStripeCustomer(otherError), false)
+})
+
 test('every offer key resolves to matching server metadata', () => {
   for (const key of PAYMENT_OFFER_KEYS) {
     assert.equal(PAYMENT_OFFERS[key].key, key)
@@ -62,8 +84,20 @@ test('every offer key resolves to matching server metadata', () => {
     amount: 15999,
     currency: 'pln',
     available: true,
+    entitlementSourceType: 'lifetime_purchase',
     priceEnvName: 'STRIPE_OPIEKUN_STANDARD_PRICE_ID',
   })
+  assert.deepEqual(PAYMENT_OFFERS.opiekun_premium_upgrade, {
+    key: 'opiekun_premium_upgrade',
+    courseSlug: 'opiekun-medyczny',
+    accessTier: 'premium',
+    amount: 29000,
+    currency: 'pln',
+    available: true,
+    entitlementSourceType: 'lifetime_upgrade',
+    priceEnvName: 'STRIPE_OPIEKUN_PREMIUM_UPGRADE_PRICE_ID',
+  })
+  assert.equal(PAYMENT_OFFERS.pielegniarstwo_premium_upgrade.amount, 32000)
 })
 
 test('configured Stripe Price must match active one-time offer', () => {

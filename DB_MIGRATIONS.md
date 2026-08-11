@@ -305,8 +305,9 @@ migracja bazy danych.*
 - `wolfmed_processed_events`: nullable `event_type`, `stripe_object_id`, `order_id`
   i `payment_id`. Marker zdarzenia jest zapisywany w tej samej transakcji co zakup.
 - `wolfmed_course_enrollments`: nullable `source_type`, `source_id`, `starts_at`,
-  `revoked_at`; unikalne `(source_type, source_id)`. Zakup Premium aktualizuje
-  istniejący grant lifetime; osobne modele źródłowe mogą współistnieć.
+  `revoked_at`; unikalne `(source_type, source_id)`. Każda opłacona Session tworzy
+  osobny grant źródłowy. Upgrade Premium używa `lifetime_upgrade`, więc jego
+  późniejsze cofnięcie pozostawia bazowy grant Basic.
 - `wolfmed_stripe_subscriptions` bez zmian.
 
 Preflight przed dodaniem unikalnych indeksów:
@@ -339,6 +340,9 @@ WHERE source_type IS NULL;
 
 4. Sprawdzić, że każdy stary dostęp pozostał aktywny i ma unikalny `source_id`.
 5. Wykonać test Stripe Phase 2A+2B z przewodnika 42.
+
+Oferty lifetime upgrade nie wymagają kolejnej migracji DB. Wymagają dwóch cen
+jednorazowych Stripe i zmiennych środowiskowych opisanych w przewodniku 42.
 
 Produkcja: osobna wersjonowana migracja expand/backfill po backupie. Nie ustawiać
 nowych kolumn `NOT NULL` i nie usuwać `customerEmail` w pierwszym deployu.

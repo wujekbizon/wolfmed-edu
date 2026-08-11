@@ -19,12 +19,12 @@ Prepared: 2026-08-11.
 - [x] Phase 2B: canonical Session validation, atomic ledger/entitlement fulfillment,
   webhook replay safety and DB-authoritative access.
 - [x] Card and BLIK development payments.
-- [x] Lifetime Basic-to-Premium access update without duplicate enrollment.
+- [x] Source-aware lifetime grants resolve to the highest active tier.
 - [x] Cancel, access and navigation development tests.
 - [x] Verified paid/pending/failed success UI.
 - [x] Manual paid, pending, invalid-ID and cross-user success-page tests.
 - [ ] Refund and dispute lifecycle.
-- [ ] Difference-price lifetime upgrade offers.
+- [x] Difference-price lifetime upgrade offers and separate source grants.
 - [ ] Monthly subscriptions and Customer Portal.
 
 ## Pricing

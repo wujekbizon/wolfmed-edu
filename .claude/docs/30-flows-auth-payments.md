@@ -39,6 +39,8 @@ The full loop: client-initiated checkout → Stripe-hosted payment → asynchron
 1. Form submits only a server-known `offerKey`. Zod, authentication and rate
    limiting run before Stripe or DB mutation.
 2. Server validates the configured Stripe Product/Price and checks DB access.
+   An active lifetime Basic owner receives only the course's difference-price
+   Premium upgrade; forged upgrade requests are rejected.
 3. A local `stripe_checkout_orders` row snapshots owner, offer, course, tier,
    Price, amount and currency. A unique active key permits one lifetime attempt
    per user/course.
@@ -56,11 +58,12 @@ The full loop: client-initiated checkout → Stripe-hosted payment → asynchron
    owner through local `orderId`, and compares Session, user, Customer, Price,
    amount, currency, mode and quantity with the immutable order snapshot.
 3. One DB transaction locks fulfillment per user/course, inserts the unique event
-   marker, upserts the payment, updates order state, creates or upgrades the single
-   lifetime entitlement and initializes storage once. Any failure rolls everything
-   back and returns `500` for retry.
+   marker, upserts the payment, updates order state, creates one source grant per
+   paid Session and initializes storage once. A lifetime upgrade also rechecks its
+   active Basic grant. Any failure rolls everything back and returns `500` for retry.
 4. Event, Session, PaymentIntent, Invoice and entitlement-source uniqueness make
-   replay, concurrent and out-of-order delivery idempotent.
+   replay, concurrent and out-of-order delivery idempotent. Effective access uses
+   the highest active grant, so revoking an upgrade later falls back to Basic.
 5. The webhook performs no Clerk call, email identity lookup, metadata mirror,
    model work or `testLimit` reward. Stripe keeps billing PII; DB access is
    authoritative.

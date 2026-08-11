@@ -1,7 +1,8 @@
 import 'server-only'
-import { hasAccessToTier } from '@/helpers/accessTiers'
+import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
+import { resolveLifetimeCheckoutEligibility } from '@/helpers/resolveLifetimeCheckoutEligibility'
 import stripe from '@/lib/stripeClient'
-import { getUserEnrollments } from '@/server/queries'
+import { getUserEnrollmentGrants } from '@/server/queries'
 import { getOrCreateStripeCustomer } from '@/server/stripe'
 import { getVerifiedStripeOffer } from '@/server/stripeOffer'
 import type { CheckoutStartResult, PaymentOfferKey } from '@/types/paymentTypes'
@@ -15,13 +16,12 @@ export async function startCheckout(
   userId: string,
   offerKey: PaymentOfferKey
 ): Promise<CheckoutStartResult> {
-  const offer = await getVerifiedStripeOffer(offerKey)
-  const enrollments = await getUserEnrollments(userId)
-  const owned = enrollments.find((item) => item.courseSlug === offer.courseSlug)
+  const catalogOffer = PAYMENT_OFFERS[offerKey]
+  const enrollmentGrants = await getUserEnrollmentGrants(userId)
+  const eligibility = resolveLifetimeCheckoutEligibility(enrollmentGrants, catalogOffer)
+  if (eligibility !== 'ALLOWED') return { status: eligibility }
 
-  if (owned && hasAccessToTier(owned.accessTier, offer.accessTier)) {
-    return { status: 'ALREADY_OWNED' }
-  }
+  const offer = await getVerifiedStripeOffer(offerKey)
 
   const order = await getOrCreateCheckoutOrder(userId, offer)
   if (order.offerKey !== offer.key) return { status: 'ACTIVE_CONFLICT' }
@@ -42,7 +42,12 @@ export async function startCheckout(
     return startCheckout(userId, offerKey)
   }
 
-  const customerId = await getOrCreateStripeCustomer(userId)
+  const customer = await getOrCreateStripeCustomer(userId)
+  if (customer.replaced) {
+    await markCheckoutOrderStatus(order.id, 'FAILED', true)
+    return startCheckout(userId, offerKey)
+  }
+  const customerId = customer.customerId
   const cancelUrl = new URL('/canceled', process.env.NEXT_PUBLIC_APP_URL)
   cancelUrl.searchParams.set('course', offer.courseSlug)
   cancelUrl.searchParams.set('order', order.id)
