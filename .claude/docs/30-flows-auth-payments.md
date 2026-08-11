@@ -74,6 +74,16 @@ actual panel access reads DB grants. Navbar/Drawer do not read Clerk course meta
 **Files**: `src/actions/stripe.ts`, `src/server/payments/*`,
 `src/app/api/webhooks/stripe/route.ts`, `src/server/db/schema.ts`.
 
+**Part C — refunds and disputes** (`POST /api/webhooks/stripe`):
+1. Signed Charge, Refund, and Dispute events trigger a fresh canonical Stripe read.
+2. Successful refunds are summed across the PaymentIntent. Pending/failed refunds
+   do not count; a partial refund updates the ledger without access loss.
+3. A full refund or aggregate lost dispute deactivates only the entitlement whose
+   source matches that paid Checkout Session. Other grants remain active, so a
+   refunded Premium upgrade falls back to its lifetime Basic grant.
+4. Won/resolved disputes restore that grant unless a full refund still requires
+   revocation. Event marker, payment state and grant state commit together.
+
 ## Flow 4 — User deletes their account
 
 1. Triggered entirely from **Clerk's side** (user deletes their account via Clerk's account UI, or an admin removes them in the Clerk dashboard) — there is no in-app "delete my account" button in this codebase.

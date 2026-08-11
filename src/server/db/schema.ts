@@ -19,8 +19,10 @@ import type {
   CheckoutOrderStatus,
   CheckoutPurchaseModel,
   EntitlementSourceType,
+  PaymentDisputeStatus,
   PaymentOffer,
   PaymentOfferKey,
+  PaymentRefundStatus,
 } from "@/types/paymentTypes"
 
 interface TestMeta {
@@ -103,11 +105,23 @@ export const payments = createTable("stripe_payments", {
   stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
   sessionId: varchar("sessionId", { length: 256 }),
   paymentIntentId: varchar("paymentIntentId", { length: 256 }),
+  chargeId: varchar("charge_id", { length: 256 }),
   invoiceId: varchar("invoice_id", { length: 256 }),
+  amountRefunded: integer("amount_refunded").default(0).notNull(),
+  refundStatus: varchar("refund_status", { length: 32 })
+    .$type<PaymentRefundStatus>()
+    .default("none")
+    .notNull(),
+  disputeStatus: varchar("dispute_status", { length: 32 })
+    .$type<PaymentDisputeStatus>()
+    .default("none")
+    .notNull(),
   createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
   uniqueIndex("stripe_payments_session_id_uq").on(table.sessionId),
   uniqueIndex("stripe_payments_intent_id_uq").on(table.paymentIntentId),
+  uniqueIndex("stripe_payments_charge_id_uq").on(table.chargeId),
   uniqueIndex("stripe_payments_invoice_id_uq").on(table.invoiceId),
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),

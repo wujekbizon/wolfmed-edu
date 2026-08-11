@@ -3,12 +3,25 @@ import { NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import stripe from '@/lib/stripeClient'
 import { processStripeCheckoutEvent } from '@/server/payments/processStripeCheckoutEvent'
-import type { StripeCheckoutEventType } from '@/types/paymentTypes'
+import { processStripePaymentLifecycleEvent } from '@/server/payments/processStripePaymentLifecycleEvent'
+import type {
+  StripeCheckoutEventType,
+  StripePaymentLifecycleEventType,
+} from '@/types/paymentTypes'
 
 const checkoutEvents = new Set<StripeCheckoutEventType>([
   'checkout.session.completed',
   'checkout.session.async_payment_succeeded',
   'checkout.session.async_payment_failed',
+])
+
+const paymentLifecycleEvents = new Set<StripePaymentLifecycleEventType>([
+  'charge.refunded',
+  'refund.created',
+  'refund.updated',
+  'refund.failed',
+  'charge.dispute.created',
+  'charge.dispute.closed',
 ])
 
 export async function POST(req: Request) {
@@ -32,6 +45,8 @@ export async function POST(req: Request) {
   try {
     if (checkoutEvents.has(event.type as StripeCheckoutEventType)) {
       await processStripeCheckoutEvent(event)
+    } else if (paymentLifecycleEvents.has(event.type as StripePaymentLifecycleEventType)) {
+      await processStripePaymentLifecycleEvent(event)
     }
     return NextResponse.json({ received: true })
   } catch (error) {

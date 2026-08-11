@@ -1,9 +1,9 @@
 # Stripe payments and subscriptions plan
 
 Status: implementation active. One-time Checkout hardening, local orders,
-idempotency, atomic fulfillment, lifetime Basic-to-Premium updates and verified
-success UI are approved and tested in development. Refunds/disputes and
-subscriptions remain pending.
+idempotency, atomic fulfillment, lifetime Basic-to-Premium updates,
+refunds/disputes and success UI are approved and tested in development.
+Subscriptions remain pending.
 
 Branch: `codex/practical-exam-next`.
 
@@ -23,7 +23,7 @@ Prepared: 2026-08-11.
 - [x] Cancel, access and navigation development tests.
 - [x] Verified paid/pending/failed success UI.
 - [x] Manual paid, pending, invalid-ID and cross-user success-page tests.
-- [ ] Refund and dispute lifecycle.
+- [x] Refund and dispute lifecycle.
 - [x] Difference-price lifetime upgrade offers and separate source grants.
 - [ ] Monthly subscriptions and Customer Portal.
 

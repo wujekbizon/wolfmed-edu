@@ -1,7 +1,8 @@
 # Stripe one-time payment hardening guide
 
-Status: Checkpoints 1-4 and difference-price lifetime upgrades approved by Greg on
-2026-08-11. Refunds and disputes are next. Subscriptions remain out of scope.
+Status: Checkpoints 1-5 and difference-price lifetime upgrades approved by Greg on
+2026-08-11. One-time payment hardening is complete. Subscriptions remain out of
+scope.
 
 Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
 
@@ -275,12 +276,14 @@ Evidence:
 
 ## Checkpoint 5 - refunds and disputes
 
-Status: ready to implement; lifetime upgrades approved.
+Status: approved by Greg on 2026-08-11.
 
 Changes:
 
-- Handle refund lifecycle and dispute opened/closed events.
+- Handle `charge.refunded`, refund created/updated/failed, and dispute
+  created/closed events.
 - Fetch canonical Stripe state for duplicate/out-of-order events.
+- Sum only successful refunds; pending/failed refunds do not revoke access.
 - Full successful refund or lost dispute revokes only its source entitlement.
 - Partial refund updates the ledger without revoking access.
 - Won dispute restores access when the payment remains valid.
@@ -293,12 +296,47 @@ Acceptance:
 - Replayed and out-of-order events converge to Stripe state.
 - Other course/lifetime grants remain unaffected.
 
+Dev preparation:
+
+1. Apply additive M10 schema changes from `DB_MIGRATIONS.md`.
+2. Forward signed lifecycle events:
+
+   ```text
+   stripe listen --events charge.refunded,refund.created,refund.updated,refund.failed,charge.dispute.created,charge.dispute.closed --forward-to localhost:3000/api/webhooks/stripe
+   ```
+
+3. Restart the app with the listener's `whsec_...` secret.
+
+Greg's test-mode acceptance:
+
+1. Partially refund a paid Basic purchase. Expect `refund_status=partial`, exact
+   `amount_refunded`, active Basic access and one processed event per Stripe event.
+2. Complete the refund. Expect `refund_status=full` and only that Session grant
+   inactive/revoked.
+3. Fully refund a Premium upgrade. Expect Premium revoked and original Basic active.
+4. Replay a refund event. Expect no additional state change or event row.
+5. Open a test dispute. Access remains while open. Close it as lost: exact grant is
+   revoked. Close a separate test dispute as won: access remains/restores unless the
+   payment is also fully refunded.
+
+Evidence:
+
+- [x] Canonical refund/dispute aggregation and entitlement rules have automated tests.
+- [x] Focused payment tests (31), full suite (172), TypeScript, lint and production
+  build pass before migration.
+- [x] Additive dev migration applied.
+- [x] Partial/full Dashboard refunds updated ledger and exact source entitlement.
+- [x] Repurchase after refund created a new active Session grant and retained the
+  revoked grant as history.
+- [x] Won dispute retained access with zero refunded amount and `won` status.
+- [x] Greg approved checkpoint 5.
+
 ## Phase 1 completion gate
 
-- [ ] All five checkpoints approved; checkpoints 1-4 complete.
+- [x] All five checkpoints approved.
 - [x] Current full automated suite (166 tests), TypeScript, lint and production
   build pass after lifetime upgrades.
-- [ ] Final lint and production build after checkpoints 4-5.
+- [x] Final lint and production build after checkpoints 4-5.
 - [ ] Stripe CLI replay and Dashboard refund/dispute tests pass.
 - [ ] Dev DB reconciles one-to-one with Stripe Sessions and payments.
 - [x] Payment flow, schema, API, forms, testing, and migration docs updated through

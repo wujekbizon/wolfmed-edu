@@ -72,8 +72,11 @@ Tracks one-time payments via Stripe.
   currency: enum('pln', 'usd', 'eur')
   customerEmail: varchar(256) (nullable; no longer written)
   paymentStatus: varchar(50) (not null)
-  sessionId, paymentIntentId, invoiceId: varchar(256) (unique, nullable)
-  createdAt: timestamp (auto)
+  sessionId, paymentIntentId, chargeId, invoiceId: varchar(256) (unique, nullable)
+  amountRefunded: integer (default 0, not null)
+  refundStatus: varchar(32) ('none' | 'partial' | 'full', default 'none')
+  disputeStatus: varchar(32) ('none' | 'open' | 'won' | 'lost' | 'resolved', default 'none')
+  createdAt, updatedAt: timestamp (auto)
 }
 ```
 

@@ -64,8 +64,8 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 
 ### `POST /api/webhooks/stripe`
 `src/app/api/webhooks/stripe/route.ts`. Verifies the raw body with
-`stripe.webhooks.constructEvent`, then delegates completed/asynchronous Checkout
-events to `src/server/payments/*`.
+`stripe.webhooks.constructEvent`, then delegates completed/asynchronous Checkout,
+refund, and dispute events to `src/server/payments/*`.
 
 1. Retrieves the canonical Session with expanded line items.
 2. Resolves ownership from local `orderId`; legacy open Sessions may use their
@@ -76,6 +76,10 @@ events to `src/server/payments/*`.
    order, creates/reactivates the source-aware entitlement and initializes storage.
 5. Duplicate events/business IDs are no-ops. Any failure rolls back and returns
    `500`, allowing Stripe retry.
+6. Refund/dispute handlers retrieve canonical Charge, Refund, and Dispute state.
+   Only successful refund amounts count. A full refund or lost dispute toggles only
+   the matching Session-source grant; a partial refund or won dispute preserves or
+   restores it. Payment lifecycle fields and entitlement change atomically.
 
 No Clerk API call, Clerk metadata update, `testLimit` reward or AI/indexing work
 runs in this webhook.

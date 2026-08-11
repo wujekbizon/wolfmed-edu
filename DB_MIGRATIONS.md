@@ -294,7 +294,7 @@ migracja bazy danych.*
 
 ### M9 — Stripe: zamówienia, atomowe płatności i źródła dostępu
 
-*Status: kod przygotowany; dev i prod jeszcze niezmigrowane.*
+*Status: dev wdrożone i zweryfikowane 2026-08-11; prod jeszcze niezmigrowane.*
 
 - Nowa tabela `wolfmed_stripe_checkout_orders`: użytkownik, oferta, model zakupu,
   snapshot ceny/kursu/poziomu, status, aktywny klucz deduplikacji, Stripe Customer
@@ -347,7 +347,25 @@ jednorazowych Stripe i zmiennych środowiskowych opisanych w przewodniku 42.
 Produkcja: osobna wersjonowana migracja expand/backfill po backupie. Nie ustawiać
 nowych kolumn `NOT NULL` i nie usuwać `customerEmail` w pierwszym deployu.
 
-### M10+ — (dopisuj kolejne zmiany tutaj)
+### M10 — Stripe: lifecycle zwrotów i sporów
+
+*Status: dev wdrożone i zweryfikowane 2026-08-11; prod jeszcze niezmigrowane.*
+
+- `wolfmed_stripe_payments` + `charge_id varchar(256) NULL` z unikalnym indeksem.
+- `amount_refunded integer NOT NULL DEFAULT 0`.
+- `refund_status varchar(32) NOT NULL DEFAULT 'none'`.
+- `dispute_status varchar(32) NOT NULL DEFAULT 'none'`.
+- `updated_at timestamp NOT NULL DEFAULT now()`.
+- Migracja wyłącznie addytywna. Brak backfillu i kroku contract. Identyfikator
+  Charge uzupełnia pierwszy obsłużony event lifecycle.
+- Istniejące płatności dostają stan `none`/`0`. Automatyczne cofnięcie wymaga
+  source-aware płatności z M9; historyczne rekordy bez `offer_key`, `sessionId` lub
+  `courseSlug` wymagają ręcznego uzgodnienia ze Stripe.
+
+Dev: `pnpm db:push`, potem testy Checkpoint 5 z przewodnika 42. Produkcja:
+`pnpm db:generate` → review SQL → backup/branch Neon → `pnpm db:migrate` → deploy.
+
+### M11+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 
