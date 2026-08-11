@@ -1,9 +1,9 @@
 # Stripe payments and subscriptions plan
 
 Status: implementation active. One-time Checkout hardening, local orders,
-idempotency, atomic fulfillment and lifetime Basic-to-Premium updates are approved
-and tested in development. Verified success UI, refunds/disputes and subscriptions
-remain pending.
+idempotency, atomic fulfillment, lifetime Basic-to-Premium updates and verified
+success UI are approved and tested in development. Refunds/disputes and
+subscriptions remain pending.
 
 Branch: `codex/practical-exam-next`.
 
@@ -21,7 +21,8 @@ Prepared: 2026-08-11.
 - [x] Card and BLIK development payments.
 - [x] Lifetime Basic-to-Premium access update without duplicate enrollment.
 - [x] Cancel, access and navigation development tests.
-- [ ] Verified paid/pending/failed success UI.
+- [x] Verified paid/pending/failed success UI.
+- [x] Manual paid, pending, invalid-ID and cross-user success-page tests.
 - [ ] Refund and dispute lifecycle.
 - [ ] Difference-price lifetime upgrade offers.
 - [ ] Monthly subscriptions and Customer Portal.
@@ -46,7 +47,6 @@ lifetime/subscription billing for the same course.
 
 ## Current implementation risks
 
-- Success UI cannot authoritatively verify fulfillment.
 - Refund, dispute, and subscription events are absent.
 - Subscription schema cannot model the required lifecycle or two courses.
 - Billing management UI and Stripe Customer Portal are absent.

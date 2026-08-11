@@ -46,6 +46,7 @@ export type CheckoutStartResult =
 export type CheckoutSessionSnapshot = {
   id: string
   mode: string | null
+  status: string | null
   paymentStatus: string
   amountTotal: number | null
   currency: string | null
@@ -76,12 +77,45 @@ export type CheckoutPaymentState = 'paid' | 'failed' | 'processing' | 'invalid'
 
 export type CheckoutFulfillmentContext = {
   orderId: string | null
+  orderStatus: CheckoutOrderStatus | null
   userId: string
   offerKey: PaymentOfferKey
   courseSlug: PaymentOffer['courseSlug']
   accessTier: PaymentOffer['accessTier']
   stripeCustomerId: string
   snapshot: CheckoutSessionSnapshot
+}
+
+export type CheckoutResultStatus =
+  | 'paid'
+  | 'processing'
+  | 'failed'
+  | 'invalid'
+  | 'unavailable'
+
+export type CheckoutResult =
+  | {
+      status: Exclude<CheckoutResultStatus, 'invalid' | 'unavailable'>
+      courseSlug: PaymentOffer['courseSlug']
+      accessTier: PaymentOffer['accessTier']
+    }
+  | { status: 'invalid' | 'unavailable' }
+
+export type CheckoutResultResolution = {
+  currentUserId: string
+  checkoutUserId: string
+  paymentStatus: string
+  sessionStatus: string | null
+  orderStatus: CheckoutOrderStatus | null
+}
+
+export type SuccessSearchParams = Promise<{
+  session_id?: string | string[]
+}>
+
+export type PaymentResultCardProps = {
+  result: CheckoutResult
+  retryHref: string
 }
 
 export type EnrollmentGrant = {

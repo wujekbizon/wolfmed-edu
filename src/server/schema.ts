@@ -13,6 +13,12 @@ export const CreateCheckoutSchema = z.object({
 
 export const CheckoutOrderIdSchema = z.string().uuid();
 
+export const CheckoutSessionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^cs_(?:test_|live_)?[A-Za-z0-9]+$/);
+
 export const DeleteTestIdSchema = z.object({
   testId: z
     .string()

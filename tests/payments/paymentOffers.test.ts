@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import type Stripe from 'stripe'
+import Stripe from 'stripe'
 import { PAYMENT_OFFER_KEYS, PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { isStripePriceValidForOffer } from '@/helpers/isStripePriceValidForOffer'
-import { CreateCheckoutSchema } from '@/server/schema'
+import { CheckoutSessionIdSchema, CreateCheckoutSchema } from '@/server/schema'
 import { getCanceledReturnHref } from '@/helpers/getCanceledReturnHref'
+import { isStripeInvalidRequestError } from '@/helpers/isStripeInvalidRequestError'
 
 const stripePrice = (
   overrides: Partial<Stripe.Price> = {}
@@ -24,6 +25,28 @@ test('checkout accepts only known offer keys', () => {
   assert.equal(CreateCheckoutSchema.safeParse({
     offerKey: 'attacker_price',
   }).success, false)
+})
+
+test('success accepts only Stripe Checkout Session IDs', () => {
+  assert.equal(CheckoutSessionIdSchema.safeParse('cs_test_abc123').success, true)
+  assert.equal(CheckoutSessionIdSchema.safeParse('pi_test_abc123').success, false)
+  assert.equal(CheckoutSessionIdSchema.safeParse(['cs_test_abc123']).success, false)
+})
+
+test('Stripe Session request errors are invalid, not temporary outages', () => {
+  const missing = new Stripe.errors.StripeInvalidRequestError({
+    type: 'invalid_request_error',
+    code: 'resource_missing',
+    message: 'No such checkout.session',
+  })
+  const malformed = new Stripe.errors.StripeInvalidRequestError({
+    type: 'invalid_request_error',
+    message: 'Invalid checkout.session ID',
+  })
+
+  assert.equal(isStripeInvalidRequestError(missing), true)
+  assert.equal(isStripeInvalidRequestError(malformed), true)
+  assert.equal(isStripeInvalidRequestError(new Error('Network unavailable')), false)
 })
 
 test('every offer key resolves to matching server metadata', () => {

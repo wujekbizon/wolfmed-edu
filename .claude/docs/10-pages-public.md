@@ -124,7 +124,7 @@ Both are pure content pages — no forms, no data fetching.
 
 ## `/success`, `/canceled` — Stripe redirect targets
 
-- **`/success`** (static) — renders `<Success />` (`src/app/_components/Success.tsx`), the landing page after a completed Stripe Checkout (`success_url` from `createCheckoutSession`, carries `?session_id=`).
+- **`/success`** (server-first) — authenticates the user, validates `session_id`, retrieves the canonical Stripe Session, verifies ownership and the trusted order snapshot, then runs the same idempotent fulfillment used by the webhook. It renders paid, processing, failed, invalid, or temporarily unavailable states from verified server data.
 - **`/canceled`** (server-first) — expires the authenticated user's local/Stripe order and returns to the same course pricing section.
 
-`/success` still does not verify fulfillment; that is the next payment checkpoint. The actual entitlement write happens asynchronously through the Stripe webhook. See [`14-api-routes.md`](./14-api-routes.md).
+Either `/success` or the webhook may fulfill first; transaction locks, processed-event IDs, unique Stripe object IDs, and enrollment merging keep both paths idempotent. See [`14-api-routes.md`](./14-api-routes.md).

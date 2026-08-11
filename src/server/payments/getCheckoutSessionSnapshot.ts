@@ -17,6 +17,7 @@ export function getCheckoutSessionSnapshot(
   return {
     id: session.id,
     mode: session.mode,
+    status: session.status,
     paymentStatus: session.payment_status,
     amountTotal: session.amount_total,
     currency: session.currency,

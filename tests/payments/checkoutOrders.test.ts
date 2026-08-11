@@ -4,6 +4,7 @@ import { getCheckoutOrderDeduplicationKey } from '@/helpers/getCheckoutOrderDedu
 import { getCheckoutOrderExpiry } from '@/helpers/getCheckoutOrderExpiry'
 import { isCheckoutSessionValidForOrder } from '@/helpers/isCheckoutSessionValidForOrder'
 import { resolveCheckoutPaymentState } from '@/helpers/resolveCheckoutPaymentState'
+import { resolveCheckoutResultStatus } from '@/helpers/resolveCheckoutResultStatus'
 import type {
   CheckoutSessionExpectation,
   CheckoutSessionSnapshot,
@@ -23,6 +24,7 @@ const snapshot = (
 ): CheckoutSessionSnapshot => ({
   id: 'cs_test_1',
   mode: 'payment',
+  status: 'complete',
   paymentStatus: 'paid',
   amountTotal: 15999,
   currency: 'pln',
@@ -74,4 +76,40 @@ test('canonical paid state wins over an out-of-order failure event', () => {
     'checkout.session.async_payment_succeeded',
     'unpaid'
   ), 'invalid')
+})
+
+test('success result rejects a Checkout Session owned by another user', () => {
+  assert.equal(resolveCheckoutResultStatus({
+    currentUserId: 'user_2',
+    checkoutUserId: 'user_1',
+    paymentStatus: 'paid',
+    sessionStatus: 'complete',
+    orderStatus: 'PAID',
+  }), 'invalid')
+})
+
+test('success result distinguishes processing and failed payments', () => {
+  const input = {
+    currentUserId: 'user_1',
+    checkoutUserId: 'user_1',
+    paymentStatus: 'unpaid',
+    sessionStatus: 'complete',
+    orderStatus: 'PROCESSING' as const,
+  }
+
+  assert.equal(resolveCheckoutResultStatus(input), 'processing')
+  assert.equal(resolveCheckoutResultStatus({
+    ...input,
+    orderStatus: 'FAILED',
+  }), 'failed')
+})
+
+test('canonical paid result wins over stale local failure', () => {
+  assert.equal(resolveCheckoutResultStatus({
+    currentUserId: 'user_1',
+    checkoutUserId: 'user_1',
+    paymentStatus: 'paid',
+    sessionStatus: 'complete',
+    orderStatus: 'FAILED',
+  }), 'paid')
 })

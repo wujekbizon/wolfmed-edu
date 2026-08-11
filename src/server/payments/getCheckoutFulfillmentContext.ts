@@ -45,6 +45,7 @@ export async function getCheckoutFulfillmentContext(
 
   return {
     orderId: order?.id ?? null,
+    orderStatus: order?.status ?? null,
     userId,
     offerKey: order?.offerKey ?? legacyOffer!.key,
     courseSlug: order?.courseSlug ?? legacyOffer!.courseSlug,
