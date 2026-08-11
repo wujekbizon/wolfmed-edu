@@ -1,7 +1,8 @@
 # Stripe one-time payment hardening guide
 
-Status: Phase 2A and 2B implemented in code. Dev migration and combined Stripe
-test pending. Subscriptions remain out of scope.
+Status: Checkpoints 1-3 approved by Greg on 2026-08-11. Development migration,
+card/BLIK payments, upgrade, replay, rollback, cancel and access tests passed.
+Checkpoint 4 is next. Subscriptions remain out of scope.
 
 Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
 
@@ -59,8 +60,8 @@ Automated acceptance:
 
 Greg's Stripe test-mode acceptance:
 
-Environment note (2026-08-11): Stripe CLI is not installed on this workstation.
-Install/authenticate it before step 3, or test against a deployed test webhook.
+Environment note (2026-08-11): Stripe CLI is installed, authenticated and used to
+forward signed card and BLIK events to the local webhook.
 
 1. Confirm all Stripe keys and four Price IDs use test mode.
 2. Start the app with `pnpm dev`.
@@ -93,21 +94,22 @@ Do not use real card details. Stripe's official test values are documented at
 
 Approval evidence:
 
-- [x] Automated checks passed: 144 tests, TypeScript, lint, production build.
-- [ ] Opiekun Basic success passed.
-- [ ] Opiekun Premium success passed.
+- [x] Automated checks passed: 155 tests and TypeScript. Earlier checkpoint build
+  and lint passed.
+- [x] Opiekun Basic success passed.
+- [x] Opiekun Premium success passed.
 - [ ] Pielegniarstwo Basic success passed.
 - [ ] Pielegniarstwo Premium success passed.
-- [ ] Required billing data and optional NIP passed.
-- [ ] Paid Invoice passed.
+- [x] Required billing data and optional NIP passed.
+- [x] Paid Invoice passed.
 - [ ] Decline passed with no enrollment.
-- [ ] Forged offers rejected.
-- [ ] Cancel returns to the same course offer.
-- [ ] Greg approved checkpoint 1.
+- [x] Forged offers rejected by automated coverage.
+- [x] Cancel returns to the same course offer.
+- [x] Greg approved checkpoint 1.
 
 ## Checkpoint 2 - checkout orders and idempotency (Phase 2A)
 
-Status: implemented in code; waiting for combined Phase 2A+2B dev test.
+Status: approved by Greg on 2026-08-11.
 
 Changes:
 
@@ -129,9 +131,16 @@ Acceptance:
 - A terminal/expired attempt permits a new Checkout.
 - Existing Checkout behavior remains unchanged.
 
+Evidence:
+
+- [x] Concurrent order integration check produced one winner and one stored order.
+- [x] Stripe idempotency key and active-order reuse covered by automated tests.
+- [x] Canceled attempt returned to the correct course and granted no access.
+- [x] Greg approved Phase 2A.
+
 ## Checkpoint 3 - atomic ledger and entitlement fulfillment (Phase 2B)
 
-Status: implemented in code; waiting for migration and combined dev test.
+Status: approved by Greg on 2026-08-11.
 
 Changes:
 
@@ -154,6 +163,18 @@ Acceptance:
 - Forced transaction failure grants nothing; Stripe retry later succeeds once.
 - First payment creates one lifetime entitlement; an upgrade updates it in place.
 - Backfilled owners keep identical access.
+
+Evidence:
+
+- [x] Card and BLIK payments returned successful signed webhook responses.
+- [x] Concurrent BLIK completed/async-success events both returned `200`.
+- [x] Real event replay kept one event, payment and enrollment.
+- [x] Forced rollback left no event row; synthetic rows were cleaned.
+- [x] Tampered owner, Customer, Price, amount, currency and mode are rejected.
+- [x] Basic-to-Premium purchase updated one lifetime enrollment in place.
+- [x] Payment history retained separate Basic and Premium payment rows.
+- [x] No Clerk metadata dependency remains in webhook or navigation access state.
+- [x] Greg approved Phase 2B.
 
 ### Combined Phase 2A+2B dev test
 
@@ -183,7 +204,7 @@ Prerequisite: execute M9 from `DB_MIGRATIONS.md` against dev only.
 
 ## Checkpoint 4 - verified result UI
 
-Status: blocked on checkpoint 3 approval.
+Status: ready to implement; checkpoint 3 approved.
 
 Changes:
 
@@ -224,12 +245,14 @@ Acceptance:
 
 ## Phase 1 completion gate
 
-- [ ] All five checkpoints approved.
-- [ ] Full automated suite, TypeScript, lint, and build pass.
+- [ ] All five checkpoints approved; checkpoints 1-3 complete.
+- [x] Current full automated suite and TypeScript pass: 155 tests.
+- [ ] Final lint and production build after checkpoints 4-5.
 - [ ] Stripe CLI replay and Dashboard refund/dispute tests pass.
 - [ ] Dev DB reconciles one-to-one with Stripe Sessions and payments.
-- [ ] Payment flow, schema, API, forms, testing, and migration docs updated.
-- [ ] No subscription Product, Price, Portal, or lifecycle code introduced.
+- [x] Payment flow, schema, API, forms, testing, and migration docs updated for
+  checkpoints 1-3.
+- [x] No subscription Product, Price, Portal, or lifecycle code introduced.
 - [ ] Greg approves beginning subscription implementation.
 
 ## Official baseline

@@ -1,12 +1,30 @@
 # Stripe payments and subscriptions plan
 
-Status: implementation active. Trusted Checkout, local orders, idempotency,
-atomic one-time fulfillment and source-aware lifetime grants are implemented in
-code. Dev migration/test and later checkpoints remain pending.
+Status: implementation active. One-time Checkout hardening, local orders,
+idempotency, atomic fulfillment and lifetime Basic-to-Premium updates are approved
+and tested in development. Verified success UI, refunds/disputes and subscriptions
+remain pending.
 
 Branch: `codex/practical-exam-next`.
 
 Prepared: 2026-08-11.
+
+## Progress
+
+- [x] Trusted server-owned lifetime offer catalog.
+- [x] Required name/address, optional NIP and paid invoices.
+- [x] Course-aware canceled return flow.
+- [x] Phase 2A: local orders, concurrent-attempt deduplication and Stripe
+  idempotency keys.
+- [x] Phase 2B: canonical Session validation, atomic ledger/entitlement fulfillment,
+  webhook replay safety and DB-authoritative access.
+- [x] Card and BLIK development payments.
+- [x] Lifetime Basic-to-Premium access update without duplicate enrollment.
+- [x] Cancel, access and navigation development tests.
+- [ ] Verified paid/pending/failed success UI.
+- [ ] Refund and dispute lifecycle.
+- [ ] Difference-price lifetime upgrade offers.
+- [ ] Monthly subscriptions and Customer Portal.
 
 ## Pricing
 
@@ -28,7 +46,6 @@ lifetime/subscription billing for the same course.
 
 ## Current implementation risks
 
-- Phase 2A+2B schema has not yet been migrated or tested against the dev DB.
 - Success UI cannot authoritatively verify fulfillment.
 - Refund, dispute, and subscription events are absent.
 - Subscription schema cannot model the required lifecycle or two courses.
