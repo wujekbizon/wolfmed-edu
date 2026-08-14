@@ -1,13 +1,13 @@
 'use client'
 
-import { Settings, ChevronRight, SlidersHorizontal } from 'lucide-react'
-import Link from 'next/link'
+import { CreditCard, Settings, SlidersHorizontal } from 'lucide-react'
 import BaseModal from './modal/BaseModal'
 import ModalHeader from './modal/ModalHeader'
 import ModalBody from './modal/ModalBody'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import { useSettingsStore } from '@/store/useSettingsStore'
 import SettingsToggle from './SettingsToggle'
+import SettingsNavLink from './settings/SettingsNavLink'
 
 export default function SettingsModal() {
   const { isOpen, closeSettingsModal } = useSettingsModalStore()
@@ -47,20 +47,24 @@ export default function SettingsModal() {
             onChange={setSlashCommandsEnabled}
           />
         </div>
-        <Link
+        <SettingsNavLink
           href="/panel/ustawienia"
+          icon={<SlidersHorizontal className="h-4 w-4 shrink-0 text-zinc-400" />}
+          title="Preferencje nauki"
+          description="Cel egzaminacyjny i styl odpowiedzi tutora"
           onClick={closeSettingsModal}
-          className="flex items-center justify-between gap-4 rounded-lg -mx-2 px-2 py-2 transition-colors hover:bg-zinc-800/60"
-        >
-          <div className="flex items-center gap-3">
-            <SlidersHorizontal className="w-4 h-4 text-zinc-400 shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-zinc-200">Preferencje nauki</p>
-              <p className="text-xs text-zinc-500 mt-0.5">Cel egzaminacyjny i styl odpowiedzi tutora</p>
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-zinc-500 shrink-0" />
-        </Link>
+        />
+
+        <p className="mb-4 mt-6 text-xs font-semibold uppercase tracking-widest text-zinc-500">
+          Konto
+        </p>
+        <SettingsNavLink
+          href="/panel/ustawienia#platnosci"
+          icon={<CreditCard className="h-4 w-4 shrink-0 text-zinc-400" />}
+          title="Płatności"
+          description="Subskrypcje, zakupy i faktury"
+          onClick={closeSettingsModal}
+        />
       </ModalBody>
     </BaseModal>
   )

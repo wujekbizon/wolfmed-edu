@@ -1,10 +1,13 @@
 import 'server-only'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { resolveLifetimeCheckoutEligibility } from '@/helpers/resolveLifetimeCheckoutEligibility'
+import { resolveSubscriptionCheckoutEligibility } from '@/helpers/resolveSubscriptionCheckoutEligibility'
 import stripe from '@/lib/stripeClient'
 import { getUserEnrollmentGrants } from '@/server/queries'
 import { getOrCreateStripeCustomer } from '@/server/stripe'
 import { getVerifiedStripeOffer } from '@/server/stripeOffer'
+import { hasOpenSubscriptionForCourse } from '@/server/payments/hasOpenSubscriptionForCourse'
+import { createStripeCheckoutSession } from '@/server/payments/createStripeCheckoutSession'
 import type { CheckoutStartResult, PaymentOfferKey } from '@/types/paymentTypes'
 import {
   attachCheckoutSession,
@@ -17,10 +20,22 @@ export async function startCheckout(
   offerKey: PaymentOfferKey
 ): Promise<CheckoutStartResult> {
   const catalogOffer = PAYMENT_OFFERS[offerKey]
+  const hasOpenSubscription = await hasOpenSubscriptionForCourse(
+    userId,
+    catalogOffer.courseSlug
+  )
+  if (hasOpenSubscription) {
+    return {
+      status: catalogOffer.purchaseModel === 'subscription'
+        ? 'ALREADY_OWNED'
+        : 'MODEL_CONFLICT',
+    }
+  }
   const enrollmentGrants = await getUserEnrollmentGrants(userId)
-  const eligibility = resolveLifetimeCheckoutEligibility(enrollmentGrants, catalogOffer)
+  const eligibility = catalogOffer.purchaseModel === 'subscription'
+    ? resolveSubscriptionCheckoutEligibility(enrollmentGrants, catalogOffer)
+    : resolveLifetimeCheckoutEligibility(enrollmentGrants, catalogOffer)
   if (eligibility !== 'ALLOWED') return { status: eligibility }
-
   const offer = await getVerifiedStripeOffer(offerKey)
 
   const order = await getOrCreateCheckoutOrder(userId, offer)
@@ -48,31 +63,7 @@ export async function startCheckout(
     return startCheckout(userId, offerKey)
   }
   const customerId = customer.customerId
-  const cancelUrl = new URL('/canceled', process.env.NEXT_PUBLIC_APP_URL)
-  cancelUrl.searchParams.set('course', offer.courseSlug)
-  cancelUrl.searchParams.set('order', order.id)
-
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    customer_update: { address: 'auto', name: 'auto' },
-    billing_address_collection: 'required',
-    name_collection: { individual: { enabled: true, optional: false } },
-    tax_id_collection: { enabled: true, required: 'never' },
-    invoice_creation: { enabled: true },
-    locale: 'pl',
-    line_items: [{ price: offer.priceId, quantity: 1 }],
-    mode: 'payment',
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: cancelUrl.toString(),
-    client_reference_id: userId,
-    metadata: {
-      orderId: order.id,
-      offerKey: offer.key,
-      courseSlug: offer.courseSlug,
-      accessTier: offer.accessTier,
-    },
-    payment_intent_data: { metadata: { orderId: order.id, offerKey: offer.key } },
-  }, { idempotencyKey: `checkout:${order.id}` })
+  const session = await createStripeCheckoutSession(order.id, userId, customerId, offer)
 
   if (!session.url) throw new Error('Stripe Checkout Session has no URL')
   await attachCheckoutSession(

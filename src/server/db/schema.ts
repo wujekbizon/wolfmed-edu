@@ -107,6 +107,7 @@ export const payments = createTable("stripe_payments", {
   paymentIntentId: varchar("paymentIntentId", { length: 256 }),
   chargeId: varchar("charge_id", { length: 256 }),
   invoiceId: varchar("invoice_id", { length: 256 }),
+  subscriptionId: varchar("subscription_id", { length: 256 }),
   amountRefunded: integer("amount_refunded").default(0).notNull(),
   refundStatus: varchar("refund_status", { length: 32 })
     .$type<PaymentRefundStatus>()
@@ -127,22 +128,44 @@ export const payments = createTable("stripe_payments", {
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
   index("stripe_payments_customer_id_idx").on(table.stripeCustomerId),
+  index("stripe_payments_subscription_id_idx").on(table.subscriptionId),
 ])
 
 export const subscriptions = createTable("stripe_subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 }).notNull().unique(),
-  sessionId: varchar("sessionId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }).notNull(),
+  sessionId: varchar("sessionId", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
   customerId: varchar("customerId", { length: 256 }).notNull(),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
-  invoiceId: varchar("invoiceId", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
+  invoiceId: varchar("invoiceId", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   subscriptionId: varchar("subscriptionId", { length: 256 }).notNull(),
-  courseSlug: varchar("courseSlug", { length: 100 }),
+  courseSlug: varchar("courseSlug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  priceId: varchar("price_id", { length: 256 }),
+  status: varchar("status", { length: 50 }).notNull().default("incomplete"),
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  cancelAt: timestamp("cancel_at"),
+  canceledAt: timestamp("canceled_at"),
+  endedAt: timestamp("ended_at"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-})
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("stripe_subscriptions_subscription_id_uq").on(table.subscriptionId),
+  uniqueIndex("stripe_subscriptions_session_id_uq").on(table.sessionId),
+  index("stripe_subscriptions_user_id_idx").on(table.userId),
+  index("stripe_subscriptions_user_course_idx").on(table.userId, table.courseSlug),
+  index("stripe_subscriptions_customer_id_idx").on(table.customerId),
+  index("stripe_subscriptions_status_idx").on(table.status),
+])
 
 export const processedEvents = createTable("processed_events", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -152,6 +175,7 @@ export const processedEvents = createTable("processed_events", {
   stripeObjectId: varchar("stripe_object_id", { length: 256 }),
   orderId: uuid("order_id").references(() => checkoutOrders.id),
   paymentId: uuid("payment_id").references(() => payments.id),
+  subscriptionRecordId: uuid("subscription_record_id").references(() => subscriptions.id),
   processedAt: timestamp("processedAt").defaultNow(),
 })
 

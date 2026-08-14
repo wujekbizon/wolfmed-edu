@@ -3,6 +3,7 @@ import LinkButton from '@/components/ui/LinkButton'
 import {
   PAYMENT_COURSE_TITLES,
   PAYMENT_RESULT_CONTENT,
+  PAYMENT_SUCCESS_CONTENT,
 } from '@/constants/paymentResult'
 import type { PaymentResultCardProps } from '@/types/paymentTypes'
 
@@ -10,19 +11,21 @@ export default function PaymentResultCard({
   result,
   retryHref,
 }: PaymentResultCardProps) {
-  const content = PAYMENT_RESULT_CONTENT[result.status]
+  const content = result.status === 'paid'
+    ? PAYMENT_SUCCESS_CONTENT[result.outcome]
+    : PAYMENT_RESULT_CONTENT[result.status]
   const verified = 'courseSlug' in result
   const courseTitle = verified ? PAYMENT_COURSE_TITLES[result.courseSlug] : null
   const tier = verified && result.accessTier === 'premium' ? 'Premium' : 'Basic'
   const href = result.status === 'paid'
-    ? '/panel'
+    ? '/panel/nauka'
     : result.status === 'processing' || result.status === 'unavailable'
       ? retryHref
       : verified
         ? `/kierunki/${result.courseSlug}`
         : '/kierunki'
   const action = result.status === 'paid'
-    ? 'Rozpocznij naukę'
+    ? 'Przejdź do nauki'
     : result.status === 'processing' || result.status === 'unavailable'
       ? 'Sprawdź ponownie'
       : result.status === 'failed'
@@ -47,11 +50,6 @@ export default function PaymentResultCard({
           <LinkButton href={href} size="lg" className="w-full">
             {action}
           </LinkButton>
-          {result.status === 'paid' && (
-            <LinkButton href="/panel/kursy" variant="secondary" className="w-full">
-              Zobacz moje kursy
-            </LinkButton>
-          )}
         </div>
       </div>
     </section>

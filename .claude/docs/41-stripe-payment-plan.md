@@ -1,13 +1,14 @@
 # Stripe payments and subscriptions plan
 
-Status: implementation active. One-time Checkout hardening, local orders,
-idempotency, atomic fulfillment, lifetime Basic-to-Premium updates,
-refunds/disputes and success UI are approved and tested in development.
-Subscriptions remain pending.
+Status: core implementation verified in development. Database migration, Stripe
+test configuration and manual lifetime/subscription flows are complete. Remaining
+work is listed in **Next session handoff**; this is not production-ready yet.
 
 Branch: `codex/practical-exam-next`.
 
 Prepared: 2026-08-11.
+
+Updated: 2026-08-14.
 
 ## Progress
 
@@ -25,7 +26,156 @@ Prepared: 2026-08-11.
 - [x] Manual paid, pending, invalid-ID and cross-user success-page tests.
 - [x] Refund and dispute lifecycle.
 - [x] Difference-price lifetime upgrade offers and separate source grants.
-- [ ] Monthly subscriptions and Customer Portal.
+- [x] Monthly offer catalog, Checkout, lifecycle sync and source grants.
+- [x] Failed-renewal revocation, recovery and period-end cancellation handling.
+- [x] Billing overview, Customer Portal entry and subscription-cancellation safeguard.
+- [x] Monthly/lifetime pricing selector.
+- [x] Source-aware pricing states and course-scoped Basic-to-Premium Portal flow.
+- [x] Shared verified success page for purchases and both upgrade models.
+- [x] Dashboard plan and payment summary linking to billing settings.
+- [x] Subscription DB migration and Stripe sandbox configuration.
+- [x] Monthly purchase, upgrade, cancel, resume and terminal cleanup flows.
+- [x] Lifetime purchase, difference-price upgrade and invoice event routing.
+- [x] TypeScript check, 189 automated tests and `git diff --check`.
+- [ ] Permanent Clerk/Stripe account deletion and RODO retention workflow.
+- [ ] Stripe Test Clock renewal, failure, recovery, downgrade and cancellation.
+- [ ] Premium-to-Basic scheduled downgrade implementation and UI.
+- [ ] Durable Premium library activation job.
+
+## Next session handoff
+
+Start the next session from this section. Preserve all completed work above.
+
+### Priority 0: permanent account deletion and RODO
+
+Approved product policy:
+
+- Account deletion is immediate and permanent; there is no grace period.
+- Delete all course access, including lifetime access.
+- A later registration, even with the same email and name, creates a new Clerk
+  user, Wolfmed user and Stripe Customer. Purchases are not restored automatically.
+- Delete the Stripe Customer. Stripe removes reusable payment details and cancels
+  every active subscription, including subscriptions missing from local state.
+- Keep financial history only for accounting, refunds and disputes. Never use it
+  for access restoration or marketing.
+
+Implementation plan:
+
+1. Audit every user-owned table. Add `onDelete: "cascade"` to disposable data
+   currently missing it, including course enrollments, custom tests/categories and
+   blog likes. Do not cascade the retained financial ledger.
+2. Replace subscription-only cleanup with one idempotent account-deletion
+   coordinator. Load the local Stripe Customer ID, delete the Stripe Customer,
+   treat an already-missing Customer as success, erase personal memory and delete
+   the Wolfmed user last.
+3. Delete `wolfmed_course_enrollments` immediately. Delete or erase profile,
+   learning, uploads, limits and AI-memory data. Remove the original Clerk user ID
+   from tombstoned memory/audit rows.
+4. Retain `wolfmed_stripe_payments` as the minimal pseudonymized financial ledger.
+   Keep amount, currency, transaction date, offer/course and Stripe
+   PaymentIntent/Charge/Invoice/refund/dispute identifiers and states. Remove the
+   Clerk user ID, email/name and Stripe Customer ID when no longer operationally
+   required.
+5. Add a retention deadline to retained payment rows. Polish tax documentation is
+   generally retained for five years from the end of the calendar year in which
+   the related tax-payment deadline occurred; suspension/interruption extends it.
+   Example: a 2026 sale whose annual tax is due in 2027 is normally retained
+   through 2032. Confirm the final calculation with Wolfmed's accountant.
+6. Pseudonymize and temporarily retain `wolfmed_stripe_checkout_orders`,
+   `wolfmed_stripe_subscriptions` and `wolfmed_processed_events` so delayed Stripe
+   events can validate and return `200`. Stripe supports manual CLI resend for up
+   to 30 days, so use at least a 30-day operational cleanup window after deletion.
+7. Mark deleted-owner orders. Checkout, subscription, refund and dispute handlers
+   may update retained financial state but must never recreate enrollments,
+   storage limits or other access for a deleted owner.
+8. Override the existing Clerk `plPL` localization in `ClerkProviderWrapper`:
+   `userProfile.deletePage.messageLine1` must warn that all purchased course
+   access, including lifetime, is permanently lost; `messageLine2` must warn that
+   purchases are not restored after registration. Keep Clerk's typed `Usuń konto`
+   confirmation; do not build a separate deletion UI.
+9. Add tests for lifetime deletion, active/multiple/out-of-sync subscriptions,
+   missing Stripe Customer, webhook retry, delayed Stripe events, retained payment
+   pseudonymization, cascade cleanup and same-email registration without access.
+10. Prepare a one-time orphan cleanup for the current test database and old Stripe
+    test Customers. Show the exact command/query and wait for Greg to run it.
+
+Required documentation updates: privacy policy, schema, auth/payment flow,
+migration guide and deletion test guide.
+
+### Priority 1: Stripe Test Clock verification
+
+Do not use an existing Stripe Customer: a Test Clock accepts only new Customers.
+
+1. Run the Clerk webhook relay:
+
+   ```text
+   npx clerk webhooks listen --forward-to http://localhost:3000/api/webhooks/clerk
+   ```
+
+   Configure its public relay URL for `user.created` and `user.deleted`, copy the
+   endpoint signing secret to `CLERK_WEBHOOK_SECRET`, and restart Wolfmed.
+2. Create a fresh Wolfmed test user and sign in once so `wolfmed_users` exists.
+3. Stripe sandbox -> Billing -> Subscriptions -> Simulations -> New simulation.
+   Set frozen time to now, add a new Customer with the test user's email, but do
+   not create the Subscription in the Dashboard.
+4. Link that new `cus_...` to the fresh Wolfmed user's `stripeCustomerId` in the
+   development database. Then buy Basic monthly through Wolfmed with test card
+   `4242 4242 4242 4242`; Checkout will create the clock-bound Subscription.
+5. Successful renewal: record existing row IDs, advance slightly beyond
+   `current_period_end`, wait for `Ready`, then advance another hour so the draft
+   Invoice finalizes. Expect all webhooks `200`, the same subscription/enrollment,
+   a period moved by one month and one new Invoice payment with `sessionId = NULL`.
+6. Failed renewal: make `4000 0000 0000 0341` the default payment method, advance
+   to the next renewal plus one hour, and expect `invoice.payment_failed`, failed
+   payment state and immediate access revocation.
+7. Recovery: replace the card with `4242 4242 4242 4242`, retry the failed Invoice,
+   and expect `invoice.paid`, the same payment row updated and access restored.
+8. After downgrade work below is implemented, schedule Premium-to-Basic and
+   advance the clock. Premium remains active through the paid period; Basic becomes
+   active at renewal without duplicate subscription or enrollment rows.
+9. Schedule cancellation and advance past the end date. Expect
+   `customer.subscription.deleted`, inactive access and lifetime offers available.
+10. Inspect DB before finishing the simulation. Finishing deletes the clock's
+    Stripe Customer and Subscription.
+
+### Priority 1: Premium-to-Basic downgrade
+
+Basic-to-Premium immediate prorated upgrade is complete. The reverse direction is
+not implemented in Wolfmed UI/server flow.
+
+1. For a Premium monthly subscriber, show a clear Basic-card action such as
+   `Przejdź na Basic od następnego okresu` instead of disabled `Masz Premium`.
+2. Extend the course-scoped Portal action to accept Premium-to-Basic only for the
+   same course and current Subscription. Keep cross-course switching impossible.
+3. Configure/verify that downgrade is scheduled for the next renewal with no
+   immediate refund or access reduction.
+4. Represent the pending downgrade in local billing state and show its effective
+   date in pricing, dashboard and billing settings.
+5. Return to the shared result/status UI with copy saying the downgrade is
+   scheduled, not already active.
+6. Verify with a Test Clock that Premium remains available until renewal, then
+   changes once to Basic. Test canceling/changing the scheduled downgrade.
+
+### Priority 2: durable Premium library activation
+
+When effective access changes from Basic to Premium, enqueue a durable job that
+moves eligible personal-library materials from `not_indexed` to `pending`. Do not
+run extraction, embeddings or model work inside Checkout or webhook transactions.
+Make the transition idempotent across lifetime upgrades, subscription upgrades,
+renewal recovery and duplicate webhooks.
+
+### Final production work
+
+- Reconcile Stripe Customers, payments, subscriptions and local grants.
+- Add the billing/deletion operational runbook and alerting.
+- Confirm payment-record retention with Wolfmed's accountant and privacy reviewer.
+- Test migrations on a Neon branch/backup before production.
+- Configure live Products, Prices, Portal configurations and webhook endpoint.
+- Run the full sandbox checklist again, then perform a controlled live smoke test.
+
+Next-session unresolved questions:
+
+- Accountant confirmation of the exact payment-record retention deadline.
 
 ## Pricing
 
@@ -47,10 +197,11 @@ lifetime/subscription billing for the same course.
 
 ## Current implementation risks
 
-- Refund, dispute, and subscription events are absent.
-- Subscription schema cannot model the required lifecycle or two courses.
-- Billing management UI and Stripe Customer Portal are absent.
 - Basic materials are not indexed when access later becomes Premium.
+- Stripe Test Clock lifecycle scenarios are not verified.
+- Premium-to-Basic scheduled downgrade is not implemented.
+- Account deletion cancels locally known subscriptions but does not yet delete the
+  Stripe Customer, pseudonymize retained payments or clean every orphanable table.
 
 ## Server-first architecture
 
@@ -122,8 +273,9 @@ the subscription ends. Either model may still be used for the other course.
 - Premium to Basic: scheduled for next renewal.
 - Cancellation: period end, no automatic refund, access through paid period.
 - Failed renewal: revoke access immediately. Later successful invoice restores it.
-- Account deletion: cancel active subscriptions immediately and idempotently,
-  without automatic refund, before deleting application data.
+- Account deletion: permanently delete the Stripe Customer and all access
+  immediately and idempotently, without automatic refund. Retain only the minimum
+  pseudonymized financial ledger required for accounting/refunds/disputes.
 
 UI additions:
 
@@ -131,6 +283,8 @@ UI additions:
 - Eligible lifetime Basic-to-Premium upgrade price.
 - Billing overview and Stripe Portal entry point.
 - Verified paid, pending, failed, and canceled result states.
+- Outcome-specific success copy for lifetime, subscription, and upgrades.
+- Dashboard plan summary with renewal date and billing-settings link.
 - Clear renewal, proration, cancellation, refund, and access-loss copy.
 - DB-backed access summary instead of Clerk metadata for authoritative UI state.
 
@@ -149,8 +303,9 @@ UI additions:
 - Backfill current enrollments as permanent `legacy_lifetime` grants.
 - Resolve effective access from the highest active grant. Refunding a Premium
   upgrade falls back to lifetime Basic.
-- Keep full billing PII in Stripe Customer records; store identifiers and
-  operational flags locally.
+- Keep billing PII in Stripe while the account exists. On account deletion, delete
+  the Stripe Customer and remove local identity fields while retaining only the
+  required pseudonymized financial ledger.
 - Remove unused purchase `testLimit` rewards. Ensure storage initialization once
   on first entitlement instead of rewarding renewals.
 - On effective Basic-to-Premium activation, enqueue a durable library activation
@@ -214,7 +369,7 @@ before adding unique constraints.
 2. Expand/backfill billing and entitlement schema; add lifetime upgrades.
 3. Configure and verify recurring Products, Prices, webhooks, and Portal in Stripe
    test mode.
-4. Enable subscriptions behind a feature flag.
+4. Start the app and verify subscriptions in Stripe test mode.
 5. Reconcile Stripe and local billing state before live rollout.
 
 Use a production backup/Neon branch and a versioned expand-backfill-switch-contract
@@ -264,5 +419,10 @@ perform destructive contract cleanup in the initial release.
 - Failed renewal revokes access immediately.
 - Full refund/lost dispute revokes related grant; partial refund does not.
 - Stripe Customer is billing-address/NIP source of truth.
+- Account deletion is immediate, permanent and removes lifetime/subscription
+  access. There is no grace period or automatic restoration after re-registration.
+- Delete the Stripe Customer on account deletion. Retain only pseudonymized local
+  payment records through the applicable Polish tax-retention deadline.
 - KSeF handling is manual.
-- Unresolved questions: none.
+- Remaining external confirmation: accountant approval of the exact retention
+  deadline calculation.

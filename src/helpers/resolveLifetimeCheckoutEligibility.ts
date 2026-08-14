@@ -12,6 +12,12 @@ export function resolveLifetimeCheckoutEligibility(
   offer: PaymentOffer
 ): LifetimeCheckoutEligibility {
   const now = new Date()
+  const activeSubscription = getEffectiveEnrollmentGrants(
+    grants.filter((grant) => grant.sourceType === 'subscription'),
+    now
+  ).some((grant) => grant.courseSlug === offer.courseSlug)
+  if (activeSubscription) return 'NOT_ELIGIBLE'
+
   const owned = getEffectiveEnrollmentGrants(grants, now)
     .find((grant) => grant.courseSlug === offer.courseSlug)
   if (owned && hasAccessToTier(owned.accessTier, offer.accessTier)) {

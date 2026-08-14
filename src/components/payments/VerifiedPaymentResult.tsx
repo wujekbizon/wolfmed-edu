@@ -1,7 +1,8 @@
 import PaymentResultCard from '@/components/payments/PaymentResultCard'
 import { requireUser } from '@/helpers/requireUser'
 import { getVerifiedCheckoutResult } from '@/server/payments/getVerifiedCheckoutResult'
-import { CheckoutSessionIdSchema } from '@/server/schema'
+import { getVerifiedSubscriptionUpgradeResult } from '@/server/payments/getVerifiedSubscriptionUpgradeResult'
+import { CheckoutSessionIdSchema, SubscriptionIdSchema } from '@/server/schema'
 import type { SuccessSearchParams } from '@/types/paymentTypes'
 
 export default async function VerifiedPaymentResult({
@@ -9,13 +10,25 @@ export default async function VerifiedPaymentResult({
 }: {
   searchParams: SuccessSearchParams
 }) {
-  const [{ session_id: sessionId }, { userId }] = await Promise.all([
+  const [{ session_id: sessionId, subscription_id: subscriptionId }, { userId }] = await Promise.all([
     searchParams,
     requireUser(),
   ])
-  const parsed = CheckoutSessionIdSchema.safeParse(sessionId)
+  const checkoutSession = CheckoutSessionIdSchema.safeParse(sessionId)
+  const subscription = SubscriptionIdSchema.safeParse(subscriptionId)
 
-  if (!parsed.success) {
+  if (checkoutSession.success) {
+    const result = await getVerifiedCheckoutResult(userId, checkoutSession.data)
+
+    return (
+      <PaymentResultCard
+        result={result}
+        retryHref={`/success?session_id=${encodeURIComponent(checkoutSession.data)}`}
+      />
+    )
+  }
+
+  if (!subscription.success) {
     return (
       <PaymentResultCard
         result={{ status: 'invalid' }}
@@ -24,12 +37,15 @@ export default async function VerifiedPaymentResult({
     )
   }
 
-  const result = await getVerifiedCheckoutResult(userId, parsed.data)
+  const result = await getVerifiedSubscriptionUpgradeResult(
+    userId,
+    subscription.data
+  )
 
   return (
     <PaymentResultCard
       result={result}
-      retryHref={`/success?session_id=${encodeURIComponent(parsed.data)}`}
+      retryHref={`/success?subscription_id=${encodeURIComponent(subscription.data)}`}
     />
   )
 }

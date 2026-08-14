@@ -86,16 +86,22 @@ Manages recurring Stripe subscriptions.
 ```typescript
 {
   id: uuid (PK, auto-generated)
-  userId: varchar(256) (unique, not null)
-  sessionId: varchar(256) (not null)
-  subscriptionId: varchar(256) (not null)
+  userId: varchar(256) (not null)
+  orderId: uuid (nullable FK → checkout orders)
+  sessionId: varchar(256) (unique, nullable)
+  subscriptionId: varchar(256) (unique, not null)
   customerId: varchar(256) (not null)
-  customerEmail: varchar(256) (not null)
-  invoiceId: varchar(256) (not null)
+  offerKey, courseSlug, accessTier, priceId
+  customerEmail: varchar(256) (nullable legacy field)
+  invoiceId: varchar(256) (nullable latest Invoice)
   amountTotal: integer (not null)
   currency: enum('pln', 'usd', 'eur')
   paymentStatus: varchar(50) (not null)
-  createdAt: timestamp (auto, not null)
+  status: varchar(50) (not null)
+  currentPeriodStart, currentPeriodEnd: timestamp
+  cancelAtPeriodEnd: boolean
+  cancelAt, canceledAt, endedAt: timestamp
+  createdAt, updatedAt: timestamp
 }
 ```
 

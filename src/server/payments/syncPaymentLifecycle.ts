@@ -30,7 +30,8 @@ export async function syncPaymentLifecycle(
     if (!isPaymentLifecycleSnapshotValid(payment, snapshot)) {
       throw new Error(`Payment ${snapshot.paymentIntentId} failed lifecycle validation`)
     }
-    if (!payment.offerKey || !payment.sessionId || !payment.courseSlug) {
+    const entitlementSourceId = payment.subscriptionId ?? payment.sessionId
+    if (!payment.offerKey || !entitlementSourceId || !payment.courseSlug) {
       throw new Error(`Payment ${payment.id} has no source-aware entitlement`)
     }
 
@@ -65,7 +66,7 @@ export async function syncPaymentLifecycle(
       revokedAt: revoke ? new Date() : null,
     }).where(and(
       eq(courseEnrollments.sourceType, offer.entitlementSourceType),
-      eq(courseEnrollments.sourceId, payment.sessionId)
+      eq(courseEnrollments.sourceId, entitlementSourceId)
     ))
   })
 }

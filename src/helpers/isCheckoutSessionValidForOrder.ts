@@ -10,7 +10,7 @@ export function isCheckoutSessionValidForOrder(
   const [lineItem] = session.lineItems
 
   return (
-    session.mode === 'payment' &&
+    session.mode === (expected.purchaseModel === 'subscription' ? 'subscription' : 'payment') &&
     (!expected.sessionId || session.id === expected.sessionId) &&
     session.clientReferenceId === expected.userId &&
     session.customerId === expected.customerId &&

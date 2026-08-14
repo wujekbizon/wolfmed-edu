@@ -6,6 +6,7 @@ import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { startCheckout } from '@/server/payments/startCheckout'
+import { createBillingPortal } from '@/server/payments/createBillingPortal'
 import { CreateCheckoutSchema } from '@/server/schema'
 import type { FormState } from '@/types/actionTypes'
 
@@ -41,6 +42,9 @@ export async function createCheckoutSession(
     if (result.status === 'NOT_ELIGIBLE') {
       return toFormState('ERROR', 'Ta oferta aktualizacji nie jest dostępna.')
     }
+    if (result.status === 'MODEL_CONFLICT') {
+      return toFormState('ERROR', 'Najpierw zakończ subskrypcję tego kierunku.')
+    }
     if (result.status === 'UPGRADE_REQUIRED') {
       return toFormState('ERROR', 'Skorzystaj z ceny aktualizacji do Premium.')
     }
@@ -57,4 +61,27 @@ export async function createCheckoutSession(
   }
 
   redirect(redirectUrl!)
+}
+
+export async function createBillingPortalSession(
+  _prevState: FormState,
+  _formData: FormData
+): Promise<FormState> {
+  const { userId } = await auth()
+  if (!userId) redirect('/sign-in?redirect_url=%2Fpanel%2Fustawienia')
+
+  const rateLimit = await checkRateLimit(userId, 'stripe:portal')
+  if (!rateLimit.success) {
+    return toFormState('ERROR', 'Zbyt wiele prób. Spróbuj ponownie później.')
+  }
+
+  let redirectUrl: string | null = null
+  try {
+    redirectUrl = await createBillingPortal(userId)
+    if (!redirectUrl) return toFormState('ERROR', 'Brak subskrypcji do zarządzania.')
+  } catch (error) {
+    console.error('Error creating Stripe billing portal session:', error)
+    return toFormState('ERROR', 'Nie udało się otworzyć ustawień płatności.')
+  }
+  redirect(redirectUrl)
 }

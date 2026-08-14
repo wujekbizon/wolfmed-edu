@@ -84,11 +84,34 @@ actual panel access reads DB grants. Navbar/Drawer do not read Clerk course meta
 4. Won/resolved disputes restore that grant unless a full refund still requires
    revocation. Event marker, payment state and grant state commit together.
 
+**Part D — monthly subscriptions and billing management**:
+1. Monthly and lifetime use the same trusted offer-key and local-order flow, but
+   separate deduplication keys. Lifetime ownership or an open subscription blocks
+   duplicate billing for the same course.
+2. Subscription Checkout writes only `orderId` to Session and Subscription
+   metadata. Canonical Subscription, Price and latest Invoice data are retrieved
+   before every sync.
+3. Subscription and Invoice events atomically upsert the subscription, invoice
+   payment, processed event and `subscription` grant. A failed latest Invoice
+   revokes access immediately; a later paid Invoice restores it. Period-end
+   cancellation retains access until Stripe ends the Subscription.
+4. `/panel/ustawienia` shows lifetime and subscription state. Its authenticated
+   action creates a short-lived Customer Portal Session with a fixed return URL.
+5. Clerk account deletion cancels non-terminal Stripe Subscriptions without
+   proration before personal application data is deleted.
+
+The app assumes the subscription migration and Stripe configuration are complete
+before startup. Setup order is documented in
+[`43-stripe-subscription-testing-guide.md`](./43-stripe-subscription-testing-guide.md).
+
 ## Flow 4 — User deletes their account
 
 1. Triggered entirely from **Clerk's side** (user deletes their account via Clerk's account UI, or an admin removes them in the Clerk dashboard) — there is no in-app "delete my account" button in this codebase.
 2. Clerk fires `user.deleted` to the same `POST /api/webhooks/clerk` handler as Flow 1.
-3. `deleteUserFromDb(id)` (`src/server/db.ts:29`):
+3. `deleteUserFromDb(id)` (`src/server/db.ts`):
+   - Cancels every non-terminal Stripe Subscription immediately and without
+     proration. A Stripe failure aborts deletion so billing cannot outlive the app
+     account silently.
    - `eraseUserMemory(id)` (`src/server/memory/erase.ts`) runs **first and explicitly** — the per-user memory tables (`memPreferences`, `memFacts`, `memEpisodes`, `memTraces`) are **not** foreign-keyed to `users`, so they would silently survive a `users` row deletion otherwise. This is called out in the source as a GDPR requirement, not an optimization. **Correction (round 14 doc-test, simulating a "was memPolicies actually erased too" compliance question)**: an earlier version of this doc listed `memPolicies` alongside these four as if it received the same treatment — it does not, and shouldn't: `memPolicies` (`src/server/db/memory-schema.ts`) has no `userId` column at all, only a `tenantId` (default `'wolfmed'`) — it's global pedagogical/product configuration, not personal data, so there's nothing user-scoped in it to erase. `memDeletionEvents` (the erasure audit log itself) is also deliberately not erased, for the obvious reason. Facts/episodes are tombstoned in place (content wiped, `status: 'revoked'`) rather than hard-deleted, to keep the self-referential supersession FK valid; preferences/traces are hard-deleted.
    - `db.delete(users).where(eq(users.userId, id))` — every other user-owned table (`notes`, `materials`, `flashcardDecks`, `forumPosts`, `diagnozyProgress`, `learningPlans`, `libChunks`, etc.) cascades automatically via `onDelete: "cascade"` FKs — see [`01-database-schema.md`](./01-database-schema.md) → "Cascade ownership" for the full list.
 4. No confirmation step or grace period exists **in this codebase** for this path — the webhook is the single trigger, and it deletes immediately. (Any "are you sure?" UX would live entirely on Clerk's side of the account-deletion flow, outside this app.)

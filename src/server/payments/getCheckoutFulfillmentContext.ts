@@ -41,6 +41,7 @@ export async function getCheckoutFulfillmentContext(
     priceId: order?.stripePriceId ?? legacyOffer!.priceId,
     amount: order?.amountTotal ?? legacyOffer!.amount,
     currency: order?.currency ?? legacyOffer!.currency,
+    purchaseModel: order?.purchaseModel ?? legacyOffer!.purchaseModel,
   })
   if (!valid) throw new Error(`Checkout Session ${sessionId} failed catalog validation`)
 
@@ -54,6 +55,7 @@ export async function getCheckoutFulfillmentContext(
     courseSlug: order?.courseSlug ?? legacyOffer!.courseSlug,
     accessTier: order?.accessTier ?? legacyOffer!.accessTier,
     entitlementSourceType: PAYMENT_OFFERS[offerKey].entitlementSourceType,
+    purchaseModel: order?.purchaseModel ?? legacyOffer!.purchaseModel,
     stripeCustomerId: customerId,
     snapshot,
   }

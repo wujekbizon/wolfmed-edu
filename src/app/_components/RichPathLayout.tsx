@@ -15,7 +15,7 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
-  ownedCourses,
+  pricingOfferStatuses,
   subjectTitles,
   eligibleLifetimeUpgradeOfferKey,
   questions,
@@ -35,7 +35,7 @@ export default function RichPathLayout({
             title={title}
             story={story}
             pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
+            pricingOfferStatuses={pricingOfferStatuses}
             eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
@@ -45,7 +45,7 @@ export default function RichPathLayout({
             title={title}
             questions={questions}
             pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
+            pricingOfferStatuses={pricingOfferStatuses}
             eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
@@ -87,7 +87,7 @@ export default function RichPathLayout({
           {pricing && (
             <PricingSection
               pricing={pricing}
-              ownedCourses={ownedCourses ?? []}
+              pricingOfferStatuses={pricingOfferStatuses}
               subjectTitles={subjectTitles}
               eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
             />

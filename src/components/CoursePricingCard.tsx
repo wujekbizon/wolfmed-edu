@@ -2,6 +2,8 @@
 
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
+import { createSubscriptionUpgradePortalSession } from '@/actions/subscriptionUpgrade'
+import { PRICING_OFFER_STATUS_LABELS } from '@/constants/pricingOfferStatusLabels'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import SubmitButton from './SubmitButton'
 import FormError from './FormError'
@@ -17,12 +19,18 @@ export default function CoursePricingCard({
   features,
   isPremium = false,
   badge,
-  alreadyOwned,
+  offerStatus,
   purchaseLabel,
 }: CoursePricingCardProps) {
-  const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
+  const serverAction = offerStatus === 'portal_upgrade'
+    ? createSubscriptionUpgradePortalSession
+    : createCheckoutSession
+  const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
-  const label = alreadyOwned ? 'W posiadaniu' : purchaseLabel ?? 'Kup teraz'
+  const label = offerStatus === 'available' && purchaseLabel
+    ? purchaseLabel
+    : PRICING_OFFER_STATUS_LABELS[offerStatus]
+  const disabled = offerStatus !== 'available' && offerStatus !== 'portal_upgrade'
 
   return (
     <article className="h-full">
@@ -49,12 +57,17 @@ export default function CoursePricingCard({
             <SubmitButton
               label={label}
               loading="Przekierowywanie..."
-              disabled={Boolean(alreadyOwned)}
+              disabled={disabled}
               className={isPremium
                 ? 'bg-slate-900 text-white hover:bg-slate-800'
                 : 'bg-slate-700 text-white hover:bg-slate-800'}
             />
           </form>
+          {offerStatus === 'portal_upgrade' && (
+            <p className="mt-2 text-center text-xs text-slate-500">
+              Stripe pokaże rozliczenie proporcjonalne przed potwierdzeniem.
+            </p>
+          )}
         </div>
       </div>
     </article>

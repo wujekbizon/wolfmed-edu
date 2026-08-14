@@ -1,8 +1,13 @@
-import type { CheckoutResultStatus, PaymentOffer } from '@/types/paymentTypes'
+import type {
+  CheckoutResultStatus,
+  PaymentOffer,
+  PaymentResultContent,
+  PaymentResultOutcome,
+} from '@/types/paymentTypes'
 
 export const PAYMENT_RESULT_CONTENT: Record<
   CheckoutResultStatus,
-  { title: string; description: string; symbol: string; tone: string }
+  PaymentResultContent
 > = {
   paid: {
     title: 'Płatność potwierdzona',
@@ -33,6 +38,36 @@ export const PAYMENT_RESULT_CONTENT: Record<
     description: 'Nie potwierdzamy jeszcze dostępu. Spróbuj ponownie za chwilę.',
     symbol: '…',
     tone: 'bg-zinc-100 text-zinc-700',
+  },
+}
+
+export const PAYMENT_SUCCESS_CONTENT: Record<
+  PaymentResultOutcome,
+  PaymentResultContent
+> = {
+  lifetime_purchase: {
+    title: 'Zakup zakończony',
+    description: 'Dostęp do kursu został aktywowany na zawsze.',
+    symbol: '✓',
+    tone: 'bg-emerald-50 text-emerald-700',
+  },
+  subscription_purchase: {
+    title: 'Subskrypcja jest aktywna',
+    description: 'Możesz już korzystać ze wszystkich funkcji swojego planu.',
+    symbol: '✓',
+    tone: 'bg-emerald-50 text-emerald-700',
+  },
+  lifetime_upgrade: {
+    title: 'Plan Premium jest aktywny',
+    description: 'Dostęp Premium został aktywowany na zawsze.',
+    symbol: '✓',
+    tone: 'bg-emerald-50 text-emerald-700',
+  },
+  subscription_upgrade: {
+    title: 'Plan Premium jest aktywny',
+    description: 'Subskrypcja została uaktualniona. Funkcje Premium są już dostępne.',
+    symbol: '✓',
+    tone: 'bg-emerald-50 text-emerald-700',
   },
 }
 

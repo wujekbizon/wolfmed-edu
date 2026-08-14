@@ -13,7 +13,7 @@ export default function SimplePathLayout({
   description,
   title,
   pricing,
-  ownedCourses,
+  pricingOfferStatuses,
   subjectTitles,
   eligibleLifetimeUpgradeOfferKey,
   story,
@@ -29,7 +29,7 @@ export default function SimplePathLayout({
             title={title}
             story={story}
             pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
+            pricingOfferStatuses={pricingOfferStatuses}
             eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
@@ -52,7 +52,7 @@ export default function SimplePathLayout({
             <FadeInSection className='w-full'>
               <PricingSection
                 pricing={pricing}
-                ownedCourses={ownedCourses ?? []}
+                pricingOfferStatuses={pricingOfferStatuses}
                 subjectTitles={subjectTitles}
                 eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
               />

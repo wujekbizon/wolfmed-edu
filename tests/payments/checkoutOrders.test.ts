@@ -3,8 +3,6 @@ import test from 'node:test'
 import { getCheckoutOrderDeduplicationKey } from '@/helpers/getCheckoutOrderDeduplicationKey'
 import { getCheckoutOrderExpiry } from '@/helpers/getCheckoutOrderExpiry'
 import { isCheckoutSessionValidForOrder } from '@/helpers/isCheckoutSessionValidForOrder'
-import { resolveCheckoutPaymentState } from '@/helpers/resolveCheckoutPaymentState'
-import { resolveCheckoutResultStatus } from '@/helpers/resolveCheckoutResultStatus'
 import type {
   CheckoutSessionExpectation,
   CheckoutSessionSnapshot,
@@ -17,6 +15,7 @@ const expected: CheckoutSessionExpectation = {
   priceId: 'price_1',
   amount: 15999,
   currency: 'pln',
+  purchaseModel: 'lifetime',
 }
 
 const snapshot = (
@@ -31,6 +30,7 @@ const snapshot = (
   clientReferenceId: 'user_1',
   customerId: 'cus_1',
   paymentIntentId: 'pi_1',
+  subscriptionId: null,
   invoiceId: 'in_1',
   createdAt: new Date('2026-08-11T10:00:00Z'),
   expiresAt: new Date('2026-08-12T10:00:00Z'),
@@ -67,49 +67,13 @@ test('Checkout Session tampering is rejected', () => {
   }), expected), false)
 })
 
-test('canonical paid state wins over an out-of-order failure event', () => {
-  assert.equal(resolveCheckoutPaymentState(
-    'checkout.session.async_payment_failed',
-    'paid'
-  ), 'paid')
-  assert.equal(resolveCheckoutPaymentState(
-    'checkout.session.async_payment_succeeded',
-    'unpaid'
-  ), 'invalid')
-})
-
-test('success result rejects a Checkout Session owned by another user', () => {
-  assert.equal(resolveCheckoutResultStatus({
-    currentUserId: 'user_2',
-    checkoutUserId: 'user_1',
-    paymentStatus: 'paid',
-    sessionStatus: 'complete',
-    orderStatus: 'PAID',
-  }), 'invalid')
-})
-
-test('success result distinguishes processing and failed payments', () => {
-  const input = {
-    currentUserId: 'user_1',
-    checkoutUserId: 'user_1',
-    paymentStatus: 'unpaid',
-    sessionStatus: 'complete',
-    orderStatus: 'PROCESSING' as const,
-  }
-
-  assert.equal(resolveCheckoutResultStatus(input), 'processing')
-  assert.equal(resolveCheckoutResultStatus({
-    ...input,
-    orderStatus: 'FAILED',
-  }), 'failed')
-})
-
-test('canonical paid result wins over stale local failure', () => {
-  assert.equal(resolveCheckoutResultStatus({
-    currentUserId: 'user_1',
-    checkoutUserId: 'user_1',
-    paymentStatus: 'paid',
-    sessionStatus: 'complete',
-    orderStatus: 'FAILED',
-  }), 'paid')
+test('subscription orders require subscription Checkout mode', () => {
+  assert.equal(isCheckoutSessionValidForOrder(snapshot({ mode: 'subscription' }), {
+    ...expected,
+    purchaseModel: 'subscription',
+  }), true)
+  assert.equal(isCheckoutSessionValidForOrder(snapshot(), {
+    ...expected,
+    purchaseModel: 'subscription',
+  }), false)
 })

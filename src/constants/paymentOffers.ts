@@ -3,14 +3,19 @@ import type {
   PaymentOffer,
   PaymentOfferKey,
 } from '@/types/paymentTypes'
+import { SUBSCRIPTION_PAYMENT_OFFERS } from '@/constants/subscriptionPaymentOffers'
 
 export const PAYMENT_OFFER_KEYS = [
   'opiekun_basic_lifetime',
   'opiekun_premium_lifetime',
   'opiekun_premium_upgrade',
+  'opiekun_basic_monthly',
+  'opiekun_premium_monthly',
   'pielegniarstwo_basic_lifetime',
   'pielegniarstwo_premium_lifetime',
   'pielegniarstwo_premium_upgrade',
+  'pielegniarstwo_basic_monthly',
+  'pielegniarstwo_premium_monthly',
 ] as const satisfies readonly PaymentOfferKey[]
 
 export const LIFETIME_UPGRADE_OFFER_BY_COURSE = {
@@ -26,6 +31,7 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 15999,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_purchase',
     priceEnvName: 'STRIPE_OPIEKUN_STANDARD_PRICE_ID',
   },
@@ -36,6 +42,7 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 44999,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_purchase',
     priceEnvName: 'STRIPE_OPIEKUN_PREMIUM_PRICE_ID',
   },
@@ -46,6 +53,7 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 29000,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_upgrade',
     priceEnvName: 'STRIPE_OPIEKUN_PREMIUM_UPGRADE_PRICE_ID',
   },
@@ -56,6 +64,7 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 27999,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_purchase',
     priceEnvName: 'STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID',
   },
@@ -66,6 +75,7 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 59999,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_purchase',
     priceEnvName: 'STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID',
   },
@@ -76,7 +86,9 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     amount: 32000,
     currency: 'pln',
     available: true,
+    purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_upgrade',
     priceEnvName: 'STRIPE_PIELEGNIARSTWO_PREMIUM_UPGRADE_PRICE_ID',
   },
+  ...SUBSCRIPTION_PAYMENT_OFFERS,
 }

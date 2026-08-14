@@ -19,6 +19,12 @@ export const CheckoutSessionIdSchema = z
   .max(256)
   .regex(/^cs_(?:test_|live_)?[A-Za-z0-9]+$/);
 
+export const SubscriptionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^sub_[A-Za-z0-9]+$/);
+
 export const DeleteTestIdSchema = z.object({
   testId: z
     .string()

@@ -13,7 +13,7 @@ export async function getOrCreateCheckoutOrder(userId: string, offer: VerifiedOf
   const deduplicationKey = getCheckoutOrderDeduplicationKey(
     userId,
     offer.courseSlug,
-    'lifetime'
+    offer.purchaseModel
   )
   const now = new Date()
 
@@ -35,7 +35,7 @@ export async function getOrCreateCheckoutOrder(userId: string, offer: VerifiedOf
     stripePriceId: offer.priceId,
     amountTotal: offer.amount,
     currency: offer.currency,
-    purchaseModel: 'lifetime',
+    purchaseModel: offer.purchaseModel,
     status: 'CREATING',
     deduplicationKey,
     expiresAt: getCheckoutOrderExpiry(now),

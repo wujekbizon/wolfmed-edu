@@ -1,31 +1,28 @@
-import Link from 'next/link'
 import PathBadge from './PathBadge'
 import PathQuestionList from './PathQuestionList'
 import PathShotCollage from './PathShotCollage'
-import CourseCheckoutButton from './CourseCheckoutButton'
+import CourseHeroAction from './CourseHeroAction'
 import { CURRICULUM_ANCHOR } from '@/constants/curriculumAnchor'
-import { ownsCourse } from '@/helpers/ownsCourse'
 import type { PathData } from '@/types/careerPathsTypes'
-import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
+import type {
+  LifetimeUpgradeOfferKey,
+  PricingOfferStatusMap,
+} from '@/types/paymentTypes'
 import type { PathQuestions } from '@/types/pathStoryTypes'
 
 export default function PathQuestionsHero({
   title,
   questions,
   pricing,
-  ownedCourses,
+  pricingOfferStatuses,
   eligibleLifetimeUpgradeOfferKey,
 }: {
   title: string
   questions: PathQuestions
   pricing?: PathData['pricing']
-  ownedCourses: string[]
+  pricingOfferStatuses: PricingOfferStatusMap
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }) {
-  const entry = pricing?.basic
-  const owned = !!pricing && ownsCourse(pricing.courseSlug, ownedCourses)
-  const offerKey = eligibleLifetimeUpgradeOfferKey ?? (!owned ? entry?.offerKey : null)
-
   return (
     <section
       aria-labelledby='questions-title'
@@ -50,18 +47,17 @@ export default function PathQuestionsHero({
 
               <PathQuestionList items={questions.items} />
 
-              {pricing && offerKey && (
+              {pricing && (
                 <div className='mt-8'>
-                  <CourseCheckoutButton
-                    offerKey={offerKey}
-                    {...(eligibleLifetimeUpgradeOfferKey
-                      ? { label: 'Odblokuj AI w Premium' }
-                      : {})}
+                  <CourseHeroAction
+                    courseSlug={pricing.courseSlug}
+                    offerStatuses={pricingOfferStatuses}
+                    eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
                   />
                 </div>
               )}
 
-              <Link
+              <a
                 href={`#${CURRICULUM_ANCHOR}`}
                 className='group mt-6 inline-flex items-center gap-2 self-start text-sm font-medium text-rose-600 transition-colors hover:text-rose-700'
               >
@@ -72,7 +68,7 @@ export default function PathQuestionsHero({
                 >
                   →
                 </span>
-              </Link>
+              </a>
             </div>
           </div>
 

@@ -5,6 +5,7 @@ import type {
   LifetimeUpgradeOfferKey,
   PaymentOffer,
   PaymentOfferKey,
+  PricingOfferStatusMap,
 } from "@/types/paymentTypes";
 
 type TemplateType = "simple" | "rich";
@@ -64,7 +65,7 @@ export type PathData = {
   questions?: PathQuestions;
 };
 export type PathLayoutProps = PathData & {
-  ownedCourses: string[];
+  pricingOfferStatuses: PricingOfferStatusMap;
   subjectTitles: string[];
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null;
 }

@@ -1,31 +1,28 @@
-import Link from 'next/link'
 import PathBadge from './PathBadge'
 import PathFacts from './PathFacts'
 import StorySceneTrack from './StorySceneTrack'
-import CourseCheckoutButton from './CourseCheckoutButton'
+import CourseHeroAction from './CourseHeroAction'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
-import { ownsCourse } from '@/helpers/ownsCourse'
 import type { PathData } from '@/types/careerPathsTypes'
-import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
+import type {
+  LifetimeUpgradeOfferKey,
+  PricingOfferStatusMap,
+} from '@/types/paymentTypes'
 import type { PathStory } from '@/types/pathStoryTypes'
 
 export default function PathStoryHero({
   title,
   story,
   pricing,
-  ownedCourses,
+  pricingOfferStatuses,
   eligibleLifetimeUpgradeOfferKey,
 }: {
   title: string
   story: PathStory
   pricing?: PathData['pricing']
-  ownedCourses: string[]
+  pricingOfferStatuses: PricingOfferStatusMap
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }) {
-  const entry = pricing?.basic
-  const owned = !!pricing && ownsCourse(pricing.courseSlug, ownedCourses)
-  const offerKey = eligibleLifetimeUpgradeOfferKey ?? (!owned ? entry?.offerKey : null)
-
   return (
     <div className='w-full p-4 sm:p-6 md:p-8 lg:p-12'>
       <div className='relative w-full rounded-3xl bg-white border-3 border-stone-800/30 shadow-[0_10px_24px_-12px_rgba(60,40,40,0.28)]'>
@@ -43,13 +40,12 @@ export default function PathStoryHero({
                   {story.intro}
                 </p>
 
-                {pricing && offerKey && (
+                {pricing && (
                   <div className='mt-8'>
-                    <CourseCheckoutButton
-                      offerKey={offerKey}
-                      {...(eligibleLifetimeUpgradeOfferKey
-                        ? { label: 'Odblokuj AI w Premium' }
-                        : {})}
+                    <CourseHeroAction
+                      courseSlug={pricing.courseSlug}
+                      offerStatuses={pricingOfferStatuses}
+                      eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
                     />
                   </div>
                 )}
@@ -57,7 +53,7 @@ export default function PathStoryHero({
 
               <div>
                 <PathFacts facts={story.facts} />
-                <Link
+                <a
                   href={`#${PRICING_ANCHOR}`}
                   className='group mt-6 inline-flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors'
                 >
@@ -65,7 +61,7 @@ export default function PathStoryHero({
                   <span className='transition-transform duration-200 group-hover:translate-y-0.5'>
                     ↓
                   </span>
-                </Link>
+                </a>
               </div>
             </aside>
           </div>

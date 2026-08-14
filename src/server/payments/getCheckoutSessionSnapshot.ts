@@ -13,6 +13,9 @@ export function getCheckoutSessionSnapshot(
   const invoiceId = typeof session.invoice === 'string'
     ? session.invoice
     : session.invoice?.id ?? null
+  const subscriptionId = typeof session.subscription === 'string'
+    ? session.subscription
+    : session.subscription?.id ?? null
 
   return {
     id: session.id,
@@ -24,6 +27,7 @@ export function getCheckoutSessionSnapshot(
     clientReferenceId: session.client_reference_id,
     customerId,
     paymentIntentId,
+    subscriptionId,
     invoiceId,
     createdAt: new Date(session.created * 1000),
     expiresAt: new Date(session.expires_at * 1000),

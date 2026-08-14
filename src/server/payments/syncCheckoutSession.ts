@@ -19,6 +19,9 @@ export async function syncCheckoutSession(
   eventType: StripeCheckoutEventType,
   context: CheckoutFulfillmentContext
 ): Promise<void> {
+  if (context.purchaseModel !== 'lifetime') {
+    throw new Error(`Checkout Session ${context.snapshot.id} is not a lifetime purchase`)
+  }
   const { snapshot } = context
   const paymentState = resolveCheckoutPaymentState(eventType, snapshot.paymentStatus)
   const paid = paymentState === 'paid'

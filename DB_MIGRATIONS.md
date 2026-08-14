@@ -365,7 +365,40 @@ nowych kolumn `NOT NULL` i nie usuwać `customerEmail` w pierwszym deployu.
 Dev: `pnpm db:push`, potem testy Checkpoint 5 z przewodnika 42. Produkcja:
 `pnpm db:generate` → review SQL → backup/branch Neon → `pnpm db:migrate` → deploy.
 
-### M11+ — (dopisuj kolejne zmiany tutaj)
+### M11 — Stripe: subskrypcje miesięczne i Portal
+
+*Status: kod gotowy 2026-08-12; migracja dev/prod niewykonana.*
+
+- Cztery miesięczne oferty, osobne zamówienia `purchase_model=subscription`.
+- `wolfmed_stripe_subscriptions`: usuwa unikalność samego `userId`; dodaje
+  `order_id`, `offer_key`, `access_tier`, `price_id`, lifecycle i unikalne Stripe
+  Subscription/Session. Pola legacy email/Session/Invoice stają się nullable.
+- `wolfmed_stripe_payments` + `subscription_id`; każda faktura subskrypcyjna jest
+  osobnym wpisem ledgeru.
+- `wolfmed_processed_events` + `subscription_record_id`.
+- Subskrypcje są domyślnie aktywne w kodzie. Nie uruchamiać aplikacji przed
+  migracją i pełną konfiguracją Stripe test mode.
+
+Preflight przed migracją:
+
+```sql
+SELECT "subscriptionId", COUNT(*) FROM wolfmed_stripe_subscriptions
+GROUP BY "subscriptionId" HAVING COUNT(*) > 1;
+
+SELECT "sessionId", COUNT(*) FROM wolfmed_stripe_subscriptions
+WHERE "sessionId" IS NOT NULL GROUP BY "sessionId" HAVING COUNT(*) > 1;
+
+SELECT "userId", "courseSlug", COUNT(*) FROM wolfmed_stripe_subscriptions
+WHERE status NOT IN ('canceled', 'incomplete_expired')
+GROUP BY "userId", "courseSlug" HAVING COUNT(*) > 1;
+```
+
+Dev: preflight → `pnpm db:push` → skonfigurować 4 Prices, Portal i webhooki →
+uruchomić aplikację → testy sandbox. Produkcja: backup/Neon branch →
+wersjonowana migracja expand/backfill/switch; usunięcie starego unique `userId` jest
+wymagane przed dopuszczeniem dwóch kursów.
+
+### M12+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

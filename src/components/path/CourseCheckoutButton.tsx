@@ -2,20 +2,26 @@
 
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
+import { createSubscriptionUpgradePortalSession } from '@/actions/subscriptionUpgrade'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
 import FormError from '@/components/FormError'
-import type { PaymentOfferKey } from '@/types/paymentTypes'
+import type { PaymentOfferKey, PricingOfferStatus } from '@/types/paymentTypes'
 
 export default function CourseCheckoutButton({
   offerKey,
+  offerStatus = 'available',
   label = 'Uzyskaj dostęp do kursu',
 }: {
   offerKey: PaymentOfferKey
+  offerStatus?: PricingOfferStatus
   label?: string
 }) {
-  const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
+  const serverAction = offerStatus === 'portal_upgrade'
+    ? createSubscriptionUpgradePortalSession
+    : createCheckoutSession
+  const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
   return (
@@ -25,7 +31,9 @@ export default function CourseCheckoutButton({
       <input type='hidden' name='offerKey' value={offerKey} />
       <SubmitButton
         label={label}
-        loading='Przekierowywanie...'
+        loading={offerStatus === 'portal_upgrade'
+          ? 'Otwieranie Stripe...'
+          : 'Przekierowywanie...'}
         variant='cta'
         size='lg'
         shape='pill'
