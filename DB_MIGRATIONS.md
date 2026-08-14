@@ -398,7 +398,33 @@ uruchomić aplikację → testy sandbox. Produkcja: backup/Neon branch →
 wersjonowana migracja expand/backfill/switch; usunięcie starego unique `userId` jest
 wymagane przed dopuszczeniem dwóch kursów.
 
-### M12+ — (dopisuj kolejne zmiany tutaj)
+### M12 — Trwałe usunięcie konta i retencja płatności
+*Status: dev wdrożony i backfill wykonany 2026-08-14; prod niewykonane.*
+
+- Billing: `userId` staje się nullable w orders/payments/subscriptions/events.
+- Payments + `retention_until`, `pseudonymized_at` i indeks retencji.
+- Orders/subscriptions/events + `owner_deleted_at`, `cleanup_after` i indeksy.
+- FK `ON DELETE CASCADE` dla custom tests/categories, blog likes, grants,
+  lectures, generated practical exams i planner concepts.
+- Migracja wymaga wcześniejszego usunięcia orphanów. Najpierw dry run:
+
+```text
+pnpm exec tsx --env-file=.env scripts/cleanup-deleted-account-orphans.ts
+```
+
+Po review listy, dopiero ręcznie:
+
+```text
+pnpm exec tsx --env-file=.env scripts/cleanup-deleted-account-orphans.ts --execute
+```
+
+Skrypt odrzuca klucz Stripe live. Na dev: uruchomić cleanup, `pnpm db:push`, potem
+cleanup ponownie dla backfillu nowych pól billingowych.
+Produkcja: Neon branch/backup, wersjonowana migracja expand, cleanup/backfill,
+deploy switch. Termin retencji `sale year + 6, 31 grudnia` jest tymczasowym
+założeniem z planu; przed prod wymaga potwierdzenia księgowego.
+
+### M13+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

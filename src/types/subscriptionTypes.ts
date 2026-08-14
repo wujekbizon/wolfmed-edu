@@ -46,6 +46,8 @@ export type SubscriptionExpectation = {
 
 export type SubscriptionCheckoutOrder = {
   id: string
-  userId: string
+  userId: string | null
   stripeSessionId: string | null
+  ownerDeletedAt: Date | null
+  cleanupAfter: Date | null
 }

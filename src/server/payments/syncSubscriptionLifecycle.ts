@@ -1,6 +1,8 @@
 import 'server-only'
 import { eq, sql } from 'drizzle-orm'
 import { isSubscriptionAccessActive } from '@/helpers/isSubscriptionAccessActive'
+import { canGrantPaymentAccess } from '@/helpers/canGrantPaymentAccess'
+import { getAccountDeletionCleanupAfter } from '@/helpers/getAccountDeletionCleanupAfter'
 import { db } from '@/server/db/index'
 import {
   checkoutOrders,
@@ -24,7 +26,14 @@ export async function syncSubscriptionLifecycle(
   offer: VerifiedPaymentOffer
 ): Promise<void> {
   const active = isSubscriptionAccessActive(snapshot)
+  const ownerUserId = canGrantPaymentAccess(order.userId, order.ownerDeletedAt)
+    ? order.userId
+    : null
   const now = new Date()
+  const ownerDeletedAt = ownerUserId ? null : order.ownerDeletedAt ?? now
+  const cleanupAfter = ownerUserId
+    ? null
+    : order.cleanupAfter ?? getAccountDeletionCleanupAfter(ownerDeletedAt ?? now)
 
   await db.transaction(async (tx) => {
     await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(
@@ -32,10 +41,12 @@ export async function syncSubscriptionLifecycle(
     ))`)
     const [event] = await tx.insert(processedEvents).values({
       eventId,
-      userId: order.userId,
+      userId: ownerUserId,
       eventType,
       stripeObjectId: snapshot.id,
-      orderId: order.id,
+      orderId: ownerUserId ? order.id : null,
+      ownerDeletedAt,
+      cleanupAfter,
     }).onConflictDoNothing({ target: processedEvents.eventId }).returning({
       id: processedEvents.id,
     })
@@ -43,14 +54,16 @@ export async function syncSubscriptionLifecycle(
 
     const subscription = await upsertSubscriptionRecord(tx, snapshot, order, offer, now)
     await upsertSubscriptionPayment(tx, snapshot, order, offer, now)
-    await upsertSubscriptionEnrollment(tx, snapshot, order, offer, active, now)
+    if (ownerUserId) {
+      await upsertSubscriptionEnrollment(tx, snapshot, order, offer, active, now)
+    }
     await tx.update(checkoutOrders).set({
       status: active ? 'PAID' : snapshot.status === 'incomplete' ? 'PROCESSING' : 'FAILED',
       ...(active ? { deduplicationKey: null } : {}),
       updatedAt: now,
     }).where(eq(checkoutOrders.id, order.id))
-    if (active) {
-      await tx.insert(userLimits).values({ userId: order.userId })
+    if (active && ownerUserId) {
+      await tx.insert(userLimits).values({ userId: ownerUserId })
         .onConflictDoNothing({ target: userLimits.userId })
     }
     await tx.update(processedEvents).set({ subscriptionRecordId: subscription.id })

@@ -12,10 +12,12 @@ export async function processStripeSubscriptionEvent(event: Stripe.Event): Promi
   if (!subscriptionId) return
 
   const snapshot = await getSubscriptionSnapshot(subscriptionId)
-  const offer = await getVerifiedSubscriptionOffer(snapshot.priceId)
   const order = snapshot.orderId ? await getCheckoutOrderById(snapshot.orderId) : null
-  if (!order || order.purchaseModel !== 'subscription') {
-    throw new Error(`Subscription ${subscriptionId} has no trusted order`)
+  if (!order) return
+
+  const offer = await getVerifiedSubscriptionOffer(snapshot.priceId)
+  if (order.purchaseModel !== 'subscription') {
+    throw new Error(`Subscription ${subscriptionId} has an invalid order model`)
   }
   if (!isSubscriptionValidForOrder(snapshot, {
     orderId: order.id,

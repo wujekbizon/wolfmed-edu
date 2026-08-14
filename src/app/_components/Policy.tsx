@@ -70,10 +70,9 @@ export default function Policy() {
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Płatności</h2>
       <p className="text-base xs:text-lg text-zinc-800">
-        Wolfmed Edukacja oferuje kursy edukacyjne w modelu płatnym. Aby dokonać zakupu kursu, musisz podać naszemu
-        procesorowi płatności (Stripe) swoje dane płatnicze oraz adres e-mail. Stripe akceptuje płatności kartą oraz
-        płatności BLIK. Po dokonaniu płatności, przechowujemy numer transakcji, kwotę oraz adres e-mail w celu obsługi
-        zamówienia i zapewnienia dostępu do zakupionych treści.
+        Wolfmed Edukacja oferuje zakup dostępu do kursów jednorazowo lub w miesięcznej subskrypcji. Stripe przetwarza
+        dane płatnicze, dane rozliczeniowe, adres e-mail oraz opcjonalny NIP. Wolfmed przechowuje identyfikatory
+        transakcji, kwotę, walutę, datę, zakupioną ofertę oraz status płatności, zwrotu lub sporu.
       </p>
       <p className="text-base xs:text-lg text-zinc-800 mt-3">
         Aktualnie oferujemy kursy z zakresu: opiekuna medycznego, pielęgniarstwa oraz inne specjalistyczne
@@ -111,8 +110,8 @@ export default function Policy() {
           Dane konta użytkownika – do momentu usunięcia konta lub przez 3 lata od ostatniej aktywności.
         </li>
         <li className="list-disc mx-8">
-          Dane transakcyjne – przez 5 lat od zakończenia roku podatkowego, w którym dokonano transakcji (zgodnie z
-          przepisami podatkowymi).
+          Minimalny, pseudonimizowany rejestr transakcji – do końca okresu wymaganego przepisami podatkowymi i
+          rachunkowymi; zawieszenie lub przerwanie biegu terminu może ten okres wydłużyć.
         </li>
         <li className="list-disc mx-8">
           Dane z plików cookie analitycznych – zgodnie z okresem ważności danego pliku cookie (do 2 lat).
@@ -257,20 +256,17 @@ export default function Policy() {
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Usunięcie konta</h2>
       <p className="text-base xs:text-lg text-zinc-800">
-        Możesz przestać korzystać z naszej aplikacji, usuwając swoje konto za pomocą funkcji dostępnej w Wolfmed
-        Edukacja. Po usunięciu konta wszystkie powiązane dane zostaną trwale usunięte. W przypadku zakupu kursów,
-        usunięcie konta nie wpływa na wcześniejsze transakcje (które przechowujemy zgodnie z wymogami prawnymi).
-        Użytkownik, który usunie konto, traci dostęp do zakupionych kursów i materiałów. Pamiętaj, że usunięcie konta
-        wiąże się z utratą możliwości korzystania z naszej aplikacji.
+        Usunięcie konta działa natychmiast i jest nieodwracalne. Usuwamy profil, treści prywatne, postępy, pliki,
+        pamięć AI, dane dostępowe i Stripe Customer. Wszystkie dostępy do kursów, także dożywotnie, zostają trwale
+        utracone. Ponowna rejestracja, również tym samym adresem e-mail, tworzy nowe konto i nie przywraca zakupów.
+        Zachowujemy wyłącznie minimalny, pseudonimizowany rejestr finansowy wymagany do księgowości, zwrotów i sporów.
       </p>
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Odzyskiwanie danych na żądanie</h2>
       <p className="text-base xs:text-lg text-zinc-800">
-        Możesz przestać korzystać z naszej aplikacji, usuwając swoje konto w Wolfmed Edukacja. Dla kont, które zostały
-        zablokowane, wszystkie powiązane dane zostaną trwale usunięte po 60 dniach od daty blokady. Nie realizujemy
-        próśb o odzyskanie treści z kont zablokowanych, w tym treści niezgodnych z naszymi zasadami. Dla regularnych
-        kont przechowujemy jedynie podstawowe dane, takie jak adres e-mail. Jeśli potrzebujesz dostępu do tych danych,
-        skontaktuj się z naszym zespołem wsparcia.
+        Danych i dostępu usuniętego konta nie można odzyskać. Pseudonimizowany rejestr finansowy nie służy do
+        identyfikacji użytkownika ani przywracania zakupów. W sprawach dotyczących danych skontaktuj się z naszym
+        zespołem wsparcia.
       </p>
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Cookies (Pliki cookie)</h2>

@@ -73,5 +73,6 @@ export type CheckoutFulfillmentContext = {
   entitlementSourceType: PaymentOffer['entitlementSourceType']
   purchaseModel: CheckoutPurchaseModel
   stripeCustomerId: string
+  ownerDeletedAt: Date | null
   snapshot: CheckoutSessionSnapshot
 }

@@ -36,8 +36,8 @@ Updated: 2026-08-14.
 - [x] Subscription DB migration and Stripe sandbox configuration.
 - [x] Monthly purchase, upgrade, cancel, resume and terminal cleanup flows.
 - [x] Lifetime purchase, difference-price upgrade and invoice event routing.
-- [x] TypeScript check, 189 automated tests and `git diff --check`.
-- [ ] Permanent Clerk/Stripe account deletion and RODO retention workflow.
+- [x] TypeScript check, 194 automated tests and `git diff --check`.
+- [x] Permanent Clerk/Stripe account deletion and RODO retention workflow.
 - [ ] Stripe Test Clock renewal, failure, recovery, downgrade and cancellation.
 - [ ] Premium-to-Basic scheduled downgrade implementation and UI.
 - [ ] Durable Premium library activation job.
@@ -48,12 +48,22 @@ Start the next session from this section. Preserve all completed work above.
 
 ### Priority 0: permanent account deletion and RODO
 
+Accepted in dev 2026-08-14: M12 cleanup/migration/backfill and TC-7 passed. The
+test deleted one Customer with lifetime access, one local Subscription and one
+Stripe-only Subscription; both canceled. Disposable rows and the UploadThing
+material disappeared, memory tombstones were erased, retained billing was
+pseudonymized through 2032, Clerk replay was idempotent, and same-email
+registration restored no access and created a different Customer at checkout.
+Lecture-specific UploadThing deletion was manually skipped; it uses the same
+batched deletion path as the verified material. Static checks and 194 tests pass.
+
 Approved product policy:
 
 - Account deletion is immediate and permanent; there is no grace period.
 - Delete all course access, including lifetime access.
-- A later registration, even with the same email and name, creates a new Clerk
-  user, Wolfmed user and Stripe Customer. Purchases are not restored automatically.
+- A later registration, even with the same email and name, creates a new Clerk and
+  Wolfmed user. The next checkout lazily creates a new Stripe Customer. Purchases
+  are not restored automatically.
 - Delete the Stripe Customer. Stripe removes reusable payment details and cancels
   every active subscription, including subscriptions missing from local state.
 - Keep financial history only for accounting, refunds and disputes. Never use it
@@ -200,8 +210,7 @@ lifetime/subscription billing for the same course.
 - Basic materials are not indexed when access later becomes Premium.
 - Stripe Test Clock lifecycle scenarios are not verified.
 - Premium-to-Basic scheduled downgrade is not implemented.
-- Account deletion cancels locally known subscriptions but does not yet delete the
-  Stripe Customer, pseudonymize retained payments or clean every orphanable table.
+- Payment retention deadline still requires accountant confirmation before prod.
 
 ## Server-first architecture
 

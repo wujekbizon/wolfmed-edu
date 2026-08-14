@@ -1405,10 +1405,14 @@ export const getRecentForumPosts = cache(
 // Get stripe support payments
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()
-  return payments.map((p) => ({
-    ...p,
-    createdAt: p.createdAt ?? new Date(),
-  }))
+  return payments
+    .filter((payment): payment is typeof payment & { userId: string } => (
+      payment.userId !== null
+    ))
+    .map((payment) => ({
+      ...payment,
+      createdAt: payment.createdAt ?? new Date(),
+    }))
 })
 
 // Get supporters userId from stripe support payments

@@ -1,5 +1,6 @@
 import 'server-only'
 import { courseEnrollments } from '@/server/db/schema'
+import { canGrantPaymentAccess } from '@/helpers/canGrantPaymentAccess'
 import type { PaymentTransaction } from '@/types/dbTypes'
 import type {
   SubscriptionCheckoutOrder,
@@ -15,6 +16,8 @@ export async function upsertSubscriptionEnrollment(
   active: boolean,
   now: Date
 ): Promise<void> {
+  if (!canGrantPaymentAccess(order.userId, order.ownerDeletedAt)) return
+
   const access = {
     accessTier: offer.accessTier,
     isActive: active,

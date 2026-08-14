@@ -17,6 +17,7 @@ const payment: PaymentLifecycleRecord = {
   stripeCustomerId: 'cus_1',
   chargeId: null,
   paymentStatus: 'paid',
+  pseudonymizedAt: null,
 }
 
 const snapshot = (
@@ -73,6 +74,17 @@ test('canonical lifecycle snapshot validates against payment ledger', () => {
   assert.equal(isPaymentLifecycleSnapshotValid(payment, snapshot({ customerId: 'cus_2' })), false)
   assert.equal(isPaymentLifecycleSnapshotValid(payment, snapshot({ chargePaid: false })), false)
   assert.equal(isPaymentLifecycleSnapshotValid(payment, snapshot({ amountRefunded: 15000 })), false)
+})
+
+test('pseudonymized ledger validates delayed lifecycle without Customer ID', () => {
+  assert.equal(isPaymentLifecycleSnapshotValid(
+    {
+      ...payment,
+      stripeCustomerId: null,
+      pseudonymizedAt: new Date('2026-08-14T12:00:00.000Z'),
+    },
+    snapshot()
+  ), true)
 })
 
 test('stored charge identity rejects a different charge', () => {

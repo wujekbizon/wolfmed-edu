@@ -114,18 +114,48 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 ---
 
-## TC-7 — Account deletion erases AI memory (GDPR)
+## TC-7 — Permanent account deletion and retained ledger
 
 **Source**: [`30-flows-auth-payments.md`](./30-flows-auth-payments.md) → Flow 4.
 
-**Preconditions**: a test account that has interacted with the AI tutor enough to have generated memory data (facts/episodes — e.g. completed a few tests to trigger `onQuizCompleted`, or had a few tutor conversations).
+**Preconditions**: a fresh Clerk/Stripe test account with lifetime access for one
+course, one active local subscription for the other course, one active Stripe-only
+subscription, uploads, memory and learning data.
+
+**Setup**:
+1. Record the fresh account's Clerk `userId` and Stripe Customer ID.
+2. Through Wolfmed, buy lifetime access for one course.
+3. Through Wolfmed, buy Premium monthly access for the other course using a reusable
+   test card. Both purchases must belong to the same Stripe Customer.
+4. In Stripe test Dashboard, open that Customer and create another active monthly
+   Subscription directly. Do not use Wolfmed Checkout. Confirm it creates no new
+   Wolfmed checkout-order, subscription or enrollment row; its webhook returns
+   `200` as an intentionally ignored Stripe-only Subscription.
+5. Create one material, lecture, note, custom test/category, like and learning plan.
+   Complete one theory test and wait for its post-response memory extraction to
+   create a fact and episode. Record UploadThing keys and relevant DB row counts.
 
 **Steps**:
-1. Note the account's `userId`.
-2. Delete the account via Clerk (dashboard or the app's own account-deletion UI, wherever that lives on the Clerk side).
-3. Confirm the `user.deleted` webhook fires (check server logs / webhook delivery log).
-4. Query the DB directly for that `userId` across `wolfmed_users`, `wolfmed_mem_facts`, `wolfmed_mem_episodes`, `wolfmed_mem_preferences`, `wolfmed_mem_traces`.
-5. Expect: **zero rows** in all of them, including the memory tables — those aren't FK'd to `users`, so this specifically tests that `eraseUserMemory()` actually ran and isn't a no-op left over from an interrupted deletion.
+1. Open Clerk user profile deletion. Confirm both warnings and typed `Usuń konto`.
+2. Delete the account and confirm the Clerk webhook returns `200`.
+3. Expect Stripe Customer deleted and both subscriptions canceled, including the
+   Stripe-only one. Re-deliver the Clerk webhook; expect `200` and no new rows.
+4. Expect zero rows under the original Clerk ID in users, grants, limits, uploads,
+   notes, custom tests/categories, likes, learning data and all memory tables.
+   UploadThing material/lecture keys must also be gone.
+5. Facts/episodes and the deletion audit may remain only under random `deleted:*`
+   IDs with erased content. Preferences/traces remain absent.
+6. Payment rows remain with amount/currency/date/offer and Stripe transaction,
+   refund/dispute identifiers, but `userId`, email, Customer and `orderId` are null;
+   `pseudonymizedAt` and `retentionUntil` are set.
+7. Orders/subscriptions/events have null `userId`, deletion timestamps and a
+   `cleanupAfter` at least 30 days later. Re-deliver an already processed Stripe
+   event: expect `200`, no duplicate rows and no grants or limits. A genuinely
+   withheld event may update only retained ledger state, never access.
+8. Register again with the same email. Expect a new Clerk/Wolfmed user with no
+   course access and no automatic purchase restoration. `stripeCustomerId` remains
+   null until needed. Start and cancel a checkout; expect a new Stripe Customer,
+   different from the deleted one, and still no course access.
 
 ---
 

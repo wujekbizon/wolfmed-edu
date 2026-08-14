@@ -11,7 +11,8 @@ export function isPaymentLifecycleSnapshotValid(
     payment.paymentStatus === 'paid' &&
     payment.amountTotal === snapshot.amount &&
     payment.currency === snapshot.currency &&
-    payment.stripeCustomerId === snapshot.customerId &&
+    (payment.pseudonymizedAt !== null ||
+      payment.stripeCustomerId === snapshot.customerId) &&
     (!payment.chargeId || payment.chargeId === snapshot.chargeId) &&
     snapshot.chargePaid &&
     snapshot.chargeStatus === 'succeeded' &&

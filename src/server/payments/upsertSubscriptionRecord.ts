@@ -6,6 +6,8 @@ import type {
   SubscriptionSnapshot,
   VerifiedPaymentOffer,
 } from '@/types/paymentTypes'
+import { canGrantPaymentAccess } from '@/helpers/canGrantPaymentAccess'
+import { getAccountDeletionCleanupAfter } from '@/helpers/getAccountDeletionCleanupAfter'
 
 export async function upsertSubscriptionRecord(
   tx: PaymentTransaction,
@@ -14,6 +16,11 @@ export async function upsertSubscriptionRecord(
   offer: VerifiedPaymentOffer,
   now: Date
 ) {
+  const canGrantAccess = canGrantPaymentAccess(order.userId, order.ownerDeletedAt)
+  const ownerDeletedAt = canGrantAccess ? null : order.ownerDeletedAt ?? now
+  const cleanupAfter = canGrantAccess
+    ? null
+    : order.cleanupAfter ?? getAccountDeletionCleanupAfter(ownerDeletedAt ?? now)
   const values = {
     offerKey: offer.key,
     amountTotal: offer.amount,
@@ -33,16 +40,27 @@ export async function upsertSubscriptionRecord(
   }
   const [subscription] = await tx.insert(subscriptions).values({
     ...values,
-    userId: order.userId,
+    userId: canGrantAccess ? order.userId : null,
     sessionId: order.stripeSessionId,
-    orderId: order.id,
+    orderId: canGrantAccess ? order.id : null,
     currency: offer.currency,
     customerId: snapshot.customerId,
     subscriptionId: snapshot.id,
+    ownerDeletedAt,
+    cleanupAfter,
     createdAt: snapshot.createdAt,
   }).onConflictDoUpdate({
     target: subscriptions.subscriptionId,
-    set: values,
+    set: {
+      ...values,
+      ...(!canGrantAccess ? {
+        userId: null,
+        orderId: null,
+        customerEmail: null,
+        ownerDeletedAt,
+        cleanupAfter,
+      } : {}),
+    },
   }).returning({ id: subscriptions.id })
 
   if (!subscription) throw new Error(`Subscription ${snapshot.id} was not persisted`)

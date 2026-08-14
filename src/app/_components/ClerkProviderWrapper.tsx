@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs'
-import { plPL } from '@clerk/localizations'
+import { clerkLocalization } from '@/constants/clerkLocalization'
 
 interface ClerkProviderWrapperProps {
   children: React.ReactNode
@@ -8,7 +8,7 @@ interface ClerkProviderWrapperProps {
 export default function ClerkProviderWrapper({ children }: ClerkProviderWrapperProps) {
   return (
     <ClerkProvider
-      localization={plPL}
+      localization={clerkLocalization}
       appearance={{
         variables: {
           colorBackground: 'white',

@@ -60,7 +60,9 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 ### `POST /api/webhooks/clerk`
 `src/app/api/webhooks/clerk/route.ts`. Verifies the Svix signature (`svix-id`/`svix-timestamp`/`svix-signature` headers + `CLERK_WEBHOOK_SECRET`) before trusting the payload — standard webhook-authenticity pattern, distinct from user-session auth. Dispatch is a sequence of `if (eventType === '...')` blocks, not a `switch` — a new event type is a new `if` block alongside the two below.
 - **`user.created`** (`:56`) → `insertUserToDb()` (`@/server/db`) creates the `wolfmed_users` row with a random username and motto. It does not initialize course metadata in Clerk; PostgreSQL owns enrollment state.
-- **`user.deleted`** (`:89`) → `deleteUserFromDb(id)`; the cascade-delete FKs throughout the schema (see [`01-database-schema.md`](./01-database-schema.md)) clean up everything owned by that user automatically.
+- **`user.deleted`** (`:89`) → the idempotent account-deletion coordinator deletes
+  the Stripe Customer and UploadThing files, pseudonymizes retained billing/memory
+  rows, then deletes the user so disposable owner FKs cascade.
 
 ### `POST /api/webhooks/stripe`
 `src/app/api/webhooks/stripe/route.ts`. Verifies the raw body with

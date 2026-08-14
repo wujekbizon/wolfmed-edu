@@ -97,8 +97,8 @@ actual panel access reads DB grants. Navbar/Drawer do not read Clerk course meta
    cancellation retains access until Stripe ends the Subscription.
 4. `/panel/ustawienia` shows lifetime and subscription state. Its authenticated
    action creates a short-lived Customer Portal Session with a fixed return URL.
-5. Clerk account deletion cancels non-terminal Stripe Subscriptions without
-   proration before personal application data is deleted.
+5. Clerk account deletion deletes the Stripe Customer before personal application
+   data, canceling every Stripe-side Subscription without proration.
 
 The app assumes the subscription migration and Stripe configuration are complete
 before startup. Setup order is documented in
@@ -108,12 +108,25 @@ before startup. Setup order is documented in
 
 1. Triggered entirely from **Clerk's side** (user deletes their account via Clerk's account UI, or an admin removes them in the Clerk dashboard) — there is no in-app "delete my account" button in this codebase.
 2. Clerk fires `user.deleted` to the same `POST /api/webhooks/clerk` handler as Flow 1.
-3. `deleteUserFromDb(id)` (`src/server/db.ts`):
-   - Cancels every non-terminal Stripe Subscription immediately and without
-     proration. A Stripe failure aborts deletion so billing cannot outlive the app
-     account silently.
-   - `eraseUserMemory(id)` (`src/server/memory/erase.ts`) runs **first and explicitly** — the per-user memory tables (`memPreferences`, `memFacts`, `memEpisodes`, `memTraces`) are **not** foreign-keyed to `users`, so they would silently survive a `users` row deletion otherwise. This is called out in the source as a GDPR requirement, not an optimization. **Correction (round 14 doc-test, simulating a "was memPolicies actually erased too" compliance question)**: an earlier version of this doc listed `memPolicies` alongside these four as if it received the same treatment — it does not, and shouldn't: `memPolicies` (`src/server/db/memory-schema.ts`) has no `userId` column at all, only a `tenantId` (default `'wolfmed'`) — it's global pedagogical/product configuration, not personal data, so there's nothing user-scoped in it to erase. `memDeletionEvents` (the erasure audit log itself) is also deliberately not erased, for the obvious reason. Facts/episodes are tombstoned in place (content wiped, `status: 'revoked'`) rather than hard-deleted, to keep the self-referential supersession FK valid; preferences/traces are hard-deleted.
-   - `db.delete(users).where(eq(users.userId, id))` — every other user-owned table (`notes`, `materials`, `flashcardDecks`, `forumPosts`, `diagnozyProgress`, `learningPlans`, `libChunks`, etc.) cascades automatically via `onDelete: "cascade"` FKs — see [`01-database-schema.md`](./01-database-schema.md) → "Cascade ownership" for the full list.
-4. No confirmation step or grace period exists **in this codebase** for this path — the webhook is the single trigger, and it deletes immediately. (Any "are you sure?" UX would live entirely on Clerk's side of the account-deletion flow, outside this app.)
+3. `deleteUserAccount(id)` loads the Customer and UploadThing keys. A missing local
+   user is already complete, so webhook retries are idempotent.
+4. It deletes the Stripe Customer, which cancels every Stripe-side Subscription,
+   including subscriptions absent from local state. Missing Customers are success.
+   It then deletes the user's material and lecture files. External failure returns
+   `500`, leaving the local account for Clerk retry.
+5. One DB transaction pseudonymizes financial/operational rows, anonymizes retained
+   blog authorship, erases memory and deletes `users` last. Cascades remove all
+   course grants, profile, learning and library data. Facts/episodes keep only
+   erased tombstones under a random `deleted:*` owner; preferences/traces disappear.
+6. Payments retain only transaction/offer/refund/dispute identifiers and amounts,
+   with `retentionUntil`. Orders, subscriptions and processed events retain no Clerk
+   ID and receive a 30-day `cleanupAfter` for delayed Stripe events. Deleted-owner
+   handlers may update the ledger but cannot recreate grants or storage limits. The
+   daily retention cron deletes expired operational rows; payment purging remains
+   manual until the accountant confirms the deadline calculation.
+7. Clerk's typed `Usuń konto` confirmation warns that lifetime and subscription
+   access is permanently lost. Re-registering creates a new identity and restores
+   nothing.
 
-**Files**: `src/app/api/webhooks/clerk/route.ts`, `src/server/db.ts`, `src/server/memory/erase.ts`.
+**Files**: `src/app/api/webhooks/clerk/route.ts`,
+`src/server/account-deletion/`, `src/server/memory/erase.ts`.

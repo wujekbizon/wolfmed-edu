@@ -57,6 +57,7 @@ export async function getCheckoutFulfillmentContext(
     entitlementSourceType: PAYMENT_OFFERS[offerKey].entitlementSourceType,
     purchaseModel: order?.purchaseModel ?? legacyOffer!.purchaseModel,
     stripeCustomerId: customerId,
+    ownerDeletedAt: order?.ownerDeletedAt ?? null,
     snapshot,
   }
 }

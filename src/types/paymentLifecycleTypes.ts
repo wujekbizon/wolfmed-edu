@@ -30,4 +30,5 @@ export type PaymentLifecycleRecord = {
   stripeCustomerId: string | null
   chargeId: string | null
   paymentStatus: string
+  pseudonymizedAt: Date | null
 }

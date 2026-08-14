@@ -48,13 +48,14 @@ Server-owned attempt created before Stripe Checkout.
 ```typescript
 {
   id: uuid (PK)
-  userId: varchar(256)
+  userId: varchar(256) (nullable after owner deletion)
   offerKey, courseSlug, accessTier, purchaseModel
   stripePriceId, amountTotal, currency // immutable purchase snapshot
   status: CREATING | OPEN | PROCESSING | PAID | COMPLETED | CANCELED | EXPIRED | FAILED
   deduplicationKey: varchar(512) (unique, nullable when terminal)
   stripeSessionId: varchar(256) (unique, nullable)
   stripeCustomerId: varchar(256) (nullable)
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
   expiresAt, createdAt, updatedAt: timestamp
 }
 ```
@@ -65,7 +66,7 @@ Tracks one-time payments via Stripe.
 ```typescript
 {
   id: uuid (PK, auto-generated)
-  userId: varchar(256) (not null)
+  userId: varchar(256) (nullable after pseudonymization)
   orderId: uuid (nullable FK → checkout orders)
   offerKey, accessTier: varchar (nullable for legacy rows)
   amountTotal: integer (not null)
@@ -76,6 +77,7 @@ Tracks one-time payments via Stripe.
   amountRefunded: integer (default 0, not null)
   refundStatus: varchar(32) ('none' | 'partial' | 'full', default 'none')
   disputeStatus: varchar(32) ('none' | 'open' | 'won' | 'lost' | 'resolved', default 'none')
+  retentionUntil, pseudonymizedAt: timestamp (nullable during expand migration)
   createdAt, updatedAt: timestamp (auto)
 }
 ```
@@ -86,7 +88,7 @@ Manages recurring Stripe subscriptions.
 ```typescript
 {
   id: uuid (PK, auto-generated)
-  userId: varchar(256) (not null)
+  userId: varchar(256) (nullable after owner deletion)
   orderId: uuid (nullable FK → checkout orders)
   sessionId: varchar(256) (unique, nullable)
   subscriptionId: varchar(256) (unique, not null)
@@ -101,6 +103,7 @@ Manages recurring Stripe subscriptions.
   currentPeriodStart, currentPeriodEnd: timestamp
   cancelAtPeriodEnd: boolean
   cancelAt, canceledAt, endedAt: timestamp
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
   createdAt, updatedAt: timestamp
 }
 ```
@@ -112,9 +115,10 @@ Prevents duplicate webhook processing.
 {
   id: uuid (PK, auto-generated)
   eventId: varchar(256) (unique, not null)
-  userId: varchar(256) (not null)
+  userId: varchar(256) (nullable after owner deletion)
   eventType, stripeObjectId: varchar (nullable)
   orderId, paymentId: uuid (nullable FK)
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
   processedAt: timestamp (auto)
 }
 ```
