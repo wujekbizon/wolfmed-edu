@@ -10,10 +10,11 @@ export function getEffectiveEnrollmentGrants<T extends EnrollmentGrant>(
 
   for (const grant of grants) {
     const startsAt = grant.startsAt ?? grant.enrolledAt
+    const startsInFuture = grant.sourceType !== 'subscription' && startsAt > now
     if (
       !grant.isActive ||
       grant.revokedAt ||
-      startsAt > now ||
+      startsInFuture ||
       (grant.expiresAt && grant.expiresAt <= now)
     ) continue
 

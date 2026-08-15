@@ -56,6 +56,16 @@ test('legacy grants without source fields remain active', () => {
   assert.deepEqual(getEffectiveEnrollmentGrants([grant()], now), [grant()])
 })
 
+test('active subscription survives Test Clock dates ahead of app time', () => {
+  const subscription = grant({
+    sourceType: 'subscription',
+    startsAt: new Date('2026-09-14T00:00:00Z'),
+    expiresAt: new Date('2026-10-14T00:00:00Z'),
+  })
+
+  assert.deepEqual(getEffectiveEnrollmentGrants([subscription], now), [subscription])
+})
+
 test('revoked Premium upgrade falls back to lifetime Basic', () => {
   const effective = getEffectiveEnrollmentGrants([
     grant(),

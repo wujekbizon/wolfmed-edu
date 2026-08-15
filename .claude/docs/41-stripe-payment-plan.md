@@ -148,6 +148,12 @@ Do not use an existing Stripe Customer: a Test Clock accepts only new Customers.
 10. Inspect DB before finishing the simulation. Finishing deletes the clock's
     Stripe Customer and Subscription.
 
+Accepted in dev 2026-08-15: successful renewal, failed renewal and recovery
+passed. Webhooks returned `200`; renewal reused the subscription/enrollment rows,
+failure created one failed Invoice payment and revoked access, and recovery
+updated that same payment to `paid` and restored access. Downgrade and
+cancellation remain pending.
+
 ### Priority 1: Premium-to-Basic downgrade
 
 Basic-to-Premium immediate prorated upgrade is complete. The reverse direction is
@@ -208,7 +214,7 @@ lifetime/subscription billing for the same course.
 ## Current implementation risks
 
 - Basic materials are not indexed when access later becomes Premium.
-- Stripe Test Clock lifecycle scenarios are not verified.
+- Stripe Test Clock downgrade and cancellation remain unverified.
 - Premium-to-Basic scheduled downgrade is not implemented.
 - Payment retention deadline still requires accountant confirmation before prod.
 

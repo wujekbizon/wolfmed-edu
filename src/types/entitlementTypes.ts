@@ -8,6 +8,7 @@ export type EntitlementSourceType =
 export type EnrollmentGrant = {
   courseSlug: string
   accessTier: string
+  sourceType?: EntitlementSourceType | null
   isActive: boolean
   enrolledAt: Date
   startsAt: Date | null
