@@ -5,6 +5,8 @@ export type BillingSubscription = {
   accessTier: PaymentOffer['accessTier']
   status: string
   currentPeriodEnd: Date | null
+  pendingAccessTier: PaymentOffer['accessTier'] | null
+  pendingChangeAt: Date | null
   cancelAtPeriodEnd: boolean
   cancelAt: Date | null
 }

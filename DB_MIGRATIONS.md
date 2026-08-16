@@ -424,7 +424,17 @@ Produkcja: Neon branch/backup, wersjonowana migracja expand, cleanup/backfill,
 deploy switch. Termin retencji `sale year + 6, 31 grudnia` jest tymczasowym
 założeniem z planu; przed prod wymaga potwierdzenia księgowego.
 
-### M13+ — (dopisuj kolejne zmiany tutaj)
+### M13 — Stripe: zaplanowany downgrade Premium do Basic
+*Status: kod gotowy 2026-08-15; migracja dev/prod niewykonana.*
+
+- `wolfmed_stripe_subscriptions` + nullable `schedule_id`, `pending_offer_key`,
+  `pending_access_tier`, `pending_price_id`, `pending_change_at`.
+- Unikalny nullable indeks `stripe_subscriptions_schedule_id_uq`.
+- Migracja jest addytywna, bez backfillu i bez kroku contract.
+- Dev: backup/branch → `pnpm db:push` → konfiguracja Portal → Test Clock.
+- Produkcja: wersjonowana migracja po backupie, przed wdrożeniem kodu.
+
+### M14+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

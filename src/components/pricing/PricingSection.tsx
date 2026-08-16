@@ -9,7 +9,10 @@ import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
 import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
-import type { PricingOfferStatusMap } from '@/types/paymentTypes'
+import type {
+  PricingOfferStatusMap,
+  SubscriptionPlanChange,
+} from '@/types/paymentTypes'
 
 // `subjectTitles` arrives as a prop rather than being read here:
 // SimplePathLayout is a client component, and importing CATEGORY_METADATA
@@ -19,11 +22,13 @@ export default function PricingSection({
   pricingOfferStatuses,
   subjectTitles,
   eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
 }: {
   pricing: NonNullable<PathData['pricing']>
   pricingOfferStatuses: PricingOfferStatusMap
   subjectTitles: string[]
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
+  subscriptionPlanChange: SubscriptionPlanChange | null
 }) {
   const groups = PLAN_COMPARISON[pricing.courseSlug] ?? []
 
@@ -45,6 +50,7 @@ export default function PricingSection({
             pricing={pricing}
             offerStatuses={pricingOfferStatuses}
             eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+            subscriptionPlanChange={subscriptionPlanChange}
           />
           {groups.length > 0 && <PlanComparisonToggle />}
         </div>

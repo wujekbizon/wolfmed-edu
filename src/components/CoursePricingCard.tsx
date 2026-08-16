@@ -2,13 +2,17 @@
 
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
-import { createSubscriptionUpgradePortalSession } from '@/actions/subscriptionUpgrade'
+import {
+  cancelSubscriptionPlanChange,
+  createSubscriptionPlanChangePortalSession,
+} from '@/actions/subscriptionPlanChange'
 import { PRICING_OFFER_STATUS_LABELS } from '@/constants/pricingOfferStatusLabels'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import SubmitButton from './SubmitButton'
 import FormError from './FormError'
 import CoursePricingDetails from './pricing/CoursePricingDetails'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import { formatPlDate } from '@/helpers/formatPlDate'
 import type { CoursePricingCardProps } from '@/types/paymentTypes'
 
 export default function CoursePricingCard({
@@ -21,16 +25,21 @@ export default function CoursePricingCard({
   badge,
   offerStatus,
   purchaseLabel,
+  subscriptionPlanChange,
 }: CoursePricingCardProps) {
-  const serverAction = offerStatus === 'portal_upgrade'
-    ? createSubscriptionUpgradePortalSession
-    : createCheckoutSession
+  const serverAction = offerStatus === 'scheduled_downgrade'
+    ? cancelSubscriptionPlanChange
+    : offerStatus === 'portal_upgrade' || offerStatus === 'portal_downgrade'
+      ? createSubscriptionPlanChangePortalSession
+      : createCheckoutSession
   const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
   const label = offerStatus === 'available' && purchaseLabel
     ? purchaseLabel
     : PRICING_OFFER_STATUS_LABELS[offerStatus]
-  const disabled = offerStatus !== 'available' && offerStatus !== 'portal_upgrade'
+  const enabledStatuses = ['available', 'portal_upgrade', 'portal_downgrade',
+    'scheduled_downgrade']
+  const disabled = !enabledStatuses.includes(offerStatus)
 
   return (
     <article className="h-full">
@@ -66,6 +75,16 @@ export default function CoursePricingCard({
           {offerStatus === 'portal_upgrade' && (
             <p className="mt-2 text-center text-xs text-slate-500">
               Stripe pokaże rozliczenie proporcjonalne przed potwierdzeniem.
+            </p>
+          )}
+          {offerStatus === 'portal_downgrade' && (
+            <p className="mt-2 text-center text-xs text-slate-500">
+              Premium pozostanie aktywny do końca opłaconego okresu.
+            </p>
+          )}
+          {offerStatus === 'scheduled_downgrade' && subscriptionPlanChange && (
+            <p className="mt-2 text-center text-xs text-slate-500">
+              Basic od {formatPlDate(subscriptionPlanChange.effectiveAt)}.
             </p>
           )}
         </div>

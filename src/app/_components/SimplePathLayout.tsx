@@ -16,6 +16,7 @@ export default function SimplePathLayout({
   pricingOfferStatuses,
   subjectTitles,
   eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
   story,
   careerPath
 }: PathLayoutProps) {
@@ -55,6 +56,7 @@ export default function SimplePathLayout({
                 pricingOfferStatuses={pricingOfferStatuses}
                 subjectTitles={subjectTitles}
                 eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+                subscriptionPlanChange={subscriptionPlanChange}
               />
             </FadeInSection>
           )}

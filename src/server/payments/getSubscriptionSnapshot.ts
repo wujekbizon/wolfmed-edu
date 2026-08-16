@@ -1,5 +1,6 @@
 import 'server-only'
 import { getStripeObjectId } from '@/helpers/getStripeObjectId'
+import { getScheduledSubscriptionChange } from '@/helpers/getScheduledSubscriptionChange'
 import stripe from '@/lib/stripeClient'
 import type { SubscriptionSnapshot } from '@/types/paymentTypes'
 
@@ -13,11 +14,15 @@ export async function getSubscriptionSnapshot(
   }
 
   const invoiceId = getStripeObjectId(subscription.latest_invoice)
-  const invoice = invoiceId
-    ? await stripe.invoices.retrieve(invoiceId, {
-        expand: ['payments.data.payment.payment_intent'],
-      })
-    : null
+  const scheduleId = getStripeObjectId(subscription.schedule)
+  const [invoice, schedule] = await Promise.all([
+    invoiceId
+      ? stripe.invoices.retrieve(invoiceId, {
+          expand: ['payments.data.payment.payment_intent'],
+        })
+      : null,
+    scheduleId ? stripe.subscriptionSchedules.retrieve(scheduleId) : null,
+  ])
   const customerId = getStripeObjectId(subscription.customer)
   if (!customerId) throw new Error(`Subscription ${subscriptionId} has no Customer`)
   const invoicePayment = invoice?.payments?.data.find(
@@ -34,6 +39,12 @@ export async function getSubscriptionSnapshot(
     currency: item.price.currency,
     currentPeriodStart: new Date(item.current_period_start * 1000),
     currentPeriodEnd: new Date(item.current_period_end * 1000),
+    scheduleId,
+    scheduledChange: getScheduledSubscriptionChange(
+      schedule,
+      item.price.id,
+      new Date(item.current_period_end * 1000)
+    ),
     cancelAtPeriodEnd: subscription.cancel_at_period_end,
     cancelAt: subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null,
     canceledAt: subscription.canceled_at

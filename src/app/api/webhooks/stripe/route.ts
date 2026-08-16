@@ -5,10 +5,12 @@ import stripe from '@/lib/stripeClient'
 import { processStripeCheckoutEvent } from '@/server/payments/processStripeCheckoutEvent'
 import { processStripePaymentLifecycleEvent } from '@/server/payments/processStripePaymentLifecycleEvent'
 import { processStripeSubscriptionEvent } from '@/server/payments/processStripeSubscriptionEvent'
+import { processStripeSubscriptionScheduleEvent } from '@/server/payments/processStripeSubscriptionScheduleEvent'
 import type {
   StripeCheckoutEventType,
   StripePaymentLifecycleEventType,
   StripeSubscriptionEventType,
+  StripeSubscriptionScheduleEventType,
 } from '@/types/paymentTypes'
 
 const checkoutEvents = new Set<StripeCheckoutEventType>([
@@ -32,6 +34,15 @@ const subscriptionEvents = new Set<StripeSubscriptionEventType>([
   'customer.subscription.deleted',
   'invoice.paid',
   'invoice.payment_failed',
+])
+
+const subscriptionScheduleEvents = new Set<StripeSubscriptionScheduleEventType>([
+  'subscription_schedule.created',
+  'subscription_schedule.updated',
+  'subscription_schedule.released',
+  'subscription_schedule.canceled',
+  'subscription_schedule.completed',
+  'subscription_schedule.aborted',
 ])
 
 export async function POST(req: Request) {
@@ -59,6 +70,10 @@ export async function POST(req: Request) {
       await processStripePaymentLifecycleEvent(event)
     } else if (subscriptionEvents.has(event.type as StripeSubscriptionEventType)) {
       await processStripeSubscriptionEvent(event)
+    } else if (subscriptionScheduleEvents.has(
+      event.type as StripeSubscriptionScheduleEventType
+    )) {
+      await processStripeSubscriptionScheduleEvent(event)
     }
     return NextResponse.json({ received: true })
   } catch (error) {

@@ -4,12 +4,14 @@ import type {
   PaymentOffer,
   PaymentOfferKey,
 } from '@/types/paymentOfferTypes'
+import type { SubscriptionPlanChange } from '@/types/subscriptionTypes'
 
 export type PricingOfferStatus =
   | 'available'
   | 'current_subscription'
-  | 'included_subscription'
   | 'portal_upgrade'
+  | 'portal_downgrade'
+  | 'scheduled_downgrade'
   | 'portal_upgrade_unavailable'
   | 'active_subscription'
   | 'owned_lifetime'
@@ -47,6 +49,7 @@ export type CoursePricingCardProps = Omit<CoursePricingDetailsProps, 'isPremium'
   isPremium?: boolean
   offerStatus: PricingOfferStatus
   purchaseLabel?: string
+  subscriptionPlanChange?: SubscriptionPlanChange | null
 }
 
 export type CourseHeroActionProps = {

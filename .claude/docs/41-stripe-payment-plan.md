@@ -1,14 +1,14 @@
 # Stripe payments and subscriptions plan
 
-Status: core implementation verified in development. Database migration, Stripe
-test configuration and manual lifetime/subscription flows are complete. Remaining
-work is listed in **Next session handoff**; this is not production-ready yet.
+Status: scheduled downgrade implementation, development schema and Stripe sandbox
+catalog/Portal setup are complete. Manual downgrade/cancellation acceptance,
+Premium library activation and production rollout remain.
 
 Branch: `codex/practical-exam-next`.
 
 Prepared: 2026-08-11.
 
-Updated: 2026-08-14.
+Updated: 2026-08-16.
 
 ## Progress
 
@@ -36,15 +36,28 @@ Updated: 2026-08-14.
 - [x] Subscription DB migration and Stripe sandbox configuration.
 - [x] Monthly purchase, upgrade, cancel, resume and terminal cleanup flows.
 - [x] Lifetime purchase, difference-price upgrade and invoice event routing.
-- [x] TypeScript check, 194 automated tests and `git diff --check`.
+- [x] TypeScript check, 201 automated tests and `git diff --check`.
 - [x] Permanent Clerk/Stripe account deletion and RODO retention workflow.
-- [ ] Stripe Test Clock renewal, failure, recovery, downgrade and cancellation.
-- [ ] Premium-to-Basic scheduled downgrade implementation and UI.
+- [x] Stripe Test Clock renewal, failed payment and recovery.
+- [x] Premium-to-Basic scheduled downgrade implementation, schema and UI.
+- [x] Shared recurring Products and course-scoped sandbox Portal configurations.
+- [ ] Stripe Test Clock downgrade, schedule release and cancellation acceptance.
+- [ ] Pielęgniarstwo plan-change isolation smoke test.
 - [ ] Durable Premium library activation job.
 
 ## Next session handoff
 
 Start the next session from this section. Preserve all completed work above.
+
+Immediate next work:
+
+1. Run the complete sandbox procedure in
+   [`43-stripe-subscription-testing-guide.md`](./43-stripe-subscription-testing-guide.md).
+2. Verify Opiekun schedule creation, release, recreation and clock transition.
+3. Verify period-end cancellation.
+4. Run the Pielęgniarstwo course-scoped Portal smoke test.
+5. Record acceptance results here.
+6. Implement durable Premium library activation after billing acceptance.
 
 ### Priority 0: permanent account deletion and RODO
 
@@ -140,9 +153,9 @@ Do not use an existing Stripe Customer: a Test Clock accepts only new Customers.
    payment state and immediate access revocation.
 7. Recovery: replace the card with `4242 4242 4242 4242`, retry the failed Invoice,
    and expect `invoice.paid`, the same payment row updated and access restored.
-8. After downgrade work below is implemented, schedule Premium-to-Basic and
-   advance the clock. Premium remains active through the paid period; Basic becomes
-   active at renewal without duplicate subscription or enrollment rows.
+8. Schedule Premium-to-Basic, release it once, recreate it and advance the clock.
+   Premium remains active through the paid period; Basic becomes active at renewal
+   without duplicate subscription or enrollment rows.
 9. Schedule cancellation and advance past the end date. Expect
    `customer.subscription.deleted`, inactive access and lifetime offers available.
 10. Inspect DB before finishing the simulation. Finishing deletes the clock's
@@ -157,7 +170,10 @@ cancellation remain pending.
 ### Priority 1: Premium-to-Basic downgrade
 
 Basic-to-Premium immediate prorated upgrade is complete. The reverse direction is
-not implemented in Wolfmed UI/server flow.
+implemented with canonical Subscription Schedule reads, pending local state,
+schedule webhooks, release UI and period-end transition handling. The additive dev
+migration and Stripe catalog/Portal configuration are complete. Test Clock
+acceptance remains.
 
 1. For a Premium monthly subscriber, show a clear Basic-card action such as
    `Przejdź na Basic od następnego okresu` instead of disabled `Masz Premium`.
@@ -214,8 +230,8 @@ lifetime/subscription billing for the same course.
 ## Current implementation risks
 
 - Basic materials are not indexed when access later becomes Premium.
-- Stripe Test Clock downgrade and cancellation remain unverified.
-- Premium-to-Basic scheduled downgrade is not implemented.
+- Stripe Test Clock downgrade, schedule release and cancellation remain unverified.
+- Pielęgniarstwo dedicated plan-change Portal remains unverified.
 - Payment retention deadline still requires accountant confirmation before prod.
 
 ## Server-first architecture

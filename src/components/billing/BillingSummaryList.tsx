@@ -27,6 +27,10 @@ export default function BillingSummaryList({ overview }: BillingSummaryListProps
             {billingDate && (
               <> · {billingDate.label} {formatPlDate(billingDate.date)}</>
             )}
+            {item.pendingAccessTier && item.pendingChangeAt && (
+              <> · zmiana na {item.pendingAccessTier === 'premium' ? 'Premium' : 'Basic'}{' '}
+                {formatPlDate(item.pendingChangeAt)}</>
+            )}
           </p>
         )
       })}

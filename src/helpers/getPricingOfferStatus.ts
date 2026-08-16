@@ -4,20 +4,25 @@ import type {
   LifetimeUpgradeGrant,
   PaymentOffer,
   PricingOfferStatus,
+  SubscriptionPlanChange,
 } from '@/types/paymentTypes'
 
 export function getPricingOfferStatus(
   grants: LifetimeUpgradeGrant[],
   offer: PaymentOffer,
   activeSubscription: LifetimeUpgradeGrant | undefined,
-  portalConfigured: boolean
+  portalConfigured: boolean,
+  planChange: SubscriptionPlanChange | null = null
 ): PricingOfferStatus {
   if (activeSubscription) {
     if (offer.purchaseModel === 'lifetime') return 'active_subscription'
     if (offer.accessTier === activeSubscription.accessTier) {
       return 'current_subscription'
     }
-    if (activeSubscription.accessTier === 'premium') return 'included_subscription'
+    if (activeSubscription.accessTier === 'premium') {
+      if (planChange?.targetOfferKey === offer.key) return 'scheduled_downgrade'
+      return portalConfigured ? 'portal_downgrade' : 'portal_upgrade_unavailable'
+    }
     return portalConfigured ? 'portal_upgrade' : 'portal_upgrade_unavailable'
   }
 

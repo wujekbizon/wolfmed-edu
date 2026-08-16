@@ -1,7 +1,7 @@
 import PaymentResultCard from '@/components/payments/PaymentResultCard'
 import { requireUser } from '@/helpers/requireUser'
 import { getVerifiedCheckoutResult } from '@/server/payments/getVerifiedCheckoutResult'
-import { getVerifiedSubscriptionUpgradeResult } from '@/server/payments/getVerifiedSubscriptionUpgradeResult'
+import { getVerifiedSubscriptionPlanChangeResult } from '@/server/payments/getVerifiedSubscriptionPlanChangeResult'
 import { CheckoutSessionIdSchema, SubscriptionIdSchema } from '@/server/schema'
 import type { SuccessSearchParams } from '@/types/paymentTypes'
 
@@ -37,7 +37,7 @@ export default async function VerifiedPaymentResult({
     )
   }
 
-  const result = await getVerifiedSubscriptionUpgradeResult(
+  const result = await getVerifiedSubscriptionPlanChangeResult(
     userId,
     subscription.data
   )

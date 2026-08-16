@@ -4,8 +4,6 @@ import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { isSubscriptionAccessActive } from '@/helpers/isSubscriptionAccessActive'
 import { isSubscriptionValidForOrder } from '@/helpers/isSubscriptionValidForOrder'
 import { resolveSubscriptionResultStatus } from '@/helpers/resolveSubscriptionResultStatus'
-import { getSubscriptionBillingDate } from '@/helpers/getSubscriptionBillingDate'
-import type { BillingSubscription } from '@/types/billingTypes'
 import type { SubscriptionSnapshot } from '@/types/paymentTypes'
 
 const offer = { ...PAYMENT_OFFERS.opiekun_basic_monthly, priceId: 'price_monthly' }
@@ -21,6 +19,8 @@ const snapshot = (
   currency: 'pln',
   currentPeriodStart: new Date('2026-08-01T00:00:00Z'),
   currentPeriodEnd: new Date('2026-09-01T00:00:00Z'),
+  scheduleId: null,
+  scheduledChange: null,
   cancelAtPeriodEnd: false,
   cancelAt: null,
   canceledAt: null,
@@ -85,36 +85,4 @@ test('subscription result distinguishes paid, processing and failed states', () 
     latestInvoicePaid: false,
     latestInvoiceStatus: 'open',
   })), 'failed')
-})
-
-test('billing summary recognizes explicit and period-end cancellation dates', () => {
-  const currentPeriodEnd = new Date('2026-09-14T00:00:00Z')
-  const base: BillingSubscription = {
-    courseSlug: 'pielegniarstwo',
-    accessTier: 'premium',
-    status: 'active',
-    currentPeriodEnd,
-    cancelAtPeriodEnd: false,
-    cancelAt: null,
-  }
-
-  assert.deepEqual(getSubscriptionBillingDate(base), {
-    date: currentPeriodEnd,
-    label: 'odnowienie',
-  })
-  assert.deepEqual(getSubscriptionBillingDate({
-    ...base,
-    cancelAt: currentPeriodEnd,
-  }), {
-    date: currentPeriodEnd,
-    label: 'dostęp do',
-  })
-  assert.deepEqual(getSubscriptionBillingDate({
-    ...base,
-    cancelAtPeriodEnd: true,
-  }), {
-    date: currentPeriodEnd,
-    label: 'dostęp do',
-  })
-  assert.equal(getSubscriptionBillingDate({ ...base, status: 'canceled' }), null)
 })

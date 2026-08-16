@@ -3,6 +3,7 @@ import type { PaymentOffer } from '@/types/paymentOfferTypes'
 
 export type CheckoutResultStatus =
   | 'paid'
+  | 'scheduled'
   | 'processing'
   | 'failed'
   | 'invalid'
@@ -13,10 +14,18 @@ export type PaymentResultOutcome =
   | 'subscription_purchase'
   | 'lifetime_upgrade'
   | 'subscription_upgrade'
+  | 'subscription_downgrade'
 
 export type CheckoutResult =
   | {
-      status: Exclude<CheckoutResultStatus, 'invalid' | 'unavailable'>
+      status: 'scheduled'
+      courseSlug: PaymentOffer['courseSlug']
+      accessTier: PaymentOffer['accessTier']
+      outcome: 'subscription_downgrade'
+      effectiveAt: Date
+    }
+  | {
+      status: Exclude<CheckoutResultStatus, 'invalid' | 'unavailable' | 'scheduled'>
       courseSlug: PaymentOffer['courseSlug']
       accessTier: PaymentOffer['accessTier']
       outcome: PaymentResultOutcome

@@ -65,13 +65,30 @@ test('Basic subscription upgrades through configured Portal only', () => {
   )
 })
 
-test('Premium subscription includes Basic and blocks lifetime', () => {
+test('Premium subscription offers a scheduled Basic downgrade', () => {
   const statuses = getPricingOfferStatuses(
     [grant({ sourceType: 'subscription', accessTier: 'premium' })],
     'opiekun-medyczny',
     true
   )
-  assert.equal(statuses.opiekun_basic_monthly, 'included_subscription')
+  assert.equal(statuses.opiekun_basic_monthly, 'portal_downgrade')
   assert.equal(statuses.opiekun_premium_monthly, 'current_subscription')
   assert.equal(statuses.opiekun_premium_lifetime, 'active_subscription')
+})
+
+test('scheduled downgrade is shown without reducing Premium access', () => {
+  const effectiveAt = new Date('2026-09-14T00:00:00Z')
+  const statuses = getPricingOfferStatuses(
+    [grant({ sourceType: 'subscription', accessTier: 'premium' })],
+    'opiekun-medyczny',
+    true,
+    {
+      courseSlug: 'opiekun-medyczny',
+      targetOfferKey: 'opiekun_basic_monthly',
+      targetAccessTier: 'basic',
+      effectiveAt,
+    }
+  )
+  assert.equal(statuses.opiekun_basic_monthly, 'scheduled_downgrade')
+  assert.equal(statuses.opiekun_premium_monthly, 'current_subscription')
 })

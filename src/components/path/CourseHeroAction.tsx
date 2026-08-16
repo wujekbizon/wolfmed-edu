@@ -34,7 +34,6 @@ export default function CourseHeroAction({
   }
 
   const hasAccess = hasActiveSubscription ||
-    basicStatus === 'included_subscription' ||
     basicStatus === 'lifetime_access'
 
   return (

@@ -26,7 +26,7 @@ Wolfmed if the value changed.
 3. Forward every Stripe event handled by Wolfmed:
 
 ```bash
-stripe listen --events checkout.session.completed,checkout.session.async_payment_succeeded,checkout.session.async_payment_failed,invoice.paid,invoice.payment_failed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,charge.refunded,refund.created,refund.updated,refund.failed,charge.dispute.created,charge.dispute.closed --forward-to http://localhost:3000/api/webhooks/stripe
+stripe listen --events checkout.session.completed,checkout.session.async_payment_succeeded,checkout.session.async_payment_failed,invoice.paid,invoice.payment_failed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,subscription_schedule.created,subscription_schedule.updated,subscription_schedule.released,subscription_schedule.canceled,subscription_schedule.completed,subscription_schedule.aborted,charge.refunded,refund.created,refund.updated,refund.failed,charge.dispute.created,charge.dispute.closed --forward-to http://localhost:3000/api/webhooks/stripe
 ```
 
 Copy the listener's `whsec_...` value to `STRIPE_WEBHOOK_SECRET`, then restart

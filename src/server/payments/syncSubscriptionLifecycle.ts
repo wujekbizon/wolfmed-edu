@@ -12,6 +12,7 @@ import {
 import { upsertSubscriptionEnrollment } from '@/server/payments/upsertSubscriptionEnrollment'
 import { upsertSubscriptionPayment } from '@/server/payments/upsertSubscriptionPayment'
 import { upsertSubscriptionRecord } from '@/server/payments/upsertSubscriptionRecord'
+import { getVerifiedScheduledSubscriptionChange } from '@/server/payments/getVerifiedScheduledSubscriptionChange'
 import type {
   SubscriptionCheckoutOrder,
   SubscriptionSnapshot,
@@ -26,6 +27,7 @@ export async function syncSubscriptionLifecycle(
   offer: VerifiedPaymentOffer
 ): Promise<void> {
   const active = isSubscriptionAccessActive(snapshot)
+  const scheduledChange = await getVerifiedScheduledSubscriptionChange(snapshot, offer)
   const ownerUserId = canGrantPaymentAccess(order.userId, order.ownerDeletedAt)
     ? order.userId
     : null
@@ -52,7 +54,14 @@ export async function syncSubscriptionLifecycle(
     })
     if (!event) return
 
-    const subscription = await upsertSubscriptionRecord(tx, snapshot, order, offer, now)
+    const subscription = await upsertSubscriptionRecord(
+      tx,
+      snapshot,
+      order,
+      offer,
+      scheduledChange,
+      now
+    )
     await upsertSubscriptionPayment(tx, snapshot, order, offer, now)
     if (ownerUserId) {
       await upsertSubscriptionEnrollment(tx, snapshot, order, offer, active, now)

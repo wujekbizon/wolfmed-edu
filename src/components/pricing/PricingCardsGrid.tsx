@@ -12,6 +12,7 @@ import type {
   CheckoutPurchaseModel,
   LifetimeUpgradeOfferKey,
   PricingOfferStatusMap,
+  SubscriptionPlanChange,
 } from '@/types/paymentTypes'
 
 type Pricing = NonNullable<PathData['pricing']>
@@ -20,10 +21,12 @@ export default function PricingCardsGrid({
   pricing,
   offerStatuses,
   eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
 }: {
   pricing: Pricing
   offerStatuses: PricingOfferStatusMap
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
+  subscriptionPlanChange: SubscriptionPlanChange | null
 }) {
   const [purchaseModel, setPurchaseModel] = useState<CheckoutPurchaseModel>('subscription')
   const upgradeOffer = eligibleLifetimeUpgradeOfferKey
@@ -66,6 +69,7 @@ export default function PricingCardsGrid({
               features={tier.features}
               isPremium={isPremium}
               offerStatus={offerStatus}
+              subscriptionPlanChange={subscriptionPlanChange}
               {...(usesUpgradeOffer
                 ? { badge: 'Dopłata do Premium', purchaseLabel: 'Ulepsz do Premium' }
                 : tier.badge ? { badge: tier.badge } : {})}

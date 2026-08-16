@@ -158,6 +158,13 @@ export const subscriptions = createTable("stripe_subscriptions", {
   status: varchar("status", { length: 50 }).notNull().default("incomplete"),
   currentPeriodStart: timestamp("current_period_start"),
   currentPeriodEnd: timestamp("current_period_end"),
+  scheduleId: varchar("schedule_id", { length: 256 }),
+  pendingOfferKey: varchar("pending_offer_key", { length: 100 })
+    .$type<PaymentOfferKey>(),
+  pendingAccessTier: varchar("pending_access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  pendingPriceId: varchar("pending_price_id", { length: 256 }),
+  pendingChangeAt: timestamp("pending_change_at"),
   cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
   cancelAt: timestamp("cancel_at"),
   canceledAt: timestamp("canceled_at"),
@@ -169,6 +176,7 @@ export const subscriptions = createTable("stripe_subscriptions", {
 }, (table) => [
   uniqueIndex("stripe_subscriptions_subscription_id_uq").on(table.subscriptionId),
   uniqueIndex("stripe_subscriptions_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_subscriptions_schedule_id_uq").on(table.scheduleId),
   index("stripe_subscriptions_user_id_idx").on(table.userId),
   index("stripe_subscriptions_user_course_idx").on(table.userId, table.courseSlug),
   index("stripe_subscriptions_customer_id_idx").on(table.customerId),

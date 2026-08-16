@@ -3,13 +3,11 @@ import SimplePathLayout from '@/app/_components/SimplePathLayout'
 import RichPathLayout from '@/app/_components/RichPathLayout'
 import { careerPathsData } from '@/constants/careerPathsData'
 import { getCourseSubjectTitles } from '@/helpers/getCourseSubjectTitles'
-import { getEligibleLifetimeUpgradeOfferKey } from '@/helpers/getEligibleLifetimeUpgradeOfferKey'
-import { getPricingOfferStatuses } from '@/helpers/getPricingOfferStatuses'
-import { STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE } from '@/constants/stripePortalConfigurations'
-import { getUserEnrollmentsAction } from '@/actions/course-actions'
+import { getCoursePricingContext } from '@/server/payments/getCoursePricingContext'
 import type {
   LifetimeUpgradeOfferKey,
   PricingOfferStatusMap,
+  SubscriptionPlanChange,
 } from '@/types/paymentTypes'
 
 export const dynamic = 'force-dynamic'
@@ -42,10 +40,12 @@ function PathPageComponent({
   slug,
   pricingOfferStatuses,
   eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
 }: {
   slug: string
   pricingOfferStatuses: PricingOfferStatusMap
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
+  subscriptionPlanChange: SubscriptionPlanChange | null
 }) {
   const data = careerPathsData[slug]
 
@@ -60,6 +60,7 @@ function PathPageComponent({
       {...data}
       pricingOfferStatuses={pricingOfferStatuses}
       eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+      subscriptionPlanChange={subscriptionPlanChange}
       subjectTitles={getCourseSubjectTitles(data.pricing?.courseSlug ?? slug)}
     />
   )
@@ -71,26 +72,21 @@ export default async function PathPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { enrollmentGrants } = await getUserEnrollmentsAction()
   const pricing = careerPathsData[slug]?.pricing
-  const eligibleLifetimeUpgradeOfferKey = pricing
-    ? getEligibleLifetimeUpgradeOfferKey(enrollmentGrants, pricing.courseSlug)
-    : null
-  const pricingOfferStatuses = pricing
-    ? getPricingOfferStatuses(
-        enrollmentGrants,
-        pricing.courseSlug,
-        Boolean(process.env[
-          STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE[pricing.courseSlug]
-        ])
-      )
-    : {}
+  const pricingContext = pricing
+    ? await getCoursePricingContext(pricing.courseSlug)
+    : {
+        eligibleLifetimeUpgradeOfferKey: null,
+        pricingOfferStatuses: {},
+        subscriptionPlanChange: null,
+      }
 
   return (
     <PathPageComponent
       slug={slug}
-      pricingOfferStatuses={pricingOfferStatuses}
-      eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+      pricingOfferStatuses={pricingContext.pricingOfferStatuses}
+      eligibleLifetimeUpgradeOfferKey={pricingContext.eligibleLifetimeUpgradeOfferKey}
+      subscriptionPlanChange={pricingContext.subscriptionPlanChange}
     />
   )
 }

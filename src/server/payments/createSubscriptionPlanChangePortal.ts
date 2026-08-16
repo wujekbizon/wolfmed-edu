@@ -5,6 +5,7 @@ import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import { STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE } from '@/constants/stripePortalConfigurations'
 import { TERMINAL_SUBSCRIPTION_STATUSES } from '@/constants/subscriptionStatus'
 import { isSubscriptionAccessActive } from '@/helpers/isSubscriptionAccessActive'
+import { isPortalPlanChangeConfigured } from '@/helpers/isPortalPlanChangeConfigured'
 import stripe from '@/lib/stripeClient'
 import { db } from '@/server/db/index'
 import { subscriptions } from '@/server/db/schema'
@@ -13,42 +14,50 @@ import { getVerifiedSubscriptionOffer } from '@/server/payments/getVerifiedSubsc
 import { getVerifiedStripeOffer } from '@/server/stripeOffer'
 import type { PaymentOfferKey } from '@/types/paymentTypes'
 
-export async function createSubscriptionUpgradePortal(
+export async function createSubscriptionPlanChangePortal(
   userId: string,
   targetOfferKey: PaymentOfferKey
 ): Promise<string | null> {
   const targetOffer = PAYMENT_OFFERS[targetOfferKey]
-  if (targetOffer.purchaseModel !== 'subscription' || targetOffer.accessTier !== 'premium') {
-    return null
-  }
+  if (targetOffer.purchaseModel !== 'subscription') return null
 
-  const [localSubscription] = await db.select()
-    .from(subscriptions)
-    .where(and(
-      eq(subscriptions.userId, userId),
-      eq(subscriptions.courseSlug, targetOffer.courseSlug),
-      notInArray(subscriptions.status, [...TERMINAL_SUBSCRIPTION_STATUSES])
-    ))
-    .orderBy(desc(subscriptions.createdAt))
-    .limit(1)
-  if (!localSubscription) return null
+  const [local] = await db.select().from(subscriptions).where(and(
+    eq(subscriptions.userId, userId),
+    eq(subscriptions.courseSlug, targetOffer.courseSlug),
+    notInArray(subscriptions.status, [...TERMINAL_SUBSCRIPTION_STATUSES])
+  )).orderBy(desc(subscriptions.createdAt)).limit(1)
+  if (!local) return null
 
-  const snapshot = await getSubscriptionSnapshot(localSubscription.subscriptionId)
-  const currentOffer = await getVerifiedSubscriptionOffer(snapshot.priceId)
+  const snapshot = await getSubscriptionSnapshot(local.subscriptionId)
+  const [currentOffer, verifiedTarget] = await Promise.all([
+    getVerifiedSubscriptionOffer(snapshot.priceId),
+    getVerifiedStripeOffer(targetOfferKey),
+  ])
+  const validDirection =
+    (currentOffer.accessTier === 'basic' && targetOffer.accessTier === 'premium') ||
+    (currentOffer.accessTier === 'premium' && targetOffer.accessTier === 'basic')
   if (
     !isSubscriptionAccessActive(snapshot) ||
-    snapshot.customerId !== localSubscription.customerId ||
+    snapshot.scheduleId ||
+    snapshot.customerId !== local.customerId ||
     currentOffer.courseSlug !== targetOffer.courseSlug ||
-    currentOffer.accessTier !== 'basic'
+    currentOffer.productId !== verifiedTarget.productId ||
+    !validDirection
   ) return null
 
-  const configurationEnv = STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE[
-    targetOffer.courseSlug
-  ]
+  const configurationEnv = STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE[targetOffer.courseSlug]
   const configuration = process.env[configurationEnv]
   if (!configuration) throw new Error(`Missing Stripe Portal configuration: ${configurationEnv}`)
+  const portalConfiguration = await stripe.billingPortal.configurations.retrieve(configuration)
+  const downgrade = currentOffer.accessTier === 'premium'
+  if (!isPortalPlanChangeConfigured(
+    portalConfiguration,
+    currentOffer.productId,
+    currentOffer.priceId,
+    verifiedTarget.priceId,
+    downgrade
+  )) return null
 
-  const verifiedTarget = await getVerifiedStripeOffer(targetOfferKey)
   const courseUrl = `${process.env.NEXT_PUBLIC_APP_URL}/kierunki/${targetOffer.courseSlug}#${PRICING_ANCHOR}`
   const successUrl = `${process.env.NEXT_PUBLIC_APP_URL}/success?subscription_id=${encodeURIComponent(snapshot.id)}`
   const session = await stripe.billingPortal.sessions.create({

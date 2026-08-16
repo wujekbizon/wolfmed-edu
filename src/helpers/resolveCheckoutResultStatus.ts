@@ -9,7 +9,7 @@ export function resolveCheckoutResultStatus({
   paymentStatus,
   sessionStatus,
   orderStatus,
-}: CheckoutResultResolution): CheckoutResultStatus {
+}: CheckoutResultResolution): Exclude<CheckoutResultStatus, 'scheduled' | 'unavailable'> {
   if (currentUserId !== checkoutUserId) return 'invalid'
   if (paymentStatus === 'paid') return 'paid'
   if (orderStatus === 'FAILED' || sessionStatus === 'expired') return 'failed'

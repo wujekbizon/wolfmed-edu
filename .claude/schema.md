@@ -101,6 +101,9 @@ Manages recurring Stripe subscriptions.
   paymentStatus: varchar(50) (not null)
   status: varchar(50) (not null)
   currentPeriodStart, currentPeriodEnd: timestamp
+  scheduleId: varchar(256) (unique, nullable)
+  pendingOfferKey, pendingAccessTier, pendingPriceId: varchar (nullable)
+  pendingChangeAt: timestamp (nullable)
   cancelAtPeriodEnd: boolean
   cancelAt, canceledAt, endedAt: timestamp
   ownerDeletedAt, cleanupAfter: timestamp (nullable)

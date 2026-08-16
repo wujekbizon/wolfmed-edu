@@ -6,7 +6,7 @@ import type {
 } from '@/types/paymentTypes'
 
 export const PAYMENT_RESULT_CONTENT: Record<
-  CheckoutResultStatus,
+  Exclude<CheckoutResultStatus, 'scheduled'>,
   PaymentResultContent
 > = {
   paid: {
@@ -69,6 +69,19 @@ export const PAYMENT_SUCCESS_CONTENT: Record<
     symbol: '✓',
     tone: 'bg-emerald-50 text-emerald-700',
   },
+  subscription_downgrade: {
+    title: 'Plan Basic jest aktywny',
+    description: 'Subskrypcja została zmieniona na plan Basic.',
+    symbol: '✓',
+    tone: 'bg-emerald-50 text-emerald-700',
+  },
+}
+
+export const PAYMENT_SCHEDULED_CONTENT: PaymentResultContent = {
+  title: 'Zmiana planu zaplanowana',
+  description: 'Premium pozostaje aktywny do końca opłaconego okresu.',
+  symbol: '✓',
+  tone: 'bg-emerald-50 text-emerald-700',
 }
 
 export const PAYMENT_COURSE_TITLES: Record<PaymentOffer['courseSlug'], string> = {

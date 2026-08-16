@@ -44,4 +44,7 @@ export type PaymentOffer = {
     | 'STRIPE_PIELEGNIARSTWO_PREMIUM_MONTHLY_PRICE_ID'
 }
 
-export type VerifiedPaymentOffer = PaymentOffer & { priceId: string }
+export type VerifiedPaymentOffer = PaymentOffer & {
+  priceId: string
+  productId: string
+}

@@ -7,11 +7,12 @@ import { db } from '@/server/db/index'
 import { subscriptions } from '@/server/db/schema'
 import { getCheckoutOrderById } from '@/server/payments/checkoutOrders'
 import { getSubscriptionSnapshot } from '@/server/payments/getSubscriptionSnapshot'
+import { getVerifiedScheduledSubscriptionChange } from '@/server/payments/getVerifiedScheduledSubscriptionChange'
 import { getVerifiedSubscriptionOffer } from '@/server/payments/getVerifiedSubscriptionOffer'
 import { syncSubscriptionLifecycle } from '@/server/payments/syncSubscriptionLifecycle'
 import type { CheckoutResult } from '@/types/paymentTypes'
 
-export async function getVerifiedSubscriptionUpgradeResult(
+export async function getVerifiedSubscriptionPlanChangeResult(
   userId: string,
   subscriptionId: string
 ): Promise<CheckoutResult> {
@@ -29,33 +30,44 @@ export async function getVerifiedSubscriptionUpgradeResult(
     if (!order || order.userId !== userId) return { status: 'invalid' }
 
     const offer = await getVerifiedSubscriptionOffer(snapshot.priceId)
-    const valid = offer.accessTier === 'premium' && isSubscriptionValidForOrder(
-      snapshot,
-      {
-        orderId: order.id,
-        customerId: order.stripeCustomerId,
-        courseSlug: order.courseSlug,
-        purchaseModel: order.purchaseModel,
-        offer,
-      }
-    )
-    if (!valid) return { status: 'invalid' }
+    if (!isSubscriptionValidForOrder(snapshot, {
+      orderId: order.id,
+      customerId: order.stripeCustomerId,
+      courseSlug: order.courseSlug,
+      purchaseModel: order.purchaseModel,
+      offer,
+    })) return { status: 'invalid' }
 
     const status = resolveSubscriptionResultStatus(snapshot)
     if (status !== 'failed') {
-      const resultId = `success:upgrade:${snapshot.id}:${snapshot.latestInvoiceId ?? snapshot.priceId}`
+      const marker = snapshot.scheduledChange
+        ? `${snapshot.scheduledChange.scheduleId}:${snapshot.scheduledChange.priceId}:${snapshot.scheduledChange.effectiveAt.getTime()}`
+        : snapshot.latestInvoiceId ?? snapshot.priceId
+      const resultId = `success:change:${snapshot.id}:${marker}`
       await syncSubscriptionLifecycle(resultId, 'portal.subscription.updated', snapshot, order, offer)
     }
 
+    const scheduled = await getVerifiedScheduledSubscriptionChange(snapshot, offer)
+    if (status === 'paid' && scheduled) {
+      return {
+        status: 'scheduled',
+        courseSlug: scheduled.offer.courseSlug,
+        accessTier: scheduled.offer.accessTier,
+        outcome: 'subscription_downgrade',
+        effectiveAt: scheduled.effectiveAt,
+      }
+    }
     return {
       status,
       courseSlug: offer.courseSlug,
       accessTier: offer.accessTier,
-      outcome: 'subscription_upgrade',
+      outcome: offer.accessTier === 'premium'
+        ? 'subscription_upgrade'
+        : 'subscription_downgrade',
     }
   } catch (error) {
     if (isStripeInvalidRequestError(error)) return { status: 'invalid' }
-    console.error(`Subscription upgrade verification failed for ${subscriptionId}:`, error)
+    console.error(`Subscription change verification failed for ${subscriptionId}:`, error)
     return { status: 'unavailable' }
   }
 }

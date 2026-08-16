@@ -21,5 +21,8 @@ export async function getVerifiedStripeOffer(offerKey: PaymentOfferKey) {
     throw new Error(`Invalid Stripe Price configuration: ${offer.priceEnvName}`)
   }
 
-  return { ...offer, priceId }
+  const productId = typeof price.product === 'string'
+    ? price.product
+    : price.product.id
+  return { ...offer, priceId, productId }
 }

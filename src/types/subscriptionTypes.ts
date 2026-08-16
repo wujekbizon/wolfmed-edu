@@ -1,6 +1,8 @@
 import type {
   CheckoutPurchaseModel,
   PaymentOffer,
+  PaymentOfferKey,
+  VerifiedPaymentOffer,
 } from '@/types/paymentOfferTypes'
 
 export type SubscriptionCheckoutEligibility = 'ALLOWED' | 'ALREADY_OWNED'
@@ -12,6 +14,32 @@ export type StripeSubscriptionEventType =
   | 'invoice.paid'
   | 'invoice.payment_failed'
 
+export type StripeSubscriptionScheduleEventType =
+  | 'subscription_schedule.created'
+  | 'subscription_schedule.updated'
+  | 'subscription_schedule.released'
+  | 'subscription_schedule.canceled'
+  | 'subscription_schedule.completed'
+  | 'subscription_schedule.aborted'
+
+export type ScheduledSubscriptionChangeSnapshot = {
+  scheduleId: string
+  priceId: string
+  effectiveAt: Date
+}
+
+export type VerifiedScheduledSubscriptionChange =
+  ScheduledSubscriptionChangeSnapshot & {
+    offer: VerifiedPaymentOffer
+  }
+
+export type SubscriptionPlanChange = {
+  courseSlug: PaymentOffer['courseSlug']
+  targetOfferKey: PaymentOfferKey
+  targetAccessTier: PaymentOffer['accessTier']
+  effectiveAt: Date
+}
+
 export type SubscriptionSnapshot = {
   id: string
   itemId: string
@@ -22,6 +50,8 @@ export type SubscriptionSnapshot = {
   currency: string
   currentPeriodStart: Date
   currentPeriodEnd: Date
+  scheduleId: string | null
+  scheduledChange: ScheduledSubscriptionChangeSnapshot | null
   cancelAtPeriodEnd: boolean
   cancelAt: Date | null
   canceledAt: Date | null

@@ -5,12 +5,14 @@ import type {
   LifetimeUpgradeGrant,
   PaymentOffer,
   PricingOfferStatusMap,
+  SubscriptionPlanChange,
 } from '@/types/paymentTypes'
 
 export function getPricingOfferStatuses(
   grants: LifetimeUpgradeGrant[],
   courseSlug: PaymentOffer['courseSlug'],
-  portalConfigured: boolean
+  portalConfigured: boolean,
+  planChange: SubscriptionPlanChange | null = null
 ): PricingOfferStatusMap {
   const activeSubscription = getEffectiveEnrollmentGrants(
     grants.filter((grant) => grant.sourceType === 'subscription')
@@ -21,7 +23,13 @@ export function getPricingOfferStatuses(
       .filter((offer) => offer.courseSlug === courseSlug)
       .map((offer) => [
         offer.key,
-        getPricingOfferStatus(grants, offer, activeSubscription, portalConfigured),
+        getPricingOfferStatus(
+          grants,
+          offer,
+          activeSubscription,
+          portalConfigured,
+          planChange
+        ),
       ])
   ) as PricingOfferStatusMap
 }

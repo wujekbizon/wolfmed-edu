@@ -5,6 +5,7 @@ import type {
   SubscriptionCheckoutOrder,
   SubscriptionSnapshot,
   VerifiedPaymentOffer,
+  VerifiedScheduledSubscriptionChange,
 } from '@/types/paymentTypes'
 import { canGrantPaymentAccess } from '@/helpers/canGrantPaymentAccess'
 import { getAccountDeletionCleanupAfter } from '@/helpers/getAccountDeletionCleanupAfter'
@@ -14,6 +15,7 @@ export async function upsertSubscriptionRecord(
   snapshot: SubscriptionSnapshot,
   order: SubscriptionCheckoutOrder,
   offer: VerifiedPaymentOffer,
+  scheduledChange: VerifiedScheduledSubscriptionChange | null,
   now: Date
 ) {
   const canGrantAccess = canGrantPaymentAccess(order.userId, order.ownerDeletedAt)
@@ -32,6 +34,11 @@ export async function upsertSubscriptionRecord(
     status: snapshot.status,
     currentPeriodStart: snapshot.currentPeriodStart,
     currentPeriodEnd: snapshot.currentPeriodEnd,
+    scheduleId: snapshot.scheduleId,
+    pendingOfferKey: scheduledChange?.offer.key ?? null,
+    pendingAccessTier: scheduledChange?.offer.accessTier ?? null,
+    pendingPriceId: scheduledChange?.priceId ?? null,
+    pendingChangeAt: scheduledChange?.effectiveAt ?? null,
     cancelAtPeriodEnd: snapshot.cancelAtPeriodEnd,
     cancelAt: snapshot.cancelAt,
     canceledAt: snapshot.canceledAt,

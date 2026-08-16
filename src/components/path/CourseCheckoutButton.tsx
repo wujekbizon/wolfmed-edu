@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
-import { createSubscriptionUpgradePortalSession } from '@/actions/subscriptionUpgrade'
+import { createSubscriptionPlanChangePortalSession } from '@/actions/subscriptionPlanChange'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
@@ -19,7 +19,7 @@ export default function CourseCheckoutButton({
   label?: string
 }) {
   const serverAction = offerStatus === 'portal_upgrade'
-    ? createSubscriptionUpgradePortalSession
+    ? createSubscriptionPlanChangePortalSession
     : createCheckoutSession
   const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
