@@ -112,8 +112,8 @@ RETENTION                                   ▼
   revoked >30d                     isSelfStateQuestion → answerFromMemory
                                         Flash-Lite, NO corpus retrieval
 ERASE
-eraseUserMemory ← Clerk user.deleted
-  tombstone facts/episodes, hard-delete preferences, one transaction
+deleteUserAccount ← Clerk user.deleted
+  delete Stripe Customer/files → pseudonymize billing/memory → delete user last
 ```
 
 **Memory is never evidence.** It describes the student, not the subject.

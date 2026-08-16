@@ -15,6 +15,15 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 import type { Diagnoza } from "@/types/diagnozyTypes"
+import type {
+  CheckoutOrderStatus,
+  CheckoutPurchaseModel,
+  EntitlementSourceType,
+  PaymentDisputeStatus,
+  PaymentOffer,
+  PaymentOfferKey,
+  PaymentRefundStatus,
+} from "@/types/paymentTypes"
 
 interface TestMeta {
   course: string;
@@ -47,46 +56,149 @@ export const users = createTable(
   ]
 )
 
+export const checkoutOrders = createTable("stripe_checkout_orders", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("user_id", { length: 256 }),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>().notNull(),
+  courseSlug: varchar("course_slug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>()
+    .notNull(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>()
+    .notNull(),
+  stripePriceId: varchar("stripe_price_id", { length: 256 }).notNull(),
+  amountTotal: integer("amount_total").notNull(),
+  currency: currencyEnum("currency").notNull(),
+  purchaseModel: varchar("purchase_model", { length: 32 })
+    .$type<CheckoutPurchaseModel>()
+    .default("lifetime")
+    .notNull(),
+  status: varchar("status", { length: 32 })
+    .$type<CheckoutOrderStatus>()
+    .default("CREATING")
+    .notNull(),
+  deduplicationKey: varchar("deduplication_key", { length: 512 }),
+  stripeSessionId: varchar("stripe_session_id", { length: 256 }),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("checkout_orders_active_dedup_uq").on(table.deduplicationKey),
+  uniqueIndex("checkout_orders_session_id_uq").on(table.stripeSessionId),
+  index("checkout_orders_user_id_idx").on(table.userId),
+  index("checkout_orders_status_idx").on(table.status),
+  index("checkout_orders_expires_at_idx").on(table.expiresAt),
+  index("checkout_orders_cleanup_after_idx").on(table.cleanupAfter),
+])
+
 export const payments = createTable("stripe_payments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
+  accessTier: varchar("access_tier", { length: 50 }),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   courseSlug: varchar("courseSlug", { length: 100 }),
   stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
   sessionId: varchar("sessionId", { length: 256 }),
   paymentIntentId: varchar("paymentIntentId", { length: 256 }),
+  chargeId: varchar("charge_id", { length: 256 }),
+  invoiceId: varchar("invoice_id", { length: 256 }),
+  subscriptionId: varchar("subscription_id", { length: 256 }),
+  amountRefunded: integer("amount_refunded").default(0).notNull(),
+  refundStatus: varchar("refund_status", { length: 32 })
+    .$type<PaymentRefundStatus>()
+    .default("none")
+    .notNull(),
+  disputeStatus: varchar("dispute_status", { length: 32 })
+    .$type<PaymentDisputeStatus>()
+    .default("none")
+    .notNull(),
+  retentionUntil: timestamp("retention_until"),
+  pseudonymizedAt: timestamp("pseudonymized_at"),
   createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
+  uniqueIndex("stripe_payments_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_payments_intent_id_uq").on(table.paymentIntentId),
+  uniqueIndex("stripe_payments_charge_id_uq").on(table.chargeId),
+  uniqueIndex("stripe_payments_invoice_id_uq").on(table.invoiceId),
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
   index("stripe_payments_customer_id_idx").on(table.stripeCustomerId),
+  index("stripe_payments_subscription_id_idx").on(table.subscriptionId),
+  index("stripe_payments_retention_until_idx").on(table.retentionUntil),
 ])
 
 export const subscriptions = createTable("stripe_subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 }).notNull().unique(),
-  sessionId: varchar("sessionId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  sessionId: varchar("sessionId", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
   customerId: varchar("customerId", { length: 256 }).notNull(),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
-  invoiceId: varchar("invoiceId", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
+  invoiceId: varchar("invoiceId", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   subscriptionId: varchar("subscriptionId", { length: 256 }).notNull(),
-  courseSlug: varchar("courseSlug", { length: 100 }),
+  courseSlug: varchar("courseSlug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  priceId: varchar("price_id", { length: 256 }),
+  status: varchar("status", { length: 50 }).notNull().default("incomplete"),
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  scheduleId: varchar("schedule_id", { length: 256 }),
+  pendingOfferKey: varchar("pending_offer_key", { length: 100 })
+    .$type<PaymentOfferKey>(),
+  pendingAccessTier: varchar("pending_access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  pendingPriceId: varchar("pending_price_id", { length: 256 }),
+  pendingChangeAt: timestamp("pending_change_at"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  cancelAt: timestamp("cancel_at"),
+  canceledAt: timestamp("canceled_at"),
+  endedAt: timestamp("ended_at"),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-})
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("stripe_subscriptions_subscription_id_uq").on(table.subscriptionId),
+  uniqueIndex("stripe_subscriptions_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_subscriptions_schedule_id_uq").on(table.scheduleId),
+  index("stripe_subscriptions_user_id_idx").on(table.userId),
+  index("stripe_subscriptions_user_course_idx").on(table.userId, table.courseSlug),
+  index("stripe_subscriptions_customer_id_idx").on(table.customerId),
+  index("stripe_subscriptions_status_idx").on(table.status),
+  index("stripe_subscriptions_cleanup_after_idx").on(table.cleanupAfter),
+])
 
 export const processedEvents = createTable("processed_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   eventId: varchar("eventId", { length: 256 }).notNull().unique(),
-  userId: varchar("userId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  eventType: varchar("event_type", { length: 100 }),
+  stripeObjectId: varchar("stripe_object_id", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  paymentId: uuid("payment_id").references(() => payments.id),
+  subscriptionRecordId: uuid("subscription_record_id").references(() => subscriptions.id),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
   processedAt: timestamp("processedAt").defaultNow(),
-})
+}, (table) => [
+  index("processed_events_cleanup_after_idx").on(table.cleanupAfter),
+])
 
 export const completedTestes = createTable(
   "completed_tests",
@@ -146,7 +258,9 @@ export const userCustomTests = createTable(
   "user_custom_tests",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     meta: jsonb("meta").$type<TestMeta>().notNull(),
     data: jsonb("data").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
@@ -162,7 +276,9 @@ export const userCustomCategories = createTable(
   "user_custom_categories",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     categoryName: varchar("categoryName", { length: 255 }).notNull(),
     // Real curriculum subject this custom category maps to (e.g. "farmakologia").
     // Drives planner learning-curve attribution; null = not linked / not counted.
@@ -300,7 +416,9 @@ export const blogPostTags = createTable(
 export const blogLikes = createTable(
   'blog_likes',
   {
-    userId: varchar('userId', { length: 256 }).notNull(),
+    userId: varchar('userId', { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
     postId: uuid('postId')
       .notNull()
       .references(() => blogPosts.id, { onDelete: 'cascade' }),
@@ -634,14 +752,21 @@ export const courseEnrollments = createTable(
   "course_enrollments",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     courseSlug: varchar("course_slug", { length: 100 }).notNull(),
     accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    sourceType: varchar("source_type", { length: 50 }).$type<EntitlementSourceType>(),
+    sourceId: varchar("source_id", { length: 256 }),
     isActive: boolean("is_active").default(true).notNull(),
     enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    startsAt: timestamp("starts_at"),
     expiresAt: timestamp("expires_at"),
+    revokedAt: timestamp("revoked_at"),
   },
   (table) => [
+    uniqueIndex("enrollments_source_uq").on(table.sourceType, table.sourceId),
     index("enrollments_user_id_idx").on(table.userId),
     index("enrollments_course_slug_idx").on(table.courseSlug),
     index("enrollments_is_active_idx").on(table.isActive),
@@ -740,7 +865,9 @@ export const lectures = createTable(
   "lectures",
   {
     id:          uuid("id").primaryKey().defaultRandom(),
-    userId:      varchar("userId", { length: 256 }).notNull(),
+    userId:      varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     title:       varchar("title", { length: 256 }).notNull(),
     contentHash: varchar("contentHash", { length: 64 }).notNull(),
     audioKey:    varchar("audioKey", { length: 256 }).notNull(),
@@ -765,7 +892,9 @@ export const generatedPracticalExams = createTable(
   "generated_practical_exams",
   {
     id:        uuid("id").primaryKey().defaultRandom(),
-    userId:    varchar("userId", { length: 256 }).notNull(),
+    userId:    varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     examJson:  jsonb("examJson").notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
@@ -833,7 +962,9 @@ export const learningPlanConcepts = createTable(
     planId: uuid("planId")
       .notNull()
       .references(() => learningPlans.id, { onDelete: "cascade" }),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     categoryKey: varchar("categoryKey", { length: 100 }),
     procedureId: varchar("procedureId", { length: 256 }),
     label: varchar("label", { length: 255 }).notNull(),

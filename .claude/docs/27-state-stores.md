@@ -29,7 +29,6 @@ All 28 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 |---|---|---|
 | `useCookieConsentStore.ts` | `consent: CookieConsent \| null`, `showBanner`, `isLoaded` + `initialize()`, `openBanner()`, `closeBanner()`, `acceptAll()`, `declineAll()`, `savePreferences(partial)`. Also exports `COOKIE_CONSENT_KEY`, `COOKIE_CONSENT_DURATION_DAYS = 180`, `defaultConsent`. | Persists to `localStorage` — but **manually**, not via Zustand's `persist` middleware: `initialize()` reads `localStorage.getItem(COOKIE_CONSENT_KEY)` directly, validates it hasn't expired (`isConsentValid`, 180-day window from `consent.timestamp`), and every write path (`acceptAll`/`declineAll`/`savePreferences`) calls a local `saveConsentToStorage()` helper that both writes `localStorage` and dispatches a `window.dispatchEvent(new CustomEvent('cookieConsentChanged'))` so `GoogleAnalytics` can react to a consent change without polling. **Correction**: an earlier version of this doc's "which stores persist" list (below) included this store as a `persist`-middleware user — it isn't; see the corrected list. `necessary` is always forced `true` in every write path, never actually configurable. |
 | `useInstagramBannerStore.ts` | `isDismissed` + `dismiss()`/`reset()` | Dismiss state for the `FloatingInstagram` banner. Not persisted — dismissal doesn't survive a reload. |
-| `useNoCoursesBannerStore.ts` | `isOpen` + `show()`/`hide()` | Visibility state for the "you have no courses yet" banner shown to unenrolled users. Not persisted. |
 
 ## Tests & test-authoring
 

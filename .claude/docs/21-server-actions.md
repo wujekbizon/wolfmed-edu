@@ -180,14 +180,13 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 | `saveCellsAction` | Rate-limited (`cells:update`), validates the full `order`/`cells` relationship, then calls one atomic versioned save. New rows use unique-`userId` insert; existing rows update only when the submitted version matches. Identical repeated submissions are idempotent. A stale divergent save returns the server snapshot as a conflict and writes nothing. |
 | `syncCellsAction` | Authenticated plain read of the latest board and version. The client confirms before discarding dirty local work. |
 
-## `course-actions.ts` (134 lines) — enrollment & access
+## `course-actions.ts` — access
 
 | Function | Behavior |
 |---|---|
 | `checkCourseAccessAction` | `(courseSlug) => {hasAccess, accessTier}`. **DB-authoritative only.** Its docstring explains a deliberate past change: an earlier `currentUser()` Clerk-metadata fast-path was removed because this runs once per category on the learning hub (fanned out via `Promise.all`) and tripped Clerk's dev rate limit (429) — the DB query was already authoritative, so the pre-check added load without changing the answer. Swallows errors to `{hasAccess: false}` (fail-closed). |
 | `getUserEnrollmentsAction` | `() => {enrollments}`, `[]` for signed-out or on error. |
-| `checkPremiumAccessAction` | `() => boolean`. Checks **both** courses in parallel and returns true if either is held at premium or above. ⚠️ Its docstring still claims it "uses the same two-layer check… Clerk metadata for fast-path ownership, DB for authoritative tier" — **stale**, describing the metadata fast-path that `checkCourseAccessAction` documents having removed. The code is correct; the comment describes an architecture that no longer exists. |
-| `enrollUserAction` | `(userId, courseSlug, accessTier='basic')`. **Update-if-exists, insert otherwise** — which is why a duplicated Stripe webhook can't create a duplicate enrollment (relevant to README audit note #13). Called by the Stripe webhook, not by a form. |
+| `checkPremiumAccessAction` | `() => boolean`. Checks both courses and returns true if either effective DB grant is premium or above. |
 
 ## `mindmap.ts` (72 lines)
 
@@ -233,7 +232,7 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 **4. Resolved: cells save concurrency.** The inert transaction/check-then-write flow was removed. `saveUserCellsList` now performs a unique insert or compare-and-swap update against `version`; stale writes return conflict without changing the row.
 
-**5. `checkPremiumAccessAction`'s docstring describes an architecture that was deliberately removed.** It claims a "two-layer check… Clerk metadata for fast-path ownership" — but `checkCourseAccessAction`, which it calls, documents having removed exactly that fast-path to stop tripping Clerk's rate limit. The code is right; the comment would mislead anyone reasoning about where access decisions come from.
+**5. Resolved: premium access documentation.** The stale Clerk fast-path claim was removed; all course/premium ownership reads now resolve effective DB grants.
 
 **6. `uploadFilesAction` discards which files failed.** `uploadFiles()` returns `results.failed: string[]`; the action reports only `results.failed.length`. An admin whose batch partly failed sees a count and has no way to tell which files to retry. (Carried over from round 14's F-26, confirmed here in the action itself.)
 

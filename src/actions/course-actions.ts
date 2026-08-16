@@ -1,11 +1,9 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { db } from "@/server/db/index";
-import { courseEnrollments } from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
 import { hasAccessToTier } from "@/helpers/accessTiers";
-import { getUserEnrollments } from "@/server/queries";
+import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants";
+import { getUserEnrollmentGrants, getUserEnrollments } from "@/server/queries";
 
 /**
  * Check if user has access to a specific course.
@@ -25,17 +23,8 @@ export async function checkCourseAccessAction(courseSlug: string) {
   }
 
   try {
-    const [enrollment] = await db
-      .select()
-      .from(courseEnrollments)
-      .where(
-        and(
-          eq(courseEnrollments.userId, userId),
-          eq(courseEnrollments.courseSlug, courseSlug),
-          eq(courseEnrollments.isActive, true)
-        )
-      )
-      .limit(1);
+    const enrollments = await getUserEnrollments(userId)
+    const enrollment = enrollments.find((item) => item.courseSlug === courseSlug)
 
     if (enrollment) {
       return {
@@ -56,22 +45,21 @@ export async function checkCourseAccessAction(courseSlug: string) {
  */
 export async function getUserEnrollmentsAction() {
   const { userId } = await auth()
-  if (!userId) return { enrollments: [] }
+  if (!userId) return { enrollments: [], enrollmentGrants: [] }
 
   try {
-    const enrollments = await getUserEnrollments(userId)
-    return { enrollments }
+    const enrollmentGrants = await getUserEnrollmentGrants(userId)
+    return {
+      enrollments: getEffectiveEnrollmentGrants(enrollmentGrants),
+      enrollmentGrants,
+    }
   } catch (error) {
     console.error('Error fetching enrollments:', error)
-    return { enrollments: [] }
+    return { enrollments: [], enrollmentGrants: [] }
   }
 }
 
-/**
- * Check if the current user has premium (or higher) access on either course.
- * Uses the same two-layer check as checkCourseAccessAction:
- * Clerk metadata for fast-path ownership, DB for authoritative tier.
- */
+/** Check if the current user has premium access on either course. */
 export async function checkPremiumAccessAction(): Promise<boolean> {
   const [opiekun, pielegniarstwo] = await Promise.all([
     checkCourseAccessAction('opiekun-medyczny'),
@@ -81,54 +69,4 @@ export async function checkPremiumAccessAction(): Promise<boolean> {
     (opiekun.hasAccess && hasAccessToTier(opiekun.accessTier ?? 'free', 'premium')) ||
     (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium'))
   )
-}
-
-/**
- * Enroll user in a course (used by webhook)
- */
-export async function enrollUserAction(
-  userId: string,
-  courseSlug: string,
-  accessTier: string = "basic"
-) {
-  try {
-    // Check if enrollment exists
-    const [existing] = await db
-      .select()
-      .from(courseEnrollments)
-      .where(
-        and(
-          eq(courseEnrollments.userId, userId),
-          eq(courseEnrollments.courseSlug, courseSlug)
-        )
-      )
-      .limit(1);
-
-    if (existing) {
-      // Update existing enrollment
-      await db
-        .update(courseEnrollments)
-        .set({
-          isActive: true,
-          accessTier,
-          enrolledAt: new Date(),
-        })
-        .where(eq(courseEnrollments.id, existing.id));
-
-      return { success: true, updated: true };
-    }
-
-    // Create new enrollment
-    await db.insert(courseEnrollments).values({
-      userId,
-      courseSlug,
-      accessTier,
-      isActive: true,
-    });
-
-    return { success: true, updated: false };
-  } catch (error) {
-    console.error("Error enrolling user:", error);
-    return { success: false, error: String(error) };
-  }
 }

@@ -1,13 +1,12 @@
 import { PathLayoutProps } from '@/types/careerPathsTypes'
 import GradientOverlay from '@/components/GradientOverlay'
-import CurriculumMap from '../../components/CurriculumMap'
 import PathHero from '@/components/path/PathHero'
 import PathQuestionsHero from '@/components/path/PathQuestionsHero'
 import PathStoryHero from '@/components/path/PathStoryHero'
 import SectionDivider from '@/components/path/SectionDivider'
 import PathTools from '@/components/path/PathTools'
 import PricingSection from '@/components/pricing/PricingSection'
-import { CURRICULUM_ANCHOR } from '@/constants/curriculumAnchor'
+import PathCurriculumSection from '@/components/path/PathCurriculumSection'
 
 export default function RichPathLayout({
   title,
@@ -15,8 +14,10 @@ export default function RichPathLayout({
   curriculum,
   features,
   pricing,
-  ownedCourses,
+  pricingOfferStatuses,
   subjectTitles,
+  eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
   questions,
   story
 }: PathLayoutProps) {
@@ -34,7 +35,8 @@ export default function RichPathLayout({
             title={title}
             story={story}
             pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
+            pricingOfferStatuses={pricingOfferStatuses}
+            eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
 
@@ -43,37 +45,15 @@ export default function RichPathLayout({
             title={title}
             questions={questions}
             pricing={pricing}
-            ownedCourses={ownedCourses ?? []}
+            pricingOfferStatuses={pricingOfferStatuses}
+            eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
           />
         )}
 
         <section className='@container flex flex-col w-full p-4 sm:p-6 md:p-8 lg:p-12 gap-8 sm:gap-12 lg:gap-16'>
           {!hasHero && <PathHero title={title} description={description} />}
 
-          <section
-            id={CURRICULUM_ANCHOR}
-            aria-labelledby='curriculum-title'
-            className='relative w-full scroll-mt-24 p-4 sm:p-8'
-          >
-            <header className='mb-6 sm:mb-10 text-center'>
-              <span className='inline-block rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium tracking-wide'>
-                Program nauczania
-              </span>
-              <h2
-                id='curriculum-title'
-                className='mt-3 text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900'
-              >
-                Szczegółowa mapa programu
-              </h2>
-              <p className='mt-3 text-zinc-600 text-base md:text-lg'>
-                Przeglądaj przedmioty według roku. Rozwiń moduły, aby zobaczyć
-                liczbę godzin, ECTS i formę zaliczenia.
-              </p>
-            </header>
-            <div className='mx-auto w-full max-w-none lg:max-w-6xl'>
-              <CurriculumMap curriculum={curriculum ?? []} />
-            </div>
-          </section>
+          <PathCurriculumSection curriculum={curriculum} />
 
           {features && features.length > 0 && pricing && <SectionDivider />}
 
@@ -84,8 +64,10 @@ export default function RichPathLayout({
           {pricing && (
             <PricingSection
               pricing={pricing}
-              ownedCourses={ownedCourses ?? []}
+              pricingOfferStatuses={pricingOfferStatuses}
               subjectTitles={subjectTitles}
+              eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+              subscriptionPlanChange={subscriptionPlanChange}
             />
           )}
         </section>

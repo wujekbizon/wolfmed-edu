@@ -56,6 +56,9 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 
   'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
 
+  'stripe:checkout': { interval: 10 * 60 * 1000, maxRequests: 10 },
+  'stripe:portal': { interval: 10 * 60 * 1000, maxRequests: 10 },
+
   'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
   'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
 

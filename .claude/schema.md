@@ -42,18 +42,43 @@ Primary user account and profile information.
 
 ## 💳 Payment & Subscription Tables
 
+### Checkout Orders (`wolfmed_stripe_checkout_orders`)
+Server-owned attempt created before Stripe Checkout.
+
+```typescript
+{
+  id: uuid (PK)
+  userId: varchar(256) (nullable after owner deletion)
+  offerKey, courseSlug, accessTier, purchaseModel
+  stripePriceId, amountTotal, currency // immutable purchase snapshot
+  status: CREATING | OPEN | PROCESSING | PAID | COMPLETED | CANCELED | EXPIRED | FAILED
+  deduplicationKey: varchar(512) (unique, nullable when terminal)
+  stripeSessionId: varchar(256) (unique, nullable)
+  stripeCustomerId: varchar(256) (nullable)
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
+  expiresAt, createdAt, updatedAt: timestamp
+}
+```
+
 ### Payments (`wolfmed_stripe_payments`)
 Tracks one-time payments via Stripe.
 
 ```typescript
 {
   id: uuid (PK, auto-generated)
-  userId: varchar(256) (not null)
+  userId: varchar(256) (nullable after pseudonymization)
+  orderId: uuid (nullable FK → checkout orders)
+  offerKey, accessTier: varchar (nullable for legacy rows)
   amountTotal: integer (not null)
   currency: enum('pln', 'usd', 'eur')
-  customerEmail: varchar(256) (not null)
+  customerEmail: varchar(256) (nullable; no longer written)
   paymentStatus: varchar(50) (not null)
-  createdAt: timestamp (auto)
+  sessionId, paymentIntentId, chargeId, invoiceId: varchar(256) (unique, nullable)
+  amountRefunded: integer (default 0, not null)
+  refundStatus: varchar(32) ('none' | 'partial' | 'full', default 'none')
+  disputeStatus: varchar(32) ('none' | 'open' | 'won' | 'lost' | 'resolved', default 'none')
+  retentionUntil, pseudonymizedAt: timestamp (nullable during expand migration)
+  createdAt, updatedAt: timestamp (auto)
 }
 ```
 
@@ -63,16 +88,26 @@ Manages recurring Stripe subscriptions.
 ```typescript
 {
   id: uuid (PK, auto-generated)
-  userId: varchar(256) (unique, not null)
-  sessionId: varchar(256) (not null)
-  subscriptionId: varchar(256) (not null)
+  userId: varchar(256) (nullable after owner deletion)
+  orderId: uuid (nullable FK → checkout orders)
+  sessionId: varchar(256) (unique, nullable)
+  subscriptionId: varchar(256) (unique, not null)
   customerId: varchar(256) (not null)
-  customerEmail: varchar(256) (not null)
-  invoiceId: varchar(256) (not null)
+  offerKey, courseSlug, accessTier, priceId
+  customerEmail: varchar(256) (nullable legacy field)
+  invoiceId: varchar(256) (nullable latest Invoice)
   amountTotal: integer (not null)
   currency: enum('pln', 'usd', 'eur')
   paymentStatus: varchar(50) (not null)
-  createdAt: timestamp (auto, not null)
+  status: varchar(50) (not null)
+  currentPeriodStart, currentPeriodEnd: timestamp
+  scheduleId: varchar(256) (unique, nullable)
+  pendingOfferKey, pendingAccessTier, pendingPriceId: varchar (nullable)
+  pendingChangeAt: timestamp (nullable)
+  cancelAtPeriodEnd: boolean
+  cancelAt, canceledAt, endedAt: timestamp
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
+  createdAt, updatedAt: timestamp
 }
 ```
 
@@ -83,10 +118,31 @@ Prevents duplicate webhook processing.
 {
   id: uuid (PK, auto-generated)
   eventId: varchar(256) (unique, not null)
-  userId: varchar(256) (not null)
+  userId: varchar(256) (nullable after owner deletion)
+  eventType, stripeObjectId: varchar (nullable)
+  orderId, paymentId: uuid (nullable FK)
+  ownerDeletedAt, cleanupAfter: timestamp (nullable)
   processedAt: timestamp (auto)
 }
 ```
+
+### Course Entitlements (`wolfmed_course_enrollments`)
+Access grants. Multiple rows for one user/course are valid; readers choose the
+highest active, started, non-expired and non-revoked tier.
+
+```typescript
+{
+  userId, courseSlug, accessTier
+  sourceType: legacy_lifetime | lifetime_purchase | lifetime_upgrade | subscription | manual
+  sourceId: varchar(256)
+  isActive, enrolledAt, startsAt, expiresAt, revokedAt
+}
+```
+
+`(sourceType, sourceId)` is unique. Legacy rows are backfilled with their row UUID
+as source ID. A lifetime Basic purchase and its Premium upgrade remain separate
+grants; effective access is Premium while both are active and falls back to Basic
+when only the upgrade is revoked.
 
 ---
 

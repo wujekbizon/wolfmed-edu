@@ -429,9 +429,7 @@ export const careerPathsData: Record<string, PathData> = {
       courseSlug: 'opiekun-medyczny',
       basic: {
         price: '159,99 zł',
-        priceId:
-          process.env.STRIPE_OPIEKUN_STANDARD_PRICE_ID ||
-          'price_standard_placeholder',
+        offerKey: 'opiekun_basic_lifetime',
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
@@ -445,9 +443,7 @@ export const careerPathsData: Record<string, PathData> = {
       },
       premium: {
         price: '449,99 zł',
-        priceId:
-          process.env.STRIPE_OPIEKUN_PREMIUM_PRICE_ID ||
-          'price_opiekun_premium_placeholder',
+        offerKey: 'opiekun_premium_lifetime',
         accessTier: 'premium',
         badge: 'Oferta na start',
         features: [
@@ -529,9 +525,7 @@ export const careerPathsData: Record<string, PathData> = {
       courseSlug: 'pielegniarstwo',
       basic: {
         price: '279,99 zł',
-        priceId:
-          process.env.STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID ||
-          'price_basic_placeholder',
+        offerKey: 'pielegniarstwo_basic_lifetime',
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
@@ -545,9 +539,7 @@ export const careerPathsData: Record<string, PathData> = {
       },
       premium: {
         price: '599,99 zł',
-        priceId:
-          process.env.STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID ||
-          'price_premium_placeholder',
+        offerKey: 'pielegniarstwo_premium_lifetime',
         accessTier: 'premium',
         badge: 'Oferta na start',
         features: [

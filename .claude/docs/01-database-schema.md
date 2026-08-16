@@ -24,9 +24,10 @@ Both `library-schema.ts` and `memory-schema.ts` require the Postgres `vector` an
 The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks test-taking aggregates (`testsAttempted`, `totalScore`, `totalQuestions`), a free-text `motto`, `supporter` flag, and `stripeCustomerId` for billing lookups. `testLimit` gates how many tests a non-premium account may take.
 
 ### Payments & subscriptions
-- **`payments`** (`stripe_payments`) — one row per completed Stripe Checkout session (one-time course purchases). Indexed by `userId`, `paymentStatus`, `createdAt`, `stripeCustomerId`.
-- **`subscriptions`** (`stripe_subscriptions`) — one row per user's active subscription (`userId` unique). Holds `subscriptionId`, `invoiceId`, `courseSlug`.
-- **`processedEvents`** (`processed_events`) — Stripe webhook idempotency ledger; `eventId` is unique so a replayed webhook is a no-op.
+- **`checkoutOrders`** (`stripe_checkout_orders`) — server-owned Checkout attempts. Deleted owners have nullable `userId`, `ownerDeletedAt` and `cleanupAfter`; the purchase snapshot remains for 30-day delayed-event validation.
+- **`payments`** (`stripe_payments`) — one row per Session or subscription Invoice. Stripe business IDs are unique. On account deletion identity, email, Customer and local order links are removed; `pseudonymizedAt` and `retentionUntil` govern the retained financial ledger.
+- **`subscriptions`** (`stripe_subscriptions`) — one row per Stripe Subscription. Multiple courses per user are supported. Deleted-owner rows are pseudonymized and carry a 30-day cleanup deadline.
+- **`processedEvents`** (`processed_events`) — transactional webhook idempotency ledger. Deleted-owner rows lose their Clerk ID and object links, then remain until `cleanupAfter` so retries return success.
 - **`currencyEnum`** — `pln | usd | eur`, shared by both payment tables.
 
 ### Tests & sessions
@@ -39,7 +40,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 ### Procedures & courses
 - **`procedures`** — single table for every course's procedural-learning content. `course` + `slug` identify it; `data` (jsonb) holds the full procedure body. `data.meta` mirrors the `course`/`slug` columns for convenience, but the columns are the query-side source of truth. Seeded from `data/procedures.json` via `scripts/seed-procedures.ts`.
 - **`courses`** — the multi-course catalog (`slug`, `name`, `isActive`).
-- **`courseEnrollments`** — links a user to a course with an `accessTier` (`basic` default) and optional `expiresAt`.
+- **`courseEnrollments`** — source-aware access grants (`legacy_lifetime`, `lifetime_purchase`, later subscription/manual). A lifetime upgrade updates the existing lifetime grant; different source models may coexist. Readers choose the highest active, started, non-expired and non-revoked tier. `(sourceType, sourceId)` is unique.
 - **`challengeCompletions`** — a scored attempt at a procedure's practice challenge (quiz/recognition/etc.): `score`, `timeSpent`, `attempts`, `passed`.
 - **`procedureBadges`** — an earned badge per completed procedure (`badgeImageUrl`, `earnedAt`).
 
@@ -52,7 +53,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 - **`blogCategories`**, **`blogTags`** — simple lookup tables (`name`, `slug`, plus `color`/`icon`/`order` on categories).
 - **`blogPosts`** — full CMS post: `slug`, `excerpt`, `content`, `coverImage`, `categoryId` FK (`set null` on delete), `authorId/authorName`, `status: draft | published | archived` (`blogStatusEnum`), `publishedAt`, SEO fields (`metaTitle`, `metaDescription`, `metaKeywords`), `viewCount`, `readingTime`.
 - **`blogPostTags`** — many-to-many join (`postId` + `tagId`, cascade both directions).
-- **`blogLikes`** — composite `(userId, postId)`, cascade delete on post. Backs the like/unlike feature (see `.claude/docs/10-pages-public.md` → Blog).
+- **`blogLikes`** — composite `(userId, postId)`, cascade delete on post or owner. Backs the like/unlike feature (see `.claude/docs/10-pages-public.md` → Blog).
 - Relations: `blogPostsRelations` (one category, many tags, many likes), `blogCategoriesRelations`, `blogTagsRelations`, `blogPostTagsRelations`, `blogLikesRelations`.
 
 ### Forum
@@ -115,7 +116,7 @@ Six tables under `MEM_TABLES` (`src/server/memory/config.ts`), all `wolfmed_mem_
 | `memFacts` | The compounding layer — durable facts about a student (`subject`/`predicate`/`content`). Deduplicated via `(contentHash, userId)` unique index. `status: provisional \| active \| revoked`. Has both trigram and HNSW vector indexes for retrieval, and a self-referential `supersededBy` FK for fact revision chains. |
 | `memEpisodes` | "ostatnio przerabialiśmy…" — session summaries (`taskType: tutor_session \| quiz \| mindmap_review`, `summary`, `outcome`, `keySteps`, `artifacts`). Vector + trigram indexed. |
 | `memTraces` | Per-turn flight recorder (`runId`, `turnIndex`, `eventType`, `payload`, `tokenCost`, `latencyMs`) — 90-day retention, cleaned by the `memory-retention` cron. `eventType` constrained to `user_msg \| rag_retrieval \| memory_retrieval \| model_msg \| promotion`. |
-| `memDeletionEvents` | Append-only GDPR audit log — every memory deletion is recorded with `scope` and `reason`, never physically reconciled away. |
+| `memDeletionEvents` | GDPR audit log with pseudonymous `deleted:*` owner, `scope` and `reason`; never stores the deleted Clerk ID. |
 
 All vector columns use `EMBED_DIM` from `@/constants/embeddings` — the same embedding dimensionality as the personal library, so both layers stay compatible with one embedding model config.
 
@@ -123,7 +124,7 @@ All vector columns use `EMBED_DIM` from `@/constants/embeddings` — the same em
 
 ## Cross-cutting patterns
 
-- **Cascade ownership**: nearly every user-owned table FKs `userId → users.userId` with `onDelete: "cascade"` — deleting a user cleans up their tests, notes, materials, forum posts, diagnozy progress, planner data, etc. automatically at the DB level.
+- **Cascade ownership**: disposable user-owned tables FK `userId → users.userId` with `onDelete: "cascade"`, including custom tests/categories, blog likes, course grants, lectures, generated exams and planner concepts. Billing tables deliberately do not cascade because they are pseudonymized and retained. Editorial blog posts are anonymized instead of deleted.
 - **jsonb over join tables**: content-heavy, non-relational data (test questions, procedure bodies, diagnozy steps, Lexical note content, quiz JSON) is stored as `jsonb` rather than normalized — these are read/written as whole documents, not queried by sub-field.
 - **Type exports**: newer tables (from `learningPlans` onward) export `$inferSelect`/`$inferInsert` types directly beside the table definition (e.g. `LearningPlanRow`, `NewLecture`) — read/write shapes for actions and queries to import instead of re-declaring.
 

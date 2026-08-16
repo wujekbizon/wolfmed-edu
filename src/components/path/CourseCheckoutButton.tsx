@@ -2,33 +2,38 @@
 
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
+import { createSubscriptionPlanChangePortalSession } from '@/actions/subscriptionPlanChange'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import SubmitButton from '@/components/SubmitButton'
+import FormError from '@/components/FormError'
+import type { PaymentOfferKey, PricingOfferStatus } from '@/types/paymentTypes'
 
-// The same server action the plan cards post to, so the hero sells the course
-// rather than pointing at something that does.
 export default function CourseCheckoutButton({
-  courseSlug,
-  priceId,
-  accessTier
+  offerKey,
+  offerStatus = 'available',
+  label = 'Uzyskaj dostęp do kursu',
 }: {
-  courseSlug: string
-  priceId: string
-  accessTier: string
+  offerKey: PaymentOfferKey
+  offerStatus?: PricingOfferStatus
+  label?: string
 }) {
-  const [state, action] = useActionState(createCheckoutSession, EMPTY_FORM_STATE)
+  const serverAction = offerStatus === 'portal_upgrade'
+    ? createSubscriptionPlanChangePortalSession
+    : createCheckoutSession
+  const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 
   return (
     <form action={action} className='w-full max-w-xs'>
       {noScriptFallback}
-      <input type='hidden' name='courseSlug' value={courseSlug} />
-      <input type='hidden' name='accessTier' value={accessTier} />
-      <input type='hidden' name='priceId' value={priceId} />
+      <FormError formState={state} />
+      <input type='hidden' name='offerKey' value={offerKey} />
       <SubmitButton
-        label='Uzyskaj dostęp do kursu'
-        loading='Przekierowywanie...'
+        label={label}
+        loading={offerStatus === 'portal_upgrade'
+          ? 'Otwieranie Stripe...'
+          : 'Przekierowywanie...'}
         variant='cta'
         size='lg'
         shape='pill'

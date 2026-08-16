@@ -66,6 +66,7 @@ import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
 import { boardsEqual } from "@/helpers/cellsConcurrency"
+import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -308,7 +309,12 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
     )
     .orderBy(asc(courseEnrollments.enrolledAt))
 
-  return enrollments.map((row) => ({
+  const effectiveIds = new Set(
+    getEffectiveEnrollmentGrants(enrollments.map((row) => row.enrollment))
+      .map((enrollment) => enrollment.id)
+  )
+
+  return enrollments.filter((row) => effectiveIds.has(row.enrollment.id)).map((row) => ({
     ...row.course,
     enrolledAt: row.enrollment.enrolledAt,
     accessTier: row.enrollment.accessTier,
@@ -316,9 +322,8 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
   }))
 })
 
-// Check if user has any active enrollments (used for /panel layout guard)
-export const getUserEnrollments = cache(async (userId: string) => {
-  return await db
+export const getUserEnrollmentGrants = cache(async (userId: string) => {
+  return db
     .select()
     .from(courseEnrollments)
     .where(
@@ -327,6 +332,12 @@ export const getUserEnrollments = cache(async (userId: string) => {
         eq(courseEnrollments.isActive, true)
       )
     )
+
+})
+
+// Check if user has any active enrollments (used for /panel layout guard)
+export const getUserEnrollments = cache(async (userId: string) => {
+  return getEffectiveEnrollmentGrants(await getUserEnrollmentGrants(userId))
 })
 
 // ============================================================================
@@ -1394,10 +1405,14 @@ export const getRecentForumPosts = cache(
 // Get stripe support payments
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()
-  return payments.map((p) => ({
-    ...p,
-    createdAt: p.createdAt ?? new Date(),
-  }))
+  return payments
+    .filter((payment): payment is typeof payment & { userId: string } => (
+      payment.userId !== null
+    ))
+    .map((payment) => ({
+      ...payment,
+      createdAt: payment.createdAt ?? new Date(),
+    }))
 })
 
 // Get supporters userId from stripe support payments

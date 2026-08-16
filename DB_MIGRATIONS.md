@@ -278,7 +278,163 @@ ekstrakcja).
   na użytkownika i indeks → wdrożyć kod wersjonowanego zapisu. Produkcja jeszcze
   niezmigrowana.
 
-### M9+ — (dopisuj kolejne zmiany tutaj)
+## Stripe Dashboard — katalog produktów
+
+*Status: do wykonania przed uruchomieniem płatności produkcyjnych. To nie jest
+migracja bazy danych.*
+
+- Uzupełnić krótki opis i obraz dla każdego istniejącego produktu jednorazowego:
+  Opiekun Medyczny Standard/Premium oraz Pielęgniarstwo Standard/Premium.
+- Tak samo uzupełnić każdy nowy produkt subskrypcyjny podczas jego tworzenia.
+- Zmiany wykonać osobno w Stripe sandbox i live mode; produkty i ich dane nie są
+  współdzielone między trybami.
+- Nie zmieniać istniejących Price ID. Opis i obraz należą do Stripe Product.
+- Po zmianach utworzyć nowe Checkout Session dla każdego wariantu i sprawdzić
+  nazwę, opis, obraz, cenę oraz tryb płatności jednorazowej/subskrypcji.
+
+### M9 — Stripe: zamówienia, atomowe płatności i źródła dostępu
+
+*Status: dev wdrożone i zweryfikowane 2026-08-11; prod jeszcze niezmigrowane.*
+
+- Nowa tabela `wolfmed_stripe_checkout_orders`: użytkownik, oferta, model zakupu,
+  snapshot ceny/kursu/poziomu, status, aktywny klucz deduplikacji, Stripe Customer
+  i Session, wygaśnięcie oraz daty.
+- `wolfmed_stripe_payments`: nullable `order_id`, `offer_key`, `access_tier`,
+  `invoice_id`; `customerEmail` staje się nullable. Unikalne nullable identyfikatory
+  Stripe Session, PaymentIntent i Invoice.
+- `wolfmed_processed_events`: nullable `event_type`, `stripe_object_id`, `order_id`
+  i `payment_id`. Marker zdarzenia jest zapisywany w tej samej transakcji co zakup.
+- `wolfmed_course_enrollments`: nullable `source_type`, `source_id`, `starts_at`,
+  `revoked_at`; unikalne `(source_type, source_id)`. Każda opłacona Session tworzy
+  osobny grant źródłowy. Upgrade Premium używa `lifetime_upgrade`, więc jego
+  późniejsze cofnięcie pozostawia bazowy grant Basic.
+- `wolfmed_stripe_subscriptions` bez zmian.
+
+Preflight przed dodaniem unikalnych indeksów:
+
+```sql
+SELECT "sessionId", COUNT(*) FROM wolfmed_stripe_payments
+WHERE "sessionId" IS NOT NULL GROUP BY "sessionId" HAVING COUNT(*) > 1;
+
+SELECT "paymentIntentId", COUNT(*) FROM wolfmed_stripe_payments
+WHERE "paymentIntentId" IS NOT NULL
+GROUP BY "paymentIntentId" HAVING COUNT(*) > 1;
+```
+
+Oba zapytania muszą zwrócić zero wierszy. Duplikatów nie usuwać automatycznie;
+najpierw porównać je ze Stripe Dashboard.
+
+Kolejność na dev:
+
+1. Wykonać preflight.
+2. `pnpm db:push`.
+3. Oznaczyć istniejące dostępy jako historyczne lifetime:
+
+```sql
+UPDATE wolfmed_course_enrollments
+SET source_type = 'legacy_lifetime',
+    source_id = id::text,
+    starts_at = enrolled_at
+WHERE source_type IS NULL;
+```
+
+4. Sprawdzić, że każdy stary dostęp pozostał aktywny i ma unikalny `source_id`.
+5. Wykonać test Stripe Phase 2A+2B z przewodnika 42.
+
+Oferty lifetime upgrade nie wymagają kolejnej migracji DB. Wymagają dwóch cen
+jednorazowych Stripe i zmiennych środowiskowych opisanych w przewodniku 42.
+
+Produkcja: osobna wersjonowana migracja expand/backfill po backupie. Nie ustawiać
+nowych kolumn `NOT NULL` i nie usuwać `customerEmail` w pierwszym deployu.
+
+### M10 — Stripe: lifecycle zwrotów i sporów
+
+*Status: dev wdrożone i zweryfikowane 2026-08-11; prod jeszcze niezmigrowane.*
+
+- `wolfmed_stripe_payments` + `charge_id varchar(256) NULL` z unikalnym indeksem.
+- `amount_refunded integer NOT NULL DEFAULT 0`.
+- `refund_status varchar(32) NOT NULL DEFAULT 'none'`.
+- `dispute_status varchar(32) NOT NULL DEFAULT 'none'`.
+- `updated_at timestamp NOT NULL DEFAULT now()`.
+- Migracja wyłącznie addytywna. Brak backfillu i kroku contract. Identyfikator
+  Charge uzupełnia pierwszy obsłużony event lifecycle.
+- Istniejące płatności dostają stan `none`/`0`. Automatyczne cofnięcie wymaga
+  source-aware płatności z M9; historyczne rekordy bez `offer_key`, `sessionId` lub
+  `courseSlug` wymagają ręcznego uzgodnienia ze Stripe.
+
+Dev: `pnpm db:push`, potem testy Checkpoint 5 z przewodnika 42. Produkcja:
+`pnpm db:generate` → review SQL → backup/branch Neon → `pnpm db:migrate` → deploy.
+
+### M11 — Stripe: subskrypcje miesięczne i Portal
+
+*Status: kod gotowy 2026-08-12; migracja dev/prod niewykonana.*
+
+- Cztery miesięczne oferty, osobne zamówienia `purchase_model=subscription`.
+- `wolfmed_stripe_subscriptions`: usuwa unikalność samego `userId`; dodaje
+  `order_id`, `offer_key`, `access_tier`, `price_id`, lifecycle i unikalne Stripe
+  Subscription/Session. Pola legacy email/Session/Invoice stają się nullable.
+- `wolfmed_stripe_payments` + `subscription_id`; każda faktura subskrypcyjna jest
+  osobnym wpisem ledgeru.
+- `wolfmed_processed_events` + `subscription_record_id`.
+- Subskrypcje są domyślnie aktywne w kodzie. Nie uruchamiać aplikacji przed
+  migracją i pełną konfiguracją Stripe test mode.
+
+Preflight przed migracją:
+
+```sql
+SELECT "subscriptionId", COUNT(*) FROM wolfmed_stripe_subscriptions
+GROUP BY "subscriptionId" HAVING COUNT(*) > 1;
+
+SELECT "sessionId", COUNT(*) FROM wolfmed_stripe_subscriptions
+WHERE "sessionId" IS NOT NULL GROUP BY "sessionId" HAVING COUNT(*) > 1;
+
+SELECT "userId", "courseSlug", COUNT(*) FROM wolfmed_stripe_subscriptions
+WHERE status NOT IN ('canceled', 'incomplete_expired')
+GROUP BY "userId", "courseSlug" HAVING COUNT(*) > 1;
+```
+
+Dev: preflight → `pnpm db:push` → skonfigurować 4 Prices, Portal i webhooki →
+uruchomić aplikację → testy sandbox. Produkcja: backup/Neon branch →
+wersjonowana migracja expand/backfill/switch; usunięcie starego unique `userId` jest
+wymagane przed dopuszczeniem dwóch kursów.
+
+### M12 — Trwałe usunięcie konta i retencja płatności
+*Status: dev wdrożony i backfill wykonany 2026-08-14; prod niewykonane.*
+
+- Billing: `userId` staje się nullable w orders/payments/subscriptions/events.
+- Payments + `retention_until`, `pseudonymized_at` i indeks retencji.
+- Orders/subscriptions/events + `owner_deleted_at`, `cleanup_after` i indeksy.
+- FK `ON DELETE CASCADE` dla custom tests/categories, blog likes, grants,
+  lectures, generated practical exams i planner concepts.
+- Migracja wymaga wcześniejszego usunięcia orphanów. Najpierw dry run:
+
+```text
+pnpm exec tsx --env-file=.env scripts/cleanup-deleted-account-orphans.ts
+```
+
+Po review listy, dopiero ręcznie:
+
+```text
+pnpm exec tsx --env-file=.env scripts/cleanup-deleted-account-orphans.ts --execute
+```
+
+Skrypt odrzuca klucz Stripe live. Na dev: uruchomić cleanup, `pnpm db:push`, potem
+cleanup ponownie dla backfillu nowych pól billingowych.
+Produkcja: Neon branch/backup, wersjonowana migracja expand, cleanup/backfill,
+deploy switch. Termin retencji `sale year + 6, 31 grudnia` jest tymczasowym
+założeniem z planu; przed prod wymaga potwierdzenia księgowego.
+
+### M13 — Stripe: zaplanowany downgrade Premium do Basic
+*Status: kod gotowy 2026-08-15; migracja dev/prod niewykonana.*
+
+- `wolfmed_stripe_subscriptions` + nullable `schedule_id`, `pending_offer_key`,
+  `pending_access_tier`, `pending_price_id`, `pending_change_at`.
+- Unikalny nullable indeks `stripe_subscriptions_schedule_id_uq`.
+- Migracja jest addytywna, bez backfillu i bez kroku contract.
+- Dev: backup/branch → `pnpm db:push` → konfiguracja Portal → Test Clock.
+- Produkcja: wersjonowana migracja po backupie, przed wdrożeniem kodu.
+
+### M14+ — (dopisuj kolejne zmiany tutaj)
 
 Szablon wpisu:
 

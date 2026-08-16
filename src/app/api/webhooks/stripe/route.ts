@@ -1,145 +1,83 @@
-import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
+import { NextResponse } from 'next/server'
+import type Stripe from 'stripe'
 import stripe from '@/lib/stripeClient'
-import Stripe from 'stripe'
-import { insertPayment, processPurchaseRewards } from '@/server/db'
-import { backfillStripeCustomerId } from '@/server/stripe'
-import { enrollUserAction } from '@/actions/course-actions'
-import { clerkClient } from '@clerk/nextjs/server'
-import { db } from '@/server/db/index'
-import { eq } from 'drizzle-orm'
-import { processedEvents } from '@/server/db/schema'
+import { processStripeCheckoutEvent } from '@/server/payments/processStripeCheckoutEvent'
+import { processStripePaymentLifecycleEvent } from '@/server/payments/processStripePaymentLifecycleEvent'
+import { processStripeSubscriptionEvent } from '@/server/payments/processStripeSubscriptionEvent'
+import { processStripeSubscriptionScheduleEvent } from '@/server/payments/processStripeSubscriptionScheduleEvent'
+import type {
+  StripeCheckoutEventType,
+  StripePaymentLifecycleEventType,
+  StripeSubscriptionEventType,
+  StripeSubscriptionScheduleEventType,
+} from '@/types/paymentTypes'
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const checkoutEvents = new Set<StripeCheckoutEventType>([
+  'checkout.session.completed',
+  'checkout.session.async_payment_succeeded',
+  'checkout.session.async_payment_failed',
+])
+
+const paymentLifecycleEvents = new Set<StripePaymentLifecycleEventType>([
+  'charge.refunded',
+  'refund.created',
+  'refund.updated',
+  'refund.failed',
+  'charge.dispute.created',
+  'charge.dispute.closed',
+])
+
+const subscriptionEvents = new Set<StripeSubscriptionEventType>([
+  'customer.subscription.created',
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
+  'invoice.paid',
+  'invoice.payment_failed',
+])
+
+const subscriptionScheduleEvents = new Set<StripeSubscriptionScheduleEventType>([
+  'subscription_schedule.created',
+  'subscription_schedule.updated',
+  'subscription_schedule.released',
+  'subscription_schedule.canceled',
+  'subscription_schedule.completed',
+  'subscription_schedule.aborted',
+])
 
 export async function POST(req: Request) {
-  const body = await req.text()
-  const headerPayload = await headers()
-  const sig = headerPayload.get('stripe-signature')
+  const signature = (await headers()).get('stripe-signature')
+  if (!signature || !process.env.STRIPE_WEBHOOK_SECRET) {
+    return NextResponse.json({ error: 'Missing webhook configuration' }, { status: 400 })
+  }
 
   let event: Stripe.Event
+  try {
+    event = stripe.webhooks.constructEvent(
+      await req.text(),
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    )
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Invalid signature'
+    return NextResponse.json({ error: `Webhook Error: ${message}` }, { status: 400 })
+  }
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig!, endpointSecret)
-  } catch (err: any) {
-    console.error(`Webhook Error: ${err.message}`)
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
+    if (checkoutEvents.has(event.type as StripeCheckoutEventType)) {
+      await processStripeCheckoutEvent(event)
+    } else if (paymentLifecycleEvents.has(event.type as StripePaymentLifecycleEventType)) {
+      await processStripePaymentLifecycleEvent(event)
+    } else if (subscriptionEvents.has(event.type as StripeSubscriptionEventType)) {
+      await processStripeSubscriptionEvent(event)
+    } else if (subscriptionScheduleEvents.has(
+      event.type as StripeSubscriptionScheduleEventType
+    )) {
+      await processStripeSubscriptionScheduleEvent(event)
+    }
+    return NextResponse.json({ received: true })
+  } catch (error) {
+    console.error(`Stripe webhook ${event.id} failed:`, error)
+    return NextResponse.json({ error: 'Webhook processing failed' }, { status: 500 })
   }
-
-  switch (event.type) {
-    case 'checkout.session.completed':
-      const {
-        client_reference_id,
-        id,
-        amount_total,
-        currency,
-        customer,
-        customer_details,
-        payment_intent,
-        payment_status,
-        created,
-        mode,
-        metadata,
-      } = event.data.object as Stripe.Checkout.Session
-
-      const stripeCustomerId = typeof customer === 'string' ? customer : customer?.id ?? null
-      const paymentIntentId = typeof payment_intent === 'string' ? payment_intent : payment_intent?.id ?? null
-
-      // Idempotency check
-      const existingEvent = await db
-        .select()
-        .from(processedEvents)
-        .where(eq(processedEvents.eventId, event.id))
-        .limit(1)
-
-      if (existingEvent.length > 0) {
-        console.log(`Event ${event.id} already processed`)
-        break
-      }
-
-      const courseSlug = metadata?.courseSlug
-      const accessTier = metadata?.accessTier || 'basic'
-
-      // Resolve userId — fallback to Clerk email lookup when client_reference_id is absent
-      let resolvedUserId: string | null = client_reference_id
-      if (!resolvedUserId && customer_details?.email) {
-        try {
-          const clerkRes = await fetch(
-            `https://api.clerk.com/v1/users?email_address=${encodeURIComponent(customer_details.email)}`,
-            { headers: { Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}` } }
-          )
-          if (clerkRes.ok) {
-            const clerkUsers = await clerkRes.json()
-            resolvedUserId = clerkUsers?.[0]?.id ?? null
-          }
-        } catch (err) {
-          console.error('Clerk email lookup failed:', err)
-        }
-      }
-
-      if (!resolvedUserId) {
-        console.error('checkout.session.completed: cannot resolve userId for', customer_details?.email)
-        return NextResponse.json({ error: 'User not found' }, { status: 500 })
-      }
-
-      if (stripeCustomerId) {
-        await backfillStripeCustomerId(resolvedUserId, stripeCustomerId)
-      }
-
-      if (mode === 'payment') {
-        try {
-          await insertPayment({
-            userId: resolvedUserId,
-            amountTotal: amount_total!,
-            currency: currency! as 'pln' | 'usd' | 'eur' | null,
-            customerEmail: customer_details?.email!,
-            courseSlug: courseSlug || null,
-            createdAt: new Date(created * 1000),
-            paymentStatus: payment_status,
-            stripeCustomerId,
-            sessionId: id,
-            paymentIntentId,
-          })
-        } catch (err) {
-          console.error('insertPayment failed:', err)
-          return NextResponse.json({ error: 'Failed to record payment' }, { status: 500 })
-        }
-      }
-
-      if (courseSlug && payment_status === 'paid') {
-        try {
-          await enrollUserAction(resolvedUserId, courseSlug, accessTier)
-
-          const clerk = await clerkClient()
-          const user = await clerk.users.getUser(resolvedUserId)
-          const currentCourses = (user.publicMetadata?.ownedCourses as string[]) || []
-
-          if (!currentCourses.includes(courseSlug)) {
-            await clerk.users.updateUser(resolvedUserId, {
-              publicMetadata: {
-                ...user.publicMetadata,
-                ownedCourses: [...currentCourses, courseSlug],
-              },
-            })
-          }
-
-          console.log(`User ${resolvedUserId} enrolled in ${courseSlug}`)
-        } catch (error) {
-          console.error('Error enrolling user in course:', error)
-        }
-      }
-
-      await processPurchaseRewards(resolvedUserId, event.id)
-
-      break
-
-    case 'charge.succeeded':
-      // Reserved for future refund/chargeback handling
-      break
-
-    default:
-      console.log(`Unhandled event type ${event.type}`)
-  }
-
-  return NextResponse.json({ received: true }, { status: 200 })
 }

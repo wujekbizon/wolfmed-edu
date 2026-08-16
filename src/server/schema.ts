@@ -3,6 +3,27 @@ import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 import { BODY_ZONES } from "@/types/diagnozyTypes";
 import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
+import { PAYMENT_OFFER_KEYS } from "@/constants/paymentOffers";
+
+export const CreateCheckoutSchema = z.object({
+  offerKey: z.enum(PAYMENT_OFFER_KEYS, {
+    error: "Nieprawidłowa oferta płatności.",
+  }),
+});
+
+export const CheckoutOrderIdSchema = z.string().uuid();
+
+export const CheckoutSessionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^cs_(?:test_|live_)?[A-Za-z0-9]+$/);
+
+export const SubscriptionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^sub_[A-Za-z0-9]+$/);
 
 export const DeleteTestIdSchema = z.object({
   testId: z

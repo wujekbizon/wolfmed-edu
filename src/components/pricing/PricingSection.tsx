@@ -8,18 +8,27 @@ import PlanComparisonToggle from './PlanComparisonToggle'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
 import type { PathData } from '@/types/careerPathsTypes'
+import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
+import type {
+  PricingOfferStatusMap,
+  SubscriptionPlanChange,
+} from '@/types/paymentTypes'
 
 // `subjectTitles` arrives as a prop rather than being read here:
 // SimplePathLayout is a client component, and importing CATEGORY_METADATA
 // through it would ship the whole category catalogue to the browser.
 export default function PricingSection({
   pricing,
-  ownedCourses,
-  subjectTitles
+  pricingOfferStatuses,
+  subjectTitles,
+  eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
 }: {
   pricing: NonNullable<PathData['pricing']>
-  ownedCourses: string[]
+  pricingOfferStatuses: PricingOfferStatusMap
   subjectTitles: string[]
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
+  subscriptionPlanChange: SubscriptionPlanChange | null
 }) {
   const groups = PLAN_COMPARISON[pricing.courseSlug] ?? []
 
@@ -34,10 +43,15 @@ export default function PricingSection({
           <SectionHeading
             eyebrow='Cennik'
             title='Plany cenowe'
-            subtitle='Jednorazowa płatność. Dostęp na zawsze.'
+            subtitle='Wybierz subskrypcję miesięczną lub dostęp na zawsze.'
             titleId='pricing-title'
           />
-          <PricingCardsGrid pricing={pricing} ownedCourses={ownedCourses} />
+          <PricingCardsGrid
+            pricing={pricing}
+            offerStatuses={pricingOfferStatuses}
+            eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+            subscriptionPlanChange={subscriptionPlanChange}
+          />
           {groups.length > 0 && <PlanComparisonToggle />}
         </div>
 

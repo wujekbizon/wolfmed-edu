@@ -1,0 +1,51 @@
+import type {
+  PaymentOffer,
+  SubscriptionPaymentOfferKey,
+} from '@/types/paymentTypes'
+
+export const SUBSCRIPTION_PAYMENT_OFFERS = {
+  opiekun_basic_monthly: {
+    key: 'opiekun_basic_monthly',
+    courseSlug: 'opiekun-medyczny',
+    accessTier: 'basic',
+    amount: 1999,
+    currency: 'pln',
+    available: true,
+    purchaseModel: 'subscription',
+    entitlementSourceType: 'subscription',
+    priceEnvName: 'STRIPE_OPIEKUN_BASIC_MONTHLY_PRICE_ID',
+  },
+  opiekun_premium_monthly: {
+    key: 'opiekun_premium_monthly',
+    courseSlug: 'opiekun-medyczny',
+    accessTier: 'premium',
+    amount: 4999,
+    currency: 'pln',
+    available: true,
+    purchaseModel: 'subscription',
+    entitlementSourceType: 'subscription',
+    priceEnvName: 'STRIPE_OPIEKUN_PREMIUM_MONTHLY_PRICE_ID',
+  },
+  pielegniarstwo_basic_monthly: {
+    key: 'pielegniarstwo_basic_monthly',
+    courseSlug: 'pielegniarstwo',
+    accessTier: 'basic',
+    amount: 4999,
+    currency: 'pln',
+    available: true,
+    purchaseModel: 'subscription',
+    entitlementSourceType: 'subscription',
+    priceEnvName: 'STRIPE_PIELEGNIARSTWO_BASIC_MONTHLY_PRICE_ID',
+  },
+  pielegniarstwo_premium_monthly: {
+    key: 'pielegniarstwo_premium_monthly',
+    courseSlug: 'pielegniarstwo',
+    accessTier: 'premium',
+    amount: 7999,
+    currency: 'pln',
+    available: true,
+    purchaseModel: 'subscription',
+    entitlementSourceType: 'subscription',
+    priceEnvName: 'STRIPE_PIELEGNIARSTWO_PREMIUM_MONTHLY_PRICE_ID',
+  },
+} satisfies Record<SubscriptionPaymentOfferKey, PaymentOffer>

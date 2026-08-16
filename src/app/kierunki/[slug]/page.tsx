@@ -3,7 +3,12 @@ import SimplePathLayout from '@/app/_components/SimplePathLayout'
 import RichPathLayout from '@/app/_components/RichPathLayout'
 import { careerPathsData } from '@/constants/careerPathsData'
 import { getCourseSubjectTitles } from '@/helpers/getCourseSubjectTitles'
-import { getUserEnrollmentsAction } from '@/actions/course-actions'
+import { getCoursePricingContext } from '@/server/payments/getCoursePricingContext'
+import type {
+  LifetimeUpgradeOfferKey,
+  PricingOfferStatusMap,
+  SubscriptionPlanChange,
+} from '@/types/paymentTypes'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,10 +38,14 @@ const layoutComponents = {
 
 function PathPageComponent({
   slug,
-  ownedCourses
+  pricingOfferStatuses,
+  eligibleLifetimeUpgradeOfferKey,
+  subscriptionPlanChange,
 }: {
   slug: string
-  ownedCourses: string[]
+  pricingOfferStatuses: PricingOfferStatusMap
+  eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
+  subscriptionPlanChange: SubscriptionPlanChange | null
 }) {
   const data = careerPathsData[slug]
 
@@ -49,7 +58,9 @@ function PathPageComponent({
   return (
     <LayoutComponent
       {...data}
-      ownedCourses={ownedCourses}
+      pricingOfferStatuses={pricingOfferStatuses}
+      eligibleLifetimeUpgradeOfferKey={eligibleLifetimeUpgradeOfferKey}
+      subscriptionPlanChange={subscriptionPlanChange}
       subjectTitles={getCourseSubjectTitles(data.pricing?.courseSlug ?? slug)}
     />
   )
@@ -61,8 +72,21 @@ export default async function PathPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const { enrollments } = await getUserEnrollmentsAction()
-  const ownedCourses = enrollments.map(e => `${e.courseSlug}-${e.accessTier}`)
+  const pricing = careerPathsData[slug]?.pricing
+  const pricingContext = pricing
+    ? await getCoursePricingContext(pricing.courseSlug)
+    : {
+        eligibleLifetimeUpgradeOfferKey: null,
+        pricingOfferStatuses: {},
+        subscriptionPlanChange: null,
+      }
 
-  return <PathPageComponent slug={slug} ownedCourses={ownedCourses} />
+  return (
+    <PathPageComponent
+      slug={slug}
+      pricingOfferStatuses={pricingContext.pricingOfferStatuses}
+      eligibleLifetimeUpgradeOfferKey={pricingContext.eligibleLifetimeUpgradeOfferKey}
+      subscriptionPlanChange={pricingContext.subscriptionPlanChange}
+    />
+  )
 }

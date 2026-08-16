@@ -3,6 +3,7 @@ import { memTraces, memEpisodes } from '@/server/db/memory-schema'
 import { and, eq, lt, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { RETENTION } from '@/server/memory/config'
+import { cleanupDeletedAccountOperations } from '@/server/account-deletion/cleanupDeletedAccountOperations'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
@@ -43,12 +44,14 @@ export async function GET(request: Request) {
     const factsDeleted = Array.isArray((factResult as { rows?: unknown[] }).rows)
       ? (factResult as { rows: unknown[] }).rows.length
       : ((factResult as { rowCount?: number }).rowCount ?? 0)
+    const deletedAccounts = await cleanupDeletedAccountOperations(now)
 
     return NextResponse.json({
       success: true,
       traces: tracesDeleted.length,
       episodes: episodesDeleted.length,
       facts: factsDeleted,
+      deletedAccounts,
       timestamp: now.toISOString(),
     })
   } catch (error) {
