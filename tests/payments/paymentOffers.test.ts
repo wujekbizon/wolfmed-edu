@@ -10,6 +10,7 @@ const stripePrice = (
 ): Stripe.Price => ({
   active: true,
   currency: 'pln',
+  lookup_key: 'opiekun_basic_lifetime',
   type: 'one_time',
   unit_amount: 15999,
   product: { active: true } as Stripe.Product,
@@ -20,6 +21,8 @@ const recurringStripePrice = (
   overrides: Partial<Stripe.Price> = {}
 ): Stripe.Price => stripePrice({
   type: 'recurring',
+  lookup_key: 'opiekun_basic_monthly',
+  tax_behavior: 'inclusive',
   unit_amount: 1999,
   recurring: { interval: 'month' } as Stripe.Price.Recurring,
   ...overrides,
@@ -78,6 +81,8 @@ test('configured recurring Price must be monthly and match the offer', () => {
   assert.equal(isStripePriceValidForOffer(recurringStripePrice(), offer), true)
   assert.equal(isStripePriceValidForOffer(recurringStripePrice({ unit_amount: 1 }), offer), false)
   assert.equal(isStripePriceValidForOffer(recurringStripePrice({ type: 'one_time' }), offer), false)
+  assert.equal(isStripePriceValidForOffer(recurringStripePrice({ tax_behavior: 'unspecified' }), offer), false)
+  assert.equal(isStripePriceValidForOffer(recurringStripePrice({ lookup_key: 'wrong' }), offer), false)
   assert.equal(isStripePriceValidForOffer(recurringStripePrice({
     recurring: { interval: 'year' } as Stripe.Price.Recurring,
   }), offer), false)
@@ -91,6 +96,7 @@ test('configured Stripe Price must match active one-time offer', () => {
   assert.equal(isStripePriceValidForOffer(stripePrice({ currency: 'eur' }), offer), false)
   assert.equal(isStripePriceValidForOffer(stripePrice({ unit_amount: 1 }), offer), false)
   assert.equal(isStripePriceValidForOffer(stripePrice({ type: 'recurring' }), offer), false)
+  assert.equal(isStripePriceValidForOffer(stripePrice({ lookup_key: null }), offer), true)
   assert.equal(
     isStripePriceValidForOffer(stripePrice({ product: { active: false } as Stripe.Product }), offer),
     false

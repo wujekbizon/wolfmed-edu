@@ -1,11 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { useActionState } from 'react'
 import { createCheckoutSession } from '@/actions/stripe'
-import {
-  cancelSubscriptionPlanChange,
-  createSubscriptionPlanChangePortalSession,
-} from '@/actions/subscriptionPlanChange'
+import { changeSubscriptionPlan } from '@/actions/subscriptionPlanChange'
 import { PRICING_OFFER_STATUS_LABELS } from '@/constants/pricingOfferStatusLabels'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import SubmitButton from './SubmitButton'
@@ -27,18 +25,15 @@ export default function CoursePricingCard({
   purchaseLabel,
   subscriptionPlanChange,
 }: CoursePricingCardProps) {
-  const serverAction = offerStatus === 'scheduled_downgrade'
-    ? cancelSubscriptionPlanChange
-    : offerStatus === 'portal_upgrade' || offerStatus === 'portal_downgrade'
-      ? createSubscriptionPlanChangePortalSession
-      : createCheckoutSession
+  const serverAction = offerStatus === 'portal_upgrade' || offerStatus === 'downgrade_available'
+    ? changeSubscriptionPlan
+    : createCheckoutSession
   const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
   const label = offerStatus === 'available' && purchaseLabel
     ? purchaseLabel
     : PRICING_OFFER_STATUS_LABELS[offerStatus]
-  const enabledStatuses = ['available', 'portal_upgrade', 'portal_downgrade',
-    'scheduled_downgrade']
+  const enabledStatuses = ['available', 'portal_upgrade', 'downgrade_available']
   const disabled = !enabledStatuses.includes(offerStatus)
 
   return (
@@ -77,14 +72,17 @@ export default function CoursePricingCard({
               Stripe pokaże rozliczenie proporcjonalne przed potwierdzeniem.
             </p>
           )}
-          {offerStatus === 'portal_downgrade' && (
+          {offerStatus === 'downgrade_available' && (
             <p className="mt-2 text-center text-xs text-slate-500">
               Premium pozostanie aktywny do końca opłaconego okresu.
             </p>
           )}
           {offerStatus === 'scheduled_downgrade' && subscriptionPlanChange && (
             <p className="mt-2 text-center text-xs text-slate-500">
-              Basic od {formatPlDate(subscriptionPlanChange.effectiveAt)}.
+              Basic od {formatPlDate(subscriptionPlanChange.effectiveAt)}.{' '}
+              <Link className="font-medium underline" href="/panel#platnosci">
+                Zarządzaj zmianą
+              </Link>
             </p>
           )}
         </div>

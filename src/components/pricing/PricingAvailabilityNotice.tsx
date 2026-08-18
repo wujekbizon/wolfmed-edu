@@ -18,7 +18,7 @@ export default function PricingAvailabilityNotice({
     return (
       <p className="mt-5 text-center text-sm text-slate-600">
         Masz aktywną subskrypcję. Dostęp na zawsze kupisz po jej zakończeniu.{' '}
-        <Link className="font-medium underline" href="/panel/ustawienia#platnosci">
+        <Link className="font-medium underline" href="/panel#platnosci">
           Zarządzaj subskrypcją
         </Link>
       </p>

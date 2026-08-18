@@ -71,7 +71,7 @@ test('Premium subscription offers a scheduled Basic downgrade', () => {
     'opiekun-medyczny',
     true
   )
-  assert.equal(statuses.opiekun_basic_monthly, 'portal_downgrade')
+  assert.equal(statuses.opiekun_basic_monthly, 'downgrade_available')
   assert.equal(statuses.opiekun_premium_monthly, 'current_subscription')
   assert.equal(statuses.opiekun_premium_lifetime, 'active_subscription')
 })

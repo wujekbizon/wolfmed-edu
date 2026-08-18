@@ -12,6 +12,7 @@ export async function getBillingOverview(userId: string): Promise<BillingOvervie
       accessTier: subscriptions.accessTier,
       status: subscriptions.status,
       currentPeriodEnd: subscriptions.currentPeriodEnd,
+      pendingOfferKey: subscriptions.pendingOfferKey,
       pendingAccessTier: subscriptions.pendingAccessTier,
       pendingChangeAt: subscriptions.pendingChangeAt,
       cancelAtPeriodEnd: subscriptions.cancelAtPeriodEnd,

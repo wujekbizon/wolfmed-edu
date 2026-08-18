@@ -1,3 +1,4 @@
+import CancelScheduledDowngradeButton from '@/components/billing/CancelScheduledDowngradeButton'
 import { PAYMENT_COURSE_TITLES } from '@/constants/paymentResult'
 import { formatPlDate } from '@/helpers/formatPlDate'
 import { formatSubscriptionStatus } from '@/helpers/formatSubscriptionStatus'
@@ -19,19 +20,32 @@ export default function BillingSummaryList({ overview }: BillingSummaryListProps
       ))}
       {overview.subscriptions.map((item) => {
         const billingDate = getSubscriptionBillingDate(item)
+        const pendingOfferKey = item.pendingOfferKey
+        const pendingChangeAt = item.pendingChangeAt
+        const hasScheduledDowngrade = pendingOfferKey &&
+          item.pendingAccessTier === 'basic' && pendingChangeAt
         return (
-          <p key={`subscription-${item.courseSlug}`} className="text-sm text-zinc-600">
-            {PAYMENT_COURSE_TITLES[item.courseSlug]} ·{' '}
-            {item.accessTier === 'premium' ? 'Premium' : 'Basic'} ·{' '}
-            {formatSubscriptionStatus(item.status)}
-            {billingDate && (
-              <> · {billingDate.label} {formatPlDate(billingDate.date)}</>
+          <div key={`subscription-${item.courseSlug}`} className="space-y-3">
+            <p className="text-sm text-zinc-600">
+              {PAYMENT_COURSE_TITLES[item.courseSlug]} ·{' '}
+              {item.accessTier === 'premium' ? 'Premium' : 'Basic'} ·{' '}
+              {formatSubscriptionStatus(item.status)}
+              {billingDate && (
+                <> · {billingDate.label} {formatPlDate(billingDate.date)}</>
+              )}
+            </p>
+            {hasScheduledDowngrade && (
+              <div className="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                <p className="text-sm font-medium text-amber-950">
+                  Zaplanowana zmiana na Basic: {formatPlDate(pendingChangeAt)}
+                </p>
+                <p className="mt-1 text-xs text-amber-800">
+                  Premium pozostaje aktywny do tego dnia.
+                </p>
+                <CancelScheduledDowngradeButton offerKey={pendingOfferKey} />
+              </div>
             )}
-            {item.pendingAccessTier && item.pendingChangeAt && (
-              <> · zmiana na {item.pendingAccessTier === 'premium' ? 'Premium' : 'Basic'}{' '}
-                {formatPlDate(item.pendingChangeAt)}</>
-            )}
-          </p>
+          </div>
         )
       })}
     </div>

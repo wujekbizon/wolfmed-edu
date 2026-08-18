@@ -1,4 +1,5 @@
 import 'server-only'
+import { isSubscriptionDowngrade } from '@/helpers/isSubscriptionDowngrade'
 import { getVerifiedSubscriptionOffer } from '@/server/payments/getVerifiedSubscriptionOffer'
 import type {
   SubscriptionSnapshot,
@@ -13,12 +14,7 @@ export async function getVerifiedScheduledSubscriptionChange(
   if (!snapshot.scheduledChange) return null
 
   const offer = await getVerifiedSubscriptionOffer(snapshot.scheduledChange.priceId)
-  if (
-    currentOffer.accessTier !== 'premium' ||
-    offer.accessTier !== 'basic' ||
-    offer.courseSlug !== currentOffer.courseSlug ||
-    offer.productId !== currentOffer.productId
-  ) {
+  if (!isSubscriptionDowngrade(currentOffer, offer)) {
     throw new Error(`Subscription ${snapshot.id} has an invalid scheduled change`)
   }
 

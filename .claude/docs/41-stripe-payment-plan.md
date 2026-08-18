@@ -1,14 +1,14 @@
 # Stripe payments and subscriptions plan
 
-Status: scheduled downgrade implementation, development schema and Stripe sandbox
-catalog/Portal setup are complete. Manual downgrade/cancellation acceptance,
+Status: cross-Product scheduled downgrade implementation is complete. Stripe
+sandbox catalog/Portal reconfiguration, manual downgrade/cancellation acceptance,
 Premium library activation and production rollout remain.
 
 Branch: `codex/practical-exam-next`.
 
 Prepared: 2026-08-11.
 
-Updated: 2026-08-16.
+Updated: 2026-08-18.
 
 ## Progress
 
@@ -36,11 +36,12 @@ Updated: 2026-08-16.
 - [x] Subscription DB migration and Stripe sandbox configuration.
 - [x] Monthly purchase, upgrade, cancel, resume and terminal cleanup flows.
 - [x] Lifetime purchase, difference-price upgrade and invoice event routing.
-- [x] TypeScript check, 201 automated tests and `git diff --check`.
+- [x] TypeScript check, 203 automated tests and `git diff --check`.
 - [x] Permanent Clerk/Stripe account deletion and RODO retention workflow.
 - [x] Stripe Test Clock renewal, failed payment and recovery.
 - [x] Premium-to-Basic scheduled downgrade implementation, schema and UI.
-- [x] Shared recurring Products and course-scoped sandbox Portal configurations.
+- [x] Separate recurring tier Product support and course-scoped upgrade Portal flow.
+- [ ] Reconfigure sandbox recurring Products and upgrade Portal configurations.
 - [ ] Stripe Test Clock downgrade, schedule release and cancellation acceptance.
 - [ ] Pielęgniarstwo plan-change isolation smoke test.
 - [ ] Durable Premium library activation job.
@@ -172,13 +173,13 @@ cancellation remain pending.
 Basic-to-Premium immediate prorated upgrade is complete. The reverse direction is
 implemented with canonical Subscription Schedule reads, pending local state,
 schedule webhooks, release UI and period-end transition handling. The additive dev
-migration and Stripe catalog/Portal configuration are complete. Test Clock
-acceptance remains.
+migration is complete. Stripe catalog/Portal reconfiguration and Test Clock
+acceptance remain.
 
 1. For a Premium monthly subscriber, show a clear Basic-card action such as
    `Przejdź na Basic od następnego okresu` instead of disabled `Masz Premium`.
-2. Extend the course-scoped Portal action to accept Premium-to-Basic only for the
-   same course and current Subscription. Keep cross-course switching impossible.
+2. Create a course-validated Subscription Schedule through the API for
+   Premium-to-Basic. Keep cross-course switching impossible.
 3. Configure/verify that downgrade is scheduled for the next renewal with no
    immediate refund or access reduction.
 4. Represent the pending downgrade in local billing state and show its effective
@@ -230,8 +231,13 @@ lifetime/subscription billing for the same course.
 ## Current implementation risks
 
 - Basic materials are not indexed when access later becomes Premium.
+- Open payment-recovery UX: `invoice.payment_failed` immediately revokes the only
+  enrollment, so `/panel#platnosci` becomes unreachable through the guarded panel
+  layout. Decide between a course-pricing Customer Portal recovery CTA, a separate
+  authenticated recovery route, or a controlled retry grace period. Course
+  content must remain blocked while unpaid.
 - Stripe Test Clock downgrade, schedule release and cancellation remain unverified.
-- Pielęgniarstwo dedicated plan-change Portal remains unverified.
+- Pielęgniarstwo dedicated upgrade Portal remains unverified.
 - Payment retention deadline still requires accountant confirmation before prod.
 
 ## Server-first architecture
@@ -275,8 +281,8 @@ Support ten Prices:
 - Opiekun Basic lifetime to Premium lifetime: 290.00 PLN.
 - Pielegniarstwo Basic lifetime to Premium lifetime: 320.00 PLN.
 
-Use one recurring Product per course with Basic and Premium Prices under it so
-Customer Portal can change tiers. Use stable lookup keys:
+Use one flat-rate recurring Product per course tier. Customer Portal rejects two
+Prices with the same Product and recurring interval. Use stable lookup keys:
 
 - `opiekun_basic_lifetime`
 - `opiekun_premium_lifetime`
@@ -298,10 +304,12 @@ the subscription ends. Either model may still be used for the other course.
   date, lifetime ownership, and a Manage subscription button.
 - Create short-lived authenticated Customer Portal Sessions with a fixed return
   URL.
-- Configure Portal for payment methods, billing details, NIP, invoices, tier
-  changes, and cancellation. Disable quantity changes and promotions.
+- Configure the default Portal for payment methods, billing details, NIP, invoices,
+  and cancellation. Disable plan and quantity changes.
+- Configure course-scoped upgrade Portals with the course's separate Basic and
+  Premium Products. Disable quantity changes and promotions.
 - Basic to Premium: immediate, prorated, and invoiced.
-- Premium to Basic: scheduled for next renewal.
+- Premium to Basic: Wolfmed creates a Subscription Schedule for next renewal.
 - Cancellation: period end, no automatic refund, access through paid period.
 - Failed renewal: revoke access immediately. Later successful invoice restores it.
 - Account deletion: permanently delete the Stripe Customer and all access
@@ -388,7 +396,8 @@ Stripe sandbox coverage:
 
 - All ten offers and exact amounts.
 - Required name/address, optional NIP, and generated invoice PDFs.
-- Customer Portal tier changes, cancellation, and invoices.
+- Customer Portal upgrades, cancellation, and invoices.
+- API-created scheduled downgrades and releases.
 - Test Clocks for renewal, failure, recovery, downgrade, and cancellation.
 
 Migration preflight detects duplicate payments, enrollments, and subscriptions

@@ -21,7 +21,7 @@ export function getPricingOfferStatus(
     }
     if (activeSubscription.accessTier === 'premium') {
       if (planChange?.targetOfferKey === offer.key) return 'scheduled_downgrade'
-      return portalConfigured ? 'portal_downgrade' : 'portal_upgrade_unavailable'
+      return 'downgrade_available'
     }
     return portalConfigured ? 'portal_upgrade' : 'portal_upgrade_unavailable'
   }

@@ -9,6 +9,7 @@ const subscription: BillingSubscription = {
   accessTier: 'premium',
   status: 'active',
   currentPeriodEnd,
+  pendingOfferKey: null,
   pendingAccessTier: null,
   pendingChangeAt: null,
   cancelAtPeriodEnd: false,

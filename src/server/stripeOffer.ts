@@ -24,5 +24,5 @@ export async function getVerifiedStripeOffer(offerKey: PaymentOfferKey) {
   const productId = typeof price.product === 'string'
     ? price.product
     : price.product.id
-  return { ...offer, priceId, productId }
+  return { ...offer, priceId, productId, taxBehavior: price.tax_behavior }
 }

@@ -57,9 +57,11 @@ export default function PanelDashboard() {
                 <Suspense fallback={<StorageQuotaWidgetSkeleton />}>
                   <StorageQuotaWidget />
                 </Suspense>
-                <Suspense fallback={<DashboardBillingCardSkeleton />}>
-                  <DashboardBillingCard />
-                </Suspense>
+                <div id="platnosci" className="scroll-mt-6">
+                  <Suspense fallback={<DashboardBillingCardSkeleton />}>
+                    <DashboardBillingCard />
+                  </Suspense>
+                </div>
               </div>
             </div>
           </div>

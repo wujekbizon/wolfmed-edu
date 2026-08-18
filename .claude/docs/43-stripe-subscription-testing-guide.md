@@ -19,7 +19,7 @@ The full pass covers:
 - Failed renewal, immediate access loss and payment recovery.
 - Period-end cancellation.
 - Idempotent webhook/database behavior.
-- Course isolation and both dedicated Portal configurations.
+- Course isolation and both dedicated upgrade Portal configurations.
 
 Do not reuse an old Test Clock Customer after changing Products or Prices. Create a
 fresh Clerk user, Test Clock, Customer and Subscription.
@@ -46,19 +46,27 @@ Verify the scheduled-change columns exist on
 
 ## 2. Stripe sandbox catalog
 
-Use one recurring Product per course. Each Product must contain its Basic and
-Premium monthly Prices:
+Use one flat-rate recurring Product per course tier. Basic and Premium must be
+separate Products because Customer Portal rejects two Prices with the same
+Product and recurring interval:
 
 | Product | Price | Amount | Lookup key | Default |
 |---|---|---:|---|---|
-| Opiekun Medyczny — subskrypcja | Basic | 19.99 PLN/month | `opiekun_basic_monthly` | yes |
-| Opiekun Medyczny — subskrypcja | Premium | 49.99 PLN/month | `opiekun_premium_monthly` | no |
-| Pielęgniarstwo — subskrypcja | Basic | 49.99 PLN/month | `pielegniarstwo_basic_monthly` | yes |
-| Pielęgniarstwo — subskrypcja | Premium | 79.99 PLN/month | `pielegniarstwo_premium_monthly` | no |
+| Opiekun Medyczny — Basic | Basic | 19.99 PLN/month | `opiekun_basic_monthly` | yes |
+| Opiekun Medyczny — Premium | Premium | 49.99 PLN/month | `opiekun_premium_monthly` | yes |
+| Pielęgniarstwo — Basic | Basic | 49.99 PLN/month | `pielegniarstwo_basic_monthly` | yes |
+| Pielęgniarstwo — Premium | Premium | 79.99 PLN/month | `pielegniarstwo_premium_monthly` | yes |
 
 The default Price does not affect Wolfmed because Checkout always sends an
 explicit Price ID. Keep all lifetime Products, Prices and environment variables
 unchanged.
+
+Give every recurring Price its exact lookup key from the table. Set the same
+explicit tax behavior on Basic and Premium (`inclusive` or `exclusive`); never
+leave it `unspecified`, because Stripe Portal then blocks subscription updates.
+Stripe Prices cannot move between Products, so create new Prices and transfer the
+lookup keys from the superseded recurring Prices. Do not delete a Price used by an
+existing Subscription; archive it only after migration/testing no longer needs it.
 
 Set the current sandbox IDs in the active local environment:
 
@@ -80,22 +88,25 @@ The default Portal configuration is for billing management:
 - Period-end cancellation enabled.
 - Plan switching disabled.
 
-Create one dedicated plan-change configuration per course. Each must satisfy:
+Create one dedicated upgrade configuration per course. Each must satisfy:
 
 1. Subscription plan switching enabled.
-2. Only that course's recurring Product is included.
-3. Both current Basic and Premium Prices are included.
+2. Only that course's Basic and Premium recurring Products are included.
+3. Each Product includes only its current monthly Price.
 4. Price changes enabled and quantity changes disabled.
 5. Prorated charges and credits enabled.
 6. Prorations invoiced immediately.
 7. Billing-cycle anchor unchanged.
-8. Manage downgrades enabled.
-9. Decreasing-price changes scheduled at period end.
+8. Manage downgrades disabled; Wolfmed schedules them through the Subscription
+   Schedule API.
 
-Wolfmed validates these settings before opening the plan-change Portal. A
-configuration failure usually means the wrong `bpc_...`, missing Price, wrong
-Product, quantity enabled, non-immediate proration or missing period-end downgrade
-scheduling.
+Wolfmed validates these settings before opening an upgrade Portal. A configuration
+failure usually means the wrong `bpc_...`, an extra/missing Product or Price,
+quantity enabled, or non-immediate proration.
+
+Stripe returns the configuration's Product catalog only when
+`features.subscription_update.products` is expanded. An empty `products` value
+from a plain CLI retrieve command does not mean the catalog is missing.
 
 ## 4. Local processes
 
@@ -239,7 +250,7 @@ Expected:
 2. Confirm Portal displays an immediate prorated charge before approval.
 3. Approve the change.
 4. Confirm `/success` says Premium is active.
-5. Confirm pricing, `/panel` and `/panel/ustawienia` show Premium.
+5. Confirm pricing and `/panel#platnosci` show Premium.
 
 Expected:
 
@@ -252,10 +263,9 @@ Expected:
 ## 9. Schedule, release and recreate downgrade
 
 1. From Premium, choose Basic.
-2. Confirm Portal states that Basic starts at the next billing period.
-3. Approve the change.
-4. Confirm `/success` says the downgrade is scheduled, not already active.
-5. Verify pricing, dashboard and billing settings show the effective date.
+2. Wolfmed creates the Stripe Subscription Schedule and returns to `/success`.
+3. Confirm `/success` says the downgrade is scheduled, not already active.
+4. Verify pricing and `/panel#platnosci` show the effective date.
 
 Expected before renewal:
 
@@ -266,7 +276,7 @@ Expected before renewal:
 - The pending tier is Basic.
 - Schedule webhooks return `200`.
 
-Cancel the scheduled downgrade in Wolfmed.
+Cancel the scheduled downgrade from `/panel#platnosci` in Wolfmed.
 
 Expected:
 
@@ -275,6 +285,8 @@ Expected:
 - Premium remains active.
 
 Schedule Basic again and leave it pending for the Test Clock transition.
+Confirm Stripe created a new `sub_sched_...` ID and `/success` reports the
+scheduled Basic change rather than the current Premium state.
 
 ## 10. Advance through the downgrade renewal
 
@@ -292,6 +304,7 @@ Expected:
 - Subscription and enrollment now show Basic.
 - Current Price and offer are Basic.
 - Pending fields clear.
+- Wolfmed releases the completed downgrade schedule after `invoice.paid`.
 - One new paid renewal Invoice payment has `sessionId = NULL`.
 - No duplicate subscription or enrollment exists.
 - Premium features are no longer available.
@@ -362,15 +375,48 @@ Expected:
 
 ## 14. Second-course isolation
 
-Use a fresh user/Test Clock for the cleanest result. At minimum test
-Pielęgniarstwo:
+Choose one setup before testing:
+
+- Pielęgniarstwo-only smoke test: use a fresh user/Test Clock and run steps 1-5.
+  The cross-course state check does not apply because the user owns no Opiekun
+  access.
+- Cross-course isolation test: use one user who owns both courses. Record both
+  courses' subscription/enrollment/payment state before testing, run steps 1-5,
+  then confirm the Opiekun records did not change.
+
+Pielęgniarstwo smoke test:
 
 1. Basic monthly Checkout at 49.99 PLN.
 2. Immediate Premium upgrade at 79.99 PLN with proration.
 3. Premium-to-Basic scheduled downgrade.
 4. Release the downgrade once.
-5. Confirm its dedicated Portal contains only Pielęgniarstwo Prices.
-6. Confirm Opiekun access and pricing state never change.
+5. Retrieve the dedicated Pielęgniarstwo upgrade configuration through the API
+   with `features.subscription_update.products` expanded. Confirm it contains
+   only the Basic and Premium Products, each with its current Price and quantity
+   adjustment disabled. Users don't open this configuration directly; Wolfmed
+   applies it only to the upgrade confirmation session.
+
+```powershell
+$configId = 'bpc_...' # STRIPE_PIELEGNIARSTWO_PORTAL_CONFIGURATION_ID
+(stripe get "/v1/billing_portal/configurations/$configId" `
+  -d "expand[]=features.subscription_update.products" |
+  ConvertFrom-Json).features.subscription_update.products |
+  ConvertTo-Json -Depth 6
+```
+
+Expected: exactly two entries. Their Price IDs match
+`STRIPE_PIELEGNIARSTWO_BASIC_MONTHLY_PRICE_ID` and
+`STRIPE_PIELEGNIARSTWO_PREMIUM_MONTHLY_PRICE_ID`; both entries show
+`adjustable_quantity.enabled: false`.
+6. For the cross-course setup only, confirm Wolfmed still shows the same Opiekun
+   tier and pricing status. Confirm its enrollment and payment records retain the
+   same IDs, tier, active/payment state and source. Pielęgniarstwo actions must not
+   create or update an Opiekun subscription, schedule or Invoice.
+
+If Opiekun access was purchased only after steps 1-5, first confirm that purchase
+did not alter the existing Pielęgniarstwo subscription. Then schedule and release
+one Pielęgniarstwo downgrade and confirm the Opiekun lifetime enrollment remains
+unchanged. This verifies isolation in both directions.
 
 One full clock lifecycle can be run for Opiekun and a plan-change smoke test for
 Pielęgniarstwo. Repeat the full lifecycle for both only when validating production
@@ -398,12 +444,14 @@ Acceptance passes when:
 - Renewal activates Basic exactly once.
 - Failure revokes access and recovery restores it.
 - Cancellation removes access only at period end.
-- Both course Portal configurations stay course-scoped.
+- Both course upgrade Portal configurations stay course-scoped.
 
 ## Troubleshooting
 
-- Plan-change button fails: verify the dedicated `bpc_...`, same Product, both
-  Price IDs, quantity disabled, immediate proration and period-end downgrade.
+- Upgrade button fails: verify the dedicated `bpc_...`, separate Basic/Premium
+  Products, one current Price each, quantity disabled and immediate proration.
+- Downgrade button fails: verify both Prices are active flat-rate monthly Prices
+  for separate Products and restart Wolfmed after changing their environment IDs.
 - Customer has no Test Clock: create a new Customer inside the simulation and
   relink the fresh Wolfmed user.
 - Webhook `400`: replace the signing secret and restart Wolfmed.

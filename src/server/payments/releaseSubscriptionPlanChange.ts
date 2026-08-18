@@ -1,10 +1,7 @@
 import 'server-only'
-import { and, desc, eq, notInArray } from 'drizzle-orm'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
-import { TERMINAL_SUBSCRIPTION_STATUSES } from '@/constants/subscriptionStatus'
 import stripe from '@/lib/stripeClient'
-import { db } from '@/server/db/index'
-import { subscriptions } from '@/server/db/schema'
+import { getActiveCourseSubscription } from '@/server/payments/getActiveCourseSubscription'
 import { getSubscriptionSnapshot } from '@/server/payments/getSubscriptionSnapshot'
 import { getVerifiedScheduledSubscriptionChange } from '@/server/payments/getVerifiedScheduledSubscriptionChange'
 import { getVerifiedSubscriptionOffer } from '@/server/payments/getVerifiedSubscriptionOffer'
@@ -18,11 +15,7 @@ export async function releaseSubscriptionPlanChange(
   const target = PAYMENT_OFFERS[targetOfferKey]
   if (target.purchaseModel !== 'subscription' || target.accessTier !== 'basic') return false
 
-  const [local] = await db.select().from(subscriptions).where(and(
-    eq(subscriptions.userId, userId),
-    eq(subscriptions.courseSlug, target.courseSlug),
-    notInArray(subscriptions.status, [...TERMINAL_SUBSCRIPTION_STATUSES])
-  )).orderBy(desc(subscriptions.createdAt)).limit(1)
+  const local = await getActiveCourseSubscription(userId, target.courseSlug)
   if (!local) return false
 
   const snapshot = await getSubscriptionSnapshot(local.subscriptionId)

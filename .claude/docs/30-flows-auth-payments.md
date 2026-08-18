@@ -95,13 +95,12 @@ actual panel access reads DB grants. Navbar/Drawer do not read Clerk course meta
    payment, processed event and `subscription` grant. A failed latest Invoice
    revokes access immediately; a later paid Invoice restores it. Period-end
    cancellation retains access until Stripe ends the Subscription.
-4. `/panel/ustawienia` shows lifetime and subscription state. Its authenticated
-   action creates a short-lived Customer Portal Session with a fixed return URL.
-   Basic-to-Premium is immediate. Premium-to-Basic uses Stripe Portal's
-   period-end schedule; schedule webhooks persist the pending Basic Price/date
-   without reducing current Premium access. Releasing the schedule cancels only
-   the pending change. At phase transition the same subscription grant becomes
-   Basic.
+4. `/panel#platnosci` is the single payment-management surface. It shows lifetime
+   and subscription state, opens a short-lived Customer Portal Session, and lets
+   the user release a pending downgrade. Basic-to-Premium is immediate.
+   Premium-to-Basic uses the Subscription Schedule API; schedule webhooks persist
+   the pending Basic Price/date without reducing current Premium access. At phase
+   transition the same subscription grant becomes Basic.
 5. Clerk account deletion deletes the Stripe Customer before personal application
    data, canceling every Stripe-side Subscription without proration.
 

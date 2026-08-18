@@ -47,4 +47,5 @@ export type PaymentOffer = {
 export type VerifiedPaymentOffer = PaymentOffer & {
   priceId: string
   productId: string
+  taxBehavior: 'exclusive' | 'inclusive' | 'unspecified' | null
 }

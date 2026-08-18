@@ -1,61 +1,63 @@
 import 'server-only'
-import { and, desc, eq, notInArray } from 'drizzle-orm'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
 import { STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE } from '@/constants/stripePortalConfigurations'
-import { TERMINAL_SUBSCRIPTION_STATUSES } from '@/constants/subscriptionStatus'
+import { isPortalSubscriptionUpgradeConfigured } from '@/helpers/isPortalSubscriptionUpgradeConfigured'
 import { isSubscriptionAccessActive } from '@/helpers/isSubscriptionAccessActive'
-import { isPortalPlanChangeConfigured } from '@/helpers/isPortalPlanChangeConfigured'
+import { isSubscriptionUpgrade } from '@/helpers/isSubscriptionUpgrade'
 import stripe from '@/lib/stripeClient'
-import { db } from '@/server/db/index'
-import { subscriptions } from '@/server/db/schema'
+import { getActiveCourseSubscription } from '@/server/payments/getActiveCourseSubscription'
 import { getSubscriptionSnapshot } from '@/server/payments/getSubscriptionSnapshot'
 import { getVerifiedSubscriptionOffer } from '@/server/payments/getVerifiedSubscriptionOffer'
+import { releaseCompletedSubscriptionDowngrade } from '@/server/payments/releaseCompletedSubscriptionDowngrade'
 import { getVerifiedStripeOffer } from '@/server/stripeOffer'
 import type { PaymentOfferKey } from '@/types/paymentTypes'
 
-export async function createSubscriptionPlanChangePortal(
+export async function createSubscriptionUpgradePortal(
   userId: string,
   targetOfferKey: PaymentOfferKey
 ): Promise<string | null> {
   const targetOffer = PAYMENT_OFFERS[targetOfferKey]
-  if (targetOffer.purchaseModel !== 'subscription') return null
+  if (targetOffer.purchaseModel !== 'subscription' || targetOffer.accessTier !== 'premium') {
+    return null
+  }
 
-  const [local] = await db.select().from(subscriptions).where(and(
-    eq(subscriptions.userId, userId),
-    eq(subscriptions.courseSlug, targetOffer.courseSlug),
-    notInArray(subscriptions.status, [...TERMINAL_SUBSCRIPTION_STATUSES])
-  )).orderBy(desc(subscriptions.createdAt)).limit(1)
+  const local = await getActiveCourseSubscription(userId, targetOffer.courseSlug)
   if (!local) return null
 
-  const snapshot = await getSubscriptionSnapshot(local.subscriptionId)
+  let snapshot = await getSubscriptionSnapshot(local.subscriptionId)
   const [currentOffer, verifiedTarget] = await Promise.all([
     getVerifiedSubscriptionOffer(snapshot.priceId),
     getVerifiedStripeOffer(targetOfferKey),
   ])
-  const validDirection =
-    (currentOffer.accessTier === 'basic' && targetOffer.accessTier === 'premium') ||
-    (currentOffer.accessTier === 'premium' && targetOffer.accessTier === 'basic')
   if (
     !isSubscriptionAccessActive(snapshot) ||
-    snapshot.scheduleId ||
     snapshot.customerId !== local.customerId ||
-    currentOffer.courseSlug !== targetOffer.courseSlug ||
-    currentOffer.productId !== verifiedTarget.productId ||
-    !validDirection
+    !isSubscriptionUpgrade(currentOffer, verifiedTarget)
   ) return null
+  if (snapshot.scheduleId) {
+    const released = await releaseCompletedSubscriptionDowngrade(snapshot, currentOffer)
+    if (!released) return null
+    snapshot = await getSubscriptionSnapshot(snapshot.id)
+    if (
+      snapshot.scheduleId ||
+      snapshot.priceId !== currentOffer.priceId ||
+      !isSubscriptionAccessActive(snapshot)
+    ) return null
+  }
 
   const configurationEnv = STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE[targetOffer.courseSlug]
   const configuration = process.env[configurationEnv]
   if (!configuration) throw new Error(`Missing Stripe Portal configuration: ${configurationEnv}`)
-  const portalConfiguration = await stripe.billingPortal.configurations.retrieve(configuration)
-  const downgrade = currentOffer.accessTier === 'premium'
-  if (!isPortalPlanChangeConfigured(
+  const portalConfiguration = await stripe.billingPortal.configurations.retrieve(configuration, {
+    expand: ['features.subscription_update.products'],
+  })
+  if (!isPortalSubscriptionUpgradeConfigured(
     portalConfiguration,
     currentOffer.productId,
     currentOffer.priceId,
-    verifiedTarget.priceId,
-    downgrade
+    verifiedTarget.productId,
+    verifiedTarget.priceId
   )) return null
 
   const courseUrl = `${process.env.NEXT_PUBLIC_APP_URL}/kierunki/${targetOffer.courseSlug}#${PRICING_ANCHOR}`

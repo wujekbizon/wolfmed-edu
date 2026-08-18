@@ -1,51 +1,66 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type Stripe from 'stripe'
-import { isPortalPlanChangeConfigured } from '@/helpers/isPortalPlanChangeConfigured'
+import { isPortalSubscriptionUpgradeConfigured } from '@/helpers/isPortalSubscriptionUpgradeConfigured'
 
 const configuration = (
-  conditions: Array<{ type: 'decreasing_item_amount' | 'shortening_interval' }>
+  products: Stripe.BillingPortal.Configuration.Features.SubscriptionUpdate.Product[]
 ) => ({
+  active: true,
   features: {
     subscription_update: {
       enabled: true,
       default_allowed_updates: ['price'],
       billing_cycle_anchor: 'unchanged',
       proration_behavior: 'always_invoice',
-      schedule_at_period_end: { conditions },
-      products: [{
-        product: 'prod_course',
-        prices: ['price_basic', 'price_premium'],
-        adjustable_quantity: { enabled: false, minimum: 1, maximum: 1 },
-      }],
+      schedule_at_period_end: { conditions: [] },
+      products,
     },
   },
-}) as Stripe.BillingPortal.Configuration
+}) as unknown as Stripe.BillingPortal.Configuration
 
-test('course Portal supports immediate upgrade and scheduled downgrade', () => {
-  const configured = configuration([{ type: 'decreasing_item_amount' }])
-  assert.equal(isPortalPlanChangeConfigured(
-    configured,
-    'prod_course',
+const product = (id: string, price: string) => ({
+  product: id,
+  prices: [price],
+  adjustable_quantity: { enabled: false, minimum: 1, maximum: 1 },
+})
+
+test('course Portal supports a cross-Product immediate upgrade', () => {
+  assert.equal(isPortalSubscriptionUpgradeConfigured(
+    configuration([
+      product('prod_basic', 'price_basic'),
+      product('prod_premium', 'price_premium'),
+    ]),
+    'prod_basic',
     'price_basic',
+    'prod_premium',
     'price_premium',
-    false
-  ), true)
-  assert.equal(isPortalPlanChangeConfigured(
-    configured,
-    'prod_course',
-    'price_premium',
-    'price_basic',
-    true
   ), true)
 })
 
-test('downgrade requires Stripe period-end scheduling', () => {
-  assert.equal(isPortalPlanChangeConfigured(
-    configuration([]),
+test('upgrade rejects same-Product and extra catalog entries', () => {
+  const sameProduct = configuration([{
+    ...product('prod_course', 'price_basic'),
+    prices: ['price_basic', 'price_premium'],
+  }])
+  const extraProduct = configuration([
+    product('prod_basic', 'price_basic'),
+    product('prod_premium', 'price_premium'),
+    product('prod_other', 'price_other'),
+  ])
+
+  assert.equal(isPortalSubscriptionUpgradeConfigured(
+    sameProduct,
     'prod_course',
-    'price_premium',
     'price_basic',
-    true
+    'prod_course',
+    'price_premium'
+  ), false)
+  assert.equal(isPortalSubscriptionUpgradeConfigured(
+    extraProduct,
+    'prod_basic',
+    'price_basic',
+    'prod_premium',
+    'price_premium',
   ), false)
 })

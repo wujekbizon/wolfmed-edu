@@ -1,10 +1,11 @@
-import type { PaymentOffer } from '@/types/paymentTypes'
+import type { PaymentOffer, PaymentOfferKey } from '@/types/paymentTypes'
 
 export type BillingSubscription = {
   courseSlug: PaymentOffer['courseSlug']
   accessTier: PaymentOffer['accessTier']
   status: string
   currentPeriodEnd: Date | null
+  pendingOfferKey: PaymentOfferKey | null
   pendingAccessTier: PaymentOffer['accessTier'] | null
   pendingChangeAt: Date | null
   cancelAtPeriodEnd: boolean

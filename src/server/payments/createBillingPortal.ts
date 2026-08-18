@@ -14,7 +14,7 @@ export async function createBillingPortal(userId: string): Promise<string | null
 
   const session = await stripe.billingPortal.sessions.create({
     customer: subscription.customerId,
-    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/panel/ustawienia`,
+    return_url: `${process.env.NEXT_PUBLIC_APP_URL}/panel#platnosci`,
   })
   return session.url
 }

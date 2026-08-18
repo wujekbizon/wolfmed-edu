@@ -10,7 +10,7 @@ export type PricingOfferStatus =
   | 'available'
   | 'current_subscription'
   | 'portal_upgrade'
-  | 'portal_downgrade'
+  | 'downgrade_available'
   | 'scheduled_downgrade'
   | 'portal_upgrade_unavailable'
   | 'active_subscription'

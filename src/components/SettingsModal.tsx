@@ -59,7 +59,7 @@ export default function SettingsModal() {
           Konto
         </p>
         <SettingsNavLink
-          href="/panel/ustawienia#platnosci"
+          href="/panel#platnosci"
           icon={<CreditCard className="h-4 w-4 shrink-0 text-zinc-400" />}
           title="Płatności"
           description="Subskrypcje, zakupy i faktury"
