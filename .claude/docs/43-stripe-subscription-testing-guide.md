@@ -1,7 +1,6 @@
 # Stripe subscription testing guide
 
-Status: setup complete; Premium-to-Basic downgrade and cancellation acceptance
-remain.
+Status: sandbox setup and full subscription lifecycle acceptance complete.
 
 Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
 
@@ -446,6 +445,30 @@ Acceptance passes when:
 - Cancellation removes access only at period end.
 - Both course upgrade Portal configurations stay course-scoped.
 
+## Development acceptance record
+
+Accepted 2026-08-18:
+
+- Opiekun: Basic purchase, prorated Premium upgrade, downgrade scheduling,
+  release, recreation, renewal transition to Basic, failed renewal, automatic
+  retry recovery and period-end cancellation passed.
+- Releasing and recreating a downgrade produced a new Schedule; stale
+  idempotency responses no longer reused the released Schedule.
+- The Basic transition releases the completed Schedule, so later upgrades remain
+  available.
+- Failed-payment recovery updated the same Invoice payment row from `failed` to
+  `paid` and reactivated the same enrollment.
+- Pielęgniarstwo: purchase, upgrade, downgrade/release and course-scoped Portal
+  isolation passed. A later Opiekun lifetime purchase did not alter
+  Pielęgniarstwo state.
+- All observed handled Stripe webhooks returned `200`; static checks and 203 tests
+  passed.
+
+Open product decision: immediate failed-payment revocation blocks guarded
+`/panel#platnosci`. Choose a recovery CTA, separate authenticated recovery route
+or retry grace period before production. Course content must stay blocked while
+unpaid.
+
 ## Troubleshooting
 
 - Upgrade button fails: verify the dedicated `bpc_...`, separate Basic/Premium
@@ -468,4 +491,4 @@ pnpm lint
 pnpm test
 ```
 
-Unresolved questions: none.
+Unresolved questions: failed-payment recovery UX.

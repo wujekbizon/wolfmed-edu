@@ -1,8 +1,8 @@
 # Stripe payments and subscriptions plan
 
-Status: cross-Product scheduled downgrade implementation is complete. Stripe
-sandbox catalog/Portal reconfiguration, manual downgrade/cancellation acceptance,
-Premium library activation and production rollout remain.
+Status: Stripe sandbox catalog, Portal and full subscription lifecycle acceptance
+are complete. Payment-recovery UX, Premium library activation and production
+rollout remain.
 
 Branch: `codex/practical-exam-next`.
 
@@ -32,7 +32,7 @@ Updated: 2026-08-18.
 - [x] Monthly/lifetime pricing selector.
 - [x] Source-aware pricing states and course-scoped Basic-to-Premium Portal flow.
 - [x] Shared verified success page for purchases and both upgrade models.
-- [x] Dashboard plan and payment summary linking to billing settings.
+- [x] Dashboard plan and payment management consolidated in `/panel#platnosci`.
 - [x] Subscription DB migration and Stripe sandbox configuration.
 - [x] Monthly purchase, upgrade, cancel, resume and terminal cleanup flows.
 - [x] Lifetime purchase, difference-price upgrade and invoice event routing.
@@ -41,9 +41,9 @@ Updated: 2026-08-18.
 - [x] Stripe Test Clock renewal, failed payment and recovery.
 - [x] Premium-to-Basic scheduled downgrade implementation, schema and UI.
 - [x] Separate recurring tier Product support and course-scoped upgrade Portal flow.
-- [ ] Reconfigure sandbox recurring Products and upgrade Portal configurations.
-- [ ] Stripe Test Clock downgrade, schedule release and cancellation acceptance.
-- [ ] Pielęgniarstwo plan-change isolation smoke test.
+- [x] Reconfigure sandbox recurring Products and upgrade Portal configurations.
+- [x] Stripe Test Clock downgrade, schedule release and cancellation acceptance.
+- [x] Pielęgniarstwo plan-change isolation smoke test.
 - [ ] Durable Premium library activation job.
 
 ## Next session handoff
@@ -52,13 +52,10 @@ Start the next session from this section. Preserve all completed work above.
 
 Immediate next work:
 
-1. Run the complete sandbox procedure in
-   [`43-stripe-subscription-testing-guide.md`](./43-stripe-subscription-testing-guide.md).
-2. Verify Opiekun schedule creation, release, recreation and clock transition.
-3. Verify period-end cancellation.
-4. Run the Pielęgniarstwo course-scoped Portal smoke test.
-5. Record acceptance results here.
-6. Implement durable Premium library activation after billing acceptance.
+1. Decide failed-payment recovery UX while course content remains blocked.
+2. Implement durable Premium library activation.
+3. Configure live Products, Prices, Portal configurations and webhook endpoint.
+4. Repeat the sandbox checklist, then run a controlled live smoke test.
 
 ### Priority 0: permanent account deletion and RODO
 
@@ -162,19 +159,20 @@ Do not use an existing Stripe Customer: a Test Clock accepts only new Customers.
 10. Inspect DB before finishing the simulation. Finishing deletes the clock's
     Stripe Customer and Subscription.
 
-Accepted in dev 2026-08-15: successful renewal, failed renewal and recovery
-passed. Webhooks returned `200`; renewal reused the subscription/enrollment rows,
-failure created one failed Invoice payment and revoked access, and recovery
-updated that same payment to `paid` and restored access. Downgrade and
-cancellation remain pending.
+Accepted in dev 2026-08-18: the full Opiekun Test Clock lifecycle passed. Basic
+purchase, prorated Premium upgrade, downgrade schedule creation, release,
+recreation, transition to Basic, failed renewal, automatic retry recovery and
+period-end cancellation all returned handled webhooks with `200`. Subscription
+and enrollment IDs stayed stable. Recovery updated the same failed Invoice row to
+`paid`; cancellation removed access.
 
 ### Priority 1: Premium-to-Basic downgrade
 
 Basic-to-Premium immediate prorated upgrade is complete. The reverse direction is
 implemented with canonical Subscription Schedule reads, pending local state,
 schedule webhooks, release UI and period-end transition handling. The additive dev
-migration is complete. Stripe catalog/Portal reconfiguration and Test Clock
-acceptance remain.
+migration, sandbox catalog/Portal reconfiguration and Test Clock acceptance are
+complete.
 
 1. For a Premium monthly subscriber, show a clear Basic-card action such as
    `Przejdź na Basic od następnego okresu` instead of disabled `Masz Premium`.
@@ -208,6 +206,8 @@ renewal recovery and duplicate webhooks.
 
 Next-session unresolved questions:
 
+- Failed-payment recovery UX: pricing Portal CTA, separate recovery route or grace
+  period?
 - Accountant confirmation of the exact payment-record retention deadline.
 
 ## Pricing
@@ -236,8 +236,6 @@ lifetime/subscription billing for the same course.
   layout. Decide between a course-pricing Customer Portal recovery CTA, a separate
   authenticated recovery route, or a controlled retry grace period. Course
   content must remain blocked while unpaid.
-- Stripe Test Clock downgrade, schedule release and cancellation remain unverified.
-- Pielęgniarstwo dedicated upgrade Portal remains unverified.
 - Payment retention deadline still requires accountant confirmation before prod.
 
 ## Server-first architecture
