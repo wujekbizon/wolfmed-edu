@@ -1,8 +1,8 @@
 # Stripe payments and subscriptions plan
 
-Status: Stripe sandbox catalog, Portal and full subscription lifecycle acceptance
-are complete. Payment-recovery UX, Premium library activation and production
-rollout remain.
+Status: Stripe sandbox catalog, Portal, full subscription lifecycle acceptance and
+global navbar payment management are complete. Premium library activation and
+production rollout remain.
 
 Branch: `codex/practical-exam-next`.
 
@@ -44,6 +44,8 @@ Updated: 2026-08-18.
 - [x] Reconfigure sandbox recurring Products and upgrade Portal configurations.
 - [x] Stripe Test Clock downgrade, schedule release and cancellation acceptance.
 - [x] Pielęgniarstwo plan-change isolation smoke test.
+- [x] Accept global Clerk-menu Stripe Portal UI for lifetime, subscription and
+  mixed-payment Customers outside guarded `/panel`.
 - [ ] Durable Premium library activation job.
 
 ## Next session handoff
@@ -52,10 +54,15 @@ Start the next session from this section. Preserve all completed work above.
 
 Immediate next work:
 
-1. Decide failed-payment recovery UX while course content remains blocked.
-2. Implement durable Premium library activation.
-3. Configure live Products, Prices, Portal configurations and webhook endpoint.
-4. Repeat the sandbox checklist, then run a controlled live smoke test.
+1. Implement durable Premium library activation.
+2. Configure live Products, Prices, Portal configurations and webhook endpoint.
+3. Repeat the sandbox checklist, then run a controlled live smoke test.
+
+Accepted in dev 2026-08-18: one Customer with a lifetime course and a second
+monthly course could open the global Clerk-menu Portal, see shared billing history,
+purchase Basic, upgrade to Premium, schedule and release a downgrade, and manage
+the subscription. All observed Checkout, Invoice, Subscription and Subscription
+Schedule webhooks returned `200`.
 
 ### Priority 0: permanent account deletion and RODO
 
@@ -206,8 +213,6 @@ renewal recovery and duplicate webhooks.
 
 Next-session unresolved questions:
 
-- Failed-payment recovery UX: pricing Portal CTA, separate recovery route or grace
-  period?
 - Accountant confirmation of the exact payment-record retention deadline.
 
 ## Pricing
@@ -231,11 +236,6 @@ lifetime/subscription billing for the same course.
 ## Current implementation risks
 
 - Basic materials are not indexed when access later becomes Premium.
-- Open payment-recovery UX: `invoice.payment_failed` immediately revokes the only
-  enrollment, so `/panel#platnosci` becomes unreachable through the guarded panel
-  layout. Decide between a course-pricing Customer Portal recovery CTA, a separate
-  authenticated recovery route, or a controlled retry grace period. Course
-  content must remain blocked while unpaid.
 - Payment retention deadline still requires accountant confirmation before prod.
 
 ## Server-first architecture

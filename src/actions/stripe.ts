@@ -68,7 +68,7 @@ export async function createBillingPortalSession(
   _formData: FormData
 ): Promise<FormState> {
   const { userId } = await auth()
-  if (!userId) redirect('/sign-in?redirect_url=%2Fpanel%23platnosci')
+  if (!userId) redirect('/sign-in?redirect_url=%2Fkierunki')
 
   const rateLimit = await checkRateLimit(userId, 'stripe:portal')
   if (!rateLimit.success) {
