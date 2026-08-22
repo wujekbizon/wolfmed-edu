@@ -8,6 +8,8 @@ export const metadata = {
   description: 'Preferencje nauki.',
 }
 
+export const dynamic = 'force-dynamic'
+
 export default function SettingsPage() {
   return (
     <div className="container mx-auto px-3 xs:px-4 sm:px-8 py-6 sm:py-8">
