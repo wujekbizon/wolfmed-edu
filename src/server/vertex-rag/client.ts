@@ -153,10 +153,3 @@ export async function vertexUploadFetch(
   }
   return res.json()
 }
-
-// Logs token usage (prompt / candidates / thoughts) for a Gemini call when
-// RAG_DEBUG_USAGE=true, so real numbers can replace the cost estimates.
-export function logUsage(label: string, response: { usageMetadata?: unknown }): void {
-  if (process.env.RAG_DEBUG_USAGE !== 'true') return
-  console.log(`[RAG usage] ${label}:`, JSON.stringify(response.usageMetadata ?? {}, null, 2))
-}

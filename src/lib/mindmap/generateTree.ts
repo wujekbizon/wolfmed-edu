@@ -11,7 +11,7 @@ import { RAG_TOP_K_BROAD } from "@/constants/rag"
 import { retrieveContext } from "@/server/retrieval/context"
 import { formatContextChunks } from "@/helpers/formatContextChunks"
 
-const MODEL = process.env.MINDMAP_MODEL || "gemini-2.5-flash"
+const MODEL = "gemini-2.5-flash"
 
 const MAX_ATTEMPTS = 3
 // Thinking off: a corpus-grounded map is summarising/structuring a source, not

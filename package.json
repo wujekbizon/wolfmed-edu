@@ -1,6 +1,6 @@
 {
   "name": "wolfmed-edukacja",
-  "version": "5.0.6",
+  "version": "6.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,11 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:migration:step": "tsx --env-file=.env scripts/production-migration/run-step.ts",
     "db:migrate:cells": "tsx --env-file=.env scripts/migrate-user-cells-concurrency.ts",
     "db:seed:procedures": "tsx scripts/seed-procedures.ts",
+    "db:seed:tests": "tsx --env-file=.env scripts/seed-pielegniarstwo-tests.ts",
+    "db:seed:diagnozy": "tsx --env-file=.env scripts/seed-diagnozy.ts",
     "db:reset:challenges": "tsx scripts/reset-challenge-progress.ts",
     "db:memory:extensions": "tsx --env-file=.env scripts/setup-memory-extensions.ts",
     "db:memory:seed": "tsx --env-file=.env scripts/seed-memory-policies.ts",

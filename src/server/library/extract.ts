@@ -1,5 +1,5 @@
 import 'server-only'
-import { getGoogleAI, logUsage } from '@/server/vertex-rag/client'
+import { getGoogleAI } from '@/server/vertex-rag/client'
 import {
   EXTRACTABLE_MIME_TYPES,
   EXTRACTION_MAX_OUTPUT_TOKENS,
@@ -54,7 +54,6 @@ export async function extractDocumentText(
       thinkingConfig: { thinkingBudget: 0 },
     },
   })
-  logUsage('library:extract', result)
 
   return (result.text || '').trim()
 }

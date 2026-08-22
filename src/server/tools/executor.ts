@@ -2,7 +2,7 @@ import 'server-only'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { getGoogleAI, logUsage } from '../vertex-rag/client'
+import { getGoogleAI } from '../vertex-rag/client'
 import { enforceItemCount } from '@/helpers/enforceItemCount'
 import { applyDiagramTheme } from '@/helpers/applyDiagramTheme'
 import { countMermaidNodes } from '@/helpers/countMermaidNodes'
@@ -236,7 +236,6 @@ Return ONLY the JSON array, no additional text.`
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('utworz_test', response)
 
   const generatedText = response.text || '[]'
   let questions: any[]
@@ -300,7 +299,6 @@ Return ONLY the markdown note content.`
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('notatka_tool', response)
 
   const noteContent = response.text || template.example
 
@@ -339,7 +337,6 @@ Return ONLY the markdown summary content.`
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('podsumuj', response)
 
   const summaryContent = response.text || template.example
 
@@ -392,7 +389,6 @@ async function diagramTool(args: any): Promise<ToolResult> {
         thinkingConfig: NO_THINKING
       }
     })
-    logUsage('diagram_tool', response)
     return repairMermaidSubgraphs(quoteMermaidLabels(stripCodeFences(response.text || example)))
   }
 
@@ -475,7 +471,6 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('fiszka_tool', response)
 
   const generatedText = response.text || '{"flashcards":[]}'
   let flashcards: Array<{ questionText: string; answerText: string }>
@@ -525,7 +520,6 @@ async function planujTool(args: any): Promise<ToolResult> {
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('planuj_tool', response)
 
   const rawJson = response.text || '{}'
 
@@ -566,7 +560,6 @@ async function wykladTool(args: any): Promise<ToolResult> {
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('wyklad_tool', response)
 
   const lectureContent = (response.text || '').trim()
 
@@ -618,7 +611,6 @@ async function quizProceduralnyTool(args: any): Promise<ToolResult> {
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('quiz_proceduralny_tool', response)
 
   const generatedText = (response.text || '').trim()
 
@@ -650,7 +642,6 @@ async function egzaminPraktycznyTool(): Promise<ToolResult> {
       thinkingConfig: NO_THINKING
     }
   })
-  logUsage('egzamin_praktyczny_tool', response)
 
   const generatedText = (response.text || '').trim()
 

@@ -10,6 +10,65 @@ sekcja „Rejestr migracji" na dole rośnie wraz z projektem.
 
 ---
 
+## Handoff — stan audytu 2026-08-20
+
+Źródło prawdy: Git branch `practical-exam`. Próba wykonana na Neon branch
+`practical-exam-test`. Produkcja nie została zmigrowana.
+
+Zakończone i zweryfikowane na kopii produkcji:
+
+1. Wszystkie 48 docelowych tabel, 435 kolumn, 42 FK, 6 check constraints i 3
+   enumy są obecne.
+2. `course_enrollments`: orphan cleanup i recovery zakończone; 374 real grants
+   jako `legacy_lifetime`, source IDs, `starts_at`, FK i unique index.
+3. Billing schema/events/payments/subscriptions/checkout orders: expand i orphan
+   pseudonymization zakończone.
+4. `wolfmed_procedures`: 134 rekordy (31 + 103), zachowane ID/slugi/content;
+   legacy table usunięta.
+5. Quiz 2.0: 537 legacy completions i 14 badges usunięte; AI smoke test przeszedł.
+6. `wolfmed_tests`: `data/tests.json` jest jedynym źródłem prawdy; 23 686 rekordów
+   w źródle i DB, 0 inserts/updates/extras/missing/mismatched.
+7. Diagnozy: 70 rekordów w źródle i DB, 0 różnic; smoke test potwierdzony przez
+   użytkownika.
+8. RAG: config przełączony na `wolfmed-kb`, `SERVERLESS`,
+   `text-multilingual-embedding-002`, corpus `1112960854006956032`,
+   `us-central1`; retrieval smoke test przeszedł.
+9. Memory policies: dokładne 3 rekordy z dev DB, idempotency potwierdzona.
+10. `stripe_payments_status_idx`: pełny index zgodny z `practical-exam`.
+11. Historyczne forum roles pozostają `user`; brak backfillu decyzją użytkownika.
+
+Test-only, nigdy nie wykonywać na produkcji:
+
+- `seed-smoke-user.ts`; branch zawiera Clerk test user, 2 smoke enrollments i
+  wygenerowany quiz testowy.
+
+Stripe DB blocker — rozwiązany:
+
+1. Live reconciliation wykazał, że legacy Checkout utworzył 0 Customers; wszystkie
+   374 opłacone Sessions były guest purchases. Bulk Customer backfill nie istnieje
+   do wykonania. Nowy kod tworzy Customer leniwie przy pierwszym upgrade.
+2. Jeden aktywny płatnik Clerk brakujący w DB został odzyskany wraz z płatnością
+   i Opiekun Basic `legacy_lifetime` przez `06a1-recover-legacy-paid-user.sql`.
+3. `06c-paid-users-postflight.sql` potwierdził 370 aktywnych płatnych użytkowników,
+   371 oczekiwanych grantów kursowych, 371 gotowych i 0 brakujących lub błędnych.
+
+Na świeżej kopii recovery uruchomić po `06a`, przed `06b`; zapobiega to błędnej
+pseudonimizacji prawidłowej płatności i usunięciu enrollmentu. `06c` uruchomić po
+`06b`. Na branchu testowym pozostają dodatkowo wyłącznie dwa granty smoke usera.
+
+Pozostało przed produkcją:
+
+1. Odtworzyć świeżą kopię produkcji i wykonać dokładny replay kroków z tego pliku.
+2. Wykonać końcowy schema/data audit.
+3. Przygotować maintenance window i uruchomić identyczną sekwencję na produkcji.
+4. Podczas deployu potwierdzić Vercel service-account access do wspólnego RAG
+   corpus.
+
+Nowa rozmowa: przeczytaj `CLAUDE.md`, następnie ten plik, i rozpocznij od świeżego
+replay produkcji oraz końcowego audytu.
+
+---
+
 ## Zasady dla produkcji
 
 1. **Backup przed każdą migracją.** Neon: branch bazy (`neon branches create`)
@@ -47,9 +106,227 @@ Wszystkie czytają `NEON_DATABASE_URL` (skrypty `tsx` ładują `.env.local`, pot
 | `pnpm db:migrate` | wykonuje oczekujące migracje SQL z `./drizzle` na bazie z konfiguracji | prod (po `db:generate` i review) |
 | `pnpm db:studio` | podgląd/edycja danych (Drizzle Studio) | dev / debug prod |
 | `pnpm db:seed:procedures` | TRUNCATE + reseed `wolfmed_procedures` z `data/procedures.json` (zachowuje ID i slugi) | backfill przy M4 |
+| `pnpm db:seed:tests -- --expected-host=<host> [--execute]` | transakcyjny dry-run/UPSERT pełnego `data/tests.json`; nie usuwa extras | migracja pytań po normalizacji źródła |
+| `pnpm db:seed:diagnozy -- --expected-host=<host> [--execute --prune-extras]` | waliduje Zod i synchronizuje `wolfmed_diagnozy` z `data/diagnozy.json` | po utworzeniu tabeli Diagnozy |
 | `pnpm db:reset:challenges` | TRUNCATE `challenge_completions` + `procedure_badges` (twardy reset Quiz 2.0) | jednorazowo przy M2 |
 
 ## Jak wykonać migrację na produkcji (workflow)
+
+### Próba na kopii produkcji
+
+Przed generowaniem lub wykonywaniem migracji uruchom
+[`scripts/production-migration/01-preflight.sql`](./scripts/production-migration/01-preflight.sql)
+w Neon SQL Editor na branchu `practical-exam-test`. Skrypt działa w transakcji
+read-only i zapisuje stan faktycznego schematu, rozszerzeń, tabel, kolumn oraz
+indeksów.
+
+Pierwszy preflight 2026-08-20 potwierdził PostgreSQL 17.11, brak rozszerzeń
+`vector` i `pg_trgm`, brak tabeli `drizzle.__drizzle_migrations` oraz jedną różnicę
+względem Git `main`: `wolfmed_generated_practical_exams` już istnieje na kopii
+produkcji. Statystyki `n_live_tup` były zerowe mimo zajętego miejsca, dlatego przed
+DDL uruchom także
+[`scripts/production-migration/02-data-preflight.sql`](./scripts/production-migration/02-data-preflight.sql)
+dla dokładnych liczników, duplikatów, orphanów i schematu istniejącej tabeli.
+
+Drugi preflight 2026-08-20 potwierdził 6873 użytkowników, 375 dostępów i płatności,
+0 subskrypcji, 0 materiałów, 1 notatkę, 35 plansz bez duplikatów oraz 0 duplikatów
+aktywnych dostępów. Wykrył 2 osierocone dostępy, 2 płatności i 1 processed event;
+muszą przejść kontrolowany cleanup M12 przed dodaniem docelowych więzów. Istniejąca
+pusta tabela `wolfmed_generated_practical_exams` ma docelowe kolumny i indeks.
+
+Pierwszy krok DDL na kopii to
+[`scripts/production-migration/03-extensions.sql`](./scripts/production-migration/03-extensions.sql):
+addytywne, transakcyjne włączenie `pg_trgm` i `vector` przed tabelami pamięci i
+biblioteki.
+
+### Dziennik próby `practical-exam-test` — 2026-08-20
+
+Wykonane i zweryfikowane:
+
+1. `01-preflight.sql` — PostgreSQL 17.11, schemat produkcyjny zinwentaryzowany.
+2. `02-data-preflight.sql` — dokładne liczniki, duplikaty i orphan rows zapisane.
+3. `03-extensions.sql` — `pg_trgm 1.6`, `vector 0.8.0`.
+4. `04a-new-feature-tables.sql` — 11 nowych tabel funkcjonalnych i enum
+   `flashcard_source`.
+5. `04b-new-retrieval-tables.sql` — 7 tabel biblioteki/pamięci oraz indeksy
+   HNSW/GIN.
+6. `05-existing-table-preflight.sql` — brak duplikatów i kolizji ID procedur;
+   wykryto 2 orphan enrollments, 2 payments i 1 processed event.
+7. `06a-expand-billing.sql` — docelowe nullable billing fields, lifecycle fields,
+   indeksy, FK do checkout orders i kolumny źródeł dostępów.
+8. `06b-cleanup-billing.sql` — 2 payments i 1 event spseudonimizowane, 2 orphan
+   enrollments usunięte, 373 dostępy oznaczone `legacy_lifetime`; FK i unikalność
+   źródła dodane.
+9. `07-expand-app-tables.sql` — pozostałe kolumny aplikacyjne, 5 FK użytkownika i
+   3 indeksy; istniejące forum posts otrzymały `authorRole='user'`.
+10. `08-procedures-preflight.sql` + `procedure-content-preflight.ts` — manifest
+    134 procedur dokładnie odpowiadał 31 + 103 rekordom bazy; 31 różnic dotyczyło
+    wyłącznie brakującego `data.meta`, zero różnic merytorycznych.
+11. `09a-procedures-expand-backfill.sql` — 134 procedury scalone w
+    `wolfmed_procedures`, ID/slugi zachowane, wszystkie referencje poprawne;
+    stara tabela 103 rekordów pozostawiona jako rollback.
+12. Smoke test obu kursów procedur przeszedł. Na branchu dodano wyłącznie
+    technicznego użytkownika Clerk test przez `seed-smoke-user.ts`; tego kroku nie
+    wykonuje się na produkcji.
+13. `10-quiz2-preflight.sql` — 537 legacy completions: 102 order steps, 301 stare
+    AI, 134 usunięte visual recognition; 14 badges, zero duplikatów.
+14. `11-quiz2-reset.sql` — transakcyjnie usunięto 537 completions i 14 badges;
+    obie tabele po resecie mają 0 rekordów.
+
+Wykonane po smoke teście Quiz 2.0 AI:
+
+- `12-procedures-contract-preflight.sql` — 103 rekordy rollback były identyczne
+  z unified table; zero braków, różnic, uszkodzonych referencji i zależności.
+- `13-procedures-contract.sql` — powtórzył asercje w transakcji, usunął
+  `wolfmed_pielegniarstwo_procedures` bez `CASCADE`; unified table zachowała
+  134 rekordy (31 + 103), zero uszkodzonych referencji.
+- `normalize-test-course-metadata.ts` — znormalizował 147 `meta.course` w
+  `data/tests.json` (146 wykrytych grup + 1 stary typo); ponowny dry-run: 0 zmian.
+- `seed-pielegniarstwo-tests.ts` — dry-run: 17 785 inserts, 109 updates,
+  5 747 unchanged, 52 extras. Transakcyjny UPSERT wykonany; postflight:
+  23 641/23 641 source IDs, 0 missing, 0 mismatches. Extras zachowane.
+- Review 52 database-only rows: 45 unikalnych pytań dodano do `data/tests.json`,
+  7 duplikatów treści odrzucono. Finalne źródło: 23 686 unikalnych ID, wyłącznie
+  kanoniczne `meta.course`. Pliki review i jednorazowe skrypty usunięte.
+- `16-tests-reset.sql` + `db:seed:tests --execute` — tabela odbudowana dokładnie
+  z source of truth. Końcowy dry-run: 23 686 unchanged, 0 inserts, updates,
+  extras, missing i mismatched.
+- `17-rag-config-preflight.sql` — wykrył legacy
+  `fileSearchStores/wolfmedmedicaldocs-p6enp3eu7cte`, nie docelowy Vertex corpus.
+- `18-rag-config-switch.sql` — zachował ID/`created_at` rekordu i przełączył go na
+  `wolfmed-kb`, `SERVERLESS`, `text-multilingual-embedding-002`, corpus
+  `1112960854006956032` w `us-central1`; postflight i smoke test retrieval przeszły.
+- `data/diagnozy.json` — duplikat UUID rozdzielony: rekord
+  `zachlysniecie-ryzyko-wystapienia` otrzymał UUID v4
+  `59698341-7788-445f-b272-5a8fa92ca786`; 70 unikalnych ID i slugów.
+- `db:seed:diagnozy` — dry-run 70 inserts; transakcyjny seed wykonany z
+  `--prune-extras`; końcowy dry-run: 70 unchanged, 0 inserts, updates, extras,
+  missing i mismatched.
+- `19-memory-policies-seed.sql` — wstawiono dokładnie 3 rekordy z dev DB,
+  zachowując policy ID, typ, klucz, JSON, wersję i `effective_from`; wszystkie
+  aktywne (`effective_until=NULL`).
+- `20-stripe-payment-status-index.sql` — zastąpił legacy partial index pełnym
+  indeksem `paymentStatus`, zgodnym ze schematem `practical-exam`; bez zmian danych.
+- Historyczne `forum_posts.authorRole` pozostają `user`; decyzja: brak backfillu.
+  Nowe posty zapisują bieżącą rolę Clerk.
+
+Wykonane i zweryfikowane po live Stripe reconciliation:
+
+```powershell
+pnpm db:migration:step -- scripts/production-migration/06a1-recover-legacy-paid-user.sql --expected-host=<host>
+```
+
+1. Na obecnym `practical-exam-test` odtworzył jednego brakującego użytkownika,
+   jedną płatność 49,99 PLN i grant Opiekun Basic `legacy_lifetime`.
+2. Na świeżym replay produkcji uruchomić po `06a`, przed `06b`; wtedy zapobiega
+   pseudonimizacji płatności i usunięciu prawidłowego enrollmentu.
+3. Skrypt jest idempotentny, używa dokładnego live Checkout Session ID, nie
+   odtwarza e-maila i nie tworzy Stripe Customer.
+
+Końcowy postflight płatnych użytkowników:
+
+```powershell
+pnpm db:migration:step -- scripts/production-migration/06c-paid-users-postflight.sql --expected-host=<host>
+```
+
+Uruchomić po `06b`. Grupuje rzeczywiste historyczne płatności 14,99 / 49,99 /
+159,99 / 279,99 PLN do oczekiwanego kursu, deduplikuje wielokrotne próby płatności
+i wymaga aktywnego Basic `legacy_lifetime`. Zweryfikowany wynik przed uruchomieniem
+nowych płatności cyklicznych: 370 płatnych użytkowników, 371 grantów kursowych,
+371 gotowych i 0 brakujących/nieprawidłowych; drugi result set pusty.
+
+Produkcja Diagnozy po utworzeniu tabeli:
+
+```powershell
+pnpm db:seed:diagnozy -- --expected-host=<production-host>
+pnpm db:seed:diagnozy -- --expected-host=<production-host> --execute --prune-extras
+pnpm db:seed:diagnozy -- --expected-host=<production-host>
+```
+
+1. Pierwsza komenda: dry-run; oczekuj 70 inserts na pustej tabeli.
+2. Druga: transakcyjny seed dokładnie ze źródła.
+3. Trzecia: oczekuj 70 unchanged oraz 0 inserts, updates, extras, missing,
+   mismatched.
+4. Po deployu sprawdź listę, jeden przypadek i egzamin Diagnozy.
+
+Produkcja memory policies po utworzeniu tabel `wolfmed_mem_*`:
+
+```powershell
+pnpm db:migration:step -- scripts/production-migration/19-memory-policies-seed.sql --expected-host=<production-host>
+```
+
+1. Uruchom `19`; wynik musi zawierać dokładnie `answer_grounding`,
+   `answer_language`, `medical_disclaimer`, wszystkie w wersji 1.
+2. Skrypt jest idempotentny i przerwie się przy nieoczekiwanych policy keys.
+3. Po deployu sprawdź odpowiedź tutora po polsku, grounding oraz disclaimer dla
+   pytania o dawkowanie lub plan leczenia.
+
+Produkcja — wyrównanie indeksu płatności:
+
+```powershell
+pnpm db:migration:step -- scripts/production-migration/20-stripe-payment-status-index.sql --expected-host=<production-host>
+```
+
+1. `index_before` może zawierać `WHERE paymentStatus <> 'paid'`.
+2. `index_after` musi być pełnym indeksem bez `WHERE`.
+3. Krok nie modyfikuje rekordów płatności; wymaga tylko krótkiej blokady DDL.
+
+
+Produkcja RAG:
+
+```powershell
+pnpm db:migration:step -- scripts/production-migration/17-rag-config-preflight.sql
+pnpm db:migration:step -- scripts/production-migration/18-rag-config-switch.sql
+```
+
+1. Uruchom `17`; musi wykazać jeden oczekiwany legacy store.
+2. Uruchom `18`; musi ustawić `wolfmed-kb`, `SERVERLESS`, model i corpus ID.
+3. Dodatkowa zmiana poza DB: Vercel Production musi mieć
+   `GOOGLE_CLOUD_LOCATION=us-central1`, projekt
+   `project-9d10f80c-d5df-459f-8d8` oraz `GOOGLE_SERVICE_ACCOUNT_KEY` z dostępem
+   do corpus. Lokalnie działa ADC.
+4. Po deployu wykonaj jeden znany query w tutorze lub admin RAG search.
+
+Produkcja — `data/tests.json` jest jedynym źródłem prawdy: 23 686 unikalnych,
+kanonicznych pytań. Jednorazowy skrypt normalizacji został wykonany i usunięty.
+
+`16-tests-reset.sql` to wymagany reset danych, nie zwykły preflight. Usuwa całą
+zawartość `wolfmed_tests`, aby odrzucić stare/duplikujące ID i umożliwić odbudowę
+dokładnie ze źródła. Uruchamiaj go wyłącznie po backupie, w maintenance window,
+z gotową komendą seed. Między resetem a seedem tabela jest pusta.
+
+Kolejność po migracji schematu:
+
+```powershell
+pnpm db:seed:tests -- --expected-host=<production-host>
+pnpm db:migration:step -- scripts/production-migration/16-tests-reset.sql
+pnpm db:seed:tests -- --expected-host=<production-host> --execute
+pnpm db:seed:tests -- --expected-host=<production-host>
+```
+
+1. Pierwsza komenda jest dry-runem: waliduje źródło i połączenie.
+2. Reset usuwa stare globalne pytania; nie używa `CASCADE` i przerwie się przy
+   FK dependents.
+3. Seed natychmiast odbudowuje tabelę transakcyjnie z `data/tests.json`.
+4. Ostatni dry-run musi zwrócić `inserts: 0`, `updates: 0`,
+   `unchanged: 23686`, `extras: 0`, `missing: 0`, `mismatched: 0`.
+
+Nie uruchamiaj `16-tests-reset.sql` samodzielnie ani przed maintenance window.
+
+Przygotowane, jeszcze niewykonane:
+
+- Końcowy audit pełnego schematu i seedów przed powtórzeniem próby na świeżej
+  kopii produkcji.
+
+Pełny wynik audytu `main` → `practical-exam` → `practical-exam-test`, wraz z
+blokadami danych i stanem każdej istniejącej tabeli, znajduje się w
+[`46-production-database-rollout-status.md`](./.claude/docs/46-production-database-rollout-status.md).
+
+Repozytorium nie ma jeszcze katalogu `drizzle/` ani historii snapshotów. Nie
+uruchamiaj `pnpm db:generate` lub `pnpm db:migrate`, dopóki nie przygotujemy
+baseline'u schematu `main` i przejrzanego zestawu migracji przyrostowych. Drizzle
+`generate` porównuje bieżący schemat z ostatnim snapshotem migracji, a nie z
+aktualnym schematem podłączonej bazy.
 
 1. **Backup / branch bazy** (Neon).
 2. Na branchu z gotowym `schema.ts`: `pnpm db:generate` — powstaje nowy plik
@@ -445,3 +722,125 @@ Szablon wpisu:
 - Jakie skrypty backfill/seed i w jakiej kolejności
 - Co jest destrukcyjne i kiedy wykonać krok "contract"
 ```
+
+---
+
+## Finalna sekwencja produkcyjna — 16 kroków
+
+Uruchom dopiero po udanym replay na świeżej kopii. `.env` musi wskazywać produkcję;
+każda komenda chroni host `ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech`.
+`seed-smoke-user.ts` nigdy nie trafia na produkcję.
+
+1. **Backup i maintenance.** Utwórz Neon backup/branch, włącz maintenance i
+   zatrzymaj nowe Checkouty. Brak komendy repo.
+
+2. **Schema preflight.** Zapisz stan wyjściowy.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/01-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+3. **Data preflight.** Potwierdź liczniki, orphan rows i duplikaty.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/02-data-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+4. **Nowe tabele i rozszerzenia.** Dodaj fundamenty bez zmiany danych.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/03-extensions.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/04a-new-feature-tables.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/04b-new-retrieval-tables.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+5. **Billing i płatni użytkownicy.** Odtwórz brakującego płatnika przed cleanupem,
+   potem oznacz granty legacy.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/05-existing-table-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/06a-expand-billing.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/06a1-recover-legacy-paid-user.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/06b-cleanup-billing.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/06c-paid-users-postflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+6. **Pozostałe tabele aplikacji.** Dodaj kolumny, FK i indeksy.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/07-expand-app-tables.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+7. **Procedury preflight.** Porównaj manifest i treść przed scaleniem.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/08-procedures-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm exec tsx --env-file=.env scripts/production-migration/procedure-content-preflight.ts
+   ```
+
+8. **Scalenie procedur.** Zachowaj ID/slugi, następnie smoke obu kursów.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/09a-procedures-expand-backfill.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+9. **Reset Quiz 2.0.** Sprawdź stare postępy, potem wykonaj uzgodniony reset.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/10-quiz2-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/11-quiz2-reset.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+10. **Contract procedur.** Po smoke procedur i Quiz AI sprawdź rollback table,
+    potem usuń ją.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/12-procedures-contract-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/13-procedures-contract.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+11. **Teoria — preflight i dry-run.** Zweryfikuj źródło przed resetem tabeli.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/15-tests-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:seed:tests -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+12. **Teoria — reset i seed.** Reset i seed wykonaj bez przerwy między nimi.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/16-tests-reset.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:seed:tests -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech --execute
+   pnpm db:seed:tests -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+13. **RAG.** Sprawdź legacy config, potem przełącz na Vertex corpus.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/17-rag-config-preflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/18-rag-config-switch.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+14. **Diagnozy.** Seed dokładnie ze źródła i wykonaj finalny dry-run.
+
+   ```powershell
+   pnpm db:seed:diagnozy -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:seed:diagnozy -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech --execute --prune-extras
+   pnpm db:seed:diagnozy -- --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+15. **Memory i indeks płatności.** Seed policies oraz wyrównaj indeks.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/19-memory-policies-seed.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/20-stripe-payment-status-index.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```
+
+16. **Końcowy audit, deploy i smoke.** Sprawdź finalny stan, wdroż nowy kod,
+    ustaw service account do corpus; sprawdź RAG, procedury, Quiz AI, testy,
+    Diagnozy i upgrade, potem wyłącz maintenance.
+
+   ```powershell
+   pnpm db:migration:step -- scripts/production-migration/14-existing-data-status.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   pnpm db:migration:step -- scripts/production-migration/06c-paid-users-postflight.sql --expected-host=ep-withered-waterfall-a2mu2tk4-pooler.eu-central-1.aws.neon.tech
+   ```

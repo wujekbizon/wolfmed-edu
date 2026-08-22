@@ -6,7 +6,7 @@ import type { RetrievedContext, SourceRef } from '@/types/retrievalTypes'
 import { stripContentParameter } from '@/helpers/stripContentParameter'
 import { stripContextCitations } from '@/helpers/stripContextCitations'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
-import { getGoogleAI, logUsage } from './client'
+import { getGoogleAI } from './client'
 import { parseGoogleApiError } from './errors'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
@@ -34,7 +34,6 @@ export async function answerFromMemory(
     contents: `INFORMACJE Z PAMIĘCI:\n${memoryContext}\n\nPytanie ucznia: ${question}`,
     config: { systemInstruction: MEMORY_ANSWER_SYSTEM, thinkingConfig: NO_THINKING },
   })
-  logUsage('answerFromMemory', response)
   return { answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.' }
 }
 
@@ -84,7 +83,6 @@ export async function generateGroundedAnswer(
         thinkingConfig: NO_THINKING,
       },
     })
-    logUsage('generateGroundedAnswer', response)
 
     const answer = response.text || ''
     if (!answer) {
@@ -200,7 +198,6 @@ ${content}
         thinkingConfig: NO_THINKING
       }
     })
-    logUsage('executeToolWithContent:dispatch', response)
 
     const call = response.functionCalls?.[0]
 
@@ -246,7 +243,6 @@ Please provide a brief confirmation message to the user about what was created.`
         thinkingConfig: NO_THINKING
       }
     })
-    logUsage('executeToolWithContent:confirm', finalResponse)
 
     return {
       answer: finalResponse.text || 'Content created successfully.',

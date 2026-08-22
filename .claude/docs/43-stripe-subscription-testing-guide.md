@@ -2,7 +2,7 @@
 
 Status: sandbox setup and full subscription lifecycle acceptance complete.
 
-Parent plan: [`41-stripe-payment-plan.md`](./41-stripe-payment-plan.md).
+Parent flow: [`30-flows-auth-payments.md`](./30-flows-auth-payments.md).
 
 Use Stripe sandbox/test mode and the development database only.
 

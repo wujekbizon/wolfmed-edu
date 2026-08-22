@@ -53,6 +53,7 @@ detail_layers.txt
 !/.claude/docs/*.md
 
 *.sql
+/scripts/production-migration/
 *.toml
 *.local.json
 

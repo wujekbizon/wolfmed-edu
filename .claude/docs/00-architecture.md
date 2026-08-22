@@ -139,7 +139,7 @@ Ten more files, one level deeper than the modules above — the actual implement
 - **`preferences.ts`** — `getPreferences`, `getPreferencesMap`, `upsertPreference(s)`. Backs `memoryPrefix` (see root `CLAUDE.md` → Data Sources tier 4) — preferences carry a `PreferenceSource` (`'user_stated' | 'llm_inferred' | 'admin_set'`) distinguishing what the student typed from what the model inferred.
 
 **`src/server/vertex-rag/`** (the curriculum-corpus client — tier 1 in the Data Sources table):
-- **`client.ts`** — `getAccessToken()`, `getGoogleAI()`, `vertexFetch(path, options)`, `vertexUploadFetch(...)`, `logUsage(...)`. The shared low-level HTTP/auth client every other `vertex-rag/*.ts` file calls through — exports `PROJECT_ID`/`LOCATION` (env-driven, with a hardcoded fallback project/region for local dev).
+- **`client.ts`** — `getAccessToken()`, `getGoogleAI()`, `vertexFetch(path, options)`, `vertexUploadFetch(...)`. The shared low-level HTTP/auth client every other `vertex-rag/*.ts` file calls through — exports `PROJECT_ID`/`LOCATION` (env-driven, with a hardcoded fallback project/region for local dev).
 - **`ingest.ts`** — `uploadFiles(...)`, `importFilesFromGcs(...)`, `listCorpusFiles(corpusName)`. The admin corpus-upload path behind `/admin/rag` (see [`13-pages-admin.md`](./13-pages-admin.md)) — pushes documents into the Vertex File Search Store.
 - **`errors.ts`** — `parseGoogleApiError(error)`. Normalizes Vertex/Google API error shapes into a plain `Error` with a readable message, used by the corpus-management actions to surface something better than a raw API error to the admin UI.
 

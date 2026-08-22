@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.0.0] - Unreleased
+
+Major practical-exam, AI, billing, curriculum and database rollout release.
+
+### Added
+
+- Practical exams, MED.14 content, grading flows and Premium-gated AI generation.
+- Learning planner, study logs, mind maps, flashcards and Diagnozy module.
+- Vertex AI RAG Engine integration with shared corpus retrieval, memory policies
+  and personal-library indexing.
+- Stripe lifetime upgrades, monthly subscriptions, Customer Portal flows,
+  checkout orders, lifecycle events, refunds and disputes.
+- Production migration SQL, idempotent seeds, reconciliation and audit tooling.
+
+### Changed
+
+- Unified procedures table for both courses while preserving IDs and slugs.
+- Theory-test source normalized to `data/tests.json` with 23,686 canonical rows.
+- Legacy paid users migrated to source-aware `legacy_lifetime` course grants.
+- Diagnozy source normalized to 70 canonical records.
+- RAG configuration moved to the shared `wolfmed-kb` corpus.
+- Quiz 2.0 progress reset and data migration workflow documented.
+
+### Fixed
+
+- Stripe checkout/session and webhook idempotency.
+- Concurrent user-cell saves with versioned conflict detection.
+- Server-side form validation and migration data consistency gaps.
+
 ## [5.0.6] - 2026-07-11
 
 > Consolidates the practical-exam and learning-planner lines of work. Earlier

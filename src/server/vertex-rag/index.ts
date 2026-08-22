@@ -9,7 +9,6 @@ export {
   vertexFetch,
   vertexUploadFetch,
   getAccessToken,
-  logUsage,
 } from './client'
 
 export { parseGoogleApiError } from './errors'
