@@ -53,7 +53,10 @@ detail_layers.txt
 !/.claude/docs/*.md
 
 *.sql
-/scripts/production-migration/
+/scripts/production-migration/*
+!/scripts/production-migration/normalizeMigrationDate.ts
+!/scripts/production-migration/synchronizeTestSeed.ts
+!/scripts/production-migration/testMigrationTypes.ts
 *.toml
 *.local.json
 
