@@ -84,7 +84,7 @@
     "remark-gfm": "^4.0.1",
     "require-in-the-middle": "8.0.1",
     "server-only": "^0.0.1",
-    "stripe": "^21.0.1",
+    "stripe": "^22.5.0",
     "svix": "^1.99.1",
     "three": "^0.185.1",
     "uploadthing": "^7.7.4",
