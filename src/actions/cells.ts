@@ -1,23 +1,17 @@
 "use server"
 
-import { db } from "@/server/db/index"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
-import { auth, currentUser } from "@clerk/nextjs/server"
+import { auth } from "@clerk/nextjs/server"
 import { UserCellsListSchema } from "@/server/schema"
 import { checkRateLimit } from "@/lib/rateLimit"
-import {
-  checkUserCellsList,
-  createUserCellsList,
-  getUserCellsList,
-  updateUserCellsList,
-} from "@/server/queries"
+import { getUserCellsList, saveUserCellsList } from "@/server/queries"
 import { UserCellsList } from "@/types/cellTypes"
 
 export async function saveCellsAction(
-  formState: FormState,
+  _formState: FormState,
   formData: FormData
-) {
+): Promise<FormState> {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
@@ -32,6 +26,8 @@ export async function saveCellsAction(
 
   const rawOrder = formData.get("order") as string
   const rawCells = formData.get("cells") as string
+  const rawVersion = formData.get("version")
+  const rawClientRevision = formData.get("clientRevision")
 
   let parsed
   try {
@@ -43,20 +39,49 @@ export async function saveCellsAction(
     return fromErrorToFormState(err)
   }
 
-  try {
-    await db.transaction(async (tx) => {
-      const existing = await checkUserCellsList(userId)
+  const expectedVersion = rawVersion === null || rawVersion === "" ? null : Number(rawVersion)
+  const clientRevision = Number(rawClientRevision)
+  if (
+    expectedVersion !== null &&
+    (!Number.isInteger(expectedVersion) || expectedVersion < 0)
+  ) {
+    return toFormState("ERROR", "Nieprawidłowa wersja planszy")
+  }
+  if (!Number.isInteger(clientRevision) || clientRevision < 0) {
+    return toFormState("ERROR", "Nieprawidłowa lokalna wersja planszy")
+  }
 
-      if (existing) {
-        await updateUserCellsList(userId, parsed.cells, parsed.order)
-      } else {
-        await createUserCellsList(userId, parsed.cells, parsed.order)
+  try {
+    const result = await saveUserCellsList(
+      userId,
+      parsed.cells,
+      parsed.order,
+      expectedVersion
+    )
+
+    if (result.status === "conflict") {
+      return {
+        ...toFormState(
+          "ERROR",
+          "Plansza została zmieniona w innej karcie lub na innym urządzeniu"
+        ),
+        values: {
+          conflict: true,
+          serverVersion: result.current?.version ?? null,
+          serverOrder: JSON.stringify(result.current?.order ?? []),
+          serverCells: JSON.stringify(result.current?.cells ?? {}),
+          clientRevision,
+        },
       }
-    })
+    }
+
+    return {
+      ...toFormState("SUCCESS", "Zapisano pomyślnie"),
+      values: { serverVersion: result.version, clientRevision },
+    }
   } catch (err) {
     return fromErrorToFormState(err)
   }
-  return toFormState("SUCCESS", "Zapisano pomyślnie")
 }
 
 export const syncCellsAction = async (): Promise<{
@@ -65,10 +90,10 @@ export const syncCellsAction = async (): Promise<{
   error?: string
 }> => {
   try {
-    const user = await currentUser()
-    if (!user?.id) return { success: false, error: "Unauthorized" }
+    const { userId } = await auth()
+    if (!userId) return { success: false, error: "Unauthorized" }
 
-    const fetchedCells = await getUserCellsList(user.id)
+    const fetchedCells = await getUserCellsList(userId)
     if (!fetchedCells) {
       return { success: false, error: "No saved cells found" }
     }

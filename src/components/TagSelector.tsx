@@ -1,37 +1,30 @@
 import { memo } from "react"
 import Input from "@/components/ui/Input"
 import Label from "@/components/ui/Label"
-
-const TAG_OPTIONS = [1, 2, 3]
+import DropdownSelect from "@/components/ui/DropdownSelect"
+import { TAG_COUNT_OPTIONS } from "@/constants/tagCountOptions"
+import type { FormState } from "@/types/actionTypes"
+import FieldError from "@/components/FieldError"
 
 export const TagSelector = memo(function TagSelector({
   tagCount,
   onTagCountChange,
+  formState,
 }: {
   tagCount: number | string
-  onTagCountChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+  onTagCountChange: (value: string) => void
+  formState: FormState
 }) {
   return (
     <div className="flex gap-4 flex-col justify-between">
-      <div className="relative w-32">
-        <select
-          id="tagCount"
-          value={tagCount || ""}
-          onChange={onTagCountChange}
-           className="pl-[106px] peer w-full appearance-none rounded-lg border border-zinc-200 bg-white/80 backdrop-blur-sm px-3 py-2 text-sm text-zinc-700 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all placeholder:text-transparent"
-        >
-          <option value="" hidden></option>
-          {TAG_OPTIONS.map((n) => (
-            <option key={n} value={n}>
-              {n}
-            </option>
-          ))}
-        </select>
-        <Label
-          htmlFor="tagCount"
-          label="Liczba tagów"
-          className="absolute left-3 top-[8px] text-sm text-zinc-400 pointer-events-none transition-all duration-300
-          peer-focus:-top-4 peer-focus:text-xs peer-focus:text-[#ff9898]"
+      <div className="w-32">
+        <p className="pb-1 text-xs text-zinc-400">Liczba tagów</p>
+        <DropdownSelect
+          options={TAG_COUNT_OPTIONS}
+          value={tagCount ? String(tagCount) : null}
+          onSelect={onTagCountChange}
+          ariaLabel="Liczba tagów"
+          placeholder="Wybierz"
         />
       </div>
 
@@ -41,6 +34,7 @@ export const TagSelector = memo(function TagSelector({
             <Input
               id={`tag${i + 1}`}
               name={`tag${i + 1}`}
+              defaultValue={formState.values?.[`tag${i + 1}`]?.toString() || ""}
               placeholder={`Tag ${i + 1} - opcjonalnie`}
               className="peer w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg bg-white/80 backdrop-blur-sm text-sm border border-zinc-200 outline-none focus:ring-2 focus:ring-[#ff9898]/50 transition-all duration-300 text-zinc-700 placeholder:text-transparent"
             />
@@ -52,6 +46,7 @@ export const TagSelector = memo(function TagSelector({
           </div>
         ))}
       </div>
+      <FieldError name="tags" formState={formState} />
     </div>
   )
 })

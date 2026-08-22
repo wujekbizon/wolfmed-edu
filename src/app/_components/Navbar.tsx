@@ -8,14 +8,12 @@ import Logo from '@/components/Logo'
 import MenuIcon from '@/components/icons/MenuIcon'
 import AuthSection from '@/components/AuthSection'
 import { usePathname } from 'next/navigation'
-import { Show, useUser } from '@clerk/nextjs'
+import { Show } from '@clerk/nextjs'
 
 export default function Navbar() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { isScrolled } = useScroll(0)
   const pathname = usePathname()
-  const { user } = useUser()
-  const hasCourses = ((user?.publicMetadata?.ownedCourses as string[]) ?? []).length > 0
 
   return (
     <>
@@ -36,19 +34,6 @@ export default function Navbar() {
         <Show when="signed-in">
           <nav className="bg-zinc-200 border border-zinc-400 backdrop-blur-sm py-1 px-1 hidden lg:flex gap-1 items-center rounded-full shadow-sm shadow-zinc-500/20 z-10">
             {navLinks.map((link) => {
-              const isPanelDisabled = link.linkUrl === '/panel' && !hasCourses
-              if (isPanelDisabled) {
-                return (
-                  <span
-                    key={link.id}
-                    title="Kup kurs, aby uzyskać dostęp do panelu"
-                    className="relative flex items-center gap-1 px-4 py-2 rounded-full opacity-40 cursor-not-allowed select-none"
-                  >
-                    {link.icon}
-                    <span className="text-sm font-medium text-zinc-900">{link.label}</span>
-                  </span>
-                )
-              }
               return (
                 <Link
                   href={link.linkUrl}

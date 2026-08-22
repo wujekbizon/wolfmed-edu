@@ -1,14 +1,19 @@
 'use client'
 
 import { useState } from 'react'
+import { useScrollToTopOnChange } from '@/hooks/useScrollToTopOnChange'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ChevronLeft, ChevronRight, RotateCcw, ArrowLeft, Clock, Award, Check } from 'lucide-react'
+import { ChevronLeft, ChevronRight, RotateCcw, ArrowLeft, Clock, Award, Check, Swords } from 'lucide-react'
 import Link from 'next/link'
+import { useProcedureStepsStore } from '@/store/useProcedureStepsStore'
+import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 import type { PielegniastwoProcedure, PielegniastwoSection } from '@/types/pielegniastwoTypes'
 
 type Direction = 1 | -1
 
 type ExtendedSection = PielegniastwoSection & { _notes?: string }
+
+const EMPTY: number[] = []
 
 export default function PielegniastwoProcedureReader({
   procedure,
@@ -16,7 +21,13 @@ export default function PielegniastwoProcedureReader({
   procedure: PielegniastwoProcedure
 }) {
   const [currentSection, setCurrentSection] = useState(0)
+  const scrollRef = useScrollToTopOnChange(currentSection)
   const [direction, setDirection] = useState<Direction>(1)
+  const procedureSlug = getPielegniastwoSlug(procedure)
+
+  const markedSteps = useProcedureStepsStore((s) => s.marked[procedure.name] ?? EMPTY)
+  const toggleStep = useProcedureStepsStore((s) => s.toggleStep)
+  const clearProcedure = useProcedureStepsStore((s) => s.clearProcedure)
 
   const allSections: ExtendedSection[] = procedure.notes
     ? [...procedure.sections, { title: 'Uwagi', steps: [], _notes: procedure.notes }]
@@ -44,6 +55,7 @@ export default function PielegniastwoProcedureReader({
   const handleReset = () => {
     setDirection(1)
     setCurrentSection(0)
+    clearProcedure(procedure.name)
   }
 
   const variants = {
@@ -54,6 +66,8 @@ export default function PielegniastwoProcedureReader({
 
   const active = allSections[currentSection]
   const isNotesSection = !!active?._notes
+  const stepsInSection = active?.steps ?? []
+  const markedInSection = stepsInSection.filter((s) => markedSteps.includes(s.number)).length
 
   return (
     <div className="flex w-full h-[calc(100vh-80px)] -my-10 overflow-hidden">
@@ -99,12 +113,12 @@ export default function PielegniastwoProcedureReader({
                 return (
                   <li
                     key={index}
-                    className={`flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                       isActive ? 'bg-slate-700 text-white' : 'text-zinc-400'
                     }`}
                   >
                     <span
-                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold mt-0.5 ${
+                      className={`shrink-0 w-5 h-5 rounded-full border flex items-center justify-center text-xs font-semibold leading-none ${
                         isActive
                           ? 'border-white/30 bg-white/10 text-white'
                           : isCompleted
@@ -119,6 +133,16 @@ export default function PielegniastwoProcedureReader({
                 )
               })}
             </ol>
+          </div>
+
+          <div className="mt-auto">
+            <Link
+              href={`/panel/procedury/pielegniarstwo/${procedureSlug}/wyzwania`}
+              className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white text-sm font-semibold transition-colors"
+            >
+              <Swords className="w-4 h-4" />
+              Wyzwania procedury
+            </Link>
           </div>
         </div>
       </aside>
@@ -148,18 +172,37 @@ export default function PielegniastwoProcedureReader({
             <span className="text-xs text-zinc-400">
               Sekcja {currentSection + 1} z {totalSections}
             </span>
+            <Link
+              href={`/panel/procedury/pielegniarstwo/${procedureSlug}/wyzwania`}
+              className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition-colors"
+            >
+              <Swords className="w-3.5 h-3.5" />
+              Wyzwania
+            </Link>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto scrollbar-webkit">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto scrollbar-webkit">
           <div className="px-4 md:px-10 py-6 md:py-10 max-w-4xl w-full mx-auto">
 
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-8 flex-wrap">
               <span className="shrink-0 text-xs font-semibold text-zinc-400 bg-zinc-100 border border-zinc-200 px-2.5 py-1 rounded-full">
                 {currentSection + 1} / {totalSections}
               </span>
               <h2 className="text-lg md:text-2xl font-bold text-zinc-800 leading-snug">
                 {active?.title}
               </h2>
+              {!isNotesSection && stepsInSection.length > 0 && (
+                <span
+                  className={`ml-auto shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+                    markedInSection === stepsInSection.length
+                      ? 'text-slate-700 bg-slate-100 border-slate-200'
+                      : 'text-zinc-400 bg-zinc-50 border-zinc-200'
+                  }`}
+                >
+                  <Check className="w-3.5 h-3.5" />
+                  {markedInSection} / {stepsInSection.length} zaznaczonych
+                </span>
+              )}
             </div>
 
             <AnimatePresence mode="wait" custom={direction}>
@@ -178,19 +221,48 @@ export default function PielegniastwoProcedureReader({
                   </p>
                 ) : (
                   <div className="divide-y divide-zinc-100 border border-zinc-200 rounded-xl overflow-hidden bg-white">
-                    {active?.steps.map((step) => (
-                      <div key={step.number} className="flex items-start gap-4 px-4 md:px-6 py-4">
-                        <span className="shrink-0 w-7 h-7 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-500 text-xs font-bold flex items-center justify-center mt-0.5">
-                          {step.number}
-                        </span>
-                        <p className="flex-1 text-zinc-700 text-sm md:text-base leading-relaxed">
-                          {step.step}
-                        </p>
-                        <span className="shrink-0 text-xs font-semibold text-zinc-400 bg-zinc-50 border border-zinc-200 px-2 py-1 rounded-full mt-0.5 whitespace-nowrap">
-                          {step.points} pkt
-                        </span>
-                      </div>
-                    ))}
+                    {active?.steps.map((step) => {
+                      const isStepMarked = markedSteps.includes(step.number)
+                      return (
+                        <button
+                          key={step.number}
+                          type="button"
+                          onClick={() => toggleStep(procedure.name, step.number)}
+                          aria-pressed={isStepMarked}
+                          className={`group/step w-full text-left flex items-start gap-4 px-4 md:px-6 py-4 border-l-[3px] transition-colors duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-fuchsia-400/50 ${
+                            isStepMarked
+                              ? 'border-l-slate-700 bg-slate-50'
+                              : 'border-l-transparent hover:border-l-fuchsia-400 hover:bg-fuchsia-50/40'
+                          }`}
+                        >
+                          <span
+                            className={`shrink-0 w-7 h-7 rounded-full text-xs font-bold flex items-center justify-center mt-0.5 leading-none transition-colors duration-200 ${
+                              isStepMarked
+                                ? 'bg-slate-700 text-white'
+                                : 'bg-zinc-100 border border-zinc-200 text-zinc-500 group-hover/step:bg-gradient-to-br group-hover/step:from-[#ff9898] group-hover/step:to-fuchsia-400 group-hover/step:text-white group-hover/step:border-transparent'
+                            }`}
+                          >
+                            {isStepMarked ? <Check className="w-4 h-4" /> : step.number}
+                          </span>
+                          <p
+                            className={`flex-1 text-sm md:text-base leading-relaxed transition-colors duration-200 ${
+                              isStepMarked ? 'text-zinc-400' : 'text-zinc-700 group-hover/step:text-zinc-900'
+                            }`}
+                          >
+                            {step.step}
+                          </p>
+                          <span
+                            className={`shrink-0 text-xs font-semibold px-2 py-1 rounded-full mt-0.5 whitespace-nowrap border transition-colors duration-200 ${
+                              isStepMarked
+                                ? 'bg-slate-100 text-slate-700 border-slate-200'
+                                : 'bg-zinc-50 text-zinc-400 border-zinc-200 group-hover/step:bg-fuchsia-50 group-hover/step:text-fuchsia-600 group-hover/step:border-fuchsia-200'
+                            }`}
+                          >
+                            {step.points} pkt
+                          </span>
+                        </button>
+                      )
+                    })}
                   </div>
                 )}
               </motion.div>
@@ -216,7 +288,7 @@ export default function PielegniastwoProcedureReader({
             <button
               onClick={handlePrevious}
               disabled={isFirstSection}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors w-full lg:w-auto"
+              className="flex items-center justify-center gap-1.5 px-4 py-2 md:px-5 md:py-2.5 bg-zinc-100 hover:bg-zinc-200 disabled:opacity-40 disabled:pointer-events-none text-zinc-700 text-xs md:text-sm font-medium rounded-lg md:rounded-xl border border-zinc-200 transition-colors shrink-0 whitespace-nowrap"
             >
               <ChevronLeft className="w-3.5 h-3.5 md:w-4 md:h-4" />
               Cofnij
@@ -224,7 +296,7 @@ export default function PielegniastwoProcedureReader({
 
             <button
               onClick={isLastSection ? handleReset : handleNext}
-              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
+              className="flex-1 lg:flex-none lg:min-w-52 flex items-center justify-center gap-1.5 md:gap-2 whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-white text-xs md:text-sm font-medium rounded-lg md:rounded-xl transition-colors bg-slate-700 hover:bg-slate-800"
             >
               {isLastSection ? (
                 <>

@@ -19,9 +19,14 @@ export const EditorField = memo(function EditorField({
     excerptRef: React.RefObject<HTMLInputElement | null>
     initialContent?: unknown
 }) {
+    // The editor fills its container, so an always-present error slot would
+    // read as a permanent gap under it rather than as reserved space.
+    const hasError =
+        formState?.status === 'ERROR' &&
+        Boolean(formState.message || formState.fieldErrors?.content?.[0])
 
     return (
-        <div className="w-full">
+        <div className="flex h-full min-h-0 w-full flex-col rounded-lg bg-zinc-800">
             <input type="hidden" name="content" ref={contentRef} defaultValue="" />
             <input type="hidden" name="plainText" ref={plainTextRef} defaultValue="" />
             <input type="hidden" name="excerpt" ref={excerptRef} defaultValue="" />
@@ -29,10 +34,14 @@ export const EditorField = memo(function EditorField({
                 key={editorKey}
                 onChange={onChange}
                 placeholder="Napisz swoją notatkę..."
-                className="min-h-64 overflow-y-auto scrollbar-webkit"
+                className="flex-1 overflow-y-auto scrollbar-webkit"
                 initialContent={typeof initialContent === 'string' ? initialContent : initialContent ? JSON.stringify(initialContent) : ''}
             />
-            <FieldError name="content" formState={formState} />
+            {hasError && (
+                <div className="shrink-0 px-3 pb-1">
+                    <FieldError name="content" formState={formState} />
+                </div>
+            )}
         </div>
     )
 })

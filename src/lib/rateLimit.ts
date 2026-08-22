@@ -17,6 +17,10 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'file:upload': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'flashcard:create': { interval: 60 * 60 * 1000, maxRequests: 50 },
+  'flashcard:update': { interval: 60 * 60 * 1000, maxRequests: 100 },
+  'flashcard:delete': { interval: 60 * 60 * 1000, maxRequests: 100 },
+  'flashcard:deck:create': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'flashcard:deck:delete': { interval: 60 * 60 * 1000, maxRequests: 30 },
 
   'message:send': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'email:send': { interval: 60 * 60 * 1000, maxRequests: 3 },
@@ -25,6 +29,7 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'forum:post:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
   'forum:comment:create': { interval: 60 * 60 * 1000, maxRequests: 20 },
   'forum:comment:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'forum:seen': { interval: 60 * 60 * 1000, maxRequests: 120 },
 
   'blog:post:create': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'blog:post:update': { interval: 60 * 60 * 1000, maxRequests: 10 },
@@ -37,17 +42,34 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'challenge:submit': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'quiz:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 20 },
+
+  'egzamin:grade': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'egzamin:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 5 },
+
+  'diagnozy:complete': { interval: 60 * 60 * 1000, maxRequests: 60 },
+  'diagnozy:exam:submit': { interval: 60 * 60 * 1000, maxRequests: 30 },
 
   'profile:update:username': { interval: 60 * 60 * 1000, maxRequests: 3 },
   'profile:update:motto': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'profile:update:preferences': { interval: 60 * 60 * 1000, maxRequests: 20 },
 
   'testimonial:create': { interval: 60 * 60 * 1000, maxRequests: 2 },
+
+  'stripe:checkout': { interval: 10 * 60 * 1000, maxRequests: 10 },
+  'stripe:portal': { interval: 10 * 60 * 1000, maxRequests: 10 },
 
   'cells:update': { interval: 60 * 60 * 1000, maxRequests: 50 },
   'rag:query': { interval: 60 * 60 * 1000, maxRequests: 10 },
 
   'lecture:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 3 },
-  'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 }
+  'lecture:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },
+
+  'mindmap:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 10 },
+
+  'planner:create': { interval: 60 * 60 * 1000, maxRequests: 5 },
+  'planner:update': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'planner:log': { interval: 60 * 60 * 1000, maxRequests: 20 }
 }
 
 export interface RateLimitResult {

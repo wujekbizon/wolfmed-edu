@@ -34,7 +34,7 @@ export default function RagProgressIndicator({
   const toolLabel = getToolLabel(tool)
 
   return (
-    <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+    <div className="p-3 sm:p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
       {/* Header: spinner + tool icon + name + badge */}
       <div className="flex items-center gap-2">
         {!isComplete && !isError && (

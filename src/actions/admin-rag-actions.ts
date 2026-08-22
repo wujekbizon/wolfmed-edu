@@ -8,20 +8,25 @@ import {
   TestRagQuerySchema,
 } from '@/server/schema'
 import {
-  createFileSearchStore,
+  createCorpus,
   uploadFiles,
-  getStoreInfo,
-  listStoreDocuments,
-  queryWithFileSearch,
-  deleteFileSearchStore,
-} from '@/server/google-rag'
+  getCorpus,
+  listCorpusFiles,
+  generateGroundedAnswer,
+  deleteCorpus,
+  DEFAULT_EMBEDDING_MODEL,
+} from '@/server/vertex-rag'
 import { getRagConfig, setRagConfig, deleteRagConfig } from '@/server/rag-queries'
+import { retrieveContext } from '@/server/retrieval/context'
+import { ensureAdmin } from '@/helpers/ensureAdmin'
 
 export async function createFileSearchStoreAction(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const displayName = formData.get('displayName') as string
 
     const validationResult = CreateStoreSchema.safeParse({ displayName })
@@ -30,9 +35,17 @@ export async function createFileSearchStoreAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const storeName = await createFileSearchStore(validationResult.data.displayName)
+    const storeName = await createCorpus(validationResult.data.displayName)
 
-    await setRagConfig(storeName, validationResult.data.displayName)
+    // Read the model back rather than recording what we asked for. RAG Engine
+    // substitutes a fallback when it rejects the requested model, and the live
+    // corpus is evidence that this happens silently — rag_config has to describe
+    // the corpus that exists, since retrieval quality is debugged from it.
+    const created = await getCorpus(storeName).catch(() => null)
+
+    await setRagConfig(storeName, validationResult.data.displayName, {
+      embeddingModel: created?.embeddingModel ?? DEFAULT_EMBEDDING_MODEL,
+    })
 
     revalidatePath('/admin/rag')
 
@@ -51,6 +64,8 @@ export async function uploadFilesAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {
@@ -106,6 +121,7 @@ export async function getStoreStatusAction(): Promise<{
   error?: string
 }> {
   try {
+    await ensureAdmin()
 
     const config = await getRagConfig()
 
@@ -119,7 +135,7 @@ export async function getStoreStatusAction(): Promise<{
       }
     }
 
-    await getStoreInfo(config.storeName)
+    await getCorpus(config.storeName)
 
     return {
       success: true,
@@ -144,6 +160,8 @@ export async function listStoreDocumentsAction(): Promise<{
   error?: string
 }> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {
@@ -153,7 +171,7 @@ export async function listStoreDocumentsAction(): Promise<{
       }
     }
 
-    const documents = await listStoreDocuments(config.storeName)
+    const documents = await listCorpusFiles(config.storeName)
 
     return {
       success: true,
@@ -173,6 +191,8 @@ export async function testRagQueryAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    const adminUserId = await ensureAdmin()
+
     const question = formData.get('question') as string
     const storeName = (formData.get('storeName') as string) || undefined
 
@@ -185,10 +205,19 @@ export async function testRagQueryAction(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const result = await queryWithFileSearch(
-      validationResult.data.question,
-      validationResult.data.storeName
-    )
+    // Same path production uses, so a green admin probe means the tutor works —
+    // now including the split between retrieval and generation. canonical_only:
+    // this probes the corpus, and mixing in an admin's own notes would make a
+    // green result mean less than it looks like it means.
+    //
+    // The store comes from rag_config rather than the submitted storeName, which
+    // was only ever the configured store echoed back by the form.
+    const context = await retrieveContext({
+      userId: adminUserId,
+      query: validationResult.data.question,
+      mode: 'canonical_only',
+    })
+    const result = await generateGroundedAnswer(validationResult.data.question, context)
 
     return {
       ...toFormState('SUCCESS', result.answer),
@@ -205,13 +234,15 @@ export async function deleteFileSearchStoreAction(
   formData: FormData
 ): Promise<FormState> {
   try {
+    await ensureAdmin()
+
     const config = await getRagConfig()
 
     if (!config) {
       return toFormState('ERROR', 'File Search Store nie jest skonfigurowany')
     }
 
-    await deleteFileSearchStore(config.storeName)
+    await deleteCorpus(config.storeName)
 
     await deleteRagConfig(config.storeName)
 

@@ -4,7 +4,6 @@ import DeleteCommentButton from './DeleteCommentButton'
 
 type Props = {
   comments: Comment[]
-  postId: string
   visibleCount: number
   isAuthor: boolean
   userId: string
@@ -14,7 +13,6 @@ type Props = {
 
 export default function ForumPostComments({
   comments,
-  postId,
   visibleCount,
   isAuthor,
   userId,
@@ -31,7 +29,7 @@ export default function ForumPostComments({
               <span>/</span>
               <time>{formatDate(comment.createdAt)}</time>
               {(isAuthor || userId === comment.authorId) && (
-                <DeleteCommentButton postId={postId} commentId={comment.id} authorId={comment.authorId} />
+                <DeleteCommentButton commentId={comment.id} />
               )}
             </div>
           </div>

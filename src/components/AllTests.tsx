@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
@@ -7,14 +8,18 @@ import SearchTerm from '@/components/SearchTerm'
 import FilteredTestsList from '@/components/FilteredTestsList'
 import type { Test } from '@/types/dataTypes'
 
-export default function AllTests(props: { tests: Test[] }) {
-  const { searchTerm, setSearchTerm, isExpanded, toggleExpand } = useSearchTermStore()
+export default function AllTests(props: { tests: Test[]; category: string }) {
+  const { searchTerm, setSearchTerm, isExpanded, toggleExpand, openCategory } = useSearchTermStore()
+
+  useEffect(() => {
+    openCategory(props.category)
+  }, [props.category, openCategory])
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 250)
 
   const testsArr = Object.values(props.tests)
 
   const { data: cachedTestsArr } = useQuery({
-    queryKey: ['allTests', props.tests[0]?.meta.category ?? ''],
+    queryKey: ['allTests', props.category],
     queryFn: async () => testsArr,
     initialData: testsArr,
     staleTime: 10 * 60 * 1000,
@@ -37,7 +42,7 @@ export default function AllTests(props: { tests: Test[] }) {
     isLoading: searchLoading,
     error,
   } = useQuery({
-    queryKey: ['filteredTests', debouncedSearchTerm, props.tests[0]?.meta.category ?? ''],
+    queryKey: ['filteredTests', debouncedSearchTerm, props.category],
     queryFn: filteredTestsQueryFn,
     enabled: !!searchTerm || true,
     staleTime: 10 * 60 * 1000,
@@ -55,7 +60,12 @@ export default function AllTests(props: { tests: Test[] }) {
           title="Baza pytań"
         />
       </div>
-      <FilteredTestsList tests={filteredTests ?? cachedTestsArr} isLoading={searchLoading} error={error} />
+      <FilteredTestsList
+        tests={filteredTests ?? cachedTestsArr}
+        category={props.category}
+        isLoading={searchLoading}
+        error={error}
+      />
     </section>
   )
 }

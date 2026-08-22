@@ -10,9 +10,20 @@ import {
   text,
   pgEnum,
   boolean,
-  real
+  real,
+  uniqueIndex
 } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
+import type { Diagnoza } from "@/types/diagnozyTypes"
+import type {
+  CheckoutOrderStatus,
+  CheckoutPurchaseModel,
+  EntitlementSourceType,
+  PaymentDisputeStatus,
+  PaymentOffer,
+  PaymentOfferKey,
+  PaymentRefundStatus,
+} from "@/types/paymentTypes"
 
 interface TestMeta {
   course: string;
@@ -37,49 +48,157 @@ export const users = createTable(
     testsAttempted: integer("tests_attempted").default(0).notNull(),
     totalScore: integer("total_score").default(0).notNull(),
     totalQuestions: integer("total_questions").default(0).notNull(),
+    stripeCustomerId: varchar("stripeCustomerId", { length: 256 }).unique(),
   },
   (table) => [
     index("usersUsername").on(table.username),
-    index("usersUserId").on(table.userId), 
+    index("usersUserId").on(table.userId),
   ]
 )
 
+export const checkoutOrders = createTable("stripe_checkout_orders", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: varchar("user_id", { length: 256 }),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>().notNull(),
+  courseSlug: varchar("course_slug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>()
+    .notNull(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>()
+    .notNull(),
+  stripePriceId: varchar("stripe_price_id", { length: 256 }).notNull(),
+  amountTotal: integer("amount_total").notNull(),
+  currency: currencyEnum("currency").notNull(),
+  purchaseModel: varchar("purchase_model", { length: 32 })
+    .$type<CheckoutPurchaseModel>()
+    .default("lifetime")
+    .notNull(),
+  status: varchar("status", { length: 32 })
+    .$type<CheckoutOrderStatus>()
+    .default("CREATING")
+    .notNull(),
+  deduplicationKey: varchar("deduplication_key", { length: 512 }),
+  stripeSessionId: varchar("stripe_session_id", { length: 256 }),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("checkout_orders_active_dedup_uq").on(table.deduplicationKey),
+  uniqueIndex("checkout_orders_session_id_uq").on(table.stripeSessionId),
+  index("checkout_orders_user_id_idx").on(table.userId),
+  index("checkout_orders_status_idx").on(table.status),
+  index("checkout_orders_expires_at_idx").on(table.expiresAt),
+  index("checkout_orders_cleanup_after_idx").on(table.cleanupAfter),
+])
+
 export const payments = createTable("stripe_payments", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
+  accessTier: varchar("access_tier", { length: 50 }),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   courseSlug: varchar("courseSlug", { length: 100 }),
+  stripeCustomerId: varchar("stripeCustomerId", { length: 256 }),
+  sessionId: varchar("sessionId", { length: 256 }),
+  paymentIntentId: varchar("paymentIntentId", { length: 256 }),
+  chargeId: varchar("charge_id", { length: 256 }),
+  invoiceId: varchar("invoice_id", { length: 256 }),
+  subscriptionId: varchar("subscription_id", { length: 256 }),
+  amountRefunded: integer("amount_refunded").default(0).notNull(),
+  refundStatus: varchar("refund_status", { length: 32 })
+    .$type<PaymentRefundStatus>()
+    .default("none")
+    .notNull(),
+  disputeStatus: varchar("dispute_status", { length: 32 })
+    .$type<PaymentDisputeStatus>()
+    .default("none")
+    .notNull(),
+  retentionUntil: timestamp("retention_until"),
+  pseudonymizedAt: timestamp("pseudonymized_at"),
   createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 }, (table) => [
+  uniqueIndex("stripe_payments_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_payments_intent_id_uq").on(table.paymentIntentId),
+  uniqueIndex("stripe_payments_charge_id_uq").on(table.chargeId),
+  uniqueIndex("stripe_payments_invoice_id_uq").on(table.invoiceId),
   index("stripe_payments_user_id_idx").on(table.userId),
   index("stripe_payments_status_idx").on(table.paymentStatus),
   index("stripe_payments_created_at_idx").on(table.createdAt),
+  index("stripe_payments_customer_id_idx").on(table.stripeCustomerId),
+  index("stripe_payments_subscription_id_idx").on(table.subscriptionId),
+  index("stripe_payments_retention_until_idx").on(table.retentionUntil),
 ])
 
 export const subscriptions = createTable("stripe_subscriptions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: varchar("userId", { length: 256 }).notNull().unique(),
-  sessionId: varchar("sessionId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  sessionId: varchar("sessionId", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  offerKey: varchar("offer_key", { length: 100 }).$type<PaymentOfferKey>(),
   amountTotal: integer("amountTotal").notNull(),
   currency: currencyEnum("currency"),
   customerId: varchar("customerId", { length: 256 }).notNull(),
-  customerEmail: varchar("customerEmail", { length: 256 }).notNull(),
-  invoiceId: varchar("invoiceId", { length: 256 }).notNull(),
+  customerEmail: varchar("customerEmail", { length: 256 }),
+  invoiceId: varchar("invoiceId", { length: 256 }),
   paymentStatus: varchar("paymentStatus", { length: 50 }).notNull(),
   subscriptionId: varchar("subscriptionId", { length: 256 }).notNull(),
-  courseSlug: varchar("courseSlug", { length: 100 }),
+  courseSlug: varchar("courseSlug", { length: 100 })
+    .$type<PaymentOffer["courseSlug"]>(),
+  accessTier: varchar("access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  priceId: varchar("price_id", { length: 256 }),
+  status: varchar("status", { length: 50 }).notNull().default("incomplete"),
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  scheduleId: varchar("schedule_id", { length: 256 }),
+  pendingOfferKey: varchar("pending_offer_key", { length: 100 })
+    .$type<PaymentOfferKey>(),
+  pendingAccessTier: varchar("pending_access_tier", { length: 50 })
+    .$type<PaymentOffer["accessTier"]>(),
+  pendingPriceId: varchar("pending_price_id", { length: 256 }),
+  pendingChangeAt: timestamp("pending_change_at"),
+  cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
+  cancelAt: timestamp("cancel_at"),
+  canceledAt: timestamp("canceled_at"),
+  endedAt: timestamp("ended_at"),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-})
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => [
+  uniqueIndex("stripe_subscriptions_subscription_id_uq").on(table.subscriptionId),
+  uniqueIndex("stripe_subscriptions_session_id_uq").on(table.sessionId),
+  uniqueIndex("stripe_subscriptions_schedule_id_uq").on(table.scheduleId),
+  index("stripe_subscriptions_user_id_idx").on(table.userId),
+  index("stripe_subscriptions_user_course_idx").on(table.userId, table.courseSlug),
+  index("stripe_subscriptions_customer_id_idx").on(table.customerId),
+  index("stripe_subscriptions_status_idx").on(table.status),
+  index("stripe_subscriptions_cleanup_after_idx").on(table.cleanupAfter),
+])
 
 export const processedEvents = createTable("processed_events", {
   id: uuid("id").primaryKey().defaultRandom(),
   eventId: varchar("eventId", { length: 256 }).notNull().unique(),
-  userId: varchar("userId", { length: 256 }).notNull(),
+  userId: varchar("userId", { length: 256 }),
+  eventType: varchar("event_type", { length: 100 }),
+  stripeObjectId: varchar("stripe_object_id", { length: 256 }),
+  orderId: uuid("order_id").references(() => checkoutOrders.id),
+  paymentId: uuid("payment_id").references(() => payments.id),
+  subscriptionRecordId: uuid("subscription_record_id").references(() => subscriptions.id),
+  ownerDeletedAt: timestamp("owner_deleted_at"),
+  cleanupAfter: timestamp("cleanup_after"),
   processedAt: timestamp("processedAt").defaultNow(),
-})
+}, (table) => [
+  index("processed_events_cleanup_after_idx").on(table.cleanupAfter),
+])
 
 export const completedTestes = createTable(
   "completed_tests",
@@ -139,7 +258,9 @@ export const userCustomTests = createTable(
   "user_custom_tests",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     meta: jsonb("meta").$type<TestMeta>().notNull(),
     data: jsonb("data").notNull(),
     createdAt: timestamp("createdAt").defaultNow(),
@@ -155,8 +276,13 @@ export const userCustomCategories = createTable(
   "user_custom_categories",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     categoryName: varchar("categoryName", { length: 255 }).notNull(),
+    // Real curriculum subject this custom category maps to (e.g. "farmakologia").
+    // Drives planner learning-curve attribution; null = not linked / not counted.
+    linkedCategory: varchar("linkedCategory", { length: 255 }),
     questionIds: jsonb("questionIds").$type<string[]>().notNull().default([]),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -166,19 +292,26 @@ export const userCustomCategories = createTable(
   })
 )
 
-export const procedures = createTable("procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
-
-export const pielegniastwoProcedures = createTable("pielegniarstwo_procedures", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  data: jsonb("data").notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt"),
-})
+// Single procedures table for all courses. `data.meta` mirrors course/category;
+// the columns are the query-side source of truth. Seeded from data/procedures.json
+// (scripts/seed-procedures.ts) with stable ids and slugs.
+export const procedures = createTable(
+  "procedures",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    course: varchar("course", { length: 100 })
+      .notNull()
+      .default("opiekun-medyczny"),
+    slug: varchar("slug", { length: 256 }).notNull().default(""),
+    data: jsonb("data").notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    index("procedures_course_idx").on(table.course),
+    index("procedures_course_slug_idx").on(table.course, table.slug),
+  ]
+)
 
 export const customersMessages = createTable("messages", {
   id: serial("id").primaryKey(),
@@ -283,7 +416,9 @@ export const blogPostTags = createTable(
 export const blogLikes = createTable(
   'blog_likes',
   {
-    userId: varchar('userId', { length: 256 }).notNull(),
+    userId: varchar('userId', { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: 'cascade' }),
     postId: uuid('postId')
       .notNull()
       .references(() => blogPosts.id, { onDelete: 'cascade' }),
@@ -305,6 +440,7 @@ export const forumPosts = createTable(
       .notNull()
       .references(() => users.userId, { onDelete: "cascade" }),
     authorName: varchar("authorName", { length: 256 }).notNull(),
+    authorRole: varchar("authorRole", { length: 32 }).default("user").notNull(),
     readonly: boolean("readonly").default(false).notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
@@ -312,8 +448,21 @@ export const forumPosts = createTable(
   (table) => [
     index("forum_posts_author_id_idx").on(table.authorId),
     index("forum_posts_created_at_idx").on(table.createdAt),
+    index("forum_posts_author_role_created_at_idx").on(
+      table.authorRole,
+      table.createdAt
+    ),
   ]
 )
+
+export const forumReadState = createTable("forum_read_state", {
+  userId: varchar("userId", { length: 256 })
+    .primaryKey()
+    .references(() => users.userId, { onDelete: "cascade" }),
+  lastSeenPostsAt: timestamp("lastSeenPostsAt").defaultNow().notNull(),
+  lastSeenCommentsAt: timestamp("lastSeenCommentsAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+})
 
 export const forumComments = createTable(
   "forum_comments",
@@ -450,13 +599,72 @@ export const userCellsList = createTable(
       .references(() => users.userId, { onDelete: "cascade" }),
     cells: jsonb("cells").notNull(),
     order: jsonb("order").notNull(),
+    version: integer("version").default(0).notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
   },
   (table) => [
-    index("user_cells_list_user_id_idx").on(table.userId),
+    uniqueIndex("user_cells_list_user_id_uq").on(table.userId),
   ]
 )
+
+export const flashcardSourceEnum = pgEnum("flashcard_source", ["ai", "manual", "note"])
+
+export const flashcardDecks = createTable(
+  "flashcard_decks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    name: varchar("name", { length: 256 }).notNull(),
+    sourceType: flashcardSourceEnum("sourceType").notNull().default("manual"),
+    sourceRef: varchar("sourceRef", { length: 256 }),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("flashcard_decks_user_id_idx").on(table.userId),
+    uniqueIndex("flashcard_decks_user_source_ref_uq").on(
+      table.userId,
+      table.sourceRef
+    ),
+  ]
+)
+
+export const flashcards = createTable(
+  "flashcards",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    deckId: uuid("deckId")
+      .notNull()
+      .references(() => flashcardDecks.id, { onDelete: "cascade" }),
+    questionText: text("questionText").notNull(),
+    answerText: text("answerText").notNull(),
+    position: integer("position").notNull().default(0),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("flashcards_deck_id_idx").on(table.deckId),
+    index("flashcards_deck_id_position_idx").on(table.deckId, table.position),
+  ]
+)
+
+export const flashcardDecksRelations = relations(flashcardDecks, ({ one, many }) => ({
+  user: one(users, {
+    fields: [flashcardDecks.userId],
+    references: [users.userId],
+  }),
+  cards: many(flashcards),
+}))
+
+export const flashcardsRelations = relations(flashcards, ({ one }) => ({
+  deck: one(flashcardDecks, {
+    fields: [flashcards.deckId],
+    references: [flashcardDecks.id],
+  }),
+}))
 
 export const materials = createTable(
   "materials",
@@ -471,6 +679,14 @@ export const materials = createTable(
     type: varchar("type", { length: 64 }).notNull(),
     category: varchar("category", { length: 128 }).notNull(),
     size: integer("size").notNull(),
+    // Text read out of the file once, at upload. Everything downstream reads
+    // this instead of re-downloading and base64-encoding the file per request.
+    extractedText: text("extracted_text"),
+    // pending | indexed | unindexable | failed. A material the sweep can never
+    // read (video, and anything else with no text layer) is marked terminal
+    // rather than retried forever.
+    indexStatus: varchar("index_status", { length: 32 }).notNull().default("pending"),
+    indexedAt: timestamp("indexed_at", { withTimezone: true }),
     createdAt: timestamp("createdAt").defaultNow().notNull(),
     updatedAt: timestamp("updatedAt").defaultNow().notNull(),
   },
@@ -478,6 +694,8 @@ export const materials = createTable(
     index("materials_user_id_idx").on(table.userId),
     index("materials_category_idx").on(table.category),
     index("materials_type_idx").on(table.type),
+    // Drives the backstop sweep, which only looks at material still waiting.
+    index("materials_index_status_idx").on(table.indexStatus),
   ]
 );
 
@@ -534,14 +752,21 @@ export const courseEnrollments = createTable(
   "course_enrollments",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    userId: varchar("userId", { length: 256 }).notNull(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     courseSlug: varchar("course_slug", { length: 100 }).notNull(),
     accessTier: varchar("access_tier", { length: 50 }).default("basic").notNull(),
+    sourceType: varchar("source_type", { length: 50 }).$type<EntitlementSourceType>(),
+    sourceId: varchar("source_id", { length: 256 }),
     isActive: boolean("is_active").default(true).notNull(),
     enrolledAt: timestamp("enrolled_at").defaultNow().notNull(),
+    startsAt: timestamp("starts_at"),
     expiresAt: timestamp("expires_at"),
+    revokedAt: timestamp("revoked_at"),
   },
   (table) => [
+    uniqueIndex("enrollments_source_uq").on(table.sourceType, table.sourceId),
     index("enrollments_user_id_idx").on(table.userId),
     index("enrollments_course_slug_idx").on(table.courseSlug),
     index("enrollments_is_active_idx").on(table.isActive),
@@ -620,6 +845,11 @@ export const ragConfig = createTable("rag_config", {
   id: uuid("id").primaryKey().defaultRandom(),
   storeName: text("store_name").notNull().unique(),
   storeDisplayName: text("store_display_name"),
+  // What the corpus is actually running on, so the app never has to guess.
+  // deploymentMode: 'SPANNER' | 'SERVERLESS'; embeddingModel e.g. gemini-embedding-001.
+  deploymentMode: text("deployment_mode"),
+  embeddingModel: text("embedding_model"),
+  corpusId: text("corpus_id"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -635,11 +865,14 @@ export const lectures = createTable(
   "lectures",
   {
     id:          uuid("id").primaryKey().defaultRandom(),
-    userId:      varchar("userId", { length: 256 }).notNull(),
+    userId:      varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
     title:       varchar("title", { length: 256 }).notNull(),
     contentHash: varchar("contentHash", { length: 64 }).notNull(),
     audioKey:    varchar("audioKey", { length: 256 }).notNull(),
     audioUrl:    text("audioUrl").notNull(),
+    size:        integer("size").notNull().default(0),
     scriptText:  text("scriptText").notNull(),
     duration:    integer("duration"),
     createdAt:   timestamp("createdAt").defaultNow().notNull(),
@@ -653,3 +886,240 @@ export const lectures = createTable(
 
 export type Lecture = typeof lectures.$inferSelect
 export type NewLecture = typeof lectures.$inferInsert
+
+// AI-generated practical exams
+export const generatedPracticalExams = createTable(
+  "generated_practical_exams",
+  {
+    id:        uuid("id").primaryKey().defaultRandom(),
+    userId:    varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    examJson:  jsonb("examJson").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("generated_practical_exams_user_id_idx").on(table.userId),
+  ]
+)
+
+export type GeneratedPracticalExam = typeof generatedPracticalExams.$inferSelect
+export type NewGeneratedPracticalExam = typeof generatedPracticalExams.$inferInsert
+
+export const generatedQuizzes = createTable(
+  "generated_quizzes",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    procedureId: varchar("procedureId", { length: 256 }).notNull(),
+    challengeType: varchar("challengeType", { length: 32 }).notNull(),
+    quizJson: jsonb("quizJson").notNull(),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("generated_quizzes_user_id_idx").on(table.userId),
+    index("generated_quizzes_user_proc_type_idx").on(
+      table.userId,
+      table.procedureId,
+      table.challengeType
+    ),
+  ]
+)
+
+export type GeneratedQuizRow = typeof generatedQuizzes.$inferSelect
+export type NewGeneratedQuizRow = typeof generatedQuizzes.$inferInsert
+
+export const learningPlans = createTable(
+  "learning_plans",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    courseSlug: varchar("courseSlug", { length: 100 }).notNull(),
+    name: varchar("name", { length: 255 }).notNull(),
+    goalType: varchar("goalType", { length: 30 }).notNull().default("custom"),
+    focusCategoryKey: varchar("focusCategoryKey", { length: 100 }),
+    dueDate: timestamp("dueDate").notNull(),
+    minutesPerDay: integer("minutesPerDay").notNull(),
+    studyDays: jsonb("studyDays").$type<number[]>().notNull(),
+    status: varchar("status", { length: 20 }).notNull().default("active"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+    updatedAt: timestamp("updatedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("learning_plans_user_id_idx").on(table.userId),
+    index("learning_plans_user_status_idx").on(table.userId, table.status),
+  ]
+)
+
+export const learningPlanConcepts = createTable(
+  "learning_plan_concepts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    planId: uuid("planId")
+      .notNull()
+      .references(() => learningPlans.id, { onDelete: "cascade" }),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    categoryKey: varchar("categoryKey", { length: 100 }),
+    procedureId: varchar("procedureId", { length: 256 }),
+    label: varchar("label", { length: 255 }).notNull(),
+    source: varchar("source", { length: 20 }).notNull().default("category"),
+    targetMinutes: integer("targetMinutes").notNull().default(60),
+    sortOrder: integer("sortOrder").notNull().default(0),
+    completedAt: timestamp("completedAt"),
+  },
+  (table) => [
+    index("learning_plan_concepts_plan_id_idx").on(table.planId),
+    index("learning_plan_concepts_user_id_idx").on(table.userId),
+  ]
+)
+
+export const studyLogs = createTable(
+  "study_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    planId: uuid("planId").references(() => learningPlans.id, {
+      onDelete: "cascade",
+    }),
+    conceptId: uuid("conceptId").references(() => learningPlanConcepts.id, {
+      onDelete: "set null",
+    }),
+    categoryKey: varchar("categoryKey", { length: 128 }),
+    procedureId: varchar("procedureId", { length: 256 }),
+    studyDate: timestamp("studyDate").defaultNow().notNull(),
+    minutes: integer("minutes").notNull(),
+    note: varchar("note", { length: 500 }),
+    source: varchar("source", { length: 20 }).notNull().default("manual"),
+    createdAt: timestamp("createdAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("study_logs_user_id_idx").on(table.userId),
+    index("study_logs_user_date_idx").on(table.userId, table.studyDate),
+    index("study_logs_plan_id_idx").on(table.planId),
+  ]
+)
+
+export const learningPlansRelations = relations(learningPlans, ({ many }) => ({
+  concepts: many(learningPlanConcepts),
+  studyLogs: many(studyLogs),
+}))
+
+export const learningPlanConceptsRelations = relations(
+  learningPlanConcepts,
+  ({ one }) => ({
+    plan: one(learningPlans, {
+      fields: [learningPlanConcepts.planId],
+      references: [learningPlans.id],
+    }),
+  })
+)
+
+export const studyLogsRelations = relations(studyLogs, ({ one }) => ({
+  plan: one(learningPlans, {
+    fields: [studyLogs.planId],
+    references: [learningPlans.id],
+  }),
+}))
+
+export type LearningPlanRow = typeof learningPlans.$inferSelect
+export type NewLearningPlanRow = typeof learningPlans.$inferInsert
+export type LearningPlanConceptRow = typeof learningPlanConcepts.$inferSelect
+export type NewLearningPlanConceptRow = typeof learningPlanConcepts.$inferInsert
+export type StudyLogRow = typeof studyLogs.$inferSelect
+export type NewStudyLogRow = typeof studyLogs.$inferInsert
+
+export const diagnozy = createTable(
+  "diagnozy",
+  {
+    id: uuid("id").primaryKey(),
+    course: varchar("course", { length: 100 })
+      .notNull()
+      .default("pielegniarstwo"),
+    slug: varchar("slug", { length: 256 }).notNull(),
+    section: varchar("section", { length: 16 }).notNull(),
+    chapterNumber: varchar("chapterNumber", { length: 8 }).notNull(),
+    chapterTitle: varchar("chapterTitle", { length: 256 }).notNull(),
+    title: varchar("title", { length: 256 }).notNull(),
+    data: jsonb("data").$type<Diagnoza>().notNull(),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt"),
+  },
+  (table) => [
+    index("diagnozy_course_idx").on(table.course),
+    index("diagnozy_slug_idx").on(table.slug),
+  ]
+)
+
+export const diagnozyProgress = createTable(
+  "diagnozy_progress",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    diagnozaSlug: varchar("diagnozaSlug", { length: 256 }).notNull(),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("diagnozy_progress_user_idx").on(table.userId),
+    uniqueIndex("diagnozy_progress_user_slug_uq").on(
+      table.userId,
+      table.diagnozaSlug
+    ),
+  ]
+)
+
+export const diagnozyProgressRelations = relations(diagnozyProgress, ({ one }) => ({
+  user: one(users, {
+    fields: [diagnozyProgress.userId],
+    references: [users.userId],
+  }),
+}))
+
+export const diagnozyExamAttempts = createTable(
+  "diagnozy_exam_attempts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    userId: varchar("userId", { length: 256 })
+      .notNull()
+      .references(() => users.userId, { onDelete: "cascade" }),
+    diagnozaSlug: varchar("diagnozaSlug", { length: 256 }).notNull(),
+    score: integer("score").notNull(),
+    stepScores: jsonb("stepScores").notNull(),
+    timeSpent: integer("timeSpent").notNull(),
+    passed: boolean("passed").notNull().default(false),
+    completedAt: timestamp("completedAt").defaultNow().notNull(),
+  },
+  (table) => [
+    index("diagnozy_exam_attempts_user_idx").on(table.userId),
+    index("diagnozy_exam_attempts_user_slug_idx").on(
+      table.userId,
+      table.diagnozaSlug
+    ),
+  ]
+)
+
+export const diagnozyExamAttemptsRelations = relations(diagnozyExamAttempts, ({ one }) => ({
+  user: one(users, {
+    fields: [diagnozyExamAttempts.userId],
+    references: [users.userId],
+  }),
+}))
+
+// ── Memory layer (see src/server/memory/) ──────────────────────────────────
+// Re-exported so drizzle-kit (schema entry point) and the ORM client pick up
+// the wolfmed_mem_* tables. Requires the "vector" and "pg_trgm" extensions —
+// run scripts/setup-memory-extensions.ts before the first db:push.
+export * from "./memory-schema"
+
+// Personal library: chunks of a student's own notes and materials. Same "vector"
+// and "pg_trgm" extension requirement as the memory tables.
+export * from "./library-schema"

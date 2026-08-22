@@ -27,6 +27,15 @@ import {
   userCustomTests,
   userCustomCategories,
   customersMessages,
+  generatedPracticalExams,
+  generatedQuizzes,
+  learningPlans,
+  learningPlanConcepts,
+  studyLogs,
+  diagnozy,
+  diagnozyProgress,
+  diagnozyExamAttempts,
+  forumReadState,
 } from "./db/schema"
 import {
   ExtendedCompletedTest,
@@ -40,12 +49,24 @@ import {
   Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
-import { eq, asc, desc, sql, and, or, like, count, inArray } from "drizzle-orm"
-import { Post as ForumPost } from "@/types/forumPostsTypes"
+import { eq, asc, desc, sql, and, or, like, count, gt, ne, inArray, notInArray } from "drizzle-orm"
+import { challengeTypesForCourse } from "@/helpers/challengeTypesForCourse"
+import {
+  Post as ForumPost,
+  ForumNotifications,
+  ForumStats,
+  RecentForumPost,
+} from "@/types/forumPostsTypes"
+import { forumWatermark } from "@/helpers/forumWatermark"
 import { Payment, Supporter } from "@/types/stripeTypes"
 import { NoteInput } from "./schema"
 import { Cell, UserCellsList } from "@/types/cellTypes"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
+import type { PracticalExam } from "@/types/praktycznyTypes"
+import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
+import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
+import { boardsEqual } from "@/helpers/cellsConcurrency"
+import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -199,23 +220,30 @@ export const deleteUserCustomCategory = async (
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(
-  async (): Promise<ExtendedProcedures[]> => {
-    const procedures = await db.query.procedures.findMany({
+  async (course = "opiekun-medyczny"): Promise<ExtendedProcedures[]> => {
+    return db.query.procedures.findMany({
+      where: (model, { eq }) => eq(model.course, course),
       orderBy: (model, { desc }) => desc(model.id),
     })
-    return procedures
   }
 )
 
-// Count all procedures
-export const getProceduresCount = cache(async (): Promise<number> => {
-  const result = await db.select({ count: count() }).from(procedures)
-  return result[0]?.count ?? 0
-})
+// Count procedures for a course
+export const getProceduresCount = cache(
+  async (course = "opiekun-medyczny"): Promise<number> => {
+    const result = await db
+      .select({ count: count() })
+      .from(procedures)
+      .where(eq(procedures.course, course))
+    return result[0]?.count ?? 0
+  }
+)
 
 // Get procedure by ID
 export const getProcedureById = cache(
-  async (id: string): Promise<ExtendedProcedures | null> => {
+  async (
+    id: string
+  ): Promise<(ExtendedProcedures & { course: string; slug: string }) | null> => {
     const procedure = await db.query.procedures.findFirst({
       where: (model, { eq }) => eq(model.id, id),
     })
@@ -223,17 +251,26 @@ export const getProcedureById = cache(
   }
 )
 
-// Get procedure by slug
+// Lightweight id+name list for pickers (planner wizard)
+export const getProcedureOptions = cache(async (course: string) => {
+  return db
+    .select({
+      id: procedures.id,
+      name: sql<string>`${procedures.data}->>'name'`,
+    })
+    .from(procedures)
+    .where(eq(procedures.course, course))
+    .orderBy(asc(sql`${procedures.data}->>'name'`))
+})
+
+// Get procedure by course + slug (slugs are unique within a course)
 export const getProcedureBySlug = cache(
-  async (slug: string): Promise<ExtendedProcedures | null> => {
-    const { getProcedureIdFromSlug } = await import("@/constants/procedureSlugs")
-    const procedureId = getProcedureIdFromSlug(slug)
-
-    if (!procedureId) {
-      return null
-    }
-
-    return getProcedureById(procedureId)
+  async (course: string, slug: string): Promise<ExtendedProcedures | null> => {
+    const procedure = await db.query.procedures.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.course, course), eq(model.slug, slug)),
+    })
+    return procedure || null
   }
 )
 
@@ -272,7 +309,12 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
     )
     .orderBy(asc(courseEnrollments.enrolledAt))
 
-  return enrollments.map((row) => ({
+  const effectiveIds = new Set(
+    getEffectiveEnrollmentGrants(enrollments.map((row) => row.enrollment))
+      .map((enrollment) => enrollment.id)
+  )
+
+  return enrollments.filter((row) => effectiveIds.has(row.enrollment.id)).map((row) => ({
     ...row.course,
     enrolledAt: row.enrollment.enrolledAt,
     accessTier: row.enrollment.accessTier,
@@ -280,9 +322,8 @@ export const getUserEnrolledCourses = cache(async (userId: string) => {
   }))
 })
 
-// Check if user has any active enrollments (used for /panel layout guard)
-export const getUserEnrollments = cache(async (userId: string) => {
-  return await db
+export const getUserEnrollmentGrants = cache(async (userId: string) => {
+  return db
     .select()
     .from(courseEnrollments)
     .where(
@@ -291,6 +332,12 @@ export const getUserEnrollments = cache(async (userId: string) => {
         eq(courseEnrollments.isActive, true)
       )
     )
+
+})
+
+// Check if user has any active enrollments (used for /panel layout guard)
+export const getUserEnrollments = cache(async (userId: string) => {
+  return getEffectiveEnrollmentGrants(await getUserEnrollmentGrants(userId))
 })
 
 // ============================================================================
@@ -928,12 +975,15 @@ export const getUserIdByCustomer = cache(
   }
 )
 
-export async function getTestSessionDetails(sessionId: string) {
+export async function getTestSessionDetails(sessionId: string, userId: string) {
   const session = await db.query.testSessions.findFirst({
-    where: eq(testSessions.id, sessionId),
+    where: and(eq(testSessions.id, sessionId), eq(testSessions.userId, userId)),
     columns: {
+      category: true,
       durationMinutes: true,
       numberOfQuestions: true,
+      status: true,
+      expiresAt: true,
     },
   })
   return session
@@ -1115,6 +1165,7 @@ export const createForumPost = cache(
     content: string
     authorId: string
     authorName: string
+    authorRole: string
     readonly: boolean
   }) => {
     const post = await db
@@ -1131,9 +1182,14 @@ export const createForumPost = cache(
 )
 
 // Delete a forum post and its associated comments
-export const deleteForumPost = cache(async (postId: string) => {
-  await db.delete(forumPosts).where(eq(forumPosts.id, postId))
-})
+export const deleteForumPost = async (postId: string, userId: string) => {
+  const deleted = await db
+    .delete(forumPosts)
+    .where(and(eq(forumPosts.id, postId), eq(forumPosts.authorId, userId)))
+    .returning({ id: forumPosts.id })
+
+  return deleted.length > 0
+}
 
 // Create a new comment on a forum post
 export const createForumComment = cache(
@@ -1156,9 +1212,27 @@ export const createForumComment = cache(
 )
 
 // Delete a specific comment
-export const deleteForumComment = cache(async (commentId: string) => {
-  await db.delete(forumComments).where(eq(forumComments.id, commentId))
-})
+export const deleteForumComment = async (commentId: string, userId: string) => {
+  const ownedPostIds = db
+    .select({ id: forumPosts.id })
+    .from(forumPosts)
+    .where(eq(forumPosts.authorId, userId))
+
+  const deleted = await db
+    .delete(forumComments)
+    .where(
+      and(
+        eq(forumComments.id, commentId),
+        or(
+          eq(forumComments.authorId, userId),
+          inArray(forumComments.postId, ownedPostIds)
+        )
+      )
+    )
+    .returning({ id: forumComments.id })
+
+  return deleted.length > 0
+}
 
 // Get the timestamp of user's last forum post
 export const getLastUserPostTime = cache(
@@ -1221,13 +1295,124 @@ export const getLastUserForumComment = cache(
   }
 )
 
+export const getForumNotifications = cache(
+  async (userId: string): Promise<ForumNotifications> => {
+    const [readState] = await db
+      .select({
+        lastSeenPostsAt: forumReadState.lastSeenPostsAt,
+        lastSeenCommentsAt: forumReadState.lastSeenCommentsAt,
+        accountCreatedAt: users.createdAt,
+      })
+      .from(users)
+      .leftJoin(forumReadState, eq(forumReadState.userId, users.userId))
+      .where(eq(users.userId, userId))
+
+    if (!readState) return { newPosts: 0, newAdminPosts: 0, newComments: 0 }
+
+    const postsSince = forumWatermark(
+      readState.lastSeenPostsAt ?? readState.accountCreatedAt
+    )
+    const commentsSince = forumWatermark(
+      readState.lastSeenCommentsAt ?? readState.accountCreatedAt
+    )
+
+    const [postCounts, commentCounts] = await Promise.all([
+      db
+        .select({
+          newPosts: count(),
+          newAdminPosts: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.authorRole} = 'admin')`,
+        })
+        .from(forumPosts)
+        .where(
+          and(
+            gt(forumPosts.createdAt, postsSince),
+            ne(forumPosts.authorId, userId)
+          )
+        ),
+      db
+        .select({ newComments: count() })
+        .from(forumComments)
+        .innerJoin(forumPosts, eq(forumPosts.id, forumComments.postId))
+        .where(
+          and(
+            gt(forumComments.createdAt, commentsSince),
+            eq(forumPosts.authorId, userId),
+            ne(forumComments.authorId, userId)
+          )
+        ),
+    ])
+
+    return {
+      newPosts: Number(postCounts[0]?.newPosts) || 0,
+      newAdminPosts: Number(postCounts[0]?.newAdminPosts) || 0,
+      newComments: Number(commentCounts[0]?.newComments) || 0,
+    }
+  }
+)
+
+export const getForumStats = cache(async (): Promise<ForumStats> => {
+  const oneWeekAgo = new Date()
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+
+  const oneMonthAgo = new Date()
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1)
+
+  const answeredPostIds = db
+    .selectDistinct({ postId: forumComments.postId })
+    .from(forumComments)
+
+  const [stats, [comments]] = await Promise.all([
+    db
+      .select({
+        total: count(),
+        thisWeek: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.createdAt} >= ${oneWeekAgo})`,
+        thisMonth: sql<number>`COUNT(*) FILTER (WHERE ${forumPosts.createdAt} >= ${oneMonthAgo})`,
+        unanswered: sql<number>`COUNT(*) FILTER (WHERE ${notInArray(forumPosts.id, answeredPostIds)})`,
+      })
+      .from(forumPosts),
+    db.select({ total: count() }).from(forumComments),
+  ])
+
+  return {
+    total: stats[0]?.total || 0,
+    thisWeek: Number(stats[0]?.thisWeek) || 0,
+    thisMonth: Number(stats[0]?.thisMonth) || 0,
+    unanswered: Number(stats[0]?.unanswered) || 0,
+    totalComments: comments?.total || 0,
+  }
+})
+
+export const getRecentForumPosts = cache(
+  async (limit = 5, offset = 0): Promise<RecentForumPost[]> => {
+    return db
+      .select({
+        id: forumPosts.id,
+        title: forumPosts.title,
+        authorName: forumPosts.authorName,
+        authorRole: forumPosts.authorRole,
+        createdAt: forumPosts.createdAt,
+        commentCount: count(forumComments.id),
+      })
+      .from(forumPosts)
+      .leftJoin(forumComments, eq(forumComments.postId, forumPosts.id))
+      .groupBy(forumPosts.id)
+      .orderBy(desc(forumPosts.createdAt), desc(forumPosts.id))
+      .limit(limit)
+      .offset(offset)
+  }
+)
+
 // Get stripe support payments
 export const getStripeSupportPayments = cache(async (): Promise<Payment[]> => {
   const payments = await db.query.payments.findMany()
-  return payments.map((p) => ({
-    ...p,
-    createdAt: p.createdAt ?? new Date(),
-  }))
+  return payments
+    .filter((payment): payment is typeof payment & { userId: string } => (
+      payment.userId !== null
+    ))
+    .map((payment) => ({
+      ...payment,
+      createdAt: payment.createdAt ?? new Date(),
+    }))
 })
 
 // Get supporters userId from stripe support payments
@@ -1311,7 +1496,7 @@ export const updateTestimonial = async (
 ) => {
   const updated = await db
     .update(testimonials)
-    .set({ ...data, createdAt: new Date() })
+    .set({ ...data, updatedAt: new Date() })
     .where(eq(testimonials.id, id))
     .returning()
 
@@ -1463,58 +1648,143 @@ export const deleteMaterial = cache(
   }
 )
 
-export const getUserCellsList = cache(
-  async (userId: string): Promise<UserCellsList | null> => {
-    const rows = await db
-      .select()
-      .from(userCellsList)
-      .where(eq(userCellsList.userId, userId))
-      .limit(1)
-
-    const userCells = rows[0] ?? null
-
-    if (!userCells) return null
-
-    return {
-      id: userCells.id,
-      cells: userCells.cells as Record<string, Cell>,
-      order: userCells.order as string[],
-    }
-  }
-)
-
-export const createUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db.insert(userCellsList).values({
-      userId,
-      cells,
-      order,
-    })
-  }
-)
-
-export const updateUserCellsList = cache(
-  async (userId: string, cells: Record<string, Cell>, order: string[]) => {
-    await db
-      .update(userCellsList)
-      .set({
-        cells,
-        order,
-        updatedAt: new Date(),
-      })
-      .where(eq(userCellsList.userId, userId))
-  }
-)
-
-export const checkUserCellsList = cache(async (userId: string) => {
-  const existing = await db
+async function readUserCellsList(userId: string): Promise<UserCellsList | null> {
+  const rows = await db
     .select()
     .from(userCellsList)
     .where(eq(userCellsList.userId, userId))
     .limit(1)
 
-  return existing[0] || null
+  const userCells = rows[0] ?? null
+  if (!userCells) return null
+
+  return {
+    id: userCells.id,
+    cells: userCells.cells as Record<string, Cell>,
+    order: userCells.order as string[],
+    version: userCells.version,
+  }
+}
+
+export const getUserCellsList = cache(readUserCellsList)
+
+export type SaveUserCellsResult =
+  | { status: "saved"; version: number }
+  | { status: "conflict"; current: UserCellsList | null }
+
+export async function saveUserCellsList(
+  userId: string,
+  cells: Record<string, Cell>,
+  order: string[],
+  expectedVersion: number | null
+): Promise<SaveUserCellsResult> {
+  if (expectedVersion === null) {
+    const [created] = await db
+      .insert(userCellsList)
+      .values({ userId, cells, order, version: 0 })
+      .onConflictDoNothing({ target: userCellsList.userId })
+      .returning({ version: userCellsList.version })
+
+    if (created) return { status: "saved", version: created.version }
+  } else {
+    const [updated] = await db
+      .update(userCellsList)
+      .set({
+        cells,
+        order,
+        version: sql`${userCellsList.version} + 1`,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(userCellsList.userId, userId),
+          eq(userCellsList.version, expectedVersion)
+        )
+      )
+      .returning({ version: userCellsList.version })
+
+    if (updated) return { status: "saved", version: updated.version }
+  }
+
+  const current = await readUserCellsList(userId)
+  if (current && boardsEqual({ cells, order }, current)) {
+    return { status: "saved", version: current.version }
+  }
+
+  return { status: "conflict", current }
+}
+
+const toFlashcardDeck = (deck: {
+  id: string
+  name: string
+  sourceType: FlashcardSource
+  sourceRef: string | null
+  cards: { id: string; deckId: string; questionText: string; answerText: string; position: number }[]
+}): FlashcardDeck => ({
+  id: deck.id,
+  name: deck.name,
+  sourceType: deck.sourceType,
+  sourceRef: deck.sourceRef,
+  cards: deck.cards.map((card) => ({
+    id: card.id,
+    deckId: card.deckId,
+    questionText: card.questionText,
+    answerText: card.answerText,
+    position: card.position,
+  })),
 })
+
+export const getFlashcardDecksByUser = cache(
+  async (userId: string): Promise<FlashcardDeck[]> => {
+    const decks = await db.query.flashcardDecks.findMany({
+      where: (model, { eq }) => eq(model.userId, userId),
+      orderBy: (model, { desc }) => desc(model.createdAt),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    return decks.map(toFlashcardDeck)
+  }
+)
+
+export const getFlashcardDeckById = cache(
+  async (userId: string, deckId: string): Promise<FlashcardDeck | null> => {
+    const deck = await db.query.flashcardDecks.findFirst({
+      where: (model, { and, eq }) =>
+        and(eq(model.id, deckId), eq(model.userId, userId)),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    if (!deck) return null
+
+    return toFlashcardDeck(deck)
+  }
+)
+
+export const getFlashcardDeckByNoteId = cache(
+  async (userId: string, noteId: string): Promise<FlashcardDeck | null> => {
+    const deck = await db.query.flashcardDecks.findFirst({
+      where: (model, { and, eq }) =>
+        and(eq(model.userId, userId), eq(model.sourceRef, noteId)),
+      with: {
+        cards: {
+          orderBy: (model, { asc }) => [asc(model.position), asc(model.createdAt)],
+        },
+      },
+    })
+
+    if (!deck) return null
+
+    return toFlashcardDeck(deck)
+  }
+)
 
 export const getMaterialsByUser = cache(async (userId: string) => {
   const rows = await db.query.materials.findMany({
@@ -1635,13 +1905,16 @@ export const saveChallengeCompletion = async (
     .limit(1)
 
   if (existing.length > 0) {
-    // Update existing completion
+    // A retake never revokes a pass or a personal best — the procedure badge
+    // is granted off `passed`, so downgrading it would strip an earned badge.
+    const previous = existing[0]
+
     await tx
       .update(challengeCompletions)
       .set({
-        score: data.score,
+        score: Math.max(previous.score, data.score),
         timeSpent: data.timeSpent,
-        passed,
+        passed: previous.passed || passed,
         attempts: sql`${challengeCompletions.attempts} + 1`,
         completedAt: new Date(),
       })
@@ -1672,6 +1945,12 @@ export const checkAllChallengesComplete = async (
   userId: string,
   procedureId: string
 ): Promise<boolean> => {
+  const [proc] = await tx
+    .select({ course: procedures.course })
+    .from(procedures)
+    .where(eq(procedures.id, procedureId))
+    .limit(1)
+
   const completions = await tx
     .select()
     .from(challengeCompletions)
@@ -1683,11 +1962,17 @@ export const checkAllChallengesComplete = async (
       )
     )
 
-  // Need 5 unique challenge types PASSED (score >= 70%)
-  const uniqueChallengeTypes = new Set(
-    completions.map((c: any) => c.challengeType)
+  // Badge requires every challenge type of the procedure's course PASSED
+  // (score >= 70%). Filtering ignores legacy rows from removed types.
+  const requiredTypes = challengeTypesForCourse(
+    proc?.course ?? "opiekun-medyczny"
+  ) as string[]
+  const passedTypes = new Set(
+    completions
+      .map((c: any) => c.challengeType)
+      .filter((type: string) => requiredTypes.includes(type))
   )
-  return uniqueChallengeTypes.size >= 5
+  return passedTypes.size >= requiredTypes.length
 }
 
 /**
@@ -1998,7 +2283,7 @@ export const getProgressTimeline = cache(
 // ─── Lectures ────────────────────────────────────────────────────────────────
 
 import { lectures } from "./db/schema"
-import type { Lecture, NewLecture } from "./db/schema"
+import type { Lecture } from "./db/schema"
 
 export async function getLectureByHash(userId: string, contentHash: string): Promise<Lecture | null> {
   const rows = await db
@@ -2006,19 +2291,6 @@ export async function getLectureByHash(userId: string, contentHash: string): Pro
     .from(lectures)
     .where(and(eq(lectures.userId, userId), eq(lectures.contentHash, contentHash)))
     .limit(1)
-  return rows[0] ?? null
-}
-
-export async function insertLecture(data: NewLecture): Promise<Lecture> {
-  const rows = await db.insert(lectures).values(data).returning()
-  return rows[0]!
-}
-
-export async function deleteLectureById(userId: string, lectureId: string): Promise<Lecture | null> {
-  const rows = await db
-    .delete(lectures)
-    .where(and(eq(lectures.id, lectureId), eq(lectures.userId, userId)))
-    .returning()
   return rows[0] ?? null
 }
 
@@ -2036,3 +2308,336 @@ export async function getLecturesByUser(userId: string): Promise<Lecture[]> {
     .where(eq(lectures.userId, userId))
     .orderBy(desc(lectures.createdAt))
 }
+
+export async function saveGeneratedPracticalExam(
+  userId: string,
+  exam: PracticalExam
+): Promise<string> {
+  const [row] = await db
+    .insert(generatedPracticalExams)
+    .values({ id: exam.id, userId, examJson: exam })
+    .returning({ id: generatedPracticalExams.id })
+  if (!row) throw new Error("Nie udało się zapisać wygenerowanego arkusza.")
+  return row.id
+}
+
+export async function getGeneratedPracticalExamById(
+  id: string,
+  userId: string
+): Promise<PracticalExam | null> {
+  const [row] = await db
+    .select()
+    .from(generatedPracticalExams)
+    .where(
+      and(eq(generatedPracticalExams.id, id), eq(generatedPracticalExams.userId, userId))
+    )
+    .limit(1)
+  return row ? (row.examJson as PracticalExam) : null
+}
+
+// ===== AI-generated procedure quizzes (Quiz 2.0) =====
+
+// Keep only the few newest quizzes per (user, procedure, type); older rows are
+// never read again (the UI loads the latest) so pruning caps unbounded growth.
+const GENERATED_QUIZ_KEEP = 3
+
+export async function saveGeneratedQuiz(data: {
+  userId: string
+  procedureId: string
+  challengeType: string
+  quizJson: unknown
+}): Promise<string> {
+  const [row] = await db
+    .insert(generatedQuizzes)
+    .values(data)
+    .returning({ id: generatedQuizzes.id })
+  if (!row) throw new Error("Nie udało się zapisać wygenerowanego quizu.")
+
+  const keep = await db
+    .select({ id: generatedQuizzes.id })
+    .from(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType)
+      )
+    )
+    .orderBy(desc(generatedQuizzes.createdAt))
+    .limit(GENERATED_QUIZ_KEEP)
+
+  await db
+    .delete(generatedQuizzes)
+    .where(
+      and(
+        eq(generatedQuizzes.userId, data.userId),
+        eq(generatedQuizzes.procedureId, data.procedureId),
+        eq(generatedQuizzes.challengeType, data.challengeType),
+        notInArray(
+          generatedQuizzes.id,
+          keep.map((r) => r.id)
+        )
+      )
+    )
+
+  return row.id
+}
+
+export const getGeneratedQuizById = cache(
+  async (quizId: string, userId: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(eq(generatedQuizzes.id, quizId), eq(generatedQuizzes.userId, userId))
+      )
+      .limit(1)
+    return row ?? null
+  }
+)
+
+export const getLatestGeneratedQuiz = cache(
+  async (userId: string, procedureId: string, challengeType: string) => {
+    const [row] = await db
+      .select()
+      .from(generatedQuizzes)
+      .where(
+        and(
+          eq(generatedQuizzes.userId, userId),
+          eq(generatedQuizzes.procedureId, procedureId),
+          eq(generatedQuizzes.challengeType, challengeType)
+        )
+      )
+      .orderBy(desc(generatedQuizzes.createdAt))
+      .limit(1)
+    return row ?? null
+  }
+)
+
+// ===== Learning planner =====
+
+// Ledger write: features call this on completion so their time counts toward
+// planner progress, streaks and daily goals.
+export async function insertStudyLog(data: {
+  userId: string
+  minutes: number
+  source: string
+  categoryKey?: string | null
+  procedureId?: string | null
+  conceptId?: string | null
+  note?: string | null
+}): Promise<void> {
+  await db.insert(studyLogs).values({
+    userId: data.userId,
+    minutes: data.minutes,
+    source: data.source,
+    categoryKey: data.categoryKey ?? null,
+    procedureId: data.procedureId ?? null,
+    conceptId: data.conceptId ?? null,
+    note: data.note ?? null,
+  })
+}
+
+export const getActivePlan = cache(async (userId: string) => {
+  const plan = await db.query.learningPlans.findFirst({
+    where: (model, { eq, and }) =>
+      and(eq(model.userId, userId), eq(model.status, "active")),
+  })
+  return plan ?? null
+})
+
+export const getActivePlanWithConcepts = cache(async (userId: string) => {
+  const plan = await getActivePlan(userId)
+  if (!plan) return null
+
+  const concepts = await db.query.learningPlanConcepts.findMany({
+    where: (model, { eq }) => eq(model.planId, plan.id),
+    orderBy: (model, { asc }) => asc(model.sortOrder),
+  })
+
+  return { ...plan, concepts }
+})
+
+export const getPlanById = cache(async (planId: string) => {
+  const plan = await db.query.learningPlans.findFirst({
+    where: (model, { eq }) => eq(model.id, planId),
+  })
+  return plan ?? null
+})
+
+export const getConceptById = cache(async (conceptId: string) => {
+  const concept = await db.query.learningPlanConcepts.findFirst({
+    where: (model, { eq }) => eq(model.id, conceptId),
+  })
+  return concept ?? null
+})
+
+export const getStudyLogsSince = cache(async (userId: string, since: Date) => {
+  return db
+    .select({
+      studyDate: studyLogs.studyDate,
+      minutes: studyLogs.minutes,
+      conceptId: studyLogs.conceptId,
+      categoryKey: studyLogs.categoryKey,
+      procedureId: studyLogs.procedureId,
+    })
+    .from(studyLogs)
+    .where(
+      and(eq(studyLogs.userId, userId), sql`${studyLogs.studyDate} >= ${since}`)
+    )
+})
+
+export const getTestActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        completedAt: completedTestes.completedAt,
+        startedAt: testSessions.startedAt,
+        durationMinutes: testSessions.durationMinutes,
+        category: testSessions.category,
+      })
+      .from(completedTestes)
+      .innerJoin(testSessions, eq(completedTestes.sessionId, testSessions.id))
+      .where(
+        and(
+          eq(completedTestes.userId, userId),
+          sql`${completedTestes.completedAt} >= ${since}`
+        )
+      )
+  }
+)
+
+export const getChallengeActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        completedAt: challengeCompletions.completedAt,
+        timeSpent: challengeCompletions.timeSpent,
+        procedureId: challengeCompletions.procedureId,
+      })
+      .from(challengeCompletions)
+      .where(
+        and(
+          eq(challengeCompletions.userId, userId),
+          sql`${challengeCompletions.completedAt} >= ${since}`
+        )
+      )
+  }
+)
+
+export const getNoteActivitySince = cache(
+  async (userId: string, since: Date) => {
+    return db
+      .select({
+        createdAt: notes.createdAt,
+        category: notes.category,
+      })
+      .from(notes)
+      .where(and(eq(notes.userId, userId), sql`${notes.createdAt} >= ${since}`))
+  }
+)
+
+export const getAllDiagnozy = cache(async (): Promise<DiagnozaListItem[]> => {
+  return db
+    .select({
+      id: diagnozy.id,
+      slug: diagnozy.slug,
+      section: diagnozy.section,
+      chapterNumber: diagnozy.chapterNumber,
+      chapterTitle: diagnozy.chapterTitle,
+      title: diagnozy.title,
+      definicjaSnippet: sql<string>`left(${diagnozy.data}->>'definicja', 220)`,
+    })
+    .from(diagnozy)
+})
+
+export const getDiagnozyTitlesBySlugs = cache(async (slugs: string[]) => {
+  if (slugs.length === 0) return []
+
+  return db
+    .select({
+      slug: diagnozy.slug,
+      section: diagnozy.section,
+      title: diagnozy.title,
+    })
+    .from(diagnozy)
+    .where(inArray(diagnozy.slug, slugs))
+})
+
+export const getDiagnozaBySlug = cache(
+  async (slug: string): Promise<Diagnoza | null> => {
+    const row = await db.query.diagnozy.findFirst({
+      where: (model, { eq, and }) =>
+        and(eq(model.slug, slug)),
+    })
+    return row?.data ?? null
+  }
+)
+
+export const getUserDiagnozyCompletions = cache(
+  async (userId: string): Promise<string[]> => {
+    const rows = await db
+      .select({ diagnozaSlug: diagnozyProgress.diagnozaSlug })
+      .from(diagnozyProgress)
+      .where(eq(diagnozyProgress.userId, userId))
+    return rows.map((row) => row.diagnozaSlug)
+  }
+)
+
+export async function insertDiagnozaCompletion(
+  userId: string,
+  diagnozaSlug: string
+): Promise<void> {
+  await db
+    .insert(diagnozyProgress)
+    .values({ userId, diagnozaSlug })
+    .onConflictDoNothing()
+}
+
+export const getDiagnozaFormulations = cache(
+  async (): Promise<DiagnozaFormulation[]> => {
+    return db
+      .select({
+        slug: diagnozy.slug,
+        text: sql<string>`${diagnozy.data}->>'diagnozaPielegniarska'`,
+      })
+      .from(diagnozy)
+      .orderBy(asc(diagnozy.section))
+  }
+)
+
+export const getDiagnozyForExam = cache(async (): Promise<Diagnoza[]> => {
+  const rows = await db
+    .select({ data: diagnozy.data })
+    .from(diagnozy)
+  return rows.map((row) => row.data)
+})
+
+export async function insertDiagnozyExamAttempt(attempt: {
+  userId: string
+  diagnozaSlug: string
+  score: number
+  stepScores: unknown
+  timeSpent: number
+  passed: boolean
+}): Promise<void> {
+  await db.insert(diagnozyExamAttempts).values(attempt)
+}
+
+export const getUserDiagnozyExamAttempts = cache(
+  async (userId: string, limit = 10) => {
+    return db
+      .select({
+        id: diagnozyExamAttempts.id,
+        diagnozaSlug: diagnozyExamAttempts.diagnozaSlug,
+        score: diagnozyExamAttempts.score,
+        passed: diagnozyExamAttempts.passed,
+        timeSpent: diagnozyExamAttempts.timeSpent,
+        completedAt: diagnozyExamAttempts.completedAt,
+      })
+      .from(diagnozyExamAttempts)
+      .where(eq(diagnozyExamAttempts.userId, userId))
+      .orderBy(desc(diagnozyExamAttempts.completedAt))
+      .limit(limit)
+  }
+)

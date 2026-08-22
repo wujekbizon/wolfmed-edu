@@ -26,6 +26,7 @@
   --ring: 240 10% 3.9%;
   --slidein-delay: 0s;
   --radius: 0.5rem;
+
   --animate-slideInDown: slideInDown 1s ease var(--slidein-delay, 0s) forwards;
   --animate-fadeInUp: fadeInUp 0.5s ease-out var(--slidein-delay, 0s) forwards;
   --animate-scaleIn: scaleIn 0.5s ease-out forwards;
@@ -170,6 +171,32 @@
   to   { transform: scale3d(1, 1, 1); }
 }
 
+/* Command palette chip (AI cell). State comes from aria-pressed, which the
+   button sets anyway for assistive tech, so the markup carries no state classes
+   and needs no ternary. @utility rather than @layer components: v4 only resolves
+   @apply for class names it knows about, and @layer components does not
+   register them. */
+@utility chip {
+  @apply shrink-0 cursor-pointer rounded-full border px-3 py-1 text-xs font-medium transition-colors;
+  @apply border-zinc-200 bg-white text-zinc-600;
+
+  &:hover {
+    @apply border-zinc-300 bg-zinc-50;
+  }
+
+  &[aria-pressed='true'] {
+    @apply border-zinc-800 bg-zinc-800 text-white;
+
+    &:hover {
+      @apply bg-zinc-700;
+    }
+  }
+
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
@@ -225,5 +252,99 @@
     &::-webkit-scrollbar-button:hover {
       filter: brightness(0.9);
     }
+  }
+
+  /* Dark surfaces (mind-map panels, cell overlays). Bundles the Firefox and
+     WebKit rules, so callers use this alone rather than the thin/webkit pair.
+     Arrow buttons are dropped — they read as clutter on a small overlay. */
+  .scrollbar-dark {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 138, 138, 0.45) transparent;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(245, 138, 138, 0.35);
+      border-radius: 20px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(245, 138, 138, 0.6);
+    }
+
+    &::-webkit-scrollbar-button {
+      display: none;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The dark stage shared by the tools scene and the pricing section. A
+   background, not decoration: as a utility it needs no extra node and no
+   stacking context, so children never have to fight it for clicks the way
+   they do with GradientOverlay. Defined once so the two cannot drift. */
+@utility panel-dark {
+  background-image: linear-gradient(to bottom, #2a262b, #1c1a1e);
+}
+
+/* Story scenes reveal as they reach the middle of the viewport. Opacity and
+   transform run on separate durations on purpose: the lift finishes after the
+   fade, which is what stops the change reading as a single hard switch. */
+@utility scene-reveal {
+  opacity: 0.14;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* 0.14 was measured against the dark story panel, where it reads as dimmed. The
+   questions panel is pale, and body text at that opacity there is not dimmed
+   but gone. Same motion, resting high enough to stay readable. */
+@utility scene-reveal-soft {
+  opacity: 0.4;
+  transform: translateY(26px) scale(0.985);
+  transition:
+    opacity 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.55s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Kept out of the utility above rather than nested inside it. @utility lands
+   in the utilities cascade layer, and the unlayered rules below would outrank
+   it whatever the specificity; as its own unlayered rule this one competes on
+   equal terms and wins on specificity. */
+:is(.scene-reveal, .scene-reveal-soft)[data-active='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Stacked, the scenes sit close together and several share the screen at once,
+   so the full-strength lift reads as flicker rather than as a reveal. Same
+   effect, dialled back — the scale drop is what stops carrying at this size. */
+@media (max-width: 1279px) {
+  .scene-reveal {
+    opacity: 0.35;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.scene-reveal, .scene-reveal-soft) {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

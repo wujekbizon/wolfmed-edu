@@ -23,7 +23,7 @@ export default function RagCell({ cell, isPremium = false }: { cell: { id: strin
 
   return (
     <ResizableComponent direction="vertical">
-      <div className="flex flex-col h-full bg-white p-3 pb-6 rounded shadow-xl border border-zinc-200/60">
+      <div className="flex flex-col h-full bg-white p-1.5 pb-5 sm:p-3 sm:pb-6 rounded shadow-xl border border-zinc-200/60">
         <RagCellForm cell={cell} />
       </div>
     </ResizableComponent>

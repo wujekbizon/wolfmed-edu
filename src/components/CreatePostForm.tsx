@@ -36,8 +36,8 @@ export default function CreatePostForm({ onClose }: {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-2 sm:p-4 z-50 overflow-hidden">
       <div className="bg-zinc-900 rounded-lg p-2 sm:p-4 xs:p-6 w-full sm:max-w-[90%] md:max-w-3xl h-[90vh] flex flex-col">
-        <form action={action} className="space-y-4 flex-1 overflow-auto px-2 h-full mt-2">
-          <div>
+        <form action={action} className="flex flex-1 min-h-0 flex-col gap-4 px-2 mt-2">
+          <div className="shrink-0">
             <Label htmlFor="title" label="Tytuł" className="text-zinc-400 text-sm" />
             <Input
               type="text"
@@ -50,7 +50,7 @@ export default function CreatePostForm({ onClose }: {
             <FieldError name="title" formState={state} />
           </div>
 
-          <div>
+          <div className="shrink-0">
             <input type="hidden" name="readonly" value={readonly.toString()} />
             <Checkbox
               id="readonly"
@@ -61,13 +61,13 @@ export default function CreatePostForm({ onClose }: {
             />
           </div>
 
-          <div className="flex-1 h-[75%]">
+          <div className="flex flex-1 min-h-0 flex-col">
             <input type="hidden" name="content" value={editorContent} />
-            <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full h-full" />
+            <Editor onChange={handleEditorChange} placeholder="O czym chcesz napisać?" className="w-full flex-1 min-h-0" />
             <FieldError name="content" formState={state} />
           </div>
 
-          <div className="flex justify-end gap-4 pt-2">
+          <div className="flex shrink-0 justify-end gap-4 pt-2">
             <button
               type="button"
               onClick={onClose}

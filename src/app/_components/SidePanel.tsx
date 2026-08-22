@@ -10,18 +10,19 @@ import PinButton from '../../components/PinButton'
 import { Settings, Sparkles } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
 import SideAIInput from '@/components/SideAIInput'
-import { is } from 'drizzle-orm'
 
 interface SidePanelProps {
   children?: React.ReactNode
   pinnedCount?: number
   isPremium?: boolean
+  enrolledCourseSlugs?: string[]
 }
 
 export default function SidePanel({
   children,
   pinnedCount = 0,
-  isPremium
+  isPremium,
+  enrolledCourseSlugs = []
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -53,6 +54,7 @@ export default function SidePanel({
       isOpen={pinnedOpen}
       isSidebarOpen={isSidePanelOpen}
       pinnedCount={pinnedCount}
+      compact={isSidePanelOpen}
       onClick={() => setPinnedOpen((v) => !v)}
     />
   )
@@ -93,80 +95,90 @@ export default function SidePanel({
           </button>
         </div>
 
-        <div className='flex flex-col flex-1 px-4 py-3 gap-3 min-h-0'>
-          {sideMenuNavigationLinks.map((navLink) => (
-            <CustomButton
-              key={navLink.label}
-              text={navLink.label}
-              href={navLink.url}
-              active={navLink.url === pathname}
-              showTooltip={!isSidePanelOpen}
-              isPremium={!!navLink.requiresSupporter && !isPremium}
-            >
-              {navLink.icon}
-            </CustomButton>
-          ))}
+        <div className='flex flex-col flex-1 min-h-0'>
+          <div
+            className={`flex flex-col flex-1 min-h-0 px-4 py-3 gap-3
+              ${isSidePanelOpen ? 'overflow-y-auto scrollbar-webkit' : ''}`}
+          >
+            {sideMenuNavigationLinks
+              .filter(
+                (navLink) =>
+                  !navLink.requiresCourse ||
+                  enrolledCourseSlugs.includes(navLink.requiresCourse)
+              )
+              .map((navLink) => (
+              <CustomButton
+                key={navLink.label}
+                text={navLink.label}
+                href={navLink.url}
+                active={navLink.url === pathname}
+                showTooltip={!isSidePanelOpen}
+                isPremium={!!navLink.requiresSupporter && !isPremium}
+              >
+                {navLink.icon}
+              </CustomButton>
+              ))}
+          </div>
 
           {isSidePanelOpen && (
-            <div className='mt-auto pt-3 border-t border-zinc-100'>
+            <div className='shrink-0 px-4 pt-2 border-t border-zinc-100'>
               <SideAIInput />
             </div>
           )}
         </div>
 
-        <div className='px-3 pt-3 pb-2 border-t border-zinc-200 flex flex-col gap-2'>
-          {!isSidePanelOpen && (
-            <div className={!isPremium ? 'cursor-not-allowed ml-[-2.5px]' : 'ml-[-2.5px]'}>
-              <Tooltip message='Asystent AI' position='right'>
-                <button
-                  onClick={isPremium ? toggleSidePanel : undefined}
-                  disabled={!isPremium}
-                  className={`group relative flex items-center justify-center px-3 py-2 rounded-xl w-full transition-all duration-200 text-zinc-700 hover:text-zinc-900
-          ${!isPremium ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`}
-                >
-                  <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
-                    <span className='transition-transform duration-200 group-hover:scale-110'>
-                      <Sparkles size={17} />
-                    </span>
-                  </span>
-                </button>
-              </Tooltip>
-            </div>
-          )}
+        <div className='shrink-0 px-3 pt-3 pb-2 border-t border-zinc-200'>
           {isSidePanelOpen ? (
-            pinButton
-          ) : (
-            <Tooltip message='Przypięte notatki' position='right'>
+            <div className='flex items-center gap-2'>
               {pinButton}
-            </Tooltip>
-          )}
-          {isSidePanelOpen ? (
-            <button
-              onClick={openSettingsModal}
-              className='group relative flex items-center gap-3.5 px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
-            >
-              <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
-                <span className='transition-transform duration-200 group-hover:scale-110'>
-                  <Settings size={17} />
-                </span>
-              </span>
-              <span className='text-md font-medium whitespace-nowrap overflow-hidden'>
-                Ustawienia
-              </span>
-            </button>
-          ) : (
-            <Tooltip message='Ustawienia' position='right'>
               <button
                 onClick={openSettingsModal}
-                className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+                className='group relative flex flex-1 min-w-0 items-center gap-2 px-2 py-2 rounded-xl cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
               >
                 <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
                   <span className='transition-transform duration-200 group-hover:scale-110'>
                     <Settings size={17} />
                   </span>
                 </span>
+                <span className='text-sm font-medium whitespace-nowrap overflow-hidden'>
+                  Ustawienia
+                </span>
               </button>
-            </Tooltip>
+            </div>
+          ) : (
+            <div className='flex flex-col gap-2'>
+              <div className={!isPremium ? 'cursor-not-allowed ml-[-2.5px]' : 'ml-[-2.5px]'}>
+                <Tooltip message='Asystent AI' position='right'>
+                  <button
+                    onClick={isPremium ? toggleSidePanel : undefined}
+                    disabled={!isPremium}
+                    className={`group relative flex items-center justify-center px-3 py-2 rounded-xl w-full transition-all duration-200 text-zinc-700 hover:text-zinc-900
+            ${!isPremium ? 'opacity-40 pointer-events-none' : 'cursor-pointer'}`}
+                  >
+                    <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                      <span className='transition-transform duration-200 group-hover:scale-110'>
+                        <Sparkles size={17} />
+                      </span>
+                    </span>
+                  </button>
+                </Tooltip>
+              </div>
+              <Tooltip message='Przypięte notatki' position='right'>
+                {pinButton}
+              </Tooltip>
+              <Tooltip message='Ustawienia' position='right'>
+                <button
+                  onClick={openSettingsModal}
+                  className='group relative flex items-center justify-center px-3 py-2 rounded-xl w-full cursor-pointer transition-all duration-200 text-zinc-700 hover:text-zinc-900'
+                >
+                  <span className='w-9 h-9 rounded-xl flex items-center justify-center shrink-0 transition-all duration-200 bg-zinc-200 border border-zinc-400 group-hover:bg-zinc-100 group-hover:shadow-sm'>
+                    <span className='transition-transform duration-200 group-hover:scale-110'>
+                      <Settings size={17} />
+                    </span>
+                  </span>
+                </button>
+              </Tooltip>
+            </div>
           )}
         </div>
       </nav>

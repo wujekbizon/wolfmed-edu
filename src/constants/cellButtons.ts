@@ -33,4 +33,9 @@ export const cellButtons: CellButtons[] = [
       cellName: 'Fiszka',
       type: 'flashcard',
     },
+    {
+      id: 6,
+      cellName: 'Mapa Myśli',
+      type: 'mindmap',
+    },
   ]

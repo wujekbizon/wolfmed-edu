@@ -57,7 +57,10 @@ export interface UseRagProgressReturn {
   connectionState: ConnectionState
   isComplete: boolean
   error: string | null
-  startListening: () => void
+  // Returns the job id it just opened a stream for. The caller must send that
+  // id with the request — reusing the previous one gets a 204 from a job the
+  // server already completed.
+  startListening: () => string
   stopListening: () => void
   reset: () => void
 }

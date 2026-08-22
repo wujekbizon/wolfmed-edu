@@ -1,19 +1,26 @@
 import Link from 'next/link'
 import { formatDate } from '@/helpers/blogUtils'
 import { BlogPost, BlogStatistics } from '@/types/dataTypes'
+import { MessageStats } from '@/types/messagesTypes'
+import { ForumStats, RecentForumPost } from '@/types/forumPostsTypes'
+import AdminStatsGrid from './admin/AdminStatsGrid'
+import AdminRecentForumPosts from './admin/AdminRecentForumPosts'
 
 interface AdminBlogPanelProps {
   stats: BlogStatistics
   recentPosts: BlogPost[]
-  messageStats: {
-    total: number
-    unread: number
-    thisWeek: number
-    thisMonth: number
-  }
+  messageStats: MessageStats
+  forumStats: ForumStats
+  recentForumPosts: RecentForumPost[]
 }
 
-export default function AdminBlogPanel({ stats, recentPosts, messageStats }: AdminBlogPanelProps) {
+export default function AdminBlogPanel({
+  stats,
+  recentPosts,
+  messageStats,
+  forumStats,
+  recentForumPosts,
+}: AdminBlogPanelProps) {
   return (
     <div className="space-y-8">
       <div>
@@ -23,92 +30,7 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-zinc-600 font-medium">Wszystkie Posty</p>
-              <p className="text-3xl font-bold text-zinc-900 mt-2">
-                {stats.totalPosts}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-4 text-sm">
-            <span className="text-green-600">{stats.publishedPosts} opublikowane</span>
-            <span className="text-yellow-600">{stats.draftPosts} szkice</span>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-zinc-600 font-medium">Wyświetlenia</p>
-              <p className="text-3xl font-bold text-zinc-900 mt-2">
-                {stats.totalViews.toLocaleString('pl-PL')}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-zinc-600">
-            {stats.publishedPosts > 0
-              ? Math.round(stats.totalViews / stats.publishedPosts)
-              : 0}{' '}
-            średnio na post
-          </p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-zinc-600 font-medium">Polubienia</p>
-              <p className="text-3xl font-bold text-zinc-900 mt-2">
-                {stats.totalLikes}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-            </div>
-          </div>
-          <p className="mt-4 text-sm text-zinc-600">
-            {stats.publishedPosts > 0
-              ? (stats.totalLikes / stats.publishedPosts).toFixed(1)
-              : 0}{' '}
-            średnio na post
-          </p>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-zinc-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-zinc-600 font-medium">Wiadomości</p>
-              <p className="text-3xl font-bold text-zinc-900 mt-2">
-                {messageStats.total}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-            </div>
-          </div>
-          <div className="mt-4 flex items-center gap-4 text-sm">
-            <span className="text-emerald-600">{messageStats.unread} nieprzeczytane</span>
-            <span className="text-blue-600">{messageStats.thisWeek} w tym tyg.</span>
-          </div>
-        </div>
-      </div>
+      <AdminStatsGrid stats={stats} messageStats={messageStats} forumStats={forumStats} />
 
       {/* Recent Posts */}
       <div className="bg-white rounded-lg shadow-sm border border-zinc-200">
@@ -197,6 +119,8 @@ export default function AdminBlogPanel({ stats, recentPosts, messageStats }: Adm
           </div>
         )}
       </div>
+
+      <AdminRecentForumPosts posts={recentForumPosts} />
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

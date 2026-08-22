@@ -1,7 +1,7 @@
 export interface Resource {
   name: string;
   displayName: string;
-  type: 'doc' | 'note' | 'material';
+  type: 'note' | 'material';
   metadata?: {
     createdAt?: string;
     updatedAt?: string;
@@ -13,7 +13,6 @@ export interface Resource {
 export interface ResourcesResponse {
   resources: Resource[];
   counts?: {
-    docs: number;
     notes: number;
     materials: number;
   };

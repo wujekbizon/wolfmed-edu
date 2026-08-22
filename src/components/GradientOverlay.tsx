@@ -1,6 +1,8 @@
+// pointer-events-none matters: this paints above any sibling that is not
+// itself positioned, and without it the overlay swallows their clicks.
 export default function GradientOverlay() {
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
       <div className="absolute inset-0 opacity-0 animate-fadeInUp">
         <div className="absolute inset-0 animate-gradientPosition bg-linear-to-r from-[#ff5b5b]/18 via-purple-500/10 to-[#ff5b5b]/18 bg-size-[200%_200%]" />
       </div>

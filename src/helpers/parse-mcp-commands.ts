@@ -1,12 +1,23 @@
+import { TOOL_COMMANDS } from '@/constants/toolCommands'
+
 export interface ParsedMcpCommand {
   cleanQuestion: string;
   resources: string[];
   tools: string[];
+  unknownTools: string[];
 }
 
-export function parseMcpCommands(input: string): ParsedMcpCommand {
+// Only a slash that starts a token is a command, so "https://host" and "and/or" are left alone.
+// Built per call because a shared /g regex carries lastIndex between invocations.
+const commandPattern = () => /(?<![\p{L}\p{N}/])\/(\p{L}+)/gu;
+
+export function parseMcpCommands(
+  input: string,
+  { commandsEnabled = true }: { commandsEnabled?: boolean } = {}
+): ParsedMcpCommand {
   const resources: string[] = [];
   const tools: string[] = [];
+  const unknownTools: string[] = [];
 
   // Match @resource - supports Unicode (Polish chars), dots, numbers
   // Captures everything after @ until whitespace followed by / or end
@@ -19,11 +30,13 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
     }
   }
 
-  const toolPattern = /\/(utworz|notatka|podsumuj|diagram|fiszka|planuj|quiz|tlumacz)/gi;
-  while ((match = toolPattern.exec(input)) !== null) {
-    if (match[1]) {
-      tools.push(match[1]);
-    }
+  const toolPattern = commandPattern();
+  while (commandsEnabled && (match = toolPattern.exec(input)) !== null) {
+    const name = match[1]?.toLowerCase();
+    if (!name) continue;
+
+    if (TOOL_COMMANDS[name]) tools.push(name);
+    else unknownTools.push(match[1]!);
   }
 
   // Remove @resources and /tools from question
@@ -31,11 +44,16 @@ export function parseMcpCommands(input: string): ParsedMcpCommand {
   for (const resource of resources) {
     cleanQuestion = cleanQuestion.replace(`@${resource}`, '');
   }
-  cleanQuestion = cleanQuestion.replace(toolPattern, '').trim();
+  // With commands off a typed „/utworz" is ordinary text, so it stays in the question.
+  if (commandsEnabled) {
+    cleanQuestion = cleanQuestion.replace(commandPattern(), '');
+  }
+  cleanQuestion = cleanQuestion.trim();
 
   return {
     cleanQuestion,
     resources,
     tools,
+    unknownTools,
   };
 }

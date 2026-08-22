@@ -2,7 +2,23 @@ import 'server-only'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { GoogleGenAI } from '@google/genai'
+import { getGoogleAI } from '../vertex-rag/client'
+import { enforceItemCount } from '@/helpers/enforceItemCount'
+import { applyDiagramTheme } from '@/helpers/applyDiagramTheme'
+import { countMermaidNodes } from '@/helpers/countMermaidNodes'
+import { quoteMermaidLabels } from '@/helpers/quoteMermaidLabels'
+import { repairMermaidSubgraphs } from '@/helpers/repairMermaidSubgraphs'
+import {
+  DEFAULT_DIAGRAM_DETAIL,
+  DIAGRAM_BUDGET_OVERRUN_FACTOR,
+  DIAGRAM_DETAIL_LEVELS,
+  type DiagramDetail,
+} from '@/constants/diagramRoles'
+
+// Content generation stays on gemini-2.5-flash, but thinking is disabled — the
+// tools produce structured/creative output, not reasoning chains, and thinking
+// tokens bill at the output rate.
+const NO_THINKING = { thinkingBudget: 0 } as const
 
 export interface ToolResult {
   cellType?: 'note' | 'test' | 'draw' | 'flashcard' | 'plan';
@@ -22,11 +38,12 @@ interface NoteTemplate {
 }
 
 interface MermaidTemplate {
-  prompt: string;
+  systemPrompt: string;
+  userPrompt: string;
   examples: {
     flowchart: string;
+    structure: string;
     sequence: string;
-    class: string;
   };
 }
 
@@ -45,6 +62,16 @@ interface LectureTemplate {
   userPrompt: string;
 }
 
+interface PracticalExamTemplate {
+  systemPrompt: string;
+  userPrompt: string;
+}
+
+interface ProcedureQuizTemplate {
+  systemPrompt: string;
+  prompts: Record<string, string>;
+}
+
 let testTemplate: TestQuestionTemplate | null = null
 let noteTemplate: NoteTemplate | null = null
 let summaryTemplate: NoteTemplate | null = null
@@ -52,14 +79,8 @@ let mermaidTemplate: MermaidTemplate | null = null
 let flashcardTemplate: FlashcardTemplate | null = null
 let planTemplate: PlanTemplate | null = null
 let lectureTemplate: LectureTemplate | null = null
-
-function getGoogleAI() {
-  const apiKey = process.env.GOOGLE_API_KEY
-  if (!apiKey) {
-    throw new Error('GOOGLE_API_KEY is not configured')
-  }
-  return new GoogleGenAI({ apiKey })
-}
+let practicalExamTemplate: PracticalExamTemplate | null = null
+let procedureQuizTemplate: ProcedureQuizTemplate | null = null
 
 async function loadTemplate<T>(filename: string): Promise<T> {
   const templatePath = join(process.cwd(), 'templates', filename)
@@ -120,6 +141,20 @@ async function getLectureTemplate(): Promise<LectureTemplate> {
   return lectureTemplate
 }
 
+async function getPracticalExamTemplate(): Promise<PracticalExamTemplate> {
+  if (!practicalExamTemplate) {
+    practicalExamTemplate = await loadTemplate<PracticalExamTemplate>('egzamin-praktyczny-template.json')
+  }
+  return practicalExamTemplate
+}
+
+async function getProcedureQuizTemplate(): Promise<ProcedureQuizTemplate> {
+  if (!procedureQuizTemplate) {
+    procedureQuizTemplate = await loadTemplate<ProcedureQuizTemplate>('quiz-proceduralny-template.json')
+  }
+  return procedureQuizTemplate
+}
+
 export async function executeToolLocally(
   toolName: string,
   args: any
@@ -151,6 +186,12 @@ export async function executeToolLocally(
 
     case 'wyklad_tool':
       return await wykladTool(args);
+
+    case 'egzamin_praktyczny_tool':
+      return await egzaminPraktycznyTool();
+
+    case 'quiz_proceduralny_tool':
+      return await quizProceduralnyTool(args);
 
     default:
       throw new Error(`Unknown tool: ${toolName}`);
@@ -191,7 +232,8 @@ Return ONLY the JSON array, no additional text.`
     contents: fullPrompt,
     config: {
       temperature: 0.7,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -216,11 +258,15 @@ Return ONLY the JSON array, no additional text.`
     throw new Error('Failed to generate valid test questions')
   }
 
+  const enforced = enforceItemCount(questions, questionCount)
+
   return {
     cellType: 'test' as const,
-    content: JSON.stringify({ questions }, null, 2),
+    content: JSON.stringify({ questions: enforced.items }, null, 2),
     metadata: {
-      count: questions.length,
+      count: enforced.items.length,
+      requested: enforced.requested,
+      shortfall: enforced.shortfall,
       category,
       generated: new Date().toISOString(),
     }
@@ -249,7 +295,8 @@ Return ONLY the markdown note content.`
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7
+      temperature: 0.7,
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -286,7 +333,8 @@ Return ONLY the markdown summary content.`
     model: 'gemini-2.5-flash',
     contents: fullPrompt,
     config: {
-      temperature: 0.7
+      temperature: 0.7,
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -302,54 +350,77 @@ Return ONLY the markdown summary content.`
   };
 }
 
+function stripCodeFences(text: string): string {
+  return text
+    .replace(/```mermaid\n?/g, '')
+    .replace(/```\n?/g, '')
+    .trim()
+}
+
 async function diagramTool(args: any): Promise<ToolResult> {
-  const { content = '', diagramType = 'flowchart', focus = '' } = args;
+  const { content = '', diagramType = 'flowchart', focus = '', detail } = args;
 
   const template = await getMermaidTemplate()
   const ai = getGoogleAI()
 
-  const prompt = template.prompt.replace('{{diagramType}}', diagramType)
+  const detailLevel: DiagramDetail = detail in DIAGRAM_DETAIL_LEVELS ? detail : DEFAULT_DIAGRAM_DETAIL
+  const { nodeBudget, description } = DIAGRAM_DETAIL_LEVELS[detailLevel]
 
-  // Select appropriate example based on diagram type
   const exampleKey = diagramType === 'sequence' ? 'sequence'
-    : diagramType === 'class' ? 'class'
+    : diagramType === 'structure' ? 'structure'
     : 'flowchart'
   const example = template.examples[exampleKey]
 
-  const fullPrompt = `${prompt}
+  const userMessage = template.userPrompt
+    .replace('{{diagramType}}', diagramType === 'sequence' ? 'sequenceDiagram' : 'flowchart')
+    .replace('{{nodeBudget}}', String(nodeBudget))
+    .replace('{{detailDescription}}', description)
+    .replace('{{focus}}', focus ? `\nSZCZEGÓLNY NACISK NA: ${focus}\n` : '')
+    .replace('{{content}}', content)
+    .replace('{{example}}', example)
 
-${focus ? `Focus specifically on: ${focus}` : ''}
+  const generate = async (message: string) => {
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: message,
+      config: {
+        systemInstruction: template.systemPrompt,
+        temperature: 0.7,
+        thinkingConfig: NO_THINKING
+      }
+    })
+    return repairMermaidSubgraphs(quoteMermaidLabels(stripCodeFences(response.text || example)))
+  }
 
-CONTENT:
-${content}
+  let mermaidContent = await generate(userMessage)
+  let nodeCount = countMermaidNodes(mermaidContent)
+  let repaired = false
 
-EXAMPLE FOR ${diagramType.toUpperCase()}:
-${example}
-
-Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
-
-  const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
-    contents: fullPrompt,
-    config: {
-      temperature: 0.7
+  // A prompt-stated budget alone let a 15-node instruction return 50 nodes, at
+  // which point the diagram is unreadable at any zoom. One repair call is the
+  // cheapest fix that still returns a usable diagram rather than none.
+  if (nodeCount > nodeBudget * DIAGRAM_BUDGET_OVERRUN_FACTOR) {
+    const retry = await generate(
+      `${userMessage}\n\nPOPRZEDNIA PRÓBA MIAŁA ${nodeCount} WĘZŁÓW ZAMIAST ${nodeBudget}. Ogranicz diagram do najważniejszych zależności i zmieść się w limicie.`
+    )
+    const retryCount = countMermaidNodes(retry)
+    if (retryCount < nodeCount) {
+      mermaidContent = retry
+      nodeCount = retryCount
+      repaired = true
     }
-  })
-
-  let mermaidContent = response.text || example
-
-  // Clean up any markdown code blocks if present
-  mermaidContent = mermaidContent
-    .replace(/```mermaid\n?/g, '')
-    .replace(/```\n?/g, '')
-    .trim()
+  }
 
   return {
     cellType: 'draw',
-    content: mermaidContent,
+    content: applyDiagramTheme(mermaidContent),
     metadata: {
       type: diagramType,
       format: 'mermaid',
+      detail: detailLevel,
+      nodeCount,
+      nodeBudget,
+      repaired,
       generated: new Date().toISOString()
     }
   };
@@ -357,6 +428,20 @@ Return ONLY the Mermaid syntax. No markdown code blocks, no explanation.`
 
 async function fiszkaTool(args: any): Promise<ToolResult> {
   const { cardCount = 10, topic = 'medycyna', content = '' } = args;
+
+  // Reached when the model calls this tool of its own accord on an ungrounded
+  // question; generating from nothing yields flashcards about having no content.
+  if (!content.trim()) {
+    return {
+      cellType: 'flashcard',
+      content: JSON.stringify({ topic, flashcards: [] }),
+      metadata: {
+        count: 0,
+        topic,
+        error: 'Brak treści źródłowej — nie wygenerowano fiszek.',
+      }
+    };
+  }
 
   const template = await getFlashcardTemplate()
   const ai = getGoogleAI()
@@ -382,7 +467,8 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
     contents: fullPrompt,
     config: {
       temperature: 0.7,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -400,11 +486,15 @@ Return ONLY a JSON object with a "flashcards" key containing an array of flashca
     throw new Error('Failed to generate valid flashcards')
   }
 
+  const enforced = enforceItemCount(flashcards, cardCount)
+
   return {
     cellType: 'flashcard',
-    content: JSON.stringify({ topic, flashcards }),
+    content: JSON.stringify({ topic, flashcards: enforced.items }),
     metadata: {
-      count: flashcards.length,
+      count: enforced.items.length,
+      requested: enforced.requested,
+      shortfall: enforced.shortfall,
       topic,
       generated: new Date().toISOString(),
     }
@@ -426,7 +516,8 @@ async function planujTool(args: any): Promise<ToolResult> {
     config: {
       systemInstruction: template.systemPrompt,
       temperature: 0.4,
-      responseMimeType: 'application/json'
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -466,6 +557,7 @@ async function wykladTool(args: any): Promise<ToolResult> {
     config: {
       systemInstruction: template.systemPrompt,
       temperature: 0.6,
+      thinkingConfig: NO_THINKING
     }
   })
 
@@ -480,6 +572,87 @@ async function wykladTool(args: any): Promise<ToolResult> {
     content: lectureContent,
     metadata: {
       type: 'lecture',
+      generated: new Date().toISOString()
+    }
+  }
+}
+
+async function quizProceduralnyTool(args: any): Promise<ToolResult> {
+  const {
+    procedureName = '',
+    steps = [],
+    challengeType = 'knowledge-quiz',
+    context = '',
+  } = args
+
+  const template = await getProcedureQuizTemplate()
+  const prompt = template.prompts[challengeType]
+  if (!prompt) {
+    throw new Error(`Unknown procedure quiz type: ${challengeType}`)
+  }
+
+  const stepsText = (steps as string[])
+    .map((step, index) => `${index + 1}. ${step}`)
+    .join('\n')
+
+  const userMessage = prompt
+    .replace(/\{\{procedureName\}\}/g, procedureName)
+    .replace(/\{\{steps\}\}/g, stepsText)
+    .replace(/\{\{context\}\}/g, context || 'Brak dodatkowego kontekstu.')
+
+  const ai = getGoogleAI()
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: userMessage,
+    config: {
+      systemInstruction: template.systemPrompt,
+      temperature: 0.7,
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
+    }
+  })
+
+  const generatedText = (response.text || '').trim()
+
+  if (!generatedText) {
+    throw new Error('Procedure quiz generation failed: empty response')
+  }
+
+  return {
+    content: generatedText,
+    metadata: {
+      type: 'procedure-quiz',
+      challengeType,
+      generated: new Date().toISOString()
+    }
+  }
+}
+
+async function egzaminPraktycznyTool(): Promise<ToolResult> {
+  const template = await getPracticalExamTemplate()
+  const ai = getGoogleAI()
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: template.userPrompt,
+    config: {
+      systemInstruction: template.systemPrompt,
+      temperature: 0.8,
+      responseMimeType: 'application/json',
+      thinkingConfig: NO_THINKING
+    }
+  })
+
+  const generatedText = (response.text || '').trim()
+
+  if (!generatedText) {
+    throw new Error('Practical exam generation failed: empty response')
+  }
+
+  return {
+    content: generatedText,
+    metadata: {
+      type: 'practical-exam',
       generated: new Date().toISOString()
     }
   }

@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect } from 'react'
+import { useActionState, useEffect, useRef } from 'react'
 import { useQuestionSelectionStore } from '@/store/useQuestionSelectionStore'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -14,11 +14,13 @@ export default function CategoryDeleteModal({ categoryId }: { categoryId: string
 
   const noScriptFallback = useToastMessage(state)
 
+  const prevTimestamp = useRef(state.timestamp)
   useEffect(() => {
-    if (state.status === 'SUCCESS') {
+    if (state.status === 'SUCCESS' && state.timestamp !== prevTimestamp.current) {
+      prevTimestamp.current = state.timestamp
       closeDeleteModal()
     }
-  }, [state.status, closeDeleteModal])
+  }, [state.status, state.timestamp, closeDeleteModal])
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/70">

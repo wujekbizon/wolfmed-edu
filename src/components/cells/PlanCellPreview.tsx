@@ -25,7 +25,6 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   const insertCellAfterWithContent = useCellsStore(s => s.insertCellAfterWithContent)
 
   const {
-    jobId,
     stage,
     progress,
     message: progressMessage,
@@ -59,9 +58,11 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
   }
 
   const handleGenerate = () => {
-    startListening()
+    // The id the stream was opened for. Generating a second lecture with the
+    // previous run's id gets a 204 from the already-completed job.
+    const runJobId = startListening()
     startTransition(async () => {
-      const result = await generateLectureAction(cell.content, jobId)
+      const result = await generateLectureAction(cell.content, runJobId)
       resetProgress()
 
       if (result.status === 'SUCCESS') {
@@ -98,34 +99,38 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
         estimatedTotalMinutes={plan.estimatedTotalMinutes}
       />
 
-      <PlanPrerequisites prerequisites={plan.prerequisites ?? []} />
+      {/* min-h-0 lets this shrink below its content; without it the flex child
+          refuses to scroll and the footer gets clipped by the cell instead. */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin scrollbar-webkit">
+        <PlanPrerequisites prerequisites={plan.prerequisites ?? []} />
 
-      <div className="divide-y divide-zinc-100 overflow-y-auto flex-1 scrollbar-thin scrollbar-webkit">
-        {plan.steps?.map((step, index) => (
-          <PlanStepItem
-            key={step.number}
-            step={step}
-            isExpanded={expandedSteps.has(index)}
-            onToggle={() => toggleStep(index)}
-          />
-        ))}
+        <div className="divide-y divide-zinc-100">
+          {plan.steps?.map((step, index) => (
+            <PlanStepItem
+              key={step.number}
+              step={step}
+              isExpanded={expandedSteps.has(index)}
+              onToggle={() => toggleStep(index)}
+            />
+          ))}
+        </div>
+
+        <PlanFooter
+          summary={plan.summary}
+          examRelevance={plan.examRelevance}
+          isPending={isPending}
+          lectureGenerated={generatedLecture !== null}
+          onGenerate={handleGenerate}
+          onSaveScript={generatedLecture ? handleSaveScript : undefined}
+          stage={stage}
+          progress={progress}
+          progressMessage={progressMessage}
+          tool={tool}
+          userLogs={userLogs}
+          technicalLogs={technicalLogs}
+          progressError={progressError}
+        />
       </div>
-
-      <PlanFooter
-        summary={plan.summary}
-        examRelevance={plan.examRelevance}
-        isPending={isPending}
-        lectureGenerated={generatedLecture !== null}
-        onGenerate={handleGenerate}
-        onSaveScript={generatedLecture ? handleSaveScript : undefined}
-        stage={stage}
-        progress={progress}
-        progressMessage={progressMessage}
-        tool={tool}
-        userLogs={userLogs}
-        technicalLogs={technicalLogs}
-        progressError={progressError}
-      />
     </>
   )
 }

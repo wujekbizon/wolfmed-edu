@@ -30,7 +30,7 @@ const FEATURES = [
     icon: <Headphones className="w-5 h-5" />,
     label: 'Wykłady AI',
     desc: 'Słuchaj i ucz się',
-    href: '/panel/nauka/wykladania',
+    href: '/panel/nauka',
     premium: true,
   },
 ]
@@ -50,7 +50,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
   const hasPremium = premiumSlugs.size > 0
 
   return (
-    <div className="h-full p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
+    <div className="h-full p-4 lg:p-6 bg-white border border-zinc-100 rounded-2xl flex flex-col gap-8">
       {/* Heading */}
       <div className="text-center pt-2">
         <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-zinc-900 mb-3 leading-tight">
@@ -67,12 +67,12 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
         <h3 className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest mb-3">
           Co oferuje platforma
         </h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {FEATURES.map((feature) => {
             const locked = feature.premium && !hasPremium
             return (
               <Link
-                key={feature.href}
+                key={feature.label}
                 href={locked ? '#' : feature.href}
                 className={`relative flex flex-col gap-2 p-4 border rounded-xl transition-all duration-200 group ${
                   locked
@@ -94,7 +94,7 @@ export default function UserOnboard({ enrollments }: UserOnboardProps) {
                 <span className={`text-sm font-semibold ${locked ? 'text-zinc-400' : 'text-zinc-800'}`}>
                   {feature.label}
                 </span>
-                <span className={`text-xs ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                <span className={`text-xs break-words ${locked ? 'text-zinc-400' : 'text-zinc-500'}`}>
                   {feature.desc}
                 </span>
               </Link>

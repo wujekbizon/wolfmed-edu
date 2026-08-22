@@ -17,7 +17,7 @@ export default function ProgramContentSection({
   isPremium = false,
 }: ProgramContentSectionProps) {
   return (
-    <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-6'>
+    <div className='bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8 mb-6'>
       <h2 className='text-2xl font-bold mb-6'>Program kursu</h2>
 
       {lectures.length > 0 && (
@@ -26,7 +26,7 @@ export default function ProgramContentSection({
             <Presentation className='w-5 h-5 text-zinc-600' />
             <h3 className='text-lg font-semibold text-gray-800'>Podstawy teoretyczne</h3>
           </div>
-          <ul className='space-y-2'>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-stretch'>
             {lectures.map((item, idx) => (
               <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}
@@ -40,7 +40,7 @@ export default function ProgramContentSection({
             <Users className='w-5 h-5 text-slate-600' />
             <h3 className='text-lg font-semibold text-gray-800'>Praktyczne zastosowanie</h3>
           </div>
-          <ul className='space-y-2'>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-stretch'>
             {seminars.map((item, idx) => (
               <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}
@@ -54,7 +54,7 @@ export default function ProgramContentSection({
             <BookOpen className='w-5 h-5 text-zinc-600' />
             <h3 className='text-lg font-semibold text-gray-800'>Wiedza rozszerzona</h3>
           </div>
-          <ul className='space-y-2'>
+          <ul className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 items-stretch'>
             {selfStudy.map((item, idx) => (
               <ProgramTopicItem key={idx} item={item} categoryId={categoryId} isPremium={isPremium} />
             ))}

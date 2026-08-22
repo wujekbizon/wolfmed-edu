@@ -1,4 +1,4 @@
-export type CellTypes = "note" | "rag" | "draw" | "test" | "flashcard" | "plan" | "media"
+export type CellTypes = "note" | "rag" | "draw" | "test" | "flashcard" | "plan" | "media" | "mindmap"
 
 export interface Cell {
   id: string
@@ -11,6 +11,7 @@ export interface UserCellsList {
   userId?: string
   order: string[]
   cells: Record<string, Cell>
+  version: number
   updatedAt?: Date
   createdAt?: Date
 }

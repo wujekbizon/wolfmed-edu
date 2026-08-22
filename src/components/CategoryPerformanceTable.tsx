@@ -1,16 +1,54 @@
 'use client'
 
-interface CategoryPerformanceTableProps {
-  categories: Array<{
-    category: string
-    totalTests: number
-    avgScore: string
-    totalQuestions: number
-    correctAnswers: number
-  }>
+import { useActionState } from 'react'
+import { CalendarPlus, Check } from 'lucide-react'
+import { addConceptAction } from '@/actions/planner'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useToastMessage } from '@/hooks/useToastMessage'
+import { titleizeCategory } from '@/helpers/titleizeCategory'
+import FormError from '@/components/FormError'
+
+interface CategoryPerformanceRow {
+  category: string
+  totalTests: number
+  avgScore: string
+  totalQuestions: number
+  correctAnswers: number
+  inPlan: boolean
 }
 
-export default function CategoryPerformanceTable({ categories }: CategoryPerformanceTableProps) {
+interface CategoryPerformanceTableProps {
+  categories: CategoryPerformanceRow[]
+  planId: string | null
+}
+
+const WEAK_THRESHOLD = 60
+
+function AddToPlanButton({ planId, category }: { planId: string; category: string }) {
+  const [formState, action, isPending] = useActionState(addConceptAction, EMPTY_FORM_STATE)
+  const fallback = useToastMessage(formState)
+
+  return (
+    <form action={action}>
+      {fallback}
+      <input type="hidden" name="planId" value={planId} />
+      <input type="hidden" name="label" value={titleizeCategory(category)} />
+      <input type="hidden" name="categoryKey" value={category} />
+      <input type="hidden" name="targetMinutes" value={60} />
+      <button
+        type="submit"
+        disabled={isPending}
+        className="inline-flex items-center gap-1 text-xs font-semibold text-[#ff9898] hover:text-red-500 disabled:opacity-40 transition-colors whitespace-nowrap"
+      >
+        <CalendarPlus className="w-3.5 h-3.5" />
+        {isPending ? 'Dodaję…' : 'Dodaj do planu'}
+      </button>
+      <FormError formState={formState} />
+    </form>
+  )
+}
+
+export default function CategoryPerformanceTable({ categories, planId }: CategoryPerformanceTableProps) {
   if (!categories || categories.length === 0) {
     return (
       <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-6 shadow-md">
@@ -44,6 +82,7 @@ export default function CategoryPerformanceTable({ categories }: CategoryPerform
             {categories.map((category, index) => {
               const avgScore = parseFloat(category.avgScore)
               const scoreColor = avgScore >= 80 ? 'text-green-600' : avgScore >= 60 ? 'text-[#ff9898]' : 'text-red-600'
+              const isWeak = avgScore < WEAK_THRESHOLD
 
               return (
                 <tr
@@ -51,7 +90,19 @@ export default function CategoryPerformanceTable({ categories }: CategoryPerform
                   className="border-b border-zinc-100 hover:bg-white/60 transition-colors"
                 >
                   <td className="py-4 px-4">
-                    <span className="text-sm font-medium text-slate-900">{category.category}</span>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-sm font-medium text-slate-900">{category.category}</span>
+                      {category.inPlan ? (
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 w-fit">
+                          <Check className="w-3 h-3" strokeWidth={3} />
+                          w planie
+                        </span>
+                      ) : (
+                        isWeak && planId && (
+                          <AddToPlanButton planId={planId} category={category.category} />
+                        )
+                      )}
+                    </div>
                   </td>
                   <td className="py-4 px-4 text-center">
                     <span className="inline-flex items-center justify-center min-w-[32px] h-7 px-2 rounded-full bg-zinc-100 text-xs font-semibold text-zinc-700">

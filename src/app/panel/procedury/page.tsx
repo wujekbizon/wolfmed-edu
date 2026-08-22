@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { getUserEnrolledCourses, getProceduresCount } from '@/server/queries'
-import { getAllPielegniastwoProcedures } from '@/lib/pielegniastwoUtils'
 import ProceduresHub from '@/components/ProceduresHub'
 import { Metadata } from 'next'
 
@@ -21,8 +20,8 @@ export default async function ProceduresHubPage() {
   const hasPielegniarstwo = courses.some((c) => c.slug === 'pielegniarstwo')
 
   const [opiekunCount, pielegniastwoCount] = await Promise.all([
-    hasOpiekun ? getProceduresCount() : Promise.resolve(0),
-    Promise.resolve(hasPielegniarstwo ? getAllPielegniastwoProcedures().length : 0),
+    hasOpiekun ? getProceduresCount('opiekun-medyczny') : Promise.resolve(0),
+    hasPielegniarstwo ? getProceduresCount('pielegniarstwo') : Promise.resolve(0),
   ])
 
   const procedureCounts: Record<string, number> = {

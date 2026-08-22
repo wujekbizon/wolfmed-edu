@@ -73,4 +73,13 @@ const DynamicMediaCell = dynamic(() => import('./MediaCell'), {
   ssr: false,
 })
 
-export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell }
+const DynamicMindMapCell = dynamic(() => import('./MindMapCell'), {
+  loading: () => (
+    <div className="h-1/10 flex flex-col items-center justify-center">
+      <ProgressBar />
+    </div>
+  ),
+  ssr: false,
+})
+
+export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell, DynamicMindMapCell }

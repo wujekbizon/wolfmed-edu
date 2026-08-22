@@ -99,7 +99,7 @@ export default async function CategoryDetailPage({ params }: CategoryPageProps) 
   const { categoryId } = await params
 
   return (
-    <section className='w-full h-full overflow-y-auto scrollbar-webkit p-4 lg:p-16'>
+    <section className='w-full px-4 lg:px-16 pt-4 lg:pt-16 -mb-10'>
       <Suspense fallback={<CategoryDetailSkeleton />}>
         <CategoryContent categoryId={categoryId} />
       </Suspense>

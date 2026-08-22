@@ -61,15 +61,15 @@ export default function EnrolledCoursesList({ courses }: EnrolledCoursesListProp
             key={course.id}
             className="bg-white rounded-2xl shadow-xl border border-zinc-200/60 overflow-hidden hover:shadow-2xl transition-all duration-300"
           >
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4">
+            <div className="p-4 sm:p-6">
+              <div className="flex flex-wrap items-start justify-between gap-2 mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold text-zinc-800 mb-2">
+                  <h2 className="text-2xl font-bold text-zinc-800 mb-2 break-words">
                     {course.name}
                   </h2>
                   <p className="text-zinc-600">{course.description}</p>
                 </div>
-                <span className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full whitespace-nowrap font-medium">
+                <span className="shrink-0 bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full whitespace-nowrap font-medium">
                   {course.accessTier}
                 </span>
               </div>

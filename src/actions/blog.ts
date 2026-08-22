@@ -30,7 +30,7 @@ export async function createBlogPostAction(
     }
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
 
     const title = formData.get('title') as string
     const slug = formData.get('slug') as string
@@ -119,7 +119,7 @@ export async function updateBlogPostAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
     const title = formData.get('title') as string | null
@@ -230,7 +230,7 @@ export async function deleteBlogPostAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
 
@@ -264,7 +264,7 @@ export async function publishBlogPostAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
     const publishedAtStr = formData.get('publishedAt') as string | null
@@ -308,7 +308,7 @@ export async function archiveBlogPostAction(
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
 
     const id = formData.get('id') as string
 
@@ -573,7 +573,7 @@ export async function deleteBlogPost(input: { id: string }): Promise<ActionResul
     const { userId , sessionClaims} = await auth()
     const userRole = (sessionClaims?.metadata as { role?: string })?.role
 
-    if (!userId && userRole !== "admin") throw new Error("Unauthorized")
+    if (!userId || userRole !== "admin") throw new Error("Unauthorized")
     const validationResult = DeleteBlogPostSchema.safeParse(input)
 
     if (!validationResult.success) {

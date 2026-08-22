@@ -1,5 +1,29 @@
 import { z } from "zod";
 import { getLexicalContent } from "@/helpers/getLexicalContent";
+import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
+import { BODY_ZONES } from "@/types/diagnozyTypes";
+import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
+import { PAYMENT_OFFER_KEYS } from "@/constants/paymentOffers";
+
+export const CreateCheckoutSchema = z.object({
+  offerKey: z.enum(PAYMENT_OFFER_KEYS, {
+    error: "Nieprawidłowa oferta płatności.",
+  }),
+});
+
+export const CheckoutOrderIdSchema = z.string().uuid();
+
+export const CheckoutSessionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^cs_(?:test_|live_)?[A-Za-z0-9]+$/);
+
+export const SubscriptionIdSchema = z
+  .string()
+  .min(1)
+  .max(256)
+  .regex(/^sub_[A-Za-z0-9]+$/);
 
 export const DeleteTestIdSchema = z.object({
   testId: z
@@ -23,23 +47,11 @@ export const DeleteMaterialIdSchema = z.object({
 });
 
 export const DeleteCategorySchema = z.object({
-  meta: z.object({
-    category: z
-      .string()
-      .min(1, "Kategoria jest wymagana.")
-      .trim(),
-  }),
+  category: z
+    .string()
+    .min(1, "Kategoria jest wymagana.")
+    .trim(),
 });
-
-export const CreateAnswersSchema = (allowedLengths: number[]) => {
-  return z
-    .array(
-      z.record(z.string().min(1, "Odpowiedz na wszystkie pytania"), z.string())
-    )
-    .refine((data) => allowedLengths.includes(data.length), {
-      message: "Odpowiedz na wszystkie pytania.",
-    });
-};
 
 export const UpdateMottoSchema = z.object({
   motto: z
@@ -85,7 +97,10 @@ export const CreatePostSchema = z.object({
     .max(100, "Tytuł nie może przekraczać 100 znaków"),
   content: z.string().refine(
     (content) => {
-      const textContent = getLexicalContent(content);
+      // Collapse whitespace before measuring: the limit is about how much a
+      // reader has to read, and it should not move when the extractor changes
+      // how it separates blocks.
+      const textContent = getLexicalContent(content).replace(/\s+/g, " ").trim();
       return textContent.length >= 10 && textContent.length <= 2000;
     },
     { message: "Treść musi mieć od 10 do 2000 znaków" }
@@ -101,8 +116,20 @@ export const CreateCommentSchema = z.object({
   postId: z.string().min(1, "ID posta jest wymagane"),
 });
 
+export const DeleteForumPostSchema = z.object({
+  postId: z.string().uuid("Nieprawidłowe ID posta"),
+});
+
+export const DeleteForumCommentSchema = z.object({
+  commentId: z.string().uuid("Nieprawidłowe ID komentarza"),
+});
+
 export type CreatePostInput = z.infer<typeof CreatePostSchema>;
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
+
+export const MarkForumSeenSchema = z.object({
+  scope: z.enum(["posts", "comments"]),
+});
 
 export const CreateTestimonialSchema = z.object({
   content: z
@@ -139,6 +166,10 @@ export const StartTestSchema = z.object({
  */
 export const CreateTestSchema = z.object({
   category: z.string().min(1, { message: "Proszę wybrać kategorię" }),
+  // Real curriculum subject the custom category maps to (planner attribution).
+  linkedCategory: z
+    .string()
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz kategorię" }),
   question: z
     .string()
     .min(1, { message: "Pole pytania nie może być puste" })
@@ -155,6 +186,33 @@ export const CreateTestSchema = z.object({
     })
   ),
 });
+
+/**
+ * Schema for the AI test generation form (topic → grounded questions).
+ */
+export const GenerateAITestsSchema = z.object({
+  topic: z
+    .string()
+    .min(3, { message: "Podaj temat lub problem (min. 3 znaki)" })
+    .max(500, { message: "Temat nie może przekraczać 500 znaków" })
+    .trim(),
+  // The select submits `null` when nothing is picked, which fails z.string()'s
+  // type check before .min() runs — set `error` so the null case shows the same
+  // Polish message instead of Zod's default "expected string, received null".
+  linkedCategory: z
+    .string({ error: "Wybierz przedmiot, do którego przypiszesz pytania" })
+    .min(1, { message: "Wybierz przedmiot, do którego przypiszesz pytania" }),
+  categoryName: z
+    .string()
+    .min(1, { message: "Podaj nazwę kategorii" })
+    .max(100, { message: "Nazwa kategorii nie może przekraczać 100 znaków" })
+    .trim(),
+  questionCount: z.coerce
+    .number()
+    .int()
+    .min(1, { message: "Minimum 1 pytanie" })
+    .max(15, { message: "Maksymalnie 15 pytań" }),
+})
 
 /**
  * Schema for validating test data imported from a file.
@@ -181,7 +239,11 @@ export const TestFileSchema = z.array(
           })
         )
         .min(2, { message: "Wymagane są co najmniej 2 opcje odpowiedzi" })
-        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" }),
+        .max(5, { message: "Maksymalnie 5 opcji odpowiedzi" })
+        .refine(
+          (answers) => answers.filter((answer) => answer.isCorrect).length === 1,
+          { message: "Dokładnie jedna odpowiedź musi być poprawna" }
+        ),
     }),
     meta: z.object({
       course: z.string().min(1, { message: "Pole kursu jest wymagane" }),
@@ -240,13 +302,94 @@ export type NoteInput = z.infer<typeof NoteSchema>;
  */
 export const CellSchema = z.object({
   id: z.string(),
-  type: z.enum(["note", "rag", "draw"]),
+  type: z.enum([
+    "note",
+    "rag",
+    "draw",
+    "test",
+    "flashcard",
+    "plan",
+    "media",
+    "mindmap",
+  ]),
   content: z.string(),
 });
 
 export const UserCellsListSchema = z.object({
   order: z.array(z.string().min(1, { message: "Lista nie może być pusta" })),
   cells: z.record(z.string(), CellSchema),
+}).superRefine(({ order, cells }, ctx) => {
+  const uniqueOrder = new Set(order)
+  if (uniqueOrder.size !== order.length) {
+    ctx.addIssue({ code: "custom", path: ["order"], message: "Lista zawiera duplikaty" })
+  }
+
+  for (const id of order) {
+    if (!cells[id]) {
+      ctx.addIssue({ code: "custom", path: ["order"], message: `Brak komórki ${id}` })
+    }
+  }
+
+  for (const [key, cell] of Object.entries(cells)) {
+    if (!uniqueOrder.has(key)) {
+      ctx.addIssue({ code: "custom", path: ["cells", key], message: "Komórka nie jest na liście" })
+    }
+    if (cell.id !== key) {
+      ctx.addIssue({ code: "custom", path: ["cells", key, "id"], message: "Niezgodny identyfikator" })
+    }
+  }
+});
+
+export const DeckIdSchema = z.object({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+});
+
+export const FlashcardIdSchema = z.object({
+  cardId: z.string().min(1, "Musisz podać poprawny identyfikator fiszki.").trim(),
+});
+
+export const DeckNameSchema = z
+  .string({ error: "Nazwa zestawu jest wymagana" })
+  .trim()
+  .min(1, { message: "Nazwa zestawu jest wymagana" })
+  .max(256, { message: "Nazwa nie może przekraczać 256 znaków" });
+
+export const FlashcardContentSchema = z.object({
+  questionText: z
+    .string({ error: "Pytanie jest wymagane" })
+    .trim()
+    .min(1, { message: "Pytanie jest wymagane" })
+    .max(1000, { message: "Pytanie nie może przekraczać 1000 znaków" }),
+  answerText: z
+    .string({ error: "Odpowiedź jest wymagana" })
+    .trim()
+    .min(1, { message: "Odpowiedź jest wymagana" })
+    .max(2000, { message: "Odpowiedź nie może przekraczać 2000 znaków" }),
+});
+
+export const CreateFlashcardSchema = FlashcardContentSchema.extend({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+});
+
+export const UpdateFlashcardSchema = FlashcardContentSchema.extend({
+  cardId: z.string().min(1, "Musisz podać poprawny identyfikator fiszki.").trim(),
+});
+
+export const RenameDeckSchema = z.object({
+  deckId: z.string().min(1, "Musisz podać poprawny identyfikator zestawu.").trim(),
+  name: DeckNameSchema,
+});
+
+export const CreateNoteFlashcardSchema = FlashcardContentSchema.extend({
+  noteId: z.string().min(1, "Musisz podać poprawny identyfikator notatki.").trim(),
+});
+
+export const CreateGeneratedDeckSchema = z.object({
+  name: DeckNameSchema,
+  cards: z
+    .array(FlashcardContentSchema)
+    .min(1, { message: "Zestaw musi zawierać co najmniej jedną fiszkę" })
+    .max(100, { message: "Zestaw nie może zawierać więcej niż 100 fiszek" }),
 });
 
 /**
@@ -289,76 +432,206 @@ export const SubmitOrderStepsSchema = z.object({
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
-export const SubmitQuizSchema = z.object({
+// --- AI-generated procedure quizzes (Quiz 2.0) ---
+
+const GeneratedQuizOptionListSchema = z
+  .array(z.string().min(1))
+  .length(4, "Pytanie musi mieć dokładnie 4 odpowiedzi");
+
+const GeneratedQuizAnswerIndexSchema = z
+  .number()
+  .int()
+  .min(0)
+  .max(3);
+
+export const GeneratedKnowledgeQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  questions: z
+    .array(
+      z.object({
+        question: z.string().min(10),
+        options: GeneratedQuizOptionListSchema,
+        correctAnswer: GeneratedQuizAnswerIndexSchema,
+        explanation: z.string().optional().nullable(),
+      })
+    )
+    .min(5, "Quiz musi mieć co najmniej 5 pytań")
+    .max(10, "Quiz może mieć maksymalnie 10 pytań"),
+});
+
+export const GeneratedSpotErrorQuizSchema = z
+  .object({
+    procedureName: z.string().min(1),
+    steps: z
+      .array(
+        z.object({
+          step: z.string().min(3),
+          isCorrect: z.boolean(),
+          errorCategory: z
+            .enum(["safety", "sequence", "technique", "omission", "measurement"])
+            .optional()
+            .nullable(),
+          explanation: z.string().optional().nullable(),
+        })
+      )
+      .min(5)
+      .max(40),
+  })
+  .refine(
+    (quiz) => {
+      const errors = quiz.steps.filter((step) => !step.isCorrect).length;
+      return errors >= 2 && errors <= 5;
+    },
+    { message: "Wyzwanie musi zawierać od 2 do 5 błędnych kroków" }
+  );
+
+export const GeneratedScenarioQuizSchema = z.object({
+  procedureName: z.string().min(1),
+  scenario: z.string().min(30),
+  question: z.string().min(10),
+  options: GeneratedQuizOptionListSchema,
+  correctAnswer: GeneratedQuizAnswerIndexSchema,
+  explanation: z.string().optional().nullable(),
+});
+
+export const GenerateProcedureQuizSchema = z.object({
   procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
+  challengeType: z.enum(["knowledge-quiz", "spot-error", "scenario-based"], {
+    message: "Nieznany typ wyzwania",
+  }),
+});
+
+export const SubmitGeneratedQuizSchema = z.object({
+  quizId: z.string().uuid("Nieprawidłowy identyfikator quizu"),
   answers: z.string().min(1, "Brak odpowiedzi").refine(
     (val) => {
       try {
-        const parsed = JSON.parse(val);
-        return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+        JSON.parse(val);
+        return true;
       } catch {
         return false;
       }
     },
     { message: "Nieprawidłowy format odpowiedzi" }
   ),
-  correctAnswers: z.string().min(1, "Brak poprawnych odpowiedzi").refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format poprawnych odpowiedzi" }
-  ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
-export const SubmitVisualRecognitionSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
-  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
+export const GradePracticalExamSchema = z.object({
+  examId: z.string().min(1, "Brak identyfikatora egzaminu"),
+  answers: z
+    .string()
+    .min(1, "Brak odpowiedzi")
+    .refine(
+      (val) => {
+        try {
+          const parsed = JSON.parse(val);
+          return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
+        } catch {
+          return false;
+        }
+      },
+      { message: "Nieprawidłowy format odpowiedzi" }
+    ),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
-export const SubmitScenarioSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedOption: z.coerce.number().min(0, "Wybierz odpowiedź").max(3, "Nieprawidłowa odpowiedź"),
-  correctAnswer: z.coerce.number().min(0, "Brak poprawnej odpowiedzi").max(3, "Nieprawidłowa poprawna odpowiedź"),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
+/**
+ * Validates an AI-generated practical exam before it is persisted, so a malformed
+ * generation can never reach the exam runner or the grader. Mirrors the
+ * PracticalExam shape in `@/types/praktycznyTypes` (id/image/year are assigned by
+ * the action, so they are omitted here).
+ */
+const GeneratedPatientSchema = z.object({
+  name: z.string().min(1),
+  pesel: z.string().optional(),
+  ward: z.string().min(1),
+  description: z.string().min(1),
 });
 
-export const SubmitSpotErrorSchema = z.object({
-  procedureId: z.string().min(1, "Brak ID procedury"),
-  procedureName: z.string().min(1, "Brak nazwy procedury"),
-  selectedErrors: z.string().min(1, "Zaznacz przynajmniej jeden błąd").refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format błędów" }
-  ),
-  actualErrors: z.string().refine(
-    (val) => {
-      try {
-        const parsed = JSON.parse(val);
-        return Array.isArray(parsed);
-      } catch {
-        return false;
-      }
-    },
-    { message: "Nieprawidłowy format błędów rzeczywistych" }
-  ),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
+const GeneratedAssessedTaskSchema = z.object({
+  type: z.enum(["equipment", "procedure"]),
+  title: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+});
+
+const GeneratedValueFieldSchema = z.object({
+  kind: z.literal("value"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  match: z.enum(["text", "number", "date"]).optional(),
+  accepted: z.array(z.string()).optional(),
+  range: z.object({ min: z.number().optional(), max: z.number().optional() }).optional(),
+  unit: z.string().optional(),
+  hint: z.string().optional(),
+});
+
+const GeneratedListFieldSchema = z.object({
+  kind: z.literal("list"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  minRequired: z.number().int().nonnegative(),
+  lines: z.number().int().positive(),
+  acceptedAnswers: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        canonical: z.string().min(1),
+        synonyms: z.array(z.string()).optional(),
+      })
+    )
+    .min(1),
+  hint: z.string().optional(),
+});
+
+const GeneratedChoiceFieldSchema = z.object({
+  kind: z.literal("choice"),
+  id: z.string().min(1),
+  label: z.string().min(1),
+  intro: z.string().optional(),
+  groups: z
+    .array(
+      z.object({
+        id: z.string().min(1),
+        label: z.string().min(1),
+        minRequired: z.number().int().nonnegative(),
+        options: z
+          .array(
+            z.object({
+              id: z.string().min(1),
+              label: z.string().min(1),
+              correct: z.boolean(),
+            })
+          )
+          .min(1),
+      })
+    )
+    .min(1),
+});
+
+const GeneratedFormFieldSchema = z.discriminatedUnion("kind", [
+  GeneratedValueFieldSchema,
+  GeneratedListFieldSchema,
+  GeneratedChoiceFieldSchema,
+]);
+
+const GeneratedExamFormSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  intro: z.string().optional(),
+  fields: z.array(GeneratedFormFieldSchema).min(1),
+});
+
+export const GeneratedPracticalExamSchema = z.object({
+  title: z.string().min(1),
+  year: z.number().int().optional(),
+  session: z.string().min(1),
+  arkusz: z.string().min(1),
+  durationMinutes: z.number().int().positive(),
+  taskSummary: z.string().min(1),
+  assessedTasks: z.array(GeneratedAssessedTaskSchema).min(1),
+  patient: GeneratedPatientSchema,
+  forms: z.array(GeneratedExamFormSchema).min(1),
 });
 
 /**
@@ -567,6 +840,20 @@ export const RagQuerySchema = z.object({
     .min(5, "Pytanie musi mieć min. 5 znaków")
     .max(500, "Pytanie zbyt długie (max 500 znaków)"),
   cellId: z.string().min(1, "ID komórki jest wymagane"),
+  // Subject alone, sent when the question is prose a cell composed for the user
+  // to read. Drives retrieval; the question still drives the answer.
+  searchTopic: z.string().max(300).optional(),
+  // Set by the chip palette. A selected command is a mode, so the name never has
+  // to be recovered from the question text.
+  command: z.enum(TOOL_COMMAND_NAMES as [string, ...string[]]).optional(),
+  // The item count for commands that produce countable output. Bounds per
+  // command are enforced by resolveCommandCount; this only rejects nonsense.
+  commandCount: z.coerce
+    .number("Podaj liczbę")
+    .int("Liczba musi być całkowita")
+    .min(1, "Minimum to 1")
+    .max(100, "Maksimum to 100")
+    .optional(),
 });
 
 // Admin: Create File Search Store
@@ -590,3 +877,269 @@ export const TestRagQuerySchema = z.object({
 export type RagQueryInput = z.infer<typeof RagQuerySchema>;
 export type CreateStoreInput = z.infer<typeof CreateStoreSchema>;
 export type TestRagQueryInput = z.infer<typeof TestRagQuerySchema>;
+
+// Mind maps
+const CategorySchema = z.enum(CATEGORIES as unknown as [string, ...string[]]);
+const TopicTypeSchema = z.enum(TOPIC_TYPES as unknown as [string, ...string[]]);
+const MasteryLevelSchema = z.enum(["unseen", "learning", "mastered"]);
+
+const MindMapNodeMetadataSchema = z
+  .object({
+    notes: z.string().max(2000),
+    tags: z.array(z.string().min(1).max(40)).max(3),
+    quizCount: z.number().int().min(0),
+    masteryLevel: MasteryLevelSchema,
+    examTopicId: z.string(),
+    category: CategorySchema,
+    topicType: TopicTypeSchema,
+  })
+  .partial();
+
+export const MindMapNodeSchema = z.object({
+  id: z.string().min(1),
+  label: z.string().min(1).max(80),
+  parentId: z.string().nullable(),
+  depth: z.number().int().min(0).max(MAX_DEPTH),
+  collapsed: z.boolean().optional(),
+  get children() {
+    return z.array(MindMapNodeSchema).max(MAX_CHILDREN);
+  },
+  metadata: MindMapNodeMetadataSchema.optional(),
+});
+
+export const GenerateMindMapSchema = z.object({
+  topic: z
+    .string()
+    .trim()
+    .min(2, "Temat musi mieć co najmniej 2 znaki.")
+    .max(120, "Temat nie może być dłuższy niż 120 znaków."),
+  subjectId: z.string().trim().optional(),
+});
+
+export type GenerateMindMapInput = z.infer<typeof GenerateMindMapSchema>;
+
+const PlanConceptInputSchema = z.object({
+  categoryKey: z.string().max(100).trim().optional().nullable(),
+  procedureId: z.string().uuid().optional().nullable(),
+  label: z
+    .string()
+    .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
+    .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
+    .trim(),
+  source: z.enum(["category", "custom", "ai", "procedure"]).default("category"),
+  targetMinutes: z.coerce
+    .number()
+    .int()
+    .min(5, "Minimalny czas na zagadnienie to 5 minut.")
+    .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
+});
+
+// The form sends a bare YYYY-MM-DD, which coerces to midnight UTC. The plan is
+// due at the END of that day, so a plan is editable on its due date — only
+// dates whose end-of-day has already passed are rejected.
+const DUE_DATE_GRACE_MS = 24 * 60 * 60 * 1000 - 1;
+const PlanDueDateSchema = z.coerce
+  .date({ message: "Podaj poprawną datę." })
+  .refine((date) => date.getTime() + DUE_DATE_GRACE_MS > Date.now(), {
+    message: "Termin nie może być w przeszłości.",
+  });
+
+export const CreatePlanSchema = z.object({
+  courseSlug: z.string().min(1, "Wybierz kurs.").max(100).trim(),
+  name: z
+    .string()
+    .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
+    .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
+    .trim(),
+  goalType: z.enum(["exam", "custom"], {
+    message: "Wybierz cel planu.",
+  }),
+  focusCategoryKey: z.string().max(100).trim().optional().nullable(),
+  dueDate: PlanDueDateSchema,
+  minutesPerDay: z.coerce
+    .number()
+    .int()
+    .min(15, "Zaplanuj co najmniej 15 minut dziennie.")
+    .max(480, "Maksymalnie 480 minut (8 godzin) dziennie."),
+  studyDays: z
+    .array(z.number().int().min(1).max(7))
+    .min(1, "Wybierz co najmniej jeden dzień nauki w tygodniu.")
+    .max(7),
+  concepts: z
+    .array(PlanConceptInputSchema)
+    .min(1, "Dodaj co najmniej jedno zagadnienie do planu.")
+    .max(60, "Plan może mieć maksymalnie 60 zagadnień."),
+});
+
+export const UpdatePlanSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+  name: z
+    .string()
+    .min(3, "Nazwa planu musi mieć co najmniej 3 znaki.")
+    .max(255, "Nazwa planu może mieć maksymalnie 255 znaków.")
+    .trim(),
+  dueDate: PlanDueDateSchema,
+  minutesPerDay: z.coerce
+    .number()
+    .int()
+    .min(15, "Zaplanuj co najmniej 15 minut dziennie.")
+    .max(480, "Maksymalnie 480 minut (8 godzin) dziennie."),
+  studyDays: z
+    .array(z.number().int().min(1).max(7))
+    .min(1, "Wybierz co najmniej jeden dzień nauki w tygodniu.")
+    .max(7),
+});
+
+export const PlanIdSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+});
+
+export const ConceptIdSchema = z.object({
+  conceptId: z.string().min(1, "Brak identyfikatora zagadnienia.").trim(),
+});
+
+export const AddConceptSchema = z.object({
+  planId: z.string().min(1, "Brak identyfikatora planu.").trim(),
+  label: z
+    .string()
+    .min(2, "Nazwa zagadnienia musi mieć co najmniej 2 znaki.")
+    .max(255, "Nazwa zagadnienia może mieć maksymalnie 255 znaków.")
+    .trim(),
+  categoryKey: z.string().max(100).trim().optional().nullable(),
+  targetMinutes: z.coerce
+    .number()
+    .int()
+    .min(5, "Minimalny czas na zagadnienie to 5 minut.")
+    .max(6000, "Maksymalny czas na zagadnienie to 6000 minut."),
+});
+
+export const LogStudySchema = z.object({
+  minutes: z.coerce
+    .number()
+    .int()
+    .min(1, "Zapisz co najmniej 1 minutę nauki.")
+    .max(600, "Maksymalnie 600 minut na jeden wpis."),
+  note: z
+    .string()
+    .max(500, "Notatka może mieć maksymalnie 500 znaków.")
+    .trim()
+    .optional(),
+  conceptId: z.string().trim().optional().nullable(),
+});
+
+// --- Diagnozy i Interwencje (pielegniarstwo) ---
+
+const DiagnozaStringGroupSchema = z.object({
+  label: z.string().min(1),
+  items: z.array(z.string().min(1)).min(1),
+});
+
+/** Book sections render either as a flat list or as labelled sub-groups. */
+export const StringListOrGroupedSchema = z.union([
+  z.array(z.string().min(1)),
+  z.object({
+    type: z.literal("grouped"),
+    groups: z.array(DiagnozaStringGroupSchema).min(1),
+  }),
+]);
+
+/** Reserved for the future Egzamin mode; unused by the fill-out flow. */
+const DiagnozaPracticeStepSchema = z.object({
+  field: z.string().min(1),
+  prompt: z.string().min(1),
+  type: z.enum(["single-choice", "multi-choice"]),
+  correct: z.union([z.string(), z.array(z.string())]).optional(),
+  correctRef: z.string().optional(),
+  distractors: z.array(z.string()).optional(),
+});
+
+export const DiagnozaSchema = z.object({
+  id: z.uuid(),
+  chapter: z.object({
+    number: z.string().min(1),
+    // Some chapters in the source lack a title; UI falls back to the number.
+    title: z.string().default(""),
+  }),
+  section: z.string().min(1),
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/, "Slug może zawierać tylko małe litery, cyfry i myślniki."),
+  title: z.string().min(1),
+  definicja: z.string().min(1),
+  cechyCharakteryzujace: StringListOrGroupedSchema,
+  czynnikiEtiologiczne: z.object({
+    patofizjologiczne: z.array(z.string().min(1)),
+    zwiazaneZLeczeniem: z.array(z.string().min(1)),
+    sytuacyjne: z.array(z.string().min(1)),
+    rozwojowe: z.array(z.string().min(1)),
+  }),
+  kryteriaRozpoznawania: z.object({
+    subiektywne: StringListOrGroupedSchema,
+    obiektywne: StringListOrGroupedSchema,
+  }),
+  opisPrzypadku: z.string().min(1),
+  diagnozaPielegniarska: z.string().min(1),
+  celeOpieki: z.array(z.string().min(1)).min(1),
+  interwencje: z
+    .array(
+      z.object({
+        interwencja: z.string().min(1),
+        // Optional: some interventions (e.g. "Ocena efektywności…") have no
+        // separate book rationale; empty means no teaching payload is shown.
+        uzasadnienie: z.string().default(""),
+        // Egzamin v2: where on the mannequin the intervention is performed;
+        // interventions without it are simply not graded for execution.
+        exam: z
+          .object({
+            bodyZone: z.enum(BODY_ZONES),
+            equipment: z.array(z.string()).optional(),
+          })
+          .optional(),
+      })
+    )
+    .min(1),
+  oczekiwaneWyniki: z.string().min(1),
+  practice: z
+    .object({
+      note: z.string().optional(),
+      steps: z.array(DiagnozaPracticeStepSchema).optional(),
+    })
+    .optional(),
+});
+
+/** Container shape of data/diagnozy.json, validated by scripts/seed-diagnozy.ts. */
+export const DiagnozyFileSchema = z.object({
+  schemaVersion: z.literal(1),
+  diagnozy: z.array(DiagnozaSchema).min(1),
+});
+
+export const MarkDiagnozaCompletedSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy.")
+    .trim(),
+});
+
+export const DIAGNOZY_EXAM_FIELDS = [
+  "diagnoza",
+  "cele",
+  "interwencje",
+  "ocena",
+] as const;
+
+export const SubmitDiagnozyExamSchema = z.object({
+  slug: z
+    .string()
+    .min(1, "Brak identyfikatora diagnozy.")
+    .regex(/^[a-z0-9-]+$/, "Nieprawidłowy identyfikator diagnozy."),
+  answers: z.object({
+    diagnoza: z.array(z.string()).max(1),
+    cele: z.array(z.string()).max(30),
+    interwencje: z.array(z.string()).max(50),
+    ocena: z.array(z.string()).max(1),
+  }),
+  zones: z.record(z.string(), z.enum(BODY_ZONES)).optional(),
+  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas").max(24 * 60 * 60),
+});

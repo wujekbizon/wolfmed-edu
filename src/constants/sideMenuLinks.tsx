@@ -1,7 +1,9 @@
 import CourseLibraryIcon from '@/components/icons/CoursesLibraryIcon'
 import DashboardIcon from '@/components/icons/DashboardIcon'
+import DiagnozyIcon from '@/components/icons/DiagnozyIcon'
 import FeadbackIcon from '@/components/icons/FeadbackIcon'
 import LearnIcon from '@/components/icons/LearnIcon'
+import PlannerIcon from '@/components/icons/PlannerIcon'
 import ProceduresIcon from '@/components/icons/ProceduresIcon'
 import ProgressIcon from '@/components/icons/ProgressIcon'
 import UserProfileIcon from '@/components/icons/UserProfileIcon'
@@ -18,7 +20,7 @@ export const sideMenuNavigationLinks = [
     icon: <CourseLibraryIcon width={26} height={26} />,
   },
   {
-    url: '/panel/testy',
+    url: '/panel/testy-egzaminy',
     label: 'Testy i Egzaminy',
     icon: <DashboardIcon width={26} height={26} />,
   },
@@ -34,9 +36,21 @@ export const sideMenuNavigationLinks = [
     icon: <LearnIcon width={26} height={26} />,
   },
   {
+    url: '/panel/plan',
+    label: 'Plan Nauki',
+    icon: <PlannerIcon width={26} height={26} />,
+  },
+  {
     url: '/panel/procedury',
     label: 'Procedury',
     icon: <ProceduresIcon width={26} height={26} />,
+  },
+  {
+    url: '/panel/diagnozy',
+    label: 'Diagnozy i Interwencje',
+    icon: <DiagnozyIcon width={26} height={26} />,
+    requiresCourse: 'pielegniarstwo',
+    requiresSupporter: true,
   },
   {
     url: '/panel/wyniki',

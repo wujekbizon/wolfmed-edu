@@ -1,7 +1,7 @@
 "use server"
 
-import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
+import { ensureAdmin } from "@/helpers/ensureAdmin"
 import { markMessageAsRead } from "@/server/queries"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
@@ -11,10 +11,7 @@ export async function markMessageAsReadAction(
   formData: FormData
 ): Promise<FormState> {
   try {
-    const { userId } = await auth()
-    if (!userId) {
-      return toFormState("ERROR", "Nieautoryzowany dostęp")
-    }
+    await ensureAdmin()
 
     const messageId = Number(formData.get("messageId"))
 

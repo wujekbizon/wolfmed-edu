@@ -1,49 +1,32 @@
 import { ResourceAutocomplete } from './ResourceAutocomplete'
 import { CommandAutocomplete } from './CommandAutocomplete'
-import type { Resource } from '@/types/resourceTypes'
-import type { Command } from '@/types/commandTypes'
+import type { RagCellInput } from '@/hooks/useRagCellInput'
 
 interface AIAutocompleteDropdownsProps {
-  showResourceAutocomplete: boolean
-  showCommandAutocomplete: boolean
-  filteredResources: Resource[]
-  filteredCommands: Command[]
-  resourceSelectedIndex: number
-  commandSelectedIndex: number
-  resourcesLoading: boolean
-  insertResource: (displayName: string) => void
-  insertCommand: (name: string) => void
+  input: RagCellInput
   direction?: 'up' | 'down'
 }
 
 export function AIAutocompleteDropdowns({
-  showResourceAutocomplete,
-  showCommandAutocomplete,
-  filteredResources,
-  filteredCommands,
-  resourceSelectedIndex,
-  commandSelectedIndex,
-  resourcesLoading,
-  insertResource,
-  insertCommand,
+  input,
   direction = 'down',
 }: AIAutocompleteDropdownsProps) {
   return (
     <>
-      {showResourceAutocomplete && !showCommandAutocomplete && (
+      {input.showResourceAutocomplete && !input.showCommandAutocomplete && (
         <ResourceAutocomplete
-          resources={filteredResources}
-          selectedIndex={resourceSelectedIndex}
-          onSelect={insertResource}
-          loading={resourcesLoading}
+          resources={input.filteredResources}
+          selectedIndex={input.resourceSelectedIndex}
+          onSelect={input.insertResource}
+          loading={input.resourcesLoading}
           direction={direction}
         />
       )}
-      {showCommandAutocomplete && (
+      {input.showCommandAutocomplete && (
         <CommandAutocomplete
-          commands={filteredCommands}
-          selectedIndex={commandSelectedIndex}
-          onSelect={insertCommand}
+          commands={input.filteredCommands}
+          selectedIndex={input.commandSelectedIndex}
+          onSelect={input.insertCommand}
           direction={direction}
         />
       )}

@@ -1,8 +1,10 @@
 import ForumPosts from '@/components/ForumPosts'
-import { getAllForumPosts } from '@/server/queries'
+import { getAllForumPosts, getForumNotifications } from '@/server/queries'
 import { Suspense } from 'react'
+import { auth } from '@clerk/nextjs/server'
 import CreatePostButton from '@/components/CreatePostButton'
 import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
+import MarkForumSeen from '@/components/MarkForumSeen'
 import { Metadata } from 'next'
 
 export const experimental_ppr = true
@@ -13,6 +15,14 @@ export const metadata: Metadata = {
     'Witam na forum dyskusyjne na naszej platformie. To przestrzeń, która łączy zarówno tych, którzy dopiero przygotowują się do egzaminu na opiekuna medycznego, jak i doświadczonych opiekunów, chcących podzielić się swoimi rozwiązaniami i poradami z innymi.',
   keywords:
     'opiekun, forum, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja, dyskusja, problemy',
+}
+
+async function ForumSeenMarker() {
+  const { userId } = await auth()
+  if (!userId) return null
+
+  const { newPosts } = await getForumNotifications(userId)
+  return <MarkForumSeen scope="posts" hasUnread={newPosts > 0} />
 }
 
 export default async function ForumPage() {
@@ -37,6 +47,9 @@ export default async function ForumPage() {
       </div>
       <Suspense fallback={<ForumPostsSkeleton />}>
         <ForumPosts posts={posts} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <ForumSeenMarker />
       </Suspense>
     </section>
   )

@@ -1,30 +1,18 @@
 import { LETTERS } from '@/constants/optionsLetters'
-import { Test } from '@/types/dataTypes'
-import { useState, useEffect } from 'react'
+import type { ExamQuestion } from '@/types/dataTypes'
 import Label from '@/components/ui/Label'
 import { FormState } from '@/types/actionTypes'
 
-export default function TestCard(props: { test: Test; questionNumber: string; formState: FormState }) {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null)
-
+export default function TestCard(props: {
+  test: ExamQuestion
+  questionNumber: string
+  formState: FormState
+  selectedIndex: number | null
+  onSelect: (index: number) => void
+}) {
   const {
     data: { answers, question },
   } = props.test
-
-  // Use useEffect to set the activeIndex based on the formState values
-  useEffect(() => {
-    if (props.formState.values) {
-      const savedAnswer = props.formState.values[`answer-${props.test.id}`]
-      if (savedAnswer !== undefined) {
-        const index = answers.findIndex((answer) => answer.isCorrect === (savedAnswer === 'true'))
-        setActiveIndex(index !== -1 ? index : null)
-      }
-    }
-  }, [props.formState.values, answers, props.test.id])
-
-  const handleAnswerChange = (index: number) => {
-    setActiveIndex(index)
-  }
 
   return (
     <div className="relative flex h-full min-h-80 w-full flex-col rounded-lg shadow-md shadow-zinc-500 border border-red-100/50 bg-white px-4 py-6 text-zinc-900">
@@ -39,9 +27,9 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
             <div
               className={`flex w-full items-center gap-4 rounded-lg px-1 py-1 ${
                 (props.formState.status === 'UNSET' || props.formState.status === 'ERROR') && 'hover:bg-[#ffdcdc]'
-              } ${props.formState.status === 'UNSET' && activeIndex === index && 'bg-[#ffdcdc]'} ${
+              } ${props.formState.status !== 'SUCCESS' && props.selectedIndex === index && 'bg-[#ffdcdc]'} ${
                 props.formState.status === 'SUCCESS' &&
-                (answer.isCorrect ? 'bg-green-300/40' : 'bg-red-300/40 opacity-50')
+                (props.selectedIndex === index ? 'bg-green-300/40' : 'opacity-50')
               }`}
               key={uniqueId}
             >
@@ -51,16 +39,16 @@ export default function TestCard(props: { test: Test; questionNumber: string; fo
                 <input
                   className={`${
                     props.formState.status === 'SUCCESS' &&
-                    activeIndex === index &&
+                    props.selectedIndex === index &&
                     'bg-[#ff6060] before:animate-none before:bg-[#ff6060]'
                   } before:content[''] border-zinc-500 before:bg-blue-gray-500 peer relative h-3.5 min-h-3.5 w-3.5 min-w-3.5 cursor-pointer appearance-none rounded-full border text-gray-900 transition-all before:absolute before:left-2/4 before:top-2/4 before:block before:h-6 before:w-6 before:-translate-x-2/4 before:-translate-y-2/4 before:animate-pulse before:rounded-full before:opacity-0 before:transition-opacity checked:border-zinc-800 checked:bg-[#ff6060] checked:before:bg-[#ff6060] hover:before:opacity-5 disabled:pointer-events-none`}
                   type="radio"
-                  value={answer.isCorrect ? 'true' : 'false'}
+                  value={index}
                   id={uniqueId}
                   disabled={props.formState.status === 'SUCCESS'}
                   name={`answer-${props.test.id}`}
-                  checked={activeIndex === index}
-                  onChange={() => handleAnswerChange(index)}
+                  checked={props.selectedIndex === index}
+                  onChange={() => props.onSelect(index)}
                 />
                 <Label
                   className="text-sm text-muted-foreground cursor-pointer"

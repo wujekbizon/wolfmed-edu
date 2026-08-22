@@ -1,18 +1,28 @@
-import { defineConfig } from "eslint/config";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import js from "@eslint/js";
-import { FlatCompat } from "@eslint/eslintrc";
+import clerkNext from '@clerk/eslint-plugin/next'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-    baseDirectory: __dirname,
-    recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
-});
+export default [
+  { ignores: ['.next/**'] },
+  {
+    plugins: { '@clerk/next': clerkNext },
 
-export default defineConfig([{
-    ignores:[".next/**"],
-    extends: compat.extends("next/core-web-vitals"),
-}]);
+    rules: {
+      "@clerk/next/require-auth-protection": [
+        "error",
+        {
+         protected: [
+            "app/panel/**",
+            "app/blog/**",
+            "app/forum/**",
+            "app/admin/**",
+         ],
+         public: ['src/app/sign-in/**', 'src/app/sign-up/**'],
+         resources: {
+            routeHandlers: true,
+            serverFunctions: true,
+            serverComponentEntrypoints: false, // Skip for now.
+          },
+        },
+      ],
+    },
+  },
+];

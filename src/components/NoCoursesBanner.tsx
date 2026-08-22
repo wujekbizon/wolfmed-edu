@@ -1,18 +1,19 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { useNoCoursesBannerStore } from '@/store/useNoCoursesBannerStore'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export default function NoCoursesBanner() {
   const params = useSearchParams()
-  const { isOpen, show, hide } = useNoCoursesBannerStore()
+  const pathname = usePathname()
+  const router = useRouter()
+  const isOpen = params.get('from') === 'panel'
 
-  useEffect(() => {
-    if (params.get('from') === 'panel') {
-      show()
-    }
-  }, [params, show])
+  const hide = () => {
+    const nextParams = new URLSearchParams(params.toString())
+    nextParams.delete('from')
+    const query = nextParams.toString()
+    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+  }
 
   if (!isOpen) return null
 

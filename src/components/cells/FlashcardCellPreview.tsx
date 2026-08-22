@@ -1,44 +1,40 @@
 'use client'
 
 import { useState } from 'react'
-import { useFlashcardCell } from '@/hooks/useFlashcardCell'
 import { Plus } from 'lucide-react'
+import { useFlashcardCell } from '@/hooks/useFlashcardCell'
+import { useCellsStore } from '@/store/useCellsStore'
 import FlashcardRow from './FlashcardRow'
-import { Textarea } from '../ui/Textarea'
+import FlashcardAddForm from './FlashcardAddForm'
+import FlashcardCellEmpty from './FlashcardCellEmpty'
+import FlashcardCellCreateDeck from './FlashcardCellCreateDeck'
 import type { Cell } from '@/types/cellTypes'
-import Label from '../ui/Label'
 
 export default function FlashcardCellPreview({ cell }: { cell: Cell }) {
-  const { cards, topic, updateFlashcard, removeFlashcard, addCard } =
-    useFlashcardCell(cell.id, cell.content)
+  const { deckId, deck, cards, topic, isLoading, isMissing } = useFlashcardCell(cell.content)
+  const updateCell = useCellsStore((s) => s.updateCell)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [isAdding, setIsAdding] = useState(false)
-  const [newQ, setNewQ] = useState('')
-  const [newA, setNewA] = useState('')
 
-  const handleSave = (id: string, q: string, a: string) => {
-    if (!q || !a) return
-    updateFlashcard(id, q, a)
-    setEditingId(null)
+  if (isLoading) return <FlashcardCellEmpty variant='loading' />
+
+  if (!deckId || isMissing) {
+    return (
+      <FlashcardCellCreateDeck
+        hint={isMissing ? 'Poprzedni zestaw fiszek został usunięty.' : undefined}
+        onCreated={(newDeckId) => updateCell(cell.id, JSON.stringify({ deckId: newDeckId }))}
+      />
+    )
   }
 
-  const handleAdd = () => {
-    if (!newQ.trim() || !newA.trim()) return
-    addCard(newQ.trim(), newA.trim())
-    setNewQ('')
-    setNewA('')
-    setIsAdding(false)
-  }
+  if (!deck) return <FlashcardCellEmpty variant='error' />
 
   return (
     <div className='flex flex-col h-full'>
+      <h3 className='text-sm font-semibold text-zinc-700 mb-2 line-clamp-1'>{topic}</h3>
+
       {cards.length === 0 && !isAdding ? (
-        <div className='flex flex-col items-center justify-center flex-1 text-center'>
-          <h3 className='text-xl text-zinc-500 mb-2 font-medium'>
-            Brak dostępnych fiszek
-          </h3>
-          <p className='text-zinc-400'>Dodaj pierwszą fiszkę!</p>
-        </div>
+        <FlashcardCellEmpty variant='empty' />
       ) : (
         <div className='overflow-y-auto flex-1 space-y-2 pr-1'>
           {cards.map((card) => (
@@ -47,51 +43,12 @@ export default function FlashcardCellPreview({ cell }: { cell: Cell }) {
               card={card}
               isEditing={editingId === card.id}
               onStartEdit={() => setEditingId(card.id)}
-              onSave={(q, a) => handleSave(card.id, q, a)}
               onCancel={() => setEditingId(null)}
-              onDelete={() => removeFlashcard(card.id)}
             />
           ))}
 
           {isAdding && (
-            <div className='bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80 backdrop-blur-sm rounded-xl p-4 space-y-2'>
-              <Label label='Pytanie:' htmlFor='new-question' />
-              <Textarea
-                id='new-question'
-                value={newQ}
-                onChange={(e) => setNewQ(e.target.value)}
-                placeholder='Dodaj pytanie do fiszki'
-              />
-              <Label label='Odpowiedź:' htmlFor='new-answer' />
-              <Textarea
-                id='new-answer'
-                value={newA}
-                onChange={(e) => setNewA(e.target.value)}
-                placeholder='Dodaj odpowiedź do fiszki'
-              />
-
-              <div className='flex gap-2 justify-end'>
-                <button
-                  type='button'
-                  onClick={() => {
-                    setIsAdding(false)
-                    setNewQ('')
-                    setNewA('')
-                  }}
-                  className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-white hover:bg-zinc-100 px-4 py-2 text-lg font-medium border text-black shadow transition-colors cursor-pointer hover:border-zinc-800 border-red-200/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40 disabled:opacity-50 disabled:cursor-not-allowed'
-                >
-                  Anuluj
-                </button>
-                <button
-                  type='button'
-                  onClick={handleAdd}
-                  disabled={!newQ.trim() || !newA.trim()}
-                  className='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-[#f58a8a] hover:bg-[#ff5b5b] px-4 py-2 text-lg font-medium border text-black shadow transition-colors cursor-pointer hover:border-zinc-800 border-red-200/40 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40 disabled:opacity-50 disabled:cursor-not-allowed'
-                >
-                  Dodaj
-                </button>
-              </div>
-            </div>
+            <FlashcardAddForm deckId={deckId} onDone={() => setIsAdding(false)} />
           )}
         </div>
       )}

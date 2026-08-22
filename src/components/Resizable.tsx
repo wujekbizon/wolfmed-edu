@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Resizable } from "re-resizable";
+import { Resizable, type ResizeCallback } from "re-resizable";
 import BottomResizableHandle from "./BottomResizableHandle";
 import RightResizableHandle from "./RightResizableHandle";
+import { useCellFullscreen } from "@/context/CellFullscreenContext";
+import { buildResizableProps } from "@/helpers/buildResizableProps";
 
 interface ResizableProps {
     direction: "horizontal" | "vertical";
@@ -11,11 +13,17 @@ interface ResizableProps {
     constraint?: number;
 }
 
+const handleComponent = {
+    right: <RightResizableHandle />,
+    bottom: <BottomResizableHandle />,
+};
+
 export default function ResizableComponent({
     direction,
     children,
     constraint,
 }: ResizableProps) {
+    const isFullscreen = useCellFullscreen();
     const [innerHeight, setInnerHeight] = useState(0);
     const [innerWidth, setInnerWidth] = useState(0);
     const [width, setWidth] = useState(0);
@@ -49,54 +57,29 @@ export default function ResizableComponent({
         return null;
     }
 
-    const resizableProps =
-        direction === "horizontal"
-            ? {
-                size: { width, height: "100%" },
-                handleComponent: {
-                    right: <RightResizableHandle />
-                },
-                minWidth: innerWidth * 0.2,
-                maxWidth: innerWidth * 0.60,
-                minHeight: "100%",
-                maxHeight: "100%",
-                enable: {
-                    right: true,
-                    bottom: false,
-                    bottomRight: false,
-                },
-                onResizeStop: (
-                    e: MouseEvent | TouchEvent,
-                    dir: any,
-                    ref: HTMLElement
-                ) => {
-                    setWidth(ref.offsetWidth);
-                },
-                style: { display: "flex" },
-            }
-            : {
-                size: { width: "100%", height },
-                handleComponent: { bottom: <BottomResizableHandle />},
-                minHeight: constraint || 480,
-                maxHeight: innerHeight * 0.7,
-                minWidth: "100%",
-                maxWidth: "100%",
-                enable: {
-                    bottom: true,
-                    right: false,
-                    bottomRight: false,
-                },
-                onResizeStop: (
-                    e: MouseEvent | TouchEvent,
-                    dir: any,
-                    ref: HTMLElement
-                ) => {
-                    setHeight(ref.offsetHeight);
-                },
-                style: { width: "100%" },
-            };
+    const handleResizeStop: ResizeCallback = (_event, _dir, ref) => {
+        if (direction === "horizontal") {
+            setWidth(ref.offsetWidth);
+        } else {
+            setHeight(ref.offsetHeight);
+        }
+    };
 
-    return <Resizable {...resizableProps}>{children}</Resizable>;
+    return (
+        <Resizable
+            {...buildResizableProps({
+                direction,
+                isFullscreen,
+                innerWidth,
+                innerHeight,
+                width,
+                height,
+                constraint,
+            })}
+            handleComponent={handleComponent}
+            onResizeStop={handleResizeStop}
+        >
+            {children}
+        </Resizable>
+    );
 };
-
-

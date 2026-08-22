@@ -6,6 +6,7 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
 import SubmitButton from '@/components/SubmitButton'
 import { useToastMessage } from '@/hooks/useToastMessage'
+import type { SourceRef } from '@/types/retrievalTypes'
 import RagResponse from '@/components/cells/RagResponse'
 
 interface TestQueryFormProps {
@@ -14,7 +15,10 @@ interface TestQueryFormProps {
 
 export default function TestQueryForm({ storeName }: TestQueryFormProps) {
   const [state, action] = useActionState(testRagQueryAction, EMPTY_FORM_STATE)
-  const noScriptFallback = state.status === 'ERROR' ? useToastMessage(state) : null
+  const noScriptFallback = useToastMessage({
+    ...state,
+    message: state.status === 'ERROR' ? state.message : '',
+  })
 
   return (
     <div className="space-y-6">
@@ -50,7 +54,7 @@ export default function TestQueryForm({ storeName }: TestQueryFormProps) {
       </form>
 
       {state.status === 'SUCCESS' && state.message && (
-        <RagResponse answer={state.message} sources={state.values?.sources as string[] | undefined} />
+        <RagResponse answer={state.message} sources={state.values?.sources as SourceRef[] | undefined} />
       )}
     </div>
   )

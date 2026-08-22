@@ -1,10 +1,23 @@
-import { Show, SignInButton, SignUpButton, UserButton, useUser } from '@clerk/nextjs';
+import { startTransition, useActionState } from 'react'
+import { Show, SignInButton, UserButton, useUser } from '@clerk/nextjs'
+import { CreditCard } from 'lucide-react'
+import { createBillingPortalSession } from '@/actions/stripe'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
+import { useToastMessage } from '@/hooks/useToastMessage'
 import { AuthButton } from './AuthButton'
-
 import LoginIcon from './icons/LoginIcon'
 
 export default function AuthSection() {
   const { isLoaded } = useUser()
+  const [billingState, openBillingPortal] = useActionState(
+    createBillingPortalSession,
+    EMPTY_FORM_STATE
+  )
+  const noScriptFallback = useToastMessage(billingState)
+
+  const handleBillingClick = () => {
+    startTransition(() => openBillingPortal(new FormData()))
+  }
 
   if (!isLoaded) {
     return (
@@ -38,9 +51,18 @@ export default function AuthSection() {
                 },
               },
             }}
-          />
+          >
+            <UserButton.MenuItems>
+              <UserButton.Action
+                label="Plan i płatności"
+                labelIcon={<CreditCard size={16} />}
+                onClick={handleBillingClick}
+              />
+            </UserButton.MenuItems>
+          </UserButton>
+          {noScriptFallback}
         </div>
       </Show>
     </>
-  );
+  )
 }

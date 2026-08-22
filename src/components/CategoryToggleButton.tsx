@@ -3,6 +3,8 @@
 import { useActionState } from 'react'
 import { addQuestionToCategoryAction, removeQuestionFromCategoryAction } from '@/actions/actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
+import FormError from './FormError'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
 interface Props {
   categoryId: string
@@ -12,10 +14,13 @@ interface Props {
 }
 
 export default function CategoryToggleButton({ categoryId, categoryName, questionId, isAdded }: Props) {
-  const [, addAction] = useActionState(addQuestionToCategoryAction, EMPTY_FORM_STATE)
-  const [, removeAction] = useActionState(removeQuestionFromCategoryAction, EMPTY_FORM_STATE)
+  const [addState, addAction] = useActionState(addQuestionToCategoryAction, EMPTY_FORM_STATE)
+  const [removeState, removeAction] = useActionState(removeQuestionFromCategoryAction, EMPTY_FORM_STATE)
+  const addFallback = useToastMessage(addState)
+  const removeFallback = useToastMessage(removeState)
 
   const action = isAdded ? removeAction : addAction
+  const state = isAdded ? removeState : addState
 
   return (
     <form action={action}>
@@ -31,6 +36,9 @@ export default function CategoryToggleButton({ categoryId, categoryName, questio
       >
         {categoryName}
       </button>
+      <FormError formState={state} />
+      {addFallback}
+      {removeFallback}
     </form>
   )
 }

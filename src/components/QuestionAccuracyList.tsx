@@ -5,20 +5,11 @@ import { useQuery } from '@tanstack/react-query'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useProblematicQuestionsStore } from '@/store/useProblematicQuestionsStore'
 import LearningPaginationControls from './LearningPaginationControls'
-
-interface EnrichedProblematicQuestion {
-  questionId: string
-  questionText: string
-  category: string
-  correctAnswer: string
-  timesAnswered: number
-  timesCorrect: number
-  accuracy: number
-  errorRate: number
-}
+import ProblematicQuestionCard from './ProblematicQuestionCard'
+import type { ProblematicQuestion } from '@/types/analyticsTypes'
 
 interface QuestionAccuracyListProps {
-  questions: EnrichedProblematicQuestion[]
+  questions: ProblematicQuestion[]
 }
 
 export default function QuestionAccuracyList({ questions }: QuestionAccuracyListProps) {
@@ -69,7 +60,7 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-6 shadow-md">
+      <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md">
         <h3 className="text-lg font-bold text-slate-900 mb-4">Problematyczne pytania</h3>
         <div className="flex flex-col items-center justify-center h-32 text-zinc-500">
           <p className="text-center">Świetna robota! Nie masz pytań z niską dokładnością.</p>
@@ -83,7 +74,7 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
   const placeholders = emptySlots > 0 ? Array.from({ length: emptySlots }) : []
 
   return (
-    <div ref={listRef} className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300">
+    <div ref={listRef} className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300">
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>
@@ -115,50 +106,13 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
         <>
           <div className="space-y-4 mb-4 min-h-[600px]">
             {paginatedQuestions.map((question) => (
-              <div
-                key={question.questionId}
-                className="p-4 bg-white/80 rounded-lg border border-zinc-200/60 hover:border-[#ff9898]/40 transition-colors"
-              >
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <span className="px-3 py-1 text-xs font-semibold bg-zinc-100 text-zinc-700 rounded-full border border-zinc-200">
-                    {question.category}
-                  </span>
-                </div>
-
-                <p className="text-sm font-medium text-slate-900 mb-3 leading-relaxed">
-                  {question.questionText}
-                </p>
-
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-medium text-zinc-600">Poprawna odpowiedź:</span>
-                  <span className="px-2 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded border border-green-200">
-                    {question.correctAnswer}
-                  </span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <p className="text-xs text-zinc-600">
-                    Rozwiązane {question.timesAnswered} razy · Poprawne {question.timesCorrect} razy
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="relative w-full sm:w-32 h-2 bg-zinc-200 rounded-full overflow-hidden">
-                      <div
-                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-500 to-red-400 rounded-full transition-all duration-300"
-                        style={{ width: `${question.errorRate}%` }}
-                      />
-                    </div>
-                    <span className="text-sm font-bold text-red-600 min-w-[60px] text-right">
-                      {question.errorRate.toFixed(1)}% błędów
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <ProblematicQuestionCard key={question.questionId} question={question} />
             ))}
 
             {placeholders.map((_, index) => (
               <div
                 key={`placeholder-${index}`}
-                className="p-4 bg-zinc-50/50 rounded-lg border border-zinc-200/40 opacity-40"
+                className="p-3 sm:p-4 bg-zinc-50/50 rounded-lg border border-zinc-200/40 opacity-40"
               >
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <span className="px-3 py-1 text-xs font-semibold bg-zinc-100 text-zinc-400 rounded-full border border-zinc-200">

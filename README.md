@@ -4,24 +4,36 @@ Edukacja medyczna może być jeszcze łatwiejsza.
 
 # Local Development
 
-## Setup Steps
+## Test Clerk and Stripe webhooks
 
-1. Start the development server:
+Run each process in a separate terminal.
+
+1. Start Wolfmed:
+
 ```bash
-pnpm run dev
+pnpm dev
 ```
 
-2. Start Ngrok tunnel on port 3000:
+2. Forward Clerk `user.created` and `user.deleted` events:
+
 ```bash
-ngrok http 3000
+npx clerk webhooks listen --forward-to http://localhost:3000/api/webhooks/clerk
 ```
 
-3. Update Clerk webhook endpoints:
-   - Go to Clerk Dashboard/Development > Configure > Webhooks
-   - Update the webhook URL with your new Ngrok URL
-   - Format: `https://[your-ngrok-url]/api/webhooks/clerk`
-   - Remember: With free Ngrok plan, URL changes each time you restart Ngrok
-   - Don't forget update CLERK_WEBHOOK_SECRET each time yo add new endpoint
+Set the listener endpoint's signing secret as `CLERK_WEBHOOK_SECRET`, then restart
+Wolfmed if the value changed.
+
+3. Forward every Stripe event handled by Wolfmed:
+
+```bash
+stripe listen --events checkout.session.completed,checkout.session.async_payment_succeeded,checkout.session.async_payment_failed,invoice.paid,invoice.payment_failed,customer.subscription.created,customer.subscription.updated,customer.subscription.deleted,subscription_schedule.created,subscription_schedule.updated,subscription_schedule.released,subscription_schedule.canceled,subscription_schedule.completed,subscription_schedule.aborted,charge.refunded,refund.created,refund.updated,refund.failed,charge.dispute.created,charge.dispute.closed --forward-to http://localhost:3000/api/webhooks/stripe
+```
+
+Copy the listener's `whsec_...` value to `STRIPE_WEBHOOK_SECRET`, then restart
+Wolfmed if the value changed. Use Stripe sandbox/test mode only.
+
+A successful delivery appears in the listener as `<-- 200 POST`. A `400` usually
+means the local signing secret is missing or does not match the active listener.
    
 ## Database Management
 
@@ -44,13 +56,14 @@ NEON_DATABASE_URL="your-new-branch-connection-string"
 
 ## Important Notes
 
-- Always update Clerk webhook URL when starting new Ngrok session
-- Keep your `.env.local` up to date with the correct database branch
-- Test webhooks functionality after updating Clerk endpoints
+- Keep `.env.local` synchronized with the active Neon branch and webhook secrets.
+- A new Stripe listener can issue a new `whsec_...`; restart Wolfmed after updates.
+- The CLI relays do not require Ngrok.
 
 ## Troubleshooting
 
 - If webhooks aren't working, verify:
-  1. Ngrok is running
-  2. Clerk webhook URL is updated
-  3. Your app is running on port 3000
+  1. Wolfmed is running on port 3000.
+  2. Both CLI listeners are still running.
+  3. `CLERK_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET` match those listeners.
+  4. Stripe CLI is using the intended sandbox account.

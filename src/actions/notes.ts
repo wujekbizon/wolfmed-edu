@@ -1,7 +1,8 @@
 'use server'
 
-import { notes } from "@/server/db/schema"
+import { flashcardDecks, notes } from "@/server/db/schema"
 import { db } from "@/server/db/index"
+import { and, eq } from "drizzle-orm"
 import { DeleteNoteIdSchema, NoteInput, NoteSchema, NoteUpdateSchema } from "@/server/schema"
 import { fromErrorToFormState, toFormState } from "@/helpers/toFormState"
 import { FormState } from "@/types/actionTypes"
@@ -10,20 +11,33 @@ import { revalidatePath } from "next/cache"
 import { deleteNote, updateNote } from "@/server/queries"
 import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import { checkRateLimit } from "@/lib/rateLimit"
+import { after } from "next/server"
+import { removeNoteChunks, syncNoteChunks } from "@/server/library/sync-note"
+import { embedPendingChunks } from "@/server/library/embed-pending"
+import { getIsPremium } from "@/server/premium"
+import { getFormStringValues } from "@/helpers/getFormStringValues"
 
 export const createNoteAction = async (
   formState: FormState,
   formData: FormData
 ) => {
+  const submittedValues = getFormStringValues(formData)
+  const errorWithValues = (state: FormState): FormState => ({
+    ...state,
+    values: submittedValues,
+  })
+
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
 
   const rateLimit = await checkRateLimit(userId, 'note:create')
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState(
-      "ERROR",
-      `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+    return errorWithValues(
+      toFormState(
+        "ERROR",
+        `Zbyt wiele żądań. Spróbuj ponownie za ${resetMinutes} minut.`
+      )
     )
   }
 
@@ -41,20 +55,19 @@ export const createNoteAction = async (
 
   const validationResult = NoteSchema.safeParse(data)
   if (!validationResult.success) {
-    return {
-      ...fromErrorToFormState(validationResult.error),
-      values: data,
-    }
+    return errorWithValues(fromErrorToFormState(validationResult.error))
   }
 
   const contentResult = parseLexicalContent(validationResult.data.content)
 
   if (!contentResult.success) {
-    return toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+    return errorWithValues(
+      toFormState("ERROR", `Błąd zapisu treści: ${contentResult.error}`)
+    )
   }
 
   try {
-    await db
+    const [created] = await db
       .insert(notes)
       .values({
         ...validationResult.data,
@@ -64,12 +77,26 @@ export const createNoteAction = async (
         updatedAt: new Date(),
       })
       .returning()
+
+    // Writing the note is Postgres. Indexing it is a model call per chunk, and
+    // that is what premium buys — a basic plan keeps its notes in full and gets
+    // no chunk rows at all, so `embedding IS NULL` keeps meaning "queued".
+    if (created && (await getIsPremium())) {
+      // Chunk rows are written synchronously — pure Postgres, transactional with
+      // the note. Embedding them is a model call per chunk, so it happens after
+      // the response; the trigram index keeps the note findable meanwhile.
+      const noteId = created.id
+      await syncNoteChunks({
+        userId,
+        noteId,
+        title: created.title,
+        content: contentResult.content,
+      })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
+    }
   } catch (error) {
     console.error('Database error creating note:', error)
-    return {
-      ...fromErrorToFormState(error),
-      values: data,
-    }
+    return errorWithValues(fromErrorToFormState(error))
   }
   revalidatePath("panel/nauka")
   return toFormState("SUCCESS", "Notatka została utworzona pomyślnie!")
@@ -101,13 +128,18 @@ export async function deleteNoteAction(formState: FormState, formData: FormData)
       return toFormState("ERROR", "Brak notatki do usunięcia")
     }
 
-    await deleteNote(userId,noteId)
+    await deleteNote(userId, noteId)
+    await removeNoteChunks(userId, noteId)
+
+    // Note decks reference the note by id without a foreign key, so nothing cascades.
+    await db
+      .delete(flashcardDecks)
+      .where(and(eq(flashcardDecks.userId, userId), eq(flashcardDecks.sourceRef, noteId)))
   } catch (error) {
     return fromErrorToFormState(error)
   }
 
-  revalidatePath("panel/nauka")
-  return toFormState("SUCCESS", "Notatka usunięty pomyślnie")
+  return toFormState("SUCCESS", "Notatka została usunięta pomyślnie")
 }
 
 export const updateNoteContentAction = async (
@@ -148,7 +180,19 @@ export const updateNoteContentAction = async (
   }
 
   try {
-    await updateNote(userId, noteId, validationResult.data)
+    const updated = await updateNote(userId, noteId, validationResult.data)
+
+    // Also the upgrade path: an unindexed note written on a basic plan gets its
+    // chunks the first time it is edited on a premium one.
+    if (updated && (await getIsPremium())) {
+      await syncNoteChunks({
+        userId,
+        noteId: updated.id,
+        title: updated.title,
+        content: updated.content,
+      })
+      after(() => embedPendingChunks({ userId, sourceId: noteId }))
+    }
   } catch (error) {
     return {
       ...fromErrorToFormState(error),

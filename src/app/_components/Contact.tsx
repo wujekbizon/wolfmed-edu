@@ -1,9 +1,11 @@
 import ContactForm from './ContactForm'
+import SectionHalo from '@/components/SectionHalo'
 
 export default async function Contact() {
   return (
-    <section id='contact' className='w-full px-4 sm:px-6 md:px-8 py-8 md:py-12'>
-      <div className='bg-transparent rounded-3xl pt-16 sm:pt-24 pb-20 sm:pb-20'>
+    <section id='contact' className='relative w-full px-4 sm:px-6 md:px-8 py-16 md:py-24'>
+      <SectionHalo />
+      <div className='bg-transparent rounded-3xl pt-8 sm:pt-12 pb-12 sm:pb-16'>
         <div className='container mx-auto px-4'>
           <div className='max-w-6xl mx-auto'>
             <div className='text-center mb-12'>

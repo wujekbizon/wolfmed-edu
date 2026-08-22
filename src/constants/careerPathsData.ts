@@ -1,4 +1,7 @@
 import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
+import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
+import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
+import { PIELEGNIARSTWO_STORY } from '@/constants/pielegniarstwoStory'
 
 export const careerPaths = [
   {
@@ -348,6 +351,8 @@ export const curriculum: CurriculumBlock[] = [
 
 export const careerPathsData: Record<string, PathData> = {
   'opiekun-medyczny': {
+    story: OPIEKUN_MEDYCZNY_STORY,
+    careerPath: OPIEKUN_MEDYCZNY_PATH,
     title: 'Opiekun Medyczny',
     description:
       'Nasz program edukacyjny wspiera zarówno osoby przygotowujące się do egzaminu, jak i tych, którzy już pracują w branży i chcą utrwalać wiedzę oraz rozwijać kompetencje przed kolejnym zawodowym wyzwaniem.',
@@ -424,43 +429,36 @@ export const careerPathsData: Record<string, PathData> = {
       courseSlug: 'opiekun-medyczny',
       basic: {
         price: '159,99 zł',
-        priceId:
-          process.env.STRIPE_OPIEKUN_STANDARD_PRICE_ID ||
-          'price_standard_placeholder',
+        offerKey: 'opiekun_basic_lifetime',
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
-          'Bogata baza pytań – ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego',
-          'Procedury Opiekuna Medycznego',
-          'Przegląd postępów i wyników testów',
+          'Ponad 900 pytań z egzaminów i kursu na Opiekuna Medycznego',
           'Testy praktyczne i Egzamin Próbny',
-          'Forum i Blog Medyczny',
-          'Materiały i zasoby - 20MB miejsce na dysku',
-          'Moje Notatki - twórz notatki z nauki',
-          'Dostęp do modułu praktycznego i tablicy',
-          'Wyzwania i quizy procedur - ukończ wyzwania i zdobądz odznaki'
+          'Procedury Opiekuna Medycznego',
+          'Fiszki, notatki i plan nauki z analizą postępów',
+          'Wyzwania i quizy procedur — zdobywaj odznaki',
+          'Forum i Blog Medyczny'
         ]
       },
       premium: {
         price: '449,99 zł',
-        priceId:
-          process.env.STRIPE_OPIEKUN_PREMIUM_PRICE_ID ||
-          'price_opiekun_premium_placeholder',
+        offerKey: 'opiekun_premium_lifetime',
         accessTier: 'premium',
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
-          'Każda nowa treść dla Opiekuna Medycznego dodawana automatycznie – bez dodatkowych opłat',
-          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał egzaminacyjny',
-          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
-          'Wizualne diagramy i schematy – zamieniaj trudne procedury w czytelne, edytowalne schematy wizualne',
-          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
-          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
+          'Każda nowa treść dodawana automatycznie – bez dodatkowych opłat',
+          'Asystent AI, który zna cały materiał egzaminacyjny',
+          'Automatyczne notatki, streszczenia i wykłady audio',
+          'Własne testy i quizy generowane przez AI',
+          'Edytowalne diagramy i interaktywna tablica'
         ]
       }
     }
   },
   pielegniarstwo: {
+    story: PIELEGNIARSTWO_STORY,
     title: 'Pielęgniarstwo',
     description:
       'Nowa kompletna ścieżka edukacyjna dla kierunku pielęgniarstwo - rozpocznij naukę już dziś !',
@@ -527,37 +525,30 @@ export const careerPathsData: Record<string, PathData> = {
       courseSlug: 'pielegniarstwo',
       basic: {
         price: '279,99 zł',
-        priceId:
-          process.env.STRIPE_PIELEGNIARSTWO_BASIC_PRICE_ID ||
-          'price_basic_placeholder',
+        offerKey: 'pielegniarstwo_basic_lifetime',
         accessTier: 'basic',
         badge: 'Oferta na start',
         features: [
-          'Dostęp do wszystkich aktualnych kategorii: Anatomia, Fizjologia, Biochemia z Biofizyką, Mikrobiologia z Parazytologią, Socjologia, Psychologia, Pedagogika, Prawo Medyczne, Zdrowie Publiczne, Podstawy Pielęgniarstwa, Etyka Zawodowa, Promocja Zdrowia, Zakażenia Szpitalne',
-          'Ponad 2000 pytań egzaminacyjnych z 1. semestru',
-          'Przegląd postępów i wyników testów',
+          'Ponad 22 700 pytań egzaminacyjnych z 22 kategorii',
+          'Przedmioty podstawowe, kierunkowe i specjalizacje kliniczne',
           'Testy praktyczne i egzaminy próbne',
-          'Forum i Blog Medyczny',
-          'Materiały i zasoby - 20MB miejsce na dysku',
-          'Moje Notatki - twórz notatki z nauki',
-          'Dostęp do modułu praktycznego i tablicy'
+          'Fiszki, notatki i plan nauki z analizą postępów',
+          'Wyzwania i quizy — zdobywaj odznaki',
+          'Forum i Blog Medyczny'
         ]
       },
       premium: {
         price: '599,99 zł',
-        priceId:
-          process.env.STRIPE_PIELEGNIARSTWO_PREMIUM_PRICE_ID ||
-          'price_premium_placeholder',
+        offerKey: 'pielegniarstwo_premium_lifetime',
         accessTier: 'premium',
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
-          'Pełne 3 lata nauki – nowe semestry i kategorie dodawane automatycznie przez cały tok studiów',
-          'Asystent AI – ucz się szybciej z pomocą sztucznej inteligencji, która zna cały materiał pielęgniarski',
-          'Automatyczne notatki i streszczenia – AI tworzy za Ciebie zwięzłe notatki i podsumowania z dowolnego tematu',
-          'Wizualne diagramy i schematy – zamieniaj trudne zagadnienia w czytelne, edytowalne schematy i mapy pojęć',
-          'Własne testy generowane przez AI – sprawdzaj wiedzę na nieskończonej liczbie pytań dopasowanych do Twojego tematu',
-          'Interaktywna tablica – twórz mapy myśli, rysunki i notatki wizualne w jednym miejscu'
+          'Pełne 3 lata nauki – nowe semestry dodawane automatycznie',
+          'Diagnozy i Interwencje – pełny proces pielęgnowania',
+          'Asystent AI, który zna cały materiał pielęgniarski',
+          'Automatyczne notatki, streszczenia i wykłady audio',
+          'Własne testy AI, edytowalne diagramy i tablica'
         ]
       }
     }

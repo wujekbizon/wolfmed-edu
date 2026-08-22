@@ -6,6 +6,8 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { Test } from '@/types/dataTypes'
 import CategoryDeleteButton from './CategoryDeleteButton'
 import EditableCategoryName from './EditableCategoryName'
+import FormError from './FormError'
+import { useToastMessage } from '@/hooks/useToastMessage'
 
 interface Props {
   id: string
@@ -15,7 +17,8 @@ interface Props {
 }
 
 export default function CategoryCard({ id, name, questionIds, questions }: Props) {
-  const [, removeAction] = useActionState(removeQuestionFromCategoryAction, EMPTY_FORM_STATE)
+  const [state, removeAction] = useActionState(removeQuestionFromCategoryAction, EMPTY_FORM_STATE)
+  const noScriptFallback = useToastMessage(state)
 
   return (
     <div className="rounded-lg border border-zinc-600/20 bg-white/80 p-2 sm:p-4 shadow-sm">
@@ -44,6 +47,8 @@ export default function CategoryCard({ id, name, questionIds, questions }: Props
           ) : null
         })}
       </div>
+      <FormError formState={state} />
+      {noScriptFallback}
     </div>
   )
 }

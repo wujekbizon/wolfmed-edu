@@ -7,13 +7,24 @@ import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { FormState } from '@/types/actionTypes'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { RagQuerySchema } from '@/server/schema'
-import { queryWithFileSearch, queryFileSearchOnly, executeToolWithContent } from '@/server/google-rag'
+import { generateGroundedAnswer, executeToolWithContent, answerFromMemory } from '@/server/vertex-rag'
+import { retrieveContext } from '@/server/retrieval/context'
+import { formatContextChunks } from '@/helpers/formatContextChunks'
+import { getNoDataFoundMessage } from '@/helpers/rag-prompts'
+import {
+  buildStaticPrefix,
+  buildMemoryTail,
+  isSelfStateQuestion,
+  buildSelfStateContext,
+} from '@/server/memory/assemble'
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
+import { resolveCommandCount } from '@/helpers/resolveCommandCount'
+import { extractLeadingCount } from '@/helpers/extractLeadingCount'
 import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } from '@/server/queries'
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
-import { mcpServer } from '@/server/mcp/server'
+import { TOOL_COMMANDS, TOOL_COMMAND_NAMES } from '@/constants/toolCommands'
 import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
 import type { ProgressStage } from '@/types/progressTypes'
 import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
@@ -38,23 +49,10 @@ async function progressStep(
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
-    // Build resources list directly from DB (not API) to include user's notes/materials
+    // Only the student's own notes and materials: an attachment can never reach
+    // outside the user, and nothing in the request path reads from disk.
     const resources: Resource[] = []
 
-    // Get docs from MCP server
-    const mcpResult = await mcpServer.readResource('docs://list')
-    const fileList = mcpResult.contents?.[0]?.text
-      ? JSON.parse(mcpResult.contents[0].text)
-      : []
-
-    const docResources: Resource[] = fileList.map((filename: string) => ({
-      name: filename,
-      displayName: filename.replace('.md', '').replace(/_/g, ' '),
-      type: 'doc' as const,
-    }))
-    resources.push(...docResources)
-
-    // Get user's notes and materials directly from DB
     if (userId) {
       const [notes, materials] = await Promise.all([
         getAllUserNotes(userId),
@@ -108,7 +106,14 @@ async function fetchResourceContent(uri: string, userId: string): Promise<Resour
       return { type: 'text', content: '' }
     }
 
-    // Fetch PDF bytes from the URL
+    // The text was read once at upload, so an attached PDF costs a database
+    // read rather than a download plus a base64 copy of the whole file on every
+    // single question about it.
+    if (material.extractedText) {
+      return { type: 'text', content: `# ${material.title}\n\n${material.extractedText}` }
+    }
+
+    // Not extracted yet, or extraction failed: fall back to shipping the file.
     try {
       const response = await fetch(material.url)
       if (!response.ok) {
@@ -131,14 +136,7 @@ async function fetchResourceContent(uri: string, userId: string): Promise<Resour
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  const response = await fetch(`${baseUrl}/api/mcp`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tool: 'read', args: { filename: uri } }),
-  })
-  const data = await response.json()
-  return { type: 'text', content: data.content?.[0]?.text || '' }
+  return { type: 'text', content: '' }
 }
 
 export async function askRagQuestion(
@@ -173,6 +171,10 @@ export async function askRagQuestion(
 
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
+    const searchTopicField = (formData.get('searchTopic') as string | null)?.trim()
+    const commandsEnabled = formData.get('commandsEnabled') !== 'false'
+    const commandField = (formData.get('command') as string | null)?.trim()
+    const commandCountField = (formData.get('commandCount') as string | null)?.trim()
 
     await progressStep(
       jobId, 'parsing', 10,
@@ -183,6 +185,9 @@ export async function askRagQuestion(
     const validationResult = RagQuerySchema.safeParse({
       question,
       cellId,
+      ...(searchTopicField ? { searchTopic: searchTopicField } : {}),
+      ...(commandField ? { command: commandField } : {}),
+      ...(commandCountField ? { commandCount: commandCountField } : {}),
     })
 
     if (!validationResult.success) {
@@ -190,7 +195,40 @@ export async function askRagQuestion(
       return fromErrorToFormState(validationResult.error)
     }
 
-    const { cleanQuestion, resources, tools } = parseMcpCommands(validationResult.data.question)
+    const parsed = parseMcpCommands(validationResult.data.question, { commandsEnabled })
+    const { cleanQuestion, resources, unknownTools } = parsed
+    const searchTopic = validationResult.data.searchTopic
+
+    // A chip is an explicit mode, so it wins over anything typed. Slash stays as
+    // an accelerator and lands on the same invocation.
+    const selectedCommand = validationResult.data.command
+    const tools = selectedCommand ? [selectedCommand] : parsed.tools
+
+    // The count reaches the tool as a validated number rather than as prose the
+    // dispatch model has to re-extract. That extraction failing, and a silent
+    // default absorbing the failure, is what turned „10 pytań" into 5.
+    //
+    // Both surfaces converge here: the chip palette posts commandCount, a typed
+    // „/utworz 10 …" yields the same number from its leading token, and either
+    // way it is clamped by the command's own spec before dispatch.
+    const commandSpec = tools[0] ? TOOL_COMMANDS[tools[0]] : undefined
+    const rawCount = validationResult.data.commandCount ?? extractLeadingCount(cleanQuestion)
+    const requestedCount = resolveCommandCount(commandSpec, rawCount)
+    const countOverride =
+      commandSpec?.count && requestedCount !== null
+        ? { [commandSpec.count.param]: requestedCount }
+        : undefined
+
+    // Without this an unrecognised command falls through to a free-form question,
+    // where the model may still call a tool with arguments it invented.
+    if (unknownTools.length > 0 && tools.length === 0) {
+      const available = TOOL_COMMAND_NAMES.map((name) => `/${name}`).join(', ')
+      if (jobId) await errorJob(jobId, 'Nieznane polecenie', `Unknown command: /${unknownTools[0]}`)
+      return toFormState(
+        'ERROR',
+        `Nieznane polecenie /${unknownTools[0]}. Dostępne polecenia: ${available}`
+      )
+    }
 
     if (tools.length > 0 && tools[0]) {
       const toolName = tools[0]
@@ -215,6 +253,9 @@ export async function askRagQuestion(
 
     let additionalContext = ''
     let pdfFiles: Array<{ title: string; base64: string; mimeType: string }> = []
+    // Ids behind the resolved @resources, so retrieval can load those exact
+    // sources rather than searching for something the student already named.
+    const attachmentSourceIds: string[] = []
 
     if (resources.length > 0) {
       await progressStep(
@@ -231,6 +272,10 @@ export async function askRagQuestion(
         )
 
         const validResources = resolvedUris.filter((r): r is { displayName: string; uri: string } => r !== null)
+
+        attachmentSourceIds.push(
+          ...validResources.map(({ uri }) => uri.replace(/^(note|material):\/\//, ''))
+        )
 
         if (validResources.length > 0) {
           await progressStep(
@@ -267,21 +312,14 @@ export async function askRagQuestion(
 
     if (tools.length > 0) {
       const toolName = tools[0]
-      const toolMap: Record<string, any> = {
-        'notatka': TOOL_DEFINITIONS.find(t => t.name === 'notatka_tool'),
-        'utworz': TOOL_DEFINITIONS.find(t => t.name === 'utworz_test'),
-        'podsumuj': TOOL_DEFINITIONS.find(t => t.name === 'podsumuj'),
-        'diagram': TOOL_DEFINITIONS.find(t => t.name === 'diagram_tool'),
-        'fiszka': TOOL_DEFINITIONS.find(t => t.name === 'fiszka_tool'),
-        'planuj': TOOL_DEFINITIONS.find(t => t.name === 'planuj_tool'),
-        'wyklad': TOOL_DEFINITIONS.find(t => t.name === 'wyklad_tool'),
-      }
+      const command = toolName ? TOOL_COMMANDS[toolName] : undefined
+      const toolDefinition = command
+        ? TOOL_DEFINITIONS.find((t) => t.name === command.toolName)
+        : undefined
 
-      if (!toolName || !toolMap[toolName]) {
+      if (!toolDefinition) {
         return toFormState('ERROR', `Unknown tool: ${toolName}`)
       }
-
-      const toolDefinition = toolMap[toolName]
 
       if (jobId) {
         await emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
@@ -312,20 +350,51 @@ export async function askRagQuestion(
         toolInputContent += `=== GŁÓWNE ŹRÓDŁO (wybrane przez użytkownika) ===\n${additionalContext}\n\n`
       }
 
-      // SECONDARY: File Search results (supplementary info from knowledge base)
-      await progressStep(
-        jobId, 'searching', 60,
-        'Przeszukuję bazę wiedzy...',
-        'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
-      )
-      const ragResult = await queryFileSearchOnly(effectiveQuestion)
-      if (ragResult.answer) {
-        toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${ragResult.answer}\n\n`
-        const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+      // SECONDARY: File Search results (supplementary info from knowledge base).
+      // Skip entirely when the user attached their own @resource/PDF — that is
+      // the primary source, so the extra grounded RAG round-trip is pure waste.
+      if (!hasUserResource) {
         await progressStep(
-          jobId, 'searching', 65,
-          `Znaleziono informacje na temat: ${topic}`,
-          'RAG', `Found ${ragResult.answer.length} chars of context`
+          jobId, 'searching', 60,
+          'Przeszukuję bazę wiedzy...',
+          'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
+        )
+        // Raw chunks, not a generated summary of them: one Flash call cheaper and
+        // the tool sees the source wording instead of a paraphrase.
+        //
+        // canonical_only: a generator builds study material, and material built
+        // partly on the student's own half-written note would be indistinguishable
+        // from material built on the curriculum. Widening this is a later,
+        // deliberate step — see the plan's staged rollout.
+        const corpus = await retrieveContext({
+          userId,
+          query: effectiveQuestion,
+          mode: 'canonical_only',
+        })
+        if (corpus.chunks.length > 0) {
+          toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${formatContextChunks(corpus.chunks)}\n\n`
+          const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
+          await progressStep(
+            jobId, 'searching', 65,
+            `Znaleziono informacje na temat: ${topic}`,
+            'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
+          )
+        }
+      } else {
+        await progressStep(
+          jobId, 'searching', 60,
+          'Używam wybranego źródła...',
+          'RAG', 'Skipping knowledge base — user provided a primary source'
+        )
+      }
+
+      // The dispatch call forces a function call, so a source-backed tool handed an
+      // empty prompt invents its own subject instead of declining. Stop before that.
+      if (command?.requiresSource && !toolInputContent.trim() && pdfFiles.length === 0) {
+        if (jobId) await errorJob(jobId, 'Brak materiałów', `No grounded content for ${toolDefinition.name}`)
+        return toFormState(
+          'ERROR',
+          `Nie znalazłem w bazie wiedzy materiałów na temat "${effectiveQuestion}". Doprecyzuj temat lub dołącz własne źródło przez @zasób.`
         )
       }
 
@@ -334,12 +403,12 @@ export async function askRagQuestion(
         'Generuję zawartość z AI...',
         'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`
       )
-      const toolResult = await executeToolWithContent(
-        toolDefinition.name,
-        toolInputContent,
-        toolDefinition,
-        pdfFiles
-      )
+      const toolResult = await executeToolWithContent(toolDefinition.name, toolDefinition, {
+        request: effectiveQuestion,
+        content: toolInputContent,
+        pdfFiles,
+        ...(countOverride ? { overrideArgs: countOverride } : {}),
+      })
 
       await progressStep(
         jobId, 'finalizing', 95,
@@ -348,11 +417,45 @@ export async function askRagQuestion(
       )
       if (jobId) await completeJob(jobId)
 
+      // The answer is payload for the cell, not toast text: FormState.message is
+      // what useToastMessage shows, so it stays a short human status.
+      const generated = toolResult.toolResults?.[toolDefinition.name]?.metadata
+      const label = (toolName && TOOL_LABELS_ACCUSATIVE[toolName]) || 'zawartość'
+
+      // A generator that came up short says so. Silently returning 7 of the 10
+      // asked for is indistinguishable, to the student, from the request never
+      // having arrived.
+      const statusMessage =
+        generated?.shortfall > 0
+          ? `Utworzono ${generated.count} z ${generated.requested} — model nie zwrócił pełnej liczby. Spróbuj ponownie lub zawęź temat.`
+          : `Gotowe — utworzono ${label}`
+
       return {
-        ...toFormState('SUCCESS', toolResult.answer),
+        ...toFormState('SUCCESS', statusMessage),
         values: {
+          answer: toolResult.answer,
           sources: [],
           toolResults: toolResult.toolResults
+        }
+      }
+    }
+
+    // Memory-answered guard: questions about the student's OWN state (progress,
+    // exam, what to revise) are answered from memory alone — no corpus retrieval,
+    // no Flash grounding. Only when the student didn't attach their own resource.
+    if (!additionalContext && pdfFiles.length === 0 && isSelfStateQuestion(cleanQuestion)) {
+      const selfState = await buildSelfStateContext(userId)
+      if (selfState) {
+        await progressStep(
+          jobId, 'searching', 60,
+          'Sprawdzam Twój postęp...',
+          'MEMORY', 'Self-state question — answering from memory, skipping corpus'
+        )
+        const memAnswer = await answerFromMemory(cleanQuestion, selfState)
+        if (jobId) await completeJob(jobId)
+        return {
+          ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
+          values: { answer: memAnswer.answer, sources: [] },
         }
       }
     }
@@ -363,17 +466,49 @@ export async function askRagQuestion(
       'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`
     )
 
-    const result = await queryFileSearchOnly(
-      cleanQuestion,
-      undefined,
-      additionalContext || undefined
-    )
+    // Path A memory: active policies + preferences in the static (cache-friendly)
+    // prefix. Path B: retrieved facts + recent episodes in the volatile tail.
+    // Both fail-safe — return '' if memory is unavailable.
+    const memoryPrefix = await buildStaticPrefix(userId)
+    const memoryTail = await buildMemoryTail(userId, cleanQuestion)
+
+    const hasAttachment = attachmentSourceIds.length > 0 || pdfFiles.length > 0
+
+    // An attachment is the student's explicit pick, so it is the primary source
+    // and the corpus is not consulted. Without one, the tutor reads the
+    // curriculum and — capped, floored and labelled — the student's own library.
+    const context = await retrieveContext({
+      userId,
+      // Retrieval sees the subject alone. Memory and attachments ride in the
+      // generation prompt; putting them in front of the subject is what made
+      // corpus terms come back as "no information".
+      query: searchTopic || cleanQuestion,
+      mode: hasAttachment ? 'explicit_resource' : 'canonical_with_personal',
+      ...(attachmentSourceIds.length ? { attachmentSourceIds } : {}),
+    })
+
+    // Nothing from the curriculum and nothing the student attached: answering
+    // anyway would mean writing curriculum from the model's own knowledge, which
+    // is the failure the source rule exists to prevent.
+    if (!context.hasCanonical && context.chunks.length === 0) {
+      if (jobId) await completeJob(jobId)
+      return {
+        ...toFormState('SUCCESS', 'Brak materiałów'),
+        values: { answer: getNoDataFoundMessage(), sources: [] },
+      }
+    }
+
+    const result = await generateGroundedAnswer(cleanQuestion, context, {
+      ...(additionalContext ? { userContext: additionalContext } : {}),
+      ...(memoryTail ? { memoryTail } : {}),
+      ...(memoryPrefix ? { memoryPrefix } : {}),
+    })
 
     const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
     await progressStep(
       jobId, 'executing', 80,
       `Znaleziono odpowiedź na temat: ${topic}`,
-      'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length || 0}`
+      'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length ? result.sources.join(', ') : 'none — retrieval returned nothing'}`
     )
     await progressStep(
       jobId, 'finalizing', 95,
@@ -383,8 +518,9 @@ export async function askRagQuestion(
     if (jobId) await completeJob(jobId)
 
     return {
-      ...toFormState('SUCCESS', result.answer),
+      ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
       values: {
+        answer: result.answer,
         sources: result.sources
       }
     }
@@ -449,14 +585,16 @@ export async function generateLectureAction(
       'RAG', 'Querying knowledge base for lecture content'
     )
 
-    const ragResult = await queryFileSearchOnly(topic)
+    // canonical_only: a lecture is study material, so it is built on the
+    // curriculum alone.
+    const corpus = await retrieveContext({ userId, query: topic, mode: 'canonical_only' })
     let enrichedContent = planContent
-    if (ragResult.answer) {
-      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${ragResult.answer}`
+    if (corpus.chunks.length > 0) {
+      enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${formatContextChunks(corpus.chunks)}`
       await progressStep(
         jobId, 'searching', 55,
         `Znaleziono materiały na temat: ${topic}`,
-        'RAG', `Found ${ragResult.answer.length} chars of additional context`
+        'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
       )
     }
 
