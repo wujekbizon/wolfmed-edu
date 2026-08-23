@@ -32,8 +32,10 @@ From here the function branches into one of four flows:
 ## Flow B — Self-state questions ("jak mi idzie z farmakologią?", "co powinienem powtórzyć?")
 
 1. Only reached if the student didn't attach their own resource (`@resource`/PDF).
-2. `isSelfStateQuestion(cleanQuestion)` (`src/server/memory/assemble.ts:130` — corrected this round; an earlier pass guessed `gate.ts`) classifies the question as being about the *student themselves* rather than subject matter.
-3. If so: `buildSelfStateContext(userId)` assembles the student's own progress data, and `answerFromMemory(question, selfState)` answers **from memory alone — no corpus retrieval, no grounded generation at all**. This is the routing root `CLAUDE.md` describes: "Facts and episodes... belong solely to questions about the student themselves... they never enter a subject answer."
+2. `classifyTutorIntent(cleanQuestion)` uses a constrained Flash-Lite JSON response to classify the information required as `self_state`, `medical_question`, or `ambiguous`. It does not extract or rewrite the RAG query. If classification is unavailable, the existing RAG path remains the availability fallback.
+3. `self_state` builds explicit `ready`, `empty`, or `unavailable` context. `reconcileStudentMemory` runs once per feed version (or after a genuine empty state), rebuilding missing facts/episodes from committed theory, diagnozy, challenge, practical, and study-log tables through the normal promotion gate.
+4. `ready` is answered from typed memory alone; `empty`/`unavailable` return fixed responses. Six validated recent turns resolve short self-state follow-ups but never enter or rewrite medical retrieval. Memory answers are capped, grouped, actionable, and do not ask follow-up questions.
+5. `medical_question` continues through Flow C unchanged. `ambiguous` requests a complete standalone question.
 
 ## Flow C — Free-form question (the conversational tutor)
 
@@ -46,6 +48,7 @@ The default path when there's no command and it's not a self-state question.
 3. **The "no source, no output" gate**: if `!context.hasCanonical && context.chunks.length === 0` — nothing from the curriculum and nothing the student attached — the action returns `getNoDataFoundMessage()` (`src/helpers/rag-prompts.ts`) instead of letting the model answer from its own pretrained knowledge. This is the single most load-bearing check in the whole function for the "don't hallucinate curriculum content" guarantee.
 4. `generateGroundedAnswer(question, context, { userContext, memoryTail, memoryPrefix })` (`src/server/vertex-rag/generate.ts`) — the actual grounded generation call, with memory folded in as prompt context (never as retrieval input, never as evidence — per Data Sources tier 4).
 5. Returns `{ answer, sources }` — `sources` come from `context.sources` (deduped `{label, origin}` pairs from `retrieveContext()`), rendered by the client as the visible source chips; the model's own text is never trusted to self-cite (Retrieval Rule #5 — `stripContextCitations` is the backstop if it tries).
+6. Trace order follows the turn: `user_msg` before classification/model work, `memory_retrieval`/`rag_retrieval` after recall, then `model_msg` after response. The model row combines semantic-router and answer-call usage into `tokenCost`; its payload keeps input/output/thought/total tokens. Events share `(userId, runId, turnIndex)` and expire after 90 days.
 
 ## Flow D — Generated lecture (a related, separate action)
 
@@ -61,7 +64,7 @@ The default path when there's no command and it's not a self-state question.
 
 Every branch calls `progressStep(jobId, stage, percent, userMessage, logCategory, technicalDetail)` at each meaningful step (parsing → resolving/fetching resources → searching → calling a tool/generating → finalizing). This writes to the same job the client is already listening to via SSE (`GET /api/rag/progress`), giving the UI a live "Przeszukuję bazę wiedzy... → Generuję zawartość z AI... → Gotowe" sequence rather than a single opaque loading spinner for what can be a multi-second, multi-step operation. `completeJob`/`errorJob` terminate the stream on success/failure respectively — see [`14-api-routes.md`](./14-api-routes.md) for the SSE mechanics and [`22-hooks.md`](./22-hooks.md) → `useRagProgress` for the client side.
 
-**Files**: `src/actions/rag-actions.ts`, `src/server/retrieval/context.ts`, `src/server/vertex-rag/`, `src/server/memory/` (`gate.ts`, `assemble.ts` presumably backing `buildStaticPrefix`/`buildMemoryTail`), `src/helpers/{parse-mcp-commands,resolveCommandCount,extractLeadingCount,rag-prompts,formatContextChunks}.ts`, `src/server/progress-store.ts`, `src/constants/toolCommands.ts`.
+**Files**: `src/actions/rag-actions.ts`, `src/server/retrieval/context.ts`, `src/server/vertex-rag/`, `src/server/memory/` (`gate.ts`, assembly, extract/reconcile modules, semantic router, trace writer), `src/helpers/`, `src/server/progress-store.ts`.
 
 ---
 

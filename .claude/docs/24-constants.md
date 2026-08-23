@@ -88,10 +88,12 @@ All 65 files in `src/constants/`. Grouped by domain; each entry lists the file's
 | `embeddings.ts` | `EMBED_DIM`, `EMBEDDING_MODEL`, `EMBED_TIMEOUT_MS`, `EMBED_BACKGROUND_TIMEOUT_MS`, `EMBED_MAX_RETRIES`, `EMBED_RETRY_BASE_MS`, `EMBED_PACE_MS`, `EMBED_BATCH_SIZE` | Embedding model + retry/pacing config shared by the personal library (`libChunks`) and memory (`memFacts`/`memEpisodes`) vector columns — see [`01-database-schema.md`](./01-database-schema.md). |
 | `memoryPolicies.ts` | `PolicyType`, `DefaultPolicy`, `DEFAULT_POLICIES` | Seed data for the `memPolicies` table. |
 | `memoryPreferences.ts` | `PreferenceOption`, `PreferenceDef`, `PREFERENCE_DEFS`, `PREFERENCE_KEYS`, `preferenceValueLabel`, `preferenceLabel` | The allow-list `updatePreferencesAction` validates against (see [`21-server-actions.md`](./21-server-actions.md)) — drives `PreferencesForm` on `/panel/ustawienia`. |
+| `memoryPerformance.ts` | `MEMORY_PERFORMANCE_WINDOW`, `MEMORY_WEAK_PERCENT`, `MEMORY_STRONG_PERCENT` | Shared deterministic assessment window/levels. |
+| `memoryMessages.ts` | `EMPTY_SELF_STATE_MESSAGE`, `UNAVAILABLE_SELF_STATE_MESSAGE`, `AMBIGUOUS_TUTOR_INTENT_MESSAGE` | Fixed user-facing outcomes when typed memory is empty/unavailable or semantic intent needs clarification; none asks a contextual follow-up or falls through to curriculum RAG. |
 | `commands.ts` | `COMMANDS` | The autocomplete-facing command list — **derived** from `toolCommands.ts`'s `TOOL_COMMAND_LIST` via `.map()`, not hand-maintained separately. The source has an explicit comment: this derivation exists because the two lists had previously drifted (5 vs. 7 entries) when maintained by hand. |
 | `toolCommands.ts` | `TOOL_COMMANDS`, `TOOL_COMMAND_NAMES`, `TOOL_COMMAND_LIST`, `PALETTE_COMMANDS` | The `/commands` catalog referenced in root `CLAUDE.md`'s `requiresSource` rule — each command's source requirement lives here. |
 | `progress.ts` | `STAGE_PROGRESS`, `STAGE_MESSAGES`, `TOOL_LABELS`, `TOOL_LABELS_ACCUSATIVE`, `TOOL_LABELS_GENITIVE`, `PROGRESS_DELAY`, `JOB_TTL`, `KEEP_ALIVE_INTERVAL`, `DEFAULT_SSE_RETRY`, `JOB_WAIT_TIMEOUT`, `SSE_POLL_INTERVAL` | Everything driving the `/api/rag/progress` SSE job-progress UI (see [`14-api-routes.md`](./14-api-routes.md)) — including Polish grammatical-case label variants (`_ACCUSATIVE`/`_GENITIVE`) for natural-language progress messages. |
-| `ragCell.ts` | `RAG_MAX_MESSAGES` | Cap on messages kept in a RAG chat cell's history. |
+| `ragCell.ts` | Persisted cell-history cap plus stricter server-bound recent-turn count/text/serialized limits. |
 
 ## Uploads & study viewer
 

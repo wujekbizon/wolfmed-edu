@@ -6,6 +6,7 @@ import type {
   SSELogData,
   SSEProgressData,
 } from '@/types/progressTypes'
+import { STAGE_MESSAGES, STAGE_PROGRESS } from '@/constants/progress'
 
 export interface ProgressState {
   jobId: string
@@ -43,7 +44,14 @@ const IDLE: ProgressState = {
 function reducer(state: ProgressState, action: ProgressAction): ProgressState {
   switch (action.type) {
     case 'start':
-      return { ...IDLE, jobId: action.jobId, connectionState: 'connecting' }
+      return {
+        ...IDLE,
+        jobId: action.jobId,
+        stage: 'parsing',
+        message: STAGE_MESSAGES.parsing,
+        progress: STAGE_PROGRESS.parsing,
+        connectionState: 'connecting',
+      }
 
     case 'connection':
       return { ...state, connectionState: action.connectionState }

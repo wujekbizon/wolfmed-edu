@@ -1,6 +1,8 @@
 import { useCallback } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useCellsStore } from '@/store/useCellsStore'
 import { createGeneratedDeckAction } from '@/actions/flashcardDecks'
+import { flashcardDecksKey } from '@/constants/flashcards'
 import { parseFlashcardContent } from '@/helpers/flashcardCellHelpers'
 import { showToast } from '@/hooks/useToastMessage'
 import type { CellTypes } from '@/types/cellTypes'
@@ -14,6 +16,7 @@ import type { CellTypes } from '@/types/cellTypes'
  */
 export function useInsertGeneratedCell() {
   const insertCellAfterWithContent = useCellsStore((s) => s.insertCellAfterWithContent)
+  const queryClient = useQueryClient()
 
   return useCallback(
     async (afterCellId: string, cellType: CellTypes, content: string) => {
@@ -34,8 +37,9 @@ export function useInsertGeneratedCell() {
         return
       }
 
+      await queryClient.invalidateQueries({ queryKey: flashcardDecksKey() })
       insertCellAfterWithContent(afterCellId, 'flashcard', JSON.stringify({ deckId: result.deckId }))
     },
-    [insertCellAfterWithContent]
+    [insertCellAfterWithContent, queryClient]
   )
 }

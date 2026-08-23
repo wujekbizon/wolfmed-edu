@@ -99,17 +99,20 @@ Deep dive: `src/server/memory/README.md`. The flow, and the boundary that matter
 
 ```
 WRITE                            READ (per turn)
-quiz completed                   buildStaticPrefix ─▶ policies + preferences
-  → after(): onQuizCompleted           (Path A: stable, cache-friendly)
+committed learning event         buildStaticPrefix ─▶ policies + preferences
+  → after(): extractor                  (Path A: stable, cache-friendly)
   → promoteFact (gate)                        ▼
-      dedup · contradiction        systemInstruction  → tone and depth only
+      dedup · reactivation         systemInstruction  → tone and depth only
       → supersession
-  → episode logged               buildMemoryTail ──▶ facts + recent episodes
-                                       (Path B: retrieved, volatile)
+  → idempotent episode           buildMemoryTail ──▶ facts + recent episodes
+  → versioned reconciliation           (Path B: retrieved, volatile)
+tutor turn → user/retrieval/model traces
+                                  recent six turns ──▶ self-state continuity
 RETENTION                                   ▼
 /api/cron/memory-retention           prompt tail — self-state answers only
   traces >90d, expired facts
-  revoked >30d                     isSelfStateQuestion → answerFromMemory
+  revoked >30d, active episodes
+  >180d                            semantic self-state route → answerFromMemory
                                         Flash-Lite, NO corpus retrieval
 ERASE
 deleteUserAccount ← Clerk user.deleted

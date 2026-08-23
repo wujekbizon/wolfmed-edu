@@ -94,7 +94,7 @@ Every AI feature (tutor, mind map, tests, flashcards, plans, lectures, `/command
 | 1. Curriculum (corpus) | Vertex AI RAG corpus, global | `src/server/vertex-rag/retrieve.ts` → `retrieveContexts()`. Distance-based (lower = better). A corpus "miss" (`isCorpusMiss`, threshold `CORPUS_MISS_DISTANCE = 0.34` in `constants/rag.ts`) drops the **whole** source rather than keep its least-bad chunks. |
 | 2. Personal library | The student's own notes/materials | `src/server/library/retrieve.ts` → `retrieveLibrary()`. Similarity-based (higher = better), trigram + HNSW vector search over `libChunks`. Gated by `mode === 'canonical_with_personal'` and the `ENABLE_IMPLICIT_PERSONAL_RETRIEVAL` flag. |
 | 3. Attachments (`@resource`) | One explicitly picked note/material | `getAttachedSourceText()` — returns the **whole** source, not sampled chunks, when `mode === 'explicit_resource'`. |
-| 4. Student memory | Facts/episodes/preferences about the student, never subject content | `src/server/memory/` — routed separately via `isSelfStateQuestion`, never enters a retrieval query. |
+| 4. Student memory | Facts/episodes/preferences about the student, never subject content | `src/server/memory/` — routed separately via constrained semantic intent, never enters or rewrites a retrieval query. |
 
 Key mechanics inside `retrieveContext()`:
 - The corpus and personal-library reads run **in parallel** (`Promise.all`).
@@ -111,7 +111,7 @@ See root `CLAUDE.md` → "🔒 Retrieval rules" for the full non-negotiable list
 | `src/server/vertex-rag/` | Vertex AI corpus client, ingest, retrieve, generate, corpus management |
 | `src/server/retrieval/` | The single `retrieveContext()` entry point — fuses corpus + library |
 | `src/server/library/` | Personal library: chunking, embedding sweep, retrieval, note/material sync |
-| `src/server/memory/` | Tutor memory: extract, retrieve, assemble (prompt prefix), erase (GDPR), gate (self-state routing) |
+| `src/server/memory/` | Tutor memory: semantic intent routing, extract, retrieve, assemble, promote through the gate, erase (GDPR) |
 | `src/server/planner/` | Learning-plan catalog, scheduling engine, progress tracking |
 | `src/server/tools/` | Tool/command definitions + executor for the AI tutor's `/commands` |
 

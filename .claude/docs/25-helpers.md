@@ -46,6 +46,14 @@ The implementation behind the retrieval rules in root `CLAUDE.md` and [`00-archi
 | `parse-mcp-commands.ts` | `parseMcpCommands(...)` | Parses `/commands` typed into the tutor chat. |
 | `resolveCommandCount.ts` | `resolveCommandCount(...)` | Resolves a count argument on a `/command` (e.g. "/fiszki 10"). |
 | `extractLeadingCount.ts` | `extractLeadingCount(text)` | Pulls a leading number off a string (used by the above). |
+| `resolveTutorRoute.ts` | `resolveTutorRoute(result)` | Maps the validated semantic intent contract to typed memory, clarification, or the unchanged RAG path; router unavailability degrades to existing RAG. |
+| `toTutorContextMessages.ts` | `toTutorContextMessages(messages)` | Reduces cell history to six bounded role/text turns; sources never ride back as conversational context. |
+| `formatTutorConversation.ts` | `formatTutorConversation(messages)` | Adds explicit user/assistant labels for semantic routing and memory answers. |
+| `renderMemoryPreferences.ts` | `renderMemoryPreferences(preferences)` | Shared exact preference rendering. |
+| `getMemoryPerformanceLabel.ts` | `getMemoryPerformanceLabel(percent)` | Shared Polish assessment wording. |
+| `getChallengeTypeLabel.ts` | `getChallengeTypeLabel(type)` | Converts internal challenge keys to Polish labels before promotion. |
+| `getModelTokenUsage.ts` | `getModelTokenUsage(metadata)` | Normalizes Gemini prompt/candidate/thought/total usage metadata. |
+| `combineModelTokenUsage.ts` | `combineModelTokenUsage(...usages)` | Sums router + answer model calls into one turn-level usage record. |
 | `stripContentParameter.ts` | `stripContentParameter(definition)` | Strips a tool definition's `content` param before sending it to the model (keeps the schema the model sees lean). |
 | `rag-prompts.ts` | `SYSTEM_PROMPT`, `getNoDataFoundMessage(...)` | The tutor's system prompt and the "no source, no output" refusal message (root `CLAUDE.md` → "No source, no output"). |
 | `progress-helpers.ts` | `getStageMessage(stage, tool?)`, `formatSSEMessage`, `formatKeepAlive` | Human-readable progress-stage text + SSE wire-format helpers for `/api/rag/progress`. |

@@ -97,6 +97,12 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 **Edge case — `@resource` overrides a corpus miss**: attach a personal note (`@notatka`) on that same out-of-scope topic and ask again. Expect: the tutor **does** answer, grounded in the attached note (`explicit_resource` mode bypasses the corpus-miss refusal, since the attachment is now the primary source) — this confirms the attachment tier is genuinely primary, not just supplementary.
 
+**Edge case — fresh-user self-state routing**: with a premium account that has no memory facts, preferences, or episodes, ask for an evaluation of personal learning progress. Expect: an honest message that there is not enough progress data, `sources: []`, and no curriculum search. Then ask a normal medical question and expect the same grounded RAG behavior and sources as before semantic routing.
+
+**Edge case — memory reconciliation and traces**: keep canonical learning rows but clear test-user facts/episodes/traces. One SideMenu progress question should show progress immediately, submit exactly once, rebuild typed memory, and create one promotion marker plus three ordered trace events sharing one turn index. The `model_msg` row should have non-null total `tokenCost` and usage breakdown. Repeating in the same cell adds exactly three events at the next turn index and no duplicate fact/episode.
+
+**Edge case — short follow-up**: after a progress answer, submit a contextual continuation. Expect the six-turn bounded context to resolve it memory-only. A later medical question must keep the same retrieval query/sources as before.
+
 ---
 
 ## TC-6 — Post on the forum and see notifications clear

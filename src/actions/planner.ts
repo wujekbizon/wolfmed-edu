@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { eq, and, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
@@ -26,6 +27,7 @@ import {
 import { checkRateLimit } from '@/lib/rateLimit'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { FormState } from '@/types/actionTypes'
+import { onStudyLogRecorded } from '@/server/memory/extractStudyLog'
 
 const PLANNER_PATHS = ['/panel/plan', '/panel']
 
@@ -416,14 +418,18 @@ export async function logStudySessionAction(
       }
     }
 
-    await db.insert(studyLogs).values({
-      userId,
-      planId: plan?.id ?? null,
-      conceptId: parsed.conceptId || null,
-      minutes: parsed.minutes,
-      note: parsed.note || null,
-      source: 'manual',
-    })
+    const [studyLog] = await db
+      .insert(studyLogs)
+      .values({
+        userId,
+        planId: plan?.id ?? null,
+        conceptId: parsed.conceptId || null,
+        minutes: parsed.minutes,
+        note: parsed.note || null,
+        source: 'manual',
+      })
+      .returning({ id: studyLogs.id })
+    after(() => onStudyLogRecorded({ userId, studyLogId: studyLog!.id }))
   } catch (error) {
     return fromErrorToFormState(error)
   }

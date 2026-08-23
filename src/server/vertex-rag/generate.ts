@@ -8,6 +8,9 @@ import { stripContextCitations } from '@/helpers/stripContextCitations'
 import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI } from './client'
 import { parseGoogleApiError } from './errors'
+import { formatTutorConversation } from '@/helpers/formatTutorConversation'
+import { getModelTokenUsage } from '@/helpers/getModelTokenUsage'
+import type { ModelTokenUsage, TutorContextMessage } from '@/types/memoryTypes'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
 // the (8×) output rate. None of the RAG paths need it, so disable everywhere.
@@ -22,19 +25,29 @@ function composeSystemInstruction(memoryPrefix?: string): string {
 // Memory-answered guard (M3): questions about the student's own state are
 // answered from their memory context alone — a single Flash-Lite call, no corpus
 // retrieval, no Flash grounding.
-const MEMORY_ANSWER_SYSTEM = `Jesteś asystentem nauki Wolfmed. Odpowiadasz na pytania ucznia o jego własny postęp, cele, preferencje i aktywności WYŁĄCZNIE na podstawie poniższych informacji z pamięci. Jeśli brakuje informacji, powiedz to wprost i zaproponuj, co uczeń może zrobić. Odpowiadaj po polsku, zwięźle i przyjaźnie.`
+const MEMORY_ANSWER_SYSTEM = `Jesteś asystentem nauki Wolfmed. Odpowiadasz na pytania ucznia o jego własny postęp, cele, preferencje i aktywności WYŁĄCZNIE na podstawie informacji z pamięci. Odpowiadaj po polsku, konkretnie i w maksymalnie 120 słowach. Bez powitania i wstępu. Grupuj obszary z podobnymi wynikami zamiast opisywać każdy osobno. Podaj najważniejszą ocenę oraz maksymalnie dwa priorytety do poprawy. Nie powtarzaj tych samych wyników w ocenie i zaleceniach. Jeśli brakuje informacji, powiedz to wprost. Odpowiedź ma być samodzielna: nie zadawaj pytań, nie proponuj dalszej pomocy i nie zapraszaj do kontynuowania rozmowy.`
 
 export async function answerFromMemory(
   question: string,
-  memoryContext: string
-): Promise<{ answer: string }> {
+  memoryContext: string,
+  recentMessages: TutorContextMessage[] = []
+): Promise<{ answer: string; usage?: ModelTokenUsage }> {
   const ai = getGoogleAI()
+  const recentContext = formatTutorConversation(recentMessages)
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-lite',
-    contents: `INFORMACJE Z PAMIĘCI:\n${memoryContext}\n\nPytanie ucznia: ${question}`,
-    config: { systemInstruction: MEMORY_ANSWER_SYSTEM, thinkingConfig: NO_THINKING },
+    contents: `INFORMACJE Z PAMIĘCI:\n${memoryContext}${recentContext ? `\n\nOSTATNIE WYPOWIEDZI:\n${recentContext}` : ''}\n\nBIEŻĄCA WYPOWIEDŹ UCZNIA: ${question}`,
+    config: {
+      systemInstruction: MEMORY_ANSWER_SYSTEM,
+      maxOutputTokens: 256,
+      thinkingConfig: NO_THINKING,
+    },
   })
-  return { answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.' }
+  const usage = getModelTokenUsage(response.usageMetadata)
+  return {
+    answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.',
+    ...(usage ? { usage } : {}),
+  }
 }
 
 export interface GroundedAnswerOptions {
@@ -61,7 +74,7 @@ export async function generateGroundedAnswer(
   question: string,
   context: RetrievedContext,
   options: GroundedAnswerOptions = {}
-): Promise<{ answer: string; sources: SourceRef[] }> {
+): Promise<{ answer: string; sources: SourceRef[]; usage?: ModelTokenUsage }> {
   try {
     if (context.chunks.length === 0) {
       return { answer: getNoDataFoundMessage(), sources: [] }
@@ -89,7 +102,12 @@ export async function generateGroundedAnswer(
       throw new Error('Empty response from Gemini')
     }
 
-    return { answer: stripContextCitations(answer), sources: context.sources }
+    const usage = getModelTokenUsage(response.usageMetadata)
+    return {
+      answer: stripContextCitations(answer),
+      sources: context.sources,
+      ...(usage ? { usage } : {}),
+    }
   } catch (error) {
     console.error('Error generating grounded answer:', error)
     throw parseGoogleApiError(error)

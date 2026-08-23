@@ -16,6 +16,8 @@ import {
 import { toFormState, fromErrorToFormState } from "@/helpers/toFormState"
 import type { FormState } from "@/types/actionTypes"
 import type { ExamAnswers, PracticalExam, PracticalExamState } from "@/types/praktycznyTypes"
+import { after } from "next/server"
+import { onStudyLogRecorded } from "@/server/memory/extractStudyLog"
 
 function errorState(message: string): PracticalExamState {
   return { status: "ERROR", message, timestamp: Date.now(), result: null }
@@ -68,12 +70,14 @@ export async function gradePracticalExamAction(
       120
     )
     try {
-      await insertStudyLog({
+      const studyLogId = await insertStudyLog({
         userId,
         minutes: studiedMinutes,
         source: "practical-exam",
-        note: exam.title ? `Egzamin praktyczny: ${exam.title}`.slice(0, 500) : null,
+        categoryKey: "opiekun-medyczny",
+        note: `Egzamin praktyczny: ${exam.title || exam.id} — wynik ${result.percent}%, ${result.passed ? "zaliczony" : "niezaliczony"}`.slice(0, 500),
       })
+      after(() => onStudyLogRecorded({ userId, studyLogId }))
     } catch (error) {
       console.error("Failed to log practical exam study time:", error)
     }

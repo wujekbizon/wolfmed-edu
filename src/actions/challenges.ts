@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { revalidatePath } from "next/cache"
+import { after } from "next/server"
 import { db } from "@/server/db/index"
 import { checkRateLimit } from "@/lib/rateLimit"
 import {
@@ -21,6 +22,7 @@ import type {
   ProcedureProgress,
 } from "@/types/challengeTypes"
 import type { Procedure, StepWithId } from "@/types/dataTypes"
+import { onChallengeCompleted } from "@/server/memory/extractChallenge"
 
 /**
  * Get challenge progress for a specific procedure
@@ -148,8 +150,8 @@ export async function submitOrderStepsAction(
     const score = Math.round((correctCount / correctSteps.length) * 100)
 
     // Save challenge completion
-    await db.transaction(async (tx) => {
-      await saveChallengeCompletion(tx, {
+    const completion = await db.transaction(async (tx) => {
+      const saved = await saveChallengeCompletion(tx, {
         userId,
         procedureId,
         challengeType: "order-steps",
@@ -172,7 +174,20 @@ export async function submitOrderStepsAction(
           procedureName,
         })
       }
+      return saved
     })
+
+    after(() =>
+      onChallengeCompleted({
+        userId,
+        completionId: completion.id,
+        procedureId,
+        procedureName,
+        challengeType: "order-steps",
+        currentScore: score,
+        attempts: completion.attempts,
+      })
+    )
 
     revalidatePath(`/panel/procedury/opiekun-medyczny/${procedureId}/wyzwania`)
     revalidatePath("/panel")

@@ -1,0 +1,3 @@
+export const MEMORY_PERFORMANCE_WINDOW = 3
+export const MEMORY_WEAK_PERCENT = 65
+export const MEMORY_STRONG_PERCENT = 85

@@ -62,7 +62,7 @@ All 28 files in `src/store/`, one Zustand store per file. Per [`00-architecture.
 
 | Store | State & actions | Notes |
 |---|---|---|
-| `useRagStore.ts` | `pendingTopic: string \| null`, `pendingAutoSubmitCellId: string \| null` + `setPendingTopic`, `setPendingAutoSubmitCellId` | Cross-component signaling for the tutor: when the learning hub or a mind-map "explain this" action spawns a new RAG cell with a topic already chosen, it sets `pendingTopic`/`pendingAutoSubmitCellId` here; `useRagAutoSubmit` (see [`22-hooks.md`](./22-hooks.md)) watches for its own cell id to match and fires the query automatically, then clears the pending id. Not persisted — this is a one-shot handoff, not durable state. |
+| `useRagStore.ts` | Pending topic/cell id setters plus atomic `consumePendingTopic` / `consumePendingAutoSubmit` | One-shot cross-component tutor handoff. Consumers read current store state while clearing it synchronously, preventing React development effect replay from creating/submitting twice. Not persisted. |
 | `useSettingsStore.ts` | `showMobileAI` (default `true`), `slashCommandsEnabled` (default `true`) + `setShowMobileAI(v)`, `setSlashCommandsEnabled(v)` | Two **persisted** (`persist`, key `wolfmed-settings`, `localStorage`) preference flags. Confirmed distinct from `useSettingsModalStore` — that one holds only the settings modal's `isOpen` boolean; this one holds the actual preference values the modal edits. `slashCommandsEnabled` is read by `useRagCellInput`/`useRagAutoSubmit` to gate whether a typed `/` triggers the command autocomplete/dispatcher at all. |
 
 ---

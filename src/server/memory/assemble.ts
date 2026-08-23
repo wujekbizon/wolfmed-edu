@@ -1,11 +1,7 @@
 import 'server-only'
 import { getActivePolicies } from './stores/policies'
 import { getPreferencesMap } from './stores/preferences'
-import { getActiveFacts } from './stores/facts'
-import { getRecentEpisodes } from './stores/episodes'
-import { retrieveFacts } from './retrieve'
-import { ASSEMBLY_TOKEN_BUDGET, CHARS_PER_TOKEN } from './config'
-import { preferenceLabel, preferenceValueLabel } from '@/constants/memoryPreferences'
+import { renderMemoryPreferences } from '@/helpers/renderMemoryPreferences'
 import type { MemPolicy } from '@/server/db/memory-schema'
 
 // ── Path A: static, exact, exhaustive — no ranking ──────────────────────────
@@ -36,16 +32,6 @@ function renderPolicy(policy: MemPolicy): string | null {
   }
 }
 
-function renderPreferences(prefs: Record<string, unknown>): string[] {
-  const lines: string[] = []
-  for (const [key, raw] of Object.entries(prefs)) {
-    const value = typeof raw === 'string' ? raw : String(raw ?? '')
-    if (!value || value === 'brak') continue
-    lines.push(`- ${preferenceLabel(key)}: ${preferenceValueLabel(key, value)}`)
-  }
-  return lines
-}
-
 export async function buildStaticPrefix(userId: string): Promise<string> {
   try {
     const [policies, prefs] = await Promise.all([
@@ -63,7 +49,7 @@ export async function buildStaticPrefix(userId: string): Promise<string> {
       sections.push(`ZASADY (obowiązujące polityki):\n${policyLines.join('\n')}`)
     }
 
-    const prefLines = renderPreferences(prefs)
+    const prefLines = renderMemoryPreferences(prefs)
     if (prefLines.length > 0) {
       sections.push(`PREFERENCJE UCZNIA:\n${prefLines.join('\n')}`)
     }
@@ -71,93 +57,6 @@ export async function buildStaticPrefix(userId: string): Promise<string> {
     return sections.join('\n\n')
   } catch (error) {
     console.error('[memory] buildStaticPrefix failed, degrading to no memory:', error)
-    return ''
-  }
-}
-
-// ── Path B: ranked volatile tail (M3) ───────────────────────────────────────
-// Retrieved facts + recent episodes for the tutor's volatile prompt section.
-// Token-budgeted: reserved nothing here, fill to budget dropping whole items
-// (never truncate a record mid-way). Fail-safe → '' so the tutor never breaks.
-export async function buildMemoryTail(userId: string, query: string): Promise<string> {
-  try {
-    // Skip the query embedding entirely when the student has no facts yet — no
-    // point paying an embedding call (and quota) to search an empty set.
-    const anyFact = await getActiveFacts(userId, 1)
-    if (anyFact.length === 0) {
-      const episodesOnly = await getRecentEpisodes(userId, { limit: 3 })
-      if (episodesOnly.length === 0) return ''
-      return `OSTATNIE AKTYWNOŚCI UCZNIA:\n${episodesOnly.map((e) => `- ${e.summary}`).join('\n')}`
-    }
-
-    const budgetChars = ASSEMBLY_TOKEN_BUDGET * CHARS_PER_TOKEN
-    const [factResult, episodes] = await Promise.all([
-      retrieveFacts(userId, query, 8),
-      getRecentEpisodes(userId, { limit: 3 }),
-    ])
-
-    const sections: string[] = []
-    let used = 0
-
-    const factLines: string[] = []
-    for (const hit of factResult.hits) {
-      if (hit.tier === 'low') continue // only high/standard confidence into the prompt
-      const line = `- ${hit.content}`
-      if (used + line.length > budgetChars) break
-      factLines.push(line)
-      used += line.length
-    }
-    if (factLines.length > 0) sections.push(`WIEDZA O UCZNIU:\n${factLines.join('\n')}`)
-
-    const epLines: string[] = []
-    for (const ep of episodes) {
-      const line = `- ${ep.summary}`
-      if (used + line.length > budgetChars) break
-      epLines.push(line)
-      used += line.length
-    }
-    if (epLines.length > 0) sections.push(`OSTATNIE AKTYWNOŚCI UCZNIA:\n${epLines.join('\n')}`)
-
-    return sections.join('\n\n')
-  } catch (error) {
-    console.error('[memory] buildMemoryTail failed:', error)
-    return ''
-  }
-}
-
-// Heuristic: is the student asking about their OWN state (progress, exam, what to
-// revise)? These are answerable from memory alone — no corpus retrieval needed.
-export function isSelfStateQuestion(question: string): boolean {
-  const s = question.toLowerCase()
-  return /(kiedy mam|mój egzamin|moje słab|moich słab|co mam (dziś )?powtórz|czego mam się uczyć|mój postęp|jak mi idzie|moje wynik|na czym stoję|moje cele|co powinienem powtórz)/.test(
-    s
-  )
-}
-
-// Full self-state context (all active facts + preferences + recent episodes) for
-// the memory-answered guard. Returns '' if the student has no memory yet.
-export async function buildSelfStateContext(userId: string): Promise<string> {
-  try {
-    const [facts, prefs, episodes] = await Promise.all([
-      getActiveFacts(userId, 40),
-      getPreferencesMap(userId),
-      getRecentEpisodes(userId, { limit: 5 }),
-    ])
-
-    const sections: string[] = []
-
-    if (facts.length > 0) {
-      sections.push(`FAKTY O UCZNIU:\n${facts.map((f) => `- ${f.content}`).join('\n')}`)
-    }
-    const prefLines = renderPreferences(prefs)
-    if (prefLines.length > 0) sections.push(`PREFERENCJE:\n${prefLines.join('\n')}`)
-    if (episodes.length > 0) {
-      sections.push(`OSTATNIE AKTYWNOŚCI:\n${episodes.map((e) => `- ${e.summary}`).join('\n')}`)
-    }
-
-    return sections.join('\n\n')
-  } catch (error) {
-    console.error('[memory] buildSelfStateContext failed:', error)
     return ''
   }
 }

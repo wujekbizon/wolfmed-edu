@@ -2,6 +2,7 @@
 
 import { auth } from '@clerk/nextjs/server'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
 import { db } from '@/server/db/index'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { checkCourseAccessAction } from '@/actions/course-actions'
@@ -31,6 +32,7 @@ import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { FormState } from '@/types/actionTypes'
 import type { GeneratedQuizData } from '@/types/generatedQuizTypes'
 import type { Procedure } from '@/types/dataTypes'
+import { onChallengeCompleted } from '@/server/memory/extractChallenge'
 
 const QUIZ_SCHEMAS = {
   'knowledge-quiz': GeneratedKnowledgeQuizSchema,
@@ -175,8 +177,8 @@ export async function submitGeneratedQuizAction(
     const procedureName =
       (quiz.quizJson as { procedureName?: string }).procedureName ?? ''
 
-    await db.transaction(async (tx) => {
-      await saveChallengeCompletion(tx, {
+    const completion = await db.transaction(async (tx) => {
+      const saved = await saveChallengeCompletion(tx, {
         userId,
         procedureId: quiz.procedureId,
         challengeType: quiz.challengeType,
@@ -197,7 +199,20 @@ export async function submitGeneratedQuizAction(
           procedureName,
         })
       }
+      return saved
     })
+
+    after(() =>
+      onChallengeCompleted({
+        userId,
+        completionId: completion.id,
+        procedureId: quiz.procedureId,
+        procedureName: procedureName || quiz.procedureId,
+        challengeType: quiz.challengeType,
+        currentScore: score,
+        attempts: completion.attempts,
+      })
+    )
 
     revalidatePath('/panel')
 

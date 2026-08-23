@@ -229,9 +229,14 @@ Nothing in the request path reads from disk.
 **4. Student memory — never content.** Memory describes the *student*, not the
 subject, and is not evidence. Preferences and policies (`memoryPrefix`) shape tone
 and depth for the conversational tutor only. Facts and episodes (`memoryTail`)
-belong solely to questions about the student themselves, which `isSelfStateQuestion`
-routes to a memory-only path; they never enter a subject answer and never reach a
-retrieval query.
+belong solely to questions about the student themselves, which the constrained
+`classifyTutorIntent` semantic router sends to a memory-only path; they never
+enter a retrieval query or alter its query text.
+
+Memory formation is deterministic: committed theory tests, diagnozy exams,
+procedure challenges, practical-exam study logs, and manual study logs pass
+through the promotion gate. Tutor text stays append-only trace memory and is
+never auto-promoted. Versioned reconciliation rebuilds missing derived memory.
 
 | Feature | Corpus | Personal | Attachments | Memory |
 |---|---|---|---|---|
