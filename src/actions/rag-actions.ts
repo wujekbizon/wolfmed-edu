@@ -39,7 +39,7 @@ import { getLectureByHash } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
 import { after } from 'next/server'
 import { safeJsonParse } from '@/helpers/safeJsonParse'
-import type { TutorContextMessage } from '@/types/memoryTypes'
+import type { ModelTokenUsage, TutorContextMessage } from '@/types/memoryTypes'
 import { reconcileStudentMemory } from '@/server/memory/reconcileStudentMemory'
 import {
   recordTutorModelTrace,
@@ -47,6 +47,7 @@ import {
   startTutorTurnTrace,
 } from '@/server/memory/recordTutorTurnTrace'
 import { RAG_RECENT_CONTEXT_SERIALIZED_LENGTH } from '@/constants/ragCell'
+import { combineModelTokenUsage } from '@/helpers/combineModelTokenUsage'
 
 async function progressStep(
   jobId: string | null,
@@ -470,6 +471,7 @@ export async function askRagQuestion(
       userId,
       question: cleanQuestion,
     })
+    let routingUsage: ModelTokenUsage | undefined
 
     if (!additionalContext && pdfFiles.length === 0) {
       await progressStep(
@@ -479,6 +481,7 @@ export async function askRagQuestion(
       )
 
       const intentResult = await classifyTutorIntent(cleanQuestion, recentTutorMessages)
+      routingUsage = intentResult.status === 'classified' ? intentResult.usage : undefined
       const tutorRoute = resolveTutorRoute(intentResult)
 
       if (tutorRoute === 'clarify') {
@@ -488,6 +491,7 @@ export async function askRagQuestion(
             recordTutorModelTrace({
               ...tutorTrace,
               answer: AMBIGUOUS_TUTOR_INTENT_MESSAGE,
+              ...(routingUsage ? { tokenUsage: routingUsage } : {}),
               latencyMs: Date.now() - tutorTurnStartedAt,
             })
           )
@@ -532,6 +536,7 @@ export async function askRagQuestion(
               recordTutorModelTrace({
                 ...tutorTrace,
                 answer,
+                ...(routingUsage ? { tokenUsage: routingUsage } : {}),
                 latencyMs: Date.now() - tutorTurnStartedAt,
               })
             )
@@ -551,11 +556,13 @@ export async function askRagQuestion(
           selfState.context,
           recentTutorMessages
         )
+        const tokenUsage = combineModelTokenUsage(routingUsage, memAnswer.usage)
         if (tutorTrace) {
           after(() =>
             recordTutorModelTrace({
               ...tutorTrace,
               answer: memAnswer.answer,
+              ...(tokenUsage ? { tokenUsage } : {}),
               latencyMs: Date.now() - tutorTurnStartedAt,
             })
           )
@@ -612,6 +619,7 @@ export async function askRagQuestion(
           recordTutorModelTrace({
             ...tutorTrace,
             answer,
+            ...(routingUsage ? { tokenUsage: routingUsage } : {}),
             latencyMs: Date.now() - tutorTurnStartedAt,
           })
         )
@@ -628,11 +636,13 @@ export async function askRagQuestion(
       ...(memoryTail ? { memoryTail } : {}),
       ...(memoryPrefix ? { memoryPrefix } : {}),
     })
+    const tokenUsage = combineModelTokenUsage(routingUsage, result.usage)
     if (tutorTrace) {
       after(() =>
         recordTutorModelTrace({
           ...tutorTrace,
           answer: result.answer,
+          ...(tokenUsage ? { tokenUsage } : {}),
           latencyMs: Date.now() - tutorTurnStartedAt,
         })
       )

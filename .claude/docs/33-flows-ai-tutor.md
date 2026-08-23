@@ -48,7 +48,7 @@ The default path when there's no command and it's not a self-state question.
 3. **The "no source, no output" gate**: if `!context.hasCanonical && context.chunks.length === 0` — nothing from the curriculum and nothing the student attached — the action returns `getNoDataFoundMessage()` (`src/helpers/rag-prompts.ts`) instead of letting the model answer from its own pretrained knowledge. This is the single most load-bearing check in the whole function for the "don't hallucinate curriculum content" guarantee.
 4. `generateGroundedAnswer(question, context, { userContext, memoryTail, memoryPrefix })` (`src/server/vertex-rag/generate.ts`) — the actual grounded generation call, with memory folded in as prompt context (never as retrieval input, never as evidence — per Data Sources tier 4).
 5. Returns `{ answer, sources }` — `sources` come from `context.sources` (deduped `{label, origin}` pairs from `retrieveContext()`), rendered by the client as the visible source chips; the model's own text is never trusted to self-cite (Retrieval Rule #5 — `stripContextCitations` is the backstop if it tries).
-6. Trace order follows the turn: `user_msg` before classification/model work, `memory_retrieval`/`rag_retrieval` after recall, then `model_msg` after response. Events share `(userId, runId, turnIndex)` and expire after 90 days.
+6. Trace order follows the turn: `user_msg` before classification/model work, `memory_retrieval`/`rag_retrieval` after recall, then `model_msg` after response. The model row combines semantic-router and answer-call usage into `tokenCost`; its payload keeps input/output/thought/total tokens. Events share `(userId, runId, turnIndex)` and expire after 90 days.
 
 ## Flow D — Generated lecture (a related, separate action)
 

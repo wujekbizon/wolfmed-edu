@@ -4,6 +4,7 @@ import { TutorIntentClassificationSchema } from '@/server/schema'
 import { getGoogleAI } from '@/server/vertex-rag/client'
 import { formatTutorConversation } from '@/helpers/formatTutorConversation'
 import type { TutorContextMessage, TutorIntentResult } from '@/types/memoryTypes'
+import { getModelTokenUsage } from '@/helpers/getModelTokenUsage'
 
 const SYSTEM_INSTRUCTION = `Klasyfikujesz pytanie ucznia w aplikacji edukacyjnej.
 self_state: poprawna odpowiedź wymaga prywatnych danych ucznia, takich jak wyniki, postęp, cele, preferencje, aktywność lub gotowość egzaminacyjna.
@@ -46,8 +47,13 @@ export async function classifyTutorIntent(
     const parsed = response.text ? JSON.parse(response.text) : null
     const result = TutorIntentClassificationSchema.safeParse(parsed)
     if (!result.success) throw new Error('Invalid tutor intent response')
+    const usage = getModelTokenUsage(response.usageMetadata)
 
-    return { status: 'classified', classification: result.data }
+    return {
+      status: 'classified',
+      classification: result.data,
+      ...(usage ? { usage } : {}),
+    }
   } catch (error) {
     console.error('[memory] classifyTutorIntent failed, preserving RAG fallback:', error)
     return { status: 'unavailable' }

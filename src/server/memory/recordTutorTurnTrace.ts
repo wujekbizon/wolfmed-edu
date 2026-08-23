@@ -65,7 +65,11 @@ export async function recordTutorModelTrace(input: TutorModelTraceInput): Promis
       userId: input.userId,
       turnIndex: input.turnIndex,
       eventType: 'model_msg',
-      payload: { text: input.answer },
+      payload: {
+        text: input.answer,
+        ...(input.tokenUsage ? { usage: input.tokenUsage } : {}),
+      },
+      tokenCost: input.tokenUsage?.totalTokens ?? null,
       latencyMs: input.latencyMs,
     })
   } catch (error) {

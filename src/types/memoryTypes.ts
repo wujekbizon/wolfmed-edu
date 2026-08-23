@@ -5,13 +5,24 @@ export interface TutorIntentClassification {
   confidence: number
 }
 
+export interface ModelTokenUsage {
+  inputTokens: number
+  outputTokens: number
+  thoughtTokens: number
+  totalTokens: number
+}
+
 export interface TutorContextMessage {
   role: 'user' | 'assistant'
   text: string
 }
 
 export type TutorIntentResult =
-  | { status: 'classified'; classification: TutorIntentClassification }
+  | {
+      status: 'classified'
+      classification: TutorIntentClassification
+      usage?: ModelTokenUsage
+    }
   | { status: 'unavailable' }
 
 export type TutorRoute = 'memory' | 'rag' | 'clarify'
@@ -32,6 +43,7 @@ export interface TutorRetrievalTraceInput extends TutorTraceContext {
 export interface TutorModelTraceInput extends TutorTraceContext {
   answer: string
   latencyMs: number
+  tokenUsage?: ModelTokenUsage
 }
 
 export interface FactCandidate {

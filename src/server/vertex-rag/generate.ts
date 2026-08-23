@@ -9,7 +9,8 @@ import { executeToolLocally, type ToolResult } from '@/server/tools/executor'
 import { getGoogleAI } from './client'
 import { parseGoogleApiError } from './errors'
 import { formatTutorConversation } from '@/helpers/formatTutorConversation'
-import type { TutorContextMessage } from '@/types/memoryTypes'
+import { getModelTokenUsage } from '@/helpers/getModelTokenUsage'
+import type { ModelTokenUsage, TutorContextMessage } from '@/types/memoryTypes'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
 // the (8×) output rate. None of the RAG paths need it, so disable everywhere.
@@ -30,7 +31,7 @@ export async function answerFromMemory(
   question: string,
   memoryContext: string,
   recentMessages: TutorContextMessage[] = []
-): Promise<{ answer: string }> {
+): Promise<{ answer: string; usage?: ModelTokenUsage }> {
   const ai = getGoogleAI()
   const recentContext = formatTutorConversation(recentMessages)
   const response = await ai.models.generateContent({
@@ -42,7 +43,11 @@ export async function answerFromMemory(
       thinkingConfig: NO_THINKING,
     },
   })
-  return { answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.' }
+  const usage = getModelTokenUsage(response.usageMetadata)
+  return {
+    answer: response.text || 'Nie mam jeszcze wystarczających informacji, aby odpowiedzieć.',
+    ...(usage ? { usage } : {}),
+  }
 }
 
 export interface GroundedAnswerOptions {
@@ -69,7 +74,7 @@ export async function generateGroundedAnswer(
   question: string,
   context: RetrievedContext,
   options: GroundedAnswerOptions = {}
-): Promise<{ answer: string; sources: SourceRef[] }> {
+): Promise<{ answer: string; sources: SourceRef[]; usage?: ModelTokenUsage }> {
   try {
     if (context.chunks.length === 0) {
       return { answer: getNoDataFoundMessage(), sources: [] }
@@ -97,7 +102,12 @@ export async function generateGroundedAnswer(
       throw new Error('Empty response from Gemini')
     }
 
-    return { answer: stripContextCitations(answer), sources: context.sources }
+    const usage = getModelTokenUsage(response.usageMetadata)
+    return {
+      answer: stripContextCitations(answer),
+      sources: context.sources,
+      ...(usage ? { usage } : {}),
+    }
   } catch (error) {
     console.error('Error generating grounded answer:', error)
     throw parseGoogleApiError(error)

@@ -27,7 +27,9 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
   ready/empty/unavailable states and never falls through to the corpus. Rolling
   Six bounded recent turns support short self-state follow-ups without changing
   medical RAG. Each free-form turn appends `user_msg`, retrieval, and `model_msg`
-  trace events under one `(runId, turnIndex)` for replay/audit.
+  trace events under one `(runId, turnIndex)` for replay/audit. Gemini usage from
+  semantic routing plus answer generation is combined into `model_msg.tokenCost`,
+  with input/output/thought/total breakdown retained in its payload.
 - **M5 (done)** — GDPR/RODO: `erase.ts` is part of the Clerk `user.deleted`
   transaction — tombstones facts/episodes under a random `deleted:*` owner,
   hard-deletes preferences/traces, and logs a pseudonymous deletion event. Nightly
