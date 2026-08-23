@@ -5,4 +5,4 @@ export const UNAVAILABLE_SELF_STATE_MESSAGE =
   'Nie mogę teraz odczytać Twoich wyników. Spróbuj ponownie za chwilę.'
 
 export const AMBIGUOUS_TUTOR_INTENT_MESSAGE =
-  'Czy pytasz o swój postęp w nauce, czy o wyjaśnienie zagadnienia medycznego?'
+  'Napisz pełne pytanie: opisz, czy chodzi o Twój postęp w nauce, czy o zagadnienie medyczne.'

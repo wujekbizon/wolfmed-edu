@@ -2,6 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { TutorIntentClassificationSchema } from '@/server/schema'
 import { resolveTutorRoute } from '@/helpers/resolveTutorRoute'
+import { AMBIGUOUS_TUTOR_INTENT_MESSAGE } from '@/constants/memoryMessages'
 
 test('accepts the closed semantic intent contract', () => {
   assert.equal(
@@ -55,7 +56,7 @@ test('routes only self-state away from existing RAG', () => {
   assert.equal(resolveTutorRoute({ status: 'unavailable' }), 'rag')
 })
 
-test('asks for clarification instead of guessing ambiguous intent', () => {
+test('requests a standalone clarification without asking a question', () => {
   assert.equal(
     resolveTutorRoute({
       status: 'classified',
@@ -63,4 +64,5 @@ test('asks for clarification instead of guessing ambiguous intent', () => {
     }),
     'clarify'
   )
+  assert.equal(AMBIGUOUS_TUTOR_INTENT_MESSAGE.includes('?'), false)
 })

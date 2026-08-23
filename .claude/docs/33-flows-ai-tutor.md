@@ -34,7 +34,7 @@ From here the function branches into one of four flows:
 1. Only reached if the student didn't attach their own resource (`@resource`/PDF).
 2. `classifyTutorIntent(cleanQuestion)` uses a constrained Flash-Lite JSON response to classify the information required as `self_state`, `medical_question`, or `ambiguous`. It does not extract or rewrite the RAG query. If classification is unavailable, the existing RAG path remains the availability fallback.
 3. `self_state` calls `buildSelfStateContext(userId)`, which returns an explicit `ready`, `empty`, or `unavailable` state. `ready` is answered by `answerFromMemory` from typed memory alone; `empty` and `unavailable` return honest fixed responses. None of these outcomes consults the corpus or displays source chips.
-4. `medical_question` continues through Flow C unchanged. `ambiguous` asks whether the student means their progress or a medical topic instead of guessing.
+4. `medical_question` continues through Flow C unchanged. `ambiguous` instructs the student to send a complete standalone question instead of guessing. Memory answers are complete and actionable; they never end with a question or invite a contextual follow-up, because prior turns are not yet sent back to the server.
 
 ## Flow C — Free-form question (the conversational tutor)
 

@@ -22,7 +22,7 @@ function composeSystemInstruction(memoryPrefix?: string): string {
 // Memory-answered guard (M3): questions about the student's own state are
 // answered from their memory context alone — a single Flash-Lite call, no corpus
 // retrieval, no Flash grounding.
-const MEMORY_ANSWER_SYSTEM = `Jesteś asystentem nauki Wolfmed. Odpowiadasz na pytania ucznia o jego własny postęp, cele, preferencje i aktywności WYŁĄCZNIE na podstawie poniższych informacji z pamięci. Jeśli brakuje informacji, powiedz to wprost i zaproponuj, co uczeń może zrobić. Odpowiadaj po polsku, zwięźle i przyjaźnie.`
+const MEMORY_ANSWER_SYSTEM = `Jesteś asystentem nauki Wolfmed. Odpowiadasz na pytania ucznia o jego własny postęp, cele, preferencje i aktywności WYŁĄCZNIE na podstawie poniższych informacji z pamięci. Jeśli brakuje informacji, powiedz to wprost. Podaj od razu konkretne, wykonalne zalecenia wynikające z dostępnych danych. Odpowiedź ma być samodzielna i kompletna: nie zadawaj pytań, nie proponuj dalszej pomocy i nie zapraszaj do kontynuowania rozmowy. Odpowiadaj po polsku, zwięźle i przyjaźnie.`
 
 export async function answerFromMemory(
   question: string,
