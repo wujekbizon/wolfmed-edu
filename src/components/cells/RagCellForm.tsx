@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useRef } from 'react'
+import { startTransition, useActionState, useEffect, useRef } from 'react'
 import { askRagQuestion } from '@/actions/rag-actions'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import FieldError from '@/components/FieldError'
@@ -15,6 +15,7 @@ import { useRagToolResults } from '@/hooks/useRagToolResults'
 import { useAttachExplanationToMindMap } from '@/hooks/useAttachExplanationToMindMap'
 import { useCommandSelection } from '@/hooks/useCommandSelection'
 import { useStickToBottom } from '@/hooks/useStickToBottom'
+import { toTutorContextMessages } from '@/helpers/toTutorContextMessages'
 import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
 import CommandBar from './CommandBar'
 import RagConversation from './RagConversation'
@@ -33,9 +34,13 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
 
   const handleSubmit = (formData: FormData) => {
     conversation.rememberQuestion(formData.get('question') as string)
+    formData.set(
+      'recentMessages',
+      JSON.stringify(toTutorContextMessages(conversation.messages))
+    )
     // Send the id the stream was actually opened for, not the previous run's.
     formData.append('jobId', progress.startListening())
-    action(formData)
+    startTransition(() => action(formData))
   }
 
   // searchTopic rides the auto-submit only: it describes the prose this cell was
@@ -77,7 +82,7 @@ export default function RagCellForm({ cell }: { cell: { id: string; content: str
             messages={conversation.messages}
             pendingQuestion={conversation.pendingQuestion}
             progress={
-              isPending && (
+              (isPending || progress.stage !== 'idle') && (
                 <RagProgressIndicator
                   stage={progress.stage}
                   progress={progress.progress}

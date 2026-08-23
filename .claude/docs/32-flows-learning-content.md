@@ -79,6 +79,7 @@ All three paths share `nextCardPosition(deckId)` (`src/server/flashcardAccess.ts
 3. **Server-side scoring, not client-side**: re-loads the procedure from the DB (`getProcedureById`) and compares the user's submitted step order against `procedure.data.algorithm` step-by-step, computing `score = round(correctCount / totalSteps * 100)` — the client's drag-and-drop UI never computes or reports its own score.
 4. Inside a transaction: `saveChallengeCompletion()` writes the `challengeCompletions` row, then `checkAllChallengesComplete(tx, userId, procedureId)` checks whether **all 5** challenge types for this procedure are now complete for this user — if so, `awardBadge(tx, {...})` inserts a `procedureBadges` row **in the same transaction**, so a badge is never awarded without its triggering completion actually having been recorded (or vice versa).
 5. `revalidatePath` on both the challenge page and `/panel` (badges show on the dashboard).
+6. After commit, `onChallengeCompleted` recomputes a per-procedure performance fact and writes an idempotent episode keyed by completion id + attempt count.
 
 This is the general pattern for challenges — AI-generated quiz challenges (`submitGeneratedQuizAction`, `src/actions/generatedQuizzes.ts`) follow the same shape (server-side grading, `challengeCompletions` write, same all-5-complete badge check), just against a different content source (an AI-generated quiz row instead of the static `algorithm` array).
 

@@ -21,7 +21,7 @@ All three cron routes share the same guard: `Authorization: Bearer ${CRON_SECRET
 ### `GET /api/cron/memory-retention`
 `src/app/api/cron/memory-retention/route.ts`. Nightly GDPR/storage hygiene on the memory layer ([`01-database-schema.md`](./01-database-schema.md) → memory tables), driven by `RETENTION` config (`@/server/memory/config`):
 - Deletes `memTraces` older than `RETENTION.traceDays` (90 days).
-- Deletes `memEpisodes` where `status = 'revoked'` and older than `RETENTION.revokedFactDays`.
+- Deletes active `memEpisodes` older than 180 days and revoked episodes older than `RETENTION.revokedFactDays`.
 - Deletes `memFacts` that are either expired (`expiresAt` passed) or revoked-and-old, **but only if nothing else still points to them** (`NOT EXISTS ... WHERE superseded_by = f.fact_id`) — the self-referential fact-revision chain clears from the tail across multiple runs rather than breaking a FK.
 
 ---

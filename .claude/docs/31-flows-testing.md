@@ -49,7 +49,7 @@
 2. `<PracticalExamRunner exam={exam} />` presents the documentation-filling exercise; on completion, submits `gradePracticalExamAction` (`src/actions/praktyczny.ts:24`).
 3. Course-access-gated (`opiekun-medyczny`), rate-limited (`egzamin:grade`), validated (`GradePracticalExamSchema`).
 4. Resolves the exam definition the same two ways as step 1 (static-first, then generated), parses the submitted `answers` JSON, and grades via `gradePracticalExam()` (`src/helpers/praktycznyGrading.ts`) — **all grading logic runs server-side**; the client never computes or could spoof its own score.
-5. **Side effect**: logs a `studyLogs` entry (`insertStudyLog`) crediting the attempt as learning time — clamped to `[1, 120]` minutes (120 = the real MED.14 practical exam's official time limit), guarding against a runaway timer from an abandoned browser tab inflating a student's logged study time.
+5. **Side effect**: logs a `studyLogs` entry crediting `[1,120]` minutes plus score/pass result; `after()` promotes the committed log into an idempotent practical-exam episode.
 6. Returns `{ status, message, result }` with the percent score and a pass/fail message (`75%` threshold, stated inline in the return message).
 
 **Files**: `src/actions/praktyczny.ts`, `src/helpers/praktycznyGrading.ts`, `src/lib/praktycznyUtils.ts`, `src/server/queries.ts` (`insertStudyLog`).
@@ -72,7 +72,7 @@
 3. Student works through the case in the UI (`WykonanieStep`/`WykonanieMannequinPanel` etc. — see [`26-components.md`](./26-components.md) → `diagnozy/egzamin/`), including a body-zone-picking interaction on the 3D mannequin (`egzamin/mannequin/`). The mannequin subsystem (model asset, vertex→zone mapping, click-to-zone raycasting, and how to regenerate the zone map) has its own deep-dive at `scripts/MANNEQUIN.md` — not duplicated here, but worth knowing it exists before touching anything in `egzamin/mannequin/` or `scripts/*mannequin*`.
 4. Submits `submitDiagnozyExamAction({ slug, answers, zones, timeSpent })` (`:132`) — rate-limited (`diagnozy:exam:submit`), validated (`SubmitDiagnozyExamSchema`).
 5. Re-fetches the actual diagnoza by slug (never trusts a client-supplied "correct answer" — only the slug and the student's picks) and grades via `gradeDiagnozyExam()` (`src/helpers/gradeDiagnozyExam.ts`, pass threshold `DIAGNOZY_EXAM_PASS_THRESHOLD = 75`).
-6. Inserts a `diagnozyExamAttempts` row (`score`, per-step `stepScores`, `timeSpent`, `passed`). Returns the full result for the UI to render.
+6. Inserts a `diagnozyExamAttempts` row. Its returned id drives an `after()` hook that recomputes the last-three performance fact and writes an idempotent episode.
 7. Attempt history is visible on the same page via a separately-suspended panel reading `getUserDiagnozyExamAttempts` — see [`12-pages-panel-learning.md`](./12-pages-panel-learning.md).
 
 **Files**: `src/actions/diagnozy.ts`, `src/helpers/{buildDiagnozyExam,gradeDiagnozyExam}.ts`, `src/components/diagnozy/egzamin/`.

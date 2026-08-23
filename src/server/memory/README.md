@@ -14,24 +14,25 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 - **M1 (done)** — Path A: policy + preference stores, default policies seeded,
   preferences settings UI, and the static-prefix injection into the tutor
   (fail-safe). No ranked memory yet.
-- **M2 (done, minus mind-map hook)** — facts/episodes stores, promotion gate
-  (dedup + contradiction → supersession), Path B hybrid retrieval (pgvector +
-  trgm + ILIKE cascade), and the deterministic **quiz** hook: on quiz completion
-  (`submitTestAction` → `after()` → `onQuizCompleted`) a per-category performance
-  fact is recomputed/superseded and a quiz episode logged. The mind-map hook is
-  deferred — mastery is currently client-only state with no DB persistence to
-  hook; wiring it needs mastery persisted first.
+- **M2 (done, minus client-only activities)** — facts/episodes stores, atomic
+  promotion/reactivation/supersession, idempotent episodes, and Path B hybrid
+  retrieval. Deterministic hooks cover theory tests, diagnozy exams, procedure
+  challenges, practical exams, and manual study logs. Versioned reconciliation
+  rebuilds missing memory from canonical tables without embeddings. Flashcard
+  review and mind-map mastery remain client-only with no committed event to promote.
 - **M3 (done, minus rolling summary)** — Path B injected into the tutor: retrieved
   facts + recent episodes in the volatile prompt tail (token-budgeted, fail-safe).
   A constrained Flash-Lite semantic router separates self-state from medical
   questions without changing the RAG query. Self-state recall returns explicit
   ready/empty/unavailable states and never falls through to the corpus. Rolling
-  summary deferred (needs conversation-turn persistence the app doesn't have yet).
+  Six bounded recent turns support short self-state follow-ups without changing
+  medical RAG. Each free-form turn appends `user_msg`, retrieval, and `model_msg`
+  trace events under one `(runId, turnIndex)` for replay/audit.
 - **M5 (done)** — GDPR/RODO: `erase.ts` is part of the Clerk `user.deleted`
   transaction — tombstones facts/episodes under a random `deleted:*` owner,
   hard-deletes preferences/traces, and logs a pseudonymous deletion event. Nightly
   retention cron (`/api/cron/memory-retention`, vercel.json) purges traces >90d,
-  expired facts, and revoked facts/episodes >30d (FK-safe fact deletes).
+  active episodes >180d, expired facts, and revoked facts/episodes >30d.
 - **M4 — remaining (optional, ships last)**: combined-call LLM extraction +
   background episode distillation. Per the plan, build last and kill if the gate
   rejection logs show noise.
@@ -45,7 +46,11 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 | `stores/policies.ts` | Exact-match reads + versioned upsert of policies (never similarity). |
 | `stores/preferences.ts` | Per-user preference upsert + load-all. |
 | `classifyTutorIntent.ts` | Constrained semantic routing between typed self-state memory, medical RAG, and clarification. Classification failure preserves the existing RAG fallback. |
-| `assemble.ts` | Builds the static policy/preference prefix, ranked fact/episode tail, and explicit ready/empty/unavailable self-state context. |
+| `assemble.ts` | Builds the static policy/preference prefix. |
+| `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded volatile recall and explicit ready/empty/unavailable self-state context. |
+| `extract*.ts` | Deterministic committed-event → fact/episode hooks. |
+| `reconcile*Memory.ts` | Versioned, idempotent rebuild from learning tables. |
+| `recordTutorTurnTrace.ts` | Append-only user/retrieval/model trace sequence. |
 
 Tables live in `src/server/db/memory-schema.ts` (re-exported from `db/schema.ts`)
 so `drizzle-kit` and the ORM manage them: `wolfmed_mem_{policies,preferences,facts,episodes,traces,deletion_events}`.

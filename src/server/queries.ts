@@ -1909,7 +1909,7 @@ export const saveChallengeCompletion = async (
     // is granted off `passed`, so downgrading it would strip an earned badge.
     const previous = existing[0]
 
-    await tx
+    const [row] = await tx
       .update(challengeCompletions)
       .set({
         score: Math.max(previous.score, data.score),
@@ -1925,14 +1925,25 @@ export const saveChallengeCompletion = async (
           eq(challengeCompletions.challengeType, data.challengeType)
         )
       )
+      .returning({
+        id: challengeCompletions.id,
+        attempts: challengeCompletions.attempts,
+      })
+    return row!
   } else {
-    // Insert new completion
-    await tx.insert(challengeCompletions).values({
-      ...data,
-      passed,
-      attempts: 1,
-      completedAt: new Date(),
-    })
+    const [row] = await tx
+      .insert(challengeCompletions)
+      .values({
+        ...data,
+        passed,
+        attempts: 1,
+        completedAt: new Date(),
+      })
+      .returning({
+        id: challengeCompletions.id,
+        attempts: challengeCompletions.attempts,
+      })
+    return row!
   }
 }
 
@@ -2426,16 +2437,20 @@ export async function insertStudyLog(data: {
   procedureId?: string | null
   conceptId?: string | null
   note?: string | null
-}): Promise<void> {
-  await db.insert(studyLogs).values({
-    userId: data.userId,
-    minutes: data.minutes,
-    source: data.source,
-    categoryKey: data.categoryKey ?? null,
-    procedureId: data.procedureId ?? null,
-    conceptId: data.conceptId ?? null,
-    note: data.note ?? null,
-  })
+}): Promise<string> {
+  const [row] = await db
+    .insert(studyLogs)
+    .values({
+      userId: data.userId,
+      minutes: data.minutes,
+      source: data.source,
+      categoryKey: data.categoryKey ?? null,
+      procedureId: data.procedureId ?? null,
+      conceptId: data.conceptId ?? null,
+      note: data.note ?? null,
+    })
+    .returning({ id: studyLogs.id })
+  return row!.id
 }
 
 export const getActivePlan = cache(async (userId: string) => {
@@ -2620,8 +2635,12 @@ export async function insertDiagnozyExamAttempt(attempt: {
   stepScores: unknown
   timeSpent: number
   passed: boolean
-}): Promise<void> {
-  await db.insert(diagnozyExamAttempts).values(attempt)
+}): Promise<string> {
+  const [row] = await db
+    .insert(diagnozyExamAttempts)
+    .values(attempt)
+    .returning({ id: diagnozyExamAttempts.id })
+  return row!.id
 }
 
 export const getUserDiagnozyExamAttempts = cache(

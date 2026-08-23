@@ -233,6 +233,11 @@ belong solely to questions about the student themselves, which the constrained
 `classifyTutorIntent` semantic router sends to a memory-only path; they never
 enter a retrieval query or alter its query text.
 
+Memory formation is deterministic: committed theory tests, diagnozy exams,
+procedure challenges, practical-exam study logs, and manual study logs pass
+through the promotion gate. Tutor text stays append-only trace memory and is
+never auto-promoted. Versioned reconciliation rebuilds missing derived memory.
+
 | Feature | Corpus | Personal | Attachments | Memory |
 |---|---|---|---|---|
 | Conversational tutor | yes | yes | yes | preferences only |

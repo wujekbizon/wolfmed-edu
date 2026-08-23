@@ -1,14 +1,14 @@
 import { db } from '@/server/db/index'
 import { memTraces, memEpisodes } from '@/server/db/memory-schema'
-import { and, eq, lt, sql } from 'drizzle-orm'
+import { and, eq, lt, or, sql } from 'drizzle-orm'
 import { NextResponse } from 'next/server'
 import { RETENTION } from '@/server/memory/config'
 import { cleanupDeletedAccountOperations } from '@/server/account-deletion/cleanupDeletedAccountOperations'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
-// Nightly memory retention: traces > 90 days, expired facts, and revoked
-// facts/episodes older than 30 days. Facts are deleted FK-safely — the
+// Nightly memory retention: traces, active/revoked episodes, and expired/revoked
+// facts use their configured windows. Facts are deleted FK-safely — the
 // self-referential superseded_by means a revoked fact still pointed at by another
 // row is kept until that pointer is gone (chains clear from the tail over runs).
 export async function GET(request: Request) {
@@ -21,6 +21,9 @@ export async function GET(request: Request) {
     const now = new Date()
     const traceCutoff = new Date(now.getTime() - RETENTION.traceDays * DAY_MS)
     const revokedCutoff = new Date(now.getTime() - RETENTION.revokedFactDays * DAY_MS)
+    const activeEpisodeCutoff = new Date(
+      now.getTime() - RETENTION.activeEpisodeDays * DAY_MS
+    )
 
     const tracesDeleted = await db
       .delete(memTraces)
@@ -29,7 +32,15 @@ export async function GET(request: Request) {
 
     const episodesDeleted = await db
       .delete(memEpisodes)
-      .where(and(eq(memEpisodes.status, 'revoked'), lt(memEpisodes.completedAt, revokedCutoff)))
+      .where(
+        or(
+          and(eq(memEpisodes.status, 'revoked'), lt(memEpisodes.completedAt, revokedCutoff)),
+          and(
+            eq(memEpisodes.status, 'active'),
+            lt(memEpisodes.completedAt, activeEpisodeCutoff)
+          )
+        )
+      )
       .returning({ id: memEpisodes.episodeId })
 
     const factResult = await db.execute(sql`

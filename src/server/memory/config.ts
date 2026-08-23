@@ -36,6 +36,7 @@ export const CHARS_PER_TOKEN = 4
 export const RETENTION = {
   traceDays: 90,
   revokedFactDays: 30,
+  activeEpisodeDays: 180,
 } as const
 
 // ── Table names ─────────────────────────────────────────────────────────────

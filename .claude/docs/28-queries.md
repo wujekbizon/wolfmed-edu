@@ -51,7 +51,7 @@ Every function below is read directly from source: real signature, return shape,
 | `getProcedureById` | `(id) => ExtendedProcedures \| null` | Single row, no course scoping. |
 | `getProcedureOptions` | `(course) => {id, name}[]` | Lightweight id+name list specifically for planner-wizard pickers — `name` is pulled from the JSONB `data->>'name'` column and used to sort, not a real indexed column. |
 | `getProcedureBySlug` | `(course, slug) => ExtendedProcedures \| null` | Slugs are unique **within a course**, so both are required — a slug alone isn't guaranteed unique across courses. |
-| `saveChallengeCompletion` | `(tx, {userId, procedureId, challengeType, score, timeSpent}) => void` — **write, transaction-scoped** (`tx: any`, no typed transaction param) | Upsert-by-hand: checks for an existing completion, and if found, **never downgrades**: `score: Math.max(previous.score, data.score)`, `passed: previous.passed \|\| passed` — a retake can improve a score or a pass, never revoke one, per the inline comment (a badge is granted off `passed`, so downgrading it would strip an earned badge). Increments `attempts` via a raw SQL `+1`. Not `cache()`-wrapped, correctly — must run fresh inside its caller's transaction every time. |
+| `saveChallengeCompletion` | `(tx, {...}) => {id, attempts}` — **write, transaction-scoped** | Never downgrades personal best/pass; returned identity/version drives the idempotent post-commit memory event. |
 | `checkAllChallengesComplete` | `(tx, userId, procedureId) => boolean` — transaction-scoped | Looks up the procedure's `course`, gets that course's required challenge-type set via `challengeTypesForCourse()` (see [`25-helpers.md`](./25-helpers.md)), and checks whether the user has a **passed** completion for every required type — filtering out completions for types no longer in the required set (handles a challenge type having been removed from the course after some users already completed it). |
 | `awardBadge` | `(tx, {userId, procedureId, procedureName, badgeImageUrl?}) => void` — transaction-scoped | Idempotent: no-ops if a badge for this `(userId, procedureId)` pair already exists. Falls back to a hardcoded placeholder image URL if the procedure has none. |
 | `getChallengeCompletion` | `(userId, procedureId, challengeType) => ChallengeCompletion \| undefined` | Single completion lookup, all three keys required. |
@@ -71,7 +71,7 @@ Every function below is read directly from source: real signature, return shape,
 | `insertDiagnozaCompletion` | `(userId, diagnozaSlug) => void` — **write** | `.onConflictDoNothing()` — safe to call repeatedly for the same case, no duplicate rows or error on a re-practice. |
 | `getDiagnozaFormulations` | `() => {slug, text}[]` | Pulls just the `diagnozaPielegniarska` JSONB field across all cases, ordered by `section` — likely feeds a reference/study list rather than the full case view. |
 | `getDiagnozyForExam` | `() => Diagnoza[]` | Loads **every** case's full `data` JSON — the practical-exam question pool. No filtering; the caller (exam generation) is expected to sample from the full set. |
-| `insertDiagnozyExamAttempt` | `(attempt: {userId, diagnozaSlug, score, stepScores, timeSpent, passed}) => void` — **write** | Plain insert, no upsert — every exam attempt gets its own row (unlike `diagnozyProgress`, which is idempotent per case). |
+| `insertDiagnozyExamAttempt` | `(attempt: {...}) => attemptId` — **write** | Every attempt gets a row; returned id is memory provenance. |
 | `getUserDiagnozyExamAttempts` | `(userId, limit=10) => attempt[]` | Newest-first, capped at `limit`. |
 
 ## Practical exams & generated quizzes
@@ -180,7 +180,7 @@ Every function below is read directly from source: real signature, return shape,
 | `getPlanById` | `(planId) => LearningPlan \| null` | No `userId` filter — ownership must be checked by the caller. |
 | `getConceptById` | `(conceptId) => Concept \| null` | Same — no ownership scoping in this function itself. |
 | `getStudyLogsSince` | `(userId, since) => row[]` | Raw log rows since a timestamp — one of four `*ActivitySince` functions (with `getTestActivitySince`, `getChallengeActivitySince`, `getNoteActivitySince`) that together feed the planner's cross-feature activity ledger; each pulls from a different table with the same "since a date" shape rather than one combined query. |
-| `insertStudyLog` | `(data: {userId, minutes, source, categoryKey?, procedureId?, conceptId?, note?}) => void` — **write** | The shared ledger-write function called from the test-taking, practical-exam, and planner flows wherever study time needs logging (per its own inline comment) — features call this on completion so their time counts toward planner progress, streaks, and daily goals. Not `cache()`-wrapped. |
+| `insertStudyLog` | `(data: {...}) => studyLogId` — **write** | Shared study-ledger write; returned id drives practical/manual-study memory episodes. |
 
 ## User profile & stats
 

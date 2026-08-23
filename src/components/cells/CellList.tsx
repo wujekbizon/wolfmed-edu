@@ -25,7 +25,7 @@ export default function CellList({
     initialized,
     initializeFromServer,
   } = useCellsStore()
-  const { pendingTopic, setPendingTopic, setPendingAutoSubmitCellId } = useRagStore()
+  const { pendingTopic, consumePendingTopic, setPendingAutoSubmitCellId } = useRagStore()
 
   useEffect(() => {
     if (hasHydrated && !initialized) initializeFromServer(initialCells)
@@ -33,18 +33,25 @@ export default function CellList({
 
   useEffect(() => {
     if (initialized && pendingTopic) {
+      const topic = consumePendingTopic()
+      if (!topic) return
       insertCellAfter(null, 'rag')
 
       const newCellId = useCellsStore.getState().order[0]
 
       if (newCellId) {
-        updateCell(newCellId, buildRagCellContent(pendingTopic))
+        updateCell(newCellId, buildRagCellContent(topic))
         setPendingAutoSubmitCellId(newCellId)
       }
-
-      setPendingTopic(null)
     }
-  }, [initialized, pendingTopic, insertCellAfter, updateCell, setPendingTopic, setPendingAutoSubmitCellId])
+  }, [
+    initialized,
+    pendingTopic,
+    insertCellAfter,
+    updateCell,
+    consumePendingTopic,
+    setPendingAutoSubmitCellId,
+  ])
 
   if (!initialized) return null
 

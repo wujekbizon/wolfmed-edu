@@ -12,6 +12,8 @@ import {
 } from "@/server/queries"
 import { buildDiagnozyExam } from "@/helpers/buildDiagnozyExam"
 import { gradeDiagnozyExam } from "@/helpers/gradeDiagnozyExam"
+import { after } from "next/server"
+import { onDiagnozyExamCompleted } from "@/server/memory/extractDiagnozy"
 import type {
   BodyZoneAssignments,
   DiagnozaFillData,
@@ -168,7 +170,7 @@ export async function submitDiagnozyExamAction(payload: {
       validationResult.data.answers,
       validationResult.data.zones ?? {}
     )
-    await insertDiagnozyExamAttempt({
+    const attemptId = await insertDiagnozyExamAttempt({
       userId,
       diagnozaSlug: diagnoza.slug,
       score: result.score,
@@ -176,6 +178,13 @@ export async function submitDiagnozyExamAction(payload: {
       timeSpent: Math.round(validationResult.data.timeSpent),
       passed: result.passed,
     })
+    after(() =>
+      onDiagnozyExamCompleted({
+        userId,
+        attemptId,
+        diagnozaSlug: diagnoza.slug,
+      })
+    )
 
     return { status: "SUCCESS", result }
   } catch {

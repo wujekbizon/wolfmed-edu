@@ -13,9 +13,9 @@ import { formatContextChunks } from '@/helpers/formatContextChunks'
 import { getNoDataFoundMessage } from '@/helpers/rag-prompts'
 import {
   buildStaticPrefix,
-  buildMemoryTail,
-  buildSelfStateContext,
 } from '@/server/memory/assemble'
+import { buildMemoryTail } from '@/server/memory/buildMemoryTail'
+import { buildSelfStateContext } from '@/server/memory/buildSelfStateContext'
 import { classifyTutorIntent } from '@/server/memory/classifyTutorIntent'
 import { resolveTutorRoute } from '@/helpers/resolveTutorRoute'
 import {
@@ -37,6 +37,16 @@ import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/
 import { saveLectureInternal } from '@/actions/lectures'
 import { getLectureByHash } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
+import { after } from 'next/server'
+import { safeJsonParse } from '@/helpers/safeJsonParse'
+import type { TutorContextMessage } from '@/types/memoryTypes'
+import { reconcileStudentMemory } from '@/server/memory/reconcileStudentMemory'
+import {
+  recordTutorModelTrace,
+  recordTutorRetrievalTrace,
+  startTutorTurnTrace,
+} from '@/server/memory/recordTutorTurnTrace'
+import { RAG_RECENT_CONTEXT_SERIALIZED_LENGTH } from '@/constants/ragCell'
 
 async function progressStep(
   jobId: string | null,
@@ -181,6 +191,12 @@ export async function askRagQuestion(
     const commandsEnabled = formData.get('commandsEnabled') !== 'false'
     const commandField = (formData.get('command') as string | null)?.trim()
     const commandCountField = (formData.get('commandCount') as string | null)?.trim()
+    const recentMessagesField = formData.get('recentMessages')
+    const recentMessages =
+      typeof recentMessagesField === 'string' &&
+      recentMessagesField.length <= RAG_RECENT_CONTEXT_SERIALIZED_LENGTH
+        ? safeJsonParse<TutorContextMessage[]>(recentMessagesField, []) ?? []
+        : []
 
     await progressStep(
       jobId, 'parsing', 10,
@@ -194,6 +210,7 @@ export async function askRagQuestion(
       ...(searchTopicField ? { searchTopic: searchTopicField } : {}),
       ...(commandField ? { command: commandField } : {}),
       ...(commandCountField ? { commandCount: commandCountField } : {}),
+      recentMessages,
     })
 
     if (!validationResult.success) {
@@ -204,6 +221,8 @@ export async function askRagQuestion(
     const parsed = parseMcpCommands(validationResult.data.question, { commandsEnabled })
     const { cleanQuestion, resources, unknownTools } = parsed
     const searchTopic = validationResult.data.searchTopic
+    const recentTutorMessages = validationResult.data.recentMessages ?? []
+    const tutorTurnStartedAt = Date.now()
 
     // A chip is an explicit mode, so it wins over anything typed. Slash stays as
     // an accelerator and lands on the same invocation.
@@ -446,6 +465,12 @@ export async function askRagQuestion(
       }
     }
 
+    const tutorTrace = await startTutorTurnTrace({
+      runId: cellId,
+      userId,
+      question: cleanQuestion,
+    })
+
     if (!additionalContext && pdfFiles.length === 0) {
       await progressStep(
         jobId, 'parsing', 35,
@@ -453,10 +478,20 @@ export async function askRagQuestion(
         'MEMORY', 'Classifying question intent without changing the RAG query'
       )
 
-      const intentResult = await classifyTutorIntent(cleanQuestion)
+      const intentResult = await classifyTutorIntent(cleanQuestion, recentTutorMessages)
       const tutorRoute = resolveTutorRoute(intentResult)
 
       if (tutorRoute === 'clarify') {
+        if (tutorTrace) {
+          await recordTutorRetrievalTrace({ ...tutorTrace, route: 'clarify' })
+          after(() =>
+            recordTutorModelTrace({
+              ...tutorTrace,
+              answer: AMBIGUOUS_TUTOR_INTENT_MESSAGE,
+              latencyMs: Date.now() - tutorTurnStartedAt,
+            })
+          )
+        }
         if (jobId) await completeJob(jobId)
         return {
           ...toFormState('SUCCESS', 'Potrzebne doprecyzowanie'),
@@ -471,22 +506,60 @@ export async function askRagQuestion(
           'MEMORY', 'Self-state question — answering from memory, skipping corpus'
         )
 
-        const selfState = await buildSelfStateContext(userId)
+        let selfState = await buildSelfStateContext(userId)
+        const reconciliation = await reconcileStudentMemory(
+          userId,
+          selfState.status === 'empty'
+        )
+        if (reconciliation.attempted) {
+          selfState = await buildSelfStateContext(userId)
+        }
+        if (tutorTrace) {
+          await recordTutorRetrievalTrace({
+            ...tutorTrace,
+            route: 'memory',
+            memoryStatus: selfState.status,
+            ...(selfState.status === 'ready' ? { memoryCounts: selfState.counts } : {}),
+          })
+        }
         if (selfState.status !== 'ready') {
+          const answer =
+            selfState.status === 'empty'
+              ? EMPTY_SELF_STATE_MESSAGE
+              : UNAVAILABLE_SELF_STATE_MESSAGE
+          if (tutorTrace) {
+            after(() =>
+              recordTutorModelTrace({
+                ...tutorTrace,
+                answer,
+                latencyMs: Date.now() - tutorTurnStartedAt,
+              })
+            )
+          }
           if (jobId) await completeJob(jobId)
           return {
             ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
             values: {
-              answer:
-                selfState.status === 'empty'
-                  ? EMPTY_SELF_STATE_MESSAGE
-                  : UNAVAILABLE_SELF_STATE_MESSAGE,
+              answer,
               sources: [],
             },
           }
         }
 
-        const memAnswer = await answerFromMemory(cleanQuestion, selfState.context)
+        const memAnswer = await answerFromMemory(
+          cleanQuestion,
+          selfState.context,
+          recentTutorMessages
+        )
+        if (tutorTrace) {
+          after(() =>
+            recordTutorModelTrace({
+              ...tutorTrace,
+              answer: memAnswer.answer,
+              latencyMs: Date.now() - tutorTurnStartedAt,
+            })
+          )
+        }
         if (jobId) await completeJob(jobId)
         return {
           ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
@@ -521,15 +594,32 @@ export async function askRagQuestion(
       mode: hasAttachment ? 'explicit_resource' : 'canonical_with_personal',
       ...(attachmentSourceIds.length ? { attachmentSourceIds } : {}),
     })
+    if (tutorTrace) {
+      await recordTutorRetrievalTrace({
+        ...tutorTrace,
+        route: 'rag',
+        sources: context.sources,
+      })
+    }
 
     // Nothing from the curriculum and nothing the student attached: answering
     // anyway would mean writing curriculum from the model's own knowledge, which
     // is the failure the source rule exists to prevent.
     if (!context.hasCanonical && context.chunks.length === 0) {
+      const answer = getNoDataFoundMessage()
+      if (tutorTrace) {
+        after(() =>
+          recordTutorModelTrace({
+            ...tutorTrace,
+            answer,
+            latencyMs: Date.now() - tutorTurnStartedAt,
+          })
+        )
+      }
       if (jobId) await completeJob(jobId)
       return {
         ...toFormState('SUCCESS', 'Brak materiałów'),
-        values: { answer: getNoDataFoundMessage(), sources: [] },
+        values: { answer, sources: [] },
       }
     }
 
@@ -538,6 +628,15 @@ export async function askRagQuestion(
       ...(memoryTail ? { memoryTail } : {}),
       ...(memoryPrefix ? { memoryPrefix } : {}),
     })
+    if (tutorTrace) {
+      after(() =>
+        recordTutorModelTrace({
+          ...tutorTrace,
+          answer: result.answer,
+          latencyMs: Date.now() - tutorTurnStartedAt,
+        })
+      )
+    }
 
     const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
     await progressStep(

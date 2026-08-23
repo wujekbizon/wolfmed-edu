@@ -4,6 +4,10 @@ import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindma
 import { BODY_ZONES } from "@/types/diagnozyTypes";
 import { TOOL_COMMAND_NAMES } from "@/constants/toolCommands";
 import { PAYMENT_OFFER_KEYS } from "@/constants/paymentOffers";
+import {
+  RAG_RECENT_CONTEXT_MESSAGES,
+  RAG_RECENT_CONTEXT_TEXT_LENGTH,
+} from "@/constants/ragCell";
 
 export const CreateCheckoutSchema = z.object({
   offerKey: z.enum(PAYMENT_OFFER_KEYS, {
@@ -837,7 +841,7 @@ export type UnlikeBlogPostInput = z.infer<typeof UnlikeBlogPostSchema>;
 export const RagQuerySchema = z.object({
   question: z
     .string()
-    .min(5, "Pytanie musi mieć min. 5 znaków")
+    .min(2, "Pytanie musi mieć min. 2 znaki")
     .max(500, "Pytanie zbyt długie (max 500 znaków)"),
   cellId: z.string().min(1, "ID komórki jest wymagane"),
   // Subject alone, sent when the question is prose a cell composed for the user
@@ -853,6 +857,17 @@ export const RagQuerySchema = z.object({
     .int("Liczba musi być całkowita")
     .min(1, "Minimum to 1")
     .max(100, "Maksimum to 100")
+    .optional(),
+  recentMessages: z
+    .array(
+      z
+        .object({
+          role: z.enum(["user", "assistant"]),
+          text: z.string().min(1).max(RAG_RECENT_CONTEXT_TEXT_LENGTH),
+        })
+        .strict()
+    )
+    .max(RAG_RECENT_CONTEXT_MESSAGES)
     .optional(),
 });
 
