@@ -14,9 +14,15 @@ import { getNoDataFoundMessage } from '@/helpers/rag-prompts'
 import {
   buildStaticPrefix,
   buildMemoryTail,
-  isSelfStateQuestion,
   buildSelfStateContext,
 } from '@/server/memory/assemble'
+import { classifyTutorIntent } from '@/server/memory/classifyTutorIntent'
+import { resolveTutorRoute } from '@/helpers/resolveTutorRoute'
+import {
+  AMBIGUOUS_TUTOR_INTENT_MESSAGE,
+  EMPTY_SELF_STATE_MESSAGE,
+  UNAVAILABLE_SELF_STATE_MESSAGE,
+} from '@/constants/memoryMessages'
 import { executeToolLocally } from '@/server/tools/executor'
 import { parseMcpCommands } from '@/helpers/parse-mcp-commands'
 import { resolveCommandCount } from '@/helpers/resolveCommandCount'
@@ -440,18 +446,47 @@ export async function askRagQuestion(
       }
     }
 
-    // Memory-answered guard: questions about the student's OWN state (progress,
-    // exam, what to revise) are answered from memory alone — no corpus retrieval,
-    // no Flash grounding. Only when the student didn't attach their own resource.
-    if (!additionalContext && pdfFiles.length === 0 && isSelfStateQuestion(cleanQuestion)) {
-      const selfState = await buildSelfStateContext(userId)
-      if (selfState) {
+    if (!additionalContext && pdfFiles.length === 0) {
+      await progressStep(
+        jobId, 'parsing', 35,
+        'Rozpoznaję rodzaj pytania...',
+        'MEMORY', 'Classifying question intent without changing the RAG query'
+      )
+
+      const intentResult = await classifyTutorIntent(cleanQuestion)
+      const tutorRoute = resolveTutorRoute(intentResult)
+
+      if (tutorRoute === 'clarify') {
+        if (jobId) await completeJob(jobId)
+        return {
+          ...toFormState('SUCCESS', 'Potrzebne doprecyzowanie'),
+          values: { answer: AMBIGUOUS_TUTOR_INTENT_MESSAGE, sources: [] },
+        }
+      }
+
+      if (tutorRoute === 'memory') {
         await progressStep(
           jobId, 'searching', 60,
           'Sprawdzam Twój postęp...',
           'MEMORY', 'Self-state question — answering from memory, skipping corpus'
         )
-        const memAnswer = await answerFromMemory(cleanQuestion, selfState)
+
+        const selfState = await buildSelfStateContext(userId)
+        if (selfState.status !== 'ready') {
+          if (jobId) await completeJob(jobId)
+          return {
+            ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
+            values: {
+              answer:
+                selfState.status === 'empty'
+                  ? EMPTY_SELF_STATE_MESSAGE
+                  : UNAVAILABLE_SELF_STATE_MESSAGE,
+              sources: [],
+            },
+          }
+        }
+
+        const memAnswer = await answerFromMemory(cleanQuestion, selfState.context)
         if (jobId) await completeJob(jobId)
         return {
           ...toFormState('SUCCESS', 'Odpowiedź gotowa'),

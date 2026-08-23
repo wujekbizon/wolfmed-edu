@@ -97,6 +97,8 @@ A growing set of manual QA test cases, derived directly from the flow docs (`3x-
 
 **Edge case — `@resource` overrides a corpus miss**: attach a personal note (`@notatka`) on that same out-of-scope topic and ask again. Expect: the tutor **does** answer, grounded in the attached note (`explicit_resource` mode bypasses the corpus-miss refusal, since the attachment is now the primary source) — this confirms the attachment tier is genuinely primary, not just supplementary.
 
+**Edge case — fresh-user self-state routing**: with a premium account that has no memory facts, preferences, or episodes, ask for an evaluation of personal learning progress. Expect: an honest message that there is not enough progress data, `sources: []`, and no curriculum search. Then ask a normal medical question and expect the same grounded RAG behavior and sources as before semantic routing.
+
 ---
 
 ## TC-6 — Post on the forum and see notifications clear

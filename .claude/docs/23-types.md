@@ -79,6 +79,7 @@ All 46 files in `src/types/`, one domain per file per Golden Rule #4. Listed wit
 |---|---|
 | `retrievalTypes.ts` | `ChunkOrigin`, `ContextChunk`, `RetrievalMode` (closed union of exactly 3: `'canonical_only' \| 'canonical_with_personal' \| 'explicit_resource'` — full explanation in [`00-architecture.md`](./00-architecture.md), not an open-ended example list), `RetrieveContextOptions`, `SourceRef`, `RetrievedContext` — the types behind `retrieveContext()`. |
 | `ragCellTypes.ts` | `RagMessage`, `RagExplainOrigin`, `RagCellContent` |
+| `memoryTypes.ts` | `TutorIntent`, `TutorIntentClassification`, `TutorIntentResult`, `TutorRoute`, `SelfStateContextResult` — closed contracts between semantic routing, typed memory recall, and tutor orchestration. |
 | `commandTypes.ts` | `CommandCountSpec`, `ToolCommand`, `Command` — the `/commands` system (see `TOOL_COMMANDS` in [`24-constants.md`](./24-constants.md)). |
 | `progressTypes.ts` | `ProgressStage`, `LogAudience`, `LogLevel`, `ConnectionState`, `ProgressData`, `SSEProgressData`, `UseRagProgressReturn`, `EventType`, `ProgressEvent`, `JobProgress` — backs the `/api/rag/progress` SSE stream and `useRagProgress`. |
 | `speechTypes.ts` | `SpeechRecognition`, `SpeechRecognitionErrorEvent`, `SpeechRecognitionEvent`, `SpeechRecognitionAlternative` — Web Speech API type shims (not shipped by default TS lib types), backs `useSpeechRecognition`. |

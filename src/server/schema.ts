@@ -856,6 +856,13 @@ export const RagQuerySchema = z.object({
     .optional(),
 });
 
+export const TutorIntentClassificationSchema = z
+  .object({
+    intent: z.enum(["self_state", "medical_question", "ambiguous"]),
+    confidence: z.number().min(0).max(1),
+  })
+  .strict();
+
 // Admin: Create File Search Store
 export const CreateStoreSchema = z.object({
   displayName: z

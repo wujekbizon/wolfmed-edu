@@ -22,10 +22,11 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
   deferred — mastery is currently client-only state with no DB persistence to
   hook; wiring it needs mastery persisted first.
 - **M3 (done, minus rolling summary)** — Path B injected into the tutor: retrieved
-  facts + recent episodes in the volatile prompt tail (token-budgeted, fail-safe),
-  plus the memory-answered guard (self-state questions → `answerFromMemory` via
-  Flash-Lite, skipping corpus retrieval entirely). Rolling summary deferred (needs
-  conversation-turn persistence the app doesn't have yet).
+  facts + recent episodes in the volatile prompt tail (token-budgeted, fail-safe).
+  A constrained Flash-Lite semantic router separates self-state from medical
+  questions without changing the RAG query. Self-state recall returns explicit
+  ready/empty/unavailable states and never falls through to the corpus. Rolling
+  summary deferred (needs conversation-turn persistence the app doesn't have yet).
 - **M5 (done)** — GDPR/RODO: `erase.ts` is part of the Clerk `user.deleted`
   transaction — tombstones facts/episodes under a random `deleted:*` owner,
   hard-deletes preferences/traces, and logs a pseudonymous deletion event. Nightly
@@ -43,7 +44,8 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 | `embeddings.ts` | `gemini-embedding-001` via the shared `vertex-rag/client`. `RETRIEVAL_DOCUMENT`/`RETRIEVAL_QUERY` task types, 1.5s timeout → `EmbeddingUnavailable` so retrieval cascades instead of hanging. |
 | `stores/policies.ts` | Exact-match reads + versioned upsert of policies (never similarity). |
 | `stores/preferences.ts` | Per-user preference upsert + load-all. |
-| `assemble.ts` | **Path A** — `buildStaticPrefix(userId)`: active policies + preferences → prompt-cache-friendly system-instruction block. Fail-safe: returns `''` on any error so the tutor never breaks. |
+| `classifyTutorIntent.ts` | Constrained semantic routing between typed self-state memory, medical RAG, and clarification. Classification failure preserves the existing RAG fallback. |
+| `assemble.ts` | Builds the static policy/preference prefix, ranked fact/episode tail, and explicit ready/empty/unavailable self-state context. |
 
 Tables live in `src/server/db/memory-schema.ts` (re-exported from `db/schema.ts`)
 so `drizzle-kit` and the ORM manage them: `wolfmed_mem_{policies,preferences,facts,episodes,traces,deletion_events}`.

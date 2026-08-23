@@ -109,7 +109,7 @@ quiz completed                   buildStaticPrefix ─▶ policies + preferences
 RETENTION                                   ▼
 /api/cron/memory-retention           prompt tail — self-state answers only
   traces >90d, expired facts
-  revoked >30d                     isSelfStateQuestion → answerFromMemory
+  revoked >30d                     semantic self-state route → answerFromMemory
                                         Flash-Lite, NO corpus retrieval
 ERASE
 deleteUserAccount ← Clerk user.deleted

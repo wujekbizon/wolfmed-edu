@@ -7,6 +7,7 @@ import { retrieveFacts } from './retrieve'
 import { ASSEMBLY_TOKEN_BUDGET, CHARS_PER_TOKEN } from './config'
 import { preferenceLabel, preferenceValueLabel } from '@/constants/memoryPreferences'
 import type { MemPolicy } from '@/server/db/memory-schema'
+import type { SelfStateContextResult } from '@/types/memoryTypes'
 
 // ── Path A: static, exact, exhaustive — no ranking ──────────────────────────
 // Builds the prompt-cache-friendly memory block that goes into the tutor's
@@ -125,18 +126,7 @@ export async function buildMemoryTail(userId: string, query: string): Promise<st
   }
 }
 
-// Heuristic: is the student asking about their OWN state (progress, exam, what to
-// revise)? These are answerable from memory alone — no corpus retrieval needed.
-export function isSelfStateQuestion(question: string): boolean {
-  const s = question.toLowerCase()
-  return /(kiedy mam|mój egzamin|moje słab|moich słab|co mam (dziś )?powtórz|czego mam się uczyć|mój postęp|jak mi idzie|moje wynik|na czym stoję|moje cele|co powinienem powtórz)/.test(
-    s
-  )
-}
-
-// Full self-state context (all active facts + preferences + recent episodes) for
-// the memory-answered guard. Returns '' if the student has no memory yet.
-export async function buildSelfStateContext(userId: string): Promise<string> {
+export async function buildSelfStateContext(userId: string): Promise<SelfStateContextResult> {
   try {
     const [facts, prefs, episodes] = await Promise.all([
       getActiveFacts(userId, 40),
@@ -155,9 +145,10 @@ export async function buildSelfStateContext(userId: string): Promise<string> {
       sections.push(`OSTATNIE AKTYWNOŚCI:\n${episodes.map((e) => `- ${e.summary}`).join('\n')}`)
     }
 
-    return sections.join('\n\n')
+    const context = sections.join('\n\n')
+    return context ? { status: 'ready', context } : { status: 'empty' }
   } catch (error) {
     console.error('[memory] buildSelfStateContext failed:', error)
-    return ''
+    return { status: 'unavailable' }
   }
 }
