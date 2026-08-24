@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
+import { connection } from 'next/server'
 import { requireUser } from '@/helpers/requireUser'
 import { getAllUserNotes, getUserEnrolledCourses } from '@/server/queries'
 import SidePanel from '@/app/_components/SidePanel'
@@ -12,11 +13,16 @@ import MobileAIFloat from '@/components/MobileAIFloat'
 import type { NotesType } from '@/types/notesTypes'
 import { hasAccessToTier } from '@/helpers/accessTiers'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export default async function DashboardLayout({
   children
 }: {
   children: React.ReactNode
 }) {
+  await connection()
   const { userId } = await requireUser()
 
   const enrolledCourses = await getUserEnrolledCourses(userId)

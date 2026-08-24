@@ -5,6 +5,10 @@ import { getUserEnrolledCourses, getGeneratedPracticalExamById } from '@/server/
 import { getPublicPracticalExamById, toPublicExam } from '@/lib/praktycznyUtils'
 import PracticalExamRunner from '@/components/PracticalExamRunner'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 interface Props {
   params: Promise<{ slug: string }>
 }
@@ -17,8 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: exam ? `Arkusz ${exam.arkusz} — część praktyczna MED.14` : undefined,
   }
 }
-
-export const dynamic = 'force-dynamic'
 
 export default async function PracticalExamPage({ params }: Props) {
   const user = await getCurrentUser()

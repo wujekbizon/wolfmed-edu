@@ -10,13 +10,15 @@ import NoteFlashcardsSection from '@/components/NoteFlashcardsSection'
 import NotePageSkeleton from '@/components/skeletons/NotePageSkeleton'
 import NoteFlashcardsSkeleton from '@/components/skeletons/NoteFlashcardsSkeleton'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 type Props = {
     params: Promise<{
         noteId: string
     }>
 }
-
-export const dynamic = 'force-dynamic'
 
 async function NoteData({ noteId, userId }: { noteId: string; userId: string }) {
     const note = await getNoteById(userId, noteId)

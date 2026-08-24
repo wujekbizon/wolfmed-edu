@@ -1,9 +1,15 @@
 import Link from 'next/link'
+import { connection } from 'next/server'
 import { getBlogCategories, getBlogTags } from '@/server/queries'
 
-export const dynamic = 'force-dynamic'
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 export default async function CategoriesManagementPage() {
+  // TODO: Cache Components adoption. Added to unblock the build: remove this connection() to re-trigger the error and review the fix options.
+  await connection()
+
   const [categories, tags] = await Promise.all([
     getBlogCategories(),
     getBlogTags(),

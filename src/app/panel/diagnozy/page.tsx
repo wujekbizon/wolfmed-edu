@@ -9,13 +9,15 @@ import DiagnozyHeader from '@/components/diagnozy/browse/DiagnozyHeader'
 import DiagnozyEmptyState from '@/components/diagnozy/browse/DiagnozyEmptyState'
 import DiagnozyBrowserSkeleton from '@/components/skeletons/DiagnozyBrowserSkeleton'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export const metadata: Metadata = {
   title: 'Diagnozy i Interwencje',
   description:
     'Diagnozy pielęgniarskie z interwencjami — nauka i wypełnianie procesu pielęgnowania',
 }
-
-export const dynamic = 'force-dynamic'
 
 async function DiagnozyContent() {
   const user = await getCurrentUser()

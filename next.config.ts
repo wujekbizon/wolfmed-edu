@@ -3,6 +3,7 @@ import type { NextConfig } from 'next'
 /** @type {import('next').NextConfig} */
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   turbopack: {
     rules: {
       '*.svg': {

@@ -11,6 +11,10 @@ import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { getUserCustomCategories } from '@/server/queries'
 import type { PopulatedCategories } from '@/types/categoryType'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
   const categoryKeys = categories.map(([key]) => key).join(", ");
@@ -23,8 +27,6 @@ export async function generateMetadata(): Promise<Metadata> {
     keywords: categoryKeywords,
   }
 }
-
-export const dynamic = 'force-dynamic'
 
 async function TestsCategories() {
   const user = await getCurrentUser()

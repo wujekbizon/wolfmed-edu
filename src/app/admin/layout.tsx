@@ -1,9 +1,14 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
 import { Metadata } from 'next'
+import { connection } from 'next/server'
 import AdminNav from '@/components/admin/AdminNav'
 import AdminNavBadged from '@/components/admin/AdminNavBadged'
 import { requireAdmin } from '@/helpers/requireAdmin'
+
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 export const metadata: Metadata = {
   title: 'Admin Panel - Wolfmed Blog',
@@ -16,6 +21,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode
 }) {
+  await connection()
   await requireAdmin()
 
   return (

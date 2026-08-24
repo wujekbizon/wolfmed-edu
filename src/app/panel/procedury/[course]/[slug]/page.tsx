@@ -6,6 +6,10 @@ import { Metadata } from 'next'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 import type { Procedure } from '@/types/dataTypes'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 interface Props {
   params: Promise<{ course: string; slug: string }>
 }

@@ -4,6 +4,7 @@ import { DEFAULT_CATEGORY_METADATA, CATEGORY_METADATA } from "@/constants/catego
 import { getCategories, countTestsByCategory } from "@/server/queries";
 import { checkCourseAccessAction } from "@/actions/course-actions";
 import { hasAccessToTier } from "@/helpers/accessTiers";
+import { formatCategoryName } from '@/helpers/formatCategoryName'
 
 export async function getAccessibleCategories(): Promise<PopulatedCategories[]> {
   const populatedCategories = await getPopulatedCategories();
@@ -27,7 +28,6 @@ export async function getAccessibleCategories(): Promise<PopulatedCategories[]> 
 
   return categoriesWithAccess.filter((cat) => cat.hasAccess);
 }
-
 export async function getPopulatedCategories(): Promise<PopulatedCategories[]> {
   // Get categories directly from database
   const categories = await getCategories();
@@ -53,12 +53,4 @@ export async function getPopulatedCategories(): Promise<PopulatedCategories[]> {
       };
     })
   );
-}
-
-function formatCategoryName(name: string) {
-  return name
-    .replace(/-/g, " ")
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
 }

@@ -1,6 +1,11 @@
 import { Metadata } from 'next'
+import { connection } from 'next/server'
 import AllPosts from '@/components/AllPosts'
 import { getAllBlogPosts } from '@/server/queries'
+
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -11,6 +16,7 @@ export const metadata: Metadata = {
 }
 
 export default async function BlogPage() {
+  await connection()
 
   const posts = await getAllBlogPosts({
     status: 'published',

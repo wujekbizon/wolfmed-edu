@@ -1,7 +1,9 @@
 import { getUserPreferencesAction } from '@/actions/memory-actions'
 import PreferencesForm from '@/components/memory/PreferencesForm'
+import { connection } from 'next/server'
 
 export default async function LearningPreferencesSection() {
+  await connection()
   const preferences = await getUserPreferencesAction()
 
   return (

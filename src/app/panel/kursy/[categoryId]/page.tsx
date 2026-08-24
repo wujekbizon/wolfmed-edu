@@ -11,7 +11,9 @@ import NoAccessMessage from '@/components/NoAccessMessage'
 import TierUpgradeMessage from '@/components/TierUpgradeMessage'
 import CategoryDetailSkeleton from '@/components/skeletons/CategoryDetailSkeleton'
 
-export const dynamic = 'force-dynamic'
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 interface CategoryPageProps {
   params: Promise<{ categoryId: string }>

@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import { connection } from 'next/server'
 import {
   getStoreStatusAction,
   listStoreDocumentsAction,
@@ -9,9 +10,12 @@ import UploadDocsSection from '@/components/rag/UploadDocsSection'
 import DocumentListTable from '@/components/rag/DocumentListTable'
 import TestQueryForm from '@/components/rag/TestQueryForm'
 
-export const dynamic = 'force-dynamic'
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 async function AsyncRagDashboard() {
+  await connection()
 
   const [storeStatus, documentsResult] = await Promise.all([
     getStoreStatusAction(),

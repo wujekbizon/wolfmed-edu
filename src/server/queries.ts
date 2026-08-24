@@ -68,6 +68,7 @@ import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
 import type { ProcedureDatabaseRow } from '@/types/procedureBrowseTypes'
 import { boardsEqual } from "@/helpers/cellsConcurrency"
 import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
+import { queryTestsByCategory } from '@/server/tests/queryTestsByCategory'
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -78,13 +79,7 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
 })
 
 // Get tests filtered by category
-export const getTestsByCategory = cache(async (category: string): Promise<ExtendedTest[]> => {
-  const tests = await db.query.tests.findMany({
-    where: (model) => sql`${model.meta}->>'category' = ${category}`,
-    orderBy: (model, { desc }) => desc(model.id),
-  })
-  return tests
-})
+export const getTestsByCategory = cache(queryTestsByCategory)
 
 // Get unique categories from tests
 export const getCategories = cache(async (): Promise<{ meta: { category: string; course: string } }[]> => {

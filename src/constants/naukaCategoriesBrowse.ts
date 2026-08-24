@@ -2,6 +2,7 @@ import type { NaukaCategoryBrowseCriteria } from '@/types/categoryType'
 import type { SelectOption } from '@/types/uiTypes'
 
 export const CUSTOM_CATEGORIES_FILTER = '__custom__'
+export const CUSTOM_TEST_CATEGORY_PREFIX = 'moje-testy__'
 
 export const NAUKA_CATEGORY_DEFAULT_CRITERIA: NaukaCategoryBrowseCriteria = {
   search: '',

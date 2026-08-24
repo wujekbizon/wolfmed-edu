@@ -12,13 +12,15 @@ import EgzaminAttemptsPanel from '@/components/diagnozy/egzamin/EgzaminAttemptsP
 import EgzaminAttemptsListSkeleton from '@/components/skeletons/EgzaminAttemptsListSkeleton'
 import EgzaminContentSkeleton from '@/components/skeletons/EgzaminContentSkeleton'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export const metadata: Metadata = {
   title: 'Egzamin — Diagnozy i Interwencje',
   description:
     'Egzamin próbny z procesu pielęgnowania: wylosowany przypadek, wypełnienie przewodnika, ocena odpowiedzi',
 }
-
-export const dynamic = 'force-dynamic'
 
 async function EgzaminAttempts({ userId }: { userId: string }) {
   const attempts = await getUserDiagnozyExamAttempts(userId, ATTEMPTS_HISTORY_LIMIT)

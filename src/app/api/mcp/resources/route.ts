@@ -1,9 +1,11 @@
-import { NextResponse } from 'next/server';
+import { connection, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getAllUserNotes, getMaterialsByUser } from '@/server/queries';
 import type { Resource } from '@/types/resourceTypes';
 
 export async function GET() {
+  await connection();
+
   try {
     const { userId } = await auth();
 

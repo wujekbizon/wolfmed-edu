@@ -6,8 +6,11 @@ import CreatePostButton from '@/components/CreatePostButton'
 import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
 import MarkForumSeen from '@/components/MarkForumSeen'
 import { Metadata } from 'next'
+import { connection } from 'next/server'
 
-export const experimental_ppr = true
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
 
 export const metadata: Metadata = {
   title: 'Wolfmed Forum Dyskusyjne ',
@@ -18,6 +21,7 @@ export const metadata: Metadata = {
 }
 
 async function ForumSeenMarker() {
+  await connection()
   const { userId } = await auth()
   if (!userId) return null
 
@@ -26,6 +30,7 @@ async function ForumSeenMarker() {
 }
 
 export default async function ForumPage() {
+  await connection()
   const posts = await getAllForumPosts()
 
   return (

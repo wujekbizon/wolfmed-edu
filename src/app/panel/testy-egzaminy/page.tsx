@@ -6,12 +6,14 @@ import { getAccessibleCategories } from '@/helpers/populateCategories'
 import { getAllPracticalExams } from '@/lib/praktycznyUtils'
 import TestyEgzaminyHub from '@/components/TestyEgzaminyHub'
 
+// TODO: Cache Components adoption. Refactor this route so this opt-out can be removed.
+// See: https://nextjs.org/docs/app/guides/migrating-to-cache-components
+export const instant = false;
+
 export const metadata: Metadata = {
   title: 'Testy i egzaminy',
   description: 'Wybierz egzamin teoretyczny lub praktyczny i sprawdź swoją wiedzę',
 }
-
-export const dynamic = 'force-dynamic'
 
 const MONTH_ORDER: Record<string, number> = {
   Styczeń: 1, Luty: 2, Marzec: 3, Kwiecień: 4, Maj: 5, Czerwiec: 6,

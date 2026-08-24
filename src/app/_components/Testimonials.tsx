@@ -3,8 +3,10 @@ import TestimonialsCarousel from '@/components/TestimonialsCarousel'
 import SectionHalo from '@/components/SectionHalo'
 import { getTestimonialsWithUsernames } from '@/server/queries'
 import { Suspense } from 'react'
+import { connection } from 'next/server'
 
 export default async function Testimonials() {
+  await connection()
   const testimonials = await getTestimonialsWithUsernames()
 
   return (
