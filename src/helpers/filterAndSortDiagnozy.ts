@@ -1,30 +1,9 @@
 import { compareDiagnozySection } from '@/helpers/compareDiagnozySection'
+import { matchesSearchTerms } from '@/helpers/matchesSearchTerms'
 import type {
   DiagnozaListItem,
   DiagnozyBrowseCriteria,
 } from '@/types/diagnozyTypes'
-
-function normalize(value: string): string {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '') // strip diacritics so 'lek' matches 'lęk'
-}
-
-function matchesSearch(item: DiagnozaListItem, query: string): boolean {
-  const haystack = normalize(
-    [
-      item.section,
-      item.title,
-      item.definicjaSnippet,
-      item.chapterTitle,
-    ].join(' ')
-  )
-  return normalize(query)
-    .split(/\s+/)
-    .filter(Boolean)
-    .every((term) => haystack.includes(term))
-}
 
 // Pure browse pipeline: filter by search/chapter/completion, then sort. Kept
 // side-effect free so it is unit-testable and shared by server + client.
@@ -39,7 +18,12 @@ export function filterAndSortDiagnozy(
     if (criteria.chapter && item.chapterNumber !== criteria.chapter) return false
     if (criteria.status === 'done' && !done.has(item.slug)) return false
     if (criteria.status === 'todo' && done.has(item.slug)) return false
-    if (criteria.search.trim() && !matchesSearch(item, criteria.search)) return false
+    if (!matchesSearchTerms([
+      item.section,
+      item.title,
+      item.definicjaSnippet,
+      item.chapterTitle,
+    ], criteria.search)) return false
     return true
   })
 

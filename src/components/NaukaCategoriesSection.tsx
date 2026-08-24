@@ -1,6 +1,7 @@
-import CategoryGrid from './CategoryGrid'
+import NaukaCategoriesBrowser from './NaukaCategoriesBrowser'
 import { getPopulatedCategories } from '@/helpers/populateCategories'
 import { buildAccessibleCategories } from '@/helpers/buildAccessibleCategories'
+import { toNaukaCategoryBrowseItems } from '@/helpers/toNaukaCategoryBrowseItems'
 import { getUserCustomCategories } from '@/server/queries'
 import { getIsPremium } from '@/server/premium'
 import type { PopulatedCategories } from '@/types/categoryType'
@@ -24,10 +25,12 @@ export default async function NaukaCategoriesSection({ userId }: { userId: strin
     }))
   }
 
+  const categories = toNaukaCategoryBrowseItems([...accessibleCategories, ...customCards])
+
   return (
     <div className='bg-transparent xs:bg-white p-0 xs:p-4 sm:p-6 rounded-2xl shadow-none xs:shadow-xl border border-transparent xs:border-zinc-200/60'>
-      <h2 className='text-xl font-bold text-zinc-800 mb-6'>Dostępne Kategorie</h2>
-      <CategoryGrid categories={[...accessibleCategories, ...customCards]} />
+      <h2 className='text-xl font-bold text-zinc-800 mb-2'>Dostępne Kategorie</h2>
+      <NaukaCategoriesBrowser categories={categories} />
     </div>
   )
 }

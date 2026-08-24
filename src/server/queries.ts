@@ -65,6 +65,7 @@ import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
+import type { ProcedureDatabaseRow } from '@/types/procedureBrowseTypes'
 import { boardsEqual } from "@/helpers/cellsConcurrency"
 import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
 
@@ -220,7 +221,7 @@ export const deleteUserCustomCategory = async (
 
 // Get all medical procedures, ordered by newest first
 export const getAllProcedures = cache(
-  async (course = "opiekun-medyczny"): Promise<ExtendedProcedures[]> => {
+  async (course = "opiekun-medyczny"): Promise<ProcedureDatabaseRow[]> => {
     return db.query.procedures.findMany({
       where: (model, { eq }) => eq(model.course, course),
       orderBy: (model, { desc }) => desc(model.id),

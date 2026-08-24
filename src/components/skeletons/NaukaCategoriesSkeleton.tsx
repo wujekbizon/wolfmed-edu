@@ -1,7 +1,15 @@
 export default function NaukaCategoriesSkeleton() {
   return (
     <div className='bg-transparent xs:bg-white p-0 xs:p-4 sm:p-6 rounded-2xl shadow-none xs:shadow-xl border border-transparent xs:border-zinc-200/60'>
-      <div className='h-7 w-52 rounded-lg bg-zinc-200 animate-pulse mb-6' />
+      <div className='h-7 w-52 rounded-lg bg-zinc-200 animate-pulse mb-5' />
+
+      <div className='flex flex-col sm:flex-row gap-2 mb-4'>
+        <div className='h-10 flex-1 rounded-xl bg-zinc-200 animate-pulse' />
+        <div className='h-10 w-full sm:w-52 rounded-xl bg-zinc-200 animate-pulse' />
+        <div className='h-10 w-full sm:w-52 rounded-xl bg-zinc-200 animate-pulse' />
+      </div>
+
+      <div className='h-3 w-20 rounded bg-zinc-200 animate-pulse mb-4' />
 
       <div className='h-fit grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6'>
         {Array.from({ length: 6 }).map((_, index) => (

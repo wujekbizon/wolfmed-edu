@@ -4,20 +4,33 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Clock, Award, ImageOff } from 'lucide-react'
 import { useState } from 'react'
+import ProcedureStatusControls from '@/components/ProcedureStatusControls'
+import type { ProcedureStatus } from '@/types/dataTypes'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
-import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 
 export default function PielegniastwoGridCard({
   procedure,
+  procedureSlug,
+  status,
+  onStatusChange,
 }: {
   procedure: PielegniastwoProcedure
+  procedureSlug: string
+  status: ProcedureStatus
+  onStatusChange: (status: ProcedureStatus) => void
 }) {
-  const slug = getPielegniastwoSlug(procedure)
   const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
   const [imgError, setImgError] = useState(false)
+  const border = status === 'ukończone'
+    ? 'border-emerald-700/30'
+    : status === 'trudne'
+      ? 'border-[#ffa5a5]/40'
+      : 'border-zinc-400/60'
 
   return (
-    <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <div className={`relative group border ${border} bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden`}>
+      <ProcedureStatusControls status={status} onStatusChange={onStatusChange} />
+
       <div className="w-full h-[320px] relative overflow-hidden rounded-xl bg-zinc-50">
         {!procedure.image || imgError ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
@@ -55,7 +68,7 @@ export default function PielegniastwoGridCard({
 
         <div className="mt-auto flex justify-end">
           <Link
-            href={`/panel/procedury/pielegniarstwo/${slug}`}
+            href={`/panel/procedury/pielegniarstwo/${procedureSlug}`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-all hover:gap-2"
           >
             Otwórz procedurę

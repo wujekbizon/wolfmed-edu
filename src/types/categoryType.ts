@@ -45,3 +45,28 @@ export interface CategoryMetadata {
   keywords?: string[]
   details?: CategoryDetails
 }
+
+export type NaukaCategorySortKey =
+  | 'default'
+  | 'name-asc'
+  | 'name-desc'
+  | 'questions-desc'
+  | 'questions-asc'
+
+export type NaukaCategoryBrowseCriteria = {
+  search: string
+  course: string
+  sort: NaukaCategorySortKey
+}
+
+export type NaukaCategoryBrowseItem = {
+  category: string
+  value: string
+  count: number
+  course: string
+  title: string
+  description: string
+  image: string
+  keywords: string[]
+  isCustom: boolean
+}
