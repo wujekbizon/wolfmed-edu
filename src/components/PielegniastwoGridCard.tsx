@@ -5,14 +5,14 @@ import Link from 'next/link'
 import { ArrowRight, Clock, Award, ImageOff } from 'lucide-react'
 import { useState } from 'react'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
-import { getPielegniastwoSlug } from '@/lib/pielegniastwoUtils'
 
 export default function PielegniastwoGridCard({
   procedure,
+  procedureSlug,
 }: {
   procedure: PielegniastwoProcedure
+  procedureSlug: string
 }) {
-  const slug = getPielegniastwoSlug(procedure)
   const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
   const [imgError, setImgError] = useState(false)
 
@@ -55,7 +55,7 @@ export default function PielegniastwoGridCard({
 
         <div className="mt-auto flex justify-end">
           <Link
-            href={`/panel/procedury/pielegniarstwo/${slug}`}
+            href={`/panel/procedury/pielegniarstwo/${procedureSlug}`}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 bg-zinc-100 hover:bg-zinc-200 rounded-full transition-all hover:gap-2"
           >
             Otwórz procedurę

@@ -2,26 +2,26 @@ import { CUSTOM_CATEGORIES_FILTER } from '@/constants/naukaCategoriesBrowse'
 import { matchesSearchTerms } from '@/helpers/matchesSearchTerms'
 import type {
   NaukaCategoryBrowseCriteria,
-  PopulatedCategories,
+  NaukaCategoryBrowseItem,
 } from '@/types/categoryType'
 
 export function filterAndSortNaukaCategories(
-  categories: PopulatedCategories[],
+  categories: NaukaCategoryBrowseItem[],
   criteria: NaukaCategoryBrowseCriteria
-): PopulatedCategories[] {
+): NaukaCategoryBrowseItem[] {
   const filtered = categories.filter((item) => {
-    if (criteria.course === CUSTOM_CATEGORIES_FILTER && item.data) return false
+    if (criteria.course === CUSTOM_CATEGORIES_FILTER && !item.isCustom) return false
     if (criteria.course && criteria.course !== CUSTOM_CATEGORIES_FILTER) {
-      if (item.data?.course !== criteria.course) return false
+      if (item.course !== criteria.course) return false
     }
 
     return matchesSearchTerms([
       item.category,
       item.value,
-      item.data?.title,
-      item.data?.description,
-      item.data?.course,
-      ...(item.data?.keywords ?? []),
+      item.title,
+      item.description,
+      item.course,
+      ...item.keywords,
     ], criteria.search)
   })
 

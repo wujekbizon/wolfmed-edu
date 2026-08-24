@@ -27,12 +27,12 @@ export default function ProceduresBrowser({
   const [criteria, setCriteria] = useState(PROCEDURE_BROWSE_DEFAULT_CRITERIA)
   const debouncedSearch = useDebouncedValue(criteria.search, 250)
   const effectiveCriteria = { ...criteria, search: debouncedSearch }
-  const sourceKey = procedures.map(({ key, name }) => `${key}:${name}`).join('|')
+  const sourceVersion = procedures.map(({ id, updatedAt }) => [id, updatedAt])
   const onChange = (patch: Partial<ProcedureBrowseCriteria>) =>
     setCriteria((current) => ({ ...current, ...patch }))
 
   const { data: results } = useQuery({
-    queryKey: ['procedures', course, sourceKey, debouncedSearch, criteria.sort],
+    queryKey: ['procedures', course, sourceVersion, debouncedSearch, criteria.sort],
     queryFn: async () => filterAndSortProcedures(procedures, effectiveCriteria),
     initialData: () => filterAndSortProcedures(procedures, effectiveCriteria),
     staleTime: PROCEDURE_BROWSE_STALE_TIME,

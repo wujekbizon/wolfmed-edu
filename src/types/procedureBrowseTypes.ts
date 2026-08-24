@@ -9,15 +9,24 @@ export type ProcedureBrowseCriteria = {
   sort: ProcedureBrowseSortKey
 }
 
+export type ProcedureDatabaseRow = {
+  id: string
+  course: string
+  slug: string
+  data: unknown
+  createdAt: Date | null
+  updatedAt: Date | null
+}
+
 type ProcedureBrowseItemBase = {
-  key: string
-  name: string
-  searchValues: string[]
+  id: string
+  slug: string
+  updatedAt: string
 }
 
 export type OpiekunProcedureBrowseItem = ProcedureBrowseItemBase & {
   course: 'opiekun-medyczny'
-  data: Procedure
+  data: Procedure['data']
 }
 
 export type PielegniastwoProcedureBrowseItem = ProcedureBrowseItemBase & {

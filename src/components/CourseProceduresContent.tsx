@@ -1,12 +1,14 @@
 import { redirect } from 'next/navigation'
-import AllProcedures from '@/components/AllProcedures'
-import PielegniastwoProceduresList from '@/components/PielegniastwoProceduresList'
+import ProceduresBrowser from '@/components/ProceduresBrowser'
+import { toProcedureBrowseItems } from '@/helpers/toProcedureBrowseItems'
 import { getAllProcedures, getUserEnrolledCourses } from '@/server/queries'
 import { getCurrentUser } from '@/server/user'
-import type { Procedure } from '@/types/dataTypes'
-import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 
 export default async function CourseProceduresContent({ course }: { course: string }) {
+  if (course !== 'opiekun-medyczny' && course !== 'pielegniarstwo') {
+    redirect('/panel/procedury')
+  }
+
   const user = await getCurrentUser()
   if (!user) redirect('/')
 
@@ -14,15 +16,5 @@ export default async function CourseProceduresContent({ course }: { course: stri
   if (!courses.some((item) => item.slug === course)) redirect('/panel/procedury')
 
   const rows = await getAllProcedures(course)
-
-  if (course === 'opiekun-medyczny') {
-    return <AllProcedures procedures={rows as unknown as Procedure[]} />
-  }
-
-  if (course === 'pielegniarstwo') {
-    const procedures = rows.map((row) => row.data as PielegniastwoProcedure)
-    return <PielegniastwoProceduresList procedures={procedures} />
-  }
-
-  redirect('/panel/procedury')
+  return <ProceduresBrowser course={course} procedures={toProcedureBrowseItems(rows, course)} />
 }

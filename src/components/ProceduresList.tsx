@@ -30,13 +30,18 @@ export default function ProceduresList({
       {procedures.map((procedure) =>
         procedure.course === 'opiekun-medyczny' ? (
           <GridProcedureCard
-            key={procedure.key}
-            procedure={procedure.data}
-            status={statuses[procedure.key] || 'normal'}
-            onStatusChange={(status) => handleStatusChange(procedure.key, status)}
+            key={procedure.id}
+            procedure={{ id: procedure.id, data: procedure.data }}
+            procedureSlug={procedure.slug}
+            status={statuses[procedure.id] || 'normal'}
+            onStatusChange={(status) => handleStatusChange(procedure.id, status)}
           />
         ) : (
-          <PielegniastwoGridCard key={procedure.key} procedure={procedure.data} />
+          <PielegniastwoGridCard
+            key={procedure.id}
+            procedure={procedure.data}
+            procedureSlug={procedure.slug}
+          />
         )
       )}
     </div>

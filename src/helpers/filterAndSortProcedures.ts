@@ -1,4 +1,5 @@
 import { matchesSearchTerms } from '@/helpers/matchesSearchTerms'
+import { getProcedureSearchValues } from '@/helpers/getProcedureSearchValues'
 import type {
   ProcedureBrowseCriteria,
   ProcedureBrowseItem,
@@ -9,14 +10,14 @@ export function filterAndSortProcedures<T extends ProcedureBrowseItem>(
   criteria: ProcedureBrowseCriteria
 ): T[] {
   const filtered = procedures.filter((procedure) =>
-    matchesSearchTerms(procedure.searchValues, criteria.search)
+    matchesSearchTerms(getProcedureSearchValues(procedure), criteria.search)
   )
 
   switch (criteria.sort) {
     case 'name-asc':
-      return filtered.sort((a, b) => a.name.localeCompare(b.name, 'pl'))
+      return filtered.sort((a, b) => a.data.name.localeCompare(b.data.name, 'pl'))
     case 'name-desc':
-      return filtered.sort((a, b) => b.name.localeCompare(a.name, 'pl'))
+      return filtered.sort((a, b) => b.data.name.localeCompare(a.data.name, 'pl'))
     default:
       return filtered
   }

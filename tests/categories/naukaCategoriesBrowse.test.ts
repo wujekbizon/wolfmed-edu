@@ -1,38 +1,46 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { DEFAULT_CATEGORY_METADATA } from '@/constants/categoryMetadata'
 import {
   CUSTOM_CATEGORIES_FILTER,
   NAUKA_CATEGORY_DEFAULT_CRITERIA,
 } from '@/constants/naukaCategoriesBrowse'
 import { filterAndSortNaukaCategories } from '@/helpers/filterAndSortNaukaCategories'
 import { getNaukaCourseSelectOptions } from '@/helpers/getNaukaCourseSelectOptions'
-import type { PopulatedCategories } from '@/types/categoryType'
+import type { NaukaCategoryBrowseItem } from '@/types/categoryType'
 
 function courseCategory(
   category: string,
   course: string,
   count: number,
   keywords: string[] = []
-): PopulatedCategories {
+): NaukaCategoryBrowseItem {
   return {
     category,
     value: category.toLocaleLowerCase('pl').replaceAll(' ', '-'),
     count,
-    data: {
-      ...DEFAULT_CATEGORY_METADATA,
-      category,
-      course,
-      description: `Materiały: ${category}`,
-      keywords,
-    },
+    course,
+    title: category,
+    description: `Materiały: ${category}`,
+    image: '',
+    keywords,
+    isCustom: false,
   }
 }
 
-const categories: PopulatedCategories[] = [
+const categories: NaukaCategoryBrowseItem[] = [
   courseCategory('Pielęgniarstwo chirurgiczne', 'pielegniarstwo', 80),
   courseCategory('Opiekun medyczny', 'opiekun-medyczny', 30, ['MED.14']),
-  { category: 'Moje trudne pytania', value: 'moje-testy__1', count: 12 },
+  {
+    category: 'Moje trudne pytania',
+    value: 'moje-testy__1',
+    count: 12,
+    course: '',
+    title: '',
+    description: 'Twoja własna kategoria testów',
+    image: '',
+    keywords: [],
+    isCustom: true,
+  },
 ]
 
 test('search ignores Polish diacritics and matches every term', () => {

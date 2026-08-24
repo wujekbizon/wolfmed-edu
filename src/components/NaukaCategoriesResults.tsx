@@ -1,11 +1,11 @@
 import { SearchX } from 'lucide-react'
 import CategoryGrid from '@/components/CategoryGrid'
-import type { PopulatedCategories } from '@/types/categoryType'
+import type { NaukaCategoryBrowseItem } from '@/types/categoryType'
 
 export default function NaukaCategoriesResults({
   categories,
 }: {
-  categories: PopulatedCategories[]
+  categories: NaukaCategoryBrowseItem[]
 }) {
   if (categories.length === 0) {
     return (
