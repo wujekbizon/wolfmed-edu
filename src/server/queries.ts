@@ -49,6 +49,7 @@ import {
   Procedure,
 } from "@/types/dataTypes"
 import { cache } from "react"
+import { cacheLife, cacheTag } from 'next/cache'
 import { eq, asc, desc, sql, and, or, like, count, gt, ne, inArray, notInArray } from "drizzle-orm"
 import { challengeTypesForCourse } from "@/helpers/challengeTypesForCourse"
 import {
@@ -65,10 +66,8 @@ import { parseLexicalContent } from "@/helpers/safeJsonParse"
 import type { PracticalExam } from "@/types/praktycznyTypes"
 import type { Diagnoza, DiagnozaFormulation, DiagnozaListItem } from "@/types/diagnozyTypes"
 import type { FlashcardDeck, FlashcardSource } from "@/types/flashcardTypes"
-import type { ProcedureDatabaseRow } from '@/types/procedureBrowseTypes'
 import { boardsEqual } from "@/helpers/cellsConcurrency"
 import { getEffectiveEnrollmentGrants } from "@/helpers/getEffectiveEnrollmentGrants"
-import { queryTestsByCategory } from '@/server/tests/queryTestsByCategory'
 
 // Get all tests with their data, ordered by newest first
 export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
@@ -79,7 +78,15 @@ export const getAllTests = cache(async (): Promise<ExtendedTest[]> => {
 })
 
 // Get tests filtered by category
-export const getTestsByCategory = cache(queryTestsByCategory)
+export async function getTestsByCategory(category: string): Promise<ExtendedTest[]> {
+  'use cache: remote'
+  cacheLife('days')
+  cacheTag('tests', `tests:category:${category}`)
+  return db.query.tests.findMany({
+    where: (model) => sql`${model.meta}->>'category' = ${category}`,
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+}
 
 // Get unique categories from tests
 export const getCategories = cache(async (): Promise<{ meta: { category: string; course: string } }[]> => {
@@ -215,14 +222,15 @@ export const deleteUserCustomCategory = async (
 }
 
 // Get all medical procedures, ordered by newest first
-export const getAllProcedures = cache(
-  async (course = "opiekun-medyczny"): Promise<ProcedureDatabaseRow[]> => {
-    return db.query.procedures.findMany({
-      where: (model, { eq }) => eq(model.course, course),
-      orderBy: (model, { desc }) => desc(model.id),
-    })
-  }
-)
+export async function getAllProcedures(course = 'opiekun-medyczny') {
+  'use cache: remote'
+  cacheLife('days')
+  cacheTag('procedures', `procedures:course:${course}`)
+  return db.query.procedures.findMany({
+    where: (model, { eq }) => eq(model.course, course),
+    orderBy: (model, { desc }) => desc(model.id),
+  })
+}
 
 // Count procedures for a course
 export const getProceduresCount = cache(

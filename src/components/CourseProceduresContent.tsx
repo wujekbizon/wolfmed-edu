@@ -3,8 +3,10 @@ import ProceduresBrowser from '@/components/ProceduresBrowser'
 import { toProcedureBrowseItems } from '@/helpers/toProcedureBrowseItems'
 import { getAllProcedures, getUserEnrolledCourses } from '@/server/queries'
 import { getCurrentUser } from '@/server/user'
+import type { CourseProceduresPageProps } from '@/types/procedureBrowseTypes'
 
-export default async function CourseProceduresContent({ course }: { course: string }) {
+export default async function CourseProceduresContent({ params }: CourseProceduresPageProps) {
+  const { course } = await params
   if (course !== 'opiekun-medyczny' && course !== 'pielegniarstwo') {
     redirect('/panel/procedury')
   }

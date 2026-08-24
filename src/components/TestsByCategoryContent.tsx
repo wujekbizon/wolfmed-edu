@@ -1,7 +1,7 @@
 import AllTests from '@/components/AllTests'
 import { CUSTOM_TEST_CATEGORY_PREFIX } from '@/constants/naukaCategoriesBrowse'
-import { getCachedTestsByCategory } from '@/server/tests/getCachedTestsByCategory'
 import {
+  getTestsByCategory,
   getUserCustomCategoryById,
   getUserCustomTestsByIds,
 } from '@/server/queries'
@@ -23,7 +23,7 @@ export default async function TestsByCategoryContent({ params }: CategoryPagePro
     if (!customCategory) redirect('/panel/nauka')
     tests = (await getUserCustomTestsByIds(customCategory.questionIds)) as Test[]
   } else {
-    tests = (await getCachedTestsByCategory(decodedCategory)) as Test[]
+    tests = (await getTestsByCategory(decodedCategory)) as Test[]
   }
 
   return <AllTests tests={tests} category={decodedCategory} />
