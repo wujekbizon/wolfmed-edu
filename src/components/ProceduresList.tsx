@@ -41,6 +41,8 @@ export default function ProceduresList({
             key={procedure.id}
             procedure={procedure.data}
             procedureSlug={procedure.slug}
+            status={statuses[procedure.id] || 'normal'}
+            onStatusChange={(status) => handleStatusChange(procedure.id, status)}
           />
         )
       )}

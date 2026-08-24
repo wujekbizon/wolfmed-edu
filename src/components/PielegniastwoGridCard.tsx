@@ -4,20 +4,33 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight, Clock, Award, ImageOff } from 'lucide-react'
 import { useState } from 'react'
+import ProcedureStatusControls from '@/components/ProcedureStatusControls'
+import type { ProcedureStatus } from '@/types/dataTypes'
 import type { PielegniastwoProcedure } from '@/types/pielegniastwoTypes'
 
 export default function PielegniastwoGridCard({
   procedure,
   procedureSlug,
+  status,
+  onStatusChange,
 }: {
   procedure: PielegniastwoProcedure
   procedureSlug: string
+  status: ProcedureStatus
+  onStatusChange: (status: ProcedureStatus) => void
 }) {
   const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
   const [imgError, setImgError] = useState(false)
+  const border = status === 'ukończone'
+    ? 'border-emerald-700/30'
+    : status === 'trudne'
+      ? 'border-[#ffa5a5]/40'
+      : 'border-zinc-400/60'
 
   return (
-    <div className="relative group border border-zinc-400/60 bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden">
+    <div className={`relative group border ${border} bg-white flex flex-col p-4 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden`}>
+      <ProcedureStatusControls status={status} onStatusChange={onStatusChange} />
+
       <div className="w-full h-[320px] relative overflow-hidden rounded-xl bg-zinc-50">
         {!procedure.image || imgError ? (
           <div className="w-full h-full flex flex-col items-center justify-center gap-2 bg-zinc-100 rounded-xl">
