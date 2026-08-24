@@ -1,7 +1,6 @@
 'use client'
 
-import { Search, X } from 'lucide-react'
-import Input from '@/components/ui/Input'
+import BrowseSearchInput from '@/components/ui/BrowseSearchInput'
 import DropdownSelect from '@/components/ui/DropdownSelect'
 import { getDiagnozyChapterSelectOptions } from '@/helpers/getDiagnozyChapterSelectOptions'
 import { getDiagnozyStatusSelectOptions } from '@/helpers/getDiagnozyStatusSelectOptions'
@@ -24,28 +23,13 @@ export default function DiagnozyToolbar({
 }) {
   return (
     <div className="sticky top-0 z-20 -mx-1 px-1 py-3 bg-zinc-50/90 backdrop-blur-sm flex flex-col sm:flex-row sm:items-center gap-2 flex-wrap">
-      <div className="relative flex-1 min-w-[12rem]">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-        <Input
-          type="text"
-          value={criteria.search}
-          onChangeHandler={(e) => onChange({ search: e.target.value })}
-          placeholder="Szukaj diagnozy, sekcji, autora…"
-          ariaLabel="Szukaj diagnoz"
-          className="w-full h-10 rounded-xl border border-zinc-300 bg-white pl-9 pr-9 text-sm text-zinc-700
-            focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-100"
-        />
-        {criteria.search && (
-          <button
-            type="button"
-            onClick={() => onChange({ search: '' })}
-            aria-label="Wyczyść"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
-      </div>
+      <BrowseSearchInput
+        value={criteria.search}
+        onChange={(search) => onChange({ search })}
+        placeholder="Szukaj diagnozy, sekcji, autora…"
+        ariaLabel="Szukaj diagnoz"
+        className="flex-1 min-w-[12rem]"
+      />
 
       <DropdownSelect
         value={criteria.chapter}

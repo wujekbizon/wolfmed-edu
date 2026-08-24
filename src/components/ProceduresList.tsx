@@ -1,56 +1,44 @@
-import { Procedure, ProcedureStatus } from '@/types/dataTypes'
+import { SearchX } from 'lucide-react'
 import GridProcedureCard from './GridProcedureCard'
+import PielegniastwoGridCard from './PielegniastwoGridCard'
 import { useState } from 'react'
-
-interface ProceduresListProps {
-  procedures: Procedure[]
-  isLoading: boolean
-  error?: Error | null
-}
+import type { ProcedureStatus } from '@/types/dataTypes'
+import type { ProcedureBrowseItem } from '@/types/procedureBrowseTypes'
 
 export default function ProceduresList({
   procedures,
-  isLoading,
-  error
-}: ProceduresListProps) {
+}: {
+  procedures: ProcedureBrowseItem[]
+}) {
   const [statuses, setStatuses] = useState<Record<string, ProcedureStatus>>({})
 
   const handleStatusChange = (id: string, status: ProcedureStatus) => {
     setStatuses(prev => ({ ...prev, [id]: status }))
   }
 
-  if (isLoading) {
+  if (procedures.length === 0) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <p className="text-zinc-600 text-lg">Ładowanie procedur...</p>
-      </div>
-    )
-  }
-
-  if (error) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4 text-zinc-300">⚠️</div>
-          <h3 className="text-xl text-zinc-500 mb-2 font-medium">Błąd ładowania</h3>
-          <p className="text-zinc-400">{error.message}</p>
-        </div>
+      <div className='rounded-2xl border border-zinc-200 p-8 text-center text-zinc-500 flex flex-col items-center gap-2'>
+        <SearchX className='w-6 h-6 text-zinc-300' />
+        Brak procedur dla podanej frazy.
       </div>
     )
   }
 
   return (
-    <div className="w-full h-full overflow-y-auto p-4 md:p-6 scrollbar-webkit">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-        {procedures.map((procedure) => (
+    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6'>
+      {procedures.map((procedure) =>
+        procedure.course === 'opiekun-medyczny' ? (
           <GridProcedureCard
-            key={procedure.id}
-            procedure={procedure}
-            status={statuses[procedure.id] || 'normal'}
-            onStatusChange={(status) => handleStatusChange(procedure.id, status)}
+            key={procedure.key}
+            procedure={procedure.data}
+            status={statuses[procedure.key] || 'normal'}
+            onStatusChange={(status) => handleStatusChange(procedure.key, status)}
           />
-        ))}
-      </div>
+        ) : (
+          <PielegniastwoGridCard key={procedure.key} procedure={procedure.data} />
+        )
+      )}
     </div>
   )
 }
