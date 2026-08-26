@@ -48,6 +48,7 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 | [`26-components.md`](./26-components.md) | All 597 files in `src/components/`, by directory and domain grouping. |
 | [`27-state-stores.md`](./27-state-stores.md) | All 28 Zustand stores in `src/store/`. |
 | [`28-queries.md`](./28-queries.md) | All 136 exported functions in `src/server/queries.ts` (2,601 lines) — the read-side data-access layer, grouped by domain, every function's real signature and behavior read from source. Added in doc-test round 8; full function-by-function pass added later, surfacing two real bugs (audit notes #18, #19). |
+| [`29-cache-components-audit.md`](./29-cache-components-audit.md) | Route-by-route Cache Components adoption map: call trees, query ownership, shared consumers, cache classification, invalidation and rollout order. |
 
 ## Testing & QA
 
