@@ -70,29 +70,49 @@ export default function Terms() {
         treści, które przeglądasz, są wyłącznie na Twoją odpowiedzialność.
       </p>
 
-      <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">Opłaty i płatności</h2>
+      <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">
+        Opłaty, płatności i zwroty
+      </h2>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7">
-        Wolfmed Edukacja oferuje płatne kursy edukacyjne. Ceny poszczególnych kursów są wyświetlane na stronie przed
-        dokonaniem zakupu. Płatności są przetwarzane przez naszego partnera płatniczego Stripe, który akceptuje płatności
-        kartą oraz BLIK.
+        Wolfmed Edukacja oferuje dostęp do kursów w dwóch modelach: dostęp bezterminowy, opłacany jednorazowo bez
+        cyklicznych opłat, oraz subskrypcję miesięczną, odnawianą automatycznie do chwili anulowania. Dostęp wymaga
+        posiadania aktywnego konta.
       </p>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
-        Po dokonaniu zakupu otrzymujesz dostęp do wybranego kursu na czas nieokreślony, pod warunkiem posiadania
-        aktywnego konta. Zastrzegamy sobie prawo do zmiany cen kursów, przy czym zmiana ceny nie wpływa na już zakupione
-        kursy.
+        Cena, wybrany kurs, zakres dostępu oraz jednorazowy albo cykliczny charakter płatności są przedstawiane przed
+        zatwierdzeniem zakupu. Płatności obsługuje Stripe, w szczególności kartą lub BLIK. Zmiana ceny nie wpływa na
+        opłacony już dostęp ani rozpoczęty okres rozliczeniowy.
       </p>
       <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
-        <strong>Polityka zwrotów:</strong> Ze względu na cyfrowy charakter naszych produktów, zwroty są możliwe tylko w
-        uzasadnionych przypadkach i w ciągu 14 dni od zakupu, jeśli użytkownik nie rozpoczął korzystania z kursu.
-        Prosimy o kontakt pod adresem{' '}
+        Subskrypcję można anulować w dowolnym momencie. Anulowanie zatrzymuje przyszłe odnowienia, a dostęp pozostaje
+        aktywny do końca opłaconego okresu rozliczeniowego. Opłata za rozpoczęty okres nie podlega proporcjonalnemu
+        zwrotowi, chyba że obowiązujące przepisy stanowią inaczej.
+      </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Podwyższenie wariantu subskrypcji może obowiązywać natychmiast. Stripe oblicza wtedy proporcjonalną dopłatę za
+        pozostałą część bieżącego okresu i przedstawia ją przed zatwierdzeniem zmiany. Obniżenie wariantu obowiązuje od
+        kolejnego okresu rozliczeniowego i nie powoduje proporcjonalnego zwrotu za okres bieżący.
+      </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Przed dokonaniem płatności użytkownik powinien sprawdzić kurs, wariant dostępu, cenę i model płatności. Zmiana
+        decyzji, omyłkowy wybór wariantu lub niewykorzystanie dostępu nie stanowią podstawy do dobrowolnego zwrotu.
+      </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Użytkownik może zażądać rozpoczęcia dostarczania treści lub usługi cyfrowej bezpośrednio po zakupie, przed
+        upływem ustawowego terminu na odstąpienie od umowy. Jeżeli udzieli wymaganej, wyraźnej zgody i przyjmie do
+        wiadomości jej skutki, prawo odstąpienia może wygasnąć w zakresie przewidzianym obowiązującymi przepisami.
+      </p>
+      <p className="text-base xs:text-lg sm:text-xl text-zinc-700 leading-7 mt-3">
+        Powyższe zasady nie ograniczają ustawowych praw konsumenta, w szczególności uprawnień dotyczących niezgodności
+        treści lub usługi cyfrowej z umową. Wnioski i reklamacje należy kierować na adres{' '}
         <Link
           href="mailto:wolfmededu@gmail.com"
           target="_blank"
           className="hover:text-red-500 transition-colors text-blue-400"
         >
           wolfmededu@gmail.com
-        </Link>{' '}
-        w celu rozpatrzenia wniosku o zwrot.
+        </Link>
+        .
       </p>
 
       <h2 className="text-xl xs:text-2xl sm:text-3xl font-semibold mt-10 mb-3">
@@ -183,7 +203,7 @@ export default function Terms() {
       </p>
 
       <div className="mt-8 pt-6 border-t border-zinc-200 text-sm text-zinc-500">
-        <p>Ostatnia aktualizacja: Styczeń 2026</p>
+        <p>Ostatnia aktualizacja: Wrzesień 2026</p>
       </div>
     </div>
   )

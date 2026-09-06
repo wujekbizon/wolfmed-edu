@@ -18,6 +18,12 @@ export async function createStripeCheckoutSession(
     billing_address_collection: 'required',
     name_collection: { individual: { enabled: true, optional: false } },
     tax_id_collection: { enabled: true, required: 'never' },
+    consent_collection: { terms_of_service: 'required' },
+    custom_text: {
+      submit: {
+        message: 'Przed płatnością sprawdź wybrany kurs, wariant dostępu, cenę oraz jednorazowy lub cykliczny charakter płatności.',
+      },
+    },
     locale: 'pl',
     line_items: [{ price: offer.priceId, quantity: 1 }],
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
