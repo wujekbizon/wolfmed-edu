@@ -104,12 +104,12 @@ committed learning event         buildStaticPrefix ─▶ policies + preferences
   → promoteFact (gate)                        ▼
       dedup · reactivation         systemInstruction  → tone and depth only
       → supersession
-  → idempotent episode           buildMemoryTail ──▶ facts + recent episodes
+  → idempotent episode           buildMemoryTail ──▶ semantic facts + episodes
   → versioned reconciliation           (Path B: retrieved, volatile)
 tutor turn → user/retrieval/model traces
-                                  recent six turns ──▶ self-state continuity
+                                  newest episode + recent six turns ──▶ continuity
 RETENTION                                   ▼
-/api/cron/memory-retention           prompt tail — self-state answers only
+/api/cron/memory-retention           prompt tail — tutor personalization
   traces >90d, expired facts
   revoked >30d, active episodes
   >180d                            semantic self-state route → answerFromMemory
@@ -120,13 +120,14 @@ deleteUserAccount ← Clerk user.deleted
 ```
 
 **Memory is never evidence.** It describes the student, not the subject.
-Preferences shape *how* an answer reads; facts and episodes answer questions about
-the student themselves. Neither enters a subject answer, and neither ever reaches a
-retrieval query — putting them in front of the subject is what made corpus terms
-come back as "no information".
+Preferences shape *how* an answer reads; relevant facts and episodes let the tutor
+adapt focus and continue prior learning. They enter the generation prompt, never a
+subject retrieval query, and cannot supply medical claims. Putting memory into the
+retrieval query is what made corpus terms come back as "no information".
 
-**Both reads fail safe.** `buildStaticPrefix` and `buildMemoryTail` return `''` when
-memory is unavailable, so the tutor degrades rather than fails.
+**Both reads fail safe.** `buildStaticPrefix` returns `''` and `buildMemoryTail`
+returns empty text when memory is unavailable, so the tutor degrades rather than
+fails.
 
 **Memory is derived and disposable.** The database is the system of record;
 memory is rebuildable from it and is never the source of truth for anything the UI
@@ -288,9 +289,10 @@ lost twice, as each ban pushed the marker into a new form.
 | PDF text extraction (Gemini) | ❌ | ✅ |
 | chunks + embeddings, appears in AI answers | ❌ | ✅ |
 
-The course is sold with notes and 20 MB of storage, so neither is blocked. What
-premium buys is the **model calls**. A basic user's marginal cost is UploadThing
-storage, Postgres and serverless — no Vertex, no Gemini.
+The course is sold with notes and 20 MB of storage, so neither is blocked. Premium
+buys the **personal-library model calls**. Deterministic student memory is formed
+for both tiers and currently embeds facts and episodes so an eventual Premium tutor
+can use the accumulated learning history immediately.
 
 **The gate is at the write path only** (`notes.ts`, `materials.ts`).
 `embedPendingChunks()` with no scope — how the cron calls it — takes every chunk

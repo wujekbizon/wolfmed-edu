@@ -15,13 +15,14 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
   preferences settings UI, and the static-prefix injection into the tutor
   (fail-safe). No ranked memory yet.
 - **M2 (done, minus client-only activities)** — facts/episodes stores, atomic
-  promotion/reactivation/supersession, idempotent episodes, and Path B hybrid
-  retrieval. Deterministic hooks cover theory tests, diagnozy exams, procedure
+  promotion/reactivation/supersession, idempotent episodes, and shared-query Path B
+  hybrid retrieval across both types. Deterministic hooks cover theory tests, diagnozy exams, procedure
   challenges, practical exams, and manual study logs. Versioned reconciliation
   rebuilds missing memory from canonical tables without embeddings. Flashcard
   review and mind-map mastery remain client-only with no committed event to promote.
-- **M3 (done, minus rolling summary)** — Path B injected into the tutor: retrieved
-  facts + recent episodes in the volatile prompt tail (token-budgeted, fail-safe).
+- **M3 (done, minus rolling summary)** — Path B injected into the tutor: semantically
+  retrieved facts + episodes and newest-activity continuity in the volatile prompt
+  tail (token-budgeted, fail-safe).
   A constrained Flash-Lite semantic router separates self-state from medical
   questions without changing the RAG query. Self-state recall returns explicit
   ready/empty/unavailable states and never falls through to the corpus. Rolling
@@ -49,7 +50,8 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 | `stores/preferences.ts` | Per-user preference upsert + load-all. |
 | `classifyTutorIntent.ts` | Constrained semantic routing between typed self-state memory, medical RAG, and clarification. Classification failure preserves the existing RAG fallback. |
 | `assemble.ts` | Builds the static policy/preference prefix. |
-| `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded volatile recall and explicit ready/empty/unavailable self-state context. |
+| `retrieve.ts` / `search*Memory.ts` | One query embedding, then parallel hybrid fact and episode discovery with lexical fallback. |
+| `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded ranked recall and explicit ready/empty/unavailable self-state context. |
 | `extract*.ts` | Deterministic committed-event → fact/episode hooks. |
 | `reconcile*Memory.ts` | Versioned, idempotent rebuild from learning tables. |
 | `recordTutorTurnTrace.ts` | Append-only user/retrieval/model trace sequence. |

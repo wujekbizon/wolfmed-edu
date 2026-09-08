@@ -510,13 +510,13 @@ export async function askRagQuestion(
           'MEMORY', 'Self-state question — answering from memory, skipping corpus'
         )
 
-        let selfState = await buildSelfStateContext(userId)
+        let selfState = await buildSelfStateContext(userId, cleanQuestion)
         const reconciliation = await reconcileStudentMemory(
           userId,
           selfState.status === 'empty'
         )
         if (reconciliation.attempted) {
-          selfState = await buildSelfStateContext(userId)
+          selfState = await buildSelfStateContext(userId, cleanQuestion)
         }
         if (tutorTrace) {
           await recordTutorRetrievalTrace({
@@ -524,6 +524,7 @@ export async function askRagQuestion(
             route: 'memory',
             memoryStatus: selfState.status,
             ...(selfState.status === 'ready' ? { memoryCounts: selfState.counts } : {}),
+            ...(selfState.status === 'ready' ? { memoryRecall: selfState.recall } : {}),
           })
         }
         if (selfState.status !== 'ready') {
@@ -606,6 +607,7 @@ export async function askRagQuestion(
         ...tutorTrace,
         route: 'rag',
         sources: context.sources,
+        ...(memoryTail.recall ? { memoryRecall: memoryTail.recall } : {}),
       })
     }
 
@@ -633,7 +635,7 @@ export async function askRagQuestion(
 
     const result = await generateGroundedAnswer(cleanQuestion, context, {
       ...(additionalContext ? { userContext: additionalContext } : {}),
-      ...(memoryTail ? { memoryTail } : {}),
+      ...(memoryTail.text ? { memoryTail: memoryTail.text } : {}),
       ...(memoryPrefix ? { memoryPrefix } : {}),
     })
     const tokenUsage = combineModelTokenUsage(routingUsage, result.usage)

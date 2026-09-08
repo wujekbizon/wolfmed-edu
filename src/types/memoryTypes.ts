@@ -37,6 +37,7 @@ export interface TutorRetrievalTraceInput extends TutorTraceContext {
   route: TutorRoute
   memoryStatus?: 'ready' | 'empty' | 'unavailable'
   memoryCounts?: { facts: number; preferences: number; episodes: number }
+  memoryRecall?: MemoryRecallTrace
   sources?: Array<{ label: string; origin: string }>
 }
 
@@ -129,7 +130,9 @@ export type SelfStateContextResult =
       status: 'ready'
       context: string
       counts: { facts: number; preferences: number; episodes: number }
+      recall: MemoryRecallTrace
     }
   | { status: 'empty' }
   | { status: 'unavailable' }
 import type { FactSource, FactStatus } from '@/server/memory/stores/facts'
+import type { MemoryRecallTrace } from '@/types/memoryRetrievalTypes'

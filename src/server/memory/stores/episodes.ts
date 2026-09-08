@@ -1,7 +1,8 @@
 import 'server-only'
-import { and, desc, eq, sql } from 'drizzle-orm'
+import { and, desc, eq, gt, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { memEpisodes, type MemEpisode } from '@/server/db/memory-schema'
+import { RETENTION } from '@/server/memory/config'
 import type { NewMemoryEpisode } from '@/types/memoryTypes'
 
 export async function insertEpisode(episode: NewMemoryEpisode): Promise<MemEpisode> {
@@ -60,9 +61,19 @@ export async function getRecentEpisodes(
   userId: string,
   opts: { taskType?: string; limit?: number } = {}
 ): Promise<MemEpisode[]> {
+  const cutoff = new Date(Date.now() - RETENTION.activeEpisodeDays * 24 * 60 * 60 * 1000)
   const scope = opts.taskType
-    ? and(eq(memEpisodes.userId, userId), eq(memEpisodes.taskType, opts.taskType), eq(memEpisodes.status, 'active'))
-    : and(eq(memEpisodes.userId, userId), eq(memEpisodes.status, 'active'))
+    ? and(
+        eq(memEpisodes.userId, userId),
+        eq(memEpisodes.taskType, opts.taskType),
+        eq(memEpisodes.status, 'active'),
+        gt(memEpisodes.completedAt, cutoff)
+      )
+    : and(
+        eq(memEpisodes.userId, userId),
+        eq(memEpisodes.status, 'active'),
+        gt(memEpisodes.completedAt, cutoff)
+      )
 
   return db
     .select()
