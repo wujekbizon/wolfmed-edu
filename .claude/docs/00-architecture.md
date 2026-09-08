@@ -134,7 +134,7 @@ Ten more files, one level deeper than the modules above — the actual implement
 - **`attached-source.ts`** — `getAttachedSourceText(userId, sourceIds)`. Backs the `@resource` attachment tier (tier 3 in the Data Sources table below): loads a note/material's **whole** content rather than retrieving chunks, because an explicit attachment means the student already did the selecting — chunk retrieval would hand back only the passages that happened to match the query. A material with no `extractedText` yet contributes nothing here (the caller falls back to shipping the raw file).
 
 **`src/server/memory/stores/`** (per-slot DB access behind `memory/assemble.ts`/`extract.ts` — see [`33-flows-ai-tutor.md`](./33-flows-ai-tutor.md)):
-- **`episodes.ts`** — `insertEpisode(episode)`, `getRecentEpisodes(...)`. The `memTraces`-backed episodic-memory slot (a timestamped record of a specific past interaction).
+- **`episodes.ts`** — `insertEpisode(episode)`, `getRecentEpisodes(...)`. The episodic-memory slot: timestamped summaries of completed learning activity. `retrieveMemory` searches their summaries through the same hybrid vector/trigram cascade as facts.
 - **`facts.ts`** — `getFactByHash`, `getActiveFactsForSlot`, `insertFact`, `revokeFact`, `getActiveFacts`. Facts carry a `FactStatus` (`'provisional' | 'active' | 'revoked'`) and a `FactSource`; `revokeFact` supersedes rather than deletes (`supersededByFactId`), preserving history.
 - **`preferences.ts`** — `getPreferences`, `getPreferencesMap`, `upsertPreference(s)`. Backs `memoryPrefix` (see root `CLAUDE.md` → Data Sources tier 4) — preferences carry a `PreferenceSource` (`'user_stated' | 'llm_inferred' | 'admin_set'`) distinguishing what the student typed from what the model inferred.
 

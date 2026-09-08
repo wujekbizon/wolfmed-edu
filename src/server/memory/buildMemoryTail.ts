@@ -1,48 +1,69 @@
 import 'server-only'
 import { getActiveFacts } from './stores/facts'
 import { getRecentEpisodes } from './stores/episodes'
-import { retrieveFacts } from './retrieve'
+import { retrieveMemory } from './retrieve'
 import { ASSEMBLY_TOKEN_BUDGET, CHARS_PER_TOKEN } from './config'
+import type {
+  MemoryHit,
+  MemoryRecallTrace,
+  MemoryTailResult,
+} from '@/types/memoryRetrievalTypes'
 
-export async function buildMemoryTail(userId: string, query: string): Promise<string> {
+export async function buildMemoryTail(
+  userId: string,
+  query: string
+): Promise<MemoryTailResult> {
   try {
-    const anyFact = await getActiveFacts(userId, 1)
-    if (anyFact.length === 0) {
-      const episodesOnly = await getRecentEpisodes(userId, { limit: 3 })
-      if (episodesOnly.length === 0) return ''
-      return `OSTATNIE AKTYWNOŚCI UCZNIA:\n${episodesOnly.map((e) => `- ${e.summary}`).join('\n')}`
-    }
-
-    const budgetChars = ASSEMBLY_TOKEN_BUDGET * CHARS_PER_TOKEN
-    const [factResult, episodes] = await Promise.all([
-      retrieveFacts(userId, query, 8),
-      getRecentEpisodes(userId, { limit: 3 }),
+    const [factsExist, recentEpisodes] = await Promise.all([
+      getActiveFacts(userId, 1),
+      getRecentEpisodes(userId, { limit: 1 }),
     ])
-    const sections: string[] = []
-    let used = 0
-    const factLines: string[] = []
-    for (const hit of factResult.hits) {
-      if (hit.tier === 'low') continue
-      const line = `- ${hit.content}`
-      if (used + line.length > budgetChars) break
-      factLines.push(line)
-      used += line.length
-    }
-    if (factLines.length > 0) sections.push(`WIEDZA O UCZNIU:\n${factLines.join('\n')}`)
+    if (factsExist.length === 0 && recentEpisodes.length === 0) return { text: '' }
 
-    const episodeLines: string[] = []
-    for (const episode of episodes) {
-      const line = `- ${episode.summary}`
-      if (used + line.length > budgetChars) break
-      episodeLines.push(line)
-      used += line.length
+    const memory = await retrieveMemory(userId, query)
+    const ranked = [...memory.facts, ...memory.episodes]
+      .filter((hit) => hit.tier !== 'low')
+      .sort((a, b) => b.score - a.score)
+    const newest = recentEpisodes[0]
+    if (newest && !memory.episodes.some((hit) => hit.id === newest.episodeId)) {
+      ranked.push({
+        id: newest.episodeId,
+        kind: 'episode',
+        selectionReason: 'recent',
+        content: newest.summary,
+        score: 0,
+        tier: 'low',
+      })
     }
-    if (episodeLines.length > 0) {
-      sections.push(`OSTATNIE AKTYWNOŚCI UCZNIA:\n${episodeLines.join('\n')}`)
+
+    const selected: MemoryHit[] = []
+    let used = 0
+    const budget = ASSEMBLY_TOKEN_BUDGET * CHARS_PER_TOKEN
+    for (const hit of ranked) {
+      const lineLength = hit.content.length + 3
+      if (used + lineLength > budget) continue
+      selected.push(hit)
+      used += lineLength
     }
-    return sections.join('\n\n')
+
+    const facts = selected.filter((hit) => hit.kind === 'fact')
+    const episodes = selected.filter((hit) => hit.kind === 'episode')
+    const sections: string[] = []
+    if (facts.length > 0) {
+      sections.push(`FAKTY O UCZNIU:\n${facts.map((hit) => `- ${hit.content}`).join('\n')}`)
+    }
+    if (episodes.length > 0) {
+      sections.push(`ISTOTNE WCZEŚNIEJSZE AKTYWNOŚCI:\n${episodes.map((hit) => `- ${hit.content}`).join('\n')}`)
+    }
+
+    const recall: MemoryRecallTrace = {
+      facts: facts.map(({ id, score, tier, selectionReason }) => ({ id, score, tier, selectionReason })),
+      episodes: episodes.map(({ id, score, tier, selectionReason }) => ({ id, score, tier, selectionReason })),
+      modes: memory.modes,
+    }
+    return { text: sections.join('\n\n'), recall }
   } catch (error) {
     console.error('[memory] buildMemoryTail failed:', error)
-    return ''
+    return { text: '' }
   }
 }

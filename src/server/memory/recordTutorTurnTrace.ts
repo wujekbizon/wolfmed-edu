@@ -50,6 +50,7 @@ export async function recordTutorRetrievalTrace(
         route: input.route,
         memoryStatus: input.memoryStatus,
         memoryCounts: input.memoryCounts,
+        memoryRecall: input.memoryRecall,
         sources: input.sources,
       },
     })

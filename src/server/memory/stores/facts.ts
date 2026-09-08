@@ -1,5 +1,5 @@
 import 'server-only'
-import { and, desc, eq, isNull, sql } from 'drizzle-orm'
+import { and, desc, eq, gt, isNull, or, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { memFacts, type MemFact } from '@/server/db/memory-schema'
 
@@ -90,7 +90,14 @@ export async function getActiveFacts(userId: string, limit = 50): Promise<MemFac
   return db
     .select()
     .from(memFacts)
-    .where(and(eq(memFacts.userId, userId), eq(memFacts.status, 'active'), isNull(memFacts.supersededBy)))
+    .where(
+      and(
+        eq(memFacts.userId, userId),
+        eq(memFacts.status, 'active'),
+        isNull(memFacts.supersededBy),
+        or(isNull(memFacts.expiresAt), gt(memFacts.expiresAt, new Date()))
+      )
+    )
     .orderBy(desc(memFacts.createdAt))
     .limit(limit)
 }

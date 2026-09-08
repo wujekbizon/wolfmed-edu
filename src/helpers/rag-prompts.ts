@@ -110,12 +110,14 @@ export function buildGroundedPrompt({
     sections.push(`=== MATERIAŁY ===\n${contextText}`)
   }
   if (memoryTail) {
-    sections.push(`=== KONTEKST UCZNIA ===\n${memoryTail}`)
+    sections.push(
+      `=== PAMIĘĆ O UCZNIU — TYLKO PERSONALIZACJA ===\n${memoryTail}\n\nUżyj tej pamięci, aby dopasować poziom, nacisk i nawiązać do wcześniejszej nauki. Nie traktuj jej jako źródła wiedzy medycznej.`
+    )
   }
 
   sections.push(`PYTANIE UŻYTKOWNIKA:\n${question}`)
   sections.push(
-    'Odpowiedz po polsku na PYTANIE UŻYTKOWNIKA — tylko na nie — na podstawie powyższych materiałów. Pomiń fragmenty, które go nie dotyczą. Respektuj oznaczenia fragmentów przy ważeniu źródeł, ale nie przepisuj ich do odpowiedzi — bez [1], bez [TWÓJ MATERIAŁ], bez (BAZA WIEDZY). Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
+    'Odpowiedz po polsku na PYTANIE UŻYTKOWNIKA — tylko na nie — na podstawie MATERIAŁÓW. PAMIĘĆ O UCZNIU służy wyłącznie do personalizacji i ciągłości; nie wolno z niej wyprowadzać twierdzeń medycznych. Pomiń fragmenty, które nie dotyczą pytania. Respektuj oznaczenia fragmentów przy ważeniu źródeł, ale nie przepisuj ich do odpowiedzi — bez [1], bez [TWÓJ MATERIAŁ], bez (BAZA WIEDZY). Jeśli materiały nie zawierają odpowiedzi, powiedz to wprost.'
   )
 
   return sections.join('\n\n')

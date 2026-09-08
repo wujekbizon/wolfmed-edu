@@ -226,12 +226,12 @@ display name — "summarise *this* note" is a different intent from "search
 everything". An attachment is the PRIMARY source; corpus chunks stay secondary.
 Nothing in the request path reads from disk.
 
-**4. Student memory — never content.** Memory describes the *student*, not the
-subject, and is not evidence. Preferences and policies (`memoryPrefix`) shape tone
-and depth for the conversational tutor only. Facts and episodes (`memoryTail`)
-belong solely to questions about the student themselves, which the constrained
-`classifyTutorIntent` semantic router sends to a memory-only path; they never
-enter a retrieval query or alter its query text.
+**4. Student memory — never subject content.** Memory describes the *student*, not
+the medical subject, and is not evidence. Preferences and policies (`memoryPrefix`)
+shape tone and depth. Semantically relevant facts and episodes (`memoryTail`) add
+personalization and continuity to conversational answers. Self-state questions use
+the same typed memory through a memory-only path. Memory never enters a curriculum
+or library retrieval query and never supplies medical claims.
 
 Memory formation is deterministic: committed theory tests, diagnozy exams,
 procedure challenges, practical-exam study logs, and manual study logs pass
