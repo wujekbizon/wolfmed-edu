@@ -42,6 +42,13 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 
 ## Layout
 
+Accuracy correction and manual acceptance cases:
+[`47-memory-retrieval-smoke-test.md`](../../../.claude/docs/47-memory-retrieval-smoke-test.md).
+Explicit topics are resolved from user metadata before scoped retrieval. Hybrid
+discovery normalizes eligible lexical scores without penalizing vector matches.
+Both answer paths use bounded assembly with record dates, aggregate/attempt
+labels, and candidate selection diagnostics.
+
 | File | Role |
 |---|---|
 | `config.ts` | Single source of truth: `EMBED_DIM = 768`, model, thresholds, token budget, table names. Pure constants — no `server-only`, so the Drizzle schema can import it. |
@@ -50,7 +57,7 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 | `stores/preferences.ts` | Per-user preference upsert + load-all. |
 | `classifyTutorIntent.ts` | Constrained semantic routing between typed self-state memory, medical RAG, and clarification. Classification failure preserves the existing RAG fallback. |
 | `assemble.ts` | Builds the static policy/preference prefix. |
-| `retrieve.ts` / `search*Memory.ts` | One query embedding, then parallel hybrid fact and episode discovery with lexical fallback. |
+| `retrieve.ts` / `searchMemoryStore.ts` | Resolve topics, reuse one query embedding, then parallel typed searches with usable lexical fallback. |
 | `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded ranked recall and explicit ready/empty/unavailable self-state context. |
 | `extract*.ts` | Deterministic committed-event → fact/episode hooks. |
 | `reconcile*Memory.ts` | Versioned, idempotent rebuild from learning tables. |

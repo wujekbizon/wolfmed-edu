@@ -1,4 +1,5 @@
 import 'server-only'
+import { MEMORY_ANSWER_SYSTEM } from '@/constants/memoryAnswerPrompt'
 import { FunctionCallingConfigMode } from '@google/genai'
 import { SYSTEM_PROMPT, buildGroundedPrompt, getNoDataFoundMessage } from '@/helpers/rag-prompts'
 import { formatContextChunks } from '@/helpers/formatContextChunks'
@@ -25,7 +26,6 @@ function composeSystemInstruction(memoryPrefix?: string): string {
 // Memory-answered guard (M3): questions about the student's own state are
 // answered from their memory context alone — a single Flash-Lite call, no corpus
 // retrieval, no Flash grounding.
-const MEMORY_ANSWER_SYSTEM = `Jesteś asystentem nauki Wolfmed. Odpowiadasz na pytania ucznia o jego własny postęp, cele, preferencje i aktywności WYŁĄCZNIE na podstawie informacji z pamięci. Odpowiadaj po polsku, konkretnie i w maksymalnie 120 słowach. Bez powitania i wstępu. Grupuj obszary z podobnymi wynikami zamiast opisywać każdy osobno. Podaj najważniejszą ocenę oraz maksymalnie dwa priorytety do poprawy. Nie powtarzaj tych samych wyników w ocenie i zaleceniach. Jeśli brakuje informacji, powiedz to wprost. Odpowiedź ma być samodzielna: nie zadawaj pytań, nie proponuj dalszej pomocy i nie zapraszaj do kontynuowania rozmowy.`
 
 export async function answerFromMemory(
   question: string,

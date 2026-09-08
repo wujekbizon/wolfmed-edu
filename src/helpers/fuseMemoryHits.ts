@@ -4,26 +4,29 @@ import type { RankedMemoryRow, ScoredMemoryRow } from '@/types/memoryRetrievalTy
 
 export function fuseMemoryHits(
   vector: ScoredMemoryRow[],
-  lexical: ScoredMemoryRow[],
-  limit: number
+  lexical: ScoredMemoryRow[]
 ): RankedMemoryRow[] {
-  const rows = new Map<string, { content: string; vector?: number; lexical?: number }>()
-  for (const hit of vector) rows.set(hit.id, { content: hit.content, vector: hit.score })
-  for (const hit of lexical) {
-    const current = rows.get(hit.id)
-    if (current) current.lexical = hit.score
-    else rows.set(hit.id, { content: hit.content, lexical: hit.score })
+  const rows = new Map<string, { row: ScoredMemoryRow; vector?: number; lexical?: number }>()
+  for (const row of vector) rows.set(row.id, { row, vector: row.score })
+  for (const row of lexical) {
+    const current = rows.get(row.id)
+    if (current) current.lexical = row.score
+    else rows.set(row.id, { row, lexical: row.score })
   }
-
-  return [...rows.entries()]
-    .map(([id, row]) => {
-      const score =
-        row.vector != null && row.lexical != null
-          ? FUSION_WEIGHTS.vector * row.vector + FUSION_WEIGHTS.lexical * row.lexical
-          : (row.vector ?? row.lexical ?? 0)
-      return { id, content: row.content, score, tier: getMemoryTier(score) }
-    })
-    .filter((hit) => hit.score >= FUSED_SCORE_FLOOR)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
+  const maxLexical = Math.max(0, ...lexical
+    .filter((row) => row.score >= FUSED_SCORE_FLOOR).map((row) => row.score))
+  return [...rows.values()].map(({ row, vector, lexical }) => {
+    const normalized = lexical != null && maxLexical > 0 ? lexical / maxLexical : null
+    const eligible = lexical != null && lexical >= FUSED_SCORE_FLOOR
+    const weighted = vector != null && normalized != null && eligible
+      ? FUSION_WEIGHTS.vector * vector + FUSION_WEIGHTS.lexical * normalized
+      : (vector ?? (eligible ? normalized ?? 0 : 0))
+    // A positive lexical observation must never reduce the vector-only baseline.
+    const score = Math.max(vector ?? 0, weighted)
+    return {
+      ...row, score, tier: getMemoryTier(score),
+      vectorScore: vector ?? null, lexicalScore: lexical ?? null,
+      normalizedLexicalScore: normalized,
+    }
+  }).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id))
 }

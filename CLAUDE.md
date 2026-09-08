@@ -240,7 +240,7 @@ never auto-promoted. Versioned reconciliation rebuilds missing derived memory.
 
 | Feature | Corpus | Personal | Attachments | Memory |
 |---|---|---|---|---|
-| Conversational tutor | yes | yes | yes | preferences only |
+| Conversational tutor | yes | yes | yes | preferences + relevant facts/episodes for personalization |
 | Self-state questions | no | no | no | yes — memory only |
 | Mind map · AI tests · `/commands` · lectures | yes | yes | yes | **no** |
 
