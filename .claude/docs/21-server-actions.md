@@ -237,3 +237,9 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 **6. `uploadFilesAction` discards which files failed.** `uploadFiles()` returns `results.failed: string[]`; the action reports only `results.failed.length`. An admin whose batch partly failed sees a count and has no way to tell which files to retry. (Carried over from round 14's F-26, confirmed here in the action itself.)
 
 **7. Two files in `src/actions/` are not Server Actions** — `fetchQuestionDetails.ts` and `fetchProblematicQuestionDetails.ts` lack `'use server'`. Currently safe (only imported by Server Components), but a future contributor importing either into a client component would get a confusing build/runtime failure, since everything else in this directory *is* callable that way.
+
+## Stripe report month navigation
+
+`selectStripeReportMonth` in `src/actions/stripe-reports.ts` checks ensureAdmin, validates StripeReportMonthSchema, then redirects to the selected report month. Form uses useActionState, FieldError and useToastMessage. Action returns no report rows/PDF and performs no business-data writes.
+
+`sendStripeReportEmail` checks admin access, validates month/fingerprint/recipient, rate-limits sending, requires an encrypted Gmail connection cookie, re-fetches Stripe data and rejects a changed preview. It sends the encrypted report PDF first and its random password in a second Gmail message.

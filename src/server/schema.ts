@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { getPreviousStripeReportMonth } from '@/helpers/getPreviousStripeReportMonth'
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
 import { BODY_ZONES } from "@/types/diagnozyTypes";
@@ -1165,3 +1166,18 @@ export const SubmitDiagnozyExamSchema = z.object({
   zones: z.record(z.string(), z.enum(BODY_ZONES)).optional(),
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas").max(24 * 60 * 60),
 });
+export const StripeReportMonthSchema = z.object({
+  month: z.string({ error: 'Wybierz miesiąc.' })
+    .regex(/^20\d{2}-(0[1-9]|1[0-2])$/, 'Nieprawidłowy miesiąc.')
+    .refine((month) => month <= getPreviousStripeReportMonth(), 'Wybierz zakończony miesiąc.'),
+})
+
+export const StripeReportDownloadSchema = StripeReportMonthSchema.extend({
+  fingerprint: z.string().regex(/^[a-f0-9]{64}$/),
+})
+
+export const SendStripeReportEmailSchema = StripeReportDownloadSchema.extend({
+  recipient: z.string({ error: 'Podaj adres odbiorcy.' })
+    .trim()
+    .email('Nieprawidłowy adres e-mail.'),
+})

@@ -285,3 +285,13 @@ subscription, uploads, memory and learning data.
 ---
 
 *(Rounds 9+ append more cases here as further flows get doc-tested — see the "How to add to this guide" note above.)*
+
+## Stripe monthly report
+
+1. Admin -> Raporty Stripe. Previous completed Warsaw month loads. Change month, refresh, download PDF; displayed totals and PDF agree. Test account shows TRYB TESTOWY.
+2. Guest/deleted Customer, missing or partial address: row stays in table/PDF with missing-data note. Historical address wins over current Customer data. Existing invoice references/tax IDs appear where available.
+3. More than 100 entries: all pages included. Refund against earlier payment belongs to balance-entry month. Currency totals remain separate; failed/pending entries are outside totals.
+4. Signed-out/non-admin page/action/JSON/PDF requests cannot read Stripe. Invalid/future month rejected. Stripe failure prevents completed report; changed fingerprint requires refresh before export.
+5. Inspect long addresses, Polish characters, repeated PDF headers, page numbers and final totals. No Stripe/customer/application-data writes.
+
+Automated cases: tests/payments/stripeReport*.test.ts.

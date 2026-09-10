@@ -12,6 +12,9 @@ const nextConfig: NextConfig = {
     },
   },
   reactCompiler: true,
+  outputFileTracingIncludes: {
+    '/api/admin/stripe-reports/pdf': ['./public/fonts/stripe-report/*.ttf'],
+  },
   serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],
   allowedDevOrigins: ['local-origin.dev', '*.ngrok-free.app','*.local-origin.dev','192.168.1.13'],
   experimental: {
