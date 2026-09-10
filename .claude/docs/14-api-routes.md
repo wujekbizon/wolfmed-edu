@@ -85,3 +85,9 @@ refund, and dispute events to `src/server/payments/*`.
 
 No Clerk API call, Clerk metadata update, `testLimit` reward or AI/indexing work
 runs in this webhook.
+
+## Admin Stripe reports
+
+`GET /api/admin/stripe-reports?month=YYYY-MM` returns complete payment/refund report DTO. `GET /api/admin/stripe-reports/pdf?month=YYYY-MM&fingerprint=...` returns an AES-256 password-protected attachment and the per-export password header used to create a separate text download. Both independently check admin access, validate server-side, use private/no-store responses, and share the authorized reader. Errors: 403 access, 400 input, 409 changed PDF preview, 503 unavailable report, 500 PDF render failure. Node runtime; PDF fonts included through outputFileTracingIncludes. No business-data mutations.
+
+`GET /api/admin/gmail/connect` creates a short-lived HttpOnly OAuth state cookie and redirects to Google. `GET /api/admin/gmail/callback` verifies admin session and state, exchanges the code for offline credentials, verifies sender identity, then stores the refresh token and email encrypted in an HttpOnly cookie. Required env: `GOOGLE_GMAIL_CLIENT_ID`, `GOOGLE_GMAIL_CLIENT_SECRET`, `GMAIL_TOKEN_ENCRYPTION_KEY` as 32-byte base64.

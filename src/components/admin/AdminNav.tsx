@@ -4,8 +4,8 @@ import { FORUM_NOTIFICATION_BADGE_CAP } from '@/constants/forumNotifications'
 import type { AdminNavBadges, AdminNavVariant } from '@/types/adminNavTypes'
 
 const VARIANT_CLASS: Record<AdminNavVariant, string> = {
-  desktop: 'hidden md:flex space-x-4',
-  mobile: 'md:hidden pb-4 flex flex-wrap gap-2',
+  desktop: 'hidden xl:flex flex-wrap gap-1',
+  mobile: 'xl:hidden pb-4 flex flex-wrap gap-2',
 }
 
 export default function AdminNav({
