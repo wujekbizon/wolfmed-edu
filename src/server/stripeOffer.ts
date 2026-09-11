@@ -2,9 +2,11 @@ import 'server-only'
 import stripe from '@/lib/stripeClient'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { isStripePriceValidForOffer } from '@/helpers/isStripePriceValidForOffer'
-import type { PaymentOfferKey } from '@/types/paymentTypes'
+import type { PaymentOfferKey, VerifiedPaymentOffer } from '@/types/paymentTypes'
 
-export async function getVerifiedStripeOffer(offerKey: PaymentOfferKey) {
+export async function getVerifiedStripeOffer(
+  offerKey: PaymentOfferKey
+): Promise<VerifiedPaymentOffer> {
   const offer = PAYMENT_OFFERS[offerKey]
   if (!offer.available) {
     throw new Error(`Unavailable payment offer: ${offerKey}`)
@@ -24,5 +26,10 @@ export async function getVerifiedStripeOffer(offerKey: PaymentOfferKey) {
   const productId = typeof price.product === 'string'
     ? price.product
     : price.product.id
-  return { ...offer, priceId, productId, taxBehavior: price.tax_behavior }
+  return {
+    ...offer,
+    priceId,
+    productId,
+    taxBehavior: price.tax_behavior as VerifiedPaymentOffer['taxBehavior'],
+  }
 }

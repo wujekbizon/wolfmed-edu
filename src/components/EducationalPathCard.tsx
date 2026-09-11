@@ -16,6 +16,7 @@ const EducationalPathCard = ({
   className,
   icon,
   vertical,
+  signedOutOnly,
 }: CardProps) => {
   const { ref, inView } = useInView();
 
@@ -43,7 +44,7 @@ const EducationalPathCard = ({
               </div>
             </div>
             <div className="flex items-center justify-center">
-              <ExploreLink text={text} url={url} />
+              <ExploreLink text={text} url={url} signedOutOnly={signedOutOnly} />
             </div>
           </div>
         </div>
@@ -62,7 +63,7 @@ const EducationalPathCard = ({
               <p className="max-w-2xl text-zinc-400 font-medium text-base sm:text-lg lg:text-xl leading-7 xl:leading-9 text-left">
                 {description}
               </p>
-              <ExploreLink text={text} url={url} />
+              <ExploreLink text={text} url={url} signedOutOnly={signedOutOnly} />
             </div>
           </div>
           <div className="relative flex-1/2 w-full">

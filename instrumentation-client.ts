@@ -6,6 +6,7 @@ import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
   dsn: "https://51f84506c0b9d62e6c19713781ffeba0@o4506796935872512.ingest.us.sentry.io/4508619326160896",
+  integrations: [Sentry.webVitalsIntegration({ ignore: ['lcp'] })],
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,

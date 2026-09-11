@@ -18,6 +18,7 @@ export interface CardProps {
   className?: string
   icon: string
   vertical?: boolean
+  signedOutOnly?: boolean
 }
 
 const CAREGIVER: CardProps = {
@@ -82,7 +83,8 @@ const INFO: CardProps = {
     'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5p5q9UmXHWiBDmgJ5wlKFsnLYVX34eQIkxfvb',
   text: 'Dołącz już dziś',
   url: '/sign-up',
-  icon: 'info'
+  icon: 'info',
+  signedOutOnly: true
 }
 
 export { CAREGIVER, NURSE, INFO }
