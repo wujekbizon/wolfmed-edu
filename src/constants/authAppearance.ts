@@ -1,0 +1,35 @@
+import type { AuthAppearance } from '@/types/authTypes'
+
+export const authAppearance = {
+  variables: {
+    colorPrimary: '#b83243',
+    colorPrimaryForeground: '#ffffff',
+    colorBackground: '#fcf2f1',
+    colorInput: '#ffffff',
+    colorForeground: '#27272a',
+    colorMutedForeground: '#65616a',
+    colorInputForeground: '#27272a',
+    colorDanger: '#b42335',
+    colorRing: '#b83243',
+    fontFamily: 'inherit',
+    fontSize: '0.875rem',
+    borderRadius: '0.875rem',
+  },
+  elements: {
+    rootBox: 'w-full!',
+    cardBox: 'w-full! rounded-none! border-none! shadow-none!',
+    card: 'border-none! bg-transparent! p-0! shadow-none!',
+    header: 'text-left!',
+    headerTitle: 'text-[clamp(1.5rem,2.8vw,2rem)]! font-semibold! tracking-[-0.05em]!',
+    headerSubtitle: 'text-sm! leading-7!',
+    logoBox: 'hidden!',
+    socialButtons: 'grid! grid-cols-2! max-[359px]:grid-cols-1!',
+    socialButtonsBlockButton: 'min-h-11.5! rounded-[14px]! border! border-transparent! bg-white/80! shadow-[inset_0_0_0_1px_#dfd4d6]! hover:bg-white! focus:shadow-[inset_0_0_0_1px_#b83243]! focus:ring-0!',
+    formFieldInput: 'min-h-12! rounded-[14px]! border! border-transparent! bg-white/85! shadow-[inset_0_0_0_1px_#dfd4d6]! outline-none! focus:shadow-[inset_0_0_0_1px_#b83243]! focus:ring-0!',
+    formButtonPrimary: 'min-h-12! bg-[#b83243]! text-sm! font-semibold! normal-case! shadow-[0_6px_18px_#b832431a]!',
+    footer: 'mt-6! rounded-none! bg-transparent!',
+    footerAction: 'bg-transparent! px-0! pb-4!',
+    footerActionLink: 'font-semibold! text-[#a8273a]!',
+    formFieldAction: 'text-[#a8273a]!',
+  },
+} satisfies AuthAppearance

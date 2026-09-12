@@ -197,6 +197,45 @@
   }
 }
 
+@utility auth-page-surface {
+  background:
+    radial-gradient(ellipse at 5% 40%, #eed5d6 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 85%, #f1dfdb 0%, transparent 45%),
+    #fcf2f1;
+}
+
+@utility auth-artwork-surface {
+  background:
+    radial-gradient(ellipse at 25% 5%, #9f6650aa, transparent 55%),
+    radial-gradient(ellipse at 95% 70%, #863c4b80, transparent 60%),
+    #351d29;
+}
+
+@utility auth-cell-texture {
+  background: radial-gradient(
+    ellipse at 50% 44%,
+    #8e3d44 5%,
+    #ba5557 23%,
+    #ea8b79 43%,
+    #cc625d 59%,
+    #732737 76%
+  );
+  box-shadow:
+    inset 5px 10px 12px #ffd8ae55,
+    inset -9px -12px 14px #59223880,
+    16px 30px 40px #190f242e;
+}
+
+@utility auth-skeleton-shimmer {
+  background: linear-gradient(110deg, #f3dfe0 8%, #fff9f7 18%, #f3dfe0 33%);
+  background-size: 200% 100%;
+  animation: authSkeletonShimmer 1.8s linear infinite;
+}
+
+@keyframes authSkeletonShimmer {
+  to { background-position: -200% 0; }
+}
+
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;

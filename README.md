@@ -4,7 +4,20 @@ Edukacja medyczna może być jeszcze łatwiejsza.
 
 # Local Development
 
-## Test Clerk and Stripe webhooks
+Use Clerk Development and Stripe sandbox/test mode only. The app already
+contains the Clerk user sync, Stripe Checkout, subscriptions, Customer Portal,
+course entitlements, and signed webhook handlers.
+
+Copy `.env.example` to `.env`, then fill the Clerk and Stripe values. Required
+monthly-test values are the four `*_MONTHLY_PRICE_ID` variables, both Portal
+configuration IDs, and both webhook secrets.
+
+Full setup and acceptance flow:
+
+- [Stripe subscription testing guide](.claude/docs/43-stripe-subscription-testing-guide.md)
+- [Auth and payments flow](.claude/docs/30-flows-auth-payments.md)
+
+### Test Clerk and Stripe webhooks
 
 Run each process in a separate terminal.
 
@@ -67,3 +80,19 @@ NEON_DATABASE_URL="your-new-branch-connection-string"
   2. Both CLI listeners are still running.
   3. `CLERK_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET` match those listeners.
   4. Stripe CLI is using the intended sandbox account.
+
+### Create a test user
+
+1. Start both listeners and Wolfmed.
+2. Open `/sign-up` and create a fresh user with a test email.
+3. Confirm the Clerk listener shows `user.created` with HTTP `200` and that the
+   user appears in `wolfmed_users`.
+4. Open the course pricing page and buy Basic or Premium with Stripe card
+   `4242 4242 4242 4242`.
+5. Use `/panel#platnosci` to verify the active plan, upgrade to Premium, or
+   schedule a Premium-to-Basic downgrade.
+
+For renewals, failed payments, recovery, cancellations, Test Clocks, and
+cross-course isolation, follow the full guide above. Do not create a Stripe
+subscription manually; let Wolfmed Checkout create it so local ownership and
+entitlements are linked correctly.

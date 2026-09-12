@@ -2,10 +2,10 @@ import FacebookIcon from '@/components/icons/FacebookIcon'
 import LinkedInIcon from '@/components/icons/LinkedInIcon'
 import XIcon from '@/components/icons/XIcon'
 import { navLinks } from '@/constants/navLinks'
-import Image from 'next/image'
 import Link from 'next/link'
 import CookieSettingsButton from './cookies/CookieSettingsButton'
 import FooterInstagram from '@/components/FooterInstagram'
+import BrandSignature from '@/components/BrandSignature'
 
 const socialLinks = [
   { href: 'https://www.facebook.com', label: 'Facebook', Icon: FacebookIcon },
@@ -27,24 +27,7 @@ export default function Footer() {
         <div className="mt-12 grid gap-10 lg:grid-cols-12">
           {/* Brand */}
           <div className="lg:col-span-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full border border-zinc-400 bg-zinc-200">
-                <Image
-                  src="https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5UOm8ArIxs2k5EyuGdN4SRigYP6qreJDvtVZl"
-                  alt="Wolfmed Edukacja logo"
-                  width={50}
-                  height={50}
-                  className="h-full w-full rounded-full object-cover"
-                  priority
-                />
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold leading-tight">
-                  WOLFMED <span className="font-normal text-zinc-500">EDUKACJA</span>
-                </h3>
-                <p className="text-sm text-zinc-500">Innowacyjne rozwiązania w edukacji medycznej</p>
-              </div>
-            </div>
+            <BrandSignature />
 
             <div className="mt-6 flex gap-3">
               {socialLinks.map(({ href, label, Icon }) => (

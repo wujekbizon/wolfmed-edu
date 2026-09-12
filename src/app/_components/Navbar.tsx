@@ -15,6 +15,8 @@ export default function Navbar() {
   const { isScrolled } = useScroll(0)
   const pathname = usePathname()
 
+  if (/^\/sign-(in|up)(\/|$)/.test(pathname ?? '')) return null
+
   return (
     <>
       <NavDrawer />

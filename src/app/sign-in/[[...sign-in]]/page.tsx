@@ -1,13 +1,16 @@
-import { FloatingShapes } from '@/components/FloatingShapes'
-import GradientOverlay from '@/components/GradientOverlay'
-import { SignIn } from '@clerk/nextjs'
+import { Suspense } from 'react'
+import AuthPage from '@/components/auth/AuthPage'
+import AuthShell from '@/components/auth/AuthShell'
+import AuthFormSkeleton from '@/components/skeletons/AuthFormSkeleton'
+
+export const metadata = { title: 'Zaloguj się | Wolfmed Edukacja' }
 
 export default function Page() {
   return (
-    <section className="relative flex h-[calc(100vh-80px)] w-full items-center justify-center">
-      <GradientOverlay />
-      <FloatingShapes count={10} />
-      <SignIn path="/sign-in" fallbackRedirectUrl="/" />
-    </section>
+    <AuthShell>
+      <Suspense fallback={<AuthFormSkeleton mode="sign-in" />}>
+        <AuthPage mode="sign-in" />
+      </Suspense>
+    </AuthShell>
   )
 }

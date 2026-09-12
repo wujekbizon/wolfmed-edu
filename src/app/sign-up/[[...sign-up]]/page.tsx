@@ -1,18 +1,16 @@
-import { FloatingShapes } from '@/components/FloatingShapes'
-import GradientOverlay from '@/components/GradientOverlay'
-import { SignUp } from '@clerk/nextjs'
-import { auth } from '@clerk/nextjs/server'
-import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
+import AuthPage from '@/components/auth/AuthPage'
+import AuthShell from '@/components/auth/AuthShell'
+import AuthFormSkeleton from '@/components/skeletons/AuthFormSkeleton'
 
-export default async function Page() {
-  const { userId } = await auth()
-  if (userId) redirect('/panel')
+export const metadata = { title: 'Utwórz konto | Wolfmed Edukacja' }
 
+export default function Page() {
   return (
-    <section className="relative flex h-[calc(100vh-80px)] w-full items-center justify-center">
-      <GradientOverlay />
-      <FloatingShapes count={10} />
-      <SignUp path="/sign-up" fallbackRedirectUrl="/" />
-    </section>
+    <AuthShell>
+      <Suspense fallback={<AuthFormSkeleton mode="sign-up" />}>
+        <AuthPage mode="sign-up" />
+      </Suspense>
+    </AuthShell>
   )
 }
