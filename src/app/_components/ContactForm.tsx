@@ -74,7 +74,7 @@ export default function ContactForm() {
         <div className="h-[400px] backdrop-blur-md border border-zinc-700 bg-zinc-900 rounded-lg p-4 xs:p-8 mt-6">
           <div className="flex flex-col items-center justify-center gap-6 text-center h-full">
             <p className="text-zinc-400">Aby skontaktować się z nami, musisz być zalogowany do swojego konta</p>
-            <SignInButton mode="modal">
+            <SignInButton mode="redirect" fallbackRedirectUrl="/#contact">
               <button className="min-w-40 inline-flex items-center justify-center px-6 py-2 rounded-full bg-red-500 text-white font-medium hover:bg-red-600 transition-colors">
                 Zaloguj się
               </button>

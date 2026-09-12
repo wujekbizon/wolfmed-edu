@@ -32,7 +32,7 @@ export default function AuthSection() {
     <>
       <Show when="signed-out">
         <div className="flex gap-2">
-          <SignInButton mode="modal">
+          <SignInButton mode="redirect">
             <AuthButton>
               <LoginIcon width={28} height={28} />
             </AuthButton>
