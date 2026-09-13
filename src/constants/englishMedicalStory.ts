@@ -1,9 +1,13 @@
 import type { PathStory } from '@/types/pathStoryTypes'
 
 const ENGLISH_MEDICAL_IMAGE =
-  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5A7rR6OTmtJLFcNxMQbgSqKBWs3zA7RoEVreO'
+  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ooTSgYvSLyQhzP6mdErKItkOUcXlTqiNMavY'
 const ENGLISH_MEDICAL_IMAGE_ALT =
-  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52osKX2SEBiUD8sVXHObYqkj3TNfo4PKMGg6J'
+  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5BjjFJjEFD1UJjByX9nEY7CcT26HaQ4iwRItP'
+const ENGLISH_MEDICAL_IMAGE_THREE =
+  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k58DVn394HBZxypP1UFjuAhJ4WoOXgcGSRqzCi'
+const ENGLISH_MEDICAL_IMAGE_FOUR =
+  'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5nNaK3XL9GQYxNri4Uw0MejlVEP63mgKp18FO'
 
 export const ENGLISH_MEDICAL_STORY: PathStory = {
   intro:
@@ -16,19 +20,35 @@ export const ENGLISH_MEDICAL_STORY: PathStory = {
   scenes: [
     {
       time: '01',
-      title: 'Poznajesz słowa używane w medycynie',
+      title: 'Poznajesz pacjentkę i pytasz o samopoczucie',
       description:
-        'Utrwalasz terminy dotyczące ciała, objawów, parametrów życiowych, badań, sprzętu i podstawowego leczenia.',
-      photoHint: 'nauka terminologii medycznej',
+        'Zaczynasz rozmowę i pytasz o objawy: “How are you feeling?”, “Where does it hurt?” oraz “I have a headache.”',
+      photoHint: 'opiekun medyczny rozmawia z pacjentką o bólu głowy',
       imgSrc: ENGLISH_MEDICAL_IMAGE_ALT,
     },
     {
       time: '02',
-      title: 'Ćwiczysz język potrzebny w praktyce',
+      title: 'Pomagasz w porannej opiece',
       description:
-        'Budujesz proste zdania, prowadzisz podstawową rozmowę z pacjentem i rozwiązujesz zadania podobne do egzaminacyjnych.',
-      photoHint: 'rozmowa z pacjentem po angielsku',
+        'Ćwiczysz uprzejme prośby, zgodę i bezpieczne poruszanie się: “Are you ready to get up?”, “Take your time.”, “I will help you.”',
+      photoHint: 'opiekun medyczny pomaga pacjentce wstać z łóżka',
       imgSrc: ENGLISH_MEDICAL_IMAGE,
+    },
+    {
+      time: '03',
+      title: 'Sprawdzasz podstawowe parametry',
+      description:
+        'Pytasz o zawroty głowy i samopoczucie, a następnie opisujesz czynności: “I will check your temperature and blood pressure.”',
+      photoHint: 'opiekun medyczny sprawdza temperaturę i ciśnienie pacjentki',
+      imgSrc: ENGLISH_MEDICAL_IMAGE_THREE,
+    },
+    {
+      time: '04',
+      title: 'Zapewniasz komfort i planujesz dalszą opiekę',
+      description:
+        'Kończysz wizytę spokojną rozmową: “Here is some water.”, “You can rest now.” i “Should I call the nurse if the pain gets worse?”',
+      photoHint: 'opiekun medyczny podaje wodę i uspokaja pacjentkę',
+      imgSrc: ENGLISH_MEDICAL_IMAGE_FOUR,
     },
   ],
 }

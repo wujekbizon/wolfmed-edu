@@ -51,7 +51,7 @@ const ENGLISH_MEDICAL: CardProps = {
   description:
     'Ucz się angielskich terminów, wyrażeń i poprawnych zdań potrzebnych w pracy z pacjentem oraz przygotuj się do egzaminów na pielęgniarstwie i kierunku opiekuna medycznego.',
   imgSrc:
-    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5A7rR6OTmtJLFcNxMQbgSqKBWs3zA7RoEVreO',
+    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5shlGC2Wj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6',
   text: 'Sprawdź kierunek angielski medyczny',
   url: '/kierunki/angielski-medyczny',
   icon: 'english-medical'
