@@ -19,4 +19,9 @@ export const PATH_TOOLS_INTRO: Record<string, ToolsIntro> = {
     headline: ['Pięć narzędzi,', 'cały tok studiów'],
     lead: 'Praktyczne moduły i materiały, które realnie pomogą Ci w nauce przez wszystkie trzy lata.',
   },
+  'angielski-medyczny': {
+    eyebrow: 'Co dostajesz w środku',
+    headline: ['Dwa sposoby,', 'pewniejszy angielski'],
+    lead: 'Terminy, komunikacja i poprawne zdania potrzebne w pracy medycznej oraz na egzaminie.',
+  },
 }

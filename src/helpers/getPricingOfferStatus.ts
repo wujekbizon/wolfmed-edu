@@ -1,5 +1,6 @@
 import { resolveLifetimeCheckoutEligibility } from '@/helpers/resolveLifetimeCheckoutEligibility'
 import { resolveSubscriptionCheckoutEligibility } from '@/helpers/resolveSubscriptionCheckoutEligibility'
+import { getEffectiveEnrollmentGrants } from '@/helpers/getEffectiveEnrollmentGrants'
 import type {
   LifetimeUpgradeGrant,
   PaymentOffer,
@@ -14,6 +15,15 @@ export function getPricingOfferStatus(
   portalConfigured: boolean,
   planChange: SubscriptionPlanChange | null = null
 ): PricingOfferStatus {
+  if (!offer.available) return 'unavailable'
+
+  const included = getEffectiveEnrollmentGrants(
+    grants.filter((grant) => grant.sourceType === 'premium_bundle')
+  ).some((grant) => grant.courseSlug === offer.courseSlug)
+  if (included && offer.accessTier === 'basic' && !activeSubscription) {
+    return 'included_access'
+  }
+
   if (activeSubscription) {
     if (offer.purchaseModel === 'lifetime') return 'active_subscription'
     if (offer.accessTier === activeSubscription.accessTier) {

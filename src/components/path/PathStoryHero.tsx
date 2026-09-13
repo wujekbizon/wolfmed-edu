@@ -53,15 +53,17 @@ export default function PathStoryHero({
 
               <div>
                 <PathFacts facts={story.facts} />
-                <a
-                  href={`#${PRICING_ANCHOR}`}
-                  className='group mt-6 inline-flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors'
-                >
-                  Zobacz plany i ceny
-                  <span className='transition-transform duration-200 group-hover:translate-y-0.5'>
-                    ↓
-                  </span>
-                </a>
+                {pricing && (
+                  <a
+                    href={`#${PRICING_ANCHOR}`}
+                    className='group mt-6 inline-flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition-colors'
+                  >
+                    Zobacz plany i ceny
+                    <span className='transition-transform duration-200 group-hover:translate-y-0.5'>
+                      ↓
+                    </span>
+                  </a>
+                )}
               </div>
             </aside>
           </div>

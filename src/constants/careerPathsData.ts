@@ -2,6 +2,7 @@ import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
 import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
 import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
 import { PIELEGNIARSTWO_STORY } from '@/constants/pielegniarstwoStory'
+import { ENGLISH_MEDICAL_STORY } from '@/constants/englishMedicalStory'
 
 export const careerPaths = [
   {
@@ -20,6 +21,15 @@ export const careerPaths = [
       'Kompletna ścieżka edukacyjna dla kierunku Pielęgniarstwo – ponad 2000 pytań egzaminacyjnych z 1. semestru.',
     image:
       'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ZbFLvNrONPcnEXeA3kx1jV6t9rCB2UlzoaSM',
+    cta: 'Sprawdź szczegóły'
+  },
+  {
+    slug: 'angielski-medyczny',
+    title: 'Angielski Medyczny',
+    teaser:
+      'Poznaj angielskie terminy i wyrażenia potrzebne w pracy medycznej oraz przygotuj się do egzaminów z języka angielskiego na pielęgniarstwie i kierunku opiekuna medycznego.',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52osKX2SEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
     cta: 'Sprawdź szczegóły'
   }
 ]
@@ -448,6 +458,7 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
+          'Angielski medyczny Basic gratis',
           'Każda nowa treść dodawana automatycznie – bez dodatkowych opłat',
           'Asystent AI, który zna cały materiał egzaminacyjny',
           'Automatyczne notatki, streszczenia i wykłady audio',
@@ -544,11 +555,73 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
+          'Angielski medyczny Basic gratis',
           'Pełne 3 lata nauki – nowe semestry dodawane automatycznie',
           'Diagnozy i Interwencje – pełny proces pielęgnowania',
           'Asystent AI, który zna cały materiał pielęgniarski',
           'Automatyczne notatki, streszczenia i wykłady audio',
           'Własne testy AI, edytowalne diagramy i tablica'
+        ]
+      }
+    }
+  },
+  'angielski-medyczny': {
+    story: ENGLISH_MEDICAL_STORY,
+    title: 'Angielski Medyczny',
+    description:
+      'Praktyczny kurs języka angielskiego medycznego na poziomie A2. Naucz się terminów, wyrażeń i poprawnych zdań potrzebnych w pracy z pacjentem oraz przygotuj się do egzaminów na pielęgniarstwie i kierunku opiekuna medycznego.',
+    templateType: 'simple',
+    features: [
+      {
+        title: 'Słownictwo medyczne A2',
+        titleBtn: 'Najważniejsze terminy',
+        description:
+          'Poznaj angielskie nazwy części ciała, objawów, parametrów życiowych, personelu, sprzętu i podstawowego leczenia.',
+        text: 'Słownictwo medyczne',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5A7rR6OTmtJLFcNxMQbgSqKBWs3zA7RoEVreO',
+        url: '/panel/testy',
+        icon: 'tests'
+      },
+      {
+        title: 'Komunikacja z pacjentem',
+        titleBtn: 'Rozmawiaj pewniej',
+        description:
+          'Ćwicz proste pytania, uprzejme zwroty i instrukcje używane podczas przyjęcia, badania i codziennej opieki.',
+        text: 'Pacjent i personel',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QgTyo0Yf6PZ5eKuhFM9REHkAy4n7s3aNYmWi',
+        url: '/panel/testy',
+        icon: 'learn'
+      },
+    ],
+    pricing: {
+      courseSlug: 'angielski-medyczny',
+      basic: {
+        price: '29,99 zł',
+        offerKey: 'angielski_medyczny_basic_lifetime',
+        accessTier: 'basic',
+        badge: 'Oferta na start',
+        features: [
+          '5 kategorii angielskiego medycznego na poziomie A2',
+          'Terminy i wyrażenia potrzebne w pracy z pacjentem',
+          'Poprawne zdania medyczne i podstawowa gramatyka',
+          'Przygotowanie do egzaminów na pielęgniarstwie i kierunku opiekuna medycznego',
+          'Fiszki, notatki i plan nauki z analizą postępów',
+          'Forum i Blog Medyczny'
+        ]
+      },
+      premium: {
+        price: '49,99 zł',
+        offerKey: 'angielski_medyczny_premium_lifetime',
+        accessTier: 'premium',
+        badge: 'Wkrótce dostępny',
+        features: [
+          'Wszystko z planu Basic',
+          'Rozszerzone materiały i nowe kategorie',
+          'Asystent AI do nauki angielskiego medycznego',
+          'Automatyczne notatki, streszczenia i wykłady audio',
+          'Testy i quizy generowane przez AI'
         ]
       }
     }

@@ -11,5 +11,6 @@ export const PRICING_OFFER_STATUS_LABELS: Record<PricingOfferStatus, string> = {
   owned_lifetime: 'W posiadaniu',
   lifetime_access: 'Masz dostęp na zawsze',
   existing_access: 'Masz już dostęp',
+  included_access: 'W pakiecie Premium',
   unavailable: 'Niedostępne',
 }

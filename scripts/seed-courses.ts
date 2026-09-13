@@ -1,5 +1,5 @@
 /**
- * Seed the wolfmed_courses table with the two active courses.
+ * Seed the wolfmed_courses table with the active courses.
  * Run with: pnpm run db:seed
  *
  * Requires NEON_DATABASE_URL to be set in .env.local
@@ -18,26 +18,22 @@ if (!connectionString) {
 const sql = postgres(connectionString, { ssl: 'require' })
 
 async function seedCourses() {
-  const existing = await sql`SELECT slug FROM wolfmed_courses`
-
-  if (existing.length > 0) {
-    console.log(`Courses table already has ${existing.length} row(s):`)
-    existing.forEach((r) => console.log(`  - ${r.slug}`))
-    console.log('Nothing to seed.')
-    await sql.end()
-    return
-  }
-
   await sql`
     INSERT INTO wolfmed_courses (slug, name, description, is_active)
     VALUES
       ('opiekun-medyczny', 'Opiekun Medyczny', 'Program edukacyjny dla opiekunów medycznych', true),
-      ('pielegniarstwo', 'Pielęgniarstwo', 'Program edukacyjny dla kierunku pielęgniarstwo', true)
+      ('pielegniarstwo', 'Pielęgniarstwo', 'Program edukacyjny dla kierunku pielęgniarstwo', true),
+      ('angielski-medyczny', 'Angielski Medyczny', 'Kurs języka angielskiego medycznego na poziomie A2', true)
+    ON CONFLICT (slug) DO UPDATE SET
+      name = excluded.name,
+      description = excluded.description,
+      is_active = excluded.is_active
   `
 
   console.log('Seeded wolfmed_courses:')
   console.log('  ✓ opiekun-medyczny')
   console.log('  ✓ pielegniarstwo')
+  console.log('  ✓ angielski-medyczny')
 
   await sql.end()
 }

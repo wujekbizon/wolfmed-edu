@@ -1,6 +1,7 @@
 import 'server-only'
 import { and, eq, gte, inArray, isNull, lte, or } from 'drizzle-orm'
 import { courseEnrollments } from '@/server/db/schema'
+import { syncEnglishBonusEnrollment } from '@/server/payments/syncEnglishBonusEnrollment'
 import type { PaymentTransaction } from '@/types/dbTypes'
 import type { CheckoutFulfillmentContext } from '@/types/paymentTypes'
 
@@ -37,5 +38,17 @@ export async function syncLifetimeEnrollment(
     startsAt: context.snapshot.createdAt,
   }).onConflictDoNothing({
     target: [courseEnrollments.sourceType, courseEnrollments.sourceId],
+  })
+  await syncEnglishBonusEnrollment(tx, {
+    userId: context.userId,
+    courseSlug: context.courseSlug,
+    accessTier: context.accessTier,
+    sourceType: context.entitlementSourceType,
+    sourceId: context.snapshot.id,
+    isActive: true,
+    enrolledAt: context.snapshot.createdAt,
+    startsAt: context.snapshot.createdAt,
+    expiresAt: null,
+    revokedAt: null,
   })
 }

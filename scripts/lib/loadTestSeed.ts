@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises'
 import type { StagedTestSeedRecord, TestSeedRecord } from './testSeedTypes'
 
-const COURSES = new Set(['opiekun-medyczny', 'pielegniarstwo'])
+const COURSES = new Set(['opiekun-medyczny', 'pielegniarstwo', 'angielski-medyczny'])
 
 function normalizeDate(value: string | null | undefined) {
   if (!value || /^\d{4}-0-/.test(value)) return null

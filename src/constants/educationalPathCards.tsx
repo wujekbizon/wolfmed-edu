@@ -35,7 +35,7 @@ const CAREGIVER: CardProps = {
 
 const NURSE: CardProps = {
   title: 'Pielęgniarstwo',
-  titleBtn: 'W krótce dostępny!',
+  titleBtn: 'Dostępny online',
   description:
     'Nowa ścieżka edukacyjna dla przyszłych pielęgniarek i pielęgniarzy. Program opracowany z myślą o wymaganiach nowoczesnej opieki zdrowotnej – oferuje zaawansowane materiały dydaktyczne, przygotowanie do egzaminów zawodowych oraz praktyczne wsparcie w zakresie codziennej pracy klinicznej. Idealny dla osób rozpoczynających naukę w kierunku pielęgniarstwa, jak i tych, którzy chcą ugruntować swoją wiedzę i dobrze przygotować się do wyzwań pracy w placówkach medycznych.',
   imgSrc:
@@ -43,6 +43,18 @@ const NURSE: CardProps = {
   text: 'Sprawdź kierunek pielęgniarstwo',
   url: '/kierunki/pielegniarstwo',
   icon: 'nurse'
+}
+
+const ENGLISH_MEDICAL: CardProps = {
+  title: 'Angielski Medyczny',
+  titleBtn: 'Nowość!',
+  description:
+    'Ucz się angielskich terminów, wyrażeń i poprawnych zdań potrzebnych w pracy z pacjentem oraz przygotuj się do egzaminów na pielęgniarstwie i kierunku opiekuna medycznego.',
+  imgSrc:
+    'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5shlGC2Wj5zfQ3u7I8bUgG0ydxCaMOwLKeVP6',
+  text: 'Sprawdź kierunek angielski medyczny',
+  url: '/kierunki/angielski-medyczny',
+  icon: 'english-medical'
 }
 
 const INFO: CardProps = {
@@ -87,4 +99,4 @@ const INFO: CardProps = {
   signedOutOnly: true
 }
 
-export { CAREGIVER, NURSE, INFO }
+export { CAREGIVER, NURSE, ENGLISH_MEDICAL, INFO }

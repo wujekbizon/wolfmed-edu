@@ -24,6 +24,7 @@ export const PREFERENCE_DEFS: PreferenceDef[] = [
       { value: 'brak', label: 'Nie określono' },
       { value: 'opiekun_medyczny', label: 'Opiekun medyczny' },
       { value: 'pielegniarstwo', label: 'Pielęgniarstwo' },
+      { value: 'angielski_medyczny', label: 'Angielski medyczny' },
     ],
   },
   {

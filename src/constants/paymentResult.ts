@@ -87,4 +87,5 @@ export const PAYMENT_SCHEDULED_CONTENT: PaymentResultContent = {
 export const PAYMENT_COURSE_TITLES: Record<PaymentOffer['courseSlug'], string> = {
   'opiekun-medyczny': 'Opiekun Medyczny',
   pielegniarstwo: 'Pielęgniarstwo',
+  'angielski-medyczny': 'Angielski Medyczny',
 }
