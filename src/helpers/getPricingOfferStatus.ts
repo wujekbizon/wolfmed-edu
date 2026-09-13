@@ -14,6 +14,8 @@ export function getPricingOfferStatus(
   portalConfigured: boolean,
   planChange: SubscriptionPlanChange | null = null
 ): PricingOfferStatus {
+  if (!offer.available) return 'unavailable'
+
   if (activeSubscription) {
     if (offer.purchaseModel === 'lifetime') return 'active_subscription'
     if (offer.accessTier === activeSubscription.accessTier) {

@@ -2,7 +2,7 @@
 
 import EducationalPathCard from "@/components/EducationalPathCard";
 import SectionHalo from "@/components/SectionHalo";
-import { CAREGIVER, INFO, NURSE } from "@/constants/educationalPathCards";
+import { CAREGIVER, ENGLISH_MEDICAL, INFO, NURSE } from "@/constants/educationalPathCards";
 
 export default function EducationPathsSection() {
   return (
@@ -40,6 +40,7 @@ export default function EducationPathsSection() {
             {...NURSE}
             className="flex flex:col lg:flex-row-reverse gap-20"
           />
+          <EducationalPathCard {...ENGLISH_MEDICAL} />
           <EducationalPathCard {...INFO} vertical />
         </div>
       </div>

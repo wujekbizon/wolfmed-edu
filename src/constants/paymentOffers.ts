@@ -16,11 +16,17 @@ export const PAYMENT_OFFER_KEYS = [
   'pielegniarstwo_premium_upgrade',
   'pielegniarstwo_basic_monthly',
   'pielegniarstwo_premium_monthly',
+  'angielski_medyczny_basic_lifetime',
+  'angielski_medyczny_premium_lifetime',
+  'angielski_medyczny_premium_upgrade',
+  'angielski_medyczny_basic_monthly',
+  'angielski_medyczny_premium_monthly',
 ] as const satisfies readonly PaymentOfferKey[]
 
 export const LIFETIME_UPGRADE_OFFER_BY_COURSE = {
   'opiekun-medyczny': 'opiekun_premium_upgrade',
   pielegniarstwo: 'pielegniarstwo_premium_upgrade',
+  'angielski-medyczny': 'angielski_medyczny_premium_upgrade',
 } as const satisfies Record<PaymentOffer['courseSlug'], LifetimeUpgradeOfferKey>
 
 export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
@@ -89,6 +95,39 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_upgrade',
     priceEnvName: 'STRIPE_PIELEGNIARSTWO_PREMIUM_UPGRADE_PRICE_ID',
+  },
+  angielski_medyczny_basic_lifetime: {
+    key: 'angielski_medyczny_basic_lifetime',
+    courseSlug: 'angielski-medyczny',
+    accessTier: 'basic',
+    amount: 2999,
+    currency: 'pln',
+    available: true,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_purchase',
+    priceEnvName: 'STRIPE_ANGIELSKI_MEDYCZNY_BASIC_PRICE_ID',
+  },
+  angielski_medyczny_premium_lifetime: {
+    key: 'angielski_medyczny_premium_lifetime',
+    courseSlug: 'angielski-medyczny',
+    accessTier: 'premium',
+    amount: 4999,
+    currency: 'pln',
+    available: false,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_purchase',
+    priceEnvName: 'STRIPE_ANGIELSKI_MEDYCZNY_PREMIUM_PRICE_ID',
+  },
+  angielski_medyczny_premium_upgrade: {
+    key: 'angielski_medyczny_premium_upgrade',
+    courseSlug: 'angielski-medyczny',
+    accessTier: 'premium',
+    amount: 2500,
+    currency: 'pln',
+    available: false,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_upgrade',
+    priceEnvName: 'STRIPE_ANGIELSKI_MEDYCZNY_PREMIUM_UPGRADE_PRICE_ID',
   },
   ...SUBSCRIPTION_PAYMENT_OFFERS,
 }

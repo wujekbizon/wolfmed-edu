@@ -63,4 +63,18 @@ export const PLAN_COMPARISON: Record<string, ComparisonGroup[]> = {
     COMMUNITY_ROWS,
     AI_ROWS,
   ],
+  'angielski-medyczny': [
+    {
+      label: 'Baza pytań i testy',
+      rows: [
+        { label: 'Kategorie angielskiego medycznego', basic: '5', premium: '5+' },
+        { label: 'Pytania dotyczące terminów, objawów i komunikacji', basic: true, premium: true },
+        { label: 'Gramatyka i poprawne zdania medyczne', basic: true, premium: true },
+        { label: 'Nowe materiały i kategorie', basic: false, premium: true },
+      ],
+    },
+    LEARNING_ROWS,
+    COMMUNITY_ROWS,
+    AI_ROWS,
+  ],
 }

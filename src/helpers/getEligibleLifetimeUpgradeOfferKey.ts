@@ -1,4 +1,4 @@
-import { LIFETIME_UPGRADE_OFFER_BY_COURSE } from '@/constants/paymentOffers'
+import { LIFETIME_UPGRADE_OFFER_BY_COURSE, PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { hasAccessToTier } from '@/helpers/accessTiers'
 import { getEffectiveEnrollmentGrants } from '@/helpers/getEffectiveEnrollmentGrants'
 import type {
@@ -30,5 +30,6 @@ export function getEligibleLifetimeUpgradeOfferKey(
     )
   })
 
-  return eligible ? LIFETIME_UPGRADE_OFFER_BY_COURSE[courseSlug] : null
+  const offerKey = LIFETIME_UPGRADE_OFFER_BY_COURSE[courseSlug]
+  return eligible && PAYMENT_OFFERS[offerKey].available ? offerKey : null
 }

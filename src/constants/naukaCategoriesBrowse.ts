@@ -20,4 +20,5 @@ export const NAUKA_CATEGORY_SORT_OPTIONS: SelectOption[] = [
 export const NAUKA_COURSE_LABELS: Record<string, string> = {
   pielegniarstwo: 'Pielęgniarstwo',
   'opiekun-medyczny': 'Opiekun medyczny',
+  'angielski-medyczny': 'Angielski medyczny',
 }

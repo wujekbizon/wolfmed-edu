@@ -61,12 +61,14 @@ export async function getUserEnrollmentsAction() {
 
 /** Check if the current user has premium access on either course. */
 export async function checkPremiumAccessAction(): Promise<boolean> {
-  const [opiekun, pielegniarstwo] = await Promise.all([
+  const [opiekun, pielegniarstwo, angielskiMedyczny] = await Promise.all([
     checkCourseAccessAction('opiekun-medyczny'),
     checkCourseAccessAction('pielegniarstwo'),
+    checkCourseAccessAction('angielski-medyczny'),
   ])
   return (
     (opiekun.hasAccess && hasAccessToTier(opiekun.accessTier ?? 'free', 'premium')) ||
-    (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium'))
+    (pielegniarstwo.hasAccess && hasAccessToTier(pielegniarstwo.accessTier ?? 'free', 'premium')) ||
+    (angielskiMedyczny.hasAccess && hasAccessToTier(angielskiMedyczny.accessTier ?? 'free', 'premium'))
   )
 }

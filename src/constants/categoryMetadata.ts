@@ -129,6 +129,356 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
       }
     }
   },
+  'angielski-slownictwo': {
+    category: 'angielski-slownictwo',
+    course: 'angielski-medyczny',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5A7rR6OTmtJLFcNxMQbgSqKBWs3zA7RoEVreO',
+    description:
+      'Najważniejsze angielskie słownictwo medyczne na poziomie A2: ciało człowieka, personel, oddziały, sprzęt, badania i podstawowe leczenie.',
+    duration: [25, 40, 60],
+    popularity: 'Angielski potrzebny w pracy medycznej',
+    status: true,
+    numberOfQuestions: [10, 20, 40],
+    title: 'Słownictwo medyczne A2',
+    keywords: [
+      'angielski medyczny',
+      'język angielski A2',
+      'terminologia medyczna',
+      'wyrażenia medyczne',
+      'zdania medyczne',
+      'angielski dla pielęgniarek',
+      'angielski dla opiekunów medycznych',
+      'egzamin z angielskiego',
+      'słownictwo medyczne'
+    ],
+    details: {
+      ects: 0,
+      semester: 'Kurs języka angielskiego medycznego A2',
+      objectives:
+        'Rozwinięcie podstawowej komunikacji w języku angielskim w środowisku medycznym. Kurs przygotowuje do rozumienia i stosowania najważniejszych terminów, wyrażeń oraz prostych zdań używanych w kontakcie z pacjentem, podczas pracy zespołu terapeutycznego i na egzaminach z języka angielskiego.',
+      prerequisites:
+        'Podstawowa znajomość języka angielskiego na poziomie początkującym. Znajomość podstawowych zwrotów i gramatyki ogólnej będzie pomocna, ale nie jest wymagana.',
+      learningOutcomes: {
+        knowledge: [
+          {
+            code: 'EMA2.W1',
+            desc: 'Rozpoznaje podstawowe nazwy części ciała, narządów, układów oraz najczęstszych objawów i dolegliwości.'
+          },
+          {
+            code: 'EMA2.W2',
+            desc: 'Zna podstawowe angielskie terminy dotyczące personelu medycznego, oddziałów, pomieszczeń, sprzętu i dokumentacji.'
+          },
+          {
+            code: 'EMA2.W3',
+            desc: 'Rozumie najczęstsze wyrażenia używane podczas przyjęcia pacjenta, wywiadu, badania i udzielania prostych instrukcji.'
+          },
+          {
+            code: 'EMA2.W4',
+            desc: 'Zna słownictwo związane z bólem, temperaturą, tętnem, ciśnieniem, oddechem, saturacją i innymi podstawowymi parametrami życiowymi.'
+          },
+          {
+            code: 'EMA2.W5',
+            desc: 'Rozpoznaje podstawowe terminy dotyczące chorób, badań, leków, leczenia, higieny i bezpieczeństwa pacjenta.'
+          },
+          {
+            code: 'EMA2.W6',
+            desc: 'Zna podstawowe konstrukcje gramatyczne potrzebne do budowania pytań, poleceń, opisów objawów i prostych informacji o pacjencie.'
+          },
+          {
+            code: 'EMA2.W7',
+            desc: 'Rozumie zasady tworzenia prostych, poprawnych i uprzejmych zdań stosowanych w komunikacji medycznej.'
+          },
+          {
+            code: 'EMA2.W8',
+            desc: 'Zna podstawowe słownictwo i typowe zadania językowe występujące na egzaminach z angielskiego dla studentów pielęgniarstwa i opiekunów medycznych.'
+          }
+        ],
+        skills: [
+          {
+            code: 'EMA2.U1',
+            desc: 'Przedstawia siebie, swoją funkcję i podstawowe informacje o miejscu pracy po angielsku.'
+          },
+          {
+            code: 'EMA2.U2',
+            desc: 'Zadaje proste pytania o samopoczucie, ból, jego lokalizację, nasilenie i czas trwania.'
+          },
+          {
+            code: 'EMA2.U3',
+            desc: 'Opisuje podstawowe objawy, parametry życiowe i stan pacjenta za pomocą prostych zdań.'
+          },
+          {
+            code: 'EMA2.U4',
+            desc: 'Przekazuje pacjentowi krótkie, jasne i uprzejme instrukcje dotyczące badania, leczenia i przygotowania do procedury.'
+          },
+          {
+            code: 'EMA2.U5',
+            desc: 'Rozumie i uzupełnia podstawowe informacje w krótkich komunikatach, formularzach i notatkach medycznych.'
+          },
+          {
+            code: 'EMA2.U6',
+            desc: 'Dobiera właściwe terminy i wyrażenia do sytuacji klinicznej oraz rozpoznaje poprawne zdania medyczne.'
+          },
+          {
+            code: 'EMA2.U7',
+            desc: 'Prowadzi krótką, podstawową rozmowę z pacjentem i członkiem zespołu medycznego.'
+          },
+          {
+            code: 'EMA2.U8',
+            desc: 'Rozwiązuje zadania leksykalne i gramatyczne sprawdzające przygotowanie do egzaminu z języka angielskiego.'
+          }
+        ],
+        competencies: [
+          {
+            code: 'EMA2.K1',
+            desc: 'Komunikuje się z pacjentem spokojnie, uprzejmie i z poszanowaniem jego godności.'
+          },
+          {
+            code: 'EMA2.K2',
+            desc: 'Dostosowuje długość i trudność wypowiedzi do podstawowego poziomu znajomości języka oraz sytuacji pacjenta.'
+          },
+          {
+            code: 'EMA2.K3',
+            desc: 'Sprawdza, czy pacjent zrozumiał przekazaną informację, i prosi o wyjaśnienie w razie wątpliwości.'
+          },
+          {
+            code: 'EMA2.K4',
+            desc: 'Przestrzega zasad poufności i ostrożności podczas przekazywania informacji o pacjencie w języku angielskim.'
+          },
+          {
+            code: 'EMA2.K5',
+            desc: 'Samodzielnie rozwija słownictwo i umiejętności językowe potrzebne w pracy oraz nauce medycznej.'
+          }
+        ]
+      },
+      programContent: {
+        lectures: [
+          'Podstawowe części ciała, narządy i układy człowieka.',
+          'Objawy, dolegliwości i opisywanie stanu pacjenta.',
+          'Personel medyczny, oddziały, pomieszczenia i sprzęt.',
+          'Przyjęcie pacjenta i podstawowy wywiad medyczny.',
+          'Parametry życiowe i ich dokumentowanie.',
+          'Badania diagnostyczne, leki i podstawowe metody leczenia.',
+          'Higiena, bezpieczeństwo i proste instrukcje dla pacjenta.',
+          'Podstawowe czasy, czasowniki modalne, tryb rozkazujący i pytania.',
+          'Uprzejma komunikacja z pacjentem i zespołem medycznym.',
+          'Strategie rozwiązywania zadań na egzaminie z angielskiego medycznego.'
+        ],
+        seminars: [
+          'Przedstawianie siebie i swojej roli w placówce medycznej.',
+          'Pytania o ból, objawy i samopoczucie pacjenta.',
+          'Opisywanie parametrów życiowych i podstawowych obserwacji.',
+          'Wydawanie prostych instrukcji przed badaniem i zabiegiem.',
+          'Krótka rozmowa pacjent–pielęgniarka–opiekun medyczny.',
+          'Ćwiczenia wyboru poprawnych terminów i zdań medycznych.'
+        ],
+        selfStudy: [
+          'Powtórka słownictwa z każdej lekcji.',
+          'Tworzenie własnego słownika terminów i wyrażeń medycznych.',
+          'Ćwiczenie budowania prostych zdań i pytań.',
+          'Rozwiązywanie testów egzaminacyjnych.',
+          'Powtórka przed egzaminem z języka angielskiego na pielęgniarstwie lub kierunku opiekuna medycznego.'
+        ]
+      }
+    }
+  },
+  'angielski-objawy': {
+    category: 'angielski-objawy',
+    course: 'angielski-medyczny',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5Lx89iPyT6ikNIWjyZsOdaGtHcBb3PAS8E7u5',
+    description:
+      'Ćwicz angielskie nazwy objawów, bólu, parametrów życiowych i podstawowych problemów zdrowotnych potrzebnych w codziennej komunikacji medycznej.',
+    duration: [25, 40, 60],
+    popularity: 'Opisywanie stanu pacjenta',
+    status: true,
+    numberOfQuestions: [10, 20, 40],
+    title: 'Objawy i stan pacjenta A2',
+    keywords: [
+      'objawy po angielsku',
+      'ból po angielsku',
+      'parametry życiowe',
+      'stan pacjenta',
+      'angielski medyczny A2'
+    ],
+    details: {
+      ects: 0,
+      semester: 'Kurs języka angielskiego medycznego A2',
+      objectives:
+        'Nauka rozpoznawania i stosowania podstawowych określeń objawów, bólu oraz parametrów życiowych w rozmowie z pacjentem i w krótkiej dokumentacji.',
+      prerequisites: 'Podstawowa znajomość języka angielskiego na poziomie początkującym.',
+      learningOutcomes: {
+        knowledge: [
+          { code: 'EMA2.O.W1', desc: 'Zna podstawowe angielskie nazwy objawów, dolegliwości i rodzajów bólu.' },
+          { code: 'EMA2.O.W2', desc: 'Rozpoznaje słownictwo dotyczące temperatury, tętna, ciśnienia, oddechu i saturacji.' },
+          { code: 'EMA2.O.W3', desc: 'Rozumie proste opisy stanu pacjenta i czasu trwania objawów.' }
+        ],
+        skills: [
+          { code: 'EMA2.O.U1', desc: 'Pyta pacjenta o samopoczucie, ból, jego lokalizację i nasilenie.' },
+          { code: 'EMA2.O.U2', desc: 'Opisuje podstawowe objawy i parametry życiowe prostymi zdaniami.' },
+          { code: 'EMA2.O.U3', desc: 'Dobiera właściwe określenie objawu do krótkiego opisu sytuacji klinicznej.' }
+        ],
+        competencies: [
+          { code: 'EMA2.O.K1', desc: 'Przekazuje informacje o objawach jasno i z szacunkiem dla pacjenta.' },
+          { code: 'EMA2.O.K2', desc: 'Dopytuje o niezrozumiałą informację zamiast zgadywać jej znaczenie.' }
+        ]
+      },
+      programContent: {
+        lectures: ['Objawy i dolegliwości.', 'Ból i jego nasilenie.', 'Parametry życiowe.', 'Czas trwania objawów i proste opisy stanu pacjenta.'],
+        seminars: ['Pytania o ból i samopoczucie.', 'Opisywanie temperatury, tętna i ciśnienia.', 'Krótki raport o stanie pacjenta.'],
+        selfStudy: ['Powtórka słownictwa objawów.', 'Ćwiczenia tłumaczenia krótkich opisów.', 'Testy egzaminacyjne z objawów.']
+      }
+    }
+  },
+  'angielski-pacjent': {
+    category: 'angielski-pacjent',
+    course: 'angielski-medyczny',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QgTyo0Yf6PZ5eKuhFM9REHkAy4n7s3aNYmWi',
+    description:
+      'Naucz się prowadzić prostą i uprzejmą rozmowę z pacjentem po angielsku: przedstawiać się, pytać o potrzeby i udzielać podstawowych informacji.',
+    duration: [25, 40, 60],
+    popularity: 'Komunikacja z pacjentem',
+    status: true,
+    numberOfQuestions: [10, 20, 40],
+    title: 'Komunikacja z pacjentem A2',
+    keywords: [
+      'rozmowa z pacjentem po angielsku',
+      'komunikacja medyczna',
+      'wywiad z pacjentem',
+      'angielski dla pielęgniarek',
+      'angielski dla opiekunów medycznych'
+    ],
+    details: {
+      ects: 0,
+      semester: 'Kurs języka angielskiego medycznego A2',
+      objectives:
+        'Przygotowanie do podstawowej, uprzejmej i bezpiecznej komunikacji z pacjentem w typowych sytuacjach opieki medycznej.',
+      prerequisites: 'Podstawowa znajomość języka angielskiego na poziomie początkującym.',
+      learningOutcomes: {
+        knowledge: [
+          { code: 'EMA2.P.W1', desc: 'Zna podstawowe zwroty używane przy powitaniu, przedstawieniu się i przyjęciu pacjenta.' },
+          { code: 'EMA2.P.W2', desc: 'Rozumie proste pytania o dane pacjenta, potrzeby, ból i samopoczucie.' },
+          { code: 'EMA2.P.W3', desc: 'Zna uprzejme formy próśb, poleceń i wyjaśnień stosowanych w opiece.' }
+        ],
+        skills: [
+          { code: 'EMA2.P.U1', desc: 'Przedstawia siebie i swoją rolę w placówce medycznej.' },
+          { code: 'EMA2.P.U2', desc: 'Zadaje i rozumie proste pytania podczas podstawowego wywiadu.' },
+          { code: 'EMA2.P.U3', desc: 'Udziela pacjentowi krótkich, jasnych i uprzejmych informacji.' }
+        ],
+        competencies: [
+          { code: 'EMA2.P.K1', desc: 'Buduje spokojną i pełną szacunku relację z pacjentem.' },
+          { code: 'EMA2.P.K2', desc: 'Sprawdza, czy pacjent zrozumiał przekazaną informację.' }
+        ]
+      },
+      programContent: {
+        lectures: ['Powitanie i przedstawianie się.', 'Dane pacjenta i podstawowy wywiad.', 'Pytania o potrzeby i ból.', 'Uprzejme prośby, polecenia i wyjaśnienia.'],
+        seminars: ['Rozmowa przy przyjęciu pacjenta.', 'Pytania o samopoczucie.', 'Udzielanie informacji o badaniu i opiece.'],
+        selfStudy: ['Powtórka zwrotów komunikacyjnych.', 'Układanie krótkich dialogów.', 'Testy egzaminacyjne z komunikacji.']
+      }
+    }
+  },
+  'angielski-wyrazenia': {
+    category: 'angielski-wyrazenia',
+    course: 'angielski-medyczny',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5SsAVyx8nbsFgvx1Tu3Mpy7o6OBtqw2dDIH49',
+    description:
+      'Utrwal najczęściej używane angielskie wyrażenia medyczne dotyczące badań, leczenia, higieny, bezpieczeństwa i pracy zespołu.',
+    duration: [25, 40, 60],
+    popularity: 'Zwroty używane w praktyce',
+    status: true,
+    numberOfQuestions: [10, 20, 40],
+    title: 'Wyrażenia medyczne A2',
+    keywords: [
+      'wyrażenia medyczne po angielsku',
+      'zwroty medyczne',
+      'badania i leczenie po angielsku',
+      'higiena po angielsku',
+      'angielski medyczny'
+    ],
+    details: {
+      ects: 0,
+      semester: 'Kurs języka angielskiego medycznego A2',
+      objectives:
+        'Rozwijanie zasobu gotowych wyrażeń, które ułatwiają wykonywanie codziennych czynności i współpracę w środowisku medycznym.',
+      prerequisites: 'Podstawowa znajomość języka angielskiego na poziomie początkującym.',
+      learningOutcomes: {
+        knowledge: [
+          { code: 'EMA2.E.W1', desc: 'Zna typowe wyrażenia dotyczące badań, przygotowania pacjenta i leczenia.' },
+          { code: 'EMA2.E.W2', desc: 'Rozpoznaje zwroty dotyczące higieny, bezpieczeństwa i zapobiegania zakażeniom.' },
+          { code: 'EMA2.E.W3', desc: 'Rozumie podstawowe wyrażenia używane we współpracy personelu medycznego.' }
+        ],
+        skills: [
+          { code: 'EMA2.E.U1', desc: 'Dobiera właściwe wyrażenie do sytuacji klinicznej.' },
+          { code: 'EMA2.E.U2', desc: 'Stosuje gotowe zwroty podczas przygotowania pacjenta i badania.' },
+          { code: 'EMA2.E.U3', desc: 'Rozpoznaje znaczenie wyrażenia w krótkim komunikacie medycznym.' }
+        ],
+        competencies: [
+          { code: 'EMA2.E.K1', desc: 'Korzysta z uzgodnionych i zrozumiałych zwrotów podczas pracy zespołowej.' },
+          { code: 'EMA2.E.K2', desc: 'Dba o jasność komunikatu w sytuacjach związanych z bezpieczeństwem pacjenta.' }
+        ]
+      },
+      programContent: {
+        lectures: ['Badania i przygotowanie pacjenta.', 'Leczenie i przyjmowanie leków.', 'Higiena i bezpieczeństwo.', 'Wyrażenia używane przez zespół medyczny.'],
+        seminars: ['Instrukcje przed badaniem.', 'Zwroty dotyczące leków i zaleceń.', 'Przekazywanie krótkiego komunikatu zespołowi.'],
+        selfStudy: ['Fiszki z wyrażeniami.', 'Uzupełnianie brakujących zwrotów.', 'Testy egzaminacyjne z wyrażeń.']
+      }
+    }
+  },
+  'angielski-gramatyka': {
+    category: 'angielski-gramatyka',
+    course: 'angielski-medyczny',
+    requiredTier: 'basic',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5ztNNSnUX7YQSa26hxGoeVpbCPILvOygltknr',
+    description:
+      'Opanuj gramatykę potrzebną do budowania poprawnych, prostych zdań medycznych i rozwiązywania zadań egzaminacyjnych na poziomie A2.',
+    duration: [25, 40, 60],
+    popularity: 'Poprawne zdania medyczne',
+    status: true,
+    numberOfQuestions: [10, 20, 40],
+    title: 'Gramatyka i zdania medyczne A2',
+    keywords: [
+      'gramatyka angielska A2',
+      'zdania medyczne po angielsku',
+      'angielski egzamin',
+      'czasowniki modalne',
+      'pytania po angielsku'
+    ],
+    details: {
+      ects: 0,
+      semester: 'Kurs języka angielskiego medycznego A2',
+      objectives:
+        'Utrwalenie podstawowych struktur gramatycznych i zastosowanie ich w prostych zdaniach, pytaniach, poleceniach oraz opisach medycznych.',
+      prerequisites: 'Podstawowa znajomość języka angielskiego na poziomie początkującym.',
+      learningOutcomes: {
+        knowledge: [
+          { code: 'EMA2.G.W1', desc: 'Zna zastosowanie czasownika to be, have got oraz podstawowych czasów w kontekście medycznym.' },
+          { code: 'EMA2.G.W2', desc: 'Rozumie pytania, przeczenia, tryb rozkazujący i czasowniki modalne can, should oraz must.' },
+          { code: 'EMA2.G.W3', desc: 'Zna szyk prostego zdania medycznego i zasady tworzenia krótkich odpowiedzi.' }
+        ],
+        skills: [
+          { code: 'EMA2.G.U1', desc: 'Buduje poprawne pytania o objawy, dane pacjenta i czynności medyczne.' },
+          { code: 'EMA2.G.U2', desc: 'Tworzy proste zdania opisujące stan pacjenta, zalecenia i procedury.' },
+          { code: 'EMA2.G.U3', desc: 'Wybiera poprawną strukturę gramatyczną w zadaniach egzaminacyjnych.' }
+        ],
+        competencies: [
+          { code: 'EMA2.G.K1', desc: 'Kontroluje poprawność i zrozumiałość własnych komunikatów.' },
+          { code: 'EMA2.G.K2', desc: 'Samodzielnie utrwala gramatykę potrzebną w pracy i nauce medycznej.' }
+        ]
+      },
+      programContent: {
+        lectures: ['To be, have got i there is/are.', 'Present Simple i Present Continuous.', 'Pytania, przeczenia i krótkie odpowiedzi.', 'Tryb rozkazujący oraz can, should i must.', 'Budowanie prostych zdań medycznych.'],
+        seminars: ['Pytania o objawy i parametry.', 'Instrukcje dla pacjenta.', 'Poprawianie błędnych zdań.', 'Zadania egzaminacyjne A2.'],
+        selfStudy: ['Powtórka struktur gramatycznych.', 'Uzupełnianie luk w zdaniach.', 'Budowanie własnych zdań medycznych.', 'Próbne testy egzaminacyjne.']
+      }
+    }
+  },
   'anatomia': {
     category: 'anatomia',
     course: 'pielegniarstwo',

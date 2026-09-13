@@ -43,8 +43,13 @@ test('checkout accepts only known offer keys', () => {
 test('every offer key resolves to matching server metadata', () => {
   for (const key of PAYMENT_OFFER_KEYS) {
     assert.equal(PAYMENT_OFFERS[key].key, key)
-    assert.equal(PAYMENT_OFFERS[key].available, true)
   }
+
+  assert.equal(PAYMENT_OFFERS.angielski_medyczny_basic_lifetime.available, true)
+  assert.equal(PAYMENT_OFFERS.angielski_medyczny_basic_monthly.available, true)
+  assert.equal(PAYMENT_OFFERS.angielski_medyczny_premium_lifetime.available, false)
+  assert.equal(PAYMENT_OFFERS.angielski_medyczny_premium_monthly.available, false)
+  assert.equal(PAYMENT_OFFERS.angielski_medyczny_premium_upgrade.available, false)
 
   assert.deepEqual(PAYMENT_OFFERS.opiekun_basic_lifetime, {
     key: 'opiekun_basic_lifetime',
