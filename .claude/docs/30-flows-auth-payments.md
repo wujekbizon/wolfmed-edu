@@ -74,6 +74,13 @@ actual panel access reads DB grants. Navbar/Drawer do not read Clerk course meta
 **Files**: `src/actions/stripe.ts`, `src/server/payments/*`,
 `src/app/api/webhooks/stripe/route.ts`, `src/server/db/schema.ts`.
 
+Premium purchases, lifetime upgrades and paid subscriptions for Opiekun Medyczny
+and Pielęgniarstwo also write a separate English Basic `premium_bundle` grant in
+the same transaction. Subscription sync renews or deactivates only its own bonus.
+Lifetime bonuses remain permanent. English checkout uses the existing DB access
+guards; pricing labels included access without calling it a lifetime purchase.
+Existing-user backfill: [`48-english-premium-bonus.md`](./48-english-premium-bonus.md).
+
 **Part C — refunds and disputes** (`POST /api/webhooks/stripe`):
 1. Signed Charge, Refund, and Dispute events trigger a fresh canonical Stripe read.
 2. Successful refunds are summed across the PaymentIntent. Pending/failed refunds

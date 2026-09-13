@@ -17,6 +17,7 @@ export type PricingOfferStatus =
   | 'owned_lifetime'
   | 'lifetime_access'
   | 'existing_access'
+  | 'included_access'
   | 'unavailable'
 
 export type PricingOfferStatusMap = Partial<

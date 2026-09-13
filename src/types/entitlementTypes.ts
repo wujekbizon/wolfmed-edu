@@ -4,6 +4,7 @@ export type EntitlementSourceType =
   | 'lifetime_upgrade'
   | 'subscription'
   | 'manual'
+  | 'premium_bundle'
 
 export type EnrollmentGrant = {
   courseSlug: string

@@ -55,6 +55,7 @@ The `1x`/`2x` docs above answer "what does this page render" and "what does this
 |---|---|
 | [`40-testing-guide.md`](./40-testing-guide.md) | Manual QA test cases (preconditions, steps, expected results, edge cases) derived from the flow docs. A living document — grows every doc-test round. |
 | [`43-stripe-subscription-testing-guide.md`](./43-stripe-subscription-testing-guide.md) | Stripe sandbox catalog and full subscription lifecycle acceptance guide. |
+| [`48-english-premium-bonus.md`](./48-english-premium-bonus.md) | English Basic bonus grants, subscription lifecycle and existing-user migration. |
 | [`44-stripe-production-rollout-plan.md`](./44-stripe-production-rollout-plan.md) | Live Stripe, Vercel Production, smoke-test and rollback checklist. |
 | [`45-production-readiness-top-list.md`](./45-production-readiness-top-list.md) | `main` → `practical-exam` comparison split into independently safe work and coordinated production plans. |
 | [`46-production-database-rollout-status.md`](./46-production-database-rollout-status.md) | Audited `main` → `practical-exam` → migrated Neon status: existing-data migrations, schema parity, blockers and required production work. |

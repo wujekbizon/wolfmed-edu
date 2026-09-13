@@ -41,6 +41,7 @@ export const PLAN_COMPARISON: Record<string, ComparisonGroup[]> = {
         { label: 'Pytania egzaminacyjne', basic: 'ponad 900', premium: 'ponad 900' },
         { label: 'Testy praktyczne i Egzamin Próbny', basic: true, premium: true },
         { label: 'Procedury Opiekuna Medycznego', basic: true, premium: true },
+        { label: 'Angielski medyczny Basic gratis', basic: false, premium: true },
         { label: 'Nowe treści dodawane automatycznie', basic: false, premium: true },
       ],
     },
@@ -54,6 +55,7 @@ export const PLAN_COMPARISON: Record<string, ComparisonGroup[]> = {
       rows: [
         { label: 'Pytania egzaminacyjne', basic: 'ponad 22 700', premium: 'ponad 22 700' },
         { label: 'Kategorie przedmiotowe', basic: '22', premium: '22' },
+        { label: 'Angielski medyczny Basic gratis', basic: false, premium: true },
         { label: 'Testy praktyczne i egzaminy próbne', basic: true, premium: true },
         { label: 'Diagnozy i Interwencje', basic: false, premium: true },
         { label: 'Nowe semestry dodawane automatycznie', basic: false, premium: true },

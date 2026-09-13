@@ -133,7 +133,7 @@ highest active, started, non-expired and non-revoked tier.
 ```typescript
 {
   userId, courseSlug, accessTier
-  sourceType: legacy_lifetime | lifetime_purchase | lifetime_upgrade | subscription | manual
+  sourceType: legacy_lifetime | lifetime_purchase | lifetime_upgrade | subscription | manual | premium_bundle
   sourceId: varchar(256)
   isActive, enrolledAt, startsAt, expiresAt, revokedAt
 }

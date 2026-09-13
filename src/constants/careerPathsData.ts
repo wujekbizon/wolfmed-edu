@@ -458,6 +458,7 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
+          'Angielski medyczny Basic gratis',
           'Każda nowa treść dodawana automatycznie – bez dodatkowych opłat',
           'Asystent AI, który zna cały materiał egzaminacyjny',
           'Automatyczne notatki, streszczenia i wykłady audio',
@@ -554,6 +555,7 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Wszystko z planu Standard',
+          'Angielski medyczny Basic gratis',
           'Pełne 3 lata nauki – nowe semestry dodawane automatycznie',
           'Diagnozy i Interwencje – pełny proces pielęgnowania',
           'Asystent AI, który zna cały materiał pielęgniarski',
