@@ -21,12 +21,18 @@ export const PAYMENT_OFFER_KEYS = [
   'angielski_medyczny_premium_upgrade',
   'angielski_medyczny_basic_monthly',
   'angielski_medyczny_premium_monthly',
+  'jezyk_migowy_basic_lifetime',
+  'jezyk_migowy_premium_lifetime',
+  'jezyk_migowy_premium_upgrade',
+  'jezyk_migowy_basic_monthly',
+  'jezyk_migowy_premium_monthly',
 ] as const satisfies readonly PaymentOfferKey[]
 
 export const LIFETIME_UPGRADE_OFFER_BY_COURSE = {
   'opiekun-medyczny': 'opiekun_premium_upgrade',
   pielegniarstwo: 'pielegniarstwo_premium_upgrade',
   'angielski-medyczny': 'angielski_medyczny_premium_upgrade',
+  'jezyk-migowy': 'jezyk_migowy_premium_upgrade',
 } as const satisfies Record<PaymentOffer['courseSlug'], LifetimeUpgradeOfferKey>
 
 export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
@@ -128,6 +134,39 @@ export const PAYMENT_OFFERS: Record<PaymentOfferKey, PaymentOffer> = {
     purchaseModel: 'lifetime',
     entitlementSourceType: 'lifetime_upgrade',
     priceEnvName: 'STRIPE_ANGIELSKI_MEDYCZNY_PREMIUM_UPGRADE_PRICE_ID',
+  },
+  jezyk_migowy_basic_lifetime: {
+    key: 'jezyk_migowy_basic_lifetime',
+    courseSlug: 'jezyk-migowy',
+    accessTier: 'basic',
+    amount: 0,
+    currency: 'pln',
+    available: false,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_purchase',
+    priceEnvName: 'STRIPE_JEZYK_MIGOWY_BASIC_PRICE_ID',
+  },
+  jezyk_migowy_premium_lifetime: {
+    key: 'jezyk_migowy_premium_lifetime',
+    courseSlug: 'jezyk-migowy',
+    accessTier: 'premium',
+    amount: 0,
+    currency: 'pln',
+    available: false,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_purchase',
+    priceEnvName: 'STRIPE_JEZYK_MIGOWY_PREMIUM_PRICE_ID',
+  },
+  jezyk_migowy_premium_upgrade: {
+    key: 'jezyk_migowy_premium_upgrade',
+    courseSlug: 'jezyk-migowy',
+    accessTier: 'premium',
+    amount: 0,
+    currency: 'pln',
+    available: false,
+    purchaseModel: 'lifetime',
+    entitlementSourceType: 'lifetime_upgrade',
+    priceEnvName: 'STRIPE_JEZYK_MIGOWY_PREMIUM_UPGRADE_PRICE_ID',
   },
   ...SUBSCRIPTION_PAYMENT_OFFERS,
 }

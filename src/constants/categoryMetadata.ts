@@ -3275,5 +3275,57 @@ export const CATEGORY_METADATA: Record<string, CategoryMetadata> = {
         ]
       }
     }
+  },
+  'jezyk-migowy-pierwszy-kontakt': {
+    category: 'jezyk-migowy-pierwszy-kontakt',
+    course: 'jezyk-migowy',
+    requiredTier: 'basic',
+    image: '/images/pjm/signwriting-perspective-page-52.png',
+    description: 'Podstawy komunikacji, PJM, SJM i pierwszego kontaktu z osobą Głuchą.',
+    duration: [25, 40, 60],
+    popularity: 'Nowy kurs',
+    status: true,
+    numberOfQuestions: [10, 30],
+    title: 'Język migowy - pierwszy kontakt',
+    keywords: ['pjm', 'język migowy', 'komunikacja', 'osoby Głuche']
+  },
+  'jezyk-migowy-znaki-i-alfabet': {
+    category: 'jezyk-migowy-znaki-i-alfabet',
+    course: 'jezyk-migowy',
+    requiredTier: 'basic',
+    image: '/images/pjm/lexicon-alphabet-page-16.png',
+    description: 'Elementy znaku, alfabet palcowy, liczebniki i czytanie opisów ilustracji.',
+    duration: [25, 40, 60],
+    popularity: 'Nowy kurs',
+    status: true,
+    numberOfQuestions: [10, 30],
+    title: 'Język migowy - znaki i alfabet',
+    keywords: ['pjm', 'alfabet palcowy', 'liczebniki', 'znaki']
+  },
+  'pismo-migowe-podstawy': {
+    category: 'pismo-migowe-podstawy',
+    course: 'jezyk-migowy',
+    requiredTier: 'basic',
+    image: '/images/pjm/signwriting-punctuation-pdf-page-77.png',
+    description: 'Podstawy zapisu SignWriting: perspektywa, dłonie, ruch, kontakt i interpunkcja.',
+    duration: [25, 40, 60],
+    popularity: 'Nowy kurs',
+    status: true,
+    numberOfQuestions: [10, 30],
+    title: 'Pismo migowe - podstawy',
+    keywords: ['signwriting', 'pismo migowe', 'notacja', 'pjm']
+  },
+  'jezyk-migowy-komunikacja-z-pacjentem': {
+    category: 'jezyk-migowy-komunikacja-z-pacjentem',
+    course: 'jezyk-migowy',
+    requiredTier: 'basic',
+    image: '/images/pjm/lexicon-numbers-page-21.png',
+    description: 'Podstawowe zasady kontaktu z pacjentem Głuchym i komunikacji w ochronie zdrowia.',
+    duration: [25, 40, 60],
+    popularity: 'Nowy kurs',
+    status: true,
+    numberOfQuestions: [10, 30],
+    title: 'Język migowy - komunikacja z pacjentem',
+    keywords: ['pjm', 'pacjent', 'komunikacja', 'opieka zdrowotna']
   }
 }

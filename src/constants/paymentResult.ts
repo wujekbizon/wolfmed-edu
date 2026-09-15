@@ -88,4 +88,5 @@ export const PAYMENT_COURSE_TITLES: Record<PaymentOffer['courseSlug'], string> =
   'opiekun-medyczny': 'Opiekun Medyczny',
   pielegniarstwo: 'Pielęgniarstwo',
   'angielski-medyczny': 'Angielski Medyczny',
+  'jezyk-migowy': 'Polski Język Migowy (PJM)',
 }

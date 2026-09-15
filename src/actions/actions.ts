@@ -72,6 +72,7 @@ import { getCreateTestFieldErrors } from "@/helpers/getCreateTestFieldErrors"
 import { getSessionQuestions } from "@/server/testSessionQuestions"
 import { gradeSessionAnswers } from "@/helpers/gradeSessionAnswers"
 import { hasSessionExpired } from "@/helpers/hasSessionExpired"
+import { getCategoryAccess } from "@/helpers/getCategoryAccess"
 
 export async function startTestAction(
   formState: FormState,
@@ -107,6 +108,16 @@ export async function startTestAction(
 
     const { category, numberOfQuestions, durationMinutes, meta } =
       validationResult.data
+
+    const categoryAccess = await getCategoryAccess(userId, category)
+    if (!categoryAccess.hasAccess) {
+      return toFormState(
+        "ERROR",
+        categoryAccess.hasCourse
+          ? "Ta kategoria wymaga wyższego pakietu."
+          : "Nie masz dostępu do tego kursu."
+      )
+    }
 
     let parsedMeta = {}
     try {

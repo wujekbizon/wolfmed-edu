@@ -31,6 +31,15 @@ export const careerPaths = [
     image:
       'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k52osKX2SEBiUD8sVXHObYqkj3TNfo4PKMGg6J',
     cta: 'Sprawdź szczegóły'
+  },
+  {
+    slug: 'jezyk-migowy',
+    title: 'Polski Język Migowy (PJM)',
+    teaser:
+      'Poznaj podstawy Polskiego Języka Migowego i lepiej przygotuj się do kontaktu z pacjentem Głuchym.',
+    image:
+      'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+    cta: 'Sprawdź szczegóły'
   }
 ]
 
@@ -622,6 +631,63 @@ export const careerPathsData: Record<string, PathData> = {
           'Asystent AI do nauki angielskiego medycznego',
           'Automatyczne notatki, streszczenia i wykłady audio',
           'Testy i quizy generowane przez AI'
+        ]
+      }
+    }
+  },
+  'jezyk-migowy': {
+    title: 'Polski Język Migowy (PJM)',
+    description:
+      'Praktyczne podstawy Polskiego Języka Migowego oraz zasady pierwszego kontaktu z pacjentem Głuchym.',
+    templateType: 'simple',
+    features: [
+      {
+        title: 'Podstawy PJM',
+        titleBtn: 'Poznaj podstawy',
+        description:
+          'Ucz się przez pytania o komunikację, alfabet, znaki, kulturę Głuchych i sytuacje z pacjentem.',
+        text: 'Kategorie PJM',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5mMYlJUZ7X6gGeKqRUixZb41zLrcWStM5HDAk',
+        url: '/panel/testy',
+        icon: 'tests'
+      },
+      {
+        title: 'Komunikacja z pacjentem',
+        titleBtn: 'Ćwicz sytuacje',
+        description:
+          'Rozpoznawaj właściwe reakcje i zasady kontaktu w podstawowych sytuacjach medycznych.',
+        text: 'Pacjent i personel',
+        imgSrc:
+          'https://utfs.io/a/zw3dk8dyy9/UVAwLrIxs2k5QgTyo0Yf6PZ5eKuhFM9REHkAy4n7s3aNYmWi',
+        url: '/panel/testy',
+        icon: 'learn'
+      }
+    ],
+    pricing: {
+      courseSlug: 'jezyk-migowy',
+      basic: {
+        price: 'Cena wkrótce',
+        offerKey: 'jezyk_migowy_basic_lifetime',
+        accessTier: 'basic',
+        badge: 'Wkrótce dostępny',
+        features: [
+          'Podstawy PJM, alfabet i liczebniki',
+          'Pierwszy kontakt z pacjentem Głuchym',
+          'Podstawowe zasady komunikacji i kultury Głuchych',
+          'Testy, wyniki, notatki i plan nauki'
+        ]
+      },
+      premium: {
+        price: 'Cena wkrótce',
+        offerKey: 'jezyk_migowy_premium_lifetime',
+        accessTier: 'premium',
+        badge: 'Wkrótce dostępny',
+        features: [
+          'Wszystko z planu Basic',
+          'Rozszerzone sytuacje z pacjentem',
+          'Gramatyka PJM i praktyka SignWriting',
+          'Narzędzia AI Wolfmed zgodnie z dostępem Premium'
         ]
       }
     }

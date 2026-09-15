@@ -7,6 +7,8 @@ type Answer = {
 export interface TestData {
   question: string
   answers: Answer[]
+  visualAsset?: string
+  visualAlt?: string
 }
 
 export interface TestMeta {
@@ -27,6 +29,8 @@ export type ExamQuestion = {
   data: {
     question: string
     answers: Array<{ option: string }>
+    visualAsset?: string
+    visualAlt?: string
   }
 }
 

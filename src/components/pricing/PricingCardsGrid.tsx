@@ -61,9 +61,11 @@ export default function PricingCardsGrid({
             <CoursePricingCard
               key={`${tierName}-${selectedOffer.key}-${offerStatus}`}
               tierName={tierName}
-              price={`${formatPlnAmount(selectedOffer.amount)}${
-                purchaseModel === 'subscription' ? ' / mies.' : ''
-              }`}
+              price={selectedOffer.available
+                ? `${formatPlnAmount(selectedOffer.amount)}${
+                    purchaseModel === 'subscription' ? ' / mies.' : ''
+                  }`
+                : tier.price}
               {...(usesUpgradeOffer ? { originalPrice: tier.price } : {})}
               offerKey={selectedOffer.key}
               features={tier.features}

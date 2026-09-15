@@ -1,7 +1,8 @@
 import { readFile } from 'node:fs/promises'
 import type { StagedTestSeedRecord, TestSeedRecord } from './testSeedTypes'
 
-const COURSES = new Set(['opiekun-medyczny', 'pielegniarstwo', 'angielski-medyczny'])
+const COURSES = new Set(['opiekun-medyczny', 'pielegniarstwo', 'angielski-medyczny', 'jezyk-migowy'])
+const TEST_SEED_FILES = ['data/tests.json', 'data/pjmBasicTests.json']
 
 function normalizeDate(value: string | null | undefined) {
   if (!value || /^\d{4}-0-/.test(value)) return null
@@ -26,8 +27,14 @@ function validateRecord(record: TestSeedRecord) {
 }
 
 export async function loadTestSeed(): Promise<StagedTestSeedRecord[]> {
-  const source = JSON.parse(await readFile('data/tests.json', 'utf8')) as TestSeedRecord[]
-  if (!Array.isArray(source)) throw new Error('data/tests.json must contain an array')
+  const sources = await Promise.all(TEST_SEED_FILES.map(async (path) => ({
+    path,
+    records: JSON.parse(await readFile(path, 'utf8')) as unknown,
+  })))
+  for (const source of sources) {
+    if (!Array.isArray(source.records)) throw new Error(`${source.path} must contain an array`)
+  }
+  const source = sources.flatMap((item) => item.records as TestSeedRecord[])
 
   const ids = new Set<string>()
   return source.map((record) => {

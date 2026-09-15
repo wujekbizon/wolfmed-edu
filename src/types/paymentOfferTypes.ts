@@ -16,11 +16,17 @@ export type PaymentOfferKey =
   | 'angielski_medyczny_premium_upgrade'
   | 'angielski_medyczny_basic_monthly'
   | 'angielski_medyczny_premium_monthly'
+  | 'jezyk_migowy_basic_lifetime'
+  | 'jezyk_migowy_premium_lifetime'
+  | 'jezyk_migowy_premium_upgrade'
+  | 'jezyk_migowy_basic_monthly'
+  | 'jezyk_migowy_premium_monthly'
 
 export type LifetimeUpgradeOfferKey =
   | 'opiekun_premium_upgrade'
   | 'pielegniarstwo_premium_upgrade'
   | 'angielski_medyczny_premium_upgrade'
+  | 'jezyk_migowy_premium_upgrade'
 
 export type SubscriptionPaymentOfferKey =
   | 'opiekun_basic_monthly'
@@ -29,10 +35,12 @@ export type SubscriptionPaymentOfferKey =
   | 'pielegniarstwo_premium_monthly'
   | 'angielski_medyczny_basic_monthly'
   | 'angielski_medyczny_premium_monthly'
+  | 'jezyk_migowy_basic_monthly'
+  | 'jezyk_migowy_premium_monthly'
 
 export type PaymentOffer = {
   key: PaymentOfferKey
-  courseSlug: 'opiekun-medyczny' | 'pielegniarstwo' | 'angielski-medyczny'
+  courseSlug: 'opiekun-medyczny' | 'pielegniarstwo' | 'angielski-medyczny' | 'jezyk-migowy'
   accessTier: 'basic' | 'premium'
   amount: number
   currency: 'pln'
@@ -55,6 +63,11 @@ export type PaymentOffer = {
     | 'STRIPE_ANGIELSKI_MEDYCZNY_PREMIUM_UPGRADE_PRICE_ID'
     | 'STRIPE_ANGIELSKI_MEDYCZNY_BASIC_MONTHLY_PRICE_ID'
     | 'STRIPE_ANGIELSKI_MEDYCZNY_PREMIUM_MONTHLY_PRICE_ID'
+    | 'STRIPE_JEZYK_MIGOWY_BASIC_PRICE_ID'
+    | 'STRIPE_JEZYK_MIGOWY_PREMIUM_PRICE_ID'
+    | 'STRIPE_JEZYK_MIGOWY_PREMIUM_UPGRADE_PRICE_ID'
+    | 'STRIPE_JEZYK_MIGOWY_BASIC_MONTHLY_PRICE_ID'
+    | 'STRIPE_JEZYK_MIGOWY_PREMIUM_MONTHLY_PRICE_ID'
 }
 
 export type VerifiedPaymentOffer = PaymentOffer & {

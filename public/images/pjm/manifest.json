@@ -1,0 +1,546 @@
+{
+  "source": "Leksykon-Języka-Migowego.pdf",
+  "dpi": 120,
+  "assets": [
+    {
+      "label": "alphabet-page-16",
+      "kind": "reference",
+      "path": "/images/pjm/reference/alphabet-page-16.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "alphabet-page-17",
+      "kind": "reference",
+      "path": "/images/pjm/reference/alphabet-page-17.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "numbers-page-21",
+      "kind": "reference",
+      "path": "/images/pjm/reference/numbers-page-21.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "numbers-page-22",
+      "kind": "reference",
+      "path": "/images/pjm/reference/numbers-page-22.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "numbers-page-23",
+      "kind": "reference",
+      "path": "/images/pjm/reference/numbers-page-23.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "A",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-a.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "Ą",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-a-ogonek.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "B",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-b.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "C",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-c.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "Ć",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-c-acute.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "CH",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-ch.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "CZ",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-cz.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "D",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-d.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "E",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-e.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "Ę",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-e-ogonek.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "F",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-f.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "G",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-g.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "H",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-h.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "I",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-i.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "J",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-j.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "K",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-k.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "L",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-l.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "Ł",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-l-stroke.png",
+      "sourcePage": 16
+    },
+    {
+      "label": "M",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-m.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "N",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-n.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Ń",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-n-acute.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "O",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-o.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Ó",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-o-acute.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "P",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-p.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "R",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-r.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "RZ",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-rz.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "S",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-s.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Ś",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-s-acute.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "SZ",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-sz.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "T",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-t.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "U",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-u.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "W",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-w.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Y",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-y.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Z",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-z.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Ź",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-z-acute.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "Ż",
+      "kind": "alphabet",
+      "path": "/images/pjm/alphabet/alphabet-z-dot.png",
+      "sourcePage": 17
+    },
+    {
+      "label": "0",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-0.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "1",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-1.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "2",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-2.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "3",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-3.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "4",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-4.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "5",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-5.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "6",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-6.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "7",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-7.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "8",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-8.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "9",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-9.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "10",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-10.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "11",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-11.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "12",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-12.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "13",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-13.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "14",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-14.png",
+      "sourcePage": 21
+    },
+    {
+      "label": "15",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-15.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "16",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-16.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "17",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-17.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "18",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-18.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "19",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-19.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "20",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-20.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "30",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-30.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "40",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-40.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "50",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-50.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "60",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-60.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "70",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-70.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "80",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-80.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "90",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-90.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "100",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-100.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "200",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-200.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "300",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-300.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "400",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-400.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "500",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-500.png",
+      "sourcePage": 22
+    },
+    {
+      "label": "600",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-600.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "700",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-700.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "800",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-800.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "900",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-900.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "1000",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-1000.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "1000000",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-1000000.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "1000000000",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-1000000000.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "pierwszy-1",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-pierwszy-1.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "drugi-2",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-drugi-2.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "trzeci-3",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-trzeci-3.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "czwarty-4",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-czwarty-4.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "piaty-5",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-piaty-5.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "szosty-6",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-szosty-6.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "siodmy-7",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-siodmy-7.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "osmy-8",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-osmy-8.png",
+      "sourcePage": 23
+    },
+    {
+      "label": "dziewiaty-9",
+      "kind": "numbers",
+      "path": "/images/pjm/numbers/numbers-dziewiaty-9.png",
+      "sourcePage": 23
+    }
+  ]
+}

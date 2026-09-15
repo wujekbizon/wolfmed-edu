@@ -1,0 +1,3380 @@
+[
+  {
+    "id": "2f264f9c-34ef-4943-8639-076bf2c65145",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Komunikacja to przede wszystkim:",
+      "answers": [
+        {
+          "option": "wymiana informacji między nadawcą a odbiorcą",
+          "isCorrect": true
+        },
+        {
+          "option": "jednostronne przekazywanie poleceń",
+          "isCorrect": false
+        },
+        {
+          "option": "zapisywanie informacji bez odbiorcy",
+          "isCorrect": false
+        },
+        {
+          "option": "obserwowanie zachowania bez odpowiedzi",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "9db2634b-7691-4799-80e3-59d5ecd5812a",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Prawidłowy proces komunikacji przebiega:",
+      "answers": [
+        {
+          "option": "w dwóch kierunkach",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko od nadawcy do odbiorcy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko od odbiorcy do nadawcy",
+          "isCorrect": false
+        },
+        {
+          "option": "bez informacji zwrotnej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "40e9f814-14c5-4211-aa46-c6e317d226ee",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Nadawca to osoba, która:",
+      "answers": [
+        {
+          "option": "przekazuje informację",
+          "isCorrect": true
+        },
+        {
+          "option": "odbiera informację i nic nie odpowiada",
+          "isCorrect": false
+        },
+        {
+          "option": "ocenia stan zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "zapisuje wyłącznie liczby",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "34507fbd-5429-4d38-8a63-af8fc0ffb272",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Odbiorca to osoba, która:",
+      "answers": [
+        {
+          "option": "odbiera wiadomość i przekazuje informację zwrotną",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko obserwuje nadawcę",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze powtarza każde słowo",
+          "isCorrect": false
+        },
+        {
+          "option": "przekazuje wiadomość bez jej odbioru",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "47a22737-06f4-4c0f-8782-12918ac6db20",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Informacja zwrotna jest:",
+      "answers": [
+        {
+          "option": "odpowiedzią odbiorcy w procesie komunikacji",
+          "isCorrect": true
+        },
+        {
+          "option": "nazwą alfabetu palcowego",
+          "isCorrect": false
+        },
+        {
+          "option": "rodzajem ruchu ręki",
+          "isCorrect": false
+        },
+        {
+          "option": "zapisem liczebnika",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3c360d09-b254-499b-89fa-bc08f30abf99",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Komunikacja werbalna oznacza komunikację z użyciem:",
+      "answers": [
+        {
+          "option": "języka naturalnego w postaci mowy dźwiękowej",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie ruchu dłoni",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie rysunku",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "92e4b74c-7847-4715-a19c-0aa01bd7d5f7",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Komunikacja niewerbalna obejmuje między innymi:",
+      "answers": [
+        {
+          "option": "gesty, mimikę twarzy i postawę ciała",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko głośną mowę",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko zapis alfabetem łacińskim",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko liczebniki",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "4884392b-3bdf-44e6-8968-aece6749231f",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W komunikacji osób niesłyszących komunikacja niewerbalna może:",
+      "answers": [
+        {
+          "option": "być podstawą porozumiewania się",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze zastępować każdą formę języka",
+          "isCorrect": false
+        },
+        {
+          "option": "oznaczać tylko emocje",
+          "isCorrect": false
+        },
+        {
+          "option": "być używana wyłącznie w szkole",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "ed3f3975-6e50-4026-9c29-f6cb2b3ac5fd",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Czytanie z ust:",
+      "answers": [
+        {
+          "option": "nie jest w stanie całkowicie zastąpić słuchu",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze daje pełne rozumienie wypowiedzi",
+          "isCorrect": false
+        },
+        {
+          "option": "jest łatwe do opanowania",
+          "isCorrect": false
+        },
+        {
+          "option": "nie wymaga kontekstu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "cb120e46-8c7a-4724-8bc1-281bf3699b80",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Jedną z trudności w czytaniu z ust jest to, że:",
+      "answers": [
+        {
+          "option": "wiele polskich głosek ma podobne układy artykulacyjne",
+          "isCorrect": true
+        },
+        {
+          "option": "każda głoska ma zupełnie inny układ ust",
+          "isCorrect": false
+        },
+        {
+          "option": "nie trzeba obserwować rozmówcy",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze występuje zapis SignWriting",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "5ad99d4b-cfd6-4a76-a95a-8a2d58f3f2f1",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Skuteczność odbioru mowy może poprawić współpraca:",
+      "answers": [
+        {
+          "option": "wzroku i resztek słuchu",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko węchu i wzroku",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie ruchu nóg",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie alfabetu międzynarodowego",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "539a38d4-5667-465e-a34f-8de0d0131146",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Fonogesty:",
+      "answers": [
+        {
+          "option": "uzupełniają niewidoczne ruchy artykulacyjne",
+          "isCorrect": true
+        },
+        {
+          "option": "zastępują mówienie w każdej sytuacji",
+          "isCorrect": false
+        },
+        {
+          "option": "są rodzajem pisma migowego",
+          "isCorrect": false
+        },
+        {
+          "option": "oznaczają wyłącznie liczby",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "33429ba4-b7e2-4a18-a700-444d29d966bf",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Według podręcznika polski system fonogestów zawiera:",
+      "answers": [
+        {
+          "option": "9 układów spółgłoskowych i 5 pozycji samogłoskowych",
+          "isCorrect": true
+        },
+        {
+          "option": "5 układów spółgłoskowych i 9 pozycji samogłoskowych",
+          "isCorrect": false
+        },
+        {
+          "option": "38 układów spółgłoskowych",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko jeden układ dłoni",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "bdf7eb98-2e5e-4ac9-a408-6fe97e175c94",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Daktylografia to forma porozumiewania się za pomocą:",
+      "answers": [
+        {
+          "option": "alfabetu palcowego",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie pisma odręcznego",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie ruchu tułowia",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "298754ef-8576-4d56-8737-4da308c2bc56",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W daktylografii każda litera i liczba ma:",
+      "answers": [
+        {
+          "option": "przypisany znak daktylograficzny",
+          "isCorrect": true
+        },
+        {
+          "option": "ten sam znak",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zapis dźwiękowy",
+          "isCorrect": false
+        },
+        {
+          "option": "znak zależny tylko od koloru ubrania",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "386b3345-2643-4c9a-85e7-080ef1fd8389",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Ideografia to:",
+      "answers": [
+        {
+          "option": "porozumiewanie się za pomocą znaków migowych odpowiadających wyrazom lub krótkim zwrotom",
+          "isCorrect": true
+        },
+        {
+          "option": "czytanie z ruchu ust",
+          "isCorrect": false
+        },
+        {
+          "option": "system pozycji samogłoskowych",
+          "isCorrect": false
+        },
+        {
+          "option": "zapis samych liczb",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "9f9ff75d-a116-4199-be41-3a818f0b3503",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Język migowy obejmuje:",
+      "answers": [
+        {
+          "option": "słownictwo oraz reguły określające użycie znaków",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie znaki jednej dłoni",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko mowę dźwiękową",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko gesty spontaniczne",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "0b661683-0405-4304-877d-899b65fa6889",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "System Językowo-Migowy łączy:",
+      "answers": [
+        {
+          "option": "elementy języka polskiego i języka migowego",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie PJM i SignWriting",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko rysunki i piktogramy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie alfabet międzynarodowy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3b97945a-7533-4c3a-bdc9-33ef5e00f228",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W SJM informacja jest przekazywana:",
+      "answers": [
+        {
+          "option": "mową dźwiękową wspomaganą znakami migowymi i alfabetem palcowym",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie ruchami ciała bez mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zapisem SW",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko za pomocą mimiki",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "b21274d4-2707-4ceb-aad9-3459f299d0e2",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Totalna komunikacja oznacza:",
+      "answers": [
+        {
+          "option": "wykorzystywanie wszystkich dostępnych środków komunikacyjnych",
+          "isCorrect": true
+        },
+        {
+          "option": "używanie tylko mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "używanie wyłącznie jednej ręki",
+          "isCorrect": false
+        },
+        {
+          "option": "rezygnację z informacji zwrotnej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "385aff00-23c6-4f6a-8f38-6c7fa6173f23",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "PJM jest opisany w podręczniku jako:",
+      "answers": [
+        {
+          "option": "naturalny język używany przez osoby niesłyszące w Polsce",
+          "isCorrect": true
+        },
+        {
+          "option": "sztuczny system podporządkowany polskiej gramatyce",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie alfabet palcowy",
+          "isCorrect": false
+        },
+        {
+          "option": "międzynarodowy język wszystkich osób Głuchych",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "6efb033b-1fcf-4799-be00-25e713815548",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W PJM znaczenie przekazu tworzą między innymi:",
+      "answers": [
+        {
+          "option": "ruchy rąk i ciała oraz mimika",
+          "isCorrect": true
+        },
+        {
+          "option": "same końcówki fleksyjne języka polskiego",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie głośna artykulacja",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko zapis literowy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d115b115-c5ac-49af-a3e8-55ceed18cd11",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Podstawowa różnica między SJM i PJM polega na tym, że:",
+      "answers": [
+        {
+          "option": "SJM jest systemem sztucznym, a PJM naturalnym językiem",
+          "isCorrect": true
+        },
+        {
+          "option": "oba są dokładnie tym samym",
+          "isCorrect": false
+        },
+        {
+          "option": "PJM jest podporządkowany gramatyce polskiej",
+          "isCorrect": false
+        },
+        {
+          "option": "SJM nie używa żadnych znaków",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "dd21238a-8260-4943-ab73-537516fe0796",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "SJM został stworzony w celu:",
+      "answers": [
+        {
+          "option": "ułatwienia dzieciom niesłyszącym osiągnięcia kompetencji w języku polskim",
+          "isCorrect": true
+        },
+        {
+          "option": "zapisu wszystkich języków migowych",
+          "isCorrect": false
+        },
+        {
+          "option": "zastąpienia alfabetu palcowego",
+          "isCorrect": false
+        },
+        {
+          "option": "opisu ruchów baletowych",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "4fb8d54a-fb43-46ae-8d56-5390052f576f",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "PJM wymaga przekładu na język polski, ponieważ:",
+      "answers": [
+        {
+          "option": "ma własną gramatykę i sposób organizacji wypowiedzi",
+          "isCorrect": true
+        },
+        {
+          "option": "jest identyczny z językiem polskim",
+          "isCorrect": false
+        },
+        {
+          "option": "nie posiada żadnych reguł",
+          "isCorrect": false
+        },
+        {
+          "option": "składa się wyłącznie z liczb",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "27c673a5-7444-4b2c-9a9b-cc079c6ab78f",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W SJM znaki migowe są używane:",
+      "answers": [
+        {
+          "option": "równocześnie z głośną, wyraźną mową",
+          "isCorrect": true
+        },
+        {
+          "option": "bez żadnej mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie w zapisie SW",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko do wskazywania kierunku",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "40bccdfe-e327-4d1f-9447-af58580e5181",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "W PJM pytania, przeczenia i wykrzyknienia przekazuje się między innymi przez:",
+      "answers": [
+        {
+          "option": "mimikę twarzy oraz ruch głowy lub tułowia",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie intonację głosu",
+          "isCorrect": false
+        },
+        {
+          "option": "końcówki polskich wyrazów",
+          "isCorrect": false
+        },
+        {
+          "option": "kolor tła",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "206bf3a8-fb75-4b1b-910a-d3c1a34030d5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Niesłyszący mają takie same potrzeby życiowe jak słyszący, ale mogą napotykać więcej trudności z powodu:",
+      "answers": [
+        {
+          "option": "bariery komunikacyjnej",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie bariery architektonicznej",
+          "isCorrect": false
+        },
+        {
+          "option": "braku potrzeb społecznych",
+          "isCorrect": false
+        },
+        {
+          "option": "nadmiaru informacji zwrotnej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d5a149cd-59c3-4315-91fe-b57e4ebb87fd",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Brak możliwości zaspokojenia potrzeb może prowadzić do:",
+      "answers": [
+        {
+          "option": "frustracji i złego samopoczucia psychicznego",
+          "isCorrect": true
+        },
+        {
+          "option": "automatycznego opanowania języka",
+          "isCorrect": false
+        },
+        {
+          "option": "zaniku informacji zwrotnej",
+          "isCorrect": false
+        },
+        {
+          "option": "poprawy każdej komunikacji",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "063c8972-57ca-4c6c-8dab-d9f1fa4a99c1",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-pierwszy-kontakt"
+    },
+    "data": {
+      "question": "Nauka PJM z wykorzystaniem pisma migowego może według podręcznika:",
+      "answers": [
+        {
+          "option": "przyspieszać naukę pojęć, zwrotów i wyrazów zawodowych",
+          "isCorrect": true
+        },
+        {
+          "option": "zastępować każdą formę kontaktu z ludźmi",
+          "isCorrect": false
+        },
+        {
+          "option": "usuwać wszystkie różnice językowe",
+          "isCorrect": false
+        },
+        {
+          "option": "służyć tylko do nauki liczb",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "aedeed56-6336-40c9-95b9-41fc358a4310",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W opisach znaków Leksykon odwołuje się do trzech najważniejszych elementów:",
+      "answers": [
+        {
+          "option": "lokalizacji, ruchu i układu dłoni",
+          "isCorrect": true
+        },
+        {
+          "option": "głośności, tempa mowy i akcentu",
+          "isCorrect": false
+        },
+        {
+          "option": "koloru, wieku i wzrostu",
+          "isCorrect": false
+        },
+        {
+          "option": "pisowni, odmiany i interpunkcji polskiej",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/lexicon-alphabet-page-16.png"
+    }
+  },
+  {
+    "id": "f5d70433-9ca0-4865-bbea-b7e271cde615",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W kodach opisu dłoni litera P odnosi się do:",
+      "answers": [
+        {
+          "option": "prawej ręki",
+          "isCorrect": true
+        },
+        {
+          "option": "lewej ręki",
+          "isCorrect": false
+        },
+        {
+          "option": "pozycji poziomej",
+          "isCorrect": false
+        },
+        {
+          "option": "pytania ogólnego",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/alphabet/alphabet-p.png"
+    }
+  },
+  {
+    "id": "b5adfa8d-ff2f-4cb6-bd05-bc776807b7f5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W kodach opisu dłoni litera L odnosi się do:",
+      "answers": [
+        {
+          "option": "lewej ręki",
+          "isCorrect": true
+        },
+        {
+          "option": "prawej ręki",
+          "isCorrect": false
+        },
+        {
+          "option": "lokalizacji twarzy",
+          "isCorrect": false
+        },
+        {
+          "option": "liczebnika",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/alphabet/alphabet-l.png"
+    }
+  },
+  {
+    "id": "07da8e78-5244-47b0-8a48-caa6a58983e5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Skrót PL w opisie znaku oznacza:",
+      "answers": [
+        {
+          "option": "prawą rękę ułożoną w kształcie litery L",
+          "isCorrect": true
+        },
+        {
+          "option": "lewą rękę ułożoną w kształcie litery P",
+          "isCorrect": false
+        },
+        {
+          "option": "prawą rękę w kształcie liczby 5",
+          "isCorrect": false
+        },
+        {
+          "option": "obie ręce w kształcie litery L",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "ab234d64-cd32-4af1-937b-39213600f4bb",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Skrót PBm, L5 oznacza:",
+      "answers": [
+        {
+          "option": "prawą dłoń w kształcie B z alfabetu międzynarodowego i lewą w kształcie liczebnika 5",
+          "isCorrect": true
+        },
+        {
+          "option": "obie dłonie w kształcie A",
+          "isCorrect": false
+        },
+        {
+          "option": "prawą dłoń w kształcie liczby 5 i lewą w kształcie B",
+          "isCorrect": false
+        },
+        {
+          "option": "lewą dłoń w kształcie litery P",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "31b1e9ce-dca5-4a96-bcab-399a2c4b7110",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Znaki lub ruchy oddzielone żółtą ramką w ilustracjach Leksykonu:",
+      "answers": [
+        {
+          "option": "mają numer określający kolejność wykonania",
+          "isCorrect": true
+        },
+        {
+          "option": "oznaczają błąd w znaku",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze oznaczają pytanie",
+          "isCorrect": false
+        },
+        {
+          "option": "oznaczają tylko ruch powolny",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "c0550914-d5f0-4a94-8767-bf85ac646bd7",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Niebieska ramka na fragmencie zdjęcia pokazuje:",
+      "answers": [
+        {
+          "option": "końcową fazę znaku bez zachowania lokalizacji",
+          "isCorrect": true
+        },
+        {
+          "option": "początkową literę alfabetu",
+          "isCorrect": false
+        },
+        {
+          "option": "miejsce przecinka",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie ruch obu rąk",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "e615d400-9c3a-4590-8fcc-16e879e5d2e7",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Przerywana linia w opisie ilustracji oznacza najczęściej:",
+      "answers": [
+        {
+          "option": "przesunięcie do wykonania kolejnego ruchu",
+          "isCorrect": true
+        },
+        {
+          "option": "zakończenie całego alfabetu",
+          "isCorrect": false
+        },
+        {
+          "option": "ruch głowy w bok",
+          "isCorrect": false
+        },
+        {
+          "option": "zmianę języka na SJM",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "f2637648-5332-497c-b2c3-18fc011df449",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W znakach dynamicznych integralnym składnikiem jest:",
+      "answers": [
+        {
+          "option": "ruch",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie bezruch dłoni",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze alfabet międzynarodowy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko zapis cyfrowy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "2dc96f31-38d5-4fc6-9546-12c526a30620",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Zmiana jednego elementu znaku może:",
+      "answers": [
+        {
+          "option": "spowodować zmianę jego znaczenia",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze pozostawić znaczenie bez zmian",
+          "isCorrect": false
+        },
+        {
+          "option": "zmienić PJM w SJM",
+          "isCorrect": false
+        },
+        {
+          "option": "usunąć potrzebę kontekstu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "90ebe5b7-5ec7-47a6-88dc-05ed6bf77136",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Polski alfabet palcowy w Leksykonie obejmuje:",
+      "answers": [
+        {
+          "option": "polskie litery, w tym znaki diakrytyczne i dwuznaki",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie 10 cyfr",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko litery bez polskich znaków",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie alfabet międzynarodowy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3cb855a7-6cd9-4e23-af54-d6ed5e9f885f",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Międzynarodowy alfabet palcowy w Leksykonie jest opisany jako przyjęty przez:",
+      "answers": [
+        {
+          "option": "Światową Federację Głuchych",
+          "isCorrect": true
+        },
+        {
+          "option": "Światową Organizację Zdrowia",
+          "isCorrect": false
+        },
+        {
+          "option": "Komisję Europejską",
+          "isCorrect": false
+        },
+        {
+          "option": "Polskie Towarzystwo Matematyczne",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "9ef42609-5c5a-439f-9d8a-6f9e4910e611",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Alfabet palcowy służy przede wszystkim do:",
+      "answers": [
+        {
+          "option": "przekazywania liter za pomocą układów dłoni",
+          "isCorrect": true
+        },
+        {
+          "option": "zapisywania wyłącznie ruchów okrężnych",
+          "isCorrect": false
+        },
+        {
+          "option": "zastępowania całej gramatyki PJM",
+          "isCorrect": false
+        },
+        {
+          "option": "określania poziomu uszkodzenia słuchu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3d00485c-6cec-4d8d-94c3-87dcd6e14629",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Na stronach poświęconych liczebnikom Leksykon przedstawia:",
+      "answers": [
+        {
+          "option": "liczebniki główne i porządkowe",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko działania matematyczne",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie daty historyczne",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko alfabet międzynarodowy",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/lexicon-numbers-page-21.png"
+    }
+  },
+  {
+    "id": "3ccd68cd-5b76-4de7-b23c-47ccba22bc3a",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Na stronie 21 Leksykonu pokazano liczebniki:",
+      "answers": [
+        {
+          "option": "od 0 do 14",
+          "isCorrect": true
+        },
+        {
+          "option": "od 15 do 500",
+          "isCorrect": false
+        },
+        {
+          "option": "od 500 do miliarda",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie porządkowe",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/reference/numbers-page-21.png"
+    }
+  },
+  {
+    "id": "78766e9c-b1c2-4745-8688-657665128ed1",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Na stronie 22 Leksykonu pokazano między innymi:",
+      "answers": [
+        {
+          "option": "liczebniki 15-20, dziesiątki oraz 100-500",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko liczby 0-9",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie liczby porządkowe",
+          "isCorrect": false
+        },
+        {
+          "option": "same znaki interpunkcyjne",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/reference/numbers-page-22.png"
+    }
+  },
+  {
+    "id": "220f978a-834a-4a7f-9e85-2a2638b5f6c1",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Wśród liczebników przedstawionych w Leksykonie znajdują się:",
+      "answers": [
+        {
+          "option": "0, 1, 2, 3, 4 i 5",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie liczby ujemne",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko ułamki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie liczby rzymskie",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/numbers/numbers-0.png"
+    }
+  },
+  {
+    "id": "ee8e4f07-4504-4c4c-afb2-fe7d160c4b5e",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Liczebniki porządkowe odpowiadają między innymi słowom:",
+      "answers": [
+        {
+          "option": "pierwszy, drugi, trzeci",
+          "isCorrect": true
+        },
+        {
+          "option": "wczoraj, dzisiaj, jutro",
+          "isCorrect": false
+        },
+        {
+          "option": "lekarz, pacjent, szpital",
+          "isCorrect": false
+        },
+        {
+          "option": "szybko, wolno, mocno",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d3ef7dd2-6f28-4f6f-8278-f968ac8bfd4c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Lokalizacja znaku wskazuje:",
+      "answers": [
+        {
+          "option": "miejsce wykonania znaku względem ciała osoby migającej",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie znaczenie polskiego słowa",
+          "isCorrect": false
+        },
+        {
+          "option": "numer pytania testowego",
+          "isCorrect": false
+        },
+        {
+          "option": "poziom dostępu do kursu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "31703791-6e9f-4c2e-80fa-f35d8fcbab0e",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W opisach znaków położenie dłoni może odnosić się do:",
+      "answers": [
+        {
+          "option": "twarzy, klatki piersiowej, pasa lub przestrzeni przed osobą",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie kolan",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko prawego ramienia",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie kartki papieru",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a309d133-efe5-4aed-99a9-298fdfe85526",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W znaku oburęcznym opisuje się także:",
+      "answers": [
+        {
+          "option": "wzajemne położenie rąk",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie kolor rękawów",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko rękę dominującą",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie długość polskiego słowa",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "5c5f1426-327a-4a15-b333-da876774cda2",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Układ dłoni może być opisany przez:",
+      "answers": [
+        {
+          "option": "kształt palców, orientację dłoni i jej położenie",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko liczbę sylab",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie kierunek wzroku",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko zapis alfabetem łacińskim",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "2cfafbdb-3afe-40b4-b690-49723bbcea0c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W Leksykonie opis specjalnych układów dłoni odwołuje się do:",
+      "answers": [
+        {
+          "option": "kodów literowych i liczebnikowych",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie nazw miesięcy",
+          "isCorrect": false
+        },
+        {
+          "option": "samej mowy dźwiękowej",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko znaków interpunkcyjnych",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "70fe077f-89a9-47b8-9219-1617e765667d",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Ruch wykonywany dwukrotnie jest w legendzie oznaczany:",
+      "answers": [
+        {
+          "option": "liczbą grotów odpowiadającą liczbie ruchów",
+          "isCorrect": true
+        },
+        {
+          "option": "kolorem czerwonym oznaczającym błąd",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko literą A",
+          "isCorrect": false
+        },
+        {
+          "option": "brakiem jakiegokolwiek symbolu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "59c95589-5977-4a2c-b9b7-2e86437dee30",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Fragment zdjęcia pokazujący zmianę ułożenia dłoni przy zachowaniu lokalizacji jest:",
+      "answers": [
+        {
+          "option": "półprzezroczystym fragmentem obrysowanym czarną linią",
+          "isCorrect": true
+        },
+        {
+          "option": "żółtą ramką z numerem",
+          "isCorrect": false
+        },
+        {
+          "option": "niebieską ramką bez lokalizacji",
+          "isCorrect": false
+        },
+        {
+          "option": "kropką interpunkcyjną",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "dcb0ddbc-e6d3-4718-a9a8-3a92f23f1592",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Wśród parametrów wykonania znaku wymieniono ekspresję:",
+      "answers": [
+        {
+          "option": "mimiczną",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie głosową",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie pisemną",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie kolorystyczną",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "7b5303cf-0f4e-4b72-b1ef-2d5c9de246d5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Znaki daktylograficzne obejmują:",
+      "answers": [
+        {
+          "option": "litery, liczby i znaki uzupełniające",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko czasowniki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie mimikę",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko ruchy okrężne",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "deffe282-a205-47a9-a987-5345ebba5859",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "W PJM nie istnieje:",
+      "answers": [
+        {
+          "option": "jeden ogólnoświatowy język migowy",
+          "isCorrect": true
+        },
+        {
+          "option": "wiele języków migowych",
+          "isCorrect": false
+        },
+        {
+          "option": "regionalne różnice",
+          "isCorrect": false
+        },
+        {
+          "option": "język wizualno-przestrzenny",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d8649b1e-a14c-4a85-b577-2b78f8eaecf7",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Najbezpieczniej czytać ilustrację znaku:",
+      "answers": [
+        {
+          "option": "razem z legendą i opisem parametrów",
+          "isCorrect": true
+        },
+        {
+          "option": "bez oglądania kolejności ruchu",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie przez zgadywanie z polskiego słowa",
+          "isCorrect": false
+        },
+        {
+          "option": "ignorując lokalizację",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "0ad9c141-10df-46db-b5ac-e3bcd4220962",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "SignWriting jest:",
+      "answers": [
+        {
+          "option": "metodą zapisu znaków języka migowego",
+          "isCorrect": true
+        },
+        {
+          "option": "systemem zapisu wyłącznie dźwięków",
+          "isCorrect": false
+        },
+        {
+          "option": "alfabetem języka polskiego",
+          "isCorrect": false
+        },
+        {
+          "option": "metodą oceny słuchu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "838f76a3-981b-4ee4-b7fb-47a0e3ff9527",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "SignWriting został stworzony w 1974 roku przez:",
+      "answers": [
+        {
+          "option": "Valerie Sutton",
+          "isCorrect": true
+        },
+        {
+          "option": "Bogdana Szczepankowskiego",
+          "isCorrect": false
+        },
+        {
+          "option": "Olgierda Kosibę",
+          "isCorrect": false
+        },
+        {
+          "option": "Jakuba Falkowskiego",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "4974264e-c8a9-4c19-bb2f-32e46bb839a2",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "SignWriting powstał pierwotnie na potrzeby:",
+      "answers": [
+        {
+          "option": "baletu",
+          "isCorrect": true
+        },
+        {
+          "option": "medycyny",
+          "isCorrect": false
+        },
+        {
+          "option": "alfabetu polskiego",
+          "isCorrect": false
+        },
+        {
+          "option": "badania słuchu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "247352bb-f89b-43ec-88b4-f64e5ee62a07",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "SignWriting odpowiada na potrzebę zapisu języka, który jest:",
+      "answers": [
+        {
+          "option": "wizualno-przestrzenny, a nie linearny",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie dźwiękowy",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze identyczny z polskim",
+          "isCorrect": false
+        },
+        {
+          "option": "pozbawiony gramatyki",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "caca624b-6a7b-43f6-8360-879b1e3ff566",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Zaletą SignWritingu jest między innymi:",
+      "answers": [
+        {
+          "option": "ikoniczność znaków graficznych",
+          "isCorrect": true
+        },
+        {
+          "option": "brak możliwości zapisu mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "zależność od głośnej mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "ograniczenie do jednej litery",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "fe4bde9b-5244-4334-a520-f82ce20caa2e",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Podstawy SignWritingu w podręczniku zaplanowano na:",
+      "answers": [
+        {
+          "option": "12 jednostek lekcyjnych",
+          "isCorrect": true
+        },
+        {
+          "option": "2 jednostki",
+          "isCorrect": false
+        },
+        {
+          "option": "60 jednostek",
+          "isCorrect": false
+        },
+        {
+          "option": "100 jednostek",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "c14b02dc-16b5-4b0a-a85c-60db397061da",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Jedna jednostka lekcyjna w programie podstaw SignWritingu trwa:",
+      "answers": [
+        {
+          "option": "45 minut",
+          "isCorrect": true
+        },
+        {
+          "option": "15 minut",
+          "isCorrect": false
+        },
+        {
+          "option": "30 minut",
+          "isCorrect": false
+        },
+        {
+          "option": "90 minut",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "401b6f08-1061-4345-adc6-eca85096740e",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Perspektywa odbiorcy oznacza zapis:",
+      "answers": [
+        {
+          "option": "tak jak obserwator widzi dłonie osoby migającej",
+          "isCorrect": true
+        },
+        {
+          "option": "tak jak słyszy głos nadawcy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie od strony pleców",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze od strony własnej dłoni",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-perspective-page-52.png"
+    }
+  },
+  {
+    "id": "06b669f6-53d1-4040-949a-54842e035402",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Perspektywa migającego oznacza patrzenie:",
+      "answers": [
+        {
+          "option": "od siebie na własne dłonie",
+          "isCorrect": true
+        },
+        {
+          "option": "na dłonie odbiorcy od tyłu",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie z góry",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko na twarz rozmówcy",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-perspective-page-52.png"
+    }
+  },
+  {
+    "id": "ca0b2488-d9a4-4571-8f32-fda02c60dbeb",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "W zapisie SignWriting wykorzystywana jest przede wszystkim perspektywa:",
+      "answers": [
+        {
+          "option": "nadawcy/migającego",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie odbiorcy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie osoby stojącej z boku",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie fotografa",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a437b2b5-3ca5-4fd9-9169-ed51e28468c0",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Podstawowe pięć układów dłoni omawianych w podręczniku to:",
+      "answers": [
+        {
+          "option": "A, B, Z, 5 i O",
+          "isCorrect": true
+        },
+        {
+          "option": "C, D, E, F i G",
+          "isCorrect": false
+        },
+        {
+          "option": "P, L, R, S i T",
+          "isCorrect": false
+        },
+        {
+          "option": "0, 1, 2, 3 i 4",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-perspective-page-52.png"
+    }
+  },
+  {
+    "id": "3ef381dc-8245-4297-bb78-2de56d1042a4",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Układ B oznacza:",
+      "answers": [
+        {
+          "option": "płaską dłoń z wyprostowanymi i złączonymi palcami",
+          "isCorrect": true
+        },
+        {
+          "option": "zamkniętą pięść",
+          "isCorrect": false
+        },
+        {
+          "option": "wyprostowany tylko palec wskazujący",
+          "isCorrect": false
+        },
+        {
+          "option": "okrąg z kciuka i palca",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-perspective-page-52.png"
+    }
+  },
+  {
+    "id": "9bb9f611-26e5-464a-be75-c13abe220e13",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Układ A oznacza:",
+      "answers": [
+        {
+          "option": "zamkniętą pięść",
+          "isCorrect": true
+        },
+        {
+          "option": "płaską dłoń z palcami złączonymi",
+          "isCorrect": false
+        },
+        {
+          "option": "dłoń z wyprostowanym wskazującym",
+          "isCorrect": false
+        },
+        {
+          "option": "dłoń w kształcie koła",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3b130591-2470-4131-ba26-637f5c07cf4c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Układ Z oznacza:",
+      "answers": [
+        {
+          "option": "wyprostowany palec wskazujący przy pozostałych palcach zamkniętych",
+          "isCorrect": true
+        },
+        {
+          "option": "pięć wyprostowanych palców",
+          "isCorrect": false
+        },
+        {
+          "option": "zamkniętą pięść z kciukiem na zewnątrz",
+          "isCorrect": false
+        },
+        {
+          "option": "dwie dłonie stykające się",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "e3904017-e99c-4db9-a2e8-efdfc68e1e38",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Układ 5 jest w podręczniku identyfikowany z:",
+      "answers": [
+        {
+          "option": "liczebnikiem 5 w PJM",
+          "isCorrect": true
+        },
+        {
+          "option": "literą A",
+          "isCorrect": false
+        },
+        {
+          "option": "literą Z",
+          "isCorrect": false
+        },
+        {
+          "option": "liczebnikiem 0",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a248fdb2-9ae6-42ba-b758-249d5dcd16f4",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Układ O jest identyfikowany z:",
+      "answers": [
+        {
+          "option": "literą O polskiego alfabetu palcowego",
+          "isCorrect": true
+        },
+        {
+          "option": "liczbą 5",
+          "isCorrect": false
+        },
+        {
+          "option": "literą B",
+          "isCorrect": false
+        },
+        {
+          "option": "ruchem okrężnym",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "b558a31e-d988-41af-ae5c-550abb0cfa2a",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Metoda czarne-białe pokazuje:",
+      "answers": [
+        {
+          "option": "pozycję ręki względem ciała",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie liczbę ruchów",
+          "isCorrect": false
+        },
+        {
+          "option": "tempo całego zdania",
+          "isCorrect": false
+        },
+        {
+          "option": "rodzaj interpunkcji polskiej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "da16363c-59c1-4fdf-810b-46b9f275b35c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Niezaciemniony symbol dłoni oznacza widok na:",
+      "answers": [
+        {
+          "option": "jej wnętrze",
+          "isCorrect": true
+        },
+        {
+          "option": "jej wierzch",
+          "isCorrect": false
+        },
+        {
+          "option": "jej bok",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie palce",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "2bafef85-a5c1-4d81-889f-9beeccefa163",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Całkowicie zaciemniony symbol dłoni oznacza widok na:",
+      "answers": [
+        {
+          "option": "jej wierzch",
+          "isCorrect": true
+        },
+        {
+          "option": "jej wnętrze",
+          "isCorrect": false
+        },
+        {
+          "option": "jej bok",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko nadgarstek",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "383329ab-866c-4405-9606-07974b201910",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Częściowo zaciemniony symbol dłoni oznacza dłoń ustawioną:",
+      "answers": [
+        {
+          "option": "bokiem do ciała",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie wnętrzem do ciała",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie grzbietem do ciała",
+          "isCorrect": false
+        },
+        {
+          "option": "poziomo na podłodze",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "16ad0e1c-882b-46b1-988c-02ad3cadc958",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Płaszczyzna pionowa oznacza dłoń ułożoną równolegle do:",
+      "answers": [
+        {
+          "option": "ściany",
+          "isCorrect": true
+        },
+        {
+          "option": "podłogi",
+          "isCorrect": false
+        },
+        {
+          "option": "sufitu wyłącznie",
+          "isCorrect": false
+        },
+        {
+          "option": "kartki w drukarce",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "24928e1c-5f28-463a-a993-3b24b5cdf199",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Płaszczyzna pozioma oznacza dłoń ułożoną równolegle do:",
+      "answers": [
+        {
+          "option": "podłogi",
+          "isCorrect": true
+        },
+        {
+          "option": "ściany",
+          "isCorrect": false
+        },
+        {
+          "option": "twarzy odbiorcy",
+          "isCorrect": false
+        },
+        {
+          "option": "pionowej osi ciała",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "f4a4e06b-7dd1-4cee-afa3-eed640258441",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "W zapisie poziomego ułożenia symbolu pojawia się:",
+      "answers": [
+        {
+          "option": "biały pasek dzielący symbol na dwie części",
+          "isCorrect": true
+        },
+        {
+          "option": "czerwona kropka",
+          "isCorrect": false
+        },
+        {
+          "option": "podwójna litera",
+          "isCorrect": false
+        },
+        {
+          "option": "żółta ramka",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "c3847ebb-c236-4623-b5e0-ffe82563d126",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Pionowy ruch równoległy do ciała oznacza się:",
+      "answers": [
+        {
+          "option": "podwójną strzałką",
+          "isCorrect": true
+        },
+        {
+          "option": "pojedynczą kropką",
+          "isCorrect": false
+        },
+        {
+          "option": "przecinkiem",
+          "isCorrect": false
+        },
+        {
+          "option": "pustym polem",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-movement-pdf-page-61.png"
+    }
+  },
+  {
+    "id": "3e6edab4-fbc3-4801-a8ae-8dbb1fbf4143",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Poziomy ruch równoległy do podłogi oznacza się:",
+      "answers": [
+        {
+          "option": "pojedynczą strzałką",
+          "isCorrect": true
+        },
+        {
+          "option": "podwójną strzałką",
+          "isCorrect": false
+        },
+        {
+          "option": "znakiem zapytania",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie kolorem czarnym",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-movement-pdf-page-61.png"
+    }
+  },
+  {
+    "id": "a61a0d23-9ceb-4de4-8718-374d730ac3c5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Wśród rodzajów kontaktu wymienionych w podręczniku znajduje się:",
+      "answers": [
+        {
+          "option": "dotyk/dotknięcie",
+          "isCorrect": true
+        },
+        {
+          "option": "intonacja głosu",
+          "isCorrect": false
+        },
+        {
+          "option": "akcent wyrazowy",
+          "isCorrect": false
+        },
+        {
+          "option": "samogłoska",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-contact-pdf-page-70.png"
+    }
+  },
+  {
+    "id": "d95112a4-f39b-4012-bc18-8965de91d17c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Innym rodzajem kontaktu wymienionym w podręczniku jest:",
+      "answers": [
+        {
+          "option": "pocieranie",
+          "isCorrect": true
+        },
+        {
+          "option": "czytanie z ust",
+          "isCorrect": false
+        },
+        {
+          "option": "mówienie szeptem",
+          "isCorrect": false
+        },
+        {
+          "option": "zmiana alfabetu",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-contact-pdf-page-70.png"
+    }
+  },
+  {
+    "id": "11272cd3-123a-4411-819e-1dc6bdb69fb9",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Symbole niemanualne odnoszą się między innymi do:",
+      "answers": [
+        {
+          "option": "mimiki i ruchów głowy",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie liczb",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko kolorów dłoni",
+          "isCorrect": false
+        },
+        {
+          "option": "samej pisowni polskiej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "bcb7bcab-f4bd-44f9-b892-740f8d6666c3",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Wśród znaków interpunkcyjnych SW wymieniono:",
+      "answers": [
+        {
+          "option": "kropkę, przecinek, dwukropek, znak zapytania i wykrzyknik",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko kropkę",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie nawiasy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko litery alfabetu",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-punctuation-pdf-page-77.png"
+    }
+  },
+  {
+    "id": "2d9e5526-a39c-46ad-9c59-f6d12aa0582b",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "pismo-migowe-podstawy"
+    },
+    "data": {
+      "question": "Wśród oznaczeń dynamiki SW wymieniono ruch:",
+      "answers": [
+        {
+          "option": "napięty, szybki i wolny",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie głośny i cichy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko prosty",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie polski",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/signwriting-punctuation-pdf-page-77.png"
+    }
+  },
+  {
+    "id": "45a07d4e-5ea3-4fc9-ad02-d518fcb44cb9",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Pytanie ogólne typu „czy” w PJM tworzy się według podręcznika przez:",
+      "answers": [
+        {
+          "option": "uniesienie brwi i rozszerzenie oczu",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie głośniejszą mowę",
+          "isCorrect": false
+        },
+        {
+          "option": "dodanie polskiej końcówki",
+          "isCorrect": false
+        },
+        {
+          "option": "zmianę koloru symbolu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "c5c6001f-9fa8-49cd-a1ce-0153864a2ed1",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Sygnały pytania ogólnego najczęściej występują:",
+      "answers": [
+        {
+          "option": "na końcu zdania",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze na początku akapitu",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko w środku słowa",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie przed alfabetem",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "29c98a99-12ee-4abd-bb6e-bffa7c140d82",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Pytajniki szczegółowe w PJM znajdują swoje miejsce:",
+      "answers": [
+        {
+          "option": "na końcu zdania",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze przed czasownikiem",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie przed alfabetem",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko na początku rozmowy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "6d457d5f-8c3e-4e73-933e-b8fca13c87f6",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Pytaniu szczegółowemu towarzyszą między innymi:",
+      "answers": [
+        {
+          "option": "ściągnięcie brwi i lekkie pochylenie do przodu",
+          "isCorrect": true
+        },
+        {
+          "option": "uniesienie ramion bez mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie głośna artykulacja",
+          "isCorrect": false
+        },
+        {
+          "option": "zamknięcie oczu i brak ruchu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "49916c32-1044-48a7-8c66-38fb6a77e161",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Negacja w PJM wykorzystuje między innymi:",
+      "answers": [
+        {
+          "option": "poprzeczny ruch głowy i ekspresję twarzy",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie przecinek",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko ruch ręki do góry",
+          "isCorrect": false
+        },
+        {
+          "option": "głośne powtórzenie polskiego słowa",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "c3eae381-f31b-45bc-a008-90de24b9a232",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Potwierdzenie w PJM może wykorzystywać:",
+      "answers": [
+        {
+          "option": "ruch głową góra-dół",
+          "isCorrect": true
+        },
+        {
+          "option": "ruch głową tylko na boki",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zmianę pozycji dłoni",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko znak wykrzyknika",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "4836f89d-1e03-49cf-9b9e-df9ae215affb",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Stopniowanie przymiotników w PJM jest według podręcznika wyrażane przez:",
+      "answers": [
+        {
+          "option": "intensywność mimiki",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie liczbę palców",
+          "isCorrect": false
+        },
+        {
+          "option": "polskie końcówki",
+          "isCorrect": false
+        },
+        {
+          "option": "zmianę alfabetu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "aa884fc2-0c64-4549-b5aa-270b2f444874",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Znak „dlaczego” w przykładzie PJM występuje:",
+      "answers": [
+        {
+          "option": "na końcu zdania i z mimiką pytania szczegółowego",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze na początku zdania bez mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko jako liczebnik",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie w SJM",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "cfa43ae4-5d17-496a-b265-ff8634875f63",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Zdania kontrastowe są wyrażane między innymi przez:",
+      "answers": [
+        {
+          "option": "boczne ruchy ciała i głowy",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie ruch w górę",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko zapis liczby",
+          "isCorrect": false
+        },
+        {
+          "option": "głośną intonację",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "7a43102c-cf12-4e34-8113-11fad521b6d4",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Znaki kierunkowe wykorzystują:",
+      "answers": [
+        {
+          "option": "przestrzeń i kierunek ruchu",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie kolor tła",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko alfabet palcowy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zapis interpunkcyjny",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a20845dd-a930-4f66-a855-f6b118d0ab67",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Symbole kontaktu mogą opisywać:",
+      "answers": [
+        {
+          "option": "dynamikę, miejsce kontaktu i szybkość gestu",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko polską wymowę",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie liczbę znaków",
+          "isCorrect": false
+        },
+        {
+          "option": "jedynie pozycję obserwatora",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a5d6a3f4-c684-411a-82d0-d45a07c2397b",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "PJM ma własną strukturę gramatyczną, która jest:",
+      "answers": [
+        {
+          "option": "odmienna od języka polskiego",
+          "isCorrect": true
+        },
+        {
+          "option": "identyczna z polską",
+          "isCorrect": false
+        },
+        {
+          "option": "pozbawiona reguł",
+          "isCorrect": false
+        },
+        {
+          "option": "oparta tylko na fonogestach",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3051dbcf-b484-4070-afc2-146a0b2ca441",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W PJM myśli i zdania nabierają wyrazu dzięki:",
+      "answers": [
+        {
+          "option": "układom dłoni, ruchom, lokacjom i sygnałom niemanualnym",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko końcówkom wyrazów",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie intonacji głosu",
+          "isCorrect": false
+        },
+        {
+          "option": "samym znaków interpunkcyjnym",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "2a0ddfa9-022c-4423-9f33-eb4c0348df83",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W SJM pytania i przeczenia są przekazywane między innymi przez:",
+      "answers": [
+        {
+          "option": "intonację głosu i odpowiedni znak migowy",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie mimikę bez mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko SignWriting",
+          "isCorrect": false
+        },
+        {
+          "option": "same ruchy tułowia",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "da5ec206-4fd1-42a5-b7ef-2640137184f7",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W PJM pytania i przeczenia są przekazywane między innymi przez:",
+      "answers": [
+        {
+          "option": "mimikę twarzy oraz ruch głowy lub tułowia",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie polską fleksję",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko głośność mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "same znaki liczbowe",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a8e75f57-8bb8-4e72-a607-59e5533e1d3d",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W SJM kolejność wypowiedzi jest podporządkowana:",
+      "answers": [
+        {
+          "option": "gramatyce języka polskiego",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie przestrzeni migania",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko mimice",
+          "isCorrect": false
+        },
+        {
+          "option": "alfabetowi międzynarodowemu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "0bb4b1e1-5c77-493e-9511-dcb38a7f44cc",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W PJM kolejność znaków zależy między innymi od:",
+      "answers": [
+        {
+          "option": "charakteru danej części mowy i kontekstu",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko długości polskiego słowa",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie alfabetu",
+          "isCorrect": false
+        },
+        {
+          "option": "koloru znaku",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "a913a016-797b-41cb-9cc6-a5eeb0a0fb2a",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W PJM relacje czasowe i osobowe są tworzone przy pomocy:",
+      "answers": [
+        {
+          "option": "linii czasowych i przestrzeni przy ciele migającego",
+          "isCorrect": true
+        },
+        {
+          "option": "tylko końcówek fleksyjnych",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie intonacji",
+          "isCorrect": false
+        },
+        {
+          "option": "samego zapisu fonetycznego",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "881c46bd-97ee-46e8-8af3-14565c542ce5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W PJM jedno słowo może:",
+      "answers": [
+        {
+          "option": "łączyć więcej niż jedną informację w jednym znaku",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze wymagać osobnego znaku dla każdej końcówki",
+          "isCorrect": false
+        },
+        {
+          "option": "nigdy nie zależeć od kontekstu",
+          "isCorrect": false
+        },
+        {
+          "option": "być tylko literą alfabetu",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "50522faa-a2dd-4180-9162-45f4f6d0eed5",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W SJM czas trwania wypowiedzi może być dłuższy, ponieważ:",
+      "answers": [
+        {
+          "option": "czasowniki i rzeczowniki są migane oddzielnie",
+          "isCorrect": true
+        },
+        {
+          "option": "każde słowo jest pomijane",
+          "isCorrect": false
+        },
+        {
+          "option": "używa się wyłącznie mimiki",
+          "isCorrect": false
+        },
+        {
+          "option": "nie ma żadnych znaków",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "8c12d52d-6f97-403d-b7a7-41c346375af4",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Podczas kontaktu z pacjentem pytanie „czy” powinno być rozpoznawane także po:",
+      "answers": [
+        {
+          "option": "sygnałach niemanualnych",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie po długości polskiego zdania",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko po liczbie palców",
+          "isCorrect": false
+        },
+        {
+          "option": "kolorze ubrania",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "5b7c7ca9-5855-46df-b501-6a6b9f29595a",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Jeżeli uczeń nie rozumie znaku, zgodnie z zasadą komunikacji powinien:",
+      "answers": [
+        {
+          "option": "dążyć do uzyskania informacji zwrotnej i wyjaśnienia",
+          "isCorrect": true
+        },
+        {
+          "option": "udawać pełne zrozumienie",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze zakończyć kontakt",
+          "isCorrect": false
+        },
+        {
+          "option": "zmienić temat bez odpowiedzi",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "7511bc87-e638-4e0f-b635-166ddf5208c3",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "W kontakcie z osobą Głuchą właściwe jest pamiętanie, że:",
+      "answers": [
+        {
+          "option": "rozumienie komunikatu wymaga udziału obu stron",
+          "isCorrect": true
+        },
+        {
+          "option": "nadawca nie potrzebuje odbiorcy",
+          "isCorrect": false
+        },
+        {
+          "option": "informacja zwrotna jest zbędna",
+          "isCorrect": false
+        },
+        {
+          "option": "komunikacja zawsze przebiega jednostronnie",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "e82381a8-533a-4785-9d89-68d5613be872",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Bariera komunikacyjna może wynikać z:",
+      "answers": [
+        {
+          "option": "braku rozumienia języka migowego u osób słyszących",
+          "isCorrect": true
+        },
+        {
+          "option": "nadmiaru potrzeb fizjologicznych",
+          "isCorrect": false
+        },
+        {
+          "option": "samego użycia alfabetu",
+          "isCorrect": false
+        },
+        {
+          "option": "zawsze z braku mimiki",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d96aaf7c-5a02-49f9-8643-283da1ec8afb",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Według podręcznika osoby niesłyszące mogą mieć trudności w grupie osób słyszących z powodu:",
+      "answers": [
+        {
+          "option": "braku porozumienia prowadzącego do izolacji",
+          "isCorrect": true
+        },
+        {
+          "option": "zawsze braku potrzeb społecznych",
+          "isCorrect": false
+        },
+        {
+          "option": "samego użycia PJM",
+          "isCorrect": false
+        },
+        {
+          "option": "nadmiaru informacji zwrotnej",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "12406529-c83e-4732-a821-7e2dae2d3d4d",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Potrzeba afiliacji oznacza potrzebę:",
+      "answers": [
+        {
+          "option": "akceptacji, miłości, przyjaźni i przynależności",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie jedzenia",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko ochrony przed chorobą",
+          "isCorrect": false
+        },
+        {
+          "option": "samego sukcesu zawodowego",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "82d7f86d-091c-43bf-afe0-c060cda4c13e",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Potrzeby bezpieczeństwa obejmują zabezpieczenie między innymi przed:",
+      "answers": [
+        {
+          "option": "chorobą i niezdolnością do pracy",
+          "isCorrect": true
+        },
+        {
+          "option": "brakiem alfabetu",
+          "isCorrect": false
+        },
+        {
+          "option": "zwykłą rozmową",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie zmianą perspektywy",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "4a5b24bf-f996-4e39-9949-c7c5e988107c",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Wiedza o PJM w ochronie zdrowia ma pomagać przede wszystkim w:",
+      "answers": [
+        {
+          "option": "rozpoznaniu potrzeb komunikacyjnych i właściwym kontakcie",
+          "isCorrect": true
+        },
+        {
+          "option": "zastąpieniu każdego tłumacza",
+          "isCorrect": false
+        },
+        {
+          "option": "stawianiu diagnozy na podstawie znaku",
+          "isCorrect": false
+        },
+        {
+          "option": "ocenie osoby po sposobie migania",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "d4e86251-4f1b-4cd9-b7fc-4a193d893afe",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Wśród haseł medycznych wymienionych w indeksie Leksykonu znajdują się:",
+      "answers": [
+        {
+          "option": "pacjent, lekarz, pielęgniarski, szpital i tabletka",
+          "isCorrect": true
+        },
+        {
+          "option": "wyłącznie nazwy państw",
+          "isCorrect": false
+        },
+        {
+          "option": "tylko pojęcia baletowe",
+          "isCorrect": false
+        },
+        {
+          "option": "same znaki interpunkcyjne",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "fa61bc9b-a159-4f28-b6ce-8572a9a2bd74",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-komunikacja-z-pacjentem"
+    },
+    "data": {
+      "question": "Znajomość słownictwa zawodowego jest ważna, ponieważ:",
+      "answers": [
+        {
+          "option": "brak odpowiednich pojęć może utrudniać naukę i funkcjonowanie zawodowe",
+          "isCorrect": true
+        },
+        {
+          "option": "zastępuje wszystkie zasady gramatyki",
+          "isCorrect": false
+        },
+        {
+          "option": "eliminuje potrzebę informacji zwrotnej",
+          "isCorrect": false
+        },
+        {
+          "option": "oznacza znajomość każdego języka migowego",
+          "isCorrect": false
+        }
+      ]
+    }
+  },
+  {
+    "id": "3e1574fc-e362-4328-bffc-087392584754",
+    "meta": {
+      "course": "jezyk-migowy",
+      "category": "jezyk-migowy-znaki-i-alfabet"
+    },
+    "data": {
+      "question": "Który zestaw zawiera wyłącznie elementy wymienione przy opisie wykonania znaku?",
+      "answers": [
+        {
+          "option": "układ palców, umiejscowienie dłoni, pozycja dłoni, kierunek ruchu i ekspresja mimiczna",
+          "isCorrect": true
+        },
+        {
+          "option": "głośność, akcent, długość słowa, kolor i tempo mowy",
+          "isCorrect": false
+        },
+        {
+          "option": "wyłącznie litera, liczba, przecinek, kropka i wykrzyknik",
+          "isCorrect": false
+        },
+        {
+          "option": "wiek, wzrost, ubranie, miejsce zamieszkania i zawód",
+          "isCorrect": false
+        }
+      ],
+      "visualAsset": "/images/pjm/reference/alphabet-page-16.png"
+    }
+  }
+]

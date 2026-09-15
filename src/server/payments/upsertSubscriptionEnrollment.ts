@@ -2,6 +2,7 @@ import 'server-only'
 import { courseEnrollments } from '@/server/db/schema'
 import { canGrantPaymentAccess } from '@/helpers/canGrantPaymentAccess'
 import { syncEnglishBonusEnrollment } from '@/server/payments/syncEnglishBonusEnrollment'
+import { syncPjmBonusEnrollment } from '@/server/payments/syncPjmBonusEnrollment'
 import type { PaymentTransaction } from '@/types/dbTypes'
 import type {
   SubscriptionCheckoutOrder,
@@ -39,6 +40,14 @@ export async function upsertSubscriptionEnrollment(
   if (!active && snapshot.status !== 'canceled' && offer.accessTier !== 'basic') return
 
   await syncEnglishBonusEnrollment(tx, {
+    ...access,
+    userId: order.userId,
+    courseSlug: offer.courseSlug,
+    sourceType: 'subscription',
+    sourceId: snapshot.id,
+    enrolledAt: now,
+  }, now)
+  await syncPjmBonusEnrollment(tx, {
     ...access,
     userId: order.userId,
     courseSlug: offer.courseSlug,

@@ -1,6 +1,7 @@
 import 'server-only'
 
 import type { Test } from '@/types/dataTypes'
+import { getCategoryAccess } from '@/helpers/getCategoryAccess'
 import { selectSessionTests } from '@/helpers/selectSessionTests'
 import {
   getTestsByCategory,
@@ -16,6 +17,8 @@ export async function getSessionQuestions(
   count: number,
   sessionId: string
 ) {
+  if (!(await getCategoryAccess(userId, category)).hasAccess) return []
+
   let tests: Test[]
 
   if (category.startsWith(CUSTOM_PREFIX)) {

@@ -2,6 +2,7 @@ import { LETTERS } from '@/constants/optionsLetters'
 import type { ExamQuestion } from '@/types/dataTypes'
 import Label from '@/components/ui/Label'
 import { FormState } from '@/types/actionTypes'
+import Image from 'next/image'
 
 export default function TestCard(props: {
   test: ExamQuestion
@@ -18,7 +19,18 @@ export default function TestCard(props: {
     <div className="relative flex h-full min-h-80 w-full flex-col rounded-lg shadow-md shadow-zinc-500 border border-red-100/50 bg-white px-4 py-6 text-zinc-900">
       <p className="absolute right-2 top-1 text-sm text-muted-foreground">{props.questionNumber}</p>
 
-      <h3 className="border-b border-border/40 px-1 xs:px-4 pb-2 text-base">{question}</h3>
+      <div className="border-b border-border/40 px-1 xs:px-4 pb-2">
+        <h3 className="text-base">{question}</h3>
+        {props.test.data.visualAsset && (
+          <Image
+            src={props.test.data.visualAsset}
+            alt={props.test.data.visualAlt ?? 'Ilustracja do pytania'}
+            width={1400}
+            height={1000}
+            className="mt-4 max-h-72 w-full object-contain object-left"
+          />
+        )}
+      </div>
       <div className="flex h-full w-full flex-col gap-1 px-1 xs:px-4 pt-4 ">
         {answers.map((answer, index) => {
           const uniqueId = `${props.test.id}-answer-${index}`

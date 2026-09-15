@@ -5,6 +5,9 @@ import { Test } from '@/types/dataTypes';
 import { Metadata } from 'next'
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
+import { getCategoryAccess } from '@/helpers/getCategoryAccess'
+import NoAccessMessage from '@/components/NoAccessMessage'
+import TierUpgradeMessage from '@/components/TierUpgradeMessage'
 interface CategoryPageProps {
     params: Promise<{ category: string }>;
 }
@@ -42,6 +45,11 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
       if (!cat) redirect('/panel/nauka')
       tests = (await getUserCustomTestsByIds(cat.questionIds)) as Test[]
     } else {
+      const access = await getCategoryAccess(user.userId, decodedCategory)
+      if (!access.hasCourse) return <NoAccessMessage />
+      if (!access.hasAccess) {
+        return <TierUpgradeMessage requiredTier={access.requiredTier} userTier={access.userTier} />
+      }
       tests = await getTestsByCategory(decodedCategory) as Test[]
     }
 

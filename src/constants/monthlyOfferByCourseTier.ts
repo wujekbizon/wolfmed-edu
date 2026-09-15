@@ -13,6 +13,10 @@ export const MONTHLY_OFFER_BY_COURSE_TIER = {
     basic: 'angielski_medyczny_basic_monthly',
     premium: 'angielski_medyczny_premium_monthly',
   },
+  'jezyk-migowy': {
+    basic: 'jezyk_migowy_basic_monthly',
+    premium: 'jezyk_migowy_premium_monthly',
+  },
 } as const satisfies Record<
   PaymentOffer['courseSlug'],
   Record<PaymentOffer['accessTier'], PaymentOffer['key']>

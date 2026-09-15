@@ -56,6 +56,8 @@ async function TestsByCategory({ category, sessionId }: { category: string, sess
     data: {
       question: test.data.question,
       answers: test.data.answers.map(({ option }) => ({ option })),
+      ...(test.data.visualAsset ? { visualAsset: test.data.visualAsset } : {}),
+      ...(test.data.visualAlt ? { visualAlt: test.data.visualAlt } : {}),
     },
   }))
 

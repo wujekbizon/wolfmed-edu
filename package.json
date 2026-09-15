@@ -20,6 +20,7 @@
     "rag:migrate": "tsx --env-file=.env scripts/rag-migrate.ts",
     "rag:set-corpus": "tsx --env-file=.env scripts/rag-set-corpus.ts",
     "db:seed": "tsx --env-file=.env scripts/seed-courses.ts",
+    "db:migrate:pjm-bonuses": "tsx --env-file=.env scripts/migrate-pjm-bonuses.ts",
     "db:studio": "drizzle-kit studio",
     "test:diagnozy": "tsx scripts/test-diagnozy.ts",
     "tests:replace-category": "tsx scripts/replace-category.ts",

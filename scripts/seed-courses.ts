@@ -23,7 +23,8 @@ async function seedCourses() {
     VALUES
       ('opiekun-medyczny', 'Opiekun Medyczny', 'Program edukacyjny dla opiekunów medycznych', true),
       ('pielegniarstwo', 'Pielęgniarstwo', 'Program edukacyjny dla kierunku pielęgniarstwo', true),
-      ('angielski-medyczny', 'Angielski Medyczny', 'Kurs języka angielskiego medycznego na poziomie A2', true)
+      ('angielski-medyczny', 'Angielski Medyczny', 'Kurs języka angielskiego medycznego na poziomie A2', true),
+      ('jezyk-migowy', 'Polski Język Migowy (PJM)', 'Podstawy Polskiego Języka Migowego i komunikacji z pacjentem Głuchym', true)
     ON CONFLICT (slug) DO UPDATE SET
       name = excluded.name,
       description = excluded.description,
@@ -34,6 +35,7 @@ async function seedCourses() {
   console.log('  ✓ opiekun-medyczny')
   console.log('  ✓ pielegniarstwo')
   console.log('  ✓ angielski-medyczny')
+  console.log('  ✓ jezyk-migowy')
 
   await sql.end()
 }

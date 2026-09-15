@@ -7,6 +7,8 @@ export interface TestSeedRecord {
   data: {
     question: string
     answers: Array<{ option: string; isCorrect?: boolean }>
+    visualAsset?: string
+    visualAlt?: string
   }
   createdAt?: string | null
   updatedAt?: string | null

@@ -3,6 +3,7 @@
 import { LETTERS } from '@/constants/optionsLetters'
 import { Test } from '@/types/dataTypes'
 import { useState } from 'react'
+import Image from 'next/image'
 
 export default function LearningCard({ test, questionNumber }: { test: Test; questionNumber: string }) {
   const [showCorrectAnswer, setShowCorrectAnswer] = useState(false)
@@ -20,6 +21,15 @@ export default function LearningCard({ test, questionNumber }: { test: Test; que
       <h3 className="mt-4 md:mt-5 mb-2 sm:mb-3 md:mb-4 text-xs xs:text-sm sm:text-base md:text-lg font-semibold leading-none">
         {question}
       </h3>
+      {test.data.visualAsset && (
+        <Image
+          src={test.data.visualAsset}
+          alt={test.data.visualAlt ?? 'Ilustracja do pytania'}
+          width={1400}
+          height={1000}
+          className="mb-4 max-h-64 w-full object-contain object-left"
+        />
+      )}
       <ul className="grow space-y-2 sm:space-y-3 md:space-y-4 overflow-y-auto mt-4 md:mt-0 scrollbar-webkit justify-center">
         {answers.map(({ option, isCorrect }, index) => (
           <li key={option} className="flex items-center">
