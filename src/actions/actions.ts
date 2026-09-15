@@ -982,22 +982,12 @@ export async function uploadTestsFromFile(
   const file = formData.get("file") as File
   if (!file) throw new Error("Proszę wybrać plik!")
 
-  if (file.size > 5_000_000) {
-    return toFormState("ERROR", "Plik jest zbyt duży. Maksymalny rozmiar: 5MB")
+  if (file.size > 3_000_000) {
+    return toFormState("ERROR", "Plik jest zbyt duży. Maksymalny rozmiar: 3MB")
   }
 
   try {
-    const fileReader = file.stream().getReader()
-    const testsDataU8: Uint8Array[] = []
-
-    while (true) {
-      const { done, value } = await fileReader.read()
-      if (done) break
-      testsDataU8.push(value as Uint8Array)
-    }
-
-    const testsBinary = Buffer.concat(testsDataU8)
-    const fileContent = testsBinary.toString("utf8")
+    const fileContent = Buffer.from(await file.arrayBuffer()).toString("utf8")
 
     if (!fileContent)
       return toFormState("ERROR", "Proszę wybrać plik do przesłania!")

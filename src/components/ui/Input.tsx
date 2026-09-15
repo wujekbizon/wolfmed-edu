@@ -11,12 +11,14 @@ interface Input {
   required?: boolean | undefined
   disabled?: boolean | undefined
   autoComplete?: string | undefined
+  accept?: string | undefined
   min?: number | undefined
   max?: number | undefined
   step?: number | string | undefined
   minLength?: number | undefined
   maxLength?: number | undefined
   ariaLabel?: string | undefined
+  inputRef?: React.Ref<HTMLInputElement>
 }
 
 export default function Input({
@@ -32,16 +34,19 @@ export default function Input({
   disabled,
   id,
   autoComplete,
+  accept,
   min,
   max,
   step,
   minLength,
   maxLength,
-  ariaLabel
+  ariaLabel,
+  inputRef
 }: Input) {
   return (
     <input
       id={id}
+      ref={inputRef}
       type={type}
       className={className}
       placeholder={placeholder}
@@ -53,6 +58,7 @@ export default function Input({
       required={required}
       disabled={disabled}
       autoComplete={autoComplete}
+      accept={accept}
       min={min}
       max={max}
       step={step}
