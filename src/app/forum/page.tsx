@@ -1,11 +1,10 @@
-import ForumPosts from '@/components/ForumPosts'
-import { getAllForumPosts, getForumNotifications } from '@/server/queries'
 import { Suspense } from 'react'
-import { auth } from '@clerk/nextjs/server'
+import type { Metadata } from 'next'
 import CreatePostButton from '@/components/CreatePostButton'
-import ForumPostsSkeleton from '@/components/ForumPostsSkeleton'
-import MarkForumSeen from '@/components/MarkForumSeen'
-import { Metadata } from 'next'
+import ForumPageContent from '@/components/forum/ForumPageContent'
+import ForumSeenMarker from '@/components/forum/ForumSeenMarker'
+import ForumToolbar from '@/components/forum/ForumToolbar'
+import ForumPostsSkeleton from '@/components/skeletons/ForumPostsSkeleton'
 
 export const experimental_ppr = true
 
@@ -17,17 +16,7 @@ export const metadata: Metadata = {
     'opiekun, forum, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja, dyskusja, problemy',
 }
 
-async function ForumSeenMarker() {
-  const { userId } = await auth()
-  if (!userId) return null
-
-  const { newPosts } = await getForumNotifications(userId)
-  return <MarkForumSeen scope="posts" hasUnread={newPosts > 0} />
-}
-
-export default async function ForumPage() {
-  const posts = await getAllForumPosts()
-
+export default function ForumPage() {
   return (
     <section className="min-h-screen w-full max-w-7xl mx-auto px-0 xs:px-4 py-0 xs:py-8">
       <div className="bg-zinc-900 rounded-tr-lg rounded-tl-lg overflow-hidden">
@@ -45,9 +34,12 @@ export default async function ForumPage() {
           </div>
         </div>
       </div>
-      <Suspense fallback={<ForumPostsSkeleton />}>
-        <ForumPosts posts={posts} />
-      </Suspense>
+      <ForumToolbar />
+      <div className="mt-6">
+        <Suspense fallback={<ForumPostsSkeleton />}>
+          <ForumPageContent />
+        </Suspense>
+      </div>
       <Suspense fallback={null}>
         <ForumSeenMarker />
       </Suspense>

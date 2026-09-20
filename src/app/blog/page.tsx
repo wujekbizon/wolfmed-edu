@@ -1,6 +1,5 @@
-import { Metadata } from 'next'
-import AllPosts from '@/components/AllPosts'
-import { getAllBlogPosts } from '@/server/queries'
+import type { Metadata } from 'next'
+import BlogPageView from '@/components/blog/BlogPageView'
 
 export const metadata: Metadata = {
   title: 'Wolfmed Blog Medyczny ',
@@ -10,13 +9,6 @@ export const metadata: Metadata = {
     'opiekun, blog, porady, dieta, opieka, bezpieczeństwo, etyka, stres, komunikacja, higiena, egzamin, pomoc, rehabilitacja',
 }
 
-export default async function BlogPage() {
-
-  const posts = await getAllBlogPosts({
-    status: 'published',
-    sortBy: 'publishedAt',
-    sortOrder: 'desc',
-  })
-
-  return <AllPosts posts={posts} />
+export default function BlogPage() {
+  return <BlogPageView />
 }
