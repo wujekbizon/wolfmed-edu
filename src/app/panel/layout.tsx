@@ -5,6 +5,7 @@ import { getAllUserNotes, getUserEnrolledCourses } from '@/server/queries'
 import SidePanel from '@/app/_components/SidePanel'
 import PinnedNotesFeature from '@/components/PinnedNotesFeature'
 import PinnedNotesFeatureSkeleton from '@/components/skeletons/PinnedNotesFeatureSkeleton'
+import PanelLayoutSkeleton from '@/components/skeletons/PanelLayoutSkeleton'
 import ConfirmModal from '@/components/ConfirmModal'
 import FlashcardReviewModalHost from '@/components/FlashcardReviewModalHost'
 import SettingsModal from '@/components/SettingsModal'
@@ -12,24 +13,23 @@ import MobileAIFloat from '@/components/MobileAIFloat'
 import type { NotesType } from '@/types/notesTypes'
 import { hasAccessToTier } from '@/helpers/accessTiers'
 
-export default async function DashboardLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+async function PanelAccessContent({ children }: { children: React.ReactNode }) {
   const { userId } = await requireUser()
 
-  const enrolledCourses = await getUserEnrolledCourses(userId)
+  const [enrolledCourses, notes] = await Promise.all([
+    getUserEnrolledCourses(userId),
+    getAllUserNotes(userId),
+  ])
+
   if (enrolledCourses.length === 0) redirect('/kierunki?from=panel')
 
   const isPremium = enrolledCourses.some(c => hasAccessToTier(c.accessTier, 'premium'))
-  const notes = (await getAllUserNotes(userId)) as NotesType[]
-  const pinnedNotes = notes.filter((note) => note.pinned)
-  const pinnedCount = notes.filter((n) => n.pinned).length
-
+  const userNotes = notes as NotesType[]
+  const pinnedNotes = userNotes.filter((note) => note.pinned)
+  const pinnedCount = pinnedNotes.length
 
   return (
-    <main className='flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50'>
+    <>
       <SidePanel
         pinnedCount={pinnedCount}
         isPremium={isPremium}
@@ -39,12 +39,19 @@ export default async function DashboardLayout({
           <PinnedNotesFeature pinnedNotes={pinnedNotes} />
         </Suspense>
       </SidePanel>
-      <div
-        id='scroll-container'
-        className='flex-1 overflow-y-scroll scrollbar-webkit'
-      >
+      <div id='scroll-container' className='flex-1 overflow-y-scroll scrollbar-webkit'>
         <div className='py-10'>{children}</div>
       </div>
+    </>
+  )
+}
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <main className='flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50'>
+      <Suspense fallback={<PanelLayoutSkeleton />}>
+        <PanelAccessContent>{children}</PanelAccessContent>
+      </Suspense>
       <ConfirmModal />
       <FlashcardReviewModalHost />
       <SettingsModal />

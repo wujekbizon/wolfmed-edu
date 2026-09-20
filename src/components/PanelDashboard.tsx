@@ -16,12 +16,15 @@ import UserAnalyticsSkeleton from '@/components/skeletons/UserAnalyticsSkeleton'
 import UserMottoSkeleton from '@/components/skeletons/UserMottoSkeleton'
 import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 import DynamicBoard from '@/app/_components/DynamicBoard'
+import DynamicBoardSkeleton from '@/components/skeletons/DynamicBoardSkeleton'
 
 export default function PanelDashboard() {
   return (
     <section className="h-full w-full">
       <div className="flex h-full w-full flex-col items-center gap-8">
-        <DynamicBoard />
+        <Suspense fallback={<DynamicBoardSkeleton />}>
+          <DynamicBoard />
+        </Suspense>
         <section className="container mx-auto">
           <div className="flex w-full flex-col gap-8 rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-xl shadow-zinc-900/[0.07] xs:p-4 sm:p-10">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
