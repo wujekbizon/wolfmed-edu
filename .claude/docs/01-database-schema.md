@@ -2,7 +2,7 @@
 
 [← Back to index](./README.md)
 
-Postgres (Neon serverless, `@neondatabase/serverless` over a WebSocket pool) via Drizzle ORM. Client: `src/server/db/index.ts` — exports `db`, a pooled `drizzle()` instance (`max: 3` connections), built from `NEON_DATABASE_URL`.
+Postgres (Neon through `pg`, with Vercel Fluid pool lifecycle management) via Drizzle ORM. Client: `src/server/db/index.ts` — exports `db`, a pooled `drizzle()` instance (`max: 3` connections), built from `NEON_DATABASE_URL`.
 
 Every table name is created through `pgTableCreator((name) => \`wolfmed_${name}\`)`, so every physical table is prefixed `wolfmed_*`. This is declared three times (`schema.ts`, `library-schema.ts`, `memory-schema.ts`) with the same prefix to avoid a circular import — `schema.ts` re-exports the other two (`export * from "./memory-schema"` / `"./library-schema"`) so Drizzle Kit and the ORM see every table from one entry point.
 

@@ -1,9 +1,7 @@
-import { Pool, Client, neonConfig} from '@neondatabase/serverless'
-import { drizzle } from 'drizzle-orm/neon-serverless'
+import { attachDatabasePool } from '@vercel/functions'
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { Pool } from 'pg'
 import * as schema from './schema'
-import ws from 'ws'
-
-neonConfig.webSocketConstructor = ws
 
 if (!process.env.NEON_DATABASE_URL) {
   throw new Error('NEON_DATABASE_URL is not defined')
@@ -16,7 +14,9 @@ const pool = new Pool({
   connectionTimeoutMillis: 10000,
 })
 
-pool.on('error', (err: Error, client: Client) => {
+attachDatabasePool(pool)
+
+pool.on('error', (err: Error) => {
   console.error('Unexpected error on idle client', err)
 })
 
