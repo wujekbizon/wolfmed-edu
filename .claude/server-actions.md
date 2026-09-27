@@ -3,6 +3,8 @@
 ## Overview
 This document establishes the **strict server-first architecture** used in the Wolfmed application. All user interactions with the database follow a consistent pattern using Next.js Server Actions, ensuring security, validation, and proper error handling.
 
+Current convention: `CLAUDE.md` and the source take precedence over historical examples below. Every exposed action validates untrusted input, authenticates and authorizes before protected data access, and returns only scoped data. Form mutations use `FormState`; read, decision and telemetry actions may return a DTO, `null`, or `void`. Revalidate only data held in a Next cache; Centrum Nauki updates its user/category React Query cache from the action's returned view. Client event/effect invocations use React transitions; `<form action>` uses `useActionState` directly. Private `server-only` modules are not additional public actions.
+
 ---
 
 ## 🎯 Core Philosophy
@@ -21,20 +23,20 @@ This document establishes the **strict server-first architecture** used in the W
 2. **Validation**: Centralized Zod schemas prevent invalid data
 3. **Type Safety**: End-to-end TypeScript from form to database
 4. **DX**: No need to create API routes for every form
-5. **Performance**: Automatic request deduplication and caching
+5. **Performance**: Explicit cache/update policy; Server Actions are not automatically cached or deduplicated
 6. **User Feedback**: Consistent error handling and success messages
 
 ---
 
 ## 📋 The Standard Pattern
 
-Every Server Action follows this exact structure:
+Form-bound Server Actions follow this pattern. Read actions and background interaction actions return a scoped DTO or `void` rather than a form state.
 
 ### 1. File Location
 ```
-src/server/actions.ts
+src/actions/<feature>.ts
 ```
-All Server Actions are centralized in a single file marked with `"use server"` directive.
+Current actions are split by feature under `src/actions/` and marked with `"use server"`. Internal database and provider work stays in `src/server/<feature>/` with `server-only`; it is called by actions or Server Components, not exposed as an action itself. The monolithic `src/actions/actions.ts` is legacy code.
 
 ### 2. Action Structure Template
 ```typescript

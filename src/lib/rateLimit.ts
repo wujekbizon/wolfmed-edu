@@ -9,6 +9,8 @@ interface RateLimitConfig {
 }
 
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  'practice:write': { interval: 60 * 60 * 1000, maxRequests: 300 },
+  'practice:support': { interval: 60 * 60 * 1000, maxRequests: 60 },
   'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 },
   'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 },
   'note:delete': { interval: 60 * 60 * 1000, maxRequests: 20 },

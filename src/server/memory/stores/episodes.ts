@@ -4,9 +4,10 @@ import { db } from '@/server/db/index'
 import { memEpisodes, type MemEpisode } from '@/server/db/memory-schema'
 import { RETENTION } from '@/server/memory/config'
 import type { NewMemoryEpisode } from '@/types/memoryTypes'
+import type { PaymentTransaction } from '@/types/dbTypes'
 
-export async function insertEpisode(episode: NewMemoryEpisode): Promise<MemEpisode> {
-  return db.transaction(async (tx) => {
+export async function insertEpisode(episode: NewMemoryEpisode, transaction?: PaymentTransaction): Promise<MemEpisode> {
+  const insert = async (tx: PaymentTransaction): Promise<MemEpisode> => {
     const lockKey = `${episode.userId}:${episode.sourceRunId}`
     await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${lockKey}))`)
 
@@ -31,6 +32,7 @@ export async function insertEpisode(episode: NewMemoryEpisode): Promise<MemEpiso
           keySteps: episode.keySteps ?? null,
           artifacts: episode.artifacts ?? null,
           embedding: episode.embedding ?? existing.embedding,
+          completedAt: episode.completedAt ?? existing.completedAt,
         })
         .where(eq(memEpisodes.episodeId, existing.episodeId))
         .returning()
@@ -49,10 +51,12 @@ export async function insertEpisode(episode: NewMemoryEpisode): Promise<MemEpiso
         keySteps: episode.keySteps ?? null,
         artifacts: episode.artifacts ?? null,
         embedding: episode.embedding ?? null,
+        completedAt: episode.completedAt,
       })
       .returning()
     return row!
-  })
+  }
+  return transaction ? insert(transaction) : db.transaction(insert)
 }
 
 // Most recent episodes for a user (optionally by task type) — powers the tutor's

@@ -5,15 +5,16 @@ import { memFacts } from '@/server/db/memory-schema'
 import { prepareFactCandidate } from './prepareFactCandidate'
 import { storeFactCandidate } from './storeFactCandidate'
 import type { FactCandidate, PromotionResult } from '@/types/memoryTypes'
+import type { PaymentTransaction } from '@/types/dbTypes'
 
 // Classify + scope + dedup + contradiction → supersession, atomically. A new
 // ACTIVE fact revokes the active facts it contradicts (same slot, different
 // content) and points their superseded_by at itself. A provisional fact never
 // revokes a good active fact.
-export async function promoteFact(candidate: FactCandidate): Promise<PromotionResult> {
+export async function promoteFact(candidate: FactCandidate, transaction?: PaymentTransaction): Promise<PromotionResult> {
   const prepared = prepareFactCandidate(candidate)
 
-  return db.transaction(async (tx) => {
+  const promote = async (tx: PaymentTransaction): Promise<PromotionResult> => {
     const slotKey = candidate.factKey ?? `${candidate.subject}:${candidate.predicate}`
     const lockKey = `${candidate.userId}:${slotKey}`
     await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${lockKey}))`)
@@ -50,5 +51,6 @@ export async function promoteFact(candidate: FactCandidate): Promise<PromotionRe
     return stored.reactivated
       ? { outcome: 'reactivated', factId: newFactId, status: 'active', superseded }
       : { outcome: 'inserted', factId: newFactId, status: prepared.status, superseded }
-  })
+  }
+  return transaction ? promote(transaction) : db.transaction(promote)
 }

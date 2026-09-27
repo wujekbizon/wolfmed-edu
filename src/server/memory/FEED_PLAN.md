@@ -18,6 +18,7 @@ student facts.
 | Procedure challenge | challenge actions | `procedure_challenge` | `procedure:<id>` | ✅ |
 | Practical exam | `actions/praktyczny.ts` | `practical_exam` via study log | no | ✅ |
 | Manual/planner study | `actions/planner.ts` | `study_session` | no | ✅ |
+| Centrum Nauki practice | `actions/learning-practice.ts` | `learning_practice` | activity `practice:<category>` | ✅ code; source migration pending |
 | Tutor turn | `askRagQuestion` | trace only | never auto-promoted | ✅ |
 | Mind-map mastery / flashcard review | client-only | no canonical completion | no | blocked by persistence |
 

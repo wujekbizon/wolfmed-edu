@@ -1,4 +1,72 @@
 import { z } from "zod";
+
+export const PracticeCategorySchema = z.string().min(1).max(256)
+export const PracticeStartSchema = z.uuid()
+export const PracticeResetSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.uuid(), eventId: z.uuid(),
+  version: z.coerce.number().int().min(0),
+}).strict()
+export const ReviewedPracticeSupportSchema = z.object({
+  questionId: z.uuid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+  topic: z.string().trim().min(1).max(300),
+  hints: z.array(z.string().trim().min(1).max(1500)).max(8),
+  explanation: z.string().trim().min(1).max(10000).nullable(),
+  source: z.string().trim().min(1), reviewer: z.string().trim().min(1),
+  reviewedAt: z.iso.date(),
+  material: z.object({ label: z.string().trim().min(1).max(120),
+    href: z.string().regex(/^\/panel\/(?:kursy|nauka|procedury)\/[a-z0-9%\-/]+$/i) }).optional(),
+})
+export const PracticeSupportSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
+}).strict()
+export const PracticeSuggestionInteractionSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
+  questionId: z.uuid(), trigger: z.string().trim().min(1).max(256), eventId: z.uuid(),
+  action: z.enum(['hint', 'compare', 'retry', 'reveal', 'tutor', 'material', 'plan', 'continue']),
+  interaction: z.enum(['accepted', 'dismissed']),
+}).strict()
+export const PracticeHelpInteractionSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
+  questionId: z.uuid(), eventId: z.uuid(), action: z.literal('compare'),
+}).strict()
+export const JevConfigSchema = z.object({
+  mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
+  dailyLimit: z.coerce.number().int().positive().max(10000),
+  sessionLimit: z.coerce.number().int().positive().max(100),
+  minConfidence: z.coerce.number().min(0).max(1).optional(),
+}).refine((config) => config.mode !== 'active' || config.minConfidence !== undefined)
+export const JevResponseSchema = z.object({
+  model: z.string(),
+  answers: z.object({ support: z.object({
+    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+  }) }),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const LearningQuestionCardDataSchema = z.object({
+  question: z.string().min(1).max(20000),
+  answers: z.array(z.object({ option: z.string().min(1).max(10000), isCorrect: z.boolean() }))
+    .min(2).max(10),
+})
+export const PracticeQuestionDataSchema = LearningQuestionCardDataSchema
+  .refine((data) => data.answers.filter((answer) => answer.isCorrect).length === 1)
+export const PracticeMutationSchema = z.object({
+  sessionId: z.preprocess((value) => value === '' ? undefined : value, z.uuid().optional()),
+  eventId: z.uuid(),
+  version: z.coerce.number().int().min(0),
+  command: z.enum(['answer', 'hint', 'reveal', 'skip', 'next', 'finish']),
+  questionId: z.preprocess((value) => value === '' ? undefined : value, z.uuid().optional()),
+  selected: z.preprocess((value) => value === null || value === '' ? undefined : value,
+    z.coerce.number().int().min(0).max(9).optional()),
+}).refine((value) => value.command !== 'answer' || value.selected !== undefined, {
+  path: ['selected'], message: 'Wybierz odpowiedź.',
+}).refine((value) => Boolean(value.questionId) || Boolean(value.sessionId), {
+  path: ['questionId'], message: 'Wybierz kartę.',
+})
+export const PracticeReferenceSchema = z.object({
+  sessionId: z.uuid(), questionId: z.uuid(), questionRevision: z.string().regex(/^[a-f0-9]{64}$/),
+  attemptId: z.uuid().nullable(), purpose: z.enum(['explain', 'follow_up']),
+}).strict()
 import { getPreviousStripeReportMonth } from '@/helpers/getPreviousStripeReportMonth'
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
@@ -839,12 +907,11 @@ export type UnlikeBlogPostInput = z.infer<typeof UnlikeBlogPostSchema>;
  */
 
 // User-facing RAG query schema
-export const RagQuerySchema = z.object({
+const RagQueryBaseSchema = z.object({
   question: z
     .string()
     .min(2, "Pytanie musi mieć min. 2 znaki")
     .max(500, "Pytanie zbyt długie (max 500 znaków)"),
-  cellId: z.string().min(1, "ID komórki jest wymagane"),
   // Subject alone, sent when the question is prose a cell composed for the user
   // to read. Drives retrieval; the question still drives the answer.
   searchTopic: z.string().max(300).optional(),
@@ -871,6 +938,17 @@ export const RagQuerySchema = z.object({
     .max(RAG_RECENT_CONTEXT_MESSAGES)
     .optional(),
 });
+
+export const RagQuerySchema = z.union([
+  RagQueryBaseSchema.extend({
+    cellId: z.string().min(1, 'ID komórki jest wymagane'),
+    practiceContext: z.never().optional(),
+  }),
+  RagQueryBaseSchema.extend({
+    cellId: z.never().optional(),
+    practiceContext: PracticeReferenceSchema,
+  }),
+])
 
 export const TutorIntentClassificationSchema = z
   .object({

@@ -3,12 +3,13 @@ import { reconcileQuizMemory } from './reconcileQuizMemory'
 import { reconcileDiagnozyMemory } from './reconcileDiagnozyMemory'
 import { reconcileChallengeMemory } from './reconcileChallengeMemory'
 import { reconcileStudyLogMemory } from './reconcileStudyLogMemory'
+import { reconcilePracticeMemory } from './reconcilePracticeMemory'
 import { and, eq, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { memTraces } from '@/server/db/memory-schema'
 import type { MemoryReconciliationResult } from '@/types/memoryTypes'
 
-const RECONCILIATION_VERSION = 3
+const RECONCILIATION_VERSION = 4
 const RECONCILIATION_RUN_ID = `learning-feed-v${RECONCILIATION_VERSION}`
 
 export async function reconcileStudentMemory(
@@ -28,6 +29,7 @@ export async function reconcileStudentMemory(
       reconcileDiagnozyMemory(userId),
       reconcileChallengeMemory(userId),
       reconcileStudyLogMemory(userId),
+      reconcilePracticeMemory(userId),
     ])
     if (results.some((result) => !result)) {
       return { attempted: true, complete: false }
@@ -46,7 +48,7 @@ export async function reconcileStudentMemory(
         eventType: 'promotion',
         payload: {
           version: RECONCILIATION_VERSION,
-          sources: ['quiz', 'diagnozy', 'challenge', 'study_log'],
+          sources: ['quiz', 'diagnozy', 'challenge', 'study_log', 'learning_practice'],
         },
       })
     })

@@ -12,6 +12,8 @@ import { parseGoogleApiError } from './errors'
 import { formatTutorConversation } from '@/helpers/formatTutorConversation'
 import { getModelTokenUsage } from '@/helpers/getModelTokenUsage'
 import type { ModelTokenUsage, TutorContextMessage } from '@/types/memoryTypes'
+import type { GroundedAnswerOptions } from '@/types/groundedAnswerTypes'
+import { formatPracticeTutorContext } from '@/helpers/formatPracticeTutorContext'
 
 // Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
 // the (8×) output rate. None of the RAG paths need it, so disable everywhere.
@@ -50,11 +52,7 @@ export async function answerFromMemory(
   }
 }
 
-export interface GroundedAnswerOptions {
-  userContext?: string | undefined
-  memoryTail?: string | undefined
-  memoryPrefix?: string | undefined
-}
+export type { GroundedAnswerOptions } from '@/types/groundedAnswerTypes'
 
 /**
  * Writes an answer from context that has already been retrieved.
@@ -84,13 +82,15 @@ export async function generateGroundedAnswer(
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: buildGroundedPrompt({
+      contents: [buildGroundedPrompt({
         question,
         contextText: formatContextChunks(context.chunks),
         userContext: options.userContext,
         memoryTail: options.memoryTail,
         hasCanonical: context.hasCanonical,
-      }),
+      }), options.practiceContext ? formatPracticeTutorContext(options.practiceContext) : '',
+      options.recentMessages?.length ? `OSTATNIE WYPOWIEDZI — DANE ROZMOWY:\n${formatTutorConversation(options.recentMessages)}` : '',
+      ].filter(Boolean).join('\n\n'),
       config: {
         systemInstruction: composeSystemInstruction(options.memoryPrefix),
         thinkingConfig: NO_THINKING,

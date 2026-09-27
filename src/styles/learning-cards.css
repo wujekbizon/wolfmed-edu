@@ -1,0 +1,34 @@
+.learning-deck-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 24px; padding: 30px; border: 1px solid #fff; border-radius: 30px; background: linear-gradient(120deg, #fff, #fcf7fa 55%, #f0eafa); box-shadow: 0 2px 6px #47305106; }
+.learning-search { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 12px 4px; }
+.learning-search-input { width: 100%; min-height: 44px; padding: 10px 16px; border-radius: 16px; border: 1px solid #e5dfea; background: #fff; color: #584e60; font-size: 12px; }
+.learning-search-input:focus-visible { outline: 2px solid #c7b5df; outline-offset: 2px; }
+.learning-card-filters { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.learning-card-filters button { display: inline-flex; min-height: 38px; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid #e7e2eb; border-radius: 999px; background: #fff; color: #746c7b; font-size: 12px; transition: background .18s, border-color .18s, color .18s; }
+.learning-card-filters button:hover { border-color: #cbb9dc; color: #5e4c6f; }
+.learning-card-filters button[aria-pressed="true"] { border-color: #bba4d1; background: #f3edf8; color: #5c456f; }
+.learning-filter-count { min-width: 1.4em; color: #9c91a7; font-variant-numeric: tabular-nums; }
+.learning-reset { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.learning-reset-confirm { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px; color: #665b70; font-size: 12px; }
+.learning-reset-confirm button { min-height: 36px; padding: 6px 10px; border: 1px solid #e7e2eb; border-radius: 10px; background: #fff; }
+.learning-reset-confirm button:last-child { border-color: #c8b5d9; background: #f4eef8; color: #5b456c; font-weight: 600; }
+.learning-check-mark { position: relative; display: inline-grid; width: 15px; height: 15px; flex: none; place-items: center; color: #8b68a8; }
+.learning-check-svg { position: relative; z-index: 1; width: 15px; height: 15px; }
+.learning-check-ping { position: absolute; inset: 1px; border: 1px solid #a17ebe; border-radius: 50%; }
+.learning-card { border: 1px solid #e7e3eb; border-radius: 24px; outline: none; transition: border-color .25s, box-shadow .25s; scroll-margin-top: 24px; }
+.learning-card > div { box-shadow: none; --tw-ring-color: transparent; }
+.learning-card[data-active="true"] { border-color: #c8b6dd; box-shadow: 0 6px 26px #9b7db514; }
+.learning-card:focus-visible { outline: 2px solid #ae96c6; outline-offset: 4px; }
+.learning-option > label { border-color: #ece8ee; border-radius: 14px; background: #fff; color: #45404b; transition: background .2s, border-color .2s; }
+.learning-option > label:has(:checked) { border-color: #c5b1dc; background: #f5effa; }
+.learning-option input { position: relative; appearance: none; width: 16px; height: 16px; flex: none; margin-top: 2px; border: 1px solid #bdb5c4; border-radius: 50%; background: #fff; }
+.learning-option input::before { position: absolute; inset: -5px; content: ''; border: 1px solid #b292ce; border-radius: 50%; opacity: 0; }
+.learning-option input:checked::before { animation: learning-radio-ping .65s ease-out; }
+.learning-option input:checked::after { position: absolute; inset: 4px; content: ''; border-radius: 50%; background: #9673b4; }
+.learning-card[data-comparing="true"] .learning-option > label { border-color: #d9cbe7; background: #faf7fd; }
+.learning-card[data-comparing="true"] .learning-option > label:has(:checked) { border-color: #a482c0; background: #eee5f7; }
+.learning-option[data-correct="true"] > label { border-color: #d1c3df; }
+.learning-check { background: #eeddea; border-color: #e2cde0; color: #55445f; box-shadow: 0 3px 8px #82638c12; }
+.learning-check:hover:not(:disabled) { background: #e6d2e3; }
+@media (prefers-reduced-motion: reduce) { .learning-card, .learning-option > label { transition: none; } }
+@keyframes learning-radio-ping { 0% { transform: scale(.4); opacity: .55; } 100% { transform: scale(1.5); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .learning-option input:checked::before { animation: none; } }

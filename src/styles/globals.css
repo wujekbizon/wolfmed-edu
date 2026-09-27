@@ -1,6 +1,14 @@
 @import "tailwindcss";
+@import "./wolfek.css";
+@import "./wolfek-avatar.css";
+@import "./learning-cards.css";
 
 @import "uploadthing/tw/v4";
+@import "./wolfek-glass.css";
+@import "./learning-companion-orbit.css";
+@import "./learning-companion-orbit-layout.css";
+@import "./learning-companion-avatar.css";
+@import "./learning-companion-theme.css";
 @source "../../node_modules/@uploadthing/react/dist";
 
 @theme {
@@ -387,3 +395,4 @@
     transition: none;
   }
 }
+
