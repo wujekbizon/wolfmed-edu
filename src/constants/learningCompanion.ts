@@ -5,6 +5,7 @@ export const COMPANION_SUGGESTIONS: Record<JevSupportAction, string> = {
   compare: 'Zestaw swój wybór z innymi odpowiedziami z karty.',
   retry: 'Spróbuj wybrać inną odpowiedź i sprawdź swój tok rozumowania.',
   reveal: 'Sprawdź zapisaną odpowiedź, gdy będziesz gotowy.',
+  review: 'Odkryłeś kilka odpowiedzi. Wróć do wcześniejszej karty i spróbuj bez podpowiedzi.',
   tutor: 'Kilka kart sprawiło trudność. Możemy omówić tę kartę z asystentem; najpierw ujawnimy odpowiedź.',
   material: 'Wróć do materiału powiązanego z tym pytaniem.',
   plan: 'Wróć do kolejnego kroku w swoim planie nauki.',

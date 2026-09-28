@@ -3,11 +3,11 @@ import { z } from "zod";
 export const PracticeCategorySchema = z.string().min(1).max(256)
 export const PracticeStartSchema = z.uuid()
 export const PracticeResetSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.uuid(), eventId: z.uuid(),
+  category: PracticeCategorySchema, sessionId: z.guid(), eventId: z.uuid(),
   version: z.coerce.number().int().min(0),
 }).strict()
 export const ReviewedPracticeSupportSchema = z.object({
-  questionId: z.uuid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+  questionId: z.guid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
   topic: z.string().trim().min(1).max(300),
   hints: z.array(z.string().trim().min(1).max(1500)).max(8),
   explanation: z.string().trim().min(1).max(10000).nullable(),
@@ -17,17 +17,17 @@ export const ReviewedPracticeSupportSchema = z.object({
     href: z.string().regex(/^\/panel\/(?:kursy|nauka|procedury)\/[a-z0-9%\-/]+$/i) }).optional(),
 })
 export const PracticeSupportSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
 }).strict()
 export const PracticeSuggestionInteractionSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
-  questionId: z.uuid(), trigger: z.string().trim().min(1).max(256), eventId: z.uuid(),
-  action: z.enum(['hint', 'compare', 'retry', 'reveal', 'tutor', 'material', 'plan', 'continue']),
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
+  questionId: z.guid(), trigger: z.string().trim().min(1).max(256), eventId: z.uuid(),
+  action: z.enum(['hint', 'compare', 'retry', 'reveal', 'review', 'tutor', 'material', 'plan', 'continue']),
   interaction: z.enum(['accepted', 'dismissed']),
 }).strict()
 export const PracticeHelpInteractionSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.uuid(), version: z.number().int().min(0),
-  questionId: z.uuid(), eventId: z.uuid(), action: z.literal('compare'),
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
+  questionId: z.guid(), eventId: z.uuid(), action: z.literal('compare'),
 }).strict()
 export const JevConfigSchema = z.object({
   mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
@@ -51,11 +51,11 @@ export const LearningQuestionCardDataSchema = z.object({
 export const PracticeQuestionDataSchema = LearningQuestionCardDataSchema
   .refine((data) => data.answers.filter((answer) => answer.isCorrect).length === 1)
 export const PracticeMutationSchema = z.object({
-  sessionId: z.preprocess((value) => value === '' ? undefined : value, z.uuid().optional()),
+  sessionId: z.preprocess((value) => value === '' ? undefined : value, z.guid().optional()),
   eventId: z.uuid(),
   version: z.coerce.number().int().min(0),
-  command: z.enum(['answer', 'hint', 'reveal', 'skip', 'next', 'finish']),
-  questionId: z.preprocess((value) => value === '' ? undefined : value, z.uuid().optional()),
+  command: z.enum(['answer', 'hint', 'reveal', 'review', 'skip', 'next', 'finish']),
+  questionId: z.preprocess((value) => value === '' ? undefined : value, z.guid().optional()),
   selected: z.preprocess((value) => value === null || value === '' ? undefined : value,
     z.coerce.number().int().min(0).max(9).optional()),
 }).refine((value) => value.command !== 'answer' || value.selected !== undefined, {
@@ -64,7 +64,7 @@ export const PracticeMutationSchema = z.object({
   path: ['questionId'], message: 'Wybierz kartę.',
 })
 export const PracticeReferenceSchema = z.object({
-  sessionId: z.uuid(), questionId: z.uuid(), questionRevision: z.string().regex(/^[a-f0-9]{64}$/),
+  sessionId: z.guid(), questionId: z.guid(), questionRevision: z.string().regex(/^[a-f0-9]{64}$/),
   attemptId: z.uuid().nullable(), purpose: z.enum(['explain', 'follow_up']),
 }).strict()
 import { getPreviousStripeReportMonth } from '@/helpers/getPreviousStripeReportMonth'

@@ -1,6 +1,6 @@
-.practice-orbit-hint { top: 1.7rem; left: -0.25rem; transform: rotate(-4deg); }
-.practice-orbit-compare { top: 5.2rem; right: -0.25rem; transform: rotate(3deg); }
-.practice-orbit-ask { right: 0.9rem; bottom: 0.3rem; transform: rotate(-2deg); }
+.practice-orbit-hint { top: 1.7rem; left: 0; transform: rotate(-4deg); }
+.practice-orbit-compare { top: 5.2rem; right: 0; transform: rotate(3deg); }
+.practice-orbit-ask { right: 0.5rem; bottom: 0.3rem; transform: rotate(-2deg); }
 .practice-orbit-ask > span:first-child {
   background: rgb(255 230 226 / 88%);
   color: #b26675;
@@ -17,19 +17,13 @@
 }
 .practice-companion-detail p,
 .practice-companion-detail div { color: inherit; }
+.practice-companion-detail button,
+.practice-companion-detail a { font-size: 0.8125rem; }
 .dark .wolfek-glass-surface {
   border-color: rgb(222 213 245 / 24%);
   background: linear-gradient(145deg, rgb(47 46 64 / 88%), rgb(41 40 58 / 76%));
   box-shadow: inset 0 1px rgb(255 255 255 / 14%), 0 1.4rem 3.5rem rgb(0 0 0 / 32%);
 }
-.dark .wolfek-card-wrap::before {
-  background:
-    radial-gradient(ellipse at 12% 24%, rgb(112 100 185 / 42%), transparent 48%),
-    radial-gradient(ellipse at 94% 50%, rgb(176 98 125 / 36%), transparent 49%),
-    radial-gradient(ellipse at 56% 100%, rgb(93 147 172 / 34%), transparent 48%);
-}
-.dark .practice-companion-state,
-.dark .practice-companion-reveal { color: rgb(238 232 248 / 77%); }
 .dark .practice-companion-detail { color: #f2edf8; }
 .dark .practice-companion-detail,
 .dark .practice-orbit-action {

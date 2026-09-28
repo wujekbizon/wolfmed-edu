@@ -12,7 +12,7 @@ export function filterLearningCards(questions: LearningQuestionCardData[], term:
     if (filter === 'all') return true
     if (filter === 'new') return !card || (!card.priorExposure && !card.attempts && !card.hintOpened && !card.resolved)
     if (filter === 'mastered') return card?.outcome === 'unassisted'
-    return Boolean(card && (card.priorExposure || card.correct === false || card.hintOpened || card.outcome === 'assisted' ||
+    return Boolean(card && (card.correct === false || card.hintOpened || card.outcome === 'assisted' ||
       card.outcome === 'revealed' || card.outcome === 'skipped' || card.outcome === 'invalid'))
   })
 }

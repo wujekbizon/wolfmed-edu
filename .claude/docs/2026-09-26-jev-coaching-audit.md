@@ -1,6 +1,6 @@
 # Jev coaching audit
 
-2026-09-26 historical baseline audit. Greg approved the distinct-card streak case on 2026-09-27; that first case is now implemented in code. Other cases, confidence calibration and live quality evaluation below remain open. No live inference or tests were run by Codex.
+2026-09-26 historical baseline audit. The distinct-card streak, next-card difficulty after help, and frequent-reveal review are now implemented. Other cases, confidence calibration and live quality evaluation below remain open. No live inference or tests were run by Codex.
 
 ## Conclusion
 

@@ -6,6 +6,7 @@ import { useDebouncedValue } from './useDebounceValue'
 import { usePracticeSession } from './usePracticeSession'
 import { usePracticeSupport } from './usePracticeSupport'
 import { useWolfekAnswerReaction } from './useWolfekAnswerReaction'
+import { useLearningDeckNavigation } from './useLearningDeckNavigation'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import { buildPracticeCardView } from '@/helpers/buildPracticeCardView'
 import { filterLearningCards } from '@/helpers/filterLearningCards'
@@ -20,7 +21,6 @@ export function useLearningDeck({ questions, category, userId, initialSession, p
   const [compareId, compare] = useState<string | null>(null)
   const [filter, setFilter] = useState<LearningCardFilter>('all')
   const [tutor, setTutor] = useState<PracticeTutorAttachment | null>(null)
-  const [advanceToId, setAdvanceToId] = useState<string | null>(null)
   const query = usePracticeSession(userId, category, initialSession)
   const { reaction, onAnswered } = useWolfekAnswerReaction()
   const session = query.data ?? null
@@ -47,45 +47,19 @@ export function useLearningDeck({ questions, category, userId, initialSession, p
   const page = Math.max(1, Math.min(search.pageByCategory[category] ?? 1, totalPages))
   const start = (page - 1) * perPage
   const pageQuestions = filtered.slice(start, start + perPage)
-  useEffect(() => {
-    if (!advanceToId || !pageQuestions.some((card) => card.id === advanceToId)) return
-    focus(advanceToId)
-    setAdvanceToId(null)
-    requestAnimationFrame(() => {
-      const nextCard = document.getElementById(`learning-card-${advanceToId}`)
-      nextCard?.scrollIntoView({ block: 'center', behavior: 'smooth' })
-      nextCard?.focus({ preventScroll: true })
-    })
-  }, [advanceToId, pageQuestions])
   const question = pageQuestions.find((q) => q.id === focusedId) ?? pageQuestions[0]
-  const currentFilteredIndex = question ? filtered.findIndex((card) => card.id === question.id) : -1
-  const canContinue = currentFilteredIndex >= 0 && currentFilteredIndex < filtered.length - 1
   const index = question ? questions.findIndex((q) => q.id === question.id) : 0
   const companion = question ? buildPracticeCardView(category, question, index, questions.length,
     session, session?.cards.find((card) => card.id === question.id && card.revision === question.revision)) : null
 
-  const changePage = (next: number) => {
-    search.setCurrentPage(next)
-    focus(null)
-    compare(null)
-    document.getElementById('learning-card-feed')?.scrollIntoView({ block: 'start', behavior: 'instant' })
-  }
   const changeFilter = (next: LearningCardFilter) => {
     setFilter(next)
     search.setCurrentPage(1)
     focus(null)
     compare(null)
   }
-  const continueToNextCard = () => {
-    if (!canContinue) return false
-    const next = filtered[currentFilteredIndex + 1]
-    if (!next) return false
-    const nextPage = Math.floor((currentFilteredIndex + 1) / perPage) + 1
-    setAdvanceToId(next.id)
-    if (nextPage !== page) search.setCurrentPage(nextPage)
-    compare(null)
-    return true
-  }
+  const navigation = useLearningDeckNavigation({ questions, filtered, pageQuestions, session,
+    questionId: question?.id, page, perPage, onFocus: focus, onCompare: compare, onFilter: setFilter })
   const askTutor = () => {
     const card = companion?.question
     if (!premium || !card || !companion.id || card.correctIndex === null || card.invalid) return
@@ -95,6 +69,7 @@ export function useLearningDeck({ questions, category, userId, initialSession, p
   return { search, session, update: query.update, error: query.error, authorized: query.authorized,
     pageQuestions, total: filtered.length, filter, filterCounts, changeFilter,
     page, totalPages, question, companion,
-    focus, compareId, compare, tutor, setTutor, askTutor, changePage, reaction, onAnswered,
-    continueToNextCard, canContinue }
+    focus, compareId, compare, tutor, setTutor, askTutor, changePage: navigation.changePage,
+    reaction, onAnswered, continueToNextCard: navigation.continueToNextCard,
+    reviewRevealedCard: navigation.reviewRevealedCard, canContinue: navigation.canContinue }
 }

@@ -8,7 +8,7 @@ export default function WolfekGlassCard({ avatarRef, avatar, children, onMinimiz
     onPointerLeave={onPointerLeave} onPointerCancel={onPointerCancel}>
     <div className="wolfek-glass">
       <div className="wolfek-glass-surface" aria-hidden="true" />
-      <button type="button" className="wolfek-minimize" onClick={onMinimize}
+      <button type="button" className="wolfek-minimize" data-wolfek-focus-target onClick={onMinimize}
         title="Zminimalizuj Wolfka" aria-label="Zminimalizuj Wolfka"><Minus size={16} /></button>
       {children}
       <div ref={avatarRef} className="wolfek-card-avatar">{avatar}</div>

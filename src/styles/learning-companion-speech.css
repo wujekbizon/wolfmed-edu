@@ -1,0 +1,84 @@
+.practice-companion-base {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 8rem;
+  padding: 0.4rem 0 0.7rem 5.75rem;
+}
+
+.wolfek-small-talk,
+.practice-companion-next {
+  --speech-background: rgb(255 255 255 / 84%);
+  --speech-border: rgb(255 255 255 / 92%);
+  position: relative;
+  border: 1px solid var(--speech-border);
+  background: var(--speech-background);
+  box-shadow: 0 0.3rem 0.8rem rgb(64 38 80 / 8%);
+  transition: translate 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.wolfek-small-talk {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 3.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 1rem 1rem 1rem 0.3rem;
+  color: #51455f;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.wolfek-small-talk p { margin: 0; }
+
+.practice-companion-next {
+  align-self: flex-end;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 1rem 1rem 1rem 0.3rem;
+  color: #70528c;
+  font-size: 0.8125rem;
+}
+
+.practice-companion-next:hover:not(:disabled) { --speech-background: #fff; }
+
+.wolfek-small-talk::before,
+.practice-companion-next::before {
+  position: absolute;
+  bottom: 0.7rem;
+  left: -0.28rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  content: '';
+  transform: rotate(45deg);
+  border-bottom: 1px solid var(--speech-border);
+  border-left: 1px solid var(--speech-border);
+  background: var(--speech-background);
+}
+
+.dark .wolfek-small-talk,
+.dark .practice-companion-next {
+  --speech-background: rgb(48 47 65 / 94%);
+  --speech-border: rgb(231 221 250 / 20%);
+  color: #f0ebf8;
+}
+
+.dark .practice-companion-next:hover:not(:disabled) { --speech-background: #403850; }
+
+@media (hover: hover) {
+  .wolfek-small-talk:hover,
+  .practice-companion-next:hover:not(:disabled) {
+    translate: 0 -2px;
+    box-shadow: 0 0.5rem 1rem rgb(64 38 80 / 14%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wolfek-small-talk,
+  .practice-companion-next { transition: none; }
+  .wolfek-small-talk:hover,
+  .practice-companion-next:hover:not(:disabled) { translate: none; }
+}

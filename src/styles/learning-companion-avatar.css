@@ -1,33 +1,3 @@
-.practice-companion-base {
-  display: flex;
-  min-height: 7.5rem;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.45rem;
-  padding: 1.25rem 0 1.25rem 6rem;
-}
-
-.practice-companion-state { display: block; color: #3e394a; font-size: 0.76rem; }
-
-.practice-companion-reveal {
-  display: inline-flex;
-  min-height: 2.5rem;
-  align-items: center;
-  gap: 0.3rem;
-  align-self: flex-start;
-  border: 0;
-  background: transparent;
-  color: rgb(73 67 88 / 73%);
-  font-size: 0.69rem;
-  text-decoration: underline;
-  text-underline-offset: 0.2rem;
-}
-
-.practice-companion-reveal-suggested {
-  color: #8d567f;
-  font-weight: 500;
-}
-
 .wolfek-card-avatar {
   position: absolute;
   bottom: var(--wolfek-bottom);
@@ -73,7 +43,6 @@
 .wolfek-avatar-shadow { filter: blur(7px); opacity: .48; }
 
 .practice-companion-orbit { height: 13.9rem; }
-.practice-companion-base { min-height: 7.2rem; }
 
 @media (prefers-reduced-motion: reduce) {
   .practice-orbit-action,

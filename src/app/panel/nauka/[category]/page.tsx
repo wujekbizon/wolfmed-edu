@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: LearningCategoryProps): Promi
 }
 
 export default function CategoryPage(props: LearningCategoryProps) {
-  return <section className="flex w-full flex-col items-center gap-8 p-4 lg:p-16">
+  return <section className="learning-category-page flex w-full flex-col items-center gap-8 p-4 lg:p-16">
     <Suspense fallback={<LearningPracticeSkeleton />}>
       <CategoryContent {...props} />
     </Suspense>

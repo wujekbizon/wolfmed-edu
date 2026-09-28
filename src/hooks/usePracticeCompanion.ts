@@ -11,7 +11,7 @@ import type { PracticeCompanionMode } from '@/types/learningPracticeTypes'
 import type { WolfekCompanionProps } from '@/types/learningUiTypes'
 
 export function usePracticeCompanion({
-  userId, category, session, premium, onSaved, onAskTutor, onCompare, onContinue,
+  userId, category, session, premium, onSaved, onAskTutor, onCompare, onContinue, onReview,
 }: WolfekCompanionProps) {
   const [mode, setMode] = useState<PracticeCompanionMode>('welcome')
   const { bubbleSession, record, hide } =
@@ -61,6 +61,11 @@ export function usePracticeCompanion({
     }
     if (session?.question?.suggestedAction === 'continue') {
       if (onContinue()) record('accepted')
+      else { record('dismissed'); hide() }
+      return
+    }
+    if (session?.question?.suggestedAction === 'review') {
+      if (onReview()) record('accepted')
       else { record('dismissed'); hide() }
       return
     }

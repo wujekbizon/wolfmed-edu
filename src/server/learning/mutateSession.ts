@@ -4,6 +4,7 @@ import { and, eq } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { learningPracticeEvents, learningPracticeSessions } from '@/server/db/schema'
 import { transitionPractice } from '@/helpers/transitionPractice'
+import { clearPracticeItem } from '@/helpers/clearPracticeItem'
 import { loadPracticeQuestion } from './loadQuestion'
 import { buildPracticeView } from './buildView'
 import { getPracticeItem } from './getPracticeItems'
@@ -11,6 +12,7 @@ import { savePracticeItem } from './savePracticeItem'
 import type { PracticeActionInput } from '@/types/learningPracticeTypes'
 import { PRACTICE_EVENT_TYPES } from '@/constants/learningPractice'
 import { nextPracticeEventOrdinal } from './nextEventOrdinal'
+import { PracticeError } from './PracticeError'
 
 export async function mutatePracticeSession(userId: string, category: string, input: PracticeActionInput) {
   return db.transaction(async (tx) => {
@@ -29,10 +31,18 @@ export async function mutatePracticeSession(userId: string, category: string, in
     }
     const current = await getPracticeItem(tx, session, input.questionId)
     if (!current) throw new Error('Pytanie niedostępne.')
-    const { item, position } = current
-    const previousOutcome = item.outcome
-    const question = await loadPracticeQuestion(tx, item.id, category)
-    transitionPractice(item, input, question && question.revision === item.revision ? question.data : null)
+    const { position } = current
+    const previousOutcome = current.item.outcome
+    const question = await loadPracticeQuestion(tx, current.item.id, category)
+    let item = current.item
+    if (input.command === 'review') {
+      if (item.outcome !== 'revealed' || question?.revision !== item.revision) {
+        throw new PracticeError('Ta karta nie jest już dostępna do powtórki.')
+      }
+      item = clearPracticeItem(item)
+    } else {
+      transitionPractice(item, input, question && question.revision === item.revision ? question.data : null)
+    }
     if (previousOutcome !== item.outcome) {
       if (previousOutcome) session.summary[previousOutcome]--
       if (item.outcome) session.summary[item.outcome]++

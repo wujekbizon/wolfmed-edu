@@ -8,7 +8,7 @@ export function getLearningCardFilterCounts(questions: LearningQuestionCardData[
     const card = progress.get(`${question.id}:${question.revision}`)
     if (!card || (!card.priorExposure && !card.attempts && !card.hintOpened && !card.resolved)) counts.new++
     if (card?.outcome === 'unassisted') counts.mastered++
-    if (card && (card.priorExposure || card.correct === false || card.hintOpened || card.outcome === 'assisted' || card.outcome === 'revealed' ||
+    if (card && (card.correct === false || card.hintOpened || card.outcome === 'assisted' || card.outcome === 'revealed' ||
       card.outcome === 'skipped' || card.outcome === 'invalid')) counts.review++
   }
   return counts

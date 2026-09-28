@@ -1,5 +1,6 @@
 'use client'
 
+import { ArrowRight } from 'lucide-react'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
 import FormError from '@/components/FormError'
@@ -10,6 +11,7 @@ import WolfekBubble from './WolfekBubble'
 import PracticeCompanionActions from './PracticeCompanionActions'
 import PracticeCompanionAvatar from './PracticeCompanionAvatar'
 import WolfekGlassCard from '@/components/wolfek/WolfekGlassCard'
+import WolfekSmallTalk from '@/components/wolfek/WolfekSmallTalk'
 
 export default function PracticeCompanion(props: WolfekCompanionProps) {
   const { session, category, premium, onMinimize } = props
@@ -44,14 +46,10 @@ export default function PracticeCompanion(props: WolfekCompanionProps) {
           onMode={help.setMode} onHint={help.openHint}
           onCompare={help.compare} onAskTutor={help.chat} />
         <div className="practice-companion-base">
-          <span className="practice-companion-state">{session?.question?.correct === true ? 'Dobra robota' : 'Bez pośpiechu'}</span>
-          {session?.question && props.canContinue &&
-            <Button type="button" size="sm" variant="ghost"
-              className="self-start" onClick={() => props.onContinue()}>Dalej</Button>}
-          {session?.question && session.question.correctIndex === null && <button type="button"
-            onClick={() => help.runCommand('reveal')}
-            className={`practice-companion-reveal ${session.question.suggestedAction === 'reveal' ? 'practice-companion-reveal-suggested' : ''}`}>
-            Pokaż odpowiedź <span aria-hidden="true">↗</span></button>}
+          <WolfekSmallTalk index={props.smallTalkIndex} />
+          {props.canContinue && <Button type="button" size="sm" variant="ghost"
+            className="practice-companion-next" disabled={help.pending}
+            onClick={() => props.onContinue()}>Dalej <ArrowRight size={14} aria-hidden="true" /></Button>}
         </div>
       </div>
     </WolfekGlassCard>

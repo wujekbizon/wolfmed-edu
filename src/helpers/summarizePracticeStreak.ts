@@ -6,6 +6,7 @@ export function summarizePracticeStreak(events: PracticeObservation[]): Practice
   const results: PracticeStreakEvidence['firstAttemptResultsOldestFirst'] = []
   let previousAt: number | null = null
   for (const event of events) {
+    if (event.kind === 'progress_reset' || event.kind === 'question_review_started') break
     const at = Date.parse(event.at)
     if (!Number.isFinite(at) || (previousAt !== null && previousAt - at > JEV_STREAK_IDLE_MS)) break
     previousAt = at

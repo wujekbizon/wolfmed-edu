@@ -27,3 +27,22 @@ export interface PracticeStreakEvidence {
   consecutiveIncorrect: number
   firstAttemptResultsOldestFirst: Array<{ result: 'incorrect' | 'correct'; assisted: boolean }>
 }
+
+export interface PracticePriorHelpEvidence {
+  kind: 'hint' | 'compare'
+  previousCardFirstAttempt: 'incorrect'
+  currentCardFirstAttempt: 'incorrect'
+  topicRelation: 'unknown'
+}
+
+export interface PracticeRevealEvidence {
+  scope: 'current_run_last_30_minutes'
+  distinctRevealedCards: number
+}
+
+export interface PracticeCoachingEvidence {
+  trigger: 'three_distinct_first_errors' | 'difficulty_after_help' | 'frequent_reveals'
+  learningWindow: PracticeStreakEvidence
+  priorHelp: PracticePriorHelpEvidence | null
+  revealWindow: PracticeRevealEvidence | null
+}

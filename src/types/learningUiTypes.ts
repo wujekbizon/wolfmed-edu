@@ -12,7 +12,19 @@ export interface LearningDeckProps {
   initialSession: PracticeView | null
   premium: boolean
 }
-export interface LearningDeckHeaderProps { count: number }
+export interface LearningDeckNavigationProps {
+  questions: LearningQuestionCardData[]
+  filtered: LearningQuestionCardData[]
+  pageQuestions: LearningQuestionCardData[]
+  session: PracticeView | null
+  questionId: string | undefined
+  page: number
+  perPage: number
+  onFocus: (id: string | null) => void
+  onCompare: (id: string | null) => void
+  onFilter: (filter: LearningCardFilter) => void
+}
+export interface LearningDeckHeaderProps { count: number; actions?: ReactNode }
 export interface PracticeCompanionAvatarProps {
   session: PracticeView | null
   interactive?: boolean
@@ -53,16 +65,18 @@ export interface WolfekCompanionProps {
   onSaved: (session: PracticeView) => void
   onAskTutor: () => void
   onContinue: () => boolean
+  onReview: () => boolean
   canContinue: boolean
   onCompare?: () => void
   onMinimize: () => void
+  smallTalkIndex: number
   reaction: WolfekAnswerReaction | null
 }
 export interface WolfekDockProps {
   userId: string
   questionId: string | undefined
   session: PracticeView | null
-  children: (minimize: () => void) => ReactNode
+  children: (minimize: () => void, smallTalkIndex: number) => ReactNode
   reaction: WolfekAnswerReaction | null
 }
 export interface PracticeCompanionActionsProps {

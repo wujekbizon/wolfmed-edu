@@ -6,6 +6,10 @@ export interface WolfekAnswerReaction {
   gesture: 'yes' | 'no'
 }
 
+export interface WolfekSmallTalkProps {
+  index: number
+}
+
 export interface WolfekFaceProps {
   id: string
   positive: boolean

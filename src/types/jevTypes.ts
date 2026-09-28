@@ -1,5 +1,5 @@
 import type { JevSupportAction, PracticeItem } from './learningPracticeTypes'
-import type { PracticeObservationSummary, PracticeStreakEvidence } from './learningObservationTypes'
+import type { PracticeObservationSummary, PracticePriorHelpEvidence, PracticeRevealEvidence, PracticeStreakEvidence } from './learningObservationTypes'
 
 export interface JevConfig {
   mode: 'shadow' | 'active'
@@ -10,10 +10,13 @@ export interface JevConfig {
 }
 export interface JevCandidate { id: JevSupportAction; text: string }
 export interface JevState {
-  trigger: 'three_distinct_first_errors'
+  trigger: 'three_distinct_first_errors' | 'difficulty_after_help' | 'frequent_reveals'
   currentCard: { attemptCount: number; answerVisible: boolean; hintUsed: boolean;
     comparisonUsed: boolean; verifiedTopic: string | null }
   learningWindow: PracticeStreakEvidence
+  priorHelp: PracticePriorHelpEvidence | null
+  revealWindow: PracticeRevealEvidence | null
+  reviewAvailable: boolean
   practice: Pick<PracticeObservationSummary, 'cards' | 'firstCorrect' | 'firstWrong' |
     'retries' | 'hints' | 'reveals' | 'comparisons' | 'tutorResponses'> &
     { scope: 'last_30_days_up_to_120_events' }

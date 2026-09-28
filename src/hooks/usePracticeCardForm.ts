@@ -28,5 +28,6 @@ export function usePracticeCardForm({ userId, category, question, onSaved, onAns
     }
   }, [state])
   useEffect(() => () => clear(key), [clear, key])
-  return { state, action, pending, eventInput, submittedEventId, events, selected, select: (index: number) => select(key, index) }
+  return { state, action, pending, eventInput, submittedEventId, events, selected,
+    select: (index: number) => select(key, index), clearSelection: () => clear(key) }
 }

@@ -2,7 +2,7 @@ import 'server-only'
 import { toPracticeCardProgress } from '@/helpers/toPracticeCardProgress'
 import { loadPracticeQuestion } from './loadQuestion'
 import { getJevConfig } from './jevConfig'
-import { getPracticeStreakEvidence } from './getPracticeStreakEvidence'
+import { getPracticeCoachingEvidence } from './getPracticeCoachingEvidence'
 import { getPracticeItem, getPracticeItemRows } from './getPracticeItems'
 import type { PracticeSession, PracticeTransaction } from '@/types/learningPracticeServerTypes'
 import type { PracticeView } from '@/types/learningPracticeTypes'
@@ -36,10 +36,11 @@ export async function buildPracticeView(
   const last = item.attempts.at(-1)
   const progress = toPracticeCardProgress(item, session.catalogVersion)
   const showKey = item.revealed || last?.correct === true
-  const pendingTrigger = !invalid && !!getJevConfig() && item.outcome === null &&
-    item.attempts.length === 1 && last?.correct === false &&
+  const firstWrong = item.outcome === null && item.attempts.length === 1 && last?.correct === false
+  const revealed = item.outcome === 'revealed' && item.revealed
+  const pendingTrigger = !invalid && !!getJevConfig() && (firstWrong || revealed) &&
     item.support?.trigger !== item.learningEventId
-  const supportPending = pendingTrigger && !!await getPracticeStreakEvidence(
+  const supportPending = pendingTrigger && !!await getPracticeCoachingEvidence(
     tx, session.id, item, pendingEventId === item.learningEventId)
   view.question = {
     id: item.id, revision: item.revision,

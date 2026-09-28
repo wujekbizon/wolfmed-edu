@@ -8,10 +8,13 @@
 @import "./learning-companion-orbit.css";
 @import "./learning-companion-orbit-layout.css";
 @import "./learning-companion-avatar.css";
+@import "./learning-companion-speech.css";
 @import "./learning-companion-theme.css";
 @source "../../node_modules/@uploadthing/react/dist";
 
 @theme {
+  --learning-canvas: #eeedf3;
+  --learning-canvas-glow: #e5dfef;
   --background: hsl(255 100% 100%);
   --foreground: hsl(240 10% 3.9%);
   --breakpoint-xs: 480px;

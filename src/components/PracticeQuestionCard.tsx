@@ -12,7 +12,7 @@ import type { PracticeQuestionCardProps } from '@/types/learningUiTypes'
 
 export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
   const { category, question, number, session, progress, active, comparing, onFocus } = props
-  const { state, action, pending, eventInput, submittedEventId, events, selected, select } = usePracticeCardForm(props)
+  const { state, action, pending, eventInput, submittedEventId, events, selected, select, clearSelection } = usePracticeCardForm(props)
   const toast = useToastMessage(state)
   return <article id={`learning-card-${question.id}`} tabIndex={0} onFocusCapture={onFocus}
     className="learning-card" data-active={active} data-comparing={comparing} aria-label={`Karta ${number}`}>
@@ -38,7 +38,7 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
         </header>
         <h2 className="break-words text-base font-medium leading-relaxed text-zinc-900 sm:text-lg">{question.question}</h2>
         {progress?.priorExposure && !progress.attempts &&
-          <p className="text-xs text-violet-600">Tę kartę widziałeś już wcześniej; ta próba pozostanie oznaczona jako powtórka.</p>}
+          <p className="text-xs text-violet-600">Widziałeś już tę kartę. Kolejna odpowiedź będzie oznaczona jako wspomagana.</p>}
         {!question.practiceable && <p className="text-sm text-zinc-500">Karta do czytania — nie ma jednej odpowiedzi do sprawdzenia.</p>}
         {comparing && <p className="text-xs text-violet-600">Porównaj sformułowania odpowiedzi z treścią pytania.</p>}
         <fieldset disabled={pending || Boolean(session && session.status !== 'active') ||
@@ -67,6 +67,9 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
           </Button>
           <Button type="submit" name="command" value="reveal" size="lg" variant="ghost" disabled={pending}>Pokaż odpowiedź</Button>
         </div>}
+        {session?.status === 'active' && progress?.outcome === 'revealed' && question.practiceable &&
+          <Button type="submit" name="command" value="review" size="md" variant="ghost"
+            disabled={pending} onClick={clearSelection}>Spróbuj ponownie bez podpowiedzi</Button>}
         {toast}
       </form>
     </Card>

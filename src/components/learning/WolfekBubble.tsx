@@ -25,7 +25,8 @@ export default function WolfekBubble({ session, mode, premium, pending, onRecomm
         : <Button size="sm" variant="secondary" disabled={pending || (suggestion === 'tutor' && !premium)}
           onClick={onRecommend}>
           {suggestion === 'tutor' ? question?.correctIndex === null ? 'Ujawnij i zapytaj AI'
-            : 'Zapytaj asystenta' : suggestion === 'continue' ? 'Dalej' : 'Skorzystaj'}
+            : 'Zapytaj asystenta' : suggestion === 'continue' ? 'Dalej'
+              : suggestion === 'review' ? 'Wróć do karty' : 'Skorzystaj'}
         </Button>}
       <button type="button" className="wolfek-dismiss" onClick={onDismiss} aria-label="Odrzuć tę propozycję" title="Nie teraz">
         <X size={15} />

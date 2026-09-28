@@ -11,6 +11,8 @@ import { nextPracticeEventOrdinal } from './nextEventOrdinal'
 import { getPracticeDecisionCandidates } from '@/helpers/getPracticeDecisionCandidates'
 import { getReviewedPracticeSupport } from '@/helpers/getReviewedPracticeSupport'
 import { getPracticeItem } from './getPracticeItems'
+import { getPracticeCoachingEvidence } from './getPracticeCoachingEvidence'
+import { hasPracticeReviewCard } from './hasPracticeReviewCard'
 import { savePracticeItem } from './savePracticeItem'
 import type { JevConfig, JevDecision, PracticeSupportContext } from '@/types/jevTypes'
 
@@ -27,10 +29,16 @@ export async function savePracticeSupport(
     const item = currentItem?.item
     if (!item || item.id !== context.item.id || item.revision !== context.item.revision ||
       item.learningEventId !== context.trigger || item.support?.trigger === context.trigger) return null
+    const evidence = await getPracticeCoachingEvidence(tx, session.id, item)
+    if (!evidence || evidence.trigger !== context.state.trigger ||
+      JSON.stringify(evidence.priorHelp) !== JSON.stringify(context.state.priorHelp) ||
+      JSON.stringify(evidence.revealWindow) !== JSON.stringify(context.state.revealWindow) ||
+      JSON.stringify(evidence.learningWindow) !== JSON.stringify(context.state.learningWindow)) return null
     const current = await loadPracticeQuestion(tx, item.id, session.category)
     if (current?.revision !== item.revision) return null
     const currentMaterial = getReviewedPracticeSupport(item.id, item.revision, session.catalogVersion)?.material ?? null
     if (JSON.stringify(currentMaterial) !== JSON.stringify(context.target.material)) return null
+    if (context.state.reviewAvailable && !await hasPracticeReviewCard(tx, session, item.id)) return null
     const candidates = getPracticeDecisionCandidates(context.state)
     if (JSON.stringify(candidates) !== JSON.stringify(context.candidates)) return null
     const candidate = context.candidates.find((entry) => entry.id === decision?.choice)
@@ -48,6 +56,7 @@ export async function savePracticeSupport(
       sessionId: session.id, eventId: randomUUID(), ordinal: await nextPracticeEventOrdinal(tx, session.id), type: 'support_decided',
       questionId: item.id, questionRevision: item.revision, response,
       payload: { spec: JEV_SPEC_VERSION, model: JEV_MODEL, policy: session.policyVersion,
+        scenario: context.state.trigger,
         mode: config.mode, trigger: context.trigger, candidates: context.candidates.map((entry) => entry.id),
         choice: decision?.choice ?? null, probabilities: decision?.probabilities ?? null,
         confidence: decision?.confidence ?? null, inputTokens: decision?.inputTokens ?? null,
