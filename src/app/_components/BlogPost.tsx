@@ -100,7 +100,7 @@ export default function BlogPost({ post }: BlogPostProps) {
         {children}
       </blockquote>
     ),
-    img: ({ src, alt }) => src ? (
+    img: ({ src, alt }) => typeof src === 'string' && src ? (
       <div className="my-10 rounded-xl overflow-hidden border border-[#3A3A5A] shadow-xl">
         <Image
           src={src}
