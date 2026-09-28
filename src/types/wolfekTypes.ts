@@ -17,12 +17,19 @@ export interface WolfekFaceProps {
   reduced: boolean | null
   interactive: boolean
   gaze?: WolfekGaze | undefined
+  videoHover?: boolean
 }
 
 export interface WolfekEyesProps {
   positive: boolean
   confused: boolean
   gaze?: WolfekGaze | undefined
+  videoHover?: boolean
+  reduced?: boolean | null
+}
+
+export interface Wolfek3DGlassesProps {
+  reduced: boolean | null
 }
 
 export interface WolfekMonocleProps {
@@ -42,10 +49,12 @@ export interface WolfekAvatarProps {
   interactive: boolean
   reaction?: WolfekAnswerReaction | null | undefined
   gaze?: WolfekGaze | undefined
+  videoHover?: boolean
 }
 
 export interface WolfekOverlayProps {
   anchorId: string | undefined
+  variant?: 'learning' | 'panel'
   visible: boolean
   avatar: ReactNode
   children: (minimize: () => void) => ReactNode

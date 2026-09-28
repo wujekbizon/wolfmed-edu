@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { animate, useMotionValue, useReducedMotion } from 'framer-motion'
 
-export function useFloatingPanelPosition(anchorId: string | undefined, minimized: boolean, mounted: boolean) {
+export function useFloatingPanelPosition(
+  anchorId: string | undefined, minimized: boolean, mounted: boolean, bottomMobilePanel = false,
+) {
   const panel = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -27,6 +29,14 @@ export function useFloatingPanelPosition(anchorId: string | undefined, minimized
       const offset = viewport?.offsetTop ?? 0
       const small = width < 1280
       setCompact(small)
+      if (bottomMobilePanel && window.innerWidth < 768) {
+        movement?.stop()
+        x.set(0)
+        y.set(0)
+        first = false
+        setReady(true)
+        return
+      }
       const box = target?.getBoundingClientRect()
       const bounds = scroller?.getBoundingClientRect()
       const panelWidth = Math.min(344, width - 24)
@@ -68,6 +78,6 @@ export function useFloatingPanelPosition(anchorId: string | undefined, minimized
       window.visualViewport?.removeEventListener('resize', schedule)
       window.visualViewport?.removeEventListener('scroll', schedule)
     }
-  }, [anchorId, minimized, mounted, reduced, x, y])
+  }, [anchorId, minimized, mounted, reduced, x, y, bottomMobilePanel])
   return { panel, x, y, compact, ready }
 }

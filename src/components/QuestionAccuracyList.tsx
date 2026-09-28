@@ -60,7 +60,7 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md">
+      <div id="panel-difficult-questions" className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md">
         <h3 className="text-lg font-bold text-slate-900 mb-4">Problematyczne pytania</h3>
         <div className="flex flex-col items-center justify-center h-32 text-zinc-500">
           <p className="text-center">Świetna robota! Nie masz pytań z niską dokładnością.</p>
@@ -74,7 +74,7 @@ export default function QuestionAccuracyList({ questions }: QuestionAccuracyList
   const placeholders = emptySlots > 0 ? Array.from({ length: emptySlots }) : []
 
   return (
-    <div ref={listRef} className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300">
+    <div id="panel-difficult-questions" ref={listRef} className="bg-white/60 backdrop-blur-sm border border-zinc-200/60 rounded-xl p-4 sm:p-6 shadow-md hover:shadow-lg transition-all duration-300">
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
           <div>

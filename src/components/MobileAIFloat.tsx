@@ -11,7 +11,7 @@ export default function MobileAIFloat() {
   if (!showMobileAI || (pathname.startsWith('/panel/nauka/') && pathname.split('/').length === 4 && !pathname.includes('/moje-testy__'))) return null
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-[env(safe-area-inset-bottom)]">
+    <div id="mobile-ai-float" className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pb-[env(safe-area-inset-bottom)]">
       <SideAIInput onDismiss={() => setShowMobileAI(false)} />
     </div>
   )

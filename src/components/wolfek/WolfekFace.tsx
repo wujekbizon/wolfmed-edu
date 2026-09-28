@@ -1,12 +1,13 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import type { WolfekFaceProps } from '@/types/wolfekTypes'
 import WolfekEyes from './WolfekEyes'
 import WolfekMonocle from './WolfekMonocle'
+import Wolfek3DGlasses from './Wolfek3DGlasses'
 
-export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze }: WolfekFaceProps) {
+export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover }: WolfekFaceProps) {
   const [dropped, setDropped] = useState(false)
   const leftFold = dropped ? -14 : supportive ? -5 : 0
   const rightFold = dropped ? 3 : supportive ? 5 : 0
@@ -52,13 +53,16 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     <motion.path d="M24 42q13-12 36-10 23-2 36 10-18-9-36-7-18-2-36 7Z" fill="#fff"
       animate={reduced ? { opacity: .32 } : { opacity: [.27, .4, .27] }}
       transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut', delay: 1.1 }} />
-    <WolfekEyes positive={positive} confused={dropped} gaze={gaze} />
+    <WolfekEyes positive={positive} confused={dropped} gaze={gaze} videoHover={Boolean(videoHover)} reduced={reduced} />
     <path d="M52 77q8-4 16 0-1 7-8 8-7-1-8-8Z" fill="#8e708f" />
     <path d="M56 77q4-2 8 0" stroke="#cdb5cf" strokeWidth="1.5" strokeLinecap="round" />
     <path d={dropped ? 'M56 93q4-5 8 0' : 'M60 85v4m0-1q-5 5-10 1m10-1q5 5 10 1'} stroke="#8c7391" strokeWidth="1.6" strokeLinecap="round" />
     <path d="m54 98 6 4 6-4-6 11z" fill="#b7a3c9" />
     <ellipse cx="36" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity=".65" />
     <ellipse cx="84" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity=".65" />
-    <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />
+    {!videoHover && <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />}
+    <AnimatePresence initial={false}>
+      {videoHover && <Wolfek3DGlasses reduced={reduced} />}
+    </AnimatePresence>
   </svg>
 }

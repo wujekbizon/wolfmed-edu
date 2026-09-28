@@ -100,12 +100,20 @@ export default function BlogPost({ post }: BlogPostProps) {
         {children}
       </blockquote>
     ),
-    img: ({ src, alt }) => (
+    img: ({ src, alt }) => src ? (
       <div className="my-10 rounded-xl overflow-hidden border border-[#3A3A5A] shadow-xl">
-        <img src={src} alt={alt || ''} className="w-full h-auto" loading="lazy" />
+        <Image
+          src={src}
+          alt={alt || ''}
+          width={1200}
+          height={800}
+          sizes="(max-width: 768px) 100vw, 768px"
+          unoptimized
+          className="w-full h-auto"
+        />
         {alt && <p className="text-sm text-[#A5A5C3] text-center py-3 bg-[#1F1F2D]">{alt}</p>}
       </div>
-    ),
+    ) : null,
     table: ({ children }) => (
       <div className="my-10 overflow-x-auto rounded-xl border border-[#3A3A5A] shadow-lg">
         <table className="min-w-full divide-y divide-[#3A3A5A]">{children}</table>

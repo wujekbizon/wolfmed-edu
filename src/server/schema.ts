@@ -43,6 +43,23 @@ export const JevResponseSchema = z.object({
   }) }),
   usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
 })
+export const PanelWolfekAskSchema = z.object({
+  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim()
+    .min(2, 'Wpisz pytanie do Wolfka.').max(300, 'Skróć pytanie do 300 znaków.'),
+}).strict()
+export const PanelWolfekTopicSchema = z.enum([
+  'first_steps', 'username', 'motto', 'courses', 'countdown', 'results',
+  'difficult_questions', 'plan', 'billing', 'storage', 'badges',
+  'navigation', 'forum', 'feedback',
+])
+export const PanelJevResponseSchema = z.object({
+  model: z.string(),
+  answers: z.object({ help: z.object({
+    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+  }) }),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
 export const LearningQuestionCardDataSchema = z.object({
   question: z.string().min(1).max(20000),
   answers: z.array(z.object({ option: z.string().min(1).max(10000), isCorrect: z.boolean() }))

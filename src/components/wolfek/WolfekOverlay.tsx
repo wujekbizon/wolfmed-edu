@@ -1,20 +1,21 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
 import { useFloatingPanelPosition } from '@/hooks/useFloatingPanelPosition'
 import type { WolfekOverlayProps } from '@/types/wolfekTypes'
 
-export default function WolfekOverlay({ anchorId, visible, avatar, children, onMinimize, onOpen }: WolfekOverlayProps) {
-  const [mounted, setMounted] = useState(false)
+export default function WolfekOverlay({ anchorId, variant = 'learning', visible, avatar, children, onMinimize, onOpen }: WolfekOverlayProps) {
+  const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const launcher = useRef<HTMLButtonElement>(null)
   const focusLauncher = useRef(false)
   const focusPanel = useRef(false)
-  const { panel, x, y, compact, ready } = useFloatingPanelPosition(anchorId, !visible || !mobileOpen, mounted)
+  const { panel, x, y, compact, ready } = useFloatingPanelPosition(
+    anchorId, !visible || !mobileOpen, mounted, variant === 'panel',
+  )
   const minimized = !visible || (compact && !mobileOpen)
-  useEffect(() => setMounted(true), [])
   useEffect(() => {
     if (minimized && (focusLauncher.current || panel.current?.contains(document.activeElement))) {
       launcher.current?.focus()
@@ -39,15 +40,16 @@ export default function WolfekOverlay({ anchorId, visible, avatar, children, onM
   }
   if (!mounted) return null
 
-  return createPortal(<div className="wolfek-overlay">
+  return createPortal(<div className="wolfek-overlay" data-variant={variant}>
     <motion.div ref={panel} className="wolfek-position" style={{ x, y }}
       data-minimized={minimized || !ready} inert={minimized || !ready}>
+      {/* eslint-disable-next-line react-hooks/refs -- The render prop receives an event handler; refs are read only when it is clicked. */}
       {children(minimize)}
     </motion.div>
     {minimized && <button ref={launcher} type="button" className="wolfek-launcher" aria-label="Otwórz Wolfka"
       title="Wolfek — jestem obok" onClick={open}>
       {avatar}
-      <span className="wolfek-launcher-label">Wolfek</span>
+      <span className="wolfek-launcher-label">Hej, jestem Wolfek!</span>
     </button>}
   </div>, document.body)
 }
