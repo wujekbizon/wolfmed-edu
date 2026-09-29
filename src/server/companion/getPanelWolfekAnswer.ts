@@ -6,6 +6,7 @@ import { getQuestionAccuracyAnalytics, getUserBadges, getUserStorageUsage } from
 import { getPlanProgress } from '@/server/planner/progress'
 import { getBillingOverview } from '@/server/payments/getBillingOverview'
 import { getPanelCountdownAnswer } from './getPanelCountdownAnswer'
+import { getPanelResultsWolfekAnswer } from './getPanelResultsWolfekAnswer'
 import type { PanelWolfekAnswer, PanelWolfekContext, PanelWolfekTopic } from '@/types/panelWolfekTypes'
 
 export async function getPanelWolfekAnswer(
@@ -24,7 +25,7 @@ export async function getPanelWolfekAnswer(
       text = 'Motto zmienisz w formularzu „Motto nauki” niżej na tej stronie. Wpisz tekst i wybierz „Ustaw motto”.'
       break
     case 'courses': {
-      const names = context.courses.map((course) =>
+      const names = (context.route === 'panel.home' ? context.courses : []).map((course) =>
         `${careerPathsData[course.slug]?.title ?? course.slug} (${course.tier})`)
       text = `Masz dostęp do: ${names.join(', ')}. Szczegóły swoich kursów zobaczysz w sekcji „Twoje kursy” lub na stronie „Moje kursy”.`
       href = '/panel/kursy'
@@ -80,6 +81,13 @@ export async function getPanelWolfekAnswer(
       break
     case 'feedback':
       text = 'Niżej na stronie znajdziesz formularz opinii. Wpisz treść, wybierz ocenę i samodzielnie ją wyślij.'
+      break
+    case 'results_categories':
+    case 'results_explain':
+    case 'results_improve':
+    case 'results_mistakes':
+    case 'results_history':
+      return getPanelResultsWolfekAnswer(topic)
   }
   return href ? { topic, text, href } : { topic, text }
 }

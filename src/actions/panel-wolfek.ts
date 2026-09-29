@@ -8,7 +8,7 @@ import { getPanelOnboardingSeen } from '@/server/companion/getPanelOnboardingSee
 import { getPanelWolfekContext } from '@/server/companion/getPanelWolfekContext'
 import { getPanelWolfekAnswer } from '@/server/companion/getPanelWolfekAnswer'
 import { selectPanelWolfekTopic } from '@/server/companion/selectPanelWolfekTopic'
-import { PanelWolfekAskSchema, PanelWolfekTopicSchema } from '@/server/schema'
+import { PanelWolfekAskSchema, PanelWolfekRouteSchema, PanelWolfekTopicRequestSchema } from '@/server/schema'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { PanelWolfekAskState } from '@/types/panelWolfekTypes'
 
@@ -34,11 +34,11 @@ export async function markPanelOnboardingSeenAction() {
 export async function getPanelWolfekTopicAction(input: unknown) {
   const { userId } = await auth()
   if (!userId) return null
-  const parsed = PanelWolfekTopicSchema.safeParse(input)
+  const parsed = PanelWolfekTopicRequestSchema.safeParse(input)
   if (!parsed.success) return null
-  const context = await getPanelWolfekContext(userId)
+  const context = await getPanelWolfekContext(userId, parsed.data.route)
   if (!context) return null
-  return getPanelWolfekAnswer(userId, parsed.data, context)
+  return getPanelWolfekAnswer(userId, parsed.data.topic, context)
 }
 
 export async function askPanelWolfekAction(
@@ -48,8 +48,10 @@ export async function askPanelWolfekAction(
   if (!userId) return toFormState('ERROR', 'Zaloguj się ponownie.')
   const parsed = PanelWolfekAskSchema.safeParse({ question: formData.get('question') })
   if (!parsed.success) return fromErrorToFormState(parsed.error)
+  const route = PanelWolfekRouteSchema.safeParse(formData.get('route') ?? 'panel.home')
+  if (!route.success) return toFormState('ERROR', 'Nie mogę teraz sprawdzić odpowiedzi. Wybierz temat poniżej.')
   try {
-    const context = await getPanelWolfekContext(userId)
+    const context = await getPanelWolfekContext(userId, route.data)
     if (!context) return toFormState('ERROR', 'Brak dostępu do panelu.')
     const decision = await selectPanelWolfekTopic(userId, parsed.data.question, context)
     if (!decision || decision.topic === 'other' || decision.confidence < 0.35) {

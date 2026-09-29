@@ -4,15 +4,17 @@ import { useCallback, useState, useTransition } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { getPanelOnboardingSeenAction, markPanelOnboardingSeenAction } from '@/actions/panel-wolfek'
 import type { PanelWolfekTopic } from '@/types/panelWolfekTypes'
+import type { PanelWolfekRoute } from '@/types/panelWolfekTypes'
 import WolfekAvatar from './WolfekAvatar'
 import WolfekOverlay from './WolfekOverlay'
 import PanelWolfekCard from './PanelWolfekCard'
 import PanelWolfekMarker from './PanelWolfekMarker'
 import PanelWolfekVideoModal from './PanelWolfekVideoModal'
 
-export default function PanelWolfekHost({ userId, initialSeen }: {
+export default function PanelWolfekHost({ userId, initialSeen, route }: {
   userId: string
   initialSeen: boolean
+  route: PanelWolfekRoute
 }) {
   const queryClient = useQueryClient()
   const key = ['panel-wolfek-seen', userId]
@@ -23,7 +25,7 @@ export default function PanelWolfekHost({ userId, initialSeen }: {
   const [videoTopic, setVideoTopic] = useState<PanelWolfekTopic | null>(null)
   const [dismissedIntro, setDismissedIntro] = useState(false)
   const [, startTransition] = useTransition()
-  const intro = !seen && !dismissedIntro
+  const intro = route === 'panel.home' && !seen && !dismissedIntro
   const onIntroDone = () => {
     if (!intro) return
     setDismissedIntro(true)
@@ -67,7 +69,7 @@ export default function PanelWolfekHost({ userId, initialSeen }: {
     avatar={<WolfekAvatar positive={false} supportive={false} interactive={false} />}
     onMinimize={minimize} onOpen={() => setVisible(true)}>
     {(onOverlayMinimize) => <>
-      <PanelWolfekCard intro={intro} onIntroDone={onIntroDone}
+      <PanelWolfekCard route={route} intro={intro} onIntroDone={onIntroDone}
         onMinimize={onOverlayMinimize} onLocate={locate} onVideo={setVideoTopic} />
       {marker && <PanelWolfekMarker key={marker.id} topic={marker.topic}
         onOpen={openFromMarker} onDismiss={dismissMarker} />}

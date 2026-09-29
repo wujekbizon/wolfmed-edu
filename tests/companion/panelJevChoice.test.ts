@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { JEV_MODEL } from '@/constants/jev'
-import { PANEL_WOLFEK_TOPIC_IDS } from '@/constants/panelWolfek'
+import { PANEL_WOLFEK_RESULTS_TOPICS, PANEL_WOLFEK_TOPIC_IDS } from '@/constants/panelWolfek'
 import { parsePanelJevChoice } from '@/helpers/parsePanelJevChoice'
 
 const choices = [...PANEL_WOLFEK_TOPIC_IDS, 'other']
@@ -25,4 +25,12 @@ test('rejects invented and incomplete topics', () => {
 test('rejects invalid probabilities and model versions', () => {
   assert.equal(parsePanelJevChoice(response('billing', { ...probabilities, other: .5 })), null)
   assert.equal(parsePanelJevChoice({ ...response(), model: 'another-model' }), null)
+})
+
+test('rejects a topic outside the current route choices', () => {
+  const routeChoices = [...PANEL_WOLFEK_RESULTS_TOPICS, 'other']
+  const routeProbabilities = Object.fromEntries(routeChoices.map((id) => [
+    id, id === PANEL_WOLFEK_RESULTS_TOPICS[0] ? 1 : 0,
+  ]))
+  assert.equal(parsePanelJevChoice(response('billing', routeProbabilities), PANEL_WOLFEK_RESULTS_TOPICS), null)
 })

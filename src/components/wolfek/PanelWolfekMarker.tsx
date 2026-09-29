@@ -29,8 +29,11 @@ export default function PanelWolfekMarker({ topic, onOpen, onDismiss }: {
         return
       }
       setPosition({
-        left: Math.max(12, Math.min(rect.left + 12, window.innerWidth - 180)),
-        top: Math.max(76, Math.min(rect.top - 72, window.innerHeight - 84)),
+        left: Math.max(12, Math.min(rect.left + (topic.startsWith('results_') ? -190 : 12), window.innerWidth - 180)),
+        top: Math.max(76, Math.min(
+          topic.startsWith('results_') ? rect.top + rect.height / 2 - 36 : rect.top - 72,
+          window.innerHeight - 84,
+        )),
       })
     }
     const schedule = () => {

@@ -50,8 +50,14 @@ export const PanelWolfekAskSchema = z.object({
 export const PanelWolfekTopicSchema = z.enum([
   'first_steps', 'username', 'motto', 'courses', 'countdown', 'results',
   'difficult_questions', 'plan', 'billing', 'storage', 'badges',
-  'navigation', 'forum', 'feedback',
+  'navigation', 'forum', 'feedback', 'results_explain', 'results_improve',
+  'results_mistakes', 'results_history', 'results_categories',
 ])
+export const PanelWolfekRouteSchema = z.enum(['panel.home', 'panel.results'])
+export const PanelWolfekTopicRequestSchema = z.object({
+  route: PanelWolfekRouteSchema.default('panel.home'),
+  topic: PanelWolfekTopicSchema,
+}).strict()
 export const PanelJevResponseSchema = z.object({
   model: z.string(),
   answers: z.object({ help: z.object({

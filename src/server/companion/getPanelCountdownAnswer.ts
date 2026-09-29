@@ -11,6 +11,9 @@ export async function getPanelCountdownAnswer(
     topic: 'countdown', href: '/panel/plan',
     text: `Odliczanie dotyczy planu „${plan.name}”. Twój termin: ${plan.dueDate.toLocaleDateString('pl-PL')}. Otwórz plan, aby zobaczyć dzisiejsze zadania.`,
   }
+  if (context.route !== 'panel.home') return {
+    topic: 'countdown', href: '/panel', text: 'Szczegóły odliczania znajdziesz w panelu głównym.',
+  }
   if (context.courses.some((course) => course.slug === 'opiekun-medyczny')) {
     const period = calculateTimeLeft().currentPeriod
     return { topic: 'countdown', text: period

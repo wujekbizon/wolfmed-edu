@@ -21,4 +21,9 @@ export const PANEL_WOLFEK_TOPIC_ICONS: Record<PanelWolfekTopic, LucideIcon> = {
   navigation: HelpCircle,
   forum: MessageCircle,
   feedback: MessageSquare,
+  results_explain: BookOpen,
+  results_improve: ChartNoAxesCombined,
+  results_mistakes: Target,
+  results_history: NotebookTabs,
+  results_categories: Route,
 }
