@@ -1177,3 +1177,5 @@ export * from "./memory-schema"
 // Personal library: chunks of a student's own notes and materials. Same "vector"
 // and "pg_trgm" extension requirement as the memory tables.
 export * from "./library-schema"
+export * from './jev-schema'
+export * from './wolfek-metrics-schema'

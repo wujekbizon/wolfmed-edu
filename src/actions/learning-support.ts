@@ -23,7 +23,8 @@ export async function selectPracticeSupportAction(input: unknown) {
     if (!context.candidates.length) return await savePracticeSupport(userId, context, config, null, 0)
     if (!await reservePracticeJevCall(userId, request.sessionId, context.trigger)) return null
     const start = Date.now()
-    const decision = await selectJevSupport(config.apiKey, context.state, context.candidates)
+    const decision = await selectJevSupport(config.apiKey, context.state, context.candidates,
+      { userId, sessionId: request.sessionId })
     await requireCategoryAccess(request.category)
     if (!isPracticeEnabled(request.category)) return null
     return await savePracticeSupport(userId, context, config, decision, Date.now() - start)

@@ -1,5 +1,7 @@
 # Global Wolfek implementation plan
 
+2026-09-30 correction from Greg: frequent-question buttons must submit their visible question through the same Jev decision pipeline as typed input. Jev selects the supplied response using relevant JSON facts/options. Button-bypass instructions below are historical and superseded by this requirement. Implementation still uses the old behavior; proposed repair: [response-pipeline fix plan](../plans/2026-09-30_wolfek-jev-response-pipeline-fix.md).
+
 Status: core product decisions confirmed; initial public abuse limits and routing-cache policy proposed below. Route content and pilot tuning remain. Exam lifecycle inspected in source; browser integration verification belongs to implementation. Scope: planning only. Application behavior unchanged.
 
 ## Confirmed product decisions

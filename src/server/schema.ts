@@ -33,6 +33,17 @@ export const JevConfigSchema = z.object({
   mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
   minConfidence: z.coerce.number().min(0).max(1).optional(),
 }).refine((config) => config.mode !== 'active' || config.minConfidence !== undefined)
+export const WolfekAdminFiltersSchema = z.object({
+  view: z.enum(['insights', 'audit', 'errors', 'usage']),
+  source: z.enum(['all', 'panel', 'kierunki', 'practice']),
+  status: z.enum(['all', 'success', 'http_error', 'invalid_response', 'timeout', 'error']),
+  from: z.iso.date(), to: z.iso.date(),
+  search: z.string().trim().max(300),
+  page: z.coerce.number().int().min(1).max(10_000),
+}).strict().refine((value) => value.from <= value.to &&
+  Date.parse(value.to) - Date.parse(value.from) <= 366 * 86_400_000,
+{ message: 'Wybierz poprawny zakres dat, maksymalnie 366 dni.' })
+export const WolfekAdminAuditIdSchema = z.uuid()
 export const JevResponseSchema = z.object({
   model: z.string(),
   answers: z.object({ support: z.object({

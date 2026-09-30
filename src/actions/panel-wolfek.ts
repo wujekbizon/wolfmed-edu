@@ -12,6 +12,8 @@ import { selectPanelWolfekTopic } from '@/server/companion/selectPanelWolfekTopi
 import { PanelWolfekAskSchema, PanelWolfekRouteSchema, PanelWolfekTopicRequestSchema } from '@/server/schema'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { PanelWolfekAskState } from '@/types/panelWolfekTypes'
+import { recordWolfekInteraction } from '@/server/jev/recordWolfekInteraction'
+import { WOLFEK_TOPIC_MIN_CONFIDENCE } from '@/constants/wolfekRouting'
 
 export async function getPanelOnboardingSeenAction() {
   const { userId } = await auth()
@@ -40,6 +42,8 @@ export async function getPanelWolfekTopicAction(input: unknown) {
   if (!(await checkRateLimit(userId, 'panel:wolfek')).success) return null
   const context = await getPanelWolfekContext(userId, parsed.data.route)
   if (!context) return null
+  await recordWolfekInteraction({ source: 'panel', route: parsed.data.route, userId, kind: 'topic_click',
+    question: null, topic: parsed.data.topic, confidence: null, outcome: 'topic_click' })
   return getPanelWolfekAnswer(userId, parsed.data.topic, context)
 }
 
@@ -59,7 +63,10 @@ export async function askPanelWolfekAction(
     const context = await getPanelWolfekContext(userId, route.data)
     if (!context) return toFormState('ERROR', 'Brak dostępu do panelu.')
     const decision = await selectPanelWolfekTopic(userId, parsed.data.question, context)
-    if (!decision || decision.topic === 'other' || decision.confidence < 0.35) {
+    await recordWolfekInteraction({ source: 'panel', route: route.data, userId, kind: 'question',
+      question: parsed.data.question, topic: decision?.topic ?? null, confidence: decision?.confidence ?? null,
+      outcome: decision ? decision.cacheHit ? 'cache_hit' : 'provider' : 'unavailable' })
+    if (!decision || decision.topic === 'other' || decision.confidence < WOLFEK_TOPIC_MIN_CONFIDENCE) {
       return { ...toFormState('SUCCESS', ''), answer: null, confidence: decision?.confidence ?? null }
     }
     const answer = await getPanelWolfekAnswer(userId, decision.topic, context)

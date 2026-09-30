@@ -76,6 +76,8 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
   'planner:log': { interval: 60 * 60 * 1000, maxRequests: 20 },
   'kierunki:request': { interval: 60 * 60 * 1000, maxRequests: 600 },
   'panel:wolfek': { interval: 60 * 60 * 1000, maxRequests: 600 },
+  'admin:wolfek': { interval: 60 * 1000, maxRequests: 120 },
+  'admin:wolfek:export': { interval: 60 * 1000, maxRequests: 6 },
 }
 
 export interface RateLimitResult {
