@@ -1,6 +1,8 @@
 'use client'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { Info, X } from 'lucide-react'
+import Button from '@/components/ui/Button'
 
 export default function NoCoursesBanner() {
   const params = useSearchParams()
@@ -18,19 +20,12 @@ export default function NoCoursesBanner() {
   if (!isOpen) return null
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 bg-gradient-to-br from-zinc-900/95 to-black/90 backdrop-blur-xl border-b border-white/[0.08] shadow-2xl shadow-black/50 px-3 py-2 sm:px-4 sm:py-3 flex items-center justify-between gap-3">
-      <p className="text-xs sm:text-sm md:text-base text-zinc-200 text-center flex-1 leading-snug">
-        Nie posiadasz jeszcze żadnego kursu —{' '}
-        <span className="text-rose-400 font-medium">wybierz kierunek który Cię interesuje</span>{' '}
-        i zacznij naukę już dziś.
-      </p>
-      <button
-        onClick={hide}
-        aria-label="Zamknij"
-        className="shrink-0 text-zinc-400 hover:text-zinc-200 transition-colors text-base leading-none p-1"
-      >
-        ✕
-      </button>
+    <div className="kierunki-access-notice" role="status">
+      <Info size={18} aria-hidden="true" />
+      <p>Aby rozpocząć naukę w panelu, wybierz swój pierwszy kurs. Wolfek pomoże Ci zdecydować.</p>
+      <Button variant="ghost" size="sm" shape="pill" onClick={hide} aria-label="Zamknij informację">
+        <X size={17} aria-hidden="true" />
+      </Button>
     </div>
   )
 }

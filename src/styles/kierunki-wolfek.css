@@ -1,0 +1,41 @@
+.kierunki-wolfek-skeleton { min-width: 0; width: 100%; align-self: start; padding: clamp(1.25rem, 2.5vw, 2rem); border: 1px solid white; border-radius: 1.75rem; background: linear-gradient(145deg, #fff 10%, #fbf6fb 70%, #f0e8f7); box-shadow: 0 18px 50px #6651740d, inset 0 1px white; }
+.kierunki-wolfek { min-width: 0; width: 100%; align-self: start; }
+.kierunki-wolfek .wolfek-card-wrap { padding: .5rem .5rem 1.35rem; }
+.kierunki-wolfek .wolfek-glass { --wolfek-size: 6.5rem; --wolfek-left: -.35rem; --wolfek-bottom: -.75rem; }
+.kierunki-wolfek .wolfek-glass-surface { background: linear-gradient(145deg, #fdfbff, #f8f3fa 70%, #f2ebf7); }
+.wolfek-card-content.kierunki-wolfek-card-content { padding: 1.15rem 1rem 7.2rem; }
+.kierunki-wolfek-intro h2 { color: #342d3c; font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; letter-spacing: -.03em; }
+.kierunki-wolfek-intro p:last-child { margin-top: .5rem; color: #716977; font-size: .9rem; line-height: 1.7; }
+.kierunki-wolfek-chat { display: grid; min-width: 0; gap: 1.25rem; }
+.kierunki-wolfek-answer { display: grid; gap: .8rem; padding: 1rem; border: 1px solid #e8dfed; border-radius: 1rem; background: #fffc; color: #453d4c; font-size: .9rem; line-height: 1.75; white-space: pre-line; overflow-wrap: anywhere; }
+.kierunki-wolfek-answer-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.kierunki-wolfek-answer-actions a { color: #80568e; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.kierunki-wolfek-answer-actions a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.kierunki-wolfek-answer-actions button { height: auto; min-height: 2.5rem; color: #765b87; }
+.kierunki-wolfek-label { display: block; color: #655b6d; font-size: .82rem; font-weight: 600; }
+.kierunki-wolfek-question-row { display: flex; min-height: 3.5rem; align-items: center; gap: .5rem; margin-top: .6rem; padding: .4rem .4rem .4rem 1rem; border: 1px solid #e5dce9; border-radius: 1rem; background: #fff; box-shadow: 0 4px 12px #66517406; }
+.kierunki-wolfek-question-row:focus-within { outline: 2px solid #ccb8df; outline-offset: 2px; }
+.kierunki-wolfek-input { min-width: 0; flex: 1; border: 0; outline: 0; background: transparent; padding: .4rem 0; color: #342f3c; font-size: 1rem; }
+.kierunki-wolfek-input::placeholder { color: #998ea3; }
+.kierunki-wolfek-question-row .kierunki-wolfek-send { width: 2.6rem; height: 2.6rem; flex: none; padding: 0; border: 1px solid #e3d3e6; border-radius: .8rem; background: linear-gradient(135deg, #fbe5e6, #ece3f4); color: #80567e; box-shadow: inset 0 1px white; }
+.kierunki-wolfek-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+.kierunki-wolfek-topics button { display: flex; min-width: 0; min-height: 4rem; height: auto; justify-content: flex-start; gap: .65rem; padding: .75rem; border: 1px solid #e7dfea; border-radius: 1rem; background: #ffffffc9; color: #584b64; font-size: .86rem; line-height: 1.45; text-align: left; white-space: normal; box-shadow: 0 3px 8px #66517404; }
+.kierunki-wolfek-topics button:last-child { grid-column: 1 / -1; min-height: 3.25rem; }
+.kierunki-wolfek-topic-icon { display: grid; width: 2.1rem; height: 2.1rem; flex: none; place-items: center; border-radius: .7rem; background: #f0e9f7; color: #8b6ba8; }
+.kierunki-wolfek-topics button:nth-child(even) .kierunki-wolfek-topic-icon { background: #fcecef; color: #b87488; }
+.kierunki-wolfek-topic-arrow { flex: none; margin-left: auto; color: #aa9bb6; }
+.kierunki-wolfek-topics button:hover:not(:disabled), .kierunki-wolfek-topics button[aria-pressed="true"] { border-color: #c5add7; background: #fff; box-shadow: 0 4px 12px #6651740c; }
+.kierunki-wolfek-topics button:focus-visible, .kierunki-wolfek-answer a:focus-visible { outline: 2px solid #af91c6; outline-offset: 3px; }
+.kierunki-wolfek-video-dialog { display: grid; gap: 1rem; padding: 3.5rem 1rem 1rem; }
+.kierunki-wolfek-video-heading { display: flex; align-items: center; gap: .6rem; color: #f8f3fc; }
+.kierunki-wolfek-video-heading h2 { font-size: 1rem; font-weight: 650; }
+@media (max-width: 480px) {
+  .kierunki-wolfek-skeleton { padding: 1.1rem; border-radius: 1.35rem; }
+  .kierunki-wolfek .wolfek-card-wrap { padding: .25rem .25rem 1.25rem; }
+  .wolfek-card-content.kierunki-wolfek-card-content { padding: 1rem .8rem 7rem; }
+  .kierunki-wolfek-intro p:last-child { font-size: .85rem; }
+  .kierunki-wolfek-topics { gap: .5rem; }
+  .kierunki-wolfek-topics button { gap: .4rem; padding: .65rem; font-size: .82rem; }
+  .kierunki-wolfek-topics button:nth-child(n) .kierunki-wolfek-topic-icon { width: 1.25rem; height: 1.5rem; background: transparent; }
+  .kierunki-wolfek-topic-arrow { display: none; }
+}

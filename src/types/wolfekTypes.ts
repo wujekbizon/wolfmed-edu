@@ -66,7 +66,10 @@ export interface WolfekGlassCardProps {
   avatarRef: Ref<HTMLDivElement>
   avatar: ReactNode
   children: ReactNode
-  onMinimize: () => void
+  className?: string
+  glassClassName?: string
+  surfaceClassName?: string
+  onMinimize?: () => void
   onPointerMove: PointerEventHandler<HTMLDivElement>
   onPointerLeave: PointerEventHandler<HTMLDivElement>
   onPointerCancel: PointerEventHandler<HTMLDivElement>

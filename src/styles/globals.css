@@ -3,6 +3,9 @@
 @import "./wolfek-avatar.css";
 @import "./learning-cards.css";
 @import "./test-results.css";
+@import "./kierunki-wolfek.css";
+@import "./kierunki-landing.css";
+@import "./kierunki-background.css";
 
 @import "uploadthing/tw/v4";
 @import "./wolfek-glass.css";

@@ -73,7 +73,8 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 
   'planner:create': { interval: 60 * 60 * 1000, maxRequests: 5 },
   'planner:update': { interval: 60 * 60 * 1000, maxRequests: 30 },
-  'planner:log': { interval: 60 * 60 * 1000, maxRequests: 20 }
+  'planner:log': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'kierunki:jev': { interval: 60 * 60 * 1000, maxRequests: 20 },
 }
 
 export interface RateLimitResult {

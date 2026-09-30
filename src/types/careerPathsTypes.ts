@@ -8,6 +8,7 @@ import type {
   PricingOfferStatusMap,
   SubscriptionPlanChange,
 } from "@/types/paymentTypes";
+import type { KierunkiWolfekCourseSlug } from '@/types/kierunkiWolfekTypes'
 
 type TemplateType = "simple" | "rich";
 
@@ -65,9 +66,27 @@ export type PathData = {
   careerPath?: CareerPath;
   questions?: PathQuestions;
 };
+export type CareerPathCarouselItem = {
+  slug: KierunkiWolfekCourseSlug
+  title: string
+  teaser: string
+  image: StaticImageData | string
+  cta: string
+}
 export type PathLayoutProps = PathData & {
   pricingOfferStatuses: PricingOfferStatusMap;
   subjectTitles: string[];
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null;
   subscriptionPlanChange: SubscriptionPlanChange | null;
+}
+export type KierunkiCourseCardProps = { path: CareerPathCarouselItem }
+export type KierunkiRollingNumberProps = { value: string; reduced: boolean }
+export type KierunkiCourseCardCopy = {
+  description: string
+  tags: string[]
+  noteTitle: string
+  note: string
+  metricValue: string
+  metricLabel: string
+  students?: string
 }

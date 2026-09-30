@@ -1,10 +1,10 @@
-import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
+import { CareerPathCarouselItem, CurriculumBlock, PathData } from '@/types/careerPathsTypes'
 import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
 import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
 import { PIELEGNIARSTWO_STORY } from '@/constants/pielegniarstwoStory'
 import { ENGLISH_MEDICAL_STORY } from '@/constants/englishMedicalStory'
 
-export const careerPaths = [
+export const careerPaths: CareerPathCarouselItem[] = [
   {
     slug: 'opiekun-medyczny',
     title: 'Opiekun Medyczny',

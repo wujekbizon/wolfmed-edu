@@ -1,0 +1,100 @@
+.kierunki-landing { min-height: calc(100dvh - 5rem); padding: clamp(1.5rem, 4vw, 3.5rem) 1.5rem 5rem; background: #fff; }
+.kierunki-landing-shell { width: min(100%, 104rem); margin-inline: auto; }
+.kierunki-landing-header { max-width: 48rem; margin-bottom: 2.5rem; }
+.kierunki-landing-eyebrow { color: #b66e86; font-size: .75rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.kierunki-landing-header h1 { margin-top: .65rem; color: #292430; font-size: clamp(2rem, 4vw, 3.3rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.15; }
+.kierunki-landing-header h1 span { color: #ec7583; }
+.kierunki-landing-header > p:last-child { max-width: 43rem; margin-top: .9rem; color: #79717f; font-size: 1rem; line-height: 1.75; }
+.kierunki-landing-grid { display: grid; grid-template-columns: minmax(18rem, 22rem) minmax(0, 1fr); align-items: start; gap: clamp(1.5rem, 3vw, 3rem); }
+.kierunki-access-notice { display: flex; min-height: 3.25rem; align-items: center; gap: .75rem; margin-bottom: 1.5rem; padding: .6rem 1rem; border: 1px solid #e7dfed; border-radius: 1rem; background: #ffffffb3; color: #80718e; }
+.kierunki-access-notice > svg { flex: none; }
+.kierunki-access-notice p { flex: 1; color: #72667e; font-size: .82rem; line-height: 1.6; }
+.kierunki-access-notice button { width: 2rem; flex: none; padding: 0; color: #8f8199; }
+.kierunki-catalog { container-type: inline-size; min-width: 0; scroll-margin-top: 7rem; }
+.kierunki-course-carousel { min-width: 0; }
+.kierunki-course-carousel-viewport { overflow: hidden; }
+.kierunki-course-carousel-track { display: flex; gap: clamp(1rem, 2vw, 2rem); touch-action: pan-y pinch-zoom; }
+.kierunki-course-carousel-slide { min-width: 0; flex: 0 0 100%; }
+.kierunki-course-carousel-controls { display: flex; align-items: center; justify-content: center; gap: .8rem; padding-top: 1rem; }
+.kierunki-course-carousel-controls > button { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid #e7dfed; border-radius: 50%; color: #756681; transition: background .2s, color .2s; }
+.kierunki-course-carousel-controls > button:hover { background: #f1ebf5; color: #5b3e72; }
+.kierunki-course-carousel-controls button:focus-visible { outline: 2px solid #af91c6; outline-offset: 3px; }
+.kierunki-course-carousel-dots { display: flex; align-items: center; gap: .5rem; }
+.kierunki-course-carousel-dots button { width: .55rem; height: .55rem; border-radius: 999px; background: #d8cddd; transition: width .2s, background .2s; }
+.kierunki-course-carousel-dots button[aria-current='true'] { width: 1.5rem; background: #8e6ca3; }
+.kierunki-course-card { position: relative; isolation: isolate; min-width: 0; padding: clamp(1.5rem, 4cqw, 3.5rem); border: 1px solid #ece8ef; border-radius: 2rem; background: #f8f6fa; box-shadow: 0 10px 34px #51445f0a, inset 0 1px #fff; transition: border-color .2s, box-shadow .2s; }
+.kierunki-course-card:hover { border-color: #e4dce9; box-shadow: 0 14px 36px #51445f0d, inset 0 1px #fff; }
+.kierunki-course-header { max-width: 45rem; margin-inline: auto; text-align: center; }
+.kierunki-course-header h3 { color: #302b38; font-size: clamp(1.85rem, 5.3cqw, 3.4rem); font-weight: 600; line-height: 1.15; letter-spacing: -.045em; }
+.kierunki-course-description { max-width: 36rem; margin: 1rem auto 0; color: #706b77; font-size: .94rem; line-height: 1.8; }
+.kierunki-course-main-link::after { content: ''; position: absolute; z-index: 2; inset: 0; border-radius: 2rem; }
+.kierunki-course-main-link:focus-visible { outline: none; }
+.kierunki-course-main-link:focus-visible::after { outline: 3px solid #a385b8; outline-offset: 4px; }
+.kierunki-course-stage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.8fr) minmax(0, 1fr); grid-template-areas: 'note image metric'; align-items: center; gap: clamp(1rem, 2.2cqw, 2rem); margin-top: clamp(2rem, 4cqw, 3rem); }
+.kierunki-course-glass { grid-area: image; position: relative; width: min(100%, 38rem); justify-self: center; padding: .6rem; border: 1px solid #fff; border-radius: 1.8rem; background: linear-gradient(145deg, #ffffffed 5%, #e9dfefb8 52%, #ffffffed 95%); backdrop-filter: blur(18px) saturate(1.3); box-shadow: 0 24px 38px -24px #39495e85, 0 8px 24px #927ba021, inset 0 1px #fff; }
+.kierunki-course-image { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 1.2rem; background: #e6e6ef; }
+.kierunki-course-image img { object-position: 60% center; }
+.kierunki-course-image-label { position: absolute; z-index: 1; bottom: 1.35rem; left: 1.35rem; display: inline-flex; align-items: center; gap: .4rem; max-width: calc(100% - 2.7rem); padding: .5rem .75rem; border-radius: 999px; background: #fffffff0; box-shadow: 0 5px 16px #2f314a24; color: #655971; font-size: .68rem; }
+.kierunki-course-note { grid-area: note; min-width: 0; min-height: 11rem; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+.kierunki-course-orbit { display: grid; width: 2.5rem; height: 2.5rem; margin: 0 auto 1rem; place-items: center; color: #8a779c; }
+.kierunki-course-note h4 { color: #655a70; font-size: .8rem; font-weight: 600; line-height: 1.7; }
+.kierunki-course-note > p { margin-top: .65rem; color: #85798b; font-size: .76rem; line-height: 1.85; }
+.kierunki-course-metric { grid-area: metric; min-width: 0; min-height: 11rem; display: flex; align-items: center; justify-content: center; flex-direction: column; text-align: center; }
+.kierunki-course-metric strong { display: inline-block; color: #74558d; font-size: clamp(1.8rem, 3.2cqw, 2.8rem); font-weight: 600; letter-spacing: -.045em; line-height: 1.1; white-space: nowrap; }
+.kierunki-rolling-number { font-variant-numeric: tabular-nums; letter-spacing: 0; }
+.kierunki-rolling-visual { display: inline-flex; align-items: flex-start; line-height: 1; }
+.kierunki-rolling-digit { position: relative; display: block; width: 1ch; height: 1em; flex: none; overflow: hidden; }
+.kierunki-rolling-symbol { display: inline-flex; height: 1em; align-items: center; line-height: 1; white-space: pre; background: linear-gradient(110deg, #a25370, #74558d); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.kierunki-rolling-reel { position: absolute; inset: 0; display: block; }
+.kierunki-rolling-glyph { display: flex; height: 1em; align-items: center; justify-content: center; line-height: 1; background: linear-gradient(110deg, #a25370, #74558d); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.kierunki-course-metric .kierunki-rolling-glyph[data-zero] { transform: translateY(-1px); }
+.kierunki-course-social-proof .kierunki-rolling-glyph[data-three] { transform: translateY(1px); }
+.kierunki-course-metric > p { max-width: 11rem; margin: .7rem auto 0; color: #85798b; font-size: .74rem; line-height: 1.7; }
+.kierunki-course-social-proof { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .65rem; margin-top: 2rem; color: #756681; font-size: .8rem; }
+.kierunki-course-social-proof strong { margin-right: .2rem; color: #74558d; font-size: 1.2rem; font-weight: 650; letter-spacing: -.03em; }
+.kierunki-course-demo-label { color: #8c7897; font-size: .64rem; white-space: nowrap; }
+.kierunki-course-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 1rem; margin-top: 2rem; }
+.kierunki-course-tags { display: flex; flex-wrap: wrap; gap: .45rem; }
+.kierunki-course-tags li { padding: .4rem .65rem; border-radius: 999px; background: #f7f3f9; color: #7c6f86; font-size: .66rem; }
+.kierunki-course-explore { display: inline-flex; align-items: center; gap: .65rem; color: #5e4d6c; font-size: .85rem; font-weight: 600; }
+.kierunki-course-actions { position: relative; z-index: 3; display: flex; flex-wrap: wrap; align-items: center; justify-self: end; gap: .75rem; }
+.kierunki-course-actions > a { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .35rem; color: #81718e; font-size: .78rem; text-decoration: underline; text-underline-offset: 4px; }
+.kierunki-course-actions > a:hover { color: #5b3e72; }
+.kierunki-course-actions a:focus-visible { outline: 2px solid #af91c6; outline-offset: 3px; border-radius: .3rem; }
+@container (max-width: 760px) {
+  .kierunki-course-stage { grid-template-columns: 1fr 1fr; grid-template-areas: 'image image' 'note metric'; row-gap: 2rem; }
+  .kierunki-course-glass { width: min(100%, 36rem); }
+  .kierunki-course-note { max-width: 15rem; justify-self: center; }
+  .kierunki-course-metric { justify-self: center; }
+  .kierunki-course-orbit { margin-bottom: .75rem; }
+  .kierunki-course-footer { grid-template-columns: minmax(0, 1fr) auto; }
+  .kierunki-course-tags { grid-column: 1 / -1; justify-content: center; }
+  .kierunki-course-explore { justify-self: start; }
+}
+@media (min-width: 1200px) {
+  .kierunki-landing-grid .kierunki-wolfek-topics { grid-template-columns: 1fr; }
+  .kierunki-landing-grid .kierunki-wolfek-topics button { min-height: 3.2rem; }
+}
+@media (max-width: 1199px) {
+  .kierunki-landing-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .kierunki-landing-shell { max-width: 68rem; }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .kierunki-landing-grid > .kierunki-wolfek { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  .kierunki-landing-grid .kierunki-wolfek-intro { align-self: start; align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 480px) {
+  .kierunki-landing { padding-inline: .75rem; padding-bottom: 3rem; }
+  .kierunki-landing-header { padding-inline: .35rem; margin-bottom: 1.5rem; }
+  .kierunki-landing-header > p:last-child { font-size: .9rem; }
+  .kierunki-course-card { padding: 1.5rem 1rem; border-radius: 1.5rem; }
+  .kierunki-course-description { font-size: .86rem; }
+  .kierunki-course-stage { column-gap: .75rem; row-gap: 1.25rem; }
+  .kierunki-course-glass { padding: .4rem; border-radius: 1.3rem; }
+  .kierunki-course-image { border-radius: 1rem; }
+  .kierunki-course-image-label { font-size: .6rem; left: 1rem; bottom: 1rem; }
+  .kierunki-course-note, .kierunki-course-metric { min-height: 9rem; }
+  .kierunki-course-metric strong { font-size: clamp(1.55rem, 8cqw, 2.3rem); }
+  .kierunki-course-footer { gap: .75rem; }
+  .kierunki-access-notice { align-items: flex-start; padding: .75rem; gap: .55rem; }
+}
