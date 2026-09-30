@@ -4,5 +4,5 @@ import { getKierunkiWolfekRateLimitIdentity } from './getKierunkiWolfekRateLimit
 
 export async function checkKierunkiWolfekRateLimit(userId: string | null) {
   const identity = await getKierunkiWolfekRateLimitIdentity(userId)
-  return checkRateLimit(identity, 'kierunki:jev')
+  return checkRateLimit(identity, 'kierunki:request')
 }

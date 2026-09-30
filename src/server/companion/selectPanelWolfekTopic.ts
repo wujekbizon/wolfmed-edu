@@ -5,6 +5,7 @@ import {
   PANEL_WOLFEK_HOME_TOPICS, PANEL_WOLFEK_RESULTS_TOPICS, PANEL_WOLFEK_TOPICS, PANEL_WOLFEK_VERSION,
 } from '@/constants/panelWolfek'
 import { getRedis } from '@/lib/redis'
+import { reserveCompanionJevCall } from './reserveCompanionJevCall'
 import { parsePanelJevChoice } from '@/helpers/parsePanelJevChoice'
 import type { PanelWolfekContext, PanelWolfekTopic } from '@/types/panelWolfekTypes'
 
@@ -15,6 +16,7 @@ export async function selectPanelWolfekTopic(
   if (!apiKey) return null
   const topicIds = context.route === 'panel.results' ? PANEL_WOLFEK_RESULTS_TOPICS : PANEL_WOLFEK_HOME_TOPICS
   const redis = getRedis()
+  if (!redis) return null
   const fingerprint = createHash('sha256').update(JSON.stringify({
     userId, question: question.toLocaleLowerCase('pl-PL'), context, version: PANEL_WOLFEK_VERSION,
     model: JEV_MODEL,
@@ -22,9 +24,11 @@ export async function selectPanelWolfekTopic(
   const cacheKey = `panel-wolfek:choice:${fingerprint}`
   const allowed = [...topicIds, 'other']
   try {
-    const cached = await redis?.get<{ topic: PanelWolfekTopic | 'other'; confidence: number }>(cacheKey)
+    const cached = await redis.get<{ topic: PanelWolfekTopic | 'other'; confidence: number }>(cacheKey)
     if (cached && allowed.includes(cached.topic) && cached.confidence >= 0 && cached.confidence <= 1) return cached
-  } catch {}
+  } catch { return null }
+
+  if (!await reserveCompanionJevCall(`user:${userId}`, fingerprint)) return null
 
   const criteria = Object.fromEntries(topicIds.map((id) => [id, PANEL_WOLFEK_TOPICS[id].criteria]))
   try {

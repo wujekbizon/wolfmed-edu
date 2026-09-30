@@ -3,11 +3,13 @@ import { createHash } from 'node:crypto'
 import { JEV_ENDPOINT, JEV_MODEL, JEV_TIMEOUT_MS } from '@/constants/jev'
 import { KIERUNKI_WOLFEK_TOPIC_IDS, KIERUNKI_WOLFEK_TOPICS, KIERUNKI_WOLFEK_VERSION } from '@/constants/kierunkiWolfek'
 import { getRedis } from '@/lib/redis'
+import { getKierunkiWolfekRateLimitIdentity } from './getKierunkiWolfekRateLimitIdentity'
+import { reserveCompanionJevCall } from './reserveCompanionJevCall'
 import { parseKierunkiJevChoice } from '@/helpers/parseKierunkiJevChoice'
 import type { KierunkiWolfekContext, KierunkiWolfekTopic } from '@/types/kierunkiWolfekTypes'
 
 export async function selectKierunkiWolfekTopic(
-  question: string, context: KierunkiWolfekContext,
+  userId: string | null, question: string, context: KierunkiWolfekContext,
 ): Promise<{ topic: KierunkiWolfekTopic | 'other'; confidence: number } | null> {
   const apiKey = process.env.TYPESAFE_API_KEY
   if (!apiKey) return null
@@ -15,12 +17,16 @@ export async function selectKierunkiWolfekTopic(
     question: question.toLocaleLowerCase('pl-PL'), context, version: KIERUNKI_WOLFEK_VERSION, model: JEV_MODEL,
   })).digest('hex')
   const redis = getRedis()
+  if (!redis) return null
   const cacheKey = `kierunki:wolfek:choice:${fingerprint}`
   const allowed = [...KIERUNKI_WOLFEK_TOPIC_IDS, 'other']
   try {
-    const cached = await redis?.get<{ topic: KierunkiWolfekTopic | 'other'; confidence: number }>(cacheKey)
+    const cached = await redis.get<{ topic: KierunkiWolfekTopic | 'other'; confidence: number }>(cacheKey)
     if (cached && allowed.includes(cached.topic) && cached.confidence >= 0 && cached.confidence <= 1) return cached
-  } catch {}
+  } catch { return null }
+
+  const identity = await getKierunkiWolfekRateLimitIdentity(userId)
+  if (!await reserveCompanionJevCall(identity, fingerprint)) return null
 
   const criteria = Object.fromEntries(KIERUNKI_WOLFEK_TOPIC_IDS.map((id) => [id, KIERUNKI_WOLFEK_TOPICS[id].criteria]))
   try {

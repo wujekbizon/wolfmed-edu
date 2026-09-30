@@ -27,7 +27,7 @@ export async function askKierunkiWolfekAction(
     const rate = await checkKierunkiWolfekRateLimit(userId)
     if (!rate.success) return toFormState('ERROR', 'Na chwilę zwalniamy tempo. Spróbuj ponownie za moment.')
     const context = await getKierunkiWolfekContext(userId)
-    const decision = await selectKierunkiWolfekTopic(parsed.data.question, context)
+    const decision = await selectKierunkiWolfekTopic(userId, parsed.data.question, context)
     if (!decision || decision.topic === 'other' || decision.confidence < 0.35) {
       return { ...toFormState('SUCCESS', ''), answer: null, confidence: decision?.confidence ?? null }
     }

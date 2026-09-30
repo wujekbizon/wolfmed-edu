@@ -3,6 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { PANEL_WOLFEK_ONBOARDING_PREFIX } from '@/constants/panelWolfek'
 import { getRedis } from '@/lib/redis'
+import { checkRateLimit } from '@/lib/rateLimit'
 import { getUserEnrolledCourses } from '@/server/queries'
 import { getPanelOnboardingSeen } from '@/server/companion/getPanelOnboardingSeen'
 import { getPanelWolfekContext } from '@/server/companion/getPanelWolfekContext'
@@ -51,6 +52,9 @@ export async function askPanelWolfekAction(
   const route = PanelWolfekRouteSchema.safeParse(formData.get('route') ?? 'panel.home')
   if (!route.success) return toFormState('ERROR', 'Nie mogę teraz sprawdzić odpowiedzi. Wybierz temat poniżej.')
   try {
+    if (!(await checkRateLimit(userId, 'panel:wolfek')).success) {
+      return toFormState('ERROR', 'Na chwilę zwalniamy tempo. Spróbuj ponownie za moment.')
+    }
     const context = await getPanelWolfekContext(userId, route.data)
     if (!context) return toFormState('ERROR', 'Brak dostępu do panelu.')
     const decision = await selectPanelWolfekTopic(userId, parsed.data.question, context)
