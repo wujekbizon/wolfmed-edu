@@ -13,8 +13,8 @@
 .kierunki-catalog { container-type: inline-size; min-width: 0; scroll-margin-top: 7rem; }
 .kierunki-course-carousel { min-width: 0; }
 .kierunki-course-carousel-viewport { overflow: hidden; }
-.kierunki-course-carousel-track { display: flex; gap: clamp(1rem, 2vw, 2rem); touch-action: pan-y pinch-zoom; }
-.kierunki-course-carousel-slide { min-width: 0; flex: 0 0 100%; }
+.kierunki-course-carousel-track { --kierunki-carousel-gap: clamp(1rem, 2vw, 2rem); display: flex; touch-action: pan-y pinch-zoom; }
+.kierunki-course-carousel-slide { min-width: 0; flex: 0 0 100%; margin-inline-end: var(--kierunki-carousel-gap); }
 .kierunki-course-carousel-controls { display: flex; align-items: center; justify-content: center; gap: .8rem; padding-top: 1rem; }
 .kierunki-course-carousel-controls > button { display: grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid #e7dfed; border-radius: 50%; color: #756681; transition: background .2s, color .2s; }
 .kierunki-course-carousel-controls > button:hover { background: #f1ebf5; color: #5b3e72; }
@@ -73,7 +73,6 @@
 }
 @media (min-width: 1200px) {
   .kierunki-landing-grid .kierunki-wolfek-topics { grid-template-columns: 1fr; }
-  .kierunki-landing-grid .kierunki-wolfek-topics button { min-height: 3.2rem; }
 }
 @media (max-width: 1199px) {
   .kierunki-landing-grid { grid-template-columns: 1fr; gap: 2rem; }

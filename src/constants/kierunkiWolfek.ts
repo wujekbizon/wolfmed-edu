@@ -19,6 +19,14 @@ export const KIERUNKI_WOLFEK_TOPICS: Record<KierunkiWolfekTopic, {
 }
 
 export const KIERUNKI_WOLFEK_TOPIC_IDS = Object.keys(KIERUNKI_WOLFEK_TOPICS) as KierunkiWolfekTopic[]
+export const KIERUNKI_WOLFEK_TOPIC_LABELS: Partial<Record<KierunkiWolfekTopic, string>> = {
+  exam_preparation: 'Zdaj egzamin opiekuna',
+  opiekun_growth: 'Rozwój opiekuna',
+  nursing_journey: 'Studia pielęgniarskie',
+  payment_models: 'Plany i płatności',
+  course_selection: 'Wybór kierunku',
+}
+
 export const KIERUNKI_WOLFEK_FEATURED_TOPICS: KierunkiWolfekTopic[] = [
   'exam_preparation', 'opiekun_growth', 'nursing_journey', 'payment_models', 'course_selection',
 ]

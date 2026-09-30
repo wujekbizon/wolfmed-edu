@@ -1,0 +1,73 @@
+@media (max-width: 767px) {
+  .kierunki-landing-grid { gap: 1rem; }
+
+  .kierunki-wolfek .wolfek-card-wrap { padding: .25rem; }
+
+  .kierunki-wolfek .wolfek-glass { --wolfek-size: 4rem; }
+
+  .kierunki-wolfek .wolfek-glass-surface {
+    border-radius: 1.5rem;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .kierunki-wolfek .wolfek-card-avatar {
+    top: -.5rem;
+    bottom: auto;
+    left: .5rem;
+  }
+
+  .wolfek-card-content.kierunki-wolfek-card-content { padding: .75rem .85rem 1rem; }
+
+  .kierunki-wolfek-intro h2 {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding-left: 3.75rem;
+    padding-right: 3rem;
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .kierunki-wolfek-intro p:last-child { margin-top: .35rem; font-size: .8rem; line-height: 1.6; }
+
+  .kierunki-wolfek-chat { gap: .75rem; margin-top: .75rem; }
+  .kierunki-wolfek-topic-picker,
+  .kierunki-wolfek-chat > form { min-width: 0; }
+
+  .kierunki-wolfek-topics {
+    display: flex;
+    gap: .5rem;
+    overflow-x: auto;
+    padding: .2rem .15rem .45rem;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: #cbbbd6 transparent;
+  }
+
+  .kierunki-wolfek-topics button:nth-child(n) {
+    flex: none;
+    min-height: 2.8rem;
+    white-space: nowrap;
+    scroll-snap-align: start;
+  }
+
+  .kierunki-wolfek-topic-arrow { display: none; }
+  .kierunki-wolfek-label { font-size: .75rem; }
+  .kierunki-wolfek-question-row { min-height: 3rem; margin-top: .35rem; padding-left: .75rem; }
+  .kierunki-wolfek-answer { padding: .75rem; font-size: .82rem; }
+
+  .kierunki-wolfek .panel-wolfek-video-button {
+    top: .65rem;
+    right: .75rem;
+    bottom: auto;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: .85rem;
+  }
+
+  .kierunki-wolfek-skeleton > div:first-child > div:first-child { width: 4rem; height: 4rem; }
+  .kierunki-wolfek-skeleton > div:nth-child(2) { display: flex; margin-top: .75rem; overflow: hidden; }
+  .kierunki-wolfek-skeleton > div:nth-child(2) > div { flex: 0 0 10rem; height: 2.75rem; }
+  .kierunki-wolfek-skeleton > div:last-child { height: 3rem; margin-top: .75rem; }
+}

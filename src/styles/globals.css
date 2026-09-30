@@ -15,6 +15,7 @@
 @import "./learning-companion-avatar.css";
 @import "./learning-companion-speech.css";
 @import "./learning-companion-theme.css";
+@import "./kierunki-wolfek-mobile.css";
 @source "../../node_modules/@uploadthing/react/dist";
 
 @theme {

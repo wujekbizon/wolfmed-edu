@@ -31,8 +31,6 @@ export const PracticeHelpInteractionSchema = z.object({
 }).strict()
 export const JevConfigSchema = z.object({
   mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
-  dailyLimit: z.coerce.number().int().positive().max(10000),
-  sessionLimit: z.coerce.number().int().positive().max(100),
   minConfidence: z.coerce.number().min(0).max(1).optional(),
 }).refine((config) => config.mode !== 'active' || config.minConfidence !== undefined)
 export const JevResponseSchema = z.object({

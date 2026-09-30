@@ -8,7 +8,6 @@ import { userCustomTests } from '@/server/db/schema'
 import { getTestsByCategory, getUserCustomCategoryById } from '@/server/queries'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { requireCategoryAccess } from '@/server/learning/requireCategoryAccess'
-import { isPracticeEnabled } from '@/server/learning/config'
 import { readPracticeSession } from '@/server/learning/readSession'
 import { toLearningQuestionCardData } from '@/helpers/toLearningQuestionCardData'
 import type { LearningCategoryProps } from '@/types/learningPracticeTypes'
@@ -34,13 +33,12 @@ export default async function CategoryContent({ params }: LearningCategoryProps)
     )) as Test[] : []
     return <AllTestsBrowse key={`${userId}:${decoded}`} tests={tests} category={decoded} userId={userId} />
   }
-  let tests: Test[] = await getTestsByCategory(decoded) as Test[]
-  if (!isPracticeEnabled(decoded)) return <AllTestsBrowse tests={tests} category={decoded} userId={userId} />
+  const tests = await getTestsByCategory(decoded) as Test[]
   const [session, premium] = await Promise.all([
     readPracticeSession(userId, decoded), checkPremiumAccessAction(),
   ])
   const questions = toLearningQuestionCardData(tests)
   return <AllTests key={`${userId}:${decoded}`} userId={userId} category={decoded}
     questions={questions} initialSession={session}
-    premium={premium && process.env.LEARNING_PRACTICE_TUTOR_ENABLED === 'true'} />
+    premium={premium} />
 }

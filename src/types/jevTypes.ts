@@ -4,8 +4,6 @@ import type { PracticeObservationSummary, PracticePriorHelpEvidence, PracticeRev
 export interface JevConfig {
   mode: 'shadow' | 'active'
   apiKey: string
-  dailyLimit: number
-  sessionLimit: number
   minConfidence: number | undefined
 }
 export interface JevCandidate { id: JevSupportAction; text: string }

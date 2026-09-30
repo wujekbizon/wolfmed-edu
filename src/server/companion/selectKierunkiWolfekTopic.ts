@@ -10,7 +10,7 @@ export async function selectKierunkiWolfekTopic(
   question: string, context: KierunkiWolfekContext,
 ): Promise<{ topic: KierunkiWolfekTopic | 'other'; confidence: number } | null> {
   const apiKey = process.env.TYPESAFE_API_KEY
-  if (!apiKey || process.env.TYPESAFE_JEV_MODE !== 'active') return null
+  if (!apiKey) return null
   const fingerprint = createHash('sha256').update(JSON.stringify({
     question: question.toLocaleLowerCase('pl-PL'), context, version: KIERUNKI_WOLFEK_VERSION, model: JEV_MODEL,
   })).digest('hex')

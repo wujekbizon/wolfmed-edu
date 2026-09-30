@@ -17,8 +17,7 @@ export async function recordPracticeTutorResponse(userId: string, reference: Pra
     .from(learningPracticeSessions).where(and(
       eq(learningPracticeSessions.id, reference.sessionId), eq(learningPracticeSessions.userId, userId),
     )).limit(1)
-  if (!owned || !isPracticeEnabled(owned.category) ||
-    process.env.LEARNING_PRACTICE_TUTOR_ENABLED !== 'true') return
+  if (!owned || !isPracticeEnabled(owned.category)) return
   await requireCategoryAccess(owned.category)
   const saved = await db.transaction(async (tx) => {
     const [session] = await tx.select().from(learningPracticeSessions).where(and(

@@ -12,7 +12,7 @@ export async function selectPanelWolfekTopic(
   userId: string, question: string, context: PanelWolfekContext,
 ): Promise<{ topic: PanelWolfekTopic | 'other'; confidence: number } | null> {
   const apiKey = process.env.TYPESAFE_API_KEY
-  if (!apiKey || process.env.TYPESAFE_JEV_MODE !== 'active') return null
+  if (!apiKey) return null
   const topicIds = context.route === 'panel.results' ? PANEL_WOLFEK_RESULTS_TOPICS : PANEL_WOLFEK_HOME_TOPICS
   const redis = getRedis()
   const fingerprint = createHash('sha256').update(JSON.stringify({

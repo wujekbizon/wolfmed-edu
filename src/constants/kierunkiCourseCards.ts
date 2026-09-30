@@ -7,8 +7,8 @@ export const KIERUNKI_COURSE_CARDS: Record<KierunkiWolfekCourseSlug, KierunkiCou
     tags: ['Testy egzaminacyjne', 'Procedury'],
     noteTitle: 'Twój cel, Twoje tempo',
     note: 'Przygotuj się do egzaminu. Zostań, kiedy zechcesz rozwijać się dalej.',
-    metricValue: '900+',
-    metricLabel: 'pytań z egzaminów i kursu',
+    metricValue: '3000+',
+    metricLabel: 'pytań w bazie kursu',
     students: '5 700+',
   },
   pielegniarstwo: {

@@ -77,7 +77,7 @@ export async function preparePracticeSupport(userId: string, request: PracticeSu
       retries: practice.retries, hints: practice.hints, reveals: practice.reveals,
       comparisons: practice.comparisons, tutorResponses: practice.tutorResponses },
     priorTest, studyActivity, plan, material: material ? { label: material.label } : null,
-    tutorAvailable: premium && process.env.LEARNING_PRACTICE_TUTOR_ENABLED === 'true',
+    tutorAvailable: premium,
     dismissedActions: base.dismissedActions,
   }
   const candidates = getPracticeDecisionCandidates(state)

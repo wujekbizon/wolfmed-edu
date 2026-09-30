@@ -13,7 +13,7 @@ export async function resolvePracticeTutorContext(userId: string, reference: Pra
   const [owned] = await db.select().from(learningPracticeSessions).where(and(
     eq(learningPracticeSessions.id, reference.sessionId), eq(learningPracticeSessions.userId, userId),
   )).limit(1)
-  if (!owned || !isPracticeEnabled(owned.category) || process.env.LEARNING_PRACTICE_TUTOR_ENABLED !== 'true') {
+  if (!owned || !isPracticeEnabled(owned.category)) {
     throw new Error('Pomoc do tej sesji jest niedostępna.')
   }
   await requireCategoryAccess(owned.category)

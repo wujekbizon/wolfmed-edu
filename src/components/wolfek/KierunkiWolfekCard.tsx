@@ -50,8 +50,7 @@ export default function KierunkiWolfekCard({ context }: { context: KierunkiWolfe
 
   return <>
     <section className="kierunki-wolfek" aria-labelledby="kierunki-wolfek-title">
-      <WolfekGlassCard className="!px-2 !pt-2 !pb-5 max-[480px]:!px-1 max-[480px]:!pt-1 max-[480px]:!pb-5"
-        glassClassName="![--wolfek-size:6.5rem] ![--wolfek-left:-.35rem] ![--wolfek-bottom:-.75rem]"
+      <WolfekGlassCard
         surfaceClassName="!bg-linear-to-br !from-[#fdfbff] !via-[#f8f3fa] !to-[#f2ebf7]"
         avatarRef={eyes.avatar} onPointerMove={eyes.follow} onPointerLeave={eyes.reset}
         onPointerCancel={eyes.reset} avatar={<WolfekAvatar gaze={eyes.gaze} positive={false}
