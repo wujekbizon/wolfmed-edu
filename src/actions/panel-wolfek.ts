@@ -37,6 +37,7 @@ export async function getPanelWolfekTopicAction(input: unknown) {
   if (!userId) return null
   const parsed = PanelWolfekTopicRequestSchema.safeParse(input)
   if (!parsed.success) return null
+  if (!(await checkRateLimit(userId, 'panel:wolfek')).success) return null
   const context = await getPanelWolfekContext(userId, parsed.data.route)
   if (!context) return null
   return getPanelWolfekAnswer(userId, parsed.data.topic, context)

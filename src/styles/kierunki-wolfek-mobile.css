@@ -1,8 +1,6 @@
 @media (max-width: 767px) {
   .kierunki-landing-grid { gap: 1rem; }
 
-  .kierunki-wolfek .wolfek-card-wrap { padding: .25rem; }
-
   .kierunki-wolfek .wolfek-glass { --wolfek-size: 4rem; }
 
   .kierunki-wolfek .wolfek-glass-surface {

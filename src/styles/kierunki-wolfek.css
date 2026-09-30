@@ -1,6 +1,6 @@
 .kierunki-wolfek-skeleton { min-width: 0; width: 100%; align-self: start; padding: clamp(1.25rem, 2.5vw, 2rem); border: 1px solid white; border-radius: 1.75rem; background: linear-gradient(145deg, #fff 10%, #fbf6fb 70%, #f0e8f7); box-shadow: 0 18px 50px #6651740d, inset 0 1px white; }
 .kierunki-wolfek { min-width: 0; width: 100%; align-self: start; }
-.kierunki-wolfek .wolfek-card-wrap { padding: .5rem .5rem 1.35rem; }
+.kierunki-wolfek .wolfek-card-wrap { padding: 0; }
 .kierunki-wolfek .wolfek-glass { --wolfek-size: 6.5rem; --wolfek-left: -.35rem; --wolfek-bottom: -.75rem; }
 .kierunki-wolfek .wolfek-glass-surface { background: linear-gradient(145deg, #fdfbff, #f8f3fa 70%, #f2ebf7); }
 .wolfek-card-content.kierunki-wolfek-card-content { padding: 1.15rem 1rem 7.2rem; }
@@ -30,7 +30,6 @@
 .kierunki-wolfek-video-heading h2 { font-size: 1rem; font-weight: 650; }
 @media (max-width: 480px) {
   .kierunki-wolfek-skeleton { padding: 1.1rem; border-radius: 1.35rem; }
-  .kierunki-wolfek .wolfek-card-wrap { padding: .25rem .25rem 1.25rem; }
   .wolfek-card-content.kierunki-wolfek-card-content { padding: 1rem .8rem 7rem; }
   .kierunki-wolfek-intro p:last-child { font-size: .85rem; }
   .kierunki-wolfek-topics { gap: .5rem; }
