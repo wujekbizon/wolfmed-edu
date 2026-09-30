@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import { motion } from 'framer-motion'
+import { Tooltip } from '@/components/Tooltip'
 import { useFloatingPanelPosition } from '@/hooks/useFloatingPanelPosition'
 import type { WolfekOverlayProps } from '@/types/wolfekTypes'
 
@@ -46,10 +47,12 @@ export default function WolfekOverlay({ anchorId, variant = 'learning', visible,
       {/* eslint-disable-next-line react-hooks/refs -- The render prop receives an event handler; refs are read only when it is clicked. */}
       {children(minimize)}
     </motion.div>
-    {minimized && <button ref={launcher} type="button" className="wolfek-launcher" aria-label="Otwórz Wolfka"
-      title="Wolfek — jestem obok" onClick={open}>
-      {avatar}
-      <span className="wolfek-launcher-label">Hej, jestem Wolfek!</span>
-    </button>}
+    {minimized && <Tooltip message="Wolfek — jestem obok" position="top-left"
+      className="wolfek-launcher-tooltip">
+      <button ref={launcher} type="button" className="wolfek-launcher" aria-label="Otwórz Wolfka" onClick={open}>
+        {avatar}
+        <span className="wolfek-launcher-label">Hej, jestem Wolfek!</span>
+      </button>
+    </Tooltip>}
   </div>, document.body)
 }

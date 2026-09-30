@@ -1,9 +1,10 @@
 'use client'
-import { ReactNode, useState, useEffect, useId } from 'react'
+import { cloneElement, isValidElement, ReactNode, useState, useEffect, useId } from 'react'
 
 interface TooltipProps {
   message: string
   children: ReactNode
+  className?: string
   position?:
     | 'top'
     | 'right'
@@ -15,7 +16,7 @@ interface TooltipProps {
     | 'bottom-right'
 }
 
-export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
+export function Tooltip({ message, children, className = '', position = 'top' }: TooltipProps) {
   const [open, setOpen] = useState(false)
   const id = `tooltip-${useId()}`
 
@@ -35,34 +36,34 @@ export function Tooltip({ message, children, position = 'top' }: TooltipProps) {
     'bottom-left': 'top-full right-0 mt-2',
     'bottom-right': 'top-full left-0 mt-2'
   }
+  const describedChild = isValidElement<{ 'aria-describedby'?: string }>(children)
+    ? cloneElement(children, {
+        'aria-describedby': [children.props['aria-describedby'], id].filter(Boolean).join(' '),
+      })
+    : children
 
   return (
     <div
-      className='relative inline-block'
+      className={`relative inline-block ${className}`}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
-      aria-describedby={id}
     >
-      {children}
-      {open && (
-        <div
-          id={id}
-          role='tooltip'
-          className={`
-            absolute ${positionClasses[position]}
-            bg-zinc-200 text-zinc-900
-            border border-zinc-400
-            text-sm font-medium px-1.5 py-1 rounded-lg shadow-lg
-            backdrop-blur-sm 
-            whitespace-nowrap
-            transition-all duration-200 opacity-100 z-[100]
-          `}
-        >
-          {message}
-        </div>
-      )}
+      {describedChild}
+      <div
+        id={id}
+        role='tooltip'
+        className={`
+          absolute ${positionClasses[position]}
+          bg-zinc-200 text-zinc-900
+          border border-zinc-400
+          text-sm font-medium px-1.5 py-1 rounded-lg shadow-lg
+          backdrop-blur-sm
+          whitespace-nowrap pointer-events-none
+          transition-all duration-200 ${open ? 'opacity-100' : 'opacity-0'} z-[100]
+        `}
+      >
+        {message}
+      </div>
     </div>
   )
 }

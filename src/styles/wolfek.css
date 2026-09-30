@@ -3,12 +3,13 @@
 .wolfek-position[data-minimized="true"] { visibility: hidden; pointer-events: none; }
 .wolfek-dismiss { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 50%; color: #897a97; cursor: pointer; }
 .wolfek-bubble { position: relative; margin: 0; padding: 0; border: 0; background: transparent; }
-.wolfek-launcher { position: fixed; right: 24px; bottom: max(20px, env(safe-area-inset-bottom)); width: 7.5rem; height: 7.5rem; border: 1px solid #ffffffd0; border-radius: 50%; pointer-events: auto; cursor: pointer; background: linear-gradient(145deg, #efe7f8, #fff3f3); box-shadow: 0 8px 25px #55406830, inset 0 1px white; transition: transform 180ms ease, box-shadow 180ms ease; }
+.wolfek-overlay .wolfek-launcher-tooltip { position: fixed; z-index: 41; right: 24px; bottom: max(20px, env(safe-area-inset-bottom)); width: 7.5rem; height: 7.5rem; pointer-events: auto; }
+.wolfek-launcher { position: relative; width: 100%; height: 100%; border: 1px solid #ffffffd0; border-radius: 50%; pointer-events: auto; cursor: pointer; background: linear-gradient(145deg, #efe7f8, #fff3f3); box-shadow: 0 8px 25px #55406830, inset 0 1px white; transition: transform 180ms ease, box-shadow 180ms ease; }
 .wolfek-launcher:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 30px #55406838, inset 0 1px white; }
 .wolfek-launcher-label { position: absolute; bottom: -10px; right: 0; white-space: nowrap; border-radius: 12px; background: #fff; padding: 4px 12px; font-size: 13px; font-weight: 600; color: #6c587b; box-shadow: 0 2px 8px #55406812; }
 .wolfek-conversation { margin-top: 10px; font-size: 13px; }
 .wolfek-conversation > div { padding: 16px; border-radius: 24px; }
 .wolfek-launcher:focus-visible, .wolfek-dismiss:focus-visible { outline: 2px solid #a18abf; outline-offset: 3px; }
-@media (max-width: 1279px) { .wolfek-launcher { width: 6rem; height: 6rem; right: 18px; } }
-@media (max-width: 1023px) { body:has(#mobile-ai-float) .wolfek-overlay[data-variant="panel"] .wolfek-launcher { bottom: calc(9rem + env(safe-area-inset-bottom)); } }
+@media (max-width: 1279px) { .wolfek-overlay .wolfek-launcher-tooltip { width: 6rem; height: 6rem; right: 18px; } }
+@media (max-width: 1023px) { body:has(#mobile-ai-float) .wolfek-overlay[data-variant="panel"] .wolfek-launcher-tooltip { bottom: calc(9rem + env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion: reduce) { .wolfek-launcher { transition: none; } .wolfek-launcher:hover { transform: none; } }

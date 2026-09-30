@@ -55,12 +55,15 @@
   .kierunki-wolfek-question-row { min-height: 3rem; margin-top: .35rem; padding-left: .75rem; }
   .kierunki-wolfek-answer { padding: .75rem; font-size: .82rem; }
 
-  .kierunki-wolfek .panel-wolfek-video-button {
+  .kierunki-wolfek .panel-wolfek-video-tooltip {
     top: .65rem;
     right: .75rem;
     bottom: auto;
     width: 2.75rem;
     height: 2.75rem;
+  }
+
+  .kierunki-wolfek .panel-wolfek-video-button {
     border-radius: .85rem;
   }
 

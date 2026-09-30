@@ -1,4 +1,5 @@
 import { X } from 'lucide-react'
+import { Tooltip } from '@/components/Tooltip'
 import Button from '@/components/ui/Button'
 import LinkButton from '@/components/ui/LinkButton'
 import { COMPANION_SUGGESTIONS } from '@/constants/learningCompanion'
@@ -28,9 +29,11 @@ export default function WolfekBubble({ session, mode, premium, pending, onRecomm
             : 'Zapytaj asystenta' : suggestion === 'continue' ? 'Dalej'
               : suggestion === 'review' ? 'Wróć do karty' : 'Skorzystaj'}
         </Button>}
-      <button type="button" className="wolfek-dismiss" onClick={onDismiss} aria-label="Odrzuć tę propozycję" title="Nie teraz">
-        <X size={15} />
-      </button>
+      <Tooltip message="Nie teraz" position="top" className="shrink-0">
+        <button type="button" className="wolfek-dismiss" onClick={onDismiss} aria-label="Odrzuć tę propozycję">
+          <X size={15} />
+        </button>
+      </Tooltip>
     </div>}
   </div>
 }
