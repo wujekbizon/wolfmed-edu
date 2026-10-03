@@ -21,6 +21,7 @@ export async function retrieveContexts(
     corpusName?: string
     topK?: number
     vectorDistanceThreshold?: number
+    signal?: AbortSignal
   } = {}
 ): Promise<RetrievedContext[]> {
   try {
@@ -37,6 +38,7 @@ export async function retrieveContexts(
       `projects/${PROJECT_ID}/locations/${LOCATION}:retrieveContexts`,
       {
         method: 'POST',
+        ...(options.signal ? { signal: options.signal } : {}),
         body: JSON.stringify({
           vertex_rag_store: {
             rag_resources: [{ rag_corpus: corpusName }],

@@ -6,6 +6,8 @@ export const RAG_TOP_K = 12
 // it casts a wider net.
 export const RAG_TOP_K_BROAD = 20
 
+export const RAG_CANDIDATE_TIMEOUT_MS = 15_000
+
 // Vertex keeps contexts whose vector distance is BELOW this. 0.3 only admits
 // near-verbatim matches and drops terms that appear once in a source table.
 export const RAG_VECTOR_DISTANCE_THRESHOLD = 0.5

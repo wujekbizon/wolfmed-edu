@@ -243,6 +243,12 @@ caller declares a mode; the mode decides everything below.
 | `canonical_with_personal` | yes | yes | conversational tutor |
 | `explicit_resource` | no | named source only | `@resource` |
 
+Mind maps additionally select `corpusRelevance: 'model'` with `canonical_only`.
+They retain bounded Vertex candidates even above `CORPUS_MISS_DISTANCE`; the same
+generation call returns a grounded map or `no_source`. The option is rejected
+for personal/attachment modes. Other callers keep the distance gate. Corpus
+failures propagate for maps so a service outage cannot become "topic missing".
+
 **`explicit_resource` short-circuits before retrieval.** The student named the
 source, so it is the answer's material — whole, not sampled. Chunking it here would
 turn `@skrypt /podsumuj` into a summary of the three passages matching the word
@@ -328,3 +334,7 @@ a personal one** — different models, opposite directions.
 
 `logRetrievalScores` prints document titles on every request. Gate or remove it
 before production.
+
+`[retrieval] corpus selection` reports query, policy, retrieved/nonempty/retained
+counts and best distance before the final source log. A zero count in the final
+log therefore no longer hides whether the local relevance gate dropped hits.

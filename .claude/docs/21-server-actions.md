@@ -192,7 +192,7 @@ All ownership checks go through `findOwnedDeck`/`findOwnedCard` (`src/server/fla
 
 ## `mindmap.ts` (72 lines)
 
-`generateMindMapAction` — premium-gated **before** validation, then `GenerateMindMapSchema`, then rate-limited (`mindmap:generate`). Generates via `generateTree()` (which calls `retrieveContext` internally — grounded, not raw model knowledge), then **re-validates the model's tree against `MindMapNodeSchema` even after the generation library normalized it** ("never trust model output even after normalization"). Collapses below `INITIAL_EXPANDED_DEPTH = 1` so a fresh map opens showing only the root and its first ring. **Persists nothing** — returns the tree JSON in `values.content`; the cell stores it in the `userCellsList` blob. Validation failures use `fromErrorToFormState`, keeping the top-level message empty and errors field-specific.
+`generateMindMapAction` — premium-gated **before** validation, then `GenerateMindMapSchema`, then rate-limited (`mindmap:generate`). `generateTree()` retrieves canonical candidates and returns a fully validated map or `no_source`; raw response, references, metadata, normalization and final `MindMapNodeSchema` validation all happen inside its bounded repair loop. `no_source` produces a dedicated form-wide toast; input validation remains field-specific. Errors preserve the topic. Success collapses below `INITIAL_EXPANDED_DEPTH = 1` and returns the unchanged `{title, topicType, root}` JSON in `values.content`. **Persists nothing** — the cell writes through the existing `userCellsList` board flow.
 
 ## `aiTests.ts` (120 lines)
 

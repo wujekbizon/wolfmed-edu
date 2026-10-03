@@ -295,3 +295,15 @@ subscription, uploads, memory and learning data.
 5. Inspect long addresses, Polish characters, repeated PDF headers, page numbers and final totals. No Stripe/customer/application-data writes.
 
 Automated cases: tests/payments/stripeReport*.test.ts.
+
+## TC-20 — Mind-map sources, output and saved-map compatibility
+
+**Source**: [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 4.
+
+1. Premium, `/panel/nauka`, new map cell: generate `krew`, `serce`, `erytrocyty`. Expect relevant maps, not a distance-based missing-topic error. Logs show `relevance: 'model'` and candidate counts.
+2. Generate `naprawa silnika samochodowego` and `orbity planet`. Expect the insufficient-materials toast and no cell content replacement. A valid `no_source` stops after one model call.
+3. Save a map, reload, expand/collapse, set mastery, export PNG and use “Wyjaśnij”. Expect the existing tree format and the explanation attached to the selected node. Repeat with a map saved before this fix.
+4. Simulate retrieval/model outage and model timeout. Expect distinct temporary-failure messages, preserved topic, and no change to existing cells. Empty retrieval must skip generation. A structured-request HTTP 400 must log the JSON-mode fallback once and still validate the returned map; a second 400 fails normally. HTTP 401/403/429/503 must not trigger schema fallback.
+5. Confirm ordinary tutor retrieval still uses its distance policy and attachments/personal notes retain their previous access boundaries. Repeat TC-19 for manual saving conflicts.
+
+Automated cases: `tests/mindmap/generation*.test.ts`, `tests/mindmap/parseGeneration.test.ts`, `tests/library/selectCorpusChunks.test.ts`, existing layout/cells tests. Live verification of the final flat provider schema is manual.

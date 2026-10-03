@@ -4,11 +4,11 @@ import { auth } from "@clerk/nextjs/server"
 import { checkRateLimit } from "@/lib/rateLimit"
 import { checkPremiumAccessAction } from "@/actions/course-actions"
 import { toFormState, fromErrorToFormState } from "@/helpers/toFormState"
-import { GenerateMindMapSchema, MindMapNodeSchema } from "@/server/schema"
+import { GenerateMindMapSchema } from "@/server/schema"
 import { generateTree } from "@/lib/mindmap/generateTree"
 import { collapseBelowDepth } from "@/lib/mindmap/treeOps"
 import type { FormState } from "@/types/actionTypes"
-import type { MindMapNode } from "@/types/mindmapTypes"
+import { MINDMAP_NO_SOURCE_MESSAGE } from "@/constants/mindmapGeneration"
 
 // A fresh map opens showing only the root and its first ring; deeper levels
 // start collapsed so the user expands progressively.
@@ -23,42 +23,50 @@ const INITIAL_EXPANDED_DEPTH = 1
 export async function generateMindMapAction(formState: FormState, formData: FormData): Promise<FormState> {
   const { userId } = await auth()
   if (!userId) throw new Error("Unauthorized")
+  const rawTopic = formData.get('topic')
+  const topic = typeof rawTopic === 'string' ? rawTopic : ''
 
   const isPremium = await checkPremiumAccessAction()
   if (!isPremium) {
-    return toFormState("ERROR", "Funkcja dostępna tylko dla użytkowników premium.")
+    return {
+      ...toFormState("ERROR", "Funkcja dostępna tylko dla użytkowników premium."),
+      values: { topic },
+    }
   }
 
   const parsed = GenerateMindMapSchema.safeParse({
-    topic: formData.get("topic"),
+    topic: rawTopic,
     subjectId: formData.get("subjectId") ?? undefined,
   })
   if (!parsed.success) {
     return {
       ...fromErrorToFormState(parsed.error),
-      values: { topic: (formData.get("topic") as string) ?? "" },
+      values: { topic },
     }
   }
 
   const rateLimit = await checkRateLimit(userId, "mindmap:generate")
   if (!rateLimit.success) {
     const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-    return toFormState("ERROR", `Limit generowania map na dziś wyczerpany. Spróbuj ponownie za ${resetMinutes} minut.`)
+    return {
+      ...toFormState("ERROR", `Limit generowania map na dziś wyczerpany. Spróbuj ponownie za ${resetMinutes} minut.`),
+      values: { topic: parsed.data.topic },
+    }
   }
 
   try {
-    const { root, topicType } = await generateTree(userId, parsed.data.topic)
-
-    // Never trust model output even after normalization.
-    const validated = MindMapNodeSchema.safeParse(root)
-    if (!validated.success) {
-      return toFormState("ERROR", "Wygenerowana mapa była nieprawidłowa. Spróbuj ponownie.")
+    const result = await generateTree(userId, parsed.data.topic)
+    if (result.status === 'no_source') {
+      return {
+        ...toFormState('ERROR', MINDMAP_NO_SOURCE_MESSAGE),
+        values: { topic: parsed.data.topic },
+      }
     }
 
     const content = JSON.stringify({
       title: parsed.data.topic,
-      topicType,
-      root: collapseBelowDepth(validated.data as MindMapNode, INITIAL_EXPANDED_DEPTH),
+      topicType: result.topicType,
+      root: collapseBelowDepth(result.root, INITIAL_EXPANDED_DEPTH),
     })
 
     return {
@@ -66,6 +74,9 @@ export async function generateMindMapAction(formState: FormState, formData: Form
       values: { content },
     }
   } catch (error) {
-    return fromErrorToFormState(error)
+    return {
+      ...fromErrorToFormState(error),
+      values: { topic: parsed.data.topic },
+    }
   }
 }

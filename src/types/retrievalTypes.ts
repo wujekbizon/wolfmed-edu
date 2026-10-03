@@ -37,10 +37,14 @@ export interface RetrieveContextOptions {
   // as "no information".
   query: string
   mode: RetrievalMode
+  // Model policy is only for canonical-only generators with an explicit no_source result.
+  corpusRelevance?: CorpusRelevance
   // Required by 'explicit_resource', ignored otherwise.
   attachmentSourceIds?: string[]
   limit?: number
 }
+
+export type CorpusRelevance = 'distance' | 'model'
 
 // A cited source, carrying where it came from. The origin has to survive as far
 // as the UI: labelling chunks for the model but showing the student an

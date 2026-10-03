@@ -1,4 +1,6 @@
 import { MAX_CHILDREN, MAX_DEPTH, type MindMapNode } from "@/types/mindmapTypes"
+import type { MindMapDraftNode } from "@/types/mindmapGenerationTypes"
+import { normalizeMindMapMetadata } from "@/helpers/normalizeMindMapMetadata"
 
 // Combining diacritical marks (U+0300–U+036F), stripped after NFD so Polish
 // letters like ł/ó/ż collapse to their ASCII base for slug ids.
@@ -19,10 +21,10 @@ function slugify(label: string): string {
  * and parentId from actual tree position, clamps children per node, and drops
  * branches past MAX_DEPTH. Runs before Zod so most drift is fixed, not rejected.
  */
-export function normalizeTree(root: MindMapNode): MindMapNode {
+export function normalizeTree(root: MindMapDraftNode): MindMapNode {
   let counter = 0
 
-  function walk(node: MindMapNode, depth: number, parentId: string | null): MindMapNode {
+  function walk(node: MindMapDraftNode, depth: number, parentId: string | null): MindMapNode {
     const base = slugify(node.label) || "node"
     const id = `${base}-${(counter++).toString(36)}`
 
@@ -42,7 +44,7 @@ export function normalizeTree(root: MindMapNode): MindMapNode {
       collapsed: node.collapsed ?? false,
       children,
     }
-    if (node.metadata) normalized.metadata = node.metadata
+    if (node.metadata) normalized.metadata = normalizeMindMapMetadata(node.metadata)
     return normalized
   }
 
