@@ -281,6 +281,13 @@ shipped and had to be measured out again.**
    unrelated file behind it. `hasCanonical` follows from the corpus being empty, and
    the prompt says so when it is false.
 
+   Mind-map generation uses `canonical_only` with `corpusRelevance: 'model'`.
+   It passes bounded corpus candidates to the same generation call, which must
+   return a source-grounded map or explicit `no_source`. The distance gate alone
+   rejected real blood/heart passages while accepting unrelated engine-repair
+   results. This policy is restricted to canonical-only generation; existing
+   retrieval consumers retain their distance gate.
+
 5. **Chunk labels are internal.** Origin labels weight sources for the model; they
    are not citations. Answers carry no `[1]`, no `(BAZA WIEDZY)`, no
    `(TWOJA NOTATKA — plik.md)` — the student reads the sources panel.

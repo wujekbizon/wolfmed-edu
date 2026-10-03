@@ -47,7 +47,7 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 
 ## `/api/rag/progress` — SSE progress stream
 
-`src/app/api/rag/progress/route.ts`, `GET`. Server-Sent-Events endpoint for long-running AI generation jobs (mind maps, quizzes, etc. — anything tracked by `jobId` in `@/server/progress-store`). Supports SSE reconnection via `Last-Event-ID` (replays missed events from `getEvents(jobId, lastEventId)` before switching to live polling), keep-alive pings (`KEEP_ALIVE_INTERVAL`), and a `JOB_WAIT_TIMEOUT` in case the job never appears (e.g. client raced the job's creation). Closes the stream once the job's status is `complete`/`error`. If the job is already finished when the request arrives, returns `204` immediately instead of opening a stream.
+`src/app/api/rag/progress/route.ts`, `GET`. Server-Sent-Events endpoint for AI jobs tracked by `jobId` in `@/server/progress-store`. Mind-map generation does not create such a job; its modal is driven by the pending Server Action and rotating status messages. Supports SSE reconnection via `Last-Event-ID` (replays missed events from `getEvents(jobId, lastEventId)` before switching to live polling), keep-alive pings (`KEEP_ALIVE_INTERVAL`), and a `JOB_WAIT_TIMEOUT` in case the job never appears (e.g. client raced the job's creation). Closes the stream once the job's status is `complete`/`error`. If the job is already finished when the request arrives, returns `204` immediately instead of opening a stream.
 
 ## `/api/mcp/resources` — List attachable resources
 
