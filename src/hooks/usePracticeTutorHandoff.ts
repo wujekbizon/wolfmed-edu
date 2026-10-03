@@ -29,7 +29,7 @@ export function usePracticeTutorHandoff({
     const question = session?.question
     if (!premium || !question || pending) return false
     if (question.correctIndex !== null) { onAskTutor(); return true }
-    if (question.correct !== false || !onReveal()) return false
+    if (question.invalid || !onReveal()) return false
     setHandoff({ questionId: question.id, stateTimestamp: state.timestamp })
     return true
   }

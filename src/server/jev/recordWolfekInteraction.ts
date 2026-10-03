@@ -9,7 +9,8 @@ import type { WolfekInteraction } from '@/types/wolfekMetricTypes'
 export async function recordWolfekInteraction(record: WolfekInteraction): Promise<void> {
   const createdAt = new Date()
   const needsReview = record.kind === 'question' &&
-    (record.topic === 'other' || record.confidence === null || record.confidence < WOLFEK_TOPIC_MIN_CONFIDENCE)
+    (record.topic === 'other' || record.topic === 'no_match' || record.topic === 'clarify' ||
+      record.topic?.startsWith('unavailable_') === true || record.confidence === null || record.confidence < WOLFEK_TOPIC_MIN_CONFIDENCE)
   try {
     await db.transaction(async (tx) => {
       await tx.insert(wolfekInteractions).values({ ...record, needsReview, createdAt,

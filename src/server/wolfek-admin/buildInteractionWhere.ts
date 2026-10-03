@@ -8,7 +8,7 @@ export function buildInteractionWhere(filters: WolfekAdminFilters) {
   return and(
     sql`${events.createdAt} >= (${filters.from}::date::timestamp AT TIME ZONE 'Europe/Warsaw')`,
     sql`${events.createdAt} < ((${filters.to}::date + 1)::timestamp AT TIME ZONE 'Europe/Warsaw')`,
-    filters.source === 'practice' ? sql`false` : filters.source === 'all' ? undefined : eq(events.source, filters.source),
+    filters.source === 'all' ? undefined : eq(events.source, filters.source),
     search ? or(ilike(events.question, `%${search}%`), ilike(events.topic, `%${search}%`)) : undefined,
   )
 }

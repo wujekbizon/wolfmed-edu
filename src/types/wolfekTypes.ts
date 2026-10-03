@@ -65,6 +65,7 @@ export interface WolfekOverlayProps {
 export interface WolfekGlassCardProps {
   avatarRef: Ref<HTMLDivElement>
   avatar: ReactNode
+  avatarStatus?: ReactNode
   children: ReactNode
   className?: string
   glassClassName?: string

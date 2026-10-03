@@ -22,7 +22,7 @@ export default function WolfekAdminAuditDetail({ id, userId }: { id: string; use
     <div className="grid gap-4 lg:grid-cols-2">
       <div><h3 className="mb-2 text-sm font-semibold">Pełne zapytanie</h3>
         <pre className="max-h-96 overflow-auto rounded-xl bg-zinc-900 p-4 text-xs text-zinc-100">{JSON.stringify(log.requestPayload, null, 2)}</pre></div>
-      <div><h3 className="mb-2 text-sm font-semibold">Pełna odpowiedź</h3>
+      <div><h3 className="mb-2 text-sm font-semibold">Odpowiedź Jev i wynik Wolfka</h3>
         <pre className="max-h-96 overflow-auto rounded-xl bg-zinc-900 p-4 text-xs text-zinc-100">{JSON.stringify(log.responsePayload, null, 2)}</pre></div>
     </div>
     <details><summary className="cursor-pointer text-sm font-semibold">Oryginalne body odpowiedzi</summary>

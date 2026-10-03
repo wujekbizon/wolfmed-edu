@@ -7,12 +7,12 @@ import { EMPTY_PRACTICE_STATE } from '@/constants/learningPractice'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { usePracticeTutorHandoff } from '@/hooks/usePracticeTutorHandoff'
 import { usePracticeSuggestionInteractions } from '@/hooks/usePracticeSuggestionInteractions'
+import { usePracticeWolfekQuestions } from '@/hooks/usePracticeWolfekQuestions'
 import type { PracticeCompanionMode } from '@/types/learningPracticeTypes'
 import type { WolfekCompanionProps } from '@/types/learningUiTypes'
 
-export function usePracticeCompanion({
-  userId, category, session, premium, onSaved, onAskTutor, onCompare, onContinue, onReview,
-}: WolfekCompanionProps) {
+export function usePracticeCompanion(props: WolfekCompanionProps) {
+  const { userId, category, session, premium, onSaved, onAskTutor, onCompare } = props
   const [mode, setMode] = useState<PracticeCompanionMode>('welcome')
   const { bubbleSession, record, hide } =
     usePracticeSuggestionInteractions(userId, category, session)
@@ -49,43 +49,18 @@ export function usePracticeCompanion({
       })
     }
   }
-  const chat = () => {
-    if (premium && session?.question?.correctIndex != null) onAskTutor()
-    else setMode('chat')
-  }
-  const recommend = () => {
-    if (session?.question?.suggestedAction === 'tutor') {
-      if (startRecommendedTutor()) record('accepted')
-      else setMode('chat')
-      return
-    }
-    if (session?.question?.suggestedAction === 'continue') {
-      if (onContinue()) record('accepted')
-      else { record('dismissed'); hide() }
-      return
-    }
-    if (session?.question?.suggestedAction === 'review') {
-      if (onReview()) record('accepted')
-      else { record('dismissed'); hide() }
-      return
-    }
-    record('accepted')
-    switch (session?.question?.suggestedAction) {
-      case 'hint': setMode('hint'); if (!session?.question?.hintOpened) runCommand('hint'); break
-      case 'compare': compare(); break
-      case 'reveal': runCommand('reveal'); break
-      default: document.getElementById(`learning-card-${session?.question?.id}`)?.focus({ preventScroll: true })
-    }
-  }
   const onSubmit = () => {
     const key = `${session?.version}:${session?.question?.id}:${commandInput.current?.value}`
     const id = events.current.get(key) ?? crypto.randomUUID()
     events.current.set(key, id)
     if (eventInput.current) eventInput.current.value = id
   }
-  const openHint = () => { setMode('hint'); if (!session?.question?.hintOpened) runCommand('hint') }
   const dismissRecommendation = () => { record('dismissed'); hide() }
-  return { mode, setMode, bubbleSession, state, action, pending, form, eventInput, commandInput,
-    toast, onSubmit, openHint, compare, chat, recommend, dismissRecommendation,
+  const questions = usePracticeWolfekQuestions(props,
+    { hintOpened: () => setMode('hint'), compare, openTutor: onAskTutor, revealTutor: startRecommendedTutor })
+  return { mode, setMode, bubbleSession, state, action, pending: pending || questions.pending, form, eventInput, commandInput,
+    toast, onSubmit, openHint: () => questions.submitPrepared('hint'),
+    compare: () => questions.submitPrepared('compare'), chat: () => questions.submitPrepared('assistant'),
+    recommend: questions.recommendation, dismissRecommendation, questions,
     recordNavigation: () => record('accepted'), runCommand }
 }

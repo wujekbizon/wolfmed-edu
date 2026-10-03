@@ -6,9 +6,10 @@ export default function WolfekAdminStats({ summary, view }: { summary: WolfekAdm
   const number = new Intl.NumberFormat('pl-PL')
   const errorRate = summary.providerCalls ? (summary.errors / summary.providerCalls * 100).toFixed(1) : '0.0'
   const stats = view === 'insights' ? [
-    { label: 'Własne pytania', value: number.format(summary.questions), icon: <MessageCircle />, footer: 'Także pytania z cache' },
-    { label: 'Kliknięcia tematów', value: number.format(summary.clicks), icon: <MousePointer2 />, footer: 'Bez wywołań Jev' },
-    { label: 'Odpowiedzi z cache', value: number.format(summary.cacheHits), icon: <Database />, footer: 'Powtórzone pytania użytkowników' },
+    { label: 'Pytania', value: number.format(summary.questions), icon: <MessageCircle />, footer: 'Wpisane i z przycisków' },
+    { label: 'Pakiety pytań', value: number.format(summary.preparedBatches ?? 0), icon: <Database />, footer: 'Jedno wywołanie na pakiet przycisków' },
+    { label: 'Ponownie użyte wyniki', value: number.format(summary.reusedButtons ?? 0), icon: <MousePointer2 />, footer: 'Przyciski bez nowego wywołania Jev' },
+    { label: 'Wpisane pytania', value: number.format(summary.typedQuestions ?? 0), icon: <MessageCircle />, footer: 'Każde z nowym wywołaniem Jev' },
     { label: 'Do przeglądu', value: number.format(summary.reviews), icon: <AlertTriangle />, footer: 'Brak rozpoznania lub niska pewność' },
   ] : [
     { label: 'Wywołania Jev', value: number.format(summary.providerCalls), icon: <Activity />, footer: 'Rzeczywiste zapytania do TypeSafe' },

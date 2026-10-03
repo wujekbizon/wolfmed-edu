@@ -93,6 +93,7 @@ export interface PracticeCompanionActionsProps {
   onCompare?: () => void
 }
 export interface WolfekBubbleProps {
+  answerText?: string | null
   session: PracticeView | null
   mode: PracticeCompanionMode
   premium: boolean
@@ -100,6 +101,12 @@ export interface WolfekBubbleProps {
   onRecommend: () => void
   onDismiss: () => void
   onNavigate: () => void
+}
+export interface PracticeWolfekQuestionHandlers {
+  hintOpened: () => void
+  compare: () => void
+  openTutor: () => void
+  revealTutor: () => boolean
 }
 export interface PracticeTutorProps {
   reference: PracticeTutorAttachment

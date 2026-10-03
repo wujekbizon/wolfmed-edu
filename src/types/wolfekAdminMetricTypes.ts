@@ -1,4 +1,7 @@
 export type WolfekAdminSummary = {
+  preparedBatches: number
+  reusedButtons: number
+  typedQuestions: number
   questions: number
   clicks: number
   cacheHits: number

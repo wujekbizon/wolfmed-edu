@@ -4,7 +4,7 @@ import { Minus } from 'lucide-react'
 import { Tooltip } from '@/components/Tooltip'
 import type { WolfekGlassCardProps } from '@/types/wolfekTypes'
 
-export default function WolfekGlassCard({ avatarRef, avatar, children, className, glassClassName,
+export default function WolfekGlassCard({ avatarRef, avatar, avatarStatus, children, className, glassClassName,
   surfaceClassName, onMinimize, onPointerMove, onPointerLeave, onPointerCancel }: WolfekGlassCardProps) {
   return <div className={`wolfek-card-wrap ${className ?? ''}`} onPointerMove={onPointerMove}
     onPointerLeave={onPointerLeave} onPointerCancel={onPointerCancel}>
@@ -16,7 +16,7 @@ export default function WolfekGlassCard({ avatarRef, avatar, children, className
           aria-label="Zminimalizuj Wolfka"><Minus size={16} /></button>
       </Tooltip>}
       {children}
-      <div ref={avatarRef} className="wolfek-card-avatar">{avatar}</div>
+      <div ref={avatarRef} className="wolfek-card-avatar">{avatar}{avatarStatus}</div>
     </div>
   </div>
 }

@@ -1,0 +1,250 @@
+{
+  "kierunki": [
+    {
+      "id": "exam_preparation",
+      "prompt": "Jak przygotować się do egzaminu opiekuna medycznego?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "opiekun_growth",
+      "prompt": "Jak rozwijać się jako opiekun medyczny?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "nursing_journey",
+      "prompt": "Co oferuje kurs pielęgniarstwa?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "payment_models",
+      "prompt": "Subskrypcja czy dostęp na zawsze — jakie są różnice?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "course_selection",
+      "prompt": "Który kierunek pasuje do mojego celu?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "pricing",
+      "prompt": "Ile kosztują dostępne kursy i plany?",
+      "featured": false,
+      "conditional": false
+    },
+    {
+      "id": "tier_comparison",
+      "prompt": "Co zawiera Basic i Premium?",
+      "featured": false,
+      "conditional": false
+    },
+    {
+      "id": "english_course",
+      "prompt": "Co zawiera kurs angielskiego medycznego?",
+      "featured": false,
+      "conditional": false
+    },
+    {
+      "id": "owned_course",
+      "prompt": "Jakie kursy mam dostępne i jak wrócić do nauki?",
+      "featured": false,
+      "conditional": false
+    },
+    {
+      "id": "card_payment",
+      "prompt": "Czy mogę płacić kartą za subskrypcję?",
+      "featured": false,
+      "conditional": false
+    },
+    {
+      "id": "course_video",
+      "prompt": "Czy jest prezentacja wideo kursu opiekuna medycznego?",
+      "featured": false,
+      "conditional": false
+    }
+  ],
+  "panel.home": [
+    {
+      "id": "first_steps",
+      "prompt": "Od czego zacząć w panelu?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "courses",
+      "prompt": "Jakie kursy mam dostępne?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "results",
+      "prompt": "Jakie mam postępy w testach?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "billing",
+      "prompt": "Jaki mam dostęp i status płatności?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "navigation",
+      "prompt": "Z jakich funkcji mogę korzystać?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "username",
+      "prompt": "Jak zmienić nazwę użytkownika?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "motto",
+      "prompt": "Jak zmienić motto nauki?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "countdown",
+      "prompt": "Co pokazuje moje odliczanie i ile dni zostało?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "difficult_questions",
+      "prompt": "Które pytania sprawiają mi trudność?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "plan",
+      "prompt": "Co mam dziś zrobić w planie nauki?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "storage",
+      "prompt": "Ile mam wolnego miejsca?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "badges",
+      "prompt": "Jakie odznaki mam zdobyte?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "forum",
+      "prompt": "Gdzie znajdę forum?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "feedback",
+      "prompt": "Jak wystawić opinię o aplikacji?",
+      "featured": true,
+      "conditional": false
+    }
+  ],
+  "panel.results": [
+    {
+      "id": "results_explain",
+      "prompt": "Jak czytać wynik mojego testu?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "results_improve",
+      "prompt": "Jak poprawić skuteczność w kolejnych testach?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "results_mistakes",
+      "prompt": "Gdzie znajdę moje błędne odpowiedzi?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "results_history",
+      "prompt": "Ile mam ukończonych testów?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "results_categories",
+      "prompt": "Jakie mam wyniki według kategorii?",
+      "featured": true,
+      "conditional": false
+    }
+  ],
+  "learning.practice": [
+    {
+      "id": "hint",
+      "prompt": "Czy możesz dać mi wskazówkę do tego pytania?",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "compare",
+      "prompt": "Pomóż mi porównać moją odpowiedź z pozostałymi.",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "assistant",
+      "prompt": "Chcę omówić to pytanie z asystentem AI.",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "next",
+      "prompt": "Chcę przejść do następnego pytania.",
+      "featured": true,
+      "conditional": false
+    },
+    {
+      "id": "reveal_tutor",
+      "prompt": "Chcę ujawnić odpowiedź i omówić ją z asystentem AI.",
+      "featured": false,
+      "conditional": true
+    },
+    {
+      "id": "ask_tutor",
+      "prompt": "Chcę omówić tę ujawnioną odpowiedź z asystentem AI.",
+      "featured": false,
+      "conditional": true
+    },
+    {
+      "id": "review",
+      "prompt": "Chcę wrócić do wcześniejszej karty i spróbować bez pomocy.",
+      "featured": false,
+      "conditional": true
+    },
+    {
+      "id": "material",
+      "prompt": "Chcę zobaczyć sprawdzony materiał powiązany z tym pytaniem.",
+      "featured": false,
+      "conditional": true
+    },
+    {
+      "id": "plan",
+      "prompt": "Chcę zobaczyć zadanie z planu pasujące do tej nauki.",
+      "featured": false,
+      "conditional": true
+    },
+    {
+      "id": "accept_suggestion",
+      "prompt": "Chcę skorzystać z aktualnej propozycji pomocy do tej karty.",
+      "featured": false,
+      "conditional": true
+    }
+  ]
+}

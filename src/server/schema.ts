@@ -1,5 +1,42 @@
 import { z } from "zod";
 
+export const WolfekPracticeReferenceSchema = z.object({
+  category: z.string().min(1).max(256), sessionId: z.uuid().nullable(), version: z.number().int().nonnegative(),
+  questionId: z.guid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+}).strict()
+export const WolfekQuestionSchema = z.object({
+  route: z.enum(['kierunki', 'panel.home', 'panel.results', 'learning.practice']),
+  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim().min(2).max(300),
+  origin: z.enum(['typed', 'prepared']), preparedQuestionId: z.string().max(128).nullable(),
+  submissionId: z.uuid(), practice: WolfekPracticeReferenceSchema.nullable(),
+}).strict().refine((input) => input.route !== 'learning.practice' || input.practice !== null,
+  { message: 'Wybierz aktualną kartę.', path: ['question'] })
+export const WolfekPackSchema = z.object({
+  version: z.string(), instructions: z.unknown(), diagnostics: z.record(z.string(), z.unknown()),
+  options: z.array(z.object({
+    id: z.string(), topic: z.string().nullable(), covers: z.string(), template: z.string(),
+    requiredFacts: z.array(z.string()),
+    conditions: z.array(z.object({ path: z.string(), equals: z.union([z.string(), z.boolean(), z.number(), z.null()]) })),
+    action: z.object({ type: z.string(), destinationKey: z.string() }).nullable(),
+  })),
+})
+export const WolfekJevResponseSchema = z.object({
+  model: z.string(), answers: z.object({
+    response: z.object({ type: z.literal('choice'), choice: z.string(),
+      confidence: z.number().min(0).max(1), probabilities: z.record(z.string(), z.number().min(0).max(1)) }),
+    needs_clarification: z.object({ type: z.literal('noul'), noul: z.number().min(0).max(1) }),
+    answer_coverage: z.object({ type: z.literal('score'), score: z.number().min(0).max(3),
+      confidence: z.number().min(0).max(1), probabilities: z.record(z.string(), z.number().min(0).max(1)),
+      legend: z.record(z.string(), z.unknown()) }),
+  }), usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const WolfekBatchEnvelopeSchema = z.object({
+  model: z.string(), answers: z.record(z.string(), z.unknown()),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const WolfekVisitIdSchema = z.uuid()
+export const WolfekBatchIdSchema = z.uuid()
+
 export const PracticeCategorySchema = z.string().min(1).max(256)
 export const PracticeStartSchema = z.uuid()
 export const PracticeResetSchema = z.object({

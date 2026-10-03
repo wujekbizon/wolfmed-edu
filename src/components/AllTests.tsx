@@ -8,6 +8,7 @@ import PracticeCompanion from '@/components/learning/PracticeCompanion'
 import PracticeTutor from '@/components/learning/PracticeTutor'
 import LearningDeckHeader from '@/components/learning/LearningDeckHeader'
 import WolfekDock from '@/components/learning/WolfekDock'
+import WolfekVisitProvider from '@/components/wolfek/WolfekVisitProvider'
 import LearningCardFilters from '@/components/learning/LearningCardFilters'
 import ResetLearningProgressButton from '@/components/learning/ResetLearningProgressButton'
 import { useLearningDeck } from '@/hooks/useLearningDeck'
@@ -18,7 +19,7 @@ export default function AllTests(props: LearningDeckProps) {
   const deck = useLearningDeck(props)
   const wolfekHidden = useSettingsStore((state) => state.practiceCompanionHidden[props.userId] ?? false)
   if (!deck.authorized) return <p>Zaloguj się ponownie, aby kontynuować.</p>
-  return <section className="w-full max-w-[1500px] space-y-6 pb-24 xl:pb-4">
+  return <WolfekVisitProvider><section className="w-full max-w-[1500px] space-y-6 pb-24 xl:pb-4">
     <LearningDeckHeader count={props.questions.length} actions={deck.session &&
       <ResetLearningProgressButton userId={props.userId} category={props.category}
         session={deck.session} onReset={(view) => { deck.update(view); deck.changeFilter('all') }} />} />
@@ -56,5 +57,5 @@ export default function AllTests(props: LearningDeckProps) {
         </div>}
       </>}
     </WolfekDock>
-  </section>
+  </section></WolfekVisitProvider>
 }

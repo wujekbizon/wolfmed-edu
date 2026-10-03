@@ -54,7 +54,7 @@ export default function WolfekAdminPanel({ userId, initialFilters, initialReport
           <WolfekAdminTable rows={report.rows} total={report.totalRows} page={filters.page}
             userId={userId} pending={loading} onPage={setPage} />}
         {filters.view === 'insights' && <p className="text-xs text-zinc-500">Pomiar interakcji od {report.lifetime.activitySince ?? 'pierwszego użycia po migracji'}.
-          Nie odtwarzamy dawnych kliknięć. Pytania z cache liczą się jako aktywność, ale nie jako płatne wywołania.</p>}
+          Pierwszy przycisk pobiera jeden pakiet Jev. Kolejne używają wyników z tej wizyty. Wpisane pytania mają osobne wywołania.</p>}
       </div>}
     <p className="text-xs text-zinc-500">Eksport obejmuje wybrany widok i filtry, do {WOLFEK_EXPORT_LIMIT} pełnych wierszy.
       Pliki mogą zawierać treść pytań i dane audytowe użytkowników.</p>

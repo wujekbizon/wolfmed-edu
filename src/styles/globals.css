@@ -914,6 +914,29 @@ body:has(.panel-wolfek-marker) .wolfek-overlay[data-variant="panel"] .wolfek-lau
 
 .wolfek-small-talk p { margin: 0; }
 
+.wolfek-thinking-bubble {
+  position: absolute;
+  top: calc(100% + .35rem);
+  left: .6rem;
+  width: max-content;
+  min-height: 2rem;
+  padding: .4rem .7rem;
+  border-radius: .8rem;
+  pointer-events: none;
+  font-size: .75rem;
+  white-space: nowrap;
+}
+
+.wolfek-small-talk.wolfek-thinking-bubble::before {
+  top: -.3rem;
+  bottom: auto;
+  left: 1rem;
+  border-top: 1px solid var(--speech-border);
+  border-bottom: 0;
+}
+
+.kierunki-wolfek[data-wolfek-pending="true"] .wolfek-card-wrap { padding-bottom: 3rem; }
+
 .practice-companion-next {
   align-self: flex-end;
   gap: 0.5rem;
@@ -1189,6 +1212,9 @@ body:has(.panel-wolfek-marker) .wolfek-overlay[data-variant="panel"] .wolfek-lau
   }
 
   .kierunki-wolfek-intro p:last-child { margin-top: .35rem; font-size: .8rem; line-height: 1.6; }
+
+  .kierunki-wolfek[data-wolfek-pending="true"] .wolfek-card-wrap { padding-bottom: 0; }
+  .kierunki-wolfek[data-wolfek-pending="true"] .kierunki-wolfek-intro p:last-child { margin-top: 2.5rem; }
 
   .kierunki-wolfek-chat { gap: .75rem; margin-top: .75rem; }
   .kierunki-wolfek-topic-picker,

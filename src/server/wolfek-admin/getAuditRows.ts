@@ -17,7 +17,8 @@ export async function getAuditRows(filters: WolfekAdminFilters): Promise<{ rows:
       model: logs.model, status: logs.status, latencyMs: logs.latencyMs,
       question: sql<string>`COALESCE(${logs.requestPayload} #>> '{state,question}', 'Sesja ćwiczeń')`,
       usage: sql<unknown>`${logs.responsePayload} -> 'usage'`,
-      answer: sql<unknown>`COALESCE(${logs.responsePayload} #> '{answers,guide}',
+      answer: sql<unknown>`COALESCE((SELECT value FROM jsonb_each(COALESCE(${logs.responsePayload}->'answers', '{}'::jsonb))
+        WHERE key LIKE '%__response' LIMIT 1), ${logs.responsePayload} #> '{answers,response}', ${logs.responsePayload} #> '{answers,guide}',
         ${logs.responsePayload} #> '{answers,help}', ${logs.responsePayload} #> '{answers,support}')`,
     }).from(logs).where(where).orderBy(desc(logs.startedAt), desc(logs.id))
       .limit(WOLFEK_ADMIN_PAGE_SIZE).offset((filters.page - 1) * WOLFEK_ADMIN_PAGE_SIZE),
@@ -31,6 +32,7 @@ export async function getAuditRows(filters: WolfekAdminFilters): Promise<{ rows:
     return { id: row.id, createdAt: row.createdAt.toISOString(), source: row.source, route: row.route,
       model: row.model, status: row.status, latencyMs: row.latencyMs, question: row.question,
       inputTokens: usage.input, outputTokens: usage.output, topic, confidence, kind: 'provider',
-      needsReview: topic === 'other' || (confidence !== null && confidence < WOLFEK_TOPIC_MIN_CONFIDENCE) }
+      needsReview: topic === 'other' || topic === 'no_match' || topic === 'clarify' ||
+        topic?.startsWith('unavailable_') === true || (confidence !== null && confidence < WOLFEK_TOPIC_MIN_CONFIDENCE) }
   }) }
 }

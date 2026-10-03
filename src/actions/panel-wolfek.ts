@@ -3,17 +3,8 @@
 import { auth } from '@clerk/nextjs/server'
 import { PANEL_WOLFEK_ONBOARDING_PREFIX } from '@/constants/panelWolfek'
 import { getRedis } from '@/lib/redis'
-import { checkRateLimit } from '@/lib/rateLimit'
 import { getUserEnrolledCourses } from '@/server/queries'
 import { getPanelOnboardingSeen } from '@/server/companion/getPanelOnboardingSeen'
-import { getPanelWolfekContext } from '@/server/companion/getPanelWolfekContext'
-import { getPanelWolfekAnswer } from '@/server/companion/getPanelWolfekAnswer'
-import { selectPanelWolfekTopic } from '@/server/companion/selectPanelWolfekTopic'
-import { PanelWolfekAskSchema, PanelWolfekRouteSchema, PanelWolfekTopicRequestSchema } from '@/server/schema'
-import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
-import type { PanelWolfekAskState } from '@/types/panelWolfekTypes'
-import { recordWolfekInteraction } from '@/server/jev/recordWolfekInteraction'
-import { WOLFEK_TOPIC_MIN_CONFIDENCE } from '@/constants/wolfekRouting'
 
 export async function getPanelOnboardingSeenAction() {
   const { userId } = await auth()
@@ -29,49 +20,5 @@ export async function markPanelOnboardingSeenAction() {
   try {
     await redis.set(`${PANEL_WOLFEK_ONBOARDING_PREFIX}${userId}`, '1', { ex: 365 * 24 * 60 * 60 })
     return true
-  } catch {
-    return false
-  }
-}
-
-export async function getPanelWolfekTopicAction(input: unknown) {
-  const { userId } = await auth()
-  if (!userId) return null
-  const parsed = PanelWolfekTopicRequestSchema.safeParse(input)
-  if (!parsed.success) return null
-  if (!(await checkRateLimit(userId, 'panel:wolfek')).success) return null
-  const context = await getPanelWolfekContext(userId, parsed.data.route)
-  if (!context) return null
-  await recordWolfekInteraction({ source: 'panel', route: parsed.data.route, userId, kind: 'topic_click',
-    question: null, topic: parsed.data.topic, confidence: null, outcome: 'topic_click' })
-  return getPanelWolfekAnswer(userId, parsed.data.topic, context)
-}
-
-export async function askPanelWolfekAction(
-  _previous: PanelWolfekAskState, formData: FormData,
-): Promise<PanelWolfekAskState> {
-  const { userId } = await auth()
-  if (!userId) return toFormState('ERROR', 'Zaloguj się ponownie.')
-  const parsed = PanelWolfekAskSchema.safeParse({ question: formData.get('question') })
-  if (!parsed.success) return fromErrorToFormState(parsed.error)
-  const route = PanelWolfekRouteSchema.safeParse(formData.get('route') ?? 'panel.home')
-  if (!route.success) return toFormState('ERROR', 'Nie mogę teraz sprawdzić odpowiedzi. Wybierz temat poniżej.')
-  try {
-    if (!(await checkRateLimit(userId, 'panel:wolfek')).success) {
-      return toFormState('ERROR', 'Na chwilę zwalniamy tempo. Spróbuj ponownie za moment.')
-    }
-    const context = await getPanelWolfekContext(userId, route.data)
-    if (!context) return toFormState('ERROR', 'Brak dostępu do panelu.')
-    const decision = await selectPanelWolfekTopic(userId, parsed.data.question, context)
-    await recordWolfekInteraction({ source: 'panel', route: route.data, userId, kind: 'question',
-      question: parsed.data.question, topic: decision?.topic ?? null, confidence: decision?.confidence ?? null,
-      outcome: decision ? decision.cacheHit ? 'cache_hit' : 'provider' : 'unavailable' })
-    if (!decision || decision.topic === 'other' || decision.confidence < WOLFEK_TOPIC_MIN_CONFIDENCE) {
-      return { ...toFormState('SUCCESS', ''), answer: null, confidence: decision?.confidence ?? null }
-    }
-    const answer = await getPanelWolfekAnswer(userId, decision.topic, context)
-    return { ...toFormState('SUCCESS', ''), answer, confidence: decision.confidence }
-  } catch {
-    return toFormState('ERROR', 'Nie mogę teraz sprawdzić odpowiedzi. Wybierz temat poniżej.')
-  }
+  } catch { return false }
 }
