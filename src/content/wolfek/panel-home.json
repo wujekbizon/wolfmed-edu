@@ -1,5 +1,5 @@
 {
-  "version": "wolfek-responses-v11",
+  "version": "wolfek-responses-v12",
   "instructions": {
     "question": "Which eligible supplied response object directly answers `state.question` using only verified `state.facts`?",
     "constraints": [
@@ -459,7 +459,7 @@
       "covers": "How to submit app feedback.",
       "requiredFacts": [],
       "conditions": [],
-      "template": "W formularzu opinii wpisz treść, wybierz ocenę i samodzielnie wyślij opinię.",
+      "template": "W formularzu opinii opisz swoje uwagi, wybierz ocenę i wyślij opinię. Z góry dziękujemy — każda opinia jest dla nas ważna.",
       "action": null
     },
     {

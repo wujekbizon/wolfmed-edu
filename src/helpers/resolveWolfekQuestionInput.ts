@@ -7,6 +7,7 @@ export function resolveWolfekQuestionInput(data: FormData) {
     route: data.get('route'), question: data.get('question'), origin: data.get('origin') ?? 'typed',
     preparedQuestionId: data.get('preparedQuestionId') || null, submissionId: data.get('submissionId'),
     practice: data.get('practice') ? JSON.parse(String(data.get('practice'))) : null,
+    ...(data.get('recentMessages') ? { recentMessages: JSON.parse(String(data.get('recentMessages'))) } : {}),
   })
   if (input.origin === 'prepared') {
     const question = input.preparedQuestionId ? getWolfekPreparedQuestion(input.route, input.preparedQuestionId) : null

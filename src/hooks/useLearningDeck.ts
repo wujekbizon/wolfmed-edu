@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebouncedValue } from './useDebounceValue'
 import { usePracticeSession } from './usePracticeSession'
-import { usePracticeSupport } from './usePracticeSupport'
 import { useWolfekAnswerReaction } from './useWolfekAnswerReaction'
 import { useLearningDeckNavigation } from './useLearningDeckNavigation'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
@@ -24,7 +23,6 @@ export function useLearningDeck({ questions, category, userId, initialSession, p
   const query = usePracticeSession(userId, category, initialSession)
   const { reaction, onAnswered } = useWolfekAnswerReaction()
   const session = query.data ?? null
-  usePracticeSupport(query.authorized ? session : null, query.update)
   const term = useDebouncedValue(search.searchTerm, 250)
   useEffect(() => {
     search.openCategory(category)

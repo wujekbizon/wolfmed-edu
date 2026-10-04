@@ -11,7 +11,7 @@ import type { WolfekQuestionProps, WolfekQuestionState } from '@/types/wolfekRes
 export function useWolfekQuestions(props: WolfekQuestionProps) {
   const { route, practice } = props
   const prepared = useWolfekPreparedVisit(props)
-  const scope = `${prepared.visit.id}:${prepared.visit.viewer}:${route}:${practice?.questionId ?? ''}:${practice?.revision ?? ''}`
+  const scope = `${prepared.visit.id}:${prepared.visit.viewer}:${route}:${practice?.questionId ?? ''}:${practice?.revision ?? ''}:${practice?.selected ?? ''}`
   const current = useRef(scope)
   current.current = scope
   const [thinking, setThinking] = useState(false)
@@ -19,7 +19,8 @@ export function useWolfekQuestions(props: WolfekQuestionProps) {
     const submittedScope = current.current
     let result: WolfekQuestionState
     try {
-      if (data.get('origin') === 'prepared') result = await prepared.usePrepared(data, () => setThinking(true))
+      if (data.get('origin') === 'prepared') result = props.preparedResult?.(String(data.get('preparedQuestionId'))) ??
+        await prepared.usePrepared(data, () => setThinking(true))
       else { setThinking(true); result = await askWolfekQuestionAction(previous, data) }
     } catch (error) {
       result = { ...toFormState('ERROR', error instanceof Error ? error.message : 'Nie mogę teraz odpowiedzieć.'),
@@ -32,6 +33,7 @@ export function useWolfekQuestions(props: WolfekQuestionProps) {
     data.set('route', route)
     data.set('submissionId', crypto.randomUUID())
     data.set('practice', practice ? JSON.stringify(practice) : '')
+    if (props.recentMessages) data.set('recentMessages', JSON.stringify(props.recentMessages))
   }
   const submitPrepared = (id: string) => {
     const button = getWolfekPreparedQuestion(route, id)
@@ -46,5 +48,5 @@ export function useWolfekQuestions(props: WolfekQuestionProps) {
   const stale = state.values?.viewScope !== scope || (practice && state.status === 'SUCCESS' &&
     state.values?.practiceVersion !== practice.version && state.session?.version !== practice.version)
   return { state: stale ? EMPTY_WOLFEK_QUESTION : state, action,
-    pending: pending || !prepared.visit.ready, thinking, prepareForm, submitPrepared }
+    pending: pending || !prepared.visit.ready, viewer: prepared.visit.viewer, thinking, prepareForm, submitPrepared }
 }

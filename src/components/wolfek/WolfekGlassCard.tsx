@@ -34,6 +34,6 @@ export default function WolfekGlassCard({ avatarRef, avatar, avatarStatus, avata
         </div>
       </div>
     </div>
-    <div ref={setSpeechTarget} className="wolfek-speaker-answer" />
+    <div className="wolfek-speaker-answer"><div ref={setSpeechTarget} className="wolfek-speech-content" /></div>
   </div></WolfekSpeechTarget.Provider></WolfekAnimationContext.Provider>
 }

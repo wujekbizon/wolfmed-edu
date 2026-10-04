@@ -2,9 +2,9 @@
 
 ## Wolfek app/help questions — 2026-10-01
 
-Page mount/open makes no Jev call. First prepared click → `getWolfekPreparedBatchAction` → all route prompts judged independently with Choice/Noul/Score in one Jev request. React Query holds the batch for this page visit. Later clicks → `useWolfekPreparedResultAction` → access/current-data checks and delivery logging, without Jev. Reload/navigation/account changes clear reuse; changed facts invalidate the batch. Typed questions → `askWolfekQuestionAction` → fresh Jev call each time. UI-only controls remain direct. Existing automatic learning coaching and Premium RAG retain their adapters.
+Page mount/open makes no Jev call. First prepared click → `getWolfekPreparedBatchAction` → all route prompts judged independently with Choice/Noul/Score in one Jev request. React Query holds the batch for this page visit. Later clicks → `useWolfekPreparedResultAction` → access/current-data checks and delivery logging, without Jev. Reload/navigation/account changes clear reuse; changed facts invalidate the batch. Typed questions → `askWolfekQuestionAction` → fresh Jev call each time. UI-only controls remain direct. Learning help now uses the [Premium RAG workflow](docs/2026-10-04-wolfek-learning-rag.md), replacing the separate tutor form and automatic coaching calls on this route.
 
-Runtime packs: `src/content/wolfek`. [Batch implementation and smoke checks](docs/2026-10-01-wolfek-prepared-batches.md). Original provider body remains in `responseText`; `wolfekBatch`/`wolfekDeliveries` track batches/clicks and `wolfekDelivery` tracks typed delivery. Payment-method facts, videos and source-reviewed medical hints are explicitly unavailable until provided.
+Runtime packs: `src/content/wolfek`. [Batch implementation and smoke checks](docs/2026-10-01-wolfek-prepared-batches.md). Original provider body remains in `responseText`; `wolfekBatch`/`wolfekDeliveries` track batches/clicks and `wolfekDelivery` tracks typed delivery. Learning RAG runs only for the selected hint/comparison/explanation; without relevant sources it returns an explicit no-source answer.
 
 The shape of the AI side of Wolfmed: what happens between a student typing and an
 answer appearing, and how their material got there first. Rules live in `CLAUDE.md`

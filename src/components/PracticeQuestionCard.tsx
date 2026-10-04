@@ -65,7 +65,7 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
           <Button type="submit" name="command" value="answer" size="lg" disabled={pending} className="learning-check">
             {pending ? 'Zapisywanie…' : 'Sprawdź swój wybór'}
           </Button>
-          <Button type="submit" name="command" value="reveal" size="lg" variant="ghost" disabled={pending}>Pokaż odpowiedź</Button>
+          <Button type="submit" name="command" value="reveal" size="lg" variant="ghost" disabled={pending}>Pokaż poprawną odpowiedź</Button>
         </div>}
         {session?.status === 'active' && progress?.outcome === 'revealed' && question.practiceable &&
           <Button type="submit" name="command" value="review" size="md" variant="ghost"

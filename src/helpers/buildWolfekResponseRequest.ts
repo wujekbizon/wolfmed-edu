@@ -42,5 +42,6 @@ export function buildWolfekResponseRequest(
       availability: id.startsWith('unavailable_') ? 'missing_data' : 'verified',
     }])),
     submission: { id: input.submissionId, origin: input.origin },
+    ...(input.origin === 'typed' && input.recentMessages?.length ? { conversation: input.recentMessages } : {}),
   }, questions: buildWolfekJudgments('state.question', criteria as Record<string, null>) } }
 }

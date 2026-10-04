@@ -1,5 +1,5 @@
 {
-  "version": "wolfek-responses-v2",
+  "version": "wolfek-learning-rag-v1",
   "instructions": {
     "question": "Which eligible supplied response object directly answers `state.question` using only verified `state.facts`?",
     "constraints": [
@@ -58,37 +58,9 @@
   },
   "options": [
     {
-      "id": "hint_reviewed",
+      "id": "hint_rag",
       "topic": "hint",
-      "covers": "An explicit hint request; current unrevealed card and source-backed hint approved for this revision.",
-      "requiredFacts": [
-        "card.reviewedHintText",
-        "card.hintSourceLabel"
-      ],
-      "conditions": [
-        {
-          "path": "card.loaded",
-          "equals": true
-        },
-        {
-          "path": "card.resolved",
-          "equals": false
-        },
-        {
-          "path": "card.hasHint",
-          "equals": true
-        }
-      ],
-      "template": "{{card.reviewedHintText}}",
-      "action": {
-        "type": "show_hint",
-        "destinationKey": "currentCard"
-      }
-    },
-    {
-      "id": "hint_missing",
-      "topic": "hint",
-      "covers": "Hint request; no reviewed source-backed hint available for current card.",
+      "covers": "A tiny educational hint for the current question, without giving the solution. Choose this for a hint request, not a full explanation.",
       "requiredFacts": [],
       "conditions": [
         {
@@ -96,47 +68,28 @@
           "equals": true
         },
         {
-          "path": "card.resolved",
-          "equals": false
-        },
-        {
-          "path": "card.hasHint",
-          "equals": false
-        }
-      ],
-      "template": "Nie mam sprawdzonej wskazówki do tego pytania. Możesz porównać odpowiedzi lub samodzielnie ujawnić rozwiązanie.",
-      "action": null
-    },
-    {
-      "id": "hint_resolved",
-      "topic": "hint",
-      "covers": "Hint request but current card is already resolved or its answer is visible.",
-      "requiredFacts": [
-        "card.availableExplanationNotice"
-      ],
-      "conditions": [
-        {
-          "path": "card.loaded",
-          "equals": true
-        },
-        {
-          "path": "card.resolved",
+          "path": "access.premiumTutorAllowed",
           "equals": true
         }
       ],
-      "template": "Odpowiedź została już sprawdzona lub ujawniona. {{card.availableExplanationNotice}}",
-      "action": null
+      "template": "Przygotuję krótką wskazówkę na podstawie materiałów kursu.",
+      "action": {
+        "type": "rag_hint",
+        "destinationKey": "currentCard"
+      }
     },
     {
-      "id": "compare",
+      "id": "compare_rag",
       "topic": "compare",
-      "covers": "Compare wording of selected and alternative options; no grading or correct-option selection.",
-      "requiredFacts": [
-        "card.comparisonFocusText"
-      ],
+      "covers": "Explain differences between the current selected answer and other options. Do not repeat the selected option or choose the correct one.",
+      "requiredFacts": [],
       "conditions": [
         {
           "path": "card.loaded",
+          "equals": true
+        },
+        {
+          "path": "access.premiumTutorAllowed",
           "equals": true
         },
         {
@@ -144,16 +97,16 @@
           "equals": true
         }
       ],
-      "template": "Porównaj treść pytania z odpowiedziami na karcie. {{card.comparisonFocusText}}",
+      "template": "Porównam Twój wybór z pozostałymi odpowiedziami.",
       "action": {
-        "type": "highlight_comparison",
-        "destinationKey": "currentCard"
+        "type": "rag_compare",
+        "destinationKey": "comparison"
       }
     },
     {
       "id": "compare_select",
       "topic": "compare",
-      "covers": "Comparison request with no selected answer.",
+      "covers": "A comparison request with no selected answer.",
       "requiredFacts": [],
       "conditions": [
         {
@@ -161,17 +114,21 @@
           "equals": true
         },
         {
+          "path": "access.premiumTutorAllowed",
+          "equals": true
+        },
+        {
           "path": "card.selectedAnswerPresent",
           "equals": false
         }
       ],
-      "template": "Najpierw zaznacz odpowiedź, którą chcesz porównać. Nie będę wskazywać poprawnej odpowiedzi.",
+      "template": "Najpierw zaznacz odpowiedź, którą chcesz porównać.",
       "action": null
     },
     {
       "id": "tutor_ready",
       "topic": "assistant",
-      "covers": "Explicit AI discussion request; Premium and answer already visible.",
+      "covers": "A full explanation, AI discussion or follow-up about the current medical question; the answer is already visible.",
       "requiredFacts": [],
       "conditions": [
         {
@@ -187,16 +144,16 @@
           "equals": true
         }
       ],
-      "template": "Możesz omówić to pytanie z asystentem na podstawie dostępnych materiałów.",
+      "template": "Wyjaśnię pytanie na podstawie materiałów kursu.",
       "action": {
-        "type": "open_tutor",
+        "type": "rag_explain",
         "destinationKey": "currentCardTutor"
       }
     },
     {
       "id": "tutor_reveal_confirm",
       "topic": "assistant",
-      "covers": "AI request with Premium but answer hidden; explanation would reveal the key.",
+      "covers": "Full explanation or discussion while the answer is hidden; request explicit confirmation to reveal before explaining. Also handles Pokaż i wyjaśnij.",
       "requiredFacts": [],
       "conditions": [
         {
@@ -212,221 +169,28 @@
           "equals": false
         }
       ],
-      "template": "Wyjaśnienie ujawni rozwiązanie. Czy chcesz najpierw ujawnić odpowiedź, a potem otworzyć asystenta?",
+      "template": "Pełne wyjaśnienie ujawni rozwiązanie. Czy chcesz pokazać poprawną odpowiedź i ją omówić?",
       "action": {
         "type": "confirm_reveal_then_tutor",
         "destinationKey": "currentCardTutor"
       }
     },
     {
-      "id": "tutor_basic",
-      "topic": "assistant",
-      "covers": "AI discussion request; verified no Premium entitlement.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "card.loaded",
-          "equals": true
-        },
-        {
-          "path": "access.premiumTutorAllowed",
-          "equals": false
-        }
-      ],
-      "template": "Rozmowa z asystentem jest dostępna w Premium. Możesz nadal korzystać z dostępnych wskazówek, porównania i ujawnienia odpowiedzi.",
-      "action": null
-    },
-    {
-      "id": "review_available",
-      "topic": "review",
-      "covers": "Return to earlier revealed card requested; eligible card is verified.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "review.available",
-          "equals": true
-        }
-      ],
-      "template": "Wróć do wcześniejszej karty i spróbuj odpowiedzieć bez otwierania pomocy. Wcześniejsze ujawnienie pozostaje zapisane.",
-      "action": {
-        "type": "review_card",
-        "destinationKey": "verifiedReviewCard"
-      }
-    },
-    {
-      "id": "review_missing",
-      "topic": "review",
-      "covers": "Review request; no eligible earlier card.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "review.available",
-          "equals": false
-        }
-      ],
-      "template": "Nie ma teraz wcześniejszej karty dostępnej do takiej powtórki.",
-      "action": null
-    },
-    {
-      "id": "material_available",
-      "topic": "material",
-      "covers": "Open recommendation's verified source material requested.",
-      "requiredFacts": [
-        "material.title"
-      ],
-      "conditions": [
-        {
-          "path": "material.verified",
-          "equals": true
-        }
-      ],
-      "template": "Materiał powiązany z tym pytaniem: {{material.title}}.",
-      "action": {
-        "type": "link",
-        "destinationKey": "verifiedMaterial"
-      }
-    },
-    {
-      "id": "material_missing",
-      "topic": "material",
-      "covers": "Related material requested; verified mapping absent.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "material.verified",
-          "equals": false
-        }
-      ],
-      "template": "Nie mam sprawdzonego materiału przypisanego do tego pytania. Nie wskażę przypadkowego rozdziału.",
-      "action": null
-    },
-    {
-      "id": "plan_available",
-      "topic": "plan",
-      "covers": "Follow learning-plan activity requested; an applicable activity exists.",
-      "requiredFacts": [
-        "plan.relevantActivityText"
-      ],
-      "conditions": [
-        {
-          "path": "plan.relevant",
-          "equals": true
-        }
-      ],
-      "template": "Twój kolejny krok w planie: {{plan.relevantActivityText}}.",
-      "action": {
-        "type": "link",
-        "destinationKey": "plan"
-      }
-    },
-    {
-      "id": "plan_missing",
-      "topic": "plan",
-      "covers": "Plan activity requested; no applicable active-plan task.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "plan.relevant",
-          "equals": false
-        }
-      ],
-      "template": "Nie ma teraz zadania z aktywnego planu dopasowanego do tej nauki.",
-      "action": null
-    },
-    {
-      "id": "next_available",
-      "topic": "next",
-      "covers": "Explicit next-card request; server confirms navigation is available.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "navigation.canContinue",
-          "equals": true
-        }
-      ],
-      "template": "Możesz przejść do następnej karty.",
-      "action": {
-        "type": "next_card",
-        "destinationKey": "nextCard"
-      }
-    },
-    {
-      "id": "next_end",
-      "topic": "next",
-      "covers": "Explicit next-card request; verified last card.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "navigation.canContinue",
-          "equals": false
-        }
-      ],
-      "template": "To ostatnia karta w tej sesji. Możesz wrócić do wcześniejszych pytań lub zakończyć naukę.",
-      "action": null
-    },
-    {
-      "id": "recommendation_valid",
-      "topic": "accept_suggestion",
-      "covers": "User asks to use existing suggestion; current trusted suggestion and action remain eligible.",
-      "requiredFacts": [
-        "recommendation.message"
-      ],
-      "conditions": [
-        {
-          "path": "recommendation.valid",
-          "equals": true
-        }
-      ],
-      "template": "{{recommendation.message}}",
-      "action": {
-        "type": "confirm_recommended_action",
-        "destinationKey": "currentRecommendation"
-      }
-    },
-    {
-      "id": "recommendation_stale",
-      "topic": "accept_suggestion",
-      "covers": "Use suggestion request; suggestion no longer applies or is missing.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "recommendation.valid",
-          "equals": false
-        }
-      ],
-      "template": "Ta propozycja nie jest już aktualna. Wybierz dostępną pomoc do bieżącej karty.",
-      "action": null
-    },
-    {
-      "id": "no_card",
-      "topic": "hint",
-      "covers": "Learning help requested but no valid current card is loaded.",
-      "requiredFacts": [],
-      "conditions": [
-        {
-          "path": "card.loaded",
-          "equals": false
-        }
-      ],
-      "template": "Wybierz aktualne pytanie, abym mógł dobrać pomoc do tej karty.",
-      "action": null
-    },
-    {
       "id": "clarify",
       "topic": null,
-      "covers": "The request is ambiguous and a specific missing detail is necessary.",
+      "covers": "A missing specific detail is necessary to understand the request. Do not ask clarification for a hint, comparison or explanation of the current card.",
       "requiredFacts": [],
       "conditions": [],
-      "template": "Doprecyzuj proszę pytanie: wskaż kurs, konkretny test albo cel, którego dotyczy.",
+      "template": "Doprecyzuj, co chcesz zrozumieć w tym pytaniu.",
       "action": null
     },
     {
       "id": "no_match",
       "topic": null,
-      "covers": "No supplied response answers the actual request.",
+      "covers": "The request is unrelated to learning help for the current card.",
       "requiredFacts": [],
       "conditions": [],
-      "template": "Nie mam odpowiedzi na to pytanie w dostępnych informacjach. Doprecyzuj pytanie albo wybierz inną propozycję.",
+      "template": "Pomogę Ci ze wskazówką, porównaniem odpowiedzi lub wyjaśnieniem tego pytania.",
       "action": null
     }
   ]

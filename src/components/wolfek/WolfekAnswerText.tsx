@@ -5,11 +5,11 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { getWolfekSpeechTiming } from '@/helpers/getWolfekSpeechTiming'
 import { WOLFEK_SPEECH_DELAY, WOLFEK_WORD_FADE } from '@/constants/wolfekSpeech'
 
-export default function WolfekAnswerText({ text }: { text: string }) {
+export default function WolfekAnswerText({ text, animate = true }: { text: string; animate?: boolean }) {
   const reduced = useReducedMotion()
   const { interval } = getWolfekSpeechTiming(text)
   let word = 0
-  if (reduced) return <p className="whitespace-pre-line">{text}</p>
+  if (reduced || !animate) return <p className="whitespace-pre-line">{text}</p>
   return <p key={text} className="whitespace-pre-line">
     <span className="sr-only">{text}</span>
     <span aria-hidden="true">{text.split(/(\s+)/).map((token, index) => {

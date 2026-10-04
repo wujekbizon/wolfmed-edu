@@ -181,44 +181,8 @@
       "conditional": false
     },
     {
-      "id": "next",
-      "prompt": "Chcę przejść do następnego pytania.",
-      "featured": true,
-      "conditional": false
-    },
-    {
       "id": "reveal_tutor",
-      "prompt": "Chcę ujawnić odpowiedź i omówić ją z asystentem AI.",
-      "featured": false,
-      "conditional": true
-    },
-    {
-      "id": "ask_tutor",
-      "prompt": "Chcę omówić tę ujawnioną odpowiedź z asystentem AI.",
-      "featured": false,
-      "conditional": true
-    },
-    {
-      "id": "review",
-      "prompt": "Chcę wrócić do wcześniejszej karty i spróbować bez pomocy.",
-      "featured": false,
-      "conditional": true
-    },
-    {
-      "id": "material",
-      "prompt": "Chcę zobaczyć sprawdzony materiał powiązany z tym pytaniem.",
-      "featured": false,
-      "conditional": true
-    },
-    {
-      "id": "plan",
-      "prompt": "Chcę zobaczyć zadanie z planu pasujące do tej nauki.",
-      "featured": false,
-      "conditional": true
-    },
-    {
-      "id": "accept_suggestion",
-      "prompt": "Chcę skorzystać z aktualnej propozycji pomocy do tej karty.",
+      "prompt": "Pokaż i wyjaśnij",
       "featured": false,
       "conditional": true
     }

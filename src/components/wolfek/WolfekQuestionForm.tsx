@@ -10,7 +10,7 @@ import FormError from '@/components/FormError'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import type { WolfekQuestionProps, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
-export default function WolfekQuestionForm({ route, practice, state, pending, action, onInteraction }: WolfekQuestionProps & {
+export default function WolfekQuestionForm({ route, practice, recentMessages, state, pending, action, onInteraction }: WolfekQuestionProps & {
   state: WolfekQuestionState; pending: boolean; action: (data: FormData) => void; onInteraction?: () => void
 }) {
   const generatedId = useId()
@@ -24,6 +24,7 @@ export default function WolfekQuestionForm({ route, practice, state, pending, ac
     <Input type="hidden" name="route" value={route} />
     <Input type="hidden" name="origin" value="typed" />
     <Input type="hidden" name="practice" value={practice ? JSON.stringify(practice) : ''} />
+    {recentMessages && <Input type="hidden" name="recentMessages" value={JSON.stringify(recentMessages)} />}
     <Input type="hidden" name="submissionId" inputRef={submission} defaultValue="" />
     <Label htmlFor={id} label="Zadaj własne pytanie"
       className="panel-wolfek-topics-label wolfek-custom-question-label" />

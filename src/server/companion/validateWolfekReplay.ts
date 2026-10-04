@@ -14,6 +14,7 @@ export async function validateWolfekReplay(userId: string | null, input: WolfekQ
     loadWolfekResponsePack(input.route), practice ? getWolfekPracticeContext(userId!, practice)
       : getWolfekAppContext(userId, input.route),
   ])
+  if (result.values?.learningGenerated) return
   if (!result.answer) return
   const pack = input.route === 'kierunki' ? expandWolfekCourseResponses(rawPack) : rawPack
   const fresh = buildWolfekResponseRequest(input, pack, context).answers[result.answer.responseId]

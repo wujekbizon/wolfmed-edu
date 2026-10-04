@@ -16,6 +16,7 @@ import { validateWolfekReplay } from './validateWolfekReplay'
 import { getKierunkiWolfekRateLimitIdentity } from './getKierunkiWolfekRateLimitIdentity'
 import { reserveCompanionJevCall } from './reserveCompanionJevCall'
 import { deliverWolfekPracticeHint } from './deliverWolfekPracticeHint'
+import { deliverWolfekLearningHelp } from './deliverWolfekLearningHelp'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
 export async function executeWolfekQuestion(userId: string | null, input: WolfekQuestionRequest): Promise<WolfekQuestionState> {
@@ -60,6 +61,7 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
     if (input.practice && answer?.action?.type === 'show_hint') {
       result.session = await deliverWolfekPracticeHint(userId!, input.practice, input.submissionId)
     }
+    if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
   } catch (error) {
     result = { ...toFormState('ERROR', error instanceof WolfekQuestionError ? error.message : 'Nie mogę teraz pobrać danych. Spróbuj później.'),
       answer: null, confidence: null }
@@ -67,7 +69,7 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
   await recordWolfekInteraction({ source, route: input.route, userId, kind: 'question',
     question: input.question, topic: selected, confidence: result.confidence,
     outcome: result.status === 'SUCCESS' && attempted ? 'typed_provider' : 'unavailable' })
-  result.values = { preparedQuestionId: input.preparedQuestionId, origin: input.origin,
+  result.values = { ...result.values, preparedQuestionId: input.preparedQuestionId, origin: input.origin,
     practiceVersion: input.practice?.version ?? null }
   await completeWolfekAudit(input, userId, result, Date.now() - started)
   try { await submission.complete(result) } catch {}

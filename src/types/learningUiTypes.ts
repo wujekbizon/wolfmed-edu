@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import type { WolfekAnswerReaction, WolfekGaze } from './wolfekTypes'
 import type {
-  JevSupportAction, LearningQuestionCardData, PracticeCardProgress, PracticeCompanionMode,
+  LearningQuestionCardData, PracticeCardProgress, PracticeCompanionMode,
   PracticeFormState, PracticeTutorAttachment, PracticeView,
 } from './learningPracticeTypes'
 
@@ -81,13 +81,8 @@ export interface WolfekDockProps {
 }
 export interface PracticeCompanionActionsProps {
   mode: PracticeCompanionMode
-  premium: boolean
-  answerVisible: boolean
-  suggestedAction: JevSupportAction | null
   enabled: boolean
-  resolved: boolean
   pending: boolean
-  onMode: (mode: PracticeCompanionMode) => void
   onHint: () => void
   onAskTutor: () => void
   onCompare?: () => void

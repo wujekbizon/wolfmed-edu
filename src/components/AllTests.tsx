@@ -5,7 +5,6 @@ import Label from '@/components/ui/Label'
 import LearningPaginationControls from '@/components/LearningPaginationControls'
 import PracticeQuestionCard from '@/components/PracticeQuestionCard'
 import PracticeCompanion from '@/components/learning/PracticeCompanion'
-import PracticeTutor from '@/components/learning/PracticeTutor'
 import LearningDeckHeader from '@/components/learning/LearningDeckHeader'
 import WolfekDock from '@/components/learning/WolfekDock'
 import WolfekVisitProvider from '@/components/wolfek/WolfekVisitProvider'
@@ -24,7 +23,7 @@ export default function AllTests(props: LearningDeckProps) {
       <ResetLearningProgressButton userId={props.userId} category={props.category}
         session={deck.session} onReset={(view) => { deck.update(view); deck.changeFilter('all') }} />} />
     {deck.error && <p role="alert">Nie udało się odświeżyć postępu. Sprawdź połączenie lub dostęp.</p>}
-    <div id="learning-card-feed" className={`relative min-w-0 scroll-mt-6 space-y-4 ${wolfekHidden ? 'xl:pr-24' : 'xl:pr-[380px]'}`}>
+    <div id="learning-card-feed" className={`relative min-w-0 scroll-mt-6 space-y-4 ${!props.premium ? '' : wolfekHidden ? 'xl:pr-24' : 'xl:pr-[380px]'}`}>
       <div className="learning-card-toolbar">
         <LearningCardFilters value={deck.filter} counts={deck.filterCounts} onChange={deck.changeFilter} />
         <div className="learning-search-field">
@@ -43,7 +42,7 @@ export default function AllTests(props: LearningDeckProps) {
         onFocus={() => deck.focus(question.id)} onSaved={deck.update} onAnswered={deck.onAnswered} />)}
       <LearningPaginationControls totalPages={deck.totalPages} currentPage={deck.page} setCurrentPage={deck.changePage} />
     </div>
-    <WolfekDock userId={props.userId} questionId={deck.question?.id} session={deck.companion} reaction={deck.reaction}>
+    {props.premium && <WolfekDock userId={props.userId} questionId={deck.question?.id} session={deck.companion} reaction={deck.reaction}>
       {(minimize, smallTalkIndex) => <>
         <PracticeCompanion key={deck.question?.id ?? 'welcome'} userId={props.userId} category={props.category}
           session={deck.companion} premium={props.premium} onSaved={deck.update} onAskTutor={deck.askTutor}
@@ -51,11 +50,7 @@ export default function AllTests(props: LearningDeckProps) {
           onReview={deck.reviewRevealedCard}
           canContinue={deck.canContinue}
           onMinimize={minimize} smallTalkIndex={smallTalkIndex} reaction={deck.reaction} />
-        {deck.tutor && <div className="wolfek-conversation">
-          <PracticeTutor key={`${deck.tutor.sessionId}:${deck.tutor.questionId}`}
-            reference={deck.tutor} category={props.category} onClose={() => deck.setTutor(null)} />
-        </div>}
       </>}
-    </WolfekDock>
+    </WolfekDock>}
   </section></WolfekVisitProvider>
 }

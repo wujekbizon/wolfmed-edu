@@ -1,15 +1,18 @@
 import type { FormState } from './actionTypes'
 import type { PracticeView } from './learningPracticeTypes'
 import type { JevRequestPayload } from './jevAuditTypes'
+import type { SourceRef } from './retrievalTypes'
+import type { TutorContextMessage } from './memoryTypes'
 
 export type WolfekRoute = 'kierunki' | 'panel.home' | 'panel.results' | 'learning.practice'
 export type WolfekFacts = Record<string, unknown>
 export type WolfekPracticeReference = {
-  category: string; sessionId: string | null; version: number; questionId: string; revision: string
+  category: string; sessionId: string | null; version: number; questionId: string; revision: string; selected?: number | null | undefined
 }
 export type WolfekQuestionRequest = {
   route: WolfekRoute; question: string; origin: 'typed' | 'prepared'
   preparedQuestionId: string | null; submissionId: string; practice: WolfekPracticeReference | null
+  recentMessages?: TutorContextMessage[] | undefined
 }
 export type WolfekOption = {
   id: string; topic: string | null; covers: string; template: string; requiredFacts: string[]
@@ -30,6 +33,7 @@ export type WolfekDecision = {
 }
 export type WolfekQuestionState = FormState & {
   answer: WolfekAnswer | null; confidence: number | null; session?: PracticeView
+  sources?: SourceRef[]
 }
 export type WolfekContext = {
   facts: WolfekFacts; destinations: Record<string, WolfekAction>
@@ -42,6 +46,8 @@ export type WolfekResponseEvaluator = (
 ) => Promise<WolfekDecision | null>
 export type WolfekQuestionProps = {
   route: WolfekRoute; practice?: WolfekPracticeReference | null
+  recentMessages?: TutorContextMessage[]
+  preparedResult?: (id: string) => WolfekQuestionState | null
   onAnswer?: (answer: WolfekAnswer) => void
 }
 export type WolfekQuestionChatProps = WolfekQuestionProps & {

@@ -15,6 +15,7 @@ export async function loadWolfekPracticeCard(userId: string, ref: WolfekPractice
   return db.transaction(async (tx) => {
     const question = await loadPracticeQuestion(tx, ref.questionId, ref.category)
     if (!question || question.revision !== ref.revision) throw new WolfekQuestionError('Treść pytania uległa zmianie.')
+    if (ref.selected != null && !question.data.answers[ref.selected]) throw new WolfekQuestionError('Nieprawidłowy wybór odpowiedzi.')
     if (!ref.sessionId) {
       const [count] = await tx.select({ total: sql<number>`count(*)::int`,
         remaining: sql<number>`count(*) FILTER (WHERE ${tests.id} > ${ref.questionId}::uuid)::int` }).from(tests)

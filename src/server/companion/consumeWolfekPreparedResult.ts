@@ -13,6 +13,7 @@ import { beginWolfekSubmission } from './beginWolfekSubmission'
 import { loadWolfekQuestionData } from './loadWolfekQuestionData'
 import { deliverWolfekPracticeHint } from './deliverWolfekPracticeHint'
 import { validateWolfekReplay } from './validateWolfekReplay'
+import { deliverWolfekLearningHelp } from './deliverWolfekLearningHelp'
 import type { WolfekBatchReceipt, WolfekBatchRequest } from '@/types/wolfekBatchTypes'
 import type { WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
@@ -37,7 +38,7 @@ export async function consumeWolfekPreparedResult(
   if (receipt.contextVersion !== data.contextVersion) { await redis.del(key); return expired }
   const state = receipt.states[input.preparedQuestionId!]
   if (!state) throw new WolfekQuestionError('Nieprawidłowe przygotowane pytanie.')
-  const result: WolfekQuestionState = { ...state, timestamp: Date.now(), values: {
+  let result: WolfekQuestionState = { ...state, timestamp: Date.now(), values: {
     preparedQuestionId: input.preparedQuestionId, origin: 'prepared', practiceVersion: input.practice?.version ?? null,
     contextVersion: data.contextVersion, batchId, batchReused: receipt.consumed,
   } }
@@ -45,8 +46,11 @@ export async function consumeWolfekPreparedResult(
     const fresh = buildWolfekResponseRequest(input, data.pack, data.context).answers[result.answer.responseId]
     if (JSON.stringify(fresh) !== JSON.stringify(result.answer)) return expired
   }
+  if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
   if (input.practice && result.answer?.action?.type === 'show_hint') {
     result.session = await deliverWolfekPracticeHint(userId!, input.practice, input.submissionId)
+    await redis.del(key)
+  } else if (result.session) {
     await redis.del(key)
   } else {
     await redis.set(key, { ...receipt, consumed: true }, { ex: WOLFEK_BATCH_RECEIPT_SECONDS })
@@ -54,7 +58,7 @@ export async function consumeWolfekPreparedResult(
   const source = input.route === 'kierunki' ? 'kierunki' : input.route === 'learning.practice' ? 'practice' : 'panel'
   await recordWolfekInteraction({ source, route: input.route, userId, kind: 'question', question: input.question,
     topic: result.answer?.responseId ?? null, confidence: result.confidence,
-    outcome: receipt.consumed ? 'batch_reuse' : 'batch_first' })
+    outcome: result.status === 'SUCCESS' ? receipt.consumed ? 'batch_reuse' : 'batch_first' : 'unavailable' })
   await recordWolfekBatchDelivery(input, userId, receipt.request.submissionId, result, receipt.consumed)
   try { await submission.complete(result) } catch {}
   return result

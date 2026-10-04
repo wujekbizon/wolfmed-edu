@@ -94,6 +94,7 @@ export async function generateGroundedAnswer(
       config: {
         systemInstruction: composeSystemInstruction(options.memoryPrefix),
         thinkingConfig: NO_THINKING,
+        ...(options.maxOutputTokens ? { maxOutputTokens: options.maxOutputTokens } : {}),
       },
     })
 

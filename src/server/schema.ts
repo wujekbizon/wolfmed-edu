@@ -3,12 +3,14 @@ import { z } from "zod";
 export const WolfekPracticeReferenceSchema = z.object({
   category: z.string().min(1).max(256), sessionId: z.uuid().nullable(), version: z.number().int().nonnegative(),
   questionId: z.guid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+  selected: z.number().int().min(0).max(19).nullable().optional(),
 }).strict()
 export const WolfekQuestionSchema = z.object({
   route: z.enum(['kierunki', 'panel.home', 'panel.results', 'learning.practice']),
   question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim().min(2).max(300),
   origin: z.enum(['typed', 'prepared']), preparedQuestionId: z.string().max(128).nullable(),
   submissionId: z.uuid(), practice: WolfekPracticeReferenceSchema.nullable(),
+  recentMessages: z.array(z.object({ role: z.enum(['user', 'assistant']), text: z.string().max(2000) }).strict()).max(4).optional(),
 }).strict().refine((input) => input.route !== 'learning.practice' || input.practice !== null,
   { message: 'Wybierz aktualną kartę.', path: ['question'] })
 export const WolfekPackSchema = z.object({
