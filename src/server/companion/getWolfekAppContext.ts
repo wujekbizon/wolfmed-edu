@@ -21,11 +21,7 @@ export async function getWolfekAppContext(userId: string | null, route: WolfekRo
         examFeaturesText: opiekun ? careerPathsData['opiekun-medyczny']?.pricing?.basic.features.filter((item) => !item.startsWith('Ponad')).join('; ') : null,
         growthFeaturesText: opiekun ? careerPathsData['opiekun-medyczny']?.pricing?.[opiekun.tier === 'premium' || opiekun.tier === 'pro' ? 'premium' : 'basic']?.features.join('; ') : null },
       firstStepsText: 'Wybierz kategorię w posiadanym kursie i rozpocznij naukę.',
-      availableFeaturesText: owned.map((course) => {
-        const pricing = careerPathsData[course.slug]?.pricing
-        const tier = course.tier === 'premium' || course.tier === 'pro' ? 'premium' : 'basic'
-        return `${careerPathsData[course.slug]?.title}: ${pricing?.[tier]?.features.filter((item) => !/^Ponad |^[0-9]/.test(item)).join('; ')}`
-      }).join('\n') },
+    },
   }
   if (route === 'kierunki') return { facts: { ...facts, ...getWolfekCatalogFacts(context) }, destinations: getWolfekDestinations() }
   const [tests, home] = await Promise.allSettled([

@@ -22,7 +22,7 @@ export default function WolfekQuestionChat(props: WolfekQuestionChatProps) {
     <WolfekSpeech revealKey={help.state.timestamp} pending={help.pending}
       answerText={help.state.answer?.text ?? ''}
       answerKey={!help.pending && help.state.answer ? help.state.timestamp : 0}>
-    {help.thinking && <p role="status">Wolfek sprawdza…</p>}
+    {help.thinking && <p role="status" className="wolfek-loading-text">Wolfek sprawdza…</p>}
     {!help.pending && help.state.answer && <WolfekSelectedResponse answer={help.state.answer}
       {...(props.onAction ? { onAction: props.onAction } : {})} />}
     {!help.pending && help.state.status === 'SUCCESS' && !help.state.answer &&

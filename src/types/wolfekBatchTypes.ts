@@ -2,6 +2,9 @@ import type { FormState } from './actionTypes'
 import type { WolfekBuiltRequest, WolfekDecision, WolfekQuestionRequest, WolfekQuestionState } from './wolfekResponseTypes'
 
 export type WolfekPreparedQuestion = { id: string; prompt: string }
+export type WolfekPreparedQuestionButtonProps = {
+  question: WolfekPreparedQuestion; pending: boolean; onSelect: (id: string) => void; active?: boolean
+}
 export type WolfekBatchRequest = WolfekQuestionRequest & { visitId: string }
 export type WolfekPreparedBatch = {
   id: string; visitId: string; contextVersion: string; states: Record<string, WolfekQuestionState>

@@ -1,5 +1,5 @@
 {
-  "version": "wolfek-responses-v2",
+  "version": "wolfek-responses-v11",
   "instructions": {
     "question": "Which eligible supplied response object directly answers `state.question` using only verified `state.facts`?",
     "constraints": [
@@ -66,10 +66,7 @@
       ],
       "conditions": [],
       "template": "Zacznij od swoich kursów i sekcji Nauka. Potem sprawdź postępy i ustaw plan nauki. {{access.firstStepsText}}",
-      "action": {
-        "type": "locate",
-        "destinationKey": "firstSteps"
-      }
+      "action": null
     },
     {
       "id": "username_edit",
@@ -78,10 +75,7 @@
       "requiredFacts": [],
       "conditions": [],
       "template": "Nazwę użytkownika zmienisz w formularzu „Nazwa użytkownika”. Wpisz nową nazwę i wybierz „Aktualizuj nazwę”.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "usernameForm"
-      }
+      "action": null
     },
     {
       "id": "motto_edit",
@@ -90,10 +84,7 @@
       "requiredFacts": [],
       "conditions": [],
       "template": "Motto zmienisz w formularzu „Motto nauki”. Wpisz tekst i wybierz „Ustaw motto”.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "mottoForm"
-      }
+      "action": null
     },
     {
       "id": "courses",
@@ -124,10 +115,7 @@
         }
       ],
       "template": "Odliczanie dotyczy Twojego planu. Termin: {{plan.dueDateText}}. Pozostało {{plan.daysLeft}} dni.",
-      "action": {
-        "type": "link",
-        "destinationKey": "plan"
-      }
+      "action": null
     },
     {
       "id": "exam_countdown",
@@ -149,10 +137,7 @@
         }
       ],
       "template": "Odliczanie dotyczy sesji egzaminacyjnej opiekuna: {{exam.periodLabel}}. Termin: {{exam.dateText}}. Pozostało {{exam.daysLeft}} dni.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "countdown"
-      }
+      "action": null
     },
     {
       "id": "no_countdown",
@@ -170,10 +155,7 @@
         }
       ],
       "template": "Nie masz teraz aktywnego odliczania. Utwórz plan nauki z terminem, aby śledzić czas do swojego celu.",
-      "action": {
-        "type": "link",
-        "destinationKey": "plan"
-      }
+      "action": null
     },
     {
       "id": "progress",
@@ -192,10 +174,7 @@
         }
       ],
       "template": "Rozwiązane pytania: {{results.totalQuestions}}. Poprawne odpowiedzi: {{results.correctAnswers}}. Ukończone testy: {{results.completedTestCount}}. Skuteczność: {{results.accuracyText}}.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "analytics"
-      }
+      "action": null
     },
     {
       "id": "progress_empty",
@@ -240,10 +219,7 @@
         }
       ],
       "template": "Masz {{results.difficultQuestionCount}} pytań ze skutecznością poniżej 50%. {{results.difficultQuestionsSummary}}",
-      "action": {
-        "type": "locate",
-        "destinationKey": "difficultQuestions"
-      }
+      "action": null
     },
     {
       "id": "difficult_empty",
@@ -257,10 +233,7 @@
         }
       ],
       "template": "Nie masz teraz pytań ze skutecznością poniżej 50%. Szczegóły pojawią się, gdy zbierzesz odpowiednie wyniki.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "difficultQuestions"
-      }
+      "action": null
     },
     {
       "id": "plan_today",
@@ -356,10 +329,7 @@
       ],
       "conditions": [],
       "template": "Twój dostęp i płatności: {{billing.summaryText}}.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "billing"
-      }
+      "action": null
     },
     {
       "id": "billing_manage",
@@ -444,10 +414,7 @@
         }
       ],
       "template": "Masz {{badges.count}} odznak: {{badges.namesText}}.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "badges"
-      }
+      "action": null
     },
     {
       "id": "badges_empty",
@@ -461,24 +428,18 @@
         }
       ],
       "template": "Nie masz jeszcze odznak. Dostępne wyzwania procedur pomogą Ci zdobyć pierwsze.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "badges"
-      }
+      "action": null
     },
     {
       "id": "navigation",
       "topic": "navigation",
-      "covers": "Functions available under verified effective access.",
+      "covers": "Concise overview of the user's courses, access tiers and main feature groups.",
       "requiredFacts": [
-        "access.availableFeaturesText"
+        "access.ownedCoursesWithTiersText"
       ],
       "conditions": [],
-      "template": "Na Twoim koncie dostępne są: {{access.availableFeaturesText}}.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "features"
-      }
+      "template": "Korzystasz z kursów: {{access.ownedCoursesWithTiersText}}. Znajdziesz w nich naukę, testy, plan i materiały; szczegóły zależą od wariantu.",
+      "action": null
     },
     {
       "id": "forum",
@@ -499,10 +460,7 @@
       "requiredFacts": [],
       "conditions": [],
       "template": "W formularzu opinii wpisz treść, wybierz ocenę i samodzielnie wyślij opinię.",
-      "action": {
-        "type": "locate",
-        "destinationKey": "feedback"
-      }
+      "action": null
     },
     {
       "id": "clarify",

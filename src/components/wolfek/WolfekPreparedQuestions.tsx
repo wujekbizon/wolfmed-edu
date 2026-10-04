@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { MessageCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import questions from '@/content/wolfek/questions.json'
 import type { WolfekRoute } from '@/types/wolfekResponseTypes'
+import WolfekPreparedQuestionButton from './WolfekPreparedQuestionButton'
 
 export default function WolfekPreparedQuestions({ route, pending, onSelect, questionIds, activeId }: {
   route: WolfekRoute; pending: boolean; onSelect: (id: string) => void; questionIds?: string[]; activeId?: string
@@ -17,13 +17,13 @@ export default function WolfekPreparedQuestions({ route, pending, onSelect, ques
   return <div className="panel-wolfek-topic-picker">
     <p className="panel-wolfek-topics-label">Wybierz pytanie</p>
     <div className="panel-wolfek-topics">
-      {[...featured, ...(expanded ? extra : [])].map((item) =>
-        <Button key={item.id} type="button" variant="secondary" size="sm" disabled={pending}
-          aria-pressed={activeId ? activeId === item.id : undefined}
-          className="practice-orbit-action panel-wolfek-topic" onClick={() => onSelect(item.id)}>
-          <span aria-hidden="true"><MessageCircle size={17} /></span><span>{item.prompt}</span>
-        </Button>)}
+      {featured.map((question) => <WolfekPreparedQuestionButton key={question.id}
+        question={question} pending={pending} onSelect={onSelect} active={activeId === question.id} />)}
     </div>
+    {expanded && extra.length > 0 && <div className="panel-wolfek-extra-topics" role="group" aria-label="Dodatkowe pytania">
+      {extra.map((question) => <WolfekPreparedQuestionButton key={question.id}
+        question={question} pending={pending} onSelect={onSelect} active={activeId === question.id} />)}
+    </div>}
     {extra.length > 0 && <Button variant="ghost" size="sm" disabled={pending}
       aria-expanded={expanded} onClick={() => setExpanded((value) => !value)}>
       {expanded ? 'Mniej pytań' : 'Więcej pytań'}

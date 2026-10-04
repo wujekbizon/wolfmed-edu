@@ -20,7 +20,7 @@ export default function WolfekBubble({ session, mode, premium, pending, answerTe
     : 'Cześć, jestem Wolfek. Spróbuj samodzielnie — w razie potrzeby pomogę Ci zrobić kolejny krok.')
   return <div className="wolfek-bubble" aria-live="polite">
     {!pending && answerText ? <WolfekAnswerText text={answerText} />
-      : <p className="text-sm leading-relaxed text-zinc-600">{text}</p>}
+      : <p className={pending ? 'wolfek-loading-text' : 'text-sm leading-relaxed text-zinc-600'}>{text}</p>}
     {suggestion && !answerText && mode === 'welcome' && <div className="mt-3 flex flex-wrap items-center gap-2">
       <Button size="sm" variant="secondary" disabled={pending}
           onClick={onRecommend}>

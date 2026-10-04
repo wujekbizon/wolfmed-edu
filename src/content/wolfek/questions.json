@@ -117,20 +117,8 @@
       "conditional": false
     },
     {
-      "id": "storage",
-      "prompt": "Ile mam wolnego miejsca?",
-      "featured": true,
-      "conditional": false
-    },
-    {
       "id": "badges",
       "prompt": "Jakie odznaki mam zdobyte?",
-      "featured": true,
-      "conditional": false
-    },
-    {
-      "id": "forum",
-      "prompt": "Gdzie znajdę forum?",
       "featured": true,
       "conditional": false
     },
