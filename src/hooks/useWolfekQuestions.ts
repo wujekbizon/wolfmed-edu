@@ -5,6 +5,7 @@ import { askWolfekQuestionAction } from '@/actions/wolfek-questions'
 import { EMPTY_WOLFEK_QUESTION } from '@/constants/wolfekResponses'
 import { getWolfekPreparedQuestion } from '@/helpers/getWolfekPreparedQuestion'
 import { toFormState } from '@/helpers/toFormState'
+import { resolveWolfekQuestionResult } from '@/helpers/resolveWolfekQuestionResult'
 import { useWolfekPreparedVisit } from './useWolfekPreparedVisit'
 import type { WolfekQuestionProps, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
@@ -26,8 +27,7 @@ export function useWolfekQuestions(props: WolfekQuestionProps) {
       result = { ...toFormState('ERROR', error instanceof Error ? error.message : 'Nie mogę teraz odpowiedzieć.'),
         answer: null, confidence: null }
     } finally { setThinking(false) }
-    return submittedScope === current.current
-      ? { ...result, values: { ...result.values, viewScope: submittedScope } } : EMPTY_WOLFEK_QUESTION
+    return resolveWolfekQuestionResult(result, submittedScope, current.current, props.onSession)
   }, EMPTY_WOLFEK_QUESTION)
   const prepareForm = (data: FormData) => {
     data.set('route', route)

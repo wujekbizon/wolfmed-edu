@@ -62,12 +62,24 @@ test('unknown payment methods and absent videos cannot produce affirmative answe
   assert.ok(pack.options.some((option) => option.id === 'tiers_nursing'))
 })
 
-test('missing reviewed hints cannot emit medical hint text or an action', () => {
+test('learning hints request grounded RAG instead of returning reviewed medical text', () => {
   const pack = WolfekPackSchema.parse(learning)
   const built = buildWolfekResponseRequest({ ...input, route: 'learning.practice' }, pack, {
-    facts: { card: { loaded: true, resolved: false, hasHint: false } }, destinations: { currentCard: { type: 'show_hint' } },
+    facts: { card: { loaded: true, resolved: false }, access: { premiumTutorAllowed: true } },
+    destinations: { currentCard: { type: 'rag_hint' } },
   })
+  assert.equal(built.answers.hint_rag?.action?.type, 'rag_hint')
+  assert.equal(built.answers.hint_rag?.text, 'Przygotuję krótką wskazówkę na podstawie materiałów kursu.')
   assert.equal(built.answers.hint_reviewed, undefined)
-  assert.equal(built.answers.hint_missing?.action, null)
-  assert.match(built.answers.hint_missing!.text, /Nie mam sprawdzonej/)
+  assert.doesNotMatch(JSON.stringify(built.payload), /storedKey|isCorrect/)
+})
+
+test('Basic access cannot enable learning RAG actions', () => {
+  const built = buildWolfekResponseRequest({ ...input, route: 'learning.practice' }, WolfekPackSchema.parse(learning), {
+    facts: { card: { loaded: true, answerVisible: true, selectedAnswerPresent: true },
+      access: { premiumTutorAllowed: false } },
+    destinations: { currentCard: { type: 'rag_hint' }, comparison: { type: 'rag_compare' },
+      currentCardTutor: { type: 'rag_explain' } },
+  })
+  assert.equal(Object.values(built.answers).some((answer) => answer.action !== null), false)
 })

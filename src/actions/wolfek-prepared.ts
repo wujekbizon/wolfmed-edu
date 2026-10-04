@@ -6,6 +6,7 @@ import { WolfekBatchIdSchema, WolfekVisitIdSchema } from '@/server/schema'
 import { resolveWolfekQuestionInput } from '@/helpers/resolveWolfekQuestionInput'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { WolfekQuestionError } from '@/lib/WolfekQuestionError'
+import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import { loadWolfekPreparedBatch } from '@/server/companion/loadWolfekPreparedBatch'
 import { consumeWolfekPreparedResult } from '@/server/companion/consumeWolfekPreparedResult'
 import type { WolfekBatchState } from '@/types/wolfekBatchTypes'
@@ -29,7 +30,8 @@ export async function useWolfekPreparedResultAction(data: FormData): Promise<Wol
       visitId: WolfekVisitIdSchema.parse(data.get('visitId')) }, WolfekBatchIdSchema.parse(data.get('batchId')))
   } catch (error) {
     return { ...(error instanceof z.ZodError ? fromErrorToFormState(error) : toFormState('ERROR',
-      error instanceof WolfekQuestionError ? error.message : 'Nie mogę sprawdzić zapisanej odpowiedzi.')),
-      answer: null, confidence: null }
+      error instanceof WolfekQuestionError || error instanceof PracticeConflictError
+        ? error.message : 'Nie mogę sprawdzić zapisanej odpowiedzi.')),
+      answer: null, confidence: null, ...(error instanceof PracticeConflictError ? { session: error.session } : {}) }
   }
 }

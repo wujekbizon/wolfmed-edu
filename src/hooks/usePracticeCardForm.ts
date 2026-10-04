@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from 'react'
 import { practiceAction } from '@/actions/learning-practice'
 import { EMPTY_PRACTICE_STATE } from '@/constants/learningPractice'
 import { usePracticeSelectionStore } from '@/store/usePracticeSelectionStore'
+import { deliverPracticeFormResult } from '@/helpers/deliverPracticeFormResult'
 import type { PracticeQuestionCardProps } from '@/types/learningUiTypes'
 
 export function usePracticeCardForm({ userId, category, question, onSaved, onAnswered }: PracticeQuestionCardProps) {
@@ -19,13 +20,7 @@ export function usePracticeCardForm({ userId, category, question, onSaved, onAns
   const clear = usePracticeSelectionStore((store) => store.clear)
   useEffect(() => { callback.current = { onSaved, onAnswered } }, [onSaved, onAnswered])
   useEffect(() => {
-    if (state.status !== 'SUCCESS' || !state.session) return
-    callback.current.onSaved(state.session)
-    const result = state.session.question
-    if (result?.attemptId && result.attemptId === submittedEventId.current && result.attemptId !== answered.current) {
-      answered.current = result.attemptId
-      callback.current.onAnswered(result)
-    }
+    answered.current = deliverPracticeFormResult(state, callback.current, submittedEventId.current, answered.current)
   }, [state])
   useEffect(() => () => clear(key), [clear, key])
   return { state, action, pending, eventInput, submittedEventId, events, selected,

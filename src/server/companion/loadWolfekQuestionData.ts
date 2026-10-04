@@ -1,5 +1,5 @@
 import 'server-only'
-import { createHash } from 'node:crypto'
+import { getWolfekContextVersion } from '@/helpers/getWolfekContextVersion'
 import { expandWolfekCourseResponses } from '@/helpers/expandWolfekCourseResponses'
 import { loadWolfekResponsePack } from './loadWolfekResponsePack'
 import { getWolfekAppContext } from './getWolfekAppContext'
@@ -12,9 +12,6 @@ export async function loadWolfekQuestionData(userId: string | null, input: Wolfe
       : getWolfekAppContext(userId, input.route),
   ])
   const pack = input.route === 'kierunki' ? expandWolfekCourseResponses(rawPack) : rawPack
-  const contextVersion = createHash('sha256').update(JSON.stringify({
-    version: pack.version, route: input.route, reference: input.practice,
-    facts: context.facts, options: pack.options, destinations: context.destinations,
-  })).digest('hex')
+  const contextVersion = getWolfekContextVersion(input, pack, context)
   return { pack, context, contextVersion }
 }

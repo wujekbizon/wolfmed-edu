@@ -10,6 +10,10 @@ export type WolfekPreparedBatch = {
   id: string; visitId: string; contextVersion: string; states: Record<string, WolfekQuestionState>
 }
 export type WolfekBatchState = FormState & { batch: WolfekPreparedBatch | null }
+export type WolfekPreparedActions = {
+  load: (data: FormData) => Promise<WolfekBatchState>
+  consume: (data: FormData) => Promise<WolfekQuestionState>
+}
 export type WolfekBatchReceipt = {
   request: WolfekBatchRequest; contextVersion: string; states: Record<string, WolfekQuestionState>; consumed: boolean
 }

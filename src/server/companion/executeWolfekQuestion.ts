@@ -17,6 +17,7 @@ import { getKierunkiWolfekRateLimitIdentity } from './getKierunkiWolfekRateLimit
 import { reserveCompanionJevCall } from './reserveCompanionJevCall'
 import { deliverWolfekPracticeHint } from './deliverWolfekPracticeHint'
 import { deliverWolfekLearningHelp } from './deliverWolfekLearningHelp'
+import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
 export async function executeWolfekQuestion(userId: string | null, input: WolfekQuestionRequest): Promise<WolfekQuestionState> {
@@ -63,8 +64,9 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
     }
     if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
   } catch (error) {
-    result = { ...toFormState('ERROR', error instanceof WolfekQuestionError ? error.message : 'Nie mogę teraz pobrać danych. Spróbuj później.'),
-      answer: null, confidence: null }
+    result = { ...toFormState('ERROR', error instanceof WolfekQuestionError || error instanceof PracticeConflictError
+      ? error.message : 'Nie mogę teraz pobrać danych. Spróbuj później.'),
+      answer: null, confidence: null, ...(error instanceof PracticeConflictError ? { session: error.session } : {}) }
   }
   await recordWolfekInteraction({ source, route: input.route, userId, kind: 'question',
     question: input.question, topic: selected, confidence: result.confidence,

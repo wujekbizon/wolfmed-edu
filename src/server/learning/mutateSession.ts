@@ -13,6 +13,7 @@ import type { PracticeActionInput } from '@/types/learningPracticeTypes'
 import { PRACTICE_EVENT_TYPES } from '@/constants/learningPractice'
 import { nextPracticeEventOrdinal } from './nextEventOrdinal'
 import { PracticeError } from './PracticeError'
+import { resolvePracticeMutationReplay } from '@/helpers/resolvePracticeMutationReplay'
 
 export async function mutatePracticeSession(userId: string, category: string, input: PracticeActionInput) {
   return db.transaction(async (tx) => {
@@ -25,10 +26,9 @@ export async function mutatePracticeSession(userId: string, category: string, in
       .from(learningPracticeEvents).where(and(
         eq(learningPracticeEvents.sessionId, session.id), eq(learningPracticeEvents.eventId, input.eventId),
       )).limit(1)
-    if (existing) return existing.response
-    if (session.version !== input.version || session.status !== 'active') {
-      return buildPracticeView(tx, session)
-    }
+    const replay = await resolvePracticeMutationReplay(session, input.version, existing?.response,
+      () => buildPracticeView(tx, session))
+    if (replay) return replay
     const current = await getPracticeItem(tx, session, input.questionId)
     if (!current) throw new Error('Pytanie niedostępne.')
     const { position } = current

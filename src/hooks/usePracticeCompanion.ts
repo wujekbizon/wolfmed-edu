@@ -25,7 +25,7 @@ export function usePracticeCompanion(props: WolfekCompanionProps) {
   const toast = useToastMessage(state)
   useEffect(() => { callback.current = onSaved }, [onSaved])
   useEffect(() => {
-    if (state.status === 'SUCCESS' && state.session) callback.current(state.session)
+    if (state.session) callback.current(state.session)
   }, [state])
   const runCommand = (command: string) => {
     if (!session?.question || !commandInput.current || !form.current || pending) return false

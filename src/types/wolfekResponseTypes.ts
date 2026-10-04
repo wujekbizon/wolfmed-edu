@@ -48,6 +48,7 @@ export type WolfekQuestionProps = {
   route: WolfekRoute; practice?: WolfekPracticeReference | null
   recentMessages?: TutorContextMessage[]
   preparedResult?: (id: string) => WolfekQuestionState | null
+  onSession?: (session: PracticeView) => void
   onAnswer?: (answer: WolfekAnswer) => void
 }
 export type WolfekQuestionChatProps = WolfekQuestionProps & {

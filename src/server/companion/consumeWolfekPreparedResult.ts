@@ -49,12 +49,8 @@ export async function consumeWolfekPreparedResult(
   if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
   if (input.practice && result.answer?.action?.type === 'show_hint') {
     result.session = await deliverWolfekPracticeHint(userId!, input.practice, input.submissionId)
-    await redis.del(key)
-  } else if (result.session) {
-    await redis.del(key)
-  } else {
-    await redis.set(key, { ...receipt, consumed: true }, { ex: WOLFEK_BATCH_RECEIPT_SECONDS })
   }
+  await redis.set(key, { ...receipt, consumed: true }, { ex: WOLFEK_BATCH_RECEIPT_SECONDS })
   const source = input.route === 'kierunki' ? 'kierunki' : input.route === 'learning.practice' ? 'practice' : 'panel'
   await recordWolfekInteraction({ source, route: input.route, userId, kind: 'question', question: input.question,
     topic: result.answer?.responseId ?? null, confidence: result.confidence,

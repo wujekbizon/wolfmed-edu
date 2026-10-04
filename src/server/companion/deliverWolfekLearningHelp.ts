@@ -4,6 +4,7 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { WolfekQuestionError } from '@/lib/WolfekQuestionError'
 import { startPracticeSession } from '@/server/learning/startSession'
 import { mutatePracticeSession } from '@/server/learning/mutateSession'
+import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import { loadWolfekPracticeCard } from './loadWolfekPracticeCard'
 import { generateWolfekLearningHelp } from './generateWolfekLearningHelp'
 import { recordWolfekLearningAssistance } from './recordWolfekLearningAssistance'
@@ -21,16 +22,16 @@ export async function deliverWolfekLearningHelp(userId: string, input: WolfekQue
   if (!(await checkRateLimit(userId, 'rag:query')).success) throw new WolfekQuestionError('Zbyt wiele pytań do AI. Spróbuj później.')
   let ref = input.practice
   let session = state.session
-  if (confirmation) {
-    const started = ref.sessionId ? null : await startPracticeSession(userId, ref.category, randomUUID())
-    session = await mutatePracticeSession(userId, ref.category, { sessionId: ref.sessionId ?? started!.id,
-      version: started?.version ?? ref.version, questionId: ref.questionId, command: 'reveal', eventId: randomUUID() })
-    if (session.question?.id !== ref.questionId || session.question.correctIndex === null) {
-      throw new WolfekQuestionError('Nie udało się ujawnić odpowiedzi. Spróbuj ponownie.')
-    }
-    ref = { ...ref, sessionId: session.id, version: session.version }
-  }
   try {
+    if (confirmation) {
+      const started = ref.sessionId ? null : await startPracticeSession(userId, ref.category, randomUUID())
+      session = await mutatePracticeSession(userId, ref.category, { sessionId: ref.sessionId ?? started!.id,
+        version: started?.version ?? ref.version, questionId: ref.questionId, command: 'reveal', eventId: randomUUID() })
+      if (session.question?.id !== ref.questionId || session.question.correctIndex === null) {
+        throw new WolfekQuestionError('Nie udało się ujawnić odpowiedzi. Spróbuj ponownie.')
+      }
+      ref = { ...ref, sessionId: session.id, version: session.version }
+    }
     const generated = await generateWolfekLearningHelp(userId, { ...input, practice: ref }, mode)
     await authorizeWolfekQuestion(userId, input)
     await loadWolfekPracticeCard(userId, ref)
@@ -40,7 +41,9 @@ export async function deliverWolfekLearningHelp(userId: string, input: WolfekQue
       values: { ...state.values, learningGenerated: true, learningGrounded: generated.grounded,
         learningMode: mode, userQuestion: input.question } }
   } catch (error) {
+    if (error instanceof PracticeConflictError) session = error.session
     return { ...state, status: 'ERROR' as const, answer: null, timestamp: Date.now(), ...(session ? { session } : {}),
-      message: error instanceof WolfekQuestionError ? error.message : 'Nie udało się pobrać pomocy z materiałów. Spróbuj ponownie.' }
+      message: error instanceof WolfekQuestionError || error instanceof PracticeConflictError
+        ? error.message : 'Nie udało się pobrać pomocy z materiałów. Spróbuj ponownie.' }
   }
 }

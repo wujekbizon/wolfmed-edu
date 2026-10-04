@@ -42,6 +42,7 @@ export function useWolfekLearningQuestions(props: WolfekCompanionProps) {
   }
   const messages = authorized && hydrated ? entry?.messages ?? [] : []
   const help = useWolfekQuestions({ route: 'learning.practice', practice, recentMessages: messages,
+    onSession: props.onSaved,
     preparedResult: (id) => {
       const modes: Record<string, WolfekLearningMode> = { hint: 'hint', compare: 'compare', assistant: 'explain', reveal_tutor: 'explain' }
       const mode = modes[id]
@@ -50,13 +51,10 @@ export function useWolfekLearningQuestions(props: WolfekCompanionProps) {
       return reply
     } })
   const delivered = useRef(0)
-  const saved = useRef(props.onSaved)
-  saved.current = props.onSaved
   useEffect(() => {
     const state = help.state
     if (!state.timestamp || delivered.current === state.timestamp) return
     delivered.current = state.timestamp
-    if (state.session) saved.current(state.session)
     const mode = state.values?.learningMode as WolfekLearningMode | undefined
     if (mode && !state.values?.restored && authorized) saveReply(key, mode, state)
   }, [help.state, saveReply, key, authorized])

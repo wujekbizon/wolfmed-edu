@@ -13,6 +13,7 @@ import { checkRateLimit } from '@/lib/rateLimit'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import type { PracticeFormState } from '@/types/learningPracticeTypes'
 import { PracticeError } from '@/server/learning/PracticeError'
+import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import { onPracticeActivity } from '@/server/memory/extractPractice'
 
 export async function getPracticeAction(category: string) {
@@ -56,6 +57,7 @@ export async function practiceAction(previous: PracticeFormState, formData: Form
     }
     return { ...toFormState('SUCCESS', ''), session }
   } catch (error) {
+    if (error instanceof PracticeConflictError) return { ...toFormState('ERROR', error.message), session: error.session }
     if (error instanceof z.ZodError) return { ...fromErrorToFormState(error), session: previous.session }
     if (error instanceof PracticeError) return { ...toFormState('ERROR', error.message), session: previous.session }
     console.error('[practice] Action failed', error)
