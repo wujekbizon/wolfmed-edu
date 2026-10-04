@@ -1,12 +1,20 @@
 'use client'
 
 import { Minus } from 'lucide-react'
+import { useState } from 'react'
+import { AnimatePresence } from 'framer-motion'
 import { Tooltip } from '@/components/Tooltip'
-import type { WolfekGlassCardProps } from '@/types/wolfekTypes'
+import { WolfekSpeechTarget } from './WolfekSpeech'
+import { WolfekAnimationContext } from './WolfekAnimationContext'
+import WolfekThinkingDots from './WolfekThinkingDots'
+import type { WolfekActivity, WolfekGlassCardProps } from '@/types/wolfekTypes'
 
-export default function WolfekGlassCard({ avatarRef, avatar, avatarStatus, children, className, glassClassName,
+export default function WolfekGlassCard({ avatarRef, avatar, avatarStatus, avatarActions, children, className, glassClassName,
   surfaceClassName, onMinimize, onPointerMove, onPointerLeave, onPointerCancel }: WolfekGlassCardProps) {
-  return <div className={`wolfek-card-wrap ${className ?? ''}`} onPointerMove={onPointerMove}
+  const [speechTarget, setSpeechTarget] = useState<HTMLDivElement | null>(null)
+  const [activity, setActivity] = useState<WolfekActivity>({ pending: false, answerKey: 0 })
+  return <WolfekAnimationContext.Provider value={{ activity, setActivity }}>
+    <WolfekSpeechTarget.Provider value={speechTarget}><div className={`wolfek-card-wrap wolfek-speaking-card ${className ?? ''}`} onPointerMove={onPointerMove}
     onPointerLeave={onPointerLeave} onPointerCancel={onPointerCancel}>
     <div className={`wolfek-glass ${glassClassName ?? ''}`}>
       <div className={`wolfek-glass-surface ${surfaceClassName ?? ''}`} aria-hidden="true" />
@@ -16,7 +24,16 @@ export default function WolfekGlassCard({ avatarRef, avatar, avatarStatus, child
           aria-label="Zminimalizuj Wolfka"><Minus size={16} /></button>
       </Tooltip>}
       {children}
-      <div ref={avatarRef} className="wolfek-card-avatar">{avatar}{avatarStatus}</div>
+      <div className="wolfek-speaker">
+        <div className="wolfek-speaker-head">
+          <div ref={avatarRef} className="wolfek-card-avatar">
+            {avatar}{avatarStatus}
+            <AnimatePresence>{activity.pending && <WolfekThinkingDots />}</AnimatePresence>
+          </div>
+          {avatarActions}
+        </div>
+      </div>
     </div>
-  </div>
+    <div ref={setSpeechTarget} className="wolfek-speaker-answer" />
+  </div></WolfekSpeechTarget.Provider></WolfekAnimationContext.Provider>
 }

@@ -25,7 +25,8 @@ export default function WolfekQuestionForm({ route, practice, state, pending, ac
     <Input type="hidden" name="origin" value="typed" />
     <Input type="hidden" name="practice" value={practice ? JSON.stringify(practice) : ''} />
     <Input type="hidden" name="submissionId" inputRef={submission} defaultValue="" />
-    <Label htmlFor={id} label="Lub zadaj własne pytanie" />
+    <Label htmlFor={id} label="Zadaj własne pytanie"
+      className="panel-wolfek-topics-label wolfek-custom-question-label" />
     <div className="panel-wolfek-question-row">
       <Input id={id} name="question" type="text" className="panel-wolfek-input"
         placeholder="O co chcesz zapytać?" disabled={pending} />

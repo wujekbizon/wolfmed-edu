@@ -1259,3 +1259,88 @@ body:has(.panel-wolfek-marker) .wolfek-overlay[data-variant="panel"] .wolfek-lau
   .kierunki-wolfek-skeleton > div:nth-child(2) > div { flex: 0 0 10rem; height: 2.75rem; }
   .kierunki-wolfek-skeleton > div:last-child { height: 3rem; margin-top: .75rem; }
 }
+
+.wolfek-speaking-card .wolfek-glass .wolfek-glass-surface {
+  -webkit-mask-image: radial-gradient(circle at var(--wolfek-center-x) var(--wolfek-center-y), transparent calc(var(--wolfek-cutout) - 0.05rem), #000 var(--wolfek-cutout));
+  mask-image: radial-gradient(circle at var(--wolfek-center-x) var(--wolfek-center-y), transparent calc(var(--wolfek-cutout) - 0.05rem), #000 var(--wolfek-cutout));
+}
+.wolfek-speaking-card .wolfek-glass .wolfek-card-content {
+  padding-bottom: 0;
+  max-height: none;
+  overflow: visible;
+}
+.wolfek-speaker { padding: 1rem; }
+.wolfek-speaker-head { display: flex; align-items: flex-end; justify-content: flex-end; min-height: calc(var(--wolfek-size) - 1rem); }
+.wolfek-speaking-card .wolfek-glass .wolfek-card-avatar {
+  position: absolute;
+  inset: auto;
+  bottom: var(--wolfek-bottom);
+  left: var(--wolfek-left);
+  width: var(--wolfek-size);
+  height: var(--wolfek-size);
+}
+.wolfek-speaking-card .wolfek-glass .panel-wolfek-video-tooltip {
+  position: relative;
+  inset: auto;
+  width: 3rem;
+  height: 3rem;
+}
+.wolfek-speaker-answer {
+  position: relative;
+  display: grid;
+  gap: .75rem;
+  min-width: 0;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border: 1px solid #e6d9ee;
+  border-radius: .5rem 1.25rem 1.25rem;
+  background: #fff;
+  color: #3f3847;
+  box-shadow: 0 .4rem 1.2rem rgb(70 44 86 / 8%);
+  font-size: .95rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+  scroll-margin-block: 1rem;
+}
+.wolfek-speaker-answer:empty { display: none; }
+.wolfek-speaker-answer::before {
+  content: '';
+  position: absolute;
+  top: -.4rem;
+  left: 1.75rem;
+  width: .7rem;
+  height: .7rem;
+  rotate: 45deg;
+  background: inherit;
+  border-left: 1px solid #e6d9ee;
+  border-top: 1px solid #e6d9ee;
+}
+.wolfek-speaker-answer .panel-wolfek-answer { margin: 0; padding: 0; background: transparent; color: inherit; font: inherit; }
+.wolfek-speaker-answer .wolfek-bubble > p { color: inherit; font: inherit; white-space: pre-line; }
+.wolfek-speaking-card .practice-companion-base { min-height: 0; padding: .5rem 0 0; }
+.kierunki-wolfek .wolfek-speaking-card .kierunki-wolfek-intro h2 { padding-left: 0; }
+.wolfek-overlay .wolfek-speaking-card {
+  max-height: calc(100dvh - var(--wolfek-panel-bottom, 1rem) - 2rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.dark .wolfek-speaker-answer { background: #302f41; border-color: #655773; color: #f0ebf8; }
+.dark .wolfek-speaker-answer::before { border-color: #655773; }
+
+.wolfek-thinking-dots { position: absolute; z-index: 4; top: -.5rem; left: 72%; width: 3rem; height: 2rem; pointer-events: none; }
+.wolfek-thinking-dots > span { position: absolute; border-radius: 50%; background: #fdfaff; border: 1px solid #cdb8df; box-shadow: 0 2px 5px rgb(83 55 108 / 14%); }
+.dark .wolfek-thinking-dots > span { background: #e0d2ef; border-color: #ad91c8; }
+
+.wolfek-speaking-card .wolfek-intro { padding-bottom: 1.25rem; }
+.wolfek-speaking-card .wolfek-intro h2 { padding-right: 2.4rem; color: #342d3c; font-size: clamp(1.25rem, 2vw, 1.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.25; }
+.wolfek-speaking-card .wolfek-intro p { margin-top: .65rem; color: #716977; font-size: .9rem; line-height: 1.55; }
+.wolfek-speaking-card .panel-wolfek-topics-label { display: flex; align-items: center; gap: .75rem; margin: 0 0 .25rem; font-size: .75rem; font-weight: 500; color: #81718c; }
+.wolfek-speaking-card .panel-wolfek-topics-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, #daccdf, transparent); }
+.wolfek-speaking-card .panel-wolfek-topics { padding-top: .25rem; }
+.wolfek-speaking-card .panel-wolfek-chat { display: grid; min-width: 0; gap: 1rem; }
+.wolfek-speaking-card .wolfek-card-content > .panel-wolfek-topic-picker { margin-bottom: 1rem; }
+.dark .wolfek-speaking-card .panel-wolfek-topics-label { color: #c9b8d6; }
+.dark .wolfek-speaking-card .wolfek-intro h2 { color: #f0ebf8; }
+.dark .wolfek-speaking-card .wolfek-intro p { color: #c9b8d6; }
+.wolfek-speaking-card .wolfek-custom-question-label { margin-top: .65rem; margin-bottom: .65rem; }

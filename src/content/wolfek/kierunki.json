@@ -1,5 +1,5 @@
 {
-  "version": "wolfek-responses-v2",
+  "version": "wolfek-responses-v11",
   "instructions": {
     "question": "Which eligible supplied response object directly answers `state.question` using only verified `state.facts`?",
     "constraints": [
@@ -70,7 +70,7 @@
           "equals": false
         }
       ],
-      "template": "Do egzaminu opiekuna możesz przygotowywać się przez pytania, testy praktyczne, egzamin próbny i procedury dostępne w kursie. {{catalog.opiekun.basicFeaturesText}}",
+      "template": "Kurs Opiekun Medyczny wspiera przygotowanie do egzaminu przez naukę pytań i ćwiczenie umiejętności w praktyce. Znajdziesz w nim: {{catalog.opiekun.basicFeaturesText}}",
       "action": {
         "type": "link",
         "destinationKey": "opiekunCourse"
@@ -89,7 +89,7 @@
           "equals": true
         }
       ],
-      "template": "Masz już dostęp do kursu opiekuna. Zacznij od pytań w Nauka, sprawdź się w testach i ćwicz dostępne procedury. {{access.opiekun.examFeaturesText}}",
+      "template": "Masz już dostęp do kursu opiekuna. Przygotowanie do egzaminu możesz podzielić na naukę pytań i ćwiczenie umiejętności w praktyce. W kursie znajdziesz: {{access.opiekun.examFeaturesText}}",
       "action": {
         "type": "link",
         "destinationKey": "learning"
@@ -98,51 +98,25 @@
     {
       "id": "growth_course",
       "topic": "opiekun_growth",
-      "covers": "Professional growth as Opiekun; use only verified available features.",
-      "requiredFacts": [
-        "catalog.opiekun.basicFeaturesText"
-      ],
-      "conditions": [
-        {
-          "path": "access.opiekun.owned",
-          "equals": false
-        }
-      ],
-      "template": "W rozwoju zawodowym pomogą Ci: {{catalog.opiekun.basicFeaturesText}}. Dostępność zależy od wybranego wariantu kursu.",
+      "covers": "Professional growth as a medical caregiver through work-related articles, tips and community discussion; distinct from exam study or course feature lists.",
+      "requiredFacts": [],
+      "conditions": [],
+      "template": "W rozwoju zawodowym możesz korzystać z Blogu Medycznego i forum, gdzie pojawiają się porady oraz wpisy związane z pracą opiekuna medycznego. Planujemy też rozwijać platformę o kolejne funkcje przydatne w codziennej pracy opiekunów.",
       "action": {
         "type": "link",
-        "destinationKey": "opiekunCourse"
-      }
-    },
-    {
-      "id": "growth_owned",
-      "topic": "opiekun_growth",
-      "covers": "Professional growth as Opiekun with active access.",
-      "requiredFacts": [
-        "access.opiekun.growthFeaturesText"
-      ],
-      "conditions": [
-        {
-          "path": "access.opiekun.owned",
-          "equals": true
-        }
-      ],
-      "template": "W Twoim wariancie kursu możesz korzystać z: {{access.opiekun.growthFeaturesText}}.",
-      "action": {
-        "type": "link",
-        "destinationKey": "ownedCourses"
+        "destinationKey": "forum"
       }
     },
     {
       "id": "nursing_course",
       "topic": "nursing_journey",
-      "covers": "What Nursing offers; do not replace this with an ownership message.",
+      "covers": "Nursing follows the base three-year study curriculum shown in the curriculum map. Describe actual course features and distinguish Premium access; never promise clinical specializations.",
       "requiredFacts": [
         "catalog.nursing.basicFeaturesText",
         "catalog.nursing.premiumFeaturesText"
       ],
       "conditions": [],
-      "template": "Kurs pielęgniarstwa obejmuje: {{catalog.nursing.basicFeaturesText}}. Premium dodaje: {{catalog.nursing.premiumFeaturesText}}.",
+      "template": "Podstawą kursu jest program 3-letnich studiów pielęgniarskich, który pokazujemy w mapie programu z przedmiotami, godzinami i ECTS dla każdego roku. Wariant Basic obejmuje: {{catalog.nursing.basicFeaturesText}}. Premium dodatkowo zapewnia: {{catalog.nursing.premiumFeaturesText}}.",
       "action": {
         "type": "link",
         "destinationKey": "nursingCourse"
@@ -151,13 +125,14 @@
     {
       "id": "payment_models",
       "topic": "payment_models",
-      "covers": "Comparison of recurring versus one-time access, not payment-method availability.",
+      "covers": "Comparison of recurring versus one-time access, including when one-time lifetime access offers better value for long-term study such as Nursing; not payment-method availability.",
       "requiredFacts": [
         "payments.subscriptionTermsText",
-        "payments.lifetimeTermsText"
+        "payments.lifetimeTermsText",
+        "catalog.nursing.title"
       ],
       "conditions": [],
-      "template": "Subskrypcja to płatność cykliczna: {{payments.subscriptionTermsText}}. Dostęp na zawsze to płatność jednorazowa: {{payments.lifetimeTermsText}}. Wybór zależy od tego, jak długo planujesz korzystać z kursu.",
+      "template": "Subskrypcja to płatność cykliczna: {{payments.subscriptionTermsText}}. Dostęp na zawsze: {{payments.lifetimeTermsText}}. Jeśli planujesz korzystać z kursu przez dłuższy czas, dostęp na zawsze zwykle bardziej się opłaca — szczególnie przy długoterminowym kursie, takim jak {{catalog.nursing.title}}. Jeśli chcesz uczyć się krócej, subskrypcja może być lepszym wyborem.",
       "action": {
         "type": "link",
         "destinationKey": "catalog"
@@ -255,11 +230,10 @@
       "covers": "Medical English content, using maintained catalog facts and current availability.",
       "requiredFacts": [
         "catalog.english.descriptionText",
-        "catalog.english.basicFeaturesText",
-        "catalog.english.availabilityText"
+        "catalog.english.basicFeaturesText"
       ],
       "conditions": [],
-      "template": "{{catalog.english.descriptionText}} Dostępne funkcje: {{catalog.english.basicFeaturesText}}. {{catalog.english.availabilityText}}",
+      "template": "{{catalog.english.descriptionText}} Dostępne funkcje: {{catalog.english.basicFeaturesText}}.",
       "action": {
         "type": "link",
         "destinationKey": "englishCourse"
@@ -299,11 +273,8 @@
           "equals": false
         }
       ],
-      "template": "Na tym koncie nie widzę aktywnego dostępu do kursu. Jeśli zakup był na innym koncie, zaloguj się na nie. Jeśli zakup jest w trakcie potwierdzania, sprawdź jego status.",
-      "action": {
-        "type": "link",
-        "destinationKey": "catalog"
-      }
+      "template": "Nie masz jeszcze aktywnego kursu. Przejrzyj katalog dostępnych kierunków i wybierz kurs dla siebie.",
+      "action": null
     },
     {
       "id": "sign_in",
@@ -335,7 +306,7 @@
           "equals": true
         }
       ],
-      "template": "Tak, za subskrypcję możesz zapłacić kartą. Dostępne metody zobaczysz podczas płatności.",
+      "template": "Tak. Płatność przez Stripe możesz zrealizować kartą, BLIK-iem lub przez Link. Te same metody są dostępne przy subskrypcji i płatności jednorazowej.",
       "action": null
     },
     {

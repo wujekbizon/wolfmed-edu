@@ -1,5 +1,13 @@
 import type { MotionValue } from 'framer-motion'
-import type { PointerEventHandler, ReactNode, Ref } from 'react'
+import type { Dispatch, PointerEventHandler, ReactNode, Ref, SetStateAction } from 'react'
+
+export type WolfekActivity = { pending: boolean; answerKey: number; speechDuration?: number }
+export type WolfekAnimationState = {
+  activity: WolfekActivity
+  setActivity: Dispatch<SetStateAction<WolfekActivity>>
+}
+export type WolfekMouthProps = { dropped: boolean; reduced: boolean | null }
+export type WolfekIntroProps = { description: string; id?: string }
 
 export interface WolfekAnswerReaction {
   eventId: string
@@ -66,6 +74,7 @@ export interface WolfekGlassCardProps {
   avatarRef: Ref<HTMLDivElement>
   avatar: ReactNode
   avatarStatus?: ReactNode
+  avatarActions?: ReactNode
   children: ReactNode
   className?: string
   glassClassName?: string

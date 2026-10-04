@@ -541,7 +541,7 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Ponad 22 700 pytań egzaminacyjnych z 22 kategorii',
-          'Przedmioty podstawowe, kierunkowe i specjalizacje kliniczne',
+          'Mapa programu: przedmioty podstawowe i kierunkowe rozpisane na lata studiów',
           'Testy praktyczne i egzaminy próbne',
           'Fiszki, notatki i plan nauki z analizą postępów',
           'Wyzwania i quizy — zdobywaj odznaki',

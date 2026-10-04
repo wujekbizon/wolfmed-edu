@@ -6,6 +6,7 @@ import type { WolfekFaceProps } from '@/types/wolfekTypes'
 import WolfekEyes from './WolfekEyes'
 import WolfekMonocle from './WolfekMonocle'
 import Wolfek3DGlasses from './Wolfek3DGlasses'
+import WolfekMouth from './WolfekMouth'
 
 export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover }: WolfekFaceProps) {
   const [dropped, setDropped] = useState(false)
@@ -56,7 +57,7 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     <WolfekEyes positive={positive} confused={dropped} gaze={gaze} videoHover={Boolean(videoHover)} reduced={reduced} />
     <path d="M52 77q8-4 16 0-1 7-8 8-7-1-8-8Z" fill="#8e708f" />
     <path d="M56 77q4-2 8 0" stroke="#cdb5cf" strokeWidth="1.5" strokeLinecap="round" />
-    <path d={dropped ? 'M56 93q4-5 8 0' : 'M60 85v4m0-1q-5 5-10 1m10-1q5 5 10 1'} stroke="#8c7391" strokeWidth="1.6" strokeLinecap="round" />
+    <WolfekMouth dropped={dropped} reduced={reduced} />
     <path d="m54 98 6 4 6-4-6 11z" fill="#b7a3c9" />
     <ellipse cx="36" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity=".65" />
     <ellipse cx="84" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity=".65" />

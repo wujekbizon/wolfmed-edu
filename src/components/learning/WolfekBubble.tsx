@@ -5,6 +5,7 @@ import { COMPANION_SUGGESTIONS } from '@/constants/learningCompanion'
 import { getWolfekPreparedQuestion } from '@/helpers/getWolfekPreparedQuestion'
 import { getPracticeWolfekQuestionId } from '@/helpers/getPracticeWolfekQuestionId'
 import type { WolfekBubbleProps } from '@/types/learningUiTypes'
+import WolfekAnswerText from '@/components/wolfek/WolfekAnswerText'
 
 export default function WolfekBubble({ session, mode, premium, pending, answerText, onRecommend, onDismiss }: WolfekBubbleProps) {
   const question = session?.question
@@ -18,7 +19,8 @@ export default function WolfekBubble({ session, mode, premium, pending, answerTe
     : question?.correct === false ? 'Przyjrzyjmy się temu spokojnie. Jestem obok, jeśli potrzebujesz pomocy.'
     : 'Cześć, jestem Wolfek. Spróbuj samodzielnie — w razie potrzeby pomogę Ci zrobić kolejny krok.')
   return <div className="wolfek-bubble" aria-live="polite">
-    <p className="text-sm leading-relaxed text-zinc-600">{text}</p>
+    {!pending && answerText ? <WolfekAnswerText text={answerText} />
+      : <p className="text-sm leading-relaxed text-zinc-600">{text}</p>}
     {suggestion && !answerText && mode === 'welcome' && <div className="mt-3 flex flex-wrap items-center gap-2">
       <Button size="sm" variant="secondary" disabled={pending}
           onClick={onRecommend}>

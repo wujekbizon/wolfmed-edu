@@ -10,6 +10,8 @@ import WolfekAvatar from './WolfekAvatar'
 import WolfekGlassCard from './WolfekGlassCard'
 import PanelWolfekVideoButton from './PanelWolfekVideoButton'
 import WolfekQuestionChat from './WolfekQuestionChat'
+import WolfekSpeech from './WolfekSpeech'
+import WolfekIntro from './WolfekIntro'
 
 export default function PanelWolfekCard({ route, intro, onIntroDone, onMinimize, onLocate, onVideo }: {
   route: PanelWolfekRoute; intro: boolean; onIntroDone: () => void; onMinimize: () => void
@@ -21,13 +23,16 @@ export default function PanelWolfekCard({ route, intro, onIntroDone, onMinimize,
   return <WolfekGlassCard avatarRef={eyes.avatar}
     onMinimize={() => { setVideoHovered(false); onMinimize() }}
     onPointerMove={eyes.follow} onPointerLeave={eyes.reset} onPointerCancel={eyes.reset}
-    avatar={<WolfekAvatar gaze={eyes.gaze} positive={false} supportive interactive videoHover={videoHovered} />}>
+    avatar={<WolfekAvatar gaze={eyes.gaze} positive={false} supportive interactive videoHover={videoHovered} />}
+    avatarActions={<PanelWolfekVideoButton available={Boolean(PANEL_WOLFEK_VIDEOS[videoTopic])}
+      onClick={() => onVideo(videoTopic)} onHoverChange={setVideoHovered} />}>
     <div className="wolfek-card-content panel-wolfek-content">
-      <h2 className="panel-wolfek-title">{route === 'panel.results' ? 'Wolfek pomoże Ci w wynikach' : 'Wolfek pomoże Ci w panelu'}</h2>
-      {intro && <div className="panel-wolfek-answer">
+      <WolfekIntro description={route === 'panel.results' ? 'Pomogę Ci zrozumieć wyniki i wybrać kolejny krok.'
+        : 'Pomogę Ci znaleźć kursy, postępy i najważniejsze miejsca w panelu.'} />
+      {intro && <WolfekSpeech><div className="panel-wolfek-answer">
         <p>Witaj! Pokażę Ci kursy, postępy i najważniejsze miejsca w panelu.</p>
         <Button size="sm" onClick={onIntroDone}>Pokaż, w czym mogę pomóc</Button>
-      </div>}
+      </div></WolfekSpeech>}
       {!intro && <WolfekQuestionChat route={route} onInteraction={onIntroDone} onAnswer={(answer) => {
         if (answer.topic && Object.hasOwn(PANEL_WOLFEK_TOPICS, answer.topic)) {
           const topic = answer.topic as PanelWolfekTopic
@@ -38,7 +43,5 @@ export default function PanelWolfekCard({ route, intro, onIntroDone, onMinimize,
         if (answer.action?.targetId) document.getElementById(answer.action.targetId)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
       }} />}
     </div>
-    <PanelWolfekVideoButton available={Boolean(PANEL_WOLFEK_VIDEOS[videoTopic])}
-      onClick={() => onVideo(videoTopic)} onHoverChange={setVideoHovered} />
   </WolfekGlassCard>
 }

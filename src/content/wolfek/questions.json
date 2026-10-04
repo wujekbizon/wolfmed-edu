@@ -25,12 +25,6 @@
       "conditional": false
     },
     {
-      "id": "course_selection",
-      "prompt": "Który kierunek pasuje do mojego celu?",
-      "featured": true,
-      "conditional": false
-    },
-    {
       "id": "pricing",
       "prompt": "Ile kosztują dostępne kursy i plany?",
       "featured": false,
@@ -39,7 +33,7 @@
     {
       "id": "tier_comparison",
       "prompt": "Co zawiera Basic i Premium?",
-      "featured": false,
+      "featured": true,
       "conditional": false
     },
     {
@@ -57,12 +51,6 @@
     {
       "id": "card_payment",
       "prompt": "Czy mogę płacić kartą za subskrypcję?",
-      "featured": false,
-      "conditional": false
-    },
-    {
-      "id": "course_video",
-      "prompt": "Czy jest prezentacja wideo kursu opiekuna medycznego?",
       "featured": false,
       "conditional": false
     }
