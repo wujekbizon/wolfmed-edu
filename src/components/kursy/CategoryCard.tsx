@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { hasAccessToTier } from '@/helpers/accessTiers'
 import type { AccessTier, CategoryMetadata } from '@/types/categoryType'
 import { Clock, BookOpen, Lock } from 'lucide-react'
@@ -31,9 +32,11 @@ export function CategoryCard({ category, userTier }: CategoryCardProps) {
  
       <div className="relative h-40 min-[360px]:h-56 w-full overflow-hidden">
         {category.image ? (
-          <img
+          <Image
             src={category.image}
             alt={category.title || category.category}
+            fill
+            sizes='(max-width: 359px) 100vw, (max-width: 767px) 100vw, 50vw'
             className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
           />
         ) : (

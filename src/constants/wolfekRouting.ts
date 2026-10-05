@@ -1,0 +1,1 @@
+export const WOLFEK_TOPIC_MIN_CONFIDENCE = .35

@@ -17,6 +17,7 @@ import UserMottoSkeleton from '@/components/skeletons/UserMottoSkeleton'
 import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 import DynamicBoard from '@/app/_components/DynamicBoard'
 import DynamicBoardSkeleton from '@/components/skeletons/DynamicBoardSkeleton'
+import PanelWolfekSection from '@/components/wolfek/PanelWolfekSection'
 
 export default function PanelDashboard() {
   return (
@@ -37,29 +38,29 @@ export default function PanelDashboard() {
                 <UserMotto />
               </Suspense>
             </div>
-            <Suspense fallback={<UserAnalyticsSkeleton />}>
+            <div id="panel-analytics"><Suspense fallback={<UserAnalyticsSkeleton />}>
               <UserAnalytics />
-            </Suspense>
+            </Suspense></div>
             <div className="flex flex-col gap-6">
-              <Suspense fallback={<BadgeWidgetSkeleton />}>
+              <div id="panel-badges"><Suspense fallback={<BadgeWidgetSkeleton />}>
                 <BadgeWidget />
-              </Suspense>
+              </Suspense></div>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <Suspense fallback={null}>
                   <AdminBlogWidget />
                 </Suspense>
-                <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
+                <div id="panel-username-form" className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
                   <UsernameForm />
                 </div>
-                <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
+                <div id="panel-motto-form" className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
                   <MottoForm />
                 </div>
-                <div className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
+                <div id="panel-feedback" className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
                   <TestimonialForm />
                 </div>
-                <Suspense fallback={<StorageQuotaWidgetSkeleton />}>
+                <div id="panel-storage"><Suspense fallback={<StorageQuotaWidgetSkeleton />}>
                   <StorageQuotaWidget />
-                </Suspense>
+                </Suspense></div>
                 <div id="platnosci" className="scroll-mt-6">
                   <Suspense fallback={<DashboardBillingCardSkeleton />}>
                     <DashboardBillingCard />
@@ -70,6 +71,7 @@ export default function PanelDashboard() {
           </div>
         </section>
       </div>
+      <Suspense fallback={null}><PanelWolfekSection /></Suspense>
     </section>
   )
 }

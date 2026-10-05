@@ -39,7 +39,7 @@ async function PanelAccessContent({ children }: { children: React.ReactNode }) {
           <PinnedNotesFeature pinnedNotes={pinnedNotes} />
         </Suspense>
       </SidePanel>
-      <div id='scroll-container' className='flex-1 overflow-y-scroll scrollbar-webkit'>
+      <div id='scroll-container' className='min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain scrollbar-webkit'>
         <div className='py-10'>{children}</div>
       </div>
     </>
@@ -48,14 +48,14 @@ async function PanelAccessContent({ children }: { children: React.ReactNode }) {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className='flex flex-row relative h-[calc(100vh-80px)] w-full bg-zinc-50'>
+    <main className='relative flex h-[calc(100dvh-5rem)] min-h-0 w-full flex-row overflow-hidden bg-zinc-50'>
       <Suspense fallback={<PanelLayoutSkeleton />}>
         <PanelAccessContent>{children}</PanelAccessContent>
+        <MobileAIFloat />
       </Suspense>
       <ConfirmModal />
       <FlashcardReviewModalHost />
       <SettingsModal />
-      <MobileAIFloat />
     </main>
   )
 }

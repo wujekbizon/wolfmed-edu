@@ -9,4 +9,5 @@ export const ADMIN_NAV_LINKS: AdminNavLink[] = [
   { href: '/admin/categories', label: 'Kategorie' },
   { href: '/admin/rag', label: 'RAG' },
   { href: '/admin/stripe-reports', label: 'Raporty Stripe' },
+  { href: '/admin/wolfek', label: 'Wolfek' },
 ]

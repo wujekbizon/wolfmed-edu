@@ -585,3 +585,9 @@ const session = await db.query.testSessions.findFirst({
 **Schema Version:** 1.0  
 **ORM:** Drizzle ORM  
 **Database:** PostgreSQL
+
+## Jev provider audit
+
+`wolfmed_jev_audit_logs` is defined in `src/server/db/jev-schema.ts` and re-exported by the main schema. It holds exact request bodies, full JSON/raw responses, status, timing and route/model/policy metadata for paid Jev calls. Nullable user/session foreign keys cascade on deletion. Expiration is 30 days, enforced by the prepared maintenance script. No public reader is exposed. See [Jev audit logs](./docs/2026-09-30-jev-audit-logs.md) for migration, cleanup and inspection commands.
+
+`wolfmed_wolfek_interactions` records permitted typed questions/cache hits/topic clicks with 30-day retention and cascading account deletion. `wolfmed_wolfek_daily_metrics` holds durable, anonymous daily counters for activity, provider calls, tokens and errors; no question text or user identifiers. Both are defined in `src/server/db/wolfek-metrics-schema.ts`. The metrics migration adds `usage_aggregated` to provider logs and backfills each retained log once. Admin-only inspection and exports live at `/admin/wolfek`; see [Wolfek admin](./docs/2026-09-30-wolfek-admin.md).

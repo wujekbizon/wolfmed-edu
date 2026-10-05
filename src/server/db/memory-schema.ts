@@ -90,7 +90,7 @@ export const memFacts = memTable(
     check('mem_fact_status_chk', sql`${t.status} IN ('provisional','active','revoked')`),
     check(
       'mem_fact_source_chk',
-      sql`${t.source} IN ('user_stated','quiz_derived','mindmap_derived','llm_inferred','admin_set')`
+      sql`${t.source} IN ('user_stated','quiz_derived','practice_derived','mindmap_derived','llm_inferred','admin_set')`
     ),
   ]
 )

@@ -1,0 +1,86 @@
+import type { MotionValue } from 'framer-motion'
+import type { Dispatch, PointerEventHandler, ReactNode, Ref, SetStateAction } from 'react'
+
+export type WolfekActivity = { pending: boolean; answerKey: number; speechDuration?: number }
+export type WolfekAnimationState = {
+  activity: WolfekActivity
+  setActivity: Dispatch<SetStateAction<WolfekActivity>>
+}
+export type WolfekMouthProps = { dropped: boolean; reduced: boolean | null }
+export type WolfekIntroProps = { description: string; id?: string }
+
+export interface WolfekAnswerReaction {
+  eventId: string
+  gesture: 'yes' | 'no'
+}
+
+export interface WolfekSmallTalkProps {
+  index: number
+}
+
+export interface WolfekFaceProps {
+  id: string
+  positive: boolean
+  supportive: boolean
+  reduced: boolean | null
+  interactive: boolean
+  gaze?: WolfekGaze | undefined
+  videoHover?: boolean
+}
+
+export interface WolfekEyesProps {
+  positive: boolean
+  confused: boolean
+  gaze?: WolfekGaze | undefined
+  videoHover?: boolean
+  reduced?: boolean | null
+}
+
+export interface Wolfek3DGlassesProps {
+  reduced: boolean | null
+}
+
+export interface WolfekMonocleProps {
+  dropped: boolean
+  reduced: boolean | null
+  interactive: boolean
+  onDrop: () => void
+}
+export interface WolfekGaze {
+  x: MotionValue<number>
+  y: MotionValue<number>
+}
+
+export interface WolfekAvatarProps {
+  positive: boolean
+  supportive: boolean
+  interactive: boolean
+  reaction?: WolfekAnswerReaction | null | undefined
+  gaze?: WolfekGaze | undefined
+  videoHover?: boolean
+}
+
+export interface WolfekOverlayProps {
+  anchorId: string | undefined
+  variant?: 'learning' | 'panel'
+  visible: boolean
+  avatar: ReactNode
+  children: (minimize: () => void) => ReactNode
+  onMinimize: () => void
+  onOpen: () => void
+}
+
+export interface WolfekGlassCardProps {
+  avatarRef: Ref<HTMLDivElement>
+  avatar: ReactNode
+  avatarStatus?: ReactNode
+  avatarActions?: ReactNode
+  children: ReactNode
+  className?: string
+  glassClassName?: string
+  surfaceClassName?: string
+  onMinimize?: () => void
+  onPointerMove: PointerEventHandler<HTMLDivElement>
+  onPointerLeave: PointerEventHandler<HTMLDivElement>
+  onPointerCancel: PointerEventHandler<HTMLDivElement>
+}

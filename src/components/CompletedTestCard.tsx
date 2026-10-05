@@ -1,47 +1,44 @@
-import { CompletedTest } from '@/types/dataTypes'
+'use client'
+
+import { CalendarDays, ChevronRight, CircleCheck } from 'lucide-react'
+import type { CompletedTest, CompletedTestCardProps } from '@/types/dataTypes'
 import Link from 'next/link'
 import CompletedTestDeleteButton from './CompletedTestDeleteButton'
 import { useStore } from '@/store/useStore'
 import CompletedTestDeleteModal from './CompletedTestDeleteModal'
 import { getQuestionWord } from '@/helpers/textHelpers'
 
-export default function CompletedTestCard({ completedTest }: { completedTest: CompletedTest }) {
+export default function CompletedTestCard({ completedTest, isWolfekTarget = false }: CompletedTestCardProps) {
   const { score, id, testResult, completedAt } = completedTest as CompletedTest
   const { isDeleteModalOpen, testIdToDelete } = useStore()
+  const correctAnswersCount = testResult.filter((result) => result.answer).length
+  const progress = testResult.length ? Math.min(100, Math.max(0, score / testResult.length * 100)) : 0
 
-  const totalTests = testResult.length
-  const correctAnswers = testResult.filter((result) => result.answer === true)
-
-  const correctAnswersCount = correctAnswers.length
-
-  return (
-    <div className="relative flex flex-col gap-4 items-center justify-between rounded-xl border border-red-200/60 bg-[#ffb1b1] shadow-md shadow-zinc-500 p-4 w-full lg:w-2/3 xl:w-1/2">
-      {isDeleteModalOpen && testIdToDelete === id && <CompletedTestDeleteModal testId={id} />}
-
-      <p className="text-center text-sm text-zinc-900 sm:text-base md:text-lg">
-        Odpowiedziałeś poprawnie na {correctAnswersCount} {getQuestionWord(correctAnswersCount)}
-      </p>
-      <div className="flex h-32 w-32 flex-col items-center justify-center gap-3 rounded-full border border-red-200/60 bg-linear-to-r from-zinc-600 to-zinc-950 shadow-inner shadow-slate-950 sm:h-48 sm:w-48">
-        <p className="text-center text-sm text-zinc-100 sm:text-lg">Wynik: </p>
-        <p className="text-center text-base text-zinc-300 sm:text-2xl">
-          <span className="text-2xl font-bold text-[#ff5b5b] sm:text-4xl">{score}</span>{' '}
-          <span className="font-thin text-zinc-600">/</span> {totalTests}
+  return <article id={isWolfekTarget ? 'panel-results-history' : undefined} className="completed-result-card">
+    {isDeleteModalOpen && testIdToDelete === id && <CompletedTestDeleteModal testId={id} />}
+    <div className="completed-result-main">
+      <div className="completed-result-copy">
+        <p className="completed-result-eyebrow"><CircleCheck size={15} aria-hidden="true" /> Ukończony test</p>
+        <h2>{correctAnswersCount} {getQuestionWord(correctAnswersCount)} z {testResult.length} poprawnych</h2>
+        <p className="completed-result-date">
+          <CalendarDays size={15} aria-hidden="true" />
+          {completedAt ? new Date(completedAt).toLocaleDateString('pl-PL') : 'Brak daty'}
         </p>
       </div>
-      <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
-        <Link
-          href={`/panel/wyniki/${id}`}
-          className="bg-zinc-100 hover:bg-green-300 transition-colors py-2 px-4 rounded-md"
-        >
-          <p className="text-center text-xs text-zinc-800 sm:text-base font-semibold">Zobacz szczegóły testu.</p>
-        </Link>
-        <div className="flex gap-2 items-center">
-          <p className="text-center text-xs text-zinc-800 sm:text-base">
-            Test rozwiązany: {completedAt ? new Date(completedAt).toLocaleDateString('pl-PL') : 'Brak dostępnej daty'}
-          </p>
-          <CompletedTestDeleteButton testId={id} />
-        </div>
+      <div className="completed-result-score" aria-label={`Wynik: ${score} z ${testResult.length}`}>
+        <span>Twój wynik</span>
+        <strong>{score}<small> / {testResult.length}</small></strong>
       </div>
     </div>
-  )
+    <div className="completed-result-progress" role="progressbar" aria-label="Wynik testu"
+      aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)}>
+      <span style={{ width: `${progress}%` }} />
+    </div>
+    <div className="completed-result-actions">
+      <Link href={`/panel/wyniki/${id}`} className="completed-result-open">
+        Zobacz szczegóły <ChevronRight size={17} aria-hidden="true" />
+      </Link>
+      <CompletedTestDeleteButton testId={id} />
+    </div>
+  </article>
 }

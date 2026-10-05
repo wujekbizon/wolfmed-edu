@@ -115,6 +115,7 @@ export interface NewMemoryEpisode {
   summary: string
   outcome: string
   sourceRunId: string
+  completedAt?: Date
   keySteps?: unknown
   artifacts?: unknown
   embedding?: number[] | null

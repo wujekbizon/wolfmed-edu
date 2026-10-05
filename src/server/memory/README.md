@@ -17,7 +17,7 @@ corpus stays the **knowledge** layer; this is the **memory** layer.
 - **M2 (done, minus client-only activities)** — facts/episodes stores, atomic
   promotion/reactivation/supersession, idempotent episodes, and shared-query Path B
   hybrid retrieval across both types. Deterministic hooks cover theory tests, diagnozy exams, procedure
-  challenges, practical exams, and manual study logs. Versioned reconciliation
+  challenges, practical exams, manual study logs, and Centrum Nauki practice observations. Versioned reconciliation
   rebuilds missing memory from canonical tables without embeddings. Flashcard
   review and mind-map mastery remain client-only with no committed event to promote.
 - **M3 (done, minus rolling summary)** — Path B injected into the tutor: semantically
@@ -59,7 +59,7 @@ labels, and candidate selection diagnostics.
 | `assemble.ts` | Builds the static policy/preference prefix. |
 | `retrieve.ts` / `searchMemoryStore.ts` | Resolve topics, reuse one query embedding, then parallel typed searches with usable lexical fallback. |
 | `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded ranked recall and explicit ready/empty/unavailable self-state context. |
-| `extract*.ts` | Deterministic committed-event → fact/episode hooks. |
+| `extract*.ts` | Deterministic committed-event → fact/episode hooks, including `extractPractice.ts` for card outcomes. |
 | `reconcile*Memory.ts` | Versioned, idempotent rebuild from learning tables. |
 | `recordTutorTurnTrace.ts` | Append-only user/retrieval/model trace sequence. |
 

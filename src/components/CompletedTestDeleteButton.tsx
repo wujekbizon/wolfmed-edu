@@ -6,7 +6,8 @@ export default function CompletedTestDeleteButton({ testId }: { testId: string |
   return (
     <button
       type="button"
-      className="flex items-center justify-center bg-red-500/40 hover:bg-red-500/70 cursor-pointer px-2 rounded"
+      aria-label="Usuń wynik testu"
+      className="completed-result-delete-button"
       onClick={() => openDeleteModal(testId)}
     >
       <DeleteIcon />
