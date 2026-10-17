@@ -67,6 +67,11 @@ export interface CompletedTest {
   testResult: FormattedAnswer[]
 }
 
+export interface CompletedTestCardProps {
+  completedTest: CompletedTest
+  isWolfekTarget?: boolean
+}
+
 export type ExtendedCompletedTest = Omit<CompletedTest, 'testResult'> & {
   testResult: unknown
 }

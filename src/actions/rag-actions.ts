@@ -48,6 +48,8 @@ import {
 } from '@/server/memory/recordTutorTurnTrace'
 import { RAG_RECENT_CONTEXT_SERIALIZED_LENGTH } from '@/constants/ragCell'
 import { combineModelTokenUsage } from '@/helpers/combineModelTokenUsage'
+import { answerPracticeQuestion } from '@/server/learning/answerPracticeQuestion'
+import type { PracticeReference } from '@/types/learningPracticeTypes'
 
 async function progressStep(
   jobId: string | null,
@@ -188,6 +190,9 @@ export async function askRagQuestion(
 
     const question = formData.get('question') as string
     const cellId = formData.get('cellId') as string
+    const practiceField = formData.get('practiceContext')
+    const practiceContext = typeof practiceField === 'string' && practiceField.length <= 1000
+      ? safeJsonParse<PracticeReference>(practiceField, null) : undefined
     const searchTopicField = (formData.get('searchTopic') as string | null)?.trim()
     const commandsEnabled = formData.get('commandsEnabled') !== 'false'
     const commandField = (formData.get('command') as string | null)?.trim()
@@ -207,7 +212,7 @@ export async function askRagQuestion(
 
     const validationResult = RagQuerySchema.safeParse({
       question,
-      cellId,
+      ...(practiceField !== null ? { practiceContext } : { cellId }),
       ...(searchTopicField ? { searchTopic: searchTopicField } : {}),
       ...(commandField ? { command: commandField } : {}),
       ...(commandCountField ? { commandCount: commandCountField } : {}),
@@ -217,6 +222,13 @@ export async function askRagQuestion(
     if (!validationResult.success) {
       if (jobId) await errorJob(jobId, 'Nieprawidłowe zapytanie', `Validation error: ${validationResult.error.message}`)
       return fromErrorToFormState(validationResult.error)
+    }
+
+    if (validationResult.data.practiceContext) {
+      const response = await answerPracticeQuestion(userId, validationResult.data.question,
+        validationResult.data.practiceContext, validationResult.data.recentMessages ?? [])
+      if (jobId) await completeJob(jobId)
+      return response
     }
 
     const parsed = parseMcpCommands(validationResult.data.question, { commandsEnabled })
@@ -634,6 +646,7 @@ export async function askRagQuestion(
     }
 
     const result = await generateGroundedAnswer(cleanQuestion, context, {
+      recentMessages: recentTutorMessages,
       ...(additionalContext ? { userContext: additionalContext } : {}),
       ...(memoryTail.text ? { memoryTail: memoryTail.text } : {}),
       ...(memoryPrefix ? { memoryPrefix } : {}),

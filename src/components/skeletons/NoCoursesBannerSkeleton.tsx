@@ -1,3 +1,5 @@
 export default function NoCoursesBannerSkeleton() {
-  return <div className="fixed top-20 left-0 right-0 z-40 h-12 bg-gradient-to-br from-zinc-900/95 to-black/90 border-b border-white/[0.08] animate-pulse" />
+  return <div className="kierunki-access-notice motion-safe:animate-pulse" aria-hidden="true">
+    <div className="h-4 w-3/4 rounded bg-purple-100/60" />
+  </div>
 }

@@ -13,7 +13,8 @@ import {
   real,
   uniqueIndex
 } from "drizzle-orm/pg-core"
-import { relations } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
+import type { PracticeItem, PracticeView } from '@/types/learningPracticeTypes'
 import type { Diagnoza } from "@/types/diagnozyTypes"
 import type {
   CheckoutOrderStatus,
@@ -253,6 +254,59 @@ export const tests = createTable("tests", {
   createdAt: timestamp("createdAt").defaultNow(),
   updatedAt: timestamp("updatedAt"),
 })
+
+export const learningPracticeSessions = createTable('learning_practice_sessions', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: varchar('userId', { length: 256 }).notNull()
+    .references(() => users.userId, { onDelete: 'cascade' }),
+  category: varchar('category', { length: 256 }).notNull(),
+  items: jsonb('items').$type<PracticeItem[]>().notNull(),
+  summary: jsonb('summary').$type<PracticeView['summary']>().notNull()
+    .default(sql`'{"unassisted":0,"assisted":0,"revealed":0,"skipped":0,"invalid":0}'::jsonb`),
+  activeIndex: integer('activeIndex').notNull().default(0),
+  version: integer('version').notNull().default(0),
+  status: varchar('status', { length: 32 })
+    .$type<'active' | 'completed' | 'abandoned'>().notNull().default('active'),
+  policyVersion: varchar('policyVersion', { length: 64 }).notNull(),
+  catalogVersion: varchar('catalogVersion', { length: 64 }).notNull(),
+  experimentArm: varchar('experimentArm', { length: 32 }).notNull().default('rules'),
+  startedAt: timestamp('startedAt').notNull().defaultNow(),
+  finishedAt: timestamp('finishedAt'),
+}, (table) => [
+  index('practice_user_category_idx').on(table.userId, table.category),
+  uniqueIndex('practice_active_idx').on(table.userId, table.category)
+    .where(sql`${table.status} = 'active'`),
+])
+
+export const learningPracticeItems = createTable('learning_practice_items', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  sessionId: uuid('sessionId').notNull()
+    .references(() => learningPracticeSessions.id, { onDelete: 'cascade' }),
+  questionId: uuid('questionId').notNull(),
+  position: integer('position').notNull(),
+  item: jsonb('item').$type<PracticeItem>().notNull(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+}, (table) => [
+  uniqueIndex('practice_item_question_idx').on(table.sessionId, table.questionId),
+  uniqueIndex('practice_item_position_idx').on(table.sessionId, table.position),
+])
+
+export const learningPracticeEvents = createTable('learning_practice_events', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  sessionId: uuid('sessionId').notNull()
+    .references(() => learningPracticeSessions.id, { onDelete: 'cascade' }),
+  eventId: uuid('eventId').notNull(),
+  ordinal: integer('ordinal').notNull(),
+  type: varchar('type', { length: 64 }).notNull(),
+  questionId: uuid('questionId'),
+  questionRevision: varchar('questionRevision', { length: 64 }),
+  payload: jsonb('payload').$type<Record<string, unknown>>().notNull(),
+  response: jsonb('response').$type<PracticeView>().notNull(),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+}, (table) => [
+  uniqueIndex('practice_event_id_idx').on(table.sessionId, table.eventId),
+  uniqueIndex('practice_event_ordinal_idx').on(table.sessionId, table.ordinal),
+])
 
 export const userCustomTests = createTable(
   "user_custom_tests",
@@ -1123,3 +1177,5 @@ export * from "./memory-schema"
 // Personal library: chunks of a student's own notes and materials. Same "vector"
 // and "pg_trgm" extension requirement as the memory tables.
 export * from "./library-schema"
+export * from './jev-schema'
+export * from './wolfek-metrics-schema'

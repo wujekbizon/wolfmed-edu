@@ -1,7 +1,7 @@
 # 🔍 Database Queries Documentation
 
 ## Overview
-This document provides comprehensive documentation of all database queries used in the Wolfmed application. All queries are defined in `src/server/queries.ts` and use Drizzle ORM with React's `cache()` function for optimization.
+This document catalogs shared queries in `src/server/queries.ts`. Feature-specific database work also lives in `src/server/<feature>/` (for example `src/server/learning/`), called by Server Actions or Server Components. `cache()` is used where a query benefits from request-local deduplication; it is not universal.
 
 ---
 

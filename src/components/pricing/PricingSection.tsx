@@ -7,6 +7,7 @@ import PlanComparisonPanel from './PlanComparisonPanel'
 import PlanComparisonToggle from './PlanComparisonToggle'
 import CourseSubjectList from './CourseSubjectList'
 import SectionHeading from './SectionHeading'
+import PricingHashScroller from './PricingHashScroller'
 import type { PathData } from '@/types/careerPathsTypes'
 import type { LifetimeUpgradeOfferKey } from '@/types/paymentTypes'
 import type {
@@ -34,12 +35,12 @@ export default function PricingSection({
 
   return (
     <section
-      id={PRICING_ANCHOR}
       aria-labelledby='pricing-title'
-      className='relative w-full scroll-mt-24 px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
+      className='relative w-full px-5 py-12 sm:px-10 sm:py-16 lg:px-[60px] lg:py-[68px]'
     >
       <div className='mx-auto flex w-full max-w-6xl flex-col gap-12 sm:gap-16'>
-        <div>
+        <div id={PRICING_ANCHOR} className='scroll-mt-28'>
+          <PricingHashScroller />
           <SectionHeading
             eyebrow='Cennik'
             title='Plany cenowe'

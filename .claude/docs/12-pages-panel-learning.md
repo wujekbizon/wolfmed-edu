@@ -23,7 +23,7 @@ Three modals rendered at page level (Modal Rendering Rule): `PdfPreviewModal`, `
 
 ## `/panel/nauka/[category]` — Test list within a category (learning context)
 
-**File**: `src/app/panel/nauka/[category]/page.tsx`. Same `moje-testy__` custom-category branching as `/panel/testy/[value]` (see [`11-pages-panel-core.md`](./11-pages-panel-core.md)), but renders `<AllTests tests={tests} category={decodedCategory} />` — the React Query reference component (Golden Rule #5 in root `CLAUDE.md`) rather than the timed `GenerateTests` runner. This is the "browse/study" path; `/panel/testy/[value]` is the "take a timed test" path.
+**File**: `src/app/panel/nauka/[category]/page.tsx`. Server shell with separate Suspense boundaries for `CategoryContent` and `PracticePlan`. `CategoryContent` re-checks entitlement, branches to browse-only `AllTestsBrowse` for owned `moje-testy__` categories, and passes answer-key-free card data plus an owned initial practice session to `AllTests` for eligible public categories. `AllTests` uses React Query for search/filter/session state; grading and Jev run through authenticated Server Actions backed by `src/server/learning/`. The timed exam stays under `/panel/testy/[value]`. See [learning practice](./2026-09-22-learning-practice-mvp.md).
 
 ## `/panel/nauka/notatki/[noteId]` — Note detail/editor
 

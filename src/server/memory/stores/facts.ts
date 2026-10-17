@@ -7,6 +7,7 @@ export type FactStatus = 'provisional' | 'active' | 'revoked'
 export type FactSource =
   | 'user_stated'
   | 'quiz_derived'
+  | 'practice_derived'
   | 'mindmap_derived'
   | 'llm_inferred'
   | 'admin_set'

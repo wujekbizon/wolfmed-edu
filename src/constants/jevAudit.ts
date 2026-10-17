@@ -1,0 +1,2 @@
+export const JEV_AUDIT_RETENTION_DAYS = 30
+export const JEV_MAX_RESPONSE_LENGTH = 64_000

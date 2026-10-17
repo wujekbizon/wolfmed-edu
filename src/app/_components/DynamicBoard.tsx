@@ -24,19 +24,19 @@ export default async function DynamicBoard() {
         enrolledCount={enrollments.length}
       />
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div className="lg:col-span-8 h-full">
+        <div id="panel-features" className="lg:col-span-8 h-full">
           <UserOnboard enrollments={enrollments} />
         </div>
         <aside className="lg:col-span-4 rounded-2xl">
           <div className="space-y-4 p-4 rounded-2xl bg-white/70 backdrop-blur-xl border border-zinc-200/70">
-            <CourseAccessWidget enrollments={enrollments} />
-            <Suspense fallback={null}>
+            <div id="panel-courses"><CourseAccessWidget enrollments={enrollments} /></div>
+            <div id="panel-forum"><Suspense fallback={null}>
               <ForumActivityCard />
-            </Suspense>
-            <OnboardingChecklist />
-            <Suspense fallback={<ExamCountdownSkeleton />}>
+            </Suspense></div>
+            <div id="panel-first-steps"><OnboardingChecklist /></div>
+            <div id="panel-countdown"><Suspense fallback={<ExamCountdownSkeleton />}>
               <PlanCountdown />
-            </Suspense>
+            </Suspense></div>
           </div>
         </aside>
       </div>

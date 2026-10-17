@@ -1,10 +1,10 @@
-import { CurriculumBlock, PathData } from '@/types/careerPathsTypes'
+import { CareerPathCarouselItem, CurriculumBlock, PathData } from '@/types/careerPathsTypes'
 import { OPIEKUN_MEDYCZNY_STORY } from '@/constants/careerStory'
 import { OPIEKUN_MEDYCZNY_PATH } from '@/constants/careerPath'
 import { PIELEGNIARSTWO_STORY } from '@/constants/pielegniarstwoStory'
 import { ENGLISH_MEDICAL_STORY } from '@/constants/englishMedicalStory'
 
-export const careerPaths = [
+export const careerPaths: CareerPathCarouselItem[] = [
   {
     slug: 'opiekun-medyczny',
     title: 'Opiekun Medyczny',
@@ -541,7 +541,7 @@ export const careerPathsData: Record<string, PathData> = {
         badge: 'Oferta na start',
         features: [
           'Ponad 22 700 pytań egzaminacyjnych z 22 kategorii',
-          'Przedmioty podstawowe, kierunkowe i specjalizacje kliniczne',
+          'Mapa programu: przedmioty podstawowe i kierunkowe rozpisane na lata studiów',
           'Testy praktyczne i egzaminy próbne',
           'Fiszki, notatki i plan nauki z analizą postępów',
           'Wyzwania i quizy — zdobywaj odznaki',

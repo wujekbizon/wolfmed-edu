@@ -61,6 +61,7 @@ export default function UserAnalyticsClient({
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
+            id={id === 'analytics' ? 'panel-analytics-details-tab' : undefined}
             onClick={() => setActiveTab(id)}
             className={`inline-flex flex-1 xs:flex-none items-center justify-center gap-1.5 whitespace-nowrap px-2 xs:px-4 sm:px-6 py-2.5 rounded-lg font-semibold text-xs sm:text-sm transition-all duration-200 ${
               activeTab === id

@@ -9,6 +9,8 @@ import { pseudonymizeBillingRecords } from '@/server/account-deletion/pseudonymi
 import { db } from '@/server/db/index'
 import { lectures, materials, users } from '@/server/db/schema'
 import { eraseUserMemoryInTransaction } from '@/server/memory/erase'
+import { PANEL_WOLFEK_ONBOARDING_PREFIX } from '@/constants/panelWolfek'
+import { getRedis } from '@/lib/redis'
 
 const utapi = new UTApi()
 
@@ -43,4 +45,9 @@ export async function deleteUserAccount(userId: string): Promise<void> {
     await eraseUserMemoryInTransaction(tx, userId, erasedUserId)
     await tx.delete(users).where(eq(users.userId, userId))
   })
+  try {
+    await getRedis()?.del(`${PANEL_WOLFEK_ONBOARDING_PREFIX}${userId}`)
+  } catch {
+    // The onboarding marker expires independently if Redis cleanup is unavailable.
+  }
 }

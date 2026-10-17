@@ -1,4 +1,159 @@
 import { z } from "zod";
+
+export const WolfekPracticeReferenceSchema = z.object({
+  category: z.string().min(1).max(256), sessionId: z.uuid().nullable(), version: z.number().int().nonnegative(),
+  questionId: z.guid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+  selected: z.number().int().min(0).max(19).nullable().optional(),
+}).strict()
+export const WolfekQuestionSchema = z.object({
+  route: z.enum(['kierunki', 'panel.home', 'panel.results', 'learning.practice']),
+  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim().min(2).max(300),
+  origin: z.enum(['typed', 'prepared']), preparedQuestionId: z.string().max(128).nullable(),
+  submissionId: z.uuid(), practice: WolfekPracticeReferenceSchema.nullable(),
+  recentMessages: z.array(z.object({ role: z.enum(['user', 'assistant']), text: z.string().max(2000) }).strict()).max(4).optional(),
+}).strict().refine((input) => input.route !== 'learning.practice' || input.practice !== null,
+  { message: 'Wybierz aktualną kartę.', path: ['question'] })
+export const WolfekPackSchema = z.object({
+  version: z.string(), instructions: z.unknown(), diagnostics: z.record(z.string(), z.unknown()),
+  options: z.array(z.object({
+    id: z.string(), topic: z.string().nullable(), covers: z.string(), template: z.string(),
+    requiredFacts: z.array(z.string()),
+    conditions: z.array(z.object({ path: z.string(), equals: z.union([z.string(), z.boolean(), z.number(), z.null()]) })),
+    action: z.object({ type: z.string(), destinationKey: z.string() }).nullable(),
+  })),
+})
+export const WolfekJevResponseSchema = z.object({
+  model: z.string(), answers: z.object({
+    response: z.object({ type: z.literal('choice'), choice: z.string(),
+      confidence: z.number().min(0).max(1), probabilities: z.record(z.string(), z.number().min(0).max(1)) }),
+    needs_clarification: z.object({ type: z.literal('noul'), noul: z.number().min(0).max(1) }),
+    answer_coverage: z.object({ type: z.literal('score'), score: z.number().min(0).max(3),
+      confidence: z.number().min(0).max(1), probabilities: z.record(z.string(), z.number().min(0).max(1)),
+      legend: z.record(z.string(), z.unknown()) }),
+  }), usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const WolfekBatchEnvelopeSchema = z.object({
+  model: z.string(), answers: z.record(z.string(), z.unknown()),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const WolfekVisitIdSchema = z.uuid()
+export const WolfekBatchIdSchema = z.uuid()
+
+export const PracticeCategorySchema = z.string().min(1).max(256)
+export const PracticeStartSchema = z.uuid()
+export const PracticeResetSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.guid(), eventId: z.uuid(),
+  version: z.coerce.number().int().min(0),
+}).strict()
+export const ReviewedPracticeSupportSchema = z.object({
+  questionId: z.guid(), revision: z.string().regex(/^[a-f0-9]{64}$/),
+  topic: z.string().trim().min(1).max(300),
+  hints: z.array(z.string().trim().min(1).max(1500)).max(8),
+  explanation: z.string().trim().min(1).max(10000).nullable(),
+  source: z.string().trim().min(1), reviewer: z.string().trim().min(1),
+  reviewedAt: z.iso.date(),
+  material: z.object({ label: z.string().trim().min(1).max(120),
+    href: z.string().regex(/^\/panel\/(?:kursy|nauka|procedury)\/[a-z0-9%\-/]+$/i) }).optional(),
+})
+export const PracticeSupportSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
+}).strict()
+export const PracticeSuggestionInteractionSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
+  questionId: z.guid(), trigger: z.string().trim().min(1).max(256), eventId: z.uuid(),
+  action: z.enum(['hint', 'compare', 'retry', 'reveal', 'review', 'tutor', 'material', 'plan', 'continue']),
+  interaction: z.enum(['accepted', 'dismissed']),
+}).strict()
+export const PracticeHelpInteractionSchema = z.object({
+  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
+  questionId: z.guid(), eventId: z.uuid(), action: z.literal('compare'),
+}).strict()
+export const JevConfigSchema = z.object({
+  mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
+  minConfidence: z.coerce.number().min(0).max(1).optional(),
+}).refine((config) => config.mode !== 'active' || config.minConfidence !== undefined)
+export const WolfekAdminFiltersSchema = z.object({
+  view: z.enum(['insights', 'audit', 'errors', 'usage']),
+  source: z.enum(['all', 'panel', 'kierunki', 'practice']),
+  status: z.enum(['all', 'success', 'http_error', 'invalid_response', 'timeout', 'error']),
+  from: z.iso.date(), to: z.iso.date(),
+  search: z.string().trim().max(300),
+  page: z.coerce.number().int().min(1).max(10_000),
+}).strict().refine((value) => value.from <= value.to &&
+  Date.parse(value.to) - Date.parse(value.from) <= 366 * 86_400_000,
+{ message: 'Wybierz poprawny zakres dat, maksymalnie 366 dni.' })
+export const WolfekAdminAuditIdSchema = z.uuid()
+export const JevResponseSchema = z.object({
+  model: z.string(),
+  answers: z.object({ support: z.object({
+    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+  }) }),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const PanelWolfekAskSchema = z.object({
+  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim()
+    .min(2, 'Wpisz pytanie do Wolfka.').max(300, 'Skróć pytanie do 300 znaków.'),
+}).strict()
+export const PanelWolfekTopicSchema = z.enum([
+  'first_steps', 'username', 'motto', 'courses', 'countdown', 'results',
+  'difficult_questions', 'plan', 'billing', 'storage', 'badges',
+  'navigation', 'forum', 'feedback', 'results_explain', 'results_improve',
+  'results_mistakes', 'results_history', 'results_categories',
+])
+export const PanelWolfekRouteSchema = z.enum(['panel.home', 'panel.results'])
+export const PanelWolfekTopicRequestSchema = z.object({
+  route: PanelWolfekRouteSchema.default('panel.home'),
+  topic: PanelWolfekTopicSchema,
+}).strict()
+export const PanelJevResponseSchema = z.object({
+  model: z.string(),
+  answers: z.object({ help: z.object({
+    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+  }) }),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const KierunkiWolfekAskSchema = z.object({
+  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim()
+    .min(2, 'Wpisz pytanie do Wolfka.').max(300, 'Skróć pytanie do 300 znaków.'),
+}).strict()
+export const KierunkiWolfekTopicSchema = z.enum([
+  'exam_preparation', 'opiekun_growth', 'nursing_journey', 'course_selection',
+  'pricing', 'payment_models', 'tier_comparison', 'english_course', 'owned_course',
+])
+export const KierunkiJevResponseSchema = z.object({
+  model: z.string(),
+  answers: z.object({ guide: z.object({
+    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
+    probabilities: z.record(z.string(), z.number().min(0).max(1)),
+  }) }),
+  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
+})
+export const LearningQuestionCardDataSchema = z.object({
+  question: z.string().min(1).max(20000),
+  answers: z.array(z.object({ option: z.string().min(1).max(10000), isCorrect: z.boolean() }))
+    .min(2).max(10),
+})
+export const PracticeQuestionDataSchema = LearningQuestionCardDataSchema
+  .refine((data) => data.answers.filter((answer) => answer.isCorrect).length === 1)
+export const PracticeMutationSchema = z.object({
+  sessionId: z.preprocess((value) => value === '' ? undefined : value, z.guid().optional()),
+  eventId: z.uuid(),
+  version: z.coerce.number().int().min(0),
+  command: z.enum(['answer', 'hint', 'reveal', 'review', 'skip', 'next', 'finish']),
+  questionId: z.preprocess((value) => value === '' ? undefined : value, z.guid().optional()),
+  selected: z.preprocess((value) => value === null || value === '' ? undefined : value,
+    z.coerce.number().int().min(0).max(9).optional()),
+}).refine((value) => value.command !== 'answer' || value.selected !== undefined, {
+  path: ['selected'], message: 'Wybierz odpowiedź.',
+}).refine((value) => Boolean(value.questionId) || Boolean(value.sessionId), {
+  path: ['questionId'], message: 'Wybierz kartę.',
+})
+export const PracticeReferenceSchema = z.object({
+  sessionId: z.guid(), questionId: z.guid(), questionRevision: z.string().regex(/^[a-f0-9]{64}$/),
+  attemptId: z.uuid().nullable(), purpose: z.enum(['explain', 'follow_up']),
+}).strict()
 import { getPreviousStripeReportMonth } from '@/helpers/getPreviousStripeReportMonth'
 import { getLexicalContent } from "@/helpers/getLexicalContent";
 import { CATEGORIES, TOPIC_TYPES, MAX_CHILDREN, MAX_DEPTH } from "@/types/mindmapTypes";
@@ -839,12 +994,11 @@ export type UnlikeBlogPostInput = z.infer<typeof UnlikeBlogPostSchema>;
  */
 
 // User-facing RAG query schema
-export const RagQuerySchema = z.object({
+const RagQueryBaseSchema = z.object({
   question: z
     .string()
     .min(2, "Pytanie musi mieć min. 2 znaki")
     .max(500, "Pytanie zbyt długie (max 500 znaków)"),
-  cellId: z.string().min(1, "ID komórki jest wymagane"),
   // Subject alone, sent when the question is prose a cell composed for the user
   // to read. Drives retrieval; the question still drives the answer.
   searchTopic: z.string().max(300).optional(),
@@ -871,6 +1025,17 @@ export const RagQuerySchema = z.object({
     .max(RAG_RECENT_CONTEXT_MESSAGES)
     .optional(),
 });
+
+export const RagQuerySchema = z.union([
+  RagQueryBaseSchema.extend({
+    cellId: z.string().min(1, 'ID komórki jest wymagane'),
+    practiceContext: z.never().optional(),
+  }),
+  RagQueryBaseSchema.extend({
+    cellId: z.never().optional(),
+    practiceContext: PracticeReferenceSchema,
+  }),
+])
 
 export const TutorIntentClassificationSchema = z
   .object({

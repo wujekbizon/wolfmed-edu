@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface CategoryHeaderProps {
   categoryName: string
@@ -29,9 +30,11 @@ export default function CategoryHeader({
         <div className='p-4 sm:p-6 md:p-8'>
           <div className='flex flex-col sm:flex-row items-start gap-4 sm:gap-6'>
             {categoryImage && (
-              <img
+              <Image
                 src={categoryImage}
                 alt={categoryName}
+                width={128}
+                height={128}
                 className='w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 shrink-0 rounded-lg object-cover'
               />
             )}
