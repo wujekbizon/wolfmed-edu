@@ -22,6 +22,7 @@ export default function OpiekunReaderSidebar({
       <div className="flex flex-col h-full overflow-y-auto scrollbar-webkit p-6 gap-6">
         <Link
           href="/panel/procedury/opiekun-medyczny"
+          scroll={false}
           className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-700 transition-colors w-fit"
         >
           <ArrowLeft className="w-3.5 h-3.5" />

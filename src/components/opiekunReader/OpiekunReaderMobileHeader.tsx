@@ -20,6 +20,7 @@ export default function OpiekunReaderMobileHeader({
     <div className="lg:hidden flex flex-col gap-2 border-b border-zinc-200 bg-white px-4 py-3">
       <Link
         href="/panel/procedury/opiekun-medyczny"
+        scroll={false}
         className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-zinc-700 transition-colors w-fit"
       >
         <ArrowLeft className="w-3.5 h-3.5" />

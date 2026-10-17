@@ -39,6 +39,8 @@ Three modals rendered at page level (Modal Rendering Rule): `PdfPreviewModal`, `
 
 ## `/panel/procedury/[course]` — Procedure list for one course
 
+The client browser stores that course's search/sort criteria and panel scroll position in `sessionStorage`, restoring them when the user returns from a procedure detail page.
+
 **File**: `src/app/panel/procedury/[course]/page.tsx`. Redirects to `/panel/procedury` if not enrolled in `course`. **Course-specific rendering branch**: `opiekun-medyczny` → `<AllProcedures />`; `pielegniarstwo` → `<PielegniastwoProceduresList />` (different data shape, `PielegniastwoProcedure` type vs. the generic `Procedure`). Any other course value redirects back to the hub.
 
 ## `/panel/procedury/[course]/[slug]` — Procedure detail (study view)
