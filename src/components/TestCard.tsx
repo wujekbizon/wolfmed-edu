@@ -9,6 +9,7 @@ export default function TestCard(props: {
   formState: FormState
   selectedIndex: number | null
   onSelect: (index: number) => void
+  includeAnswerInForm?: boolean
 }) {
   const {
     data: { answers, question },
@@ -46,7 +47,7 @@ export default function TestCard(props: {
                   value={index}
                   id={uniqueId}
                   disabled={props.formState.status === 'SUCCESS'}
-                  name={`answer-${props.test.id}`}
+                  name={`${props.includeAnswerInForm === false ? 'practice-ui-answer' : 'answer'}-${props.test.id}`}
                   checked={props.selectedIndex === index}
                   onChange={() => props.onSelect(index)}
                 />

@@ -6,8 +6,9 @@ import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
 import { getCurrentUser } from "@/server/user";
 import { redirect } from "next/navigation";
-import { getSessionQuestions } from '@/server/testSessionQuestions'
+import { getPracticeSessionQuestions, getSessionQuestions } from '@/server/testSessionQuestions'
 import { getTestSessionPageState } from '@/helpers/getTestSessionPageState'
+import PracticeTests from '@/components/PracticeTests'
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -24,13 +25,39 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string }) {
+async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string | undefined }) {
   const decodedCategory = decodeURIComponent(category)
 
   const user = await getCurrentUser()
   if (!user) redirect('/sign-in')
+  if (!sessionId) return <p>Nie znaleziono szczegółów sesji testowej.</p>
 
   const sessionDetails = await getTestSessionDetails(sessionId, user.userId);
+  if (!sessionDetails || sessionDetails.category !== decodedCategory) {
+    return <p>Nie znaleziono szczegółów sesji testowej.</p>;
+  }
+
+  if (sessionDetails.mode === 'PRACTICE') {
+    if (sessionDetails.status === 'COMPLETED') redirect('/panel/wyniki')
+    if (sessionDetails.status !== 'ACTIVE') return <p>Nie znaleziono szczegółów sesji testowej.</p>
+
+    const practiceQuestions = await getPracticeSessionQuestions(
+      user.userId,
+      sessionDetails.category,
+      sessionDetails.questionIds,
+      sessionId
+    )
+    if (practiceQuestions.length !== sessionDetails.numberOfQuestions) {
+      return <p>Brak dostępnych testów. Proszę spróbować później.</p>
+    }
+
+    const tests = practiceQuestions.map((test) => ({
+      id: test.id,
+      data: { question: test.data.question, answers: test.data.answers.map(({ option }) => ({ option })) },
+    }))
+    return <PracticeTests tests={tests} sessionId={sessionId} initialProgress={sessionDetails.progress} />
+  }
+
   const sessionState = getTestSessionPageState(sessionDetails, decodedCategory)
 
   if (sessionState === 'COMPLETED') redirect('/panel/wyniki')

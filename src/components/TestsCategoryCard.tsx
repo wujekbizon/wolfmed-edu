@@ -2,8 +2,16 @@ import Image from "next/image";
 import StartTestForm from "./StartTestForm";
 import { PopulatedCategories } from "@/types/categoryType";
 import { DEFAULT_CATEGORY_METADATA } from "@/constants/categoryMetadata";
+import PracticeResumeCard from "./PracticeResumeCard";
+import type { PracticeExamResume } from "@/types/practiceResumeTypes";
 
-export default async function TestsCategoryCard({ item }: { item: PopulatedCategories }) {
+export default async function TestsCategoryCard({
+  item,
+  practiceAttempts,
+}: {
+  item: PopulatedCategories
+  practiceAttempts: PracticeExamResume[]
+}) {
   const categoryData = item.data || DEFAULT_CATEGORY_METADATA;
   const isCustomCategory = !item.data;
   const isLocked = item.hasAccess === false;
@@ -35,11 +43,11 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
         <div className="flex flex-col gap-3 sm:gap-4">
           <div className="flex flex-wrap gap-2">
             {categoryData.status ? (
-              <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs sm:text-sm text-green-500 border border-green-500/30 font-medium">
+                <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs sm:text-sm text-green-500 border border-green-500/30 font-medium">
                 Dostępny online
               </span>
             ) : (
-              <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs sm:text-sm text-red-500 border border-red-500/30 font-medium">
+                <span className="rounded-full bg-red-500/20 px-3 py-1 text-xs sm:text-sm text-red-500 border border-red-500/30 font-medium">
                 Niedostępny online
               </span>
             )}
@@ -79,6 +87,26 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
           </div>
         </div>
 
+        {practiceAttempts.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <h4 className="text-sm font-semibold text-white">Wznów rozpoczęty trening</h4>
+            <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+              {practiceAttempts.map((attempt) => (
+                <PracticeResumeCard
+                  key={attempt.sessionId}
+                  kind="Trening egzaminacyjny"
+                  title={`${item.category} · ${attempt.numberOfQuestions} pytań`}
+                  detail={`${attempt.answeredQuestions}/${attempt.numberOfQuestions} odpowiedzi`}
+                  progress={attempt.answeredQuestions / attempt.numberOfQuestions * 100}
+                  updatedAt={attempt.lastActivityAt}
+                  href={`/panel/testy/${encodeURIComponent(attempt.category)}?sessionId=${attempt.sessionId}`}
+                  variant="light"
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="w-full border border-zinc-600 rounded-lg bg-slate-950 p-3 sm:p-4">
           {isLocked ? (
             <div className="flex flex-col items-center justify-center py-4 gap-2">
@@ -88,7 +116,7 @@ export default async function TestsCategoryCard({ item }: { item: PopulatedCateg
               </p>
             </div>
           ) : (
-            <StartTestForm category={item} />
+            <StartTestForm category={item} practiceAttempts={practiceAttempts} />
           )}
         </div>
       </div>

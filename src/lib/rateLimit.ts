@@ -40,6 +40,9 @@ const RATE_LIMITS: Record<string, RateLimitConfig> = {
 
   'test:start': { interval: 60 * 60 * 1000, maxRequests: 20 },
   'test:submit': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'test:practice:start': { interval: 60 * 60 * 1000, maxRequests: 20 },
+  'test:practice:save': { interval: 60 * 60 * 1000, maxRequests: 600 },
+  'test:practice:submit': { interval: 60 * 60 * 1000, maxRequests: 20 },
   'test:create': { interval: 60 * 60 * 1000, maxRequests: 5 },
   'test:delete': { interval: 60 * 60 * 1000, maxRequests: 10 },
 

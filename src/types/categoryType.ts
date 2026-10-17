@@ -9,7 +9,7 @@ export interface PopulatedCategories {
 
 export interface CategoryPageProps {
   params: Promise<{ value: string }>
-  searchParams: Promise<{ sessionId: string }>
+  searchParams: Promise<{ sessionId?: string; mode?: string }>
 }
 
 export type AccessTier = "free" | "basic" | "premium" | "pro"

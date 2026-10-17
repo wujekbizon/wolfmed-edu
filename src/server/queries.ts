@@ -985,6 +985,9 @@ export async function getTestSessionDetails(sessionId: string, userId: string) {
       numberOfQuestions: true,
       status: true,
       expiresAt: true,
+      mode: true,
+      progress: true,
+      questionIds: true,
     },
   })
   return session
@@ -1524,7 +1527,8 @@ export const expireTestSession = async (sessionId: string, userId: string) => {
       .where(
         and(
           eq(testSessions.id, sessionId),
-          eq(testSessions.userId, userId)
+          eq(testSessions.userId, userId),
+          eq(testSessions.mode, 'EXAM')
         )
       )
       .for("update")

@@ -135,6 +135,7 @@ export async function startTestAction(
         .where(
           and(
             eq(testSessions.userId, userId),
+            eq(testSessions.mode, "EXAM"),
             eq(testSessions.status, "ACTIVE"),
             or(
               lt(testSessions.expiresAt, now),
@@ -149,6 +150,7 @@ export async function startTestAction(
         .where(
           and(
             eq(testSessions.userId, userId),
+            eq(testSessions.mode, "EXAM"),
             eq(testSessions.status, "ACTIVE"),
             gt(testSessions.expiresAt, now)
           )
@@ -173,6 +175,7 @@ export async function startTestAction(
           expiresAt,
           lastActivityAt: now,
           status: "ACTIVE",
+          mode: "EXAM",
           meta: parsedMeta
         })
         .returning()
@@ -247,6 +250,7 @@ export async function submitTestAction(
       where: and(
         eq(testSessions.id, sessionId),
         eq(testSessions.userId, userId),
+        eq(testSessions.mode, "EXAM"),
         eq(testSessions.status, "ACTIVE")
       ),
       columns: {
@@ -269,6 +273,7 @@ export async function submitTestAction(
           and(
             eq(testSessions.id, sessionSnapshot.id),
             eq(testSessions.userId, userId),
+            eq(testSessions.mode, "EXAM"),
             eq(testSessions.status, "ACTIVE")
           )
         )
@@ -303,6 +308,7 @@ export async function submitTestAction(
           and(
             eq(testSessions.id, sessionId),
             eq(testSessions.userId, userId),
+            eq(testSessions.mode, "EXAM"),
             eq(testSessions.status, "ACTIVE")
           )
         )

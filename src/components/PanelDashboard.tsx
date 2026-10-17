@@ -18,6 +18,8 @@ import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 import DynamicBoard from '@/app/_components/DynamicBoard'
 import DynamicBoardSkeleton from '@/components/skeletons/DynamicBoardSkeleton'
 import PanelWolfekSection from '@/components/wolfek/PanelWolfekSection'
+import ContinueLearningSection from '@/components/ContinueLearningSection'
+import ContinueLearningSkeleton from '@/components/ContinueLearningSkeleton'
 
 export default function PanelDashboard() {
   return (
@@ -25,6 +27,9 @@ export default function PanelDashboard() {
       <div className="flex h-full w-full flex-col items-center gap-8">
         <Suspense fallback={<DynamicBoardSkeleton />}>
           <DynamicBoard />
+        </Suspense>
+        <Suspense fallback={<ContinueLearningSkeleton />}>
+          <ContinueLearningSection />
         </Suspense>
         <section className="container mx-auto">
           <div className="flex w-full flex-col gap-8 rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-xl shadow-zinc-900/[0.07] xs:p-4 sm:p-10">

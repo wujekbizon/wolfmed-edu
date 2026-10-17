@@ -12,6 +12,7 @@ All routes here sit under `src/app/panel/layout.tsx`, which is both **auth-gated
 
 Composition, top to bottom:
 - `DynamicBoard` (`src/app/_components/DynamicBoard.tsx` — the shared root `_components`, not a panel-local one, imported via `../_components/DynamicBoard`) — the interactive canvas/board widget.
+- `ContinueLearningSection` — independently suspended server section with up to three recent active practice exams and learning sessions, linked directly back to their saved work.
 - `Username` / `UserMotto` — read-only profile display, each in its own Suspense boundary (`UsernameSkeleton`, `UserMottoSkeleton`).
 - `UserAnalytics` — test-taking stats, behind `UserAnalyticsSkeleton`.
 - `BadgeWidget` — earned procedure badges, behind `BadgeWidgetSkeleton`. Reads via `getUserBadges(userId)` (see [`28-queries.md`](./28-queries.md)) — the read-side counterpart to `awardBadge()`'s write inside `submitOrderStepsAction`'s all-5-complete transaction (see [`32-flows-learning-content.md`](./32-flows-learning-content.md) → Flow 5).
@@ -37,6 +38,7 @@ Composition, top to bottom:
 2. `getAccessibleCategories()` (`@/helpers/populateCategories`) — categories the user's enrollment tier can see.
 3. `checkPremiumAccessAction()` — if premium, also fetches `getUserCustomCategories(userId)` and appends them as `moje-testy__<id>` pseudo-categories (custom user-authored test sets, see `/panel/dodaj-test` below).
 4. Renders `<TestsCategoriesList categories={[...accessible, ...custom]} />`.
+5. Loads the user's active `PRACTICE` attempts for those categories. Category cards show a separate resume thumbnail for each active question-count variant; the practice button changes to **Wznów** when its selected count already has an attempt.
 
 `CategoryDeepLinkScroller` (separate Suspense, `fallback={null}`) handles scroll-to-category when arriving via a deep link (e.g. `?category=...`).
 

@@ -321,6 +321,21 @@ export const StartTestSchema = z.object({
   meta: z.string().default("{}"),
 });
 
+export const StartPracticeTestSchema = z.object({
+  category: z.string().min(1, "Musisz podać kategorię."),
+  numberOfQuestions: z.coerce.number().int().refine((num) => [10, 20, 40].includes(num), {
+    message: "Niepoprawna ilość pytań.",
+  }),
+});
+
+export const SavePracticeProgressSchema = z.object({
+  sessionId: z.string().uuid(),
+  answers: z.record(z.string().uuid(), z.number().int().nonnegative())
+    .refine((answers) => Object.keys(answers).length > 0 && Object.keys(answers).length <= 40),
+});
+
+export const PracticeSessionIdSchema = z.string().uuid();
+
 /**
  * Schema for validating the data required to create a new test.
  */

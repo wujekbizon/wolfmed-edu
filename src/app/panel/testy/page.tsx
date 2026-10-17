@@ -10,6 +10,7 @@ import { getCurrentUser } from '@/server/user'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { getUserCustomCategories } from '@/server/queries'
 import type { PopulatedCategories } from '@/types/categoryType'
+import { getActivePracticeExamResumes } from '@/server/practiceResume'
 
 export async function generateMetadata(): Promise<Metadata> {
   const categories = Object.entries(CATEGORY_METADATA);
@@ -45,7 +46,12 @@ async function TestsCategories() {
     }))
   }
 
-  return <TestsCategoriesList categories={[...accessibleCategories, ...customCards]} />
+  const categories = [...accessibleCategories, ...customCards]
+  const practiceAttempts = await getActivePracticeExamResumes(
+    user.userId,
+    categories.map((category) => category.value)
+  )
+  return <TestsCategoriesList categories={categories} practiceAttempts={practiceAttempts} />
 }
 
 export default function TestsPage() {

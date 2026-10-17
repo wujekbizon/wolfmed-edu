@@ -34,7 +34,7 @@ The account record, keyed by Clerk's `userId` (not the Postgres `id`). Tracks te
 - **`tests`** — the question bank. `meta: { course, category }` (typed via local `TestMeta` interface) + `data` (jsonb question array).
 - **`userCustomTests`** — a user-authored test (see `panel/dodaj-test`), same `meta`/`data` shape, scoped by `userId`.
 - **`userCustomCategories`** — user-defined category grouping a set of `questionIds`; `linkedCategory` optionally maps it to a real curriculum subject for planner attribution.
-- **`testSessions`** (`test_sessions`) — a timed attempt in progress: `category`, `numberOfQuestions`, `durationMinutes`, `expiresAt`, `lastActivityAt` (heartbeat target), `status: ACTIVE | EXPIRED | COMPLETED | CANCELLED`.
+- **`testSessions`** (`test_sessions`) — an attempt in progress: `mode: EXAM | PRACTICE`, `category`, `numberOfQuestions`, `durationMinutes`, `expiresAt`, `lastActivityAt`, `questionIds`, `progress` (saved answer indexes), `status: ACTIVE | EXPIRED | COMPLETED | CANCELLED`. Practice attempts resume indefinitely; only `EXAM` attempts use timer, heartbeat, and anti-cheat expiry.
 - **`completedTestes`** (`completed_tests`) — the finished result: `score`, `testResult` (jsonb), FK to both `users.userId` and `testSessions.id` (cascade delete on both).
 
 ### Procedures & courses
