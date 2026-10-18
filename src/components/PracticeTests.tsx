@@ -18,9 +18,13 @@ export default function PracticeTests({
   initialProgress,
   initialVersions,
 }: PracticeTestsProps) {
-  const [state, action] = useActionState(submitPracticeTestAction, EMPTY_FORM_STATE)
+  const { selectAnswer: queueAnswer, status: saveStatus, stop } = usePracticeProgressAutosave(sessionId, initialVersions)
+  const [state, action] = useActionState(async (previous: FormState, data: FormData) => {
+    const result = await submitPracticeTestAction(previous, data)
+    if (result.status === 'SUCCESS') stop()
+    return result
+  }, EMPTY_FORM_STATE)
   const [answers, setAnswers] = useState(initialProgress)
-  const { selectAnswer: queueAnswer, status: saveStatus } = usePracticeProgressAutosave(sessionId, initialVersions)
   const router = useRouter()
   const noScriptFallback = useToastMessage(state)
 

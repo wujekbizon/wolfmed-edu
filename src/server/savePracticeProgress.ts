@@ -17,8 +17,7 @@ export async function persistPracticeProgress(userId: string, input: unknown) {
   const predicate = and(
     eq(testSessions.id, sessionId),
     eq(testSessions.userId, userId),
-    eq(testSessions.mode, 'PRACTICE'),
-    eq(testSessions.status, 'ACTIVE')
+    eq(testSessions.mode, 'PRACTICE')
   )
   const enrollments = await getUserEnrollments(userId)
 
@@ -28,8 +27,11 @@ export async function persistPracticeProgress(userId: string, input: unknown) {
       questionIds: testSessions.questionIds,
       progress: testSessions.progress,
       meta: testSessions.meta,
+      status: testSessions.status,
     }).from(testSessions).where(predicate).for('update')
-    if (!locked) return { success: false as const, message: 'Test próbny nie jest aktywny.' }
+    if (!locked || (locked.status !== 'ACTIVE' && locked.status !== 'COMPLETED')) {
+      return { success: false as const, message: 'Test próbny nie jest aktywny.' }
+    }
     if (!hasPracticeEnrollmentAccess(locked.category, enrollments)) {
       return { success: false as const, message: 'Nie masz już dostępu do tej kategorii.' }
     }
@@ -43,6 +45,7 @@ export async function persistPracticeProgress(userId: string, input: unknown) {
     if (Object.keys(answers).some((id) => !locked.questionIds.includes(id))) {
       return { success: false as const, message: 'Nieprawidłowe pytanie w postępie.' }
     }
+    if (locked.status === 'COMPLETED') return { success: true as const, completed: true as const }
     const meta = getPracticeProgressMeta(locked.meta)
     const merged = mergePracticeProgress(locked.progress, meta.practiceProgressVersions, answers)
     if (!merged) return {
@@ -55,7 +58,7 @@ export async function persistPracticeProgress(userId: string, input: unknown) {
       progress: merged.progress,
       meta: { ...meta, practiceProgressVersions: merged.versions },
       lastActivityAt: new Date(),
-    }).where(predicate)
+    }).where(and(predicate, eq(testSessions.status, 'ACTIVE')))
     return { success: true as const }
   })
 }

@@ -36,6 +36,8 @@ From a category card, **Rozpocznij trening** starts or resumes an owned `PRACTIC
 
 Practice progress payload and version-metadata keys use `z.guid()` for question IDs. Some seeded anatomy IDs have the PostgreSQL UUID shape without RFC version/variant bits; strict `z.uuid()` rejected their autosaves with HTTP 400. Session IDs and browser-generated client IDs remain strict UUIDs, and writes still check membership in the owned active session. This validation fix requires no migration.
 
+Successful submission stops the client autosave queue before results navigation, including the unmount beacon. A valid late save already in flight for an owned completed practice session returns `{ success: true, completed: true }` without writing progress or changing the result. Access and question membership are still checked; other users, exam-mode sessions, cancelled/expired attempts and malformed input remain rejected. The autosave hook also stops when another tab has completed the session. No migration is required.
+
 ---
 
 ## Flow 2 — User generates an AI test on a topic (premium)
