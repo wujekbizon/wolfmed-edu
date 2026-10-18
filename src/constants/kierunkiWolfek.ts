@@ -1,6 +1,5 @@
 import type { KierunkiWolfekTopic } from '@/types/kierunkiWolfekTypes'
 
-export const KIERUNKI_WOLFEK_VERSION = 'kierunki-v1'
 export const KIERUNKI_CATALOG_ANCHOR = 'kierunki-katalog'
 
 export const KIERUNKI_WOLFEK_TOPICS: Record<KierunkiWolfekTopic, {
@@ -18,7 +17,6 @@ export const KIERUNKI_WOLFEK_TOPICS: Record<KierunkiWolfekTopic, {
   owned_course: { label: 'Mam już dostęp do kursu', criteria: 'Signed-in visitor asks about an already owned course or how to continue using it.' },
 }
 
-export const KIERUNKI_WOLFEK_TOPIC_IDS = Object.keys(KIERUNKI_WOLFEK_TOPICS) as KierunkiWolfekTopic[]
 export const KIERUNKI_WOLFEK_TOPIC_LABELS: Partial<Record<KierunkiWolfekTopic, string>> = {
   exam_preparation: 'Zdaj egzamin opiekuna',
   opiekun_growth: 'Rozwój opiekuna',
@@ -26,7 +24,3 @@ export const KIERUNKI_WOLFEK_TOPIC_LABELS: Partial<Record<KierunkiWolfekTopic, s
   payment_models: 'Plany i płatności',
   course_selection: 'Wybór kierunku',
 }
-
-export const KIERUNKI_WOLFEK_FEATURED_TOPICS: KierunkiWolfekTopic[] = [
-  'exam_preparation', 'opiekun_growth', 'nursing_journey', 'payment_models', 'course_selection',
-]

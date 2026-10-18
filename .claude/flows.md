@@ -1,10 +1,10 @@
 # 🔀 System Flows
 
-## Wolfek app/help questions — 2026-10-01
+## Wolfek app/help questions — 2026-10-18
 
-Page mount/open makes no Jev call. First prepared click → `getWolfekPreparedBatchAction` → all route prompts judged independently with Choice/Noul/Score in one Jev request. React Query holds the batch for this page visit. Later clicks → `useWolfekPreparedResultAction` → access/current-data checks and delivery logging, without Jev. Reload/navigation/account changes clear reuse; changed facts invalidate the batch. Typed questions → `askWolfekQuestionAction` → fresh Jev call each time. UI-only controls remain direct. Learning help now uses the [Premium RAG workflow](docs/2026-10-04-wolfek-learning-rag.md), replacing the separate tutor form and automatic coaching calls on this route.
+Page mount/open makes no Jev call. Prepared clicks → `answerWolfekPreparedQuestionAction` → explicit button/response mappings in `src/content/wolfek/prepared-answers.json` → current server facts and existing JSON answer templates. No Jev, prepared batches or visit receipts. Typed questions → `askWolfekQuestionAction` → fresh Jev call each time, unchanged. Both paths retain authorization and submission deduplication. UI-only controls remain direct. Learning buttons select the [Premium RAG workflow](docs/2026-10-04-wolfek-learning-rag.md) directly; medical explanations still use grounded Gemini generation.
 
-Runtime packs: `src/content/wolfek`. [Batch implementation and smoke checks](docs/2026-10-01-wolfek-prepared-batches.md). Original provider body remains in `responseText`; `wolfekBatch`/`wolfekDeliveries` track batches/clicks and `wolfekDelivery` tracks typed delivery. Learning RAG runs only for the selected hint/comparison/explanation; without relevant sources it returns an explicit no-source answer.
+Runtime packs: `src/content/wolfek`. [Prepared-answer implementation](docs/2026-10-18-wolfek-prepared-answers.md). Prepared clicks record outcome `prepared` with no model confidence or provider audit row. Historical batch metrics remain readable; typed delivery keeps its existing provider audit. Learning RAG runs only for the selected hint/comparison/explanation; without relevant sources it returns an explicit no-source answer.
 
 The shape of the AI side of Wolfmed: what happens between a student typing and an
 answer appearing, and how their material got there first. Rules live in `CLAUDE.md`

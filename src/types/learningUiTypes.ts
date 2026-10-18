@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import type { WolfekAnswerReaction, WolfekGaze } from './wolfekTypes'
 import type {
   LearningQuestionCardData, PracticeCardProgress, PracticeCompanionMode,
-  PracticeFormState, PracticeTutorAttachment, PracticeView,
+  PracticeView,
 } from './learningPracticeTypes'
 
 export interface LearningDeckProps {
@@ -63,11 +63,8 @@ export interface WolfekCompanionProps {
   session: PracticeView | null
   premium: boolean
   onSaved: (session: PracticeView) => void
-  onAskTutor: () => void
   onContinue: () => boolean
-  onReview: () => boolean
   canContinue: boolean
-  onCompare?: () => void
   onMinimize: () => void
   smallTalkIndex: number
   reaction: WolfekAnswerReaction | null
@@ -86,33 +83,4 @@ export interface PracticeCompanionActionsProps {
   onHint: () => void
   onAskTutor: () => void
   onCompare?: () => void
-}
-export interface WolfekBubbleProps {
-  answerText?: string | null
-  session: PracticeView | null
-  mode: PracticeCompanionMode
-  premium: boolean
-  pending: boolean
-  onRecommend: () => void
-  onDismiss: () => void
-  onNavigate: () => void
-}
-export interface PracticeWolfekQuestionHandlers {
-  hintOpened: () => void
-  compare: () => void
-  openTutor: () => void
-  revealTutor: () => boolean
-}
-export interface PracticeTutorProps {
-  reference: PracticeTutorAttachment
-  category: string
-  onClose: () => void
-}
-export interface PracticeTutorHandoffProps {
-  session: PracticeView | null
-  state: PracticeFormState
-  premium: boolean
-  pending: boolean
-  onAskTutor: () => void
-  onReveal: () => boolean
 }

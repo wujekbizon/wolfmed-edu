@@ -2,15 +2,13 @@ import 'server-only'
 import { db } from '@/server/db/index'
 import { wolfekInteractions } from '@/server/db/schema'
 import { JEV_AUDIT_RETENTION_DAYS } from '@/constants/jevAudit'
-import { WOLFEK_TOPIC_MIN_CONFIDENCE } from '@/constants/wolfekRouting'
+import { needsWolfekInteractionReview } from '@/helpers/needsWolfekInteractionReview'
 import { addWolfekDailyMetric } from './addWolfekDailyMetric'
 import type { WolfekInteraction } from '@/types/wolfekMetricTypes'
 
 export async function recordWolfekInteraction(record: WolfekInteraction): Promise<void> {
   const createdAt = new Date()
-  const needsReview = record.kind === 'question' &&
-    (record.topic === 'other' || record.topic === 'no_match' || record.topic === 'clarify' ||
-      record.topic?.startsWith('unavailable_') === true || record.confidence === null || record.confidence < WOLFEK_TOPIC_MIN_CONFIDENCE)
+  const needsReview = needsWolfekInteractionReview(record)
   try {
     await db.transaction(async (tx) => {
       await tx.insert(wolfekInteractions).values({ ...record, needsReview, createdAt,

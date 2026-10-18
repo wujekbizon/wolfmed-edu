@@ -10,6 +10,7 @@ export async function getWolfekMetrics(filters: WolfekAdminFilters) {
   const where = sql`${source} AND day BETWEEN ${filters.from}::date AND ${filters.to}::date`
   const [summary, daily, topics, models, lifetime, routes] = await Promise.all([
     db.execute(sql`SELECT
+      COALESCE(sum(calls) FILTER (WHERE kind = 'question' AND outcome = 'prepared'), 0)::float8 AS "preparedAnswers",
       COALESCE(sum(calls) FILTER (WHERE kind = 'prepared_batch' AND outcome = 'provider'), 0)::float8 AS "preparedBatches",
       COALESCE(sum(calls) FILTER (WHERE kind = 'question' AND outcome = 'batch_reuse'), 0)::float8 AS "reusedButtons",
       COALESCE(sum(calls) FILTER (WHERE kind = 'question' AND outcome = 'typed_provider'), 0)::float8 AS "typedQuestions",

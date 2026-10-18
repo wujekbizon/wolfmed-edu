@@ -21,7 +21,7 @@ import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 
 export async function executeWolfekQuestion(userId: string | null, input: WolfekQuestionRequest): Promise<WolfekQuestionState> {
-  if (input.origin !== 'typed') throw new WolfekQuestionError('Przygotowane pytania wymagają wspólnego pakietu odpowiedzi.')
+  if (input.origin !== 'typed') throw new WolfekQuestionError('Przygotowane pytania mają osobną obsługę.')
   await authorizeWolfekQuestion(userId, input)
   const started = Date.now()
   const identity = await getKierunkiWolfekRateLimitIdentity(userId)

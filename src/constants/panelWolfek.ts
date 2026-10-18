@@ -1,6 +1,5 @@
-import type { PanelWolfekResultsTopic, PanelWolfekTopic } from '@/types/panelWolfekTypes'
+import type { PanelWolfekTopic } from '@/types/panelWolfekTypes'
 
-export const PANEL_WOLFEK_VERSION = 'panel-companion-v2'
 export const PANEL_WOLFEK_ONBOARDING_PREFIX = 'panel-wolfek:onboarding:'
 
 export const PANEL_WOLFEK_TOPICS: Record<PanelWolfekTopic, {
@@ -27,20 +26,6 @@ export const PANEL_WOLFEK_TOPICS: Record<PanelWolfekTopic, {
   results_history: { label: 'Historia testów', criteria: 'Lista ukończonych testów, sortowanie wyników, data i szczegóły wcześniejszych prób.' },
   results_categories: { label: 'Wyniki według kategorii', criteria: 'Gdzie sprawdzić wyniki, postęp i skuteczność podzielone według kategorii.' },
 }
-
-export const PANEL_WOLFEK_TOPIC_IDS = Object.keys(PANEL_WOLFEK_TOPICS) as PanelWolfekTopic[]
-export const PANEL_WOLFEK_RESULTS_TOPICS: PanelWolfekResultsTopic[] = [
-  'results_explain', 'results_improve', 'results_mistakes', 'results_history', 'results_categories',
-]
-export const PANEL_WOLFEK_HOME_TOPICS = PANEL_WOLFEK_TOPIC_IDS
-  .filter((topic) => !PANEL_WOLFEK_RESULTS_TOPICS.some((resultTopic) => resultTopic === topic))
-
-export const PANEL_WOLFEK_FEATURED_TOPICS: PanelWolfekTopic[] = [
-  'first_steps', 'courses', 'results', 'billing', 'navigation',
-]
-
-export const PANEL_WOLFEK_MORE_TOPICS = PANEL_WOLFEK_TOPIC_IDS
-  .filter((topic) => PANEL_WOLFEK_HOME_TOPICS.includes(topic) && !PANEL_WOLFEK_FEATURED_TOPICS.includes(topic))
 
 export const PANEL_WOLFEK_TARGETS: Record<PanelWolfekTopic, string> = {
   first_steps: 'panel-first-steps',

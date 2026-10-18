@@ -1,0 +1,40 @@
+{
+  "kierunki": {
+    "exam_preparation": { "responses": ["exam_owned", "exam_course"] },
+    "opiekun_growth": { "responses": ["growth_course"] },
+    "nursing_journey": { "responses": ["nursing_course"] },
+    "payment_models": { "responses": ["payment_models"] },
+    "pricing": { "responses": ["prices"] },
+    "tier_comparison": { "responses": ["tiers"], "destinationKey": "catalog" },
+    "english_course": { "responses": ["english"] },
+    "owned_course": { "responses": ["sign_in", "not_owned", "owned"] },
+    "card_payment": { "responses": ["card_unknown", "card_yes", "card_no"] }
+  },
+  "panel.home": {
+    "first_steps": { "responses": ["first_steps"] },
+    "courses": { "responses": ["courses"] },
+    "results": { "responses": ["progress_empty", "progress"] },
+    "billing": { "responses": ["billing_status"] },
+    "navigation": { "responses": ["navigation"] },
+    "username": { "responses": ["username_edit"] },
+    "motto": { "responses": ["motto_edit"] },
+    "countdown": { "responses": ["plan_countdown", "exam_countdown", "no_countdown"] },
+    "difficult_questions": { "responses": ["difficult_empty", "difficult"] },
+    "plan": { "responses": ["plan_create", "plan_done", "plan_today", "plan_progress"] },
+    "badges": { "responses": ["badges_empty", "badges"] },
+    "feedback": { "responses": ["feedback"] }
+  },
+  "panel.results": {
+    "results_explain": { "responses": ["result_general"] },
+    "results_improve": { "responses": ["improve_empty", "improve"] },
+    "results_mistakes": { "responses": ["mistakes_location"] },
+    "results_history": { "responses": ["history_empty", "test_count"] },
+    "results_categories": { "responses": ["categories_empty", "categories"] }
+  },
+  "learning.practice": {
+    "hint": { "responses": ["hint_rag"] },
+    "compare": { "responses": ["compare_select", "compare_rag"] },
+    "assistant": { "responses": ["tutor_ready", "tutor_reveal_confirm"] },
+    "reveal_tutor": { "responses": ["tutor_ready", "tutor_reveal_confirm"] }
+  }
+}

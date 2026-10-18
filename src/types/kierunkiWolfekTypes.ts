@@ -1,4 +1,3 @@
-import type { FormState } from './actionTypes'
 import type { PaymentOffer } from './paymentTypes'
 
 export type KierunkiWolfekCourseSlug = PaymentOffer['courseSlug']
@@ -28,22 +27,5 @@ export type KierunkiWolfekContext = {
   }>
 }
 
-export type KierunkiWolfekAnswer = {
-  topic: KierunkiWolfekTopic
-  text: string
-  href?: string
-  courseSlug?: KierunkiWolfekCourseSlug
-}
-
-export type KierunkiWolfekAskState = FormState & {
-  answer?: KierunkiWolfekAnswer | null
-  confidence?: number | null
-}
-
 export type KierunkiWolfekVideo = { title: string; url: string }
 export type KierunkiCourseVideoButtonProps = { courseSlug: KierunkiWolfekCourseSlug }
-export type KierunkiWolfekTopicsProps = {
-  pending: boolean
-  selectedTopic: KierunkiWolfekTopic | null
-  onSelect: (topic: KierunkiWolfekTopic) => void
-}

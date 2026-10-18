@@ -3,7 +3,6 @@ import type { FormState } from './actionTypes'
 export type PracticeOutcome = 'unassisted' | 'assisted' | 'revealed' | 'skipped' | 'invalid'
 export type PracticeCommand = 'answer' | 'hint' | 'reveal' | 'review' | 'skip' | 'next' | 'finish'
 export type PracticeCompanionMode = 'welcome' | 'hint' | 'compare' | 'chat'
-export type PracticeSuggestionInteraction = 'accepted' | 'dismissed'
 export type JevSupportAction = 'hint' | 'compare' | 'retry' | 'reveal' | 'review' | 'tutor' | 'material' | 'plan' | 'continue'
 
 export interface PracticeItem {
@@ -102,7 +101,6 @@ export interface PracticeReference {
   purpose: 'explain' | 'follow_up'
 }
 
-export type PracticeTutorAttachment = PracticeReference & { questionNumber: number }
 
 export interface LearningCategoryProps {
   params: Promise<{ category: string }>

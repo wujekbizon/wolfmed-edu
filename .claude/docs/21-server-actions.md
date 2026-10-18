@@ -4,9 +4,11 @@
 
 This catalog is a snapshot of the earlier action modules. Check `src/actions/` for current feature additions and the source for exact gates and return shapes.
 
+Wolfek prepared buttons use `answerWolfekPreparedQuestionAction` in `wolfek-prepared.ts`, resolving JSON mappings without Jev. Typed questions keep `askWolfekQuestionAction`. See [prepared answers](./2026-10-18-wolfek-prepared-answers.md).
+
 Cross-reference: [`20-forms-catalog.md`](./20-forms-catalog.md) for which client form drives which action, [`01-database-schema.md`](./01-database-schema.md) for tables written, [`28-queries.md`](./28-queries.md) for the read-side layer these call into.
 
-Centrum Nauki actions now live in `learning-practice.ts`, `learning-reset.ts`, `learning-help-interaction.ts`, `learning-suggestion.ts`, and `learning-support.ts`. They validate inputs in `src/server/schema.ts`, re-check category access, and call private `src/server/learning/` services. Form mutations return `PracticeFormState` and update the user/category React Query cache from their returned practice view; Jev and telemetry actions return a scoped view or `void`. See [learning practice](./2026-09-22-learning-practice-mvp.md).
+Centrum Nauki grading/reset actions live in `learning-practice.ts` and `learning-reset.ts`; current Wolfek help uses `wolfek-prepared.ts` and `wolfek-questions.ts`. They validate inputs, re-check access and update the user/category React Query cache from returned practice views. The unused automatic-coaching, suggestion and separate comparison actions were removed on October 18. See [prepared answers](./2026-10-18-wolfek-prepared-answers.md).
 
 **Two files in this directory are not Server Actions.** `fetchQuestionDetails.ts` and `fetchProblematicQuestionDetails.ts` have **no `'use server'` directive** (the other 25 files all do) — they're plain async server-side helper functions that happen to live in `actions/`. Both are only ever imported by async Server Components (`TestResultCard.tsx`, `UserAnalytics.tsx`), so nothing is broken, but they are not callable from a client component the way everything else here is. See Findings.
 

@@ -5,6 +5,7 @@ import { useQuery, keepPreviousData } from '@tanstack/react-query'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { getAdminWolfekReportAction } from '@/actions/wolfek-admin'
 import { WOLFEK_ADMIN_STALE_TIME } from '@/constants/wolfekAdmin'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
 import type { WolfekAdminFilters, WolfekAdminReport } from '@/types/wolfekAdminTypes'
 
 export function useWolfekAdminReport(userId: string, initialFilters: WolfekAdminFilters, initialReport: WolfekAdminReport) {
@@ -14,7 +15,8 @@ export function useWolfekAdminReport(userId: string, initialFilters: WolfekAdmin
   const query = useQuery({
     queryKey: ['wolfek-admin', userId, effective],
     queryFn: () => getAdminWolfekReportAction(effective),
-    initialData: JSON.stringify(effective) === JSON.stringify(initialFilters) ? initialReport : undefined,
+    initialData: JSON.stringify(effective) === JSON.stringify(initialFilters)
+      ? { report: initialReport, formState: EMPTY_FORM_STATE } : undefined,
     placeholderData: keepPreviousData, staleTime: WOLFEK_ADMIN_STALE_TIME, retry: false,
   })
   const change = (patch: Partial<WolfekAdminFilters>) => setFilters((current) => ({ ...current, ...patch, page: 1 }))

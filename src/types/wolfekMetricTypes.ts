@@ -10,7 +10,7 @@ export type WolfekInteraction = {
   question: string | null
   topic: string | null
   confidence: number | null
-  outcome: 'provider' | 'typed_provider' | 'batch_first' | 'batch_reuse' | 'cache_hit' | 'unavailable' | 'topic_click'
+  outcome: 'provider' | 'typed_provider' | 'batch_first' | 'batch_reuse' | 'cache_hit' | 'unavailable' | 'topic_click' | 'prepared'
 }
 export type WolfekMetricIncrement = {
   source: JevAuditContext['source']

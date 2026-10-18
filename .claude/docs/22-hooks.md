@@ -2,6 +2,8 @@
 
 [← Back to index](./README.md)
 
+Wolfek: `useWolfekQuestions` dispatches prepared buttons directly to their server action and typed questions to Jev, with viewer/route/card/selection-scoped response guards. `useWolfekLearningQuestions` retains grounded local reply caching. The former `useWolfekPreparedVisit` batch hook and visit provider were removed. See [prepared answers](./2026-10-18-wolfek-prepared-answers.md).
+
 All 60 files in `src/hooks/`, one hook per file. Every entry below is read directly from source — signature, return shape, and any non-obvious behavior (races, cleanup, dedup) called out explicitly, not guessed from the name. Grouped by domain.
 
 Naming collision to know about: `src/hooks/useStore.ts` (a generic hydration-safe Zustand selector wrapper, `useStore(store, callback)` — delays returning the selected value until after mount to avoid SSR/CSR hydration mismatch) is a different thing from `src/store/useStore.ts` (an actual Zustand store instance — see [`27-state-stores.md`](./27-state-stores.md)). Import paths disambiguate them (`@/hooks/useStore` vs `@/store/useStore`), but the shared name is a trap when skimming imports.

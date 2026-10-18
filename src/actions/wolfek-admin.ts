@@ -7,11 +7,15 @@ import { db } from '@/server/db/index'
 import { jevAuditLogs } from '@/server/db/schema'
 import { WolfekAdminFiltersSchema, WolfekAdminAuditIdSchema } from '@/server/schema'
 import { getWolfekAdminReport } from '@/server/wolfek-admin/getWolfekAdminReport'
+import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
+import type { WolfekAdminReportResult } from '@/types/wolfekAdminTypes'
 
-export async function getAdminWolfekReportAction(input: unknown) {
+export async function getAdminWolfekReportAction(input: unknown): Promise<WolfekAdminReportResult> {
   const { userId } = await requireAdmin()
   if (!(await checkRateLimit(userId, 'admin:wolfek')).success) throw new Error('Zbyt wiele odświeżeń. Spróbuj za chwilę.')
-  return getWolfekAdminReport(WolfekAdminFiltersSchema.parse(input))
+  const parsed = WolfekAdminFiltersSchema.safeParse(input)
+  if (!parsed.success) return { report: null, formState: fromErrorToFormState(parsed.error) }
+  return { report: await getWolfekAdminReport(parsed.data), formState: toFormState('SUCCESS', '') }
 }
 
 export async function getAdminWolfekAuditDetailAction(input: unknown) {
