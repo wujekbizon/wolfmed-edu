@@ -61,3 +61,24 @@ test('unversioned and invalid save payloads are rejected', () => {
     assert.equal(SavePracticeProgressSchema.safeParse({ ...payload, answers: { [id]: answer } }).success, false)
   }
 })
+
+test('legacy anatomy question IDs can be saved and their metadata reloaded', () => {
+  const questionId = 'c3d4e5f6-a7b8-9012-cdef-123456789012'
+  const answer = update(0, 1)
+  const payload = { sessionId: id, answers: { [questionId]: answer } }
+  assert.equal(SavePracticeProgressSchema.safeParse(payload).success, true)
+  assert.deepEqual(getPracticeProgressMeta({ practiceProgressVersions: {
+    [questionId]: { revision: answer.revision, clientId },
+  } }).practiceProgressVersions[questionId], { revision: 1, clientId })
+})
+
+test('question IDs still require the database UUID shape', () => {
+  for (const questionId of ['invalid', 'c3d4e5f6-a7b8-9012-cdef-12345678901z']) {
+    assert.equal(SavePracticeProgressSchema.safeParse({ sessionId: id, answers: {
+      [questionId]: update(0, 1),
+    } }).success, false)
+  }
+  assert.equal(SavePracticeProgressSchema.safeParse({ sessionId: id, answers: {
+    [id]: { ...update(0, 1), clientId: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
+  } }).success, false)
+})

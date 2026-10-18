@@ -283,12 +283,12 @@ export const PracticeProgressVersionSchema = z.object({
 });
 
 export const PracticeProgressMetaSchema = z.object({
-  practiceProgressVersions: z.record(z.string().uuid(), PracticeProgressVersionSchema).default({}),
+  practiceProgressVersions: z.record(z.guid(), PracticeProgressVersionSchema).default({}),
 }).passthrough();
 
 export const SavePracticeProgressSchema = z.object({
   sessionId: z.string().uuid(),
-  answers: z.record(z.string().uuid(), PracticeProgressVersionSchema.extend({
+  answers: z.record(z.guid(), PracticeProgressVersionSchema.extend({
     answerIndex: z.number().int().nonnegative(),
     baseRevision: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
   }).refine((answer) => answer.revision > answer.baseRevision))

@@ -34,6 +34,8 @@ From a category card, **Rozpocznij trening** starts or resumes an owned `PRACTIC
 
 **Files**: `src/actions/{practiceTests,savePracticeProgress,submitPracticeTest}.ts`, `src/components/{PracticeTestButton,PracticeTests,PracticeResumeCard,ContinueLearningSection}.tsx`, `src/hooks/usePracticeProgressAutosave.ts`, `src/server/practiceResume.ts`, `src/app/api/session/practice-progress/route.ts`, `src/app/panel/testy/[value]/page.tsx`.
 
+Practice progress payload and version-metadata keys use `z.guid()` for question IDs. Some seeded anatomy IDs have the PostgreSQL UUID shape without RFC version/variant bits; strict `z.uuid()` rejected their autosaves with HTTP 400. Session IDs and browser-generated client IDs remain strict UUIDs, and writes still check membership in the owned active session. This validation fix requires no migration.
+
 ---
 
 ## Flow 2 — User generates an AI test on a topic (premium)
