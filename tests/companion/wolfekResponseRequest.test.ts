@@ -25,16 +25,15 @@ test('all packs are valid and questions use Choice, Noul and Score', () => {
   }
 })
 
-test('button and identical typed question have identical response candidates and judgments', () => {
+test('typed count questions retain their full response candidates and judgments', () => {
   const pack = WolfekPackSchema.parse(results)
   const context = { facts: { results: { completedTestCount: 17, hasTests: true } }, destinations: {} }
   const typed = buildWolfekResponseRequest(input, pack, context)
-  const prepared = buildWolfekResponseRequest({ ...input, origin: 'prepared',
-    preparedQuestionId: 'results_history' }, pack, context)
-  assert.deepEqual(prepared.payload.questions, typed.payload.questions)
-  assert.deepEqual(prepared.answers, typed.answers)
-  assert.equal(prepared.answers.test_count?.text, 'Masz 17 ukończonych testów.')
-  assert.equal(JSON.stringify(prepared.payload).includes('preparedQuestionId'), false)
+  assert.equal(typed.answers.test_count?.text, 'Masz 17 ukończonych testów.')
+  assert.ok(typed.answers.history_location)
+  assert.ok(typed.answers.clarify)
+  assert.ok(typed.answers.no_match)
+  assert.equal(JSON.stringify(typed.payload).includes('preparedQuestionId'), false)
 })
 
 test('zero is a real value; missing count does not become zero', () => {

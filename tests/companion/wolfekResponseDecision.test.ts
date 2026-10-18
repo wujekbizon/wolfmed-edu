@@ -8,7 +8,7 @@ import { parseWolfekResponse } from '@/helpers/parseWolfekResponse'
 import type { WolfekResponseEvaluator } from '@/types/wolfekResponseTypes'
 
 const built = buildWolfekResponseRequest({ route: 'panel.results', question: 'Ile mam ukończonych testów?',
-  origin: 'prepared', preparedQuestionId: 'results_history', submissionId: crypto.randomUUID(), practice: null },
+  origin: 'typed', preparedQuestionId: null, submissionId: crypto.randomUUID(), practice: null },
 WolfekPackSchema.parse(results), { facts: { results: { completedTestCount: 17, hasTests: true } }, destinations: {} })
 const allowed = Object.keys(built.answers)
 const response = (choice = 'test_count', confidence = .9) => ({
@@ -24,7 +24,7 @@ const response = (choice = 'test_count', confidence = .9) => ({
   usage: { input_tokens: 100, output_tokens: 20 },
 })
 
-test('only Jev selection determines the displayed answer, not button identity', async () => {
+test('typed answers still follow Jev selection', async () => {
   let calls = 0
   const evaluated = await evaluateWolfekResponse(built, async (payload, parse) => {
     calls++

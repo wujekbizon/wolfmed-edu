@@ -36,6 +36,9 @@ Both are `POST`, Clerk-auth-checked (`auth()`, `401` if no `userId`), and scope 
 ### `POST /api/session/expire`
 `src/app/api/session/expire/route.ts`. Explicitly marks a session `EXPIRED` (e.g. on tab close / navigation away via `navigator.sendBeacon`) rather than waiting for the cron sweep or the next `startTestAction` call to notice it's stale.
 
+### `POST /api/session/practice-progress`
+`src/app/api/session/practice-progress/route.ts`. Authenticated best-effort beacon for batched answer indexes when a practice page becomes hidden or leaves. Reuses the same owner/mode/question-membership validation and JSONB merge as the periodic Server Action; it never expires a practice attempt.
+
 ---
 
 ## `/api/uploadthing` — File upload endpoint

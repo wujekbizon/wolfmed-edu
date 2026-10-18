@@ -5,6 +5,7 @@ import Button from '@/components/ui/Button'
 import { useWolfekAdminReport } from '@/hooks/useWolfekAdminReport'
 import { useWolfekAdminExport } from '@/hooks/useWolfekAdminExport'
 import { WOLFEK_ADMIN_VIEWS, WOLFEK_EXPORT_LIMIT } from '@/constants/wolfekAdmin'
+import { EMPTY_FORM_STATE } from '@/constants/formState'
 import WolfekAdminSkeleton from '@/components/skeletons/WolfekAdminSkeleton'
 import WolfekAdminFilters from './WolfekAdminFilters'
 import WolfekAdminStats from './WolfekAdminStats'
@@ -20,7 +21,9 @@ export default function WolfekAdminPanel({ userId, initialFilters, initialReport
 }) {
   const { filters, effective, query, change, setPage } = useWolfekAdminReport(userId, initialFilters, initialReport)
   const exports = useWolfekAdminExport(effective)
-  const report = query.data
+  const report = query.data?.report
+  const formState = query.isPlaceholderData ? EMPTY_FORM_STATE : query.data?.formState ?? EMPTY_FORM_STATE
+  const invalid = formState.status === 'ERROR'
   const loading = query.isFetching || filters.search !== effective.search
   const view = WOLFEK_ADMIN_VIEWS.find((item) => item.value === filters.view)!
   return <section className="space-y-5 text-zinc-900">
@@ -30,7 +33,7 @@ export default function WolfekAdminPanel({ userId, initialFilters, initialReport
       <div className="flex flex-wrap gap-2">
         <Button variant="secondary" size="sm" disabled={loading} onClick={() => void query.refetch()}><RefreshCw size={15} />Odśwież</Button>
         {(['csv', 'json'] as const).map((format) => <Button key={format} variant="secondary" size="sm"
-          disabled={loading || query.isError || exports.pending} onClick={() => void exports.download(format)}>
+          disabled={loading || query.isError || invalid || exports.pending} onClick={() => void exports.download(format)}>
           <Download size={15} />{format.toUpperCase()}</Button>)}
       </div>
     </header>
@@ -39,11 +42,11 @@ export default function WolfekAdminPanel({ userId, initialFilters, initialReport
         variant={filters.view === item.value ? 'secondary' : 'ghost'} aria-pressed={filters.view === item.value}
         onClick={() => change({ view: item.value, search: '', status: 'all' })}>{item.label}</Button>)}
     </nav>
-    <WolfekAdminFilters filters={filters} onChange={change} />
+    <WolfekAdminFilters filters={filters} onChange={change} formState={formState} />
     <div><h2 className="text-lg font-semibold">{view.label}</h2><p className="text-sm text-zinc-500">{view.description}</p></div>
     {(query.isError || exports.error) && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
       {exports.error || 'Nie udało się pobrać danych. Sprawdź daty (maksymalnie 366 dni) i odśwież raport.'}</p>}
-    {(!report || query.isPlaceholderData) && !query.isError ? <WolfekAdminSkeleton /> : report && !query.isError &&
+    {(!report || query.isPlaceholderData) && !query.isError && !invalid ? <WolfekAdminSkeleton /> : report && !query.isError && !invalid &&
       <div className="space-y-5" aria-busy={loading}>
         <WolfekAdminStats summary={report.summary} view={filters.view} />
         {filters.view === 'insights' ? <div className="grid gap-4 xl:grid-cols-2">
@@ -54,7 +57,7 @@ export default function WolfekAdminPanel({ userId, initialFilters, initialReport
           <WolfekAdminTable rows={report.rows} total={report.totalRows} page={filters.page}
             userId={userId} pending={loading} onPage={setPage} />}
         {filters.view === 'insights' && <p className="text-xs text-zinc-500">Pomiar interakcji od {report.lifetime.activitySince ?? 'pierwszego użycia po migracji'}.
-          Pierwszy przycisk pobiera jeden pakiet Jev. Kolejne używają wyników z tej wizyty. Wpisane pytania mają osobne wywołania.</p>}
+          Przyciski korzystają z gotowych odpowiedzi bez Jev. Wpisane pytania mają osobne wywołania.</p>}
       </div>}
     <p className="text-xs text-zinc-500">Eksport obejmuje wybrany widok i filtry, do {WOLFEK_EXPORT_LIMIT} pełnych wierszy.
       Pliki mogą zawierać treść pytań i dane audytowe użytkowników.</p>

@@ -2,7 +2,7 @@
 
 import { MessageCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
-import type { WolfekPreparedQuestionButtonProps } from '@/types/wolfekBatchTypes'
+import type { WolfekPreparedQuestionButtonProps } from '@/types/wolfekPreparedTypes'
 
 export default function WolfekPreparedQuestionButton({ question, pending, onSelect, active = false }: WolfekPreparedQuestionButtonProps) {
   return <Button type="button" variant="secondary" size="sm" disabled={pending}

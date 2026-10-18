@@ -12,14 +12,12 @@ import { filterLearningCards } from '@/helpers/filterLearningCards'
 import { getLearningCardFilterCounts } from '@/helpers/getLearningCardFilterCounts'
 import type { LearningDeckProps } from '@/types/learningUiTypes'
 import type { LearningCardFilter } from '@/types/learningUiTypes'
-import type { PracticeTutorAttachment } from '@/types/learningPracticeTypes'
 
-export function useLearningDeck({ questions, category, userId, initialSession, premium }: LearningDeckProps) {
+export function useLearningDeck({ questions, category, userId, initialSession }: LearningDeckProps) {
   const search = useSearchTermStore()
   const [focusedId, focus] = useState<string | null>(null)
   const [compareId, compare] = useState<string | null>(null)
   const [filter, setFilter] = useState<LearningCardFilter>('all')
-  const [tutor, setTutor] = useState<PracticeTutorAttachment | null>(null)
   const query = usePracticeSession(userId, category, initialSession)
   const { reaction, onAnswered } = useWolfekAnswerReaction()
   const session = query.data ?? null
@@ -58,16 +56,10 @@ export function useLearningDeck({ questions, category, userId, initialSession, p
   }
   const navigation = useLearningDeckNavigation({ questions, filtered, pageQuestions, session,
     questionId: question?.id, page, perPage, onFocus: focus, onCompare: compare, onFilter: setFilter })
-  const askTutor = () => {
-    const card = companion?.question
-    if (!premium || !card || !companion.id || card.correctIndex === null || card.invalid) return
-    setTutor({ sessionId: companion.id, questionId: card.id, questionRevision: card.revision,
-      attemptId: card.attemptId, purpose: 'explain', questionNumber: index + 1 })
-  }
   return { search, session, update: query.update, error: query.error, authorized: query.authorized,
     pageQuestions, total: filtered.length, filter, filterCounts, changeFilter,
     page, totalPages, question, companion,
-    focus, compareId, compare, tutor, setTutor, askTutor, changePage: navigation.changePage,
+    focus, compareId, compare, changePage: navigation.changePage,
     reaction, onAnswered, continueToNextCard: navigation.continueToNextCard,
     reviewRevealedCard: navigation.reviewRevealedCard, canContinue: navigation.canContinue }
 }

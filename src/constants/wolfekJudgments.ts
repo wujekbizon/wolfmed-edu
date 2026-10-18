@@ -11,4 +11,3 @@ export const WOLFEK_COVERAGE_LEVELS = [
   'Only useful clarification or an explicit missing-data response can be given.',
   'A response fully answers with verified facts, including confirmed empty or unavailable states.',
 ]
-export const WOLFEK_BATCH_RECEIPT_SECONDS = 86_400

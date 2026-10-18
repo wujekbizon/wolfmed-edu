@@ -21,6 +21,7 @@ export async function GET(request: Request) {
       .where(
         and(
           eq(testSessions.status, 'ACTIVE'),
+          eq(testSessions.mode, 'EXAM'),
           or(
             // Natural expiration: expiresAt has passed
             lt(testSessions.expiresAt, now),

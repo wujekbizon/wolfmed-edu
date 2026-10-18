@@ -8,6 +8,7 @@ Branch: `codex/learning-practice-mvp`, from local `main`.
 - Every accessible public course category uses the same redesigned, searchable, paginated question-card feed and floating glass companion.
 - The full category question set is available. Pagination limits rendered cards only; there is no five-question session cap.
 - Server grading, one retry, card-grounded hint, reveal, per-card progress and resume. No exam score or planner-minute writes.
+- Active sessions can also be resumed from the `/panel` dashboard's **Kontynuuj naukę** section, which links back to the existing category session.
 - Reset lives in the learning header menu. It clears answers, hints and mastery but preserves prior exposure; previously seen cards remain under `Wszystkie`. `Do powtórki` includes current wrong/assisted/revealed/skipped cards, not exposure alone, so it is empty immediately after reset.
 - Owner/course/tier checks on reads and writes; custom browse queries also enforce ownership.
 - Row-locked transitions, version checks, idempotent event IDs, revision hashes. Edited/deleted questions are excluded from grading; skip and start a new session for current content.

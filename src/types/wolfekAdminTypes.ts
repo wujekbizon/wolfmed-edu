@@ -1,4 +1,5 @@
 import type { JevAuditStatus } from './jevAuditTypes'
+import type { FormState } from './actionTypes'
 import type { WolfekAdminSummary, WolfekAdminDaily, WolfekAdminTopic, WolfekAdminModel,
   WolfekAdminRoute, WolfekAdminLifetime } from './wolfekAdminMetricTypes'
 export type { WolfekAdminSummary, WolfekAdminDaily, WolfekAdminTopic, WolfekAdminModel,
@@ -40,4 +41,5 @@ export type WolfekAdminReport = {
   rows: WolfekAdminRow[]
   totalRows: number
 }
+export type WolfekAdminReportResult = { report: WolfekAdminReport | null; formState: FormState }
 export type WolfekAdminPageProps = { searchParams: Promise<Record<string, string | string[] | undefined>> }

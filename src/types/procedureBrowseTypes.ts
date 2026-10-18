@@ -9,6 +9,11 @@ export type ProcedureBrowseCriteria = {
   sort: ProcedureBrowseSortKey
 }
 
+export type ProcedureBrowseViewState = {
+  criteria: ProcedureBrowseCriteria
+  panelScrollTop: number
+}
+
 export type ProcedureDatabaseRow = {
   id: string
   course: string

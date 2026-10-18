@@ -7,8 +7,9 @@ export default function WolfekAdminStats({ summary, view }: { summary: WolfekAdm
   const errorRate = summary.providerCalls ? (summary.errors / summary.providerCalls * 100).toFixed(1) : '0.0'
   const stats = view === 'insights' ? [
     { label: 'Pytania', value: number.format(summary.questions), icon: <MessageCircle />, footer: 'Wpisane i z przycisków' },
-    { label: 'Pakiety pytań', value: number.format(summary.preparedBatches ?? 0), icon: <Database />, footer: 'Jedno wywołanie na pakiet przycisków' },
-    { label: 'Ponownie użyte wyniki', value: number.format(summary.reusedButtons ?? 0), icon: <MousePointer2 />, footer: 'Przyciski bez nowego wywołania Jev' },
+    { label: 'Gotowe odpowiedzi', value: number.format(summary.preparedAnswers ?? 0), icon: <MousePointer2 />, footer: 'Przyciski bez wywołania Jev' },
+    { label: 'Dawne pakiety pytań', value: number.format(summary.preparedBatches ?? 0), icon: <Database />, footer: 'Historyczne wywołania Jev dla przycisków' },
+    { label: 'Dawne użycia pakietów', value: number.format(summary.reusedButtons ?? 0), icon: <MousePointer2 />, footer: 'Historyczne odpowiedzi z pakietów' },
     { label: 'Wpisane pytania', value: number.format(summary.typedQuestions ?? 0), icon: <MessageCircle />, footer: 'Każde z nowym wywołaniem Jev' },
     { label: 'Do przeglądu', value: number.format(summary.reviews), icon: <AlertTriangle />, footer: 'Brak rozpoznania lub niska pewność' },
   ] : [

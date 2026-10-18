@@ -32,12 +32,15 @@ export const WolfekJevResponseSchema = z.object({
       legend: z.record(z.string(), z.unknown()) }),
   }), usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
 })
-export const WolfekBatchEnvelopeSchema = z.object({
-  model: z.string(), answers: z.record(z.string(), z.unknown()),
-  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
-})
-export const WolfekVisitIdSchema = z.uuid()
-export const WolfekBatchIdSchema = z.uuid()
+const WolfekPreparedAnswerSchema = z.object({
+  responses: z.array(z.string()).min(1), destinationKey: z.string().optional(),
+}).strict()
+export const WolfekPreparedAnswersSchema = z.object({
+  kierunki: z.record(z.string(), WolfekPreparedAnswerSchema),
+  'panel.home': z.record(z.string(), WolfekPreparedAnswerSchema),
+  'panel.results': z.record(z.string(), WolfekPreparedAnswerSchema),
+  'learning.practice': z.record(z.string(), WolfekPreparedAnswerSchema),
+}).strict()
 
 export const PracticeCategorySchema = z.string().min(1).max(256)
 export const PracticeStartSchema = z.uuid()
@@ -55,19 +58,6 @@ export const ReviewedPracticeSupportSchema = z.object({
   material: z.object({ label: z.string().trim().min(1).max(120),
     href: z.string().regex(/^\/panel\/(?:kursy|nauka|procedury)\/[a-z0-9%\-/]+$/i) }).optional(),
 })
-export const PracticeSupportSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
-}).strict()
-export const PracticeSuggestionInteractionSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
-  questionId: z.guid(), trigger: z.string().trim().min(1).max(256), eventId: z.uuid(),
-  action: z.enum(['hint', 'compare', 'retry', 'reveal', 'review', 'tutor', 'material', 'plan', 'continue']),
-  interaction: z.enum(['accepted', 'dismissed']),
-}).strict()
-export const PracticeHelpInteractionSchema = z.object({
-  category: PracticeCategorySchema, sessionId: z.guid(), version: z.number().int().min(0),
-  questionId: z.guid(), eventId: z.uuid(), action: z.literal('compare'),
-}).strict()
 export const JevConfigSchema = z.object({
   mode: z.enum(['shadow', 'active']), apiKey: z.string().trim().min(1),
   minConfidence: z.coerce.number().min(0).max(1).optional(),
@@ -76,60 +66,19 @@ export const WolfekAdminFiltersSchema = z.object({
   view: z.enum(['insights', 'audit', 'errors', 'usage']),
   source: z.enum(['all', 'panel', 'kierunki', 'practice']),
   status: z.enum(['all', 'success', 'http_error', 'invalid_response', 'timeout', 'error']),
-  from: z.iso.date(), to: z.iso.date(),
+  from: z.iso.date({ error: 'Wybierz poprawną datę.' }), to: z.iso.date({ error: 'Wybierz poprawną datę.' }),
   search: z.string().trim().max(300),
   page: z.coerce.number().int().min(1).max(10_000),
-}).strict().refine((value) => value.from <= value.to &&
-  Date.parse(value.to) - Date.parse(value.from) <= 366 * 86_400_000,
-{ message: 'Wybierz poprawny zakres dat, maksymalnie 366 dni.' })
+}).strict().superRefine((value, context) => {
+  const from = Date.parse(value.from)
+  const to = Date.parse(value.to)
+  if (!Number.isFinite(from) || !Number.isFinite(to)) return
+  if (from > to) context.addIssue({ code: 'custom', path: ['to'],
+    message: 'Data „Do” nie może być wcześniejsza niż „Od”.' })
+  else if (to - from > 366 * 86_400_000) context.addIssue({ code: 'custom', path: ['to'],
+    message: 'Wybierz zakres maksymalnie 366 dni.' })
+})
 export const WolfekAdminAuditIdSchema = z.uuid()
-export const JevResponseSchema = z.object({
-  model: z.string(),
-  answers: z.object({ support: z.object({
-    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
-    probabilities: z.record(z.string(), z.number().min(0).max(1)),
-  }) }),
-  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
-})
-export const PanelWolfekAskSchema = z.object({
-  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim()
-    .min(2, 'Wpisz pytanie do Wolfka.').max(300, 'Skróć pytanie do 300 znaków.'),
-}).strict()
-export const PanelWolfekTopicSchema = z.enum([
-  'first_steps', 'username', 'motto', 'courses', 'countdown', 'results',
-  'difficult_questions', 'plan', 'billing', 'storage', 'badges',
-  'navigation', 'forum', 'feedback', 'results_explain', 'results_improve',
-  'results_mistakes', 'results_history', 'results_categories',
-])
-export const PanelWolfekRouteSchema = z.enum(['panel.home', 'panel.results'])
-export const PanelWolfekTopicRequestSchema = z.object({
-  route: PanelWolfekRouteSchema.default('panel.home'),
-  topic: PanelWolfekTopicSchema,
-}).strict()
-export const PanelJevResponseSchema = z.object({
-  model: z.string(),
-  answers: z.object({ help: z.object({
-    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
-    probabilities: z.record(z.string(), z.number().min(0).max(1)),
-  }) }),
-  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
-})
-export const KierunkiWolfekAskSchema = z.object({
-  question: z.string({ error: 'Wpisz pytanie do Wolfka.' }).trim()
-    .min(2, 'Wpisz pytanie do Wolfka.').max(300, 'Skróć pytanie do 300 znaków.'),
-}).strict()
-export const KierunkiWolfekTopicSchema = z.enum([
-  'exam_preparation', 'opiekun_growth', 'nursing_journey', 'course_selection',
-  'pricing', 'payment_models', 'tier_comparison', 'english_course', 'owned_course',
-])
-export const KierunkiJevResponseSchema = z.object({
-  model: z.string(),
-  answers: z.object({ guide: z.object({
-    type: z.literal('choice'), choice: z.string(), confidence: z.number().min(0).max(1),
-    probabilities: z.record(z.string(), z.number().min(0).max(1)),
-  }) }),
-  usage: z.object({ input_tokens: z.number().int().nonnegative(), output_tokens: z.number().int().nonnegative() }),
-})
 export const LearningQuestionCardDataSchema = z.object({
   question: z.string().min(1).max(20000),
   answers: z.array(z.object({ option: z.string().min(1).max(10000), isCorrect: z.boolean() }))
@@ -320,6 +269,33 @@ export const StartTestSchema = z.object({
     .max(120, "Niepoprawny czas trwania testu."),
   meta: z.string().default("{}"),
 });
+
+export const StartPracticeTestSchema = z.object({
+  category: z.string().min(1, "Musisz podać kategorię."),
+  numberOfQuestions: z.coerce.number().int().refine((num) => [10, 20, 40].includes(num), {
+    message: "Niepoprawna ilość pytań.",
+  }),
+});
+
+export const PracticeProgressVersionSchema = z.object({
+  revision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  clientId: z.string().uuid(),
+});
+
+export const PracticeProgressMetaSchema = z.object({
+  practiceProgressVersions: z.record(z.string().uuid(), PracticeProgressVersionSchema).default({}),
+}).passthrough();
+
+export const SavePracticeProgressSchema = z.object({
+  sessionId: z.string().uuid(),
+  answers: z.record(z.string().uuid(), PracticeProgressVersionSchema.extend({
+    answerIndex: z.number().int().nonnegative(),
+    baseRevision: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  }).refine((answer) => answer.revision > answer.baseRevision))
+    .refine((answers) => Object.keys(answers).length > 0 && Object.keys(answers).length <= 40),
+});
+
+export const PracticeSessionIdSchema = z.string().uuid();
 
 /**
  * Schema for validating the data required to create a new test.

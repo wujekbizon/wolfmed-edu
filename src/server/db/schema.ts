@@ -15,6 +15,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { relations, sql } from "drizzle-orm"
 import type { PracticeItem, PracticeView } from '@/types/learningPracticeTypes'
+import type { TestSessionMode, TestSessionProgress, TestSessionQuestionIds } from '@/types/testTypes'
 import type { Diagnoza } from "@/types/diagnozyTypes"
 import type {
   CheckoutOrderStatus,
@@ -240,6 +241,9 @@ export const testSessions = createTable(
       .$type<"ACTIVE" | "EXPIRED" | "COMPLETED" | "CANCELLED">()
       .notNull()
       .default("ACTIVE"),
+    mode: varchar("mode", { length: 16 }).$type<TestSessionMode>().notNull().default('EXAM'),
+    progress: jsonb('progress').$type<TestSessionProgress>().notNull().default({}),
+    questionIds: jsonb('questionIds').$type<TestSessionQuestionIds>().notNull().default([]),
     meta: jsonb("meta").default({}),
   },
   (table) => [

@@ -47,3 +47,18 @@ export function selectSessionTests(tests: Test[], count: number, sessionId: stri
     },
   }))
 }
+
+export function selectPracticeSessionTests(tests: Test[], questionIds: string[], sessionId: string) {
+  const testsById = new Map(tests.map((test) => [test.id, test]))
+  return questionIds.flatMap((id) => {
+    const test = testsById.get(id)
+    if (!test) return []
+    return [{
+      ...test,
+      data: {
+        ...test.data,
+        answers: shuffle(test.data.answers, `${sessionId}:${test.id}:answers`),
+      },
+    }]
+  })
+}

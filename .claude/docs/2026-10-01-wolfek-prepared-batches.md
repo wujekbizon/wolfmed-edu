@@ -1,5 +1,7 @@
 # Wolfek prepared batches — 2026-10-01
 
+Historical implementation. Superseded on October 18 by [deterministic prepared answers](./2026-10-18-wolfek-prepared-answers.md); prepared buttons no longer call Jev.
+
 Greg-approved behavior on Kierunki, panel home, results and category learning:
 
 - Mount/open: zero Jev calls.

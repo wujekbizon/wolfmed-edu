@@ -7,11 +7,11 @@
 ## Flow 1 — User takes a theory test
 
 1. **Category pick**: `/panel/testy` → `TestsCategoriesList` → user picks a category, which triggers `startTestAction` (`src/actions/actions.ts:73`).
-2. **Session start** (`startTestAction`): rate-limited (`test:start`), Zod-validated (`StartTestSchema`). Inside a DB transaction:
+2. **Exam session start** (`startTestAction`): rate-limited (`test:start`), Zod-validated (`StartTestSchema`). Inserts `mode: EXAM` inside a DB transaction after expiring stale exams and rejecting another live exam.
    - Locks the user's row (`FOR UPDATE`) to serialize concurrent start attempts.
    - Auto-expires the user's own stale `ACTIVE` sessions (past `expiresAt`, or no heartbeat in 5 minutes).
    - **Rejects** if a genuinely active session still exists ("finish it before starting a new one") — a user cannot run two timed tests at once.
-   - Inserts a new `testSessions` row (`category`, `numberOfQuestions`, `durationMinutes`, `expiresAt` computed from now, `status: ACTIVE`).
+   - Inserts a new `testSessions` row (`mode: EXAM`, `category`, `numberOfQuestions`, `durationMinutes`, `expiresAt`, `status: ACTIVE`).
    - Returns `{ sessionId, expiresAt, durationMinutes, numberOfQuestions }` in `FormState`.
 3. Client navigates to `/panel/testy/[category]?sessionId=<id>`. The page verifies session ownership/category; a completed session redirects server-side to `/panel/wyniki`, while invalid/expired sessions are rejected. An active session gets a deterministic question and answer order from `sessionId`. The page strips `isCorrect` before rendering `<GenerateTests />`, so correctness never reaches the browser.
 4. **While the test is in progress**: two client hooks keep the session alive and honest:
@@ -27,6 +27,12 @@
 7. `revalidatePath('/panel', 'page')`, returns `SUCCESS`. Client redirects to `/panel/wyniki/[testId]` to show the result (`TestResultCard`).
 
 **Files**: `src/actions/actions.ts` (`startTestAction`, `submitTestAction`), `src/app/panel/testy/[value]/page.tsx`, `src/components/{GenerateTests,TestCard}.tsx`, `src/helpers/{selectSessionTests,gradeSessionAnswers}.ts`, `src/server/testSessionQuestions.ts`, `src/hooks/useSessionHeartbeat.ts`, `src/hooks/useBeaconCleanup.ts`, `src/app/api/session/{heartbeat,expire}/route.ts`, `src/server/memory/extract.ts`.
+
+## Flow 1b — User resumes a practice exam
+
+From a category card, **Rozpocznij trening** starts or resumes an owned `PRACTICE` row in `testSessions`. Questions and answer order remain deterministic by attempt id. Active attempts appear as separate **Trening egzaminacyjny** resume cards on the category card and in the dashboard's **Kontynuuj naukę** section, so attempts with different question counts are distinguishable. The client updates selections immediately and batches dirty answer indexes to the server every 10 seconds; an authenticated beacon flushes pending changes on internal-link navigation, hidden-page, history navigation, and unmount. Practice saves never expire the attempt. Submission grades canonical server-loaded questions, writes the shared `completedTestes` record and user aggregates, clears draft progress, then schedules `onQuizCompleted` so memory reflects the result. Exam-only actions and cleanup filter `mode: EXAM`.
+
+**Files**: `src/actions/{practiceTests,savePracticeProgress,submitPracticeTest}.ts`, `src/components/{PracticeTestButton,PracticeTests,PracticeResumeCard,ContinueLearningSection}.tsx`, `src/hooks/usePracticeProgressAutosave.ts`, `src/server/practiceResume.ts`, `src/app/api/session/practice-progress/route.ts`, `src/app/panel/testy/[value]/page.tsx`.
 
 ---
 

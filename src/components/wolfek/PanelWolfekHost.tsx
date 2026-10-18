@@ -10,7 +10,6 @@ import WolfekOverlay from './WolfekOverlay'
 import PanelWolfekCard from './PanelWolfekCard'
 import PanelWolfekMarker from './PanelWolfekMarker'
 import PanelWolfekVideoModal from './PanelWolfekVideoModal'
-import WolfekVisitProvider from './WolfekVisitProvider'
 
 export default function PanelWolfekHost({ userId, initialSeen, route }: {
   userId: string
@@ -66,7 +65,7 @@ export default function PanelWolfekHost({ userId, initialSeen, route }: {
     )?.focus())
   }
 
-  return <WolfekVisitProvider><WolfekOverlay anchorId={undefined} variant="panel" visible={visible}
+  return <><WolfekOverlay anchorId={undefined} variant="panel" visible={visible}
     avatar={<WolfekAvatar positive={false} supportive={false} interactive={false} />}
     onMinimize={minimize} onOpen={() => setVisible(true)}>
     {(onOverlayMinimize) => <>
@@ -77,5 +76,5 @@ export default function PanelWolfekHost({ userId, initialSeen, route }: {
     </>}
   </WolfekOverlay>
   {videoTopic && <PanelWolfekVideoModal topic={videoTopic} onClose={closeVideo} />}
-  </WolfekVisitProvider>
+  </>
 }

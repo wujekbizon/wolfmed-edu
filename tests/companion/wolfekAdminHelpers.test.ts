@@ -7,6 +7,10 @@ import { toWolfekCsvCell } from '@/helpers/toWolfekCsvCell'
 import { buildWolfekCsv } from '@/helpers/buildWolfekCsv'
 import { getDefaultWolfekAdminFilters } from '@/helpers/getDefaultWolfekAdminFilters'
 import { WolfekAdminFiltersSchema } from '@/server/schema'
+import { needsWolfekInteractionReview } from '@/helpers/needsWolfekInteractionReview'
+import type { WolfekInteraction } from '@/types/wolfekMetricTypes'
+import { fromErrorToFormState } from '@/helpers/toFormState'
+import type { FormState } from '@/types/actionTypes'
 
 test('keeps missing or malformed token usage unknown', () => {
   assert.deepEqual(getJevTokenUsage(null), { input: null, output: null })
@@ -47,4 +51,29 @@ test('admin filters reject invalid ranges, pagination and extra properties', () 
     { from: '2026-10-01', to: '2026-09-01' }, { from: '2020-01-01', to: '2026-09-30' }, { role: 'admin' }]) {
     assert.equal(WolfekAdminFiltersSchema.safeParse({ ...filters, ...patch }).success, false)
   }
+})
+
+test('prepared answers need no confidence; unavailable and typed uncertain answers still need review', () => {
+  const record: WolfekInteraction = { source: 'panel', route: 'panel.home', userId: 'user',
+    kind: 'question', question: 'Pytanie', topic: 'username_edit', confidence: null, outcome: 'prepared' }
+  assert.equal(needsWolfekInteractionReview(record), false)
+  assert.equal(needsWolfekInteractionReview({ ...record, topic: 'unavailable_billing_status' }), true)
+  assert.equal(needsWolfekInteractionReview({ ...record, topic: null, outcome: 'unavailable' }), true)
+  assert.equal(needsWolfekInteractionReview({ ...record, outcome: 'typed_provider', confidence: .1 }), true)
+  assert.equal(needsWolfekInteractionReview({ ...record, outcome: 'typed_provider', confidence: .9 }), false)
+})
+
+test('invalid admin date ranges return named field errors without a toast', () => {
+  const defaults = getDefaultWolfekAdminFilters()
+  for (const patch of [{ from: '2026-10-19', to: '2026-10-18' },
+    { from: '2024-01-01', to: '2026-10-18' }, { to: '' }]) {
+    const parsed = WolfekAdminFiltersSchema.safeParse({ ...defaults, ...patch })
+    assert.equal(parsed.success, false)
+    if (parsed.success) continue
+    const state: FormState = fromErrorToFormState(parsed.error)
+    assert.equal(state.message, '')
+    assert.ok(state.fieldErrors.to?.length)
+  }
+  assert.equal(WolfekAdminFiltersSchema.safeParse({ ...defaults, from: '2026-10-18', to: '2026-10-18' }).success, true)
+  assert.equal(WolfekAdminFiltersSchema.safeParse({ ...defaults, from: '2026-01-01', to: '2027-01-02' }).success, true)
 })

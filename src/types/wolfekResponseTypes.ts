@@ -56,7 +56,3 @@ export type WolfekQuestionChatProps = WolfekQuestionProps & {
   onInteraction?: () => void
   onPendingChange?: (pending: boolean) => void
 }
-export type WolfekQuestionController = {
-  state: WolfekQuestionState; pending: boolean; action: (data: FormData) => void
-  submitPrepared: (id: string) => void; prepareForm: (data: FormData) => void
-}
