@@ -7,6 +7,8 @@ export interface PopulatedCategories {
   lockedReason?: string
 }
 
+export type TestCategorySummary = { category: string; course: string | null; count: number }
+
 export interface CategoryPageProps {
   params: Promise<{ value: string }>
   searchParams: Promise<{ sessionId?: string; mode?: string }>

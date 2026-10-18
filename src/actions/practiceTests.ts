@@ -5,8 +5,8 @@ import { and, eq } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { testSessions, users } from '@/server/db/schema'
 import { StartPracticeTestSchema } from '@/server/schema'
-import { getPracticeQuestionCount } from '@/helpers/getPracticeQuestionCount'
-import { getSessionQuestions } from '@/server/testSessionQuestions'
+import { hasPracticeCategoryAccess } from '@/server/hasPracticeCategoryAccess'
+import { getPracticeQuestionIds } from '@/server/practiceQuestionQueries'
 import { checkRateLimit } from '@/lib/rateLimit'
 
 export async function startPracticeTestAction(category: string, numberOfQuestions: number) {
@@ -17,17 +17,17 @@ export async function startPracticeTestAction(category: string, numberOfQuestion
 
   const parsed = StartPracticeTestSchema.safeParse({ category, numberOfQuestions })
   if (!parsed.success) return { success: false as const, message: 'Nieprawidłowe dane testu.' }
-  const available = await getPracticeQuestionCount(userId, category)
-  if (available < parsed.data.numberOfQuestions) {
-    return { success: false as const, message: 'Za mało pytań w tej kategorii.' }
-  }
-
   try {
+    if (!(await hasPracticeCategoryAccess(userId, category))) {
+      return { success: false as const, message: 'Nie masz dostępu do tej kategorii.' }
+    }
     const existing = await findActivePractice(userId, category, parsed.data.numberOfQuestions)
     if (existing) return { success: true as const, sessionId: existing.id }
     const id = crypto.randomUUID()
-    const questions = await getSessionQuestions(userId, category, parsed.data.numberOfQuestions, id)
-    if (questions.length !== parsed.data.numberOfQuestions) throw new Error('Nie udało się pobrać pytań.')
+    const questions = await getPracticeQuestionIds(userId, category, parsed.data.numberOfQuestions, id)
+    if (questions.length !== parsed.data.numberOfQuestions) {
+      return { success: false as const, message: 'Za mało pytań w tej kategorii.' }
+    }
     const sessionId = await createOrResumePractice({ userId, category, numberOfQuestions: parsed.data.numberOfQuestions, id, questionIds: questions.map((question) => question.id) })
     return { success: true as const, sessionId }
   } catch (error) {

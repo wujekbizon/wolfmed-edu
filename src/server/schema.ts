@@ -328,9 +328,21 @@ export const StartPracticeTestSchema = z.object({
   }),
 });
 
+export const PracticeProgressVersionSchema = z.object({
+  revision: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+  clientId: z.string().uuid(),
+});
+
+export const PracticeProgressMetaSchema = z.object({
+  practiceProgressVersions: z.record(z.string().uuid(), PracticeProgressVersionSchema).default({}),
+}).passthrough();
+
 export const SavePracticeProgressSchema = z.object({
   sessionId: z.string().uuid(),
-  answers: z.record(z.string().uuid(), z.number().int().nonnegative())
+  answers: z.record(z.string().uuid(), PracticeProgressVersionSchema.extend({
+    answerIndex: z.number().int().nonnegative(),
+    baseRevision: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+  }).refine((answer) => answer.revision > answer.baseRevision))
     .refine((answers) => Object.keys(answers).length > 0 && Object.keys(answers).length <= 40),
 });
 

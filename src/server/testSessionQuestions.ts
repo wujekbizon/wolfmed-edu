@@ -1,6 +1,8 @@
 import 'server-only'
 
 import type { Test } from '@/types/dataTypes'
+import { hasPracticeCategoryAccess } from '@/server/hasPracticeCategoryAccess'
+import { getPracticeQuestionsByIds } from '@/server/practiceQuestionQueries'
 import { selectPracticeSessionTests, selectSessionTests } from '@/helpers/selectSessionTests'
 import {
   getTestsByCategory,
@@ -38,15 +40,7 @@ export async function getPracticeSessionQuestions(
   questionIds: string[],
   sessionId: string
 ) {
-  if (category.startsWith(CUSTOM_PREFIX)) {
-    const customCategory = await getUserCustomCategoryById(
-      userId,
-      category.slice(CUSTOM_PREFIX.length)
-    )
-    if (!customCategory) return []
-    const tests = (await getUserCustomTestsByIds(questionIds)) as Test[]
-    return selectPracticeSessionTests(tests, questionIds, sessionId)
-  }
-  const tests = (await getTestsByCategory(category)) as Test[]
+  if (!(await hasPracticeCategoryAccess(userId, category))) return []
+  const tests = await getPracticeQuestionsByIds(userId, category, questionIds)
   return selectPracticeSessionTests(tests, questionIds, sessionId)
 }

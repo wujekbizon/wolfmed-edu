@@ -1,91 +1,74 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { savePracticeProgressAction } from '@/actions/savePracticeProgress'
+import { usePracticeProgressNavigation } from '@/hooks/usePracticeProgressNavigation'
+import type { PracticeAnswerUpdates, PracticeProgressVersions, PracticeSaveStatus } from '@/types/testTypes'
 
-type SaveStatus = 'saved' | 'unsaved' | 'saving' | 'error'
-
-export function usePracticeProgressAutosave(
-  sessionId: string,
-  initialProgress: Record<string, number>
-) {
-  const dirtyRef = useRef<Record<string, number>>({})
-  const savedRef = useRef({ ...initialProgress })
-  const inFlightRef = useRef<Record<string, number>>({})
+export function usePracticeProgressAutosave(sessionId: string, initialVersions: PracticeProgressVersions) {
+  const dirtyRef = useRef<PracticeAnswerUpdates>({})
+  const baseVersionsRef = useRef(initialVersions)
+  const versionsRef = useRef({ ...initialVersions })
+  const clientIdRef = useRef<string | null>(null)
   const savingRef = useRef(false)
-  const [status, setStatus] = useState<SaveStatus>('saved')
+  const conflictRef = useRef(false)
+  const lastBeaconRef = useRef({ payload: '', sentAt: 0 })
+  const [status, setStatus] = useState<PracticeSaveStatus>('saved')
 
   const flush = useCallback(async () => {
-    if (savingRef.current || !Object.keys(dirtyRef.current).length) return
+    if (document.hidden) return
+    if (conflictRef.current || savingRef.current || !Object.keys(dirtyRef.current).length) return
     const batch = { ...dirtyRef.current }
-    inFlightRef.current = batch
     savingRef.current = true
     setStatus('saving')
     try {
       const result = await savePracticeProgressAction({ sessionId, answers: batch })
-      if (!result.success) throw new Error(result.message)
-      for (const [questionId, answerIndex] of Object.entries(batch)) {
-        savedRef.current[questionId] = answerIndex
-        if (dirtyRef.current[questionId] === answerIndex) delete dirtyRef.current[questionId]
+      if (!result.success) {
+        if ('conflict' in result && result.conflict) {
+          conflictRef.current = true
+          setStatus('conflict')
+          return
+        }
+        throw new Error(result.message)
+      }
+      for (const [id, update] of Object.entries(batch)) {
+        if (dirtyRef.current[id]?.revision === update.revision) delete dirtyRef.current[id]
       }
       setStatus(Object.keys(dirtyRef.current).length ? 'unsaved' : 'saved')
     } catch {
       setStatus('error')
     } finally {
-      inFlightRef.current = {}
       savingRef.current = false
     }
   }, [sessionId])
 
   const sendBeacon = useCallback(() => {
     const answers = dirtyRef.current
-    if (!Object.keys(answers).length) return
-    const body = new Blob([JSON.stringify({ sessionId, answers })], { type: 'application/json' })
+    if (conflictRef.current || !Object.keys(answers).length) return
+    const payload = JSON.stringify({ sessionId, answers })
+    const now = Date.now()
+    if (lastBeaconRef.current.payload === payload && now - lastBeaconRef.current.sentAt < 1_000) return
+    const body = new Blob([payload], { type: 'application/json' })
+    lastBeaconRef.current = { payload, sentAt: now }
     if (navigator.sendBeacon('/api/session/practice-progress', body)) return
     void fetch('/api/session/practice-progress', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, answers }),
+      body: payload,
       keepalive: true,
     }).catch(() => undefined)
   }, [sessionId])
 
   const selectAnswer = useCallback((questionId: string, answerIndex: number) => {
-    if (savedRef.current[questionId] === answerIndex && inFlightRef.current[questionId] === undefined) {
-      delete dirtyRef.current[questionId]
+    clientIdRef.current ??= crypto.randomUUID()
+    const revision = (versionsRef.current[questionId]?.revision ?? 0) + 1
+    const update = {
+      answerIndex, revision, clientId: clientIdRef.current,
+      baseRevision: baseVersionsRef.current[questionId]?.revision ?? 0,
     }
-    else dirtyRef.current[questionId] = answerIndex
-    setStatus(Object.keys(dirtyRef.current).length ? 'unsaved' : 'saved')
+    versionsRef.current[questionId] = update
+    dirtyRef.current[questionId] = update
+    setStatus(conflictRef.current ? 'conflict' : 'unsaved')
   }, [])
 
-  useEffect(() => {
-    const timer = window.setInterval(() => void flush(), 10_000)
-    const onVisibilityChange = () => { if (document.hidden) sendBeacon() }
-    const onPageHide = () => sendBeacon()
-    const onHistoryNavigation = () => sendBeacon()
-    const onNavigationClick = (event: MouseEvent) => {
-      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
-      const target = event.target
-      if (!(target instanceof Element)) return
-      const anchor = target.closest<HTMLAnchorElement>('a[href]')
-      if (!anchor || anchor.target === '_blank' || anchor.hasAttribute('download')) return
-      const destination = new URL(anchor.href)
-      if (destination.origin !== window.location.origin) return
-      if (destination.pathname === window.location.pathname && destination.search === window.location.search) return
-      sendBeacon()
-    }
-
-    document.addEventListener('click', onNavigationClick, true)
-    document.addEventListener('visibilitychange', onVisibilityChange)
-    window.addEventListener('pagehide', onPageHide)
-    window.addEventListener('popstate', onHistoryNavigation)
-    return () => {
-      window.clearInterval(timer)
-      document.removeEventListener('click', onNavigationClick, true)
-      document.removeEventListener('visibilitychange', onVisibilityChange)
-      window.removeEventListener('pagehide', onPageHide)
-      window.removeEventListener('popstate', onHistoryNavigation)
-      sendBeacon()
-    }
-  }, [flush, sendBeacon])
-
+  usePracticeProgressNavigation(flush, sendBeacon)
   return { selectAnswer, status }
 }

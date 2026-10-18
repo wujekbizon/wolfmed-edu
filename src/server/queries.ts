@@ -988,6 +988,7 @@ export async function getTestSessionDetails(sessionId: string, userId: string) {
       mode: true,
       progress: true,
       questionIds: true,
+      meta: true,
     },
   })
   return session

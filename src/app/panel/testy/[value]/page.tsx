@@ -1,14 +1,9 @@
 import { Suspense } from "react";
+import TestsByCategory from '@/components/TestsByCategory'
+import PracticeTestSkeleton from '@/components/skeletons/PracticeTestSkeleton'
 import { Metadata } from "next";
-import { getTestSessionDetails } from '@/server/queries'
-import GenerateTests from "@/components/GenerateTests";
 import { CategoryPageProps } from "@/types/categoryType";
 import { CATEGORY_METADATA } from "@/constants/categoryMetadata";
-import { getCurrentUser } from "@/server/user";
-import { redirect } from "next/navigation";
-import { getPracticeSessionQuestions, getSessionQuestions } from '@/server/testSessionQuestions'
-import { getTestSessionPageState } from '@/helpers/getTestSessionPageState'
-import PracticeTests from '@/components/PracticeTests'
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const { value: category } = await params;
@@ -25,83 +20,13 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   };
 }
 
-async function TestsByCategory({ category, sessionId }: { category: string, sessionId: string | undefined }) {
-  const decodedCategory = decodeURIComponent(category)
-
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-  if (!sessionId) return <p>Nie znaleziono szczegółów sesji testowej.</p>
-
-  const sessionDetails = await getTestSessionDetails(sessionId, user.userId);
-  if (!sessionDetails || sessionDetails.category !== decodedCategory) {
-    return <p>Nie znaleziono szczegółów sesji testowej.</p>;
-  }
-
-  if (sessionDetails.mode === 'PRACTICE') {
-    if (sessionDetails.status === 'COMPLETED') redirect('/panel/wyniki')
-    if (sessionDetails.status !== 'ACTIVE') return <p>Nie znaleziono szczegółów sesji testowej.</p>
-
-    const practiceQuestions = await getPracticeSessionQuestions(
-      user.userId,
-      sessionDetails.category,
-      sessionDetails.questionIds,
-      sessionId
-    )
-    if (practiceQuestions.length !== sessionDetails.numberOfQuestions) {
-      return <p>Brak dostępnych testów. Proszę spróbować później.</p>
-    }
-
-    const tests = practiceQuestions.map((test) => ({
-      id: test.id,
-      data: { question: test.data.question, answers: test.data.answers.map(({ option }) => ({ option })) },
-    }))
-    return <PracticeTests tests={tests} sessionId={sessionId} initialProgress={sessionDetails.progress} />
-  }
-
-  const sessionState = getTestSessionPageState(sessionDetails, decodedCategory)
-
-  if (sessionState === 'COMPLETED') redirect('/panel/wyniki')
-
-  if (sessionState === 'INVALID' || !sessionDetails) {
-    return <p>Nie znaleziono szczegółów sesji testowej.</p>;
-  }
-
-  const { numberOfQuestions } = sessionDetails
-  const sessionTests = await getSessionQuestions(
-    user.userId,
-    sessionDetails.category,
-    numberOfQuestions,
-    sessionId
-  )
-
-  if (sessionTests.length !== numberOfQuestions) {
-    return <p>Brak dostępnych testów. Proszę spróbować później.</p>
-  }
-
-  const questions = sessionTests.map((test) => ({
-    id: test.id,
-    data: {
-      question: test.data.question,
-      answers: test.data.answers.map(({ option }) => ({ option })),
-    },
-  }))
-
-  return (
-    <GenerateTests
-      tests={questions}
-      sessionId={sessionId}
-      expiresAt={sessionDetails.expiresAt.toISOString()}
-    />
-  );
-}
-
 export default async function CategoryTestPage(props: CategoryPageProps) {
   const { value } = await props.params
   const { sessionId } = await props.searchParams;
 
   return (
     <section className='flex w-full flex-col items-center gap-8 p-0 sm:p-4'>
-      <Suspense>
+      <Suspense fallback={<PracticeTestSkeleton />}>
         <TestsByCategory category={value} sessionId={sessionId} />
       </Suspense>
     </section>

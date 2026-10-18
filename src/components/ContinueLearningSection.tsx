@@ -22,7 +22,7 @@ export default async function ContinueLearningSection() {
   const categoryTitles = new Map(visibleCategories.map(({ value, title }) => [value, title]))
   const categoryValues = visibleCategories.map(({ value }) => value)
   const [exams, lessons] = await Promise.all([
-    getActivePracticeExamResumes(user.userId, categoryValues),
+    getActivePracticeExamResumes(user.userId, categoryValues, 3),
     getActiveLearningResumes(user.userId, accessible.map((category) => category.value)),
   ])
 

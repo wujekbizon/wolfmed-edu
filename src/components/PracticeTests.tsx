@@ -6,8 +6,8 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { submitPracticeTestAction } from '@/actions/submitPracticeTest'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { usePracticeProgressAutosave } from '@/hooks/usePracticeProgressAutosave'
-import type { ExamQuestion } from '@/types/dataTypes'
 import type { FormState } from '@/types/actionTypes'
+import type { PracticeTestsProps } from '@/types/testTypes'
 import TestCard from '@/components/TestCard'
 import SubmitButton from '@/components/SubmitButton'
 import Input from '@/components/ui/Input'
@@ -16,14 +16,11 @@ export default function PracticeTests({
   tests,
   sessionId,
   initialProgress,
-}: {
-  tests: ExamQuestion[]
-  sessionId: string
-  initialProgress: Record<string, number>
-}) {
+  initialVersions,
+}: PracticeTestsProps) {
   const [state, action] = useActionState(submitPracticeTestAction, EMPTY_FORM_STATE)
   const [answers, setAnswers] = useState(initialProgress)
-  const { selectAnswer: queueAnswer, status: saveStatus } = usePracticeProgressAutosave(sessionId, initialProgress)
+  const { selectAnswer: queueAnswer, status: saveStatus } = usePracticeProgressAutosave(sessionId, initialVersions)
   const router = useRouter()
   const noScriptFallback = useToastMessage(state)
 
@@ -69,6 +66,7 @@ export default function PracticeTests({
             {saveStatus === 'unsaved' && 'Postęp zapisze się automatycznie.'}
             {saveStatus === 'saved' && 'Postęp zapisany.'}
             {saveStatus === 'error' && 'Nie udało się zapisać. Ponowimy próbę.'}
+            {saveStatus === 'conflict' && 'Postęp zmieniono w innym oknie. Odśwież test.'}
           </span>
           <SubmitButton label="Zakończ i sprawdź wynik" loading="Sprawdzam..." />
           <div className="pt-2"><p className="text-sm text-red-600">{state.message}</p></div>
