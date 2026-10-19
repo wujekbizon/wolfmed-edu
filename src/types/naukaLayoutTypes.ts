@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 export type NaukaTab = 'categories' | 'workspace' | 'library'
+export type NaukaLibraryTab = 'notes' | 'flashcards' | 'materials' | 'lectures'
 export type NaukaNavigationState = { active: NaukaTab; workspaceOpened: boolean }
 export type NaukaWolfekNavigationProps = { onNavigate: (tab: NaukaTab) => void }
 export type NaukaWelcomeProps = NaukaWolfekNavigationProps & { onMinimize: () => void }

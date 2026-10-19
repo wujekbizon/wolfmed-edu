@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import TabNavigation from '@/components/ui/TabNavigation'
 import TabPanel from '@/components/ui/TabPanel'
@@ -12,8 +11,7 @@ import { useNaukaNavigation } from '@/hooks/useNaukaNavigation'
 import type { NaukaLayoutProps, NaukaTab } from '@/types/naukaLayoutTypes'
 
 export default function NaukaLayout({ categories, workspace, library }: NaukaLayoutProps) {
-  const { active, workspaceOpened, selectTab, anchorRef } = useNaukaNavigation()
-  const [libraryTab, setLibraryTab] = useState('notes')
+  const { active, workspaceOpened, libraryTab, selectLibraryTab, selectTab, anchorRef } = useNaukaNavigation(library.isPremium)
   const reducedMotion = useReducedMotion()
   const libraryOptions = library.isPremium ? NAUKA_LIBRARY_TABS : NAUKA_LIBRARY_TABS.slice(0, 3)
 
@@ -44,7 +42,7 @@ export default function NaukaLayout({ categories, workspace, library }: NaukaLay
               className='-mx-1 overflow-hidden px-1'
             >
             <div className="lg:relative lg:ml-auto lg:mt-2.5 lg:w-[28rem] lg:max-w-full lg:rounded-xl lg:border lg:border-rose-200/70 lg:bg-rose-50/30 lg:px-2 lg:pb-1 lg:before:absolute lg:before:-top-2.5 lg:before:right-[18%] lg:before:h-2.5 lg:before:w-px lg:before:bg-rose-300 lg:before:content-['']">
-              <TabNavigation id='nauka-library' label='Rodzaj materiałów' options={libraryOptions} active={libraryTab} onChange={setLibraryTab} variant='underline' />
+              <TabNavigation id='nauka-library' label='Rodzaj materiałów' options={libraryOptions} active={libraryTab} onChange={selectLibraryTab} variant='underline' />
             </div>
             </motion.div>
           )}

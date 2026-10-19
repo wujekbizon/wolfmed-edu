@@ -59,6 +59,7 @@ export default function EnrolledCoursesList({ courses }: EnrolledCoursesListProp
         {courseCategories.map((course) => (
           <div
             key={course.id}
+            id={course.slug}
             className="bg-white rounded-2xl shadow-xl border border-zinc-200/60 overflow-hidden hover:shadow-2xl transition-all duration-300"
           >
             <div className="p-4 sm:p-6">
