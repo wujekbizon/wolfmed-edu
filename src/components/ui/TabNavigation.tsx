@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { KeyboardEvent } from 'react'
 import type { TabNavigationProps } from '@/types/tabTypes'
 
-export default function TabNavigation({ id, label, options, active, onChange, variant = 'pills' }: TabNavigationProps) {
+export default function TabNavigation({ id, label, options, active, onChange, variant = 'pills', fitContent = false }: TabNavigationProps) {
   const reducedMotion = useReducedMotion()
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -22,7 +22,7 @@ export default function TabNavigation({ id, label, options, active, onChange, va
   }
 
   return (
-    <div role='tablist' aria-label={label} className={`flex w-full gap-1 ${variant === 'pills' ? 'rounded-2xl border border-zinc-200/70 bg-white/90 p-1 shadow-sm' : 'border-b border-zinc-200'}`}>
+    <div role='tablist' aria-label={label} className={`flex w-full gap-1 ${variant === 'pills' ? 'rounded-2xl border border-zinc-200/70 bg-transparent p-1 shadow-sm' : 'border-b border-zinc-200'}`}>
       {options.map((option, index) => (
         <button
           key={option.id}
@@ -34,7 +34,7 @@ export default function TabNavigation({ id, label, options, active, onChange, va
           tabIndex={active === option.id ? 0 : -1}
           onClick={() => onChange(option.id)}
           onKeyDown={(event) => handleKeyDown(event, index)}
-          className={`relative min-h-11 min-w-0 flex-1 cursor-pointer rounded-xl px-1.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400 sm:px-5 sm:text-sm ${active === option.id ? 'text-zinc-900' : 'text-zinc-500 hover:text-zinc-800'}`}
+          className={`relative min-h-11 min-w-0 flex-1 cursor-pointer rounded-xl px-1.5 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400 sm:px-5 sm:text-sm ${fitContent ? 'sm:flex-none' : ''} ${active === option.id ? 'text-zinc-900' : 'text-zinc-500 hover:text-zinc-800'}`}
         >
           {active === option.id && (
             <motion.span

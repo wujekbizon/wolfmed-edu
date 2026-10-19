@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { Metadata } from 'next'
-import LearningHubHeader from '@/components/LearningHubHeader'
 import NaukaHubContent from '@/components/NaukaHubContent'
 import NaukaCategoriesSkeleton from '@/components/skeletons/NaukaCategoriesSkeleton'
 import PdfPreviewModal from '@/components/PdfPreviewModal'
@@ -18,7 +17,6 @@ export const metadata: Metadata = {
 export default function NaukaPage() {
   return (
     <section className='min-w-0 w-full px-4 pb-10 lg:px-10 bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80'>
-      <LearningHubHeader />
       <Suspense fallback={<NaukaCategoriesSkeleton />}>
         <NaukaHubContent />
       </Suspense>

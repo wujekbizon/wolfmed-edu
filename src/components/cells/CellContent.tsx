@@ -1,3 +1,5 @@
+import { useContext } from 'react'
+import { CellEditorsMountContext } from '@/context/CellEditorsMountContext'
 import {
   DynamicExcalidraw,
   DynamicNoteCell,
@@ -11,6 +13,9 @@ import {
 import type { Cell } from '@/types/cellTypes'
 
 export default function CellContent({ cell, isPremium }: { cell: Cell; isPremium: boolean }) {
+  const mountEditors = useContext(CellEditorsMountContext)
+  if (!mountEditors) return null
+
   switch (cell.type) {
     case 'note':
       return <DynamicNoteCell cell={cell} />

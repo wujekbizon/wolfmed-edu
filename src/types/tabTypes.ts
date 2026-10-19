@@ -9,6 +9,7 @@ export type TabNavigationProps = {
   active: string
   onChange: (id: string) => void
   variant?: 'pills' | 'underline'
+  fitContent?: boolean
 }
 
 export type TabPanelProps = {

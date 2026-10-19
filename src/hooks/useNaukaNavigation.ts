@@ -1,13 +1,23 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCellsStore } from '@/store/useCellsStore'
 import { useRagStore } from '@/store/useRagStore'
-import type { NaukaTab } from '@/types/naukaLayoutTypes'
+import type { NaukaNavigationState, NaukaTab } from '@/types/naukaLayoutTypes'
 
 export function useNaukaNavigation() {
-  const [active, setActive] = useState<NaukaTab>('categories')
+  const [navigation, setNavigation] = useState<NaukaNavigationState>({
+    active: 'categories',
+    workspaceOpened: false,
+  })
   const anchorRef = useRef<HTMLDivElement>(null)
+
+  const setActive = useCallback((active: NaukaTab) => {
+    setNavigation((current) => current.active === active ? current : {
+      active,
+      workspaceOpened: current.workspaceOpened || active === 'workspace',
+    })
+  }, [])
 
   const selectTab = (id: string) => {
     if (id !== 'categories' && id !== 'workspace' && id !== 'library') return
@@ -34,7 +44,7 @@ export function useNaukaNavigation() {
       unsubscribeRag()
       unsubscribeCells()
     }
-  }, [])
+  }, [setActive])
 
-  return { active, selectTab, anchorRef }
+  return { ...navigation, selectTab, anchorRef }
 }
