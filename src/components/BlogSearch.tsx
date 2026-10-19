@@ -48,18 +48,7 @@ export default function BlogSearch({ searchTerm, setSearchTerm }: BlogSearchProp
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder="Wyszukaj artykuły..."
-          className="
-            relative z-10
-            w-full
-            pl-14 pr-14
-            py-2.5
-            bg-transparent
-            text-[#E6E6F5] placeholder-[#A5A5C3]/50
-            text-base
-            focus:outline-none
-            rounded-xl
-          "
-        />
+          className="relative z-10 w-full pl-14 pr-14 py-2.5 bg-transparenttext-[#E6E6F5] placeholder-[#A5A5C3]/50 text-base focus:outline-none rounded-xl"/>
         {searchTerm && (
           <button
             onClick={() => setSearchTerm('')}

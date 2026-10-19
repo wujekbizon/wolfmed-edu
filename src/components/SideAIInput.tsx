@@ -72,29 +72,19 @@ export default function SideAIInput({ onDismiss }: SideAIInputProps) {
 
       {/* Input container */}
       <div className="relative">
-        <div className="flex flex-col bg-zinc-50 border border-zinc-200 rounded-xl
-          focus-within:ring-2 focus-within:ring-zinc-300 focus-within:border-transparent
-          transition-all duration-200">
+        <div className="flex flex-col bg-zinc-50 border border-zinc-200 rounded-xlfocus-within:ring-2 focus-within:ring-zinc-300 focus-within:border-transparent transition-all duration-200">
           <textarea
             ref={textareaRef}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             placeholder="Zapytaj asystenta... (@ pliki, / polecenia)"
             rows={isFloating ? 1 : 2}
-            className="w-full resize-none text-sm bg-transparent border-none outline-none
-              px-3 pt-2.5 pb-1
-              text-zinc-800 placeholder:text-zinc-400"
-          />
+            className="w-full resize-none text-sm bg-transparent border-none outline-none px-3 pt-2.5 pb-1 text-zinc-800 placeholder:text-zinc-400"/>
           <div className="flex justify-end px-2 pb-2">
             <button
               onClick={handleSubmit}
               disabled={!hasText}
-              className="flex items-center justify-center w-7 h-7 rounded-lg
-                bg-zinc-800 text-white
-                hover:bg-zinc-700 transition-all duration-200
-                disabled:opacity-30 disabled:cursor-not-allowed"
-              aria-label="Wyślij"
-            >
+              className="flex items-center justify-center w-7 h-7 rounded-lg bg-zinc-800 text-white hover:bg-zinc-700 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Wyślij">
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>

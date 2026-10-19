@@ -16,8 +16,7 @@ export default function UserProgress({ totalScore, totalQuestions, testsAttempte
 
   return (
     <div
-      className="bg-zinc-900 backdrop-blur p-4 sm:p-6 rounded-xl border border-zinc-800 
-      shadow-lg hover:shadow-xl transition-all duration-300"
+      className="bg-zinc-900 backdrop-blur p-4 sm:p-6 rounded-xl border border-zinc-800 shadow-lg hover:shadow-xl transition-all duration-300"
     >
       <h3 className="text-lg sm:text-xl font-semibold text-zinc-100 mb-6 sm:mb-8 text-center sm:text-left">
         Przegląd postępów

@@ -27,12 +27,13 @@ export default function ProceduresList({
 
   return (
     <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6'>
-      {procedures.map((procedure) =>
+      {procedures.map((procedure, index) =>
         procedure.course === 'opiekun-medyczny' ? (
           <GridProcedureCard
             key={procedure.id}
             procedure={{ id: procedure.id, data: procedure.data }}
             procedureSlug={procedure.slug}
+            loading={index < 6 ? 'eager' : 'lazy'}
             status={statuses[procedure.id] || 'normal'}
             onStatusChange={(status) => handleStatusChange(procedure.id, status)}
           />
@@ -41,6 +42,7 @@ export default function ProceduresList({
             key={procedure.id}
             procedure={procedure.data}
             procedureSlug={procedure.slug}
+            loading={index < 6 ? 'eager' : 'lazy'}
             status={statuses[procedure.id] || 'normal'}
             onStatusChange={(status) => handleStatusChange(procedure.id, status)}
           />

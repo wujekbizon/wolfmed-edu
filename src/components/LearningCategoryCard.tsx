@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { NaukaCategoryBrowseItem } from '@/types/categoryType'
 
-export default function LearningCategoryCard({ item }: { item: NaukaCategoryBrowseItem }) {
+export default function LearningCategoryCard({ item, loading = 'lazy' }: { item: NaukaCategoryBrowseItem; loading?: 'eager' | 'lazy' }) {
   return (
     <Link href={`/panel/nauka/${item.value}`} className='group flex items-center justify-center rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-rose-400'>
       <div className='relative flex flex-col w-full overflow-hidden rounded-2xl md:min-h-[450px] xl:h-[450px] bg-linear-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-lg transform transition-all duration-300 cursor-pointer backdrop-blur-sm backdrop-filter'>
@@ -10,6 +10,7 @@ export default function LearningCategoryCard({ item }: { item: NaukaCategoryBrow
           {item.image ? (
             <Image
               src={item.image}
+              loading={loading}
               alt={`${item.category} image`}
               fill
               sizes='(max-width: 1279px) 100vw, (max-width: 1535px) 50vw, 33vw'
