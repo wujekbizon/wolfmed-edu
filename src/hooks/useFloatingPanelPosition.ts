@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { animate, useMotionValue, useReducedMotion } from 'framer-motion'
 
 export function useFloatingPanelPosition(
-  anchorId: string | undefined, minimized: boolean, mounted: boolean, bottomMobilePanel = false,
+  anchorId: string | undefined, minimized: boolean, mounted: boolean, bottomMobilePanel = false, enabled = true, compactBreakpoint = 1280,
 ) {
   const panel = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
@@ -15,7 +15,7 @@ export function useFloatingPanelPosition(
 
   useEffect(() => {
     const element = panel.current
-    if (!element) return
+    if (!element || !enabled) return
     const scroller = document.getElementById('scroll-container')
     const target = anchorId ? document.getElementById(anchorId) : null
     let frame = 0
@@ -27,7 +27,7 @@ export function useFloatingPanelPosition(
       const width = viewport?.width ?? window.innerWidth
       const height = viewport?.height ?? window.innerHeight
       const offset = viewport?.offsetTop ?? 0
-      const small = width < 1280
+      const small = width < compactBreakpoint
       setCompact(small)
       if (bottomMobilePanel && window.innerWidth < 768) {
         movement?.stop()
@@ -78,6 +78,6 @@ export function useFloatingPanelPosition(
       window.visualViewport?.removeEventListener('resize', schedule)
       window.visualViewport?.removeEventListener('scroll', schedule)
     }
-  }, [anchorId, minimized, mounted, reduced, x, y, bottomMobilePanel])
+  }, [anchorId, minimized, mounted, reduced, x, y, bottomMobilePanel, enabled, compactBreakpoint])
   return { panel, x, y, compact, ready }
 }

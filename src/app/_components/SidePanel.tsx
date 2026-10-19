@@ -15,14 +15,12 @@ interface SidePanelProps {
   children?: React.ReactNode
   pinnedCount?: number
   isPremium?: boolean
-  enrolledCourseSlugs?: string[]
 }
 
 export default function SidePanel({
   children,
   pinnedCount = 0,
   isPremium,
-  enrolledCourseSlugs = []
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -62,10 +60,7 @@ export default function SidePanel({
   return (
     <>
       <nav
-        className={`z-50 hidden h-full flex-col text-zinc-900 shrink-0
-     bg-white border-r border-zinc-200 shadow-[4px_0_16px_rgba(0,0,0,0.04)]
-          lg:flex transition-all duration-300
-          ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
+        className={`z-50 hidden h-full flex-col text-zinc-900 shrink-0 bg-white border-r border-zinc-200 shadow-[4px_0_16px_rgba(0,0,0,0.04)] lg:flex transition-all duration-300 ${isSidePanelOpen ? 'w-75' : 'w-20'}`}
       >
         <div
           className={`flex items-center h-16 shrink-0 border-b border-zinc-100
@@ -73,10 +68,7 @@ export default function SidePanel({
         >
           <button
             onClick={toggleSidePanel}
-            className='flex items-center justify-center w-8 h-8 rounded-lg
-              text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100
-              transition-all duration-200 cursor-pointer'
-          >
+            className='flex items-center justify-center w-8 h-8 rounded-lg text-zinc-300 hover:text-zinc-600 hover:bg-zinc-100 transition-all duration-200 cursor-pointer'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
@@ -100,20 +92,14 @@ export default function SidePanel({
             className={`flex flex-col flex-1 min-h-0 px-4 py-3 gap-3
               ${isSidePanelOpen ? 'overflow-y-auto scrollbar-webkit' : ''}`}
           >
-            {sideMenuNavigationLinks
-              .filter(
-                (navLink) =>
-                  !navLink.requiresCourse ||
-                  enrolledCourseSlugs.includes(navLink.requiresCourse)
-              )
-              .map((navLink) => (
+            {sideMenuNavigationLinks.map((navLink) => (
               <CustomButton
                 key={navLink.label}
                 text={navLink.label}
                 href={navLink.url}
                 active={navLink.url === pathname}
                 showTooltip={!isSidePanelOpen}
-                isPremium={!!navLink.requiresSupporter && !isPremium}
+                requirement={navLink.requiresSupporter ? (navLink.requiresCourse === 'pielegniarstwo' ? 'Pielęgniarstwo Premium' : 'Premium') : undefined}
               >
                 {navLink.icon}
               </CustomButton>

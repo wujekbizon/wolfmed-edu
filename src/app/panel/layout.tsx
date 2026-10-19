@@ -33,7 +33,6 @@ async function PanelAccessContent({ children }: { children: React.ReactNode }) {
       <SidePanel
         pinnedCount={pinnedCount}
         isPremium={isPremium}
-        enrolledCourseSlugs={enrolledCourses.map((c) => c.slug)}
       >
         <Suspense fallback={<PinnedNotesFeatureSkeleton />}>
           <PinnedNotesFeature pinnedNotes={pinnedNotes} />

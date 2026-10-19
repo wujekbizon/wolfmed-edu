@@ -8,14 +8,12 @@ import { navLinks } from '@/constants/navLinks'
 import { sideMenuNavigationLinks } from '@/constants/sideMenuLinks'
 import { Settings } from 'lucide-react'
 import { useSettingsModalStore } from '@/store/useSettingsModalStore'
-import { usePremiumAccess } from '@/hooks/usePremiumAccess'
 import DrawerNavLink from '@/components/nav/DrawerNavLink'
 
 export default function NavDrawer() {
   const { isMenuOpen, toggleMenu } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
   const pathname = usePathname()
-  const isPremium = usePremiumAccess()
 
   return (
     <>
@@ -81,8 +79,7 @@ export default function NavDrawer() {
                   label={link.label}
                   icon={link.icon}
                   active={pathname === link.url}
-                  locked={!!link.requiresSupporter && !isPremium}
-                  lockedTitle="Wymaga planu Premium"
+                  requirement={link.requiresSupporter ? (link.requiresCourse === 'pielegniarstwo' ? 'Pielęgniarstwo Premium' : 'Premium') : undefined}
                   onNavigate={toggleMenu}
                 />
               ))}

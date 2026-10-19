@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import ExamHubCardLink from '@/components/ExamHubCardLink'
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 import {
@@ -37,7 +37,7 @@ interface CardConfig {
   subtitle: string
   description: string
   image: string
-  badge?: string
+  disabled?: boolean
   stats: Stat[]
   preview?: { icon: ReactNode; label: string; items: string[]; limit: number }
   meta: { icon: ReactNode; label: string }[]
@@ -126,9 +126,9 @@ export default function TestyEgzaminyHub({
         title: 'Egzamin praktyczny',
         subtitle: 'Część praktyczna',
         description:
-          'Praktyczne arkusze egzaminacyjne z prawdziwych sesji. Wypełnij dokumentację jak na egzaminie i otrzymaj ocenę zgodną z zasadami oceniania. Arkusze dla Twojego kierunku przygotowujemy — będą dostępne wkrótce.',
+          'Praktyczne arkusze egzaminacyjne są obecnie dostępne wyłącznie dla kursu Opiekun Medyczny.',
         image: PRACTICE_IMAGE,
-        badge: 'Wkrótce',
+        disabled: true,
         stats: [],
         meta: [
           { icon: <ClipboardList className="w-3.5 h-3.5" />, label: 'Wypełnianie kart' },
@@ -150,10 +150,10 @@ export default function TestyEgzaminyHub({
 
         <div className="grid gap-6 px-2 grid-cols-1 md:grid-cols-2">
           {cards.map((card) => (
-            <Link
+            <ExamHubCardLink
               key={card.title}
               href={card.href}
-              className="group relative flex flex-col bg-white border border-zinc-200 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+              disabled={card.disabled ?? false}
             >
               {/* Accent hairline (borrowed from the media player) */}
               <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[3px] bg-gradient-to-r from-transparent via-fuchsia-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -162,17 +162,13 @@ export default function TestyEgzaminyHub({
               <div className="relative h-56 w-full overflow-hidden">
                 <Image
                   src={card.image}
+                  loading="eager"
                   alt={card.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-transparent" />
-                {card.badge && (
-                  <span className="absolute top-4 left-4 text-[11px] font-semibold uppercase tracking-wider bg-amber-50 text-amber-700 border border-amber-200 rounded-full px-2.5 py-1">
-                    {card.badge}
-                  </span>
-                )}
                 <div className="absolute bottom-0 left-0 p-6">
                   <p className="text-xs font-semibold text-white/70 uppercase tracking-widest mb-1">
                     {card.subtitle}
@@ -254,7 +250,7 @@ export default function TestyEgzaminyHub({
                   </span>
                 </div>
               </div>
-            </Link>
+            </ExamHubCardLink>
           ))}
         </div>
       </div>

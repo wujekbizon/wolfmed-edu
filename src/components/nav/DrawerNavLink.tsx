@@ -5,8 +5,7 @@ interface DrawerNavLinkProps {
   label: string
   icon: React.ReactNode
   active?: boolean
-  locked?: boolean
-  lockedTitle?: string
+  requirement?: string | undefined
   onNavigate?: () => void
 }
 
@@ -18,27 +17,13 @@ export default function DrawerNavLink({
   label,
   icon,
   active = false,
-  locked = false,
-  lockedTitle,
+  requirement,
   onNavigate
 }: DrawerNavLinkProps) {
-  if (locked) {
-    return (
-      <span
-        title={lockedTitle}
-        className="relative flex items-center gap-3.5 px-3 py-2 rounded-xl opacity-40 cursor-not-allowed select-none"
-      >
-        <span className={`${ICON_BASE} bg-white/50 border border-white/60`}>
-          {icon}
-        </span>
-        <span className="text-sm font-medium text-zinc-700">{label}</span>
-      </span>
-    )
-  }
-
   return (
     <Link
       href={href}
+      prefetch={requirement ? false : null}
       {...(onNavigate ? { onClick: onNavigate } : {})}
       className={`group relative flex items-center gap-3.5 px-3 py-2 rounded-xl transition-all duration-200
         ${active
@@ -62,6 +47,11 @@ export default function DrawerNavLink({
       </span>
       <span className={`text-sm font-medium ${active ? 'font-semibold' : ''}`}>
         {label}
+        {requirement && (
+          <span className="mt-0.5 block text-xs font-medium text-rose-600">
+            {requirement}
+          </span>
+        )}
       </span>
     </Link>
   )

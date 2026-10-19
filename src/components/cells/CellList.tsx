@@ -8,6 +8,7 @@ import { useRagStore } from '@/store/useRagStore'
 import { buildRagCellContent } from '@/helpers/buildRagCellContent'
 import type { CellsSnapshot } from '@/helpers/cellsConcurrency'
 import CellsConflictBanner from './CellsConflictBanner'
+import NaukaCellsSkeleton from '@/components/skeletons/NaukaCellsSkeleton'
 
 export default function CellList({
   isPremium = false,
@@ -53,12 +54,12 @@ export default function CellList({
     setPendingAutoSubmitCellId,
   ])
 
-  if (!initialized) return null
+  if (!initialized) return <NaukaCellsSkeleton />
 
   return (
     <div className="w-full">
       <CellsConflictBanner />
-      <AddCell prevCellId={null} forceVisible={order.length === 0} isPremium={isPremium} />
+      <AddCell prevCellId={null} isPremium={isPremium} />
       {order.map((cell) => (
         <Fragment key={cell}>
           <CellListItem cell={data[cell]!} isPremium={isPremium} />

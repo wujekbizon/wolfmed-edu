@@ -7,9 +7,9 @@ export default function CategoryGrid({
   categories: NaukaCategoryBrowseItem[]
 }) {
   return (
-    <div className='h-fit grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6'>
-      {categories.map((item) => (
-        <LearningCategoryCard key={item.value} item={item} />
+    <div className='h-fit grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-3 md:gap-6'>
+      {categories.map((item, index) => (
+        <LearningCategoryCard key={item.value} item={item} loading={index < 3 ? 'eager' : 'lazy'} />
       ))}
     </div>
   )

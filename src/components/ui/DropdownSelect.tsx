@@ -50,10 +50,7 @@ export default function DropdownSelect({
         disabled={disabled}
         onClick={() => (open ? close() : openAt(-1))}
         onKeyDown={onKeyDown}
-        className="w-full flex items-center justify-between gap-2 rounded-xl border border-zinc-300 bg-white
-          px-3 py-2 text-left text-sm cursor-pointer transition-colors
-          hover:border-zinc-400 focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-100
-          disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full flex items-center justify-between gap-2 rounded-xl border border-zinc-300 bg-white px-3 py-2 text-left text-sm cursor-pointer transition-colors hover:border-zinc-400 focus:border-rose-300 focus:outline-none focus:ring-2 focus:ring-rose-100 disabled:cursor-not-allowed disabled:opacity-60"
       >
         <span className={`truncate ${selected ? 'text-zinc-700' : 'text-zinc-400'}`}>
           {selected?.label ?? placeholder ?? ''}

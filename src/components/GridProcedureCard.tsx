@@ -9,11 +9,13 @@ export default function GridProcedureCard({
   procedureSlug,
   status,
   onStatusChange,
+  loading = 'lazy',
 }: {
   procedure: Procedure
   procedureSlug: string
   status: ProcedureStatus
   onStatusChange: (status: ProcedureStatus) => void
+  loading?: 'eager' | 'lazy'
 }) {
   const { name, procedure: procedureText, image } = procedure.data
   const description = procedureText.slice(0, 120) + (procedureText.length > 120 ? '...' : '')
@@ -33,6 +35,7 @@ export default function GridProcedureCard({
           alt={name}
           width={800}
           height={600}
+          loading={loading}
           className='w-full h-full object-contain'
         />
       </div>

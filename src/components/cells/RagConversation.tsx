@@ -1,50 +1,26 @@
-import type { ReactNode } from 'react'
-import RagResponse from './RagResponse'
+import RagWolfekResponse from './RagWolfekResponse'
 import RagUserMessage from './RagUserMessage'
-import type { RagMessage } from '@/types/ragCellTypes'
+import type { RagConversationProps } from '@/types/ragCellUiTypes'
 
-interface RagConversationProps {
-  messages: RagMessage[]
-  pendingQuestion: string | null
-  progress: ReactNode
-}
-
-export default function RagConversation({
-  messages,
-  pendingQuestion,
-  progress,
-}: RagConversationProps) {
-  if (messages.length === 0 && !pendingQuestion) {
+export default function RagConversation({ messages, pendingQuestion, progress }: RagConversationProps) {
+  if (messages.length === 0 && !pendingQuestion && !progress) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <p className="text-sm text-zinc-400 text-center">
-          Zadaj pytanie aby rozpocząć rozmowę z asystentem AI
-        </p>
+      <div className='flex min-h-full flex-col justify-center gap-1 px-1 py-4'>
+        <p className='text-sm font-medium text-zinc-700'>Czego dziś się uczymy?</p>
+        <p className='max-w-md text-xs leading-relaxed text-zinc-500'>Zapytaj Wolfka o temat z kursu lub dołącz swoje materiały przez @.</p>
       </div>
     )
   }
 
   return (
     <>
-      {messages.map((message, index) =>
-        message.role === 'user' ? (
-          <RagUserMessage key={index} text={message.text} />
-        ) : (
-          <div key={index} className="flex justify-start">
-            <div className="w-full sm:w-auto sm:max-w-[80%]">
-              <RagResponse answer={message.text} sources={message.sources} />
-            </div>
-          </div>
-        )
-      )}
-
+      {messages.map((message, index) => message.role === 'user'
+        ? <RagUserMessage key={index} text={message.text} />
+        : <div key={index} className='w-full max-w-3xl'>
+            <RagWolfekResponse answer={message.text} sources={message.sources} />
+          </div>)}
       {pendingQuestion && <RagUserMessage text={pendingQuestion} />}
-
-      {progress && (
-        <div className="flex justify-start">
-          <div className="w-full sm:max-w-[80%]">{progress}</div>
-        </div>
-      )}
+      {progress && <div className='w-full max-w-3xl'>{progress}</div>}
     </>
   )
 }

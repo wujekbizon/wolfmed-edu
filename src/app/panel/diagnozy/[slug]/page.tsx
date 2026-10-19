@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { redirect, notFound } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
+import PremiumAccessRequired from '@/components/PremiumAccessRequired'
 import {
   getDiagnozaBySlug,
   getDiagnozaFormulations,
@@ -23,6 +24,8 @@ interface Props {
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  if (!await hasDiagnozyAccess()) return { title: 'Diagnozy i Interwencje' }
+
   const { slug } = await params
   const diagnoza = await getDiagnozaBySlug(slug)
   return {
@@ -50,7 +53,7 @@ async function DiagnozaContent({ params }: Props) {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) redirect('/panel/kursy')
+  if (!hasAccess) return <PremiumAccessRequired feature="diagnozy" />
 
   const { slug } = await params
   const diagnoza = await getDiagnozaBySlug(slug)

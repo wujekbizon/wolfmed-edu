@@ -13,11 +13,13 @@ export default function PielegniastwoGridCard({
   procedureSlug,
   status,
   onStatusChange,
+  loading = 'lazy',
 }: {
   procedure: PielegniastwoProcedure
   procedureSlug: string
   status: ProcedureStatus
   onStatusChange: (status: ProcedureStatus) => void
+  loading?: 'eager' | 'lazy'
 }) {
   const totalSteps = procedure.sections.reduce((acc, s) => acc + s.steps.length, 0)
   const [imgError, setImgError] = useState(false)
@@ -41,6 +43,7 @@ export default function PielegniastwoGridCard({
           <Image
             src={procedure.image}
             alt={procedure.name}
+            loading={loading}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover"

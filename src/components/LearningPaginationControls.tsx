@@ -13,8 +13,8 @@ export default function LearningPaginationControls(props: {
       </LearningPaginationButton>
 
       <span className="text-zinc-700 text-sm sm:text-base text-center">
-        Strona <span className="font-semibold text-red-500">{currentPage}</span> z{' '}
-        <span className="font-semibold">{totalPages}</span>
+        Strona <span className="font-semibold text-[#806796]">{currentPage}</span> z{' '}
+        <span className="font-semibold text-zinc-700">{totalPages}</span>
       </span>
 
       <LearningPaginationButton onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages}>

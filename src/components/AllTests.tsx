@@ -1,5 +1,6 @@
 'use client'
 
+import { Fragment } from 'react'
 import Input from '@/components/ui/Input'
 import Label from '@/components/ui/Label'
 import LearningPaginationControls from '@/components/LearningPaginationControls'
@@ -17,12 +18,12 @@ export default function AllTests(props: LearningDeckProps) {
   const deck = useLearningDeck(props)
   const wolfekHidden = useSettingsStore((state) => state.practiceCompanionHidden[props.userId] ?? false)
   if (!deck.authorized) return <p>Zaloguj się ponownie, aby kontynuować.</p>
-  return <section className="w-full max-w-[1500px] space-y-6 pb-24 xl:pb-4">
+  return <section className="w-full max-w-[1500px] space-y-6 pb-24 min-[1025px]:pb-4">
     <LearningDeckHeader count={props.questions.length} actions={deck.session &&
       <ResetLearningProgressButton userId={props.userId} category={props.category}
         session={deck.session} onReset={(view) => { deck.update(view); deck.changeFilter('all') }} />} />
     {deck.error && <p role="alert">Nie udało się odświeżyć postępu. Sprawdź połączenie lub dostęp.</p>}
-    <div id="learning-card-feed" className={`relative min-w-0 scroll-mt-6 space-y-4 ${!props.premium ? '' : wolfekHidden ? 'xl:pr-24' : 'xl:pr-[380px]'}`}>
+    <div id="learning-card-feed" className={`relative flex min-w-0 flex-col gap-4 scroll-mt-6 ${!props.premium ? '' : wolfekHidden ? 'min-[1025px]:pr-24' : 'min-[1025px]:pr-[380px]'}`}>
       <div className="learning-card-toolbar">
         <LearningCardFilters value={deck.filter} counts={deck.filterCounts} onChange={deck.changeFilter} />
         <div className="learning-search-field">
@@ -33,12 +34,15 @@ export default function AllTests(props: LearningDeckProps) {
         </div>
       </div>
       {!deck.total && <p className="rounded-2xl border border-dashed p-8 text-center text-zinc-500">Brak kart pasujących do wyszukiwania.</p>}
-      {deck.pageQuestions.map((question) => <PracticeQuestionCard key={question.id}
+      {props.premium && !deck.question && <div id="learning-wolfek-welcome" />}
+      {deck.pageQuestions.map((question) => <Fragment key={question.id}><PracticeQuestionCard
         userId={props.userId} category={props.category} question={question}
         number={props.questions.findIndex((q) => q.id === question.id) + 1} session={deck.session}
         progress={deck.session?.cards.find((card) => card.id === question.id && card.revision === question.revision)}
         active={deck.question?.id === question.id} comparing={deck.compareId === question.id}
-        onFocus={() => deck.focus(question.id)} onSaved={deck.update} onAnswered={deck.onAnswered} />)}
+        onFocus={() => deck.focus(question.id)} onSaved={deck.update} onAnswered={deck.onAnswered} />
+        {props.premium && deck.question?.id === question.id && <div id={`learning-wolfek-${question.id}`} className="learning-wolfek-slot" />}
+      </Fragment>)}
       <LearningPaginationControls totalPages={deck.totalPages} currentPage={deck.page} setCurrentPage={deck.changePage} />
     </div>
     {props.premium && <WolfekDock userId={props.userId} questionId={deck.question?.id} session={deck.companion} reaction={deck.reaction}>

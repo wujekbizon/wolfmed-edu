@@ -1,156 +1,31 @@
 'use client'
 
-import { startTransition, useActionState, useEffect, useRef } from 'react'
-import { askRagQuestion } from '@/actions/rag-actions'
-import { EMPTY_FORM_STATE } from '@/constants/formState'
-import FieldError from '@/components/FieldError'
-import SubmitButton from '@/components/SubmitButton'
-import { useToastMessage } from '@/hooks/useToastMessage'
-import { useOnFormSuccess } from '@/hooks/useOnFormSuccess'
-import { useRagCellInput } from '@/hooks/useRagCellInput'
-import { useRagProgress } from '@/hooks/useRagProgress'
-import { useRagCellConversation } from '@/hooks/useRagCellConversation'
-import { useRagAutoSubmit } from '@/hooks/useRagAutoSubmit'
-import { useRagToolResults } from '@/hooks/useRagToolResults'
-import { useAttachExplanationToMindMap } from '@/hooks/useAttachExplanationToMindMap'
-import { useCommandSelection } from '@/hooks/useCommandSelection'
-import { useStickToBottom } from '@/hooks/useStickToBottom'
-import { toTutorContextMessages } from '@/helpers/toTutorContextMessages'
-import { AIAutocompleteDropdowns } from './AIAutocompleteDropdowns'
-import CommandBar from './CommandBar'
+import { useRagCellForm } from '@/hooks/useRagCellForm'
+import type { RagCellProps } from '@/types/ragCellUiTypes'
+import RagComposer from './RagComposer'
 import RagConversation from './RagConversation'
-import RagProgressIndicator from './RagProgressIndicator'
+import RagWolfekHeader from './RagWolfekHeader'
+import RagWolfekProgress from './RagWolfekProgress'
 
-export default function RagCellForm({ cell }: { cell: { id: string; content: string } }) {
-  const [state, action, isPending] = useActionState(askRagQuestion, EMPTY_FORM_STATE)
-  const conversationRef = useRef<HTMLDivElement>(null)
-  const conversationContentRef = useRef<HTMLDivElement>(null)
-
-  const noScriptFallback = useToastMessage(state)
-  const input = useRagCellInput()
-  const progress = useRagProgress()
-  const conversation = useRagCellConversation({ cell, state, isPending })
-  const commandSelection = useCommandSelection()
-
-  const handleSubmit = (formData: FormData) => {
-    conversation.rememberQuestion(formData.get('question') as string)
-    formData.set(
-      'recentMessages',
-      JSON.stringify(toTutorContextMessages(conversation.messages))
-    )
-    // Send the id the stream was actually opened for, not the previous run's.
-    formData.append('jobId', progress.startListening())
-    startTransition(() => action(formData))
-  }
-
-  // searchTopic rides the auto-submit only: it describes the prose this cell was
-  // seeded with, and would misdirect retrieval once the student types their own
-  // question.
-  useRagAutoSubmit({
-    cellId: cell.id,
-    topic: conversation.topic,
-    searchTopic: conversation.searchTopic,
-    textareaRef: input.textareaRef,
-    onSubmit: handleSubmit,
-  })
-  useRagToolResults({ state, cellId: cell.id })
-  useAttachExplanationToMindMap({ origin: conversation.origin, state, isPending })
-
-  useStickToBottom(conversationRef, conversationContentRef)
-
-  const { reset: resetProgress } = progress
-  useEffect(() => {
-    if (!isPending && state.status !== 'UNSET') {
-      resetProgress()
-    }
-  }, [isPending, state.status, resetProgress])
-
-  // Clear by hand rather than form.reset(): reset restores defaultValue, which
-  // would put the answered question straight back. Errors keep the text so a
-  // failed question isn't lost.
-  useOnFormSuccess(state, () => {
-    if (input.textareaRef.current) {
-      input.textareaRef.current.value = ''
-    }
-  })
+export default function RagCellForm({ cell }: RagCellProps) {
+  const form = useRagCellForm({ cell })
+  const busy = form.isPending || form.progress.stage !== 'idle'
 
   return (
-    <div className="flex flex-col h-full bg-zinc-50 rounded-lg border border-zinc-200">
-      <div ref={conversationRef} className="flex-1 overflow-y-auto scrollbar-thin scrollbar-webkit p-2 sm:p-4">
-        <div ref={conversationContentRef} className="space-y-4 min-h-full">
-          <RagConversation
-            messages={conversation.messages}
-            pendingQuestion={conversation.pendingQuestion}
-            progress={
-              (isPending || progress.stage !== 'idle') && (
-                <RagProgressIndicator
-                  stage={progress.stage}
-                  progress={progress.progress}
-                  message={progress.message}
-                  tool={progress.tool}
-                  userLogs={progress.userLogs}
-                  technicalLogs={progress.technicalLogs}
-                  error={progress.error}
-                />
-              )
-            }
-          />
+    <div className='flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-rose-100 bg-linear-to-br from-zinc-50 via-[#fcfafb] to-zinc-50'>
+      <RagWolfekHeader pending={busy} />
+      <div ref={form.conversationRef} className='min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 scrollbar-thin scrollbar-webkit sm:p-4'>
+        <div ref={form.conversationContentRef} className='mx-auto min-h-full w-full max-w-4xl space-y-4'>
+          <RagConversation messages={form.conversation.messages}
+            pendingQuestion={form.conversation.pendingQuestion}
+            progress={busy && <RagWolfekProgress progress={form.progress} />} />
         </div>
       </div>
-
-      <div className="border-t border-zinc-200 bg-white p-2 sm:p-4">
-        <form action={handleSubmit} className="space-y-3">
-          <input type="hidden" name="cellId" value={cell.id} />
-          <input
-            type="hidden"
-            name="commandsEnabled"
-            value={String(input.slashCommandsEnabled)}
-          />
-
-          <div className="relative">
-            <textarea
-              ref={input.textareaRef}
-              name="question"
-              defaultValue={conversation.messages.length === 0 ? conversation.topic : ''}
-              placeholder={
-                !input.slashCommandsEnabled && commandSelection.command
-                  ? `Podaj temat, np. „${commandSelection.command.example}"`
-                  : input.slashCommandsEnabled
-                    ? 'Zadaj pytanie... (@ pliki, / polecenia)'
-                    : 'Zadaj pytanie... (@ pliki)'
-              }
-              rows={2}
-              onChange={input.handleChange}
-              onKeyDown={input.handleKeyDown}
-              className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-400 focus:border-transparent resize-none text-sm"
-            />
-
-            <AIAutocompleteDropdowns input={input} />
-
-            <FieldError formState={state} name="question" />
-          </div>
-
-          {/* One surface at a time. With slash on, the dropdown is the way in and
-              chips would duplicate it; with slash off, the chips are the only way. */}
-          {!input.slashCommandsEnabled && (
-            <>
-              <CommandBar selection={commandSelection} disabled={isPending} />
-              <FieldError formState={state} name="commandCount" />
-            </>
-          )}
-
-          <div className="flex items-center justify-between">
-            <SubmitButton
-              label="Wyślij"
-              loading="Wysyłam..."
-              disabled={isPending}
-              className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors text-sm"
-            />
-          </div>
-
-          {noScriptFallback}
-        </form>
-      </div>
+      <RagComposer cellId={cell.id}
+        topic={form.conversation.messages.length === 0 ? form.conversation.topic : ''}
+        state={form.state} isPending={form.isPending} input={form.input}
+        selection={form.selection} onSubmit={form.handleSubmit}
+        noScriptFallback={form.noScriptFallback} />
     </div>
   )
 }

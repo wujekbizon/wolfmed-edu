@@ -50,6 +50,7 @@ export default function ProceduresHub({ hasOpiekun, hasPielegniarstwo, procedure
                 <Image
                   src={card.image}
                   alt={card.title}
+                  loading="eager"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"

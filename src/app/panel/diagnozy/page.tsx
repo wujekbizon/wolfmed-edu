@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
+import PremiumAccessRequired from '@/components/PremiumAccessRequired'
 import { getAllDiagnozy, getUserDiagnozyCompletions } from '@/server/queries'
 import DiagnozyBrowser from '@/components/diagnozy/browse/DiagnozyBrowser'
 import DiagnozyHeader from '@/components/diagnozy/browse/DiagnozyHeader'
@@ -22,7 +23,7 @@ async function DiagnozyContent() {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) redirect('/panel/kursy')
+  if (!hasAccess) return <PremiumAccessRequired feature="diagnozy" />
 
   const [diagnozy, completedSlugs] = await Promise.all([
     getAllDiagnozy(),

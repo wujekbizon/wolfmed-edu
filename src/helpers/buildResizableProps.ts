@@ -49,7 +49,8 @@ export function buildResizableProps({
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        flex: '1 1 0%',
+        flexGrow: 1,
+        flexBasis: '0%',
         minHeight: '16rem',
       },
     }

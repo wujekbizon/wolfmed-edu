@@ -8,6 +8,7 @@ export type WolfekAnimationState = {
 }
 export type WolfekMouthProps = { dropped: boolean; reduced: boolean | null }
 export type WolfekIntroProps = { description: string; id?: string }
+export type WolfekAnswerTextProps = { text: string; animate?: boolean; children?: ReactNode }
 
 export interface WolfekAnswerReaction {
   eventId: string
@@ -26,6 +27,7 @@ export interface WolfekFaceProps {
   interactive: boolean
   gaze?: WolfekGaze | undefined
   videoHover?: boolean
+  excited?: boolean
 }
 
 export interface WolfekEyesProps {
@@ -34,6 +36,7 @@ export interface WolfekEyesProps {
   gaze?: WolfekGaze | undefined
   videoHover?: boolean
   reduced?: boolean | null
+  excited?: boolean
 }
 
 export interface Wolfek3DGlassesProps {
@@ -58,10 +61,12 @@ export interface WolfekAvatarProps {
   reaction?: WolfekAnswerReaction | null | undefined
   gaze?: WolfekGaze | undefined
   videoHover?: boolean
+  excited?: boolean
 }
 
 export interface WolfekOverlayProps {
   anchorId: string | undefined
+  inlineAnchorId?: string
   variant?: 'learning' | 'panel'
   visible: boolean
   avatar: ReactNode

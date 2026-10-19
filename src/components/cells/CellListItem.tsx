@@ -27,7 +27,7 @@ export default function CellListItem({ cell, isPremium = false }: { cell: Cell; 
     : 'border border-zinc-400/20 p-1.5 rounded bg-red-300/30'
 
   return (
-    <div id={`cell-${cell.id}`} className="relative">
+    <div id={`cell-${cell.id}`} className="relative scroll-mt-24">
       <div className={containerClass}>
         <div className="relative min-h-10 w-full shrink-0">
           <ActionBar
