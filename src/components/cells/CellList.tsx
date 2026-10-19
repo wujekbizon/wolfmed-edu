@@ -58,7 +58,7 @@ export default function CellList({
   return (
     <div className="w-full">
       <CellsConflictBanner />
-      <AddCell prevCellId={null} forceVisible={order.length === 0} isPremium={isPremium} />
+      <AddCell prevCellId={null} isPremium={isPremium} />
       {order.map((cell) => (
         <Fragment key={cell}>
           <CellListItem cell={data[cell]!} isPremium={isPremium} />

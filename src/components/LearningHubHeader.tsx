@@ -1,8 +1,8 @@
 export default function LearningHubHeader() {
   return (
-    <div>
-      <h1 className='text-3xl font-bold text-zinc-800 mb-2'>Centrum Nauki</h1>
-      <p className='text-zinc-600'>Twoje osobiste środowisko do nauki i rozwoju</p>
+    <div className='pb-3'>
+      <h1 className='text-2xl sm:text-3xl font-bold tracking-tight text-zinc-800 mb-1'>Centrum Nauki</h1>
+      <p className='text-sm text-zinc-500'>Twoja codzienna przestrzeń do nauki</p>
     </div>
   )
 }

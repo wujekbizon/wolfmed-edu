@@ -5,18 +5,14 @@ import { SyncCellsButton } from './SyncCellsButton'
 
 interface AddCellProps {
   prevCellId: string | null
-  forceVisible?: boolean
   isPremium?: boolean
 }
 
-export default function AddCell({ prevCellId, forceVisible, isPremium = false }: AddCellProps) {
+export default function AddCell({ prevCellId, isPremium = false }: AddCellProps) {
   const { insertCellAfter } = useCellsStore()
 
   return (
-    <div
-      className={`relative my-3 transition-opacity duration-300 ease-in ${forceVisible ? 'opacity-100' : 'opacity-40 hover:opacity-100 md:opacity-0'
-        }`}
-    >
+    <div className='relative my-3'>
       <div className="relative flex flex-wrap items-center justify-center gap-2 sm:gap-3 z-10">
       <SaveCellsButton />
       <SyncCellsButton />
