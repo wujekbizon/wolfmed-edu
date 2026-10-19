@@ -18,6 +18,7 @@ export default function WolfekDock({ userId, questionId, session, children, reac
   }
 
   return <WolfekOverlay anchorId={questionId ? `learning-card-${questionId}` : undefined}
+    inlineAnchorId={`learning-wolfek-${questionId ?? 'welcome'}`}
     visible={!hidden} onMinimize={minimize} onOpen={open}
     avatar={<PracticeCompanionAvatar session={session} reaction={reaction} />}>
     {(minimize) => children(minimize, smallTalkIndex)}

@@ -1,4 +1,4 @@
-export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'cta' | 'dark'
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'cta' | 'dark' | 'softAccent'
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'submit'
 export type ButtonShape = 'soft' | 'rounded' | 'pill'
 
@@ -14,6 +14,8 @@ export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
     'bg-[#f58a8a] hover:bg-[#ff5b5b] text-black border border-red-200/40 shadow hover:border-zinc-800 disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40',
   secondary:
     'bg-white hover:bg-zinc-50 text-zinc-700 border border-zinc-200 shadow-sm hover:border-zinc-300',
+  softAccent:
+    'bg-[#f3edf8] hover:bg-[#ebe2f3] text-[#5c456f] border border-[#e4d8ed] shadow-sm hover:border-[#cbb9dc] disabled:hover:bg-[#f3edf8] disabled:hover:border-[#e4d8ed]',
   accent: 'bg-purple-600 hover:bg-purple-700 text-white',
   ghost: 'text-zinc-600 hover:text-zinc-800 hover:bg-zinc-100',
   // Raised rather than flat: a vertical gradient reads as a lit surface, the

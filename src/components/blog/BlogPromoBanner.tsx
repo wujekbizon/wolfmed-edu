@@ -68,7 +68,7 @@ export default function BlogPromoBanner() {
               <Link
                 key={href}
                 href={href}
-                className="group flex items-center gap-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] p-2.5 transition-all hover:border-white/20 hover:bg-white/[0.06]"
+                className="group flex items-center gap-2.5 rounded-xl border border-white/8 bg-white/3 p-2.5 transition-all hover:border-white/20 hover:bg-white/[0.06]"
               >
                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/10 text-zinc-200 shadow-sm">
                   <Icon className="h-4 w-4" strokeWidth={1.75} />

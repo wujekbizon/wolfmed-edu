@@ -14,7 +14,7 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
   const { category, question, number, session, progress, active, comparing, onFocus } = props
   const { state, action, pending, eventInput, submittedEventId, events, selected, select, clearSelection } = usePracticeCardForm(props)
   const toast = useToastMessage(state)
-  return <article id={`learning-card-${question.id}`} tabIndex={0} onFocusCapture={onFocus}
+  return <article id={`learning-card-${question.id}`} tabIndex={0} onFocusCapture={onFocus} onClick={onFocus}
     className="learning-card" data-active={active} data-comparing={comparing} aria-label={`Karta ${number}`}>
     <Card className="min-w-0 space-y-4 rounded-3xl p-5 sm:p-7">
       <form action={action} className="min-w-0 space-y-4" onSubmit={(event) => {
@@ -61,7 +61,7 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
             : progress.correct === false ? 'Spróbuj jeszcze raz. Wolfek jest obok, jeśli potrzebujesz pomocy.' : ''}
         </p>}
         {(!session || session.status === 'active') && !progress?.resolved && question.practiceable &&
-          <div className="flex flex-wrap gap-2 pt-2">
+        <div className="learning-answer-actions flex flex-wrap gap-2 pt-2">
           <Button type="submit" name="command" value="answer" size="lg" disabled={pending} className="learning-check">
             {pending ? 'Zapisywanie…' : 'Sprawdź swój wybór'}
           </Button>
@@ -69,7 +69,7 @@ export default function PracticeQuestionCard(props: PracticeQuestionCardProps) {
         </div>}
         {session?.status === 'active' && progress?.outcome === 'revealed' && question.practiceable &&
           <Button type="submit" name="command" value="review" size="md" variant="ghost"
-            disabled={pending} onClick={clearSelection}>Spróbuj ponownie bez podpowiedzi</Button>}
+            className="learning-review-button" disabled={pending} onClick={clearSelection}>Spróbuj ponownie bez podpowiedzi</Button>}
         {toast}
       </form>
     </Card>

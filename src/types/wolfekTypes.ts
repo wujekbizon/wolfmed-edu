@@ -66,6 +66,7 @@ export interface WolfekAvatarProps {
 
 export interface WolfekOverlayProps {
   anchorId: string | undefined
+  inlineAnchorId?: string
   variant?: 'learning' | 'panel'
   visible: boolean
   avatar: ReactNode
