@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { getCurrentUser } from '@/server/user'
 import { hasDiagnozyAccess } from '@/helpers/hasDiagnozyAccess'
+import PremiumAccessRequired from '@/components/PremiumAccessRequired'
 import { getDiagnozyTitlesBySlugs, getUserDiagnozyExamAttempts } from '@/server/queries'
 import { getDiagnozyTitlesBySlug } from '@/helpers/getDiagnozyTitlesBySlug'
 import { ATTEMPTS_HISTORY_LIMIT } from '@/constants/examAttempts'
@@ -37,7 +38,7 @@ async function EgzaminContent() {
   if (!user) redirect('/sign-in')
 
   const hasAccess = await hasDiagnozyAccess()
-  if (!hasAccess) redirect('/panel/kursy')
+  if (!hasAccess) return <PremiumAccessRequired feature="diagnozy" />
 
   return (
     <>

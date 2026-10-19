@@ -15,14 +15,12 @@ interface SidePanelProps {
   children?: React.ReactNode
   pinnedCount?: number
   isPremium?: boolean
-  enrolledCourseSlugs?: string[]
 }
 
 export default function SidePanel({
   children,
   pinnedCount = 0,
   isPremium,
-  enrolledCourseSlugs = []
 }: SidePanelProps) {
   const { isSidePanelOpen, toggleSidePanel } = useStore((state) => state)
   const { openSettingsModal } = useSettingsModalStore()
@@ -100,20 +98,14 @@ export default function SidePanel({
             className={`flex flex-col flex-1 min-h-0 px-4 py-3 gap-3
               ${isSidePanelOpen ? 'overflow-y-auto scrollbar-webkit' : ''}`}
           >
-            {sideMenuNavigationLinks
-              .filter(
-                (navLink) =>
-                  !navLink.requiresCourse ||
-                  enrolledCourseSlugs.includes(navLink.requiresCourse)
-              )
-              .map((navLink) => (
+            {sideMenuNavigationLinks.map((navLink) => (
               <CustomButton
                 key={navLink.label}
                 text={navLink.label}
                 href={navLink.url}
                 active={navLink.url === pathname}
                 showTooltip={!isSidePanelOpen}
-                isPremium={!!navLink.requiresSupporter && !isPremium}
+                requirement={navLink.requiresSupporter ? (navLink.requiresCourse === 'pielegniarstwo' ? 'Pielęgniarstwo Premium' : 'Premium') : undefined}
               >
                 {navLink.icon}
               </CustomButton>

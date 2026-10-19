@@ -1,31 +1,13 @@
 import { Suspense } from 'react'
-import { redirect } from 'next/navigation'
-import CreateTestTabs from '@/components/CreateTestTabs'
-import CreateTestHeader from '@/components/CreateTestHeader'
-import DeleteTestModal from '@/components/DeleteTestModal'
-import DeleteCategoryModal from '@/components/DeleteCategoryModal'
-import CategoryDeleteModalWrapper from '@/components/CategoryDeleteModalWrapper'
-import { getCurrentUser } from '@/server/user'
-import { checkPremiumAccessAction } from '@/actions/course-actions'
+import CreateTestContent from '@/components/CreateTestContent'
+import PracticeTestSkeleton from '@/components/skeletons/PracticeTestSkeleton'
 
-export default async function CreateTestPage() {
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-
-  const isPremium = await checkPremiumAccessAction()
-  if (!isPremium) redirect('/panel/kursy')
-
+export default function CreateTestPage() {
   return (
     <section className="w-full h-full overflow-y-auto scrollbar-webkit p-4">
-      <div className="flex w-full flex-col gap-6 px-0 pb-10 sm:px-4 2xl:w-3/4 mx-auto">
-        <CreateTestHeader />
-        <Suspense fallback={<div className="text-center py-8">Ładowanie...</div>}>
-          <CreateTestTabs userId={user.userId} />
-        </Suspense>
-      </div>
-      <DeleteTestModal />
-      <DeleteCategoryModal />
-      <CategoryDeleteModalWrapper />
+      <Suspense fallback={<PracticeTestSkeleton />}>
+        <CreateTestContent />
+      </Suspense>
     </section>
   )
 }

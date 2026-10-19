@@ -3,7 +3,7 @@ import PanelLayoutLoadingContent from './PanelLayoutLoadingContent'
 
 export default function PanelLayoutSkeleton() {
   return <>
-    <SidePanel isPremium={false} enrolledCourseSlugs={['pielegniarstwo']} />
+    <SidePanel isPremium={false} />
     <PanelLayoutLoadingContent />
   </>
 }
