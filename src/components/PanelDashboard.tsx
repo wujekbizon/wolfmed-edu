@@ -1,5 +1,4 @@
 import { Suspense } from 'react'
-import AdminBlogWidget from '@/components/AdminBlogWidget'
 import BadgeWidget from '@/components/BadgeWidget'
 import BadgeWidgetSkeleton from '@/components/BadgeWidgetSkeleton'
 import DashboardBillingCard from '@/components/billing/DashboardBillingCard'
@@ -51,9 +50,6 @@ export default function PanelDashboard() {
                 <BadgeWidget />
               </Suspense></div>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <Suspense fallback={null}>
-                  <AdminBlogWidget />
-                </Suspense>
                 <div id="panel-username-form" className="rounded-xl border border-zinc-100 bg-zinc-50 p-4 transition-all duration-200 hover:border-zinc-200 hover:bg-white hover:shadow-sm sm:p-6">
                   <UsernameForm />
                 </div>
