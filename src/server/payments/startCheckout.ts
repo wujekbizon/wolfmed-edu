@@ -6,7 +6,8 @@ import stripe from '@/lib/stripeClient'
 import { getUserEnrollmentGrants } from '@/server/queries'
 import { getOrCreateStripeCustomer } from '@/server/stripe'
 import { getVerifiedStripeOffer } from '@/server/stripeOffer'
-import { hasOpenSubscriptionForCourse } from '@/server/payments/hasOpenSubscriptionForCourse'
+import { getActiveCourseSubscription } from '@/server/payments/getActiveCourseSubscription'
+import { isSubscriptionPaymentOverdue } from '@/helpers/isSubscriptionPaymentOverdue'
 import { createStripeCheckoutSession } from '@/server/payments/createStripeCheckoutSession'
 import type { CheckoutStartResult, PaymentOfferKey } from '@/types/paymentTypes'
 import {
@@ -20,11 +21,14 @@ export async function startCheckout(
   offerKey: PaymentOfferKey
 ): Promise<CheckoutStartResult> {
   const catalogOffer = PAYMENT_OFFERS[offerKey]
-  const hasOpenSubscription = await hasOpenSubscriptionForCourse(
+  const subscription = await getActiveCourseSubscription(
     userId,
     catalogOffer.courseSlug
   )
-  if (hasOpenSubscription) {
+  if (isSubscriptionPaymentOverdue(subscription?.status)) {
+    return { status: 'PAYMENT_REQUIRED' }
+  }
+  if (subscription) {
     return {
       status: catalogOffer.purchaseModel === 'subscription'
         ? 'ALREADY_OWNED'

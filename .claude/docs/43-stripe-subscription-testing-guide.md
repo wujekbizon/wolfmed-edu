@@ -464,10 +464,27 @@ Accepted 2026-08-18:
 - All observed handled Stripe webhooks returned `200`; static checks and 203 tests
   passed.
 
-Open product decision: immediate failed-payment revocation blocks guarded
-`/panel#platnosci`. Choose a recovery CTA, separate authenticated recovery route
-or retry grace period before production. Course content must stay blocked while
-unpaid.
+Failed-payment recovery uses the existing Stripe Portal action from the course
+hero, pricing cards and Clerk avatar's `Plan i płatności` menu. Course content
+stays blocked while unpaid; `/panel#platnosci` remains guarded.
+
+### Returning subscriber UI
+
+1. Sign in as a sandbox customer with a failed renewal (`past_due`).
+2. Open their course page: the hero and both pricing cards show
+   `Zaktualizuj metodę płatności` and pricing explains that payment restores access.
+3. Switch to lifetime pricing: recovery remains available, no new purchase.
+4. Open recovery from either button: the existing Stripe Customer Portal opens.
+5. Confirm the Clerk avatar's `Plan i płatności` action still works.
+6. Pay the existing invoice. After webhooks complete, reload the course page:
+   normal current-plan/upgrade actions return and course access is restored.
+7. On a separate failed subscription, exhaust retries or cancel in the sandbox.
+   After the cancellation webhook completes, reload the course page: normal
+   purchase offers return. Complete a new subscription and verify course access.
+8. Check another course: its pricing must not show this course's payment failure.
+
+A stale checkout submitted during `past_due` or `unpaid` shows instructions to
+open `Plan i płatności` in the profile menu, rather than claiming access is owned.
 
 ## Troubleshooting
 
@@ -491,4 +508,4 @@ pnpm lint
 pnpm test
 ```
 
-Unresolved questions: failed-payment recovery UX.
+Unresolved questions: none.

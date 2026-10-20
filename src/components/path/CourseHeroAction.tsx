@@ -2,6 +2,7 @@ import HeroButton from '@/components/HeroButton'
 import CourseCheckoutButton from '@/components/path/CourseCheckoutButton'
 import { MONTHLY_OFFER_BY_COURSE_TIER } from '@/constants/monthlyOfferByCourseTier'
 import { PRICING_ANCHOR } from '@/constants/pricingAnchor'
+import { PAYMENT_RECOVERY_LABEL } from '@/constants/paymentRecovery'
 import type { CourseHeroActionProps } from '@/types/paymentTypes'
 
 export default function CourseHeroAction({
@@ -12,6 +13,15 @@ export default function CourseHeroAction({
   const monthlyOffers = MONTHLY_OFFER_BY_COURSE_TIER[courseSlug]
   const basicStatus = offerStatuses[monthlyOffers.basic]
   const premiumStatus = offerStatuses[monthlyOffers.premium]
+  if (basicStatus === 'payment_required' || premiumStatus === 'payment_required') {
+    return (
+      <CourseCheckoutButton
+        offerKey={monthlyOffers.basic}
+        offerStatus="payment_required"
+        label={PAYMENT_RECOVERY_LABEL}
+      />
+    )
+  }
   if (premiumStatus === 'portal_upgrade') {
     return (
       <CourseCheckoutButton
