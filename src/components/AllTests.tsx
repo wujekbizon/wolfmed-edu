@@ -1,6 +1,7 @@
 'use client'
 
 import { Fragment } from 'react'
+import Link from 'next/link'
 import Input from '@/components/ui/Input'
 import Label from '@/components/ui/Label'
 import LearningPaginationControls from '@/components/LearningPaginationControls'
@@ -19,6 +20,10 @@ export default function AllTests(props: LearningDeckProps) {
   const deck = useLearningDeck(props)
   const wolfekHidden = useSettingsStore((state) => state.practiceCompanionHidden[props.userId] ?? false)
   if (!deck.authorized) return <PracticeSignInRequired />
+  if (deck.accessDenied) return <p role="alert">
+    Brak dostępu do tej kategorii.{' '}
+    <Link href="/panel/nauka" className="underline">Wróć do kategorii</Link>
+  </p>
   return <section className="w-full max-w-[1500px] space-y-6 pb-24 min-[1025px]:pb-4">
     <LearningDeckHeader count={props.questions.length} actions={deck.session &&
       <ResetLearningProgressButton userId={props.userId} category={props.category}

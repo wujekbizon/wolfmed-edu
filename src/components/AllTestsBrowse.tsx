@@ -1,15 +1,28 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useAuth } from '@clerk/nextjs'
 import { useDebouncedValue } from '@/hooks/useDebounceValue'
 import { useSearchTermStore } from '@/store/useSearchTermStore'
 import SearchTerm from '@/components/SearchTerm'
 import FilteredTestsList from '@/components/FilteredTestsList'
+import PracticeSignInRequired from '@/components/learning/PracticeSignInRequired'
+import LearningPracticeSkeleton from '@/components/skeletons/LearningPracticeSkeleton'
 import type { Test } from '@/types/dataTypes'
 
 export default function AllTestsBrowse(props: { tests: Test[]; category: string; userId?: string }) {
+  const client = useQueryClient()
+  const { userId, isLoaded } = useAuth()
+  const authorized = isLoaded && Boolean(userId) && userId === props.userId
   const { searchTerm, setSearchTerm, isExpanded, toggleExpand, openCategory } = useSearchTermStore()
+
+  useEffect(() => {
+    if (isLoaded && !authorized) {
+      client.removeQueries({ queryKey: ['allTests', props.userId] })
+      client.removeQueries({ queryKey: ['filteredTests', props.userId] })
+    }
+  }, [client, isLoaded, authorized, props.userId])
 
   useEffect(() => {
     openCategory(props.category)
@@ -23,6 +36,7 @@ export default function AllTestsBrowse(props: { tests: Test[]; category: string;
     queryFn: async () => testsArr,
     initialData: testsArr,
     staleTime: 10 * 60 * 1000,
+    enabled: authorized,
   })
 
   const filteredTestsQueryFn = async () => {
@@ -44,9 +58,12 @@ export default function AllTestsBrowse(props: { tests: Test[]; category: string;
   } = useQuery({
     queryKey: ['filteredTests', props.userId, debouncedSearchTerm, props.category],
     queryFn: filteredTestsQueryFn,
-    enabled: !!searchTerm || true,
+    enabled: authorized,
     staleTime: 10 * 60 * 1000,
   })
+
+  if (!isLoaded) return <LearningPracticeSkeleton />
+  if (!authorized) return <PracticeSignInRequired />
 
   return (
     <section className="flex flex-col items-center w-full h-full">

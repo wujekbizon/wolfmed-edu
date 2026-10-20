@@ -8,6 +8,7 @@ import { userCustomTests } from '@/server/db/schema'
 import { getTestsByCategory, getUserCustomCategoryById } from '@/server/queries'
 import { checkPremiumAccessAction } from '@/actions/course-actions'
 import { requireCategoryAccess } from '@/server/learning/requireCategoryAccess'
+import { PracticeError } from '@/server/learning/PracticeError'
 import { readPracticeSession } from '@/server/learning/readSession'
 import { toLearningQuestionCardData } from '@/helpers/toLearningQuestionCardData'
 import type { LearningCategoryProps } from '@/types/learningPracticeTypes'
@@ -22,7 +23,10 @@ export default async function CategoryContent({ params }: LearningCategoryProps)
   const custom = decoded.startsWith('moje-testy__')
   if (!custom) {
     try { await requireCategoryAccess(decoded) }
-    catch { redirect('/panel/nauka') }
+    catch (error) {
+      if (error instanceof PracticeError) redirect('/panel/nauka')
+      throw error
+    }
   }
   if (custom) {
     if (!await checkPremiumAccessAction()) redirect('/panel/nauka')
@@ -33,11 +37,10 @@ export default async function CategoryContent({ params }: LearningCategoryProps)
     )) as Test[] : []
     return <AllTestsBrowse key={`${userId}:${decoded}`} tests={tests} category={decoded} userId={userId} />
   }
-  const tests = await getTestsByCategory(decoded) as Test[]
-  const [session, premium] = await Promise.all([
-    readPracticeSession(userId, decoded), checkPremiumAccessAction(),
+  const [tests, session, premium] = await Promise.all([
+    getTestsByCategory(decoded), readPracticeSession(userId, decoded), checkPremiumAccessAction(),
   ])
-  const questions = toLearningQuestionCardData(tests)
+  const questions = toLearningQuestionCardData(tests as Test[])
   return <AllTests key={`${userId}:${decoded}`} userId={userId} category={decoded}
     questions={questions} initialSession={session}
     premium={premium} />

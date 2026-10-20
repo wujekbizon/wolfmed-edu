@@ -41,5 +41,6 @@ export function usePracticeSession(userId: string, category: string, initialSess
     client.setQueryData<PracticeView | null>(key, (current) => newestPracticeView(current, session))
   }
   const signInRequired = query.error instanceof PracticeProgressError && query.error.status === 401
-  return { ...query, authorized: authorized && !signInRequired, update }
+  const accessDenied = query.error instanceof PracticeProgressError && query.error.status === 403
+  return { ...query, authorized: authorized && !signInRequired, accessDenied, update }
 }

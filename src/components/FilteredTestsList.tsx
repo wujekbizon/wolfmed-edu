@@ -56,7 +56,7 @@ export default function FilteredTestsList({ tests, category, error }: FilteredTe
     >
       {paginatedTests.map((item, index) => (
         <LearningCard
-          key={item.data.question}
+          key={item.id}
           test={item}
           questionNumber={`${index + 1 + (currentPage - 1) * perPage}/${tests.length}`}
         />

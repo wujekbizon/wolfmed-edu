@@ -57,6 +57,7 @@ export function useLearningDeck({ questions, category, userId, initialSession }:
   const navigation = useLearningDeckNavigation({ questions, filtered, pageQuestions, session,
     questionId: question?.id, page, perPage, onFocus: focus, onCompare: compare, onFilter: setFilter })
   return { search, session, update: query.update, error: query.error, authorized: query.authorized,
+    accessDenied: query.accessDenied,
     pageQuestions, total: filtered.length, filter, filterCounts, changeFilter,
     page, totalPages, question, companion,
     focus, compareId, compare, changePage: navigation.changePage,
