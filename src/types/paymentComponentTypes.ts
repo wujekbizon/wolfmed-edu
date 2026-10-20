@@ -8,6 +8,7 @@ import type { SubscriptionPlanChange } from '@/types/subscriptionTypes'
 
 export type PricingOfferStatus =
   | 'available'
+  | 'payment_required'
   | 'current_subscription'
   | 'portal_upgrade'
   | 'downgrade_available'
@@ -58,3 +59,8 @@ export type CourseHeroActionProps = {
   offerStatuses: PricingOfferStatusMap
   eligibleLifetimeUpgradeOfferKey: LifetimeUpgradeOfferKey | null
 }
+
+export type CoursePricingPlanNoticeProps = Pick<
+  CoursePricingCardProps,
+  'offerStatus' | 'subscriptionPlanChange'
+>

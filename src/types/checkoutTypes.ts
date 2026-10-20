@@ -18,6 +18,7 @@ export type CheckoutStartResult =
   | { status: 'READY'; url: string }
   | { status: 'ACTIVE_CONFLICT' }
   | { status: 'ALREADY_OWNED' }
+  | { status: 'PAYMENT_REQUIRED' }
   | { status: 'NOT_ELIGIBLE' }
   | { status: 'MODEL_CONFLICT' }
   | { status: 'UPGRADE_REQUIRED' }

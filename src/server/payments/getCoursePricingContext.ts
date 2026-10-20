@@ -4,6 +4,7 @@ import { STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE } from '@/constants/stripePor
 import { getEligibleLifetimeUpgradeOfferKey } from '@/helpers/getEligibleLifetimeUpgradeOfferKey'
 import { getPricingOfferStatuses } from '@/helpers/getPricingOfferStatuses'
 import { getSubscriptionPlanChange } from '@/server/payments/getSubscriptionPlanChange'
+import { getActiveCourseSubscription } from '@/server/payments/getActiveCourseSubscription'
 import { getUserEnrollmentGrants } from '@/server/queries'
 import type { PaymentOffer } from '@/types/paymentTypes'
 
@@ -11,12 +12,13 @@ export async function getCoursePricingContext(
   courseSlug: PaymentOffer['courseSlug']
 ) {
   const { userId } = await auth()
-  const [grants, planChange] = userId
+  const [grants, planChange, subscription] = userId
     ? await Promise.all([
         getUserEnrollmentGrants(userId),
         getSubscriptionPlanChange(userId, courseSlug),
+        getActiveCourseSubscription(userId, courseSlug),
       ])
-    : [[], null]
+    : [[], null, null]
   const portalConfigured = Boolean(process.env[
     STRIPE_PORTAL_CONFIGURATION_ENV_BY_COURSE[courseSlug]
   ])
@@ -27,7 +29,8 @@ export async function getCoursePricingContext(
       grants,
       courseSlug,
       portalConfigured,
-      planChange
+      planChange,
+      subscription?.status ?? null
     ),
     subscriptionPlanChange: planChange,
   }

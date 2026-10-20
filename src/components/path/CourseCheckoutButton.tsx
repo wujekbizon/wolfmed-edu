@@ -1,7 +1,7 @@
 'use client'
 
 import { useActionState } from 'react'
-import { createCheckoutSession } from '@/actions/stripe'
+import { createBillingPortalSession, createCheckoutSession } from '@/actions/stripe'
 import { changeSubscriptionPlan } from '@/actions/subscriptionPlanChange'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from '@/hooks/useToastMessage'
@@ -18,9 +18,11 @@ export default function CourseCheckoutButton({
   offerStatus?: PricingOfferStatus
   label?: string
 }) {
-  const serverAction = offerStatus === 'portal_upgrade'
-    ? changeSubscriptionPlan
-    : createCheckoutSession
+  const serverAction = offerStatus === 'payment_required'
+    ? createBillingPortalSession
+    : offerStatus === 'portal_upgrade'
+      ? changeSubscriptionPlan
+      : createCheckoutSession
   const [state, action] = useActionState(serverAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
 

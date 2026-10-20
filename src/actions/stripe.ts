@@ -3,6 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
+import { PAYMENT_RECOVERY_CHECKOUT_ERROR } from '@/constants/paymentRecovery'
 import { fromErrorToFormState, toFormState } from '@/helpers/toFormState'
 import { checkRateLimit } from '@/lib/rateLimit'
 import { startCheckout } from '@/server/payments/startCheckout'
@@ -36,6 +37,9 @@ export async function createCheckoutSession(
   let redirectUrl: string | null = null
   try {
     const result = await startCheckout(userId, validation.data.offerKey)
+    if (result.status === 'PAYMENT_REQUIRED') {
+      return toFormState('ERROR', PAYMENT_RECOVERY_CHECKOUT_ERROR)
+    }
     if (result.status === 'ALREADY_OWNED') {
       return toFormState('ERROR', 'Masz już ten dostęp.')
     }

@@ -1,7 +1,9 @@
 import type { PricingOfferStatus } from '@/types/paymentTypes'
+import { PAYMENT_RECOVERY_LABEL } from '@/constants/paymentRecovery'
 
 export const PRICING_OFFER_STATUS_LABELS: Record<PricingOfferStatus, string> = {
   available: 'Kup teraz',
+  payment_required: PAYMENT_RECOVERY_LABEL,
   current_subscription: 'Twój plan',
   portal_upgrade: 'Ulepsz w Stripe',
   downgrade_available: 'Przejdź na Basic',

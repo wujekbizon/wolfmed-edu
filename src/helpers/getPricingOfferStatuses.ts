@@ -1,6 +1,7 @@
 import { PAYMENT_OFFERS } from '@/constants/paymentOffers'
 import { getEffectiveEnrollmentGrants } from '@/helpers/getEffectiveEnrollmentGrants'
 import { getPricingOfferStatus } from '@/helpers/getPricingOfferStatus'
+import { isSubscriptionPaymentOverdue } from '@/helpers/isSubscriptionPaymentOverdue'
 import type {
   LifetimeUpgradeGrant,
   PaymentOffer,
@@ -12,7 +13,8 @@ export function getPricingOfferStatuses(
   grants: LifetimeUpgradeGrant[],
   courseSlug: PaymentOffer['courseSlug'],
   portalConfigured: boolean,
-  planChange: SubscriptionPlanChange | null = null
+  planChange: SubscriptionPlanChange | null = null,
+  subscriptionStatus: string | null = null
 ): PricingOfferStatusMap {
   const activeSubscription = getEffectiveEnrollmentGrants(
     grants.filter((grant) => grant.sourceType === 'subscription')
@@ -23,13 +25,15 @@ export function getPricingOfferStatuses(
       .filter((offer) => offer.courseSlug === courseSlug)
       .map((offer) => [
         offer.key,
-        getPricingOfferStatus(
-          grants,
-          offer,
-          activeSubscription,
-          portalConfigured,
-          planChange
-        ),
+        offer.available && isSubscriptionPaymentOverdue(subscriptionStatus)
+          ? 'payment_required'
+          : getPricingOfferStatus(
+              grants,
+              offer,
+              activeSubscription,
+              portalConfigured,
+              planChange
+            ),
       ])
   ) as PricingOfferStatusMap
 }
