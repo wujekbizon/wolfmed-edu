@@ -10,6 +10,7 @@ import LearningDeckHeader from '@/components/learning/LearningDeckHeader'
 import WolfekDock from '@/components/learning/WolfekDock'
 import LearningCardFilters from '@/components/learning/LearningCardFilters'
 import ResetLearningProgressButton from '@/components/learning/ResetLearningProgressButton'
+import PracticeSignInRequired from '@/components/learning/PracticeSignInRequired'
 import { useLearningDeck } from '@/hooks/useLearningDeck'
 import { useSettingsStore } from '@/store/useSettingsStore'
 import type { LearningDeckProps } from '@/types/learningUiTypes'
@@ -17,7 +18,7 @@ import type { LearningDeckProps } from '@/types/learningUiTypes'
 export default function AllTests(props: LearningDeckProps) {
   const deck = useLearningDeck(props)
   const wolfekHidden = useSettingsStore((state) => state.practiceCompanionHidden[props.userId] ?? false)
-  if (!deck.authorized) return <p>Zaloguj się ponownie, aby kontynuować.</p>
+  if (!deck.authorized) return <PracticeSignInRequired />
   return <section className="w-full max-w-[1500px] space-y-6 pb-24 min-[1025px]:pb-4">
     <LearningDeckHeader count={props.questions.length} actions={deck.session &&
       <ResetLearningProgressButton userId={props.userId} category={props.category}

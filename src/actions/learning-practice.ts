@@ -16,13 +16,6 @@ import { PracticeError } from '@/server/learning/PracticeError'
 import { PracticeConflictError } from '@/server/learning/PracticeConflictError'
 import { onPracticeActivity } from '@/server/memory/extractPractice'
 
-export async function getPracticeAction(category: string) {
-  const validated = PracticeCategorySchema.parse(category)
-  const userId = await requireCategoryAccess(validated)
-  if (!isPracticeEnabled(validated)) throw new Error('Ćwiczenia są obecnie niedostępne.')
-  return readPracticeSession(userId, validated)
-}
-
 export async function practiceAction(previous: PracticeFormState, formData: FormData): Promise<PracticeFormState> {
   try {
     const category = PracticeCategorySchema.parse(formData.get('category'))

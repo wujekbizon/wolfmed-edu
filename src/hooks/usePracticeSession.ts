@@ -3,7 +3,8 @@
 import { useEffect, useRef } from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { getPracticeAction } from '@/actions/learning-practice'
+import { fetchPracticeProgress } from '@/helpers/fetchPracticeProgress'
+import { PracticeProgressError } from '@/lib/PracticeProgressError'
 import { PRACTICE_STALE_TIME } from '@/constants/learningPractice'
 import { newestPracticeView } from '@/helpers/newestPracticeView'
 import type { PracticeView } from '@/types/learningPracticeTypes'
@@ -21,8 +22,8 @@ export function usePracticeSession(userId: string, category: string, initialSess
   }, [])
   const key = ['learningPractice', userId, category]
   const query = useQuery({
-    queryKey: key, queryFn: () => getPracticeAction(category), initialData: initialSession,
-    staleTime: PRACTICE_STALE_TIME, gcTime: 0, retry: false, enabled: authorized,
+    queryKey: key, queryFn: ({ signal }) => fetchPracticeProgress(userId, category, signal), initialData: initialSession,
+    staleTime: PRACTICE_STALE_TIME, gcTime: 0, retry: false, enabled: isLoaded && authorized,
     structuralSharing: (oldData, newData) => {
       const previous = oldData as PracticeView | null | undefined
       const next = newData as PracticeView | null
@@ -39,5 +40,6 @@ export function usePracticeSession(userId: string, category: string, initialSess
     if (!mounted.current || viewer.current !== userId || session.category !== category) return
     client.setQueryData<PracticeView | null>(key, (current) => newestPracticeView(current, session))
   }
-  return { ...query, authorized, update }
+  const signInRequired = query.error instanceof PracticeProgressError && query.error.status === 401
+  return { ...query, authorized: authorized && !signInRequired, update }
 }

@@ -83,6 +83,7 @@ export interface LearningQuestionCardData {
 }
 
 export type PracticeFormState = FormState & { session: PracticeView | null }
+export type PracticeFormAction = (previous: PracticeFormState, data: FormData) => Promise<PracticeFormState>
 export type PracticeResetInput = { category: string; sessionId: string; eventId: string; version: number }
 export type PracticeActionInput = {
   sessionId: string

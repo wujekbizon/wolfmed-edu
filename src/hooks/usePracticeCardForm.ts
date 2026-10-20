@@ -5,10 +5,13 @@ import { practiceAction } from '@/actions/learning-practice'
 import { EMPTY_PRACTICE_STATE } from '@/constants/learningPractice'
 import { usePracticeSelectionStore } from '@/store/usePracticeSelectionStore'
 import { deliverPracticeFormResult } from '@/helpers/deliverPracticeFormResult'
+import { withPracticeTransportRecovery } from '@/helpers/withPracticeTransportRecovery'
 import type { PracticeQuestionCardProps } from '@/types/learningUiTypes'
 
+const recoverablePracticeAction = withPracticeTransportRecovery(practiceAction)
+
 export function usePracticeCardForm({ userId, category, question, onSaved, onAnswered }: PracticeQuestionCardProps) {
-  const [state, action, pending] = useActionState(practiceAction, EMPTY_PRACTICE_STATE)
+  const [state, action, pending] = useActionState(recoverablePracticeAction, EMPTY_PRACTICE_STATE)
   const eventInput = useRef<HTMLInputElement>(null)
   const submittedEventId = useRef<string | null>(null)
   const events = useRef(new Map<string, string>())

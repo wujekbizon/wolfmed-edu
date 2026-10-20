@@ -3,7 +3,9 @@
 ## Overview
 This document establishes the **strict server-first architecture** used in the Wolfmed application. All user interactions with the database follow a consistent pattern using Next.js Server Actions, ensuring security, validation, and proper error handling.
 
-Current convention: `CLAUDE.md` and the source take precedence over historical examples below. Every exposed action validates untrusted input, authenticates and authorizes before protected data access, and returns only scoped data. Form mutations use `FormState`; read, decision and telemetry actions may return a DTO, `null`, or `void`. Revalidate only data held in a Next cache; Centrum Nauki updates its user/category React Query cache from the action's returned view. Client event/effect invocations use React transitions; `<form action>` uses `useActionState` directly. Private `server-only` modules are not additional public actions.
+Current convention: `CLAUDE.md` and the source take precedence over historical examples below. Every exposed action validates untrusted input, authenticates and authorizes before protected data access, and returns only scoped data. Form mutations use `FormState`; read, decision and telemetry actions may return a DTO, `null`, or `void`. Revalidate only data held in a Next cache; Centrum Nauki updates its user/category React Query cache from the action's returned view. Background progress refresh uses authenticated `GET /api/learning/progress` with private, no-store responses; 401 replaces learning controls with re-login UI. Route checks bind requests to the current viewer and require category access before reading progress. Client event/effect action invocations use React transitions; `<form action>` uses `useActionState` directly. Private `server-only` modules are not additional public actions.
+
+Progress route regression test (mocked auth and database): `node --experimental-test-module-mocks --import tsx --test tests/forms/practiceProgressRoute.integration.ts`.
 
 ---
 

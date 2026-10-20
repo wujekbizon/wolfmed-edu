@@ -9,11 +9,14 @@ import { resetPracticeAction } from '@/actions/learning-reset'
 import { EMPTY_PRACTICE_STATE } from '@/constants/learningPractice'
 import { useToastMessage } from '@/hooks/useToastMessage'
 import { usePracticeSelectionStore } from '@/store/usePracticeSelectionStore'
+import { withPracticeTransportRecovery } from '@/helpers/withPracticeTransportRecovery'
 import type { ResetLearningProgressProps } from '@/types/learningUiTypes'
+
+const recoverableResetAction = withPracticeTransportRecovery(resetPracticeAction)
 
 export default function ResetLearningProgressButton({ userId, category, session, onReset }: ResetLearningProgressProps) {
   const [confirming, setConfirming] = useState(false)
-  const [state, action, pending] = useActionState(resetPracticeAction, EMPTY_PRACTICE_STATE)
+  const [state, action, pending] = useActionState(recoverableResetAction, EMPTY_PRACTICE_STATE)
   const menuRef = useRef<HTMLDetailsElement>(null)
   const eventInput = useRef<HTMLInputElement>(null)
   const onResetRef = useRef(onReset)
