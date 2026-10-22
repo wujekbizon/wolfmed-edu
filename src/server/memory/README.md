@@ -60,6 +60,7 @@ labels, and candidate selection diagnostics.
 | `retrieve.ts` / `searchMemoryStore.ts` | Resolve topics, reuse one query embedding, then parallel typed searches with usable lexical fallback. |
 | `buildMemoryTail.ts` / `buildSelfStateContext.ts` | Bounded ranked recall and explicit ready/empty/unavailable self-state context. |
 | `extract*.ts` | Deterministic committed-event → fact/episode hooks, including `extractPractice.ts` for card outcomes. |
+| `projectPracticeActivity.ts` | Locked practice-event projection. `extractPractice.ts` coalesces overlapping calls per user/category within one process, reruns when notified during work, and clears pending entries on completion/failure. |
 | `reconcile*Memory.ts` | Versioned, idempotent rebuild from learning tables. |
 | `recordTutorTurnTrace.ts` | Append-only user/retrieval/model trace sequence. |
 
