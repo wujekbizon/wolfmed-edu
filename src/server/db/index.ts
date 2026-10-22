@@ -10,7 +10,7 @@ if (!process.env.NEON_DATABASE_URL) {
 const pool = new Pool({
   connectionString: process.env.NEON_DATABASE_URL,
   max: 3,
-  idleTimeoutMillis: 30000,
+  idleTimeoutMillis: 10000,
   connectionTimeoutMillis: 10000,
 })
 
