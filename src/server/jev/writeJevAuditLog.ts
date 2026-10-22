@@ -5,8 +5,10 @@ import { JEV_AUDIT_RETENTION_DAYS } from '@/constants/jevAudit'
 import type { JevAuditRecord } from '@/types/jevAuditTypes'
 import { getJevTokenUsage } from '@/helpers/getJevTokenUsage'
 import { addWolfekDailyMetric } from './addWolfekDailyMetric'
+import { WOLFEK_ADMIN_LOGGING_ENABLED } from '@/constants/wolfekAdmin'
 
 export async function writeJevAuditLog(record: JevAuditRecord): Promise<void> {
+  if (!WOLFEK_ADMIN_LOGGING_ENABLED) return
   try {
     const usage = getJevTokenUsage(record.responsePayload)
     await db.transaction(async (tx) => {

@@ -1,8 +1,16 @@
 # 🔀 System Flows
 
+Jev/Wolfek admin logging is disabled by the code constant `WOLFEK_ADMIN_LOGGING_ENABLED = false` in `src/constants/wolfekAdmin.ts`, with no environment setting. Provider audit/usage, interaction/activity metrics and delivery-log writes return before DB work while disabled. Historical reports remain readable; auth, rate limits, submission dedup/completion and learning writes retain their normal flow. The future admin switch is tracked in [Admin feature plan](admin-feature-plan.md).
+
 ## Wolfek app/help questions — 2026-10-18
 
 Page mount/open makes no Jev call. Prepared clicks → `answerWolfekPreparedQuestionAction` → explicit button/response mappings in `src/content/wolfek/prepared-answers.json` → current server facts and existing JSON answer templates. No Jev, prepared batches or visit receipts. Typed questions → `askWolfekQuestionAction` → fresh Jev call each time, unchanged. Both paths retain authorization and submission deduplication. UI-only controls remain direct. Learning buttons select the [Premium RAG workflow](docs/2026-10-04-wolfek-learning-rag.md) directly; medical explanations still use grounded Gemini generation.
+
+Prepared app questions and their replay validation load only fact groups referenced by their mapped answer conditions, required facts and template placeholders. Static username/motto/feedback help loads no test/home facts; course-access checks remain. Typed app questions retain full route context. `tests/integration/wolfekPreparedContext.integration.ts` verifies selective work, identical answers, access rejection and replay freshness without live services.
+
+Prepared answers requiring only `results.hasTests`/`results.completedTestCount` use one user-scoped count aggregate with the existing session join, without loading category results or answer JSON. Exact fact paths include all mapped alternatives. Count-query failure remains unavailable; other test-summary requirements retain the broader loader. `tests/integration/wolfekTestFacts.integration.ts` checks count-only work and answer/access semantics without live services.
+
+Learning help shares a request-local card snapshot between context and generation, then reauthorizes/reloads before delivery or assistance writes, including cache/no-source paths. Snapshot reads return only the question, matching session item/metadata, saved item and reviewed support; they do not calculate review/navigation counts. Reveal changes invalidate the snapshot; typed routing creates a new reader after Jev. The final locked assistance write is preserved, and Redis cache writes occur only after successful validation/assistance persistence. `tests/integration/wolfekPracticeReads.integration.ts` checks read budgets and freshness with mocked external services.
 
 Runtime packs: `src/content/wolfek`. [Prepared-answer implementation](docs/2026-10-18-wolfek-prepared-answers.md). Prepared clicks record outcome `prepared` with no model confidence or provider audit row. Historical batch metrics remain readable; typed delivery keeps its existing provider audit. Learning RAG runs only for the selected hint/comparison/explanation; without relevant sources it returns an explicit no-source answer.
 
@@ -47,9 +55,13 @@ askRagQuestion
          generateGroundedAnswer → { answer, sources }
 ```
 
-**`jobId` drives the progress bar.** `progressStep` writes to a job store the client
-polls. The id is minted per submission — a module-level id is why the bar once
-appeared only on the first request in a cell.
+**Pending status stays in the browser.** AI Asystent and lecture generation use
+React pending state with neutral text rotating every four seconds. The timer
+stops when the pending display unmounts. There is no progress job ID, SSE route,
+Redis progress store, percentage/log panel or artificial server-stage delay.
+Lecture generation takes only the plan content; `useLectureGeneration` handles
+audio-cell insertion and script saving. Mind-map/practical-exam browser loaders,
+saved learning progress, rate limits and answer caches are separate systems.
 
 **Everything converges.** A chip and a slash command reach the same `tools[0]`, the
 same count, the same dispatch. Neither surface has a path the other lacks; that

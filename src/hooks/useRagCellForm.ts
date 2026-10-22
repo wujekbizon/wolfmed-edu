@@ -6,7 +6,6 @@ import { EMPTY_FORM_STATE } from '@/constants/formState'
 import { useToastMessage } from './useToastMessage'
 import { useOnFormSuccess } from './useOnFormSuccess'
 import { useRagCellInput } from './useRagCellInput'
-import { useRagProgress } from './useRagProgress'
 import { useRagCellConversation } from './useRagCellConversation'
 import { useRagAutoSubmit } from './useRagAutoSubmit'
 import { useRagToolResults } from './useRagToolResults'
@@ -23,7 +22,6 @@ export function useRagCellForm({ cell }: RagCellProps) {
   const submitting = useRef(false)
   const noScriptFallback = useToastMessage(state)
   const input = useRagCellInput()
-  const progress = useRagProgress()
   const conversation = useRagCellConversation({ cell, state, isPending })
   const selection = useCommandSelection()
 
@@ -32,7 +30,6 @@ export function useRagCellForm({ cell }: RagCellProps) {
     submitting.current = true
     conversation.rememberQuestion(formData.get('question') as string)
     formData.set('recentMessages', JSON.stringify(toTutorContextMessages(conversation.messages)))
-    formData.append('jobId', progress.startListening())
     startTransition(() => action(formData))
   }
 
@@ -47,20 +44,18 @@ export function useRagCellForm({ cell }: RagCellProps) {
   useAttachExplanationToMindMap({ origin: conversation.origin, state, isPending })
   useStickToBottom(conversationRef, conversationContentRef)
 
-  const { reset } = progress
   useEffect(() => {
     if (!isPending && state.status !== 'UNSET') {
       submitting.current = false
-      reset()
     }
-  }, [isPending, state.status, state.timestamp, reset])
+  }, [isPending, state.status, state.timestamp])
 
   useOnFormSuccess(state, () => {
     if (input.textareaRef.current) input.textareaRef.current.value = ''
   })
 
   return {
-    state, isPending, input, progress, conversation, selection, handleSubmit,
+    state, isPending, input, conversation, selection, handleSubmit,
     conversationRef, conversationContentRef, noScriptFallback,
   }
 }

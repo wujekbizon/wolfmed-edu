@@ -3,8 +3,14 @@ import { eq, sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { completedTestes, testSessions } from '@/server/db/schema'
 import { getCategoryPerformance, getQuestionAccuracyAnalytics } from '@/server/queries'
+import { getWolfekTestCountFacts } from './getWolfekTestCountFacts'
 
-export async function getWolfekTestFacts(userId: string) {
+export async function getWolfekTestFacts(userId: string, requiredPaths?: ReadonlySet<string>) {
+  const resultPaths = requiredPaths ? [...requiredPaths].filter(path => path.startsWith('results.')) : null
+  if (resultPaths?.length && resultPaths.every(path =>
+    path === 'results.hasTests' || path === 'results.completedTestCount')) {
+    return getWolfekTestCountFacts(userId)
+  }
   const [totals, categories, difficult] = await Promise.allSettled([
     db.select({ count: sql<number>`count(*)::int`, score: sql<number>`coalesce(sum(${completedTestes.score}), 0)::int`,
       questions: sql<number>`coalesce(sum(${testSessions.numberOfQuestions}), 0)::int` })

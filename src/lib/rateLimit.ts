@@ -121,17 +121,22 @@ export async function checkRateLimit(
     // Use Redis sorted set with timestamps as scores
     // This allows sliding window rate limiting
 
-    // Remove old entries outside the time window
-    await redis.zremrangebyscore(key, 0, windowStart)
-
-    // Count current requests in window
-    const count = await redis.zcard(key)
-
-    // Add current request timestamp
-    await redis.zadd(key, { score: now, member: `${now}-${Math.random()}` })
-
-    // Set expiry on the key (cleanup)
-    await redis.expire(key, Math.ceil(config.interval / 1000))
+    const count = await redis.eval<unknown[], number>(
+      `
+        redis.call('ZREMRANGEBYSCORE', KEYS[1], 0, ARGV[1])
+        local count = redis.call('ZCARD', KEYS[1])
+        redis.call('ZADD', KEYS[1], ARGV[2], ARGV[3])
+        redis.call('EXPIRE', KEYS[1], ARGV[4])
+        return count
+      `,
+      [key],
+      [
+        windowStart,
+        now,
+        `${now}-${Math.random()}`,
+        Math.ceil(config.interval / 1000),
+      ]
+    )
 
     const remaining = Math.max(0, config.maxRequests - count - 1)
     const resetAt = now + config.interval

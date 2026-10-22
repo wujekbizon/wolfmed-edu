@@ -1,22 +1,6 @@
 import { Mic, FileText, CheckCircle } from 'lucide-react'
-import RagProgressIndicator from '@/components/cells/RagProgressIndicator'
-import type { ProgressStage, LogEntry } from '@/types/progressTypes'
-
-interface PlanFooterProps {
-  summary?: string
-  examRelevance?: string | undefined
-  isPending: boolean
-  lectureGenerated: boolean
-  onGenerate: () => void
-  onSaveScript?: (() => void) | undefined
-  stage: ProgressStage
-  progress: number
-  progressMessage: string
-  tool: string | null
-  userLogs: LogEntry[]
-  technicalLogs: LogEntry[]
-  progressError: string | null
-}
+import RagWolfekProgress from '@/components/cells/RagWolfekProgress'
+import type { PlanFooterProps } from '@/types/lectureTypes'
 
 export default function PlanFooter({
   summary,
@@ -25,13 +9,6 @@ export default function PlanFooter({
   lectureGenerated,
   onGenerate,
   onSaveScript,
-  stage,
-  progress,
-  progressMessage,
-  tool,
-  userLogs,
-  technicalLogs,
-  progressError,
 }: PlanFooterProps) {
   return (
     <div className="border-t border-zinc-200 bg-zinc-50/50 px-5 py-4 space-y-3 shrink-0">
@@ -78,17 +55,7 @@ export default function PlanFooter({
           )}
         </div>
 
-        {isPending && (
-          <RagProgressIndicator
-            stage={stage}
-            progress={progress}
-            message={progressMessage}
-            tool={tool}
-            userLogs={userLogs}
-            technicalLogs={technicalLogs}
-            error={progressError}
-          />
-        )}
+        {isPending && <RagWolfekProgress />}
       </div>
     </div>
   )

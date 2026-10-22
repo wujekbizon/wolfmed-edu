@@ -8,3 +8,11 @@ export const WOLFEK_SMALL_TALK = [
   'Mała porcja wiedzy?',
   'Bez pośpiechu!',
 ] as const
+
+export const WOLFEK_PENDING_MESSAGES = [
+  'Wolfek myśli…',
+  'Jeszcze chwilka…',
+  'Pracuję nad odpowiedzią…',
+] as const
+
+export const WOLFEK_PENDING_MESSAGE_INTERVAL_MS = 4000

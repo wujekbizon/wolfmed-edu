@@ -8,7 +8,9 @@ import { getWolfekTestFacts } from './getWolfekTestFacts'
 import { getWolfekHomeFacts } from './getWolfekHomeFacts'
 import type { WolfekContext, WolfekRoute } from '@/types/wolfekResponseTypes'
 
-export async function getWolfekAppContext(userId: string | null, route: WolfekRoute): Promise<WolfekContext> {
+export async function getWolfekAppContext(
+  userId: string | null, route: WolfekRoute, groups?: ReadonlySet<string>, requiredPaths?: ReadonlySet<string>
+): Promise<WolfekContext> {
   const context = await getKierunkiWolfekContext(userId)
   const owned = context.visitor.ownedCourses
   if (route !== 'kierunki' && (!userId || !owned.length)) throw new WolfekQuestionError('Brak dostępu do panelu.')
@@ -25,7 +27,8 @@ export async function getWolfekAppContext(userId: string | null, route: WolfekRo
   }
   if (route === 'kierunki') return { facts: { ...facts, ...getWolfekCatalogFacts(context) }, destinations: getWolfekDestinations() }
   const [tests, home] = await Promise.allSettled([
-    getWolfekTestFacts(userId!), route === 'panel.home' ? getWolfekHomeFacts(userId!, Boolean(opiekun)) : Promise.resolve({}),
+    !groups || groups.has('results') ? getWolfekTestFacts(userId!, requiredPaths) : Promise.resolve({}),
+    route === 'panel.home' ? getWolfekHomeFacts(userId!, Boolean(opiekun), groups) : Promise.resolve({}),
   ])
   return { facts: { ...facts, results: tests.status === 'fulfilled' ? tests.value : {},
     ...(home.status === 'fulfilled' ? home.value : {}), selectedTest: { identified: false } },

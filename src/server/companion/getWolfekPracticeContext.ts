@@ -2,9 +2,12 @@ import 'server-only'
 import { getIsPremium } from '@/server/premium'
 import { loadWolfekPracticeCard } from './loadWolfekPracticeCard'
 import type { WolfekContext, WolfekPracticeReference } from '@/types/wolfekResponseTypes'
+import type { WolfekPracticeCardReader } from '@/types/wolfekPracticeServerTypes'
 
-export async function getWolfekPracticeContext(userId: string, ref: WolfekPracticeReference): Promise<WolfekContext> {
-  const [base, premium] = await Promise.all([loadWolfekPracticeCard(userId, ref), getIsPremium()])
+export async function getWolfekPracticeContext(
+  userId: string, ref: WolfekPracticeReference, readCard?: WolfekPracticeCardReader
+): Promise<WolfekContext> {
+  const [base, premium] = await Promise.all([readCard ? readCard(ref) : loadWolfekPracticeCard(userId, ref), getIsPremium()])
   const last = base.item.attempts.at(-1)
   const answerVisible = base.item.revealed || last?.correct === true
   return {

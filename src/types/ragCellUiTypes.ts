@@ -4,7 +4,6 @@ import type { SourceRef } from './retrievalTypes'
 import type { RagMessage } from './ragCellTypes'
 import type { RagCellInput } from '@/hooks/useRagCellInput'
 import type { CommandSelection } from '@/hooks/useCommandSelection'
-import type { UseRagProgressReturn } from './progressTypes'
 
 export type RagCellProps = { cell: { id: string; content: string } }
 export type RagComposerProps = {
@@ -24,5 +23,4 @@ export type RagConversationProps = {
 }
 export type RagWolfekResponseProps = { answer: string; sources?: SourceRef[] | undefined }
 export type RagWolfekHeaderProps = { pending: boolean }
-export type RagWolfekProgressProps = { progress: UseRagProgressReturn }
 export type RagCopyButtonProps = { text: string }

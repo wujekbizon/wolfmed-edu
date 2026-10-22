@@ -1,5 +1,7 @@
 # Wolfek admin workspace
 
+Collection is disabled by `WOLFEK_ADMIN_LOGGING_ENABLED = false` in `src/constants/wolfekAdmin.ts`; it is not an environment variable. Changing the constant requires rebuilding/deploying; no runtime admin switch exists yet. Historical reports remain available. Future switch work is tracked in [Admin feature plan](../admin-feature-plan.md).
+
 The accepted plan is one navigation entry, `/admin/wolfek`, containing four layouts: Insights, Audit logs, Errors and Usage. Insights counts valid, permitted typed questions including cached results, and predefined topic-button clicks. It shows daily activity, popular topics, route breakdown and searchable question examples. Practice contributes provider usage, not ordinary question-answering activity.
 
 Audit logs paginate provider calls and fetch one full payload only when expanded. Errors selects non-success provider statuses; low-confidence and `other` decisions are review items, not transport errors. Usage reports input/output tokens from the provider's `usage` fields, daily trends, model breakdown and all recorded totals. Missing or malformed usage remains unknown. These are application-observed totals, not TypeSafe account billing; older unlogged calls cannot be reconstructed.
