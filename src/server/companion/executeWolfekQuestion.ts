@@ -10,6 +10,7 @@ import { recordWolfekInteraction } from '@/server/jev/recordWolfekInteraction'
 import { loadWolfekResponsePack } from './loadWolfekResponsePack'
 import { getWolfekAppContext } from './getWolfekAppContext'
 import { getWolfekPracticeContext } from './getWolfekPracticeContext'
+import { createWolfekPracticeCardReader } from './createWolfekPracticeCardReader'
 import { authorizeWolfekQuestion } from './authorizeWolfekQuestion'
 import { beginWolfekSubmission } from './beginWolfekSubmission'
 import { validateWolfekReplay } from './validateWolfekReplay'
@@ -40,9 +41,10 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
     if (!await reserveCompanionJevCall(identity, input.submissionId)) {
       throw new WolfekQuestionError('Zbyt wiele pytań. Spróbuj ponownie za chwilę.')
     }
+    let readCard = input.practice ? createWolfekPracticeCardReader(userId!) : undefined
     const [rawPack, context] = await Promise.all([
       loadWolfekResponsePack(input.route), input.practice
-        ? getWolfekPracticeContext(userId!, input.practice) : getWolfekAppContext(userId, input.route),
+        ? getWolfekPracticeContext(userId!, input.practice, readCard) : getWolfekAppContext(userId, input.route),
     ])
     const pack = input.route === 'kierunki' ? expandWolfekCourseResponses(rawPack) : rawPack
     const built = buildWolfekResponseRequest(input, pack, context)
@@ -53,7 +55,8 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
     selected = decision.responseId
     await authorizeWolfekQuestion(userId, input)
     if (input.practice) {
-      const fresh = buildWolfekResponseRequest(input, pack, await getWolfekPracticeContext(userId!, input.practice))
+      readCard = createWolfekPracticeCardReader(userId!)
+      const fresh = buildWolfekResponseRequest(input, pack, await getWolfekPracticeContext(userId!, input.practice, readCard))
       if (JSON.stringify(fresh.answers[selected]) !== JSON.stringify(built.answers[selected])) {
         throw new WolfekQuestionError('Dostęp lub propozycja pomocy uległy zmianie. Zapytaj ponownie.')
       }
@@ -62,7 +65,7 @@ export async function executeWolfekQuestion(userId: string | null, input: Wolfek
     if (input.practice && answer?.action?.type === 'show_hint') {
       result.session = await deliverWolfekPracticeHint(userId!, input.practice, input.submissionId)
     }
-    if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
+    if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result, readCard)
   } catch (error) {
     result = { ...toFormState('ERROR', error instanceof WolfekQuestionError || error instanceof PracticeConflictError
       ? error.message : 'Nie mogę teraz pobrać danych. Spróbuj później.'),

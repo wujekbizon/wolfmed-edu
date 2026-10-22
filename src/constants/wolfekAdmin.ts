@@ -1,3 +1,4 @@
+export const WOLFEK_ADMIN_LOGGING_ENABLED = false
 export const WOLFEK_REPORT_TIME_ZONE = 'Europe/Warsaw'
 export const WOLFEK_ADMIN_PAGE_SIZE = 25
 export const WOLFEK_EXPORT_LIMIT = 5000

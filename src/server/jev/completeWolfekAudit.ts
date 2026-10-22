@@ -3,10 +3,12 @@ import { sql } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { jevAuditLogs } from '@/server/db/schema'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
+import { WOLFEK_ADMIN_LOGGING_ENABLED } from '@/constants/wolfekAdmin'
 
 export async function completeWolfekAudit(
   input: WolfekQuestionRequest, userId: string | null, result: WolfekQuestionState, elapsedMs: number,
 ) {
+  if (!WOLFEK_ADMIN_LOGGING_ENABLED) return
   try {
     const delivery = JSON.stringify({ origin: input.origin, preparedQuestionId: input.preparedQuestionId,
       submissionId: input.submissionId, status: result.status, answer: result.answer,

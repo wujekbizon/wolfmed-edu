@@ -9,16 +9,15 @@ import RagWolfekProgress from './RagWolfekProgress'
 
 export default function RagCellForm({ cell }: RagCellProps) {
   const form = useRagCellForm({ cell })
-  const busy = form.isPending || form.progress.stage !== 'idle'
 
   return (
     <div className='flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-rose-100 bg-linear-to-br from-zinc-50 via-[#fcfafb] to-zinc-50'>
-      <RagWolfekHeader pending={busy} />
+      <RagWolfekHeader pending={form.isPending} />
       <div ref={form.conversationRef} className='min-h-0 flex-1 overflow-y-auto overscroll-contain p-3 scrollbar-thin scrollbar-webkit sm:p-4'>
         <div ref={form.conversationContentRef} className='mx-auto min-h-full w-full max-w-4xl space-y-4'>
           <RagConversation messages={form.conversation.messages}
             pendingQuestion={form.conversation.pendingQuestion}
-            progress={busy && <RagWolfekProgress progress={form.progress} />} />
+            progress={form.isPending && <RagWolfekProgress />} />
         </div>
       </div>
       <RagComposer cellId={cell.id}

@@ -1,0 +1,4 @@
+    await redis.zremrangebyscore(key, 0, windowStart)
+    const count = await redis.zcard(key)
+    await redis.zadd(key, { score: now, member: `${now}-${Math.random()}` })
+    await redis.expire(key, Math.ceil(config.interval / 1000))

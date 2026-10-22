@@ -14,6 +14,21 @@ Do not rely on a summary or copy of `CLAUDE.md`. Read the source file itself so 
 
 Follow higher-priority system, developer, and direct user instructions if they conflict with `CLAUDE.md`.
 
+## Test-driven development
+
+- For new or changed behavior, use TDD within Greg's approved scope: write a behavior test first, confirm it fails for the expected reason, implement the smallest change that passes, then refactor while keeping tests passing.
+- Keep approved reproduction tests as regression coverage once they demonstrate an audit issue or an optimization's benefit. Do not add tests for every ordinary bug or make unrelated coverage changes automatically.
+
+### Audit findings: propose reproduction before fixes
+
+This workflow applies to suspected edge cases, performance/cost problems and optimization opportunities found during audits. It is not a requirement to test every ordinary bug.
+
+1. First explain the audit hypothesis and propose the smallest useful reproduction or integration test. State expected behavior and measurable work/cost before/after the proposed change, real versus mocked services, costs, data changes and cleanup.
+2. Wait for Greg's explicit approval before writing or running that test. Finding an issue is not authorization to create tests or change application code.
+3. After approval, write the test and either run it within the approved scope or give Greg the exact command to run manually. Reproduce the issue against existing behavior first. Compare an isolated candidate fix in the test harness when approved; leave application code unchanged.
+4. Report what the results prove and their limitations. For optimization findings, compare relevant work such as query counts, context volume or blocking dependencies while preserving correct answers and authorization. If the hypothesis is not demonstrated, discuss next steps with Greg instead of applying the change automatically.
+5. Apply the application fix only after Greg reviews the results and explicitly approves it. Then rerun the approved test to verify the fix and restore temporary data/settings.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

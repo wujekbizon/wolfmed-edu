@@ -5,8 +5,10 @@ import { JEV_AUDIT_RETENTION_DAYS } from '@/constants/jevAudit'
 import { needsWolfekInteractionReview } from '@/helpers/needsWolfekInteractionReview'
 import { addWolfekDailyMetric } from './addWolfekDailyMetric'
 import type { WolfekInteraction } from '@/types/wolfekMetricTypes'
+import { WOLFEK_ADMIN_LOGGING_ENABLED } from '@/constants/wolfekAdmin'
 
 export async function recordWolfekInteraction(record: WolfekInteraction): Promise<void> {
+  if (!WOLFEK_ADMIN_LOGGING_ENABLED) return
   const createdAt = new Date()
   const needsReview = needsWolfekInteractionReview(record)
   try {

@@ -1,40 +1,16 @@
 "use client"
 
-import { useState, useTransition } from 'react'
-import { showToast } from '@/hooks/useToastMessage'
-import type { Cell, LearningPlan, MediaCellContent } from '@/types/cellTypes'
-import { useRagProgress } from '@/hooks/useRagProgress'
-import { generateLectureAction } from '@/actions/rag-actions'
-import { useCellsStore } from '@/store/useCellsStore'
+import { useState } from 'react'
+import type { Cell, LearningPlan } from '@/types/cellTypes'
+import { useLectureGeneration } from '@/hooks/useLectureGeneration'
 import PlanHeader from './PlanHeader'
 import PlanPrerequisites from './PlanPrerequisites'
 import PlanStepItem from './PlanStepItem'
 import PlanFooter from './PlanFooter'
 
-interface GeneratedLecture {
-  audioUrl: string
-  title: string
-  transcript: string
-  lectureId: string
-}
-
 export default function PlanCellPreview({ cell }: { cell: Cell }) {
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set([0]))
-  const [isPending, startTransition] = useTransition()
-  const [generatedLecture, setGeneratedLecture] = useState<GeneratedLecture | null>(null)
-  const insertCellAfterWithContent = useCellsStore(s => s.insertCellAfterWithContent)
-
-  const {
-    stage,
-    progress,
-    message: progressMessage,
-    tool,
-    userLogs,
-    technicalLogs,
-    error: progressError,
-    startListening,
-    reset: resetProgress,
-  } = useRagProgress()
+  const lecture = useLectureGeneration(cell)
 
   let plan: LearningPlan | null = null
   try {
@@ -55,40 +31,6 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
       }
       return next
     })
-  }
-
-  const handleGenerate = () => {
-    // The id the stream was opened for. Generating a second lecture with the
-    // previous run's id gets a 204 from the already-completed job.
-    const runJobId = startListening()
-    startTransition(async () => {
-      const result = await generateLectureAction(cell.content, runJobId)
-      resetProgress()
-
-      if (result.status === 'SUCCESS') {
-        const { audioUrl, title, transcript, lectureId } = result.values as unknown as GeneratedLecture
-
-        const mediaContent: MediaCellContent = {
-          sourceType: 'audio',
-          title: `Wykład: ${title}`,
-          url: audioUrl,
-          lectureId,
-          transcript,
-        }
-
-        insertCellAfterWithContent(cell.id, 'media', JSON.stringify(mediaContent))
-        setGeneratedLecture({ audioUrl, title, transcript, lectureId })
-        showToast('SUCCESS', 'Wykład gotowy!')
-      } else {
-        showToast('ERROR', result.message || 'Nie udało się wygenerować wykładu.')
-      }
-    })
-  }
-
-  const handleSaveScript = () => {
-    if (!generatedLecture) return
-    insertCellAfterWithContent(cell.id, 'note', generatedLecture.transcript)
-    showToast('SUCCESS', 'Skrypt zapisany jako notatka.')
   }
 
   return (
@@ -118,17 +60,10 @@ export default function PlanCellPreview({ cell }: { cell: Cell }) {
         <PlanFooter
           summary={plan.summary}
           examRelevance={plan.examRelevance}
-          isPending={isPending}
-          lectureGenerated={generatedLecture !== null}
-          onGenerate={handleGenerate}
-          onSaveScript={generatedLecture ? handleSaveScript : undefined}
-          stage={stage}
-          progress={progress}
-          progressMessage={progressMessage}
-          tool={tool}
-          userLogs={userLogs}
-          technicalLogs={technicalLogs}
-          progressError={progressError}
+          isPending={lecture.isPending}
+          lectureGenerated={lecture.generatedLecture !== null}
+          onGenerate={lecture.generate}
+          onSaveScript={lecture.generatedLecture ? lecture.saveScript : undefined}
         />
       </div>
     </>

@@ -31,9 +31,7 @@ import { getNoteById, getAllUserNotes, getMaterialsByUser, getMaterialById } fro
 import type { Resource } from '@/types/resourceTypes'
 import { TOOL_DEFINITIONS } from '@/server/tools/definitions'
 import { TOOL_COMMANDS, TOOL_COMMAND_NAMES } from '@/constants/toolCommands'
-import { createJob, emitProgress, logUser, logTechnical, completeJob, errorJob } from '@/server/progress-store'
-import type { ProgressStage } from '@/types/progressTypes'
-import { PROGRESS_DELAY, TOOL_LABELS_ACCUSATIVE, TOOL_LABELS_GENITIVE } from '@/constants/progress'
+import { TOOL_LABELS_ACCUSATIVE } from '@/constants/toolLabels'
 import { saveLectureInternal } from '@/actions/lectures'
 import { getLectureByHash } from '@/server/queries'
 import { revalidatePath } from 'next/cache'
@@ -50,21 +48,6 @@ import { RAG_RECENT_CONTEXT_SERIALIZED_LENGTH } from '@/constants/ragCell'
 import { combineModelTokenUsage } from '@/helpers/combineModelTokenUsage'
 import { answerPracticeQuestion } from '@/server/learning/answerPracticeQuestion'
 import type { PracticeReference } from '@/types/learningPracticeTypes'
-
-async function progressStep(
-  jobId: string | null,
-  stage: ProgressStage,
-  percent: number,
-  userMessage: string,
-  technicalCategory: string,
-  technicalMessage: string
-): Promise<void> {
-  if (!jobId) return
-  await emitProgress(jobId, stage, percent)
-  await logUser(jobId, userMessage)
-  await logTechnical(jobId, technicalCategory, technicalMessage)
-  await new Promise(resolve => setTimeout(resolve, PROGRESS_DELAY))
-}
 
 async function resolveDisplayNameToUri(displayName: string, userId: string): Promise<string | null> {
   try {
@@ -162,26 +145,18 @@ export async function askRagQuestion(
   formState: FormState,
   formData: FormData
 ): Promise<FormState> {
-  const jobId = formData.get('jobId') as string | null
-
-  if (jobId) {
-    await createJob(jobId)
-  }
-
   try {
     const { userId } = await auth()
     if (!userId) throw new Error("Unauthorized")
 
     const isPremium = await checkPremiumAccessAction()
     if (!isPremium) {
-      if (jobId) await errorJob(jobId, 'Premium access required')
       return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
     }
 
     const rateLimit = await checkRateLimit(userId, 'rag:query')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      if (jobId) await errorJob(jobId, 'Rate limit exceeded')
       return toFormState(
         'ERROR',
         `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`
@@ -204,12 +179,6 @@ export async function askRagQuestion(
         ? safeJsonParse<TutorContextMessage[]>(recentMessagesField, []) ?? []
         : []
 
-    await progressStep(
-      jobId, 'parsing', 10,
-      'Analizuję zapytanie...',
-      'PARSE', `Input question: "${question.slice(0, 50)}${question.length > 50 ? '...' : ''}"`
-    )
-
     const validationResult = RagQuerySchema.safeParse({
       question,
       ...(practiceField !== null ? { practiceContext } : { cellId }),
@@ -220,14 +189,12 @@ export async function askRagQuestion(
     })
 
     if (!validationResult.success) {
-      if (jobId) await errorJob(jobId, 'Nieprawidłowe zapytanie', `Validation error: ${validationResult.error.message}`)
       return fromErrorToFormState(validationResult.error)
     }
 
     if (validationResult.data.practiceContext) {
       const response = await answerPracticeQuestion(userId, validationResult.data.question,
         validationResult.data.practiceContext, validationResult.data.recentMessages ?? [])
-      if (jobId) await completeJob(jobId)
       return response
     }
 
@@ -261,31 +228,9 @@ export async function askRagQuestion(
     // where the model may still call a tool with arguments it invented.
     if (unknownTools.length > 0 && tools.length === 0) {
       const available = TOOL_COMMAND_NAMES.map((name) => `/${name}`).join(', ')
-      if (jobId) await errorJob(jobId, 'Nieznane polecenie', `Unknown command: /${unknownTools[0]}`)
       return toFormState(
         'ERROR',
         `Nieznane polecenie /${unknownTools[0]}. Dostępne polecenia: ${available}`
-      )
-    }
-
-    if (tools.length > 0 && tools[0]) {
-      const toolName = tools[0]
-      await progressStep(
-        jobId, 'parsing', 15,
-        `Wykryto polecenie: /${toolName}`,
-        'PARSE', `Found tool command: ${toolName} -> will use ${toolName}_tool`
-      )
-      await progressStep(
-        jobId, 'parsing', 20,
-        `Przygotowuję ${TOOL_LABELS_ACCUSATIVE[toolName] || toolName}...`,
-        'PARSE', `Preparing to execute ${toolName}_tool`
-      )
-    }
-    if (resources.length > 0) {
-      await progressStep(
-        jobId, 'parsing', 25,
-        `Wykryto ${resources.length} zasób(y) do pobrania`,
-        'PARSE', `Found @resources: ${resources.join(', ')}`
       )
     }
 
@@ -296,11 +241,6 @@ export async function askRagQuestion(
     const attachmentSourceIds: string[] = []
 
     if (resources.length > 0) {
-      await progressStep(
-        jobId, 'resolving', 30,
-        'Rozwiązuję referencje zasobów...',
-        'RESOLVE', `Resolving ${resources.length} resource references`
-      )
       try {
         const resolvedUris = await Promise.all(
           resources.map(async (displayName) => {
@@ -316,11 +256,6 @@ export async function askRagQuestion(
         )
 
         if (validResources.length > 0) {
-          await progressStep(
-            jobId, 'fetching', 40,
-            `Pobieram: ${validResources.map(r => r.displayName).join(', ')}`,
-            'FETCH', `Fetching ${validResources.length} resources: ${validResources.map(r => r.uri).join(', ')}`
-          )
           const resourceResults = await Promise.all(
             validResources.map(async ({ uri }) => fetchResourceContent(uri, userId))
           )
@@ -359,19 +294,9 @@ export async function askRagQuestion(
         return toFormState('ERROR', `Unknown tool: ${toolName}`)
       }
 
-      if (jobId) {
-        await emitProgress(jobId, 'calling_tool', 50, undefined, { tool: toolDefinition.name })
-      }
-      await progressStep(
-        jobId, 'calling_tool', 50,
-        `Rozpoczynam generowanie ${TOOL_LABELS_GENITIVE[toolDefinition.name] || 'zawartości'}...`,
-        'TOOL', `Preparing to call ${toolDefinition.name}`
-      )
-
       // Handle empty question - need either a topic or resource context
       const hasUserResource = !!additionalContext || pdfFiles.length > 0
       if (!cleanQuestion.trim() && !hasUserResource) {
-        if (jobId) await errorJob(jobId, 'Brak tematu lub zasobu', `Missing topic or resource for tool: ${toolName}`)
         return toFormState('ERROR', `Podaj temat lub użyj @zasobu. Przykład: "/${toolName} fizjologia serca" lub "@MójDokument /${toolName}"`)
       }
 
@@ -392,11 +317,6 @@ export async function askRagQuestion(
       // Skip entirely when the user attached their own @resource/PDF — that is
       // the primary source, so the extra grounded RAG round-trip is pure waste.
       if (!hasUserResource) {
-        await progressStep(
-          jobId, 'searching', 60,
-          'Przeszukuję bazę wiedzy...',
-          'RAG', `Query: "${effectiveQuestion.slice(0, 50)}..."`
-        )
         // Raw chunks, not a generated summary of them: one Flash call cheaper and
         // the tool sees the source wording instead of a paraphrase.
         //
@@ -411,49 +331,24 @@ export async function askRagQuestion(
         })
         if (corpus.chunks.length > 0) {
           toolInputContent += `=== DODATKOWE INFORMACJE (z bazy wiedzy) ===\n${formatContextChunks(corpus.chunks)}\n\n`
-          const topic = effectiveQuestion.split(' ').slice(0, 4).join(' ')
-          await progressStep(
-            jobId, 'searching', 65,
-            `Znaleziono informacje na temat: ${topic}`,
-            'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
-          )
         }
-      } else {
-        await progressStep(
-          jobId, 'searching', 60,
-          'Używam wybranego źródła...',
-          'RAG', 'Skipping knowledge base — user provided a primary source'
-        )
       }
 
       // The dispatch call forces a function call, so a source-backed tool handed an
       // empty prompt invents its own subject instead of declining. Stop before that.
       if (command?.requiresSource && !toolInputContent.trim() && pdfFiles.length === 0) {
-        if (jobId) await errorJob(jobId, 'Brak materiałów', `No grounded content for ${toolDefinition.name}`)
         return toFormState(
           'ERROR',
           `Nie znalazłem w bazie wiedzy materiałów na temat "${effectiveQuestion}". Doprecyzuj temat lub dołącz własne źródło przez @zasób.`
         )
       }
 
-      await progressStep(
-        jobId, 'executing', 75,
-        'Generuję zawartość z AI...',
-        'LLM', `Sending request to Gemini (input: ${toolInputContent.length} chars)`
-      )
       const toolResult = await executeToolWithContent(toolDefinition.name, toolDefinition, {
         request: effectiveQuestion,
         content: toolInputContent,
         pdfFiles,
         ...(countOverride ? { overrideArgs: countOverride } : {}),
       })
-
-      await progressStep(
-        jobId, 'finalizing', 95,
-        'Generowanie zakończone!',
-        'LLM', `Response received, tool execution complete`
-      )
-      if (jobId) await completeJob(jobId)
 
       // The answer is payload for the cell, not toast text: FormState.message is
       // what useToastMessage shows, so it stays a short human status.
@@ -486,12 +381,6 @@ export async function askRagQuestion(
     let routingUsage: ModelTokenUsage | undefined
 
     if (!additionalContext && pdfFiles.length === 0) {
-      await progressStep(
-        jobId, 'parsing', 35,
-        'Rozpoznaję rodzaj pytania...',
-        'MEMORY', 'Classifying question intent without changing the RAG query'
-      )
-
       const intentResult = await classifyTutorIntent(cleanQuestion, recentTutorMessages)
       routingUsage = intentResult.status === 'classified' ? intentResult.usage : undefined
       const tutorRoute = resolveTutorRoute(intentResult)
@@ -508,7 +397,6 @@ export async function askRagQuestion(
             })
           )
         }
-        if (jobId) await completeJob(jobId)
         return {
           ...toFormState('SUCCESS', 'Potrzebne doprecyzowanie'),
           values: { answer: AMBIGUOUS_TUTOR_INTENT_MESSAGE, sources: [] },
@@ -516,12 +404,6 @@ export async function askRagQuestion(
       }
 
       if (tutorRoute === 'memory') {
-        await progressStep(
-          jobId, 'searching', 60,
-          'Sprawdzam Twój postęp...',
-          'MEMORY', 'Self-state question — answering from memory, skipping corpus'
-        )
-
         let selfState = await buildSelfStateContext(userId, cleanQuestion)
         const reconciliation = await reconcileStudentMemory(
           userId,
@@ -554,7 +436,6 @@ export async function askRagQuestion(
               })
             )
           }
-          if (jobId) await completeJob(jobId)
           return {
             ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
             values: {
@@ -580,19 +461,12 @@ export async function askRagQuestion(
             })
           )
         }
-        if (jobId) await completeJob(jobId)
         return {
           ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
           values: { answer: memAnswer.answer, sources: [] },
         }
       }
     }
-
-    await progressStep(
-      jobId, 'searching', 50,
-      'Przeszukuję bazę wiedzy...',
-      'RAG', `Query: "${cleanQuestion.slice(0, 50)}..."`
-    )
 
     // Path A memory: active policies + preferences in the static (cache-friendly)
     // prefix. Path B: retrieved facts + recent episodes in the volatile tail.
@@ -638,7 +512,6 @@ export async function askRagQuestion(
           })
         )
       }
-      if (jobId) await completeJob(jobId)
       return {
         ...toFormState('SUCCESS', 'Brak materiałów'),
         values: { answer, sources: [] },
@@ -663,19 +536,6 @@ export async function askRagQuestion(
       )
     }
 
-    const topic = cleanQuestion.split(' ').slice(0, 4).join(' ')
-    await progressStep(
-      jobId, 'executing', 80,
-      `Znaleziono odpowiedź na temat: ${topic}`,
-      'RAG', `Found answer (${result.answer?.length || 0} chars), sources: ${result.sources?.length ? result.sources.join(', ') : 'none — retrieval returned nothing'}`
-    )
-    await progressStep(
-      jobId, 'finalizing', 95,
-      'Przetwarzanie zakończone!',
-      'RAG', `Query completed successfully`
-    )
-    if (jobId) await completeJob(jobId)
-
     return {
       ...toFormState('SUCCESS', 'Odpowiedź gotowa'),
       values: {
@@ -685,34 +545,23 @@ export async function askRagQuestion(
     }
   } catch (error) {
     console.error('Error querying RAG:', error)
-    if (jobId) {
-      const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
-      await errorJob(jobId, 'Coś poszło nie tak. Spróbuj ponownie.', technicalMsg)
-    }
     return fromErrorToFormState(error)
   }
 }
 
-export async function generateLectureAction(
-  planContent: string,
-  jobId: string
-): Promise<FormState> {
-  await createJob(jobId)
-
+export async function generateLectureAction(planContent: string): Promise<FormState> {
   try {
     const { userId } = await auth()
     if (!userId) throw new Error('Unauthorized')
 
     const isPremium = await checkPremiumAccessAction()
     if (!isPremium) {
-      await errorJob(jobId, 'Premium access required')
       return toFormState('ERROR', 'Funkcja dostępna tylko dla użytkowników premium.')
     }
 
     const rateLimit = await checkRateLimit(userId, 'lecture:generate')
     if (!rateLimit.success) {
       const resetMinutes = Math.ceil((rateLimit.reset - Date.now()) / 60000)
-      await errorJob(jobId, 'Rate limit exceeded')
       return toFormState('ERROR', `Zbyt wiele zapytań. Spróbuj ponownie za ${resetMinutes} minut.`)
     }
 
@@ -725,7 +574,6 @@ export async function generateLectureAction(
     const contentHash = crypto.createHash('sha256').update(planContent).digest('hex')
     const existing = await getLectureByHash(userId, contentHash)
     if (existing) {
-      await completeJob(jobId)
       revalidatePath('/panel/nauka')
       return {
         ...toFormState('SUCCESS', 'Wykład gotowy!'),
@@ -738,39 +586,16 @@ export async function generateLectureAction(
       }
     }
 
-    await progressStep(
-      jobId, 'searching', 30,
-      'Przeszukuję bazę wiedzy...',
-      'RAG', 'Querying knowledge base for lecture content'
-    )
-
     // canonical_only: a lecture is study material, so it is built on the
     // curriculum alone.
     const corpus = await retrieveContext({ userId, query: topic, mode: 'canonical_only' })
     let enrichedContent = planContent
     if (corpus.chunks.length > 0) {
       enrichedContent = `${planContent}\n\n=== DODATKOWE INFORMACJE Z BAZY WIEDZY ===\n${formatContextChunks(corpus.chunks)}`
-      await progressStep(
-        jobId, 'searching', 55,
-        `Znaleziono materiały na temat: ${topic}`,
-        'RAG', `Retrieved ${corpus.chunks.length} chunks from: ${corpus.sources.join(', ') || 'unnamed sources'}`
-      )
     }
-
-    await progressStep(
-      jobId, 'executing', 70,
-      'Generuję skrypt wykładu...',
-      'LLM', 'Generating spoken lecture script with Gemini'
-    )
 
     const toolResult = await executeToolLocally('wyklad_tool', { content: enrichedContent })
     const script = toolResult.content
-
-    await progressStep(
-      jobId, 'finalizing', 85,
-      'Syntezuję głos...',
-      'TTS', `Converting script (${script.length} chars) to audio`
-    )
 
     const apiKey = process.env.GOOGLE_TTS_API_KEY
     if (!apiKey) throw new Error('GOOGLE_TTS_API_KEY is not configured')
@@ -816,12 +641,6 @@ export async function generateLectureAction(
 
     const audioBuffer = Buffer.concat(audioBuffers)
 
-    await progressStep(
-      jobId, 'finalizing', 90,
-      'Zapisuję plik audio...',
-      'UPLOAD', `Uploading audio (${audioBuffer.length} bytes) to storage`
-    )
-
     const lecture = await saveLectureInternal({
       userId,
       title: topic,
@@ -830,12 +649,6 @@ export async function generateLectureAction(
       scriptText: script,
     })
 
-    await progressStep(
-      jobId, 'finalizing', 95,
-      'Wykład gotowy!',
-      'UPLOAD', `Lecture saved with id: ${lecture.id}`
-    )
-    await completeJob(jobId)
     revalidatePath('/panel/nauka')
 
     return {
@@ -849,8 +662,6 @@ export async function generateLectureAction(
     }
   } catch (error) {
     console.error('Error generating lecture:', error)
-    const technicalMsg = error instanceof Error ? `${error.name}: ${error.message}` : 'Unknown error'
-    await errorJob(jobId, 'Nie udało się wygenerować wykładu.', technicalMsg)
     return fromErrorToFormState(error)
   }
 }

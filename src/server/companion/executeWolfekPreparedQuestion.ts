@@ -9,8 +9,9 @@ import { authorizeWolfekQuestion } from './authorizeWolfekQuestion'
 import { getKierunkiWolfekRateLimitIdentity } from './getKierunkiWolfekRateLimitIdentity'
 import { beginWolfekSubmission } from './beginWolfekSubmission'
 import { loadWolfekResponsePack } from './loadWolfekResponsePack'
-import { getWolfekAppContext } from './getWolfekAppContext'
+import { getWolfekPreparedContext } from './getWolfekPreparedContext'
 import { getWolfekPracticeContext } from './getWolfekPracticeContext'
+import { createWolfekPracticeCardReader } from './createWolfekPracticeCardReader'
 import { validateWolfekReplay } from './validateWolfekReplay'
 import { deliverWolfekLearningHelp } from './deliverWolfekLearningHelp'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
@@ -31,12 +32,12 @@ export async function executeWolfekPreparedQuestion(userId: string | null, input
   }
   let result: WolfekQuestionState
   try {
-    const [pack, context] = await Promise.all([
-      loadWolfekResponsePack(input.route), input.practice
-        ? getWolfekPracticeContext(userId!, input.practice) : getWolfekAppContext(userId, input.route),
-    ])
+    const pack = await loadWolfekResponsePack(input.route)
+    const readCard = input.practice ? createWolfekPracticeCardReader(userId!) : undefined
+    const context = input.practice ? await getWolfekPracticeContext(userId!, input.practice, readCard)
+      : await getWolfekPreparedContext(userId, input, pack)
     result = { ...toFormState('SUCCESS', ''), answer: getWolfekPreparedAnswer(input, pack, context), confidence: null }
-    if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result)
+    if (input.practice) result = await deliverWolfekLearningHelp(userId!, input, result, readCard)
   } catch (error) {
     result = { ...toFormState('ERROR', error instanceof WolfekQuestionError || error instanceof PracticeConflictError
       ? error.message : 'Nie mogę teraz przygotować odpowiedzi.'), answer: null, confidence: null,

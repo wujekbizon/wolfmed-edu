@@ -11,8 +11,11 @@ import { recordWolfekLearningAssistance } from './recordWolfekLearningAssistance
 import { authorizeWolfekQuestion } from './authorizeWolfekQuestion'
 import type { WolfekQuestionRequest, WolfekQuestionState } from '@/types/wolfekResponseTypes'
 import type { WolfekLearningMode } from '@/types/wolfekLearningTypes'
+import type { WolfekPracticeCardReader } from '@/types/wolfekPracticeServerTypes'
 
-export async function deliverWolfekLearningHelp(userId: string, input: WolfekQuestionRequest, state: WolfekQuestionState) {
+export async function deliverWolfekLearningHelp(
+  userId: string, input: WolfekQuestionRequest, state: WolfekQuestionState, readCard?: WolfekPracticeCardReader
+) {
   const action = state.answer?.action?.type
   const confirmation = action === 'confirm_reveal_then_tutor' && input.preparedQuestionId === 'reveal_tutor'
   const modes: Record<string, WolfekLearningMode> = { rag_hint: 'hint', rag_compare: 'compare', rag_explain: 'explain' }
@@ -32,13 +35,15 @@ export async function deliverWolfekLearningHelp(userId: string, input: WolfekQue
       }
       ref = { ...ref, sessionId: session.id, version: session.version }
     }
-    const generated = await generateWolfekLearningHelp(userId, { ...input, practice: ref }, mode)
+    const base = await (readCard ? readCard(ref) : loadWolfekPracticeCard(userId, ref))
+    const generated = await generateWolfekLearningHelp(userId, { ...input, practice: ref }, mode, base)
     await authorizeWolfekQuestion(userId, input)
     await loadWolfekPracticeCard(userId, ref)
-    if (generated.grounded) session = await recordWolfekLearningAssistance(userId, ref, input.submissionId, mode)
-    return { ...state, ...(session ? { session } : {}), timestamp: Date.now(), sources: generated.sources,
-      answer: { ...state.answer, text: generated.answer, action: null },
-      values: { ...state.values, learningGenerated: true, learningGrounded: generated.grounded,
+    if (generated.help.grounded) session = await recordWolfekLearningAssistance(userId, ref, input.submissionId, mode)
+    await generated.cache?.()
+    return { ...state, ...(session ? { session } : {}), timestamp: Date.now(), sources: generated.help.sources,
+      answer: { ...state.answer, text: generated.help.answer, action: null },
+      values: { ...state.values, learningGenerated: true, learningGrounded: generated.help.grounded,
         learningMode: mode, userQuestion: input.question } }
   } catch (error) {
     if (error instanceof PracticeConflictError) session = error.session

@@ -20,6 +20,7 @@ export const services = {
   async loadWolfekResponsePack(route: WolfekRoute) { return packs[route] },
   async getWolfekAppContext() { services.contextReads++; return services.appContext },
   async getWolfekPracticeContext() { services.contextReads++; return learningContext },
+  createWolfekPracticeCardReader() { return async () => { throw new Error('Unexpected snapshot read in mocked context') } },
   async recordWolfekInteraction(record: WolfekInteraction) { services.records.push(record) },
   async reserveCompanionJevCall() { return true },
   async completeWolfekAudit() {},
