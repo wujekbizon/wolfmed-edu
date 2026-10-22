@@ -149,6 +149,110 @@ reads for pre/post-generation validation. It was RED before the approved F05 fix
 and is now GREEN. Reveal confirmation intentionally adds a read after its mutation.
 This command remains outside `pnpm test`.
 
+## Background practice-profile updates: isolated reproduction
+
+```powershell
+pnpm exec tsx tests/integration/practiceProfileUpdates.integration.ts --reproduce
+pnpm exec tsx tests/integration/practiceProfileUpdates.integration.ts
+```
+
+Runs uncoalesced `projectPracticeActivity` and `getPracticeObservations` function bodies
+through the existing `extractSource`/`loadSource` harness. Uses real Drizzle SQL
+expressions, event summarization and Warsaw day formatting. SQL execution,
+3-connection pool scheduling, advisory locks and fact/episode persistence are
+in-memory mocks. Calls the projection directly; does not run Server Actions or
+Next.js `after`. No `.env`, sockets, real DB/Redis/provider calls, charges or data
+changes. All state is process-local; running the test modifies no application files.
+
+Measured 2026-10-22, Node 26.7.0:
+
+| Scenario | Calls/transactions | History reads | Event rows returned | Fact/episode writes | Pool waits | Lock waits |
+| --- | --- | --- | --- | --- | --- | --- |
+| Single notification | 1 | 1 | 120 | 1/1 | 0 | 0 |
+| Burst, same committed history | 10 | 10 | 1,200 | 1/1 | 7 | 9 |
+| Sequential, one new event each | 10 | 10 | 1,200 | 10/10 | 0 | 0 |
+| Burst, profile already current | 10 | 10 | 1,200 | 0/0 | 7 | 9 |
+
+Burst fixture adds ten committed events before dispatching ten notifications;
+every worker sees the same newest 120 events. Sequential fixture adds one event
+before each projection. Already-current fixture seeds the profile first, then
+resets counters. In both bursts, modeled peak pool queue is 7 and peak lock queue
+is 2, with 3 open transactions. These are deterministic model counts, not measured
+Postgres waits or production latency. Event rows are returned rows, not rows
+examined by a database query plan. Write counts are mocked boundary calls, not
+SQL statement totals inside real promotion/persistence services.
+
+The existing last-event check prevents duplicate writes but occurs after history
+reads. `--reproduce` intentionally fails a hypothetical one-read burst budget
+(actual 10); this baseline entrypoint includes no coalescing optimization.
+The default run passes assertions for measured current behavior, final profile
+and episode summary fields, latest-event freshness, 120-row cap, independent
+users/categories and drained transactions. Scope checks exercise SQL parameters,
+not authentication. Existing raw practice events remain untouched.
+
+Default run, targeted ESLint and `tsc --noEmit --incremental false` passed.
+`stripTypeScriptTypes` emits Node's experimental warning. This demonstrates
+repeated reads under duplicate/overlapping notifications, not a RAM leak or
+proven Fluid-memory savings. Real query plans, locks, connection lifetimes,
+promotion history, failures/rollback, multi-instance scheduling and Vercel billing
+remain unmeasured. The approved application optimization is covered below.
+
+## Background profile coalescing: application regression
+
+```powershell
+pnpm exec tsx tests/integration/practiceProfileCoalescing.integration.ts
+```
+
+Approved implementation lives in `src/helpers/coalesceProfileProjection.ts`.
+`extractPractice.ts` creates the shared `onPracticeActivity` hook around the
+unchanged projection moved to `projectPracticeActivity.ts`. Every existing caller,
+including `after` work and reconciliation, uses that hook. Tests load the actual
+export initializer with mocked projection dependencies; baseline bypasses the
+coalescer. The old harness helper re-exports the app helper instead of maintaining
+a separate implementation.
+
+It groups pending calls by exact user/category, defers starting one event-loop
+turn to collect a burst, and shares one completion promise. Notifications arriving
+while projection is running mark it dirty and cause another full projection pass
+before completion. The entry is deleted on success, false return or rejection;
+there is no persistent result cache or discarded practice event. All callers wait
+for the same drain, so earlier callers may wait for later updates to finish.
+SQL, pool, locks and persistence mocks are the same as the baseline reproduction.
+
+Measured 2026-10-22:
+
+| Scenario | History reads / transactions, baseline → candidate | Event rows returned | Fact/episode writes |
+| --- | --- | --- | --- |
+| Single notification | 1 → 1 | 120 → 120 | 1/1 → 1/1 |
+| 10-call burst | 10 → 1 | 1,200 → 120 | 1/1 → 1/1 |
+| 10 sequential new events | 10 → 10 | 1,200 → 1,200 | 10/10 → 10/10 |
+| 10-call burst, already-current profile | 10 → 1 | 1,200 → 120 | 0/0 → 0/0 |
+| 9 events arrive during the first of 10 calls | 10 → 2 | 1,200 → 240 | 2/2 → 2/2 |
+
+Burst modeled pool waits drop 7 → 0; lock waits 9 → 0. Final fact and episode
+payloads compare deeply equal against baseline, including summary counters and
+latest event; raw events also compare unchanged. Mid-read test pauses after the
+first snapshot, commits nine events, then sends notifications before releasing
+the read. Candidate's second pass catches the latest state. Three user/category
+scopes remain independent; false/rejection propagates and a later retry runs.
+Two separate coalescers still perform two reads for the same scope (20 total
+notifications), with one fact write under the shared mocked lock.
+
+The comparison first failed at the burst budget with a pass-through candidate
+(10 reads rather than 1), then passed with coalescing. Comparison, original
+baseline regression, targeted ESLint and TypeScript checks pass.
+
+This is a single-process optimization: independent Vercel instances do not share
+the pending map. Sequential work is unchanged. Continuous notifications can
+extend the shared drain; process termination/durable retries/Next.js `after`
+integration and platform deadlines are not tested. Mocked writes verify final
+payloads, not historical promotion equivalence, real transaction rollback or
+database state. No production RAM, billing or latency savings measured.
+
+Application regression and baseline reproduction passed after application on
+2026-10-22. `pnpm test`: 379 passed. Full lint and TypeScript checks passed. No live database,
+provider call, migration or deployment was performed.
+
 ## Pool idle timeout: isolated lifecycle reproduction
 
 Current app setting: **10s** (`src/server/db/index.ts`). Latest comparison passed:
