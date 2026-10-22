@@ -149,6 +149,95 @@ reads for pre/post-generation validation. It was RED before the approved F05 fix
 and is now GREEN. Reveal confirmation intentionally adds a read after its mutation.
 This command remains outside `pnpm test`.
 
+## Pool idle timeout: isolated lifecycle reproduction
+
+Current app setting: **10s** (`src/server/db/index.ts`). Latest comparison passed:
+30s baseline 30,104.34ms; 15s candidate 15,106.08ms; 10s app 10,100.66ms;
+5s candidate 5,101.94ms. Applied 10s saves 20,003.40ms post-response retention
+(66.45% helper-lifetime reduction) in the isolated harness. Initial config check
+failed against 15s, then passed after applying 10s. Lint/syntax checks passed.
+These results do not measure production billing or live reconnection reliability.
+
+```powershell
+node tests/integration/poolIdleTimeout.integration.mjs --reproduce
+node tests/integration/poolIdleTimeout.integration.mjs
+```
+
+Uses installed `@vercel/functions/db-connections` with real timers and a mocked
+EventEmitter pool/request context. Reads the app's approved 10,000ms idle setting
+without importing app code. Compares 15,000ms, 10,000ms and 5,000ms against the
+original 30,000ms baseline; the app uses 10,000ms.
+No `.env`, DB connections, HTTP/provider calls, Vercel deployment, charges or data
+changes. Temporary Vercel environment values/context are restored in `finally`.
+The `.mjs` entrypoint runs directly with Node; outside `pnpm test`.
+
+`--reproduce` intentionally fails: the original 30s setting exceeds the candidate's
+11s helper-lifetime budget despite a quick simulated response. The default run
+checks each duration, pending background work at response completion and retention
+reduction within 1s of the idle-setting difference. Response completion is a
+synthetic marker after 25ms local work, not measured Next.js/HTTP latency.
+
+This demonstrates helper-managed background retention, not a memory leak or
+production billing savings. No real pg connection closure/reconnection, SQL locks,
+concurrent traffic, memory allocation or Vercel log duration is measured.
+Greg approved the 10s app setting on 2026-10-22; production validation remains.
+
+Original 30s/5s harness comparison, 2026-10-22, Node 26.7.0, helper 3.9.8:
+
+| Idle setting | Simulated response | Background lifetime after release | After response |
+| --- | --- | --- | --- |
+| 30s baseline | 27.08ms | 30,103.29ms | 30,102.99ms |
+| 5s candidate | 27.95ms | 5,103.61ms | 5,103.52ms |
+
+Default comparison passed: 24,999.47ms less post-response retention (83.05% less
+helper lifetime). Initial reproduction failed as intended at 30,104.51ms against
+the 6s budget. These percentages apply only to this isolated helper wait.
+
+Approved 15s app setting rerun, same runtime/helper:
+
+| Idle setting | Simulated response | Background lifetime after release | After response |
+| --- | --- | --- | --- |
+| 30s baseline | 30.03ms | 30,103.59ms | 30,103.30ms |
+| 15s app setting | 27.62ms | 15,105.68ms | 15,105.60ms |
+
+Comparison passed: 14,997.70ms less post-response retention, 49.82% less helper
+lifetime. Test first failed against the unchanged 30s app configuration, then
+passed after changing only `idleTimeoutMillis` to 15,000 in application code.
+Targeted DB-module ESLint and Node syntax checks passed.
+
+Connection-risk review: installed pg-pool 3.14.0 starts idle eviction on release
+and clears the idle timer when acquiring that client. Checked-out queries and
+transactions are not timed out by this setting. Requests after 10-30s of idle
+time can now require a fresh connection, adding connection/auth latency and
+potentially surfacing transient connection failures more often. Pool max remains
+3 and connection timeout remains 10s. `attachDatabasePool` remains enabled.
+[pg documentation](https://node-postgres.com/apis/pool) defines the setting for
+idle, checked-in clients; [Vercel guidance](https://vercel.com/kb/guide/connection-pooling-with-functions)
+recommends short idle timeouts (example: 5s). No live reconnection reliability or
+production billing measurement was performed.
+
+Historical four-setting comparison before applying 10s, same runtime/helper, 2026-10-22:
+
+| Idle setting | Simulated response | Helper lifetime | Reduction vs 30s |
+| --- | --- | --- | --- |
+| 30s | 27.13ms | 30,104.64ms | baseline |
+| 15s (app) | 27.28ms | 15,105.12ms | 49.82% |
+| 10s | 27.59ms | 10,112.00ms | 66.41% |
+| 5s | 27.72ms | 5,104.09ms | 83.05% |
+
+All candidate assertions passed. No live connection reuse/reconnection workload
+was measured, so this does not identify a production optimum. Compared with 5s,
+10s preserves idle-client reuse for an additional 5s at the expense of about 5s
+extra helper retention on an isolated release. App now uses the approved 10s
+compromise, subject to production latency/error and memory-billing comparison.
+
+Current [Neon Vercel guidance](https://neon.com/docs/guides/vercel-connection-methods)
+recommends `pg`, a shared pool and `attachDatabasePool` with Drizzle, matching this
+app. Its [serverless pooling guide](https://neon.com/docs/guides/serverless-connection-pooling)
+shows `idleTimeoutMillis: 5000` for Vercel Fluid. Neither establishes 10s or 15s as
+optimal for this app. Keep the lifecycle helper; lower idle timeout trades fewer
+idle connections for more connection handshakes after gaps.
+
 ## Conventions
 
 - One folder per module, mirroring the source area under test
