@@ -8,16 +8,11 @@ import ExamWolfekWelcome from '@/components/wolfek/ExamWolfekWelcome'
 import PracticalExamRunnerSkeleton from '@/components/skeletons/PracticalExamRunnerSkeleton'
 import GeneratePracticalExamModal from '@/components/GeneratePracticalExamModal'
 import { EMPTY_FORM_STATE } from '@/constants/formState'
-import { generatePracticalExamAction } from '@/actions/praktyczny'
+import { generatePracticalExamAction } from '@/actions/generatePracticalExam'
 import { useToastMessage } from '@/hooks/useToastMessage'
-import type { PublicExam } from '@/types/praktycznyTypes'
+import type { PracticalExamListProps } from '@/types/practicalExamListTypes'
 
-interface Props {
-  exams: PublicExam[]
-  isPremium?: boolean
-}
-
-export default function PracticalExamList({ exams, isPremium = false }: Props) {
+export default function PracticalExamList({ exams, isPremium = false }: PracticalExamListProps) {
   const [state, action, isPending] = useActionState(generatePracticalExamAction, EMPTY_FORM_STATE)
   const noScriptFallback = useToastMessage(state)
   const router = useRouter()

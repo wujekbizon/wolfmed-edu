@@ -15,6 +15,18 @@ export interface WolfekAnswerReaction {
   gesture: 'yes' | 'no'
 }
 
+export interface WolfekAcademicHatProps { interactive?: boolean }
+export interface WolfekAcademicCapProps {
+  flipping: boolean
+  reduced: boolean | null
+  onAnimationComplete?: () => void
+}
+export interface WolfekProfessorAvatarProps {
+  interactive?: boolean
+  excited?: boolean
+  gaze?: WolfekGaze | undefined
+}
+
 export interface WolfekSmallTalkProps {
   index: number
 }

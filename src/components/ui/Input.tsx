@@ -1,4 +1,5 @@
 interface Input {
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
   onChangeHandler?: (value: React.ChangeEvent<HTMLInputElement>) => void
   value?: string | number | readonly string[] | undefined
   defaultValue?: string | number | readonly string[] | undefined
@@ -22,6 +23,7 @@ interface Input {
 }
 
 export default function Input({
+  inputMode,
   onChangeHandler,
   value,
   defaultValue,
@@ -45,6 +47,7 @@ export default function Input({
 }: Input) {
   return (
     <input
+      inputMode={inputMode}
       id={id}
       ref={inputRef}
       type={type}

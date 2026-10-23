@@ -3,9 +3,10 @@
 import { useEffect, useRef, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 import WolfekAvatar from './WolfekAvatar'
+import WolfekProfessorAvatar from './WolfekProfessorAvatar'
 import type { NaukaWolfekLauncherProps } from '@/types/naukaLayoutTypes'
 
-export default function NaukaWolfekLauncher({ onOpen, controlsId = 'nauka-wolfek-welcome' }: NaukaWolfekLauncherProps) {
+export default function NaukaWolfekLauncher({ onOpen, controlsId = 'nauka-wolfek-welcome', professor = false, professorExcited = false }: NaukaWolfekLauncherProps) {
   const mounted = useSyncExternalStore(() => () => {}, () => true, () => false)
   const launcher = useRef<HTMLButtonElement>(null)
 
@@ -27,7 +28,7 @@ export default function NaukaWolfekLauncher({ onOpen, controlsId = 'nauka-wolfek
           aria-expanded={false}
           onClick={onOpen}
         >
-          <WolfekAvatar positive excited supportive interactive={false} />
+          {professor ? <WolfekProfessorAvatar interactive={false} excited={professorExcited} /> : <WolfekAvatar positive excited supportive interactive={false} />}
         </button>
       </div>
     </div>,

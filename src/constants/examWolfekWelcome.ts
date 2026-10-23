@@ -1,4 +1,9 @@
 export const EXAM_WOLFEK_WELCOME = {
+  results: {
+    id: 'practical-results-wolfek',
+    title: 'Przyjrzyjmy się wynikowi',
+    description: 'Wybierz część arkusza, aby porównać swoje odpowiedzi z kluczem. Pomogę Ci odczytać punkty i znaleźć miejsca do poprawy.',
+  },
   brief: {
     id: 'practical-brief-wolfek',
     title: 'Poznaj swój arkusz',
