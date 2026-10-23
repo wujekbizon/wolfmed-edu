@@ -401,6 +401,9 @@
 .wolfek-dismiss { display: grid; place-items: center; min-width: 44px; min-height: 44px; border-radius: 50%; color: #897a97; cursor: pointer; }
 .wolfek-bubble { position: relative; margin: 0; padding: 0; border: 0; background: transparent; }
 .wolfek-overlay .wolfek-launcher-tooltip { position: fixed; z-index: 41; right: 24px; bottom: max(20px, env(safe-area-inset-bottom)); width: 7.5rem; height: 7.5rem; pointer-events: auto; }
+@media (max-width: 1023px) {
+  body:has(.practical-exam-brief) .wolfek-overlay:has([aria-controls="practical-brief-wolfek-welcome"]) .wolfek-launcher-tooltip { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}
 .wolfek-launcher { position: relative; width: 100%; height: 100%; border: 1px solid #ffffffd0; border-radius: 50%; pointer-events: auto; cursor: pointer; background: linear-gradient(145deg, #efe7f8, #fff3f3); box-shadow: 0 8px 25px #55406830, inset 0 1px white; transition: transform 180ms ease, box-shadow 180ms ease; }
 .wolfek-launcher:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 12px 30px #55406838, inset 0 1px white; }
 .wolfek-launcher-label { position: absolute; bottom: -10px; right: 0; white-space: nowrap; border-radius: 12px; background: #fff; padding: 4px 12px; font-size: 13px; font-weight: 600; color: #6c587b; box-shadow: 0 2px 8px #55406812; }
@@ -583,6 +586,41 @@
 .nauka-wolfek-questions .practice-orbit-action.panel-wolfek-topic { width: fit-content; max-width: calc(100% - 1rem); min-width: 0; }
 .nauka-wolfek-questions .panel-wolfek-topics { gap: .75rem; padding: .25rem .25rem .5rem; }
 .panel-wolfek-topics { display: flex; flex-direction: column; gap: .42rem; }
+@media (max-width: 1023px) {
+  .exam-wolfek-brief-content { display: grid; grid-template-areas: 'intro' 'questions' 'avatar' 'answer'; gap: 1rem; padding: 1.25rem; }
+  .exam-wolfek-brief-content .exam-wolfek-left,
+  .exam-wolfek-brief-content .exam-wolfek-intro-row { display: contents; }
+  .exam-wolfek-brief-content .exam-wolfek-copy { grid-area: intro; padding-right: 1.5rem; }
+  .exam-wolfek-brief-content .exam-wolfek-avatar { grid-area: avatar; justify-self: center; }
+  .exam-wolfek-brief-content .exam-wolfek-answer { grid-area: answer; justify-self: center; width: 100%; max-width: 36rem; margin: -.5rem 0 0; }
+  .exam-wolfek-brief-content .exam-wolfek-answer .wolfek-speaker-answer { width: 100%; max-width: none; margin-top: 0; }
+  .exam-wolfek-brief-content .exam-wolfek-answer .wolfek-speaker-answer::before { left: calc(50% - .35rem); }
+  .exam-wolfek-brief-content .exam-wolfek-questions { grid-area: questions; padding: 0; }
+  .exam-wolfek-brief-content .panel-wolfek-topic-picker { max-width: none; }
+  .exam-wolfek-brief-content .panel-wolfek-topics { gap: .65rem; }
+}
+@media (max-width: 1023px) {
+.panel-wolfek-topics .practice-orbit-action.panel-wolfek-topic.wolfek-prepared-straight {
+  position: relative;
+  align-self: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: .65rem .85rem;
+  white-space: normal;
+  text-align: left;
+  rotate: 0deg;
+  transform: none;
+  animation: none;
+  box-shadow: 0 .2rem .65rem rgb(54 43 71 / 8%);
+}
+.panel-wolfek-topics .practice-orbit-action.panel-wolfek-topic.wolfek-prepared-straight:hover:not(:disabled) { transform: none; }
+.practice-orbit-action.wolfek-prepared-straight > span:first-child { flex-shrink: 0; }
+}
 .practice-orbit-action.panel-wolfek-topic {
   position: relative;
   height: auto;

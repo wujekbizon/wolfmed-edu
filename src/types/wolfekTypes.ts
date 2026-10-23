@@ -20,6 +20,8 @@ export interface WolfekSmallTalkProps {
 }
 
 export interface WolfekFaceProps {
+  medicalMask?: boolean
+  glasses?: boolean
   id: string
   positive: boolean
   supportive: boolean
@@ -43,6 +45,13 @@ export interface Wolfek3DGlassesProps {
   reduced: boolean | null
 }
 
+export interface WolfekMedicalMaskProps { reduced: boolean | null }
+
+export interface WolfekGlassesProps {
+  reduced: boolean | null
+  interactive: boolean
+}
+
 export interface WolfekMonocleProps {
   dropped: boolean
   reduced: boolean | null
@@ -55,6 +64,8 @@ export interface WolfekGaze {
 }
 
 export interface WolfekAvatarProps {
+  medicalMask?: boolean
+  glasses?: boolean
   positive: boolean
   supportive: boolean
   interactive: boolean

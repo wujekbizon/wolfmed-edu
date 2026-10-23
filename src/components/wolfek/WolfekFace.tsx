@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'
 import type { WolfekFaceProps } from '@/types/wolfekTypes'
 import WolfekEyes from './WolfekEyes'
 import WolfekMonocle from './WolfekMonocle'
+import WolfekGlasses from './WolfekGlasses'
 import Wolfek3DGlasses from './Wolfek3DGlasses'
 import WolfekMouth from './WolfekMouth'
+import WolfekMedicalMask from './WolfekMedicalMask'
 
-export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover, excited = false }: WolfekFaceProps) {
+export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover, excited = false, glasses = false, medicalMask = false }: WolfekFaceProps) {
   const [dropped, setDropped] = useState(false)
   const leftFold = dropped ? -14 : supportive ? -5 : 0
   const rightFold = dropped ? 3 : supportive ? 5 : 0
@@ -19,7 +21,7 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     return () => clearTimeout(timeout)
   }, [dropped])
 
-  return <svg viewBox="0 0 120 120" fill="none" className="wolfek-face">
+  return <svg viewBox="0 0 120 120" fill="none" className={medicalMask ? 'wolfek-face overflow-visible' : 'wolfek-face'}>
     <defs>
       <linearGradient id={`${id}-fur`} x1="20" y1="20" x2="95" y2="110" gradientUnits="userSpaceOnUse">
         <stop stopColor="#e4dcec" /><stop offset=".52" stopColor="#b7a5cc" /><stop offset="1" stopColor="#9781af" />
@@ -61,7 +63,8 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     <path d="m54 98 6 4 6-4-6 11z" fill="#b7a3c9" />
     <ellipse cx="36" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity={excited ? .9 : .65} />
     <ellipse cx="84" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity={excited ? .9 : .65} />
-    {!videoHover && <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />}
+    {medicalMask && <WolfekMedicalMask reduced={reduced} />}
+    {!videoHover && (glasses ? <WolfekGlasses reduced={reduced} interactive={interactive} /> : <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />)}
     <AnimatePresence initial={false}>
       {videoHover && <Wolfek3DGlasses reduced={reduced} />}
     </AnimatePresence>

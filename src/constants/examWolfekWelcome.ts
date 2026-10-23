@@ -1,4 +1,9 @@
 export const EXAM_WOLFEK_WELCOME = {
+  brief: {
+    id: 'practical-brief-wolfek',
+    title: 'Poznaj swój arkusz',
+    description: 'Zapoznaj się z poleceniem, opisem pacjenta i zakresem arkusza. Pomogę Ci zrozumieć zasady pracy. Czas zacznie płynąć po wybraniu „Rozpocznij egzamin”.',
+  },
   hub: {
     id: 'exam-wolfek',
     title: 'Przygotuj się do egzaminu',
