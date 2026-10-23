@@ -3,9 +3,13 @@ import type { WolfekGaze } from '@/types/wolfekTypes'
 
 export interface ExamHubLayoutProps { theory: ReactNode; practice: ReactNode }
 export interface ExamWolfekProps { active: string }
+export interface ExamWolfekWelcomeProps extends ExamWolfekProps {
+  variant?: 'hub' | 'practice'
+}
 export interface ExamWolfekAvatarProps extends ExamWolfekProps {
   avatarRef: RefObject<HTMLDivElement | null>
   gaze: WolfekGaze
+  reviewTargetId?: string
 }
 export interface ExamWolfekReviewProps extends ExamWolfekAvatarProps { replay: number }
 export interface ExamHubContentProps { card: ExamHubCard }

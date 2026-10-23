@@ -7,9 +7,9 @@ import ExamWolfekSheet from '@/components/wolfek/ExamWolfekSheet'
 import { useExamWolfekReview } from '@/hooks/useExamWolfekReview'
 import type { ExamWolfekAvatarProps } from '@/types/examHubTypes'
 
-export default function ExamWolfekAvatar({ active, avatarRef, gaze }: ExamWolfekAvatarProps) {
+export default function ExamWolfekAvatar({ active, avatarRef, gaze, reviewTargetId }: ExamWolfekAvatarProps) {
   const [replay, setReplay] = useState(0)
-  const reviewGaze = useExamWolfekReview({ active, replay, avatarRef, gaze })
+  const reviewGaze = useExamWolfekReview({ active, replay, avatarRef, gaze, reviewTargetId })
 
   return (
     <div ref={avatarRef} className='relative h-32 w-32 shrink-0'>

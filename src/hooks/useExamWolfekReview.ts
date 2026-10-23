@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { animate, useMotionValue, useReducedMotion, useTransform } from 'framer-motion'
 import type { ExamWolfekReviewProps } from '@/types/examHubTypes'
 
-export function useExamWolfekReview({ active, replay, avatarRef, gaze }: ExamWolfekReviewProps) {
+export function useExamWolfekReview({ active, replay, avatarRef, gaze, reviewTargetId }: ExamWolfekReviewProps) {
   const reduced = useReducedMotion()
   const reviewX = useMotionValue(0)
   const reviewY = useMotionValue(0)
@@ -31,7 +31,7 @@ export function useExamWolfekReview({ active, replay, avatarRef, gaze }: ExamWol
       await Promise.all([move(reviewX, 1.5, .3), move(reviewY, 1.8, .3)])
       if (cancelled) return
       const avatar = avatarRef.current?.getBoundingClientRect()
-      const tab = document.getElementById(`exam-hub-tab-${active}`)?.getBoundingClientRect()
+      const tab = document.getElementById(reviewTargetId ?? `exam-hub-tab-${active}`)?.getBoundingClientRect()
       const dx = avatar && tab ? tab.left + tab.width / 2 - avatar.left - avatar.width / 2 : 0
       const dy = avatar && tab ? tab.top + tab.height / 2 - avatar.top - avatar.height / 2 : 1
       const distance = Math.max(1, Math.hypot(dx, dy))
@@ -44,7 +44,7 @@ export function useExamWolfekReview({ active, replay, avatarRef, gaze }: ExamWol
       controls.forEach((control) => control.stop())
       blend.set(0)
     }
-  }, [active, replay, reduced, avatarRef, gaze.x, gaze.y, blend, reviewX, reviewY])
+  }, [active, replay, reduced, avatarRef, gaze.x, gaze.y, blend, reviewX, reviewY, reviewTargetId])
 
   return { x, y }
 }

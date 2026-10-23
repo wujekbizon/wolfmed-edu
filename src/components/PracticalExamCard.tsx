@@ -1,88 +1,18 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight, Clock, FileText, Lock, User, Wand2 } from 'lucide-react'
-import type { PublicExam } from '@/types/praktycznyTypes'
-import {
-  DEFAULT_PRACTICAL_EXAM_METADATA,
-  PRACTICAL_EXAM_AI_CARD,
-} from '@/constants/practicalExamCards'
+import { ArrowRight, Clock, FileText, User } from 'lucide-react'
+import PracticalExamHero from '@/components/PracticalExamHero'
+import PracticalExamAICard from '@/components/PracticalExamAICard'
+import { DEFAULT_PRACTICAL_EXAM_METADATA } from '@/constants/practicalExamCards'
+import { BUTTON_BASE, BUTTON_SHAPES, BUTTON_VARIANTS } from '@/constants/buttonStyles'
+import type { PracticalExamCardProps } from '@/types/practicalExamCardTypes'
 
-type Props =
-  | { variant: 'exam'; exam: PublicExam }
-  | { variant: 'ai'; isPremium?: boolean; action?: (formData: FormData) => void }
-
-export default function PracticalExamCard(props: Props) {
-  const isAI = props.variant === 'ai'
-  const image = isAI ? PRACTICAL_EXAM_AI_CARD.image : DEFAULT_PRACTICAL_EXAM_METADATA.image
-  const title = isAI ? PRACTICAL_EXAM_AI_CARD.title : props.exam.title
-
-  const containerClass = `group relative flex flex-col lg:flex-row w-full rounded-2xl bg-slate-900 border ${
-    isAI ? 'border-violet-500/20' : 'border-white/[0.06]'
-  } opacity-95 hover:opacity-100 transition-all duration-300 overflow-hidden`
-
-  const hero = (
-    <div className="relative h-64 sm:h-72 lg:h-auto w-full lg:w-2/5 xl:w-1/3 shrink-0">
-      <Image
-        src={image}
-        alt={title}
-        fill
-        sizes="(max-width: 1024px) 100vw, 40vw"
-        className="object-cover transition-transform duration-500"
-      />
-      <div className="absolute inset-0 bg-linear-to-t from-slate-900/80 via-slate-900/10 to-transparent lg:bg-linear-to-r" />
-    </div>
-  )
-
-  if (isAI) {
-    const isPremium = props.isPremium ?? false
-    return (
-      <div className={containerClass}>
-        {hero}
-        <div className="flex flex-col gap-4 lg:gap-5 p-5 sm:p-6 lg:p-8 w-full">
-          <div className="flex flex-col gap-3">
-            <div className="flex flex-wrap gap-2">
-              <span className="rounded-full bg-violet-500/20 px-3 py-1 text-xs sm:text-sm text-violet-300 border border-violet-500/30 font-medium">
-                {PRACTICAL_EXAM_AI_CARD.aiBadge}
-              </span>
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-md leading-tight">
-              {title}
-            </h3>
-
-            <p className="text-zinc-300 text-sm sm:text-base leading-relaxed">
-              {PRACTICAL_EXAM_AI_CARD.description}
-            </p>
-          </div>
-
-          <div className="mt-auto pt-1">
-            {isPremium && props.action ? (
-              <form action={props.action}>
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-violet-500/90 hover:bg-violet-500 text-white text-sm font-semibold rounded-lg border border-violet-400/40 transition-colors w-full sm:w-auto"
-                >
-                  <Wand2 className="w-4 h-4" />
-                  {PRACTICAL_EXAM_AI_CARD.ctaLabel}
-                </button>
-              </form>
-            ) : (
-              <span className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-zinc-200 text-zinc-400 text-sm font-semibold rounded-lg border border-zinc-300 cursor-not-allowed w-full sm:w-auto">
-                <Lock className="w-4 h-4" />
-                {PRACTICAL_EXAM_AI_CARD.lockedLabel}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
+export default function PracticalExamCard(props: PracticalExamCardProps) {
+  if (props.variant === 'ai') return <PracticalExamAICard isPremium={props.isPremium} action={props.action} />
   const { exam } = props
   return (
-    <Link href={`/panel/egzaminy/${exam.id}`} className={containerClass}>
-      {hero}
-      <div className="flex flex-col gap-4 lg:gap-5 p-5 sm:p-6 lg:p-8 w-full">
+    <Link href={`/panel/egzaminy/${exam.id}`} className="group relative flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-slate-900 lg:flex-row">
+      <PracticalExamHero image={DEFAULT_PRACTICAL_EXAM_METADATA.image} title={exam.title} eager />
+      <div className="flex flex-col min-w-0 w-full gap-4 p-4 sm:gap-5 sm:p-5 lg:gap-6 lg:p-6 xl:p-8">
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap gap-2">
             <span className="rounded-full bg-green-500/20 px-3 py-1 text-xs sm:text-sm text-green-500 border border-green-500/30 font-medium">
@@ -93,8 +23,8 @@ export default function PracticalExamCard(props: Props) {
             </span>
           </div>
 
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-md leading-tight">
-            {title}
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white drop-shadow-md leading-tight">
+            {exam.title}
           </h3>
 
           <p className="text-xs font-mono text-zinc-400">{exam.arkusz}</p>
@@ -107,7 +37,7 @@ export default function PracticalExamCard(props: Props) {
           </div>
         </div>
 
-        <div className="flex items-center gap-5">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
           <span className="inline-flex items-center gap-1.5 text-sm text-zinc-200">
             <Clock className="w-4 h-4 text-red-300" />
             <span className="font-bold text-red-300">{exam.durationMinutes}</span> min
@@ -119,8 +49,8 @@ export default function PracticalExamCard(props: Props) {
           </span>
         </div>
 
-        <div className="mt-auto pt-1">
-          <span className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#f58a8a] group-hover:bg-[#ff5b5b] text-black text-sm font-semibold rounded-lg border border-red-200/40 group-hover:border-zinc-800 transition-colors w-full sm:w-auto">
+        <div className="mt-auto rounded-lg border border-zinc-600 bg-slate-950 p-3 sm:p-4">
+          <span className={[BUTTON_BASE, BUTTON_SHAPES.rounded, BUTTON_VARIANTS.primary, 'min-h-11 w-full px-4 py-2 text-sm whitespace-normal'].join(' ')}>
             {DEFAULT_PRACTICAL_EXAM_METADATA.ctaLabel}
             <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" />
           </span>
