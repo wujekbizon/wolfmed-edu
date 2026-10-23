@@ -7,7 +7,7 @@ import { BUTTON_BASE, BUTTON_SHAPES, BUTTON_VARIANTS } from '@/constants/buttonS
 import type { PracticalExamCardProps } from '@/types/practicalExamCardTypes'
 
 export default function PracticalExamCard(props: PracticalExamCardProps) {
-  if (props.variant === 'ai') return <PracticalExamAICard isPremium={props.isPremium} action={props.action} />
+  if (props.variant === 'ai') return <PracticalExamAICard {...(props.isPremium !== undefined ? { isPremium: props.isPremium } : {})} {...(props.action ? { action: props.action } : {})} />
   const { exam } = props
   return (
     <Link href={`/panel/egzaminy/${exam.id}`} className="group relative flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.06] bg-slate-900 lg:flex-row">

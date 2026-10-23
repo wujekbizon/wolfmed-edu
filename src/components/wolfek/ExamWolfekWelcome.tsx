@@ -35,7 +35,7 @@ export default function ExamWolfekWelcome({ active, variant = 'hub' }: ExamWolfe
       </Button>
       <div id={`${content.id}-intro`} hidden={minimized} onPointerMove={eyes.follow} onPointerLeave={eyes.reset} onPointerCancel={eyes.reset}>
         <div className='flex flex-col gap-3 p-5 pr-12 sm:flex-row sm:items-center sm:gap-6 sm:p-6 sm:pr-14'>
-          <ExamWolfekAvatar active={active} avatarRef={eyes.avatar} gaze={eyes.gaze} reviewTargetId={variant === 'practice' ? 'practical-exam-sessions' : undefined} />
+          <ExamWolfekAvatar active={active} avatarRef={eyes.avatar} gaze={eyes.gaze} {...(variant === 'practice' ? { reviewTargetId: 'practical-exam-sessions' } : {})} />
           <div className='max-w-3xl'>
             <h2 className='text-lg font-semibold tracking-tight text-zinc-800'>{content.title}</h2>
             <p className='mt-2 text-sm leading-relaxed text-zinc-500'>{content.description}</p>
