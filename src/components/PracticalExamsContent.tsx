@@ -1,0 +1,22 @@
+import 'server-only'
+
+import { redirect } from 'next/navigation'
+import { getCurrentUser } from '@/server/user'
+import { getUserEnrolledCourses } from '@/server/queries'
+import { getAllPublicPracticalExams } from '@/lib/praktycznyUtils'
+import { checkPremiumAccessAction } from '@/actions/course-actions'
+import PracticalExamList from '@/components/PracticalExamList'
+
+export default async function PracticalExamsContent() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/sign-in')
+
+  const courses = await getUserEnrolledCourses(user.userId)
+  const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')
+  if (!hasOpiekun) redirect('/panel/testy-egzaminy')
+
+  const exams = getAllPublicPracticalExams()
+  const isPremium = await checkPremiumAccessAction()
+
+  return <PracticalExamList exams={exams} isPremium={isPremium} />
+}

@@ -1,10 +1,7 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/server/user'
-import { getUserEnrolledCourses } from '@/server/queries'
-import { getAllPublicPracticalExams } from '@/lib/praktycznyUtils'
-import { checkPremiumAccessAction } from '@/actions/course-actions'
-import PracticalExamList from '@/components/PracticalExamList'
+import PracticalExamsContent from '@/components/PracticalExamsContent'
+import PracticalExamListSkeleton from '@/components/skeletons/PracticalExamListSkeleton'
 
 export const metadata: Metadata = {
   title: 'Egzamin praktyczny — Opiekun medyczny',
@@ -13,16 +10,12 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic'
 
-export default async function PracticalExamsPage() {
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-
-  const courses = await getUserEnrolledCourses(user.userId)
-  const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')
-  if (!hasOpiekun) redirect('/panel/testy-egzaminy')
-
-  const exams = getAllPublicPracticalExams()
-  const isPremium = await checkPremiumAccessAction()
-
-  return <PracticalExamList exams={exams} isPremium={isPremium} />
+export default function PracticalExamsPage() {
+  return (
+    <div className='h-full w-full min-w-0'>
+      <Suspense fallback={<PracticalExamListSkeleton />}>
+        <PracticalExamsContent />
+      </Suspense>
+    </div>
+  )
 }

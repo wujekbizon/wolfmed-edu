@@ -1,4 +1,4 @@
-export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'cta' | 'dark' | 'softAccent'
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'cta' | 'dark' | 'softAccent' | 'coral'
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'submit'
 export type ButtonShape = 'soft' | 'rounded' | 'pill'
 
@@ -9,6 +9,7 @@ export const BUTTON_BASE =
   'inline-flex items-center justify-center gap-1.5 whitespace-nowrap font-medium transition-[color,background-color,border-color,box-shadow,translate] duration-200 ease-out motion-reduce:transition-none cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50 disabled:cursor-not-allowed'
 
 export const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
+  coral: 'border border-zinc-800 bg-linear-to-r from-[#ff9898] to-[#ff8989] text-white shadow-sm hover:from-[#ff8989] hover:to-[#ff9898] hover:shadow-md',
   dark: 'border border-white/10 bg-white/[0.03] text-zinc-100 hover:border-white/20 hover:bg-white/[0.06]',
   primary:
     'bg-[#f58a8a] hover:bg-[#ff5b5b] text-black border border-red-200/40 shadow hover:border-zinc-800 disabled:hover:bg-[#f58a8a] disabled:hover:border-red-200/40',
