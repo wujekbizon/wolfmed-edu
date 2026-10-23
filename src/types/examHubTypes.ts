@@ -4,7 +4,7 @@ import type { WolfekGaze } from '@/types/wolfekTypes'
 export interface ExamHubLayoutProps { theory: ReactNode; practice: ReactNode }
 export interface ExamWolfekProps { active: string }
 export interface ExamWolfekWelcomeProps extends ExamWolfekProps {
-  variant?: 'hub' | 'practice' | 'brief' | 'results'
+  variant?: 'hub' | 'practice' | 'brief' | 'results' | 'procedures'
   children?: ReactNode
   answer?: ReactNode
   reviewTargetId?: string

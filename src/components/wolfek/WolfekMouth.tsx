@@ -6,7 +6,7 @@ import { WolfekAnimationContext } from './WolfekAnimationContext'
 import type { WolfekMouthProps } from '@/types/wolfekTypes'
 import { WOLFEK_SPEECH_DELAY } from '@/constants/wolfekSpeech'
 
-export default function WolfekMouth({ dropped, reduced }: WolfekMouthProps) {
+export default function WolfekMouth({ dropped, reduced, expression }: WolfekMouthProps) {
   const animation = useContext(WolfekAnimationContext)
   const answerKey = animation?.activity.answerKey ?? 0
   const speaking = Boolean(answerKey) && !animation?.activity.pending && !dropped && !reduced
@@ -14,6 +14,7 @@ export default function WolfekMouth({ dropped, reduced }: WolfekMouthProps) {
   const repeats = Math.max(1, Math.round(duration / .65))
   const transition = { duration: speaking ? duration / repeats : 0,
     delay: speaking ? WOLFEK_SPEECH_DELAY : 0, repeat: speaking ? repeats - 1 : 0, ease: 'easeInOut' as const }
+  if (expression === 'scared') return <ellipse cx='60' cy='91' rx='3' ry='4' fill='#8c7391' />
   return <g key={answerKey}>
     <motion.ellipse cx="60" cy="91" rx="3" fill="#8c7391" initial={{ ry: 0 }}
       animate={{ ry: speaking ? [0, 1.8, .3, 1.2, 0] : 0 }}

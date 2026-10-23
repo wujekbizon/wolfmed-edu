@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import type { WolfekAvatarProps } from '@/types/wolfekTypes'
 import WolfekFace from './WolfekFace'
 
-export default function WolfekAvatar({ positive, supportive, interactive, reaction, gaze, videoHover, excited = false, glasses = false, medicalMask = false }: WolfekAvatarProps) {
+export default function WolfekAvatar({ positive, supportive, interactive, reaction, gaze, videoHover, excited = false, glasses = false, medicalMask = false, expression }: WolfekAvatarProps) {
   const id = useId().replaceAll(':', '')
   const reduced = useReducedMotion()
   const gesture = reduced || !reaction ? { rotateX: 0, rotateY: 0, x: 0, y: 0, scaleY: 1 }
@@ -20,7 +20,7 @@ export default function WolfekAvatar({ positive, supportive, interactive, reacti
         initial={{ rotateX: 0, rotateY: 0, x: 0, y: 0, scaleY: 1 }}
         animate={gesture} transition={{ duration: reduced ? 0 : 1, ease: 'easeInOut' }}>
         <WolfekFace id={id} positive={positive} supportive={supportive}
-          reduced={reduced} interactive={interactive} gaze={gaze} videoHover={Boolean(videoHover)} excited={excited} glasses={glasses} medicalMask={medicalMask} />
+          reduced={reduced} interactive={interactive} gaze={gaze} videoHover={Boolean(videoHover)} excited={excited} glasses={glasses} medicalMask={medicalMask} expression={expression} />
       </motion.span>
     </span>
     <span className="wolfek-avatar-shadow" />

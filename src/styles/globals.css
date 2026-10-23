@@ -425,6 +425,9 @@
 .wolfek-avatar-shadow { position: absolute; left: 26%; right: 21%; bottom: -3px; height: 10px; border-radius: 50%; background: #6c557943; filter: blur(6px); transform: rotateX(60deg); }
 .wolfek-eyes { transform-box: fill-box; transform-origin: center; animation: wolfek-blink 7s ease-in-out infinite; }
 .wolfek-monocle-trigger { cursor: pointer; outline: none; }
+.wolfek-glasses-trigger { cursor: pointer; outline: none; }
+.wolfek-glasses-focus { stroke: transparent; stroke-width: 1.5; }
+.wolfek-glasses-trigger:focus-visible .wolfek-glasses-focus { stroke: #806796; stroke-dasharray: 3 3; }
 .wolfek-monocle-trigger[aria-disabled="true"] { cursor: default; }
 .wolfek-monocle-focus { stroke: transparent; stroke-width: 1.5; }
 .wolfek-monocle-trigger:focus-visible .wolfek-monocle-focus { stroke: #806796; stroke-dasharray: 3 3; }

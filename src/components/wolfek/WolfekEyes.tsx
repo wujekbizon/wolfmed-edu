@@ -2,8 +2,10 @@
 
 import { motion } from 'framer-motion'
 import type { WolfekEyesProps } from '@/types/wolfekTypes'
+import WolfekScaredEyes from './WolfekScaredEyes'
 
-export default function WolfekEyes({ positive, confused, gaze, videoHover, reduced, excited }: WolfekEyesProps) {
+export default function WolfekEyes({ positive, confused, gaze, videoHover, reduced, excited, expression }: WolfekEyesProps) {
+  if (expression === 'scared') return <WolfekScaredEyes />
   return <g>
     {confused && <path d="M35 45q7-5 14-1m23 4 12 2" stroke="#8d759f" strokeWidth="2" strokeLinecap="round" />}
     {excited && !confused && <path d="M35 44q7-5 14-1m22 0q7-4 14 1" stroke="#8d759f" strokeWidth="1.8" strokeLinecap="round" />}

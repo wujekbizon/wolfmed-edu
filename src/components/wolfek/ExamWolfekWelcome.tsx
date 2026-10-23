@@ -5,6 +5,7 @@ import { useReducedMotion } from 'framer-motion'
 import { Minus } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import ExamWolfekAvatar from '@/components/wolfek/ExamWolfekAvatar'
+import ProcedureWolfekAvatar from '@/components/wolfek/ProcedureWolfekAvatar'
 import NaukaWolfekLauncher from '@/components/wolfek/NaukaWolfekLauncher'
 import { useWolfekGaze } from '@/hooks/useWolfekGaze'
 import { EXAM_WOLFEK_WELCOME } from '@/constants/examWolfekWelcome'
@@ -40,7 +41,9 @@ export default function ExamWolfekWelcome({ active, variant = 'hub', children, a
         <div className='exam-wolfek-left min-w-0 p-5 pr-12 sm:p-6 sm:pr-8'>
         <div className='exam-wolfek-intro-row flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5'>
           <div className='exam-wolfek-avatar shrink-0'>
-            <ExamWolfekAvatar active={active} avatarRef={eyes.avatar} gaze={eyes.gaze} accessory={accessory} professorExcited={professorExcited} {...(target ? { reviewTargetId: target } : {})} />
+            {variant === 'procedures' ? <ProcedureWolfekAvatar avatarRef={eyes.avatar} gaze={eyes.gaze} /> : (
+              <ExamWolfekAvatar active={active} avatarRef={eyes.avatar} gaze={eyes.gaze} accessory={accessory} professorExcited={professorExcited} {...(target ? { reviewTargetId: target } : {})} />
+            )}
           </div>
           <div className='exam-wolfek-copy max-w-3xl'>
             <h2 className='text-lg font-semibold tracking-tight text-zinc-800'>{content.title}</h2>

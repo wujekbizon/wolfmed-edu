@@ -8,7 +8,7 @@ export default function WolfekGlasses({ reduced, interactive }: WolfekGlassesPro
   const [replay, setReplay] = useState(0)
 
   return (
-    <g role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined} aria-label={interactive ? 'Popraw okulary Wolfka' : undefined} className={interactive ? 'cursor-pointer focus-visible:outline-2 focus-visible:outline-rose-400' : undefined}
+    <g role={interactive ? 'button' : undefined} tabIndex={interactive ? 0 : undefined} aria-label={interactive ? 'Popraw okulary Wolfka' : undefined} className={interactive ? 'wolfek-glasses-trigger' : undefined}
       onClick={(event) => { event.stopPropagation(); if (interactive) setReplay((value) => value + 1) }}
       onKeyDown={(event) => {
         if (!interactive || (event.key !== 'Enter' && event.key !== ' ')) return
@@ -24,7 +24,7 @@ export default function WolfekGlasses({ reduced, interactive }: WolfekGlassesPro
         </g>
         <path d='M35 50h9m27 0h9' stroke='#fffdfb' strokeOpacity='.8' strokeWidth='1.5' strokeLinecap='round' />
       </motion.g>
-      {interactive && <rect x='26' y='40' width='68' height='32' rx='10' fill='transparent' />}
+      {interactive && <rect className='wolfek-glasses-focus' x='26' y='40' width='68' height='32' rx='10' fill='transparent' />}
     </g>
   )
 }

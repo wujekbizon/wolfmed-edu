@@ -1,8 +1,7 @@
-import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/server/user'
-import { getUserEnrolledCourses, getProceduresCount } from '@/server/queries'
-import ProceduresHub from '@/components/ProceduresHub'
-import { Metadata } from 'next'
+import { Suspense } from 'react'
+import type { Metadata } from 'next'
+import ProceduresHubContent from '@/components/ProceduresHubContent'
+import ProceduresHubSkeleton from '@/components/skeletons/ProceduresHubSkeleton'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,29 +10,10 @@ export const metadata: Metadata = {
   description: 'Procedury medyczne dostępne w ramach Twoich kursów',
 }
 
-export default async function ProceduresHubPage() {
-  const user = await getCurrentUser()
-  if (!user) redirect('/')
-
-  const courses = await getUserEnrolledCourses(user.userId)
-  const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')
-  const hasPielegniarstwo = courses.some((c) => c.slug === 'pielegniarstwo')
-
-  const [opiekunCount, pielegniastwoCount] = await Promise.all([
-    hasOpiekun ? getProceduresCount('opiekun-medyczny') : Promise.resolve(0),
-    hasPielegniarstwo ? getProceduresCount('pielegniarstwo') : Promise.resolve(0),
-  ])
-
-  const procedureCounts: Record<string, number> = {
-    'opiekun-medyczny': opiekunCount,
-    pielegniarstwo: pielegniastwoCount,
-  }
-
+export default function ProceduresHubPage() {
   return (
-    <ProceduresHub
-      hasOpiekun={hasOpiekun}
-      hasPielegniarstwo={hasPielegniarstwo}
-      procedureCounts={procedureCounts}
-    />
+    <Suspense fallback={<ProceduresHubSkeleton />}>
+      <ProceduresHubContent />
+    </Suspense>
   )
 }
