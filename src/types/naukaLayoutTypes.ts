@@ -18,7 +18,7 @@ export type NaukaWolfekQuestionsProps = {
 export type NaukaWolfekAnswerProps = NaukaWolfekNavigationProps & {
   question: NaukaWolfekQuestion
 }
-export type NaukaWolfekLauncherProps = { onOpen: () => void; controlsId?: string }
+export type NaukaWolfekLauncherProps = { onOpen: () => void; controlsId?: string; professor?: boolean; professorExcited?: boolean }
 export type NaukaLibrarySections = {
   notes: ReactNode
   lectures: ReactNode

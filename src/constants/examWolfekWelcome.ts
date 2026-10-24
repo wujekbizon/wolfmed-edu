@@ -1,4 +1,19 @@
 export const EXAM_WOLFEK_WELCOME = {
+  procedures: {
+    id: 'procedures-wolfek',
+    title: 'Poznaj procedury medyczne',
+    description: 'Poznaj procedury i ćwiczenia dostępne w ramach Twoich kursów. Ucz się krok po kroku i utrwalaj umiejętności potrzebne w pracy z pacjentem.',
+  },
+  results: {
+    id: 'practical-results-wolfek',
+    title: 'Przyjrzyjmy się wynikowi',
+    description: 'Wybierz część arkusza, aby porównać swoje odpowiedzi z kluczem. Pomogę Ci odczytać punkty i znaleźć miejsca do poprawy.',
+  },
+  brief: {
+    id: 'practical-brief-wolfek',
+    title: 'Poznaj swój arkusz',
+    description: 'Zapoznaj się z poleceniem, opisem pacjenta i zakresem arkusza. Pomogę Ci zrozumieć zasady pracy. Czas zacznie płynąć po wybraniu „Rozpocznij egzamin”.',
+  },
   hub: {
     id: 'exam-wolfek',
     title: 'Przygotuj się do egzaminu',

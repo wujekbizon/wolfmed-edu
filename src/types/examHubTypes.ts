@@ -4,9 +4,15 @@ import type { WolfekGaze } from '@/types/wolfekTypes'
 export interface ExamHubLayoutProps { theory: ReactNode; practice: ReactNode }
 export interface ExamWolfekProps { active: string }
 export interface ExamWolfekWelcomeProps extends ExamWolfekProps {
-  variant?: 'hub' | 'practice'
+  variant?: 'hub' | 'practice' | 'brief' | 'results' | 'procedures'
+  children?: ReactNode
+  answer?: ReactNode
+  reviewTargetId?: string
+  professorExcited?: boolean
 }
 export interface ExamWolfekAvatarProps extends ExamWolfekProps {
+  accessory?: 'sheet' | 'nurse' | 'professor'
+  professorExcited?: boolean
   avatarRef: RefObject<HTMLDivElement | null>
   gaze: WolfekGaze
   reviewTargetId?: string

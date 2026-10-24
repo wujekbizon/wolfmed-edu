@@ -1,0 +1,1 @@
+export const EXAM_INPUT_CLASS = 'min-h-11 w-full rounded-xl border border-zinc-200 bg-zinc-50/50 px-3 py-2.5 text-base text-zinc-800 focus:border-rose-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rose-100'

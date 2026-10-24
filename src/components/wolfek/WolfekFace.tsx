@@ -5,10 +5,12 @@ import { useEffect, useState } from 'react'
 import type { WolfekFaceProps } from '@/types/wolfekTypes'
 import WolfekEyes from './WolfekEyes'
 import WolfekMonocle from './WolfekMonocle'
+import WolfekGlasses from './WolfekGlasses'
 import Wolfek3DGlasses from './Wolfek3DGlasses'
 import WolfekMouth from './WolfekMouth'
+import WolfekMedicalMask from './WolfekMedicalMask'
 
-export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover, excited = false }: WolfekFaceProps) {
+export default function WolfekFace({ id, positive, supportive, reduced, interactive, gaze, videoHover, excited = false, glasses = false, medicalMask = false, expression }: WolfekFaceProps) {
   const [dropped, setDropped] = useState(false)
   const leftFold = dropped ? -14 : supportive ? -5 : 0
   const rightFold = dropped ? 3 : supportive ? 5 : 0
@@ -19,7 +21,7 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     return () => clearTimeout(timeout)
   }, [dropped])
 
-  return <svg viewBox="0 0 120 120" fill="none" className="wolfek-face">
+  return <svg viewBox="0 0 120 120" fill="none" className={medicalMask ? 'wolfek-face overflow-visible' : 'wolfek-face'}>
     <defs>
       <linearGradient id={`${id}-fur`} x1="20" y1="20" x2="95" y2="110" gradientUnits="userSpaceOnUse">
         <stop stopColor="#e4dcec" /><stop offset=".52" stopColor="#b7a5cc" /><stop offset="1" stopColor="#9781af" />
@@ -54,14 +56,15 @@ export default function WolfekFace({ id, positive, supportive, reduced, interact
     <motion.path d="M24 42q13-12 36-10 23-2 36 10-18-9-36-7-18-2-36 7Z" fill="#fff"
       animate={reduced ? { opacity: .32 } : { opacity: [.27, .4, .27] }}
       transition={{ duration: 8.4, repeat: Infinity, ease: 'easeInOut', delay: 1.1 }} />
-    <WolfekEyes positive={positive} confused={dropped} gaze={gaze} videoHover={Boolean(videoHover)} reduced={reduced} excited={excited} />
+    <WolfekEyes positive={positive} confused={dropped} gaze={gaze} videoHover={Boolean(videoHover)} reduced={reduced} excited={excited} expression={expression} />
     <path d="M52 77q8-4 16 0-1 7-8 8-7-1-8-8Z" fill="#8e708f" />
     <path d="M56 77q4-2 8 0" stroke="#cdb5cf" strokeWidth="1.5" strokeLinecap="round" />
-    <WolfekMouth dropped={dropped} reduced={reduced} />
+    <WolfekMouth dropped={dropped} reduced={reduced} expression={expression} />
     <path d="m54 98 6 4 6-4-6 11z" fill="#b7a3c9" />
     <ellipse cx="36" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity={excited ? .9 : .65} />
     <ellipse cx="84" cy="71" rx="4" ry="2" fill="#e6b1c5" fillOpacity={excited ? .9 : .65} />
-    {!videoHover && <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />}
+    {medicalMask && <WolfekMedicalMask reduced={reduced} />}
+    {!videoHover && !expression && (glasses ? <WolfekGlasses reduced={reduced} interactive={interactive} /> : <WolfekMonocle dropped={dropped} reduced={reduced} interactive={interactive} onDrop={() => setDropped(true)} />)}
     <AnimatePresence initial={false}>
       {videoHover && <Wolfek3DGlasses reduced={reduced} />}
     </AnimatePresence>

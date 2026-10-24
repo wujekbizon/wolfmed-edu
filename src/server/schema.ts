@@ -653,23 +653,29 @@ export const SubmitGeneratedQuizSchema = z.object({
   timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
 });
 
+export const PracticalExamAnswersSchema = z.record(
+  z.string(),
+  z.union([z.string(), z.array(z.string())], {
+    error: "Odpowiedź musi być tekstem lub listą tekstów.",
+  }),
+  { error: "Nieprawidłowy format odpowiedzi arkusza." }
+);
+
 export const GradePracticalExamSchema = z.object({
-  examId: z.string().min(1, "Brak identyfikatora egzaminu"),
+  examId: z.string({ error: "Brak identyfikatora egzaminu" }).min(1, "Brak identyfikatora egzaminu"),
   answers: z
-    .string()
+    .string({ error: "Brak odpowiedzi" })
     .min(1, "Brak odpowiedzi")
-    .refine(
-      (val) => {
-        try {
-          const parsed = JSON.parse(val);
-          return typeof parsed === "object" && parsed !== null && !Array.isArray(parsed);
-        } catch {
-          return false;
-        }
-      },
-      { message: "Nieprawidłowy format odpowiedzi" }
-    ),
-  timeSpent: z.coerce.number().min(0, "Nieprawidłowy czas"),
+    .transform((value, ctx): unknown => {
+      try {
+        return JSON.parse(value);
+      } catch {
+        ctx.addIssue({ code: "custom", message: "Nieprawidłowy format odpowiedzi" });
+        return z.NEVER;
+      }
+    })
+    .pipe(PracticalExamAnswersSchema),
+  timeSpent: z.coerce.number({ error: "Nieprawidłowy czas" }).min(0, "Nieprawidłowy czas"),
 });
 
 /**

@@ -7,7 +7,7 @@ import UsernameSkeleton from '@/components/skeletons/UsernameSkeleton'
 
 export default function PanelDetailsSkeleton() {
   return (
-    <section className="container mx-auto mt-10 animate-pulse">
+    <section className="container mx-auto animate-pulse">
       <div className="flex w-full flex-col gap-8 rounded-2xl border border-zinc-200/60 bg-white p-3 shadow-xl shadow-zinc-900/[0.07] xs:p-4 sm:p-10">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <UsernameSkeleton />

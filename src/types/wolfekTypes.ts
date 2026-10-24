@@ -6,7 +6,8 @@ export type WolfekAnimationState = {
   activity: WolfekActivity
   setActivity: Dispatch<SetStateAction<WolfekActivity>>
 }
-export type WolfekMouthProps = { dropped: boolean; reduced: boolean | null }
+export type WolfekExpression = 'scared' | 'relieved'
+export type WolfekMouthProps = { dropped: boolean; reduced: boolean | null; expression?: WolfekExpression | undefined }
 export type WolfekIntroProps = { description: string; id?: string }
 export type WolfekAnswerTextProps = { text: string; animate?: boolean; children?: ReactNode }
 
@@ -15,11 +16,26 @@ export interface WolfekAnswerReaction {
   gesture: 'yes' | 'no'
 }
 
+export interface WolfekAcademicHatProps { interactive?: boolean }
+export interface WolfekAcademicCapProps {
+  flipping: boolean
+  reduced: boolean | null
+  onAnimationComplete?: () => void
+}
+export interface WolfekProfessorAvatarProps {
+  interactive?: boolean
+  excited?: boolean
+  gaze?: WolfekGaze | undefined
+}
+
 export interface WolfekSmallTalkProps {
   index: number
 }
 
 export interface WolfekFaceProps {
+  expression?: WolfekExpression | undefined
+  medicalMask?: boolean
+  glasses?: boolean
   id: string
   positive: boolean
   supportive: boolean
@@ -31,6 +47,7 @@ export interface WolfekFaceProps {
 }
 
 export interface WolfekEyesProps {
+  expression?: WolfekExpression | undefined
   positive: boolean
   confused: boolean
   gaze?: WolfekGaze | undefined
@@ -41,6 +58,13 @@ export interface WolfekEyesProps {
 
 export interface Wolfek3DGlassesProps {
   reduced: boolean | null
+}
+
+export interface WolfekMedicalMaskProps { reduced: boolean | null }
+
+export interface WolfekGlassesProps {
+  reduced: boolean | null
+  interactive: boolean
 }
 
 export interface WolfekMonocleProps {
@@ -55,6 +79,9 @@ export interface WolfekGaze {
 }
 
 export interface WolfekAvatarProps {
+  expression?: WolfekExpression | undefined
+  medicalMask?: boolean
+  glasses?: boolean
   positive: boolean
   supportive: boolean
   interactive: boolean

@@ -1,3 +1,5 @@
+import type { FormState } from '@/types/actionTypes'
+
 export const PRACTICAL_PASSING_PERCENT = 75
 
 export interface PracticalPatient {
@@ -141,16 +143,14 @@ export interface ExamResult {
   passed: boolean
 }
 
-export interface PracticalExamState {
-  status: 'UNSET' | 'SUCCESS' | 'ERROR'
-  message: string
-  timestamp: number
+export interface PracticalExamState extends FormState {
   result: ExamResult | null
 }
 
 export const EMPTY_PRACTICAL_EXAM_STATE: PracticalExamState = {
   status: 'UNSET',
   message: '',
+  fieldErrors: {},
   timestamp: Date.now(),
   result: null,
 }

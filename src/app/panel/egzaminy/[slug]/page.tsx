@@ -1,15 +1,11 @@
+import { Suspense } from 'react'
 import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
-import { getCurrentUser } from '@/server/user'
-import { getUserEnrolledCourses, getGeneratedPracticalExamById } from '@/server/queries'
-import { getPublicPracticalExamById, toPublicExam } from '@/lib/praktycznyUtils'
-import PracticalExamRunner from '@/components/PracticalExamRunner'
+import { getPublicPracticalExamById } from '@/lib/praktycznyUtils'
+import PracticalExamContent from '@/components/PracticalExamContent'
+import PracticalBriefSkeleton from '@/components/skeletons/PracticalBriefSkeleton'
+import type { PracticalExamRouteProps } from '@/types/practicalExamRouteTypes'
 
-interface Props {
-  params: Promise<{ slug: string }>
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PracticalExamRouteProps): Promise<Metadata> {
   const { slug } = await params
   const exam = getPublicPracticalExamById(slug)
   return {
@@ -20,21 +16,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export const dynamic = 'force-dynamic'
 
-export default async function PracticalExamPage({ params }: Props) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/sign-in')
-
-  const courses = await getUserEnrolledCourses(user.userId)
-  const hasOpiekun = courses.some((c) => c.slug === 'opiekun-medyczny')
-  if (!hasOpiekun) redirect('/panel/testy-egzaminy')
-
-  const { slug } = await params
-  let exam = getPublicPracticalExamById(slug)
-  if (!exam) {
-    const generated = await getGeneratedPracticalExamById(slug, user.userId)
-    if (generated) exam = toPublicExam(generated)
-  }
-  if (!exam) redirect('/panel/egzaminy')
-
-  return <PracticalExamRunner exam={exam} />
+export default function PracticalExamPage({ params }: PracticalExamRouteProps) {
+  return (
+    <Suspense fallback={<PracticalBriefSkeleton />}>
+      <PracticalExamContent params={params} />
+    </Suspense>
+  )
 }
