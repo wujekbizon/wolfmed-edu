@@ -4,8 +4,9 @@ Opiekun Medyczny and Pielęgniarstwo Premium include Angielski medyczny Basic.
 Lifetime purchases and Basic-to-Premium lifetime upgrades grant a permanent bonus.
 Premium subscriptions grant the bonus for their paid period. Scheduling cancellation
 keeps access until that period ends. Downgrade, cancellation or paid-period expiry
-removes only that subscription's bonus; paid renewal restores it. Failed invoices
-do not revoke an existing bonus early or extend its paid period.
+removes only that subscription's bonus; paid renewal restores it. When a failed
+invoice revokes the parent subscription enrollment, its linked bonus is revoked
+in the same transaction. Payment recovery restores both existing grants.
 Lifetime bonus grants are not changed by the refund/dispute handler.
 
 The database remains the sole access source. Bonus rows use `premium_bundle` with
@@ -16,6 +17,18 @@ block duplicate English Basic purchases and subscriptions. Pricing shows
 `W pakiecie Premium`; the course hero links to learning.
 
 No schema change or new Stripe Product/Price is required.
+
+## Repair stale subscription bonuses
+
+After deploying the fix, manually run
+[the repair query](./49-subscription-bonus-repair.md)
+in Neon SQL Editor. It revokes only English subscription bundle rows whose linked
+parent enrollment is inactive, revoked, expired or no longer Premium. It matches
+both user and parent source ID, preserving purchased English and other bundles.
+Already inactive, revoked bonuses are skipped, so rerunning changes no rows.
+The returned rows identify every repaired bonus. No rows are deleted or created.
+The short transaction locks enrollment writes to avoid racing payment recovery;
+it aborts if the lock cannot be obtained within five seconds.
 
 ## Existing users
 

@@ -36,8 +36,6 @@ export async function upsertSubscriptionEnrollment(
     target: [courseEnrollments.sourceType, courseEnrollments.sourceId],
     set: access,
   })
-  if (!active && snapshot.status !== 'canceled' && offer.accessTier !== 'basic') return
-
   await syncEnglishBonusEnrollment(tx, {
     ...access,
     userId: order.userId,
