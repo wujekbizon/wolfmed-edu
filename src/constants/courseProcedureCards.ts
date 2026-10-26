@@ -1,13 +1,4 @@
-export interface CourseProcedureCard {
-  slug: string
-  title: string
-  subtitle: string
-  description: string
-  href: string
-  image: string
-  learningTime: string
-  features: string[]
-}
+import type { CourseProcedureCard } from '@/types/procedureHubTypes'
 
 export const COURSE_PROCEDURE_CARDS: CourseProcedureCard[] = [
   {

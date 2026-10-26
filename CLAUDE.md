@@ -109,6 +109,12 @@ If no existing component fits, **add one to `/src/components/ui`** rather than s
 
 The same applies to visual primitives beyond form controls (buttons, cards, badges) — one styled implementation, reused, not copied class strings.
 
+### 9. Hydration and JSX class names
+
+Keep each `className` value on one source line. This is a formatting convention; source line breaks alone do not cause hydration errors.
+
+Server HTML and the first client render must produce identical markup and initial animation styles. Do not branch initial SVG structure or expressions on browser-only preferences such as `useReducedMotion()`: its server value can differ from the browser value. Use a hydration-safe snapshot (`useSyncExternalStore` with a `false` server snapshot and `true` client snapshot; see `NaukaWolfekLauncher.tsx`) before enabling browser-dependent animation. Keep a deterministic initial pose, then start motion after hydration. Never hide a mismatch with `suppressHydrationWarning`.
+
 ---
 
 ## 🎯 Component Architecture Patterns

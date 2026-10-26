@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import HubPanel from '@/components/ui/HubPanel'
 import { ArrowRight, LockKeyhole } from 'lucide-react'
 import LinkButton from '@/components/ui/LinkButton'
 import Button from '@/components/ui/Button'
@@ -7,15 +7,7 @@ import type { ExamHubContentProps } from '@/types/examHubTypes'
 
 export default function ExamHubContent({ card }: ExamHubContentProps) {
   return (
-    <div className='grid min-w-0 overflow-hidden rounded-3xl border border-white bg-[#fcf8f7] p-2 shadow-sm sm:p-3 xl:h-[42rem] xl:grid-cols-[0.9fr_1fr]'>
-      <div className='relative min-h-52 overflow-hidden rounded-2xl bg-zinc-900 sm:min-h-72 xl:min-h-[34rem]'>
-        <Image src={card.image} alt='' fill loading='eager' sizes='(min-width: 1280px) 45vw, 100vw' className='object-cover' />
-        <div className='absolute inset-0 bg-linear-to-t from-zinc-950 via-zinc-950/25 to-transparent' />
-        <div className='absolute inset-x-0 bottom-0 p-5 sm:p-8'>
-          <p className='mb-2 text-xs font-semibold tracking-widest text-rose-200 uppercase'>{card.subtitle}</p>
-          <h2 className='max-w-sm text-3xl font-bold tracking-tight text-white sm:text-4xl'>{card.title}</h2>
-        </div>
-      </div>
+    <HubPanel image={card.image} subtitle={card.subtitle} title={card.title} fixedHeight>
       <div className='flex min-h-0 min-w-0 flex-col gap-5 px-3 py-6 sm:p-7 xl:px-9 xl:pt-7 xl:pb-0'>
         {card.disabled && <p className='flex items-center gap-2 text-sm font-semibold text-[#765086]'><LockKeyhole size={17} />Dostęp w kursie Opiekun Medyczny</p>}
         <p className='shrink-0 text-sm leading-relaxed text-zinc-600 sm:text-base'>{card.description}</p>
@@ -39,6 +31,6 @@ export default function ExamHubContent({ card }: ExamHubContentProps) {
           )}
         </div>
       </div>
-    </div>
+    </HubPanel>
   )
 }

@@ -9,7 +9,7 @@ const helperDirectory = dirname(require.resolve('@vercel/functions/db-connection
 const packageInfo = JSON.parse(readFileSync(join(helperDirectory, '../package.json'), 'utf8'))
 const appConfig = readFileSync(new URL('../../src/server/db/index.ts', import.meta.url), 'utf8')
 const configuredIdle = Number(appConfig.match(/idleTimeoutMillis:\s*(\d+)/)?.[1])
-assert.equal(configuredIdle, 10_000, 'App must use approved 10s idle timeout')
+assert.equal(configuredIdle, 5_000, 'App must use approved 5s idle timeout')
 console.log(JSON.stringify({ helperVersion: packageInfo.version, realTimers: true,
   realDatabase: false, realVercel: false, realHttpResponse: false }))
 
@@ -20,7 +20,7 @@ if (process.argv.includes('--reproduce')) {
     `Reproduced: quick simulated response retains background work for ${baseline.helperLifetimeMs}ms; exceeds 11s candidate budget`)
 } else {
   assert.ok(baseline.helperLifetimeMs >= 30_000 && baseline.helperLifetimeMs < 35_000)
-  for (const idle of [15_000, configuredIdle, 5_000]) {
+  for (const idle of [15_000, 10_000, configuredIdle]) {
     const candidate = await measurePoolIdleLifetime(idle)
     assert.ok(candidate.helperLifetimeMs >= idle && candidate.helperLifetimeMs < idle + 1_000)
     assert.ok(baseline.simulatedResponseMs < 1_000 && candidate.simulatedResponseMs < 1_000)

@@ -1,167 +1,59 @@
 'use client'
 
-import Link from 'next/link'
-import { Check, X, RotateCcw, ArrowLeft } from 'lucide-react'
-import type { ExamResult } from '@/types/praktycznyTypes'
+import { useEffect, useRef, useState } from 'react'
+import TabNavigation from '@/components/ui/TabNavigation'
+import TabPanel from '@/components/ui/TabPanel'
+import ExamResultSummary from '@/components/ExamResultSummary'
+import ExamResultActions from '@/components/ExamResultActions'
+import ExamResultOverview from '@/components/ExamResultOverview'
+import ExamResultReview from '@/components/ExamResultReview'
+import ExamResultWolfekHelp from '@/components/ExamResultWolfekHelp'
+import { EXAM_RESULT_TABS } from '@/constants/practicalExamResults'
+import { getExamResultSections } from '@/helpers/getExamResultSections'
+import type { ExamResultsProps, ExamResultTarget } from '@/types/practicalExamResultTypes'
 
-interface Props {
-  result: ExamResult
-  answers: Record<string, string | string[]>
-  onRestart: () => void
-}
+export default function ExamResults({ title, result, answers, onRestart }: ExamResultsProps) {
+  const [active, setActive] = useState('summary')
+  const [procedureId, setProcedureId] = useState(String(result.procedures[0]?.taskIndex ?? ''))
+  const [formId, setFormId] = useState(result.forms[0]?.formId ?? '')
+  const heading = useRef<HTMLHeadingElement>(null)
+  const sections = getExamResultSections(result)
+  const tabs = EXAM_RESULT_TABS.filter((tab) => tab.id === 'summary' || (tab.id === 'procedures' ? result.procedures.length > 0 : result.forms.length > 0))
 
-function userAnswerText(answer: string | string[] | undefined): string[] {
-  if (Array.isArray(answer)) return answer.map((a) => a.trim()).filter((a) => a.length > 0)
-  if (typeof answer === 'string' && answer.trim().length > 0) return [answer.trim()]
-  return []
-}
+  useEffect(() => {
+    heading.current?.focus({ preventScroll: true })
+    heading.current?.scrollIntoView({ block: 'start' })
+  }, [])
 
-export default function ExamResults({ result, answers, onRestart }: Props) {
+  const review = (target: ExamResultTarget) => {
+    if (target.tab === 'procedures') setProcedureId(target.id)
+    if (target.tab === 'forms') setFormId(target.id)
+    setActive(target.tab)
+    requestAnimationFrame(() => {
+      const panel = document.getElementById(`exam-results-panel-${target.tab}`)
+      panel?.scrollIntoView({ block: 'start' })
+      panel?.focus({ preventScroll: true })
+    })
+  }
+
   return (
-    <section className="flex flex-col items-center w-full h-full overflow-y-auto scrollbar-webkit px-2 sm:px-4 py-6 md:py-10">
-      <div className="w-full max-w-3xl flex flex-col gap-6">
-        <div
-          className={`rounded-2xl border p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
-            result.passed ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'
-          }`}
-        >
-          <div>
-            <p className={`text-xs font-semibold uppercase tracking-widest ${result.passed ? 'text-green-600' : 'text-red-600'}`}>
-              {result.passed ? 'Arkusz zaliczony' : 'Arkusz niezaliczony'}
-            </p>
-            <h1 className="text-2xl font-bold text-zinc-800 mt-1">{result.percent}%</h1>
-            <p className="text-sm text-zinc-500 mt-1">
-              {result.earned} / {result.max} punktów · próg zaliczenia 75%
-            </p>
-          </div>
-          <div className="flex gap-2">
-            <button
-              onClick={onRestart}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white text-sm font-semibold rounded-xl transition-colors"
-            >
-              <RotateCcw className="w-4 h-4" />
-              Wypełnij ponownie
-            </button>
-            <Link
-              href="/panel/egzaminy"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white hover:bg-zinc-50 text-zinc-700 text-sm font-semibold rounded-xl border border-zinc-300 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Lista arkuszy
-            </Link>
-          </div>
+    <section className='min-w-0 w-full bg-linear-to-br from-zinc-50/80 via-rose-50/30 to-zinc-50/80 px-4 pb-10 lg:px-10'>
+      <div className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+        <header className='border-b border-zinc-200/70 pb-4'>
+          <h1 ref={heading} tabIndex={-1} className='text-2xl font-bold tracking-tight text-zinc-900 focus-visible:outline-2 focus-visible:outline-rose-400 sm:text-3xl'>Wynik egzaminu</h1>
+          <p className='mt-2 text-sm text-zinc-500'>{title}</p>
+        </header>
+        <ExamResultSummary result={result} />
+        <ExamResultActions onRestart={onRestart} />
+        <ExamResultWolfekHelp result={result} activeTab={active} onReview={review} />
+        <div className='w-full sm:max-w-xl'>
+          <TabNavigation id='exam-results' label='Przegląd wyniku' options={tabs} active={active} onChange={setActive} />
         </div>
-
-        {result.procedures.map((proc) => (
-          <div key={proc.taskIndex} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
-              <h2 className="text-base font-bold text-zinc-800">Czynności: {proc.title}</h2>
-              <span className="text-sm font-semibold text-zinc-500 shrink-0">
-                {proc.earned} / {proc.max} pkt
-              </span>
-            </div>
-            <ol className="divide-y divide-zinc-100">
-              {proc.correctSteps.map((step, i) => {
-                const ok = proc.userSteps[i] === step
-                return (
-                  <li key={i} className="px-5 md:px-6 py-3 flex items-start gap-3">
-                    <span
-                      className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
-                        ok ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-                      }`}
-                    >
-                      {ok ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
-                    </span>
-                    <div className="flex-1">
-                      <p className="text-sm text-zinc-700 leading-snug">
-                        <span className="font-semibold text-zinc-400 mr-1">{i + 1}.</span>
-                        {step}
-                      </p>
-                      {!ok && proc.userSteps[i] && (
-                        <p className="text-xs text-red-500 mt-0.5">Na tej pozycji ustawiono: {proc.userSteps[i]}</p>
-                      )}
-                    </div>
-                  </li>
-                )
-              })}
-            </ol>
-          </div>
-        ))}
-
-        {result.forms.map((form) => (
-          <div key={form.formId} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 md:px-6 py-4 border-b border-zinc-100 bg-zinc-50">
-              <h2 className="text-base font-bold text-zinc-800">{form.title}</h2>
-              <span className="text-sm font-semibold text-zinc-500 shrink-0">
-                {form.earned} / {form.max} pkt
-              </span>
-            </div>
-
-            <div className="divide-y divide-zinc-100">
-              {form.fields.map((field) => {
-                const passed = field.earned >= field.max
-                const given =
-                  field.kind === 'choice'
-                    ? field.userSelections ?? []
-                    : userAnswerText(answers[`${form.formId}:${field.fieldId}`])
-                const subtitle =
-                  field.kind === 'list'
-                    ? `${field.earned} z ${field.max} wymaganych`
-                    : field.kind === 'choice'
-                    ? `${field.earned} z ${field.max} grup poprawnych`
-                    : passed
-                    ? 'Zaliczone'
-                    : 'Niezaliczone'
-                return (
-                  <div key={field.fieldId} className="px-5 md:px-6 py-4 flex flex-col gap-2">
-                    <div className="flex items-start gap-3">
-                      <span
-                        className={`shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5 ${
-                          passed ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'
-                        }`}
-                      >
-                        {passed ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
-                      </span>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-zinc-700">{field.label}</p>
-                        <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>
-                      </div>
-                    </div>
-
-                    {given.length > 0 && (
-                      <div className="pl-8">
-                        <p className="text-xs font-semibold text-zinc-400 mb-1">Twoja odpowiedź</p>
-                        <ul className="text-sm text-zinc-600 list-disc list-inside space-y-0.5">
-                          {given.map((g, i) => (
-                            <li key={i}>{g}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {field.modelAnswers.length > 0 && (
-                      <div className="pl-8">
-                        <p className="text-xs font-semibold text-zinc-400 mb-1">
-                          {field.kind === 'list'
-                            ? 'Przykładowe poprawne odpowiedzi'
-                            : field.kind === 'choice'
-                            ? 'Poprawne pozycje'
-                            : 'Klucz odpowiedzi'}
-                        </p>
-                        <ul className="text-sm text-zinc-500 list-disc list-inside space-y-0.5">
-                          {field.modelAnswers.map((m, i) => (
-                            <li key={i}>{m}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        ))}
-
+        <TabPanel id='exam-results' tabId='summary' active={active === 'summary'}>
+          <ExamResultOverview sections={sections} onReview={review} />
+        </TabPanel>
+        <ExamResultReview result={result} answers={answers} active={active} procedureId={procedureId} formId={formId} onProcedureChange={setProcedureId} onFormChange={setFormId} />
+        <div className='border-t border-zinc-200/70 pt-5'><ExamResultActions onRestart={onRestart} /></div>
       </div>
     </section>
   )
