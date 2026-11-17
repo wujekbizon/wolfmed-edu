@@ -31,9 +31,16 @@ export async function extractDocumentText(
   fileUrl: string,
   mimeType: string
 ): Promise<string> {
-  const response = await fetch(fileUrl)
+  const signal = AbortSignal.timeout(120_000)
+  const response = await fetch(fileUrl, { signal })
   if (!response.ok) {
     throw new Error(`Nie udało się pobrać pliku (${response.status})`)
+  }
+
+  if (mimeType === 'text/plain') {
+    const bytes = await response.arrayBuffer()
+    if (bytes.byteLength > 1024 * 1024) throw new Error('Plik TXT przekracza limit 1 MB.')
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes).replace(/^\uFEFF/, '').trim()
   }
 
   const base64 = Buffer.from(await response.arrayBuffer()).toString('base64')
@@ -49,6 +56,7 @@ export async function extractDocumentText(
     ],
     config: {
       maxOutputTokens: EXTRACTION_MAX_OUTPUT_TOKENS,
+      abortSignal: signal,
       // Transcription, not composition — nothing here benefits from sampling.
       temperature: 0,
       thinkingConfig: { thinkingBudget: 0 },

@@ -9,6 +9,7 @@ import {
   DynamicPlanCell,
   DynamicMediaCell,
   DynamicMindMapCell,
+  DynamicEssayCell,
 } from '.'
 import type { Cell } from '@/types/cellTypes'
 
@@ -17,6 +18,8 @@ export default function CellContent({ cell, isPremium }: { cell: Cell; isPremium
   if (!mountEditors) return null
 
   switch (cell.type) {
+    case 'essay':
+      return <DynamicEssayCell cell={cell} />
     case 'note':
       return <DynamicNoteCell cell={cell} />
     case 'rag':

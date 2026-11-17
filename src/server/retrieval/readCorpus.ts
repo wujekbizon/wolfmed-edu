@@ -7,12 +7,13 @@ import type { ContextChunk, CorpusRelevance } from '@/types/retrievalTypes'
 export async function readCorpus(
   query: string,
   topK: number,
-  relevance: CorpusRelevance
+  relevance: CorpusRelevance,
+  strict = false
 ): Promise<ContextChunk[]> {
   try {
     const contexts = await retrieveContexts(query, {
       topK,
-      ...(relevance === 'model' ? { signal: AbortSignal.timeout(RAG_CANDIDATE_TIMEOUT_MS) } : {}),
+      ...(relevance === 'model' || strict ? { signal: AbortSignal.timeout(RAG_CANDIDATE_TIMEOUT_MS) } : {}),
     })
     const candidates: ContextChunk[] = contexts
       .filter((context) => context.text.trim().length > 0)
@@ -35,7 +36,7 @@ export async function readCorpus(
     return chunks
   } catch (error) {
     console.error('[retrieval] Corpus search failed:', error)
-    if (relevance === 'model') {
+    if (relevance === 'model' || strict) {
       throw new Error('Baza wiedzy jest chwilowo niedostępna. Spróbuj ponownie za chwilę.')
     }
     return []

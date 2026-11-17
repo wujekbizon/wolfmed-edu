@@ -29,6 +29,7 @@ export type RetrievalMode =
   // The student named a specific note or material. It is the primary source and
   // the corpus is not consulted.
   | 'explicit_resource'
+  | 'canonical_with_explicit_resources'
 
 export interface RetrieveContextOptions {
   userId: string

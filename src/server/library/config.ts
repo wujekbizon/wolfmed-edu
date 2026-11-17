@@ -42,14 +42,14 @@ export type MaterialIndexStatus = 'pending' | 'indexed' | 'unindexable' | 'faile
 // detached from the upload that caused it.
 export const UNINDEXED_STATUS: MaterialIndexStatus = 'not_indexed'
 
-// Only these yield text. The uploader also accepts video/mp4 and
+// PDF and TXT yield text. The uploader also accepts video/mp4 and
 // application/json; both are marked unindexable on arrival.
-export const EXTRACTABLE_MIME_TYPES = ['application/pdf'] as const
+export const EXTRACTABLE_MIME_TYPES = ['application/pdf', 'text/plain'] as const
 
 // Gemini reads the file once at upload. Flash rather than Flash-Lite: this runs
 // a single time per material and has to cope with scanned pages, where the
 // cheaper model loses text a student would expect to find.
-export const EXTRACTION_MODEL = 'gemini-2.5-flash'
+export const EXTRACTION_MODEL = 'gemini-3.5-flash-lite'
 
 // A 4 MB PDF (the uploader's ceiling) of dense text lands well inside this.
 export const EXTRACTION_MAX_OUTPUT_TOKENS = 32_000

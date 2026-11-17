@@ -2,10 +2,12 @@ import CellList from './cells/CellList'
 import { getIsPremium } from '@/server/premium'
 import { auth } from '@clerk/nextjs/server'
 import { getUserCellsList } from '@/server/queries'
+import { getEssayResources } from '@/server/essays/getEssayResources'
 
 export default async function NaukaCellsSection() {
   const [{ userId }, isPremium] = await Promise.all([auth(), getIsPremium()])
-  const savedCells = userId ? await getUserCellsList(userId) : null
+  if (!userId) return null
+  const [savedCells, essayResources] = await Promise.all([getUserCellsList(userId), getEssayResources(userId)])
   const initialCells = savedCells
     ? {
         order: savedCells.order,
@@ -14,5 +16,5 @@ export default async function NaukaCellsSection() {
       }
     : null
 
-  return <CellList isPremium={isPremium} initialCells={initialCells} />
+  return <CellList isPremium={isPremium} initialCells={initialCells} essayResources={essayResources} />
 }

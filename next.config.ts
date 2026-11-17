@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   },
   reactCompiler: true,
   outputFileTracingIncludes: {
+    '/panel/nauka': ['./public/fonts/stripe-report/*.ttf', './public/fonts/essay/*.ttf'],
     '/api/admin/stripe-reports/pdf': ['./public/fonts/stripe-report/*.ttf'],
   },
   serverExternalPackages: ['import-in-the-middle','require-in-the-middle'],

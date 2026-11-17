@@ -38,4 +38,5 @@ export const cellButtons: CellButtons[] = [
       cellName: 'Mapa Myśli',
       type: 'mindmap',
     },
+    { id: 7, cellName: 'Praca pisemna', type: 'essay' },
   ]

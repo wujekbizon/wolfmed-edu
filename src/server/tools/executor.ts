@@ -14,11 +14,12 @@ import {
   DIAGRAM_DETAIL_LEVELS,
   type DiagramDetail,
 } from '@/constants/diagramRoles'
+import { ThinkingLevel } from '@google/genai';
 
-// Content generation stays on gemini-2.5-flash, but thinking is disabled — the
-// tools produce structured/creative output, not reasoning chains, and thinking
-// tokens bill at the output rate.
-const NO_THINKING = { thinkingBudget: 0 } as const
+// Content generation uses gemini-3.5-flash-lite with thinking set to minimal —
+// the tools produce structured/creative output, not reasoning chains, and
+// thinking tokens bill at the output rate.
+const MINIMAL = { thinkingLevel: ThinkingLevel.MINIMAL } as const;
 
 export interface ToolResult {
   cellType?: 'note' | 'test' | 'draw' | 'flashcard' | 'plan';
@@ -228,12 +229,11 @@ ${exampleStr}
 Return ONLY the JSON array, no additional text.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: fullPrompt,
     config: {
-      temperature: 0.7,
       responseMimeType: 'application/json',
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -292,11 +292,10 @@ ${template.example}
 Return ONLY the markdown note content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: fullPrompt,
     config: {
-      temperature: 0.7,
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -330,11 +329,10 @@ ${template.example}
 Return ONLY the markdown summary content.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: fullPrompt,
     config: {
-      temperature: 0.7,
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -381,12 +379,11 @@ async function diagramTool(args: any): Promise<ToolResult> {
 
   const generate = async (message: string) => {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash-lite',
       contents: message,
       config: {
         systemInstruction: template.systemPrompt,
-        temperature: 0.7,
-        thinkingConfig: NO_THINKING
+        thinkingConfig: MINIMAL
       }
     })
     return repairMermaidSubgraphs(quoteMermaidLabels(stripCodeFences(response.text || example)))
@@ -463,12 +460,11 @@ ${exampleStr}
 Return ONLY a JSON object with a "flashcards" key containing an array of flashcard objects. Each object must have "questionText" and "answerText" string fields. No additional text.`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: fullPrompt,
     config: {
-      temperature: 0.7,
       responseMimeType: 'application/json',
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -511,13 +507,12 @@ async function planujTool(args: any): Promise<ToolResult> {
     .replace('{{topic}}', `${content}${focus ? ` — szczególny nacisk na: ${focus}` : ''}`)
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: userMessage,
     config: {
       systemInstruction: template.systemPrompt,
-      temperature: 0.4,
       responseMimeType: 'application/json',
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -552,12 +547,11 @@ async function wykladTool(args: any): Promise<ToolResult> {
   const userMessage = template.userPrompt.replace('{{planContent}}', content)
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: userMessage,
     config: {
       systemInstruction: template.systemPrompt,
-      temperature: 0.6,
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -602,13 +596,12 @@ async function quizProceduralnyTool(args: any): Promise<ToolResult> {
 
   const ai = getGoogleAI()
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: userMessage,
     config: {
       systemInstruction: template.systemPrompt,
-      temperature: 0.7,
       responseMimeType: 'application/json',
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 
@@ -633,13 +626,12 @@ async function egzaminPraktycznyTool(): Promise<ToolResult> {
   const ai = getGoogleAI()
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3.5-flash-lite',
     contents: template.userPrompt,
     config: {
       systemInstruction: template.systemPrompt,
-      temperature: 0.8,
       responseMimeType: 'application/json',
-      thinkingConfig: NO_THINKING
+      thinkingConfig: MINIMAL
     }
   })
 

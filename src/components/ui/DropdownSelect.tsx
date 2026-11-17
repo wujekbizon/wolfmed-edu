@@ -7,6 +7,7 @@ import DropdownSelectOptions from '@/components/ui/DropdownSelectOptions'
 import type { SelectOption } from '@/types/uiTypes'
 
 interface DropdownSelect {
+  id?: string
   options: SelectOption[]
   value: string | null
   onSelect: (value: string) => void
@@ -18,6 +19,7 @@ interface DropdownSelect {
 }
 
 export default function DropdownSelect({
+  id: fieldId,
   options,
   value,
   onSelect,
@@ -40,6 +42,7 @@ export default function DropdownSelect({
     <div ref={containerRef} className={`relative min-w-0 ${className ?? 'w-full'}`}>
       {name && <input type="hidden" name={name} value={value ?? ''} />}
       <button
+        id={fieldId}
         type="button"
         role="combobox"
         aria-haspopup="listbox"

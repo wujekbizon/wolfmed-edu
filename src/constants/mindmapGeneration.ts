@@ -1,4 +1,4 @@
-export const MINDMAP_MODEL = 'gemini-2.5-flash'
+export const MINDMAP_MODEL = 'gemini-3.5-flash-lite'
 export const MINDMAP_MAX_ATTEMPTS = 2
 export const MINDMAP_TIMEOUT_MS = 180_000
 export const MINDMAP_MAX_OUTPUT_TOKENS = 16_384

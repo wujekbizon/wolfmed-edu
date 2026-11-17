@@ -1,5 +1,15 @@
 # Business Flow: Learning Content (Notes, Materials, Flashcards, Mind Maps, Procedures, Planner)
 
+## Praca pisemna Cell
+
+Premium access for `pielegniarstwo` or `opiekun-medyczny` enables the essay Cell in Pracownia AI. The three views collect requirements/materials, review an editable outline, and edit the generated work in the existing Lexical editor. The brief, outline, sources, and document use the existing versioned Cell Save/Sync flow.
+
+`prepareEssayOutlineAction` retrieves the subject and selected material text through `retrieveContext` using `canonical_with_explicit_resources`. `generateEssayAction` retrieves approved section subjects, verifies material fingerprints, generates the document, validates exact source quotations, and runs a grounded review. Gap results retain existing text. The client discards late results when the initiating Cell changed.
+
+PDF/TXT source files reuse the material uploader. `prepareEssayMaterialAction` retries owned sources with course-specific Premium authorization. Preparation claims use existing status/timestamp columns, TXT decodes as UTF-8, and previously extracted text is reused during indexing retries. `downloadEssayPdfAction` renders the current Lexical snapshot with source names through `@react-pdf/renderer` and returns a browser download.
+
+The feature uses existing database tables. Manual verification remains pending at Greg's request. [Implementation and manual verification](./50-written-work-feature-plan.md)
+
 [← Back to index](./README.md)
 
 ---

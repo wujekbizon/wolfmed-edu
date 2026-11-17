@@ -9,13 +9,17 @@ import { buildRagCellContent } from '@/helpers/buildRagCellContent'
 import type { CellsSnapshot } from '@/helpers/cellsConcurrency'
 import CellsConflictBanner from './CellsConflictBanner'
 import NaukaCellsSkeleton from '@/components/skeletons/NaukaCellsSkeleton'
+import { EssayResourcesContext } from '@/context/EssayResourcesContext'
+import type { EssayResources } from '@/types/essayTypes'
 
 export default function CellList({
   isPremium = false,
   initialCells,
+  essayResources,
 }: {
   isPremium?: boolean
   initialCells: CellsSnapshot | null
+  essayResources: EssayResources
 }) {
   const {
     data,
@@ -57,6 +61,7 @@ export default function CellList({
   if (!initialized) return <NaukaCellsSkeleton />
 
   return (
+    <EssayResourcesContext.Provider value={essayResources}>
     <div className="w-full">
       <CellsConflictBanner />
       <AddCell prevCellId={null} isPremium={isPremium} />
@@ -67,5 +72,6 @@ export default function CellList({
         </Fragment>
       ))}
     </div>
+    </EssayResourcesContext.Provider>
   )
 }

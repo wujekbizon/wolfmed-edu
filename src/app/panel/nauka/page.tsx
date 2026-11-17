@@ -7,6 +7,7 @@ import TextPreviewModal from '@/components/TextPreviewModal'
 import UploadMaterialModal from '@/components/UploadMaterialModal'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 300
 
 export const metadata: Metadata = {
   title: 'Centrum Nauki',

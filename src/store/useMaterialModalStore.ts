@@ -1,28 +1,6 @@
 import { create } from 'zustand'
 
-interface MaterialModalState {
-  // PDF Modal
-  pdfModal: { isOpen: boolean; src: string; title?: string }
-  openPdfModal: (src: string, title?: string) => void
-  closePdfModal: () => void
-  downloadPdf: () => void
-  openFullPdf: () => void
-
-  // Video Modal
-  videoModal: { isOpen: boolean; src: string; title?: string }
-  openVideoModal: (src: string, title?: string) => void
-  closeVideoModal: () => void
-
-  // Text Modal
-  textModal: { isOpen: boolean; content: string; src?: string; title?: string }
-  openTextModal: (src: string, title?: string) => Promise<void>
-  closeTextModal: () => void
-
-  // Upload Modal
-  uploadModal: { isOpen: boolean }
-  openUploadModal: () => void
-  closeUploadModal: () => void
-}
+import type { MaterialModalState } from '@/types/materialsTypes'
 
 export const useMaterialModalStore = create<MaterialModalState>((set, get) => ({
   pdfModal: { isOpen: false, src: '' },
@@ -81,6 +59,12 @@ export const useMaterialModalStore = create<MaterialModalState>((set, get) => ({
   closeTextModal: () => set({ textModal: { isOpen: false, content: '' } }),
 
   uploadModal: { isOpen: false },
+  openEssayUploadModal: (cellId) => set({
+    uploadModal: { isOpen: true, cellId },
+    pdfModal: { isOpen: false, src: '' },
+    videoModal: { isOpen: false, src: '' },
+    textModal: { isOpen: false, content: '' },
+  }),
   openUploadModal: () => set({
     uploadModal: { isOpen: true },
     pdfModal: { isOpen: false, src: '' },

@@ -2,6 +2,7 @@ import { cellButtons } from '@/constants/cellButtons'
 import { useCellsStore } from '@/store/useCellsStore'
 import SaveCellsButton from './SaveCellsButton'
 import { SyncCellsButton } from './SyncCellsButton'
+import { useEssayResources } from '@/context/EssayResourcesContext'
 
 interface AddCellProps {
   prevCellId: string | null
@@ -10,6 +11,7 @@ interface AddCellProps {
 
 export default function AddCell({ prevCellId, isPremium = false }: AddCellProps) {
   const { insertCellAfter } = useCellsStore()
+  const { courses } = useEssayResources()
 
   return (
     <div className='relative my-3'>
@@ -17,7 +19,7 @@ export default function AddCell({ prevCellId, isPremium = false }: AddCellProps)
       <SaveCellsButton />
       <SyncCellsButton />
         {cellButtons.map(({ id, type, cellName }) => {
-          const isLocked = (type === 'rag' || type === 'test' || type === 'mindmap') && !isPremium
+          const isLocked = type === 'essay' ? !courses.length : (type === 'rag' || type === 'test' || type === 'mindmap') && !isPremium
           return (
             <button
               key={id}

@@ -9,6 +9,10 @@ interface RateLimitConfig {
 }
 
 const RATE_LIMITS: Record<string, RateLimitConfig> = {
+  'essay:outline': { interval: 60 * 60 * 1000, maxRequests: 10 },
+  'essay:generate': { interval: 24 * 60 * 60 * 1000, maxRequests: 5 },
+  'essay:download': { interval: 60 * 60 * 1000, maxRequests: 30 },
+  'material:prepare': { interval: 60 * 60 * 1000, maxRequests: 5 },
   'practice:write': { interval: 60 * 60 * 1000, maxRequests: 300 },
   'note:create': { interval: 60 * 60 * 1000, maxRequests: 10 },
   'note:update': { interval: 60 * 60 * 1000, maxRequests: 30 },

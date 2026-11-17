@@ -1,11 +1,12 @@
 import 'server-only'
-import { and, eq } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { db } from '@/server/db/index'
 import { materials } from '@/server/db/schema'
 import { extractDocumentText, isExtractable } from './extract'
 import { indexSource, removeSourceChunks } from './index-source'
 import { embedPendingChunks } from './embed-pending'
 import { MIN_EXTRACTED_CHARS, type MaterialIndexStatus } from './config'
+import { claimMaterialPreparation } from './claimMaterialPreparation'
 
 async function setStatus(
   materialId: string,
@@ -31,14 +32,12 @@ async function setStatus(
  * downloadable and viewable exactly as before.
  */
 export async function syncMaterialChunks(userId: string, materialId: string): Promise<void> {
+  let claimed = false
   try {
-    const [material] = await db
-      .select()
-      .from(materials)
-      .where(and(eq(materials.id, materialId), eq(materials.userId, userId)))
-      .limit(1)
+    const material = await claimMaterialPreparation(userId, materialId)
 
     if (!material) return
+    claimed = true
 
     // Video has no text layer and never will. Terminal, so the backstop skips it
     // rather than retrying a file that cannot succeed.
@@ -47,7 +46,7 @@ export async function syncMaterialChunks(userId: string, materialId: string): Pr
       return
     }
 
-    const text = await extractDocumentText(material.url, material.type)
+    const text = material.extractedText?.trim() || await extractDocumentText(material.url, material.type)
 
     if (text.length < MIN_EXTRACTED_CHARS) {
       // An image-only page the model could not read, or an empty document.
@@ -72,7 +71,7 @@ export async function syncMaterialChunks(userId: string, materialId: string): Pr
     await embedPendingChunks({ userId, sourceId: materialId })
   } catch (error) {
     console.error('[library] Failed to index material', materialId, error)
-    await setStatus(materialId, 'failed').catch(() => {})
+    if (claimed) await setStatus(materialId, 'failed').catch(() => {})
   }
 }
 

@@ -46,4 +46,9 @@ const DynamicMindMapCell = dynamic(() => import('./MindMapCell'), {
   ssr: false,
 })
 
+export const DynamicEssayCell = dynamic(() => import('./essay/EssayCell'), {
+  loading: CellEditorSkeleton,
+  ssr: false,
+})
+
 export { DynamicExcalidraw, DynamicTextEditor, DynamicNoteCell, DynamicRagCell, DynamicTestCell, DynamicFlashcardCell, DynamicPlanCell, DynamicMediaCell, DynamicMindMapCell }

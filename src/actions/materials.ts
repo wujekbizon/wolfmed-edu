@@ -185,10 +185,10 @@ export async function uploadMaterialAction(FormState: FormState, formData: FormD
       const pendingId = materialId;
       after(() => syncMaterialChunks(userId, pendingId));
     }
+    revalidatePath('/panel/nauka')
+    return { ...toFormState('SUCCESS', 'Plik został pomyślnie wrzucony'), values: { materialId } }
   } catch (error: any) {
     return toFormState("ERROR", error.message);
   }
 
-  revalidatePath("/panel/nauka");
-  return toFormState("SUCCESS", "Plik został pomyślnie wrzucony")
 }

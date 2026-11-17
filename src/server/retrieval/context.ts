@@ -13,6 +13,7 @@ import { stripQueryFiller } from '@/helpers/stripQueryFiller'
 import { dedupeContextSources } from '@/helpers/dedupeContextSources'
 import { readCorpus } from './readCorpus'
 import { readPersonal } from './readPersonal'
+import { readExplicitMaterials } from './readExplicitMaterials'
 import type { RetrieveContextOptions, RetrievedContext } from '@/types/retrievalTypes'
 
 const EMPTY: RetrievedContext = { chunks: [], sources: [], hasCanonical: false }
@@ -30,6 +31,13 @@ export async function retrieveContext({
   }
   if (mode === 'explicit_resource') {
     return getAttachedSourceText(userId, attachmentSourceIds ?? [])
+  }
+
+  if (mode === 'canonical_with_explicit_resources') {
+    const attached = await readExplicitMaterials(userId, attachmentSourceIds ?? [])
+    const corpus = await readCorpus(query.trim(), RAG_TOP_K, 'distance', true)
+    const chunks = [...attached, ...corpus.slice(0, limit)]
+    return { chunks, sources: dedupeContextSources(chunks), hasCanonical: corpus.length > 0 }
   }
 
   const subject = query.trim()

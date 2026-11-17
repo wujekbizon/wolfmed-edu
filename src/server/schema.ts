@@ -436,6 +436,10 @@ export type NoteInput = z.infer<typeof NoteSchema>;
 /**
  * Schema for validating data when saving user cells to database.
  */
+export { EssayBriefSchema, EssayGenerationSchema, EssayDownloadSchema, EssayMaterialPreparationSchema } from './essays/schema'
+import { EssayDraftSchema } from './essays/schema'
+import { safeJsonParse } from '@/helpers/safeJsonParse'
+
 export const CellSchema = z.object({
   id: z.string(),
   type: z.enum([
@@ -447,8 +451,13 @@ export const CellSchema = z.object({
     "plan",
     "media",
     "mindmap",
+    "essay",
   ]),
   content: z.string(),
+}).superRefine((cell, ctx) => {
+  if (cell.type !== 'essay' || !cell.content) return
+  if (EssayDraftSchema.safeParse(safeJsonParse(cell.content)).success) return
+  ctx.addIssue({ code: 'custom', path: ['content'], message: 'Nieprawidłowy szkic pracy pisemnej.' })
 });
 
 export const UserCellsListSchema = z.object({
@@ -534,6 +543,7 @@ export const CreateGeneratedDeckSchema = z.object({
 
 export const allowedFileTypes = [
   "application/pdf",
+  "text/plain",
   "video/mp4",
   "application/json",
 ] as const;

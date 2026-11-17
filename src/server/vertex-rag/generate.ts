@@ -15,7 +15,7 @@ import type { ModelTokenUsage, TutorContextMessage } from '@/types/memoryTypes'
 import type { GroundedAnswerOptions } from '@/types/groundedAnswerTypes'
 import { formatPracticeTutorContext } from '@/helpers/formatPracticeTutorContext'
 
-// Thinking is ON by default for gemini-2.5-flash and reasoning tokens bill at
+// Thinking is ON by default for gemini-3.5-flash-lite and reasoning tokens bill at
 // the (8×) output rate. None of the RAG paths need it, so disable everywhere.
 const NO_THINKING = { thinkingBudget: 0 } as const
 
@@ -81,7 +81,7 @@ export async function generateGroundedAnswer(
     const ai = getGoogleAI()
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.5-flash-lite',
       contents: [buildGroundedPrompt({
         question,
         contextText: formatContextChunks(context.chunks),
